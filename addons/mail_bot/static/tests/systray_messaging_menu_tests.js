@@ -6,6 +6,7 @@ var mailTestUtils = require('mail.testUtils');
 
 var MailBotService = require('mail_bot.MailBotService');
 
+var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
 
 QUnit.module('mail_bot', {}, function () {
@@ -169,6 +170,27 @@ QUnit.test('messaging menu widget: respond to notification prompt', function (as
     messagingMenu.destroy();
 });
 
+QUnit.test('notification_alert widget: display blocked notification alert', function (assert) {
+    assert.expect(2);
+
+    window.Notification.permission = 'denied';
+
+    var form = testUtils.createView({
+        View: FormView,
+        model: 'mail.message',
+        data: this.data,
+        arch: '<form>' +
+                '<widget name="notification_alert"/>' +
+            '</form>',
+    });
+    assert.containsOnce(form, '.o_notification_alert', "Blocked notification alert should be displayed");
+
+    window.Notification.permission = 'granted';
+    form.reload();
+    assert.containsNone(form, '.o_notification_alert', "Blocked notification alert should not be displayed");
+
+    form.destroy();
+});
 
 });
 });
