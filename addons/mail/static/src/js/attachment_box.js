@@ -40,6 +40,7 @@ var AttachmentBox = Widget.extend({
             model: 'ir.attachment',
             method: 'search_read',
             domain: domain,
+            fields: ['id', 'name', 'datas_fname', 'mimetype'],
         }).then(function (result) {
             self.attachmentIDs = result;
             _.each(result, function (attachment) {
