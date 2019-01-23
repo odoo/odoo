@@ -332,6 +332,13 @@ class StockMove(models.Model):
                     'value': value if quantity is None else self.value + value,
                     'price_unit': value / valued_quantity,
                 })
+            if self._is_out and self.origin_returned_move_id and self.product_id.cost_method == 'fifo':
+                curr_rounding = self.company_id.currency_id.rounding
+                value = -float_round(self.origin_returned_move_id.price_unit * valued_quantity, precision_rounding=curr_rounding)
+                self.write({
+                    'value': value,
+                    'price_unit': -self.origin_returned_move_id.price_unit,
+                })
         elif self._is_dropshipped() or self._is_dropshipped_returned():
             curr_rounding = self.company_id.currency_id.rounding
             if self.product_id.cost_method in ['fifo']:
