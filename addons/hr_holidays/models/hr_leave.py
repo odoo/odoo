@@ -400,7 +400,7 @@ class HolidaysRequest(models.Model):
             else:
                 holiday.can_approve = True
 
-    @api.constrains('date_from', 'date_to')
+    @api.constrains('date_from', 'date_to', 'state', 'employee_id')
     def _check_date(self):
         for holiday in self:
             domain = [
@@ -412,7 +412,7 @@ class HolidaysRequest(models.Model):
             ]
             nholidays = self.search_count(domain)
             if nholidays:
-                raise ValidationError(_('You can not have 2 time off that overlaps on the same day.'))
+                raise ValidationError(_('You can not set 2 times off that overlaps on the same day for the same employee.'))
 
     @api.constrains('state', 'number_of_days', 'holiday_status_id')
     def _check_holidays(self):
