@@ -8,7 +8,7 @@
                 <group>
                     <group>
                         <field name="compute_at_date" widget="radio"/>
-                        <field name="date" attrs="{'invisible': [('compute_at_date', '=', 0)]}"/>
+                        <field name="date" attrs="{'invisible': [('compute_at_date', '=', '0')]}"/>
                     </group>
                 </group>
                 <footer>
@@ -25,7 +25,7 @@
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_stock_quantity_history"/>
         <field name="target">new</field>
-        <field name="context">{'default_compute_at_date': 0}</field>
+        <field name="context">{'default_compute_at_date': '0'}</field>
     </record>
     <menuitem id="menu_valuation" name="Inventory Report" parent="stock.menu_warehouse_report" sequence="100" action="action_stock_quantity_history"/>
 </odoo>

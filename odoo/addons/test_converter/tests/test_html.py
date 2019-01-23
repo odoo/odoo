@@ -234,10 +234,6 @@ class TestBinaryExport(TestBasicExport):
 
 class TestSelectionExport(TestBasicExport):
     def test_selection(self):
-        converter = self.get_converter('selection')
-        value = converter(4)
-        self.assertEqual(value, e(u"réponse <D>"))
-
         converter = self.get_converter('selection_str')
         value = converter('C')
         self.assertEqual(value, u"Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?")

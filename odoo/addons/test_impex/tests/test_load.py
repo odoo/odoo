@@ -438,7 +438,7 @@ class test_selection(ImporterCase):
         ])
         self.assertEqual(len(result['ids']), 4)
         self.assertFalse(result['messages'])
-        self.assertEqual([3, 2, 1, 2], values(self.read()))
+        self.assertEqual(['3', '2', '1', '2'], values(self.read()))
 
     def test_imported_translated(self):
         self.add_translations(
@@ -452,7 +452,7 @@ class test_selection(ImporterCase):
         self.assertEqual(len(result['ids']), 3)
         self.assertFalse(result['messages'])
 
-        self.assertEqual([3, 1, 2], values(self.read()))
+        self.assertEqual(['3', '1', '2'], values(self.read()))
 
         result = self.import_(['value'], [['Foo']], context={'lang': 'fr_FR'})
         self.assertEqual(len(result['ids']), 1)
@@ -465,7 +465,7 @@ class test_selection(ImporterCase):
             u"Value 'Baz' not found in selection field 'Value'",
             moreinfo="Foo Bar Qux 4".split())])
 
-        result = self.import_(['value'], [[42]])
+        result = self.import_(['value'], [['42']])
         self.assertIs(result['ids'], False)
         self.assertEqual(result['messages'], [message(
             u"Value '42' not found in selection field 'Value'",
@@ -495,7 +495,7 @@ class test_selection_with_default(ImporterCase):
 
         self.assertEqual(
             values(self.read()),
-            [2])
+            ['2'])
 
 
 class test_selection_function(ImporterCase):

@@ -158,9 +158,6 @@ class TestConvertBack(common.TransactionCase):
         self.field_roundtrip('char', "foo bar")
         self.field_roundtrip('char', "ⒸⓄⓇⒼⒺ")
 
-    def test_selection(self):
-        self.field_roundtrip('selection', 3)
-
     def test_selection_str(self):
         self.field_roundtrip('selection_str', 'B')
 
