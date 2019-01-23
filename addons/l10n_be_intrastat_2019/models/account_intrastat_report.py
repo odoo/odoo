@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.tools.pycompat import text_type
 from collections import namedtuple
 
 
@@ -14,8 +15,8 @@ class XmlDeclaration(models.TransientModel):
     def _build_intrastat_line(self, numlgn, item, linekey, amounts, dispatchmode, extendedmode):
         super(XmlDeclaration, self)._build_intrastat_line(numlgn, item, linekey, amounts, dispatchmode, extendedmode)
         if dispatchmode:
-            self._set_Dim(item, 'EXCNTORI', unicode(linekey.EXCNTORI))
-            self._set_Dim(item, 'PARTNERID', unicode(linekey.PARTNERID))
+            self._set_Dim(item, 'EXCNTORI', text_type(linekey.EXCNTORI))
+            self._set_Dim(item, 'PARTNERID', text_type(linekey.PARTNERID))
 
     def _get_intrastat_linekey(self, declcode, inv_line, dispatchmode, extendedmode):
         res = super(XmlDeclaration, self)._get_intrastat_linekey(declcode, inv_line, dispatchmode, extendedmode)
