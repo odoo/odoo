@@ -12,7 +12,7 @@ class StockQuantityHistory(models.TransientModel):
 
         self.env['stock.move']._run_fifo_vacuum()
 
-        if self.compute_at_date:
+        if int(self.compute_at_date):
             tree_view_id = self.env.ref('stock_account.view_stock_product_tree2').id
             form_view_id = self.env.ref('stock.product_form_view_procurement_button').id
             search_view_id = self.env.ref('stock_account.view_inventory_valuation_search').id

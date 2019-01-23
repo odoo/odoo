@@ -276,7 +276,7 @@ class test_selection(CreatorCase):
         """ selections export the *label* for their value
         """
         self.assertEqual(
-            self.export(2),
+            self.export('2'),
             [[u"Bar"]])
 
     def test_localized_export(self):
@@ -291,7 +291,7 @@ class test_selection(CreatorCase):
                 'value': value
             })
         self.assertEqual(
-            self.export(2, context={'lang': 'fr_FR'}),
+            self.export('2', context={'lang': 'fr_FR'}),
             [[u'titi']])
 
 
