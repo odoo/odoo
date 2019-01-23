@@ -3807,6 +3807,7 @@ QUnit.module('ActionManager', {
         actionManager.doAction(3);
 
         var $searchInput = $('.o_searchview input');
+        $searchInput.val('m');
         $searchInput.trigger($.Event('keypress', {key: 'm', which: 109, keyCode: 109}));
         $searchInput.trigger($.Event('keydown', {key: 'Enter', which: 13, keyCode: 13}));
 
@@ -3815,6 +3816,7 @@ QUnit.module('ActionManager', {
 
         // Triggering the do_search above will kill the current searchview Input
         $searchInput = $('.o_searchview input');
+        $searchInput.val('o');
         $searchInput.trigger($.Event('keypress', {key: 'o', which: 111, keyCode: 111}));
 
         // We have something in the input of the search view. Making the search_read
