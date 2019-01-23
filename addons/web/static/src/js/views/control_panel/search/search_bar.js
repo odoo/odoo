@@ -216,6 +216,11 @@ var SearchBar = Widget.extend({
                     this.trigger_up('facet_removed');
                 }
                 break;
+            case $.ui.keyCode.ENTER:
+                if (this.$input.val() === '') {
+                    this.trigger_up('reload');
+                }
+                break;
         }
     },
 });
