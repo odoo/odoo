@@ -588,10 +588,16 @@ class IrActionsReport(models.Model):
                 content = base64.decodestring(attachment_id.datas)
                 streams[res_id] = io.BytesIO(content)
 
+        # A list is made with the unmapped streams and, if streams is not empty, its
+        # content, sorted by the table _order of the mapped records 
+        if streams:
+            stream_list = unmapped_streams + [streams[rec_id.id] for rec_id in self.env[self.model].search([('id', 'in', list(streams.keys()))])]
+        else:
+            stream_list = unmapped_streams
+        
         # Build the final pdf.
         # If only one stream left, no need to merge them (and then, preserve embedded files).
-        stream_list = unmapped_streams + [streams[rec_id.id] for rec_id in self.env[self.model].search([('id', 'in', list(streams.keys()))])]
-        if len(streams) == 1:
+        if len(stream_list) == 1:
             result = stream_list[0].getvalue()
         else:
             writer = PdfFileWriter()
