@@ -56,7 +56,6 @@ var WebsiteRoot = BodyManager.extend({
     init: function () {
         this._super.apply(this, arguments);
         this.animations = [];
-        sAnimation.registryObject.onAdd(this._startMissingAnimations.bind(this));
     },
     /**
      * @override
@@ -142,7 +141,7 @@ var WebsiteRoot = BodyManager.extend({
     _startAnimations: function (editableMode, $from) {
         var self = this;
 
-        this.startInEditableMode = editableMode || false;
+        editableMode = editableMode || false;
         if ($from === undefined) {
             $from = this.$('#wrapwrap');
         }
@@ -154,18 +153,13 @@ var WebsiteRoot = BodyManager.extend({
             var $target = $from.find(selector).addBack(selector);
 
             var defs = _.map($target, function (el) {
-                var animation = new Animation(self, self.startInEditableMode);
+                var animation = new Animation(self, editableMode);
                 self.animations.push(animation);
                 return animation.attachTo($(el));
             });
             return $.when.apply($, defs);
         });
         return $.when.apply($, defs);
-    },
-    _startMissingAnimations: function () {
-        if (this.animations.length) {
-            this._startAnimations(this.startInEditableMode);
-        }
     },
     /**
      * Destroys all animation instances. Especially needed before saving while
