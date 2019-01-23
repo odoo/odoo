@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="invoice_line_be_intrastat_data_form" model="ir.ui.view">
+        <field name="name">account.invoice.form.inherit.account.be.intrastat</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+             <xpath expr="//field[@name='invoice_line_ids']//field[@name='quantity']" position="before">
+                <field name="intrastat_product_origin_country_id" options="{'no_create_edit': True}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
