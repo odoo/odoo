@@ -3048,7 +3048,7 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('delete a column in grouped on m2o', async function (assert) {
+    QUnit.test('delete a column and move records to another column in grouped on m2o', async function (assert) {
         assert.expect(43);
         testUtils.mock.patch(KanbanRenderer, {
             _renderGrouped: function () {
@@ -3170,6 +3170,70 @@ QUnit.module('Views', {
         assert.deepEqual([newColumnID, 1], resequencedIDs,
             "moved column should be resequenced accordingly");
         assert.verifySteps(['name_create', 'read', 'read', 'read']);
+
+        kanban.destroy();
+        testUtils.mock.unpatch(KanbanRenderer);
+    });
+    QUnit.test('delete a column with records in grouped on m2o', function (assert) {
+        assert.expect(16);
+        testUtils.mock.patch(KanbanRenderer, {
+            _renderGrouped: function () {
+                this._super.apply(this, arguments);
+                // set delay and revert animation time to 0 so dummy drag and drop works
+                if (this.$el.sortable('instance')) {
+                    this.$el.sortable('option', {delay: 0, revert: 0});
+                }
+            },
+        });
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                if (args.method) {
+                    assert.step(args.method);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        // check the initial rendering
+        assert.containsN(kanban, '.o_kanban_group', 2, "should have two columns");
+        assert.strictEqual(kanban.$('.o_kanban_group:first').data('id'), 3,
+            'first column should be [3, "hello"]');
+        assert.strictEqual(kanban.$('.o_kanban_group:last').data('id'), 5,
+            'second column should be [5, "xmo"]');
+        assert.strictEqual(kanban.$('.o_kanban_group:last .o_column_title').text(), 'xmo',
+            'second column should have correct title');
+        assert.containsN(kanban, '.o_kanban_group:last .o_kanban_record', 2,
+            "second column should have two records");
+
+        // delete second column (first cancel the confirm request, then confirm)
+        testUtils.kanban.toggleGroupSettings(kanban.$('.o_kanban_group:last'));
+        testUtils.dom.click(kanban.$('.o_kanban_group:last .o_column_delete'));
+        assert.ok($('.modal').length, 'a confirm modal should be displayed');
+        testUtils.modal.clickButton('Cancel'); // click on cancel
+        assert.strictEqual(kanban.$('.o_kanban_group:last').data('id'), 5,
+            'column [5, "xmo"] should still be there');
+        testUtils.kanban.toggleGroupSettings(kanban.$('.o_kanban_group:last'));
+        testUtils.dom.click(kanban.$('.o_kanban_group:last .o_column_delete'));
+        assert.ok($('.modal').length, 'a confirm modal should be displayed');
+        testUtils.dom.click($('.modal').find('input[value="delete_column"]'));
+        testUtils.modal.clickButton('Confirm'); // click on confirm
+        assert.strictEqual(kanban.$('.o_kanban_group:last').data('id'), 3,
+            'last column should now be [3, "hello"]');
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(0) .o_kanban_record').length, 2,
+            "column should contain 2 record");
+
+        assert.verifySteps(["read_group", "get_record_count", "get_record_count", "write_by_domain", "read_group"]);
 
         kanban.destroy();
         testUtils.mock.unpatch(KanbanRenderer);
