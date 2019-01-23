@@ -47,7 +47,7 @@ class SurveyUserInput(models.Model):
     user_input_line_ids = fields.One2many('survey.user_input_line', 'user_input_id', string='Answers', copy=True)
     deadline = fields.Datetime('Deadline', help="Datetime until customer can open the survey and submit answers")
     last_displayed_page_id = fields.Many2one('survey.page', string='Last displayed page')
-    quizz_score = fields.Float("Score for the quiz", compute="_compute_quizz_score", default=0.0)
+    quizz_score = fields.Float("Score for the quiz", compute="_compute_quizz_score", store=True)
 
     @api.depends('user_input_line_ids.quizz_mark')
     def _compute_quizz_score(self):
@@ -118,7 +118,7 @@ class SurveyUserInputLine(models.Model):
     value_free_text = fields.Text('Free Text answer')
     value_suggested = fields.Many2one('survey.label', string="Suggested answer")
     value_suggested_row = fields.Many2one('survey.label', string="Row answer")
-    quizz_mark = fields.Float('Score given for this choice')
+    quizz_mark = fields.Float('Score given for this choice', related='value_suggested.quizz_mark', store=True)
 
     @api.constrains('skipped', 'answer_type')
     def _answered_or_skipped(self):
@@ -138,26 +138,6 @@ class SurveyUserInputLine(models.Model):
             }
             if not fields_type.get(uil.answer_type, True):
                 raise ValidationError(_('The answer must be in the right type'))
-
-    def _get_mark(self, value_suggested):
-        label = self.env['survey.label'].browse(int(value_suggested))
-        mark = label.quizz_mark if label.exists() else 0.0
-        return mark
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            value_suggested = vals.get('value_suggested')
-            if value_suggested:
-                vals.update({'quizz_mark': self._get_mark(value_suggested)})
-        return super(SurveyUserInputLine, self).create(vals_list)
-
-    @api.multi
-    def write(self, vals):
-        value_suggested = vals.get('value_suggested')
-        if value_suggested:
-            vals.update({'quizz_mark': self._get_mark(value_suggested)})
-        return super(SurveyUserInputLine, self).write(vals)
 
     @api.model
     def save_lines(self, user_input_id, question, post, answer_tag):
