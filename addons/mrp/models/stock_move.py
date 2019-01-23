@@ -116,9 +116,24 @@ class StockMove(models.Model):
     @api.multi
     @api.depends('move_lot_ids', 'move_lot_ids.quantity_done', 'quantity_done_store')
     def _qty_done_compute(self):
+        move_lot_ids = self.env['stock.move.lots'].sudo().read_group(
+            [('move_id', 'in', self.ids), ('lot_id', '!=', False)],
+            ['move_id'],
+            ['move_id']
+        )
+        move_lot_count = {x['move_id'][0]: x['move_id_count'] for x in move_lot_ids}
+        move_qty_ids = self.env['stock.move.lots'].sudo().read_group(
+            [
+                ('move_id', 'in', self.ids),
+                ('done_wo', '!=', False)
+            ],
+            ['move_id', 'quantity_done'],
+            ['move_id']
+        )
+        move_qty = {x['move_id'][0]: x['quantity_done'] for x in move_qty_ids}
         for move in self:
-            if move.has_tracking != 'none' or move.sudo().move_lot_ids.mapped('lot_id'):
-                move.quantity_done = sum(move.move_lot_ids.filtered(lambda x: x.done_wo).mapped('quantity_done')) #TODO: change with active_move_lot_ids?
+            if move.has_tracking != 'none' or move_lot_count.get(move.id, 0) > 0:
+                move.quantity_done = move_qty.get(move.id, 0)
             else:
                 move.quantity_done = move.quantity_done_store
 
@@ -162,9 +177,8 @@ class StockMove(models.Model):
     @api.multi
     def create_lots(self):
         lots = self.env['stock.move.lots']
+        lots.search([('move_id', 'in', self.ids), ('done_wo', '=', True), ('quantity_done', '=', 0)]).sudo().unlink()
         for move in self:
-            unlink_move_lots = move.move_lot_ids.filtered(lambda x : (x.quantity_done == 0) and x.done_wo)
-            unlink_move_lots.sudo().unlink()
             group_new_quant = {}
             old_move_lot = {}
             for movelot in move.move_lot_ids:
