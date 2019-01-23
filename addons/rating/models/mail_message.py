@@ -8,7 +8,7 @@ class MailMessage(models.Model):
     _inherit = 'mail.message'
 
     rating_ids = fields.One2many('rating.rating', 'message_id', string='Related ratings')
-    rating_value = fields.Float("Rating Value", compute='_compute_rating_value', store=False)
+    rating_value = fields.Float("Rating Value", compute='_compute_rating_value', store=False, search='_search_rating_value')
 
     @api.multi
     @api.depends('rating_ids', 'rating_ids.rating')
@@ -17,3 +17,7 @@ class MailMessage(models.Model):
         mapping = dict((r.message_id.id, r.rating) for r in ratings)
         for message in self:
             message.rating_value = mapping.get(message.id, 0.0)
+
+    @api.multi
+    def _search_rating_value(self, operator, operand):
+        return [('rating_ids.rating', operator, operand)]
