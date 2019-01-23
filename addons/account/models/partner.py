@@ -204,7 +204,7 @@ class ResPartner(models.Model):
 
     @api.multi
     def _credit_debit_get(self):
-        tables, where_clause, where_params = self.env['account.move.line']._query_get()
+        tables, where_clause, where_params = self.env['account.move.line'].with_context(company_id=self.env.user.company_id.id)._query_get()
         where_params = [tuple(self.ids)] + where_params
         if where_clause:
             where_clause = 'AND ' + where_clause

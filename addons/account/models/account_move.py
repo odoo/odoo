@@ -263,9 +263,6 @@ class AccountMove(models.Model):
                                                   journal_id=journal_id,
                                                   auto=auto)
             reversed_moves |= reversed_move
-            #unreconcile all lines reversed
-            aml = ac_move.line_ids.filtered(lambda x: x.account_id.reconcile or x.account_id.internal_type == 'liquidity')
-            aml.remove_move_reconcile()
             #reconcile together the reconcilable (or the liquidity aml) and their newly created counterpart
             for account in set([x.account_id for x in aml]):
                 to_rec = aml.filtered(lambda y: y.account_id == account)
@@ -282,6 +279,18 @@ class AccountMove(models.Model):
     @api.multi
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()
+
+    # FIXME: Clarify me and change me in master
+    @api.multi
+    def action_duplicate(self):
+        self.ensure_one()
+        action = self.env.ref('account.action_move_journal_line').read()[0]
+        action['target'] = 'inline'
+        action['context'] = dict(self.env.context)
+        action['context']['view_no_maturity'] = False
+        action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
+        action['res_id'] = self.copy().id
+        return action
 
     @api.model
     def _run_reverses_entries(self):
@@ -467,7 +476,7 @@ class AccountMoveLine(models.Model):
         index=True, store=True, copy=False)  # related is required
     blocked = fields.Boolean(string='No Follow-up', default=False,
         help="You can check this box to mark this journal item as a litigation with the associated partner")
-    date_maturity = fields.Date(string='Due date', index=True, required=True,
+    date_maturity = fields.Date(string='Due date', index=True, required=True, copy=False,
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
     date = fields.Date(related='move_id.date', string='Date', index=True, store=True, copy=False)  # related is required
     analytic_line_ids = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines', oldname="analytic_lines")

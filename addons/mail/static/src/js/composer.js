@@ -391,7 +391,7 @@ var BasicComposer = Widget.extend({
         // Attachments
         this.AttachmentDataSet = new data.DataSetSearch(this, 'ir.attachment', this.context);
         this.fileupload_id = _.uniqueId('o_chat_fileupload');
-        this.set('attachment_ids', []);
+        this.set('attachment_ids', options.attachment_ids || []);
 
         // Mention
         this.mention_manager = new MentionManager(this);
@@ -451,6 +451,7 @@ var BasicComposer = Widget.extend({
         dom.autoresize(this.$input, {parent: this, min_height: this.options.input_min_height});
 
         // Attachments
+        this.render_attachments();
         $(window).on(this.fileupload_id, this.on_attachment_loaded);
         this.on("change:attachment_ids", this, this.render_attachments);
 
