@@ -817,10 +817,10 @@ var FieldX2Many = AbstractField.extend({
         var arch = this.view && this.view.arch;
         if (arch) {
             this.activeActions.create = arch.attrs.create ?
-                                            JSON.parse(arch.attrs.create) :
+                                            !!JSON.parse(arch.attrs.create) :
                                             true;
             this.activeActions.delete = arch.attrs.delete ?
-                                            JSON.parse(arch.attrs.delete) :
+                                            !!JSON.parse(arch.attrs.delete) :
                                             true;
             this.editable = arch.attrs.editable;
         }

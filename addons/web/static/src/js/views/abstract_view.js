@@ -122,10 +122,10 @@ var AbstractView = Factory.extend({
         this.controllerParams = {
             actionViews: params.actionViews,
             activeActions: {
-                edit: this.arch.attrs.edit ? JSON.parse(this.arch.attrs.edit) : true,
-                create: this.arch.attrs.create ? JSON.parse(this.arch.attrs.create) : true,
-                delete: this.arch.attrs.delete ? JSON.parse(this.arch.attrs.delete) : true,
-                duplicate: this.arch.attrs.duplicate ? JSON.parse(this.arch.attrs.duplicate) : true,
+                edit: this.arch.attrs.edit ? !!JSON.parse(this.arch.attrs.edit) : true,
+                create: this.arch.attrs.create ? !!JSON.parse(this.arch.attrs.create) : true,
+                delete: this.arch.attrs.delete ? !!JSON.parse(this.arch.attrs.delete) : true,
+                duplicate: this.arch.attrs.duplicate ? !!JSON.parse(this.arch.attrs.duplicate) : true,
             },
             bannerRoute: this.arch.attrs.banner_route,
             controllerID: params.controllerID,
