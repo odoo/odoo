@@ -86,3 +86,11 @@ class Users(models.Model):
     @api.multi
     def open_website_url(self):
         return self.mapped('partner_id').open_website_url()
+
+    def get_gamification_redirection_data(self):
+        res = super(Users, self).get_gamification_redirection_data()
+        res.append({
+            'url': '/forum',
+            'label': 'See our Forum'
+        })
+        return res
