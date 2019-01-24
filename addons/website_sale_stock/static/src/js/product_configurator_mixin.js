@@ -45,7 +45,7 @@ ProductConfiguratorMixin._onChangeCombinationStock = function (ev, $parent, comb
     var qty = $parent.find('input[name="add_qty"]').val();
 
     $parent.find('#add_to_cart').removeClass('out_of_stock');
-    if (_.contains(['always', 'threshold'], combination.inventory_availability)) {
+    if (combination.product_type === 'product' && _.contains(['always', 'threshold'], combination.inventory_availability)) {
         combination.virtual_available -= parseInt(combination.cart_qty);
         if (combination.virtual_available < 0) {
             combination.virtual_available = 0;
