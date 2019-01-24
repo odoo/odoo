@@ -95,7 +95,7 @@ def at_install(flag):
     By default, tests are run right after installing the module, before
     starting the installation of the next module.
 
-    .. versionadded:: 12.0
+    .. deprecated:: 12.0
 
         ``at_install`` is now a flag, you can use :func:`tagged` to
         add/remove it, although ``tagged`` only works on test classes
@@ -110,7 +110,7 @@ def post_install(flag):
     By default, tests are *not* run after installation of all modules in the
     current installation set.
 
-    .. versionadded:: 12.0
+    .. deprecated:: 12.0
 
         ``post_install`` is now a flag, you can use :func:`tagged` to
         add/remove it, although ``tagged`` only works on test classes
