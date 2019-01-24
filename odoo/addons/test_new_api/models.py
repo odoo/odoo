@@ -524,3 +524,27 @@ class RequiredM2O(models.Model):
 
     foo = fields.Many2one('res.currency', required=True, ondelete='cascade')
     bar = fields.Many2one('res.country', required=True)
+
+
+class Attachment(models.Model):
+    _name = 'test_new_api.attachment'
+    _description = 'Attachment'
+
+    res_model = fields.Char(required=True)
+    res_id = fields.Integer(required=True)
+    name = fields.Char(compute='_compute_name', compute_sudo=True, store=True)
+
+    @api.depends('res_model', 'res_id')
+    def _compute_name(self):
+        for rec in self:
+            rec.name = self.env[rec.res_model].browse(rec.res_id).display_name
+
+
+class AttachmentHost(models.Model):
+    _name = 'test_new_api.attachment.host'
+    _description = 'Attachment Host'
+
+    attachment_ids = fields.One2many(
+        'test_new_api.attachment', 'res_id', auto_join=True,
+        domain=lambda self: [('res_model', '=', self._name)],
+    )
