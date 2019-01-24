@@ -2371,6 +2371,44 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('fullcalendar initializes with right locale', function (assert) {
+        assert.expect(1);
+
+        var initialLocale = moment.locale();
+        // This will set the locale to zz
+        moment.defineLocale('zz', {
+            longDateFormat: {
+                L: 'DD/MM/YYYY'
+            },
+            weekdaysShort: ["zz1.", "zz2.", "zz3.", "zz4.", "zz5.", "zz6.", "zz7."],
+        });
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch: '<calendar class="o_calendar_test" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'mode="week"> '+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+                action: {views: [{viewID: 1, type: 'kanban'}, {viewID: 43, type: 'form'}]}
+            },
+
+        });
+
+        assert.strictEqual(calendar.$('.fc-day-header:first').text(), "zz1. 11/12",
+            'The day should be in the given locale specific format');
+
+        moment.locale(initialLocale);
+
+        calendar.destroy();
+    });
+
 });
 
 });

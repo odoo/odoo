@@ -362,6 +362,11 @@ return AbstractRenderer.extend({
 
         this.$calendar = this.$(".o_calendar_widget");
 
+        // This seems like a workaround but apparently passing the locale
+        // in the options is not enough. We should initialize it beforehand
+        var locale = moment.locale();
+        $.fullCalendar.locale(locale);
+
         //Documentation here : http://arshaw.com/fullcalendar/docs/
         var fc_options = $.extend({}, this.state.fc_options, {
             eventDrop: function (event) {
@@ -414,6 +419,7 @@ return AbstractRenderer.extend({
             height: 'parent',
             unselectAuto: false,
             isRTL: _t.database.parameters.direction === "rtl",
+            locale: locale, // reset locale when fullcalendar has already been instanciated before now
         });
 
         this.$calendar.fullCalendar(fc_options);
