@@ -47,5 +47,14 @@
             <field name="rule_products_domain">[["name","ilike","large cabinet"]]</field>
             <field name="discount_line_product_id" ref="sale_coupon.product_product_free_large_cabinet"/>
         </record>
+
+        <record id="10_percent_coupon" model="sale.coupon.program">
+            <field name="name">10% Discount</field>
+            <field name="promo_code_usage">code_needed</field>
+            <field name="discount_apply_on">on_order</field>
+            <field name="discount_type">percentage</field>
+            <field name="discount_percentage">10.0</field>
+            <field name="program_type">coupon_program</field>
+        </record>
     </data>
 </odoo>
