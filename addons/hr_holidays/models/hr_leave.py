@@ -618,7 +618,8 @@ class HolidaysRequest(models.Model):
             'stop': self.date_to,
             'allday': False,
             'state': 'open',  # to block that meeting date in the calendar
-            'privacy': 'confidential'
+            'privacy': 'confidential',
+            'event_tz': self.user_id.tz,
         }
         # Add the partner_id (if exist) as an attendee
         if self.user_id and self.user_id.partner_id:
