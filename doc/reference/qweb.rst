@@ -630,13 +630,13 @@ API
                      use case. Odoo 9.0 still depends on Jinja_ and Mako_.
 
 .. _templating:
-    http://en.wikipedia.org/wiki/Template_processor
+    https://en.wikipedia.org/wiki/Template_processor
 
 .. _Jinja: http://jinja.pocoo.org
-.. _Mako: http://www.makotemplates.org
-.. _Genshi: http://genshi.edgewall.org
-.. _XML namespaces: http://en.wikipedia.org/wiki/XML_namespace
-.. _HTML: http://en.wikipedia.org/wiki/HTML
-.. _XSS: http://en.wikipedia.org/wiki/Cross-site_scripting
+.. _Mako: https://www.makotemplates.org
+.. _Genshi: https://genshi.edgewall.org
+.. _XML namespaces: https://en.wikipedia.org/wiki/XML_namespace
+.. _HTML: https://en.wikipedia.org/wiki/HTML
+.. _XSS: https://en.wikipedia.org/wiki/Cross-site_scripting
 .. _JSON: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON
-.. _CSS selector: http://api.jquery.com/category/selectors/
+.. _CSS selector: https://api.jquery.com/category/selectors/

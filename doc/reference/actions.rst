@@ -160,7 +160,7 @@ via two fields:
 
     {
         "type": "ir.actions.act_url",
-        "url": "http://odoo.com",
+        "url": "https://odoo.com",
         "target": "self",
     }
 

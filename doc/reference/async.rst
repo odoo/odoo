@@ -334,8 +334,8 @@ jQuery.Deferred API
        where expected promises are wrapped in :js:func:`when` just in
        case.
 
-.. _promises: http://en.wikipedia.org/wiki/Promise_(programming)
-.. _jQuery's deferred: http://api.jquery.com/category/deferred-object/
+.. _promises: https://en.wikipedia.org/wiki/Promise_(programming)
+.. _jQuery's deferred: https://api.jquery.com/category/deferred-object/
 .. _CommonJS Promises/A: http://wiki.commonjs.org/wiki/Promises/A
 .. _CommonJS Promises/B: http://wiki.commonjs.org/wiki/Promises/B
-.. _mocks: http://en.wikipedia.org/wiki/Mock_object
+.. _mocks: https://en.wikipedia.org/wiki/Mock_object

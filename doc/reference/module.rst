@@ -128,6 +128,6 @@ Available manifest fields are:
     These hooks should only be used when setup/cleanup required for this module
     is either extremely difficult or impossible through the api.
 
-.. _semantic versioning: http://semver.org
+.. _semantic versioning: https://semver.org
 .. _existing categories:
      https://github.com/odoo/odoo/blob/12.0/odoo/addons/base/data/ir_module_category_data.xml

@@ -189,6 +189,6 @@ Read vs Run Time
     };
 
 
-.. _PO File: http://en.wikipedia.org/wiki/Gettext#Translating
-.. _msginit: http://www.gnu.org/software/gettext/manual/gettext.html#Creating
-.. _POEdit: http://poedit.net/
+.. _PO File: https://en.wikipedia.org/wiki/Gettext#Translating
+.. _msginit: https://www.gnu.org/software/gettext/manual/gettext.html#Creating
+.. _POEdit: https://poedit.net/

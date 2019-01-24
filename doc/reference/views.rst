@@ -1877,10 +1877,10 @@ Fields Manipulation
   .. image:: images/widgets/radio.png
       :class: img-responsive
 
-.. _accesskey: http://www.w3.org/TR/html5/editing.html#the-accesskey-attribute
-.. _CSS color unit: http://www.w3.org/TR/css3-color/#colorunits
+.. _accesskey: https://www.w3.org/TR/html5/editing.html#the-accesskey-attribute
+.. _CSS color unit: https://www.w3.org/TR/css3-color/#colorunits
 .. _floats: https://developer.mozilla.org/en-US/docs/Web/CSS/float
-.. _HTML: http://en.wikipedia.org/wiki/HTML
-.. _kanban board: http://en.wikipedia.org/wiki/Kanban_board
-.. _pivot table: http://en.wikipedia.org/wiki/Pivot_table
-.. _XPath: http://en.wikipedia.org/wiki/XPath
+.. _HTML: https://en.wikipedia.org/wiki/HTML
+.. _kanban board: https://en.wikipedia.org/wiki/Kanban_board
+.. _pivot table: https://en.wikipedia.org/wiki/Pivot_table
+.. _XPath: https://en.wikipedia.org/wiki/XPath

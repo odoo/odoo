@@ -482,13 +482,13 @@ to that file.
 .. _jinja2: http://jinja.pocoo.org
 .. _regular expression: https://docs.python.org/3/library/re.html
 .. _password authentication:
-    http://www.postgresql.org/docs/9.3/static/auth-methods.html#AUTH-PASSWORD
+    https://www.postgresql.org/docs/9.3/static/auth-methods.html#AUTH-PASSWORD
 .. _template database:
-    http://www.postgresql.org/docs/9.3/static/manage-ag-templatedbs.html
+    https://www.postgresql.org/docs/9.3/static/manage-ag-templatedbs.html
 .. _level:
     https://docs.python.org/3/library/logging.html#logging.Logger.setLevel
 .. _a PostgreSQL URI:
-    http://www.postgresql.org/docs/9.2/static/libpq-connect.html#AEN38208
+    https://www.postgresql.org/docs/9.2/static/libpq-connect.html#AEN38208
 .. _Werkzeug's proxy support:
     http://werkzeug.pocoo.org/docs/contrib/fixers/#werkzeug.contrib.fixers.ProxyFix
 .. _pyinotify: https://github.com/seb-m/pyinotify/wiki

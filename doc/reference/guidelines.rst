@@ -408,7 +408,7 @@ PEP8 options
 
 Using a linter can help show syntax and semantic warnings or errors.
 We recommend `flake8 <https://pypi.python.org/pypi/flake8>`_ for Python and
-`jshint <http://jshint.com/install/>`_ for JavaScript.
+`jshint <https://jshint.com/install/>`_ for JavaScript.
 Odoo source code tries to respect Python standard, but some of them can be ignored.
 
 
@@ -460,13 +460,13 @@ Idiomatics of Programming (Python)
 - As python is the main language of Odoo models, know it =) :
 
   - Know your builtins : You should at least have a basic understanding of all
-    the Python builtins (http://docs.python.org/library/functions.html)
+    the Python builtins (https://docs.python.org/3/library/functions.html)
 
   - Learn list/dict comprehensions : Use list comprehension, dict comprehension, and
     basic manipulation using ``map``, ``filter``, ``sum``, ... They make the code
     easier to read.
 
-  - Don't hesitate to refresh your knowledge (http://learnxinyminutes.com/docs/python/) or
+  - Don't hesitate to refresh your knowledge (https://learnxinyminutes.com/docs/python3/) or
     to get more familiar with Python (https://docs.python.org/3/tutorial/)
 
 
@@ -541,7 +541,7 @@ Think extendable
 Functions and methods should not contain too much logic: having a lot of small
 and simple methods is more advisable than having few large and complex methods.
 A good rule of thumb is to split a method as soon as it has more than one
-responsibility (see http://en.wikipedia.org/wiki/Single_responsibility_principle).
+responsibility (see https://en.wikipedia.org/wiki/Single_responsibility_principle).
 
 Hardcoding a business logic in a method should be avoided as it prevents
 an easy extension by a submodule.
@@ -576,7 +576,7 @@ Also, name your functions accordingly: small and properly named functions are
 the starting point of readable/maintainable code and tighter documentation.
 
 This recommendation is also relevant for classes, files, modules and packages.
-(See also http://en.wikipedia.org/wiki/Cyclomatic_complexity)
+(See also https://en.wikipedia.org/wiki/Cyclomatic_complexity)
 
 Use translation method correctly
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

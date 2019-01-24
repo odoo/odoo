@@ -117,7 +117,6 @@ access to the field:
     field access groups apply to administrator in fields_get but not in
     read/write...
 
-.. _foo: http://google.com
 .. _time module: https://docs.python.org/3/library/time.html
 
 .. _reference/security/guidelines:
@@ -193,6 +192,7 @@ online documentation of pyscopg2 to learn how to use it properly:
 
 Never commit the transaction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 The Odoo framework is in charge of providing the transactional context for
 all RPC calls. The principle is that a new database cursor is opened at the
 beginning of each RPC call, and committed when the call has returned, just

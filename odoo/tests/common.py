@@ -95,7 +95,7 @@ def at_install(flag):
     By default, tests are run right after installing the module, before
     starting the installation of the next module.
 
-    .. deprecated:: 12.0
+    .. versionadded:: 12.0
 
         ``at_install`` is now a flag, you can use :func:`tagged` to
         add/remove it, although ``tagged`` only works on test classes
@@ -110,7 +110,7 @@ def post_install(flag):
     By default, tests are *not* run after installation of all modules in the
     current installation set.
 
-    .. deprecated:: 12.0
+    .. versionadded:: 12.0
 
         ``post_install`` is now a flag, you can use :func:`tagged` to
         add/remove it, although ``tagged`` only works on test classes
@@ -1007,7 +1007,9 @@ ref_re = re.compile(r"""
 \3
 """, re.VERBOSE)
 class Form(object):
-    """ Server-side form view implementation (partial)
+    """Server-side form view implementation (partial)
+
+    .. versionadded:: 12.0
 
     Implements much of the "form view" manipulation flow, such that
     server-side tests can more properly reflect the behaviour which would be
@@ -1076,7 +1078,6 @@ class Form(object):
                     simply loads the default view for the model.
     :type view: int | str | odoo.model.Model
 
-    .. versionadded:: 12.0
     """
     def __init__(self, recordp, view=None):
         # necessary as we're overriding setattr
