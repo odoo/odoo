@@ -490,7 +490,8 @@ class HolidaysRequest(models.Model):
         holiday.add_follower(employee_id)
         if 'employee_id' in values:
             holiday._onchange_employee_id()
-        holiday.activity_update()
+        if not self._context.get('import_file'):
+            holiday.activity_update()
         return holiday
 
     def _read_from_database(self, field_names, inherited_field_names=[]):
