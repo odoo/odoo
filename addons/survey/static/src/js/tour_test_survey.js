@@ -5,7 +5,7 @@ var tour = require('web_tour.tour');
 
 tour.register('test_survey', {
     test: true,
-    url: '/survey/start/1',
+    url: '/survey/start/b137640d-14d4-4748-9ef6-344ca256531e',
 }, [
     // Page-1
     {
