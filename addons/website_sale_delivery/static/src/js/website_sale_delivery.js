@@ -35,7 +35,8 @@ odoo.define('website_sale_delivery.checkout', function (require) {
             $carrier_badge.children('span').text(result.new_amount_delivery);
             $carrier_badge.removeClass('d-none');
             $compute_badge.addClass('d-none');
-            $pay_button.prop('disabled', false);
+            $pay_button.data('disabled_reasons').carrier_selection = false;
+            $pay_button.prop('disabled', _.contains($pay_button.data('disabled_reasons'), true));
         }
         else {
             console.error(result.error_message);
@@ -48,6 +49,8 @@ odoo.define('website_sale_delivery.checkout', function (require) {
     };
 
     var _onCarrierClick = function(ev) {
+        $pay_button.data('disabled_reasons', $pay_button.data('disabled_reasons') || {});
+        $pay_button.data('disabled_reasons').carrier_selection = true;
         $pay_button.prop('disabled', true);
         var carrier_id = $(ev.currentTarget).val();
         var values = {'carrier_id': carrier_id};
