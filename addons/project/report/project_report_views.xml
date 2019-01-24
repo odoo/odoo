@@ -54,7 +54,7 @@
             <field name="model">report.project.task.user</field>
             <field name="arch" type="xml">
                 <search string="Tasks Analysis">
-                    <field name="date_start"/>
+                    <field name="date_assign"/>
                     <field name="date_end"/>
                     <field name="date_deadline"/>
                     <field name="date_last_stage_update"/>
@@ -76,7 +76,7 @@
                         <filter string="Stage" name="Stage" context="{'group_by':'stage_id'}"/>
                         <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator/>
-                        <filter string="Assignation Date" name="assignation_month" context="{'group_by':'date_start:month'}"/>
+                        <filter string="Assignation Date" name="assignation_month" context="{'group_by':'date_assign:month'}"/>
                     </group>
                 </search>
             </field>

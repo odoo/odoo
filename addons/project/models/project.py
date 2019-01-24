@@ -389,7 +389,7 @@ class Project(models.Model):
 class Task(models.Model):
     _name = "project.task"
     _description = "Task"
-    _date_name = "date_start"
+    _date_name = "date_assign"
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'rating.mixin']
     _mail_post_access = 'read'
     _order = "priority desc, sequence, id desc"
@@ -445,9 +445,6 @@ class Task(models.Model):
     kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', tracking=True)
     create_date = fields.Datetime("Created On", readonly=True, index=True)
     write_date = fields.Datetime("Last Updated On", readonly=True, index=True)
-    date_start = fields.Datetime(string='Starting Date',
-    default=fields.Datetime.now,
-    index=True, copy=False)
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True)
     date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True)
@@ -585,11 +582,6 @@ class Task(models.Model):
                 self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
         else:
             self.stage_id = False
-
-    @api.onchange('user_id')
-    def _onchange_user(self):
-        if self.user_id:
-            self.date_start = fields.Datetime.now()
 
     @api.constrains('parent_id', 'child_ids')
     def _check_subtask_level(self):
