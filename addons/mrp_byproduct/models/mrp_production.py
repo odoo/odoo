@@ -55,7 +55,7 @@ class MrpProductProduce(models.TransientModel):
     _inherit = "mrp.product.produce"
 
     @api.multi
-    def _update_finished_move(self, is_workorder):
+    def _update_finished_move(self):
         """ Handle by product tracked """
         by_product_moves = self.production_id.move_finished_ids.filtered(lambda m: m.product_id != self.product_id and m.state not in ('done', 'cancel'))
         for by_product_move in by_product_moves:
@@ -82,4 +82,4 @@ class MrpProductProduce(models.TransientModel):
                 })
                 for i in range(0, int(quantity)):
                     self.env['stock.move.line'].create(values)
-        return super(MrpProductProduce, self)._update_finished_move(is_workorder)
+        return super(MrpProductProduce, self)._update_finished_move()

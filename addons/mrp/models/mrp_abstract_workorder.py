@@ -17,7 +17,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
     qty_producing = fields.Float(string='Currently Produced Quantity', digits=dp.get_precision('Product Unit of Measure'))
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', readonly=True)
     final_lot_id = fields.Many2one('stock.production.lot', string='Lot/Serial Number', domain="[('product_id', '=', product_id)]")
-    product_tracking = fields.Selection(related="product_id.tracking", readonly=False)
+    product_tracking = fields.Selection(related="product_id.tracking")
 
     @api.onchange('qty_producing')
     def _onchange_qty_producing(self):
@@ -132,6 +132,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
                 to_consume_in_line = min(qty_to_consume, move_line.product_uom_qty)
             line = {
                 'move_id': move.id,
+                'product_id': move.product_id.id,
                 'qty_to_consume': to_consume_in_line,
                 'qty_reserved': move_line.product_uom_qty,
                 'lot_id': move_line.lot_id.id,
@@ -145,6 +146,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
                 while float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) > 0:
                     line = {
                         'move_id': move.id,
+                        'product_id': move.product_id.id,
                         'qty_to_consume': 1,
                         'qty_done': 1,
                     }
@@ -153,13 +155,14 @@ class MrpAbstractWorkorder(models.AbstractModel):
             else:
                 line = {
                     'move_id': move.id,
+                    'product_id': move.product_id.id,
                     'qty_to_consume': qty_to_consume,
                     'qty_done': is_tracked and 0 or qty_to_consume
                 }
                 lines.append(line)
         return lines
 
-    def _update_finished_move(self, is_workorder):
+    def _update_finished_move(self):
         """ Update the finished move & move lines in order to set the finished
         product lot on it as well as the produced quantity. This method get the
         information either from the last workorder or from the Produce wizard."""
@@ -179,7 +182,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
                 move_line.product_uom_qty += self.qty_producing
                 move_line.qty_done += self.qty_producing
             else:
-                line = move_line.create({
+                move_line.create({
                     'move_id': production_move.id,
                     'product_id': production_move.product_id.id,
                     'lot_id': self.final_lot_id.id,
@@ -189,8 +192,6 @@ class MrpAbstractWorkorder(models.AbstractModel):
                     'location_id': production_move.location_id.id,
                     'location_dest_id': production_move.location_dest_id.id,
                 })
-                if is_workorder:
-                    line['workorder_id'] = self.id
         else:
             rounding = production_move.product_uom.rounding
             production_move._set_quantity_done(
@@ -198,17 +199,14 @@ class MrpAbstractWorkorder(models.AbstractModel):
             )
 
     def _update_raw_moves(self):
-        """ Once the production is done, components move will get the lot used
-        during the production to set them on stock move lines"""
+        """ Once the production is done, the lots written on workorder lines
+        are saved on stock move lines"""
         vals_list = []
         workorder_lines_to_process = self.workorder_line_ids.filtered(lambda line: line.qty_done > 0)
-        move_vals = workorder_lines_to_process._get_move()
-        if move_vals:
-            self.env['stock.move'].create(move_vals)
         for line in workorder_lines_to_process:
-            vals = line._create_or_update_move_line()
-            if vals:
-                vals_list += vals
+            line._update_move_lines()
+            if float_compare(line.qty_done, 0, precision_rounding=line.product_uom_id.rounding) > 0:
+                vals_list += line._create_extra_move_lines()
 
         self.workorder_line_ids.unlink()
         self.env['stock.move.line'].create(vals_list)
@@ -220,8 +218,8 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
     workorder_line"
 
     move_id = fields.Many2one('stock.move')
-    product_id = fields.Many2one('product.product', 'Product', related='move_id.product_id')
-    product_tracking = fields.Selection(related="product_id.tracking", readonly=False)
+    product_id = fields.Many2one('product.product', 'Product', required=True)
+    product_tracking = fields.Selection(related="product_id.tracking")
     lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
     qty_to_consume = fields.Float('To Consume', digits=dp.get_precision('Product Unit of Measure'))
     product_uom_id = fields.Many2one(related='product_id.uom_id', string='Unit of Measure')
@@ -248,9 +246,9 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
                 res['warning'] = {'title': _('Warning'), 'message': message}
         return res
 
-    def _create_or_update_move_line(self):
-        """ create or update a move line to save the production of the component
-        represented by the current workorder line"""
+    def _update_move_lines(self):
+        """ update a move line to save the workorder line data"""
+        self.ensure_one()
         if self.lot_id:
             move_lines = self.move_id.move_line_ids.filtered(lambda ml: ml.lot_id == self.lot_id and not ml.lot_produced_id)
         else:
@@ -280,14 +278,14 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
             if float_compare(new_quantity_done, ml.product_uom_qty, precision_rounding=rounding) >= 0:
                 ml.write({
                     'qty_done': new_quantity_done,
-                    'lot_produced_id': self.workorder_id.final_lot_id.id
+                    'lot_produced_id': self._get_final_lot().id
                 })
             else:
                 new_qty_reserved = ml.product_uom_qty - new_quantity_done
                 default = {
                     'product_uom_qty': new_quantity_done,
                     'qty_done': new_quantity_done,
-                    'lot_produced_id': self.workorder_id.final_lot_id.id
+                    'lot_produced_id': self._get_final_lot().id
                 }
                 ml.copy(default=default)
                 ml.with_context(bypass_reservation_update=True).write({
@@ -295,56 +293,56 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
                     'qty_done': 0
                 })
 
-        # Create new sml if quantity produced is bigger than the reserved one
+    def _create_extra_move_lines(self):
+        """Create new sml if quantity produced is bigger than the reserved one"""
+        vals_list = []
+        quants = self.env['stock.quant']._gather(self.product_id, self.move_id.location_id, lot_id=self.lot_id, strict=False)
+        # Search for a sub-locations where the product is available.
+        # Loop on the quants to get the locations. If there is not enough
+        # quantity into stock, we take the move location. Anyway, no
+        # reservation is made, so it is still possible to change it afterwards.
+        for quant in quants:
+            quantity = quant.reserved_quantity - quant.quantity
+            rounding = quant.product_uom_id.rounding
+            if (float_compare(quant.quantity, 0, precision_rounding=rounding) <= 0 or
+                    float_compare(quantity, 0, precision_rounding=rounding) <= 0):
+                continue
+            vals = {
+                'move_id': self.move_id.id,
+                'product_id': self.product_id.id,
+                'location_id': quant.location_id.id,
+                'location_dest_id': self.move_id.location_dest_id.id,
+                'product_uom_qty': 0,
+                'product_uom_id': self.product_uom_id.id,
+                'qty_done': min(quantity, self.qty_done),
+                'lot_produced_id': self._get_final_lot().id,
+            }
+            if self.lot_id:
+                vals.update({'lot_id': self.lot_id.id})
+
+            vals_list.append(vals)
+            self.qty_done -= vals['qty_done']
+            # If all the qty_done is distributed, we can close the loop
+            if float_compare(self.qty_done, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
+                break
+
         if float_compare(self.qty_done, 0, precision_rounding=self.product_uom_id.rounding) > 0:
-            # Search for a among sub-locations where the product is available.
-            # Loop on the quants to get the locations. If there is nort enought
-            # quantity into stock, we take the move location. Anyway, no
-            # reservation is made, so it is still possible to change it afterwards.
-            vals_list = []
-            quants = self.env['stock.quant']._gather(self.product_id, self.move_id.location_id, lot_id=self.lot_id, strict=False)
-            for quant in quants:
-                quantity = quant.reserved_quantity - quant.quantity
-                rounding = quant.product_uom_id.rounding
-                if (float_compare(quant.quantity, 0, precision_rounding=rounding) <= 0 or
-                        float_compare(quantity, 0, precision_rounding=rounding) <= 0):
-                    continue
-                vals = {
-                    'move_id': self.move_id.id,
-                    'product_id': self.product_id.id,
-                    'location_id': quant.location_id.id,
-                    'location_dest_id': self.move_id.location_dest_id.id,
-                    'product_uom_qty': 0,
-                    'product_uom_id': self.product_uom_id.id,
-                    'qty_done': min(quantity, self.qty_done),
-                    'lot_produced_id': self.workorder_id.final_lot_id.id,
-                }
-                if self.lot_id:
-                    vals.update({'lot_id': self.lot_id.id})
+            vals = {
+                'move_id': self.move_id.id,
+                'product_id': self.product_id.id,
+                'location_id': self.move_id.location_id.id,
+                'location_dest_id': self.move_id.location_dest_id.id,
+                'product_uom_qty': 0,
+                'product_uom_id': self.product_uom_id.id,
+                'qty_done': self.qty_done,
+                'lot_produced_id': self._get_final_lot().id,
+            }
+            if self.lot_id:
+                vals.update({'lot_id': self.lot_id.id})
 
-                vals_list.append(vals)
-                self.qty_done -= vals['qty_done']
-                # If all the qty_done is distributed, we can close the loop
-                if float_compare(self.qty_done, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
-                    break
+            vals_list.append(vals)
 
-            if float_compare(self.qty_done, 0, precision_rounding=self.product_uom_id.rounding) > 0:
-                vals = {
-                    'move_id': self.move_id.id,
-                    'product_id': self.product_id.id,
-                    'location_id': self.move_id.location_id.id,
-                    'location_dest_id': self.move_id.location_dest_id.id,
-                    'product_uom_qty': 0,
-                    'product_uom_id': self.product_uom_id.id,
-                    'qty_done': self.qty_done,
-                    'lot_produced_id': self.workorder_id.final_lot_id.id,
-                }
-                if self.lot_id:
-                    vals.update({'lot_id': self.lot_id.id})
-
-                vals_list.append(vals)
-
-            return vals_list
+        return vals_list
 
     def _find_candidate(self, move_line):
         """ Method used in order to return move lines that match reservation.
@@ -357,31 +355,9 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
             line.product_id == move_line.product_id)
         return res
 
-    def _get_move(self):
-        """ Check the user give a lot number or serial number if needed"""
-        move_vals = []
-        for line in self:
-            if line.move_id:
-                continue
-            # Find move_id that would match
-            move_id = line.workorder_id.production_id.move_raw_ids.filtered(
-                lambda m: m.product_id == line.product_id and m.state not in ('done', 'cancel')
-            )
-            if move_id:
-                line.move_id = move_id
-            else:
-                # create a move and put it in there
-                order = line.workorder_id.production_id
-                move_vals.append({
-                    'name': order.name,
-                    'reference': order.name,
-                    'product_id': line.product_id.id,
-                    'product_uom': line.product_uom_id.id,
-                    'location_id': order.location_src_id.id,
-                    'location_dest_id': line.product_id.property_stock_production.id,
-                    'raw_material_production_id': order.id,
-                    'group_id': order.procurement_group_id.id,
-                    'origin': order.name,
-                    'state': 'confirmed'
-                })
-        return move_vals
+    # To be implemented in specific model
+    def _get_final_lot(self):
+        pass
+
+    def _get_production(self):
+        pass

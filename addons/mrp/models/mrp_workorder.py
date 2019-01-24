@@ -18,16 +18,6 @@ class MrpWorkorder(models.Model):
     name = fields.Char(
         'Work Order', required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
-
-    production_id = fields.Many2one(
-        'mrp.production',
-        'Manufacturing Order',
-        index=True,
-        ondelete='cascade',
-        required=True,
-        track_visibility='onchange',
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}
-    )
     workcenter_id = fields.Many2one(
         'mrp.workcenter', 'Work Center', required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
@@ -49,13 +39,8 @@ class MrpWorkorder(models.Model):
         readonly=True,
         digits=dp.get_precision('Product Unit of Measure'),
         help="The number of products already handled by this work order")
-    qty_producing = fields.Float(
-        string='Currently Produced Quantity',
-        digits=dp.get_precision('Product Unit of Measure'),
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     is_produced = fields.Boolean(string="Has Been Produced",
         compute='_compute_is_produced')
-
     state = fields.Selection([
         ('pending', 'Waiting for another WO'),
         ('ready', 'Ready'),
@@ -230,7 +215,11 @@ class MrpWorkorder(models.Model):
         # If last work order, then post lots used
         # TODO: should be same as checking if for every workorder something has been done?
         if not self.next_work_order_id:
-            self._update_finished_move(True)
+            self._update_finished_move()
+            self.production_id.move_finished_ids.filtered(
+                lambda move: move.product_id == self.product_id and
+                move.state not in ('done', 'cancel')
+            ).workorder_id = self.id
 
         # Transfer quantities from temporary to final move line or make them final
         self._update_raw_moves()
@@ -395,3 +384,9 @@ class MrpWorkorderLine(models.Model):
     _description = "Workorder move line"
 
     workorder_id = fields.Many2one('mrp.workorder', 'Workorder')
+
+    def _get_final_lot(self):
+        return self.workorder_id.final_lot_id
+
+    def _get_production(self):
+        return self.workorder_id.production_id

@@ -7,6 +7,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
 
+
 class MrpProductProduce(models.TransientModel):
     _name = "mrp.product.produce"
     _description = "Record Production"
@@ -39,7 +40,7 @@ class MrpProductProduce(models.TransientModel):
     serial = fields.Boolean('Requires Serial')
     product_tracking = fields.Selection(related="product_id.tracking")
     is_pending_production = fields.Boolean(compute='_compute_pending_production')
-    workorder_line_ids = fields.One2many('mrp.product.produce.line', 'workorder_id')
+    workorder_line_ids = fields.One2many('mrp.product.produce.line', 'product_produce_id')
     move_raw_ids = fields.One2many(related='production_id.move_raw_ids')
 
     @api.depends('qty_producing')
@@ -93,24 +94,41 @@ class MrpProductProduce(models.TransientModel):
 
     @api.multi
     def _record_production(self):
-        # Nothing to do for lots since values are created using default data (stock.move.lots)
+        # Check all the product_produce line have a move id (the user can add product
+        # to consume directly in the wizard)
+        for line in self.workorder_line_ids:
+            if not line.move_id:
+                order = self.production_id
+                # Find move_id that would match
+                move_id = order.move_raw_ids.filtered(
+                    lambda m: m.product_id == line.product_id and m.state not in ('done', 'cancel')
+                )
+                if not move_id:
+                    # create a move to assign it to the line
+                    move_id = self.env['stock.move'].create({
+                        'name': order.name,
+                        'reference': order.name,
+                        'product_id': line.product_id.id,
+                        'product_uom': line.product_uom_id.id,
+                        'location_id': order.location_src_id.id,
+                        'location_dest_id': line.product_id.property_stock_production.id,
+                        'raw_material_production_id': order.id,
+                        'group_id': order.procurement_group_id.id,
+                        'origin': order.name,
+                        'state': 'confirmed'
+                    })
+                line.move_id = move_id.id
+
+        # Save product produce lines data into stock moves/move lines
         quantity = self.qty_producing
         if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
             raise UserError(_("The production order for '%s' has no quantity specified.") % self.product_id.display_name)
-        self.check_finished_move_lots()
+        self._update_finished_move()
+        self._update_raw_moves()
         if self.production_id.state == 'confirmed':
             self.production_id.write({
                 'date_start': datetime.now(),
             })
-
-    @api.multi
-    def check_finished_move_lots(self):
-        # Update finished product moves
-        self._update_finished_move(False)
-
-        # Update components moves
-        self._update_raw_moves()
-        return True
 
 
 class MrpProductProduceLine(models.TransientModel):
@@ -118,4 +136,10 @@ class MrpProductProduceLine(models.TransientModel):
     _inherit = ["mrp.abstract.workorder.line"]
     _description = "Record production line"
 
-    workorder_id = fields.Many2one('mrp.product.produce', 'Produce wizard')
+    product_produce_id = fields.Many2one('mrp.product.produce', 'Produce wizard')
+
+    def _get_final_lot(self):
+        return self.product_produce_id.final_lot_id
+
+    def _get_production(self):
+        return self.product_produce_id.production_id
