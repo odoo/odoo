@@ -50,18 +50,19 @@ var KanbanView = BasicView.extend({
         }
 
         var activeActions = this.controllerParams.activeActions;
+        var archAttrs = this.arch.attrs;
         activeActions = _.extend(activeActions, {
-            group_create: this.arch.attrs.group_create ? JSON.parse(this.arch.attrs.group_create) : true,
-            group_edit: this.arch.attrs.group_edit ? JSON.parse(this.arch.attrs.group_edit) : true,
-            group_delete: this.arch.attrs.group_delete ? JSON.parse(this.arch.attrs.group_delete) : true,
+            group_create: this.arch.attrs.group_create ? !!JSON.parse(archAttrs.group_create) : true,
+            group_edit: archAttrs.group_edit ? !!JSON.parse(archAttrs.group_edit) : true,
+            group_delete: archAttrs.group_delete ? !!JSON.parse(archAttrs.group_delete) : true,
         });
 
         this.rendererParams.column_options = {
             editable: activeActions.group_edit,
             deletable: activeActions.group_delete,
-            archivable: this.arch.attrs.archivable ? JSON.parse(this.arch.attrs.archivable) : true,
+            archivable: archAttrs.archivable ? !!JSON.parse(archAttrs.archivable) : true,
             group_creatable: activeActions.group_create && !config.device.isMobile,
-            quickCreateView: this.arch.attrs.quick_create_view || null,
+            quickCreateView: archAttrs.quick_create_view || null,
             hasProgressBar: !!progressBar,
         };
         this.rendererParams.record_options = {
@@ -70,12 +71,12 @@ var KanbanView = BasicView.extend({
             read_only_mode: params.readOnlyMode,
         };
         this.rendererParams.quickCreateEnabled = this._isQuickCreateEnabled();
-        var examples = this.arch.attrs.examples;
+        var examples = archAttrs.examples;
         if (examples) {
             this.rendererParams.examples = kanbanExamplesRegistry.get(examples);
         }
 
-        this.controllerParams.on_create = this.arch.attrs.on_create;
+        this.controllerParams.on_create = archAttrs.on_create;
         this.controllerParams.readOnlyMode = false;
         this.controllerParams.hasButtons = true;
         this.controllerParams.quickCreateEnabled = this.rendererParams.quickCreateEnabled;
@@ -100,7 +101,7 @@ var KanbanView = BasicView.extend({
             return false;
         }
         if (this.arch.attrs.quick_create !== undefined) {
-            return JSON.parse(this.arch.attrs.quick_create);
+            return !!JSON.parse(this.arch.attrs.quick_create);
         }
         return true;
     },
