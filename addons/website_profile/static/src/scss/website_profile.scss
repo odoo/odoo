@@ -1,0 +1,193 @@
+$gold: #ffcc00;
+$silver: #cccccc;
+$bronze: #eea91e;
+
+.o_wprofile_container {
+    margin: auto;
+    width: 100%;
+    max-width: 1140px;
+    padding: 32px 32px 0px 32px;
+}
+
+.o_wprofile_header {
+    margin: auto;
+    background-color: #875A7B !important;
+    border-bottom: 48px solid #66445e;
+    .o_wprofile_header_container {
+        top: 48px;
+        padding-top: 0px;
+        .o_wprofile_id {
+            font-size: 16px;
+            .o_wprofile_id_info {
+                margin-right: 36px;
+            }
+        }
+        .o_wprofile_pict {
+            .o_wprofile_photo {
+                width: 100%;
+                max-width: 256px;
+            }
+        }
+    }
+}
+
+.o_wprofile_content {
+    margin: auto;
+    background-color: #f2f2f2 !important;
+    .o_wprofile_content_container{
+        position: relative;
+        top: -80px;
+        .o_wprofile_navtabs_container {
+            .o_wprofile_nav_tabs {
+                border-bottom: 0px;
+            }
+            .o_wprofile_navlink {
+                color: white;
+                border-radius: 0px;
+                height: 48px;
+                font-weight: bold;
+                padding-top: 12px;
+                border-left: 2px solid #875A7B;
+                text-align: center;
+                width: 120px;
+                &:hover {
+                    border: 0px;
+                    border-radius: 0px;
+                    background-color: #875A7B;
+                }
+            }
+            .o_wprofile_navlink.active {
+                color: #212529;
+                background-color: #f2f2f2;
+                border: 0px;
+            }
+        }
+        .o_wprofile_detail {
+            .o_wprofile_content_abstract {
+                top: 1px;
+                width: 256px;
+                max-width: 256px;
+                margin-left: 15px;
+                table {
+                    width: 100%;
+                    tr {
+                        line-height: 32px;
+                    }
+                    th {
+                        font-weight: normal;
+                    }
+                }
+                .o_wprofile_rank {
+                    background-color: white;
+                }
+                .o_wprofile_abstract_info {
+                    background-color: white;
+                }
+            }
+            .o_wprofile_content_detail {
+                h4 {
+                    border-bottom: 1px solid lightgrey;
+                    color: grey;
+                    margin-bottom: 16px;
+                }
+                .o_user_badges {
+                    padding: 8px;
+                    div {
+                        padding: 8px;
+                    }
+                    img {
+                        width: 48px;
+                        height: 48px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Rank
+.o_wprofile_ranks_presentation {
+    background-color: lightgray;
+    .o_wprofile_rank_tile {
+        width: 20%;
+        div {
+            text-align:center;
+            img {
+                height: 128px;
+            }
+        }
+    }
+}
+
+.o_wprofile_next_rank_card {
+    div {
+        text-align: center;
+        img {
+            width: 128px;
+            height: 128px;
+        }
+    }
+    border-bottom: 1px solid lightgray;
+    .o_wprofile_next_rank_progress {
+        background-color: lightgray;
+        .o_wprofile_next_rank_progress_bar {
+            background-color: #00A09D !important;
+        }
+    }
+}
+
+// Edit Profile button
+.o_wprofile_edit {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+// Badges
+.badge-gold {
+    color: $gold;
+}
+.bg-gold {
+    background-color: $gold;
+}
+
+.badge-silver {
+    color: $silver;
+}
+.bg-silver {
+    background-color: $silver;
+}
+
+.badge-bronze {
+    color: $bronze;
+}
+.bg-bronze {
+    background-color: $bronze;
+}
+
+// Other stuffs
+.o_wprofile_bb_grey {
+    border-bottom: 2px solid lightgrey;
+}
+
+.country_flag {
+    display: inline-block;
+    margin-left: 2px;
+    max-height: 13px;
+    width: auto !important;
+}
+
+.o_img_small {
+    width: 64px;
+    height: 64px;
+}
+.o_img_medium {
+    width: 96px;
+    height: 96px;
+}
+.o_img_large {
+    width: 128px;
+    height: 128px;
+}

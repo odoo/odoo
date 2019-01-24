@@ -14,7 +14,6 @@ Ask questions, get answers, no distractions
     'depends': [
         'auth_signup',
         'website_mail',
-        'website_partner',
         'website_profile',
     ],
     'data': [
