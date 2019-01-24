@@ -202,7 +202,7 @@ class Product(models.Model):
             # We must convert the price_without_pricelist in the same currency than the
             # website_price, otherwise the comparison doesn't make sense. Moreover, we show a price
             # difference only if the website price is lower
-            price_without_pricelist = p.list_price
+            price_without_pricelist = p.lst_price
             if company_id.currency_id != pricelist.currency_id:
                 price_without_pricelist = company_id.currency_id.compute(price_without_pricelist, pricelist.currency_id)
             price_without_pricelist = taxes.compute_all(price_without_pricelist, pricelist.currency_id)[ret]
