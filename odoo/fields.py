@@ -697,10 +697,13 @@ class Field(MetaField('DummyField', (object,), {})):
         # add indirect dependencies from the dependencies found above
         seen = seen.union([self])
         for model, field, path in list(result):
-            for inv_field in model._field_inverses[field]:
-                inv_model = model0.env[inv_field.model_name]
-                inv_path = None if path is None else path + [field.name]
-                result.append((inv_model, inv_field, inv_path))
+            # limitation: setting the inverse of an integer field F does not
+            # trigger the recomputation of fields that depend on F
+            if field.relational:
+                for inv_field in model._field_inverses[field]:
+                    inv_model = model0.env[inv_field.model_name]
+                    inv_path = None if path is None else path + [field.name]
+                    result.append((inv_model, inv_field, inv_path))
             if not field.store and field not in seen:
                 result += field.resolve_deps(model, path, seen)
 
@@ -2198,6 +2201,11 @@ class _RelationalMulti(_Relational):
 
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """
+        if not isinstance(records, BaseModel):
+            # the inverse of self is a non-relational field; do not update in
+            # this case, as we do not know whether the records are the ones that
+            # value makes reference to (via a res_model/res_id pair)
+            return
         cache = records.env.cache
         for record in records:
             special = cache.get_special(record, self)
@@ -2377,12 +2385,11 @@ class One2many(_RelationalMulti):
             # link self to its inverse field and vice-versa
             comodel = model.env[self.comodel_name]
             invf = comodel._fields[self.inverse_name]
-            # In some rare cases, a ``One2many`` field can link to ``Int`` field
-            # (res_model/res_id pattern). Only inverse the field if this is
-            # a ``Many2one`` field.
             if isinstance(invf, Many2one):
+                # setting one2many fields only invalidates many2one inverses;
+                # integer inverses (res_model/res_id pairs) are not supported
                 model._field_inverses.add(self, invf)
-                comodel._field_inverses.add(invf, self)
+            comodel._field_inverses.add(invf, self)
 
     _description_relation_field = property(attrgetter('inverse_name'))
 
