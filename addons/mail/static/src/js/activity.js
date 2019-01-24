@@ -265,7 +265,7 @@ var Activity = AbstractActivityField.extend({
                     $popover.find('#activity_feedback').val(self.feedbackValue[activity_id]);
                     $popover.on('click', '.o_activity_popover_done_next', function () {
                         var feedback = _.escape($popover.find('#activity_feedback').val());
-                        var previous_activity_type_id = $popover_el.data('previous-activity-type-id');
+                        var previous_activity_type_id = $popover_el.data('previous-activity-type-id') || false;
                         self._markActivityDone(activity_id, feedback)
                             .then(self.scheduleActivity.bind(self, previous_activity_type_id));
                     });
