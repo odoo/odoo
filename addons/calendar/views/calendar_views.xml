@@ -139,6 +139,7 @@
                                     {'no_create_edit': True}"/>
                                     <field name="alarm_ids" widget="many2many_tags" />
                                     <field name="location" />
+                                    <field name="event_tz" attrs="{'invisible': [('recurrency', '=', False)]}"/>
                                 </group>
 
                             </group>
