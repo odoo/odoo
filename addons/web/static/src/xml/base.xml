@@ -1279,79 +1279,76 @@
 </div>
 
 <div t-name="ExportDialog" class="o_export">
-    <div class="row">
-        <div class="col-lg-6">
-            <strong>What do you want to do?</strong>
-            <div class="o_import_compat">
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="o_import_compat_name" value="" checked="checked"/>
-                        Use data in a spreadsheet (export all data)
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="o_import_compat_name" value="yes"/>
-                        Update data (import-compatible export)
-                    </label>
-                </div>
+    <div class="row o-export-panel no-gutters">
+        <div class="col-6 d-flex o_left_panel">
+            <div class="form-check o_import_compat">
+                <input class="form-check-input" id="o-update-data" type="checkbox"/>
+                <label class="form-check-label" for="o-update-data">
+                    I want to update data (import-compatible export)
+                </label>
             </div>
+            <div class="mt-3">
+                <h4>Available fields</h4>
+            </div>
+            <div class="input-group mb-3">
+                <input type="search" class="form-control o_export_search_input" id="o-export-search-filter" placeholder="Search" />
+            </div>
+            <div class="border o_left_field_panel"/>
         </div>
-        <div class="col-lg-6">
-            <strong>Export Format:</strong>
-            <div class="o_export_format"/>
-        </div>
-    </div>
-
-    <div class="o_export_panel">
-        <div class="o_left_panel">
-            <h4>Available fields</h4>
-            <div class="o_left_field_panel"/>
-        </div>
-        <div class="o_center_panel">
-            <button type="button" class="btn btn-secondary o_add_field">Add</button>
-            <button type="button" class="btn btn-secondary o_remove_field">Remove</button>
-            <button type="button" class="btn btn-secondary o_remove_all_field">Remove All</button>
-            <button type="button" class="btn btn-secondary o_move_up">Move Up</button>
-            <button type="button" class="btn btn-secondary o_move_down">Move Down</button>
-        </div>
-        <div class="o_right_panel">
-            <h4>
-                <a href="#" class="float-right o_toggle_save_list">Save fields list</a>
-                Fields to export
-            </h4>
-            <div class="o_save_list"/>
+        <div class="col-6 d-flex o_right_panel">
+            <div class="o_export_format">
+                <strong>Export Format:</strong>
+            </div>
+            <div class="mt-3">
+                <h4>Fields to export</h4>
+            </div>
+            <div class="o_save_list">
+                <t t-call="Export.SaveList"/>
+            </div>
             <div class="o_exported_lists"/>
-            <select class="o_fields_list" multiple="multiple"></select>
+            <div class="border o_right_field_panel">
+                <ul class="o_fields_list list-unstyled"/>
+            </div>
         </div>
     </div>
 </div>
 <t t-name="Export.TreeItems">
     <t t-foreach="fields" t-as="field">
         <t t-set="has_child" t-value="field.children &amp;&amp; (field.id).split('/').length != 3" />
-        <div t-att-data-id="field.id" t-attf-class="o_export_tree_item #{has_child ? 'haschild' : ''}" tabindex="-1" role="treeitem"> <!-- tabindex make the div focusable -->
-            <t t-if="has_child">
-                <span class="o_expand o_expand_parent fa fa-chevron-right" role="img" aria-label="Expand parents" title="Expand parents"/>
-                <span class="o_tree_column o_expand" t-att-title="debug and field.id or None"><t t-esc="field.string"/></span>
-            </t>
-            <t t-else="">
-                <span class="o_tree_column" t-att-title="debug and field.id or None"><t t-esc="field.string"/></span>
-            </t>
+        <div t-att-data-id="field.id" t-attf-class="o_export_tree_item #{has_child ? 'haschild o_expand' : ''}" tabindex="-1" role="treeitem"> <!-- tabindex make the div focusable -->
+            <span t-if="has_child" class="o_expand_parent fa fa-chevron-right" role="img" aria-label="Show sub-fields" title="Show sub-fields"/>
+            <div t-attf-class="o_tree_column" t-att-title="debug and field.id or None">
+                <t t-esc="field.string"/>
+                <span title="Select field" class="fa fa-plus pull-right m-1 o_add_field"/>
+            </div>
         </div>
     </t>
 </t>
 <t t-name="Export.SaveList">
-    <label>Save as:</label> <input type="text"/><button type="button" class="btn btn-secondary">Ok</button>
+    <div class="input-group mb-3">
+        <label class="pt-2 font-weight-bold">Save as : </label>
+        <input class="form-control ml-4 o_save_list_name"
+               placeholder="New template"/>
+        <button type="button" class="btn btn-secondary ml-1 o_save_list_btn"><i class="fa fa-floppy-o"/></button>
+        <button type="button" class="btn btn-secondary ml-1 o_cancel_list_btn"><i class="fa fa-times"/></button>
+    </div>
 </t>
 <t t-name="Export.SavedList">
-    <label>Saved exports: </label>
-    <select class="o_exported_lists_select">
-        <option></option>
-        <t t-foreach="existing_exports" t-as="export">
-            <option t-att-value="export.id"><t t-esc="export.name"/></option>
-        </t>
-    </select>
-    <button type="button" class="btn btn-secondary o_delete_exported_list">Delete</button>
+    <div class="input-group mb-3">
+        <label class="pt-2 mb-0 font-weight-bold">Template: </label>
+        <select class="form-control ml-4 o_exported_lists_select">
+            <option></option>
+            <option class="font-italic" value="new_template">New template</option>
+            <t t-foreach="existing_exports" t-as="export">
+                <option t-att-value="export.id">
+                    <t t-esc="export.name"/>
+                </option>
+            </t>
+        </select>
+        <button type="button" class="btn btn-secondary d-none ml-1 o_delete_exported_list">
+            <i class="fa fa-trash"/>
+        </button>
+    </div>
 </t>
 
 <t t-name="Throbber">

@@ -1,90 +1,52 @@
 .o_web_client .o_export {
-    flex: 1 1 auto;
-    display: flex;
-    flex-flow: column nowrap;
-    min-height: 0;
-
-    > p, > .row {
-        flex: 0 0 auto;
+    padding: 20px;
+    .o-export-panel {
+        height: 100%;
+    }
+    .o_left_panel {
+        padding-right: 10px;
+        flex-flow: column nowrap;
+        height: 100%;
+        .o_left_field_panel {
+            flex: 1;
+            overflow: auto;
+        }
+        .o_export_tree_item {
+            cursor: pointer;
+            position: relative;
+            padding-left: 20px;
+            &.o_selected > .o_tree_column {
+                background-color: $o-brand-odoo;
+                color: white;
+            }
+            .o_expand_parent {
+                @include o-position-absolute($top: 4px, $left: 5px);
+                font-size: 10px;
+            }
+            .o_required {
+                border-bottom: 2px solid $o-main-text-color;
+            }
+        }
     }
 
-    .o_export_panel {
-        flex: 1 1 auto;
-        position: relative;
-        min-height: 0;
-
-        > div {
-            height: 100%;
-            display: flex;
-            flex-flow: column nowrap;
-            justify-content: center;
-
-            &.o_left_panel { // Needed because of chrome
-                @include o-position-absolute($top: 0, $bottom: 0, $left: 0, $right: 57%);
+    .o_right_panel {
+        padding-left: 10px;
+        flex-flow: column nowrap;
+        height: 100%;
+        .o_save_list {
+            display: none;
+        }
+        .o_right_field_panel {
+            flex: 1;
+            overflow: auto;
+            .o_short_field {
+                cursor: ns-resize;
             }
-            &.o_center_panel { // Needed because of chrome
-                @include o-position-absolute($top: 0, $bottom: 0, $left: 43%, $right: 43%);
+            .o-field-placeholder {
+                border: 1px dashed $o-brand-primary;
             }
-            &.o_right_panel { // Needed because of chrome
-                @include o-position-absolute($top: 0, $bottom: 0, $left: 57%, $right: 0);
-            }
-
-            > h4, > div {
-                flex: 0 0 auto;
-            }
-
-            > button {
-                flex: 0 0 auto;
-                margin-top: 10px;
-            }
-
-            .o_left_field_panel, .o_fields_list {
-                border: 1px solid $o-brand-lightsecondary;
-                overflow: auto;
-                flex: 1 1 auto;
-                min-height: 0;
-            }
-
-            .o_export_tree_item {
+            .o_remove_field {
                 cursor: pointer;
-                position: relative;
-                padding-left: 20px;
-                user-select: none;
-
-                &.o_selected > .o_tree_column {
-                    background-color: $o-brand-odoo;
-                    color: white;
-                }
-
-                .o_expand_parent {
-                    @include o-position-absolute($top: 4px, $left: 5px);
-                    font-size: 10px;
-                }
-                .o_tree_column {
-                    display: block;
-
-                    &.o_required {
-                        border-bottom: 2px solid $o-main-text-color;
-                    }
-                }
-
-                &:focus {
-                    outline: none;
-                }
-            }
-
-            .o_save_list, .o_exported_lists {
-                display: flex;
-                align-items: baseline;
-
-                > label, > button {
-                    margin: 0 0 5px;
-                    flex: 0 0 auto;
-                }
-                > input, > select {
-                    width: 0;
-                    flex: 1 0 auto;
-                }
             }
         }
     }
