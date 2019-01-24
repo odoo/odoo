@@ -306,8 +306,8 @@ class SaleOrder(models.Model):
         if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env.user.company_id.sale_note:
             values['note'] = self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note
 
-        if self.partner_id.team_id:
-            values['team_id'] = self.partner_id.team_id.id
+        # Use team of saleman before to fallback on team of partner.
+        values['team_id'] = self.partner_id.user_id and self.partner_id.user_id.sale_team_id.id or self.partner_id.team_id.id
         self.update(values)
 
     @api.onchange('partner_id')
