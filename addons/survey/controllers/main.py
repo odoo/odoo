@@ -18,21 +18,21 @@ _logger = logging.getLogger(__name__)
 
 class Survey(http.Controller):
 
-    def _fetch_from_access_token(self, survey_id, access_token):
+    def _fetch_from_access_token(self, survey_token, answer_token):
         """ Check that given token matches an answer from the given survey_id.
         Returns a sudo-ed browse record of survey in order to avoid access rights
         issues now that access is granted through token. """
-        survey_sudo = request.env['survey.survey'].with_context(active_test=False).sudo().browse(survey_id)
-        if not access_token:
+        survey_sudo = request.env['survey.survey'].with_context(active_test=False).sudo().search([('access_token', '=', survey_token)])
+        if not answer_token:
             answer_sudo = request.env['survey.user_input'].sudo()
         else:
             answer_sudo = request.env['survey.user_input'].sudo().search([
                 ('survey_id', '=', survey_sudo.id),
-                ('token', '=', access_token)
+                ('token', '=', answer_token)
             ], limit=1)
         return survey_sudo, answer_sudo
 
-    def _check_validity(self, survey_id, access_token, ensure_token=True):
+    def _check_validity(self, survey_token, answer_token, ensure_token=True):
         """ Check survey is open and can be taken. This does not checks for
         security rules, only functional / business rules. It returns a string key
         allowing further manipulation of validity issues
@@ -50,12 +50,12 @@ class Survey(http.Controller):
           should be enforced or not, depending on the route requesting a token or
           allowing external world calls;
         """
-        survey_sudo, answer_sudo = self._fetch_from_access_token(survey_id, access_token)
+        survey_sudo, answer_sudo = self._fetch_from_access_token(survey_token, answer_token)
 
         if not survey_sudo.exists():
             return 'survey_wrong'
 
-        if access_token and not answer_sudo:
+        if answer_token and not answer_sudo:
             return 'token_wrong'
 
         if not answer_sudo and ensure_token:
@@ -81,7 +81,7 @@ class Survey(http.Controller):
 
         return True
 
-    def _get_access_data(self, survey_id, access_token, ensure_token=True):
+    def _get_access_data(self, survey_token, answer_token, ensure_token=True):
         """ Get back data related to survey and user input, given the ID and access
         token provided by the route.
 
@@ -90,9 +90,9 @@ class Survey(http.Controller):
         survey_sudo, answer_sudo = request.env['survey.survey'].sudo(), request.env['survey.user_input'].sudo()
         has_survey_access, can_answer = False, False
 
-        validity_code = self._check_validity(survey_id, access_token, ensure_token=ensure_token)
+        validity_code = self._check_validity(survey_token, answer_token, ensure_token=ensure_token)
         if validity_code != 'survey_wrong':
-            survey_sudo, answer_sudo = self._fetch_from_access_token(survey_id, access_token)
+            survey_sudo, answer_sudo = self._fetch_from_access_token(survey_token, answer_token)
             try:
                 survey_user = survey_sudo.sudo(request.env.user)
                 survey_user.check_access_rights(self, 'read', raise_exception=True)
@@ -128,22 +128,24 @@ class Survey(http.Controller):
 
         return werkzeug.utils.redirect("/")
 
-    @http.route('/survey/test/<int:survey_id>', type='http', auth='user', website=True)
-    def survey_test(self, survey_id, token=None, **kwargs):
+    @http.route('/survey/test/<string:survey_token>', type='http', auth='user', website=True)
+    def survey_test(self, survey_token, **kwargs):
         """ Test mode for surveys: create a test answer, only for managers or officers
         testing their surveys """
-        survey_sudo = request.env['survey.survey'].sudo().browse(survey_id)
+        survey_sudo, dummy = self._fetch_from_access_token(survey_token, False)
         try:
             answer_sudo = survey_sudo._create_answer(user=request.env.user, test_entry=True)
         except:
             return werkzeug.utils.redirect('/')
-        return request.redirect('/survey/start/%s?%s' % (survey_sudo.id, keep_query('*', token=answer_sudo.token)))
+        return request.redirect('/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=answer_sudo.token)))
 
-    @http.route('/survey/start/<int:survey_id>', type='http', auth='public', website=True)
-    def survey_start(self, survey_id, token=None, email=False, **post):
-        """ Start a survey by providing a token linked to an answer or generate
-        a new token if access is allowed """
-        access_data = self._get_access_data(survey_id, token, ensure_token=False)
+    @http.route('/survey/start/<string:survey_token>', type='http', auth='public', website=True)
+    def survey_start(self, survey_token, answer_token=None, email=False, **post):
+        """ Start a survey by providing
+         * a token linked to a survey;
+         * a token linked to an answer or generate a new token if access is allowed;
+        """
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token=False)
         if access_data['validity_code'] is not True:
             return self._redirect_with_error(access_data, access_data['validity_code'])
 
@@ -165,14 +167,14 @@ class Survey(http.Controller):
 
         # Select the right page
         if answer_sudo.state == 'new':  # Intro page
-            data = {'survey': survey_sudo, 'page': None, 'token': answer_sudo.token, 'test_entry': answer_sudo.test_entry}
+            data = {'survey': survey_sudo, 'page': None, 'answer': answer_sudo}
             return request.render('survey.survey_init', data)
         else:
-            return request.redirect('/survey/fill/%s/%s' % (survey_sudo.id, answer_sudo.token))
+            return request.redirect('/survey/fill/%s/%s' % (survey_sudo.access_token, answer_sudo.token))
 
-    @http.route('/survey/fill/<int:survey_id>/<string:token>', type='http', auth='public', website=True)
-    def survey_display_page(self, survey_id, token, prev=None, **post):
-        access_data = self._get_access_data(survey_id, token, ensure_token=True)
+    @http.route('/survey/fill/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
+    def survey_display_page(self, survey_token, answer_token, prev=None, **post):
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
         if access_data['validity_code'] is not True:
             return self._redirect_with_error(access_data, access_data['validity_code'])
 
@@ -181,13 +183,12 @@ class Survey(http.Controller):
         # Select the right page
         if answer_sudo.state == 'new':  # First page
             page, page_nr, last = survey_sudo.next_page(answer_sudo, 0, go_back=False)
-            data = {'survey': survey_sudo, 'page': page, 'page_nr': page_nr, 'token': answer_sudo.token, 'test_entry': answer_sudo.test_entry}
+            data = {'survey': survey_sudo, 'page': page, 'page_nr': page_nr, 'answer': answer_sudo}
             if last:
                 data.update({'last': True})
             return request.render('survey.survey', data)
         elif answer_sudo.state == 'done':  # Display success message
             return request.render('survey.sfinished', {'survey': survey_sudo,
-                                                       'token': token,
                                                        'user_input': answer_sudo})
         elif answer_sudo.state == 'skip':
             flag = (True if prev and prev == 'prev' else False)
@@ -197,17 +198,17 @@ class Survey(http.Controller):
             if not page:
                 page, page_nr, last = survey_sudo.next_page(answer_sudo, answer_sudo.last_displayed_page_id.id, go_back=True)
 
-            data = {'survey': survey_sudo, 'page': page, 'page_nr': page_nr, 'token': answer_sudo.token, 'test_entry': answer_sudo.test_entry}
+            data = {'survey': survey_sudo, 'page': page, 'page_nr': page_nr, 'answer': answer_sudo}
             if last:
                 data.update({'last': True})
             return request.render('survey.survey', data)
         else:
             return request.render("survey.403", {'survey': survey_sudo})
 
-    @http.route('/survey/prefill/<int:survey_id>/<string:token>', type='http', auth='public', website=True)
-    def survey_get_answers(self, survey_id, token, page_id=None, **post):
+    @http.route('/survey/prefill/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
+    def survey_get_answers(self, survey_token, answer_token, page_id=None, **post):
         """ TDE NOTE: original comment: # AJAX prefilling of a survey -> AJAX / http ?? """
-        access_data = self._get_access_data(survey_id, token, ensure_token=True)
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
         if access_data['validity_code'] is not True:
             return {}
 
@@ -250,10 +251,10 @@ class Survey(http.Controller):
                     _logger.warning("[survey] No answer has been found for question %s marked as non skipped" % answer_tag)
         return json.dumps(ret, default=str)
 
-    @http.route('/survey/scores/<int:survey_id>/<string:token>', type='http', auth='public', website=True)
-    def survey_get_scores(self, survey_id, token, page_id=None, **post):
+    @http.route('/survey/scores/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
+    def survey_get_scores(self, survey_id, answer_token, page_id=None, **post):
         """ TDE NOTE: original comment: # AJAX scores loading for quiz correction mode -> AJAX / http ?? """
-        access_data = self._get_access_data(survey_id, token, ensure_token=True)
+        access_data = self._get_access_data(survey_id, answer_token, ensure_token=True)
         if access_data['validity_code'] is not True:
             return {}
 
@@ -266,10 +267,10 @@ class Survey(http.Controller):
             ret.update({answer.question_id.id: tmp_score + answer.quizz_mark})
         return json.dumps(ret)
 
-    @http.route('/survey/submit/<int:survey_id>/<string:token>', type='http', methods=['POST'], auth='public', website=True)
-    def survey_submit(self, survey_id, token, **post):
+    @http.route('/survey/submit/<string:survey_token>/<string:answer_token>', type='http', methods=['POST'], auth='public', website=True)
+    def survey_submit(self, survey_token, answer_token, **post):
         """ TDE NOTE: original comment: # AJAX submission of a page -> AJAX / http ?? """
-        access_data = self._get_access_data(survey_id, token, ensure_token=True)
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
         if access_data['validity_code'] is not True:
             return {}
 
@@ -277,14 +278,14 @@ class Survey(http.Controller):
 
         page_id = int(post['page_id'])
         questions = request.env['survey.question'].sudo().search([
-            ('survey_id', '=', survey_id),
+            ('survey_id', '=', survey_sudo.id),
             ('page_id', '=', page_id)
         ])
 
         # Answer validation
         errors = {}
         for question in questions:
-            answer_tag = "%s_%s_%s" % (survey_id, page_id, question.id)
+            answer_tag = "%s_%s_%s" % (survey_sudo.id, page_id, question.id)
             errors.update(question.validate_question(post, answer_tag))
 
         ret = {}
@@ -293,7 +294,7 @@ class Survey(http.Controller):
             ret['errors'] = errors
         else:
             for question in questions:
-                answer_tag = "%s_%s_%s" % (survey_id, page_id, question.id)
+                answer_tag = "%s_%s_%s" % (survey_sudo.id, page_id, question.id)
                 request.env['survey.user_input_line'].sudo().save_lines(answer_sudo.id, question, post, answer_tag)
 
             go_back = post['button_submit'] == 'previous'
@@ -304,16 +305,16 @@ class Survey(http.Controller):
             else:
                 vals.update({'state': 'skip'})
             answer_sudo.write(vals)
-            ret['redirect'] = '/survey/fill/%s/%s' % (survey_sudo.id, token)
+            ret['redirect'] = '/survey/fill/%s/%s' % (survey_sudo.access_token, answer_token)
             if go_back:
                 ret['redirect'] += '?prev=prev'
         return json.dumps(ret)
 
-    @http.route('/survey/print/<int:survey_id>', type='http', auth='public', website=True)
-    def survey_print(self, survey_id, token=None, **post):
-        '''Display an survey in printable view; if <token> is set, it will
-        grab the answers of the user_input_id that has <token>.'''
-        access_data = self._get_access_data(survey_id, token, ensure_token=False)
+    @http.route('/survey/print/<string:survey_token>', type='http', auth='public', website=True)
+    def survey_print(self, survey_token, answer_token=None, **post):
+        '''Display an survey in printable view; if <answer_token> is set, it will
+        grab the answers of the user_input_id that has <answer_token>.'''
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token=False)
         if access_data['validity_code'] is not True and (
             not access_data['has_survey_access'] or access_data['validity_code'] not in ['token_required', 'survey_closed', 'survey_void']):
             return self._redirect_with_error(access_data, access_data['validity_code'])
@@ -322,13 +323,12 @@ class Survey(http.Controller):
 
         return request.render('survey.survey_print', {
             'survey': survey_sudo,
-            'token': token,
-            'test_entry': answer_sudo.test_entry,
+            'answer': answer_sudo,
             'page_nr': 0,
-            'quizz_correction': True if survey_sudo.quizz_mode and token else False})
+        })
 
     @http.route('/survey/results/<model("survey.survey"):survey>', type='http', auth='user', website=True)
-    def survey_report(self, survey, token=None, **post):
+    def survey_report(self, survey, answer_token=None, **post):
         '''Display survey Results & Statistics for given survey.'''
         result_template = 'survey.result'
         current_filters = []

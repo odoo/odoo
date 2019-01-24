@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import uuid
+
 from collections import Counter, OrderedDict
 from itertools import product
 from werkzeug import urls
 
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -19,8 +20,11 @@ class Survey(models.Model):
     _rec_name = 'title'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    def _default_stage(self):
+    def _get_default_stage_id(self):
         return self.env['survey.stage'].search([], limit=1).id
+
+    def _get_default_access_token(self):
+        return str(uuid.uuid4())
 
     # description
     title = fields.Char('Title', required=True, translate=True)
@@ -29,7 +33,7 @@ class Survey(models.Model):
     thank_you_message = fields.Html("Thanks Message", translate=True, help="This message will be displayed when survey is completed")
     quizz_mode = fields.Boolean("Quizz Mode")
     active = fields.Boolean("Active", default=True)
-    stage_id = fields.Many2one('survey.stage', string="Stage", default=_default_stage,
+    stage_id = fields.Many2one('survey.stage', string="Stage", default=lambda self: self._get_default_stage_id(),
                                ondelete="restrict", copy=False, group_expand='_read_group_stage_ids')
     is_closed = fields.Boolean("Is closed", related='stage_id.closed', readonly=True)
     category = fields.Selection([
@@ -46,6 +50,7 @@ class Survey(models.Model):
         ('internal', 'Employees Only'),
         ('token', 'Invitation only')], string='Access Mode',
         default='authentication', required=True)
+    access_token = fields.Char('Access Token', default=lambda self: self._get_default_access_token())
     users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
     users_can_signup = fields.Boolean('Users can signup', compute='_compute_users_can_signup')
     public_url = fields.Char("Public link", compute="_compute_survey_url")
@@ -53,6 +58,10 @@ class Survey(models.Model):
     tot_sent_survey = fields.Integer("Number of sent surveys", compute="_compute_survey_statistic")
     tot_start_survey = fields.Integer("Number of started surveys", compute="_compute_survey_statistic")
     tot_comp_survey = fields.Integer("Number of completed surveys", compute="_compute_survey_statistic")
+
+    _sql_constraints = [
+        ('access_token_unique', 'unique(access_token)', 'Access token should be unique')
+    ]
 
     @api.multi
     def _compute_users_can_signup(self):
@@ -78,7 +87,7 @@ class Survey(models.Model):
         """ Computes a public URL for the survey """
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for survey in self:
-            survey.public_url = urls.url_join(base_url, "survey/start/%s" % (survey.id))
+            survey.public_url = urls.url_join(base_url, "survey/start/%s" % (survey.access_token))
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
@@ -326,7 +335,7 @@ class Survey(models.Model):
         """ Open the website page with the survey form """
         self.ensure_one()
         token = self.env.context.get('survey_token')
-        trail = "?token=%s" % token if token else ""
+        trail = "?answer_token=%s" % token if token else ""
         return {
             'type': 'ir.actions.act_url',
             'name': "Start Survey",
@@ -367,12 +376,12 @@ class Survey(models.Model):
         """ Open the website page with the survey printable view """
         self.ensure_one()
         token = self.env.context.get('survey_token')
-        trail = "?token=%s" % token if token else ""
+        trail = "?answer_token=%s" % token if token else ""
         return {
             'type': 'ir.actions.act_url',
             'name': "Print Survey",
             'target': 'self',
-            'url': '/survey/print/%s%s' % (self.id, trail)
+            'url': '/survey/print/%s%s' % (self.access_token, trail)
         }
 
     @api.multi
@@ -394,7 +403,7 @@ class Survey(models.Model):
             'type': 'ir.actions.act_url',
             'name': "Test Survey",
             'target': 'self',
-            'url': '/survey/test/%s' % self.id,
+            'url': '/survey/test/%s' % self.access_token,
         }
 
     @api.multi
