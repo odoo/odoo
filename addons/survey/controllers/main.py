@@ -63,8 +63,7 @@ class Survey(http.Controller):
         if not answer_sudo and survey_sudo.access_mode == 'token':
             return 'token_required'
 
-        # Public -> no auth required; Token -> token check hereabove
-        if survey_sudo.access_mode not in ['public', 'token'] and request.env.user._is_public():
+        if survey_sudo.users_login_required and request.env.user._is_public():
             return 'survey_auth'
 
         if survey_sudo.is_closed or not survey_sudo.active:

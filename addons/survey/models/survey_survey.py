@@ -45,12 +45,11 @@ class Survey(models.Model):
     user_input_ids = fields.One2many('survey.user_input', 'survey_id', string='User responses', readonly=True, groups='survey.group_survey_user')
     # security / access
     access_mode = fields.Selection([
-        ('public', 'Everyone'),
-        ('authentication', 'Login Required'),
-        ('internal', 'Employees Only'),
-        ('token', 'Invitation only')], string='Access Mode',
-        default='authentication', required=True)
+        ('public', 'Anyone with the link'),
+        ('token', 'Invited people only')], string='Access Mode',
+        default='public', required=True)
     access_token = fields.Char('Access Token', default=lambda self: self._get_default_access_token())
+    users_login_required = fields.Boolean('Login required', help="If checked, users have to login before answering even with a valid token.")
     users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
     users_can_signup = fields.Boolean('Users can signup', compute='_compute_users_can_signup')
     public_url = fields.Char("Public link", compute="_compute_survey_url")

@@ -9,6 +9,7 @@
                     <group col="1">
                         <group col="2">
                             <field name="survey_access_mode" invisible="1"/>
+                            <field name="survey_users_login_required" invisible="1"/>
                             <field name="survey_id" readonly="context.get('default_survey_id')"/>
                             <field name="existing_mode" widget="radio" invisible="1" />
                             <field name="survey_url" label="Public share URL" readonly="1" widget="CopyClipboardText"
@@ -21,7 +22,7 @@
                                 context="{'force_email':True, 'show_email':True, 'no_create_edit': True}"/>
                             <field name="emails"
                                 attrs="{
-                                    'invisible': [('survey_access_mode', 'in', ['authentication', 'internal'])],
+                                    'invisible': [('survey_users_login_required', '=', True)],
                                     'readonly': [('existing_mode', '=', 'resend')]
                                 }"
                                 placeholder="Add a list of email of recipients (will not be converted into contacts). Separated by commas, semicolons or newline..."/>
