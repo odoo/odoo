@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 import json
 import lxml
 import requests
@@ -10,40 +9,24 @@ import werkzeug.wrappers
 
 from datetime import datetime
 
-from odoo import http, modules, SUPERUSER_ID, tools, _
+from odoo import http, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.http import request
 
 
-class WebsiteForum(http.Controller):
+class WebsiteForum(WebsiteProfile):
     _post_per_page = 10
     _user_per_page = 30
 
-    def _get_notifications(self):
-        badge_subtype = request.env.ref('gamification.mt_badge_granted')
-        if badge_subtype:
-            msg = request.env['mail.message'].search([('subtype_id', '=', badge_subtype.id), ('needaction', '=', True)])
-        else:
-            msg = list()
-        return msg
-
-    def _prepare_forum_values(self, forum=None, **kwargs):
-        values = {
-            'user': request.env.user,
-            'is_public_user': request.env.user.id == request.website.user_id.id,
-            'notifications': self._get_notifications(),
-            'header': kwargs.get('header', dict()),
-            'searches': kwargs.get('searches', dict()),
-            'forum_welcome_message': request.httprequest.cookies.get('forum_welcome_message', False),
-            'validation_email_sent': request.session.get('validation_email_sent', False),
-            'validation_email_done': request.session.get('validation_email_done', False),
-        }
-        if forum:
-            values['forum'] = forum
+    def _prepare_user_values(self, **kwargs):
+        values = super(WebsiteForum, self)._prepare_user_values(**kwargs)
+        values['forum_welcome_message'] = request.httprequest.cookies.get('forum_welcome_message', False)
+        if kwargs.get('forum'):
+            values['forum'] = kwargs.get('forum')
         elif kwargs.get('forum_id'):
             values['forum'] = request.env['forum.forum'].browse(kwargs.pop('forum_id'))
-        values.update(kwargs)
         return values
 
     # User and validation
@@ -165,7 +148,7 @@ class WebsiteForum(http.Controller):
 
         question_ids = Post.search(domain, limit=self._post_per_page, offset=pager['offset'], order=sorting)
 
-        values = self._prepare_forum_values(forum=forum, searches=post, header={'ask_hide': not forum.active})
+        values = self._prepare_user_values(forum=forum, searches=post, header={'ask_hide': not forum.active})
         values.update({
             'main_object': tag or forum,
             'question_ids': question_ids,
@@ -180,7 +163,7 @@ class WebsiteForum(http.Controller):
 
     @http.route(['''/forum/<model("forum.forum", "[('website_id', 'in', (False, current_website_id))]"):forum>/faq'''], type='http', auth="public", website=True)
     def forum_faq(self, forum, **post):
-        values = self._prepare_forum_values(forum=forum, searches=dict(), header={'is_guidelines': True}, **post)
+        values = self._prepare_user_values(forum=forum, searches=dict(), header={'is_guidelines': True}, **post)
         return request.render("website_forum.faq", values)
 
     @http.route('/forum/get_tags', type='http', auth="public", methods=['GET'], website=True, sitemap=False)
@@ -210,7 +193,7 @@ class WebsiteForum(http.Controller):
             order_by = 'posts_count DESC'
         tags = request.env['forum.tag'].search(domain, limit=None, order=order_by)
         # prepare values and render template
-        values = self._prepare_forum_values(forum=forum, searches={'tags': True}, **post)
+        values = self._prepare_user_values(forum=forum, searches={'tags': True}, **post)
 
         values.update({
             'tags': tags,
@@ -256,7 +239,7 @@ class WebsiteForum(http.Controller):
             redirect_url = "/forum/%s/question/%s" % (slug(forum), slug(question.parent_id))
             return werkzeug.utils.redirect(redirect_url, 301)
         filters = 'question'
-        values = self._prepare_forum_values(forum=forum, searches=post)
+        values = self._prepare_user_values(forum=forum, searches=post)
         values.update({
             'main_object': question,
             'question': question,
@@ -284,7 +267,7 @@ class WebsiteForum(http.Controller):
     def question_ask_for_close(self, forum, question, **post):
         reasons = request.env['forum.post.reason'].search([('reason_type', '=', 'basic')])
 
-        values = self._prepare_forum_values(**post)
+        values = self._prepare_user_values(**post)
         values.update({
             'question': question,
             'forum': forum,
@@ -327,7 +310,7 @@ class WebsiteForum(http.Controller):
         user = request.env.user
         if not user.email or not tools.single_email_re.match(user.email):
             return werkzeug.utils.redirect("/forum/%s/user/%s/edit?email_required=1" % (slug(forum), request.session.uid))
-        values = self._prepare_forum_values(forum=forum, searches={}, header={'ask_hide': True})
+        values = self._prepare_user_values(forum=forum, searches={}, header={'ask_hide': True})
         return request.render("website_forum.new_question", values)
 
     @http.route(['/forum/<model("forum.forum"):forum>/new',
@@ -390,7 +373,7 @@ class WebsiteForum(http.Controller):
     def post_edit(self, forum, post, **kwargs):
         tags = [dict(id=tag.id, name=tag.name) for tag in post.tag_ids]
         tags = json.dumps(tags)
-        values = self._prepare_forum_values(forum=forum)
+        values = self._prepare_user_values(forum=forum)
         values.update({
             'tags': tags,
             'post': post,
@@ -458,7 +441,7 @@ class WebsiteForum(http.Controller):
         domain = [('forum_id', '=', forum.id), ('state', '=', 'pending')]
         posts_to_validate_ids = Post.search(domain)
 
-        values = self._prepare_forum_values(forum=forum)
+        values = self._prepare_user_values(forum=forum)
         values.update({
             'posts_ids': posts_to_validate_ids,
             'queue_type': 'validation',
@@ -478,7 +461,7 @@ class WebsiteForum(http.Controller):
             domain += [('name', 'ilike', kwargs.get('spam_post'))]
         flagged_posts_ids = Post.search(domain, order='write_date DESC')
 
-        values = self._prepare_forum_values(forum=forum)
+        values = self._prepare_user_values(forum=forum)
         values.update({
             'posts_ids': flagged_posts_ids,
             'queue_type': 'flagged',
@@ -497,7 +480,7 @@ class WebsiteForum(http.Controller):
         domain = [('forum_id', '=', forum.id), ('state', '=', 'offensive'), ('active', '=', False)]
         offensive_posts_ids = Post.search(domain, order='write_date DESC')
 
-        values = self._prepare_forum_values(forum=forum)
+        values = self._prepare_user_values(forum=forum)
         values.update({
             'posts_ids': offensive_posts_ids,
             'queue_type': 'offensive',
@@ -530,7 +513,7 @@ class WebsiteForum(http.Controller):
     def post_ask_for_mark_as_offensive(self, forum, post, **kwargs):
         offensive_reasons = request.env['forum.post.reason'].search([('reason_type', '=', 'offensive')])
 
-        values = self._prepare_forum_values(forum=forum)
+        values = self._prepare_user_values(forum=forum)
         values.update({
             'question': post,
             'forum': forum,
@@ -551,7 +534,6 @@ class WebsiteForum(http.Controller):
 
     # User
     # --------------------------------------------------
-
     @http.route(['''/forum/<model("forum.forum", "[('website_id', 'in', (False, current_website_id))]"):forum>/users''',
                  '''/forum/<model("forum.forum"):forum>/users/page/<int:page>'''],
                 type='http', auth="public", website=True)
@@ -568,7 +550,7 @@ class WebsiteForum(http.Controller):
         users = User.sudo().search(dom, limit=step, offset=pager['offset'], order='karma DESC')
 
         searches['users'] = 'True'
-        values = self._prepare_forum_values(forum=forum, searches=searches)
+        values = self._prepare_user_values(forum=forum, searches=searches)
         values .update({
             'users': users,
             'main_object': forum,
@@ -586,165 +568,186 @@ class WebsiteForum(http.Controller):
                 return werkzeug.utils.redirect("/forum/%s/user/%d" % (slug(forum), partner.user_ids[0].id))
         return werkzeug.utils.redirect("/forum/%s" % slug(forum))
 
-    @http.route(['/forum/user/<int:user_id>/avatar'], type='http', auth="public", website=True, sitemap=False)
-    def user_avatar(self, user_id=0, **post):
-        status, headers, content = request.env['ir.http'].sudo().binary_content(
-            model='res.users', id=user_id, field='image_medium', default_mimetype='image/png')
+    def _prepare_open_forum_user(self, user, current_user, forums, values, **kwargs):
+        if len(forums) > 0:
+            Post = request.env['forum.post']
+            Vote = request.env['forum.post.vote']
+            Activity = request.env['mail.message']
+            Followers = request.env['mail.followers']
+            Data = request.env["ir.model.data"]
 
-        if not content:
-            img_path = modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
-            with open(img_path, 'rb') as f:
-                image = f.read()
-            content = base64.b64encode(image)
-        if status == 304:
-            return werkzeug.wrappers.Response(status=304)
-        image_base64 = base64.b64decode(content)
-        headers.append(('Content-Length', len(image_base64)))
-        response = request.make_response(image_base64, headers)
-        response.status = str(status)
-        return response
+            # questions and answers by user
+            user_question_ids = Post.search([
+                ('parent_id', '=', False),
+                ('forum_id', 'in', forums.ids), ('create_uid', '=', user.id)],
+                order='create_date desc')
+            count_user_questions = len(user_question_ids)
+
+            min_karma_unlink = min(forums.mapped('karma_unlink_all'))
+            if (user.id != request.session.uid and not
+            (user.website_published or
+             (count_user_questions and current_user.karma > min_karma_unlink))):
+                return {'is_profile_page': False}
+
+            # limit length of visible posts by default for performance reasons, except for the high
+            # karma users (not many of them, and they need it to properly moderate the forum)
+            post_display_limit = None
+            if current_user.karma < min_karma_unlink:
+                post_display_limit = 20
+
+            user_questions = user_question_ids[:post_display_limit]
+            user_answer_ids = Post.search([
+                ('parent_id', '!=', False),
+                ('forum_id', 'in', forums.ids), ('create_uid', '=', user.id)],
+                order='create_date desc')
+            count_user_answers = len(user_answer_ids)
+            user_answers = user_answer_ids[:post_display_limit]
+
+            # showing questions which user following
+            post_ids = [follower.res_id for follower in Followers.sudo().search(
+                [('res_model', '=', 'forum.post'), ('partner_id', '=', user.partner_id.id)])]
+            followed = Post.search([('id', 'in', post_ids), ('forum_id', 'in', forums.ids), ('parent_id', '=', False)])
+
+            # showing Favourite questions of user.
+            favourite = Post.search(
+                [('favourite_ids', '=', user.id), ('forum_id', 'in', forums.ids), ('parent_id', '=', False)])
+
+            # votes which given on users questions and answers.
+            data = Vote.read_group([('forum_id', 'in', forums.ids), ('recipient_id', '=', user.id)], ["vote"],
+                                   groupby=["vote"])
+            up_votes, down_votes = 0, 0
+            for rec in data:
+                if rec['vote'] == '1':
+                    up_votes = rec['vote_count']
+                elif rec['vote'] == '-1':
+                    down_votes = rec['vote_count']
+
+            # Votes which given by users on others questions and answers.
+            vote_ids = Vote.search([('user_id', '=', user.id)])
+
+            # activity by user.
+            model, comment = Data.get_object_reference('mail', 'mt_comment')
+            activities = Activity.search(
+                [('res_id', 'in', (user_question_ids + user_answer_ids).ids), ('model', '=', 'forum.post'),
+                 ('subtype_id', '!=', comment)],
+                order='date DESC', limit=100)
+
+            posts = {}
+            for act in activities:
+                posts[act.res_id] = True
+            posts_ids = Post.search([('id', 'in', list(posts))])
+            posts = {x.id: (x.parent_id or x, x.parent_id and x or False) for x in posts_ids}
+
+            # TDE CLEANME MASTER: couldn't it be rewritten using a 'menu' key instead of one key for each menu ?
+            if user == request.env.user:
+                kwargs['my_profile'] = True
+            else:
+                kwargs['users'] = True
+
+            values.update({
+                'uid': request.env.user.id,
+                'user': user,
+                'main_object': user,
+                'searches': kwargs,
+                'questions': user_questions,
+                'count_questions': count_user_questions,
+                'answers': user_answers,
+                'count_answers': count_user_answers,
+                'followed': followed,
+                'favourite': favourite,
+                'up_votes': up_votes,
+                'down_votes': down_votes,
+                'activities': activities,
+                'posts': posts,
+                'vote_post': vote_ids,
+                'is_profile_page': True,
+            })
+
+        return values
+
+    @http.route(['/forum/user/<int:user_id>'], type='http', auth="public", website=True)
+    def open_cross_forum_user(self, user_id=0, **post):
+        user = request.env['res.users'].sudo().browse([user_id])
+        current_user = request.env.user.sudo()
+
+        if post.get('forum'):
+            forums = post.get('forum')
+        elif post.get('forum_id'):
+            forums = request.env['forum.forum'].browse(int(post.get('forum_id')))
+        else:
+            forums = request.env['forum.forum'].search([])
+
+        values = {
+            'user': request.env.user,
+            'is_public_user': request.env.user.id == request.website.user_id.id,
+            'notifications': self._get_notifications(),
+            'header': post.get('header', dict()),
+            'searches': post.get('searches', dict()),
+            'validation_email_sent': request.session.get('validation_email_sent', False),
+            'validation_email_done': request.session.get('validation_email_done', False),
+            'forum': forums[0] if len(forums) == 1 else True,
+        }
+        values.update(self._prepare_open_forum_user(user, current_user, forums, values, **post))
+        if not values['is_profile_page']:
+            if isinstance(values['forum'], bool):
+                return request.render("website_forum.private_profile_cross_forum", values, status=404)
+            else:
+                return request.render("website_forum.private_profile", values, status=404)
+        return request.render("website_forum.user_detail_cross_full", values)
 
     @http.route(['/forum/<model("forum.forum"):forum>/user/<int:user_id>'], type='http', auth="public", website=True)
-    def open_user(self, forum, user_id=0, **post):
-        User = request.env['res.users']
-        Post = request.env['forum.post']
-        Vote = request.env['forum.post.vote']
-        Activity = request.env['mail.message']
-        Followers = request.env['mail.followers']
-        Data = request.env["ir.model.data"]
-
-        user = User.sudo().search([('id', '=', user_id)])
+    def open_forum_user(self, forum, user_id=0, **post):
+        user = request.env['res.users'].sudo().browse([user_id])
         current_user = request.env.user.sudo()
 
         # Users with high karma can see users with karma <= 0 for
         # moderation purposes, IFF they have posted something (see below)
         if (not user or (user.karma < 1 and current_user.karma < forum.karma_unlink_all)):
             return werkzeug.utils.redirect("/forum/%s" % slug(forum))
-        values = self._prepare_forum_values(forum=forum, **post)
-
-        # questions and answers by user
-        user_question_ids = Post.search([
-            ('parent_id', '=', False),
-            ('forum_id', '=', forum.id), ('create_uid', '=', user.id)],
-            order='create_date desc')
-        count_user_questions = len(user_question_ids)
-
-        if (user_id != request.session.uid and not
-                (user.website_published or
-                    (count_user_questions and current_user.karma > forum.karma_unlink_all))):
-            return request.render("website_forum.private_profile", values, status=404)
-
-        # limit length of visible posts by default for performance reasons, except for the high
-        # karma users (not many of them, and they need it to properly moderate the forum)
-        post_display_limit = None
-        if current_user.karma < forum.karma_unlink_all:
-            post_display_limit = 20
-
-        user_questions = user_question_ids[:post_display_limit]
-        user_answer_ids = Post.search([
-            ('parent_id', '!=', False),
-            ('forum_id', '=', forum.id), ('create_uid', '=', user.id)],
-            order='create_date desc')
-        count_user_answers = len(user_answer_ids)
-        user_answers = user_answer_ids[:post_display_limit]
-
-        # showing questions which user following
-        post_ids = [follower.res_id for follower in Followers.sudo().search([('res_model', '=', 'forum.post'), ('partner_id', '=', user.partner_id.id)])]
-        followed = Post.search([('id', 'in', post_ids), ('forum_id', '=', forum.id), ('parent_id', '=', False)])
-
-        # showing Favourite questions of user.
-        favourite = Post.search([('favourite_ids', '=', user.id), ('forum_id', '=', forum.id), ('parent_id', '=', False)])
-
-        # votes which given on users questions and answers.
-        data = Vote.read_group([('forum_id', '=', forum.id), ('recipient_id', '=', user.id)], ["vote"], groupby=["vote"])
-        up_votes, down_votes = 0, 0
-        for rec in data:
-            if rec['vote'] == '1':
-                up_votes = rec['vote_count']
-            elif rec['vote'] == '-1':
-                down_votes = rec['vote_count']
-
-        # Votes which given by users on others questions and answers.
-        vote_ids = Vote.search([('user_id', '=', user.id)])
-
-        # activity by user.
-        model, comment = Data.get_object_reference('mail', 'mt_comment')
-        activities = Activity.search([('res_id', 'in', (user_question_ids + user_answer_ids).ids), ('model', '=', 'forum.post'), ('subtype_id', '!=', comment)],
-                                     order='date DESC', limit=100)
-
-        posts = {}
-        for act in activities:
-            posts[act.res_id] = True
-        posts_ids = Post.search([('id', 'in', list(posts))])
-        posts = {x.id: (x.parent_id or x, x.parent_id and x or False) for x in posts_ids}
-
-        # TDE CLEANME MASTER: couldn't it be rewritten using a 'menu' key instead of one key for each menu ?
-        if user == request.env.user:
-            post['my_profile'] = True
-        else:
-            post['users'] = True
-
-        values.update({
-            'uid': request.env.user.id,
-            'user': user,
-            'main_object': user,
-            'searches': post,
-            'questions': user_questions,
-            'count_questions': count_user_questions,
-            'answers': user_answers,
-            'count_answers': count_user_answers,
-            'followed': followed,
-            'favourite': favourite,
-            'up_votes': up_votes,
-            'down_votes': down_votes,
-            'activities': activities,
-            'posts': posts,
-            'vote_post': vote_ids,
-        })
+        values = self._prepare_user_values(forum=forum, **post)
+        values.update(self._prepare_open_forum_user(user, current_user, forum, values, **post))
+        if not values['is_profile_page']:
+            if isinstance(values['forum'], bool):
+                return request.render("website_forum.private_profile_cross_forum", values, status=404)
+            else:
+                return request.render("website_forum.private_profile", values, status=404)
         return request.render("website_forum.user_detail_full", values)
 
-    @http.route('/forum/<model("forum.forum"):forum>/user/<model("res.users"):user>/edit', type='http', auth="user", website=True)
-    def edit_profile(self, forum, user, **kwargs):
+    @http.route('/forum/user/edit', type='http', auth="user", website=True)
+    def edit_forum_profile(self, **kwargs):
         countries = request.env['res.country'].search([])
-        values = self._prepare_forum_values(forum=forum, searches=kwargs)
+        if kwargs.get('forum_id'):
+            values = self._prepare_user_values(forum_id=int(kwargs.get('forum_id')), searches=kwargs)
+        else:
+            values = self._prepare_user_values(searches=kwargs)
         values.update({
             'email_required': kwargs.get('email_required'),
             'countries': countries,
             'notifications': self._get_notifications(),
         })
-        return request.render("website_forum.edit_profile", values)
+        return request.render("website_forum.edit_forum_profile_main", values)
+
+    @http.route('/forum/user/<model("res.users"):user>/save', type='http', auth="user", methods=['POST'], website=True)
+    def save_edited_profile_cross_forum(self, user, **kwargs):
+        values = self._prepare_save_edited_profile_values(user, **kwargs)
+        user.write(values)
+        return werkzeug.utils.redirect("/forum/user/%d" % user.id)
 
     @http.route('/forum/<model("forum.forum"):forum>/user/<model("res.users"):user>/save', type='http', auth="user", methods=['POST'], website=True)
-    def save_edited_profile(self, forum, user, **kwargs):
-        values = {
-            'name': kwargs.get('name'),
-            'website': kwargs.get('website'),
-            'email': kwargs.get('email'),
-            'city': kwargs.get('city'),
-            'country_id': int(kwargs.get('country')) if kwargs.get('country') else False,
-            'website_description': kwargs.get('description'),
-        }
-
-        if 'clear_image' in kwargs:
-            values['image'] = False
-        elif kwargs.get('ufile'):
-            image = kwargs.get('ufile').read()
-            values['image'] = base64.b64encode(image)
-
-        if request.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
-            values['website_published'] = kwargs.get('website_published') == 'True'
+    def save_edited_profile_forum(self, forum, user, **kwargs):
+        values = self._prepare_save_edited_profile_values(user, **kwargs)
         user.write(values)
-        return werkzeug.utils.redirect("/forum/%s/user/%d" % (slug(forum), user.id))
+        return werkzeug.utils.redirect("/forum/user/%d?forum_id=%d" % (user.id, forum.id))
 
     # Badges
     # --------------------------------------------------
 
     @http.route('''/forum/<model("forum.forum", "[('website_id', 'in', (False, current_website_id))]"):forum>/badge''', type='http', auth="public", website=True)
-    def badges(self, forum, **searches):
+    def forum_badges(self, forum, **searches):
         Badge = request.env['gamification.badge']
         badges = Badge.sudo().search([('challenge_ids.category', '=', 'forum')])
         badges = sorted(badges, key=lambda b: b.stat_count_distinct, reverse=True)
-        values = self._prepare_forum_values(forum=forum, searches={'badges': True})
+        values = self._prepare_user_values(forum=forum, searches={'badges': True})
         values.update({
             'badges': badges,
         })
