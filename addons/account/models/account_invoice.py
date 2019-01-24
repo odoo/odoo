@@ -144,8 +144,13 @@ class AccountInvoice(models.Model):
                         amount_to_show = line.company_id.currency_id.with_context(date=line.date).compute(abs(line.amount_residual), self.currency_id)
                     if float_is_zero(amount_to_show, precision_rounding=self.currency_id.rounding):
                         continue
+                    if line.ref :
+                        title = '%s : %s' % (line.move_id.name, line.ref)
+                    else:
+                        title = line.move_id.name
                     info['content'].append({
                         'journal_name': line.ref or line.move_id.name,
+                        'title': title,
                         'amount': amount_to_show,
                         'currency': currency_id.symbol,
                         'id': line.id,
