@@ -98,7 +98,7 @@
                             </div>
                             <field name="function"/>
                             <field name="phone" widget="phone"/>
-                            <field name="mobile"/>
+                            <field name="mobile" widget="phone"/>
                         </group>
                         <group>
                             <field name="user_id" domain="[('share', '=', False)]"
@@ -591,7 +591,7 @@
                                         <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
                                     </div>
                                     <field name="function"/>
-                                    <field name="mobile"/>
+                                    <field name="mobile" widget="phone"/>
                                 </group>
                                 <group string="Marketing">
                                     <field name="campaign_id" />
