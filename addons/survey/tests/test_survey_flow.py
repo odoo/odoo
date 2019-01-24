@@ -12,13 +12,13 @@ from odoo.tests.common import HttpCase
 class TestSurveyFlow(common.SurveyCase, HttpCase):
 
     def _access_start(self, survey):
-        return self.url_open('/survey/start/%s' % survey.id)
+        return self.url_open('/survey/start/%s' % survey.access_token)
 
     def _access_page(self, survey, token):
-        return self.url_open('/survey/fill/%s/%s' % (survey.id, token))
+        return self.url_open('/survey/fill/%s/%s' % (survey.access_token, token))
 
     def _access_submit(self, survey, token, post_data):
-        return self.url_open('/survey/submit/%s/%s' % (survey.id, token), data=post_data)
+        return self.url_open('/survey/submit/%s/%s' % (survey.access_token, token), data=post_data)
 
     def _find_csrf_token(self, text):
         csrf_token_re = re.compile("(input.+csrf_token.+value=\")([_a-zA-Z0-9]{51})", re.MULTILINE)
