@@ -57,11 +57,12 @@ class SurveyInvite(models.TransientModel):
     survey_id = fields.Many2one('survey.survey', string='Survey', required=True)
     survey_url = fields.Char(related="survey_id.public_url", readonly=True)
     survey_access_mode = fields.Selection(related="survey_id.access_mode", readonly=True)
+    survey_users_login_required = fields.Boolean(related="survey_id.users_login_required", readonly=True)
     deadline = fields.Datetime(string="Answer deadline")
 
     @api.onchange('emails')
     def _onchange_emails(self):
-        if self.emails and (self.survey_access_mode == 'internal' or (self.survey_access_mode == 'authentication' and not self.survey_id.users_can_signup)):
+        if self.emails and (self.survey_users_login_required and not self.survey_id.users_can_signup):
             raise UserError(_('This survey does not allow external people to participate. You should create user accounts or update survey access mode accordingly.'))
         if not self.emails:
             return
@@ -77,27 +78,19 @@ class SurveyInvite(models.TransientModel):
             raise UserError(_("Some emails you just entered are incorrect: %s") % (', '.join(error)))
         self.emails = '\n'.join(valid)
 
-    @api.onchange('survey_access_mode')
-    def _onchange_survey_access_mode(self):
-        if self.survey_access_mode == 'internal':
+    @api.onchange('survey_users_login_required')
+    def _onchange_survey_users_login_required(self):
+        if self.survey_users_login_required and not self.survey_id.users_can_signup:
             return {'domain': {
-                    'partner_ids': [('user_ids.groups_id', 'in', [self.env.ref('base.group_user').id])]
+                    'partner_ids': [('user_ids', '!=', False)]
                     }}
-        elif self.survey_access_mode == 'authentication':
-            if not self.survey_id.users_can_signup:
-                return {'domain': {
-                    'partner_ids': [('user_ids.groups_id', 'in', [self.env.ref('base.group_user').id, self.env.ref('base.group_portal').id])]
-                    }}
+        return {'domain': {
+                'partner_ids': []
+                }}
 
     @api.onchange('partner_ids')
     def _onchange_partner_ids(self):
-        if self.survey_access_mode == 'internal' and self.partner_ids:
-            invalid_partners = self.partner_ids.filtered(lambda partner: not partner.user_ids or not all(user.has_group('base.group_user') for user in partner.user_ids))
-            if invalid_partners:
-                raise UserError(
-                    _('The following recipients are not valid users belonging to the employee group: %s. You should create user accounts for them.' %
-                        (','.join(invalid_partners.mapped('name')))))
-        elif self.survey_access_mode == 'authentication' and self.partner_ids:
+        if self.survey_users_login_required and self.partner_ids:
             if not self.survey_id.users_can_signup:
                 invalid_partners = self.env['res.partner'].search([
                     ('user_ids', '=', False),
