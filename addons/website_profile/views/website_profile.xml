@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <template id="assets_frontend" inherit_id="website.assets_frontend">
+        <xpath expr="link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/website_profile/static/src/scss/website_profile.scss"/>
+        </xpath>
+    </template>
+
+    <!-- Edit Profile Page -->
+    <template id="user_profile_edit_main" name="Edit Profile">
+        <t t-call="website.layout">
+            <div class="container mt16 mb32">
+                <t t-call="website_profile.user_profile_edit_content">
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="user_profile_edit_content" name="Edit Profile">
+        <h1 class="o_page_header">Edit Profile</h1>
+        <div>
+            <form t-attf-action="/profile/user/save" method="post" role="form" class="js_website_submit_form row" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <input type="file" class="d-none o_forum_file_upload" name="ufile" accept="image/*"/>
+                <input type="hidden" name="url_param" t-att-value="request.params.get('url_param')"/>
+                <div class="col-3">
+                    <div class="card o_card_people">
+                        <div class="card-body">
+                            <img class="w-100 mb-3" t-attf-src="/web/image/res.users/#{user.id}/image_medium"/>
+                            <div class="text-center">
+                                <a href="#" class="o_forum_profile_pic_edit btn btn-primary" aria-label="Edit">
+                                    <i class="fa fa-pencil fa-1g float-sm-none float-md-left" title="Edit"></i>
+                                </a>
+                                <a href="#" title="Clear" aria-label="Clear" class="btn border-primary">
+                                    <i class="fa fa-trash-o float-sm-none float-md-right o_forum_profile_pic_clear"></i>
+                                </a>
+                            </div>
+                            <div class="form-group mt-3 mb-0 pt-2 border-top">
+                                <label class="text-primary" for="user_website_published" t-if="user.id == uid"><b>Public profile</b></label>
+                                <div class=" mb-0 float-right" t-if="user.id == uid">
+                                    <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" t-if="not user.website_published"/>
+                                    <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" checked="checked" t-if="user.website_published"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-9 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <input name="user_id" t-att-value="user.id" type="hidden"/>
+                                <div class="form-group col-12">
+                                    <label class="text-primary mb-1 d-block" for="user_name"><b>Real name</b></label>
+                                    <div>
+                                        <input type="text" class="form-control" name="name" id="user_name" required="True" t-attf-value="#{user.name}"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-6">
+                                    <label class="mb-1 text-primary" for="user_website"><b>Website</b></label>
+                                    <div>
+                                        <input type="text" class="form-control" name="website" id="user_website" t-attf-value="#{user.partner_id.website or ''}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group col-6">
+                                    <div t-if="email_required" class="alert alert-danger alert-dismissable oe_email_required" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert">x</button>
+                                        <p>Please enter a valid email address in order to receive notifications from answers or comments.</p>
+                                    </div>
+                                    <label class="mb-1 text-primary" for="user_email"><b>Email</b></label>
+                                    <div>
+                                        <input type="text" class="form-control" name="email" id="user_email" required="True" t-attf-value="#{user.partner_id.email}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group col-6">
+                                    <label class="mb-1 text-primary" for="user_city"><b>City</b></label>
+                                    <div>
+                                        <input type="text" class="form-control" name="city" id="user_city" t-attf-value="#{user.partner_id.city or ''}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group col-6">
+                                    <label class="mb-1 text-primary"><b>Country</b></label>
+                                    <div>
+                                        <select class="form-control" name="country">
+                                            <option value="">Country...</option>
+                                            <t t-foreach="countries or []" t-as="country">
+                                                <option t-att-value="country.id" t-att-selected="country.id == user.partner_id.country_id.id"><t t-esc="country.name"/></option>
+                                            </t>
+                                         </select>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12">
+                                    <label class="mb-1 text-primary" for="description"><b>Biography</b></label>
+                                    <textarea name="description" id="description" style="min-height: 120px" required="True"
+                                        class="form-control load_editor"><t t-esc="user.partner_id.website_description"/></textarea>
+                                </div>
+                                <div class="col">
+                                    <button type="submit" class="btn btn-primary btn">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </template>
+
+    <!-- Profile Page -->
+    <template id="user_profile_main" name="Profile Page">
+        <t t-call="website.layout">
+            <t t-call="website_profile.user_profile_header"></t>
+            <t t-call="website_profile.user_profile_content"></t>
+        </t>
+    </template>
+
+    <template id="user_profile_header" name="Profile Page Header">
+        <div class="row o_wprofile_header">
+            <div class="col-lg-12 o_wprofile_container o_wprofile_header_container">
+                <div class="row">
+                    <div class="col o_wprofile_pict">
+                        <img class="o_wprofile_photo mr-3" t-attf-src="/web/image/res.users/#{user.id}/image"/>
+                    </div>
+                    <div class="col-8 o_wprofile_id">
+                        <a id="edit_profile_button" class="btn btn-primary o_wprofile_edit"
+                            t-if="request.env.user == user"
+                           t-attf-href="/profile/edit?url_param=#{edit_button_url_param}"><b>EDIT PROFILE</b></a>
+                        <div class="row mb32">
+                            <h3 class="o_card_people_name text-white"><b t-field="user.name"/></h3>
+                        </div>
+                        <div class="row">
+                            <div class="o_wprofile_id_info">
+                                <t t-if="user.company_id">
+                                    <span class="text-white">
+                                        <i class="fa fa-building-o text-white mr-2"/><span t-field="user.company_id"/>
+                                    </span>
+                                </t>
+                            </div>
+                            <div class="o_wprofile_id_info">
+                                <t t-if="user.city or user.country_id">
+                                    <i class="fa fa-map-marker text-white mr-2"/>
+                                    <span class="text-white">
+                                        <span t-field="user.city"/><t t-if="user.country_id"> (</t><span t-field="user.country_id"/><t t-if="user.country_id">)</t>
+                                    </span>
+                                </t>
+                            </div>
+                            <div class="o_wprofile_id_info">
+                                <t t-if="user.website">
+                                    <span class="text-white">
+                                        <i class="fa fa-globe text-white mr-2"/><span t-field="user.website"/>
+                                    </span>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="user_profile_content" name="Profile Page Content">
+        <div class="row o_wprofile_content">
+            <div class="col-lg-12 o_wprofile_container o_wprofile_content_container">
+                <div class="row">
+                    <div class="col o_wprofile_navtabs_blank"></div>
+                    <div class="col-8 o_wprofile_navtabs_container">
+                        <ul class="nav nav-tabs o_wprofile_nav_tabs" role="tablist" id="profile_extra_info_tablist">
+                            <li class="nav-item" id="profile_nav_tab_about">
+                                <a role="tab" aria-controls="about" href="#profile_tab_content_about" class="nav-link o_wprofile_navlink active" data-toggle="tab">About</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row o_wprofile_detail">
+                    <div class="col o_wprofile_content_abstract">
+                        <t t-if="user.rank_id">
+                            <div class="row">
+                                <div class="col-lg-12 pt16 o_wprofile_rank">
+                                    <table><tbody><tr>
+                                        <th><b class="text-muted">Current <a href="/profile/ranks">Rank</a> : </b></th>
+                                        <th><span class="float-right" t-field="user.rank_id"/></th>
+                                    </tr></tbody></table>
+                                    <t t-call="website_profile.profile_next_rank_card"></t>
+                                </div>
+                            </div>
+                        </t>
+                        <div class="row">
+                            <div class="col-lg-12 pt16 pb16 o_wprofile_abstract_info o_wprofile_bb_grey">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <th style="width: 30%"><b class="text-muted">Joined</b></th>
+                                            <th style="width: 70%"><span t-field="user.create_date" t-options='{"format": "d MMM Y"}'/></th>
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 30%"><b class="text-muted">Badges</b></th>
+                                            <th style="width: 70%">
+                                                <t t-if="user.badge_ids">
+                                                    <span t-esc="len(user.badge_ids)"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span>0</span>
+                                                </t>
+                                            </th>
+                                        </tr>
+                                        <t t-if="user.website">
+                                            <tr>
+                                                <th style="width: 30%"><b class="text-muted">Website</b></th>
+                                                <th style="width: 70%"><span t-field="user.website"/></th>
+                                            </tr>
+                                        </t>
+                                        <t t-if="user.city or user.country_id">
+                                            <tr>
+                                                <th style="width: 30%"><b class="text-muted">Location</b></th>
+                                                <th style="width: 70%">
+                                                    <span t-field="user.city"/><t t-if="user.country_id"> (</t><span t-field="user.country_id"/><t t-if="user.country_id">)</t>
+                                                </th>
+                                            </tr>
+                                        </t>
+                                        <tr id="profile_abstract_info_company">
+                                            <th style="width: 30%"><b class="text-muted">Company</b></th>
+                                            <th style="width: 70%"><span t-field="user.company_id"/></th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-8 mt24 ml32 o_wprofile_content_detail">
+                        <div class="tab-content mt16" id="profile_extra_info_tabcontent">
+                            <div role="tabpanel" class="tab-pane active" id="profile_tab_content_about">
+                                <div id="profile_about_badge" class="mb32">
+                                    <h4><i class="fa fa-certificate"/> Badges</h4>
+                                    <t t-call="website_profile.user_badges"></t>
+                                </div>
+                                <div t-if="user.partner_id.website_description" class="mb32">
+                                    <h4><i class="fa fa-pencil"/> Biography</h4>
+                                    <span t-field="user.partner_id.website_description"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="profile_next_rank_card" name="Profile Next Rank Card">
+        <div class="card-body o_wprofile_next_rank_card mt-2 pt-2">
+            <div><img class="o_wprofile_img_medium" t-attf-src="/web/image/gamification.karma.rank/#{user.next_rank_id.id}/image_medium"/></div>
+            <div><span class="text-center"><b>"<span t-field="user.next_rank_id.name"/>"</b></span></div>
+            <div><span class="text-center"><b class="text-primary" t-field="user.karma"/>/<b t-field="user.next_rank_id.karma_min"/> xp</span></div>
+            <div class="progress o_wprofile_next_rank_progress">
+                <t t-if="user.next_rank_id.karma_min - user.rank_id.karma_min > 0">
+                    <div class="progress-bar o_wprofile_next_rank_progress_bar" style="background-color: #00A09D !important"
+                       t-att-style="'width: '+ str(100*(user.karma - user.rank_id.karma_min)/(user.next_rank_id.karma_min - user.rank_id.karma_min))+'%'"></div>
+                </t>
+                <t t-else="">
+                    <div class="progress-bar o_wprofile_next_rank_progress_bar" style="background-color: #00A09D !important"
+                       t-att-style="'width: 0%'"></div>
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <template id="user_badges" name="User Bagdes">
+        <t t-if="user.badge_ids">
+            <div class="row">
+                <div class="col-lg-3 o_user_badges" t-foreach="user.badge_ids" t-as="badge">
+                    <div class="card-body o_wprofile_bb_grey">
+                        <table><tbody><tr>
+                            <th>
+                                <img class="o_wprofile_img_thumb" t-attf-src="/web/image/gamification.badge/#{badge.badge_id.id}/image_small"/>
+                            </th>
+                            <th style="">
+                                <b t-field="badge.badge_id.name"/>
+                            </th>
+                        </tr></tbody></table>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <div class="mb16" t-if="not user.badge_ids">
+            <b>No badge yet!</b><br/>
+            <t t-if="badge_category">
+                 <a t-attf-href="/profile/badge?category=#{badge_category}" class="fa fa-arrow-right"> Check available badges</a>
+            </t>
+            <t t-else="">
+                <a t-attf-href="/profile/badge" class="fa fa-arrow-right"> Check available badges</a>
+            </t>
+        </div>
+    </template>
+
+    <!-- About Rank Page -->
+    <template id="rank_main" name="Ranks Page">
+        <t t-call="website.layout">
+            <div class="container mb32 mt48">
+                <h1 class="o_page_header">
+                    Ranks &amp; Badges
+                </h1>
+                <p>
+                    Do not stop learning with Odoo. Collects points on the forum or the eLearning platform. Those points will make you reach new ranks.
+                </p>
+                <p>
+                    <b>How do I earn badges?</b> When you finish a course, reach milestones, you're awarded badges.
+                </p>
+                <p>
+                    <b>How do I score more points?</b> You can score more points by answering quizzes at the end of each course content. Points can also be earned on the forum. Follow this link to the guidelines of the forum.
+                </p>
+            </div>
+            <t t-call="website_profile.rank_content">
+            </t>
+        </t>
+    </template>
+
+    <template id="rank_content" name="Rank Page content">
+        <div class="o_wprofile_ranks_presentation mt16 mb32 pt16 pb48">
+            <div class="container mb32 mt48">
+                <h3>Ranks</h3>
+                <div class="row">
+                    <div class="o_wprofile_rank_tile" t-foreach="ranks" t-as="rank">
+                        <div><img class="mb-3" t-attf-src="/web/image/gamification.karma.rank/#{rank.id}/image"/></div>
+                        <div><b t-field="rank.name"/></div>
+                        <div><span style="color: #00A09D;"><span t-field="rank.karma_min"/> point<span t-if="rank.karma_min">s</span></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- About Badge Page -->
+    <template id="badge_main" name="Badges Page">
+        <t t-call="website.layout">
+            <div class="container mb32 mt48">
+                <t t-call="website_profile.badge_content">
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="badge_content" name="Badges Page content">
+            <h1 class="o_page_header">
+                Badges
+            </h1>
+            <p>
+                Besides gaining reputation with your questions and answers,
+                you receive badges for being especially helpful. Badges
+                appear on your profile page, and your posts.
+            </p>
+            <table class="table mt32 mb64">
+                <tr t-foreach="badges" t-as="badge">
+                    <td>
+                        <span class="badge badge-pill float-left">
+                            <span t-if="badge.level == 'gold'"><i class="fa fa-trophy badge-gold"/> <b t-field="badge.name" class="text-white bg-gold badge-pill"/></span>
+                            <span t-if="badge.level == 'silver'"><i class="fa fa-trophy badge-silver"/> <b t-field="badge.name" class="text-white bg-silver badge-pill"/></span>
+                            <span t-if="badge.level == 'bronze'"><i class="fa fa-trophy badge-bronze"/> <b t-field="badge.name" class="text-white bg-bronze badge-pill"/></span>
+                        </span>
+                    </td><td>
+                        <b t-esc="badge.stat_count_distinct"/>
+                        <i class="text-muted"> awarded users</i>
+                    </td><td>
+                        <span t-field="badge.description"/>
+                    </td>
+                </tr>
+            </table>
+    </template>
+
+    <!--Private profile-->
+    <template id="private_profile" name="Private Profile Page">
+        <t t-call="website.layout">
+            <div class="container mb32 mt48">
+                <h1 class="mt32">This profile is private!</h1>
+                <div id="private_profile_return_link_container">
+                    <p><a t-attf-href="/">Return to the website.</a></p>
+                </div>
+            </div>
+        </t>
+    </template>
+</data></odoo>
