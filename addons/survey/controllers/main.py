@@ -46,6 +46,7 @@ class Survey(http.Controller):
          * token_wrong: given token not recognized;
          * token_required: no token given although it is necessary to access the
            survey;
+         * answer_done: token linked to a finished answer;
          * answer_deadline: token linked to an expired answer;
 
         :param ensure_token: whether user input existence based on given access token
@@ -68,17 +69,17 @@ class Survey(http.Controller):
         if survey_sudo.users_login_required and request.env.user._is_public():
             return 'survey_auth'
 
-        if survey_sudo.is_closed or not survey_sudo.active:
+        if (survey_sudo.is_closed or not survey_sudo.active) and (not answer_sudo or not answer_sudo.test_entry):
             return 'survey_closed'
 
         if not survey_sudo.page_ids:
             return 'survey_void'
 
-        # In case of delayed deadline # TDE FIXME
-        if answer_sudo and answer_sudo.deadline:
-            dt_now = datetime.now()
-            if dt_now > answer_sudo.deadline:
-                return 'answer_deadline'
+        if answer_sudo and answer_sudo.state == 'done':
+            return 'answer_done'
+
+        if answer_sudo and answer_sudo.deadline and answer_sudo.deadline < datetime.now():
+            return 'answer_deadline'
 
         return True
 
@@ -134,6 +135,8 @@ class Survey(http.Controller):
             return request.render("survey.auth_required", {'survey': survey_sudo, 'redirect_url': redirect_url})
         elif error_key == 'answer_deadline' and answer_sudo.token:
             return request.render("survey.survey_expired", {'survey': survey_sudo})
+        elif error_key == 'answer_done' and answer_sudo.token:
+            return request.render("survey.sfinished", {'survey': survey_sudo, 'token': answer_sudo.token, 'user_input': answer_sudo})
 
         return werkzeug.utils.redirect("/")
 
@@ -218,7 +221,7 @@ class Survey(http.Controller):
     def survey_get_answers(self, survey_token, answer_token, page_id=None, **post):
         """ TDE NOTE: original comment: # AJAX prefilling of a survey -> AJAX / http ?? """
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
-        if access_data['validity_code'] is not True:
+        if access_data['validity_code'] is not True and access_data['validity_code'] != 'answer_done':
             return {}
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
@@ -325,7 +328,8 @@ class Survey(http.Controller):
         grab the answers of the user_input_id that has <answer_token>.'''
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=False)
         if access_data['validity_code'] is not True and (
-            not access_data['has_survey_access'] or access_data['validity_code'] not in ['token_required', 'survey_closed', 'survey_void']):
+                access_data['has_survey_access'] or
+                access_data['validity_code'] not in ['token_required', 'survey_closed', 'survey_void', 'answer_done']):
             return self._redirect_with_error(access_data, access_data['validity_code'])
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
