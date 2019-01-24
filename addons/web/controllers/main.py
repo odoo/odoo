@@ -1088,10 +1088,17 @@ class Binary(http.Controller):
             height = int(height or 0)
             width = int(width or 0)
 
+        if not content:
+            content = base64.b64encode(self.placeholder(image='placeholder.png'))
+            headers = self.force_contenttype(headers, contenttype='image/png')
+            if not (width or height):
+                suffix = field.split('_')[-1]
+                if suffix in ('small', 'medium', 'big'):
+                    content = getattr(odoo.tools, 'image_resize_image_%s' % suffix)(content)
+
         if crop and (width or height):
             content = crop_image(content, type='center', size=(width, height), ratio=(1, 1))
-
-        elif content and (width or height):
+        elif (width or height):
             if not upper_limit:
                 # resize maximum 500*500
                 if width > 500:
@@ -1102,17 +1109,7 @@ class Binary(http.Controller):
                                                     encoding='base64', upper_limit=upper_limit,
                                                     avoid_if_small=avoid_if_small)
 
-        if content:
-            image_base64 = base64.b64decode(content)
-        else:
-            suffix = field.split('_')[-1]
-            if suffix in ('small', 'medium', 'big'):
-                encoded_placeholder = base64.b64encode(self.placeholder(image='placeholder.png'))
-                image_base64 = base64.b64decode(getattr(odoo.tools, 'image_resize_image_%s' % suffix)(encoded_placeholder))
-            else:
-                image_base64 = self.placeholder(image='placeholder.png')  # could return (contenttype, content) in master
-            headers = self.force_contenttype(headers, contenttype='image/png')
-
+        image_base64 = base64.b64decode(content)
         headers.append(('Content-Length', len(image_base64)))
         response = request.make_response(image_base64, headers)
         response.status_code = status
