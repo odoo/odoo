@@ -461,6 +461,7 @@
             <field name="model">ir.model.constraint</field>
             <field name="arch" type="xml">
                 <form string="Model Constraints">
+                <sheet>
                     <group col="4">
                         <field name="type"/>
                         <field name="name"/>
@@ -470,6 +471,7 @@
                         <field name="date_update" />
                         <field name="date_init" />
                     </group>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -498,6 +500,7 @@
             <field name="model">ir.model.relation</field>
             <field name="arch" type="xml">
                 <form string="ManyToMany Relations">
+                <sheet>
                     <group col="4">
                         <field name="name"/>
                         <field name="module" can_create="false"/>
@@ -506,6 +509,7 @@
                         <field name="date_update" />
                         <field name="date_init" />
                     </group>
+                </sheet>
                 </form>
             </field>
         </record>

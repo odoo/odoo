@@ -20,7 +20,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var utils = require('web.utils');
 var BodyManager = require('web_editor.BodyManager');
-var weContext = require('web_editor.context');
+var wContext = require('website.context');
 var rootWidget = require('web_editor.root_widget');
 var sAnimation = require('website.content.snippets.animation');
 require("website.content.zoomodoo");
@@ -31,7 +31,7 @@ var websiteRootRegistry = new rootWidget.RootWidgetRegistry();
 
 // Load localizations outside the WebsiteRoot to not wait for DOM ready (but
 // wait for them in WebsiteRoot)
-var lang = utils.get_cookie('frontend_lang') || weContext.get().lang; // FIXME the cookie value should maybe be in the ctx?
+var lang = utils.get_cookie('frontend_lang') || wContext.get().lang; // FIXME the cookie value should maybe be in the ctx?
 var localeDef = ajax.loadJS('/web/webclient/locale/' + lang.replace('-', '_'));
 
 var WebsiteRoot = BodyManager.extend({

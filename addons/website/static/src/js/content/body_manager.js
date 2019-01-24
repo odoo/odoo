@@ -1,10 +1,10 @@
 odoo.define('web_editor.BodyManager', function (require) {
 'use strict';
 
-var weContext = require('web_editor.context');
 var rootWidget = require('web_editor.root_widget');
 var ServiceProviderMixin = require('web.ServiceProviderMixin');
 var session = require('web.session');
+var wContext = require('website.context');
 
 /**
  * Element which is designed to be unique and that will be the top-most element
@@ -45,7 +45,7 @@ var BodyManager = rootWidget.RootWidget.extend(ServiceProviderMixin, {
             if (_.str.startsWith(route, '/web/dataset/call_kw/')) {
                 var params = event.data.args[1];
                 var options = event.data.args[2];
-                params.kwargs.context = _.extend({}, weContext.get(), params.kwargs.context || {});
+                params.kwargs.context = _.extend({}, wContext.get(), params.kwargs.context || {});
                 if (options) {
                     params.kwargs.context = _.omit(params.kwargs.context, options.noContextKeys);
                     event.data.args[2] = _.omit(options, 'noContextKeys');

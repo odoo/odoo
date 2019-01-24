@@ -156,7 +156,7 @@ class FleetVehicleLogContract(models.Model):
         otherwise return the number of days before the contract expires
         """
         for record in self:
-            if (record.expiration_date and (record.state == 'open' or record.state == 'expired')):
+            if record.expiration_date and record.state in ['open', 'diesoon', 'expired']:
                 today = fields.Date.from_string(fields.Date.today())
                 renew_date = fields.Date.from_string(record.expiration_date)
                 diff_time = (renew_date - today).days
@@ -267,9 +267,11 @@ class FleetVehicleLogContract(models.Model):
     def scheduler_manage_contract_expiration(self):
         # This method is called by a cron task
         # It manages the state of a contract, possibly by posting a message on the vehicle concerned and updating its status
+        params = self.env['ir.config_parameter'].sudo()
+        delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
         date_today = fields.Date.from_string(fields.Date.today())
-        in_fifteen_days = fields.Date.to_string(date_today + relativedelta(days=+15))
-        nearly_expired_contracts = self.search([('state', '=', 'open'), ('expiration_date', '<', in_fifteen_days)])
+        outdated_days = fields.Date.to_string(date_today + relativedelta(days=+delay_alert_contract))
+        nearly_expired_contracts = self.search([('state', '=', 'open'), ('expiration_date', '<', outdated_days)])
 
         nearly_expired_contracts.write({'state': 'diesoon'})
         for contract in nearly_expired_contracts.filtered(lambda contract: contract.user_id):

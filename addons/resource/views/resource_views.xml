@@ -28,20 +28,22 @@
         <field name="model">resource.resource</field>
         <field name="arch" type="xml">
             <form string="Resource">
-               <group>
-                  <group>
-                    <field name="name"/>
-                    <field name="user_id" attrs="{'required':[('resource_type','=','user')], 'readonly':[('resource_type','=','material')]}"/>
-                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                    <field name="active"/>
-                   </group>
-                   <group>
-                    <field name="resource_type" />
-                    <field name="calendar_id"/>
-                    <field name="tz"/>
-                    <field name="time_efficiency"/>
-                   </group>
+            <sheet>
+                <group>
+                    <group name="user_details">
+                        <field name="name"/>
+                        <field name="user_id" attrs="{'required':[('resource_type','=','user')], 'readonly':[('resource_type','=','material')]}"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        <field name="active"/>
+                    </group>
+                    <group name="resource_details">
+                        <field name="resource_type" />
+                        <field name="calendar_id"/>
+                        <field name="tz"/>
+                        <field name="time_efficiency"/>
+                    </group>
                 </group>
+            </sheet>
             </form>
         </field>
     </record>
@@ -115,6 +117,7 @@
         <field name="model">resource.calendar.leaves</field>
         <field name="arch" type="xml">
             <form string="Leave Detail">
+            <sheet>
                 <group>
                     <group name="leave_details">
                         <field name="name" string="Reason"/>
@@ -127,6 +130,7 @@
                        <field name="date_to"/>
                     </group>
                 </group>
+            </sheet>
             </form>
         </field>
     </record>

@@ -115,13 +115,15 @@ class FleetVehicle(models.Model):
 
     @api.depends('log_contracts')
     def _compute_contract_reminder(self):
+        params = self.env['ir.config_parameter'].sudo()
+        delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
         for record in self:
             overdue = False
             due_soon = False
             total = 0
             name = ''
             for element in record.log_contracts:
-                if element.state in ('open', 'expired') and element.expiration_date:
+                if element.state in ('open', 'diesoon', 'expired') and element.expiration_date:
                     current_date_str = fields.Date.context_today(record)
                     due_time_str = element.expiration_date
                     current_date = fields.Date.from_string(current_date_str)
@@ -130,13 +132,13 @@ class FleetVehicle(models.Model):
                     if diff_time < 0:
                         overdue = True
                         total += 1
-                    if 0 >= diff_time < 30:
+                    if diff_time < delay_alert_contract:
                         due_soon = True
                         total += 1
                     if overdue or due_soon:
                         log_contract = self.env['fleet.vehicle.log.contract'].search([
                             ('vehicle_id', '=', record.id),
-                            ('state', 'in', ('open', 'expired'))
+                            ('state', 'in', ('open', 'diesoon', 'expired'))
                             ], limit=1, order='expiration_date asc')
                         if log_contract:
                             # we display only the name of the oldest overdue/due soon contract
@@ -148,6 +150,8 @@ class FleetVehicle(models.Model):
             record.contract_renewal_name = name
 
     def _search_contract_renewal_due_soon(self, operator, value):
+        params = self.env['ir.config_parameter'].sudo()
+        delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
         res = []
         assert operator in ('=', '!=', '<>') and value in (True, False), 'Operation not supported'
         if (operator == '=' and value is True) or (operator in ('<>', '!=') and value is False):
@@ -156,7 +160,7 @@ class FleetVehicle(models.Model):
             search_operator = 'not in'
         today = fields.Date.context_today(self)
         datetime_today = fields.Datetime.from_string(today)
-        limit_date = fields.Datetime.to_string(datetime_today + relativedelta(days=+15))
+        limit_date = fields.Datetime.to_string(datetime_today + relativedelta(days=+delay_alert_contract))
         self.env.cr.execute("""SELECT cost.vehicle_id,
                         count(contract.id) AS contract_number
                         FROM fleet_vehicle_cost cost
@@ -164,7 +168,7 @@ class FleetVehicle(models.Model):
                         WHERE contract.expiration_date IS NOT NULL
                           AND contract.expiration_date > %s
                           AND contract.expiration_date < %s
-                          AND contract.state IN ('open', 'expired')
+                          AND contract.state IN ('open', 'diesoon', 'expired')
                         GROUP BY cost.vehicle_id""", (today, limit_date))
         res_ids = [x[0] for x in self.env.cr.fetchall()]
         res.append(('id', search_operator, res_ids))
@@ -184,7 +188,7 @@ class FleetVehicle(models.Model):
                         LEFT JOIN fleet_vehicle_log_contract contract ON contract.cost_id = cost.id
                         WHERE contract.expiration_date IS NOT NULL
                           AND contract.expiration_date < %s
-                          AND contract.state IN ('open', 'expired')
+                          AND contract.state IN ('open', 'diesoon', 'expired')
                         GROUP BY cost.vehicle_id ''', (today,))
         res_ids = [x[0] for x in self.env.cr.fetchall()]
         res.append(('id', search_operator, res_ids))

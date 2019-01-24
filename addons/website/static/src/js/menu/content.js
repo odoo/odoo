@@ -5,7 +5,7 @@ var Class = require('web.Class');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var time = require('web.time');
-var weContext = require('web_editor.context');
+var wContext = require('website.context');
 var weWidgets = require('wysiwyg.widgets');
 var websiteNavbarData = require('website.navbar');
 var websiteRootData = require('website.WebsiteRoot');
@@ -195,7 +195,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
      */
     save: function (data) {
         var self = this;
-        var context = weContext.get();
+        var context = wContext.get();
         var url = this.$('#page_url').val();
 
         var $date_publish = this.$("#date_publish");
@@ -469,7 +469,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
     willStart: function () {
         var defs = [this._super.apply(this, arguments)];
         var self = this;
-        var context = weContext.get();
+        var context = wContext.get();
         defs.push(this._rpc({
             model: 'website.menu',
             method: 'get_tree',
@@ -516,7 +516,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
         var new_menu = this.$('.oe_menu_editor').nestedSortable('toArray', {startDepthCount: 0});
         var levels = [];
         var data = [];
-        var context = weContext.get();
+        var context = wContext.get();
         // Resequence, re-tree and remove useless data
         new_menu.forEach(function (menu) {
             if (menu.id) {
