@@ -12,7 +12,7 @@
                 <header>
                     <button name="action_test_survey" string="Test" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
                     <button name="action_print_survey" string="Print" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
-                    <button name="action_send_survey" string="Share and invite" type="object" class="oe_highlight"  attrs="{'invisible': [('id', '=', False)]}"/>
+                    <button name="action_send_survey" string="Invite" type="object" class="oe_highlight"  attrs="{'invisible': [('id', '=', False)]}"/>
                     <button name="action_result_survey" string="View results" type="object" class="oe_highlight" attrs="{'invisible': [('id', '=', False)]}"/>
                     <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
@@ -35,22 +35,36 @@
                     <group>
                         <group>
                             <field name="access_mode"/>
-                            <field name="users_can_go_back"/>
-                        </group>
-                        <group>
+                            <field name="public_url" readonly="1" 
+                                attrs="{'invisible': [('access_mode', '!=', 'public')]}"
+                                widget="CopyClipboardText"/>
                             <field name="category" invisible="1"/>
-                            <field name="quizz_mode"/>
                         </group>
                     </group>
-                    <group string="Edit Pages and Questions">
-                        <field name="page_ids" mode="tree" context="{'default_survey_id': active_id}" nolabel="1">
-                            <tree>
-                                <field name="sequence" widget="handle"/>
-                                <field name="title"/>
-                                <field name="question_ids"/>
-                            </tree>
-                        </field>
-                    </group>
+                    <notebook>
+                        <page string="Edit Pages and Questions">
+                            <field name="page_ids" mode="tree" context="{'default_survey_id': active_id}" nolabel="1">
+                                <tree>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="title"/>
+                                    <field name="question_ids"/>
+                                </tree>
+                            </field>
+                        </page>
+                       <page string="Options">
+                            <group name="options">
+                                <group string="Candidates" name="candidates">
+                                    <field name="users_login_required"/>
+                                </group>
+                                <group string="Questions" name="questions">
+                                    <field name="users_can_go_back" string="Enable back button"/>
+                                </group>
+                                <group string="Scoring Informations" name="scoring">
+                                    <field name="quizz_mode"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
