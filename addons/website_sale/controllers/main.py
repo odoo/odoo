@@ -983,7 +983,7 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/get_unit_price'], type='json', auth="public", methods=['POST'], website=True)
     def get_unit_price(self, product_ids, add_qty, **kw):
-        products = request.env['product.product'].with_context({'quantity': add_qty}).browse(product_ids)
+        products = request.env['product.product'].with_context(quantity=add_qty).browse(product_ids)
         return {product.id: product.website_price / add_qty for product in products}
 
     # ------------------------------------------------------
