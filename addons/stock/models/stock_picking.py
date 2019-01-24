@@ -409,15 +409,16 @@ class Picking(models.Model):
         """ According to `picking.show_check_availability`, the "check availability" button will be
         displayed in the form view of a picking.
         """
+        rounding = 10 ** -self.env.ref('product.decimal_product_uom').digits
+        StockMove = self.env['stock.move']
         for picking in self:
             if picking.immediate_transfer or not picking.is_locked or picking.state not in ('confirmed', 'waiting', 'assigned'):
                 picking.show_check_availability = False
                 continue
-            picking.show_check_availability = any(
-                move.state in ('waiting', 'confirmed', 'partially_available') and
-                float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding)
-                for move in picking.move_lines
-            )
+            picking.show_check_availability = bool(StockMove.search_count(
+                [('picking_id', '=', picking.id),
+                 ('state', 'in', ('waiting', 'confirmed', 'partially_available')),
+                 ('product_uom_qty', '>', rounding)]))
 
     @api.multi
     @api.depends('state', 'move_lines')
