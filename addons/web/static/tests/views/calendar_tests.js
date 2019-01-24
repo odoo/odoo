@@ -6,6 +6,7 @@ var CalendarRenderer = require('web.CalendarRenderer');
 var fieldUtils = require('web.field_utils');
 var mixins = require('web.mixins');
 var testUtils = require('web.test_utils');
+var time = require('web.time');
 var session = require('web.session');
 
 
@@ -2142,6 +2143,53 @@ QUnit.module('Views', {
         var $input = $('.modal-body input:first');
         $input.val("It's just a fleshwound").trigger('input');
         $('.modal button.btn:contains(Create)').trigger('click');
+
+        calendar.destroy();
+    });
+
+    QUnit.test('fullcalendar initializes with right locale', function (assert) {
+        assert.expect(1);
+
+        // Do not forward port this part in versions >= saas11.3
+        testUtils.patch(time, {
+            getLangDateFormat: function () {
+                return 'DD/MM';
+            },
+        });
+
+        var initialLocale = moment.locale();
+        // This will set the locale to zz
+        moment.defineLocale('zz', {
+            longDateFormat: {
+                L: 'DD/MM/YYYY'
+            },
+            weekdaysShort: ["zz1.", "zz2.", "zz3.", "zz4.", "zz5.", "zz6.", "zz7."],
+        });
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch: '<calendar class="o_calendar_test" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'mode="week"> '+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+                action: {views: [{viewID: 1, type: 'kanban'}, {viewID: 43, type: 'form'}]}
+            },
+
+        });
+
+        assert.strictEqual(calendar.$('.fc-day-header:first').text(), "zz1. 11/12",
+            'The day should be in the given locale specific format');
+
+        moment.locale(initialLocale);
+        // Do not forward port this part in versions >= saas11.3
+        testUtils.unpatch(time);
 
         calendar.destroy();
     });
