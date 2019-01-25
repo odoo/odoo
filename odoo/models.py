@@ -304,6 +304,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         self.env['ir.model']._reflect_model(self)
         self.env['ir.model.fields']._reflect_model(self)
+        self.env['ir.model.fields.selection']._reflect_model(self)
         self.env['ir.model.constraint']._reflect_model(self)
         self.invalidate_cache()
 

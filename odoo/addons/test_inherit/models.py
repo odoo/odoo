@@ -136,3 +136,12 @@ class Parent2(models.AbstractModel):
     @api.constrains('foo')
     def _check_foo(self):
         pass
+
+
+#
+# Extend a selection field
+#
+class Selection(models.Model):
+    _inherit = 'test_new_api.selection'
+
+    state = fields.Selection(selection_add=[('bar', 'Bar'), ('baz', 'Baz')])
