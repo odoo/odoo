@@ -165,13 +165,12 @@
                     <td class="td-img">
                         <input type="hidden" class="product_template_id" t-att-value="product.id"/>
                         <input type="hidden" class="product_id" t-attf-name="optional-product-#{product.id}" t-att-value="product_variant.id"/>
-                        <input type="hidden" class="product_display_name" t-attf-name="optional-productname-#{product.id}" t-att-value="combination_info['display_name']"/>
                         <img t-if="product_variant" t-att-src="'/web/image/product.product/%s/image_medium' % product_variant.id"  class="variant_image" alt="Product Image"/>
                         <img t-else="" t-att-src="'/web/image/product.template/%s/image_medium' % product.id"  class="variant_image" alt="Product Image"/>
                     </td>
                     <td class='td-product_name' colspan="2">
                         <div class="float-left">
-                            <strong class="product-name" t-esc="combination_info['display_name']"/>
+                            <strong class="product-name product_display_name" t-esc="combination_info['display_name']"/>
                             <div class="text-muted small" t-field="product.description_sale"/>
                         </div>
                         <div class="float-right">
