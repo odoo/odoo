@@ -441,7 +441,7 @@ class test_selection(ImporterCase):
 
     def test_imported_translated(self):
         self.add_translations(
-            'export.selection,value', 'selection', 'fr_FR', *self.translations_fr)
+            'ir.model.fields.selection,name', 'model', 'fr_FR', *self.translations_fr)
 
         result = self.import_(['value'], [
             ['toto'],
@@ -524,7 +524,7 @@ class test_selection_function(ImporterCase):
         """ Expects output of selection function returns translated labels
         """
         self.add_translations(
-            'export.selection,value', 'selection', 'fr_FR', *self.translations_fr)
+            'ir.model.fields.selection,name', 'model', 'fr_FR', *self.translations_fr)
 
         result = self.import_(['value'], [
             ['titi'],

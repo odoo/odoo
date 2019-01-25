@@ -543,6 +543,13 @@ class FieldWithCaps(models.Model):
     pArTneR_321_id = fields.Many2one('res.partner')
 
 
+class Selection(models.Model):
+    _name = 'test_new_api.selection'
+    _description = "Selection"
+
+    state = fields.Selection([('foo', 'Foo'), ('bar', 'Bar')])
+
+
 class RequiredM2O(models.Model):
     _name = 'test_new_api.req_m2o'
     _description = 'Required Many2one'
