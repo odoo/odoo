@@ -13,10 +13,12 @@ class MrpUnbuild(models.Model):
     _order = 'id desc'
 
     def _get_default_location_id(self):
-        return self.env.ref('stock.stock_location_stock', raise_if_not_found=False)
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1)
+        return warehouse and warehouse.lot_stock_id.id or False
 
     def _get_default_location_dest_id(self):
-        return self.env.ref('stock.stock_location_stock', raise_if_not_found=False)
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1)
+        return warehouse and warehouse.lot_stock_id.id or False
 
     name = fields.Char('Reference', copy=False, readonly=True, default=lambda x: _('New'))
     product_id = fields.Many2one(
