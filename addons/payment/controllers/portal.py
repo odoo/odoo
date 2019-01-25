@@ -100,7 +100,10 @@ class PaymentProcessing(http.Controller):
 class WebsitePayment(http.Controller):
     @http.route(['/my/payment_method'], type='http', auth="user", website=True)
     def payment_method(self, **kwargs):
-        acquirers = list(request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False), ('payment_flow', '=', 's2s')]))
+        acquirers = list(request.env['payment.acquirer'].search([
+            ('website_published', '=', True), ('registration_view_template_id', '!=', False),
+            ('payment_flow', '=', 's2s'), ('company_id', '=', request.env.user.company_id.id)
+        ]))
         partner = request.env.user.partner_id
         payment_tokens = partner.payment_token_ids
         payment_tokens |= partner.commercial_partner_id.sudo().payment_token_ids
