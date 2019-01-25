@@ -3,6 +3,8 @@ odoo.define('mass_mailing.field_html_tests', function (require) {
 
 var ajax = require('web.ajax');
 var FormView = require('web.FormView');
+var FieldHtml = require('web_editor.field.html');
+var MassMailingFieldHtml = require('mass_mailing.FieldHtml');
 var testUtils = require('web.test_utils');
 var weTestUtils = require('web_editor.test_utils');
 var Wysiwyg = require('web_editor.wysiwyg');
@@ -130,6 +132,65 @@ QUnit.test('save arch and html', function (assert) {
             form.destroy();
             done();
         });
+    });
+});
+
+QUnit.test('save and edit arch wysiwyg', function (assert) {
+    var done = assert.async();
+    assert.expect(4);
+
+    testUtils.mock.patch(FieldHtml, {
+        commitChanges: function () {
+            assert.step("FieldHtml");
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    testUtils.mock.patch(MassMailingFieldHtml, {
+        commitChanges: function () {
+            assert.step("MassMailingFieldHtml");
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    testUtils.createAsyncView({
+        View: FormView,
+        model: 'mail.mass_mailing',
+        data: this.data,
+        arch: '<form>' +
+            '   <header style="min-height:31px;">'+
+            '       <button name="put_in_queue" type="object" class="oe_highlight" string="Send Now"/>'+
+            '   </header>'+
+            '   <field name="body_arch" class="oe_edit_only" widget="mass_mailing_html"'+
+            '       options="{'+
+            '                \'snippets\': \'template.assets\','+
+            '                \'cssEdit\': \'template.assets\','+
+            '                \'inline-field\': \'body_html\''+
+            '       }"'+
+            '   />'+
+            '</form>',
+        res_id: 1,
+        intercepts: {
+            execute_action: function (event) {
+                event.data.on_success();
+            }
+        },
+    }).then(function (form) {
+        testUtils.dom.click($('[name=put_in_queue]'))
+        testUtils.form.clickEdit(form)
+        var $fieldEdit = form.$('.oe_form_field[name="body_arch"]');
+        var $iframe = $fieldEdit.find('iframe');
+
+        $iframe.data('load-def').then(function () {
+            testUtils.dom.click($('[name=put_in_queue]'))
+            assert.verifySteps(["MassMailingFieldHtml", "FieldHtml", "MassMailingFieldHtml"]);
+            testUtils.mock.unpatch(FieldHtml);
+            testUtils.mock.unpatch(MassMailingFieldHtml);
+
+            form.destroy();
+            done();
+        });
+
     });
 });
 

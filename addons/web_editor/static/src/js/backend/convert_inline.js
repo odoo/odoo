@@ -396,9 +396,6 @@ FieldHtml.include({
      * @override
      */
     commitChanges: function () {
-        if (!this.wysiwyg) {
-            return this._super();
-        }
         if (this.nodeOptions['style-inline']) {
             this._toInline();
         }
