@@ -29,6 +29,9 @@ class TestUiHtmlEditor(odoo.tests.HttpCase):
         self.assertTrue(specific_aboutus.arch != oe_structure_layout, "Specific Aboutus view should have been changed")
         self.assertEqual(len(specific_aboutus.inherit_children_ids.filtered(lambda v: 'oe_structure' in v.name)), 1, "oe_structure view should have been created on the specific tree")
 
+    def test_html_editor_scss(self):
+        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('test_html_editor_scss')", "odoo.__DEBUG__.services['web_tour.tour'].tours.test_html_editor_scss.ready", login='admin')
+
 
 class TestUiTranslate(odoo.tests.HttpCase):
     def test_admin_tour_rte_translator(self):
