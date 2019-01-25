@@ -104,6 +104,19 @@ class MrpWorkorder(models.Model):
         'Capacity', default=1.0,
         help="Number of pieces that can be produced in parallel.")
     workorder_line_ids = fields.One2many('mrp.workorder.line', 'workorder_id', string='Workorder lines')
+    final_lot_domain = fields.One2many('stock.production.lot', compute="_compute_final_lot_domain")
+
+    @api.depends('production_id')
+    def _compute_final_lot_domain(self):
+        # check if self is not the first workorder in the list
+        if self.env['mrp.workorder'].search([('next_work_order_id', '=', self.id)]):
+            self.final_lot_domain = self.env['stock.production.lot'].search([
+                ('use_next_on_work_order_id', '=', self.id),
+            ]).ids
+        else:
+            self.final_lot_domain = self.env['stock.production.lot'].search([
+                ('product_id', '=', self.product_id.id),
+            ]).ids
 
     @api.multi
     def name_get(self):
