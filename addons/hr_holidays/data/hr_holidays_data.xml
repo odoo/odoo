@@ -16,6 +16,7 @@
         <record id="holiday_status_hw" model="hr.leave.type">
             <field name="name">Home Workings</field>
             <field name="color_name">lightgreen</field>
+            <field name="allocation_type">no</field>
             <field name="leave_notif_subtype_id" eval="ref('mt_leave_home_working')"/>
         </record>
 
@@ -42,7 +43,7 @@
         <!--Unpaid Leave -->
         <record id="holiday_status_unpaid" model="hr.leave.type">
             <field name="name">Unpaid</field>
-            <field name="allocation_type">fixed_allocation</field>
+            <field name="allocation_type">no</field>
             <field name="validation_type">both</field>
             <field name="color_name">brown</field>
             <field name="unpaid" eval="True"/>
