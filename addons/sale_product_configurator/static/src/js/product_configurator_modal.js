@@ -6,7 +6,6 @@ var Dialog = require('web.Dialog');
 var ServicesMixin = require('web.ServicesMixin');
 var VariantMixin = require('sale.VariantMixin');
 
-var productNameMap = {};
 var optionalProductsMap = {};
 
 var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
@@ -63,7 +62,6 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
         this._productImageField = 'image_medium';
 
         // reset any previously populated properties maps
-        productNameMap = {};
         optionalProductsMap = {};
 
         this._opened.then(function () {
@@ -303,11 +301,6 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
         $parent.find('.td-qty').addClass('text-center');
         $parent.find('.td-qty').append($parent.find('.optional_product_quantity'));
 
-        // change product name to display_name (containing attribute values) when it's added to cart
-        // the "simple" name is kept into a map to revert to it if the product is removed from the cart
-        productNameMap[productTemplateId] = $parent.find(".product-name").html();
-        $parent.find(".product-name").html($parent.find(".product_display_name").val());
-
         var productCustomVariantValues = self.getCustomVariantValues($parent);
         var noVariantAttributeValues = self.getNoVariantAttributeValues($parent);
         if (productCustomVariantValues || noVariantAttributeValues) {
@@ -407,10 +400,6 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
 
         var $select_options_text = $modal.find('.o_select_options');
         $select_options_text.show();
-
-        // revert back to original product name and clean the entry
-        $parent.find(".product-name").html(productNameMap[productTemplateId]);
-        delete productNameMap[productTemplateId];
 
         this._removeOptionOption($modal, productTemplateId);
 
