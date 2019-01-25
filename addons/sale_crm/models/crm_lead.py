@@ -60,3 +60,13 @@ class CrmLead(models.Model):
 
         res['invoiced']['target'] = self.env.user.target_sales_invoiced
         return res
+
+    def action_sale_action_quotations_new(self):
+        action = self.env.ref('sale_crm.sale_action_quotations_new').read()[0]
+        action['domain'] = [('opportunity_id', '=', self.id)]
+        action['context'] = {
+            'search_default_opportunity_id': self.id,
+            'default_opportunity_id': self.id,
+            'default_user_id': self.user_id.id or self.partner_id.user_id.id or self.env.user.id
+        }
+        return action
