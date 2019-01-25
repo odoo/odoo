@@ -886,22 +886,13 @@ class AccountMoveLine(models.Model):
         ret = self._reconcile_lines(debit_moves, credit_moves, field)
         return ret
 
-    @api.multi
-    def reconcile(self, writeoff_acc_id=False, writeoff_journal_id=False):
-        # Empty self can happen if the user tries to reconcile entries which are already reconciled.
-        # The calling method might have filtered out reconciled lines.
-        if not self:
-            return True
-
+    def _check_reconcile_validity(self):
         #Perform all checks on lines
         company_ids = set()
         all_accounts = []
-        partners = set()
         for line in self:
             company_ids.add(line.company_id.id)
             all_accounts.append(line.account_id)
-            if (line.account_id.internal_type in ('receivable', 'payable')):
-                partners.add(line.partner_id.id)
             if line.reconciled:
                 raise UserError(_('You are trying to reconcile some entries that are already reconciled.'))
         if len(company_ids) > 1:
@@ -911,6 +902,14 @@ class AccountMoveLine(models.Model):
         if not (all_accounts[0].reconcile or all_accounts[0].internal_type == 'liquidity'):
             raise UserError(_('Account %s (%s) does not allow reconciliation. First change the configuration of this account to allow it.') % (all_accounts[0].name, all_accounts[0].code))
 
+    @api.multi
+    def reconcile(self, writeoff_acc_id=False, writeoff_journal_id=False):
+        # Empty self can happen if the user tries to reconcile entries which are already reconciled.
+        # The calling method might have filtered out reconciled lines.
+        if not self:
+            return True
+
+        self._check_reconcile_validity()
         #reconcile everything that can be
         remaining_moves = self.auto_reconcile_lines()
 
@@ -928,7 +927,7 @@ class AccountMoveLine(models.Model):
             #add writeoff line to reconcile algorithm and finish the reconciliation
             remaining_moves = (remaining_moves + writeoff_to_reconcile).auto_reconcile_lines()
         # Check if reconciliation is total or needs an exchange rate entry to be created
-        (self+writeoff_to_reconcile).check_full_reconcile()
+        (self + writeoff_to_reconcile).check_full_reconcile()
         return True
 
     def _create_writeoff(self, writeoff_vals):
