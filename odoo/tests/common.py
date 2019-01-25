@@ -915,7 +915,9 @@ class HttpCase(TransactionCase):
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
             # code = ""
-            ready = ready or "document.readyState === 'complete'"
+            default_ready = "document.readyState === 'complete'"
+            default_ready = "window.location.href === '%s' && %s" % (url, default_ready)  # avoid to get document.readyState === 'complete on about:blank in some rare cases
+            ready = ready or default_ready
             self.assertTrue(self.browser._wait_ready(ready), 'The ready "%s" code was always falsy' % ready)
             if code:
                 message = 'The test code "%s" failed' % code
