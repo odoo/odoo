@@ -137,6 +137,8 @@
             <span t-if='payment_tx_id.acquirer_id.pending_msg' t-raw="payment_tx_id.acquirer_id.pending_msg"/>
             <span t-if='thanks_msg' t-raw="thanks_msg"/>
             <div t-if="thanks_msg and payment_tx_id.acquirer_id.provider == 'transfer' and reference">
+                <b>Amount: </b> <span t-field="payment_tx_id.amount"/>
+                <br/>
                 <b>Communication: </b><span t-esc='reference'/>
             </div>
             <div t-if="(payment_tx_id.partner_id.country_id.code in ['BE', 'AT', 'DE', 'FI', 'NL']) and (payment_tx_id.acquirer_id.qr_code == True) and (payment_tx_id.currency_id.name == 'EUR')">
