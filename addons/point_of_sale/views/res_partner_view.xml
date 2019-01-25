@@ -12,7 +12,7 @@
                         context="{'search_default_partner_id': active_id,'default_partner_id': active_id}"
                         attrs="{'invisible': ['|', ('customer', '=', False), ('pos_order_count', '=', 0)]}"
                         icon="fa-shopping-bag">
-                        <field string="POS Sales" name="pos_order_count" widget="statinfo"/>
+                        <field string="PoS Orders" name="pos_order_count" widget="statinfo"/>
                     </button>
                 </button>
                 <xpath expr="//group[@name='purchase']" position="after">
