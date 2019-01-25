@@ -189,9 +189,10 @@ class account_journal(models.Model):
             query = """SELECT residual_signed as amount_total, currency_id AS currency, type, date_invoice, company_id FROM account_invoice WHERE journal_id = %s AND date <= %s AND state = 'open';"""
             self.env.cr.execute(query, (self.id, today))
             late_query_results = self.env.cr.dictfetchall()
-            (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency)
-            (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency)
-            (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency)
+            curr_cache = {}
+            (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency, curr_cache=curr_cache)
+            (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency, curr_cache=curr_cache)
+            (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency, curr_cache=curr_cache)
 
         difference = currency.round(last_balance-account_sum) + 0.0
         return {
@@ -239,20 +240,32 @@ class account_journal(models.Model):
                   FROM account_invoice inv
                   WHERE journal_id = %(journal_id)s AND state = 'draft';""", {'journal_id':self.id})
 
-    def _count_results_and_sum_amounts(self, results_dict, target_currency):
+    def _count_results_and_sum_amounts(self, results_dict, target_currency, curr_cache=None):
         """ Loops on a query result to count the total number of invoices and sum
         their amount_total field (expressed in the given target currency).
         amount_total must be signed !
         """
         rslt_count = 0
         rslt_sum = 0.0
+        # Create a cache with currency rates to avoid unnecessary SQL requests. Do not copy
+        # curr_cache on purpose, so the dictionary is modified and can be re-used for subsequent
+        # calls of the method.
+        curr_cache = {} if curr_cache is None else curr_cache
         for result in results_dict:
             cur = self.env['res.currency'].browse(result.get('currency'))
             company = self.env['res.company'].browse(result.get('company_id')) or self.env.user.company_id
             rslt_count += 1
+            date = result.get('date_invoice') or fields.Date.today()
+
             amount = result.get('amount_total', 0)
-            rslt_sum += cur._convert(
-                amount, target_currency, company, result.get('date_invoice') or fields.Date.today())
+            if cur != target_currency:
+                key = (cur, target_currency, company, date)
+                # Using setdefault will call _get_conversion_rate, so we explicitly check the
+                # existence of the key in the cache instead.
+                if key not in curr_cache:
+                    curr_cache[key] = self.env['res.currency']._get_conversion_rate(*key)
+                amount *= curr_cache[key]
+            rslt_sum += target_currency.round(amount)
         return (rslt_count, rslt_sum)
 
     @api.multi
