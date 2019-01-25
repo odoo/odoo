@@ -11,7 +11,7 @@
         Dear ${object.partner_id.name or 'participant'}<br/><br/>
         We are conducting a survey and your response would be appreciated.
         <div style="margin: 16px 0px 16px 0px;">
-            <a href="${('%s?token=%s' % (object.survey_id.public_url, object.token)) | safe}"
+            <a href="${('%s?answer_token=%s' % (object.survey_id.public_url, object.token)) | safe}"
                 style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
                 Start Survey
             </a>
