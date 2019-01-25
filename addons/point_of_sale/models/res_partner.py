@@ -11,6 +11,7 @@ class ResPartner(models.Model):
         help="The number of point of sales orders related to this customer",
         groups="point_of_sale.group_pos_user",
     )
+    pos_order_ids = fields.One2many('pos.order', 'partner_id', readonly=True)
     barcode = fields.Char(oldname='ean13', help="Use a barcode to identify this contact from the Point of Sale.", copy=False)
 
     _sql_constraints = [
