@@ -1695,10 +1695,12 @@ exports.Orderline = Backbone.Model.extend({
                 return fiscal_position_tax.tax_src_id[0] === tax.id;
             });
 
-            if (tax_mappings) {
+            if (tax_mappings && tax_mappings.length) {
                 _.each(tax_mappings, function(tm) {
                     taxes.push(self.pos.taxes_by_id[tm.tax_dest_id[0]]);
                 });
+            } else{
+                taxes.push(tax);
             }
         } else {
             taxes.push(tax);
