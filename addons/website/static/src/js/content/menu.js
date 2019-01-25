@@ -60,6 +60,10 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
      * @private
      */
     _onWindowUpdate: function () {
+        if (this.$navbarCollapses.hasClass('show')) {
+            return;
+        }
+
         var wOffset = $(window).scrollTop();
         var hOffset = this.$target.scrollTop();
         this.$headerClone.toggleClass('affixed', wOffset > (hOffset + 300));
