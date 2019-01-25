@@ -1,7 +1,7 @@
 odoo.define('website.editor.menu.translate', function (require) {
 'use strict';
 
-require('web_editor.ready');
+require('web.dom_ready');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var localStorage = require('web.local_storage');
@@ -17,7 +17,6 @@ if ($('.js_change_lang[data-lang="' + lang + '"]').data('default-lang')) {
 var _t = core._t;
 
 var localStorageNoDialogKey = 'website_translator_nodialog';
-
 
 var TranslatorInfoDialog = Dialog.extend({
     template: 'website.TranslatorInfoDialog',
@@ -59,7 +58,7 @@ var TranslatorMenu = EditorMenu.extend({
     /**
      * @override
      */
-    start: function () {    	
+    start: function () {
         if (!localStorage.getItem(localStorageNoDialogKey)) {
             new TranslatorInfoDialog(this).open();
         }
