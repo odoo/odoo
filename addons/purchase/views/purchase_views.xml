@@ -179,6 +179,7 @@
                             <field name="date_approve" attrs="{'invisible': [('state','!=','purchase')]}"/>
                             <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="unit_id" domain="[('company_unit_id', '=', company_id)]" options="{'no_create': True}" groups="account.group_multi_operating_unit"/>
                         </group>
                     </group>
                     <notebook>

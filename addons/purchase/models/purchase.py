@@ -125,7 +125,7 @@ class PurchaseOrder(models.Model):
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product', readonly=False)
     user_id = fields.Many2one('res.users', string='Purchase Representative', index=True, tracking=True, default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, states=READONLY_STATES, default=lambda self: self.env.company.id)
-    currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, readonly=True, help='Ratio between the purchase order currency and the company currency')
+    unit_id = fields.Many2one('res.partner', string="Operating Unit", ondelete="restrict", states=READONLY_STATES, default=lambda self: self.env.user._get_default_unit())
 
     def _compute_access_url(self):
         super(PurchaseOrder, self)._compute_access_url()
@@ -203,6 +203,7 @@ class PurchaseOrder(models.Model):
             self.fiscal_position_id = self.env['account.fiscal.position'].with_context(company_id=self.company_id.id).get_fiscal_position(self.partner_id.id)
             self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
             self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
+        self.unit_id = self.company_id.partner_id
         return {}
 
     @api.onchange('fiscal_position_id')
@@ -408,6 +409,7 @@ class PurchaseOrder(models.Model):
             'default_purchase_id': self.id,
             'default_currency_id': self.currency_id.id,
             'default_company_id': self.company_id.id,
+            'default_unit_id': self.unit_id.id,
             'company_id': self.company_id.id
         }
         # choose the view_mode accordingly
