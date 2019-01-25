@@ -436,28 +436,22 @@
                                 </div>
                                 <!-- LikeButton widget -->
                                 <div class="text-muted mt4">
-                                    <div class="float-right mb16 text-right">
+                                    <div class="float-right mb16 text-right o_wslides_like">
                                         <span
-                                            class="oe_slide_js_like"
-                                            data-href="/slides/slide/like"
-                                            t-att-data-user-id="user.id"
-                                            t-att-data-public-user="is_public_user"
+                                            class="o_wslides_like_up"
                                             t-att-data-slide-id="slide.id"
                                             tabindex="0"
                                             data-toggle="popover">
                                             <i class="fa fa-thumbs-up fa-1x" role="img" aria-label="Likes" title="Likes"/>
-                                            <span class="o_wslides_like_dislike_count" t-esc="slide.likes"/>
+                                            <span t-esc="slide.likes"/>
                                         </span>
                                         <span
-                                            class="oe_slide_js_unlike"
-                                            data-href="/slides/slide/dislike"
-                                            t-att-data-user-id="user.id"
-                                            t-att-data-public-user="is_public_user"
+                                            class="o_wslides_like_down"
                                             t-att-data-slide-id="slide.id"
                                             tabindex="0"
                                             data-toggle="popover">
                                             <i class="fa fa-thumbs-down fa-1x" role="img" aria-label="Dislikes" title="Dislikes"/>
-                                            <span class="o_wslides_like_dislike_count" t-esc="slide.dislikes"/>
+                                            <span t-esc="slide.dislikes"/>
                                         </span>
                                     </div>
                                 </div>
