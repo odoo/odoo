@@ -50,6 +50,7 @@ sAnimations.registry.websiteSlidesShare = sAnimations.Class.extend({
      * @param {Object} parent
      */
     start: function (parent) {
+        var self = this;
         var defs = [this._super.apply(this, arguments)];
         defs.push(new ShareMail(this).attachTo($('.oe_slide_js_share_email')));
 
@@ -64,7 +65,7 @@ sAnimations.registry.websiteSlidesShare = sAnimations.Class.extend({
         }
 
         _.each(socialURLs, function (value, key) {
-            this._updateStatistics(key, slideURL);
+            self._updateStatistics(key, slideURL);
         });
 
         return $.when.apply($, defs);

@@ -53,7 +53,6 @@ var SlideDialog = Widget.extend({
      * @param {string} file_name
      */
     _checkUniqueSlide: function (fileName) {
-        var self = this;
         return this._rpc({
             model: 'slide.slide',
             method: 'search_count',
@@ -148,7 +147,7 @@ var SlideDialog = Widget.extend({
         var self = this;
         $('#category_id').select2(this._select2Wrapper(_t('Category'), false,
             function () {
-                return this._rpc({
+                return self._rpc({
                     model: 'slide.category',
                     method: 'search_read',
                     args: [],
@@ -175,8 +174,9 @@ var SlideDialog = Widget.extend({
      * @private
      */
     _setTagIds: function () {
+        var self = this;
         $('#tag_ids').select2(this._select2Wrapper(_t('Tags'), true, function () {
-            return this._rpc({
+            return self._rpc({
                 model: 'slide.tag',
                 method: 'search_read',
                 args: [],
