@@ -1004,30 +1004,29 @@ class MailThread(models.AbstractModel):
 
         # 2. message is a reply to an existign thread (6.1 compatibility)
         if ref_match:
-            reply_thread_id = int(ref_match.group(1))
+            reply_thread_id = int(ref_match.group(1)) or thread_id
             reply_model = ref_match.group(2) or fallback_model
             reply_hostname = ref_match.group(3)
             local_hostname = socket.gethostname()
             # do not match forwarded emails from another OpenERP system (thread_id collision!)
             if local_hostname == reply_hostname:
-                thread_id, model = reply_thread_id, reply_model
-                if thread_id and model in self.pool:
-                    record = self.env[model].browse(thread_id)
+                if reply_thread_id and reply_model in self.pool:
+                    record = self.env[reply_model].browse(reply_thread_id)
                     compat_mail_msg_ids = MailMessage.search([
                         ('message_id', '=', False),
-                        ('model', '=', model),
-                        ('res_id', '=', thread_id)])
+                        ('model', '=', reply_model),
+                        ('res_id', '=', reply_thread_id)])
                     if compat_mail_msg_ids and record.exists() and hasattr(record, 'message_update'):
                         route = self.message_route_verify(
                             message, message_dict,
-                            (model, thread_id, custom_values, self._uid, None),
+                            (reply_model, reply_thread_id, custom_values, self._uid, None),
                             update_author=True, assert_model=True, create_fallback=True)
                         if route:
                             # parent is invalid for a compat-reply
                             message_dict.pop('parent_id', None)
                             _logger.info(
                                 'Routing mail from %s to %s with Message-Id %s: direct thread reply (compat-mode) to model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                                email_from, email_to, message_id, model, thread_id, custom_values, self._uid)
+                                email_from, email_to, message_id, reply_model, reply_thread_id, custom_values, self._uid)
                             return [route]
                         elif route is False:
                             return []
