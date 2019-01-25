@@ -3,6 +3,7 @@
 
 import logging
 import re
+import datetime
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
@@ -41,6 +42,7 @@ class SurveyQuestion(models.Model):
         ('textbox', 'Single Line Text Box'),
         ('numerical_box', 'Numerical Value'),
         ('date', 'Date'),
+        ('datetime', 'Datetime'),
         ('simple_choice', 'Multiple choice: only one answer'),
         ('multiple_choice', 'Multiple choice: multiple answers allowed'),
         ('matrix', 'Matrix')], string='Type of Question',
@@ -77,7 +79,9 @@ class SurveyQuestion(models.Model):
     validation_max_float_value = fields.Float('Maximum value')
     validation_min_date = fields.Date('Minimum Date')
     validation_max_date = fields.Date('Maximum Date')
-    validation_error_msg = fields.Char('Validation Error message', translate=True, default=lambda self: _("The answer you entered has an invalid format."))
+    validation_min_datetime = fields.Datetime('Minimum Datetime')
+    validation_max_datetime = fields.Datetime('Maximum Datetime')
+    validation_error_msg = fields.Char('Validation Error message', translate=True, default=lambda self: _("The answer you entered is not valid."))
     # Constraints on number of answers (matrices)
     constr_mandatory = fields.Boolean('Mandatory Answer')
     constr_error_msg = fields.Char('Error message', translate=True, default=lambda self: _("This question requires an answer."))
@@ -91,7 +95,8 @@ class SurveyQuestion(models.Model):
         ('positive_len_max', 'CHECK (validation_length_max >= 0)', 'A length must be positive!'),
         ('validation_length', 'CHECK (validation_length_min <= validation_length_max)', 'Max length cannot be smaller than min length!'),
         ('validation_float', 'CHECK (validation_min_float_value <= validation_max_float_value)', 'Max value cannot be smaller than min value!'),
-        ('validation_date', 'CHECK (validation_min_date <= validation_max_date)', 'Max date cannot be smaller than min date!')
+        ('validation_date', 'CHECK (validation_min_date <= validation_max_date)', 'Max date cannot be smaller than min date!'),
+        ('validation_datetime', 'CHECK (validation_min_datetime <= validation_max_datetime)','Max datetime cannot be smaller than min datetime!')
     ]
 
     @api.onchange('validation_email')
@@ -169,10 +174,11 @@ class SurveyQuestion(models.Model):
                     errors.update({answer_tag: self.validation_error_msg})
         return errors
 
-    @api.multi
-    def validate_date(self, post, answer_tag):
+    def date_validation(self, date_type, post, answer_tag, min_value, max_value):
         self.ensure_one()
         errors = {}
+        if date_type not in ('date', 'datetime'):
+            raise ValueError("Unexpected date type value")
         answer = post[answer_tag].strip()
         # Empty answer to mandatory question
         if self.constr_mandatory and not answer:
@@ -180,7 +186,10 @@ class SurveyQuestion(models.Model):
         # Checks if user input is a date
         if answer:
             try:
-                dateanswer = fields.Date.from_string(answer)
+                if date_type == 'datetime':
+                    dateanswer = fields.Datetime.from_string(answer)
+                else:
+                    dateanswer = fields.Date.from_string(answer)
             except ValueError:
                 errors.update({answer_tag: _('This is not a date')})
                 return errors
@@ -188,10 +197,13 @@ class SurveyQuestion(models.Model):
         if answer and self.validation_required:
             # Answer is not in the right range
             try:
-                date_from_string = fields.Date.from_string
+                if date_type == 'datetime':
+                    date_from_string = fields.Datetime.from_string
+                else:
+                    date_from_string = fields.Date.from_string
                 dateanswer = date_from_string(answer)
-                min_date = date_from_string(self.validation_min_date)
-                max_date = date_from_string(self.validation_max_date)
+                min_date = date_from_string(min_value)
+                max_date = date_from_string(max_value)
 
                 if min_date and max_date and not (min_date <= dateanswer <= max_date):
                     # If Minimum and Maximum Date are entered
@@ -205,6 +217,14 @@ class SurveyQuestion(models.Model):
             except ValueError:  # check that it is a date has been done hereunder
                 pass
         return errors
+
+    @api.multi
+    def validate_date(self, post, answer_tag):
+        return self.date_validation('date', post, answer_tag, self.validation_min_date, self.validation_max_date)
+
+    @api.multi
+    def validate_datetime(self, post, answer_tag):
+        return self.date_validation('datetime', post, answer_tag, self.validation_min_datetime, self.validation_max_datetime)
 
     @api.multi
     def validate_simple_choice(self, post, answer_tag):
