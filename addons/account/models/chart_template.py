@@ -174,7 +174,7 @@ class AccountChartTemplate(models.Model):
             # (won't work well for multi-company)
             company = self.env.user.company_id
         # If we don't have any chart of account on this company, install this chart of account
-        if not company.chart_template_id:
+        if not self.existing_accounting(company):
             self.load_for_current_company(15.0, 15.0)
 
     def load_for_current_company(self, sale_tax_rate, purchase_tax_rate):
