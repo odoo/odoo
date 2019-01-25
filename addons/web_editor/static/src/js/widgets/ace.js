@@ -360,7 +360,7 @@ var ViewEditor = Widget.extend({
         this.aceEditor.setSession(editingSession);
 
         if (this.currentType === 'xml') {
-            this.$viewID.text(_.str.sprintf(_t("Template ID: %s"), this.views[resID].xml_id));
+            this.$viewID.text(_.str.sprintf(_t("Template ID: %s"), this.views[resID].key));
         } else {
             this.$viewID.text(_.str.sprintf(_t("SCSS file: %s"), resID));
         }
