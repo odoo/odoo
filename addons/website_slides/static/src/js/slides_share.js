@@ -55,8 +55,8 @@ sAnimations.registry.websiteSlidesShare = sAnimations.Class.extend({
         defs.push(new ShareMail(this).attachTo($('.oe_slide_js_share_email')));
 
         if ($('div#statistic').length) {
-            var slideURL = $('div#statistic').attr('slide-url');
-            var socialURLs = {
+            this.slideURL = $('div#statistic').attr('slide-url');
+            this.socialURLs = {
                 linkedin: 'https://www.linkedin.com/countserv/count/share?url=',
                 twitter: 'https://cdn.api.twitter.com/1/urls/count.json?url=',
                 facebook: 'https://graph.facebook.com/?id=',
@@ -64,9 +64,9 @@ sAnimations.registry.websiteSlidesShare = sAnimations.Class.extend({
             };
         }
 
-        _.each(socialURLs, function (value, key) {
-            self._updateStatistics(key, slideURL);
-        });
+            _.each(this.socialURLs, function (value, key) {
+                self._updateStatistics(key, self.slideURL);
+            });
 
         return $.when.apply($, defs);
     },
@@ -81,9 +81,10 @@ sAnimations.registry.websiteSlidesShare = sAnimations.Class.extend({
      * @param {string} slide_url
      */
     _updateStatistics: function (socialSite, slideURL) {
+        var self = this;
         if (socialSite === 'gplus') {
             $.ajax({
-                url: this.social_urls['gplus'],
+                url: self.socialURLs['gplus'],
                 type: 'POST',
                 dataType: 'json',
                 contentType: 'application/json',
@@ -108,7 +109,7 @@ sAnimations.registry.websiteSlidesShare = sAnimations.Class.extend({
             });
         } else {
             $.ajax({
-                url: this.social_urls[socialSite] + slideURL,
+                url: self.socialURLs[socialSite] + slideURL,
                 dataType: 'jsonp',
                 success: function (data) {
                     var shareCount = (socialSite === 'facebook' ? data.shares : data.count) || 0;
