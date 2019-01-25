@@ -8,6 +8,8 @@ import werkzeug
 from odoo import http, _
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
+from odoo.osv import expression
+
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 
@@ -67,15 +69,21 @@ class WebsiteSlides(http.Controller):
             redirects directly to its slides
         """
         domain = request.website.website_domain()
+        # search bar
+        search_term = post.get('search')
+        if search_term:
+            domain = expression.AND([domain, ['|', ('name', 'ilike', search_term), ('description', 'ilike', search_term)]])
+
         channels = request.env['slide.channel'].search(domain, order='sequence, id')
         if not channels:
-            return request.render("website_slides.channel_not_found")
-        elif len(channels) == 1:
+            return request.render("website_slides.channel_not_found", {'search_term': search_term})
+        elif len(channels) == 1 and not search_term:  # don't auto redirect to only result when searching
             return request.redirect("/slides/%s" % channels.id)
         return request.render('website_slides.channels', {
             'channels': channels,
             'user': request.env.user,
             'is_public_user': request.website.is_public_user(),
+            'search_term': search_term,
         })
 
     @http.route([
