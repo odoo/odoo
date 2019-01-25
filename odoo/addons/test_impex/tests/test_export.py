@@ -286,15 +286,11 @@ class test_selection(CreatorCase):
 
     def test_localized_export(self):
         self.env['res.lang'].load_lang('fr_FR')
-        Translations = self.env['ir.translation']
-        for source, value in self.translations_fr:
-            Translations.create({
-                'name': 'export.selection,value',
-                'lang': 'fr_FR',
-                'type': 'selection',
-                'src': source,
-                'value': value
-            })
+        ir_field = self.env['ir.model.fields']._get('export.selection', 'value')
+        selection = ir_field.selection_ids
+        translations = dict(self.translations_fr)
+        for sel_fr, sel in zip(selection.with_context(lang='fr_FR'), selection):
+            sel_fr.name = translations.get(sel.name, sel_fr.name)
         self.assertEqual(
             self.export('2', context={'lang': 'fr_FR'}),
             [[u'titi']])

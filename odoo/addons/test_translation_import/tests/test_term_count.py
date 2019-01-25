@@ -36,16 +36,6 @@ class TestTermCount(common.TransactionCase):
         field = self.env['ir.model.fields'].search([('model', '=', 'test.translation.import'), ('name', '=', 'name')])
         self.assertEqual(translations[1].res_id, field.id)
 
-        translations = self.env['ir.translation'].search([
-            ('lang', '=', 'fr_FR'),
-            ('type', '=', 'selection'),
-            ('module', '=', 'test_translation_import'),
-        ], order='src')
-        self.assertEqual(len(translations), 2)
-        self.assertEqual(translations[0].name, 'test.translation.import,import_type')
-        self.assertEqual(translations[0].res_id, 0)
-
-
     def test_count_term_module(self):
         """
         Just make sure we have as many translation entries as we wanted and module deducted from file content

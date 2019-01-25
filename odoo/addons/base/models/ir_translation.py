@@ -15,7 +15,6 @@ _logger = logging.getLogger(__name__)
 TRANSLATION_TYPE = [
     ('model', 'Model Field'),
     ('model_terms', 'Structured Model Field'),
-    ('selection', 'Selection'),
     ('code', 'Code'),
 ]
 
@@ -122,16 +121,7 @@ class IrTranslationImport(object):
                             WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
                        """ % (self._model_table, self._table))
             count += cr.rowcount
-            cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
-                           SELECT name, lang, res_id, src, type, value, module, state, comments
-                           FROM %s
-                           WHERE type = 'selection'
-                           AND noupdate IS NOT TRUE
-                           ON CONFLICT (type, lang, name, md5(src)) WHERE type = 'selection'
-                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
-                            WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
-                       """ % (self._model_table, self._table))
-            count += cr.rowcount
+
             cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
                            SELECT name, lang, res_id, src, type, value, module, state, comments
                            FROM %s
@@ -204,8 +194,7 @@ class IrTranslation(models.Model):
             self._cr.execute("CREATE UNIQUE INDEX ir_translation_code_unique ON ir_translation (type, lang, md5(src)) WHERE type = 'code'")
         if not tools.index_exists(self._cr, 'ir_translation_model_unique'):
             self._cr.execute("CREATE UNIQUE INDEX ir_translation_model_unique ON ir_translation (type, lang, name, res_id) WHERE type = 'model'")
-        if not tools.index_exists(self._cr, 'ir_translation_selection_unique'):
-            self._cr.execute("CREATE UNIQUE INDEX ir_translation_selection_unique ON ir_translation (type, lang, name, md5(src)) WHERE type = 'selection'")
+
         return res
 
     @api.model
@@ -468,6 +457,19 @@ class IrTranslation(models.Model):
         """
         fields = self.env['ir.model.fields'].sudo().search([('model', '=', model_name)])
         return {field.name: field.help for field in fields}
+
+    @api.model
+    @tools.ormcache_context('model_name', 'field_name', keys=('lang',))
+    def get_field_selection(self, model_name, field_name):
+        """ Return the translation of a field's selection in the context's language.
+        Note that the result contains the available translations only.
+
+        :param model_name: the name of the field's model
+        :param field_name: the name of the field
+        :return: the fields' selection as a list
+        """
+        field = self.env['ir.model.fields']._get(model_name, field_name)
+        return [(sel.value, sel.name) for sel in field.selection_ids]
 
     def check(self, mode):
         """ Check access rights of operation ``mode`` on ``self`` for the
@@ -802,6 +804,7 @@ class IrTranslation(models.Model):
         :return: action definition to open the list of available translations
         """
         fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
+        selection_ids = [field.selection_ids.ids for field in fields if field.type == 'selection']
         view = self.env.ref("base.view_translation_tree", False) or self.env['ir.ui.view']
         return {
             'name': _("Technical Translations"),
@@ -810,12 +813,13 @@ class IrTranslation(models.Model):
             'res_model': 'ir.translation',
             'type': 'ir.actions.act_window',
             'domain': [
-                '|',
-                    '&', ('type', '=', 'model'),
+                '&',
+                    ('type', '=', 'model'),
+                    '|',
                         '&', ('res_id', 'in', fields.ids),
                              ('name', 'like', 'ir.model.fields,'),
-                    '&', ('type', '=', 'selection'),
-                         ('name', 'like', model_name+','),
+                        '&', ('res_id', 'in', selection_ids),
+                             ('name', 'like', 'ir.model.fields.selection,')
             ],
         }
 
