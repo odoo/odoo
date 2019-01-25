@@ -79,10 +79,15 @@ if(!the_form.length) {
 
                         // prefill of text/number/date boxes
                         var input = the_form.find(".form-control[name=" + key + "]");
-                        if (input.attr('date')) {
+                        if (input.hasClass('datetimepicker-input')) {
                             // display dates in user timezone
                             var moment_date = field_utils.parse.date(value[0]);
-                            value = field_utils.format.date(moment_date, null, {timezone: true});
+                            if ($(input).closest('.input-group.date').data('questiontype') === 'datetime') {
+                                value = field_utils.format.datetime(moment_date, null, {timezone: true});
+                            }
+                            else {
+                                value = field_utils.format.date(moment_date, null, {timezone: true});
+                            }
                         }
                         input.val(value);
 
@@ -133,7 +138,12 @@ if(!the_form.length) {
                 var moment_date = moment(el.value);
                 if (moment_date) {
                     moment_date.toJSON = function () {
-                        return this.clone().locale('en').format('YYYY-MM-DD');
+                        if ($(el).closest('.input-group.date').data('questiontype') === 'datetime') {
+                            return this.clone().utc().format('YYYY-MM-DD hh:mm:ss');
+                        }
+                        else {
+                            return this.clone().format('YYYY-MM-DD');
+                        }
                     };
                 }
                 var field_obj = _.findWhere(formData, {'name': el.name});
@@ -145,6 +155,11 @@ if(!the_form.length) {
             if(_.has(response, 'errors')){  // some questions have errors
                 _.each(_.keys(response.errors), function(key){
                     $("#" + key + '>.js_errzone').append('<p>' + response.errors[key] + '</p>').show();
+                    if (_.keys(response.errors)[_.keys(response.errors).length - 1] === key) {
+                         $('html, body').animate({
+                            scrollTop: $('.js_errzone:visible:first').closest('.js_question-wrapper').offset().top - $('.o_main_navbar').height()
+                        }, 500);
+                    }
                 });
                 return false;
             }
@@ -172,13 +187,33 @@ if(!the_form.length) {
     // frontend does not load moment locale at all.
     // so wait until DOM ready with locale then init datetimepicker
     load_locale().then(function(){
-         _.each($('.input-group.date'), function(date_field){
-            var minDate = $(date_field).data('mindate') || moment({ y: 1900 });
-            var maxDate = $(date_field).data('maxdate') || moment().add(200, "y");
+        _.each($('.input-group.date'), function(date_field){
+            var disabledDates = []
+            if ($(date_field).data('mindate')) {
+                var minDate = field_utils.format.datetime(moment($(date_field).data('mindate')), null, {timezone: true});
+            }
+            if ($(date_field).data('maxdate')) {
+                var maxDate = field_utils.format.datetime(moment($(date_field).data('maxdate')), null, {timezone: true});
+            }
+            else {
+                var minDate = $(date_field).data('mindate') || moment({ y: 1900 });
+                var maxDate = $(date_field).data('maxdate') || moment().add(200, "y");
+            }
+            var datetimepickerFormat = time.getLangDateFormat()
+            if ($(date_field).data('questiontype') === 'datetime') {
+                datetimepickerFormat = time.getLangDatetimeFormat()
+            }
+            else{
+                maxDate = moment(maxDate).add(1, "d");
+                disabledDates = [maxDate]
+            }
             $('#' + date_field.id).datetimepicker({
-                format : time.getLangDateFormat(),
+                format : datetimepickerFormat,
                 minDate: minDate,
                 maxDate: maxDate,
+                disabledDates: disabledDates,
+                useCurrent: false,
+                viewDate: moment(new Date()).hours(0).minutes(0).seconds(0).milliseconds(0),
                 calendarWeeks: true,
                 icons: {
                     time: 'fa fa-clock-o',

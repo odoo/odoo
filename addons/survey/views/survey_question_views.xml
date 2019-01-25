@@ -31,9 +31,15 @@
                                 <div attrs="{'invisible': [('question_type', '!=', 'numerical_box')]}">
                                     <i class="fa fa-2x" role="img" aria-label="Numeric" title="Numeric">123..</i>
                                 </div>
-                                <!-- Date and Time -->
+                                <!-- Date -->
                                 <div attrs="{'invisible': [('question_type', '!=', 'date')]}">
                                     <p class="o_datetime">YYYY-MM-DD
+                                        <i class="fa fa-calendar fa-2x" role="img" aria-label="Calendar" title="Calendar"/>
+                                    </p>
+                                </div>
+                                <!-- Date and Time -->
+                                <div attrs="{'invisible': [('question_type', '!=', 'datetime')]}">
+                                    <p class="o_datetime">YYYY-MM-DD hh:mm:ss
                                         <i class="fa fa-calendar fa-2x" role="img" aria-label="Calendar" title="Calendar"/>
                                     </p>
                                 </div>
@@ -106,7 +112,7 @@
                                     <field name="constr_mandatory" string="Mandatory Answer"/>
                                     <field name="constr_error_msg" attrs="{'invisible': [('constr_mandatory', '=', False)]}"/>
                                 </group>
-                                <div colspan="2" attrs="{'invisible': [('question_type', 'not in', ['textbox', 'numerical_box', 'date'])]}">
+                                <div colspan="2" attrs="{'invisible': [('question_type', 'not in', ['textbox', 'numerical_box', 'date', 'datetime'])]}">
                                     <group>
                                         <field name="validation_required" attrs="{'invisible': [('validation_email', '=', True), ('question_type', '=', 'textbox')]}"/>
                                     </group>
@@ -117,6 +123,8 @@
                                         <field name="validation_max_float_value" attrs="{'invisible': [('question_type', '!=', 'numerical_box')]}"/>
                                         <field name="validation_min_date" attrs="{'invisible': [('question_type', '!=', 'date')]}"/>
                                         <field name="validation_max_date" attrs="{'invisible': [('question_type', '!=', 'date')]}"/>
+                                        <field name="validation_min_datetime" widget="datetime" attrs="{'invisible': [('question_type', '!=', 'datetime')]}"/>
+                                        <field name="validation_max_datetime" widget="datetime" attrs="{'invisible': [('question_type', '!=', 'datetime')]}"/>
                                         <field name="validation_error_msg" colspan="4"/>
                                     </group>
                                 </div>
