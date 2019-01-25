@@ -19,7 +19,7 @@ class HrFleet(Controller):
             return request.not_found()
 
         employee = request.env['hr.employee'].search([('id', '=', employee_id)], limit=1)
-        partner_ids = (employee.user_id.partner_id | employee.address_home_id).ids
+        partner_ids = (employee.user_id.partner_id | employee.sudo().address_home_id).ids
         if not employee or not partner_ids:
             return request.not_found()
 
