@@ -25,6 +25,7 @@ class ResConfigSettings(models.TransientModel):
         ('percentage', 'Multiple prices per product (e.g. customer segments, currencies)'),
         ('formula', 'Prices computed from formulas (discounts, margins, roundings)')
         ], default='percentage', string="Pricelists Method")
+    # sale_pricelist_setting deprecated, use multi_sales_price_method instead
     sale_pricelist_setting = fields.Selection([
         ('fixed', 'A single sales price per product'),
         ('percentage', 'Multiple prices per product (e.g. customer segments, currencies)'),
@@ -133,11 +134,17 @@ class ResConfigSettings(models.TransientModel):
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
-        ICPSudo = self.env['ir.config_parameter'].sudo()
-        sale_pricelist_setting = ICPSudo.get_param('sale.sale_pricelist_setting')
+        multi_sales_price = self.env.user.has_group('product.group_sale_pricelist')
+        if self.env.user.has_group('product.group_product_pricelist'):
+            multi_sales_price_method = 'percentage'
+        elif self.env.user.has_group('product.group_pricelist_item'):
+            multi_sales_price_method = 'formula'
+        else:
+            multi_sales_price_method = False
+        sale_pricelist_setting = multi_sales_price_method or 'fixed'
         res.update(
-            multi_sales_price=sale_pricelist_setting in ['percentage', 'formula'],
-            multi_sales_price_method=sale_pricelist_setting in ['percentage', 'formula'] and sale_pricelist_setting or False,
+            multi_sales_price=multi_sales_price,
+            multi_sales_price_method=multi_sales_price_method,
             sale_pricelist_setting=sale_pricelist_setting,
         )
         return res
