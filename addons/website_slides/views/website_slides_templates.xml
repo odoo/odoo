@@ -16,7 +16,22 @@
 <template id="channels" name="Channels">
     <t t-call="website.layout">
         <div class="container mt16">
-            <h1>Select a Channel</h1>
+            <div class="d-flex justify-content-between mb-4">
+                <h1 t-if="not search_term">Select a Channel</h1>
+                <h1 t-if="search_term">Channel found for "<i><t t-esc="search_term"/></i>"</h1>
+                <div class="form-inline justify-content-center">
+                    <form method="GET" class="o_website_slides_search">
+                        <div class="input-group">
+                            <input type="text" name="search" class="search-query form-control oe_search_box" placeholder="Search..." t-att-value="search_term"/>
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary oe_search_button" aria-label="Search" title="Search">
+                                    <i class="fa fa-search"/>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <div class="row">
                 <t t-foreach="channels" t-as="channel">
                     <div t-if="channel_index % 3 == 0" class="clearfix"/>
@@ -69,7 +84,12 @@
     <t t-call="website.layout">
         <div class="container">
             <div class="oe_structure">
-                <h2>No channel created or published yet.</h2>
+                <t t-if="search_term">
+                    <h2>No channel found when searching "<i><t t-esc="search_term"/></i>".</h2>
+                </t>
+                <t t-else="">
+                    <h2>No channel created or published yet.</h2>
+                </t>
             </div>
         </div>
     </t>
