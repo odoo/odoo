@@ -228,17 +228,16 @@ var FormController = BasicController.extend({
                 // are displayed with an alert
                 var fields = self.renderer.state.fields;
                 var data = self.renderer.state.data;
-                var alertFields = [];
+                var alertFields = {};
                 for (var k = 0; k < changedFields.length; k++) {
                     var field = fields[changedFields[k]];
                     var fieldData = data[changedFields[k]];
                     if (field.translate && fieldData) {
-                        alertFields.push(field);
+                        alertFields[changedFields[k]] = field;
                     }
                 }
-                if (alertFields.length) {
-                    self.renderer.alertFields = alertFields;
-                    self.renderer.displayTranslationAlert();
+                if (!_.isEmpty(alertFields)) {
+                    self.renderer.updateAlertFields(alertFields);
                 }
             }
             return changedFields;
