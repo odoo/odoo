@@ -147,9 +147,9 @@
             <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" class="float-left" alt="Logo"/>
             <div class="float-left company_address">
                 <div>
-                    <strong t-field="company.partner_id.name"/>
+                    <strong t-field="partner_header.name"/>
                 </div>
-                <span t-field="company.partner_id"
+                <span t-esc="partner_header"
                     t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
             </div>
             <div class="clearfix mb8"/>
@@ -164,10 +164,10 @@
         <div class="footer o_background_footer">
             <div class="text-center">
                 <ul class="list-inline">
-                    <li t-if="company.phone" class="list-inline-item"><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span t-field="company.phone"/></li>
-                    <li t-if="company.email" class="list-inline-item"><i class="fa fa-at" role="img" aria-label="Email" title="Email"/> <span t-field="company.email"/></li>
-                    <li t-if="company.website" class="list-inline-item"><i class="fa fa-globe" role="img" aria-label="Website" title="Website"/> <span t-field="company.website"/></li>
-                    <li t-if="company.vat" class="list-inline-item"><i class="fa fa-building-o" role="img" aria-label="Fiscal number"/><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                    <li t-if="partner_header.phone" class="list-inline-item"><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span t-field="partner_header.phone"/></li>
+                    <li t-if="partner_header.email" class="list-inline-item"><i class="fa fa-at" role="img" aria-label="Email" title="Email"/> <span t-field="partner_header.email"/></li>
+                    <li t-if="partner_header.website" class="list-inline-item"><i class="fa fa-globe" role="img" aria-label="Website" title="Website"/> <span t-field="partner_header.website"/></li>
+                    <li t-if="partner_header.vat" class="list-inline-item"><i class="fa fa-building-o" role="img" aria-label="Fiscal number"/><t t-esc="partner_header.country_id.vat_label or 'Tax ID'"/>: <span t-field="partner_header.vat"/></li>
                 </ul>
                 <div t-field="company.report_footer"/>
                 <div t-if="report_type == 'pdf'" class="text-muted">
@@ -190,7 +190,7 @@
                 <div class="col-6 text-right mb4">
                     <h4 class="mt0" t-field="company.report_header"/>
                     <div name="company_address" class="mb4">
-                        <span class="company_address" t-field="company.partner_id"
+                        <span class="company_address" t-esc="partner_header"
                             t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
                     </div>
                 </div>
@@ -206,10 +206,10 @@
         <div class="footer o_boxed_footer">
             <div class="text-center">
                 <ul class="list-inline">
-                    <li t-if="company.phone" class="list-inline-item">Tel: <span t-field="company.phone"/></li>
-                    <li t-if="company.email" class="list-inline-item">Mail: <span t-field="company.email"/></li>
-                    <li t-if="company.website" class="list-inline-item">Web: <span t-field="company.website"/></li>
-                    <li t-if="company.vat" class="list-inline-item"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                    <li t-if="partner_header.phone" class="list-inline-item">Tel: <span t-field="partner_header.phone"/></li>
+                    <li t-if="partner_header.email" class="list-inline-item">Mail: <span t-field="partner_header.email"/></li>
+                    <li t-if="partner_header.website" class="list-inline-item">Web: <span t-field="partner_header.website"/></li>
+                    <li t-if="partner_header.vat" class="list-inline-item"><t t-esc="partner_header.country_id.vat_label or 'Tax ID'"/>: <span t-field="partner_header.vat"/></li>
                 </ul>
                 <div t-field="company.report_footer"/>
                 <div t-if="report_type == 'pdf'">
@@ -228,11 +228,11 @@
                 </div>
                 <div class="col-5 offset-1" name="company_address">
                     <ul class="list-unstyled">
-                        <strong><li t-if="company.name"><span t-field="company.name"/></li></strong>
-                        <li t-if="company.vat"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
-                        <li t-if="company.phone">Tel: <span t-field="company.phone"/></li>
-                        <li t-if="company.email"><span t-field="company.email"/></li>
-                        <li t-if="company.website"><span t-field="company.website"/></li>
+                        <strong><li t-if="partner_header.name"><span t-field="partner_header.name"/></li></strong>
+                        <li t-if="partner_header.vat"><t t-esc="partner_header.country_id.vat_label or 'Tax ID'"/>: <span t-field="partner_header.vat"/></li>
+                        <li t-if="partner_header.phone">Tel: <span t-field="partner_header.phone"/></li>
+                        <li t-if="partner_header.email"><span t-field="partner_header.email"/></li>
+                        <li t-if="partner_header.website"><span t-field="partner_header.website"/></li>
                     </ul>
                 </div>
             </div>
@@ -250,7 +250,7 @@
                     <span t-field="company.report_footer"/>
                 </div>
                 <div class="col-4 text-right">
-                    <span class="company_address" t-field="company.partner_id"
+                    <span class="company_address" t-esc="partner_header"
                         t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
                 </div>
                 <div class="col-4">
@@ -280,7 +280,7 @@
             </div>
             <div class="row">
                 <div class="col-6" name="company_address">
-                    <div t-field="company.partner_id"
+                    <div t-esc="partner_header"
                         t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
                     />
                 </div>
@@ -295,10 +295,10 @@
         <div class="footer o_standard_footer">
             <div class="text-center" style="border-top: 1px solid black;">
                 <ul class="list-inline mb4">
-                    <li t-if="company.phone" class="list-inline-item">Phone: <span t-field="company.phone"/></li>
-                    <li t-if="company.email" class="list-inline-item">Email: <span t-field="company.email"/></li>
-                    <li t-if="company.website" class="list-inline-item">Web: <span t-field="company.website"/></li>
-                    <li t-if="company.vat" class="list-inline-item"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                    <li t-if="partner_header.phone" class="list-inline-item">Phone: <span t-field="partner_header.phone"/></li>
+                    <li t-if="partner_header.email" class="list-inline-item">Email: <span t-field="partner_header.email"/></li>
+                    <li t-if="partner_header.website" class="list-inline-item">Web: <span t-field="partner_header.website"/></li>
+                    <li t-if="partner_header.vat" class="list-inline-item"><t t-esc="partner_header.country_id.vat_label or 'Tax ID'"/>: <span t-field="partner_header.vat"/></li>
                 </ul>
 
                 <div name="financial_infos">
@@ -329,6 +329,8 @@
                 <t t-set="company" t-value="res_company"/>
             </t>
         </t>
+
+        <t t-set="partner_header" t-value="company.partner_id"/>
 
         <t t-if="company.external_report_layout_id" t-call="{{company.external_report_layout_id.key}}"><t t-raw="0"/></t>
         <t t-else="else" t-call="web.external_layout_standard"><t t-raw="0"/></t>
