@@ -59,6 +59,7 @@ class SaleOrder(models.Model):
         if not self.sale_order_template_id:
             self.require_signature = self._get_default_require_signature()
             self.require_payment = self._get_default_require_payment()
+            self.require_payment_percentage = self._default_require_payment_percentage()
             return
         template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
 
@@ -102,6 +103,7 @@ class SaleOrder(models.Model):
 
         self.require_signature = template.require_signature
         self.require_payment = template.require_payment
+        self.require_payment_percentage = template.require_payment_percentage
 
         if template.note:
             self.note = template.note

@@ -110,6 +110,11 @@
                         <group>
                             <field name="require_signature"/>
                             <field name="require_payment"/>
+                            <label for="require_payment_percentage" attrs="{'invisible': [('require_payment', '=', False)]}"/>
+                            <div attrs="{'invisible': [('require_payment', '=', False)]}">
+                              <field name="require_payment_percentage" class="oe_inline"/>
+                              <span class="oe_inline">%</span>
+                            </div>
                             <field name="mail_template_id"/>
                         </group>
                     </page>

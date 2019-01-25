@@ -16,6 +16,9 @@ class SaleOrderTemplate(models.Model):
     def _get_default_require_payment(self):
         return self.env.user.company_id.portal_confirmation_pay
 
+    def _default_require_payment_percentage(self):
+        return self.env.user.company_id.quotation_confirmation_percentage
+
     name = fields.Char('Quotation Template', required=True)
     sale_order_template_line_ids = fields.One2many('sale.order.template.line', 'sale_order_template_id', 'Lines', copy=True)
     note = fields.Text('Terms and conditions')
@@ -24,6 +27,7 @@ class SaleOrderTemplate(models.Model):
         help='Number of days for the validity date computation of the quotation')
     require_signature = fields.Boolean('Online Signature', default=_get_default_require_signature, help='Request a online signature to the customer in order to confirm orders automatically.')
     require_payment = fields.Boolean('Online Payment', default=_get_default_require_payment, help='Request an online payment to the customer in order to confirm orders automatically.')
+    require_payment_percentage = fields.Float('Payment Amount', default=_default_require_payment_percentage, help='Percentage of payment requested to the customer in order to confirm orders automatically.')
     mail_template_id = fields.Many2one(
         'mail.template', 'Confirmation Mail',
         domain=[('model', '=', 'sale.order')],
