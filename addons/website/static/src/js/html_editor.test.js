@@ -72,4 +72,71 @@ tour.register('html_editor_multiple_templates', {
        },
     ]
 );
+
+tour.register('test_html_editor_scss', {
+    test: true,
+    url: '/aboutus',
+    wait_for: base.ready(),
+},
+    [
+        // 1. Open Html Editor and select a scss file
+        {
+            content: "open customize menu",
+            extra_trigger: '#wrap:visible', // ensure state for later
+            trigger: '#customize-menu > a',
+        },
+        {
+            content: "open html editor",
+            trigger: '#html_editor',
+        },
+        {
+            content: "open type switcher",
+            trigger: '.o_ace_type_switcher button',
+        },
+        {
+            content: "select scss files",
+            trigger: '.o_ace_type_switcher_choice[data-type="scss"]',
+        },
+        {
+            content: "select 'website.ui.scss'",
+            trigger: '#ace-scss-list',
+            run: function () {
+                var scssId = $('#ace-scss-list option:contains("website.ui")').val();
+                $('#ace-scss-list').val(scssId).trigger('change');
+            },
+        },
+        // 2. Edit that file and ensure it was saved then reset it
+        {
+            content: "add some scss content in the file",
+            trigger: 'div.ace_line .ace_variable:contains("body.o_connected_user")',
+            run: function () {
+                ace.edit('ace-view-editor').getSession().insert({row: 2, column: 0}, '#wrap {display: none;}\n');
+            },
+        },
+        {
+            content: "save the html editor",
+            extra_trigger: 'div.ace_line:contains("#wrap {display: none;}")',
+            trigger: ".o_ace_view_editor button[data-action=save]",
+        },
+         {
+            content: "check that the scss modification got applied",
+            trigger: 'body:has(#wrap:hidden)',
+            run: function () {}, // it's a check
+        },
+        {
+            content: "reset view (after reload, html editor should have been reopened where it was)",
+            trigger: '#ace-view-id button[data-action="reset"]',
+        },
+        {
+            content: "confirm reset warning",
+            trigger: '.modal-footer .btn-primary',
+        },
+        {
+            content: "check that the scss file was reset correctly, wrap content should now be visible again",
+            trigger: '#wrap:visible',
+            run: function () {}, // it's a check
+        },
+    ]
+);
+
 });
