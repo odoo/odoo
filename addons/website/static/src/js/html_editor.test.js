@@ -54,6 +54,7 @@ tour.register('html_editor_multiple_templates', {
         },
         {
             content: "add something in the oe_structure specific view",
+            extra_trigger: '#ace-view-id:contains("website.aboutus_oe_structure_test_ui")', // If no xml_id it should show key
             trigger: 'div.ace_line .ace_xml:contains("s_cover")',
             run: function () {
                 ace.edit('ace-view-editor').getSession().insert({row: 2, column: 1}, '<p>anothernewcontent</p>\n');
