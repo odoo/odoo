@@ -15,3 +15,8 @@ class AccountBankStatementLine(models.Model):
     _inherit = 'account.bank.statement.line'
 
     pos_statement_id = fields.Many2one('pos.order', string="POS statement", ondelete='cascade')
+
+    def _prepare_reconciliation_move(self, move_ref):
+        move_vals = super(AccountBankStatementLine, self)._prepare_reconciliation_move(move_ref)
+        move_vals['unit_id'] = self.pos_statement_id.unit_id.id
+        return move_vals

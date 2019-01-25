@@ -166,6 +166,7 @@ class PosOrder(models.Model):
         return self.env['account.move'].sudo().create({
             'ref': self.name,
             'journal_id': self.sale_journal.id,
+            'unit_id': self.unit_id.id,
             'date': date_tz_user
         })
 
@@ -179,6 +180,7 @@ class PosOrder(models.Model):
             'origin': self.name,
             'account_id': self.partner_id.property_account_receivable_id.id,
             'journal_id': self.session_id.config_id.invoice_journal_id.id,
+            'unit_id': self.unit_id.id,
             'company_id': self.company_id.id,
             'type': invoice_type,
             'reference': self.name,
@@ -540,6 +542,9 @@ class PosOrder(models.Model):
     def _default_company_id(self):
         return self._default_session().config_id.company_id
 
+    def _default_unit(self):
+        return self._default_session().config_id.unit_id
+
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
     date_order = fields.Datetime(string='Order Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
@@ -557,6 +562,7 @@ class PosOrder(models.Model):
     statement_ids = fields.One2many('account.bank.statement.line', 'pos_statement_id', string='Payments', states={'draft': [('readonly', False)]}, readonly=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
                                     default=lambda self: self._default_company_id())
+    unit_id = fields.Many2one('res.partner', string="Operating Unit", ondelete="restrict", readonly=True, default=_default_unit)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, states={
                                    'draft': [('readonly', False)]}, readonly=True, default=_default_pricelist)
     partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index=True, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]})
