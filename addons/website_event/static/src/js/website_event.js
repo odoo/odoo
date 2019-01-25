@@ -1,27 +1,9 @@
-odoo.define('website_event.registration_form.instance', function (require) {
-'use strict';
-
-require('web_editor.ready');
-var EventRegistrationForm = require('website_event.website_event');
-
-var $form = $('#registration_form');
-if (!$form.length) {
-    return null;
-}
-
-var instance = new EventRegistrationForm();
-return instance.appendTo($form).then(function () {
-    return instance;
-});
-});
-
-//==============================================================================
-
 odoo.define('website_event.website_event', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
+var sAnimations = require('website.content.snippets.animation');
 
 var _t = core._t;
 
@@ -71,6 +53,19 @@ var EventRegistrationForm = Widget.extend({
                 });
             });
         }
+    },
+});
+
+sAnimations.registry.EventRegistrationFormInstance = sAnimations.Class.extend({
+    selector: '#registration_form',
+
+    /**
+     * @override
+     */
+    start: function () {
+        var def = this._super.apply(this, arguments);
+        var instance = new EventRegistrationForm(this);
+        return $.when(def, instance.appendTo(this.$el));
     },
 });
 
