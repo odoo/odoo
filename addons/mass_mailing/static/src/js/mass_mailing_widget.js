@@ -134,8 +134,8 @@ var MassMailingFieldHtml = FieldHtml.extend({
      */
     _editableAreaIsEmpty: function ($layout) {
         $layout = $layout || this.$content.find(".o_layout");
-        var $mailWrapper = $layout.children(".o_mailWrapper");
-        var $mailWrapperContent = $mailWrapper.find('.o_mailWrapper_td');
+        var $mailWrapper = $layout.children(".o_mail_wrapper");
+        var $mailWrapperContent = $mailWrapper.find('.o_mail_wrapper_td');
         if (!$mailWrapperContent.length) { // compatibility
             $mailWrapperContent = $mailWrapper;
         }
@@ -259,10 +259,10 @@ var MassMailingFieldHtml = FieldHtml.extend({
             // This wrapper structure is the only way to have a responsive
             // and centered fixed-width content column on all mail clients
             $new_wrapper = $('<table/>', {
-                class: 'o_mailWrapper'
+                class: 'o_mail_wrapper'
             });
             $newWrapperContent = $('<td/>', {
-                class: 'o_mail_no_options o_mailWrapper_td oe_structure'
+                class: 'o_mail_no_options o_mail_wrapper_td oe_structure'
             });
             $new_wrapper.append($('<tr/>').append(
                 $('<td/>', {
