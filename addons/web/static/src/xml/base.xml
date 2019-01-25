@@ -1525,7 +1525,7 @@
     <div role="alertdialog">
         Please update translations of :
         <t t-foreach="fields" t-as="field">
-            <strong><a class="oe_field_translate" t-att-name="field.name" href="#"><t t-esc="field.string"/><t t-if="!field_last">, </t></a></strong>
+            <strong><a class="oe_field_translate" t-att-name="field" href="#"><t t-esc="field_value.string"/><t t-if="field_index &lt; _.size(fields)-1">, </t></a></strong>
         </t>
     </div>
 </t>
