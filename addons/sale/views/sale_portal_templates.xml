@@ -128,6 +128,9 @@
 
                     <t t-set="title">
                         <h2 class="mb-0"><b t-field="sale_order.amount_total"/> </h2>
+                        <t t-if="sale_order.has_to_be_down_paid(True)">
+                          Down payment of <b t-field="sale_order.require_payment_percentage"/> % (<b t-field="sale_order.confirmation_amount" />)
+                        </t>
                     </t>
                     <t t-set="entries">
                         <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
@@ -236,7 +239,16 @@
                                         <span>By paying this proposal, I agree to the following terms:</span>
                                         <ul>
                                             <li><span>Accepted on the behalf of:</span> <b t-field="sale_order.partner_id.commercial_partner_id"/></li>
-                                            <li><span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/></li>
+                                            <li>
+                                              <span>For an amount of:</span>
+                                              <t t-if="sale_order.require_payment_percentage &lt; 100">
+                                                <b t-field="sale_order.confirmation_amount"/>
+                                                (Down payment of <b t-field="sale_order.require_payment_percentage"/> %),
+                                              </t>
+                                              <t t-else="">
+                                                <b data-id="total_amount" t-field="sale_order.amount_total"/>
+                                              </t>
+                                            </li>
                                             <li t-if="sale_order.payment_term_id"><span>With payment terms:</span> <b t-field="sale_order.payment_term_id"/></li>
                                         </ul>
                                     </p>
@@ -293,6 +305,7 @@
                         Your order is not in a state to be rejected.
                     </div>
 
+                    <!-- Display info on last transaction related to the SO -->
                     <t t-if="sale_order.transaction_ids">
                         <t t-call="payment.payment_confirmation_status">
                             <t t-set="payment_tx_id" t-value="sale_order.get_portal_last_transaction()"/>

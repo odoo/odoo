@@ -161,6 +161,15 @@
                                 <div class="text-muted">
                                     Request an online payment to confirm orders
                                 </div>
+                                <div class="content-group" attrs="{'invisible': [('portal_confirmation_pay', '=', False)]}">
+                                  <div class="mt16">
+                                    <div class="oe_inline">
+                                      <label for="quotation_confirmation_percentage" class="o_light_label"/>
+                                      <field name="quotation_confirmation_percentage" class="oe_inline"/>
+                                      <span class="oe_inline">%</span>
+                                    </div>
+                                  </div>
+                                </div>
                                 <div attrs="{'invisible': [('portal_confirmation_pay', '=', False)]}">
                                     <button name='%(payment.action_payment_acquirer)d' icon="fa-arrow-right" type="action" string="Payment Acquirers" class="btn-link"/>
                                 </div>
@@ -363,6 +372,9 @@
                                 <label for="automatic_invoice"/>
                                 <div class="text-muted">
                                     Generate the invoice automatically when the online payment is confirmed
+                                    <div class="alert alert-warning" role="alert" attrs="{'invisible': ['|',('automatic_invoice','=',False),('quotation_confirmation_percentage','=',100)]}">
+                                      Watch out: When the order is partially paid (amount&lt;100%), you need to issue the invoice manually.
+                                    </div>
                                 </div>
                                 <div  attrs="{'invisible': [('automatic_invoice','=',False)]}">
                                     <label for="template_id" class="o_light_label"/>

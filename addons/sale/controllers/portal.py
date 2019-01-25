@@ -292,7 +292,8 @@ class CustomerPortal(CustomerPortal):
             render_values={
                 'type': order._get_payment_type(),
                 'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
-            }
+            },
+            amount=transaction.amount
         )
 
     @http.route('/my/orders/<int:order_id>/transaction/token', type='http', auth='public', website=True)

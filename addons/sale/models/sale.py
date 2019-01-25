@@ -36,6 +36,18 @@ class SaleOrder(models.Model):
     def _get_default_require_payment(self):
         return self.env.user.company_id.portal_confirmation_pay
 
+    def _default_require_payment_percentage(self):
+        return self.env.user.company_id.quotation_confirmation_percentage
+
+    @api.model
+    def default_get(self, default_fields):
+        defaults = super(SaleOrder, self).default_get(default_fields)
+
+        if defaults.get('require_payment', False):
+            defaults['require_payment_percentage'] = self._default_require_payment_percentage()
+
+        return defaults
+
     @api.depends('order_line.price_total')
     def _amount_all(self):
         """
@@ -142,6 +154,10 @@ class SaleOrder(models.Model):
     require_payment = fields.Boolean('Online Payment', default=_get_default_require_payment, readonly=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help='Request an online payment to the customer in order to confirm orders automatically.')
+    require_payment_percentage = fields.Float('Payment Amount', default=0.0, readonly=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        help='Percentage of payment requested to the customer in order to confirm orders automatically.')
+    confirmation_amount = fields.Monetary(string="Confirmation Amount", help="Amount to pay online to confirm orders automatically", store=True, compute='_compute_confirmation_amount', readonly=True)
     remaining_validity_days = fields.Integer(compute='_compute_remaining_validity_days', string="Remaining Days Before Expiration")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
     confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sales order is confirmed.", oldname="date_confirm", copy=False)
@@ -238,8 +254,8 @@ class SaleOrder(models.Model):
 
     @api.depends('transaction_ids')
     def _compute_authorized_transaction_ids(self):
-        for trans in self:
-            trans.authorized_transaction_ids = trans.transaction_ids.filtered(lambda t: t.state == 'authorized')
+        for order in self:
+            order.authorized_transaction_ids = order.transaction_ids.filtered(lambda t: t.state == 'authorized')
 
     @api.one
     def _compute_amount_undiscounted(self):
@@ -248,11 +264,22 @@ class SaleOrder(models.Model):
             total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty  # why is there a discount in a field named amount_undiscounted ??
         self.amount_undiscounted = total
 
+    @api.depends('require_payment_percentage', 'amount_total')
+    def _compute_confirmation_amount(self):
+        for order in self:
+            order.confirmation_amount = order.amount_total*order.require_payment_percentage/100.0
+
     @api.multi
     @api.depends('state')
     def _compute_type_name(self):
         for record in self:
             record.type_name = _('Quotation') if record.state in ('draft', 'sent', 'cancel') else _('Sales Order')
+
+    _sql_constraints = [
+        ('confirmation_percentage',
+            "CHECK(NOT require_payment OR (require_payment_percentage > 0 AND require_payment_percentage <= 100))",
+            "Confirmation payment percentage has to be between 0 and 100."),
+    ]
 
     @api.multi
     def unlink(self):
@@ -354,6 +381,11 @@ class SaleOrder(models.Model):
                                  "You may be unable to honor the commitment date.")
                 }
             }
+
+    @api.onchange('require_payment')
+    def _onchange_require_payment(self):
+        if self.require_payment and not self.require_payment_percentage:
+            self.require_payment_percentage = self._default_require_payment_percentage()
 
     @api.model
     def create(self, vals):
@@ -753,6 +785,9 @@ class SaleOrder(models.Model):
         transaction = self.get_portal_last_transaction()
         return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_payment and transaction.state != 'done' and self.amount_total
 
+    def has_to_be_down_paid(self, also_in_draft=False):
+        return self.has_to_be_paid(also_in_draft) and self.require_payment_percentage < 100
+
     @api.multi
     def _notify_get_groups(self, message, groups):
         """ Give access button to users and portal customer as portal is integrated
@@ -771,11 +806,11 @@ class SaleOrder(models.Model):
 
     @api.multi
     def _create_payment_transaction(self, vals):
-        '''Similar to self.env['payment.transaction'].create(vals) but the values are filled with the
+        """Similar to self.env['payment.transaction'].create(vals) but the values are filled with the
         current sales orders fields (e.g. the partner or the currency).
         :param vals: The values to create a new payment.transaction.
         :return: The newly created payment.transaction record.
-        '''
+        """
         # Ensure the currencies are the same.
         currency = self[0].pricelist_id.currency_id
         if any([so.pricelist_id.currency_id != currency for so in self]):
@@ -821,7 +856,7 @@ class SaleOrder(models.Model):
             vals['acquirer_id'] = acquirer.id
 
         vals.update({
-            'amount': sum(self.mapped('amount_total')),
+            'amount': sum(sale_order.confirmation_amount if sale_order.has_to_be_down_paid(True) else sale_order.amount_total for sale_order in self),
             'currency_id': currency.id,
             'partner_id': partner.id,
             'sale_order_ids': [(6, 0, self.ids)],

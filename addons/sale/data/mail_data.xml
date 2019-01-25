@@ -97,6 +97,12 @@
         % endif
         amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong>
         from ${object.company_id.name}.
+        <br />
+        % if object.has_to_be_down_paid(True):
+            A down payment of ${object.require_payment_percentage}%
+            (<strong>${format_amount(object.confirmation_amount, object.currency_id)}</strong>)
+            is requested as confirmation.
+        % endif
         <br /><br />
         Do not hesitate to contact us if you have any question.
     </p>

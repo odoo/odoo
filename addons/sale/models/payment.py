@@ -59,7 +59,7 @@ class PaymentTransaction(models.Model):
     @api.multi
     def _set_transaction_pending(self):
         # Override of '_set_transaction_pending' in the 'payment' module
-        # to sent the quotations automatically.
+        # to send the quotations automatically.
         super(PaymentTransaction, self)._set_transaction_pending()
 
         for record in self:
@@ -87,13 +87,16 @@ class PaymentTransaction(models.Model):
         # Override of '_set_transaction_done' in the 'payment' module
         # to confirm the quotations automatically and to generate the invoices if needed.
         sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ('draft', 'sent'))
+        sales_orders_to_not_invoice = sales_orders.filtered(lambda so: so.has_to_be_down_paid(True))
+        # no automatic invoice is generated for confirmation down payments
+        # (confirmation payment < 100% of amount)
         for so in sales_orders:
             # For loop because some override of action_confirm are ensure_one.
             so.with_context(send_email=True).action_confirm()
-        # invoice the sale orders if needed
-        self._invoice_sale_orders()
-        res = super(PaymentTransaction, self)._reconcile_after_transaction_done()
         if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
+            # invoice the sale orders if needed
+            self._invoice_sale_orders(sales_orders_to_not_invoice)
+            res = super(PaymentTransaction, self)._reconcile_after_transaction_done()
             default_template = self.env['ir.config_parameter'].sudo().get_param('sale.default_email_template')
             if default_template:
                 ctx_company = {'company_id': self.acquirer_id.company_id.id,
@@ -104,18 +107,28 @@ class PaymentTransaction(models.Model):
                     trans = trans.with_context(ctx_company)
                     for invoice in trans.invoice_ids:
                         invoice.message_post_with_template(int(default_template), notif_layout="mail.mail_notification_paynow")
-        return res
+            return res
+        return super(PaymentTransaction, self)._reconcile_after_transaction_done()
 
     @api.multi
-    def _invoice_sale_orders(self):
-        if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
-            ctx_company = {'company_id': self.acquirer_id.company_id.id,
-                           'force_company': self.acquirer_id.company_id.id}
-            for trans in self.filtered(lambda t: t.sale_order_ids):
-                trans = trans.with_context(**ctx_company)
-                trans.sale_order_ids._force_lines_to_invoice_policy_order()
-                invoices = trans.sale_order_ids._create_invoices()
-                trans.invoice_ids = [(6, 0, invoices)]
+    def _invoice_sale_orders(self, not_invoiceable_orders=None):
+        """
+        :param set not_invoiceable_orders: sales orders to not invoice
+        """
+        not_invoiceable_orders = not_invoiceable_orders or self.env['sale.order']
+        ctx_company = {'company_id': self.acquirer_id.company_id.id,
+                       'force_company': self.acquirer_id.company_id.id}
+        for trans in self.filtered(lambda t: t.sale_order_ids):
+            trans = trans.with_context(**ctx_company)
+            sale_order_ids = trans.sale_order_ids.filtered(lambda so: so not in not_invoiceable_orders)
+            # no automatic invoice is generated for confirmation down payments
+            # (confirmation payment < 100% of amount)
+            sale_order_ids._force_lines_to_invoice_policy_order()
+            # VFE FIXME conflicting behavior :
+            # a SO could be totally invoiced on confirmation
+            # even if invoice policy = delivered_qty.
+            invoices = sale_order_ids._create_invoices()
+            trans.invoice_ids = [(6, 0, invoices)]
 
     @api.model
     def _compute_reference_prefix(self, values):
@@ -146,7 +159,11 @@ class PaymentTransaction(models.Model):
     # Tools for payment
     # --------------------------------------------------
 
-    def render_sale_button(self, order, submit_txt=None, render_values=None):
+    def render_sale_button(self, order, submit_txt=None, amount=None, render_values=None):
+        """
+            :param float amount: Supported for partial payments of a sale order
+            (f.e. down payments of confirmation)
+        """
         values = {
             'partner_id': order.partner_shipping_id.id or order.partner_invoice_id.id,
             'billing_partner_id': order.partner_invoice_id.id,
@@ -157,7 +174,7 @@ class PaymentTransaction(models.Model):
         self._log_payment_transaction_sent()
         return self.acquirer_id.with_context(submit_class='btn btn-primary', submit_txt=submit_txt or _('Pay Now')).sudo().render(
             self.reference,
-            order.amount_total,
+            amount if amount is not None else order.amount_total,
             order.pricelist_id.currency_id.id,
             values=values,
         )

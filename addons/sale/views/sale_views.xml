@@ -566,11 +566,18 @@
                                     <field name="user_id"/>
                                     <field name="team_id" options="{'no_create': True}"/>
                                     <field name="client_order_ref"/>
-                                    <field name="require_signature"/>
-                                    <field name="require_payment"/>
                                     <field name="reference" readonly="1" attrs="{'invisible': [('reference', '=', False)]}"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field name="analytic_account_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" attrs="{'readonly': [('invoice_count','!=',0),('state','=','sale')]}" groups="analytic.group_analytic_accounting" force_save="1"/>
+                                </group>
+                                <group string="Online Confirmation">
+                                    <field name="require_signature"/>
+                                    <field name="require_payment"/>
+                                    <label for="require_payment_percentage" attrs="{'invisible': [('require_payment', '=', False)]}"/>
+                                    <div attrs="{'invisible': [('require_payment', '=', False)]}">
+                                      <field name="require_payment_percentage" class="oe_inline"/>
+                                      <span class="oe_inline">%</span>
+                                    </div>
                                 </group>
                                 <group name="sale_pay" string="Invoicing">
                                     <field name="date_order" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>

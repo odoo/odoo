@@ -10,6 +10,7 @@ class ResCompany(models.Model):
     portal_confirmation_sign = fields.Boolean(string='Online Signature')
     portal_confirmation_pay = fields.Boolean(string='Online Payment')
     quotation_validity_days = fields.Integer(default=30, string="Default Quotation Validity (Days)")
+    quotation_confirmation_percentage = fields.Float(string="Requested pay down percentage for quotation confirmation", default=100.0)
 
     # sale quotation onboarding
     sale_quotation_onboarding_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done"), ('closed', "Closed")], string="State of the sale onboarding panel", default='not_done')
@@ -23,6 +24,12 @@ class ResCompany(models.Model):
         ('other', 'Pay with another payment acquirer'),
         ('manual', 'Wire Transfer'),
     ], string="Sale onboarding selected payment method")
+
+    _sql_constraints = [
+        ('confirmation_percentage',
+            "CHECK(NOT portal_confirmation_pay OR (quotation_confirmation_percentage > 0 AND quotation_confirmation_percentage <= 100))",
+            "Confirmation payment percentage has to be between 0 and 100."),
+    ]
 
     @api.model
     def action_close_sale_quotation_onboarding(self):
