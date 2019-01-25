@@ -314,7 +314,7 @@ class TestTranslation(TransactionCase):
                 })
         self.env['ir.translation'].translate_fields('res.partner.category', padawans.id, 'name')
         translations = self.env['ir.translation'].search([
-            ('res_id', '=', padawans.id), ('name', '=', 'res.partner.category,name')
+            ('res_id', '=', padawans.id), ('name', '=', 'res.partner.category,name'), ('lang', '=', 'fr_FR')
         ])
         self.assertEqual(len(translations), 1, "Translations were not duplicated after `translate_fields` call")
         self.assertEqual(translations.value, "Apprenti", "The first translation must stay")
