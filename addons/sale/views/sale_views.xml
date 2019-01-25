@@ -590,6 +590,7 @@
                                     <field name="user_id"/>
                                     <field name="team_id" options="{'no_create': True}"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                    <field name="unit_id" domain="[('company_unit_id', '=', company_id)]" options="{'no_create': True}" groups="account.group_multi_operating_unit"/>
                                     <field name="require_signature"/>
                                     <field name="require_payment"/>
                                     <field name="reference" readonly="1" attrs="{'invisible': [('reference', '=', False)]}"/>

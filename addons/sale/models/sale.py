@@ -197,6 +197,11 @@ class SaleOrder(models.Model):
                                        string='Transactions', copy=False, readonly=True)
     authorized_transaction_ids = fields.Many2many('payment.transaction', compute='_compute_authorized_transaction_ids',
                                                   string='Authorized Transactions', copy=False, readonly=True)
+    unit_id = fields.Many2one(
+        'res.partner',
+        string="Operating Unit",
+        ondelete="restrict",
+        default=lambda self: self.env.user._get_default_unit())
 
     _sql_constraints = [
         ('confirmation_date_conditional_required', "CHECK( (state IN ('sale', 'done') AND confirmation_date IS NOT NULL) OR state NOT IN ('sale', 'done') )", "A confirmed sales order requires a confirmation date."),
@@ -273,6 +278,10 @@ class SaleOrder(models.Model):
         elif 'state' in init_values and self.state == 'sent':
             return self.env.ref('sale.mt_order_sent')
         return super(SaleOrder, self)._track_subtype(init_values)
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        self.unit_id = self.company_id.partner_id
 
     @api.multi
     @api.onchange('partner_shipping_id', 'partner_id')
@@ -457,6 +466,7 @@ class SaleOrder(models.Model):
             'partner_id': self.partner_invoice_id.id,
             'partner_shipping_id': self.partner_shipping_id.id,
             'journal_id': journal_id,
+            'unit_id': self.unit_id.id,
             'currency_id': self.pricelist_id.currency_id.id,
             'comment': self.note,
             'payment_term_id': self.payment_term_id.id,

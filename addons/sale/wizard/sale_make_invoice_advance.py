@@ -101,6 +101,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'reference': False,
             'account_id': order.partner_id.property_account_receivable_id.id,
             'partner_id': order.partner_invoice_id.id,
+            'unit_id': order.unit_id.id,
             'partner_shipping_id': order.partner_shipping_id.id,
             'invoice_line_ids': [(0, 0, {
                 'name': name,
