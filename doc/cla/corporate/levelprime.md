@@ -9,9 +9,12 @@ declaration.
 Signed,
 
 Roberto Fichera roberto.fichera@levelprime.com https://github.com/robyf70
+Filippo Iovine - filippo.iovine@levelprime.com - https://github.com/FilippoIOVINE
 
 
 List of contributors:
 
 Roberto Fichera roberto.fichera@levelprime.com https://github.com/robyf70
 Roberto Fichera robyf@tekno-soft.it https://github.com/robyf70
+Filippo Iovine - filippo.iovine@levelprime.com - https://github.com/FilippoIOVINE
+Filippo Iovine - filippo.jovine@gmail.com - https://github.com/FilippoIOVINE
