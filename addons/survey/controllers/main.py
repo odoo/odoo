@@ -348,8 +348,7 @@ class Survey(http.Controller):
         filter_display_data = []
         filter_finish = False
 
-        if not survey.user_input_ids or not [input_id.id for input_id in survey.user_input_ids if input_id.state != 'new']:
-            result_template = 'survey.no_result'
+        answers = survey.user_input_ids.filtered(lambda answer: answer.state != 'new' and not answer.test_entry)
         if 'finished' in post:
             post.pop('finished')
             filter_finish = True
@@ -359,6 +358,7 @@ class Survey(http.Controller):
             filter_display_data = survey.get_filter_display_data(filter_data)
         return request.render(result_template,
                                       {'survey': survey,
+                                       'answers': answers,
                                        'survey_dict': self._prepare_result_dict(survey, current_filters),
                                        'page_range': self.page_range,
                                        'current_filters': current_filters,
