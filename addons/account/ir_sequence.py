@@ -54,6 +54,9 @@ class ir_sequence(osv.osv):
             for line in seq.fiscal_ids:
                 if line.fiscalyear_id.id == context.get('fiscalyear_id'):
                     return super(ir_sequence, self)._next(cr, uid, [line.sequence_id.id], context)
+                elif context.get('date'):
+                    if datetime.strptime(line.fiscalyear_id.date_start,'%Y-%m-%d').year == datetime.strptime(context.get('date'),'%Y-%m-%d').year:
+                        return super(ir_sequence, self)._next(cr, uid, [line.sequence_id.id], context)
         return super(ir_sequence, self)._next(cr, uid, seq_ids, context)
 
 
