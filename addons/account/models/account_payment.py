@@ -324,7 +324,7 @@ class account_register_payments(models.TransientModel):
         pmt_communication = self.show_communication_field and self.communication \
                             or self.group_invoices and ' '.join([inv.reference or inv.number for inv in invoices]) \
                             or invoices[0].reference # in this case, invoices contains only one element, since group_invoices is False
-        return {
+        values = {
             'journal_id': self.journal_id.id,
             'payment_method_id': self.payment_method_id.id,
             'payment_date': self.payment_date,
@@ -337,7 +337,12 @@ class account_register_payments(models.TransientModel):
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
             'partner_bank_account_id': bank_account.id,
             'multi': False,
+            'payment_difference_handling': self.payment_difference_handling,
+            'writeoff_account_id': self.writeoff_account_id.id,
+            'writeoff_label': self.writeoff_label,
         }
+
+        return values
 
     @api.multi
     def get_payments_vals(self):

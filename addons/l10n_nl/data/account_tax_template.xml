@@ -331,8 +331,6 @@
             <field name="description">21% BTW verlegd</field>
             <field eval="21" name="amount"/>
             <field name="amount_type">group</field>
-            <field name="refund_account_id" ref="vat_payable_v"/>
-            <field name="account_id" ref="vat_payable_v"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_10')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_ink_0_1'), ref('btw_ink_0_2')])]"/>
