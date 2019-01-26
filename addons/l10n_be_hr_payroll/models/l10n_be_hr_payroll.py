@@ -14,10 +14,6 @@ class HrContract(models.Model):
     transport_mode_others = fields.Boolean('Uses another transport mode')
     car_atn = fields.Monetary(string='ATN Company Car')
     public_transport_employee_amount = fields.Monetary('Paid by the employee (Monthly)')
-    thirteen_month = fields.Monetary(compute='_compute_holidays_advantages', string='13th Month',
-        help="Yearly gross amount the employee receives as 13th month bonus.")
-    double_holidays = fields.Monetary(compute='_compute_holidays_advantages', string='Holiday Bonus',
-        help="Yearly gross amount the employee receives as holidays bonus.")
     warrant_value_employee = fields.Monetary(compute='_compute_warrants_cost', string="Warrant value for the employee")
 
     # Employer costs fields
@@ -63,8 +59,6 @@ class HrContract(models.Model):
         help="Amount the employee receives in the form of meal vouchers per worked day.")
     holidays = fields.Float(string='Paid Time Off',
         help="Number of days of paid leaves the employee gets per year.")
-    holidays_editable = fields.Boolean(string="Editable Leaves", default=True)
-    holidays_compensation = fields.Monetary(compute='_compute_holidays_compensation', string="Holidays Compensation")
     wage_with_holidays = fields.Monetary(compute='_compute_wage_with_holidays', inverse='_inverse_wage_with_holidays',
         tracking=True, string="Wage update with holidays retenues")
     additional_net_amount = fields.Monetary(string="Net Supplements",
@@ -86,15 +80,15 @@ class HrContract(models.Model):
     @api.depends('holidays', 'wage', 'final_yearly_costs')
     def _compute_wage_with_holidays(self):
         for contract in self:
-            if contract.holidays > 20.0:
-                yearly_cost = contract.final_yearly_costs * (1.0 - (contract.holidays - 20.0) / 231.0)
+            if contract.holidays:
+                yearly_cost = contract.final_yearly_costs * (1.0 - contract.holidays / 231.0)
                 contract.wage_with_holidays = contract._get_gross_from_employer_costs(yearly_cost)
             else:
                 contract.wage_with_holidays = contract.wage
 
     def _inverse_wage_with_holidays(self):
         for contract in self:
-            if contract.holidays > 20.0:
+            if contract.holidays:
                 remaining_for_gross = contract.wage_with_holidays * (13.0 + 13.0 * 0.3507 + 0.92)
                 yearly_cost = remaining_for_gross \
                     + 12.0 * contract.representation_fees \
@@ -104,7 +98,7 @@ class HrContract(models.Model):
                     + 12.0 * contract.transport_employer_cost \
                     + contract.warrants_cost \
                     + 220.0 * contract.meal_voucher_paid_by_employer
-                contract.final_yearly_costs = yearly_cost / (1.0 - (contract.holidays - 20.0) / 231.0)
+                contract.final_yearly_costs = yearly_cost / (1.0 - contract.holidays / 231.0)
                 contract.wage = contract._get_gross_from_employer_costs(contract.final_yearly_costs)
             else:
                 contract.wage = contract.wage_with_holidays
@@ -143,26 +137,17 @@ class HrContract(models.Model):
                 contract.transport_employer_cost
             )
 
-    @api.depends('yearly_cost_before_charges', 'social_security_contributions', 'wage',
-        'social_security_contributions', 'double_holidays', 'warrants_cost', 'meal_voucher_paid_by_employer')
+    @api.depends('yearly_cost_before_charges', 'social_security_contributions', 'wage_with_holidays',
+        'social_security_contributions', 'warrants_cost', 'meal_voucher_paid_by_employer')
     def _compute_final_yearly_costs(self):
         for contract in self:
             contract.final_yearly_costs = (
                 contract.yearly_cost_before_charges +
                 contract.social_security_contributions +
-                contract.double_holidays +
+                contract.wage_with_holidays * 0.92 +
                 contract.warrants_cost +
                 (220.0 * contract.meal_voucher_paid_by_employer)
             )
-
-    @api.depends('holidays', 'final_yearly_costs')
-    def _compute_holidays_compensation(self):
-        for contract in self:
-            if contract.holidays < 20:
-                decrease_amount = contract.final_yearly_costs * (20.0 - contract.holidays) / 231.0
-                contract.holidays_compensation = decrease_amount
-            else:
-                contract.holidays_compensation = 0.0
 
     @api.onchange('final_yearly_costs')
     def _onchange_final_yearly_costs(self):
@@ -196,12 +181,6 @@ class HrContract(models.Model):
     def _compute_monthly_yearly_costs(self):
         for contract in self:
             contract.monthly_yearly_costs = contract.final_yearly_costs / 12.0
-
-    @api.depends('wage')
-    def _compute_holidays_advantages(self):
-        for contract in self:
-            contract.double_holidays = contract.wage * 0.92
-            contract.thirteen_month = contract.wage
 
     @api.onchange('transport_mode_car', 'transport_mode_public', 'transport_mode_others')
     def _onchange_transport_mode(self):

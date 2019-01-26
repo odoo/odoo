@@ -6,3 +6,4 @@ from . import res_config_settings
 from . import snailmail_letter
 from . import ir_actions_report
 from . import ir_qweb_fields
+from . import mail_message

@@ -18,23 +18,16 @@ class PurchaseOrderLine(models.Model):
     def _compute_qty_received(self):
         super(PurchaseOrderLine, self)._compute_qty_received()
         for line in self:
-            if line.qty_received_method == 'stock_moves' and line.move_ids and line.product_id.id not in line.move_ids.mapped('product_id').ids:
-                bom = self.env['mrp.bom']._bom_find(product=line.product_id, company_id=line.company_id.id, bom_type='phantom')
-                if bom:
-                    line.qty_received = line._get_bom_delivered(bom=bom)
-
-    def _get_bom_delivered(self, bom=False):
-        self.ensure_one()
-
-        # In the case of a kit, we need to check if all components are shipped. Since the BOM might
-        # have changed, we don't compute the quantities but verify the move state.
-        if bom:
-            moves = self.move_ids.filtered(lambda m: m.picking_id and m.picking_id.state != 'cancel')
-            bom_delivered = all([move.state == 'done' for move in moves])
-            if bom_delivered:
-                return self.product_qty
-            else:
-                return 0.0
+            if line.qty_received_method == 'stock_moves' and line.move_ids:
+                kit_bom = self.env['mrp.bom']._bom_find(product=line.product_id, company_id=line.company_id.id, bom_type='phantom')
+                if kit_bom:
+                    moves = line.move_ids.filtered(lambda m: m.state == 'done' and not m.scrapped)
+                    order_qty = line.product_uom._compute_quantity(line.product_uom_qty, kit_bom.product_uom_id)
+                    filters = {
+                        'incoming_moves': lambda m: m.location_id.usage == 'supplier' and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
+                        'outgoing_moves': lambda m: m.location_id.usage != 'supplier' and m.to_refund
+                    }
+                    line.qty_received = moves._compute_kit_quantities(line.product_id, order_qty, kit_bom, filters)
 
     def _get_upstream_documents_and_responsibles(self, visited):
         return [(self.order_id, self.order_id.user_id, visited)]

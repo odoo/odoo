@@ -47,7 +47,7 @@ class TestSurveyInvite(common.SurveyCase):
         Answer = self.env['survey.user_input']
         deadline = fields.Datetime.now() + relativedelta(months=1)
 
-        self.survey.write({'access_mode': 'public'})
+        self.survey.write({'access_mode': 'public', 'users_login_required': False})
         action = self.survey.action_send_survey()
         invite_form = Form(self.env[action['res_model']].with_context(action['context']))
 
@@ -73,7 +73,7 @@ class TestSurveyInvite(common.SurveyCase):
     def test_survey_invite_authentication_nosignup(self):
         Answer = self.env['survey.user_input']
 
-        self.survey.write({'access_mode': 'authentication'})
+        self.survey.write({'access_mode': 'public', 'users_login_required': True})
         action = self.survey.action_send_survey()
         invite_form = Form(self.env[action['res_model']].with_context(action['context']))
 
@@ -102,7 +102,7 @@ class TestSurveyInvite(common.SurveyCase):
         self.survey.invalidate_cache()
         Answer = self.env['survey.user_input']
 
-        self.survey.write({'access_mode': 'authentication'})
+        self.survey.write({'access_mode': 'public', 'users_login_required': True})
         action = self.survey.action_send_survey()
         invite_form = Form(self.env[action['res_model']].with_context(action['context']))
 
@@ -123,10 +123,52 @@ class TestSurveyInvite(common.SurveyCase):
         self.assertEqual(answers.mapped('partner_id'), self.customer | self.user_emp.partner_id | self.user_portal.partner_id)
 
     @users('survey_manager')
-    def test_survey_invite_internal(self):
+    def test_survey_invite_public(self):
         Answer = self.env['survey.user_input']
 
-        self.survey.write({'access_mode': 'internal'})
+        self.survey.write({'access_mode': 'public', 'users_login_required': False})
+        action = self.survey.action_send_survey()
+        invite_form = Form(self.env[action['res_model']].with_context(action['context']))
+
+        invite_form.partner_ids.add(self.customer)
+        invite_form.emails = 'test1@example.com, Raoulette Vignolette <test2@example.com>'
+
+        invite = invite_form.save()
+        invite.action_invite()
+
+        answers = Answer.search([('survey_id', '=', self.survey.id)])
+        self.assertEqual(len(answers), 3)
+        self.assertEqual(
+            set(answers.mapped('email')),
+            set(['test1@example.com', 'Raoulette Vignolette <test2@example.com>', self.customer.email]))
+        self.assertEqual(answers.mapped('partner_id'), self.customer)
+
+    @users('survey_manager')
+    def test_survey_invite_token(self):
+        Answer = self.env['survey.user_input']
+
+        self.survey.write({'access_mode': 'token', 'users_login_required': False})
+        action = self.survey.action_send_survey()
+        invite_form = Form(self.env[action['res_model']].with_context(action['context']))
+
+        invite_form.partner_ids.add(self.customer)
+        invite_form.emails = 'test1@example.com, Raoulette Vignolette <test2@example.com>'
+
+        invite = invite_form.save()
+        invite.action_invite()
+
+        answers = Answer.search([('survey_id', '=', self.survey.id)])
+        self.assertEqual(len(answers), 3)
+        self.assertEqual(
+            set(answers.mapped('email')),
+            set(['test1@example.com', 'Raoulette Vignolette <test2@example.com>', self.customer.email]))
+        self.assertEqual(answers.mapped('partner_id'), self.customer)
+
+    @users('survey_manager')
+    def test_survey_invite_token_internal(self):
+        Answer = self.env['survey.user_input']
+
+        self.survey.write({'access_mode': 'token', 'users_login_required': True})
         action = self.survey.action_send_survey()
         invite_form = Form(self.env[action['res_model']].with_context(action['context']))
 
@@ -149,45 +191,3 @@ class TestSurveyInvite(common.SurveyCase):
             set(answers.mapped('email')),
             set([self.user_emp.email]))
         self.assertEqual(answers.mapped('partner_id'), self.user_emp.partner_id)
-
-    @users('survey_manager')
-    def test_survey_invite_public(self):
-        Answer = self.env['survey.user_input']
-
-        self.survey.write({'access_mode': 'public'})
-        action = self.survey.action_send_survey()
-        invite_form = Form(self.env[action['res_model']].with_context(action['context']))
-
-        invite_form.partner_ids.add(self.customer)
-        invite_form.emails = 'test1@example.com, Raoulette Vignolette <test2@example.com>'
-
-        invite = invite_form.save()
-        invite.action_invite()
-
-        answers = Answer.search([('survey_id', '=', self.survey.id)])
-        self.assertEqual(len(answers), 3)
-        self.assertEqual(
-            set(answers.mapped('email')),
-            set(['test1@example.com', 'Raoulette Vignolette <test2@example.com>', self.customer.email]))
-        self.assertEqual(answers.mapped('partner_id'), self.customer)
-
-    @users('survey_manager')
-    def test_survey_invite_token(self):
-        Answer = self.env['survey.user_input']
-
-        self.survey.write({'access_mode': 'token'})
-        action = self.survey.action_send_survey()
-        invite_form = Form(self.env[action['res_model']].with_context(action['context']))
-
-        invite_form.partner_ids.add(self.customer)
-        invite_form.emails = 'test1@example.com, Raoulette Vignolette <test2@example.com>'
-
-        invite = invite_form.save()
-        invite.action_invite()
-
-        answers = Answer.search([('survey_id', '=', self.survey.id)])
-        self.assertEqual(len(answers), 3)
-        self.assertEqual(
-            set(answers.mapped('email')),
-            set(['test1@example.com', 'Raoulette Vignolette <test2@example.com>', self.customer.email]))
-        self.assertEqual(answers.mapped('partner_id'), self.customer)

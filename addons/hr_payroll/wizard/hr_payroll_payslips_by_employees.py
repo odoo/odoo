@@ -51,6 +51,7 @@ class HrPayslipEmployees(models.TransientModel):
             payslip = self.env['hr.payslip'].new(values)
             payslip.onchange_employee()
             payslip.onchange_contract()
+            payslip._onchange_struct_id()
             values = payslip._convert_to_write(payslip._cache)
             payslips += Payslip.create(values)
         payslips.compute_sheet()

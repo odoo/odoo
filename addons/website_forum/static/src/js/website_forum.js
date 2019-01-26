@@ -4,19 +4,13 @@ odoo.define('website_forum.website_forum', function (require) {
 var core = require('web.core');
 var wContext = require('website.context');
 var Wysiwyg = require('web_editor.wysiwyg');
-var rootWidget = require('root.widget');
 var sAnimations = require('website.content.snippets.animation');
 var session = require('web.session');
 var qweb = core.qweb;
 
 var _t = core._t;
 
-
-if (!$('.website_forum').length) {
-    return $.Deferred().reject("DOM doesn't contain '.website_forum'");
-}
-
-sAnimations.registryObject.add('websiteForum', sAnimations.Class.extend({
+sAnimations.registry.websiteForum = sAnimations.Class.extend({
     selector: '.website_forum',
     xmlDependencies: ['/website_forum/static/src/xml/website_forum_share_templates.xml'],
     read_events: {
@@ -155,7 +149,7 @@ sAnimations.registryObject.add('websiteForum', sAnimations.Class.extend({
                     MediaPlugin: false,
                 };
             }
-            var wysiwyg = new Wysiwyg(rootWidget, options);
+            var wysiwyg = new Wysiwyg(self, options);
             wysiwyg.attachTo($textarea).then(function () {
                 // float-left class messes up the post layout OPW 769721
                 $form.find('.note-editable').find('img.float-left').removeClass('float-left');
@@ -508,7 +502,7 @@ sAnimations.registryObject.add('websiteForum', sAnimations.Class.extend({
         $('.forum_intro').slideUp();
         return true;
     },
-}));
+});
 
 sAnimations.registry.websiteForumSpam = sAnimations.Class.extend({
     selector: '.o_wforum_moderation_queue',

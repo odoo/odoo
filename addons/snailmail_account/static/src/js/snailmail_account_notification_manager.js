@@ -4,7 +4,7 @@ odoo.define('snailmail_account.NotificationManager', function (require) {
 var AbstractService = require('web.AbstractService');
 var core = require("web.core");
 
-var SnailmailNotificationManager =  AbstractService.extend({
+var SnailmailAccountNotificationManager =  AbstractService.extend({
     dependencies: ['bus_service'],
 
     /**
@@ -28,8 +28,8 @@ var SnailmailNotificationManager =  AbstractService.extend({
 
 });
 
-core.serviceRegistry.add('snailmail_notification_service', SnailmailNotificationManager);
+core.serviceRegistry.add('snailmail_account_notification_service', SnailmailAccountNotificationManager);
 
-return SnailmailNotificationManager;
+return SnailmailAccountNotificationManager;
 
 });
