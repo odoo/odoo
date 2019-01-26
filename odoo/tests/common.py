@@ -915,7 +915,7 @@ class HttpCase(TransactionCase):
             if odoo.tools.config['logfile']:
                 self._logger.info('Starting screen cast')
                 self.browser.start_screencast()
-            self.browser.navigate_to(url)
+            self.browser.navigate_to(url, wait_stop=not bool(ready))
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
             # code = ""
