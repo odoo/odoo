@@ -272,7 +272,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create and change events', function (assert) {
-        assert.expect(28);
+        assert.expect(30);
 
         var calendar = createView({
             View: CalendarView,
@@ -288,8 +288,21 @@ QUnit.module('Views', {
                 'mode="month" '+
                 'readonly_form_view_id="1">'+
                     '<field name="name"/>'+
+                    '<templates>'+
+                        '<t t-name="calendar-box">'+
+                            '<div>'+
+                                '<div class="o_event_title" t-esc="record.name"/>'+
+                            '</div>'+
+                        '</t>'+
+                    '</templates>'+
             '</calendar>',
             archs: archs,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1], {name: 'event 4 modified'}, "should update the record");
+                }
+                return this._super.apply(this, arguments);
+            },
             viewOptions: {
                 initialDate: initialDate,
             },
@@ -303,6 +316,7 @@ QUnit.module('Views', {
 
         assert.ok($('.o_cw_popover').length, "should open a popover clicking on event");
         assert.ok($('.o_cw_popover .o_cw_popover_edit').length, "popover should have an edit button");
+        assert.ok($('.o_cw_popover .o_cw_popover_delete').length, "popover should have a delete button");
         assert.ok($('.o_cw_popover .o_cw_popover_close').length, "popover should have a close button");
 
         $('.o_cw_popover .o_cw_popover_edit').trigger('click');
@@ -320,9 +334,6 @@ QUnit.module('Views', {
         $('.modal-footer button.btn:contains(Save)').trigger('click');
 
         assert.notOk($('.modal-body').length, "save button should close the modal");
-
-        /// TODO: Temporary comment
-        // assert.ok(calendar.$('.fc-event:contains(event 4 modified)').length, "should display the updated records");
 
         // create a new event, quick create only
 
@@ -537,7 +548,7 @@ QUnit.module('Views', {
 
         testUtils.dom.triggerPositionalMouseEvent(left, top + 60, "mousemove");
 
-        assert.strictEqual(calendar.$('.fc-content .fc-time').text(), "08:00 - 10:00",
+        assert.strictEqual(calendar.$('.fc-content .fc-time').text(), "8:00 - 10:00",
             "should display the time in the calendar sticker");
 
         testUtils.dom.triggerPositionalMouseEvent(left, top + 60, "mouseup");
@@ -545,8 +556,8 @@ QUnit.module('Views', {
         $('.modal button.btn:contains(Create)').trigger('click');
         var $newevent = calendar.$('.fc-event:contains(new event)');
 
-        assert.strictEqual($newevent.text().replace(/[\s\n\r]+/g, ''), "08:00-10:00newevent12/13/201608:00:00False",
-            "should display the new event with time, title and additional fields");
+        assert.strictEqual($newevent.find('.o_event_title').text(), "new event",
+            "should display the new event with title");
 
         assert.deepEqual($newevent.data('fcSeg').event.record,
             {
@@ -562,7 +573,7 @@ QUnit.module('Views', {
         // delete record
 
         $newevent.trigger('click');
-        $('.modal button.btn-secondary:contains(Delete)').trigger('click');
+        $('.o_cw_popover .o_cw_popover_delete').trigger('click');
         $('.modal button.btn-primary:contains(Ok)').trigger('click');
         assert.containsNone(calendar, '.fc-content', "should delete the record");
 
@@ -591,7 +602,7 @@ QUnit.module('Views', {
                 initialDate: initialDate,
             },
         }).then(function (calendar) {
-            assert.strictEqual(calendar.$('.fc-day-header').first().text(), "Sun 12/11",
+            assert.strictEqual(calendar.$('.fc-day-header').first().text(), "Sun 11",
                 "The first day of the week should be Sunday");
             calendar.destroy();
             done();
@@ -622,7 +633,7 @@ QUnit.module('Views', {
                 week_start: 1,
             },
         }).then(function (calendar) {
-            assert.strictEqual(calendar.$('.fc-day-header').first().text(), "Mon 12/12",
+            assert.strictEqual(calendar.$('.fc-day-header').first().text(), "Mon 12",
                 "The first day of the week should be Monday");
             calendar.destroy();
             done();
@@ -655,7 +666,7 @@ QUnit.module('Views', {
                 week_start: 7,
             },
         }).then(function (calendar) {
-            assert.strictEqual(calendar.$('.fc-week-number').text(), "W51",
+            assert.strictEqual(calendar.$('.fc-week-number').text(), "Week 51",
                 "We should be on the 51st week");
             calendar.destroy();
             done();
@@ -663,7 +674,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create event with timezone in week mode with formViewDialog European locale', function (assert) {
-        assert.expect(8);
+        assert.expect(7);
 
         this.data.event.records = [];
         this.data.event.onchanges = {
@@ -770,8 +781,8 @@ QUnit.module('Views', {
         $('.modal-lg button.btn:contains(Save)').trigger('click');
         var $newevent = calendar.$('.fc-event:contains(new event)');
 
-        assert.strictEqual($newevent.text().replace(/[\s\n\r]+/g, ''), "08:00-10:00newevent",
-            "should display the new event with time and title");
+        assert.strictEqual($newevent.find('.o_event_title').text(), "new event",
+            "should display the new event with title");
 
         assert.deepEqual($newevent.data('fcSeg').event.record,
             {
@@ -878,7 +889,7 @@ QUnit.module('Views', {
 
         testUtils.dom.triggerPositionalMouseEvent(left, top + 60, "mousemove");
 
-        assert.strictEqual(calendar.$('.fc-content .fc-time').text(), "8:00am - 10:00am",
+        assert.strictEqual(calendar.$('.fc-content .fc-time').text(), "8:00 - 10:00",
             "should display the time in the calendar sticker");
 
         testUtils.dom.triggerPositionalMouseEvent(left, top + 60, "mouseup");
@@ -886,8 +897,8 @@ QUnit.module('Views', {
         $('.modal button.btn:contains(Create)').trigger('click');
         var $newevent = calendar.$('.fc-event:contains(new event)');
 
-        assert.strictEqual($newevent.text().replace(/[\s\n\r]+/g, ''), "8:00am-10:00amnewevent12/13/201608:00:00False",
-            "should display the new event with time, title and additional fields");
+        assert.strictEqual($newevent.find('.o_event_title').text(), "new event",
+            "should display the new event with title");
 
         assert.deepEqual($newevent.data('fcSeg').event.record,
             {
@@ -903,7 +914,7 @@ QUnit.module('Views', {
         // delete record
 
         $newevent.trigger('click');
-        $('.modal button.btn-secondary:contains(Delete)').trigger('click');
+        $('.o_cw_popover .o_cw_popover_delete').trigger('click');
         $('.modal button.btn-primary:contains(Ok)').trigger('click');
         assert.containsNone(calendar, '.fc-content', "should delete the record");
 
@@ -912,7 +923,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create event with timezone in week mode with formViewDialog American locale', function (assert) {
-        assert.expect(8);
+        assert.expect(7);
 
         this.data.event.records = [];
         this.data.event.onchanges = {
@@ -1019,8 +1030,8 @@ QUnit.module('Views', {
         $('.modal-lg button.btn:contains(Save)').trigger('click');
         var $newevent = calendar.$('.fc-event:contains(new event)');
 
-        assert.strictEqual($newevent.text().replace(/[\s\n\r]+/g, ''), "8:00am-10:00amnewevent",
-            "should display the new event with time and title");
+        assert.strictEqual($newevent.find('.o_event_title').text(), "new event",
+            "should display the new event with title");
 
         assert.deepEqual($newevent.data('fcSeg').event.record,
             {
@@ -1063,8 +1074,8 @@ QUnit.module('Views', {
         $view.remove();
     });
 
-    QUnit.test('check calendar week column timeformat and event content timeformat', function (assert) {
-        assert.expect(2);
+    QUnit.test('check calendar week column timeformat', function (assert) {
+        assert.expect(1);
 
         var calendar = createView({
             View: CalendarView,
@@ -1084,8 +1095,6 @@ QUnit.module('Views', {
         });
 
         assert.strictEqual(calendar.$('.fc-axis:contains(8am)').length, 1, "calendar should show according to timeformat");
-        assert.strictEqual(calendar.$('.fc-event:first:contains(12:00am)').length, 1,
-            "event time format should 12 hour");
 
         calendar.destroy();
     });
@@ -1262,7 +1271,7 @@ QUnit.module('Views', {
         var $view = $('#qunit-fixture').contents();
         $view.prependTo('body'); // => select with click position
 
-        var pos = calendar.$('.fc-bg td:eq(20)').offset();
+        var pos = calendar.$('.fc-bg td:eq(17)').offset();
         try {
             testUtils.dom.triggerPositionalMouseEvent(pos.left+15, pos.top+15, "mousedown");
         } catch (e) {
@@ -1270,7 +1279,7 @@ QUnit.module('Views', {
             $view.remove();
             throw new Error('The test fails to simulate a click in the screen. Your screen is probably too small or your dev tools is open.');
         }
-        pos = calendar.$('.fc-bg td:eq(21)').offset();
+        pos = calendar.$('.fc-bg td:eq(18)').offset();
         testUtils.dom.triggerPositionalMouseEvent(pos.left+15, pos.top+15, "mousemove");
         testUtils.dom.triggerPositionalMouseEvent(pos.left+15, pos.top+15, "mouseup");
 
@@ -1372,18 +1381,19 @@ QUnit.module('Views', {
             },
         });
 
-        assert.containsN(calendar, '.o_calendar_filter_items .o_cal_avatar', 3,
+        assert.containsN(calendar, '.o_calendar_filter_items .o_cw_filter_avatar', 3,
             "should have 3 avatars in the side bar");
 
-        var $event1Avatars = calendar.$('.fc-event .o_calendar_avatars').first();
-        assert.strictEqual($event1Avatars.find('img').length, 1, "should have 1 avatar");
-        assert.strictEqual($event1Avatars.find('span').length, 0,
-            "should not have a span for more attendees since there is only one");
+        // Event 1
+        calendar.$('.fc-event:first').trigger('click');
+        assert.ok($('.o_cw_popover').length, "should open a popover clicking on event");
+        assert.strictEqual($('.o_cw_popover .o_calendar_avatars').find('img').length, 1, "should have 1 avatar");
 
-        var $event2Avatars = calendar.$('.fc-event:contains(All day) .o_calendar_avatars');
-        assert.strictEqual($event2Avatars.find('img').length, 3, "should have 3 avatars");
-        assert.strictEqual($event2Avatars.find('span').text(), '+2',
-            "should indicate there are 2 more attendees that we don't show");
+        // Event 2
+        calendar.$('.fc-event:eq(1)').trigger('click');
+        assert.ok($('.o_cw_popover').length, "should open a popover clicking on event");
+        assert.strictEqual($('.o_cw_popover .o_calendar_avatars').find('img').length, 5, "should have 5 avatar");
+
         calendar.destroy();
     });
 
@@ -1431,6 +1441,7 @@ QUnit.module('Views', {
                 "should open the form view");
         });
         calendar.$('.fc-event:contains(event 4) .fc-content').trigger('click');
+        $('.o_cw_popover .o_cw_popover_edit').trigger('click');
 
         // create a new event and edit it
 
@@ -1550,6 +1561,7 @@ QUnit.module('Views', {
         });
 
         assert.containsNone(calendar, '.fc-resizer', "should not have resize button");
+        $('.o_cw_popover .o_cw_popover_edit').trigger('click');
 
         // click on an existing event to open the form view
 
@@ -1566,6 +1578,7 @@ QUnit.module('Views', {
                 "should open the form view");
         });
         calendar.$('.fc-event:contains(event 4) .fc-content').trigger('click');
+        $('.o_cw_popover .o_cw_popover_edit').trigger('click');
 
         // create a new event and edit it
 
@@ -1819,7 +1832,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('Update event with filters', function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         var records = this.data.user.records;
         records.push({
@@ -1874,6 +1887,8 @@ QUnit.module('Views', {
         assert.containsN(calendar, '.fc-event', 3, "should display 3 events");
 
         calendar.$('.fc-event:contains(event 2) .fc-content').trigger('click');
+        assert.ok($('.o_cw_popover').length, "should open a popover clicking on event");
+        $('.o_cw_popover .o_cw_popover_edit').trigger('click');
         $('.modal button.btn:contains(Edit)').trigger('click');
         $('.modal .o_field_widget[name="user_id"] input').trigger('click');
         $('.ui-menu-item a:contains(user 5)').trigger('mouseenter').trigger('click');
@@ -1952,7 +1967,7 @@ QUnit.module('Views', {
 
         assert.containsN(calendar, '.o_calendar_filter_item', 6, "should display 6 filter items");
         assert.containsN(calendar, '.fc-event', 2, "should display 2 events");
-        assert.strictEqual(calendar.$('.fc-event .o_field_name').text().replace(/\s/g, ''), "event7event8",
+        assert.strictEqual(calendar.$('.fc-event .o_event_title').text().replace(/\s/g, ''), "event7event8",
             "should display 2 events");
 
         calendar.destroy();
@@ -2415,7 +2430,7 @@ QUnit.module('Views', {
 
         });
 
-        assert.strictEqual(calendar.$('.fc-day-header:first').text(), "zz1. 11/12",
+        assert.strictEqual(calendar.$('.fc-day-header:first').text(), "zz1. 11",
             'The day should be in the given locale specific format');
 
         moment.locale(initialLocale);
