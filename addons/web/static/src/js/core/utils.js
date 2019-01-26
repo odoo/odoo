@@ -151,6 +151,38 @@ var utils = {
         return size.toFixed(2) + ' ' + units[i].trim();
     },
     /**
+     * Naive and unlocalized human size parser.
+     * Returns the numeric amount specified in the given human formatted string.
+     *
+     * Eg:
+     *
+     *     parse_human_size('4 Kb') === 4096
+     *     parse_human_size('10m') === 10485760
+     *     parse_human_size('340.99') === 340.99
+     *
+     * @param {String} input human formatted string
+     */
+    parse_human_size: function (size) {
+        var units = "bkmgtpezy".split('');
+        var parsed = size.toString().match(/^([0-9\.,]*)(\s*)?([a-z]{1,2})?$/i);
+        if (parsed === null) {
+            throw("Could not parse: " + size);
+        }
+        var amount = parseFloat(parsed[1].replace(',', '.'));
+        if (isNaN(amount) || !isFinite(amount)) {
+            throw("Invalid amount: " + size);
+        }
+        var unit = parsed[3] ? parsed[3][0].toLowerCase() : '';
+        var index = units.indexOf(unit);
+        if (unit && index === -1) {
+            throw("Invalid unit: " + size);
+        }
+        if (index > 0) {
+            amount = amount * Math.pow(1024, index);
+        }
+        return amount;
+    },
+    /**
      * Insert "thousands" separators in the provided number (which is actually
      * a string)
      *

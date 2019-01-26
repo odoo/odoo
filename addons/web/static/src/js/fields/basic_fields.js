@@ -1147,7 +1147,13 @@ var AbstractFieldBinary = AbstractField.extend({
         this._super.apply(this, arguments);
         this.fields = record.fields;
         this.useFileAPI = !!window.FileReader;
-        this.max_upload_size = 25 * 1024 * 1024; // 25Mo
+        // Use the fields options to determine the max upload size
+        try {
+            this.max_upload_size = utils.parse_human_size(
+                this.attrs.options.max_file_size);
+        } catch(e) {
+            this.max_upload_size = 25 * 1024 * 1024; // set default size to 25Mo
+        }
         if (!this.useFileAPI) {
             var self = this;
             this.fileupload_id = _.uniqueId('o_fileupload');
