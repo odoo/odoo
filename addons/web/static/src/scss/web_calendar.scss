@@ -45,7 +45,7 @@ $o-cw-filter-avatar-size: 20px;
             font-weight: 500;
         }
 
-        &.o_cw_custom_hilight {
+        &.o_cw_custom_highlight {
             z-index: 10!important;
 
             .fc-bg{
@@ -205,7 +205,7 @@ $o-cw-filter-avatar-size: 20px;
             }
 
             // Expand tiny events on hover/select
-            .fc-v-event.o_cw_custom_hilight, .fc-v-event.o_cw_custom_hover {
+            .fc-v-event.o_cw_custom_highlight, .fc-v-event.o_cw_custom_hover {
                 transition: margin .1s .3s, left .1s .3s, right .1s .3s;
                 margin: 0!important;
                 right: 1px!important;
@@ -286,7 +286,7 @@ $o-cw-filter-avatar-size: 20px;
                         visibility: hidden;
                     }
 
-                    &.o_cw_custom_hover, &.o_cw_custom_hilight, &:hover {
+                    &.o_cw_custom_hover, &.o_cw_custom_highlight, &:hover {
                         .fc-bg {
                             visibility: visible;
                         }
@@ -611,7 +611,7 @@ $o-cw-colors: (
                 background: mix($color, white);
             }
 
-            &.o_cw_custom_hover, &.o_cw_custom_hilight {
+            &.o_cw_custom_hover, &.o_cw_custom_highlight {
                 box-shadow: 0 12px 12px -5px rgba($color, 0.3);
                 color: color-yiq($color);
 

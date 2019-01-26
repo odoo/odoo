@@ -44,7 +44,6 @@
                 <!-- Sidebar favorites filters -->
                 <field name="employee_id" write_model="hr.user.benefit.employee" write_field="employee_id" avatar_field="image_small"/>
                 <templates>
-                <!-- <templates>
                     <t t-name="calendar-box">
                         <t t-set="color" t-value="widget.getColor(event.color_index)"/>
                         <div t-att-style="typeof color === 'string' ? ('background-color:'+color)+';' : ''" t-attf-class="#{record.is_highlighted &amp;&amp; record.is_highlighted.value ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? 'o_calendar_color_'+color : ''}">
@@ -63,7 +62,7 @@
                             </div>
                         </div>
                     </t>
-                </templates> -->
+                </templates>
             </calendar>
         </field>
     </record>

@@ -33,11 +33,11 @@
                  hide adding  "hide_date='true'" and/or "hide_time='true'" attributes  -->
                 <li class="list-group-item" t-if="displayDate &amp;&amp; !widget.arch.attrs.hide_date">
                     <i class="fa fa-fw fa-calendar-o"/>
-                    <b class="text-capitalize" t-esc="displayDate"/> <small t-if="displayDateDur"><b t-esc="'(' + displayDateDur + ')'"/></small>
+                    <b class="text-capitalize" t-esc="displayDate"/> <small t-if="displayDateDuration"><b t-esc="'(' + displayDateDuration + ')'"/></small>
                 </li>
                 <li class="list-group-item" t-if="displayTime &amp;&amp; !widget.arch.attrs.hide_time">
                     <i class="fa fa-fw fa-clock-o"/>
-                    <b t-esc="displayTime"/> <small t-if="displayTimeDur"><b t-esc="'(' + displayTimeDur + ')'"/></small>
+                    <b t-esc="displayTime"/> <small t-if="displayTimeDuration"><b t-esc="'(' + displayTimeDuration + ')'"/></small>
                 </li>
 
                 <!-- Print the 'calendar field': usually the entry's owner or partner.
@@ -74,7 +74,7 @@
 
             <div class="card-footer border-top">
                 <div class="btn btn-primary o_cw_popover_edit">Edit</div>
-                <div class="btn btn-secondary">Delete</div>
+                <div class="btn btn-secondary o_cw_popover_delete">Delete</div>
             </div>
         </div>
     </t>

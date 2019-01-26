@@ -23,6 +23,7 @@ var CalendarController = AbstractController.extend({
     custom_events: _.extend({}, AbstractController.prototype.custom_events, {
         changeDate: '_onChangeDate',
         changeFilter: '_onChangeFilter',
+        deleteRecord: '_onDeleteRecord',
         dropRecord: '_onDropRecord',
         next: '_onNext',
         openCreate: '_onOpenCreate',
@@ -190,10 +191,23 @@ var CalendarController = AbstractController.extend({
      * @param {OdooEvent} event
      */
     _onChangeFilter: function (event) {
-        this.$el.find('.fc-event').add('.o_calendar_filter_item').popover('dispose');
         if (this.model.changeFilter(event.data) && !event.data.no_reload) {
             this.reload();
         }
+    },
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onDeleteRecord: function (event) {
+        var self = this;
+        Dialog.confirm(this, _t("Are you sure you want to delete this record ?"), {
+            confirm_callback: function () {
+                self.model.deleteRecords([event.data.id], self.modelName).always(function () {
+                    self.reload();
+                });
+            }
+        });
     },
     /**
      * @private
