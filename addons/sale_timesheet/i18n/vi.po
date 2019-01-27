@@ -4,17 +4,17 @@
 # 
 # Translators:
 # fanha99 <fanha99@hotmail.com>, 2017
-# Duy BQ <duybq86@gmail.com>, 2017
 # Martin Trigaux, 2017
-# Tuan Tran <tmtuan.projects@gmail.com>, 2017
-# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# Duy BQ <duybq86@gmail.com>, 2018
+# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-17 09:57+0000\n"
-"PO-Revision-Date: 2018-09-17 09:57+0000\n"
-"Last-Translator: thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:23+0000\n"
+"Last-Translator: thanh nguyen <thanhnguyen.icsc@gmail.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,23 +85,23 @@ msgstr "Kiểu xuất hoá đơn"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Billable fixed"
-msgstr ""
+msgstr "Thanh toán cố định"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Billable time"
-msgstr ""
+msgstr "Thời gian có thể tính hóa đơn"
 
 #. module: sale_timesheet
 #: model:ir.filters,name:sale_timesheet.timesheet_filter_billing
 msgid "Billing Rate"
-msgstr ""
+msgstr "Tỷ lệ thanh toán"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
 #: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
 msgid "By Billing Rate"
-msgstr ""
+msgstr "Theo tỷ lệ thanh toán"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -117,7 +117,7 @@ msgstr "Chi phí và Doanh thu"
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
 msgid "Create a new project but no task"
-msgstr "Tạo một dự án mới nhưng không tạo Nhiệm vụ"
+msgstr "Tạo một dự án mới nhưng không tạo nhiệm vụ"
 
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
@@ -152,7 +152,7 @@ msgstr "Cố định"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Fixed Price Projects"
-msgstr "Dự án Giá cố định"
+msgstr "Dự án giá cố định"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.product_template_search_view_sale_timesheet
@@ -216,17 +216,17 @@ msgstr "Không thể Xuất hoá đơn"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Non Billable Hours"
-msgstr "Giờ Không thể Xuất hoá đơn"
+msgstr "Giờ không tính phí"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non billable"
-msgstr "Không thể Xuất hoá đơn"
+msgstr "Không tính phí"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_invoice_timesheet_count
 msgid "Number of timesheets"
-msgstr "SL bảng chấm công"
+msgstr "Số lượng thời gian biểu"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_service_tracking
@@ -235,7 +235,7 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or "
 "task. From those, you can track the service you are selling."
 msgstr ""
-"Khi xác nhận Đơn hàng bán, sản phẩm này có thể sinh ra một dự án và/hoặc "
+"Khi xác nhận Đơn bán hàng, sản phẩm này có thể sinh ra một dự án và/hoặc "
 "nhiệm vụ. Từ đó, bạn có thể theo dõi dịch vụ mà bạn đang bán."
 
 #. module: sale_timesheet
@@ -316,13 +316,13 @@ msgid ""
 "Sale order line from which the project has been created. Used for "
 "tracability."
 msgstr ""
-"Dòng đơn hàng bán mà từ đó dự án này được tạo. Được sử dụng cho mục đích "
+"Dòng Đơn bán hàng mà từ đó dự án này được tạo. Được sử dụng cho mục đích "
 "truy vết / theo dõi"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order"
-msgstr "Đơn hàng Bán"
+msgstr "Đơn bán hàng"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_sale_line_id
@@ -342,6 +342,8 @@ msgid ""
 "Sales Order item should generate a task and/or a project, depending on the "
 "product settings."
 msgstr ""
+"Nội dung đơn hàng tạo ra công việc hoặc/và dự án, phụ thuộc vào việc thiết "
+"lập sản phẩm."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_project_id
@@ -350,12 +352,14 @@ msgid ""
 "Select a non billable project on which tasks can be created. This setting "
 "must be set for each company."
 msgstr ""
+"Chọn dự án không tính phí với các công việc có thể được tạo. Thiết lập này "
+"phải được cài đặt cho từng công ty."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_service_tracking
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template_service_tracking
 msgid "Service Tracking"
-msgstr "Theo vết Dịch vụ"
+msgstr "Kiểm soát dịch vụ"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -440,22 +444,22 @@ msgstr "Dịch vụ theo Thời gian"
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_pivot_revenue
 #, python-format
 msgid "Timesheet"
-msgstr "Bảng chấm công"
+msgstr "Thời gian biểu"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
 msgid "Timesheet Cost"
-msgstr "Chi phí cho Bảng chấm công"
+msgstr "Chi phí theo thời gian"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
 msgid "Timesheet activities"
-msgstr "Hoạt động Bảng chấm công"
+msgstr "Công việc theo thời gian biểu"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_ids
 msgid "Timesheet activities associated to this sale"
-msgstr "Hoạt động bảng chấm công gắn với đơn bán này"
+msgstr "Công việc theo thời gian biểu gắn với đơn bán hàng này"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:104
@@ -467,18 +471,18 @@ msgstr "Hoạt động bảng chấm công gắn với đơn bán này"
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 #, python-format
 msgid "Timesheets"
-msgstr "Chấm công"
+msgstr "Thời gian biểu"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:20
 #, python-format
 msgid "Timesheets of %s"
-msgstr "Bảng chấm công của %s"
+msgstr "Thời gian biểu của %s"
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
 msgid "Timesheets on tasks"
-msgstr "Bảng chấm công cho nhiệm vụ"
+msgstr "Thời gian biểu của công việc/nhiệm vụ"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -492,8 +496,8 @@ msgid ""
 "You can not modify already invoiced timesheets (linked to a Sales order "
 "items invoiced on Time and material)."
 msgstr ""
-"Bạn không được phép sửa các bảng chấm công mà đã xuất hoá đơn (liên kết đến "
-"một hạng mục trên đơn bán được xuất hoá đơn dựa trên Thời gian và vật tư)."
+"Bạn không được phép sửa thời gian biểu đã ghi nhận lên hoá đơn (liên kết đến"
+" hạng mục trên đơn bán được lên hoá đơn dựa trên Thời gian và vật tư)."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:74
@@ -502,8 +506,8 @@ msgid ""
 "You cannot delete a task related to a Sales Order. You can only archive this"
 " task."
 msgstr ""
-"Bạn không được phép xoá một nhiệm vụ mà liên quan đến một Đơn Bán. Bạn chỉ "
-"có thể lưu trữ (vô hiệu) nhiệm vụ này"
+"Bạn không được phép xoá một nhiệm vụ có liên quan đến một hạng mục trên đơn "
+"hàng. Bạn chỉ có thể lưu trữ (vô hiệu) nhiệm vụ này"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_employee_extd_form
