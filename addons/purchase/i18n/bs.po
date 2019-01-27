@@ -5,7 +5,7 @@
 # Translators:
 # Bole <bole@dajmi5.com>, 2017
 # Martin Trigaux, 2017
-# Boško Stojaković <bluesoft83@gmail.com>, 2018
+# Boško Stojaković <bluesoft83@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:22+0000\n"
-"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2018\n"
+"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2019\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -598,7 +598,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_move_created_purchase_line_id
 msgid "Created Purchase Order Line"
-msgstr ""
+msgstr "Kreirana stavka nabavne narudžbe"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_create_uid
@@ -702,7 +702,7 @@ msgstr "Iznos duple validacije"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_move_dest_ids
 msgid "Downstream Moves"
-msgstr ""
+msgstr "Nizvodna kretanja"
 
 #. module: purchase
 #: selection:purchase.report,state:0
@@ -863,12 +863,12 @@ msgstr "Fakturisanje"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_is_shipped
 msgid "Is Shipped"
-msgstr ""
+msgstr "Je isporučeno"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_is_installed_sale
 msgid "Is the Sale Module Installed"
-msgstr ""
+msgstr "Instaliran modul prodaje?"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order___last_update
@@ -974,6 +974,9 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Marginalna greška za vrijeme nabavke od dobavljača. Kada sistem generiše "
+"nabavnu narudžbu, biće zakazani toliko dana ranije kako bi se amortizovala "
+"neočekivana kašnjenja dobavljača."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
@@ -1018,7 +1021,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "Pomjeri očekivane datum isporuke za "
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1142,7 +1145,7 @@ msgstr "Naručene količine"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_orderpoint_id
 msgid "Orderpoint"
-msgstr ""
+msgstr "Naručivanje"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1573,7 +1576,7 @@ msgstr "Zahtjev za kupovinu #"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Request your vendors to deliver to your customers"
-msgstr ""
+msgstr "Zahtjevajte od svojih dobavljača da isporučuju vašim kupcima"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
@@ -1601,7 +1604,7 @@ msgstr "Prikupljanje proizvoda povrata"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
 msgid "Schedule receivings earlier to avoid delays"
-msgstr ""
+msgstr "Zakaži prijeme ranije da izbjegnete kašnjenja"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_date_planned
@@ -1734,7 +1737,7 @@ msgstr "Porezi:"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr ""
+msgstr "Tehničko polje koje se koristi za prikaz adrese drop shiping-a"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
@@ -1769,6 +1772,8 @@ msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund. "
 msgstr ""
+"Količine na vašoj nabavnoj narudžbi ukazuje manje od fakturisanog. Trebali "
+"bi ste tražiti knjižno odobrenje od dobavljača."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -1822,6 +1827,11 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
+"Ovo dodaje dropshiping rutu za primjenu na proizvodima kako bi ste zatražili"
+" od dobavljača da isporuči naručenu robu na lokaciju kupca. Proizvod za "
+"dropshiping će generisati zahtjev za nabavku onda kada se prodajna narudžba "
+"potvrdi. Ovo je tok na zahtjev. Zahtjevana adresa isporuke će biti adresa za"
+" isporuku kupca a ne vaše skladište."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1869,7 +1879,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_picking_type_id
 msgid "This will determine operation type of incoming shipment"
-msgstr ""
+msgstr "Ovo će odreditit tip operacije za dolazeće isporuke"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1918,6 +1928,8 @@ msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
 "done."
 msgstr ""
+"Nije moguće otkazati nabavnu narudžbu %s jer su neki prijemi na skladište "
+"već urađeni.."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:366
@@ -2094,7 +2106,7 @@ msgstr "Website URL"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse_buy_to_resupply
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr ""
+msgstr "Kada su proizvodi kupljeni, mogu biti isporučeni na ovo skladište"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
@@ -2123,7 +2135,7 @@ msgstr ""
 #: code:addons/purchase/models/purchase.py:408
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
-msgstr ""
+msgstr "Morate postaviti lokaciju dobavljača za partnera %s"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock

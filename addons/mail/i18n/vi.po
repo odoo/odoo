@@ -9,10 +9,10 @@
 # son dang <son.dang@doda100.com>, 2017
 # Phạm Lân <phamquanglan@gmail.com>, 2017
 # Tuan Tran <tmtuan.projects@gmail.com>, 2017
-# Martin Trigaux, 2017
 # fanha99 <fanha99@hotmail.com>, 2017
 # Dang Hanh <hanh.dtm@komit-consulting.com>, 2017
 # thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# Martin Trigaux, 2018
 # Duy BQ <duybq86@gmail.com>, 2018
 # 
 msgid ""
@@ -226,10 +226,11 @@ msgid ""
 "object.parent_id.subject) or (object.parent_id and "
 "object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 msgstr ""
-"${object.subject or (object.record_name and 'Trả lời: ' % "
+"${object.subject or (object.record_name and 'Trả lời:  %s' % "
 "object.record_name) or (object.parent_id and object.parent_id.subject and "
-"'Trả lời: ' % object.parent_id.subject) or (object.parent_id and "
-"object.parent_id.record_name and 'Re: ' % object.parent_id.record_name)}"
+"'Trả lời: %s' % object.parent_id.subject) or (object.parent_id and "
+"object.parent_id.record_name and 'Trả lời: %s' % "
+"object.parent_id.record_name)}"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:29
@@ -5881,7 +5882,7 @@ msgstr "đã được chỉnh sửa"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "mycompany.odoo.com"
-msgstr "mycompany.erponline.com"
+msgstr "mycompany.odoo.com"
 
 #. module: mail
 #. openerp-web
