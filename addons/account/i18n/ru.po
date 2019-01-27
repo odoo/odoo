@@ -38,6 +38,8 @@
 # sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
 # Илья Пономарев <horochiy92@gmail.com>, 2018
 # Yaroslav Panychev <walkmanyd@yandex.ru>, 2018
+# Дмитрий Ефременко <shiza867@gmail.com>, 2019
+# Sergo S, 2019
 # 
 msgid ""
 msgstr ""
@@ -45,7 +47,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Yaroslav Panychev <walkmanyd@yandex.ru>, 2018\n"
+"Last-Translator: Sergo S, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,6 +63,10 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"Статус \"Черновик\" используется в случае, когда пользователь шифрует новый или неподтвержденный Счет.\n"
+"Статус \"Открыт\" используется в случае, когда пользователь создает счет и затем генерируется номер счета. Данный статус остается действительным до того момента, когда пользователь оплачивает счет.\n"
+"Статус \"Оплачен\" устанавливается автоматически в случае, когда счет был оплачен. Синхронизация счета и записей в журнале гарантируется.\n"
+"Статус \"Отменен\" используется в случае, когда пользователь отменяет счет."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
@@ -607,7 +613,7 @@ msgstr "<strong>2. Регистрация несогласованных пла�
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document_with_payments
 msgid "<strong>Amount Due</strong>"
-msgstr ""
+msgstr "<strong>Сумма задолженности</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -12084,7 +12090,7 @@ msgstr "чтобы установить баланс всех ваших сче�
 #: code:addons/account/static/src/xml/account_reconciliation.xml:53
 #, python-format
 msgid "transactions in"
-msgstr ""
+msgstr "Транзакции в"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts

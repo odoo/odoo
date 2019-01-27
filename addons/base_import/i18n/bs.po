@@ -3,16 +3,17 @@
 # * base_import
 # 
 # Translators:
-# Bole <bole@dajmi5.com>, 2017
 # Martin Trigaux, 2017
-# Boško Stojaković <bluesoft83@gmail.com>, 2017
+# Bole <bole@dajmi5.com>, 2017
+# Boško Stojaković <bluesoft83@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:15+0000\n"
+"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2019\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,13 +50,13 @@ msgstr "Otkaži"
 #: code:addons/base_import/models/base_import.py:596
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr ""
+msgstr "Kolona %s sadrži nepravilne vrijednosti (vrijednost: %s)"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:618
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr ""
+msgstr "Kolona %s sadrži nepravilne vrijednosti. Greška na stavci %d: %s"
 
 #. module: base_import
 #. openerp-web
@@ -115,28 +116,28 @@ msgstr "ID baze podataka"
 #: code:addons/base_import/static/src/js/import_action.js:55
 #, python-format
 msgid "Date Format:"
-msgstr ""
+msgstr "Format datuma:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:56
 #, python-format
 msgid "Datetime Format:"
-msgstr ""
+msgstr "Format DatumVrijeme"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:58
 #, python-format
 msgid "Decimal Separator:"
-msgstr ""
+msgstr "Decimalni separator:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:71
 #, python-format
 msgid "Defer parent/child computation"
-msgstr ""
+msgstr "Odgodi izračune Nadređenih/Podređenih"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_display_name
@@ -161,7 +162,7 @@ msgstr "Prikazani naziv"
 #: code:addons/base_import/static/src/js/import_action.js:353
 #, python-format
 msgid "Don't import"
-msgstr ""
+msgstr "Nemoj uvoziti"
 
 #. module: base_import
 #. openerp-web
@@ -169,7 +170,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:213
 #, python-format
 msgid "Dot"
-msgstr ""
+msgstr "Tačka"
 
 #. module: base_import
 #. openerp-web
@@ -182,13 +183,13 @@ msgstr "Šifriranje:"
 #: code:addons/base_import/models/base_import.py:620
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr ""
+msgstr "Greška parsiranja datuma [%s:L%d]: %s"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:227
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
-msgstr ""
+msgstr "Ćelija sa greškom je pronađena u toku čitanja XLS/XLSX datoteke: %s"
 
 #. module: base_import
 #. openerp-web
@@ -287,6 +288,10 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
+"Ako datoteka sadrži\n"
+"                nazive kolona, Odoo može automatski detektovati\n"
+"                polja koja odgovaraju kolonama. Ovo čini uvoz jednostavnijim,\n"
+"                pogotovo kada datoteka sadrži mnogo kolona."
 
 #. module: base_import
 #. openerp-web
@@ -297,6 +302,9 @@ msgid ""
 "will set up subscriptions and send notifications"
 "                             during the import, but lead to a slower import."
 msgstr ""
+"Ako model koristi modul za četovanje (openchatter), praćenje istorije će "
+"postaviti pretplate i poslati notifikacije tokom uvoza, ali će isto tako "
+"dovesti do sporijeg uvoza podataka."
 
 #. module: base_import
 #. openerp-web
@@ -321,7 +329,7 @@ msgstr "Uvoz"
 #: code:addons/base_import/static/src/js/import_action.js:111
 #, python-format
 msgid "Import a File"
-msgstr ""
+msgstr "Uvezi datoteku"
 
 #. module: base_import
 #. openerp-web
@@ -389,14 +397,14 @@ msgstr "Zadnje ažurirano"
 #: code:addons/base_import/static/src/xml/base_import.xml:19
 #, python-format
 msgid "Load File"
-msgstr ""
+msgstr "Učitaj datoteku"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:56
 #, python-format
 msgid "Map your columns to import"
-msgstr ""
+msgstr "Mapirajte kolone za uvoz"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_res_model
@@ -451,14 +459,14 @@ msgstr "Relacijska polja"
 #: code:addons/base_import/static/src/xml/base_import.xml:24
 #, python-format
 msgid "Reload File"
-msgstr ""
+msgstr "Ponovno učitaj datoteku"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:11
 #, python-format
 msgid "Select a CSV or Excel file to import."
-msgstr ""
+msgstr "Odaberite CSV ili Excel datoteku za uvoz."
 
 #. module: base_import
 #. openerp-web
@@ -479,7 +487,7 @@ msgstr "Separator:"
 #: code:addons/base_import/static/src/xml/base_import.xml:72
 #, python-format
 msgid "Show fields of relation fields (advanced)"
-msgstr ""
+msgstr "Prikaži polja relacionih polja (napredno)"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_somevalue
@@ -505,14 +513,14 @@ msgstr "Tab"
 #: code:addons/base_import/static/src/xml/base_import.xml:86
 #, python-format
 msgid "Test Import"
-msgstr ""
+msgstr "Test Uvoza"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:52
 #, python-format
 msgid "Text Delimiter:"
-msgstr ""
+msgstr "Tekstualni delimiter:"
 
 #. module: base_import
 #. openerp-web
@@ -522,26 +530,30 @@ msgid ""
 "The first row\n"
 "                 contains the label of the column"
 msgstr ""
+"Prvi red sadrži\n"
+"                 naslov kolone"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:57
 #, python-format
 msgid "Thousands Separator:"
-msgstr ""
+msgstr "Separator hiljade:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:62
 #, python-format
 msgid "Track history during import"
-msgstr ""
+msgstr "Prati istoriju tokom uvoza"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:192
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
+"Nije moguće učitati \"{extension}\" datoteku: ovo zahtjeva Python modul "
+"\"{modname}\""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:193
@@ -549,6 +561,7 @@ msgstr ""
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
+"Nije podržan format datoteke \"{}\", uvoz podržava samo CSV, ODS, XLS i XLSX"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_value
@@ -654,4 +667,4 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:531
 #, python-format
 msgid "between rows %d and %d"
-msgstr ""
+msgstr "između redova %d i %d"
