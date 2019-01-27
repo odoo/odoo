@@ -34,12 +34,13 @@ msgstr ""
 #, python-format
 msgid "An error occured when sending the document by post.<br>Error: %s"
 msgstr ""
+"Під час надсилання документа у повідомленні виникла помилка.<br>Помилка: %s"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:215
 #, python-format
 msgid "An unknown error happened. Please contact the support."
-msgstr ""
+msgstr "Виникла невідома помилка. Будь ласка, зв'яжіться з підтримкою."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
@@ -49,12 +50,12 @@ msgstr "Прикріплення"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__duplex
 msgid "Both side"
-msgstr ""
+msgstr "Обидві сторони"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_duplex
 msgid "Both sides"
-msgstr ""
+msgstr "З обох сторін"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
@@ -69,12 +70,12 @@ msgstr "Скасовано"
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Choose the ink used to print documents"
-msgstr ""
+msgstr "Виберіть чорнило, яке використовується для друку документів"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Choose the layout to print documents"
-msgstr ""
+msgstr "Виберіть макет для друку документів"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
@@ -167,7 +168,7 @@ msgstr "Останнє оновлення"
 #: model:ir.ui.menu,name:snailmail.menu_snailmail_letters
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
 msgid "Letters"
-msgstr ""
+msgstr "Листи"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -178,7 +179,7 @@ msgstr "Модель"
 #: code:addons/snailmail/models/snailmail_letter.py:211
 #, python-format
 msgid "One or more required fields are empty."
-msgstr ""
+msgstr "Одне або кілька обов'язкових полів порожні."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__report_template
@@ -189,7 +190,7 @@ msgstr "Необов'язковий звіт для друку та додава
 #: code:addons/snailmail/models/snailmail_letter.py:264
 #, python-format
 msgid "Post letter: an error occured."
-msgstr ""
+msgstr "Опублікувати лист: сталася помилка."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
@@ -199,7 +200,7 @@ msgstr "Поштові роздруківки"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
 msgid "Print Both sides"
-msgstr ""
+msgstr "Друкувати з обох сторін"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_color
@@ -209,7 +210,7 @@ msgstr "Друкувати в кольорі"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr ""
+msgstr "Контакт Qweb поля"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -234,14 +235,14 @@ msgstr "Надіслано"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter
 msgid "Snailmail Letter"
-msgstr ""
+msgstr "Лист Snailmail"
 
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
 #: model:ir.cron,cron_name:snailmail.snailmail_print
 #: model:ir.cron,name:snailmail.snailmail_print
 msgid "Snailmail: process letters queue"
-msgstr ""
+msgstr "Snailmail: обробити чергу листів"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
@@ -255,24 +256,26 @@ msgid ""
 "The attachment of the letter could not be sent. Please check its content and"
 " contact the support if the problem persists."
 msgstr ""
+"Додаток листа не може бути надісланий. Перевірте його вміст і зверніться до "
+"служби підтримки, якщо проблема не зникне."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:209
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
-msgstr ""
+msgstr "Країна партнера не покриває Snailmail."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:242
 #, python-format
 msgid ""
 "The document was correctly sent by post.<br>The tracking id is %ssend_id"
-msgstr ""
+msgstr "Документ був правильно надісланий поштою.<br>Іd відстеження %ssend_id"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__user_id
 msgid "User sending the letter"
-msgstr ""
+msgstr "Надсилання листа користувачем"
 
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
@@ -281,6 +284,9 @@ msgid ""
 "If the letter is correctly sent, the status goes in 'Sent',\n"
 "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
 msgstr ""
+"При створенні листа, стоїть статус \"Чернетка\".\n"
+"Якщо лист надіслано правильно, статус переходить у \"Надіслано\",\n"
+"Якщо ні, то він стане \"Помилка\", а повідомлення про помилку з'явиться у полі \"Повідомлення про помилку\"."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:207
@@ -289,6 +295,9 @@ msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
+"У вас немає облікового запису IAP, зареєстрованого для цієї "
+"послуги.<br>Перейдіть до<a href=%s target=\"new\">iap.odoo.com</a> щоби "
+"вимагати безкоштовні кредити."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:204
@@ -297,3 +306,5 @@ msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
 msgstr ""
+"Ви не маєте достатньо кредитів для виконання цієї операції.<br>Перейдіть до "
+"вашого<a href=%s target=\"new\">обліковго запису iap</a>."
