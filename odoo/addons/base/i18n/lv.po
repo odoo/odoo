@@ -3,11 +3,11 @@
 # * base
 # 
 # Translators:
-# Ieva Putnina <ievai.putninai@gmail.com>, 2019
 # JanisJanis <jbojars@gmail.com>, 2019
 # Martin Trigaux, 2019
-# Arnis Putniņš <arnis.putnins@its1.lv>, 2019
+# Arnis Putniņš <arnis@allegro.lv>, 2019
 # InfernalLV <karlisdreizis@gmail.com>, 2019
+# Ieva Putnina <ievai.putninai@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:38+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: InfernalLV <karlisdreizis@gmail.com>, 2019\n"
+"Last-Translator: Ieva Putnina <ievai.putninai@gmail.com>, 2019\n"
 "Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -921,6 +921,13 @@ msgid ""
 "    * The new lock date for advisors must be set after the previous lock date.\n"
 "    "
 msgstr ""
+"\n"
+"    Make the lock date irreversible:\n"
+"\n"
+"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
+"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
+"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -4531,6 +4538,24 @@ msgid ""
 "    - Clicking the 'Send by mail' button will attach two files to your draft mail : the invoice, and the corresponding ISR.\n"
 "    "
 msgstr ""
+"\n"
+"Swiss localization\n"
+"==================\n"
+"This module defines a chart of account for Switzerland (Swiss PME/KMU 2015), taxes and enables the generation of ISR when you print an invoice or send it by mail.\n"
+"\n"
+"An ISR will be generated if you specify the information it needs :\n"
+"    - The bank account you expect to be paid on must be set, and have a valid postal reference.\n"
+"    - Your invoice must have been set assigned a bank account to receive its payment\n"
+"      (this can be done manually, but a default value is automatically set if you have defined a bank account).\n"
+"    - You must have set the postal references of your bank.\n"
+"    - Your invoice must be in EUR or CHF (as ISRs do not accept other currencies)\n"
+"\n"
+"The generation of the ISR is automatic if you meet the previous criteria.\n"
+"\n"
+"Here is how it works:\n"
+"    - Printing the invoice will trigger the download of two files: the invoice, and its ISR\n"
+"    - Clicking the 'Send by mail' button will attach two files to your draft mail : the invoice, and the corresponding ISR.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_yodlee
@@ -6375,7 +6400,7 @@ msgstr ""
 #: code:addons/base/models/ir_ui_view.py:1091
 #, python-format
 msgid " - %r in %s=%r"
-msgstr ""
+msgstr " - %r in %s=%r"
 
 #. module: base
 #: model:ir.module.module,description:base.module_inter_company_rules
@@ -7478,7 +7503,7 @@ msgstr "Access Token"
 #. module: base
 #: model:res.groups,name:base.group_private_addresses
 msgid "Access to Private Addresses"
-msgstr ""
+msgstr "Access to Private Addresses"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
@@ -7748,7 +7773,7 @@ msgstr "Darbības"
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Active"
-msgstr "Aktīvs"
+msgstr "Aktīvs Sistēmā"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_next_actual
@@ -8425,7 +8450,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_client__params
 msgid "Arguments sent to the client along with the view tag"
-msgstr ""
+msgstr "Arguments sent to the client along with the view tag"
 
 #. module: base
 #: model:res.country,name:base.am
@@ -9756,7 +9781,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_category__color
 #: model:ir.model.fields,field_description:base.field_res_users__color
 msgid "Color Index"
-msgstr "Krāsas indikators"
+msgstr "Krāsas Indekss"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__column1
@@ -9894,7 +9919,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_registry
 msgid "Company Registry"
-msgstr ""
+msgstr "Company Registry"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__report_header
@@ -9939,7 +9964,7 @@ msgstr "Complete ID"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__complete_name
 msgid "Complete Name"
-msgstr "Complete Name"
+msgstr "Pilns Nosaukums"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
@@ -9972,7 +9997,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_default__condition
 msgid "Condition"
-msgstr "Condition"
+msgstr "Nosacījums"
 
 #. module: base
 #: model:ir.model,name:base.model_res_config
@@ -10004,7 +10029,7 @@ msgstr "Config: Run Remaining Action Todo"
 #: model:ir.ui.menu,name:base.menu_reporting_config
 #: model_terms:ir.ui.view,arch_db:base.res_config_view_base
 msgid "Configuration"
-msgstr "Konfigurācija"
+msgstr "Uzstādījumi"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_installer
@@ -10138,7 +10163,7 @@ msgstr "Kontaktu birkas"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
 msgid "Contact Titles"
-msgstr "Uzrunas"
+msgstr "Kontaktpersonu Uzrunas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__partner_ids
@@ -10168,7 +10193,7 @@ msgstr "Konteksts"
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__context
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__context
 msgid "Context Value"
-msgstr "Konteksta vērtība"
+msgstr "Konteksta Vērtība"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__context
@@ -10261,7 +10286,7 @@ msgstr "Country Calling Code"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__code
 msgid "Country Code"
-msgstr "Valsts kods"
+msgstr "Valsts Kods"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country_group
@@ -10279,12 +10304,12 @@ msgstr "Valstu grupas"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
-msgstr "Valsts nosaukums"
+msgstr "Valsts Nosaukums"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
 msgid "Country state"
-msgstr "Novads"
+msgstr "Valsts štats"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_coupon
@@ -11266,7 +11291,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
-msgstr "Discard"
+msgstr "Atmest izmaiņas"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_discuss
@@ -11277,7 +11302,7 @@ msgstr "Saziņa"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 msgid "Display"
-msgstr "Display"
+msgstr "Attēlots"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field__unknown__display_name
@@ -11379,7 +11404,7 @@ msgstr "Display"
 #: model:ir.model.fields,field_description:base.field_res_users_log__display_name
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__display_name
 msgid "Display Name"
-msgstr "Displeja nosaukums"
+msgstr "Attēlotais nosaukums"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_studio
@@ -11626,6 +11651,7 @@ msgstr "Nolaižamā izvēlne"
 msgid ""
 "Duplicating a company is not allowed. Please create a new company instead."
 msgstr ""
+"Duplicating a company is not allowed. Please create a new company instead."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_E
@@ -11709,7 +11735,7 @@ msgstr "Ecuador - Accounting"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
 msgid "Edit Translations"
-msgstr "Edit Translations"
+msgstr "Labot tulkojumus"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_P
@@ -11841,7 +11867,7 @@ msgstr "Employee Contracts"
 #: model:ir.module.module,shortdesc:base.module_hr
 #: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employees"
-msgstr "Employees"
+msgstr "Darbinieki"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:466
@@ -12113,18 +12139,18 @@ msgstr "Export Name"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Export Settings"
-msgstr "Export Settings"
+msgstr "Eksportēt iestatījumus"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_wizard_lang_export
 #: model:ir.ui.menu,name:base.menu_wizard_lang_export
 msgid "Export Translation"
-msgstr "Export Translation"
+msgstr "Eksportēt tulkojumu"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Export Translations"
-msgstr "Export Translations"
+msgstr "Eksportēt tulkojumus"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_au_aba
@@ -12884,7 +12910,7 @@ msgstr "Form Builder"
 #: selection:ir.actions.report,binding_type:0
 #: selection:ir.actions.server,binding_type:0
 msgid "Form-only"
-msgstr ""
+msgstr "Form-only"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__email_formatted
@@ -13122,7 +13148,7 @@ msgstr "Vispārīgie iestatījumi"
 #: model:ir.ui.menu,name:base.menu_wizard_update_translations
 #: model_terms:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Generate Missing Terms"
-msgstr "Generate Missing Terms"
+msgstr "Ģenerēt trūkstošos terminus"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm
@@ -13387,7 +13413,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
 msgid "Group"
-msgstr "Group"
+msgstr "Grupa"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
@@ -13410,7 +13436,7 @@ msgstr "Grupēt pēc"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__full_name
 msgid "Group Name"
-msgstr "Group Name"
+msgstr "Grupas Nosaukums"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__share
@@ -14082,6 +14108,8 @@ msgid ""
 "If enabled, the full output of SMTP sessions will be written to the server "
 "log at DEBUG level (this is very verbose and may include confidential info!)"
 msgstr ""
+"If enabled, the full output of SMTP sessions will be written to the server "
+"log at DEBUG level (this is very verbose and may include confidential info!)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule__global
@@ -14850,7 +14878,7 @@ msgstr "Ireland"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_lock
 msgid "Irreversible Lock Date"
-msgstr ""
+msgstr "Irreversible Lock Date"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_is_company
@@ -15627,7 +15655,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
 msgid "Load"
-msgstr "Load"
+msgstr "Ielādēt"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_language_install
@@ -16393,7 +16421,7 @@ msgstr "Mobilais tālr."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Mobile:"
-msgstr "Mobile:"
+msgstr "Mobīlais:"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__model
@@ -16417,7 +16445,7 @@ msgstr "Modelis"
 #: code:addons/base/models/ir_model.py:504
 #, python-format
 msgid "Model %s does not exist"
-msgstr ""
+msgstr "Model %s does not exist"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:668
@@ -19416,7 +19444,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
-msgstr "Cits"
+msgstr "Other"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra
@@ -19930,7 +19958,7 @@ msgstr "Please set the Model to Create before choosing values"
 #: code:addons/base/models/ir_model.py:505
 #, python-format
 msgid "Please specify a valid model for the object relation"
-msgstr ""
+msgstr "Please specify a valid model for the object relation"
 
 #. module: base
 #: code:addons/base/models/res_users.py:333
@@ -20091,12 +20119,12 @@ msgstr "Prioritāte"
 #. module: base
 #: selection:res.partner,type:0
 msgid "Private Address"
-msgstr "Privātā adrese"
+msgstr "Private Address"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
 msgid "Private Address Form"
-msgstr ""
+msgstr "Private Address Form"
 
 #. module: base
 #: code:addons/models.py:114
@@ -20352,6 +20380,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record on "
 "used by the server action."
 msgstr ""
+"Provide the field used to link the newly created record on the record on "
+"used by the server action."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_screen
@@ -20777,7 +20807,7 @@ msgstr "Recursivity Detected."
 #: model:ir.model.fields,field_description:base.field_ir_model_data__reference
 #: selection:ir.server.object.lines,type:0
 msgid "Reference"
-msgstr "Atsauce"
+msgstr "Atsauksme"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:567
@@ -20856,7 +20886,7 @@ msgstr "Reload from Attachment"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Remove"
-msgstr "Izņemt"
+msgstr "Dzēst"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -21271,7 +21301,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_sale_management
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales"
-msgstr "Pārdošana"
+msgstr "Tirdzniecība"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -21362,7 +21392,7 @@ msgstr "Saglabāt"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_report_form_with_print
 msgid "Save and Print"
-msgstr "Save and Print"
+msgstr "Saglabāt un printēt"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment
@@ -21466,7 +21496,7 @@ msgstr "Meklēt..."
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Security"
-msgstr "Security"
+msgstr "Drošība"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -21650,7 +21680,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_sequence_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_tree
 msgid "Sequence"
-msgstr "Sērija"
+msgstr "Secība"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__code
@@ -21679,7 +21709,7 @@ msgstr "Sequences"
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_5
 msgid "Sequences & Identifiers"
-msgstr "Sekvences un identifikatori"
+msgstr "Secības un identifikatori"
 
 #. module: base
 #: model:res.country,name:base.rs
@@ -21776,7 +21806,7 @@ msgstr "Setting empty passwords is not allowed for security reasons!"
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 #: model:res.groups,name:base.group_system
 msgid "Settings"
-msgstr "Settings"
+msgstr "Uzstādījumi"
 
 #. module: base
 #: model:res.country,name:base.sc
@@ -21948,9 +21978,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
-"Šī kontakta neliela izmēra attēls. Tam tiek automātiski mainīts izmērs uz "
-"64x64px, saglabājot izmēra attiecību. Izmantojiet šo lauku jebkurā vietā, "
-"kur nepieciešams neliels attēls."
+"Small-sized image of this contact. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_snailmail
@@ -22342,7 +22372,7 @@ msgstr "Suriname"
 #. module: base
 #: model:ir.module.category,name:base.module_category_survey
 msgid "Survey"
-msgstr "Aptauja"
+msgstr "Survey"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_survey_crm
@@ -23101,7 +23131,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_custom
 msgid "Technical"
-msgstr "Technical"
+msgstr "Tehniskie iestatījumi"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -23144,7 +23174,7 @@ msgstr "Sagatave"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_name
 msgid "Template Name"
-msgstr "Template Name"
+msgstr "Sagataves nosaukums"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_new_api
@@ -23200,7 +23230,7 @@ msgstr "Tests of field conversions"
 #. module: base
 #: selection:ir.actions.report,report_type:0 selection:ir.property,type:0
 msgid "Text"
-msgstr "Teksts"
+msgstr "Text"
 
 #. module: base
 #: model:res.country,name:base.th
@@ -23221,7 +23251,7 @@ msgstr ""
 #: code:addons/base/models/res_users.py:386
 #, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
-msgstr ""
+msgstr "The \"App Switcher\" action cannot be selected as home action."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__code
@@ -23239,6 +23269,8 @@ msgid ""
 "The Selection Options expression is not a valid Pythonic expression. Please "
 "provide an expression in the [('key','Label'), ...] format."
 msgstr ""
+"The Selection Options expression is not a valid Pythonic expression. Please "
+"provide an expression in the [('key','Label'), ...] format."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__grouping
@@ -24193,7 +24225,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_translation_search
 #: model_terms:ir.ui.view,arch_db:base.view_translation_tree
 msgid "Translations"
-msgstr "Translations"
+msgstr "Tulkojumi"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_H
@@ -24270,6 +24302,9 @@ msgid ""
 "later is slower than the former but forbids any gap in the sequence (while "
 "they are possible in the former)."
 msgstr ""
+"Two sequence object implementations are offered: Standard and 'No gap'. The "
+"later is slower than the former but forbids any gap in the sequence (while "
+"they are possible in the former)."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__type
@@ -24284,7 +24319,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Type"
-msgstr "Veids"
+msgstr "Tips"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__state
@@ -24584,7 +24619,7 @@ msgstr "Update Apps List"
 #: model:ir.model.fields,field_description:base.field_ir_model_data__date_update
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__date_update
 msgid "Update Date"
-msgstr "Atjaunot datumu"
+msgstr "Jaunināt Datumu"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
@@ -24863,7 +24898,7 @@ msgstr "Lietotāji"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_users
 msgid "Users & Companies"
-msgstr "Users & Companies"
+msgstr "Lietotāji un uzņēmumi"
 
 #. module: base
 #: model:ir.model,name:base.model_res_users_log
@@ -25192,7 +25227,7 @@ msgstr "Warehouse Management: Batch Picking"
 #: code:addons/base/models/res_partner.py:349 code:addons/models.py:5270
 #, python-format
 msgid "Warning"
-msgstr "Warning"
+msgstr "Brīdinājums"
 
 #. module: base
 #: code:addons/base/models/res_config.py:433
@@ -25672,6 +25707,9 @@ msgid ""
 "instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
 "should do the trick."
 msgstr ""
+"Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
+"instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
+"should do the trick."
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:500
@@ -25691,7 +25729,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "ZIP"
-msgstr "PASTA KODS"
+msgstr "Pasta indekss"
 
 #. module: base
 #: model:res.country,name:base.zm
