@@ -11,42 +11,14 @@ var _t = core._t;
 
 var LikeButton = Widget.extend({
     events: {
-        'click': '_onClick',
+        'click .o_wslides_like_up': '_onClickUp',
+        'click .o_wslides_like_down': '_onClickDown',
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     * @param {Object} ev
-     */
-    _applyAction: function (ev) {
-        var button = $(ev.currentTarget);
-        var slideID = button.data('slide-id');
-        var userID = button.data('user-id');
-        var isPublic = button.data('public-user');
-        var href = button.data('href');
-        if (isPublic) {
-            this._popoverAlert(button, _.str.sprintf(_t('Please <a href="/web?redirect=%s">login</a> to vote this slide'), (document.URL)));
-        } else {
-            var target = button.find('.fa');
-            if (localStorage.getItem('slide_vote_' + slideID) !== userID.toString()) {
-                this._rpc({
-                    route: href,
-                    params: {
-                        slide_id: slideID,
-                    },
-                }).then(function (data) {
-                    target.text(data);
-                    localStorage.setItem('slide_vote_' + slideID, userID);
-                });
-            } else {
-                this._popoverAlert(button, _t('You have already voted for this slide'));
-            }
-        }
-    },
     /**
      * @private
      * @param {Object} $el
@@ -71,8 +43,38 @@ var LikeButton = Widget.extend({
     /**
      * @private
      */
-    _onClick: function () {
-        this._applyAction();
+    _onClick: function (slideId, voteType) {
+        var self = this;
+        this._rpc({
+            route: '/slides/slide/like',
+            params: {
+                slide_id: slideId,
+                upvote: voteType === 'like',
+            },
+        }).then(function (data) {
+            if (! data.error) {
+                self.$el.find('span.o_wslides_like_up span').text(data.likes);
+                self.$el.find('span.o_wslides_like_down span').text(data.dislikes);
+            } else {
+                if (data.error === 'public_user') {
+                    self._popoverAlert(self.$el, _.str.sprintf(_t('Please <a href="/web?redirect=%s">login</a> to vote this slide'), (document.URL)));
+                } else if (data.error === 'vote_done') {
+                    self._popoverAlert(self.$el, _t('You have already voted for this slide'));
+                } else {
+                    self._popoverAlert(self.$el, _t('Unknown error'));
+                }
+            }
+        });
+    },
+
+    _onClickUp: function (event) {
+        var slideId = $(event.currentTarget).data('slide-id');
+        return this._onClick(slideId, 'like');
+    },
+
+    _onClickDown: function (event) {
+        var slideId = $(event.currentTarget).data('slide-id');
+        return this._onClick(slideId, 'dislike');
     },
 });
 
@@ -83,10 +85,9 @@ sAnimations.registry.websiteSlidesLike = sAnimations.Class.extend({
      * @override
      * @param {Object} parent
      */
-    start: function (parent) {
+    start: function () {
         var defs = [this._super.apply(this, arguments)];
-        defs.push(new LikeButton(this).attachTo($('.oe_slide_js_like')));
-        defs.push(new LikeButton(this).attachTo($('.oe_slide_js_unlike')));
+        defs.push(new LikeButton(this).attachTo($('.o_wslides_like')));
         return $.when.apply($, defs);
     },
 });

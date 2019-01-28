@@ -53,7 +53,6 @@ var SlideDialog = Widget.extend({
      * @param {string} file_name
      */
     _checkUniqueSlide: function (fileName) {
-        var self = this;
         return this._rpc({
             model: 'slide.slide',
             method: 'search_count',
@@ -107,12 +106,16 @@ var SlideDialog = Widget.extend({
                 if (_.filter(_.union(addedTags, data), function (tag) {
                     return tag.text.toLowerCase().localeCompare(term.toLowerCase()) === 0;
                 }).length === 0) {
-                    return {
-                        id: _.uniqueId('tag_'),
-                        create: true,
-                        tag: term,
-                        text: _.str.sprintf(_t("Create new tag '%s'"), term),
-                    };
+                    if (this.opts.can_create) {
+                        return {
+                            id: _.uniqueId('tag_'),
+                            create: true,
+                            tag: term,
+                            text: _.str.sprintf(_t("Create new tag '%s'"), term),
+                        };
+                    } else {
+                        return undefined;
+                    }
                 }
             },
             fill_data: function (query, data) {
@@ -130,8 +133,9 @@ var SlideDialog = Widget.extend({
                 // fetch data only once and store it
                 if (!this.selection_data) {
                     this.fetch_rpc_fnc().then(function (data) {
-                        that.fill_data(query, data);
-                        that.selection_data = data;
+                        that.can_create = data.can_create;
+                        that.fill_data(query, data.read_results);
+                        that.selection_data = data.read_results;
                     });
                 } else {
                     this.fill_data(query, this.selection_data);
@@ -148,11 +152,9 @@ var SlideDialog = Widget.extend({
         var self = this;
         $('#category_id').select2(this._select2Wrapper(_t('Category'), false,
             function () {
-                return this._rpc({
-                    model: 'slide.category',
-                    method: 'search_read',
-                    args: [],
-                    kwargs: {
+                return self._rpc({
+                    route: '/slides/category/search_read',
+                    params: {
                         fields: ['name'],
                         domain: [['channel_id', '=', self.channel_id]],
                     }
@@ -175,13 +177,13 @@ var SlideDialog = Widget.extend({
      * @private
      */
     _setTagIds: function () {
+        var self = this;
         $('#tag_ids').select2(this._select2Wrapper(_t('Tags'), true, function () {
-            return this._rpc({
-                model: 'slide.tag',
-                method: 'search_read',
-                args: [],
-                kwargs: {
+            return self._rpc({
+                route: '/slides/tag/search_read',
+                params: {
                     fields: ['name'],
+                    domain: [],
                 }
             });
         }));
