@@ -925,6 +925,10 @@ class ProcurementRule(models.Model):
             else:
                 po.write({'origin': origin})
 
+        # subscribe the user that created the SO to the PO
+        if 'uid' in self._context:
+            po.message_subscribe_users(self._context['uid'])
+
         # Create Line
         po_line = False
         for line in po.order_line:
