@@ -8,5 +8,5 @@ class LunchLocation(models.Model):
     _name = 'lunch.location'
     _description = 'Lunch Locations'
 
-    name = fields.Char('Location Name')
+    name = fields.Char('Location Name', required=True)
     address = fields.Text('Address')
