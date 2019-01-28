@@ -11,9 +11,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:05+0000\n"
+"POT-Creation-Date: 2019-01-22 11:11+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -64,6 +64,11 @@ msgstr "Automatiškai patvirtinti vertimą"
 #: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__gengo_auto_approve
 msgid "Auto Approve Translation ?"
 msgstr "Automatiškai patvirtinti vertimą?"
+
+#. module: base_gengo
+#: model:ir.model,name:base_gengo.model_base_gengo_translations
+msgid "Base Gengo Translations"
+msgstr ""
 
 #. module: base_gengo
 #: selection:base.gengo.translations,sync_type:0
@@ -169,7 +174,7 @@ msgid "Gengo Translation Service Level"
 msgstr "Gengo vertimo paslaugų lygmuo"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:84
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:85
 #, python-format
 msgid ""
 "Gengo `Public Key` or `Private Key` are missing. Enter your Gengo "
@@ -179,7 +184,7 @@ msgstr ""
 "patvirtinimo parametrus \"Nustatymai > Įmonės > Gengo parametrai\"."
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:95
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:96
 #, python-format
 msgid ""
 "Gengo connection failed with this message:\n"
@@ -292,7 +297,7 @@ msgid "Sync Type"
 msgstr "Sinchronizavimo tipas"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:114
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:115
 #, python-format
 msgid ""
 "The number of terms to sync should be between 1 to 200 to work with Gengo "
@@ -317,7 +322,7 @@ msgstr ""
 "užklausą"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:109
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:110
 #, python-format
 msgid "This language is not supported by the Gengo translation services."
 msgstr "Gengo vertimo paslaugose ši kalba nėra palaikoma."
@@ -350,8 +355,3 @@ msgid ""
 msgstr ""
 "Čia galite pasirinkti, kokio paslaugų lygio norite automatiniam vertimui su "
 "Gengo."
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_base_gengo_translations
-msgid "base.gengo.translations"
-msgstr "base.gengo.translations"
