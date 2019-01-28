@@ -101,7 +101,7 @@ function patch() {
             }
             if (xmlId === 'template.assets_all_style') {
                 return $.when({
-                    cssLibs: $('head link[href]:not([type="image/x-icon"])').map(function () {
+                    cssLibs: $('link[href]:not([type="image/x-icon"])').map(function () {
                         return $(this).attr('href');
                     }).get(),
                     cssContents: ['body {background-color: red;}']

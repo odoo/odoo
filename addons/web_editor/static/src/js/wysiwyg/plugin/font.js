@@ -534,6 +534,11 @@ registry.addJob(function (wysiwyg) {
     if ('web_editor.colorpicker' in QWeb.templates) {
         return;
     }
+
+    if (wysiwyg.isDestroyed()) {
+        throw new Error('The Wysiwyg are destroyed before this loading');
+    }
+
     var options = {};
     wysiwyg.trigger_up('getRecordInfo', {
         recordInfo: options,

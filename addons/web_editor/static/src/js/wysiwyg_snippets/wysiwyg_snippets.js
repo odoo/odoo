@@ -15,6 +15,7 @@ Wysiwyg.include({
         snippet_cloned: '_onSnippetCloned',
         snippet_dropped: '_onSnippetDropped',
         snippet_focused: '_onSnippetFocused',
+        reload_snippet_dropzones: '_onReloadSnippetDropzones',
     }),
 
     selectorEditableArea: '.note-editable',
@@ -173,6 +174,14 @@ Wysiwyg.include({
         context.invoke('MediaPlugin.hidePopovers');
     },
     /**
+     * trigger reload_snippet_dropzones on snippets
+     *
+     * @private
+     */
+    _onReloadSnippetDropzones: function () {
+        this.snippets.trigger('reload_snippet_dropzones');
+    },
+    /**
      * Triggered when a snippet is cloned in the editable area
      *
      * @private
@@ -257,5 +266,7 @@ $.fn.extend({
         return this;
     },
 });
+
+return Wysiwyg;
 
 });
