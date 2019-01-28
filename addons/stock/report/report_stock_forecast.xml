@@ -5,12 +5,24 @@
         <field name="name">Stock.forecast.pivot</field>
         <field name="model">report.stock.forecast</field>
         <field name="arch" type="xml">
-            <pivot string="Stock Level forecast" disable_linking="True">
+            <pivot string="Stock Level forecast">
                 <field name="product_id" type="row"/>
                 <field name="date" type="col"/>
                 <field name="quantity" type="measure"/>
                 <field name="cumulative_quantity" type="measure"/>
             </pivot>
+        </field>
+    </record>
+
+    <record id="view_stock_level_forecast_tree" model="ir.ui.view">
+        <field name="name">Stock.forecast.tree</field>
+        <field name="model">report.stock.forecast</field>
+        <field name="arch" type="xml">
+            <tree string="Stock Inventory Lines">
+                <field name="reference"/>
+                <field name="date"/>
+                <field name="quantity"/>
+            </tree>
         </field>
     </record>
 
