@@ -5,7 +5,7 @@
         <t t-set="val_integer" t-value="Math.floor(val)"/>
         <t t-set="val_decimal" t-value="val - val_integer"/>
         <t t-set="empty_star" t-value="5 - (val_integer+Math.ceil(val_decimal))"/>
-        <div class="o_website_rating_static">
+        <div class="o_website_rating_static" t-att-style="inline_mode ? 'display:inline' : ''">
             <t t-foreach="_.range(0, val_integer)" t-as="num">
                 <i class="fa fa-star" role="img" aria-label="One star" title="One star"></i>
             </t>
@@ -73,36 +73,6 @@
             </div>
             <input type="hidden" readonly="readonly" name="rating_value" value="0.0"/>
         </div>
-    </t>
-
-    <!--
-        Inherited templates from portal to custom chatter with rating
-    -->
-    <t t-extend="portal.chatter_composer">
-        <t t-jquery=".o_portal_chatter_composer_form input[name='csrf_token']" t-operation="after">
-            <t t-call="website_rating.rating_star_input"/>
-        </t>
-    </t>
-
-    <t t-extend="portal.chatter_messages">
-        <t t-jquery="t[t-raw='message.body']" t-operation="before">
-            <t t-if="message['rating_value']">
-                <t t-call="website_rating.rating_stars_static">
-                    <t t-set="val" t-value="message.rating_value"/>
-                </t>
-            </t>
-        </t>
-    </t>
-
-    <t t-extend="portal.chatter">
-        <t t-jquery="t[t-call='portal.chatter_message_count']" t-operation="replace">
-            <t t-if="widget.options['display_rating']">
-                <t t-call="website_rating.rating_card"/>
-            </t>
-            <t t-if="!widget.options['display_rating']">
-                <t t-call="portal.chatter_message_count"/>
-            </t>
-        </t>
     </t>
 
 </templates>
