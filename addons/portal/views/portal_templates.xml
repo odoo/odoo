@@ -481,22 +481,33 @@
     </template>
 
     <!--
-        Container signature template for frontend
-        :partner-name string: customer name that signs
-        :res-model string: model of the signed document
-        :res-id stringied int: id of the signed document
-        :call-url string: url to call once clicking on the sign button
-        :access-token string: access token for customer portal
-    -->
+        Snippet to request user signature in the portal. The feature comes with
+        the JS file `portal_signature.js`.
 
-    <template id="portal_signature" name="Ask Signature">
-        <div t-att-class="'o_portal_signature_form'"
-            t-att-data-partner-name="partner_name"
-            t-att-data-res-model="object._name"
-            t-att-data-res-id="object.id"
-            t-att-data-call-url="callUrl"
-            t-att-data-sign-label="signLabel"
-            t-att-data-access-token="accessToken"/>
+        The following variable has to be set:
+            - {string} call_url: url where to send the name and signature by RPC
+                The url should contain a query string if additional parameters
+                have to be sent, such as an access token.
+
+        The following variables are optional:
+            - {string} default_name: the default name to display
+            - {string} mode: 'draw', 'auto', or 'load'
+            - {string} send_label: label of the send button
+            - {number} signature_ratio: ratio of the signature area
+            - {string} signature_type: 'signature' or 'initial'
+
+        For the default values and more information, see init() of the widgets
+        SignatureForm and NameAndSignature.
+    -->
+    <template id="portal.signature_form" name="Ask Signature">
+        <div class="o_portal_signature_form"
+            t-att-data-call-url="call_url"
+            t-att-data-default-name="default_name"
+            t-att-data-mode="mode"
+            t-att-data-send-label="send_label"
+            t-att-data-signature-ratio="signature_ratio"
+            t-att-data-signature-type="signature_type"
+            />
     </template>
 
     <template id="portal_sidebar" name="Sidebar">

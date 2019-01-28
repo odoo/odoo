@@ -217,42 +217,42 @@
                                             <li t-if="sale_order.payment_term_id"><span>With payment terms:</span> <b t-field="sale_order.payment_term_id"/></li>
                                         </ul>
                                     </p>
-                                    <t t-call="portal.portal_signature">
-                                        <t t-set="object" t-value="sale_order"/>
-                                        <t t-set="partner_name" t-value="sale_order.partner_id.name"/>
-                                        <t t-set="callUrl" t-value="sale_order.get_portal_url(suffix='/accept')"/>
-                                        <t t-set="accessToken" t-value="sale_order.access_token"/>
+                                    <t t-call="portal.signature_form">
+                                        <t t-set="call_url" t-value="sale_order.get_portal_url(suffix='/accept')"/>
+                                        <t t-set="default_name" t-value="sale_order.partner_id.name"/>
                                     </t>
                                 </main>
                             </form>
                         </div>
 
-                        <div class="modal-dialog modal-content" t-if="not sale_order.has_to_be_signed(True) and sale_order.has_to_be_paid(True)">
-                            <header class="modal-header">
-                                <h4 class="modal-title">Validate Order</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
-                            </header>
-                            <main class="modal-body" id="sign-dialog">
-                                <p>
-                                    <span>By paying this proposal, I agree to the following terms:</span>
-                                    <ul>
-                                        <li><span>Accepted on the behalf of:</span> <b t-field="sale_order.partner_id.commercial_partner_id"/></li>
-                                        <li><span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/></li>
-                                        <li t-if="sale_order.payment_term_id"><span>With payment terms:</span> <b t-field="sale_order.payment_term_id"/></li>
-                                    </ul>
-                                </p>
-                                <div t-if="pms or acquirers" id="payment_method" class="text-left">
-                                    <h3 class="mb24">Pay with</h3>
-                                    <t t-call="payment.payment_tokens_list">
-                                        <t t-set="mode" t-value="'payment'"/>
-                                        <t t-set="submit_txt">Pay &amp; Confirm</t>
-                                        <t t-set="icon_class" t-value="'fa-lock'"/>
-                                        <t t-set="form_action" t-value="sale_order.get_portal_url(suffix='/transaction/token')"/>
-                                        <t t-set="prepare_tx_url" t-value="sale_order.get_portal_url(suffix='/transaction/')"/>
-                                        <t t-set="access_token" t-value="sale_order.access_token"/>
-                                    </t>
-                                </div>
-                            </main>
+                        <div class="modal-dialog" t-if="not sale_order.has_to_be_signed(True) and sale_order.has_to_be_paid(True)">
+                            <div class="modal-content">
+                                <header class="modal-header">
+                                    <h4 class="modal-title">Validate Order</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                                </header>
+                                <main class="modal-body" id="sign-dialog">
+                                    <p>
+                                        <span>By paying this proposal, I agree to the following terms:</span>
+                                        <ul>
+                                            <li><span>Accepted on the behalf of:</span> <b t-field="sale_order.partner_id.commercial_partner_id"/></li>
+                                            <li><span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/></li>
+                                            <li t-if="sale_order.payment_term_id"><span>With payment terms:</span> <b t-field="sale_order.payment_term_id"/></li>
+                                        </ul>
+                                    </p>
+                                    <div t-if="pms or acquirers" id="payment_method" class="text-left">
+                                        <h3 class="mb24">Pay with</h3>
+                                        <t t-call="payment.payment_tokens_list">
+                                            <t t-set="mode" t-value="'payment'"/>
+                                            <t t-set="submit_txt">Pay &amp; Confirm</t>
+                                            <t t-set="icon_class" t-value="'fa-lock'"/>
+                                            <t t-set="form_action" t-value="sale_order.get_portal_url(suffix='/transaction/token')"/>
+                                            <t t-set="prepare_tx_url" t-value="sale_order.get_portal_url(suffix='/transaction/')"/>
+                                            <t t-set="access_token" t-value="sale_order.access_token"/>
+                                        </t>
+                                    </div>
+                                </main>
+                            </div>
                         </div>
                     </div>
 

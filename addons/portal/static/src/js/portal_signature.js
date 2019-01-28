@@ -1,93 +1,127 @@
-odoo.define('portal.signature_form', function (require){
-    "use strict";
+odoo.define('portal.signature_form', function (require) {
+    'use strict';
 
-    var ajax = require('web.ajax');
-    var base = require('web_editor.base');
     var core = require('web.core');
-    var Widget = require("web.Widget");
-    var rpc = require("web.rpc");
-
+    var dom = require('web.dom');
+    var NameAndSignature = require('portal.name_and_signature').NameAndSignature;
     var qweb = core.qweb;
+    var Widget = require('web.Widget');
 
+    var _t = core._t;
+
+    /**
+     * This widget is a signature request form. It uses
+     * @see NameAndSignature for the input fields, adds a submit
+     * button, and handles the RPC to save the result.
+     */
     var SignatureForm = Widget.extend({
         template: 'portal.portal_signature',
+        xmlDependencies: ['/portal/static/src/xml/portal_signature.xml'],
         events: {
-            'click #o_portal_sign_clear': 'clearSign',
-            'click .o_portal_sign_submit': 'submitSign',
-            'init #o_portal_sign_accept': 'initSign',
+            'click .o_portal_sign_submit': '_onClickSignSubmit',
         },
 
-        init: function(parent, options) {
+        /**
+         * Overridden to allow options.
+         *
+         * @constructor
+         * @param {Widget} parent
+         * @param {Object} options
+         * @param {string} options.callUrl - make RPC to this url
+         * @param {string} [options.sendLabel='Accept & Sign'] - label of the
+         *  send button
+         * @param {Object} [options.rpcParams={}] - params for the RPC
+         * @param {Object} [options.nameAndSignatureOptions={}] - options for
+         *  @see NameAndSignature.init()
+         */
+        init: function (parent, options) {
             this._super.apply(this, arguments);
-            this.options = _.extend(options || {}, {
-                csrf_token: odoo.csrf_token,
-            });
+
+            this.csrf_token = odoo.csrf_token;
+
+            this.callUrl = options.callUrl || '';
+            this.rpcParams = options.rpcParams || {};
+            this.sendLabel = options.sendLabel || _t("Accept & Sign");
+
+            this.nameAndSignature = new NameAndSignature(this,
+                options.nameAndSignatureOptions || {});
+
+            // debounce on click to not make multiple RPC if clicking too fast
+            this._onClickSignSubmit = dom.makeButtonHandler(this._onClickSignSubmit);
+        },
+        /**
+         * Overridden to get the DOM elements
+         * and to insert the name and signature.
+         *
+         * @override
+         */
+        start: function () {
+            this.$confirm_btn = this.$('.o_portal_sign_submit');
+            this.$controls = this.$('.o_portal_sign_controls');
+            this.nameAndSignature.replace(this.$('.o_portal_sign_name_and_signature'));
+            return this._super.apply(this, arguments);
         },
 
-        willStart: function() {
-            return this._loadTemplates();
+        //----------------------------------------------------------------------
+        // Public
+        //----------------------------------------------------------------------
+
+        /**
+         * Focuses the name.
+         *
+         * @see NameAndSignature.focusName();
+         */
+        focusName: function () {
+            this.nameAndSignature.focusName();
+        },
+        /**
+         * Resets the signature.
+         *
+         * @see NameAndSignature.resetSignature();
+         */
+        resetSignature: function () {
+            return this.nameAndSignature.resetSignature();
         },
 
-        start: function() {
-            this.initSign();
-        },
+        //----------------------------------------------------------------------
+        // Handlers
+        //----------------------------------------------------------------------
 
-        // Signature
-        initSign: function () {
-            this.$("#o_portal_signature").empty().jSignature({
-                'decor-color': '#D1D0CE',
-                'color': '#000',
-                'background-color': '#fff',
-                'height': '142px',
-                'width': '100%', // prevent the signature from being too big
-            });
-            this.empty_sign = this.$("#o_portal_signature").jSignature('getData', 'image');
-        },
-
-        clearSign: function () {
-            this.$("#o_portal_signature").jSignature('reset');
-        },
-
-        submitSign: function (ev) {
+        /**
+         * Handles click on the submit button.
+         *
+         * This will get the current name and signature and validate them.
+         * If they are valid, they are sent to the server, and the reponse is
+         * handled. If they are invalid, it will display the errors to the user.
+         *
+         * @private
+         * @param {Event} ev
+         * @returns {Deferred}
+         */
+        _onClickSignSubmit: function (ev) {
+            var self = this;
             ev.preventDefault();
 
-            // extract data
-            var self = this;
-            var $confirm_btn = self.$el.find('button[type="submit"]');
-
-            // process : display errors, or submit
-            var partner_name = self.$("#o_portal_sign_name").val();
-            var signature = self.$("#o_portal_signature").jSignature('getData', 'image');
-            var is_empty = signature ? this.empty_sign[1] === signature[1] : true;
-
-            this.$('#o_portal_sign_name').parent().toggleClass('o_has_error', !partner_name).find('.form-control, .custom-select').toggleClass('is-invalid', !partner_name);
-            this.$('#o_portal_sign_draw').toggleClass('bg-danger text-white', is_empty);
-            if (is_empty || ! partner_name) {
-                return false;
+            if (!this.nameAndSignature.validateSignature()) {
+                return;
             }
 
-            $confirm_btn.prepend('<i class="fa fa-spinner fa-spin"></i> ');
-            $confirm_btn.attr('disabled', true);
+            var name = this.nameAndSignature.getName();
+            var signature = this.nameAndSignature.getSignatureImage()[1];
 
-            return rpc.query({
-                route: this.options.callUrl,
-                params: {
-                    'res_id': this.options.resId,
-                    'access_token': this.options.accessToken,
-                    'partner_name': partner_name,
-                    'signature': signature ? signature[1] : false,
-                },
+            return this._rpc({
+                route: this.callUrl,
+                params: _.extend(this.rpcParams, {
+                    'name': name,
+                    'signature': signature,
+                }),
             }).then(function (data) {
-                self.$('.fa-spinner').remove();
                 if (data.error) {
                     self.$('.o_portal_sign_error_msg').remove();
-                    $confirm_btn.before(qweb.render('portal.portal_signature_error', {message: data.error}));
-                    $confirm_btn.attr('disabled', false);
-                }
-                else if (data.success) {
-                    $confirm_btn.remove();
-                    var $success = qweb.render("portal.portal_signature_success", {widget: data});
-                    self.$('#o_portal_sign_draw').parent().replaceWith($success);
+                    self.$controls.prepend(qweb.render('portal.portal_signature_error', {widget: data}));
+                } else if (data.success) {
+                    var $success = qweb.render('portal.portal_signature_success', {widget: data});
+                    self.$el.empty().append($success);
                 }
                 if (data.force_refresh) {
                     if (data.redirect_url) {
@@ -95,37 +129,55 @@ odoo.define('portal.signature_form', function (require){
                     } else {
                         window.location.reload();
                     }
+                    // no resolve if we reload the page
+                    return $.Deferred();
                 }
             });
         },
-
-        //--------------------------------------------------------------------------
-        // Private
-        //--------------------------------------------------------------------------
-
-        /**
-         * @private
-         * @returns {Deferred}
-         */
-        _loadTemplates: function () {
-            return ajax.loadXML('/portal/static/src/xml/portal_signature.xml', qweb);
-        },
-    });
-
-    base.ready().then(function () {
-        $('.o_portal_signature_form').each(function () {
-            var $elem = $(this);
-            var form = new SignatureForm(null, $elem.data());
-            form.appendTo($elem);
-        });
-        // Make the signature responsive when it is displayed in bootstrap modal.
-        // More precisely it is too small if this code is not here.
-        $('.o_portal_signature_form').parents('.modal').on('shown.bs.modal', function (ev) {
-            $('.o_portal_signature_form').trigger('resize');
-        });
     });
 
     return {
         SignatureForm: SignatureForm,
     };
+});
+
+odoo.define('portal.signature_form_init', function (require) {
+'use strict';
+
+var SignatureForm = require('portal.signature_form').SignatureForm;
+var rootWidget = require('root.widget');
+require('web.dom_ready');
+
+$('.o_portal_signature_form').each(function () {
+    var hasBeenReset = false;
+    var $elem = $(this);
+
+    var callUrl = $elem.data('call-url');
+    var nameAndSignatureOptions = {
+        defaultName: $elem.data('default-name'),
+        mode: $elem.data('mode'),
+        signatureRatio: $elem.data('signature-ratio'),
+        signatureType: $elem.data('signature-type'),
+    };
+    var sendLabel = $elem.data('send-label');
+
+    var form = new SignatureForm(rootWidget, {
+        callUrl: callUrl,
+        nameAndSignatureOptions: nameAndSignatureOptions,
+        sendLabel: sendLabel,
+    });
+    form.appendTo($elem);
+    // Correctly set up the signature area if it is inside a modal
+    $('.o_portal_signature_form').parents('.modal').on('shown.bs.modal', function (ev) {
+        if (!hasBeenReset) {
+            // Reset it only the first time it is open to get correct
+            // size. After we want to keep its content on reopen.
+            hasBeenReset = true;
+            form.resetSignature();
+        } else {
+            form.focusName();
+        }
+    });
+});
+
 });
