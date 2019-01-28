@@ -6,7 +6,7 @@
 import logging
 import math
 
-from datetime import datetime
+from datetime import datetime, time
 from pytz import timezone, UTC
 
 from odoo import api, fields, models
@@ -142,7 +142,7 @@ class HolidaysRequest(models.Model):
         'Duration in days', compute='_compute_number_of_days_display', copy=False, readonly=True,
         help='Number of days of the leave request. Used for interface.')
     number_of_hours_display = fields.Float(
-        'Duration in hours', compute='_compute_number_of_hours_display', copy=False, readonly=True, 
+        'Duration in hours', compute='_compute_number_of_hours_display', copy=False, readonly=True,
         help='Number of hours of the leave request according to your working schedule. Used for interface.')
     # details
     meeting_id = fields.Many2one('calendar.event', string='Meeting')
@@ -431,7 +431,12 @@ class HolidaysRequest(models.Model):
             employee = self.env['hr.employee'].browse(employee_id)
             return employee.get_work_days_data(date_from, date_to)['days']
 
-        return self.env.user.company_id.resource_calendar_id.get_work_hours_count(date_from, date_to) / HOURS_PER_DAY
+        today_hours = self.env.user.company_id.resource_calendar_id.get_work_hours_count(
+            datetime.combine(date_from.date(), time.min),
+            datetime.combine(date_from.date(), time.max),
+            False)
+
+        return self.env.user.company_id.resource_calendar_id.get_work_hours_count(date_from, date_to) / (today_hours or HOURS_PER_DAY)
 
     ####################################################
     # ORM Overrides methods
@@ -601,6 +606,8 @@ class HolidaysRequest(models.Model):
             'holiday_status_id': self.holiday_status_id.id,
             'date_from': self.date_from,
             'date_to': self.date_to,
+            'request_date_from': self.date_from,
+            'request_date_to': self.date_to,
             'notes': self.notes,
             'number_of_days': employee.get_work_days_data(self.date_from, self.date_to)['days'],
             'parent_id': self.id,
@@ -661,24 +668,27 @@ class HolidaysRequest(models.Model):
             if holiday.holiday_type == 'employee':
                 holiday._validate_leave_request()
             elif holiday.holiday_type in ['company', 'category', 'department']:
-                leaves = self.env['hr.leave']
                 if holiday.holiday_type == 'category':
                     employees = holiday.category_id.employee_ids
                 elif holiday.holiday_type == 'company':
                     employees = self.env['hr.employee'].search([('company_id', '=', self.mode_company_id.id)])
                 else:
                     employees = holiday.department_id.member_ids
-                for employee in employees:
-                    values = holiday._prepare_holiday_values(employee)
-                    leaves += self.with_context(
-                        mail_notify_force_send=False,
-                        mail_activity_automation_skip=True
-                    ).create(values)
-                # TODO is it necessary to interleave the calls?
+
+                if self.env['hr.leave'].search_count([('date_from', '<=', holiday.date_to), ('date_to', '>', holiday.date_from),
+                                   ('state', 'not in', ['cancel', 'refuse']), ('holiday_type', '=', 'employee'),
+                                   ('employee_id', 'in', employees.ids)]):
+                    raise ValidationError(_('You can not have 2 leaves that overlaps on the same day.'))
+
+                values = [holiday._prepare_holiday_values(employee) for employee in employees]
+                leaves = self.env['hr.leave'].create(values).with_context(
+                    tracking_disable=True,
+                    mail_activity_automation_skip=True,
+                )
                 leaves.action_approve()
                 if leaves and leaves[0].validation_type == 'both':
                     leaves.action_validate()
-        self.activity_update()
+        self.filtered(lambda hol: hol.holiday_type == 'employee').activity_update()
         return True
 
     @api.multi
