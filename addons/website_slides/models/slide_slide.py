@@ -19,6 +19,16 @@ from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
 
 
+class SlideUsersRelation(models.Model):
+    _name = 'slide.users'
+    _description = 'Slide / Users decorated m2m'
+    _table = 'slide_users'
+
+    slide_id = fields.Many2one('slide.slide', index=True, required=True)
+    user_id = fields.Many2one('res.users', index=True, required=True)
+    vote = fields.Integer('Vote', default=0)
+
+
 class EmbeddedSlide(models.Model):
     """ Embedding in third party websites. Track view count, generate statistics. """
     _name = 'slide.embed'
@@ -93,6 +103,10 @@ class Slide(models.Model):
     image = fields.Binary('Image', attachment=True)
     image_medium = fields.Binary('Medium', compute="_get_image", store=True, attachment=True)
     image_thumb = fields.Binary('Thumbnail', compute="_get_image", store=True, attachment=True)
+    # subscribers
+    user_ids = fields.Many2many('res.users', 'slide_users', 'slide_id', 'user_id',
+                                string='Subscribers', groups='base.group_system')
+    slide_user_ids = fields.One2many('slide.users', 'slide_id', string='Subscribers information', groups='base.group_system')
 
     @api.depends('image')
     def _get_image(self):
@@ -135,8 +149,9 @@ class Slide(models.Model):
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
     date_published = fields.Datetime('Publish Date')
-    likes = fields.Integer('Likes')
-    dislikes = fields.Integer('Dislikes')
+    likes = fields.Integer('Likes', compute='_compute_user_info', store=True)
+    dislikes = fields.Integer('Dislikes', compute='_compute_user_info', store=True)
+    user_vote = fields.Integer('User vote', compute='_compute_user_info')
     # views
     embedcount_ids = fields.One2many('slide.embed', 'slide_id', string="Embed Count")
     slide_views = fields.Integer('# of Website Views')
@@ -147,6 +162,24 @@ class Slide(models.Model):
     def _compute_total(self):
         for record in self:
             record.total_views = record.slide_views + record.embed_views
+
+    @api.depends('slide_user_ids.vote')
+    def _compute_user_info(self):
+        slide_data = dict.fromkeys(self.ids, dict({'likes': 0, 'dislikes': 0, 'user_vote': False}))
+        slide_users = self.env['slide.users'].sudo().search([
+            ('slide_id', 'in', self.ids)
+        ])
+        for slide_user in slide_users:
+            if slide_user.vote == 1:
+                slide_data[slide_user.slide_id.id]['likes'] += 1
+                if slide_user.user_id == self.env.user:
+                    slide_data[slide_user.slide_id.id]['user_vote'] = 1
+            elif slide_user.vote == -1:
+                slide_data[slide_user.slide_id.id]['dislikes'] += 1
+                if slide_user.user_id == self.env.user:
+                    slide_data[slide_user.slide_id.id]['user_vote'] = -1
+        for slide_sudo in self.sudo():
+            slide_sudo.update(slide_data[slide_sudo.id])
 
     embed_code = fields.Text('Embed Code', readonly=True, compute='_get_embed_code')
 
@@ -304,6 +337,43 @@ class Slide(models.Model):
     def send_share_email(self, email):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         return self.channel_id.share_template_id.with_context(email=email, base_url=base_url).send_mail(self.id, notif_layout='mail.mail_notification_light')
+
+    def action_like(self):
+        self.check_access_rights('read')
+        self.check_access_rule('read')
+        return self._action_vote(upvote=True)
+
+    def action_dislike(self):
+        self.check_access_rights('read')
+        self.check_access_rule('read')
+        return self._action_vote(upvote=False)
+
+    def _action_vote(self, upvote=True):
+        """ Private implementation of voting. It does not check for any real access
+        rights; public methods should grant access before calling this method.
+
+          :param upvote: if True, is a like; if False, is a dislike
+        """
+        self_sudo = self.sudo()
+        SlideUsersSudo = self.env['slide.users'].sudo()
+        slide_users = SlideUsersSudo.search([
+            ('slide_id', 'in', self.ids),
+            ('user_id', '=', self.env.uid)
+        ])
+        new_slides = self_sudo - slide_users.mapped('slide_id')
+
+        for slide_user in slide_users:
+            if upvote:
+                new_vote = 0 if slide_user.vote == -1 else 1
+            else:
+                new_vote = 0 if slide_user.vote == 1 else -1
+            slide_user.vote = new_vote
+
+        for new_slide in new_slides:
+            new_vote = 1 if upvote else -1
+            new_slide.write({
+                'slide_user_ids': [(0, 0, {'vote': new_vote, 'user_id': self.env.uid})]
+            })
 
     # --------------------------------------------------
     # Parsing methods

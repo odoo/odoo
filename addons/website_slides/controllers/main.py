@@ -35,28 +35,6 @@ class WebsiteSlides(http.Controller):
             request.session[slide_key] = viewed_slides
         return True
 
-    def _check_session_slide_vote(self, slide, upvote=True):
-        if not request.session.get('__wslides_upvote'):
-            request.session['__wslides_upvote'] = []
-        if not request.session.get('__wslides_downvote'):
-            request.session['__wslides_downvote'] = []
-        if upvote and slide.id in request.session['__wslides_upvote']:
-            return False
-        if not upvote and slide.id in request.session['__wslides_downvote']:
-            return False
-        if upvote and slide.id in request.session['__wslides_downvote']:
-            request.session['__wslides_downvote'].remove(slide.id)
-            return 0
-        if not upvote and slide.id in request.session['__wslides_upvote']:
-            request.session['__wslides_upvote'].remove(slide.id)
-            return 0
-        if upvote:
-            request.session['__wslides_upvote'].append(slide.id)
-            return 1
-        if not upvote:
-            request.session['__wslides_downvote'].append(slide.id)
-            return -1
-
     def _get_slide_detail(self, slide):
         most_viewed_slides = slide.get_most_viewed_slides(self._slides_per_list)
         related_slides = slide.get_related_slides(self._slides_per_list)
@@ -234,21 +212,19 @@ class WebsiteSlides(http.Controller):
     def slide_like(self, slide_id, upvote):
         if request.website.is_public_user():
             return {'error': 'public_user'}
-        slide = request.env['slide.slide'].browse(int(slide_id))
-        slide.check_access_rights('read')
-        slide.check_access_rule('read')
-        check = self._check_session_slide_vote(slide, upvote=upvote)
-        if check is False:
+        slide_users = request.env['slide.users'].sudo().search([
+            ('slide_id', '=', slide_id),
+            ('user_id', '=', request.env.uid)
+        ])
+        if (upvote and slide_users.vote == 1) or (not upvote and slide_users.vote == -1):
             return {'error': 'vote_done'}
-        if check == 1:
-            slide.sudo().likes += 1
-        elif check == 0 and upvote:
-            slide.sudo().dislikes -= 1
-        elif check == 0 and not upvote:
-            slide.sudo().likes -= 1
+        slide = request.env['slide.slide'].browse(int(slide_id))
+        if upvote:
+            slide.action_like()
         else:
-            slide.sudo().dislikes += 1
-        return {'state': check, 'likes': slide.likes, 'dislikes': slide.dislikes}
+            slide.action_dislike()
+        slide.invalidate_cache()
+        return slide.read(['likes', 'dislikes', 'user_vote'])[0]
 
     @http.route(['/slides/slide/send_share_email'], type='json', auth='user', website=True)
     def slide_send_share_email(self, slide_id, email):
