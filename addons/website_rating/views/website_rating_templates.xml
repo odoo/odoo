@@ -38,4 +38,19 @@
         </div>
     </template>
 
+    <!--
+        Display static star widget, and open rating composer on click
+        This template provide the container of the Popup Rating Composer. The rest is done in js.
+        To use this template, you need to call it after setting the following variable in your template or in your controller:
+            :float rating_avg : average rating to be displayed with star widget
+            :object browserecord : the mail_thread object
+            :token string (optional): if you want your chatter to be available for non-logged user,
+                     you can use a token to verify the identity of the user;
+                     the message will be posted with the identity of the partner_id of the object
+    -->
+    <template id="rating_stars_static_popup_composer" name="Rating: rating composer in popup">
+        <div class="row d-print-none o_rating_popup_composer o_not_editable p-0" t-att-data-rating-avg="rating_avg or 0.0" t-att-data-rating-total="rating_total or 0.0" t-att-data-token="token" t-att-data-hash="hash" t-att-data-pid="pid" t-att-data-res_model="object._name" t-att-data-res_id="object.id" t-att-data-partner_id="request.env.user.partner_id.id">
+        </div>
+    </template>
+
 </odoo>
