@@ -424,7 +424,7 @@ class ThreadedServer(CommonServer):
         """
         self.start(stop=stop)
 
-        rc = preload_registries(preload)
+        rc = run_async('threaded:preload', preload_registries, preload)
 
         if stop:
             self.stop()
@@ -742,7 +742,7 @@ class PreforkServer(CommonServer):
     def run(self, preload, stop):
         self.start()
 
-        rc = preload_registries(preload)
+        rc = run_async('prefork:preload', preload_registries, preload)
 
         if stop:
             self.stop()
@@ -807,8 +807,10 @@ class Worker(object):
             if e.args[0] not in [errno.EINTR]:
                 raise
 
-    def process_limit(self):
-        # If our parent changed sucide
+    def check_limits(self):
+        """ Check per-iteration limits and other dynamic lifetime bits
+        """
+        # If our parent changed suicide
         if self.ppid != os.getppid():
             _logger.info("Worker (%s) Parent changed", self.pid)
             self.alive = False
@@ -822,16 +824,8 @@ class Worker(object):
             _logger.info('Worker (%d) virtual memory limit (%s) reached.', self.pid, memory)
             self.alive = False      # Commit suicide after the request.
 
-        set_limit_memory_hard()
-
-        # SIGXCPU (exceeded CPU time) signal handler will raise an exception.
         r = resource.getrusage(resource.RUSAGE_SELF)
         cpu_time = r.ru_utime + r.ru_stime
-        def time_expired(n, stack):
-            _logger.info('Worker (%d) CPU time limit (%s) reached.', self.pid, config['limit_time_cpu'])
-            # We dont suicide in such case
-            raise Exception('CPU time limit exceeded.')
-        signal.signal(signal.SIGXCPU, time_expired)
         soft, hard = resource.getrlimit(resource.RLIMIT_CPU)
         resource.setrlimit(resource.RLIMIT_CPU, (cpu_time + config['limit_time_cpu'], hard))
 
@@ -841,6 +835,7 @@ class Worker(object):
     def start(self):
         self.pid = os.getpid()
         self.setproctitle()
+        threading.current_thread().name = 'Worker %s (%s)' % (type(self).__name__, self.pid)
         _logger.info("Worker %s (%s) alive", self.__class__.__name__, self.pid)
         # Reseed the random number generator
         random.seed()
@@ -856,17 +851,15 @@ class Worker(object):
         signal.signal(signal.SIGCHLD, signal.SIG_DFL)
         signal.set_wakeup_fd(self.wakeup_fd_w)
 
+        self.set_limits()
+
     def stop(self):
         pass
 
     def run(self):
         try:
             self.start()
-            while self.alive:
-                self.process_limit()
-                self.multi.pipe_ping(self.watchdog_pipe)
-                self.sleep()
-                self.process_work()
+            run_async('Worker %s (%s) work' % (type(self).__name__, self.pid), self._runloop)
             _logger.info("Worker (%s) exiting. request_count: %s, registry count: %s.",
                          self.pid, self.request_count,
                          len(odoo.modules.registry.Registry.registries))
@@ -875,6 +868,28 @@ class Worker(object):
             _logger.exception("Worker (%s) Exception occured, exiting..." % self.pid)
             # should we use 3 to abort everything ?
             sys.exit(1)
+
+    def _runloop(self):
+        while self.alive:
+            self.multi.pipe_ping(self.watchdog_pipe)
+            self.sleep()
+            self.process_work()
+            self.check_limits()
+
+    def set_limits(self):
+        """ Set automatically checked limits (permanent rlimits, signals, ...)
+        at the end of the process's setup (start)
+        """
+        set_limit_memory_hard()
+
+        # SIGXCPU (exceeded CPU time) signal handler will raise an exception.
+        def time_expired(n, stack):
+            _logger.info('Worker (%d) CPU time limit (%s) reached.', self.pid,
+                         config['limit_time_cpu'])
+            # blow up compltely, don't wait for request end
+            raise Exception('CPU time limit exceeded.')
+
+        signal.signal(signal.SIGXCPU, time_expired)
 
 class WorkerHTTP(Worker):
     """ HTTP Request workers """
@@ -1127,3 +1142,22 @@ def restart():
         threading.Thread(target=_reexec).start()
     else:
         os.kill(server.pid, signal.SIGHUP)
+
+def run_async(threadname, func, *args, **kwargs):
+    """ Calls a function in a separate thread & returns its result (if any)
+    """
+    # return result or reraise exception from within thread
+    result = []
+    def callback():
+        try:
+            result.append((0, func(*args, **kwargs)))
+        except BaseException as e:
+            result.append((1, e))
+    t = threading.Thread(name=threadname, target=callback, daemon=True)
+    t.start()
+    t.join()
+
+    (exc, item) = result.pop()
+    if exc:
+        raise item
+    return item
