@@ -191,7 +191,6 @@ var ViewEditor = Widget.extend({
     willStart: function () {
         return $.when(
             this._super.apply(this, arguments),
-            ajax.loadLibs(this),
             this._loadResources()
         );
     },

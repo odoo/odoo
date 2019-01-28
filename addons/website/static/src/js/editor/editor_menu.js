@@ -4,9 +4,16 @@ odoo.define('website.editor.menu', function (require) {
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var core = require('web.core');
-var WysiwygMultizone = require('web_editor.wysiwyg.multizone');
+var Wysiwyg = require('web_editor.wysiwyg.root');
 
 var _t = core._t;
+
+var WysiwygMultizone = Wysiwyg.extend({
+    assetLibs: Wysiwyg.prototype.assetLibs.concat(['website.compiled_assets_wysiwyg']),
+    _getWysiwygContructor: function () {
+        return odoo.__DEBUG__.services['web_editor.wysiwyg.multizone'];
+    }
+});
 
 var EditorMenu = Widget.extend({
     template: 'website.editorbar',

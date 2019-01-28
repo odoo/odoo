@@ -35,8 +35,6 @@ var field_utils = require('web.field_utils');
 var Widget = require('web.Widget');
 
 var AbstractField = Widget.extend({
-    cssLibs: [],
-    jsLibs: [],
     events: {
         'keydown': '_onKeydown',
     },
@@ -181,14 +179,6 @@ var AbstractField = Widget.extend({
         if (this.attrs.decorations) {
             this.resetOnAnyFieldChange = true;
         }
-    },
-    /**
-     * Loads the libraries listed in this.jsLibs and this.cssLibs
-     *
-     * @override
-     */
-    willStart: function () {
-        return $.when(ajax.loadLibs(this), this._super.apply(this, arguments));
     },
     /**
      * When a field widget is appended to the DOM, its start method is called,

@@ -67,7 +67,7 @@ QUnit.module('field html', {
                 }
                 if (xmlId === 'template.assets_all_style') {
                     return $.when({
-                        cssLibs: $('head link[href]:not([type="image/x-icon"])').map(function () {
+                        cssLibs: $('link[href]:not([type="image/x-icon"])').map(function () {
                             return $(this).attr('href');
                         }).get(),
                         cssContents: ['body {background-color: red;}']
@@ -815,7 +815,7 @@ QUnit.test('field html translatable', function (assert) {
 
     this.data['note.note'].fields.body.translate = true;
 
-    testUtils.createAsyncView({
+    return testUtils.createAsyncView({
         View: FormView,
         model: 'note.note',
         data: this.data,
@@ -841,7 +841,6 @@ QUnit.test('field html translatable', function (assert) {
 
         form.destroy();
         _t.database.multi_lang = multiLang;
-
     });
 });
 

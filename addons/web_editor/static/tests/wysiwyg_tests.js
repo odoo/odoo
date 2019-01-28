@@ -3039,8 +3039,10 @@ QUnit.test('CodeView', function (assert) {
 
 var defMediaDialogInit;
 var defMediaDialogSave;
+var defMediaDialogClose;
 var defCropDialogInit;
 var defCropDialogSave;
+var defCropDialogClose;
 var defAltDialogInit;
 var defAltDialogSave;
 var imgWidth = 10;
@@ -3051,17 +3053,23 @@ QUnit.module('Media', {
         testUtils.mock.patch(MediaDialog, {
             init: function () {
                 this._super.apply(this, arguments);
+                this.uid = _.uniqueId();
                 defMediaDialogInit = $.Deferred();
                 defMediaDialogSave = $.Deferred();
+                defMediaDialogClose = $.Deferred();
                 this.opened(defMediaDialogInit.resolve.bind(defMediaDialogInit));
-            },
-            save: function () {
-                $.when(this._super.apply(this, arguments)).then(function () {
-                    var def = defMediaDialogSave;
+                this.on('closed', this, function () {
+                    var def = defMediaDialogClose;
                     defMediaDialogInit = null;
                     defMediaDialogSave = null;
+                    defMediaDialogClose = null;
                     def.resolve();
                 });
+            },
+            save: function () {
+                var def = defMediaDialogSave;
+                $.when(this._super.apply(this, arguments))
+                    .then(def.resolve.bind(def));
             },
         });
         testUtils.mock.patch(CropDialog, {
@@ -3069,8 +3077,10 @@ QUnit.module('Media', {
                 $(arguments[2]).attr('src', $(arguments[2]).data('src'));
                 this._super.apply(this, arguments);
                 var self = this;
+                this.uid = _.uniqueId();
                 defCropDialogInit = $.Deferred();
                 defCropDialogSave = $.Deferred();
+                defCropDialogClose = $.Deferred();
                 this.opened(function () {
                     var cropper = self.$cropperImage.data('cropper');
                     cropper.clone();
@@ -3084,14 +3094,18 @@ QUnit.module('Media', {
                     cropper.render();
                     defCropDialogInit.resolve();
                 });
-            },
-            save: function () {
-                $.when(this._super.apply(this, arguments)).then(function () {
-                    var def = defCropDialogSave;
+                this.on('closed', this, function () {
+                    var def = defCropDialogClose;
                     defCropDialogInit = null;
                     defCropDialogSave = null;
+                    defCropDialogClose = null;
                     def.resolve();
                 });
+            },
+            save: function () {
+                var def = defCropDialogSave;
+                $.when(this._super.apply(this, arguments))
+                    .then(def.resolve.bind(def));
             },
         });
         testUtils.mock.patch(AltDialog, {
@@ -3166,24 +3180,23 @@ QUnit.module('Media', {
 var _clickMedia = function (wysiwyg, assert, callbackInit, test) {
     wysiwyg.$('.note-insert .fa-file-image-o').mousedown().click();
 
-    defMediaDialogSave.then(function () {
-        if (test.check) {
-            test.check();
-        }
-        if (test.content) {
-            assert.deepEqual(wysiwyg.getValue(), test.content, testName);
-        }
-        if (test.start) {
-            var range = weTestUtils.select(test.start, test.end, $editable);
-            assert.deepEqual(Wysiwyg.getRange($editable[0]), range, testName + carretTestSuffix);
-        }
+    defMediaDialogInit.then(function () {
+        return callbackInit();
     });
-    return defMediaDialogInit.then(function () {
-        callbackInit();
-        var def = $.Deferred();
-        setTimeout(function () {
-            def.resolve();
-        }, 0);
+    return $.when(defMediaDialogSave, defMediaDialogClose).then(function () {
+        var def = $.when();
+        if (test.check) {
+            def = $.when(test.check());
+        }
+        def.then(function () {
+            if (test.content) {
+                assert.deepEqual(wysiwyg.getValue(), test.content, testName);
+            }
+            if (test.start) {
+                var range = weTestUtils.select(test.start, test.end, $editable);
+                assert.deepEqual(Wysiwyg.getRange($editable[0]), range, testName + carretTestSuffix);
+            }
+        });
         return def;
     });
 };
@@ -3494,6 +3507,7 @@ QUnit.test('Image crop', function (assert) {
                             $zoomBtn.mousedown().click();
                             $('.modal-dialog .modal-footer .btn.btn-primary:contains("Save")').mousedown().click();
                         });
+                        return $.when(defCropDialogClose, defCropDialogSave);
                     },
                 },
             },
@@ -3519,6 +3533,7 @@ QUnit.test('Image crop', function (assert) {
                             $('.o_crop_image_dialog .o_crop_options .btn:has(.fa-arrows-h)').mousedown().click();
                             $('.modal-dialog .modal-footer .btn.btn-primary:contains("Save")').mousedown().click();
                         });
+                        return $.when(defCropDialogClose, defCropDialogSave);
                     },
                 },
             },
@@ -3554,6 +3569,7 @@ QUnit.test('Image crop', function (assert) {
                             $pointW.trigger('pointerup');
                             $('.modal-dialog .modal-footer .btn.btn-primary:contains("Save")').mousedown().click();
                         });
+                        return $.when(defCropDialogClose, defCropDialogSave);
                     },
                 },
             },
@@ -3659,7 +3675,7 @@ QUnit.test('Pictogram (fontawesome)', function (assert) {
                 },
                 test: {
                     check: function () {
-                        _clickMedia(wysiwyg, assert, function () {
+                        return _clickMedia(wysiwyg, assert, function () {
                             _insertPictogram('fa-heart');
                         }, {
                             content: '<p>\u200B<span class="fa fa-heart"></span>\u200B</p>',

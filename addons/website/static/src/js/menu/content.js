@@ -412,7 +412,6 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
         }
         return this._super.apply(this, arguments);
     },
-
 });
 
 var SelectEditMenuDialog = weWidgets.Dialog.extend({

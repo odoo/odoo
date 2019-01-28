@@ -6,6 +6,8 @@ var TranslatorMenu = require('website.editor.menu.translate');
 var websiteNavbarData = require('website.navbar');
 
 var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
+    assetLibs: ['web_editor.compiled_assets_wysiwyg', 'website.compiled_assets_wysiwyg'],
+
     actions: _.extend({}, websiteNavbarData.WebsiteNavbar.prototype.actions || {}, {
         edit_master: '_goToMasterPage',
         translate: '_startTranslateMode',

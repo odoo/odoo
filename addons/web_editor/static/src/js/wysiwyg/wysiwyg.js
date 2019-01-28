@@ -19,7 +19,10 @@ var Wysiwyg = Widget.extend({
         wysiwyg_blur: '_onWysiwygBlur',
     },
     defaultOptions: {
-        codeview: config.debug
+        codeview: config.debug,
+        recordInfo: {
+            context: {},
+        },
     },
 
     /**
@@ -693,41 +696,6 @@ var Wysiwyg = Widget.extend({
 // Public helper
 //--------------------------------------------------------------------------
 
-/**
- * Load wysiwyg assets if needed.
- *
- * @see Wysiwyg.createReadyFunction
- * @param {Widget} parent
- * @returns {$.Promise}
- */
-Wysiwyg.prepare = (function () {
-    var assetsLoaded = false;
-    var def;
-    return function prepare(parent) {
-        if (assetsLoaded) {
-            return $.when();
-        }
-        if (def) {
-            return def;
-        }
-        def = $.Deferred();
-        var timeout = setTimeout(function () {
-            throw _t("Can't load assets of the wysiwyg editor");
-        }, 10000);
-        var wysiwyg = new Wysiwyg(parent, {
-            recordInfo: {
-                context: {},
-            }
-        });
-        wysiwyg.attachTo($('<textarea>')).then(function () {
-            assetsLoaded = true;
-            clearTimeout(timeout);
-            wysiwyg.destroy();
-            def.resolve();
-        });
-        return def;
-    };
-})();
 /**
  * @param {Node} node (editable or node inside)
  * @returns {Object}

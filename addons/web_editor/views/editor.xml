@@ -6,7 +6,11 @@
     <t t-call-assets="web.assets_backend" t-js="false"/>
 </template>
 
-<template id="wysiwyg" name="Wysiwyg Editor">
+<template id="compiled_assets_wysiwyg" name="Wysiwyg Editor">
+    <t t-call-assets="web_editor.assets_wysiwyg"/>
+</template>
+
+<template id="assets_wysiwyg" name="Wysiwyg Editor Assets">
     <!-- lib -->
 
     <link rel="stylesheet" type="text/css" href="/web_editor/static/lib/summernote/summernote.css"/>
@@ -16,9 +20,15 @@
     <script type="text/javascript" src="/web_editor/static/lib/cropper/js/cropper.js"/>
     <script type="text/javascript" src="/web_editor/static/lib/jQuery.transfo.js"/>
 
+    <!-- odoo utils -->
+
+    <t t-call="web._assets_helpers">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_variables.scss"/>
+    </t>
+
     <!-- integration -->
 
-    <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_variables.scss"/>
     <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg.scss"/>
     <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_iframe.scss"/>
 
@@ -64,7 +74,7 @@
     <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/plugin/help_dialog.js"/>
 </template>
 
-<template id="wysiwyg_snippets" inherit_id="web_editor.wysiwyg" name="Wysiwyg Editor additional snippets">
+<template id="wysiwyg_snippets" inherit_id="web_editor.assets_wysiwyg" name="Wysiwyg Editor additional snippets">
     <xpath expr="." position="inside">
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_variables.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_snippets.scss"/>
@@ -93,7 +103,7 @@
     <xpath expr="script[last()]" position="after">
         <script type="text/javascript" src="/web_editor/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"/>
         <script type="text/javascript" src="/web_editor/static/src/js/common/ace.js"/>
-        <t t-call="web_editor.wysiwyg"/>
+        <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/root.js"/>
     </xpath>
 </template>
 
@@ -132,6 +142,17 @@
 
 <template id="qunit_suite" inherit_id="web.qunit_suite">
     <xpath expr="." position="inside">
+        <script type="text/javascript">
+            odoo.define('web_editor.wysiwyg.root.test', function (require) {
+                'use strict';
+                var WysiwygRoot = require('web_editor.wysiwyg.root');
+                WysiwygRoot.include({
+                    assetLibs: null // We need to add the asset because tests performed overwrites (Dialog, Unbreakable...)
+                });
+            });
+        </script>
+        <t t-call="web_editor.compiled_assets_wysiwyg"/>
+
         <script type="text/javascript" src="/web_editor/static/tests/test_utils.js"/>
         <script type="text/javascript" src="/web_editor/static/tests/field_html_tests.js"/>
         <script type="text/javascript" src="/web_editor/static/tests/wysiwyg_tests.js"/>

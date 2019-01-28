@@ -3,7 +3,6 @@ odoo.define('website_forum.editor', function (require) {
 
 var core = require('web.core');
 var Widget = require('web.Widget');
-var Wysiwyg = require('web_editor.wysiwyg');
 var WebsiteNewMenu = require('website.newMenu');
 var wUtils = require('website.utils');
 var websiteRootData = require('website.WebsiteRoot');

@@ -3,7 +3,9 @@ odoo.define('web_editor.wysiwyg.iframe', function (require) {
 
 var Wysiwyg = require('web_editor.wysiwyg');
 var ajax = require('web.ajax');
+var core = require('web.core');
 
+var qweb = core.qweb;
 
 var _fnSummernoteMaster = $.fn.summernote;
 var _summernoteMaster = $.summernote;
@@ -165,48 +167,14 @@ Wysiwyg.include({
                     console.warn('Wysiwyg immediate iframe double load detected');
                     return;
                 }
-                var cwindow = this.$iframe[0].contentWindow;
-                cwindow.document
+                var iframeContent = qweb.render('wysiwyg.iframeContent', {
+                    asset: asset,
+                    updateIframeId: this._onUpdateIframeId,
+                    avoidDoubleLoad: _avoidDoubleLoad
+                });
+                this.$iframe[0].contentWindow.document
                     .open("text/html", "replace")
-                    .write(
-                        '<head>' +
-                            '<meta charset="utf-8">' +
-                            '<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>\n' +
-                            '<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>\n' +
-                            _.map(asset.cssLibs, function (cssLib) {
-                                return '<link type="text/css" rel="stylesheet" href="' + cssLib + '"/>';
-                            }).join('\n') + '\n' +
-                            _.map(asset.cssContents, function (cssContent) {
-                                return '<style type="text/css">' + cssContent + '</style>';
-                            }).join('\n') + '\n' +
-                            _.map(asset.jsContents, function (jsContent) {
-                                if (jsContent.indexOf('<inline asset>') !== -1) {
-                                    return '<script type="text/javascript">' + jsContent + '</script>';
-                                }
-                            }).join('\n') + '\n' +
-                        '</head>\n' +
-                        '<body class="o_in_iframe">\n' +
-                            '<div id="iframe_target" style="height: calc(100vh - 6px);"></div>\n' +
-                            '<script type="text/javascript">' +
-                                'window.$ = window.jQuery = window.top.jQuery;' +
-                                'var _summernoteMaster = $.summernote;' +
-                                'var _fnSummernoteMaster = $.fn.summernote;' +
-                                'delete $.summernote;' +
-                                'delete $.fn.summernote;' +
-                            '</script>\n' +
-                            '<script type="text/javascript" src="/web_editor/static/lib/summernote/summernote.js"></script>\n' +
-                            '<script type="text/javascript">' +
-                                'window._summernoteSlave = $.summernote;' +
-                                'window._summernoteSlave.iframe = true;' +
-                                'window._summernoteSlave.lang = _summernoteMaster.lang;' +
-                                'window._fnSummenoteSlave = $.fn.summernote;' +
-                                '$.summernote = _summernoteMaster;' +
-                                '$.fn.summernote = _fnSummernoteMaster;' +
-                                'if (window.top.' + this._onUpdateIframeId + ') {' +
-                                    'window.top.' + this._onUpdateIframeId + '(' + _avoidDoubleLoad + ')' +
-                                '}' +
-                            '</script>\n' +
-                        '</body>');
+                    .write(iframeContent);
             }.bind(this));
         }.bind(this));
 

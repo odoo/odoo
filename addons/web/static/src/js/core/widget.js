@@ -84,6 +84,32 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
      * @type {null|string[]}
      */
     xmlDependencies: null,
+    /**
+     * List of paths to css files that need to be loaded before the widget can
+     * be rendered. This will not induce loading anything that has already been
+     * loaded.
+     *
+     * @type {null|string[]}
+     */
+    cssLibs: null,
+    /**
+     * List of paths to js files that need to be loaded before the widget can
+     * be rendered. This will not induce loading anything that has already been
+     * loaded.
+     *
+     * @type {null|string[]}
+     */
+    jsLibs: null,
+    /**
+     * List of xmlID that need to be loaded before the widget can be rendered.
+     * The content css (link file or style tag) and js (file or inline) of the
+     * assets are loaded.
+     * This will not induce loading anything that has already been
+     * loaded.
+     *
+     * @type {null|string[]}
+     */
+    assetLibs: null,
 
     /**
      * Constructs the widget and sets its parent if a parent is given.
@@ -115,13 +141,16 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
      * @returns {Deferred}
      */
     willStart: function () {
+        var defs = [];
         if (this.xmlDependencies) {
-            var defs = _.map(this.xmlDependencies, function (xmlPath) {
+            defs.push.apply(defs, _.map(this.xmlDependencies, function (xmlPath) {
                 return ajax.loadXML(xmlPath, core.qweb);
-            });
-            return $.when.apply($, defs);
+            }));
         }
-        return $.when();
+        if (this.jsLibs || this.cssLibs || this.assetLibs) {
+            defs.push(ajax.loadLibs(this));
+        }
+        return $.when.apply($, defs);
     },
     /**
      * Method called after rendering. Mostly used to bind actions, perform

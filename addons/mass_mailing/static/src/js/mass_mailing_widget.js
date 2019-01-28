@@ -12,6 +12,9 @@ var _t = core._t;
 
 var MassMailingFieldHtml = FieldHtml.extend({
     xmlDependencies: (FieldHtml.prototype.xmlDependencies || []).concat(["/mass_mailing/static/src/xml/mass_mailing.xml"]),
+    jsLibs: [
+       '/mass_mailing/static/src/js/mass_mailing_snippets.js',
+    ],
 
     custom_events: _.extend({}, FieldHtml.prototype.custom_events, {
         snippets_loaded: '_onSnippetsLoaded',
@@ -305,7 +308,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
                 this.$content.focusIn();
             }
         }
-        this.wysiwyg.snippets.trigger('reload_snippet_dropzones');
+        this.wysiwyg.trigger('reload_snippet_dropzones');
     },
 
     //--------------------------------------------------------------------------
@@ -442,7 +445,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
             selectedTheme = themeParams;
 
             // Notify form view
-            self.wysiwyg._onChange();
+            self.wysiwyg.getEditable().trigger('change');
             $dropdown.find('.dropdown-menu').removeClass('show');
             $dropdown.find('.dropdown-item.selected').removeClass('selected');
             $dropdown.find('.dropdown-item:eq(' + themesParams.indexOf(selectedTheme) + ')').addClass('selected');
