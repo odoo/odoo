@@ -170,7 +170,7 @@ var HelperPlugin = AbstractPlugin.extend({
         var self = this;
         if (pointB.node.childNodes[pointB.offset]) {
             var firstLeaf = this.firstLeaf(pointB.node.childNodes[pointB.offset]);
-            pointB = this.makeRange(firstLeaf, 0);
+            pointB = this.makePoint(firstLeaf, 0);
         }
         if (pointB.node.tagName && pointB.node.tagName !== 'BR' && pointB.offset >= dom.nodeLength(pointB.node)) {
             pointB = dom.nextPoint(pointB);
@@ -1359,6 +1359,28 @@ var HelperPlugin = AbstractPlugin.extend({
             size: 'medium',
             $content: $notif,
         }).open();
+    },
+    /**
+     * Return true if the `container` contains the `contained` and only
+     * the `contained` (blank text nodes are ignored).
+     *
+     * @param {Node} container
+     * @param {Node} contained
+     * @returns {Boolean}
+     */
+    onlyContains: function (container, contained) {
+        var self = this;
+        if (!$.contains(container, contained)) {
+            return false;
+        }
+        var $contents = $(container).contents();
+        var otherContents = $contents.filter(function (index, node) {
+            if (node === contained || dom.isText(node) && !self.isVisibleText(node)) {
+                return false;
+            }
+            return true;
+        });
+        return !otherContents.length;
     },
     /**
      * Reorders the classes in the node's class attribute and returns it.
