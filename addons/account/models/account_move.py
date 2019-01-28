@@ -680,7 +680,7 @@ class AccountMoveLine(models.Model):
                     {partner_id_condition}
                     ORDER BY a.date desc
                     LIMIT 10
-                """.format(**locals())
+                """.format(partner_id_condition=partner_id_condition)
         else:
             partner_id_condition = partner_id_condition and partner_id_condition+' AND b.partner_id = %(partner_id)s' or ''
             query = """
@@ -692,7 +692,7 @@ class AccountMoveLine(models.Model):
                     {partner_id_condition}
                     ORDER BY a.date desc
                     LIMIT 10
-                """.format(**locals())
+                """.format(partner_id_condition=partner_id_condition)
 
         self.env.cr.execute(query, locals())
         pairs = self.env.cr.fetchall()
