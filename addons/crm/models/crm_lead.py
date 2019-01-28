@@ -64,22 +64,22 @@ class Lead(models.Model):
         return self._stage_find(team_id=team.id, domain=[('fold', '=', False)]).id
 
     name = fields.Char('Opportunity', required=True, index=True)
-    partner_id = fields.Many2one('res.partner', string='Customer', tracking=1, index=True,
+    partner_id = fields.Many2one('res.partner', string='Customer', tracking=10, index=True,
         help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
     active = fields.Boolean('Active', default=True, tracking=True)
     date_action_last = fields.Datetime('Last Action', readonly=True)
-    email_from = fields.Char('Email', help="Email address of the contact", tracking=4, index=True)
+    email_from = fields.Char('Email', help="Email address of the contact", tracking=40, index=True)
     website = fields.Char('Website', index=True, help="Website of the contact")
     team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
         index=True, tracking=True, help='When sending mails, the default email address is taken from the Sales Team.')
     kanban_state = fields.Selection([('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')],
         string='Kanban State', compute='_compute_kanban_state')
     email_cc = fields.Text('Global CC', help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
-    description = fields.Text('Notes', tracking=6)
+    description = fields.Text('Notes', tracking=60)
     tag_ids = fields.Many2many('crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id', string='Tags', help="Classify and analyze your lead/opportunity categories like: Training, Service")
-    contact_name = fields.Char('Contact Name', tracking=3)
-    partner_name = fields.Char("Company Name", tracking=2, index=True, help='The name of the future partner company that will be created while converting the lead into opportunity')
-    type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], index=True, required=True,
+    contact_name = fields.Char('Contact Name', tracking=30)
+    partner_name = fields.Char("Company Name", tracking=20, index=True, help='The name of the future partner company that will be created while converting the lead into opportunity')
+    type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], index=True, required=True, tracking=15,
         default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity',
         help="Type is used to separate Leads and Opportunities")
     priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Priority', index=True, default=crm_stage.AVAILABLE_PRIORITIES[0][0])
@@ -121,7 +121,7 @@ class Lead(models.Model):
     city = fields.Char('City')
     state_id = fields.Many2one("res.country.state", string='State')
     country_id = fields.Many2one('res.country', string='Country')
-    phone = fields.Char('Phone', tracking=5)
+    phone = fields.Char('Phone', tracking=50)
     mobile = fields.Char('Mobile')
     function = fields.Char('Job Position')
     title = fields.Many2one('res.partner.title')
@@ -1205,6 +1205,10 @@ class Lead(models.Model):
         if msg_dict.get('priority') in dict(crm_stage.AVAILABLE_PRIORITIES):
             defaults['priority'] = msg_dict.get('priority')
         defaults.update(custom_values)
+
+        # assign right company
+        if 'company_id' not in defaults and 'team_id' in defaults:
+            defaults['company_id'] = self.env['crm.team'].browse(defaults['team_id']).company_id.id
         return super(Lead, self).message_new(msg_dict, custom_values=defaults)
 
     def _message_post_after_hook(self, message, *args, **kwargs):

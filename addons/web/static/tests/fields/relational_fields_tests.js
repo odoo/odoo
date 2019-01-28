@@ -150,6 +150,61 @@ QUnit.module('relational_fields', {
     }
 }, function () {
 
+    QUnit.test('search more pager is reset when doing a new search', function (assert) {
+        assert.expect(6);
+        for(var i = 10; i < 180; i++) {
+            this.data.partner.records.push({
+                id: i,
+                display_name: "Partner " + i,
+            });
+        }
+
+        function stringToEvent ($element, string) {
+            for (var i = 0; i < string.length; i++) {
+                var keyAscii = string.charCodeAt(i);
+                $element.val($element.val()+string[i]);
+                $element.trigger($.Event('keyup', {which: keyAscii, keyCode:keyAscii}));
+            }
+            $element.trigger($.Event('keyup', {which: $.ui.keyCode.ENTER, keyCode:$.ui.keyCode.ENTER}));
+        }
+
+        this.data.partner.fields.datetime.searchable = true;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="trululu"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'partner,false,list': '<tree><field name="display_name"/></tree>',
+                'partner,false,search': '<search><field name="datetime"/><field name="display_name"/></search>',
+            },
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        form.$('.o_field_many2one input').click();
+        $dropdown.find('.o_m2o_dropdown_option:contains(Search)').mouseenter().click();
+        $('.modal .o_pager_next').click();
+
+        assert.strictEqual($('.o_pager_limit').text(), "1173", "there should be 173 records");
+        assert.strictEqual($('.o_pager_value').text(), "181-160", "should display the second page");
+        assert.strictEqual($('tr.o_data_row').length, 80, "should display 80 record");
+
+        stringToEvent($('.modal .o_searchview_input'), 'first');
+
+        assert.strictEqual($('.o_pager_limit').text(), "11", "there should be 1 record");
+        assert.strictEqual($('.o_pager_value').text(), "11-1", "should display the first page");
+        assert.strictEqual($('tr.o_data_row').length, 1, "should display 1 record");
+        form.destroy();
+    });
+
     QUnit.test('x2many default_order multiple fields', function (assert) {
         assert.expect(7);
 
@@ -442,6 +497,48 @@ QUnit.module('relational_fields', {
         assert.strictEqual($('.modal .o_data_row').text(), 'Michelangelo',
             'second partner turtle is Michelangelo');
         $('.modal .o_form_button_cancel').click();
+
+        form.destroy();
+    });
+
+    QUnit.test('quickly switch between pages in one2many list', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].turtles = [1, 2, 3];
+
+        var readDefs = [$.when(), $.Deferred(), $.Deferred()];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree limit="1">' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'read') {
+                    var recordID = args.args[0][0];
+                    return $.when(readDefs[recordID - 1]).then(_.constant(result));
+                }
+                return result;
+            },
+            res_id: 1,
+        });
+
+        form.$('.o_field_widget[name=turtles] .o_pager_next').click();
+        form.$('.o_field_widget[name=turtles] .o_pager_next').click();
+
+        readDefs[1].resolve();
+
+        assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_data_cell').text(), 'donatello');
+
+        readDefs[2].resolve();
+
+        assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_data_cell').text(), 'raphael');
 
         form.destroy();
     });

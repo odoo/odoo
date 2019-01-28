@@ -137,14 +137,14 @@ class HrContract(models.Model):
                 contract.transport_employer_cost
             )
 
-    @api.depends('yearly_cost_before_charges', 'social_security_contributions', 'wage_with_holidays',
+    @api.depends('yearly_cost_before_charges', 'social_security_contributions', 'wage',
         'social_security_contributions', 'warrants_cost', 'meal_voucher_paid_by_employer')
     def _compute_final_yearly_costs(self):
         for contract in self:
             contract.final_yearly_costs = (
                 contract.yearly_cost_before_charges +
                 contract.social_security_contributions +
-                contract.wage_with_holidays * 0.92 +
+                contract.wage * 0.92 +
                 contract.warrants_cost +
                 (220.0 * contract.meal_voucher_paid_by_employer)
             )

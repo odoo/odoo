@@ -11,8 +11,5 @@ Attachments list and document indexation
 * Document Indexation: odt
 """,
     'depends': ['web'],
-    'data': [
-        'views/attachment_indexation_templates.xml',
-    ],
     'installable': True,
 }

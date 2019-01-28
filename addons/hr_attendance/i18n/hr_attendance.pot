@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-01-16 07:59+0000\n"
+"PO-Revision-Date: 2019-01-16 07:59+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -35,9 +35,14 @@ msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:125
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:111
 #, python-format
 msgid "<b>Warning! Last check in was over 12 hours ago.</b><br/>If this isn't right, please contact Human Resource staff"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
+msgid "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
 msgstr ""
 
 #. module: hr_attendance
@@ -48,6 +53,18 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Attendance</span>"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_kanban_inherit_hr_attendance
+msgid "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle oe_hr_attendance_status_green\" role=\"img\" aria-label=\"Available\" title=\"Available\"/>"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_kanban_inherit_hr_attendance
+msgid "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle oe_hr_attendance_status_red\" role=\"img\" aria-label=\"Not available\" title=\"Not available\"/>"
 msgstr ""
 
 #. module: hr_attendance
@@ -76,7 +93,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_ids
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_graph
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
-#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Attendance"
 msgstr ""
 
@@ -108,11 +124,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 #, python-format
 msgid "Available"
-msgstr ""
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__barcode
-msgid "Badge ID"
 msgstr ""
 
 #. module: hr_attendance
@@ -410,13 +421,8 @@ msgid "ID"
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_hr_employee__barcode
-msgid "ID used for employee identification."
-msgstr ""
-
-#. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:111
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:97
 #, python-format
 msgid "If a job is worth doing, it is worth doing well!"
 msgstr ""
@@ -518,16 +524,6 @@ msgid "Officer"
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__pin
-msgid "PIN"
-msgstr ""
-
-#. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_hr_employee__pin
-msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
-msgstr ""
-
-#. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:78
 #, python-format
@@ -600,17 +596,6 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_filter_inherit_hr_attendance
 msgid "Signed Out"
-msgstr ""
-
-#. module: hr_attendance
-#: sql_constraint:hr.employee:0
-msgid "The Badge ID must be unique, this one is already assigned to another employee."
-msgstr ""
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:64
-#, python-format
-msgid "The PIN must be a sequence of digits."
 msgstr ""
 
 #. module: hr_attendance

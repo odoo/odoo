@@ -59,9 +59,6 @@ class StripeTest(StripeCommon):
 
         # render the button
         res = self.stripe.render('SO404', 320.0, self.currency_euro.id, values=self.buyer_values).decode('utf-8')
-        popup_script_src = 'script src="https://checkout.stripe.com/checkout.js"'
-        # check form result
-        self.assertIn(popup_script_src, res, "Stripe: popup script not found in template render")
         # Generated and received
         self.assertIn(self.buyer_values.get('partner_email'), res, 'Stripe: email input not found in rendered template')
 
@@ -87,7 +84,7 @@ class StripeTest(StripeCommon):
             u'id': u'ch_172xfnGMfVJxozLwEjSfpfxD',
             u'invoice': None,
             u'livemode': False,
-            u'metadata': {u'reference': u'SO100'},
+            u'metadata': {u'reference': u'SO100-1'},
             u'object': u'charge',
             u'paid': True,
             u'receipt_email': None,
@@ -137,6 +134,7 @@ class StripeTest(StripeCommon):
         tx.form_feedback(stripe_post_data, 'stripe')
         self.assertEqual(tx.state, 'done', 'Stripe: validation did not put tx into done state')
         self.assertEqual(tx.acquirer_reference, stripe_post_data.get('id'), 'Stripe: validation did not update tx id')
+        stripe_post_data['metadata']['reference'] = u'SO100-2'
         # reset tx
         tx = self.env['payment.transaction'].create({
             'amount': 4700,

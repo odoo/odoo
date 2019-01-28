@@ -49,6 +49,58 @@ class TestReconciliation(AccountingTestCase):
             'payment_type': 'inbound',
         })
 
+        self.expense_account = self.env['account.account'].create({
+            'name': 'EXP',
+            'code': 'EXP',
+            'user_type_id': self.env.ref('account.data_account_type_expenses').id,
+            'company_id': company.id,
+        })
+        # cash basis intermediary account
+        self.tax_waiting_account = self.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'user_type_id': self.env.ref('account.data_account_type_current_liabilities').id,
+            'reconcile': True,
+            'company_id': company.id,
+        })
+        # cash basis final account
+        self.tax_final_account = self.env['account.account'].create({
+            'name': 'TAX_TO_DEDUCT',
+            'code': 'TDEDUCT',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': company.id,
+        })
+        self.tax_base_amount_account = self.env['account.account'].create({
+            'name': 'TAX_BASE',
+            'code': 'TBASE',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': company.id,
+        })
+
+        # Journals
+        self.purchase_journal = self.env['account.journal'].create({
+            'name': 'purchase',
+            'code': 'PURCH',
+            'type': 'purchase',
+        })
+        self.cash_basis_journal = self.env['account.journal'].create({
+            'name': 'CABA',
+            'code': 'CABA',
+            'type': 'general',
+        })
+
+        # Tax Cash Basis
+        self.tax_cash_basis = self.env['account.tax'].create({
+            'name': 'cash basis 20%',
+            'type_tax_use': 'purchase',
+            'company_id': company.id,
+            'amount': 20,
+            'account_id': self.tax_waiting_account.id,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_account_id': self.tax_final_account.id,
+            'cash_basis_base_account_id': self.tax_base_amount_account.id,
+        })
+
     def create_invoice(self, type='out_invoice', invoice_amount=50, currency_id=None):
         #we create an invoice in given currency
         invoice = self.account_invoice_model.create({'partner_id': self.partner_agrolait_id,
@@ -1107,3 +1159,288 @@ class TestReconciliation(AccountingTestCase):
 
         receivable_lines = invoice.move_id.line_ids.filtered(lambda line: line.account_id == self.account_rcv).sorted('date_maturity')[0]
         self.assertTrue(receivable_lines.matched_credit_ids)
+
+    def test_reconciliation_cash_basis01(self):
+        # Simulates an expense made up by 2 lines
+        # one is subject to a cash basis tax
+        # the other is not subject to tax
+
+        company = self.env.ref('base.main_company')
+        company.tax_cash_basis_journal_id = self.cash_basis_journal
+
+        AccountMoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
+
+        # Purchase
+        purchase_move = self.env['account.move'].create({
+            'name': 'purchase',
+            'journal_id': self.purchase_journal.id,
+        })
+
+        purchase_payable_line0 = AccountMoveLine.create({
+            'account_id': self.account_rsa.id,
+            'credit': 100,
+            'move_id': purchase_move.id,
+        })
+        purchase_payable_line1 = AccountMoveLine.create({
+            'account_id': self.account_rsa.id,
+            'credit': 50,
+            'move_id': purchase_move.id,
+        })
+        AccountMoveLine.create({
+            'name': 'expensNoTax',
+            'account_id': self.expense_account.id,
+            'debit': 50,
+            'move_id': purchase_move.id,
+        })
+        AccountMoveLine.create({
+            'name': 'expenseTaxed',
+            'account_id': self.expense_account.id,
+            'debit': 83.33,
+            'move_id': purchase_move.id,
+            'tax_ids': [(4, self.tax_cash_basis.id, False)],
+        })
+        tax_line = AccountMoveLine.create({
+            'name': 'TaxLine',
+            'account_id': self.tax_waiting_account.id,
+            'debit': 16.67,
+            'move_id': purchase_move.id,
+            'tax_line_id': self.tax_cash_basis.id,
+        })
+        purchase_move.post()
+
+        # Payment Move
+        payment_move = self.env['account.move'].create({
+            'name': 'payment',
+            'journal_id': self.bank_journal_euro.id,
+        })
+        payment_payable_line = AccountMoveLine.create({
+            'account_id': self.account_rsa.id,
+            'debit': 150,
+            'move_id': payment_move.id,
+        })
+        AccountMoveLine.create({
+            'account_id': self.account_euro.id,
+            'credit': 150,
+            'move_id': payment_move.id,
+        })
+        payment_move.post()
+
+        to_reconcile = (purchase_move + payment_move).mapped('line_ids').filtered(lambda l: l.account_id.internal_type == 'payable')
+        to_reconcile.reconcile()
+
+        cash_basis_moves = self.env['account.move'].search([('journal_id', '=', self.cash_basis_journal.id)])
+
+        self.assertEqual(len(cash_basis_moves), 2)
+        self.assertTrue(cash_basis_moves.exists())
+
+        # check reconciliation in Payable account
+        self.assertTrue(purchase_payable_line0.full_reconcile_id.exists())
+        self.assertEqual(purchase_payable_line0.full_reconcile_id.reconciled_line_ids,
+            purchase_payable_line0 + purchase_payable_line1 + payment_payable_line)
+
+        cash_basis_aml_ids = cash_basis_moves.mapped('line_ids')
+        # check reconciliation in the tax waiting account
+        self.assertTrue(tax_line.full_reconcile_id.exists())
+        self.assertEqual(tax_line.full_reconcile_id.reconciled_line_ids,
+            cash_basis_aml_ids.filtered(lambda l: l.account_id == self.tax_waiting_account) + tax_line)
+
+        self.assertEqual(len(cash_basis_aml_ids), 8)
+
+        # check amounts
+        cash_basis_move1 = cash_basis_moves.filtered(lambda m: m.amount == 33.34)
+        cash_basis_move2 = cash_basis_moves.filtered(lambda m: m.amount == 66.66)
+
+        self.assertTrue(cash_basis_move1.exists())
+        self.assertTrue(cash_basis_move2.exists())
+
+        # For first move
+        move_lines = cash_basis_move1.line_ids
+        base_amount_tax_lines = move_lines.filtered(lambda l: l.account_id == self.tax_base_amount_account)
+        self.assertEqual(len(base_amount_tax_lines), 2)
+        self.assertAlmostEqual(sum(base_amount_tax_lines.mapped('credit')), 27.78)
+        self.assertAlmostEqual(sum(base_amount_tax_lines.mapped('debit')), 27.78)
+
+        self.assertAlmostEqual((move_lines - base_amount_tax_lines).filtered(lambda l: l.account_id == self.tax_waiting_account).credit,
+            5.56)
+        self.assertAlmostEqual((move_lines - base_amount_tax_lines).filtered(lambda l: l.account_id == self.tax_final_account).debit,
+            5.56)
+
+        # For second move
+        move_lines = cash_basis_move2.line_ids
+        base_amount_tax_lines = move_lines.filtered(lambda l: l.account_id == self.tax_base_amount_account)
+        self.assertEqual(len(base_amount_tax_lines), 2)
+        self.assertAlmostEqual(sum(base_amount_tax_lines.mapped('credit')), 55.55)
+        self.assertAlmostEqual(sum(base_amount_tax_lines.mapped('debit')), 55.55)
+
+        self.assertAlmostEqual((move_lines - base_amount_tax_lines).filtered(lambda l: l.account_id == self.tax_waiting_account).credit,
+            11.11)
+        self.assertAlmostEqual((move_lines - base_amount_tax_lines).filtered(lambda l: l.account_id == self.tax_final_account).debit,
+            11.11)
+
+    def test_reconciliation_cash_basis02(self):
+        # Simulates an invoice made up by 2 lines
+        # both subjected to cash basis taxes
+        # with 2 payment terms
+        # And partial payment not martching any payment term
+
+        company = self.env.ref('base.main_company')
+        company.tax_cash_basis_journal_id = self.cash_basis_journal
+        tax_cash_basis10percent = self.tax_cash_basis.copy({'amount': 10})
+        tax_waiting_account10 = self.tax_waiting_account.copy({
+            'name': 'TAX WAIT 10',
+            'code': 'TWAIT1',
+        })
+
+
+        AccountMoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
+
+        # Purchase
+        purchase_move = self.env['account.move'].create({
+            'name': 'invoice',
+            'journal_id': self.purchase_journal.id,
+        })
+
+        purchase_payable_line0 = AccountMoveLine.create({
+            'account_id': self.account_rsa.id,
+            'credit': 105,
+            'move_id': purchase_move.id,
+        })
+        purchase_payable_line1 = AccountMoveLine.create({
+            'account_id': self.account_rsa.id,
+            'credit': 50,
+            'move_id': purchase_move.id,
+        })
+        AccountMoveLine.create({
+            'name': 'expenseTaxed 10%',
+            'account_id': self.expense_account.id,
+            'debit': 50,
+            'move_id': purchase_move.id,
+            'tax_ids': [(4, tax_cash_basis10percent.id, False)],
+        })
+        tax_line0 = AccountMoveLine.create({
+            'name': 'TaxLine0',
+            'account_id': tax_waiting_account10.id,
+            'debit': 5,
+            'move_id': purchase_move.id,
+            'tax_line_id': tax_cash_basis10percent.id,
+        })
+        AccountMoveLine.create({
+            'name': 'expenseTaxed 20%',
+            'account_id': self.expense_account.id,
+            'debit': 83.33,
+            'move_id': purchase_move.id,
+            'tax_ids': [(4, self.tax_cash_basis.id, False)],
+        })
+        tax_line1 = AccountMoveLine.create({
+            'name': 'TaxLine1',
+            'account_id': self.tax_waiting_account.id,
+            'debit': 16.67,
+            'move_id': purchase_move.id,
+            'tax_line_id': self.tax_cash_basis.id,
+        })
+        purchase_move.post()
+
+        # Payment Move
+        payment_move0 = self.env['account.move'].create({
+            'name': 'payment',
+            'journal_id': self.bank_journal_euro.id,
+        })
+        payment_payable_line0 = AccountMoveLine.create({
+            'account_id': self.account_rsa.id,
+            'debit': 40,
+            'move_id': payment_move0.id,
+        })
+        AccountMoveLine.create({
+            'account_id': self.account_euro.id,
+            'credit': 40,
+            'move_id': payment_move0.id,
+        })
+        payment_move0.post()
+
+        # Payment Move
+        payment_move1 = self.env['account.move'].create({
+            'name': 'payment',
+            'journal_id': self.bank_journal_euro.id,
+        })
+        payment_payable_line1 = AccountMoveLine.create({
+            'account_id': self.account_rsa.id,
+            'debit': 115,
+            'move_id': payment_move1.id,
+        })
+        AccountMoveLine.create({
+            'account_id': self.account_euro.id,
+            'credit': 115,
+            'move_id': payment_move1.id,
+        })
+        payment_move1.post()
+
+        (purchase_move + payment_move0).mapped('line_ids').filtered(lambda l: l.account_id.internal_type == 'payable').reconcile()
+        (purchase_move + payment_move1).mapped('line_ids').filtered(lambda l: l.account_id.internal_type == 'payable').reconcile()
+
+        cash_basis_moves = self.env['account.move'].search([('journal_id', '=', self.cash_basis_journal.id)])
+
+        self.assertEqual(len(cash_basis_moves), 3)
+        self.assertTrue(cash_basis_moves.exists())
+
+        # check reconciliation in Payable account
+        self.assertTrue(purchase_payable_line0.full_reconcile_id.exists())
+        self.assertEqual(purchase_payable_line0.full_reconcile_id.reconciled_line_ids,
+            purchase_payable_line0 + purchase_payable_line1 + payment_payable_line0 + payment_payable_line1)
+
+        cash_basis_aml_ids = cash_basis_moves.mapped('line_ids')
+
+        # check reconciliation in the tax waiting account
+        self.assertTrue(tax_line0.full_reconcile_id.exists())
+        self.assertEqual(tax_line0.full_reconcile_id.reconciled_line_ids,
+            cash_basis_aml_ids.filtered(lambda l: l.account_id == tax_waiting_account10) + tax_line0)
+
+        self.assertTrue(tax_line1.full_reconcile_id.exists())
+        self.assertEqual(tax_line1.full_reconcile_id.reconciled_line_ids,
+            cash_basis_aml_ids.filtered(lambda l: l.account_id == self.tax_waiting_account) + tax_line1)
+
+        self.assertEqual(len(cash_basis_aml_ids), 24)
+
+        # check amounts
+        expected_move_amounts = [
+            {'base_20': 56.45, 'tax_20': 11.29, 'base_10': 33.87, 'tax_10': 3.39},
+            {'base_20': 21.50, 'tax_20': 4.30, 'base_10': 12.90, 'tax_10': 1.29},
+            {'base_20': 5.38, 'tax_20': 1.08, 'base_10': 3.23, 'tax_10': 0.32},
+        ]
+
+        index = 0
+        for cb_move in cash_basis_moves.sorted('amount', reverse=True):
+            expected = expected_move_amounts[index]
+            move_lines = cb_move.line_ids
+            base_amount_tax_lines20per = move_lines.filtered(lambda l: l.account_id == self.tax_base_amount_account and '20%' in l.name)
+            base_amount_tax_lines10per = move_lines.filtered(lambda l: l.account_id == self.tax_base_amount_account and '10%' in l.name)
+            self.assertEqual(len(base_amount_tax_lines20per), 2)
+
+            self.assertAlmostEqual(sum(base_amount_tax_lines20per.mapped('credit')), expected['base_20'])
+            self.assertAlmostEqual(sum(base_amount_tax_lines20per.mapped('debit')), expected['base_20'])
+
+            self.assertEqual(len(base_amount_tax_lines10per), 2)
+            self.assertAlmostEqual(sum(base_amount_tax_lines10per.mapped('credit')), expected['base_10'])
+            self.assertAlmostEqual(sum(base_amount_tax_lines10per.mapped('debit')), expected['base_10'])
+
+            self.assertAlmostEqual(
+                (move_lines - base_amount_tax_lines20per - base_amount_tax_lines10per)
+                .filtered(lambda l: l.account_id == self.tax_waiting_account).credit,
+                expected['tax_20']
+            )
+            self.assertAlmostEqual(
+                (move_lines - base_amount_tax_lines20per - base_amount_tax_lines10per)
+                .filtered(lambda l: 'TaxLine1' in l.name).debit,
+                expected['tax_20']
+            )
+
+            self.assertAlmostEqual(
+                (move_lines - base_amount_tax_lines20per - base_amount_tax_lines10per)
+                .filtered(lambda l: l.account_id == tax_waiting_account10).credit,
+                expected['tax_10']
+            )
+            self.assertAlmostEqual(
+                (move_lines - base_amount_tax_lines20per - base_amount_tax_lines10per)
+                .filtered(lambda l: 'TaxLine0' in l.name).debit,
+                expected['tax_10']
+            )
+            index += 1

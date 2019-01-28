@@ -32,6 +32,10 @@
                                                 <input type="checkbox" class="mail_list_checkbox" name="contact_ids"
                                                     t-att-value="list_id['id']" t-att-checked="None if list_id['id'] in opt_out_list_ids else 'checked'"/>
                                                 <t t-esc="list_id.name"/>
+                                                <span t-if="list_id['id'] in opt_out_list_ids"
+                                                      class="o_mass_mailing_unsubscribed">
+                                                    Unsubscribed
+                                                </span>
                                             </li>
                                         </t>
                                     </t>
