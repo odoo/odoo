@@ -150,6 +150,7 @@ Wysiwyg.include({
         if (this.snippets) {
             this.snippets.updateCurrentSnippetEditorOverlay();
         }
+        this._summernote.invoke('toolbar.update', true);
         this._super.apply(this, arguments);
     },
     /**

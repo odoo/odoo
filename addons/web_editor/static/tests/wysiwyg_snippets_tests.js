@@ -175,7 +175,7 @@ QUnit.test('clean the dom before save', function (assert) {
 
 QUnit.test('remove snippet', function (assert) {
     var done = assert.async();
-    assert.expect(1);
+    assert.expect(2);
 
     return weTestUtils.createWysiwyg({
         wysiwygOptions: {
@@ -186,7 +186,9 @@ QUnit.test('remove snippet', function (assert) {
         var $editable = wysiwyg.getEditable();
 
         testUtils.mock.intercept(wysiwyg, "snippet_focused", function () {
+            $('.note-btn-bold').removeClass('o_disabled');
             $('#oe_manipulators .oe_overlay_options .oe_snippet_remove').click();
+            assert.ok($('.note-btn-bold').hasClass('o_disabled'));
 
             wysiwyg.save().then(function (isDirty, html) {
                 assert.strictEqual(html.replace(/\s+/g, ' '), '', "should remove the snippet");
