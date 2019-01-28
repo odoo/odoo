@@ -4,12 +4,12 @@ odoo.define('web_editor.field.html', function (require) {
 var ajax = require('web.ajax');
 var basic_fields = require('web.basic_fields');
 var core = require('web.core');
-var Wysiwyg = require('web_editor.wysiwyg');
+var Wysiwyg = require('web_editor.wysiwyg.root');
 var field_registry = require('web.field_registry');
 
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
-
 var QWeb = core.qweb;
+var assetsLoaded = false;
 
 /**
  * FieldHtml Widget
@@ -40,8 +40,23 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     willStart: function () {
         this._onUpdateIframeId = 'onLoad_' + _.uniqueId('FieldHtml');
-        var defAsset = this.nodeOptions.cssReadonly && ajax.loadAsset(this.nodeOptions.cssReadonly);
-        return $.when(this._super().then(Wysiwyg.prepare.bind(Wysiwyg, this)), defAsset);
+        var defAsset = null;
+        if (this.nodeOptions.cssReadonly) {
+            defAsset = ajax.loadAsset(this.nodeOptions.cssReadonly);
+        }
+
+        if (!assetsLoaded) { // avoid flickering when begin to edit
+            assetsLoaded = $.Deferred();
+            var wysiwyg = new Wysiwyg(this, {});
+            wysiwyg.attachTo($('<textarea>')).then(function () {
+                wysiwyg.destroy();
+                var def = assetsLoaded;
+                assetsLoaded = true;
+                def.resolve();
+            });
+        }
+
+        return $.when(this._super(), assetsLoaded, defAsset);
     },
     /**
      * @override
@@ -147,7 +162,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         // by default this is synchronous because the assets are already loaded in willStart
         // but it can be async in the case of options such as iframe, snippets...
         return this.wysiwyg.attachTo(this.$target).then(function () {
-            self.$content = self.wysiwyg.$el;
+            self.$content = self.wysiwyg.$editor;
             self._onLoadWysiwyg();
         });
     },
@@ -444,7 +459,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             position: 'absolute',
             right: '+5px',
         });
-        var $toolbar = this.$content.closest('.note-editor').find('.note-toolbar');
+        var $toolbar = this.$content.find('.note-toolbar');
         $toolbar.css('position', 'relative');
         $toolbar.append($button);
     },

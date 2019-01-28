@@ -2,7 +2,7 @@ odoo.define('website_forum.website_forum', function (require) {
 'use strict';
 
 var core = require('web.core');
-var Wysiwyg = require('web_editor.wysiwyg');
+var Wysiwyg = require('web_editor.wysiwyg.root');
 var sAnimations = require('website.content.snippets.animation');
 var session = require('web.session');
 var qweb = core.qweb;

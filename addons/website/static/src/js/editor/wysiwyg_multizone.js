@@ -6,7 +6,7 @@ var DropzonePlugin = require('web_editor.wysiwyg.plugin.dropzone');
 var HelperPlugin = require('web_editor.wysiwyg.plugin.helper');
 var TextPlugin = require('web_editor.wysiwyg.plugin.text');
 var HistoryPlugin = require('web_editor.wysiwyg.plugin.history');
-var Wysiwyg = require('web_editor.wysiwyg');
+var Wysiwyg = require('web_editor.wysiwyg.snippets');
 
 var _t = core._t;
 
@@ -67,8 +67,6 @@ DropzonePlugin.include({
         return this._super();
     },
 });
-
-
 
 
 
