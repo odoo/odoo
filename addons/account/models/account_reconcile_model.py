@@ -107,6 +107,24 @@ class AccountReconcileModel(models.Model):
     second_analytic_account_id = fields.Many2one('account.analytic.account', string='Second Analytic Account', ondelete='set null')
     second_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Second Analytic Tags',
                                                relation='account_reconcile_model_second_analytic_tag_rel')
+    
+    number_entries = fields.Integer(string='Number of entries related to this model', compute='_compute_number_entries')
+
+    @api.multi
+    def action_reconcile_stat(self):
+        action = self.env.ref('account.action_move_journal_line').read()[0]
+        action.update({
+            'context': {'search_default_reconcile_model_id': self.name},
+            'help': """<p class="o_view_nocontent_empty_folder">{}</p>""".format(_('No move from this reconciliation model')),
+        })
+        return action
+        
+    @api.multi
+    def _compute_number_entries(self):
+        data = self.env['account.move.line'].read_group([('reconcile_model_id', 'in', self.ids)], ['reconcile_model_ids'], 'reconcile_model_id')
+        mapped_data = dict([(d['reconcile_model_id'][0], d['reconcile_model_id_count']) for d in data])
+        for model in self:
+            model.number_entries = mapped_data.get(model.id, 0)
 
     @api.onchange('name')
     def onchange_name(self):

@@ -1228,6 +1228,7 @@ var StatementModel = BasicModel.extend({
         if (prop.analytic_account_id) result.analytic_account_id = prop.analytic_account_id.id;
         if (prop.tax_id && !prop.is_tax) result.tax_ids = [[4, prop.tax_id.id, null]];
         if (prop.tax_id && prop.is_tax) result.tax_line_id = prop.tax_id.id;
+        if (prop.reconcileModelId) result.reconcile_model_id = prop.reconcileModelId
         return result;
     },
 });
