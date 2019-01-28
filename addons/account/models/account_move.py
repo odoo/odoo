@@ -520,8 +520,8 @@ class AccountMoveLine(models.Model):
 
     @api.depends('account_id.user_type_id')
     def _compute_is_unaffected_earnings_line(self):
+        unaffected_earnings_type = self.env.ref('account.data_unaffected_earnings')
         for record in self:
-            unaffected_earnings_type = self.env.ref("account.data_unaffected_earnings")
             record.is_unaffected_earnings_line = unaffected_earnings_type == record.account_id.user_type_id
 
     @api.onchange('amount_currency', 'currency_id')
