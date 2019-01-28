@@ -3424,6 +3424,24 @@ class StockMove(TransactionCase):
         self.assertEqual(scrap.state, 'done')
         self.assertEqual(move1.reserved_availability, 0.25)
 
+    def test_scrap_6(self):
+        """ Check that scrap correctly handle UoM. """
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 1)
+        scrap = self.env['stock.scrap'].create({
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_dozen.id,
+            'scrap_qty': 1,
+        })
+        warning_message = scrap.action_validate()
+        self.assertEqual(warning_message.get('res_model', 'Wrong Model'), 'stock.warn.insufficient.qty.scrap')
+        insufficient_qty_wizard = self.env['stock.warn.insufficient.qty.scrap'].create({
+            'product_id': self.product1.id,
+            'location_id': self.stock_location.id,
+            'scrap_id': scrap.id
+        })
+        insufficient_qty_wizard.action_done()
+        self.assertEqual(self.env['stock.quant']._gather(self.product1, self.stock_location).quantity, -11)
+
     def test_in_date_1(self):
         """ Check that moving a tracked quant keeps the incoming date.
         """
