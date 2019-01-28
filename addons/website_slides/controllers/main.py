@@ -11,13 +11,14 @@ from odoo.http import request
 from odoo.osv import expression
 
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.tools import html2plaintext
 
 _logger = logging.getLogger(__name__)
 
 
-class WebsiteSlides(http.Controller):
+class WebsiteSlides(WebsiteProfile):
     _slides_per_page = 12
     _slides_per_list = 20
     _order_by_criterion = {
@@ -44,8 +45,14 @@ class WebsiteSlides(http.Controller):
                 request.session['viewed_slides'] = viewed_slides
         else:
             slide.action_set_viewed()
-
         return True
+
+    def _prepare_user_values(self, **kwargs):
+        values = super(WebsiteSlides, self)._prepare_user_values(**kwargs)
+        channel = self._get_channels(**kwargs)
+        if channel:
+            values['channel'] = channel
+        return values
 
     def _get_slide_detail(self, slide):
         most_viewed_slides = slide.get_most_viewed_slides(self._slides_per_list)
@@ -95,7 +102,6 @@ class WebsiteSlides(http.Controller):
 
         '''/slides/<model("slide.channel"):channel>/tag/<model("slide.tag"):tag>''',
         '''/slides/<model("slide.channel"):channel>/tag/<model("slide.tag"):tag>/page/<int:page>''',
-
         '''/slides/<model("slide.channel"):channel>/category/<model("slide.category"):category>''',
         '''/slides/<model("slide.channel"):channel>/category/<model("slide.category"):category>/page/<int:page>''',
 
@@ -392,3 +398,37 @@ class WebsiteSlides(http.Controller):
         except AccessError: # TODO : please, make it clean one day, or find another secure way to detect
                             # if the slide can be embedded, and properly display the error message.
             return request.render('website_slides.embed_slide_forbidden', {})
+
+    # Profile
+    # ---------------------------------------------------
+    def _get_channels(self, **kwargs):
+        channels = []
+        if kwargs.get('channel'):
+            channels = kwargs['channel']
+        elif kwargs.get('channel_id'):
+            channels = request.env['slide.channel'].browse(int(kwargs['channel_id']))
+        return channels
+
+    def _prepare_user_slides_profile(self, user):
+        courses = request.env['slide.channel.partner'].sudo().search([('partner_id', '=', user.partner_id.id)]).mapped('channel_id')
+        values = {
+            'uid': request.env.user.id,
+            'user': user,
+            'main_object': user,
+            'courses': courses,
+            'count_courses': len(courses),
+            'is_profile_page': True,
+            'badge_category': 'slides',
+        }
+        return values
+
+    def _prepare_user_profile_values(self, user, **post):
+        values = super(WebsiteSlides, self)._prepare_user_profile_values(user, **post)
+        if post.get('channel_id'):
+            values.update({'edit_button_url_param': 'channel_id=' + str(post['channel_id'])})
+        channels = self._get_channels(**post)
+        if not channels:
+            channels = request.env['slide.channel'].search([])
+        values.update(self._prepare_user_values(channel=channels[0] if len(channels) == 1 else True, **post))
+        values.update(self._prepare_user_slides_profile(user))
+        return values
