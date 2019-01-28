@@ -560,6 +560,9 @@ class Field(MetaField('DummyField', (object,), {})):
         if self.inherited and field.required:
             self.required = True
 
+        if self.inherited:
+            self._modules.update(field._modules)
+
     def traverse_related(self, record):
         """ Traverse the fields of the related field `self` except for the last
         one, and return it as a pair `(last_record, last_field)`. """

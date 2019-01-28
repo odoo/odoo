@@ -1637,9 +1637,10 @@ Possible children elements of the search view are:
         If both ``operator`` and ``filter_domain`` are provided,
         ``filter_domain`` takes precedence.
     ``context``
-        allows adding context keys, including the user-provided value (which
-        as for ``domain`` is available as a ``self`` variable). By default,
-        fields don't generate domains.
+        allows adding context keys, including the user-provided values (which
+        as for ``domain`` are available as a ``self`` variable, an array of
+        values e.g. ``[id_1, id_2]`` for a :class:`~odoo.fields.Many2one` field).
+        By default, fields don't generate domains.
 
         .. note:: the domain and context are inclusive and both are generated
                   if a ``context`` is specified. To only generate context

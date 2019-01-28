@@ -188,7 +188,7 @@ class AuthorizeForm(AuthorizeCommon):
         self.assertEqual(tx.state, 'cancel', 'Authorize: erroneous validation did not put tx into error state')
 
 
-@odoo.tests.tagged('post_install', '-at_install', '-standard', 'external')
+@odoo.tests.tagged('post_install', '-at_install', '-standard')
 class AuthorizeForm(AuthorizeCommon):
     def test_30_authorize_s2s(self):
         # be sure not to do stupid thing

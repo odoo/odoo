@@ -29,6 +29,15 @@ class ResourceCalendar(models.Model):
         for calendar in self:
             calendar.is_fulltime = not float_compare(calendar.full_time_required_hours, calendar.hours_per_week, 3)
 
+    def _get_global_attendances(self):
+        res = super(ResourceCalendar, self)._get_global_attendances()
+        res |= self.normal_attendance_ids.filtered(lambda attendance: not attendance.date_from and not attendance.date_to)
+        return res
+
+    # Add a key on the api.onchange decorator
+    @api.onchange('attendance_ids', 'normal_attendance_ids')
+    def _onchange_hours_per_day(self):
+        return super(ResourceCalendar, self)._onchange_hours_per_day()
 
 class ResourceCalendarAttendance(models.Model):
     _inherit = 'resource.calendar.attendance'

@@ -74,7 +74,7 @@ class View(models.Model):
             view._create_website_specific_pages_for_view(website_specific_view,
                                                             view.env['website'].browse(current_website_id))
 
-            for inherit_child in view.inherit_children_ids.filter_duplicate():
+            for inherit_child in view.inherit_children_ids.filter_duplicate().sorted(key=lambda v: (v.priority, v.id)):
                 if inherit_child.website_id.id == current_website_id:
                     # In the case the child was already specific to the current
                     # website, we cannot just reattach it to the new specific
@@ -91,6 +91,55 @@ class View(models.Model):
             super(View, website_specific_view).write(vals)
 
         return True
+
+    @api.multi
+    def _get_specific_views(self):
+        """ Given a view, return a record set containing all the specific views
+            for that view's key.
+            If the given view is already specific, it will also return itself.
+        """
+        self.ensure_one()
+        domain = [('key', '=', self.key), ('website_id', '!=', False)]
+        return self.with_context(active_test=False).search(domain)
+
+    def _load_records_write(self, values):
+        """ During module update, when updating a generic view, we should also
+            update its specific views (COW'd).
+            Note that we will only update unmodified fields. That will mimic the
+            noupdate behavior on views having an ir.model.data.
+        """
+        if self.type == 'qweb' and not self.website_id:
+            # Update also specific views
+            for cow_view in self._get_specific_views():
+                authorized_vals = {}
+                for key in values:
+                    if cow_view[key] == self[key]:
+                        authorized_vals[key] = values[key]
+                cow_view.write(authorized_vals)
+            super(View, self)._load_records_write(values)
+
+    def _load_records_create(self, values):
+        """ During module install, when creating a generic child view, we should
+            also create that view under specific view trees (COW'd).
+            Top level view (no inherit_id) do not need that behavior as they
+            will be shared between websites since there is no specific yet.
+        """
+        records = super(View, self)._load_records_create(values)
+        for record in records:
+            if record.type == 'qweb' and record.inherit_id and not record.website_id and not record.inherit_id.website_id:
+                specific_parent_views = record.with_context(active_test=False).search([
+                    ('key', '=', record.inherit_id.key),
+                    ('website_id', '!=', None),
+                ])
+                for specific_parent_view in specific_parent_views:
+                    record.copy({
+                        # Set key to avoid copy() to generate an unique key as
+                        # we want the specific view to have the same key
+                        'key': record.key,
+                        'inherit_id': specific_parent_view.id,
+                        'website_id': specific_parent_view.website_id.id,
+                    })
+        return records
 
     @api.multi
     def unlink(self):
@@ -143,8 +192,12 @@ class View(models.Model):
             return self.filtered(lambda view: not view.website_id)
 
         for view in self:
+            # specific view: add it if it's for the current website and ignore
+            # it if it's for another website
             if view.website_id and view.website_id.id == current_website_id:
                 most_specific_views |= view
+            # generic view: add it only if, for the current website, there is no
+            # specific view for this view (based on the same `key` attribute)
             elif not view.website_id and not any(view.key == view2.key and view2.website_id and view2.website_id.id == current_website_id for view2 in self):
                 most_specific_views |= view
 
@@ -201,6 +254,17 @@ class View(models.Model):
     @api.model
     @tools.ormcache_context('self._uid', 'xml_id', keys=('website_id',))
     def get_view_id(self, xml_id):
+        """If a website_id is in the context and the given xml_id is not an int
+        then try to get the id of the specific view for that website, but
+        fallback to the id of the generic view if there is no specific.
+
+        If no website_id is in the context, it might randomly return the generic
+        or the specific view, so it's probably not recommanded to use this
+        method. `viewref` is probably more suitable.
+
+        Archived views are ignored (unless the active_test context is set, but
+        then the ormcache_context will not work as expected).
+        """
         if 'website_id' in self._context and not isinstance(xml_id, int):
             current_website = self.env['website'].browse(self._context.get('website_id'))
             domain = ['&', ('key', '=', xml_id)] + current_website.website_domain()

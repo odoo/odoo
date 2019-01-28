@@ -32,12 +32,12 @@ class BuckarooForm(BuckarooCommon):
         # ----------------------------------------
 
         form_values = {
-            'add_returndata': None,
+            'add_returndata': '',
             'Brq_websitekey': self.buckaroo.brq_websitekey,
             'Brq_amount': '2240.0',
             'Brq_currency': 'EUR',
             'Brq_invoicenumber': 'SO004',
-            'Brq_signature': '1b8c10074c622d965272a91a9e88b5b3777d2474',  # update me
+            'Brq_signature': 'aa6fe072afdd9d1b463d55f43e6df4b272d3529a',  # update me
             'brq_test': 'True',
             'Brq_return': urls.url_join(base_url, BuckarooController._return_url),
             'Brq_returncancel': urls.url_join(base_url, BuckarooController._cancel_url),
@@ -50,13 +50,14 @@ class BuckarooForm(BuckarooCommon):
         res = self.buckaroo.render(
             'SO004', 2240.0, self.currency_euro.id,
             partner_id=None,
-            partner_values=self.buyer_values)
-
+            values=self.buyer_values)
         # check form result
         tree = objectify.fromstring(res)
-        self.assertEqual(tree.get('action'), 'https://testcheckout.buckaroo.nl/html/', 'Buckaroo: wrong form POST url')
+        data_set = tree.xpath("//input[@name='data_set']")
+        self.assertEqual(len(data_set), 1, 'paypal: Found %d "data_set" input instead of 1' % len(data_set))
+        self.assertEqual(data_set[0].get('data-action-url'), 'https://testcheckout.buckaroo.nl/html/', 'Buckaroo: wrong form POST url')
         for form_input in tree.input:
-            if form_input.get('name') in ['submit']:
+            if form_input.get('name') in ['submit', 'data_set']:
                 continue
             self.assertEqual(
                 form_input.get('value'),
@@ -78,17 +79,18 @@ class BuckarooForm(BuckarooCommon):
         })
 
         # render the button
-        res = self.buckaroo_id.render(
+        res = self.buckaroo.render(
             'should_be_erased', 2240.0, self.currency_euro,
-            tx_id=tx.id,
             partner_id=None,
-            partner_values=self.buyer_values)
+            values=self.buyer_values)
 
         # check form result
         tree = objectify.fromstring(res)
-        self.assertEqual(tree.get('action'), 'https://testcheckout.buckaroo.nl/html/', 'Buckaroo: wrong form POST url')
+        data_set = tree.xpath("//input[@name='data_set']")
+        self.assertEqual(len(data_set), 1, 'paypal: Found %d "data_set" input instead of 1' % len(data_set))
+        self.assertEqual(data_set[0].get('data-action-url'), 'https://testcheckout.buckaroo.nl/html/', 'Buckaroo: wrong form POST url')
         for form_input in tree.input:
-            if form_input.get('name') in ['submit']:
+            if form_input.get('name') in ['submit', 'data_set']:
                 continue
             self.assertEqual(
                 form_input.get('value'),
@@ -116,7 +118,7 @@ class BuckarooForm(BuckarooCommon):
             'BRQ_SERVICE_PAYPAL_PAYERLASTNAME': u'Tester',
             'BRQ_SERVICE_PAYPAL_PAYERMIDDLENAME': u'de',
             'BRQ_SERVICE_PAYPAL_PAYERSTATUS': u'verified',
-            'Brq_signature': u'175d82dd53a02bad393fee32cb1eafa3b6fbbd91',
+            'Brq_signature': u'9e75e51cbcb6fbc798b40d1787cc5b7c36557d56',
             'BRQ_STATUSCODE': u'190',
             'BRQ_STATUSCODE_DETAIL': u'S001',
             'BRQ_STATUSMESSAGE': u'Transaction successfully processed',
@@ -134,7 +136,7 @@ class BuckarooForm(BuckarooCommon):
             'amount': 2240.0,
             'acquirer_id': self.buckaroo.id,
             'currency_id': self.currency_euro.id,
-            'reference': 'SO004-1',
+            'reference': 'SO004',
             'partner_name': 'Norbert Buyer',
             'partner_country_id': self.country_france.id})
 
@@ -153,14 +155,14 @@ class BuckarooForm(BuckarooCommon):
             'partner_name': 'Norbert Buyer',
             'partner_country_id': self.country_france.id})
 
+        buckaroo_post_data['BRQ_INVOICENUMBER'] = 'SO004-2'
         # now buckaroo post is ok: try to modify the SHASIGN
-        buckaroo_post_data['BRQ_SIGNATURE'] = '54d928810e343acf5fb0c3ee75fd747ff159ef7a'
+        buckaroo_post_data['Brq_signature'] = '54d928810e343acf5fb0c3ee75fd747ff159ef7a'
         with self.assertRaises(ValidationError):
             tx.form_feedback(buckaroo_post_data, 'buckaroo')
-
         # simulate an error
-        buckaroo_post_data['BRQ_STATUSCODE'] = 2
-        buckaroo_post_data['BRQ_SIGNATURE'] = '4164b52adb1e6a2221d3d8a39d8c3e18a9ecb90b'
+        buckaroo_post_data['BRQ_STATUSCODE'] = '2'
+        buckaroo_post_data['Brq_signature'] = '9138e2bf09a708a4eb485ce7777e5406898b689d'
         tx.form_feedback(buckaroo_post_data, 'buckaroo')
 
         # check state

@@ -772,12 +772,12 @@ class AccountInvoice(models.Model):
                 msg = _('Cannot find a chart of accounts for this company, You should configure it. \nPlease go to Account Configuration.')
                 raise RedirectWarning(msg, action.id, _('Go to the configuration panel'))
 
-            if type in ('out_invoice', 'out_refund'):
-                account_id = rec_account.id
-                payment_term_id = p.property_payment_term_id.id
-            else:
+            if type in ('in_invoice', 'in_refund'):
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term_id.id
+            else:
+                account_id = rec_account.id
+                payment_term_id = p.property_payment_term_id.id
 
             delivery_partner_id = self.get_delivery_partner_id()
             fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, delivery_id=delivery_partner_id)
@@ -990,8 +990,12 @@ class AccountInvoice(models.Model):
         return vals
 
     @api.multi
-    def get_taxes_values(self):
+    def get_taxes_values(self, tax_group_fields=False):
+        default_tax_group_fields = set(['amount', 'base'])
+        if tax_group_fields:
+            default_tax_group_fields |= set(tax_group_fields)
         tax_grouped = {}
+        round_curr = self.currency_id.round
         for line in self.invoice_line_ids:
             if not line.account_id:
                 continue
@@ -1003,9 +1007,10 @@ class AccountInvoice(models.Model):
 
                 if key not in tax_grouped:
                     tax_grouped[key] = val
+                    tax_grouped[key]['base'] = round_curr(val['base'])
                 else:
-                    tax_grouped[key]['amount'] += val['amount']
-                    tax_grouped[key]['base'] += val['base']
+                    for field in default_tax_group_fields:
+                        tax_grouped[key][field] += round_curr(val.get(field) or 0)
         return tax_grouped
 
     @api.multi
@@ -1085,8 +1090,7 @@ class AccountInvoice(models.Model):
             for tax in line.invoice_line_tax_ids:
                 tax_ids.append((4, tax.id, None))
                 for child in tax.children_tax_ids:
-                    if child.type_tax_use != 'none':
-                        tax_ids.append((4, child.id, None))
+                    tax_ids.append((4, child.id, None))
             analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in line.analytic_tag_ids]
 
             move_line_dict = {
@@ -1734,17 +1738,17 @@ class AccountInvoiceLine(models.Model):
                 self.price_unit = 0.0
             domain['uom_id'] = []
         else:
+            self_lang = self
             if part.lang:
-                product = self.product_id.with_context(lang=part.lang)
-            else:
-                product = self.product_id
-
+                self_lang = self.with_context(lang=part.lang)
+   
+            product = self_lang.product_id
             account = self.get_invoice_line_account(type, product, fpos, company)
             if account:
                 self.account_id = account.id
             self._set_taxes()
 
-            product_name = self._get_invoice_line_name_from_product()
+            product_name = self_lang._get_invoice_line_name_from_product()
             if product_name != None:
                 self.name = product_name
 
@@ -1875,6 +1879,14 @@ class AccountInvoiceTax(models.Model):
     _description = "Invoice Tax"
     _order = 'sequence'
 
+    def _prepare_invoice_tax_val(self):
+        self.ensure_one()
+        return {
+            'tax_id': self.tax_id.id,
+            'account_id': self.account_id.id,
+            'account_analytic_id': self.account_analytic_id.id,
+            'analytic_tag_ids': self.analytic_tag_ids.ids or False}
+
     @api.depends('invoice_id.invoice_line_ids')
     def _compute_base_amount(self):
         tax_grouped = {}
@@ -1883,12 +1895,7 @@ class AccountInvoiceTax(models.Model):
         for tax in self:
             tax.base = 0.0
             if tax.tax_id:
-                key = tax.tax_id.get_grouping_key({
-                    'tax_id': tax.tax_id.id,
-                    'account_id': tax.account_id.id,
-                    'account_analytic_id': tax.account_analytic_id.id,
-                    'analytic_tag_ids': tax.analytic_tag_ids.ids or False,
-                })
+                key = tax.tax_id.get_grouping_key(tax._prepare_invoice_tax_val())
                 if tax.invoice_id and key in tax_grouped[tax.invoice_id.id]:
                     tax.base = tax_grouped[tax.invoice_id.id][key]['base']
                 else:

@@ -1634,12 +1634,6 @@ QUnit.module('Views', {
                 '</form>',
             viewOptions: {hasSidebar: true},
             res_id: 1,
-            mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
-                return this._super.apply(this, arguments);
-            },
         });
 
         assert.isVisible(form.sidebar);
@@ -1782,12 +1776,6 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
             viewOptions: {hasSidebar: true},
-            mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
-                return this._super.apply(this, arguments);
-            },
         });
 
         assert.strictEqual(form.$('.o_control_panel .breadcrumb').text(), 'first record',
@@ -1822,9 +1810,6 @@ QUnit.module('Views', {
                     assert.strictEqual(args.kwargs.context.hey, 'hoy',
                         "should have send the correct context");
                 }
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
                 return this._super.apply(this, arguments);
             },
         });
@@ -1847,12 +1832,6 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
             viewOptions: {hasSidebar: true},
-            mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
-                return this._super.apply(this, arguments);
-            },
         });
 
         assert.strictEqual(form.$('.o_control_panel .breadcrumb').text(), 'first record',
@@ -2394,12 +2373,6 @@ QUnit.module('Views', {
             arch: '<form string="Partners"><field name="foo"></field></form>',
             res_id: 1,
             viewOptions: {hasSidebar: true},
-            mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
-                return this._super.apply(this, arguments);
-            },
         });
         testUtils.form.clickEdit(form);
         testUtils.fields.editInput(form.$('input[name=foo]'), 'tralala');
@@ -2736,12 +2709,6 @@ QUnit.module('Views', {
                 hasSidebar: true,
             },
             res_id: 1,
-            mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
-                return this._super.apply(this, arguments);
-            },
         });
 
         assert.strictEqual(form.pager.$('.o_pager_value').text(), "1", 'pager value should be 1');
@@ -2781,9 +2748,6 @@ QUnit.module('Views', {
             },
             res_id: 1,
             mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             }
@@ -4945,9 +4909,6 @@ QUnit.module('Views', {
                         "the active_ids should be an array with 1 inside.");
                     return $.when({});
                 }
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
                 return this._super.apply(this, arguments);
             },
         });
@@ -6224,9 +6185,6 @@ QUnit.module('Views', {
             res_id: 1,
             viewOptions: {hasSidebar: true},
             mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
                 var result = this._super.apply(this, arguments);
                 if (args.method === 'copy') {
                     return result.then(function (id) {
@@ -6878,9 +6836,6 @@ QUnit.module('Views', {
                 if (args.method === 'unlink') {
                     assert.step('unlink');
                 }
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
                 return this._super.apply(this, arguments);
             },
             res_id: 1,
@@ -7185,6 +7140,69 @@ QUnit.module('Views', {
         onchangeDef.resolve();
 
         assert.verifySteps(['resolve', 'create']);
+
+        form.destroy();
+    });
+
+    QUnit.test('call canBeRemoved while saving', function (assert) {
+        assert.expect(10);
+
+        this.data.partner.onchanges = {
+            foo: function (obj) {
+                obj.display_name = obj.foo === 'trigger onchange' ? 'changed' : 'default';
+            },
+        };
+
+        var onchangeDef;
+        var createDef = $.Deferred();
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="display_name"/><field name="foo"/></form>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    return $.when(onchangeDef).then(_.constant(result));
+                }
+                if (args.method === 'create') {
+                    return $.when(createDef).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // edit foo to trigger a delayed onchange
+        onchangeDef = $.Deferred();
+        testUtils.fields.editInput(form.$('.o_field_widget[name=foo]'), 'trigger onchange');
+
+        assert.strictEqual(form.$('.o_field_widget[name=display_name]').val(), 'default');
+
+        // save (will wait for the onchange to return), and will be delayed as well
+        testUtils.dom.click(form.$buttons.find('.o_form_button_save'));
+
+        assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+        assert.strictEqual(form.$('.o_field_widget[name=display_name]').val(), 'default');
+
+        // simulate a click on the breadcrumbs to leave the form view
+        form.canBeRemoved();
+
+        assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+        assert.strictEqual(form.$('.o_field_widget[name=display_name]').val(), 'default');
+
+        // unlock the onchange
+        onchangeDef.resolve();
+
+        assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+        assert.strictEqual(form.$('.o_field_widget[name=display_name]').val(), 'changed');
+
+        // unlock the create
+        createDef.resolve();
+
+        assert.hasClass(form.$('.o_form_view'), 'o_form_readonly');
+        assert.strictEqual(form.$('.o_field_widget[name=display_name]').text(), 'changed');
+        assert.containsNone(document.body, '.modal',
+            "should not display the 'Changes will be discarded' dialog");
 
         form.destroy();
     });

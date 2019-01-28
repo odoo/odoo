@@ -344,15 +344,19 @@ def send_iot_box_device(send_printer):
         printerList = {}
         if send_printer:
             printers = subprocess.check_output("sudo lpinfo -lv", shell=True).decode('utf-8').split('Device')
+            printers_installed = ''
+            try:
+                printers_installed = subprocess.check_output("sudo lpstat -a", shell=True).decode('utf-8')
+            except:
+                pass
             for printer in printers:
                 printerTab = printer.split('\n')
-                if printer and printerTab[4].split('=')[1] != ' ':
+                if printer and printerTab[4].split('=')[1] != ' ' or 'lpd://' in printerTab[0]:
                     device_connection = printerTab[1].split('= ')[1]
                     model = ''
                     for device_id in printerTab[4].split('= ')[1].split(';'):
                         if any(x in device_id for x in ['MDL','MODEL']):
                             model = device_id.split(':')[1]
-                    name = printerTab[2].split('= ')[1]
                     serial = re.sub('[^a-zA-Z0-9 ]+', '', model).replace(' ','_')
                     identifier = ''
                     if device_connection == 'direct':
@@ -361,6 +365,9 @@ def send_iot_box_device(send_printer):
                         socketIP = printerTab[0].split('://')[1]
                         macprinter = subprocess.check_output("arp -a " + socketIP + " |awk NR==1'{print $4}'", shell=True).decode('utf-8').split('\n')[0]
                         identifier = macprinter  # macPRINTER
+                    elif device_connection == 'network' and 'lpd' in printerTab[0]:
+                        identifier = re.sub('[^a-zA-Z0-9 ]+', '', printerTab[0].split('://')[1])
+                        model = printerTab[2].split('= ')[1]
                     elif device_connection == 'network' and 'dnssd' in printerTab[0]:
                         hostname_printer = subprocess.check_output("ippfind -n \"" + model + "\" | awk \'{split($0,a,\"/\"); print a[3]}\' | awk \'{split($0,b,\":\"); print b[1]}\'", shell=True).decode('utf-8').split('\n')[0]
                         if hostname_printer:
@@ -375,15 +382,16 @@ def send_iot_box_device(send_printer):
                                             'type': 'printer'
                         }
 
-                        # install these printers
-                        try:
-                            ppd = subprocess.check_output("sudo lpinfo -m |grep '" + model + "'", shell=True).decode('utf-8').split('\n')
-                            if len(ppd) > 2:
+                        if identifier not in printers_installed:
+                            # install these printers
+                            try:
+                                ppd = subprocess.check_output("sudo lpinfo -m |grep '" + model + "'", shell=True).decode('utf-8').split('\n')
+                                if len(ppd) > 2:
+                                    subprocess.call("sudo lpadmin -p '" + identifier + "' -E -v '" + printerTab[0].split('= ')[1] + "'", shell=True)
+                                else:
+                                    subprocess.call("sudo lpadmin -p '" + identifier + "' -E -v '" + printerTab[0].split('= ')[1] + "' -m '" + ppd[0].split(' ')[0] + "'", shell=True)
+                            except:
                                 subprocess.call("sudo lpadmin -p '" + identifier + "' -E -v '" + printerTab[0].split('= ')[1] + "'", shell=True)
-                            else:
-                                subprocess.call("sudo lpadmin -p '" + identifier + "' -E -v '" + printerTab[0].split('= ')[1] + "' -m '" + ppd[0].split(' ')[0] + "'", shell=True)
-                        except:
-                            subprocess.call("sudo lpadmin -p '" + identifier + "' -E -v '" + printerTab[0].split('= ')[1] + "'", shell=True)
             subprocess.call('> /tmp/printers', shell=True)
             for printer in printerList:
                 subprocess.call('echo "' + printerList[printer]['name'] + '" >> /tmp/printers', shell=True)
@@ -409,14 +417,16 @@ def send_iot_box_device(send_printer):
         data['devices'] = devicesList
         data_json = json.dumps(data).encode('utf8')
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        http = urllib3.PoolManager()
+        urllib3.disable_warnings()
+        http = urllib3.PoolManager(cert_reqs='CERT_NONE')
         req = False
         try:
             req = http.request('POST',
                                 url,
                                 body=data_json,
                                 headers=headers)
-        except:
+        except Exception as e:
             _logger.warning('Could not reach configured server')
+            _logger.error('A error encountered : %s ' % e)
 
 

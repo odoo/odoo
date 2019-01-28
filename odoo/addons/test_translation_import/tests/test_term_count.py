@@ -92,16 +92,22 @@ class TestTermCount(common.TransactionCase):
     def test_export_empty_string(self):
         """When the string and the translation is equal the translation is empty"""
         # Export the translations
-        def update_translations():
+        def update_translations(context=None):
+            context = dict(context or {}, overwrite=True)
             with closing(io.BytesIO()) as bufferobj:
                 odoo.tools.trans_export('fr_FR', ['test_translation_import'], bufferobj, 'po', self.cr)
                 bufferobj.name = 'test_translation_import/i18n/fr.po'
-                odoo.tools.trans_load_data(self.cr, bufferobj, 'po', 'fr_FR', verbose=False, context={'overwrite': True})
+                odoo.tools.trans_load_data(self.cr, bufferobj, 'po', 'fr_FR', verbose=False, context=context)
 
-        # Check if the not translated key is empty string
+        # Check that the not translated key is not created
         update_translations()
         translation = self.env['ir.translation'].search_count([('src', '=', 'Efgh'), ('value', '=', '')])
         self.assertFalse(translation, 'An empty translation is not imported')
+
+        # Check that "Generate Missing Terms" create empty string for not translated key
+        update_translations({'create_empty_translation': True})
+        translation = self.env['ir.translation'].search_count([('src', '=', 'Efgh'), ('value', '=', '')])
+        self.assertTrue(translation, 'The translation of "Efgh" should be empty')
 
         # Modify the value translated for the equal value of the key
         menu = self.env.ref('test_translation_import.menu_test_translation_import')

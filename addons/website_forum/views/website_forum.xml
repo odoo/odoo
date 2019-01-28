@@ -216,6 +216,13 @@
     </div>
     <div class="col">
         <div class="row">
+            <div class="col-12">
+                <t t-foreach="question.tag_ids" t-as="question_tag">
+                    <a t-attf-href="/forum/#{ slug(forum) }/tag/#{slug(question_tag)}/questions">
+                        <span t-attf-class="float-right mb-1 mr-1 badge #{tag and tag.name == question_tag.name and 'badge-primary' or 'badge-secondary'}" t-field="question_tag.name"/>
+                    </a>
+                </t>
+            </div>
             <div class="col">
                 <div class="question-name">
                     <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">
@@ -246,13 +253,6 @@
                         Flagged
                     </t>
                 </small>
-            </div>
-            <div class="col-3">
-                <t t-foreach="question.tag_ids" t-as="question_tag">
-                    <a t-attf-href="/forum/#{ slug(forum) }/tag/#{slug(question_tag)}/questions">
-                        <span t-attf-class="float-right mb-1 mr-1 badge #{tag and tag.name == question_tag.name and 'badge-primary' or 'badge-secondary'}" t-field="question_tag.name"/>
-                    </a>
-                </t>
             </div>
         </div>
     </div>
@@ -411,13 +411,14 @@
                 <h6 class="m-0">
                     <a href="#" class="dropdown-toggle btn btn-primary" data-toggle="dropdown">
                         <t t-if="filters == 'unanswered'"> Unanswered</t>
-                        <t t-if="filters == 'followed'"> Followed</t>
-                        <t t-if="tag"> <span t-field="tag.name"/></t>
+                        <t t-elif="filters == 'followed'"> Followed</t>
+                        <t t-elif="tag"> <span t-field="tag.name"/></t>
+
                         <t t-if="sorting == 'relevancy desc'"> by relevance</t>
-                        <t t-if="sorting == 'write_date desc'"> by activity date</t>
-                        <t t-if="sorting == 'create_date desc'"> by newest</t>
-                        <t t-if="sorting == 'child_count desc'"> by most answered</t>
-                        <t t-if="sorting == 'vote_count desc'"> by most voted</t>
+                        <t t-elif="sorting == 'write_date desc'"> by activity date</t>
+                        <t t-elif="sorting == 'create_date desc'"> by newest</t>
+                        <t t-elif="sorting == 'child_count desc'"> by most answered</t>
+                        <t t-elif="sorting == 'vote_count desc'"> by most voted</t>
                     </a>
                     <div class="dropdown-menu" role="menu">
                         <div role="separator" class="dropdown-header">Filter on</div>
@@ -436,7 +437,7 @@
                 </h6>
             </small>
         </h2>
-        <div t-foreach="question_ids" t-as="question" class="mb-3">
+        <div t-foreach="question_ids" t-as="question" class="mb-2">
             <t t-call="website_forum.display_post"/>
         </div>
         <t t-call="website.pager"/>
@@ -754,11 +755,14 @@
                                 <t t-set="icon" t-value="'fa-check'"/>
                                 <t t-set="karma" t-value="not question.can_moderate and question.forum_id.karma_moderate or 0"/>
                             </t>
-                            <a t-if="question.active" href="#" t-attf-style="#{not question.can_flag and 'display:none;' or ''}"
-                                t-attf-class="flag px-3 py-2 #{not question.can_flag and 'karma_required' or ''}"
-                                t-attf-data-karma="#{not question.can_flag and question.forum_id.karma_flag or 0}"
-                                t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(question)}/flag" title="Flag"
-                                ><i t-attf-class="fa #{not question.can_flag and 'karma_required fa-flag-o' or 'fa-flag'}"/>
+                            <a t-if="question.active" href="#"  t-call="website_forum.link_button">
+                                <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/flag'"/>
+                                <t t-set="title">Flag</t>
+                                <t t-set="inDropdown" t-value="False"/>
+                                <t t-set="icon" t-value="not question.can_flag and 'fa-flag-o' or 'fa-flag'"/>
+                                <t t-set="karma" t-value="not question.can_flag and question.forum_id.karma_flag or 0"/>
+                                <t t-set="classes" t-value="'flag'"/>
+
                             </a>
                         </div>
                     </div>
@@ -1196,13 +1200,13 @@
                 </form>
             </div>
         </div>
-        <div t-foreach="users" t-as="row_users" class="row">
-            <div t-foreach="row_users" t-as="u" class="col-xl-4 col-md-6 col-sm-12">
-                <div class="card o_card_people mb-4">
-                    <div class="card-header">
+        <div class="row">
+            <div t-foreach="users" t-as="u" class="col-xl-4 col-md-6 col-sm-12 mb-4">
+                <div class="card o_card_people h-100">
+                    <div class="card-body">
                         <img class="o_wforum_people_photo_container float-left mr-3" t-attf-src="/forum/user/#{u.id}/avatar"/>
                         <b><i class="text-secondary mr-1 fa fa-diamond"/><t t-esc="u.karma"/></b>
-                        <h3 class="font-weight-bold o_card_people_name"><a t-attf-href="/forum/#{slug(forum)}/user/#{u.id}" t-field="u.name"/></h3>
+                        <h4 class="font-weight-bold o_card_people_name"><a t-attf-href="/forum/#{slug(forum)}/user/#{u.id}" t-field="u.name"/></h4>
                         <t t-if="u.country_id">
                             <span t-field="u.country_id.image" t-options='{"widget": "image", "class": "country_flag_people"}'/>
                         </t>

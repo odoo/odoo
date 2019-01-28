@@ -70,9 +70,12 @@ class Menu(models.Model):
     @api.multi
     def unlink(self):
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
+        menus_to_remove = self
         for menu in self.filtered(lambda m: default_menu and m.parent_id.id == default_menu.id):
-            self.env['website.menu'].search([('url', '=', menu.url), ('id', '!=', menu.id)]).unlink()
-        return super(Menu, self).unlink()
+            menus_to_remove |= self.env['website.menu'].search([('url', '=', menu.url),
+                                                                ('website_id', '!=', False),
+                                                                ('id', '!=', menu.id)])
+        return super(Menu, menus_to_remove).unlink()
 
     @api.one
     def _compute_visible(self):

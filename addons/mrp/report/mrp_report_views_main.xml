@@ -26,5 +26,14 @@
             file="mrp.label_production_view"
             report_type="qweb-text"
         />
+        <report
+            string="Finished Product Label (PDF)"
+            id="action_report_finished_product"
+            model="mrp.production"
+            name="mrp.label_production_view_pdf"
+            file="mrp.label_production_view_pdf"
+            report_type="qweb-pdf"
+            print_report_name="'Finished products - %s' % object.name"
+        />
     </data>
 </odoo>

@@ -736,12 +736,15 @@ class account_payment(models.Model):
         """ Return dict to create the payment move
         """
         journal = journal or self.journal_id
-        return {
+        move_vals = {
             'date': self.payment_date,
             'ref': self.communication or '',
             'company_id': self.company_id.id,
             'journal_id': journal.id,
         }
+        if self.move_name:
+            move_vals['name'] = self.move_name
+        return move_vals
 
     def _get_shared_move_line_vals(self, debit, credit, amount_currency, move_id, invoice_id=False):
         """ Returns values common to both move lines (except for debit, credit and amount_currency which are reversed)

@@ -119,12 +119,15 @@ class IoTboxHomepage(odoo.addons.web.controllers.main.Home):
             f = open('/tmp/devices', 'r')
             for line in f:
                 url = 'http://' + self.get_ip_iotbox() + ':8069/hw_drivers/driverdetails/' + line.split('|')[0]
-                http = urllib3.PoolManager()
+                urllib3.disable_warnings()
+                http = urllib3.PoolManager(cert_reqs='CERT_NONE')
                 value = ''
                 try:
                     req = http.request('GET', url)
-                except:
+                except Exception as e:
                     req = ''
+                    _logger.warning('Could not reach configured server')
+                    _logger.error('A error encountered : %s ' % e)
 
                 if req:
                     value = req.data.decode('utf-8')
@@ -193,15 +196,18 @@ class IoTboxHomepage(odoo.addons.web.controllers.main.Home):
         #response = requests.get(url, auth=(username, db_uuid.split('\n')[0]), stream=True)
         server = self.get_server_status()
         if server:
-            pm = urllib3.PoolManager()
+            urllib3.disable_warnings()
+            pm = urllib3.PoolManager(cert_reqs='CERT_NONE')
             resp = False
             server = server + '/iot/get_drivers'
             try:
                 resp = pm.request('POST',
                                    server,
                                    fields={'mac': mac})
-            except:
+            except Exception as e:
+                req = ''
                 _logger.warning('Could not reach configured server')
+                _logger.error('A error encountered : %s ' % e)
             if resp and resp.data:
                 zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
                 zip_file.extractall("/home/pi/odoo/addons/hw_drivers/drivers")

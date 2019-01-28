@@ -281,6 +281,7 @@ Inherited XML
 ~~~~~~~~~~~~~
 
 The naming pattern of inherited view is
+
 #. Extension mode: Use the same xml id than the original view you are extending, and suffix it by :samp:`{_inherit}` . For instance, the view :samp:`project.project_view_form` can be extended by :samp:`project_forecast.project_view_form_inherit`.
 #. Primary mode: Keep the original xml id.
 
