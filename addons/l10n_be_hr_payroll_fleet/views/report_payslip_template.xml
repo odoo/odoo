@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_belgium_payslip" inherit_id='hr_payroll.report_payslip'>
+    <xpath expr="//table[@name='employee-infos']" position="inside">
+        <tr>
+            <td><strong>Company Car</strong></td>
+            <td>
+                <span t-field="o.contract_id.car_id.model_id"/>
+                <span t-field="o.contract_id.car_id.license_plate"/>
+            </td>
+        </tr>
+    </xpath>
+</template>
+</odoo>
