@@ -71,11 +71,18 @@ class HrContract(models.Model):
         help="Yearly amount the employee receives in the form of eco vouchers.")
     ip = fields.Boolean(default=False, tracking=True)
     ip_wage_rate = fields.Float(string="IP percentage", help="Should be between 0 and 100 %")
+    fiscal_voluntarism = fields.Boolean(string="Fiscal Voluntarism", default=False, tracking=True, help="Voluntarily increase withholding tax rate.")
+    fiscal_voluntary_rate = fields.Float(string="Fiscal Voluntary Rate", help="Should be between 0 and 100 %")
 
     @api.constrains('ip_wage_rate')
     def _check_ip_wage_rate(self):
         if self.filtered(lambda contract: contract.ip_wage_rate < 0 or contract.ip_wage_rate > 100):
             raise ValidationError(_('The IP rate on wage should be between 0 and 100'))
+
+    @api.constrains('fiscal_voluntary_rate')
+    def _check_fiscal_voluntary_rate(self):
+        if self.filtered(lambda contract: contract.fiscal_voluntary_rate < 0 or contract.fiscal_voluntary_rate > 100):
+            raise ValidationError(_('The Fiscal Voluntary rate on wage should be between 0 and 100'))
 
     @api.depends('holidays', 'wage', 'final_yearly_costs')
     def _compute_wage_with_holidays(self):

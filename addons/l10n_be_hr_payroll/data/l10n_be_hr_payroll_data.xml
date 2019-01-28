@@ -264,6 +264,11 @@ if yearly_gross_revenue &lt;= 16033.33:
 else:
     yearly_net_taxable_revenue = yearly_gross_revenue - 4810.0
 
+if contract.fiscal_voluntarism:
+    withholding_tax_amount_voluntary = convert_to_month(yearly_net_taxable_revenue) * contract.fiscal_voluntary_rate/100
+else:
+    withholding_tax_amount_voluntary = 0.0
+
 # BAREME III: Non resident
 if employee.resident_bool:
     basic_bareme = compute_basic_bareme(yearly_net_taxable_revenue)
@@ -326,7 +331,7 @@ if employee.dependent_children:
     if employee.dependent_children &gt;= 8:
         withholding_tax_amount -= 1428.0 + (employee.dependent_children - 8) * 256.0
 
-result = - max(withholding_tax_amount, 0.0)
+result = - max(withholding_tax_amount, withholding_tax_amount_voluntary, 0.0)
 
         </field>
     </record>
