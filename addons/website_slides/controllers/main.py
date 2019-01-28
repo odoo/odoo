@@ -152,7 +152,14 @@ class WebsiteSlides(http.Controller):
             'pager': pager,
             'is_public_user': request.website.is_public_user(),
             'display_channel_settings': not request.httprequest.cookies.get('slides_channel_%s' % (channel.id), False) and channel.can_see_full,
+            'rating_avg': channel.rating_avg,
+            'rating_count': channel.rating_count,
         }
+        if not request.env.user._is_public():
+            values.update({
+                'message_post_hash': channel._sign_token(request.env.user.partner_id.id),
+                'message_post_pid': request.env.user.partner_id.id
+            })
         if search:
             values['search'] = search
             return request.render('website_slides.slides_search', values)

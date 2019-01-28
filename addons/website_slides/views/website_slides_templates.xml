@@ -59,6 +59,10 @@
                             <div>
                                 <p class="text-muted oe_no_empty" t-field="channel.description"/>
                             </div>
+                            <t t-call="website_rating.rating_widget_stars_static">
+                                <t t-set="rating_avg" t-value="channel.rating_avg"/>
+                                <t t-set="rating_count" t-value="channel.rating_count"/>
+                            </t>
                         </div>
                     </div>
                 </t>
@@ -236,11 +240,34 @@
                             </div>
                             <div class="row oe_no_empty" t-esc="channel.promoted_slide_id.description"/>
                             <p class="row mt8">
+                                <t t-call="website_rating.rating_stars_static_popup_composer">
+                                    <t t-set="rating_avg" t-value="rating_avg"/>
+                                    <t t-set="rating_total" t-value="rating_count"/>
+                                    <t t-set="object" t-value="channel"/>
+                                    <t t-set="hash" t-value="message_post_hash"/>
+                                    <t t-set="pid" t-value="message_post_pid"/>
+                                </t>
+                            </p>
+                            <p class="row mt8">
                                 <b>Share:</b>
                                 <t t-call="website_slides.slides_share">
                                     <t t-set="slide" t-value="channel.promoted_slide_id"/>
                                 </t>
                             </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="o_slides_discussion_rating">
+                <div class="container mt16 mb16">
+                    <hr/>
+                    <div class="row">
+                        <div class="col-lg-8 offset-lg-2">
+                            <t t-call="portal.message_thread">
+                                <t t-set="object" t-value="channel"/>
+                                <t t-set="display_rating" t-value="True"/>
+                                <t t-set="disable_composer" t-value="True"/>
+                            </t>
                         </div>
                     </div>
                 </div>
