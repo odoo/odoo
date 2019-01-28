@@ -556,10 +556,13 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         }, {
             type: 'float',
             name: 'amount',
+        }, {
+            type: 'char', //TODO is it a bug or a feature when type date exists ?
+            name: 'date',
         }], {
             account_id: {string: _t("Account")},
             label: {string: _t("Label")},
-            amount: {string: _t("Account")}
+            amount: {string: _t("Account")},
         }).then(function (recordID) {
             self.handleCreateRecord = recordID;
             var record = self.model.get(self.handleCreateRecord);
@@ -587,6 +590,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
 
             self.fields.amount = new basic_fields.FieldFloat(self,
                 'amount', record, {mode: 'edit'});
+            
+            self.fields.date = new basic_fields.FieldDate(self,
+                'date', record, {mode: 'edit'});
 
             var $create = $(qweb.render("reconciliation.line.create", {'state': state}));
             self.fields.account_id.appendTo($create.find('.create_account_id .o_td_field'))
@@ -600,6 +606,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 .then(addRequiredStyle.bind(self, self.fields.label));
             self.fields.amount.appendTo($create.find('.create_amount .o_td_field'))
                 .then(addRequiredStyle.bind(self, self.fields.amount));
+            self.fields.date.appendTo($create.find('.create_date .o_td_field'))
             self.$('.create').append($create);
 
             function addRequiredStyle(widget) {
@@ -888,6 +895,7 @@ var ManualLineRenderer = LineRenderer.extend({
     _renderCreate: function (state) {
         this._super(state);
         this.$('.create .create_journal_id').show();
+        this.$('.create .create_date').removeClass('d-none')
         this.$('.create .create_journal_id .o_input').addClass('o_required_modifier');
     },
 
