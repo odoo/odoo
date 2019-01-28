@@ -14,19 +14,15 @@ class ReportStockForecat(models.Model):
     cumulative_quantity = fields.Float(string='Cumulative Quantity', readonly=True)
     quantity = fields.Float(readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
+    picking_id = fields.Many2one('stock.picking', string='Picking', readonly=True)
     reference = fields.Char('Reference')
 
     @api.model_cr
     def init(self):
         tools.drop_view_if_exists(self._cr, 'report_stock_forecast')
-        self._cr.execute("""CREATE or REPLACE VIEW report_stock_forecast AS (SELECT
-            row_number() OVER (ORDER BY final.date,final.id) AS id,
-            product_id as product_id,
-            date(final.date) as date,
-            sum(product_qty) AS quantity,
-            sum(sum(product_qty)) OVER (PARTITION BY final.product_id, final.company_id ORDER BY final.date) AS cumulative_quantity,
-            reference,
-            final.company_id
+        query = """
+        CREATE or REPLACE VIEW report_stock_forecast AS (SELECT
+            %s
         FROM
             (SELECT
                 MIN(id) as id,
@@ -129,12 +125,45 @@ class ReportStockForecat(models.Model):
             GROUP BY
                 MAIN.product_id,SUB.date, MAIN.date, MAIN.company_id,MAIN.reference
             ) AS FINAL
-        LEFT JOIN
-            stock_picking sp ON final.reference=sp.name
+        %s
         WHERE
             final.product_qty != 0 OR final.reference = 'Starting Inventory'
-        GROUP BY
-            product_id,final.date,final.id,final.company_id,final.reference,sp.priority,sp.date,sp.id)""")
+        %s
+        )
+        """ % (self._select(), self._left_join(), self._groupby())
+        self.env.cr.execute(query)
+
+    @api.model
+    def _select(self):
+        return """
+            row_number() OVER (ORDER BY final.date,final.id) AS id,
+            final.product_id as product_id,
+            date(final.date) as date,
+            sum(final.product_qty) AS quantity,
+            sum(sum(final.product_qty)) OVER (PARTITION BY final.product_id, final.company_id ORDER BY final.date) AS cumulative_quantity,
+            reference,
+            sp.id as picking_id,
+            final.company_id
+        """
+
+    @api.model
+    def _left_join(self):
+        return """LEFT JOIN
+            stock_picking sp ON final.reference=sp.name
+        """
+
+    @api.model
+    def _groupby(self):
+        return """GROUP BY
+            final.product_id,
+            final.date,
+            final.id,
+            final.company_id,
+            final.reference,
+            sp.priority,
+            sp.date,
+            sp.id
+        """
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
