@@ -26,7 +26,7 @@
             <div id="wrapwrap" t-attf-class="#{pageName or ''} #{direction == 'rtl' and 'o_rtl' or ''} #{'o_portal' if is_portal else ''}">
                 <header>
                     <nav class="navbar navbar-expand-md navbar-light bg-light">
-                        <div class="container">
+                        <div class="container-fluid p-0">
                             <a href="/" class="navbar-brand logo">
                                 <img t-att-src="'/logo.png?company=%s' % res_company.id" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
                             </a>
