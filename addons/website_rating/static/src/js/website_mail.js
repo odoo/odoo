@@ -1,27 +1,122 @@
 odoo.define('website_rating.thread', function(require) {
     'use strict';
 
+    var base = require('web_editor.base');
     var ajax = require('web.ajax');
     var core = require('web.core');
     var Widget = require('web.Widget');
+    var rootWidget = require('web_editor.root_widget');
+
+    var session = require('web.session');
 
     var qweb = core.qweb;
     var _t = core._t;
 
+    var PortalComposer = require('portal.chatter').PortalComposer;
     var PortalChatter = require('portal.chatter').PortalChatter;
 
     /**
-     * Extends Frontend Chatter to handle rating
+     * PortalComposer
+     *
+     * Extends Frontend Composer to handle rating submission
      */
-    PortalChatter.include({
-        events: _.extend({}, PortalChatter.prototype.events, {
+    PortalComposer.include({
+        events: _.extend({}, PortalComposer.prototype.events, {
             "mousemove .stars i" : "_onMoveStar",
             "mouseleave .stars i" : "_onMoveOutStar",
             "click .stars" : "_onClickStar",
             "mouseleave .stars" : "_onMouseleaveStar",
+        }),
+
+        init: function(parent, options){
+            this._super.apply(this, arguments);
+            // star input widget
+            this.labels = {
+                '0': "",
+                '1': _t("I hate it"),
+                '2': _t("I don't like it"),
+                '3': _t("It's okay"),
+                '4': _t("I like it"),
+                '5': _t("I love it"),
+            };
+            this.user_click = false; // user has click or not
+            this.set("star_value", this.options.rating_default_value);
+            this.on("change:star_value", this, this._onChangeStarValue);
+        },
+        start: function(){
+            var self = this;
+            return this._super.apply(this, arguments).then(function(){
+                // rating stars
+                self.$input = self.$('input[name="rating_value"]');
+                self.$star_list = self.$('.stars').find('i');
+                self.set("star_value", self.options.rating_default_value); // set the default value to trigger the display of star widget
+            });
+        },
+
+        //--------------------------------------------------------------------------
+        // Handlers
+        //--------------------------------------------------------------------------
+
+        /**
+         * @private
+         * @param {MouseEvent} event
+         */
+        _onClickStar: function(e){
+            this.user_click = true;
+            this.$input.val(this.get("star_value"));
+        },
+        /**
+         * @private
+         */
+        _onChangeStarValue: function(){
+            var val = this.get("star_value");
+            var index = Math.floor(val);
+            var decimal = val - index;
+            // reset the stars
+            this.$star_list.removeClass('fa-star fa-star-half-o').addClass('fa-star-o');
+
+            this.$('.stars').find("i:lt("+index+")").removeClass('fa-star-o fa-star-half-o').addClass('fa-star');
+            if(decimal){
+                this.$('.stars').find("i:eq("+(index)+")").removeClass('fa-star-o fa-star fa-star-half-o').addClass('fa-star-half-o');
+            }
+
+            this.$('.rate_text .label').text(this.labels[index]);
+        },
+        _onMouseleaveStar: function(e){
+            this.$('.rate_text').hide();
+        },
+        /**
+         * @private
+         * @param {MouseEvent} event
+         */
+        _onMoveStar: function(e){
+            var index = this.$('.stars i').index(e.currentTarget);
+            this.$('.rate_text').show();
+            this.set("star_value", index+1);
+        },
+        /**
+         * @private
+         */
+        _onMoveOutStar: function(){
+            if(!this.user_click){
+                this.set("star_value", parseInt(this.$input.val()));
+            }
+            this.user_click = false;
+        },
+    });
+
+
+    /**
+     * PortalChatter
+     *
+     * Extends Frontend Chatter to handle rating
+     */
+    PortalChatter.include({
+        events: _.extend({}, PortalChatter.prototype.events, {
             "click .o_website_rating_select": "_onClickStarDomain",
             "click .o_website_rating_select_text": "_onClickStarDomainReset",
         }),
+        xmlDependencies: (PortalChatter.prototype.xmlDependencies || []).concat(['/website_rating/static/src/xml/website_mail.xml', '/website_rating/static/src/xml/portal_chatter.xml']),
 
         init: function(parent, options){
             this._super.apply(this, arguments);
@@ -36,18 +131,6 @@ odoo.define('website_rating.thread', function(require) {
             this.set('rating_card_values', {});
             this.set('rating_value', false);
             this.on("change:rating_value", this, this._onChangeRatingDomain);
-            // rating star
-            this.labels = {
-                '0': "",
-                '1': _t("I hate it"),
-                '2': _t("I don't like it"),
-                '3': _t("It's okay"),
-                '4': _t("I like it"),
-                '5': _t("I love it"),
-            };
-            this.user_click = false; // user has click or not
-            this.set("star_value", this.options.rating_default_value);
-            this.on("change:star_value", this, this._onChangeStarValue);
         },
         willStart: function(){
             var self = this;
@@ -68,15 +151,6 @@ odoo.define('website_rating.thread', function(require) {
                     });
                     self.set('rating_card_values', rating_data);
                 }
-            });
-        },
-        start: function(){
-            var self = this;
-            return this._super.apply(this, arguments).then(function(){
-                // rating stars
-                self.$input = self.$('input[name="rating_value"]');
-                self.$star_list = self.$('.stars').find('i');
-                self.set("star_value", self.options.rating_default_value); // set the default value to trigger the display of star widget
             });
         },
 
@@ -129,9 +203,6 @@ odoo.define('website_rating.thread', function(require) {
         // Private
         //--------------------------------------------------------------------------
 
-        _loadTemplates: function(){
-            return $.when(this._super(), ajax.loadXML('/website_rating/static/src/xml/website_mail.xml', qweb));
-        },
         _messageFetchPrepareParams: function(){
             var params = this._super.apply(this, arguments);
             if(this.options['display_rating']){
@@ -144,14 +215,6 @@ odoo.define('website_rating.thread', function(require) {
         // Handlers
         //--------------------------------------------------------------------------
 
-        /**
-         * @private
-         * @param {MouseEvent} event
-         */
-        _onClickStar: function(e){
-            this.user_click = true;
-            this.$input.val(this.get("star_value"));
-        },
         /**
          * @private
          * @param {MouseEvent} event
@@ -179,6 +242,7 @@ odoo.define('website_rating.thread', function(require) {
          */
         _onClickStarDomainReset: function(e){
             e.stopPropagation();
+            e.preventDefault();
             this.set('rating_value', false);
             this.$('.o_website_rating_select_text').css('visibility', 'hidden');
             this.$('.o_website_rating_select').css({
@@ -195,43 +259,62 @@ odoo.define('website_rating.thread', function(require) {
             }
             this._changeCurrentPage(1, domain);
         },
-        /**
-         * @private
-         */
-        _onChangeStarValue: function(){
-            var val = this.get("star_value");
-            var index = Math.floor(val);
-            var decimal = val - index;
-            // reset the stars
-            this.$star_list.removeClass('fa-star fa-star-half-o').addClass('fa-star-o');
+    });
 
-            this.$('.stars').find("i:lt("+index+")").removeClass('fa-star-o fa-star-half-o').addClass('fa-star');
-            if(decimal){
-                this.$('.stars').find("i:eq("+(index)+")").removeClass('fa-star-o fa-star fa-star-half-o').addClass('fa-star-half-o');
-            }
 
-            this.$('.rate_text .label').text(this.labels[index]);
-        },
-        _onMouseleaveStar: function(e){
-            this.$('.rate_text').hide();
+    /**
+     * RatingPopupComposer
+     *
+     * Display the rating average with a static star widget, and open
+     * a popup with the portal composer when clicking on it.
+     **/
+    var RatingPopupComposer = Widget.extend({
+        template: 'website_rating.PopupComposer',
+        xmlDependencies: [
+            '/portal/static/src/xml/portal_chatter.xml',
+            '/website_rating/static/src/xml/website_mail.xml',
+            '/website_rating/static/src/xml/portal_chatter.xml',
+        ],
+
+        init: function(parent, options){
+            this._super.apply(this, arguments);
+            this.rating_avg = Math.round(options['ratingAvg'] * 100) / 100 || 0.0;
+            this.rating_total = options['ratingTotal'] || 0.0;
+
+            this.options = _.defaults({}, options, {
+                'token': false,
+                'res_model': false,
+                'res_id': false,
+                'pid': 0,
+                'display_composer': !session.is_website_user,
+                'display_rating': true,
+                'csrf_token': odoo.csrf_token,
+                'user_id': session.user_id,
+            });
         },
         /**
-         * @private
-         * @param {MouseEvent} event
+         * @override
          */
-        _onMoveStar: function(e){
-            var index = this.$('.stars i').index(e.currentTarget);
-            this.$('.rate_text').show();
-            this.set("star_value", index+1);
-        },
-        /**
-         * @private
-         */
-        _onMoveOutStar: function(){
-            if(!this.user_click){
-                this.set("star_value", parseInt(this.$input.val()));
-            }
-            this.user_click = false;
+        start: function () {
+            var defs = [];
+            defs.push(this._super.apply(this, arguments));
+
+            // instanciate and insert composer widget
+            this._composer = new PortalComposer(this, this.options);
+            defs.push(this._composer.replace(this.$('.o_portal_chatter_composer')));
+
+            return $.when.apply($, defs);
         },
     });
+
+
+base.ready().then(function () {
+    $('.o_rating_popup_composer').each(function (index) {
+        var $elem = $(this);
+        var rating_popup = new RatingPopupComposer(rootWidget, $elem.data());
+        rating_popup.appendTo($elem);
+    });
+});
+
+
 });
