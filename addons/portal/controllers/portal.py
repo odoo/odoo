@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import math
+import os
 import re
 
 from werkzeug import urls
@@ -185,6 +187,27 @@ class CustomerPortal(Controller):
         response = request.render("portal.portal_my_details", values)
         response.headers['X-Frame-Options'] = 'DENY'
         return response
+
+    @route(['/portal/sign/get_fonts'], type='json', auth='public')
+    def get_fonts(self):
+        """This route will return a list of base64 encoded fonts.
+
+        Those fonts will be proposed to the user when creating a signature
+        using mode 'auto'.
+
+        :return: base64 encoded fonts
+        :rtype: list
+        """
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        fonts_directory = os.path.join(current_dir, '..', 'static', 'font', 'sign')
+        font_filenames = sorted(os.listdir(fonts_directory))
+
+        fonts = []
+        for filename in font_filenames:
+            font_file = open(os.path.join(fonts_directory, filename), 'rb')
+            font = base64.b64encode(font_file.read())
+            fonts.append(font)
+        return fonts
 
     def details_form_validate(self, data):
         error = dict()
