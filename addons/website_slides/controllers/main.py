@@ -65,7 +65,7 @@ class WebsiteSlides(http.Controller):
             'most_viewed_slides': most_viewed_slides,
             'related_slides': related_slides,
             'user': request.env.user,
-            'is_public_user': request.env.user == request.website.user_id,
+            'is_public_user': request.website.is_public_user(),
             'comments': slide.channel_id.can_see_full and slide.website_message_ids or [],
             'private': not slide.channel_id.can_see_full,
         }
@@ -88,7 +88,7 @@ class WebsiteSlides(http.Controller):
         return request.render('website_slides.channels', {
             'channels': channels,
             'user': request.env.user,
-            'is_public_user': request.env.user == request.website.user_id
+            'is_public_user': request.website.is_public_user(),
         })
 
     def sitemap_slide(env, rule, qs):
@@ -164,7 +164,7 @@ class WebsiteSlides(http.Controller):
             'sorting': sorting,
             'user': user,
             'pager': pager,
-            'is_public_user': user == request.website.user_id,
+            'is_public_user': request.website.is_public_user(),
             'display_channel_settings': not request.httprequest.cookies.get('slides_channel_%s' % (channel.id), False) and channel.can_see_full,
         }
         if search:
