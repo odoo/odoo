@@ -326,6 +326,22 @@ class WebsiteSlides(http.Controller):
             return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
         return {'url': "/slides/slide/%s" % (slide_id.id)}
 
+    @http.route(['/slides/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
+    def slide_tag_search_read(self, fields, domain):
+        can_create = request.env['slide.tag'].check_access_rights('create', raise_exception=False)
+        return {
+            'read_results': request.env['slide.tag'].search_read(domain, fields),
+            'can_create': can_create,
+        }
+
+    @http.route(['/slides/category/search_read'], type='json', auth='user', methods=['POST'], website=True)
+    def slide_category_search_read(self, fields, domain):
+        can_create = request.env['slide.category'].check_access_rights('create', raise_exception=False)
+        return {
+            'read_results': request.env['slide.category'].search_read(domain, fields),
+            'can_create': can_create,
+        }
+
     # --------------------------------------------------
     # EMBED IN THIRD PARTY WEBSITES
     # --------------------------------------------------
