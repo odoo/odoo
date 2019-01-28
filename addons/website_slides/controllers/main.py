@@ -216,7 +216,7 @@ class WebsiteSlides(http.Controller):
 
     @http.route('''/slides/slide/<model("slide.slide", "[('channel_id.can_see', '=', True), ('download_security', '=', 'public')]"):slide>/download''', type='http', auth="public", website=True)
     def slide_download(self, slide):
-        if slide.download_security == 'public' or (slide.download_security == 'user' and request.session.uid):
+        if slide.download_security == 'public' or (slide.download_security == 'user' and request.env.user and request.env.user != request.website.user_id):
             filecontent = base64.b64decode(slide.datas)
             disposition = 'attachment; filename=%s.pdf' % werkzeug.urls.url_quote(slide.name)
             return request.make_response(

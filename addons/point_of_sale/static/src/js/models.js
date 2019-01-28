@@ -741,12 +741,20 @@ exports.PosModel = Backbone.Model.extend({
             transfer.pipe(function(order_server_id){    
 
                 // generate the pdf and download it
-                self.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{ 
-                    active_ids:order_server_id,
-                }}).done(function () {
-                    invoiced.resolve();
-                    done.resolve();
-                });
+                if (order_server_id.length) {
+                    self.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{ 
+                        active_ids:order_server_id,
+                    }}).done(function () {
+                        invoiced.resolve();
+                        done.resolve();
+                    });
+                } else {
+                    // The order has been pushed separately in batch when
+                    // the connection came back.
+                    // The user has to go to the backend to print the invoice
+                    invoiced.reject({code:401, message:'Backend Invoice', data:{order: order}});
+                    done.reject();
+                }
             });
 
             return done;
