@@ -1650,10 +1650,8 @@ class MailThread(models.AbstractModel):
             partner_id = False
             email_address = tools.email_split(contact)
             if not email_address:
-                partner_ids.append(partner_id)
                 continue
             if exclude_aliases and self.env['mail.alias'].search([('alias_name', 'ilike', email_address)], limit=1):
-                partner_ids.append(partner_id)
                 continue
 
             email_address = email_address[0]
