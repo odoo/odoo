@@ -6,7 +6,6 @@ from PIL import Image
 import base64
 import datetime
 import io
-import json
 import re
 
 from werkzeug import urls
@@ -28,6 +27,7 @@ class SlidePartnerRelation(models.Model):
     channel_id = fields.Many2one('slide.channel', string="Channel", related="slide_id.channel_id", store=True, index=True)
     partner_id = fields.Many2one('res.partner', index=True, required=True)
     vote = fields.Integer('Vote', default=0)
+    completed = fields.Boolean(string='Lesson completed', default=False)
 
 
 class EmbeddedSlide(models.Model):
@@ -110,6 +110,7 @@ class Slide(models.Model):
     is_preview = fields.Boolean('Always visible', default=False)
     completion_time = fields.Float('# Hours', default=1, digits=(10, 4))
     image = fields.Binary('Image', attachment=True)
+    # TODO DBE : review image medium and small - using standard image calls (see web/image/.. route)
     image_medium = fields.Binary('Medium', compute="_get_image", store=True, attachment=True)
     image_thumb = fields.Binary('Thumbnail', compute="_get_image", store=True, attachment=True)
     # subscribers

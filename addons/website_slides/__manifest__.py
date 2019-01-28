@@ -21,7 +21,8 @@ Share and Publish Videos, Presentations and Documents'
         'website',
         'website_mail',
         'website_profile',
-        'website_rating'],
+        'website_rating'
+    ],
     'data': [
         'views/assets.xml',
         'views/res_config_settings_views.xml',
@@ -30,6 +31,7 @@ Share and Publish Videos, Presentations and Documents'
         'views/slide_slide_views.xml',
         'views/slide_channel_views.xml',
         'views/website_slides_menu_views.xml',
+        'views/website_slides_profile.xml',
         'data/website_slides_ir_data.xml',
         'data/mail_data.xml',
         'data/slide_data.xml',

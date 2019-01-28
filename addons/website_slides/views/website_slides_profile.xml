@@ -1,0 +1,148 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <template id="profile_header" name="Slides Profile Header">
+            <section class="oe_slides_box_shadow">
+                <div class="container">
+                    <div class="row">
+                        <!-- Name and breadcrumb -->
+                        <div class="float-left col-lg-8 col-md-12 col-12 mt16 mb8">
+                            <div class="row">
+                                <h3 class="mt0">
+                                    Profile
+                                </h3>
+                                <ul class="navbar-nav ml-auto float-right pt-2">
+                                    <li class="nav-item">
+                                        <a t-attf-href="/slides/#{ slug(channel) }/user/#{uid}" t-attf-class="text-dark font-weight-bold nav-link}">
+                                            <i class="fa fa-diamond text-secondary" /> <t t-esc="user_id.karma"/>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-12 col-12 pul-right mt16 mb8">
+                            <form t-attf-action="/slides/#{slug(channel)}" role="search" method="get">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="search" t-attf-placeholder="Search in #{channel.name}" t-att-value="search"/>
+                                    <span class="input-group-append">
+                                        <button class="btn btn-primary" type="submit" aria-label="Search" title="Search">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </template>
+
+        <template id="edit_cross_slides_profile_content" inherit_id="website_profile.edit_profile_content" primary="True">
+            <xpath expr="//form" position="attributes">
+                <attribute name="t-attf-action">
+                    /slides/user/#{slug(user)}/save
+                </attribute>
+            </xpath>
+        </template>
+
+        <template id="edit_slides_profile_content" inherit_id="website_profile.edit_profile_content" primary="True">
+            <xpath expr="//form" position="attributes">
+                <attribute name="t-attf-action">
+                    /slides/#{slug(channel)}/user/#{slug(user)}/save
+                </attribute>
+            </xpath>
+        </template>
+        
+        <template id="edit_slides_profile_main" name="Slides Edit Profile">
+            <t t-call="website.layout">
+                <div class="container mt16 mb32">
+                    <t t-if="channel">
+                        <t t-call="website_slides.edit_slides_profile_content"></t>
+                    </t>
+                    <t t-if="not channel">
+                        <t t-call="website_slides.edit_cross_slides_profile_content"></t>
+                    </t>
+                </div>
+            </t>
+        </template>
+
+        <template id="badge" name="Slides Badges">
+            <t t-call="website.layout">
+                <div class="container mt16 mb32">
+                    <t t-call="website_profile.badge_content">
+                    </t>
+                </div>
+            </t>
+        </template>
+
+        <template id="user_detail_header_slide" inherit_id="website_profile.user_detail_header" primary="True">
+            <xpath expr="//a[@id='edit_profile_button']" position="replace">
+                <t t-if="channel and not isinstance(channel, bool)">
+                    <a id="edit_profile_button" class="btn btn-primary o_wprofile_edit"
+                        t-if="request.env.user == user"
+                        t-attf-href="/slides/user/edit?channel_id=#{channel.id}"><b>EDIT PROFILE</b></a>
+                </t>
+                <t t-else="">
+                    <a id="edit_profile_button" class="btn btn-primary o_wprofile_edit"
+                        t-if="request.env.user == user"
+                        t-attf-href="/slides/user/edit"><b>EDIT PROFILE</b></a>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="user_detail_content" inherit_id="website_profile.user_detail_content">
+            <xpath expr="//div[@id='profile_about_badge']" position="before">
+                <t t-if="channel">
+                    <div class="mb32">
+                        <h4><i class="fa fa-graduation-cap"/> Courses</h4>
+                        <t t-call="website_slides.display_course"/>
+                    </div>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="user_detail_full">
+            <t t-call="website.layout">
+                <t t-call="website_slides.profile_header">
+                </t>
+                <t t-call="website_slides.user_detail_header_slide"></t>
+                <t t-call="website_slides.user_detail_content"></t>
+            </t>
+        </template>
+
+        <template id="user_detail_cross_full">
+            <t t-call="website.layout">
+                <t t-call="website_slides.user_detail_header_slide"></t>
+                <t t-call="website_slides.user_detail_content"></t>
+            </t>
+        </template>
+
+        <template id="display_course">
+            <t t-if="courses">
+                <div class="row">
+                    <div class="col-lg-6 o_wprofile_slides_card" t-foreach="courses" t-as="course">
+                        <div class="card-body o_wprofile_slides_course_card_body o_wprofile_bb_grey" t-attf-onclick="location.href='/slides/#{slug(course)}';">
+                            <div class="row">
+                                <div class="o_wprofile_slides_course_img">
+                                    <img class="o_img_small mb-3" t-attf-src="/web/image/slide.channel/#{course.id}/image_small"/>
+                                </div>
+                                <div class="col-10 o_wprofile_slides_title">
+                                    <b t-field="course.name"/>
+                                </div>
+                                <div class="o_wprofile_slide_course_rating">
+                                    <t t-call="website_rating.rating_widget_stars_static">
+                                        <t t-set="rating_avg" t-value="course.rating_avg"/>
+                                        <t t-set="rating_count" t-value="course.rating_count"/>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <b>No followed course yet!</b>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -11,13 +11,14 @@ from odoo.http import request
 from odoo.osv import expression
 
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.tools import html2plaintext
 
 _logger = logging.getLogger(__name__)
 
 
-class WebsiteSlides(http.Controller):
+class WebsiteSlides(WebsiteProfile):
     _slides_per_page = 12
     _slides_per_list = 20
     _order_by_criterion = {
@@ -34,6 +35,14 @@ class WebsiteSlides(http.Controller):
             loc = '/slides/%s' % slug(channel)
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
+
+    def _prepare_user_values(self, **kwargs):
+        values = super(WebsiteSlides, self)._prepare_user_values(**kwargs)
+        if kwargs.get('channel'):
+            values['channel'] = kwargs.get('channel')
+        elif kwargs.get('channel_id'):
+            values['channel'] = request.env['slide.channel'].browse(kwargs.pop('channel_id'))
+        return values
 
     def _set_viewed_slide(self, slide, view_mode):
         slide_key = '%s_%s' % (view_mode, request.session.sid)
@@ -381,3 +390,99 @@ class WebsiteSlides(http.Controller):
         except AccessError: # TODO : please, make it clean one day, or find another secure way to detect
                             # if the slide can be embedded, and properly display the error message.
             return request.render('website_slides.embed_slide_forbidden', {})
+
+    # Profile
+    # ---------------------------------------------------
+    def _prepare_open_slide_user(self, user):
+        courses = request.env['slide.channel.partner'].sudo().search([('partner_id', '=', user.partner_id.id)]).channel_id
+
+        values = {
+            'uid': request.env.user.id,
+            'user': user,
+            'main_object': user,
+            'courses': courses,
+            'count_courses': len(courses),
+            'is_profile_page': True,
+        }
+        return values
+
+    @http.route(['/slides/user/<int:user_id>'], type='http', auth="public", website=True)
+    def open_cross_slide_user(self, user_id=0, **post):
+        user = request.env['res.users'].sudo().browse([user_id])
+
+        if post.get('channel'):
+            channels = post.get('channel')
+        elif post.get('channel_id'):
+            channels = request.env['slide.channel'].browse(int(post.get('channel_id')))
+        else:
+            channels = request.env['slide.channel'].search([])
+
+        values = {
+            'user': request.env.user,
+            'is_public_user': request.env.user.id == request.website.user_id.id,
+            'notifications': self._get_notifications(),
+            'header': post.get('header', dict()),
+            'searches': post.get('searches', dict()),
+            'validation_email_sent': request.session.get('validation_email_sent', False),
+            'validation_email_done': request.session.get('validation_email_done', False),
+            'channel': channels[0] if len(channels) == 1 else True,
+        }
+        values.update(self._prepare_open_slide_user(user))
+
+        return request.render("website_slides.user_detail_cross_full", values)
+
+    @http.route(['/slides/<model("slide.channel"):channel>/user/<int:user_id>'], type='http', auth="public", website=True)
+    def open_slide_user(self, channel, user_id=0, **post):
+        user = request.env['res.users'].sudo().browse(user_id)
+        current_user = request.env.user.sudo()
+
+        # Users with high karma can see users with karma <= 0 for
+        # moderation purposes, IFF they have posted something (see below)
+        if (not user or (user.karma < 1 and current_user.karma < channel.karma_unlink_all)):
+            return werkzeug.utils.redirect("/slides/%s" % slug(channel))
+        values = self._prepare_user_values(channel=channel, **post)
+
+        values.update(self._prepare_open_slide_user(user))
+        return request.render("website_slides.user_detail_full", values)
+
+    @http.route('/slides/user/edit', type='http', auth="user", website=True)
+    def edit_slide_profile(self, **kwargs):
+        countries = request.env['res.country'].search([])
+        if kwargs.get('channel_id'):
+            values = self._prepare_user_values(channel_id=int(kwargs.get('channel_id')), searches=kwargs)
+        else:
+            values = self._prepare_user_values(searches=kwargs)
+        values.update({
+            'email_required': kwargs.get('email_required'),
+            'countries': countries,
+            'notifications': self._get_notifications(),
+        })
+        return request.render("website_slides.edit_slides_profile_main", values)
+
+    @http.route('/slides/user/<model("res.users"):user>/save', type='http', auth="user", methods=['POST'], website=True)
+    def save_edited_profile_cross_slide(self, user, **kwargs):
+        values = self._prepare_save_edited_profile_values(user, **kwargs)
+        user.write(values)
+        return werkzeug.utils.redirect("/slides/user/%d" % (user.id))
+
+    @http.route('/slides/<model("slide.channel"):channel>/user/<model("res.users"):user>/save', type='http', auth="user", methods=['POST'], website=True)
+    def save_edited_profile_slide(self, channel, user, **kwargs):
+        values = self._prepare_save_edited_profile_values(user, **kwargs)
+        user.write(values)
+        return werkzeug.utils.redirect("/slides/user/%d?channel_id=%d" % (user.id, channel.id))
+
+    # Badges
+    # --------------------------------------------------
+
+    # Do we have to create badges for slides ? or use the forum badges ?
+    @http.route('''/slides/<model("slide.channel", "[('website_id', 'in', (False, current_website_id))]"):channel>/badge''', type='http', auth="public", website=True)
+    def slides_badges(self, channel, **searches):
+        Badge = request.env['gamification.badge']
+        # badges = Badge.sudo().search([('challenge_ids.category', '=', 'slides')])
+        badges = Badge.sudo().search([])
+        badges = sorted(badges, key=lambda b: b.stat_count_distinct, reverse=True)
+        values = self._prepare_user_values(channel=channel, searches={'badges': True})
+        values.update({
+            'badges': badges,
+        })
+        return request.render("website_profile.badge_main", values)
