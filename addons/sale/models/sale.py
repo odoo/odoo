@@ -177,7 +177,8 @@ class SaleOrder(models.Model):
     team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True, default=_get_default_team, oldname='section_id')
 
     signature = fields.Binary('Signature', help='Signature received through the portal.', copy=False, attachment=True)
-    signed_by = fields.Char('Signed by', help='Name of the person that signed the SO.', copy=False)
+    signed_by = fields.Char('Signed By', help='Name of the person that signed the SO.', copy=False)
+    signed_on = fields.Datetime('Signed On', help='Date of the signature.', copy=False)
 
     commitment_date = fields.Datetime('Commitment Date',
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
@@ -572,6 +573,7 @@ class SaleOrder(models.Model):
             'state': 'draft',
             'signature': False,
             'signed_by': False,
+            'signed_on': False,
         })
 
     @api.multi

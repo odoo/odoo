@@ -1,35 +1,35 @@
 <templates id="template" xml:space="preserve">
+
+    <!-- Template for the widget SignatureForm. -->
     <t t-name="portal.portal_signature">
-        <form id="o_portal_sign_accept" method="POST">
-            <input type="hidden" name="csrf_token" t-att-value="widget.options.csrf_token"/>
-            <div class="form-group">
-                <label class="col-form-label" for="name">Your Name</label>
-                <input type="text" name="partner_name" id="o_portal_sign_name" class="form-control" t-att-value="widget.options.partnerName"/>
-            </div>
-            <div class="card mt16 mb0" id="o_portal_sign_draw">
-                <div class="card-header">
-                    <div class="float-right">
-                        <a role="button" id="o_portal_sign_clear" class="btn btn-sm">Clear</a>
-                    </div>
-                    <strong>Draw your signature</strong>
+        <form method="POST">
+            <input type="hidden" name="csrf_token" t-att-value="widget.csrf_token"/>
+            <div class="o_portal_sign_name_and_signature"/>
+            <div class="o_portal_sign_controls my-3">
+                <div class="text-center my-3">
+                    <button type="submit" class="o_portal_sign_submit btn btn-primary">
+                        <i class="fa fa-check"/>
+                        <t t-esc="widget.sendLabel"/>
+                    </button>
                 </div>
-                <div id="o_portal_signature" class="card-body" style="padding: 0"/>
-            </div>
-            <div class="mt16 clearfix">
-              <button type="submit" class="btn btn-primary o_portal_sign_submit float-right"><t t-esc="widget.options.signLabel or 'Accept &amp; Sign'"/></button>
             </div>
         </form>
     </t>
+    <!-- Template when the sign rpc is successful. -->
     <t t-name="portal.portal_signature_success">
         <div class="alert alert-success" role="status">
-            <strong>Thank You !</strong><br />
-            <span t-esc="widget.success"/>
-            <a t-att-href="widget.redirect_url">Click here to see your document.</a>
+            <span t-if="widget.message" t-esc="widget.message"/>
+            <span t-else="">Thank You!</span>
+            <a t-if="widget.redirect_url" t-att-href="widget.redirect_url">
+                <t t-if="widget.redirect_message" t-esc="widget.redirect_message"/>
+                <t t-else="">Click here to see your document.</t>
+            </a>
         </div>
     </t>
+    <!-- Template when the sign rpc returns an error. -->
     <t t-name="portal.portal_signature_error">
-        <div class="o_portal_sign_error_msg">
-            <t t-esc="message"/>
+        <div class="o_portal_sign_error_msg alert alert-danger" role="status">
+            <t t-esc="widget.error"/>
         </div>
     </t>
 </templates>
