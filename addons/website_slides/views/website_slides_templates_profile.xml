@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+<odoo><data>
+    <!--Private profile-->
+    <template id="private_profile" inherit_id="website_profile.private_profile">
+        <xpath expr="//div[@id='private_profile_return_link_container']" position="inside">
+            <t t-if="request.params.get('channel_id')">
+                <p><a t-attf-href="/slides/course-#{request.params.get('channel_id')}">Return to the course.</a></p>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="user_profile_content" inherit_id="website_profile.user_profile_content">
+        <xpath expr="//div[@id='profile_about_badge']" position="before">
+            <t t-if="channel">
+                <div class="mb32">
+                    <h4><i class="fa fa-graduation-cap"/> Courses</h4>
+                    <t t-call="website_slides.display_course"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="display_course" name="Profile Courses">
+        <t t-if="courses">
+            <div class="row">
+                <div class="col-lg-6 o_wprofile_slides_card" t-foreach="courses" t-as="course">
+                    <div class="card-body o_wprofile_slides_course_card_body o_wprofile_bb_grey" t-attf-onclick="location.href='/slides/#{slug(course)}';">
+                        <div class="row">
+                            <div class="o_wprofile_slides_course_img">
+                                <img class="o_wprofile_img_small mb-3" t-attf-src="/web/image/slide.channel/#{course.id}/image_small"/>
+                            </div>
+                            <div class="col-10 o_wprofile_slides_title">
+                                <b t-field="course.name"/>
+                            </div>
+                            <div class="o_wprofile_slide_course_rating">
+                                <t t-call="website_rating.rating_widget_stars_static">
+                                    <t t-set="rating_avg" t-value="course.rating_avg"/>
+                                    <t t-set="rating_count" t-value="course.rating_count"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <t t-else="">
+            <b>No followed course yet!</b>
+        </t>
+    </template>
+</data></odoo>
