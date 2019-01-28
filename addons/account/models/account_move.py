@@ -980,8 +980,9 @@ class AccountMoveLine(models.Model):
                     raise UserError(_("Either pass both debit and credit or none."))
                 if 'date' not in vals:
                     vals['date'] = self._context.get('date_p') or fields.Date.today()
-                    if vals['date'] < date:
-                        date = vals['date']
+                vals['date'] = fields.Date.to_date(vals['date'])
+                if vals['date'] and vals['date'] < date:
+                    date = vals['date']
                 if 'name' not in vals:
                     vals['name'] = self._context.get('comment') or _('Write-Off')
                 if 'analytic_account_id' not in vals:

@@ -854,6 +854,7 @@ var StatementModel = BasicModel.extend({
                                 'tax_id': [tax.id, null],
                                 'amount': tax.amount,
                                 'label': tax.name,
+                                'date': prop.date,
                                 'account_id': tax.account_id ? [tax.account_id, null] : prop.account_id,
                                 'analytic': tax.analytic,
                                 'is_tax': true,
@@ -1067,6 +1068,7 @@ var StatementModel = BasicModel.extend({
      */
     _formatQuickCreate: function (line, values) {
         values = values || {};
+        var today = new moment().utc().format();
         var account = this._formatNameGet(values.account_id);
         var formatOptions = {
             currency_id: line.st_line.currency_id,
@@ -1083,6 +1085,7 @@ var StatementModel = BasicModel.extend({
             'tax_id': this._formatNameGet(values.tax_id),
             'debit': 0,
             'credit': 0,
+            'date': values.date ? values.date : field_utils.parse.date(today, {}, {isUTC: true}),
             'base_amount': values.amount_type !== "percentage" ?
                 (amount) : line.balance.amount * values.amount / 100,
             'percent': values.amount_type === "percentage" ? values.amount : null,
@@ -1233,7 +1236,7 @@ var StatementModel = BasicModel.extend({
  * datas allowing manual reconciliation
  */
 var ManualModel = StatementModel.extend({
-    quickCreateFields: ['account_id', 'journal_id', 'amount', 'analytic_account_id', 'label', 'tax_id', 'force_tax_included', 'analytic_tag_ids'],
+    quickCreateFields: ['account_id', 'journal_id', 'amount', 'analytic_account_id', 'label', 'tax_id', 'force_tax_included', 'analytic_tag_ids', 'date'],
 
     //--------------------------------------------------------------------------
     // Public
@@ -1627,6 +1630,12 @@ var ManualModel = StatementModel.extend({
                 context: this.context,
             })
             .then(this._formatMoveLine.bind(this, handle));
+    },
+    
+    _formatToProcessReconciliation: function (line, prop) {
+        var result = this._super(line, prop);
+        result['date'] = prop.date;
+        return result;
     },
 });
 
