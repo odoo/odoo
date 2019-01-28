@@ -335,7 +335,7 @@ class TestReconciliation(AccountingTestCase):
         self.assertEquals(invoice.state, 'paid', 'The invoice should be paid by now')
         reconcile = None
         for payment in invoice.payment_ids:
-            reconcile = payment.reconcile_id
+            reconcile = payment.reconcile_model_id
             break
         # The invoice should be reconciled (entirely, not a partial reconciliation)
         self.assertTrue(reconcile, 'The invoice should be totally reconciled')

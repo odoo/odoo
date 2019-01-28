@@ -61,6 +61,23 @@ class AccountMove(models.Model):
                 move.matched_percentage = 1.0
             else:
                 move.matched_percentage = total_reconciled / total_amount
+                
+    @api.multi
+    @api.depends('line_ids.reconcile_model_id')
+    def _compute_reconcile_model(self):
+        for move in self:
+            move.reconcile_model_id = move.line_ids.mapped('reconcile_model_id')
+    
+    @api.model
+    @api.depends('reconcile_model_id')
+    def _search_reconcile_model(self, operator, operand):
+        if operand:
+            rmi = self.search([('line_ids.reconcile_model_id', operator, operand)])
+        else:
+            rmi = self.search([('line_ids', operator, operand)])
+        if rmi:
+            return [('id', 'in', rmi.ids)]
+        return [('id', '=', False)]
 
     @api.one
     @api.depends('company_id')
@@ -106,6 +123,7 @@ class AccountMove(models.Model):
     narration = fields.Text(string='Internal Note')
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True)
     matched_percentage = fields.Float('Percentage Matched', compute='_compute_matched_percentage', digits=0, store=True, readonly=True, help="Technical field used in cash basis method")
+    reconcile_model_id = fields.Many2many('account.reconcile.model', compute='_compute_reconcile_model', search='_search_reconcile_model', string="Reconciliation Model", readonly=True)
     # Dummy Account field to search on account.move by account_id
     dummy_account_id = fields.Many2one('account.account', related='line_ids.account_id', string='Account', store=False, readonly=True)
     tax_cash_basis_rec_id = fields.Many2one(
@@ -609,6 +627,7 @@ class AccountMoveLine(models.Model):
     statement_id = fields.Many2one('account.bank.statement', related='statement_line_id.statement_id', string='Statement', store=True,
         help="The bank statement used for bank reconciliation", index=True, copy=False)
     reconciled = fields.Boolean(compute='_amount_residual', store=True)
+    reconcile_model_id = fields.Many2one('account.reconcile.model', string="Reconciliation Model", copy=False)
     full_reconcile_id = fields.Many2one('account.full.reconcile', string="Matching Number", copy=False, index=True)
     matched_debit_ids = fields.One2many('account.partial.reconcile', 'credit_move_id', String='Matched Debits',
         help='Debit journal items that are matched with this journal item.')
@@ -1021,6 +1040,7 @@ class AccountMoveLine(models.Model):
             return True
         rec_move_ids = self.env['account.partial.reconcile']
         for account_move_line in self:
+            account_move_line.reconcile_model_id = False
             for invoice in account_move_line.payment_id.invoice_ids:
                 if invoice.id == self.env.context.get('invoice_id') and account_move_line in invoice.payment_move_line_ids:
                     account_move_line.payment_id.write({'invoice_ids': [(3, invoice.id, None)]})
