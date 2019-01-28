@@ -170,3 +170,59 @@ class TestAccountCustomerInvoice(AccountTestUsers):
         ))
 
         self.assertEquals(invoice.amount_untaxed, sum([x.base for x in invoice.tax_line_ids]))
+
+    def test_customer_invoice_tax_refund(self):
+        company = self.env.user.company_id
+        tax_account = self.env['account.account'].create({
+            'name': 'TAX',
+            'code': 'TAX',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': company.id,
+        })
+
+        tax_refund_account = self.env['account.account'].create({
+            'name': 'TAX_REFUND',
+            'code': 'TAX_R',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': company.id,
+        })
+
+        journalrec = self.env['account.journal'].search([('type', '=', 'sale')])[0]
+        partner3 = self.env.ref('base.res_partner_3')
+        account_id = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id
+
+        tax = self.env['account.tax'].create({
+            'name': 'Tax 15.0',
+            'amount': 15.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'account_id': tax_account.id,
+            'refund_account_id': tax_refund_account.id
+        })
+
+        invoice_line_data = [
+            (0, 0,
+                {
+                    'product_id': self.env.ref('product.product_product_1').id,
+                    'quantity': 40.0,
+                    'account_id': account_id,
+                    'name': 'product test 1',
+                    'discount': 10.00,
+                    'price_unit': 2.27,
+                    'invoice_line_tax_ids': [(6, 0, [tax.id])],
+                }
+             )]
+
+        invoice = self.env['account.invoice'].create(dict(
+            name="Test Customer Invoice",
+            reference_type="none",
+            journal_id=journalrec.id,
+            partner_id=partner3.id,
+            invoice_line_ids=invoice_line_data
+        ))
+
+        invoice.action_invoice_open()
+
+        refund = invoice.refund()
+        self.assertEqual(invoice.tax_line_ids.mapped('account_id'), tax_account)
+        self.assertEqual(refund.tax_line_ids.mapped('account_id'), tax_refund_account)
