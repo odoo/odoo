@@ -88,7 +88,7 @@
                             / <a t-attf-href="/slides/#{slug(channel)}/category/#{slug(category)}" t-esc="category.name"/>
                         </t>
                         <!-- Public user has not right to create/write on slide -->
-                        <t t-if="channel.can_upload and not is_public_user">
+                        <t t-if="channel.can_see and channel.can_upload and not is_public_user">
                             <a role="button" class="btn btn-primary oe_slide_js_upload" title="Upload Presentation" t-attf-channel_id="#{channel.id}" aria-label="Upload Presentation" href="#">
                                 <i class="fa fa-cloud-upload"></i> Upload
                             </a>
@@ -233,13 +233,13 @@
                                 <h1>No presentation published yet.</h1>
                                 <p>
                                     The <i><t t-esc="channel.name"/></i> is empty.
-                                    <span t-if="can_upload">
+                                    <span t-if="channel.can_see and channel.can_upload">
                                         Upload PDF presentations, documents, videos or infographic using the button below.
                                     </span>
                                 </p>
                                 <p>
                                     <!-- Public user has not right to create/write on slide-->
-                                    <a role="button" t-if="can_upload and not is_public_user" class="btn btn-primary oe_slide_js_upload" t-attf-channel_id="#{channel.id}" aria-label="Upload Presentation" title="Upload Presentation" href="#">
+                                    <a role="button" t-if="channel.can_see and channel.can_upload and not is_public_user" class="btn btn-primary oe_slide_js_upload" t-attf-channel_id="#{channel.id}" aria-label="Upload Presentation" title="Upload Presentation" href="#">
                                         <i class="fa fa-cloud-upload"></i> Upload
                                     </a>
                                 </p>
@@ -436,28 +436,22 @@
                                 </div>
                                 <!-- LikeButton widget -->
                                 <div class="text-muted mt4">
-                                    <div class="float-right mb16 text-right">
+                                    <div class="float-right mb16 text-right o_wslides_like">
                                         <span
-                                            class="oe_slide_js_like"
-                                            data-href="/slides/slide/like"
-                                            t-att-data-user-id="user.id"
-                                            t-att-data-public-user="is_public_user"
+                                            class="o_wslides_like_up"
                                             t-att-data-slide-id="slide.id"
                                             tabindex="0"
                                             data-toggle="popover">
                                             <i class="fa fa-thumbs-up fa-1x" role="img" aria-label="Likes" title="Likes"/>
-                                            <span class="o_wslides_like_dislike_count" t-esc="slide.likes"/>
+                                            <span t-esc="slide.likes"/>
                                         </span>
                                         <span
-                                            class="oe_slide_js_unlike"
-                                            data-href="/slides/slide/dislike"
-                                            t-att-data-user-id="user.id"
-                                            t-att-data-public-user="is_public_user"
+                                            class="o_wslides_like_down"
                                             t-att-data-slide-id="slide.id"
                                             tabindex="0"
                                             data-toggle="popover">
                                             <i class="fa fa-thumbs-down fa-1x" role="img" aria-label="Dislikes" title="Dislikes"/>
-                                            <span class="o_wslides_like_dislike_count" t-esc="slide.dislikes"/>
+                                            <span t-esc="slide.dislikes"/>
                                         </span>
                                     </div>
                                 </div>
