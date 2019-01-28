@@ -3,30 +3,31 @@
 # * account
 # 
 # Translators:
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2017
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
-# Martin Trigaux, 2018
-# Levent Karakaş <levent@mektup.at>, 2018
-# Murat Kaplan <muratk@projetgrup.com>, 2018
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
-# Ediz Duman <neps1192@gmail.com>, 2018
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
 # Mehmet Demirel <mdemirell@gmail.com>, 2018
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
-# gezgin biri <gezginbiri@hotmail.com>, 2018
-# Kaya Zeren <kayazeren@gmail.com>, 2018
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2018
 # UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2018
-# Metin Akın <aknmetin@gmail.com>, 2018
-# Buket Şeker <buket_skr@hotmail.com>, 2018
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2019
+# Kaya Zeren <kayazeren@gmail.com>, 2019
+# Levent Karakaş <levent@mektup.at>, 2019
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
+# gezgin biri <gezginbiri@hotmail.com>, 2019
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
+# Ediz Duman <neps1192@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Murat Kaplan <muratk@projetgrup.com>, 2019
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2019
+# Buket Şeker <buket_skr@hotmail.com>, 2019
+# Metin Akın <aknmetin@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-16 07:59+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: Metin Akın <aknmetin@gmail.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +48,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
 msgid "# of Digits"
-msgstr "Basamak #"
+msgstr "Basamak Sayısı"
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
@@ -64,26 +65,27 @@ msgstr "${object.company_id.name} Fatura (Ref ${object.number or 'n/a'})"
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} Tahsilat Makbuzu (Ref ${object.name or 'n/a' })"
+"${object.company_id.name} Tahsilat/Ödeme Makbuzu (Ref ${object.name or 'n/a'"
+" })"
 
 #. module: account
-#: code:addons/account/models/account.py:937
+#: code:addons/account/models/account.py:944
 #, python-format
 msgid "%s (Copy)"
 msgstr "%s (Kopya)"
 
 #. module: account
-#: code:addons/account/models/account.py:242
-#: code:addons/account/models/account.py:246
-#: code:addons/account/models/account.py:248
-#: code:addons/account/models/account.py:597
-#: code:addons/account/models/account.py:598
+#: code:addons/account/models/account.py:247
+#: code:addons/account/models/account.py:251
+#: code:addons/account/models/account.py:253
+#: code:addons/account/models/account.py:604
+#: code:addons/account/models/account.py:605
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopya)"
 
 #. module: account
-#: code:addons/account/models/account.py:688
+#: code:addons/account/models/account.py:695
 #, python-format
 msgid "%s Sequence"
 msgstr ""
@@ -107,16 +109,6 @@ msgstr "-> Uzlaştır"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
 msgstr "-> Kısmi uzlaştırılmış girişleri incele"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_dashboard_onboarding_panel
-msgid "/account/static/src/img/account_dashboard_onboarding_bg.jpg"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
-msgid "/account/static/src/img/account_invoice_onboarding_bg.jpg"
-msgstr ""
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -144,7 +136,7 @@ msgid "45 Days"
 msgstr "45 Gün"
 
 #. module: account
-#: code:addons/account/models/account.py:686
+#: code:addons/account/models/account.py:693
 #, python-format
 msgid ": Refund"
 msgstr ": İade"
@@ -209,9 +201,27 @@ msgid "<em>Draft Invoice</em>"
 msgstr "Taslak Fatura"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_kanban
+msgid "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_kanban
+msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-download\"/> Download"
 msgstr "<i class=\"fa fa-download\"/> İndir"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid ""
+"<i class=\"fa fa-ellipsis-v\" aria-label=\"Selection\" role=\"img\" "
+"title=\"Selection\"/>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -230,7 +240,7 @@ msgid "<i class=\"fa fa-print\"/> Print"
 msgstr "<i class=\"fa fa-print\"/> Yazdır"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:699
+#: code:addons/account/models/account_invoice.py:714
 #, python-format
 msgid ""
 "<p>You can control the invoice from your vendor based on what you purchased "
@@ -272,6 +282,21 @@ msgid ""
 msgstr "İptal Edildi"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid ""
 "<span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state','!=','draft'), ('type','!=','in_invoice')]}\">Draft Bill</span>\n"
@@ -301,6 +326,11 @@ msgstr ""
 msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Default Incoterm</span>"
 msgstr ""
 
 #. module: account
@@ -385,7 +415,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Latest Statement</span>"
-msgstr "<span title=\"Latest Statement\">Son Ekstre</span>"
+msgstr "<span title=\"Latest Statement\">Son Hesap Özeti</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -526,7 +556,7 @@ msgstr "<strong>Vadesi Gelen</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Company:</strong>"
-msgstr "<strong>Şirket:</strong>"
+msgstr "<strong>Firma:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -551,7 +581,7 @@ msgstr "<strong>Bitiş Tarihi:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Entries Sorted By:</strong>"
-msgstr "<strong>Sıralama:</strong>"
+msgstr "<strong>Girişleri Sırala:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -601,7 +631,7 @@ msgstr "<strong>Kaynak:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Subtotal</strong>"
-msgstr "<strong>Ara Toplam</strong>"
+msgstr "<strong>Aratoplam</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -638,13 +668,13 @@ msgstr ""
 "Nakit kasanızdaki paraları girebilir ve para girdiğinde veya nakit kutusundan çıktığında girişleri kaydedebilirsiniz."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1895
+#: code:addons/account/models/account_invoice.py:1938
 #, python-format
 msgid "A Payment Term should have only one line of type Balance."
 msgstr "Bir Ödeme Vadesi, Bakiye tipinin sadece bir satırına sahip olmalı."
 
 #. module: account
-#: code:addons/account/models/account.py:854
+#: code:addons/account/models/account.py:861
 #, python-format
 msgid "A bank account can belong to only one journal."
 msgstr ""
@@ -656,7 +686,7 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
 msgstr ""
-"Bir banka hesap özeti, belirli bir süre boyunca bir banka hesabında meydana gelen tüm finansal işlemlerin özetidir.\n"
+"Bir banka hesap özeti, belirli bir süre boyunca bir banka hesabında meydana gelen tüm finansal işlemlerin ekstresidir.\n"
 "Bunu düzenli olarak bankanızdan almalısınız."
 
 #. module: account
@@ -670,8 +700,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Bir yevmiye kaydı, her biri borç veya alacak işlemi olan birkaç yevmiye "
-"kaleminin birleşmesinden oluşur."
+"Bir yevmiye girişi, her biri bir borç veya bir alacak işlemi olan birkaç yevmiye\n"
+"öğesinden oluşur."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -679,11 +709,11 @@ msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
 msgstr ""
-"Bir yevmiye, şirketin günlük işleyişle ilgili tüm muhasebe olaylarını "
+"Bir yevmiye, günlük işle ilgili tüm muhasebe verilerinin işlemlerini "
 "kaydetmek için kullanılır."
 
 #. module: account
-#: code:addons/account/models/account_move.py:324
+#: code:addons/account/models/account_move.py:315
 #, python-format
 msgid ""
 "A payment journal entry generated in a journal configured to post entries "
@@ -693,7 +723,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/reconciliation_widget.py:681
+#: code:addons/account/models/reconciliation_widget.py:692
 #, python-format
 msgid "A reconciliation must involve at least 2 move lines."
 msgstr "Uzlaştırma, en az 2 hareket satırı içermelidir."
@@ -704,18 +734,18 @@ msgid ""
 "A rounding per line is advised if your prices are tax-included. That way, "
 "the sum of line subtotals equals the total with taxes."
 msgstr ""
-"Fiyatlarınız vergi dahil ise, her satırda yuvarlama önerilir. Bu şekilde, "
-"satır alt toplamlarının toplamı, vergilerle toplama eşit olur."
+"Fiyatlarınız vergi dahil ise, her satıra bir yuvarlama önerilir. Bu şekilde,"
+" satır alt toplamlarının toplamı, vergilerle toplama eşit olur."
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:527
-#: code:addons/account/models/account_bank_statement.py:530
+#: code:addons/account/models/account_bank_statement.py:537
+#: code:addons/account/models/account_bank_statement.py:540
 #, python-format
 msgid "A selected move line was already reconciled."
-msgstr "Seçilen hareket satırı zaten uzlaştırılmış."
+msgstr "Seçilen hareket satırı zaten uzlaştı."
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:538
+#: code:addons/account/models/account_bank_statement.py:548
 #, python-format
 msgid "A selected statement line was already reconciled with an account move."
 msgstr ""
@@ -723,9 +753,8 @@ msgstr ""
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
-msgid "A tax fiscal position could be defined only once time on same taxes."
+msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
-"Bir vergi mali koşulu, aynı vergilerde yalnızca bir kez tanımlanabilir."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -739,11 +768,11 @@ msgstr "Erişim uyarısı"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:559
-#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:561
+#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:546
+#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:548
 #: code:addons/account/static/src/xml/account_reconciliation.xml:181
-#: code:addons/account/static/src/xml/account_reconciliation.xml:282
-#: code:addons/account/static/src/xml/account_reconciliation.xml:307
+#: code:addons/account/static/src/xml/account_reconciliation.xml:284
+#: code:addons/account/static/src/xml/account_reconciliation.xml:309
 #: model:ir.model,name:account.model_account_account
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding__account_id
 #: model:ir.model.fields,field_description:account.field_account_invoice__account_id
@@ -762,17 +791,12 @@ msgid "Account"
 msgstr "Hesap"
 
 #. module: account
-#: code:addons/account/models/account_move.py:913
+#: code:addons/account/models/account_move.py:905
 #, python-format
 msgid ""
 "Account %s (%s) does not allow reconciliation. First change the "
 "configuration of this account to allow it."
 msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
-msgid "Account Accountant"
-msgstr "Hesap Muhasebecisi"
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -803,7 +827,7 @@ msgstr "Hesap Hedefi"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Account Entry"
-msgstr "Muhasebe Kaydı"
+msgstr "Hesap Girişi"
 
 #. module: account
 #: model:ir.model,name:account.model_account_group
@@ -821,7 +845,7 @@ msgstr "Hesap Grupları"
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_id
 msgid "Account Holder"
-msgstr "Hesap Sahibi"
+msgstr "Hesap Saklayıcı"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
@@ -868,6 +892,7 @@ msgstr "Hesap Numarası"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_payable_id
+#: model:ir.model.fields,field_description:account.field_res_users__property_account_payable_id
 msgid "Account Payable"
 msgstr "Borç Hesabı"
 
@@ -883,6 +908,7 @@ msgstr "Hesap Özellikleri"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_receivable_id
+#: model:ir.model.fields,field_description:account.field_res_users__property_account_receivable_id
 msgid "Account Receivable"
 msgstr "Alacak Hesabı"
 
@@ -930,7 +956,7 @@ msgstr "Hesap Vergi Şablonu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr "TaxCloud Hesabı"
+msgstr "Vergi Bulut Hesabı"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -1082,6 +1108,7 @@ msgid "Account; Reverse entries"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
@@ -1185,11 +1212,13 @@ msgstr "Etkin alan adı"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__activity_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_ids
 msgid "Activities"
 msgstr "Aktiviteler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__activity_state
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_state
 msgid "Activity State"
 msgstr "Aktivite Durumu"
 
@@ -1239,7 +1268,7 @@ msgstr "Yeni bir etiket ekle"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
 msgid "Add a note"
-msgstr "Bir not ekle"
+msgstr "Bir Not Ekle"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1256,12 +1285,12 @@ msgstr "Yuvarlama çizgisi ekleyin."
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__has_second_line
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Add a second line"
-msgstr "İkinci bir satır ekle"
+msgstr "Bir ikincil satır ekle"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
 msgid "Add a section"
-msgstr "Bir bölüm ekle"
+msgstr "Bir Bölüm Ekle"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1447,7 +1476,7 @@ msgstr "Nakit yuvarlama yönetimine izin ver."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allow to configure taxes using cash basis"
-msgstr "Nakit esaslı olarak vergileme yapılandırmasına izin ver."
+msgstr "Nakit olarak vergilerin yapılandırılmasına izin ver."
 
 #. module: account
 #: model:res.groups,name:account.group_fiscal_year
@@ -1467,8 +1496,8 @@ msgstr "Analitik Muhasebe kullanmanızı sağlar."
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:208
-#: code:addons/account/static/src/xml/account_reconciliation.xml:289
-#: code:addons/account/static/src/xml/account_reconciliation.xml:306
+#: code:addons/account/static/src/xml/account_reconciliation.xml:291
+#: code:addons/account/static/src/xml/account_reconciliation.xml:308
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount
 #: model:ir.model.fields,field_description:account.field_account_move__amount
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__amount
@@ -1617,9 +1646,8 @@ msgstr "Tutar:"
 #. module: account
 #: sql_constraint:account.fiscal.position.account:0
 msgid ""
-"An account fiscal position could be defined only once time on same accounts."
+"An account fiscal position could be defined only one time on same accounts."
 msgstr ""
-"Bir hesabın mali koşulu aynı hesap üzerinde yalnız bir kez tanımlanabilir."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -1721,7 +1749,7 @@ msgstr "Analitik Satırları"
 #: model:ir.ui.menu,name:account.account_analytic_tag_menu
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Analytic Tags"
-msgstr "Analitik Etiketleri"
+msgstr "Analitik Etiketler"
 
 #. module: account
 #. openerp-web
@@ -1791,7 +1819,7 @@ msgstr "Bu mali koşulu otomatik olarak uygula."
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_group_id
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__country_group_id
 msgid "Apply only if delivery or invoicing country match the group."
-msgstr "Sadece teslimat veya faturalama ülkeleri eşleşiyor ise uygula."
+msgstr "Sadece teslimat ve faturalama ülkeleri eşleşiyor ise uygula."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_id
@@ -1949,15 +1977,15 @@ msgid "Automated Entries"
 msgstr "Otomatik Girişler"
 
 #. module: account
-#: code:addons/account/models/company.py:407
+#: code:addons/account/models/company.py:430
 #, python-format
 msgid "Automatic Balancing Line"
-msgstr "Otomatik Denkleştirme Kalemi"
+msgstr "Otomatik Denkleştirme "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_currency_rate_live
 msgid "Automatic Currency Rates"
-msgstr "Otomatik Döviz Kurları"
+msgstr "Otomatik Döviz Kuru"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1965,7 +1993,7 @@ msgid "Automatic Import"
 msgstr "Otomatik İçer Aktarım"
 
 #. module: account
-#: code:addons/account/models/account_move.py:399
+#: code:addons/account/models/account_move.py:390
 #, python-format
 msgid "Automatic reversal of: %s"
 msgstr ""
@@ -1981,7 +2009,7 @@ msgid "Average Price in Currency"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/chart_template.py:410
+#: code:addons/account/models/chart_template.py:419
 #, python-format
 msgid "BILL"
 msgstr "ALM"
@@ -2003,21 +2031,17 @@ msgid "Balance Cash Basis"
 msgstr "Gerçekleşme Esası Bakiyesi"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Balance Sheet"
-msgstr "Bilanço"
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
 msgid "Balance as calculated based on Opening Balance and transaction lines"
 msgstr "Bakiye, Açılış Bakiyesi ve işlem satırları baz alınarak hesaplanır"
 
 #. module: account
 #: selection:account.journal,type:0
-#: code:addons/account/models/chart_template.py:340
+#: code:addons/account/models/chart_template.py:351
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_id
 #: model:ir.model.fields,field_description:account.field_res_partner__bank_account_count
+#: model:ir.model.fields,field_description:account.field_res_users__bank_account_count
 #, python-format
 msgid "Bank"
 msgstr "Banka"
@@ -2057,8 +2081,8 @@ msgid ""
 "Partner bank account number."
 msgstr ""
 "Ödenecek fatura için Banka Hesap Numarası. Eğer bir Müşteri Faturası ya da "
-"Tedarikçi İade/Fiyat Farkı Faturası ise Şirket Banka Hesap Numarası, aksi "
-"taktirde İş Ortağı Banka Hesap Numarası . "
+"Tedarikçi İade/Fiyat Farkı Faturası ise Şirket Banka Hesap No'su, yoksa İş "
+"Ortağı Banka Hesap No'su . "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_bank_journal_form
@@ -2095,7 +2119,7 @@ msgstr "Banka İşlemleri"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_action.js:17
+#: code:addons/account/static/src/js/reconciliation/reconciliation_action.js:15
 #, python-format
 msgid "Bank Reconciliation"
 msgstr "Banka Uzlaştırma"
@@ -2124,7 +2148,7 @@ msgid "Bank Statement"
 msgstr "Banka Hesap Özeti"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:591
+#: code:addons/account/models/account_bank_statement.py:602
 #, python-format
 msgid "Bank Statement %s"
 msgstr "Hesap Özeti %s"
@@ -2179,7 +2203,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
 msgid "Bank statement line reconciled with this entry"
-msgstr "Banka hesap özeti satırı bu kayıt ile uzlaştırılmış"
+msgstr "Banka hesap özeti satırı bu giriş ile uzlaştırılmış"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_bank_statement
@@ -2311,7 +2335,7 @@ msgstr "Ödenecek faturalar"
 #. module: account
 #: selection:res.partner,invoice_warn:0
 msgid "Blocking Message"
-msgstr "Engelleme Mesajı"
+msgstr "Engelleme"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type__include_initial_balance
@@ -2376,8 +2400,8 @@ msgstr ""
 "gizleyebilirsiniz."
 
 #. module: account
-#: code:addons/account/models/chart_template.py:389
-#: code:addons/account/models/chart_template.py:413
+#: code:addons/account/models/chart_template.py:398
+#: code:addons/account/models/chart_template.py:422
 #, python-format
 msgid "CABA"
 msgstr "CABA"
@@ -2464,8 +2488,8 @@ msgid ""
 "this invoice."
 msgstr ""
 "Uzlaştırılmış fatura üzerinde iade/fiyat farkı yapılamaz. Öncelikle fatura "
-"uzlaştırması kaldırılır, daha sonra bu fatura için iade/fiyat farkı "
-"oluşturulabilir. "
+"uzlaştırması bozulabilir, daha sonra iade/fiyat farkı faturaya "
+"yansıtılabilir. "
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:54
@@ -2474,36 +2498,36 @@ msgid "Cannot create credit note for the draft/cancelled invoice."
 msgstr "Taslak / İptal edilen fatura için iade/fiyat farkı oluşturulamaz."
 
 #. module: account
-#: code:addons/account/models/account_move.py:358
+#: code:addons/account/models/account_move.py:349
 #, python-format
 msgid "Cannot create moves for different companies."
 msgstr "Farklı şirketler için hareketler oluşturulamıyor."
 
 #. module: account
-#: code:addons/account/models/account_move.py:390
+#: code:addons/account/models/account_move.py:381
 #, python-format
 msgid "Cannot create unbalanced journal entry."
-msgstr "Borç-Alacak eşitliği olmayan bir yevmiye kaydı oluşturulamaz"
+msgstr "Borç-Alacak eşitliği olmayan bir yevmiye girişi oluşturulamaz"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:757
+#: code:addons/account/models/account_invoice.py:772
 #, python-format
 msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
 msgstr ""
-"Bu şirket için bir hesap planı bulunamadı. Bir tane yapılandırmalısınız. \n"
-"Lütfen Muhasebe Yapılandırmasına gidin."
+"Bu firma için bir hesap planı bulunamadı. Bir tane yapılandırmalısınız. \n"
+"Lütfen Muhasebe Yapılandırmasın gidin."
 
 #. module: account
-#: code:addons/account/models/account.py:111
+#: code:addons/account/models/account.py:116
 #: code:addons/account/models/chart_template.py:151
 #, python-format
 msgid "Cannot generate an unused account code."
 msgstr "Kullanılmayan bir hesap kodu oluşturulamıyor."
 
 #. module: account
-#: code:addons/account/models/account.py:756
+#: code:addons/account/models/account.py:763
 #, python-format
 msgid ""
 "Cannot generate an unused journal code. Please fill the 'Shortcode' field."
@@ -2513,7 +2537,7 @@ msgstr ""
 
 #. module: account
 #: selection:account.journal,type:0
-#: code:addons/account/models/chart_template.py:340
+#: code:addons/account/models/chart_template.py:349
 #, python-format
 msgid "Cash"
 msgstr "Kasa"
@@ -2529,7 +2553,7 @@ msgid "Cash Basis Journal"
 msgstr "Gerçekleşme Esasına Göre Vergi Yevmiyesi"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:413
+#: code:addons/account/models/chart_template.py:422
 #, python-format
 msgid "Cash Basis Tax Journal"
 msgstr "Tahsil Esaslı Vergi Yevmiyesi"
@@ -2576,7 +2600,7 @@ msgstr "Nakit Yuvarlama Yöntemi"
 #: model:ir.ui.menu,name:account.menu_action_rounding_form_view
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Cash Roundings"
-msgstr "Nakit Yuvarlamaları"
+msgstr "Nakit Yuvarlamalar"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:187
@@ -2623,7 +2647,7 @@ msgid "Change label of the counterpart that will hold the payment difference"
 msgstr "Ödeme farkını tutacak karşı hesabın etiketini değiştirin"
 
 #. module: account
-#: code:addons/account/controllers/portal.py:105
+#: code:addons/account/controllers/portal.py:103
 #, python-format
 msgid ""
 "Changing VAT number is not allowed once invoices have been issued for your "
@@ -2633,7 +2657,7 @@ msgstr ""
 "verilemez. Lütfen bu değişiklik için bizimle iletişime geçin."
 
 #. module: account
-#: code:addons/account/controllers/portal.py:111
+#: code:addons/account/controllers/portal.py:109
 #, python-format
 msgid ""
 "Changing your company name is not allowed once invoices have been issued for"
@@ -2641,7 +2665,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/controllers/portal.py:108
+#: code:addons/account/controllers/portal.py:106
 #, python-format
 msgid ""
 "Changing your name is not allowed once invoices have been issued for your "
@@ -2670,7 +2694,7 @@ msgid "Chart Templates"
 msgstr "Çizelge Şablonu"
 
 #. module: account
-#: code:addons/account/models/company.py:320
+#: code:addons/account/models/company.py:337
 #: model:ir.actions.act_window,name:account.action_account_form
 #: model:ir.ui.menu,name:account.menu_action_account_form
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
@@ -2725,7 +2749,7 @@ msgid ""
 " credit notes made from this journal"
 msgstr ""
 "Bu yevmiyeden aynı sıradaki faturaları ve iade/fiyat farklarını görmek "
-"istemiyorsanız lütfen bu seçim alanını işaretleyin."
+"istemiyorsanız lütfen bu kutuyu işaretleyin."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__update_posted
@@ -2756,7 +2780,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Checks"
-msgstr "Kontroller"
+msgstr "Çekler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__child_ids
@@ -2772,7 +2796,7 @@ msgid "Children Taxes"
 msgstr "Alt Vergiler"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:349
+#: code:addons/account/models/chart_template.py:358
 #, python-format
 msgid "Choose Accounting Template"
 msgstr "Hesap Şablonu Seç"
@@ -2834,7 +2858,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:341
+#: code:addons/account/static/src/xml/account_reconciliation.xml:343
 #, python-format
 msgid "Close"
 msgstr "Kapat"
@@ -2868,7 +2892,7 @@ msgstr "Kapanış"
 #: model:ir.model.fields,field_description:account.field_account_register_payments__payment_method_code
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_code
 msgid "Code"
-msgstr "Kod"
+msgstr "Kodu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__code_prefix
@@ -2896,7 +2920,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_tag__color
 #: model:ir.model.fields,field_description:account.field_account_journal__color
 msgid "Color Index"
-msgstr "Renk"
+msgstr "Renk İndeksi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__commercial_partner_id
@@ -2905,7 +2929,7 @@ msgid "Commercial Entity"
 msgstr "Ticari Varlık"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:519
+#: code:addons/account/models/account_invoice.py:534
 #, python-format
 msgid "Commercial partner and vendor account owners must be identical."
 msgstr ""
@@ -2932,6 +2956,7 @@ msgstr "Şirketler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__ref_company_ids
+#: model:ir.model.fields,field_description:account.field_res_users__ref_company_ids
 msgid "Companies that refers to partner"
 msgstr "İş Ortağını ilgilendiren şirketler"
 
@@ -2962,7 +2987,7 @@ msgstr "İş Ortağını ilgilendiren şirketler"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Company"
-msgstr "Şirket"
+msgstr "Firma"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__company_currency_id
@@ -2971,7 +2996,7 @@ msgstr "Şirket"
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__company_currency_id
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__company_currency_id
 msgid "Company Currency"
-msgstr "Şirket Para Birimi"
+msgstr "Firma Para Birimi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
@@ -2985,7 +3010,7 @@ msgstr "Şirketin bir hesap planı var"
 #: model:ir.model.fields,help:account.field_account_move__company_id
 #: model:ir.model.fields,help:account.field_account_payment__company_id
 msgid "Company related to this journal"
-msgstr "Bu yevmiyeyle ilişkili şirket"
+msgstr "Bu yevmiyeyle ilişkili firma"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__complete_tax_set
@@ -3059,7 +3084,7 @@ msgstr "Belge düzeninizi yapılandırın"
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Confirm"
-msgstr "Doğrula"
+msgstr "Onayla"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_confirm
@@ -3085,7 +3110,7 @@ msgstr "Seçili faturaları doğrula"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Confirmed"
-msgstr "Doğrulanmış"
+msgstr "Onaylandı"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
@@ -3093,8 +3118,8 @@ msgid ""
 "Confirming this will create automatically a journal entry with the "
 "difference in the profit/loss account set on the cash journal."
 msgstr ""
-"Bunu doğrulamak, banka/kasa yevmiyesinde belirlenen kar / zarar hesabındaki "
-"fark için otomatik olarak bir yevmiye kaydı oluşturacaktır."
+"Bunu teyit etmek, banka/kasa yevmiyesinde belirlenen kar / zarar hesabındaki"
+" fark için otomatik olarak bir yevmiye girişi oluşturacaktır."
 
 #. module: account
 #. openerp-web
@@ -3112,7 +3137,7 @@ msgstr ""
 #: model:ir.model,name:account.model_res_partner
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Contact"
-msgstr "İletişim"
+msgstr "Kontak"
 
 #. module: account
 #: selection:account.reconcile.model,match_label:0
@@ -3134,6 +3159,7 @@ msgstr "İçerikler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contracts_count
+#: model:ir.model.fields,field_description:account.field_res_users__contracts_count
 msgid "Contracts Count"
 msgstr ""
 
@@ -3156,7 +3182,7 @@ msgid "Cost of Revenue"
 msgstr "Gelir Maliyeti"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:192
+#: code:addons/account/models/chart_template.py:204
 #, python-format
 msgid ""
 "Could not install new chart of account as there are already accounting "
@@ -3172,6 +3198,11 @@ msgstr "Karşı Hesap"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__account_id
 msgid "Counterpart Account"
 msgstr "Karşı Hesap"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
+msgid "Counterpart Values"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__country_id
@@ -3197,7 +3228,7 @@ msgid "Create Or Link Option"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:276
+#: code:addons/account/models/company.py:292
 #, python-format
 msgid "Create a Bank Account"
 msgstr "Banka Hesabı Oluştur"
@@ -3205,7 +3236,7 @@ msgstr "Banka Hesabı Oluştur"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_bank_journal_form
 msgid "Create a bank account"
-msgstr "Banka Hesabı Oluştur"
+msgstr "Banka Hesabı oluştur"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_out_refund
@@ -3241,7 +3272,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:account.action_account_fiscal_position_form
 #: model_terms:ir.actions.act_window,help:account.action_account_fiscal_position_template_form
 msgid "Create a new fiscal position"
-msgstr "Yeni Mali Koşul Oluştur"
+msgstr "Mali Koşul Oluştur"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
@@ -3302,7 +3333,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:174
 #, python-format
 msgid "Create model"
-msgstr "Model Oluştur"
+msgstr "Model oluştur"
 
 #. module: account
 #: selection:account.setup.bank.manual.config,create_or_link_option:0
@@ -3455,8 +3486,8 @@ msgid "Credit Move"
 msgstr "Alacak Hareketi"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:486
-#: code:addons/account/models/account_invoice.py:1316
+#: code:addons/account/models/account_invoice.py:498
+#: code:addons/account/models/account_invoice.py:1358
 #: model:ir.actions.act_window,name:account.action_account_invoice_refund
 #: model:ir.model,name:account.model_account_invoice_refund
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3464,13 +3495,13 @@ msgstr "Alacak Hareketi"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund
 #, python-format
 msgid "Credit Note"
-msgstr "İade/Fiyat Farkı"
+msgstr "Alacak Dekontu"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:487
+#: code:addons/account/models/account_invoice.py:499
 #, python-format
 msgid "Credit Note - %s"
-msgstr "İade/Fiyat Farkı - %s"
+msgstr "İade Fiyat Farkı - %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3534,6 +3565,7 @@ msgstr "Para Birimleri"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__currency_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__currency_id
 #: model:ir.model.fields,field_description:account.field_res_partner__currency_id
+#: model:ir.model.fields,field_description:account.field_res_users__currency_id
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -3543,18 +3575,17 @@ msgstr "Para Birimi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__currency_rate
 msgid "Currency Rate"
-msgstr "Para Birimi Çevrim Oranı"
+msgstr "Para Birimi Kuru"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1429
-#: code:addons/account/models/account_move.py:1441
+#: code:addons/account/models/account_move.py:1419
+#: code:addons/account/models/account_move.py:1431
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr "Döviz kur farkı"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Current Assets"
 msgstr "Dönen Varlıklar"
 
@@ -3581,7 +3612,7 @@ msgstr "Geçerli kullanıcı bu mesaja bağlı yıldızlı bir bildirime sahipti
 #: model_terms:ir.ui.view,arch_db:account.invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
 msgid "Customer"
-msgstr "Kayıtlı Müşteri"
+msgstr "Müşteri"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -3596,7 +3627,7 @@ msgid "Customer Invoice"
 msgstr "Müşteri Faturası"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:409
+#: code:addons/account/models/chart_template.py:418
 #, python-format
 msgid "Customer Invoices"
 msgstr "Müşteri Faturaları"
@@ -3610,6 +3641,7 @@ msgstr "Müşteri Ödemesi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_payment_term_id
+#: model:ir.model.fields,field_description:account.field_res_users__property_payment_term_id
 msgid "Customer Payment Terms"
 msgstr "Müşteri Ödeme Koşulları"
 
@@ -3626,6 +3658,7 @@ msgid "Customer Portal URL"
 msgstr "Müşteri Portal URL"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_product_product__taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__taxes_id
 msgid "Customer Taxes"
 msgstr "Müşteri Vergileri"
@@ -3685,13 +3718,13 @@ msgstr "Gemide Teslim (DES)"
 #. module: account
 #: selection:account.cash.rounding,rounding_method:0
 msgid "DOWN"
-msgstr "AŞAĞIYA"
+msgstr "DOWN"
 
 #. module: account
 #. openerp-web
 #: selection:account.print.journal,sort_selection:0
-#: code:addons/account/static/src/xml/account_reconciliation.xml:287
-#: code:addons/account/static/src/xml/account_reconciliation.xml:302
+#: code:addons/account/static/src/xml/account_reconciliation.xml:289
+#: code:addons/account/static/src/xml/account_reconciliation.xml:304
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__date
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__date
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__date
@@ -3712,7 +3745,7 @@ msgstr "Tarih"
 msgid ""
 "Date at which the opening entry of this company's accounting has been "
 "posted."
-msgstr "Şirket muhasebe kaydının açılış tarihi gönderilmiştir"
+msgstr "Şirket hesap kaydının açılış tarihi gönderilmiştir"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__opening_date
@@ -3828,6 +3861,11 @@ msgid "Default Debit Account"
 msgstr "Varsayılan Borç Hesabı"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Default Incoterm of your company"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__purchase_tax_id
 msgid "Default Purchase Tax"
@@ -3859,6 +3897,7 @@ msgstr "Varsayılan Vergiler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__incoterm_id
+#: model:ir.model.fields,field_description:account.field_res_config_settings__incoterm_id
 msgid "Default incoterm"
 msgstr ""
 
@@ -3873,11 +3912,13 @@ msgid "Default taxes applied to local transactions"
 msgstr "Yerel işlemlere uygulanan varsayılan vergiler"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,help:account.field_product_template__supplier_taxes_id
 msgid "Default taxes used when buying the product."
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_product_product__taxes_id
 #: model:ir.model.fields,help:account.field_product_template__taxes_id
 msgid "Default taxes used when selling the product."
 msgstr ""
@@ -3922,6 +3963,7 @@ msgstr "Tanım"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__trust
+#: model:ir.model.fields,field_description:account.field_res_users__trust
 msgid "Degree of trust you have in this debtor"
 msgstr "Bu borçlu için güven seviyesi"
 
@@ -3947,7 +3989,6 @@ msgstr "Süresi Dolmuş"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_depreciation
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Depreciation"
 msgstr "Amortisman"
 
@@ -3958,7 +3999,7 @@ msgstr "Nakit kasadan neden para aldığınızı açıklayın:"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:305
+#: code:addons/account/static/src/xml/account_reconciliation.xml:307
 #: model:ir.model.fields,field_description:account.field_account_account_type__note
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__name
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -3996,7 +4037,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__difference
 msgid "Difference"
-msgstr "Fark"
+msgstr "Farkı"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment__writeoff_account_id
@@ -4165,7 +4206,7 @@ msgid "Draft Credit Note"
 msgstr "Taslak İade/Fiyat Farkı"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:484
+#: code:addons/account/models/account_invoice.py:496
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4195,8 +4236,8 @@ msgstr "Ödeme Tutarı"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/controllers/portal.py:41
-#: code:addons/account/static/src/xml/account_reconciliation.xml:288
+#: code:addons/account/controllers/portal.py:39
+#: code:addons/account/static/src/xml/account_reconciliation.xml:290
 #: model:ir.model.fields,field_description:account.field_account_invoice__date_due
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__date_due
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -4227,7 +4268,7 @@ msgid "Due the"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1271
+#: code:addons/account/models/account_invoice.py:1285
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
@@ -4252,15 +4293,15 @@ msgid "EX WORKS"
 msgstr "İşyerinde Teslim (EXW)"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:387
-#: code:addons/account/models/chart_template.py:402
-#: code:addons/account/models/chart_template.py:412
+#: code:addons/account/models/chart_template.py:396
+#: code:addons/account/models/chart_template.py:411
+#: code:addons/account/models/chart_template.py:421
 #, python-format
 msgid "EXCH"
 msgstr "KRFRK"
 
 #. module: account
-#: code:addons/account/models/account_move.py:973
+#: code:addons/account/models/account_move.py:965
 #, python-format
 msgid "Either pass both debit and credit or none."
 msgstr "Ya borç ve alacağı komple geçebilir ya da hiçbirini geçemezsiniz."
@@ -4333,7 +4374,7 @@ msgid "Entries Sorted by"
 msgstr "Kayıtları Sıralama"
 
 #. module: account
-#: code:addons/account/models/account_move.py:911
+#: code:addons/account/models/account_move.py:903
 #, python-format
 msgid "Entries are not from the same account."
 msgstr ""
@@ -4362,19 +4403,18 @@ msgstr "Kayıt kalemleri"
 #. module: account
 #: selection:account.account.type,internal_group:0
 #: model:account.account.type,name:account.data_account_type_equity
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Equity"
 msgstr "Özsermaye"
 
 #. module: account
-#: code:addons/account/models/res_config_settings.py:145
+#: code:addons/account/models/res_config_settings.py:146
 #, python-format
 msgid "Error!"
 msgstr "Hata!"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:412
+#: code:addons/account/models/chart_template.py:421
 #, python-format
 msgid "Exchange Difference"
 msgstr "Kur Farkı"
@@ -4398,10 +4438,11 @@ msgstr "Hesap Planı Bekliyor"
 #. module: account
 #: selection:account.account.type,internal_group:0
 msgid "Expense"
-msgstr "Masraf"
+msgstr "Gider"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_account_expense_categ_id
+#: model:ir.model.fields,field_description:account.field_product_product__property_account_expense_id
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_expense_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
 msgid "Expense Account"
@@ -4414,10 +4455,9 @@ msgstr "Ürün Şablonunda Gider Hesabı"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_expenses
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Expenses"
-msgstr "Masraflar"
+msgstr "Giderler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__reference
@@ -4426,8 +4466,8 @@ msgstr "Harici Referans"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:318
-#: code:addons/account/static/src/xml/account_reconciliation.xml:333
+#: code:addons/account/static/src/xml/account_reconciliation.xml:320
+#: code:addons/account/static/src/xml/account_reconciliation.xml:335
 #, python-format
 msgid "External link"
 msgstr ""
@@ -4521,6 +4561,7 @@ msgstr "Mali Dönemler"
 #: model:ir.model.fields,field_description:account.field_account_invoice__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_position_id
+#: model:ir.model.fields,field_description:account.field_res_users__property_account_position_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_tree
@@ -4542,7 +4583,7 @@ msgid "Fiscal Positions"
 msgstr "Mali Koşullar"
 
 #. module: account
-#: code:addons/account/models/company.py:293
+#: code:addons/account/models/company.py:310
 #: model:ir.model,name:account.model_account_fiscal_year
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 #, python-format
@@ -4559,6 +4600,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_fiscal_year
 msgid "Fiscal Years"
 msgstr "Mali Yıllar"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
+msgid "Fiscal year last day."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_month
+msgid "Fiscal year last month."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -4676,7 +4727,7 @@ msgstr ""
 "Bu hesap için bütün hareketlerin ikincil para biriminde olmasına zorlar."
 
 #. module: account
-#: code:addons/account/report/account_aged_partner_balance.py:218
+#: code:addons/account/report/account_aged_partner_balance.py:231
 #: code:addons/account/report/account_journal.py:101
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
@@ -4722,7 +4773,7 @@ msgstr ""
 "seçebilirsiniz."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:385
+#: code:addons/account/models/account_invoice.py:387
 #, python-format
 msgid "From: "
 msgstr "Kimden:"
@@ -4741,13 +4792,9 @@ msgstr "Gelecek"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Future Activities"
-msgstr "Yapılacaklar"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "GROSS PROFIT"
-msgstr "BRÜT KÂR"
+msgstr "Sonraki Aktiviteler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__income_currency_exchange_account_id
@@ -4763,7 +4810,7 @@ msgstr "Kayıtları Oluştur"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
 msgid "Generic Statements"
-msgstr "Genel Beyannameler"
+msgstr "US GAAP"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4817,14 +4864,14 @@ msgid "Go to bank statement(s)"
 msgstr "Banka ekstrelerine git"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:758
-#: code:addons/account/models/company.py:521
+#: code:addons/account/models/account_invoice.py:773
+#: code:addons/account/models/company.py:544
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "Yapılandırma paneline git"
 
 #. module: account
-#: code:addons/account/models/company.py:459
+#: code:addons/account/models/company.py:482
 #, python-format
 msgid "Go to the journal configuration"
 msgstr ""
@@ -4903,8 +4950,9 @@ msgstr "Olağanüstü Oldu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
+#: model:ir.model.fields,field_description:account.field_res_users__has_unreconciled_entries
 msgid "Has Unreconciled Entries"
-msgstr "Eşleşmeyen Girişler Var"
+msgstr "Uzlaşmamış girişler var"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__qr_code_valid
@@ -4922,22 +4970,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment__hide_payment_method
 #: model:ir.model.fields,field_description:account.field_account_register_payments__hide_payment_method
 msgid "Hide Payment Method"
-msgstr "Ödeme Yöntemini Gizle"
+msgstr "Ödeme Yönetimi Gizle"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__hide_tax_exigibility
 msgid "Hide Use Cash Basis Option"
-msgstr "Gerçekleşme esası kullanım seçeneklerini gizle"
+msgstr "Nakit bazlı seçenekleri gizle"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_chatter
 msgid "History"
 msgstr "Geçmiş"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "How do account types affect your reports?"
-msgstr "Hesap türleri mali tablolarınızı etkileyeceği için çok önemlidir !"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5008,7 +5051,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:409
+#: code:addons/account/models/chart_template.py:418
 #, python-format
 msgid "INV"
 msgstr "FAT"
@@ -5050,7 +5093,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
-msgstr "Boş ise, geri alınacak yevmiye kaydının yevmiye ayarını kullanır."
+msgstr "Boş ise, geri alınacak yevmiye girişinin yevmiye ayarını kullanır."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_register_payments__group_invoices
@@ -5270,7 +5313,7 @@ msgid "In Payment"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:345
+#: code:addons/account/models/account_bank_statement.py:355
 #, python-format
 msgid ""
 "In order to delete a bank statement line, you must first cancel it to delete"
@@ -5322,13 +5365,13 @@ msgstr "Fiyata Dahil Edilir"
 #. module: account
 #: selection:account.account.type,internal_group:0
 #: model:account.account.type,name:account.data_account_type_revenue
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Income"
 msgstr "Gelir"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_account_income_categ_id
+#: model:ir.model.fields,field_description:account.field_product_product__property_account_income_id
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_income_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
 msgid "Income Account"
@@ -5341,10 +5384,18 @@ msgstr "Ürün Şablonundaki Gelir Hesabı"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:740
+#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:759
 #, python-format
 msgid "Incorrect Operation"
 msgstr "Geçersiz İşlem"
+
+#. module: account
+#: code:addons/account/wizard/setup_wizards.py:39
+#, python-format
+msgid ""
+"Incorrect fiscal year date: day is out of range for month. Month: %s; Day: "
+"%s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__incoterm_id
@@ -5467,6 +5518,7 @@ msgstr "İç notlar..."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__incoterm_id
 #: model:ir.model.fields,help:account.field_res_company__incoterm_id
+#: model:ir.model.fields,help:account.field_res_config_settings__incoterm_id
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
@@ -5486,12 +5538,19 @@ msgid "Invalid \"Zip Range\", please configure it properly."
 msgstr "Zip kodunuz yanlış, lütfen doğru bir zip kodu giriniz"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1314
+#: code:addons/account/models/company.py:106
+#, python-format
+msgid "Invalid fiscal year last day"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1358
 #: model:ir.model,name:account.model_account_invoice
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__invoice_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax__invoice_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__invoice_id
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn
+#: model:ir.model.fields,field_description:account.field_res_users__invoice_warn
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
 #: model_terms:ir.ui.view,arch_db:account.invoice_tree
@@ -5508,7 +5567,7 @@ msgid "Invoice #"
 msgstr "Fatura #"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:485
+#: code:addons/account/models/account_invoice.py:497
 #, python-format
 msgid "Invoice - %s"
 msgstr "Fatura - %s"
@@ -5520,7 +5579,7 @@ msgid "Invoice Created"
 msgstr "Fatura Oluşturuldu"
 
 #. module: account
-#: code:addons/account/controllers/portal.py:40
+#: code:addons/account/controllers/portal.py:38
 #: model:ir.model.fields,field_description:account.field_account_invoice__date_invoice
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__date
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -5554,7 +5613,7 @@ msgstr "Fatura Satırları"
 #. module: account
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr "Fatura numarası her şirket için benzersiz olmalıdır!"
+msgstr "Fatura numarası her firma için benzersiz olmalıdır!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
@@ -5587,25 +5646,25 @@ msgid "Invoice for which this invoice is the credit note"
 msgstr "İade/fiyat farkı faturası"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:869
+#: code:addons/account/models/account_invoice.py:884
 #, python-format
 msgid "Invoice must be cancelled in order to reset it to draft."
 msgstr "Taslak duruma geri dönmek için önce fatura iptal edilmelidir."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:893
+#: code:addons/account/models/account_invoice.py:908
 #, python-format
 msgid "Invoice must be in draft state in order to validate it."
 msgstr "Onaylamak için fatura taslak durumunda olmalıdır."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:920
+#: code:addons/account/models/account_invoice.py:935
 #, python-format
 msgid "Invoice must be paid in order to set it to register payment."
 msgstr "Ödeme kaydetmek için fatura ödenmiş olmalıdır."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:907
+#: code:addons/account/models/account_invoice.py:922
 #, python-format
 msgid "Invoice must be validated in order to set it to register payment."
 msgstr "Ödeme kaydetmek için faturanın onaylı olması gerekir."
@@ -5635,7 +5694,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Invoiced"
-msgstr "Faturalanan"
+msgstr "Faturalandı"
 
 #. module: account
 #: code:addons/account/models/account_invoice_import_wizard.py:38
@@ -5648,6 +5707,7 @@ msgstr "Faturalanan"
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_ids
 #: model:ir.model.fields,field_description:account.field_account_register_payments__invoice_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_ids
+#: model:ir.model.fields,field_description:account.field_res_users__invoice_ids
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5752,7 +5812,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__is_rounding_line
 msgid "Is a rounding line in case of cash rounding."
-msgstr "Nakit yuvarlaması olduğu takdirde yuvarlama türü."
+msgstr "Nakit yuvarlaması olduğu takdirde yuvarlama şekli."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_difference_zero
@@ -5791,7 +5851,7 @@ msgid "It indicates that the invoice has been sent."
 msgstr "Faturanın gönderildiğini gösterir."
 
 #. module: account
-#: code:addons/account/models/account_move.py:971
+#: code:addons/account/models/account_move.py:963
 #, python-format
 msgid ""
 "It is mandatory to specify an account and a journal to create a write-off."
@@ -5823,7 +5883,7 @@ msgstr "Ocak"
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:200
-#: code:addons/account/static/src/xml/account_reconciliation.xml:283
+#: code:addons/account/static/src/xml/account_reconciliation.xml:285
 #: model:ir.model,name:account.model_account_journal
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__journal_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_id
@@ -5918,10 +5978,10 @@ msgstr "Yevmiye Öğesi Etiketi"
 #: model:ir.actions.act_window,name:account.action_move_line_select
 #: model:ir.actions.act_window,name:account.action_move_line_select_by_partner
 #: model:ir.actions.act_window,name:account.action_move_line_select_by_type
-#: model:ir.actions.act_window,name:account.action_move_line_select_tax_audit
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_entry_ids
 #: model:ir.model.fields,field_description:account.field_account_move__line_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__journal_item_count
+#: model:ir.model.fields,field_description:account.field_res_users__journal_item_count
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -5933,8 +5993,13 @@ msgid "Journal Items"
 msgstr "Yevmiye Kalemleri"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.action_move_line_select_tax_audit
+msgid "Journal Items for Tax Audit"
+msgstr ""
+
+#. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_action.js:326
+#: code:addons/account/static/src/js/reconciliation/reconciliation_action.js:351
 #: model:ir.actions.client,name:account.action_manual_reconcile
 #, python-format
 msgid "Journal Items to Reconcile"
@@ -6043,6 +6108,7 @@ msgid "Keep open"
 msgstr "Açık bırakın"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_product_product__property_account_income_id
 #: model:ir.model.fields,help:account.field_product_template__property_account_income_id
 msgid ""
 "Keep this field empty to use the default value from the product category."
@@ -6050,6 +6116,7 @@ msgstr ""
 "Ürün kategorisinde varsayılan değerleri kullanmak için bu alanı boş bırakın."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_product_product__property_account_expense_id
 #: model:ir.model.fields,help:account.field_product_template__property_account_expense_id
 msgid ""
 "Keep this field empty to use the default value from the product category. If"
@@ -6064,9 +6131,9 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:560
+#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:547
 #: code:addons/account/static/src/xml/account_reconciliation.xml:204
-#: code:addons/account/static/src/xml/account_reconciliation.xml:284
+#: code:addons/account/static/src/xml/account_reconciliation.xml:286
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name
 #: model:ir.model.fields,field_description:account.field_account_move_line__name
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_label
@@ -6275,6 +6342,7 @@ msgstr "Son Güncelleme"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__last_time_entries_checked
+#: model:ir.model.fields,help:account.field_res_users__last_time_entries_checked
 msgid ""
 "Last time the invoices & payments matching was performed for this partner. "
 "It is set either if there's not at least an unreconciled debit and an "
@@ -6297,12 +6365,14 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Late Activities"
 msgstr "Geciken Aktiviteler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__last_time_entries_checked
 #: model:ir.model.fields,field_description:account.field_res_partner__last_time_entries_checked
+#: model:ir.model.fields,field_description:account.field_res_users__last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
 msgstr "Son Faturalar ve Ödemeler Eşleştirme Tarihi"
 
@@ -6402,7 +6472,7 @@ msgstr "Tarihi Kilitle"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__period_lock_date
 msgid "Lock Date for Non-Advisers"
-msgstr "Müşavir olmayanlar için Kilit Tarihi"
+msgstr "Kullanıcılar İçin Kilit Tarihi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_log
@@ -6432,7 +6502,7 @@ msgid "Loss Exchange Rate Account"
 msgstr "Döviz Kuru Oranı Kaybı Hesabı"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:411
+#: code:addons/account/models/chart_template.py:420
 #, python-format
 msgid "MISC"
 msgstr "CSTL"
@@ -6491,9 +6561,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
-"Manuel: Odoo dışında nakit, çek ya da bir başka bir yöntemle ödemelerinizi alın.\n"
-"Elektronik: Müşteri online olarak alış-veriş yaptığında ya da  abone olduğunda, müşteri tarafından kaydedilen bir kart üzerinde işlem talep ederek ödemelerinizi otomatik olarak alın (ödeme token'ı).\n"
-"Toplu Kayıt: Bankanıza göndermek için bir toplu ödeme oluşturarak bir kerede birkaç müşteri çeki imzalayın. Odoo'da  banka hesabınızı kodladığınızda, toplu çek çıkış işlemi için uzlaştırma önerilir. Bu seçeneğe ayarlar menüsünden ulaşılabilir."
+"Manuel: Odoo'dan dışında nakit, çek ya da bir başka bir yöntemle ödemelerinizi yapın.\n"
+"Elektronik: online olarak satın alındığında ya da  abone olunduğunda,müşteri tarafından kaydedilen bir kart üzerinde işlem talep ederek ödemelerinizi otomatik olarak yapın (ödeme token'ı).\n"
+"Toplu Kayıt: Toplu Çek Çıkışında oluşturulmuş birkaç müşteri çekiniz bankaya iletilir. Odoo'da tanımlı banka hesabınızı kodladığınız zaman, size toplu çek çıkışları için yeniden uzlaştırma önerilecektir. Bu seçeneğe ayarlar menüsünden ulaşılabilir."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment__payment_method_id
@@ -6516,13 +6586,13 @@ msgid ""
 msgstr ""
 "Manuel: Odoo dışında fatura ödemelerini nakit ya da başka bir yöntemle yap.\n"
 "Çek: Çek ile fatura ödemesini yap ve Odoo'dan çıktısını al.\n"
-"SEPA Credit Transfer: Bankanıza gönderdiğiniz bir  SEPA Alacak Transferi dosyası ile ödemenizi yapın. Bu seçeneğe ayarlar menüsünden ulaşılabilir."
+"SEPA Credit Transfer: Bankanıza gönderdiğiniz bir  SEPA Credit Transfer dosyası ile ödemenizi yapın. Bu seçeneğe ayarlar menüsünden ulaşılabilir."
 
 #. module: account
 #: selection:account.reconcile.model,rule_type:0
 #: selection:account.reconcile.model.template,rule_type:0
 #: code:addons/account/models/account_reconcile_model.py:19
-#: code:addons/account/models/chart_template.py:932
+#: code:addons/account/models/chart_template.py:981
 #, python-format
 msgid "Manually create a write-off on clicked button."
 msgstr ""
@@ -6569,7 +6639,7 @@ msgstr ""
 #: selection:account.reconcile.model,rule_type:0
 #: selection:account.reconcile.model.template,rule_type:0
 #: code:addons/account/models/account_reconcile_model.py:21
-#: code:addons/account/models/chart_template.py:934
+#: code:addons/account/models/chart_template.py:983
 #, python-format
 msgid "Match existing invoices/bills."
 msgstr ""
@@ -6599,12 +6669,12 @@ msgstr "Eşleştirme"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__full_reconcile_id
 msgid "Matching Number"
-msgstr "Uzlaştırma"
+msgstr "Eşleşen Numara"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
 msgid "Max Date of Matched Lines"
-msgstr "Eşleşen Kalemlerin Maksimum Tarihi"
+msgstr "Eşleşen Satırların Maksimum Tarihi"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -6644,6 +6714,7 @@ msgstr "Mesaj Kayıt Adı"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn_msg
+#: model:ir.model.fields,field_description:account.field_res_users__invoice_warn_msg
 msgid "Message for Invoice"
 msgstr "Fatura Mesajı"
 
@@ -6674,47 +6745,17 @@ msgid "Messages"
 msgstr "Mesajlar"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Minus Cost of Revenue"
-msgstr "-Gelir Maliyeti"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Minus Credit Card Accounts"
-msgstr "-Kredi Kartı Hesapları"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Minus Current Liabilities"
-msgstr "-Kısa Vadeli Borçlar"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Minus Expenses"
-msgstr "(-) Giderler"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Minus Non-Current Liabilities"
-msgstr "(-) Uzun Vadeli Borçlar"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Minus Payable Accounts"
-msgstr "Eksi Borç Hesapları"
-
-#. module: account
 #: selection:account.journal,type:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 msgid "Miscellaneous"
-msgstr "Diğer"
+msgstr "Muhtelif"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:411
+#: code:addons/account/models/chart_template.py:420
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #, python-format
 msgid "Miscellaneous Operations"
-msgstr "Diğer İşlemler"
+msgstr "Muhtelif İşlemler"
 
 #. module: account
 #: sql_constraint:account.invoice.line:0
@@ -6773,10 +6814,10 @@ msgstr "Hareket Kalemi Hesabı"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__move_reconciled
 msgid "Move Reconciled"
-msgstr "Uzlaştırılmış Kayıt"
+msgstr "Uzlaştırılmış Hareket"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1144
+#: code:addons/account/models/account_move.py:1134
 #, python-format
 msgid "Move name (id): %s (%s)"
 msgstr "Hareket adı (id): %s (%s)"
@@ -6805,16 +6846,6 @@ msgid "My Invoices"
 msgstr "Faturalarım"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "NET ASSETS"
-msgstr "NET VARLIKLAR"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "NET PROFIT"
-msgstr "NET KAR"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
 #: model:ir.model.fields,field_description:account.field_account_account_template__name
@@ -6830,7 +6861,7 @@ msgstr "NET KAR"
 #: model:ir.model.fields,field_description:account.field_account_tax_group__name
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Name"
-msgstr "İsim"
+msgstr "Adı"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__record_name
@@ -6870,7 +6901,7 @@ msgstr ""
 #. module: account
 #. openerp-web
 #: selection:account.bank.statement,state:0
-#: code:addons/account/static/src/xml/account_reconciliation.xml:243
+#: code:addons/account/static/src/xml/account_reconciliation.xml:253
 #, python-format
 msgid "New"
 msgstr "Yeni"
@@ -6886,23 +6917,26 @@ msgid "New Transactions"
 msgstr "Yeni İşlem"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1121
+#: code:addons/account/models/account_move.py:1111
 #, python-format
 msgid "New expected payment date: "
 msgstr "Beklenen yeni ödeme günü"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__activity_date_deadline
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Sonraki Faaliyet Zaman Sınırı"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__activity_summary
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_summary
 msgid "Next Activity Summary"
 msgstr "Sonraki Faaliyet Özeti"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__activity_type_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_type_id
 msgid "Next Activity Type"
 msgstr "Sonraki Faaliyet Türü"
 
@@ -6929,14 +6963,14 @@ msgstr "Uyarı Yok"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:67
-#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:137
+#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:68
+#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:143
 #, python-format
 msgid "No Title"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:897
+#: code:addons/account/models/account_invoice.py:912
 #, python-format
 msgid ""
 "No account was found to create the invoice, be sure you have installed a "
@@ -7004,7 +7038,7 @@ msgstr ""
 #. module: account
 #. openerp-web
 #: selection:account.invoice.line,display_type:0
-#: code:addons/account/static/src/xml/account_reconciliation.xml:308
+#: code:addons/account/static/src/xml/account_reconciliation.xml:310
 #: model:ir.model.fields,field_description:account.field_account_account_template__note
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_line_form
 #, python-format
@@ -7180,10 +7214,10 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:599
 #, python-format
 msgid "Only a draft payment can be posted."
-msgstr "Sadece bir taslak ödeme postalanabilir."
+msgstr "Sadece taslak ödeme postalanabilir."
 
 #. module: account
-#: code:addons/account/models/chart_template.py:185
+#: code:addons/account/models/chart_template.py:197
 #, python-format
 msgid "Only administrators can load a charf of accounts"
 msgstr ""
@@ -7206,14 +7240,14 @@ msgid "Open"
 msgstr "Açık"
 
 #. module: account
-#: code:addons/account/models/account_reconcile_model.py:274
+#: code:addons/account/models/account_reconcile_model.py:276
 #, python-format
 msgid "Open Balance"
 msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:704
+#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:723
 #: code:addons/account/static/src/xml/account_reconciliation.xml:137
 #, python-format
 msgid "Open balance"
@@ -7236,7 +7270,7 @@ msgid "Opening Journal"
 msgstr "Devir Yevmiyesi"
 
 #. module: account
-#: code:addons/account/models/company.py:343
+#: code:addons/account/models/company.py:365
 #: model:ir.model.fields,field_description:account.field_res_company__account_opening_move_id
 #, python-format
 msgid "Opening Journal Entry"
@@ -7253,7 +7287,7 @@ msgid "Opening Unit Numbers"
 msgstr "Açılış Birim Numaraları"
 
 #. module: account
-#: code:addons/account/models/account.py:164
+#: code:addons/account/models/account.py:169
 #, python-format
 msgid "Opening balance"
 msgstr "Devir Bakiyesi"
@@ -7284,7 +7318,7 @@ msgid "Operation Templates"
 msgstr "Operasyon Şablonları"
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:653
+#: code:addons/account/models/account_bank_statement.py:666
 #, python-format
 msgid ""
 "Operation not allowed. Since your statement line already received a number "
@@ -7318,7 +7352,7 @@ msgid "Options"
 msgstr "Seçenekler"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:696
+#: code:addons/account/models/account_invoice.py:711
 #, python-format
 msgid ""
 "Or set an <a data-oe-id=%s data-oe-model=\"account.journal\" "
@@ -7327,7 +7361,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:692
+#: code:addons/account/models/account_invoice.py:707
 #, python-format
 msgid ""
 "Or share the email %s to your vendors: bills will be created automatically "
@@ -7335,7 +7369,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:694
+#: code:addons/account/models/account_invoice.py:709
 #, python-format
 msgid ""
 "Or share the emails %s to your vendors: bills will be created automatically "
@@ -7399,6 +7433,7 @@ msgstr "Ödenmeyen Borçlar"
 
 #. module: account
 #: selection:account.invoice,activity_state:0
+#: selection:account.payment,activity_state:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue"
 msgstr "Geciken"
@@ -7481,8 +7516,8 @@ msgstr "Kısmi Uzlaştır"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:286
-#: code:addons/account/static/src/xml/account_reconciliation.xml:303
+#: code:addons/account/static/src/xml/account_reconciliation.xml:288
+#: code:addons/account/static/src/xml/account_reconciliation.xml:305
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment__partner_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_id
 #: model:ir.model.fields,field_description:account.field_account_invoice__partner_id
@@ -7515,6 +7550,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
+#: model:ir.model.fields,field_description:account.field_res_users__contract_ids
 msgid "Partner Contracts"
 msgstr ""
 
@@ -7562,7 +7598,7 @@ msgstr ""
 #: selection:account.account.type,type:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Payable"
-msgstr "Ödenebilir"
+msgstr "Borç"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_payable_id
@@ -7577,6 +7613,7 @@ msgstr "Borç Hesapları"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__debit_limit
+#: model:ir.model.fields,field_description:account.field_res_users__debit_limit
 msgid "Payable Limit"
 msgstr "Borç Limiti"
 
@@ -7827,7 +7864,7 @@ msgid "Percentage of balance"
 msgstr "Bakiye Yüzdesi"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1975
+#: code:addons/account/models/account_invoice.py:2018
 #, python-format
 msgid "Percentages on the Payment Terms lines must be between 0 and 100."
 msgstr ""
@@ -7844,11 +7881,12 @@ msgstr "Örgülü Bağlayıcı"
 
 #. module: account
 #: selection:account.invoice,activity_state:0
+#: selection:account.payment,activity_state:0
 msgid "Planned"
 msgstr "Planlanan"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1172
+#: code:addons/account/models/account_invoice.py:1187
 #, python-format
 msgid "Please add at least one invoice line."
 msgstr ""
@@ -7864,29 +7902,30 @@ msgstr "Banka Hesap Özetinde 'Yevmiye' alanının ayarlandığından emin olun"
 #, python-format
 msgid "Please check that the field 'Transfer Account' is set on the company."
 msgstr ""
-"Lütfen 'Transfer Hesabı' alanının şirket ayarlarında tanımlandığına emin "
+"Lütfen 'Transfer Hesabı' alanının firma ayarlarında tanımlandığına emin "
 "olun."
 
 #. module: account
-#: code:addons/account/models/account_move.py:301
+#: code:addons/account/models/account_invoice.py:1309
 #, python-format
 msgid "Please define a sequence for the credit notes"
-msgstr "İade/Fiyat Farkları için bir sıra numarası belirleyin"
+msgstr "İade/Fiyat Farkları için bir numara belirleyin"
 
 #. module: account
-#: code:addons/account/models/account_move.py:306
+#: code:addons/account/models/account_invoice.py:1314
+#: code:addons/account/models/account_move.py:297
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Yevmiye için lütfen bir seri no tanımlayın."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1170
+#: code:addons/account/models/account_invoice.py:1185
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
 msgstr "Bu faturayla ilgili yevmiyeye lütfen bir sıra tanımlayın."
 
 #. module: account
-#: code:addons/account/models/company.py:340
+#: code:addons/account/models/company.py:357
 #, python-format
 msgid ""
 "Please install a chart of accounts or create a miscellaneous journal before "
@@ -7899,31 +7938,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Plus Bank"
-msgstr "+Banka"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Plus Fixed Assets"
-msgstr "(+) Duran Varlıklar"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Plus Net Profit"
-msgstr "+Net Kâr"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Plus Non-Current Assets"
-msgstr "+Dönen Varlıklar"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Plus Other Income"
-msgstr "+Diğer Gelirler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__access_url
@@ -7955,7 +7969,7 @@ msgstr "Sonrası Fark"
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr "Yevmiye Kayıtlarını İşle"
+msgstr "Yevmiye Kayıtlarını Onayla"
 
 #. module: account
 #: selection:account.move,state:0 selection:account.payment,state:0
@@ -7963,7 +7977,7 @@ msgstr "Yevmiye Kayıtlarını İşle"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Posted"
-msgstr "İşlendi"
+msgstr "Onaylandı"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -8003,9 +8017,8 @@ msgstr ""
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_prepayments
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Prepayments"
-msgstr "Avans Ödemeleri"
+msgstr "Ön ödemeler"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model
@@ -8108,17 +8121,12 @@ msgid "Profit"
 msgstr "Kâr"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Profit &amp; Loss"
-msgstr "Kar &amp; Zarar"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__profit_account_id
 msgid "Profit Account"
 msgstr "Kar Hesabı"
 
 #. module: account
-#: code:addons/account/models/account_reconcile_model.py:378
+#: code:addons/account/models/account_reconcile_model.py:380
 #, python-format
 msgid ""
 "Programmation Error: Can't call _get_invoice_matching_query() for different "
@@ -8126,7 +8134,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_reconcile_model.py:489
+#: code:addons/account/models/account_reconcile_model.py:505
 #, python-format
 msgid ""
 "Programmation Error: Can't call _get_wo_suggestion_query() for different "
@@ -8174,7 +8182,7 @@ msgstr "Satınalma"
 #: model:ir.actions.act_window,name:account.action_cash_box_in
 #: model_terms:ir.ui.view,arch_db:account.cash_box_in_form
 msgid "Put Money In"
-msgstr "Para Koy"
+msgstr "...'ya parayı yatır"
 
 #. module: account
 #: selection:account.tax,amount_type:0
@@ -8229,7 +8237,6 @@ msgid "Receivable Account"
 msgstr "Alacak Hesabı"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Receivable Accounts"
 msgstr "Alacak Hesapları"
@@ -8304,7 +8311,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reconciled entries"
-msgstr "Uzlaştırılmış Girişler"
+msgstr "Uzlaştırılmış girişler"
 
 #. module: account
 #: model:ir.actions.client,name:account.action_manual_reconciliation
@@ -8341,14 +8348,14 @@ msgid "Record transactions in foreign currencies"
 msgstr "Yabancı para cinsinden işlem kaydı yapın"
 
 #. module: account
-#: code:addons/account/models/account.py:930
+#: code:addons/account/models/account.py:937
 #, python-format
 msgid "Recursion found for tax '%s'."
 msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:285
+#: code:addons/account/static/src/xml/account_reconciliation.xml:287
 #, python-format
 msgid "Ref"
 msgstr "Ref"
@@ -8359,7 +8366,7 @@ msgid "Ref."
 msgstr "Ref."
 
 #. module: account
-#: code:addons/account/controllers/portal.py:42
+#: code:addons/account/controllers/portal.py:40
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__name
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__ref
 #: model:ir.model.fields,field_description:account.field_account_move__ref
@@ -8390,7 +8397,7 @@ msgstr "Bu ödemeyi yapan belgenin referansı. Örneğin. Numara, dosya adı vb.
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__name
 msgid "Reference/Description"
-msgstr "Belge No"
+msgstr "Referans / Açıklama"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_in_refund
@@ -8513,7 +8520,7 @@ msgstr "Taslağa Ayarla"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:290
+#: code:addons/account/static/src/xml/account_reconciliation.xml:292
 #, python-format
 msgid "Residual"
 msgstr "Kalan"
@@ -8541,6 +8548,7 @@ msgstr "Sorumlu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__activity_user_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_user_id
 msgid "Responsible User"
 msgstr "Sorumlu Kullanıcı"
 
@@ -8589,7 +8597,7 @@ msgid "Reversal date"
 msgstr "Ters Kayıt Tarihi"
 
 #. module: account
-#: code:addons/account/models/account_move.py:399
+#: code:addons/account/models/account_move.py:390
 #, python-format
 msgid "Reversal of: %s"
 msgstr ""
@@ -8717,7 +8725,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Salesperson"
-msgstr "Satış Temsilcisi"
+msgstr "Satış Personeli"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_same_currency
@@ -8731,19 +8739,19 @@ msgid "Sample Invoice"
 msgstr "Örnek Fatura"
 
 #. module: account
-#: code:addons/account/models/company.py:462
+#: code:addons/account/models/company.py:485
 #, python-format
 msgid "Sample invoice"
 msgstr "Örnek fatura"
 
 #. module: account
-#: code:addons/account/models/company.py:468
+#: code:addons/account/models/company.py:491
 #, python-format
 msgid "Sample invoice line name"
 msgstr "Örnek fatura satırının adı"
 
 #. module: account
-#: code:addons/account/models/company.py:475
+#: code:addons/account/models/company.py:498
 #, python-format
 msgid "Sample invoice line name 2"
 msgstr "Örnek fatura satırının adı 2"
@@ -8951,6 +8959,7 @@ msgstr "Seçilen fatura (lar), 'Taslak' durumunda olmadığı için onaylanamaz.
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__invoice_warn
+#: model:ir.model.fields,help:account.field_res_users__invoice_warn
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
@@ -8978,7 +8987,7 @@ msgid "Send Email"
 msgstr "Eposta Gönder"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:607
+#: code:addons/account/models/account_invoice.py:622
 #, python-format
 msgid "Send Invoice"
 msgstr ""
@@ -9015,7 +9024,7 @@ msgstr "Örnek gönder"
 #: model:ir.model.fields,field_description:account.field_account_invoice__sent
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Sent"
-msgstr "Gönderildi"
+msgstr "Gönderilmiş"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -9042,7 +9051,7 @@ msgstr "Sıra"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:239
+#: code:addons/account/static/src/xml/account_reconciliation.xml:249
 #, python-format
 msgid "Set"
 msgstr ""
@@ -9163,6 +9172,7 @@ msgstr "Etkin vergileri göster"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Show all records which has next action date is before today"
 msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 
@@ -9212,7 +9222,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:764
+#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:780
 #, python-format
 msgid "Some fields are undefined"
 msgstr ""
@@ -9239,7 +9249,7 @@ msgid ""
 "Specify which way will be used to round the invoice amount to the rounding "
 "precision"
 msgstr ""
-"Fatura miktarındaki yuvarlama hassasiyeti için kullanılacak yolu belirleyin."
+"Fatura miktarındaki yuvarlama hassasiyeti için kullanılacak yolu özelleştir."
 " "
 
 #. module: account
@@ -9273,7 +9283,7 @@ msgstr "Nakit Para Kasasını Başlatma"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "State"
-msgstr "Durum"
+msgstr "Durumu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_dashboard_onboarding_state
@@ -9325,7 +9335,7 @@ msgstr "Üst account.move durumu"
 #: model:ir.model.fields,field_description:account.field_account_move_line__statement_id
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Statement"
-msgstr "Hesap Özeti"
+msgstr "Ekstre"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:248
@@ -9343,13 +9353,13 @@ msgstr "Hesap Özeti Kalemi"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_line_tree
 msgid "Statement lines"
-msgstr "Hesap Özeti Satırları"
+msgstr "Ekstre satırları"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_tree
 msgid "Statements"
-msgstr "Hesap Özetleri"
+msgstr "Ekstreler"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -9362,7 +9372,7 @@ msgid "States Count"
 msgstr "Devlet Sayısı"
 
 #. module: account
-#: code:addons/account/controllers/portal.py:43
+#: code:addons/account/controllers/portal.py:41
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__state
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__state
 #: model:ir.model.fields,field_description:account.field_account_invoice__state
@@ -9378,6 +9388,7 @@ msgstr "Durumu"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__activity_state
+#: model:ir.model.fields,help:account.field_account_payment__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -9414,10 +9425,15 @@ msgid "Subtype"
 msgstr "Alt-Tür"
 
 #. module: account
-#: selection:account.reconcile.model,rule_type:0
 #: selection:account.reconcile.model.template,rule_type:0
+#: code:addons/account/models/chart_template.py:982
+#, python-format
+msgid "Suggest a write-off."
+msgstr ""
+
+#. module: account
+#: selection:account.reconcile.model,rule_type:0
 #: code:addons/account/models/account_reconcile_model.py:20
-#: code:addons/account/models/chart_template.py:933
 #, python-format
 msgid "Suggest counterpart values."
 msgstr ""
@@ -9426,16 +9442,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Supplier Payments"
 msgstr "Tedarikçi Para Birimi"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "TOTAL ASSETS"
-msgstr "TOPLAM VARLIKLAR"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "TOTAL EQUITY"
-msgstr "TOPLAM ÖZKAYNAK"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__tag_ids
@@ -9473,8 +9479,8 @@ msgid "Tax"
 msgstr "Vergi"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:279
-#: code:addons/account/models/chart_template.py:281
+#: code:addons/account/models/chart_template.py:291
+#: code:addons/account/models/chart_template.py:293
 #, python-format
 msgid "Tax %.2f%%"
 msgstr "Vergi %.2f%%"
@@ -9696,7 +9702,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "TaxCloud"
-msgstr "TaxCloud"
+msgstr "VergiBulutu"
 
 #. module: account
 #: selection:account.account.tag,applicability:0
@@ -10007,13 +10013,13 @@ msgstr ""
 "müşteri hesapları içindir."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1059
+#: code:addons/account/models/account_move.py:1051
 #, python-format
 msgid "The account %s (%s) is deprecated."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:521
+#: code:addons/account/models/account_invoice.py:536
 #, python-format
 msgid ""
 "The account selected for payment does not belong to the same company as this"
@@ -10034,6 +10040,13 @@ msgid ""
 msgstr "Otomatik değişim farklarının kaydedileceği yevmiye hesabı"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:585
+#, python-format
+msgid "The amount %s is not a valid partial amount"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__amount_currency
 #: model:ir.model.fields,help:account.field_account_move_line__amount_currency
 msgid ""
@@ -10044,7 +10057,7 @@ msgstr ""
 "belirtilir."
 
 #. module: account
-#: code:addons/account/models/account_move.py:696
+#: code:addons/account/models/account_move.py:687
 #, python-format
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
@@ -10060,7 +10073,7 @@ msgid "The amount of a cash transaction cannot be 0."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:932
+#: code:addons/account/models/account.py:939
 #, python-format
 msgid ""
 "The application scope of taxes in a group must be either the same as the "
@@ -10068,7 +10081,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:551
+#: code:addons/account/models/account.py:558
 #, python-format
 msgid ""
 "The bank account of a bank journal must belong to the same company (%s)."
@@ -10096,7 +10109,7 @@ msgid "The bank statement used for bank reconciliation"
 msgstr "Banka uzlaştırması için kullanılan banka hesap özeti"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1260
+#: code:addons/account/models/account_invoice.py:1274
 #, python-format
 msgid ""
 "The cash rounding cannot be computed because the difference must be added on the biggest tax found and no tax are specified.\n"
@@ -10132,7 +10145,15 @@ msgid ""
 msgstr "Bu faturaya ait Yevmiye Girişlerinde kullanılacak ticari varlık"
 
 #. module: account
-#: code:addons/account/models/account.py:542
+#: code:addons/account/models/account_bank_statement.py:335
+#, python-format
+msgid ""
+"The currency of the bank statement line must be different than the statement"
+" currency."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account.py:549
 #, python-format
 msgid ""
 "The currency of the journal should be the same than the default credit "
@@ -10140,7 +10161,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:544
+#: code:addons/account/models/account.py:551
 #, python-format
 msgid ""
 "The currency of the journal should be the same than the default debit "
@@ -10153,7 +10174,7 @@ msgid "The currency used to enter statement"
 msgstr "Hesap özetine girilecek para birimi"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1981
+#: code:addons/account/models/account_invoice.py:2024
 #, python-format
 msgid "The day of the month used for this term must be stricly positive."
 msgstr ""
@@ -10188,7 +10209,7 @@ msgstr ""
 "kararlaştırılır."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:891
+#: code:addons/account/models/account_invoice.py:906
 #, python-format
 msgid ""
 "The field Vendor is required, please complete it to validate the Vendor "
@@ -10197,12 +10218,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_position_id
+#: model:ir.model.fields,help:account.field_res_users__property_account_position_id
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:555
+#: code:addons/account/models/account.py:564
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
 msgstr "Bir derginin banka hesabı sahibi firma olmalıdır ( %s )."
@@ -10227,14 +10249,7 @@ msgstr ""
 "Yevmiye kayıtları şirketteki bütün hesapların başlangıç bakiyesini içerir."
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
-#: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_month
-msgid ""
-"The last day of the month will be taken if the chosen day doesn't exist."
-msgstr "Seçilen gün yoksa ayın son günü alınır."
-
-#. module: account
-#: code:addons/account/models/account_invoice.py:1892
+#: code:addons/account/models/account_invoice.py:1935
 #, python-format
 msgid "The last line of a Payment Term should have the Balance type."
 msgstr ""
@@ -10249,7 +10264,7 @@ msgstr ""
 "olmalıdır."
 
 #. module: account
-#: code:addons/account/models/company.py:145
+#: code:addons/account/models/company.py:161
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
 msgstr ""
@@ -10265,7 +10280,7 @@ msgid "The name that will be used on account move lines"
 msgstr "Hesap hareket satırlarında kullanılacak ad"
 
 #. module: account
-#: code:addons/account/models/company.py:149
+#: code:addons/account/models/company.py:165
 #, python-format
 msgid ""
 "The new lock date for advisors must be set after the previous lock date."
@@ -10279,10 +10294,10 @@ msgstr "Sonraki İade/Fiyat Farkı için sıradaki numara kullanılacak"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence_number_next
 msgid "The next sequence number will be used for the next invoice."
-msgstr "Sonraki fatura için sıradaki numara kullanılacaktır."
+msgstr "Sıradaki fatura için sıradaki numara kullanılacaktır."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1983
+#: code:addons/account/models/account_invoice.py:2026
 #, python-format
 msgid "The number of days used for a payment term cannot be negative."
 msgstr ""
@@ -10291,7 +10306,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__currency_id
 #: model:ir.model.fields,help:account.field_account_move_line__currency_id
 msgid "The optional other currency if it is a multi-currency entry."
-msgstr "Eğer çok para birimli ise seçmeli diğer para biriminin kaydı."
+msgstr "Eğer çok para birimli ise seçmeli diğer para birimi girişi."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__quantity
@@ -10309,6 +10324,7 @@ msgstr "Bu fatura için kullanılan iş ortağı hesabı."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
+#: model:ir.model.fields,help:account.field_res_users__has_unreconciled_entries
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
@@ -10317,7 +10333,7 @@ msgstr ""
 "uzlaşmamış borç ve alacak var."
 
 #. module: account
-#: code:addons/account/models/account.py:648
+#: code:addons/account/models/account.py:657
 #, python-format
 msgid ""
 "The partners of the journal's company and the related bank account mismatch."
@@ -10425,7 +10441,7 @@ msgstr ""
 "miktarı."
 
 #. module: account
-#: code:addons/account/models/account_move.py:681
+#: code:addons/account/models/account_move.py:672
 #, python-format
 msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
@@ -10435,7 +10451,7 @@ msgstr ""
 "zorlar. Hesabınızdaki ikincil para birimini kaldırmalısınız."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1763
+#: code:addons/account/models/account_invoice.py:1806
 #, python-format
 msgid ""
 "The selected unit of measure has to be in the same category as the product "
@@ -10478,7 +10494,7 @@ msgid "There are currently no invoices and payments for your account."
 msgstr "Hesabınız için bir fatura ve ödeme görülmemektedir."
 
 #. module: account
-#: code:addons/account/models/company.py:248
+#: code:addons/account/models/company.py:264
 #, python-format
 msgid ""
 "There are still unposted entries in the period you want to lock. You should "
@@ -10510,7 +10526,7 @@ msgid "There is no journal items in draft state to post."
 msgstr "Taslak haldeki hiçbir yevmiye öğesi yayınlanmaz."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1566
+#: code:addons/account/models/account_move.py:1559
 #, python-format
 msgid ""
 "There is no tax cash basis journal defined for this company: \"%s\" \n"
@@ -10546,14 +10562,6 @@ msgstr ""
 "hakkında daha çok bilgi içerir."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1439
-#, python-format
-msgid ""
-"This %s has been created from: <a href=# data-oe-model=account.invoice data-"
-"oe-id=%d>%s</a><br>Reason: %s"
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/account_journal_dashboard.py:100
 #, python-format
 msgid "This Week"
@@ -10561,6 +10569,7 @@ msgstr "Bu Hafta"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_payable_id
+#: model:ir.model.fields,help:account.field_res_users__property_account_payable_id
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
@@ -10570,6 +10579,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_receivable_id
+#: model:ir.model.fields,help:account.field_res_users__property_account_receivable_id
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
@@ -10634,6 +10644,14 @@ msgstr ""
 "seçenek bu şablonda bütün vergilerin tam olarak tanımlandığını varsayar."
 
 #. module: account
+#: code:addons/account/models/account_invoice.py:1482
+#, python-format
+msgid ""
+"This customer invoice credit note has been created from: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This feature is useful if you issue a high amounts of invoices."
 msgstr ""
@@ -10655,8 +10673,8 @@ msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
 msgstr ""
-"Bu alan, bu yevmiyeye ait yevmiye girişleri numaralarının verilmesiyle "
-"ilgili bilgi içerir."
+"Bu alan, bu yevmiyeye ait yevmiye giriş numaralarının verilmesiyle ilgili "
+"bilgi içerir."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__journal_id
@@ -10690,7 +10708,7 @@ msgid "This is the accounting dashboard"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:620
+#: code:addons/account/models/account.py:627
 #, python-format
 msgid ""
 "This journal already contains items, therefore you cannot modify its "
@@ -10699,7 +10717,7 @@ msgstr ""
 "Bu yevmiyede zaten öğeler var, bu nedenle şirketini değiştiremezsiniz."
 
 #. module: account
-#: code:addons/account/models/account.py:629
+#: code:addons/account/models/account.py:636
 #, python-format
 msgid ""
 "This journal already contains items, therefore you cannot modify its short "
@@ -10711,7 +10729,7 @@ msgstr "Bu günlüğe zaten öğeler var, bu nedenle kısa adını değiştireme
 #, python-format
 msgid ""
 "This method should only be called to process a single invoice's payment."
-msgstr "Bu yöntem sadece bir fatura ödemesini işlemek için çağrılmalıdır. "
+msgstr "Bu yöntem sadece bir fatura ödemesi için talep edilmelidir. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__chart_template_id
@@ -10748,13 +10766,14 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:294
+#: code:addons/account/static/src/xml/account_reconciliation.xml:296
 #, python-format
 msgid "This payment is registered but not reconciled."
 msgstr "Bu ödeme kaydedilmiş ancak mutabık kılınmamıştır."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_supplier_payment_term_id
+#: model:ir.model.fields,help:account.field_res_users__property_supplier_payment_term_id
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
@@ -10764,6 +10783,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_payment_term_id
+#: model:ir.model.fields,help:account.field_res_users__property_payment_term_id
 msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
@@ -10781,6 +10801,14 @@ msgstr ""
 "Bu teknik alan, hesap özeti satırı oluşturulduğu/içe aktarıldığı zaman daha "
 "sonra üzerinde uzlaştırma olmaması için kullanılır. Hesap özeti satırı "
 "basitçe bu hesap üzerinde bir karşı hesap oluşturacaktır"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1484
+#, python-format
+msgid ""
+"This vendor bill credit note has been created from: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -10808,7 +10836,7 @@ msgstr "Faturalanacak"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_tree
 msgid "To Pay"
-msgstr "Ödenecek"
+msgstr "Öde"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_tree
@@ -10816,7 +10844,7 @@ msgid "To pay"
 msgstr "Öde"
 
 #. module: account
-#: code:addons/account/models/account_move.py:909
+#: code:addons/account/models/account_move.py:901
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries."
 msgstr ""
@@ -10830,11 +10858,13 @@ msgstr ""
 
 #. module: account
 #: selection:account.invoice,activity_state:0
+#: selection:account.payment,activity_state:0
 msgid "Today"
 msgstr "Bugün"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Today Activities"
 msgstr "Bugünkü Aktiviteler"
 
@@ -10872,16 +10902,19 @@ msgstr "Toplam Borç"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__total_invoiced
+#: model:ir.model.fields,field_description:account.field_res_users__total_invoiced
 msgid "Total Invoiced"
 msgstr "Toplam Faturalanan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__debit
+#: model:ir.model.fields,field_description:account.field_res_users__debit
 msgid "Total Payable"
 msgstr "Toplam Borç"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__credit
+#: model:ir.model.fields,field_description:account.field_res_users__credit
 msgid "Total Receivable"
 msgstr "Toplam Alacak"
 
@@ -10899,45 +10932,47 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_invoice_line__price_subtotal_signed
 msgid "Total amount in the currency of the company, negative for credit note."
 msgstr ""
-"Şirketinizin para birimindeki toplam miktar, kredi notu için olumsuzdur."
+"Şirketinizin para akışının toplam miktarı, kredi notu için olumsuzdur."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__amount_total_company_signed
 msgid ""
 "Total amount in the currency of the company, negative for credit notes."
 msgstr ""
-"Şirketinizin para birimindeki toplam miktar, kredi notu için olumsuzdur."
+"Şirketinizin para akışının toplam miktarı, kredi notu için olumsuzdur."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__amount_total_signed
 msgid ""
 "Total amount in the currency of the invoice, negative for credit notes."
-msgstr "Fatura para biriminin toplam miktarı, kredi notu için olumsuzdur."
+msgstr "Faturanın para akışının toplam miktarı, kredi notu için olumsuzdur."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit
+#: model:ir.model.fields,help:account.field_res_users__credit
 msgid "Total amount this customer owes you."
 msgstr "Bu müşterinin size toplam borç tutarı"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__price_total
 msgid "Total amount with taxes"
-msgstr "Vergi Dahil Tutar"
+msgstr "Vergilerle birlikte toplam miktar"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__price_subtotal
 msgid "Total amount without taxes"
-msgstr "Vergi Hariç Tutar"
+msgstr "Vergiler hariç toplam miktar"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__debit
+#: model:ir.model.fields,help:account.field_res_users__debit
 msgid "Total amount you have to pay to this vendor."
 msgstr "Bu tedarikçiye ödenmesi gereken toplam meblağ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__amount_total_company_signed
 msgid "Total in Company Currency"
-msgstr "Şirket Para Birimi Toplamı"
+msgstr "Firma Para Birimi Toplamı"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__amount_total_signed
@@ -10968,7 +11003,7 @@ msgstr "İzleme Değerleri"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:304
+#: code:addons/account/static/src/xml/account_reconciliation.xml:306
 #, python-format
 msgid "Transaction"
 msgstr "İşlem"
@@ -11003,7 +11038,7 @@ msgstr "%s 'e Havale Yap"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Transfers"
-msgstr "Transferler"
+msgstr "Havaleler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
@@ -11011,6 +11046,7 @@ msgstr "Transferler"
 #: model:ir.model.fields,field_description:account.field_account_account_type__type
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__journal_type
 #: model:ir.model.fields,field_description:account.field_account_invoice__type
+#: model:ir.model.fields,field_description:account.field_account_invoice_line__invoice_type
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__type
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__message_type
 #: model:ir.model.fields,field_description:account.field_account_journal__type
@@ -11020,7 +11056,7 @@ msgstr "Transferler"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__rule_type
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_type
 msgid "Type"
-msgstr "Tür"
+msgstr "Türü"
 
 #. module: account
 #: selection:account.cash.rounding,rounding_method:0
@@ -11028,13 +11064,13 @@ msgid "UP"
 msgstr "UP"
 
 #. module: account
-#: code:addons/account/models/account.py:398
+#: code:addons/account/models/account.py:405
 #, python-format
 msgid "Undefined Yet"
 msgstr "Tanımlanmamış"
 
 #. module: account
-#: code:addons/account/models/company.py:363
+#: code:addons/account/models/company.py:386
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr "Dağıtılmamış Kâr / Zararlar"
@@ -11042,7 +11078,7 @@ msgstr "Dağıtılmamış Kâr / Zararlar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__price_unit
 msgid "Unit Price"
-msgstr "Birim Maliyet"
+msgstr "Birim Fiyat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
@@ -11056,7 +11092,7 @@ msgid "Unit of Measure"
 msgstr "Ölçü Birimi"
 
 #. module: account
-#: code:addons/account/report/account_aged_partner_balance.py:207
+#: code:addons/account/report/account_aged_partner_balance.py:220
 #, python-format
 msgid "Unknown Partner"
 msgstr "Bilinmeyen İş Ortağı"
@@ -11129,7 +11165,7 @@ msgstr "Uzlaştırılmamış Girişler"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Vergi Hariç Tutar"
+msgstr "Vergisiz Tutar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__amount_untaxed_signed
@@ -11299,8 +11335,9 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move_line__company_currency_id
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__company_currency_id
 #: model:ir.model.fields,help:account.field_res_partner__currency_id
+#: model:ir.model.fields,help:account.field_res_users__currency_id
 msgid "Utility field to express amount currency"
-msgstr "Miktar para birimini ifade etmek için kullanım alanı"
+msgstr "Miktar bilgisini girmek için alan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
@@ -11342,7 +11379,7 @@ msgstr "Doğrulanmış"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value_amount
 msgid "Value"
-msgstr "Maliyet"
+msgstr "Değer"
 
 #. module: account
 #: selection:account.abstract.payment,partner_type:0
@@ -11356,8 +11393,8 @@ msgstr "Tedarikçi"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
-#: code:addons/account/models/account_invoice.py:488
-#: code:addons/account/models/account_invoice.py:1315
+#: code:addons/account/models/account_invoice.py:500
+#: code:addons/account/models/account_invoice.py:1357
 #: model:ir.model.fields,field_description:account.field_account_invoice__vendor_bill_id
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_tree
@@ -11367,13 +11404,13 @@ msgid "Vendor Bill"
 msgstr "Tedarikçi Faturası"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:489
+#: code:addons/account/models/account_invoice.py:501
 #, python-format
 msgid "Vendor Bill - %s"
 msgstr "Tedarikçi Faturası - %s"
 
 #. module: account
-#: code:addons/account/models/chart_template.py:410
+#: code:addons/account/models/chart_template.py:419
 #: model:ir.actions.act_window,name:account.action_vendor_bill_template
 #, python-format
 msgid "Vendor Bills"
@@ -11381,7 +11418,7 @@ msgstr "Tedarikçi  Faturaları"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
-#: code:addons/account/models/account_invoice.py:490
+#: code:addons/account/models/account_invoice.py:502
 #: code:addons/account/models/account_payment.py:772
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
@@ -11389,13 +11426,13 @@ msgid "Vendor Credit Note"
 msgstr "Tedarikçi İade/Fiyat Farkı"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:491
+#: code:addons/account/models/account_invoice.py:503
 #, python-format
 msgid "Vendor Credit Note - %s"
 msgstr "Tedarikçi İade/Fiyat Farkı - %s"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1317
+#: code:addons/account/models/account_invoice.py:1359
 #, python-format
 msgid "Vendor Credit note"
 msgstr "Tedarikçi İade/Fiyat Farkı"
@@ -11414,6 +11451,7 @@ msgstr "Tedarikçi Ödemesi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_supplier_payment_term_id
+#: model:ir.model.fields,field_description:account.field_res_users__property_supplier_payment_term_id
 msgid "Vendor Payment Terms"
 msgstr "Tedarikçi Ödeme Şartları"
 
@@ -11429,6 +11467,7 @@ msgid "Vendor Reference"
 msgstr "Tedarikçi Referansı"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__supplier_taxes_id
 msgid "Vendor Taxes"
 msgstr "Tedarikçi Vergileri"
@@ -11445,12 +11484,7 @@ msgstr "Tedarikçiler"
 #: code:addons/account/static/src/xml/account_payment.xml:82
 #, python-format
 msgid "View"
-msgstr "Görüntüle"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
-msgid "View accounts detail"
-msgstr ""
+msgstr "Görünüm"
 
 #. module: account
 #: selection:res.partner,invoice_warn:0
@@ -11458,7 +11492,7 @@ msgid "Warning"
 msgstr "Uyarı"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:778
+#: code:addons/account/models/account_invoice.py:793
 #, python-format
 msgid "Warning for %s"
 msgstr "%s için uyarı"
@@ -11469,8 +11503,8 @@ msgid "Warning on the Invoice"
 msgstr "Faturada Uyarı"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1682
-#: code:addons/account/models/account_invoice.py:1762
+#: code:addons/account/models/account_invoice.py:1725
+#: code:addons/account/models/account_invoice.py:1805
 #, python-format
 msgid "Warning!"
 msgstr "Uyarı!"
@@ -11486,7 +11520,7 @@ msgid "Warnings in Invoices"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:518
+#: code:addons/account/models/company.py:541
 #, python-format
 msgid ""
 "We cannot find a chart of accounts for this company, you should configure it. \n"
@@ -11494,7 +11528,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:457
+#: code:addons/account/models/company.py:480
 #, python-format
 msgid ""
 "We cannot find any journal for this company. You should create one.\n"
@@ -11557,8 +11591,8 @@ msgid "With tax"
 msgstr "Vergili"
 
 #. module: account
-#: code:addons/account/models/account_move.py:979
-#: code:addons/account/models/account_move.py:999
+#: code:addons/account/models/account_move.py:971
+#: code:addons/account/models/account_move.py:991
 #, python-format
 msgid "Write-Off"
 msgstr "Borç Silme"
@@ -11570,17 +11604,12 @@ msgid "Write-off Amount"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
-msgid "Counterpart Values"
-msgstr ""
-
-#. module: account
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
 msgstr "Muhasebe kaydında hatalı alacak ya da Borç değeri!"
 
 #. module: account
-#: code:addons/account/models/account_move.py:907
+#: code:addons/account/models/account_move.py:899
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
 msgstr ""
@@ -11601,7 +11630,7 @@ msgid "You can find a contact by its Name, TIN, Email or Internal Reference."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1940
+#: code:addons/account/models/account_invoice.py:1983
 #, python-format
 msgid ""
 "You can not delete payment terms as other records still reference it. "
@@ -11617,7 +11646,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1784
+#: code:addons/account/models/account_invoice.py:1827
 #, python-format
 msgid "You can only delete an invoice line if the invoice is in draft state."
 msgstr "Fatura taslağı durumunda fatura satırını silebilirsiniz."
@@ -11637,7 +11666,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:370
+#: code:addons/account/models/account_move.py:361
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
@@ -11646,18 +11675,18 @@ msgstr ""
 "ekleyemez / değiştiremezsiniz"
 
 #. module: account
-#: code:addons/account/models/account_move.py:372
+#: code:addons/account/models/account_move.py:363
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
 "Check the company settings or ask someone with the 'Adviser' role"
 msgstr ""
 "Kilit tarihi %s öncesinde ve bu tarihin kapsanmadığı girdileri ekleyemez / "
-"değiştiremezsiniz. Şirket ayarlarını kontrol edin veya 'Müşavir' rolüyle "
+"değiştiremezsiniz. Şirket ayarlarını kontrol edin veya 'Danışman' rolüyle "
 "birine sorun"
 
 #. module: account
-#: code:addons/account/models/company.py:267
+#: code:addons/account/models/company.py:283
 #, python-format
 msgid ""
 "You cannot change the currency of the company since some journal items "
@@ -11667,7 +11696,7 @@ msgstr ""
 "değiştiremezsiniz."
 
 #. module: account
-#: code:addons/account/models/account.py:310
+#: code:addons/account/models/account.py:317
 #, python-format
 msgid ""
 "You cannot change the owner company of an account that already contains "
@@ -11675,7 +11704,7 @@ msgid ""
 msgstr "Hareket görmüş bir hesabın bağlı olduğu şirketi değiştiremezsiniz."
 
 #. module: account
-#: code:addons/account/models/account_move.py:688
+#: code:addons/account/models/account_move.py:679
 #, python-format
 msgid ""
 "You cannot create journal items with a secondary currency without filling "
@@ -11683,7 +11712,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:171
+#: code:addons/account/models/company.py:187
 #, python-format
 msgid ""
 "You cannot define stricter conditions on advisors than on users. Please make"
@@ -11697,7 +11726,7 @@ msgid "You cannot delete a payment that is already posted."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:729
+#: code:addons/account/models/account_invoice.py:744
 #, python-format
 msgid ""
 "You cannot delete an invoice after it has been validated (and received a "
@@ -11709,7 +11738,7 @@ msgstr ""
 "yeniden onaylayabilirsiniz."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:727
+#: code:addons/account/models/account_invoice.py:742
 #, python-format
 msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
@@ -11719,7 +11748,7 @@ msgstr ""
 "yerine bir fiyat farkı oluşturabilirsiniz."
 
 #. module: account
-#: code:addons/account/models/res_config_settings.py:146
+#: code:addons/account/models/res_config_settings.py:147
 #, python-format
 msgid ""
 "You cannot disable this setting because some of your taxes are cash basis. "
@@ -11730,7 +11759,7 @@ msgstr ""
 "değiştiriniz."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1146
+#: code:addons/account/models/account_move.py:1136
 #, python-format
 msgid ""
 "You cannot do this modification on a posted journal entry, you can just change some non legal fields. You must revert the journal entry to cancel it.\n"
@@ -11740,13 +11769,13 @@ msgstr ""
 "%s ."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1148
+#: code:addons/account/models/account_move.py:1138
 #, python-format
 msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr ""
-"Uzlaştırılmış bir kayıt için bu değişikliği yapamazsınız! Diğer bazı alanları değiştirebilirsiniz ya da önce uzlaşmayı kaldırmalısınız\n"
+"Uzlaştırılmış bir giriş için bu değişikliği yapamazsınız! Yalnızca bazı yasal olmayan alanları değiştirebilirsiniz ya da önce uzlaşmayı kaldırmalısınız\n"
 "%s"
 
 #. module: account
@@ -11758,7 +11787,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:71
+#: code:addons/account/models/account.py:76
 #, python-format
 msgid ""
 "You cannot have more than one account with \"Current Year Earnings\" as "
@@ -11766,7 +11795,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:160
+#: code:addons/account/models/company.py:176
 #, python-format
 msgid ""
 "You cannot lock a period that is not finished yet. Please make sure that the"
@@ -11775,7 +11804,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:741
+#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:760
 #, python-format
 msgid "You cannot mix items from receivable and payable accounts."
 msgstr "Alacaklı ve borç hesaplarındaki maddeleri karıştıramazsınız."
@@ -11787,17 +11816,17 @@ msgid "You cannot modify a journal entry linked to a posted payment."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:331
+#: code:addons/account/models/account_move.py:322
 #, python-format
 msgid ""
 "You cannot modify a posted entry of this journal.\n"
 "First you should set the journal to allow cancelling entries."
 msgstr ""
 "Bu yevmiyeye ait işlenmiş bir kaydı değiştiremezsiniz !\n"
-"Bunu yapmak istiyorsanız ilgili yevmiye üzerinden yevmiye kayıtlarının iptaline izin vermelisiniz."
+"Bunu yapmak istiyorsanız ilgili yevmiye üzerinden yevmiye girişlerinin iptaline izin vermelisiniz."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:909
+#: code:addons/account/models/account_invoice.py:924
 #, python-format
 msgid ""
 "You cannot pay an invoice which is partially paid. You need to reconcile "
@@ -11807,7 +11836,7 @@ msgstr ""
 "kılmanız gerekir."
 
 #. module: account
-#: code:addons/account/models/account.py:327
+#: code:addons/account/models/account.py:334
 #, python-format
 msgid ""
 "You cannot perform this action on an account that contains journal items."
@@ -11821,13 +11850,13 @@ msgstr ""
 "Kapalı bir banka hesap özetinde para gönderme ve alma işlemi yapamazsınız."
 
 #. module: account
-#: code:addons/account/models/account.py:644
+#: code:addons/account/models/account.py:651
 #, python-format
 msgid "You cannot remove the bank account from the journal once set."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:332
+#: code:addons/account/models/account.py:339
 #, python-format
 msgid ""
 "You cannot remove/deactivate an account which is set on a customer or "
@@ -11837,7 +11866,7 @@ msgstr ""
 "dışı bırakamazsınız."
 
 #. module: account
-#: code:addons/account/models/account.py:320
+#: code:addons/account/models/account.py:327
 #, python-format
 msgid ""
 "You cannot set a currency on this account as it already has some journal "
@@ -11845,7 +11874,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:294
+#: code:addons/account/models/account.py:301
 #, python-format
 msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
@@ -11853,13 +11882,13 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1112
+#: code:addons/account/models/account_move.py:1102
 #, python-format
 msgid "You cannot use a deprecated account."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1069
+#: code:addons/account/models/account_move.py:1061
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -11870,7 +11899,7 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:76
-#: code:addons/account/models/account_invoice.py:895
+#: code:addons/account/models/account_invoice.py:910
 #, python-format
 msgid ""
 "You cannot validate an invoice with a negative total amount. You should "
@@ -11901,13 +11930,13 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:142
+#: code:addons/account/models/account.py:147
 #, python-format
 msgid "You must first define an opening move."
 msgstr "İlk önce bir açılış hareketini tanımlamanız gerekir."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1683
+#: code:addons/account/models/account_invoice.py:1726
 #, python-format
 msgid "You must first select a partner."
 msgstr "İlk önce bir ortak seçmelisiniz."
@@ -11920,7 +11949,7 @@ msgid "You reconciled"
 msgstr "Uzlaştırdınız"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1624
+#: code:addons/account/models/account_move.py:1617
 #, python-format
 msgid ""
 "You should configure the 'Exchange Rate Journal' in the accounting settings,"
@@ -11932,7 +11961,7 @@ msgstr ""
 "yapılandırmanız gerekir."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1626
+#: code:addons/account/models/account_move.py:1619
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -11944,7 +11973,7 @@ msgstr ""
 "ayarlarından yapılandırmalısınız."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1628
+#: code:addons/account/models/account_move.py:1621
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -11983,16 +12012,6 @@ msgstr "PK Başlangıç"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__zip_to
 msgid "Zip Range To"
 msgstr "PK Bitiş"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_dashboard_onboarding_panel
-msgid "action_close_account_dashboard_onboarding"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
-msgid "action_close_account_invoice_onboarding"
-msgstr ""
 
 #. module: account
 #. openerp-web
@@ -12058,7 +12077,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:318
+#: code:addons/account/static/src/xml/account_reconciliation.xml:320
 #, python-format
 msgid "have been reconciled automatically."
 msgstr ""
@@ -12068,16 +12087,6 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:44
 #, python-format
 msgid "o_manual_statement"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
-msgid "o_onboarding_blue"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_dashboard_onboarding_panel
-msgid "o_onboarding_orange"
 msgstr ""
 
 #. module: account
@@ -12115,12 +12124,6 @@ msgid "remaining)"
 msgstr "kalan)"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_dashboard_onboarding_panel
-#: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
-msgid "res.company"
-msgstr ""
-
-#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:57
 #, python-format
@@ -12129,7 +12132,7 @@ msgstr "işlem başına saniye"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:319
+#: code:addons/account/static/src/xml/account_reconciliation.xml:321
 #, python-format
 msgid "statement lines"
 msgstr ""

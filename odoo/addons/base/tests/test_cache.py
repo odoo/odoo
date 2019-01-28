@@ -2,7 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import os
+import platform
 import psutil
+import unittest
 
 from odoo.exceptions import CacheMiss
 from odoo.tests.common import TransactionCase
@@ -51,33 +53,35 @@ class TestRecordCache(TransactionCase):
         self.assertCountEqual(cache.get_missing_ids(foo2 + bar2, name), [1, 2])
 
         # set values in one environment only
-        for rec in [foo1, bar1]:
-            cache.set(rec, name, 'NAME1')
-            cache.set(rec, ref, 'REF1')
-        check(foo1, 'NAME1', 'REF1')
+        cache.set(foo1, name, 'FOO1_NAME')
+        cache.set(foo1, ref, 'FOO1_REF')
+        cache.set(bar1, name, 'BAR1_NAME')
+        cache.set(bar1, ref, 'BAR1_REF')
+        check(foo1, 'FOO1_NAME', 'FOO1_REF')
         check(foo2, None, None)
-        check(bar1, 'NAME1', 'REF1')
+        check(bar1, 'BAR1_NAME', 'BAR1_REF')
         check(bar2, None, None)
         self.assertCountEqual(cache.get_missing_ids(foo1 + bar1, name), [])
         self.assertCountEqual(cache.get_missing_ids(foo2 + bar2, name), [1, 2])
 
         # set values in both environments
-        for rec in [foo2, bar2]:
-            cache.set(rec, name, 'NAME2')
-            cache.set(rec, ref, 'REF2')
-        check(foo1, 'NAME1', 'REF1')
-        check(foo2, 'NAME2', 'REF2')
-        check(bar1, 'NAME1', 'REF1')
-        check(bar2, 'NAME2', 'REF2')
+        cache.set(foo2, name, 'FOO2_NAME')
+        cache.set(foo2, ref, 'FOO2_REF')
+        cache.set(bar2, name, 'BAR2_NAME')
+        cache.set(bar2, ref, 'BAR2_REF')
+        check(foo1, 'FOO1_NAME', 'FOO1_REF')
+        check(foo2, 'FOO2_NAME', 'FOO2_REF')
+        check(bar1, 'BAR1_NAME', 'BAR1_REF')
+        check(bar2, 'BAR2_NAME', 'BAR2_REF')
         self.assertCountEqual(cache.get_missing_ids(foo1 + bar1, name), [])
         self.assertCountEqual(cache.get_missing_ids(foo2 + bar2, name), [])
 
         # remove value in one environment
         cache.remove(foo1, name)
-        check(foo1, None, 'REF1')
-        check(foo2, 'NAME2', 'REF2')
-        check(bar1, 'NAME1', 'REF1')
-        check(bar2, 'NAME2', 'REF2')
+        check(foo1, None, 'FOO1_REF')
+        check(foo2, 'FOO2_NAME', 'FOO2_REF')
+        check(bar1, 'BAR1_NAME', 'BAR1_REF')
+        check(bar2, 'BAR2_NAME', 'BAR2_REF')
         self.assertCountEqual(cache.get_missing_ids(foo1 + bar1, name), [1])
         self.assertCountEqual(cache.get_missing_ids(foo2 + bar2, name), [])
 
@@ -85,8 +89,8 @@ class TestRecordCache(TransactionCase):
         cache.invalidate([(name, None), (ref, foo1.ids)])
         check(foo1, None, None)
         check(foo2, None, None)
-        check(bar1, None, 'REF1')
-        check(bar2, None, 'REF2')
+        check(bar1, None, 'BAR1_REF')
+        check(bar2, None, 'BAR2_REF')
 
         # total invalidation
         cache.invalidate()
@@ -96,28 +100,34 @@ class TestRecordCache(TransactionCase):
         check(bar2, None, None)
 
         # set a special value
-        cache.set_special(foo1, name, lambda: '42')
+        cache.set_special(foo1, name, lambda: 'FOO1_SPECIAL_NAME')
         self.assertTrue(cache.contains(foo1, name))
         self.assertFalse(cache.contains_value(foo1, name))
-        self.assertEqual(cache.get(foo1, name), '42')
+        self.assertEqual(cache.get(foo1, name), 'FOO1_SPECIAL_NAME')
         self.assertIsNone(cache.get_value(foo1, name))
         self.assertIsNotNone(cache.get_special(foo1, name))
 
         # copy cache
-        for rec in [foo1, bar1]:
-            cache.set(rec, name, 'NAME1')
-            cache.set(rec, ref, 'REF1')
-        check(foo1, 'NAME1', 'REF1')
-        check(foo2, None, None)
-        check(bar1, 'NAME1', 'REF1')
+        cache.set(foo1, name, 'FOO1_NAME')
+        cache.set(foo1, ref, 'FOO1_REF')
+        cache.set(bar1, name, 'BAR1_NAME')
+        cache.set(bar1, ref, 'BAR1_REF')
+        cache.set(foo2, name, 'FOO2_NAME')
+        check(foo1, 'FOO1_NAME', 'FOO1_REF')
+        check(foo2, 'FOO2_NAME', None)
+        check(bar1, 'BAR1_NAME', 'BAR1_REF')
         check(bar2, None, None)
 
         cache.copy(foo1 + bar1, foo2.env)
-        check(foo1, 'NAME1', 'REF1')
-        check(foo2, 'NAME1', 'REF1')
-        check(bar1, 'NAME1', 'REF1')
-        check(bar2, 'NAME1', 'REF1')
+        check(foo1, 'FOO1_NAME', 'FOO1_REF')
+        check(foo2, 'FOO1_NAME', 'FOO1_REF')
+        check(bar1, 'BAR1_NAME', 'BAR1_REF')
+        check(bar2, 'BAR1_NAME', 'BAR1_REF')
 
+    @unittest.skipIf(
+        not(platform.system() == 'Linux' and platform.machine() == 'x86_64'),
+        "This test only makes sense on 64-bit Linux-like systems",
+    )
     def test_memory(self):
         """ Check memory consumption of the cache. """
         NB_RECORDS = 100000

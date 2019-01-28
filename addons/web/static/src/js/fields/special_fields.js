@@ -122,7 +122,8 @@ var FieldTimezoneMismatch = FieldSelection.extend({
 });
 
 var FieldReportLayout = relational_fields.FieldMany2One.extend({
-    supportedFieldTypes: ['many2one', 'selection'],
+    // this widget is not generic, so we disable its studio use
+    // supportedFieldTypes: ['many2one', 'selection'],
     events: _.extend({}, relational_fields.FieldMany2One.prototype.events, {
         'click img': '_onImgClicked',
     }),

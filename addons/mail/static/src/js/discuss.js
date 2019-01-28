@@ -1229,7 +1229,7 @@ var Discuss = AbstractAction.extend({
      * @private
      */
     _onActivityUpdated: function () {
-        this._throttleUpdateThreads();
+        this._throttledUpdateThreads();
     },
     /**
      * @private
