@@ -55,8 +55,8 @@ class mother(models.Model):
 class mother(models.Model):
     _inherit = 'test.inherit.mother'
 
-    # extend again the selection of the state field
-    state = fields.Selection(selection_add=[('d', 'D')])
+    # extend again the selection of the state field: 'd' must precede 'b'
+    state = fields.Selection(selection_add=[('d', 'D'), ('b',)])
 
 
 class daughter(models.Model):
