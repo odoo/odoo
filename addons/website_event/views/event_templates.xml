@@ -118,13 +118,9 @@
 <template id="event_right_country_event" inherit_id="website_event.event_right_column" active="False" customize_show="True" name="Country Events">
     <xpath expr="//div[@id='right_column']" position="inside">
         <div class="card mb-3">
-            <div class="card-body oe_country_events">
-                <div class="country_events_list">
-                    <h5>
-                        <i class="fa fa-flag"/> Events from Your Country
-                    </h5>
-                </div>
-            </div>
+            <t t-call="website_event.s_country_events">
+                <t t-set="_classes" t-value="'card-body'"/>
+            </t>
         </div>
     </xpath>
 </template>
@@ -664,39 +660,29 @@
     </t>
 </template>
 
-<!-- External snippets -->
+<!-- Snippet to display local events -->
+<template id="s_country_events" name="Local Events">
+    <div t-attf-class="oe_country_events #{_classes or 'my-3'}">
+        <div class="country_events_list">
+            <h5>
+                <i class="fa fa-flag"/> Events from Your Country
+            </h5>
+        </div>
+    </div>
+</template>
+
+<!-- Replace snippet demo with actual snippet and options -->
 <template id="remove_external_snippets" inherit_id="website.external_snippets">
     <xpath expr="//t[@t-install='website_event']" position="replace"/>
 </template>
-<!-- Snippets -->
 <template id="country_events" name="Country Events" inherit_id="website.snippets">
     <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
-        <div>
-            <div class="oe_snippet_thumbnail">
-                <div class="oe_snippet_thumbnail_img shadow-none bg-white" >
-                    <i class="fa fa-flag fa-5x text-muted" title="Local Events" role="img" aria-label="Local Events"></i>
-                </div>
-                <span class="oe_snippet_thumbnail_title">Local Events</span>
-            </div>
-            <div class="oe_snippet_body oe_country_events my-3">
-                <div class="country_events_list">
-                    <div class="text-muted text-left">
-                        <div>
-                            <img class="img-fluid" src="/website_event/static/src/img/world_map.jpg" alt=""></img>
-                        </div>
-                        <div>Events in visitor's country</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <t t-snippet="website_event.s_country_events" t-thumbnail="/website_event/static/src/img/world_map.jpg"/>
     </xpath>
     <xpath expr="//div[@id='snippet_options']" position="inside">
-        <div data-js='country_events'
-            data-selector=".oe_country_events"
+        <div data-selector=".oe_country_events"
             data-drop-near="p, h1, h2, h3, blockquote, .card"
-            data-drop-in=".content"
-           >
-        </div>
+            data-drop-in=".content"/>
     </xpath>
 </template>
 
