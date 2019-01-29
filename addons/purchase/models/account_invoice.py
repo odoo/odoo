@@ -88,6 +88,7 @@ class AccountInvoice(models.Model):
 
         self.invoice_line_ids += new_lines
         self.payment_term_id = self.purchase_id.payment_term_id
+        self.fiscal_position_id = self.purchase_id.fiscal_position_id
         self.env.context = dict(self.env.context, from_purchase_order_change=True)
         self.purchase_id = False
         return {}
