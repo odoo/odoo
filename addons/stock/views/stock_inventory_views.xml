@@ -45,6 +45,13 @@
                 <field name="prod_lot_id" groups="stock.group_production_lot"/>
                 <field name="package_id" groups="stock.group_tracking_lot"/>
                 <field name="partner_id" groups="stock.group_tracking_owner"/>
+                <group expand="0" string="Group By">
+                    <filter string="Product" name="groupby_product_id" domain="[]" context="{'group_by':'product_id'}"/>
+                    <filter string="Location" name="groupby_location_id" domain="[]" context="{'group_by':'location_id'}" groups="stock.group_stock_multi_locations"/>
+                    <filter string="Lot/Serial Number" name="groupby_prod_lot_id" domain="[]" context="{'group_by':'prod_lot_id'}" groups="stock.group_production_lot"/>
+                    <filter string="Pack" name="groupby_package_id" domain="[]" context="{'group_by':'package_id'}" groups="stock.group_tracking_lot"/>
+                    <filter string="Owner" name="groupby_partner_id" domain="[]" context="{'group_by':'partner_id'}" groups="stock.group_tracking_owner"/>
+                </group>
             </search>
         </field>
     </record>
