@@ -12,6 +12,7 @@ class BaseModel(models.Model):
     value = fields.Integer()
     value_pc = fields.Float(compute="_value_pc", store=True)
     partner_id = fields.Many2one('res.partner', string='Customer')
+    partner_name = fields.Char(related='partner_id.name', store=True, readonly=True)
 
     line_ids = fields.One2many('test_performance.line', 'base_id')
     total = fields.Integer(compute="_total", store=True)

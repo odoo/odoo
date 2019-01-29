@@ -56,14 +56,14 @@ class TestPerformance(TransactionCase):
     @warmup
     def test_create_base(self):
         """ Create records. """
-        with self.assertQueryCount(__system__=6, demo=6):
+        with self.assertQueryCount(__system__=7, demo=8):
             self.env['test_performance.base'].create({'name': 'X'})
 
     @users('__system__', 'demo')
     @warmup
     def test_create_base_with_lines(self):
         """ Create records with one2many lines. """
-        with self.assertQueryCount(__system__=20, demo=20):
+        with self.assertQueryCount(__system__=21, demo=22):
             self.env['test_performance.base'].create({
                 'name': 'X',
                 'line_ids': [(0, 0, {'value': val}) for val in range(10)],
@@ -73,10 +73,21 @@ class TestPerformance(TransactionCase):
     @warmup
     def test_create_base_with_tags(self):
         """ Create records with many2many tags. """
-        with self.assertQueryCount(__system__=17, demo=17):
+        with self.assertQueryCount(__system__=18, demo=19):
             self.env['test_performance.base'].create({
                 'name': 'X',
                 'tag_ids': [(0, 0, {'name': val}) for val in range(10)],
+            })
+
+
+    @users('__system__', 'demo')
+    @warmup
+    def test_create_base_with_related(self):
+        """ Create records with many2many tags. """
+        with self.assertQueryCount(__system__=10, demo=12):
+            self.env['test_performance.base'].create({
+                'name': 'X',
+                'partner_id': self.env.ref("base.res_partner_10").id,
             })
 
     @users('__system__', 'demo')
