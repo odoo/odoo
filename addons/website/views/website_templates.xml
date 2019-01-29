@@ -315,7 +315,7 @@
 </record>
 
 <!-- Features template -->
-<template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout">
+<template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout" priority="20">
     <xpath expr="t" position="replace">
         <t t-call="website.layout">
             <div class="oe_website_login_container" t-raw="0"/>
