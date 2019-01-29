@@ -1652,11 +1652,11 @@ class MailThread(models.AbstractModel):
             if not email_address:
                 partner_ids.append(partner_id)
                 continue
-            if exclude_aliases and self.env['mail.alias'].search([('alias_name', 'ilike', email_address)], limit=1):
+            email_address = email_address[0]
+            if exclude_aliases and self.env['mail.alias'].search([('alias_name', 'ilike', email_address.split('@')[0])], limit=1):
                 partner_ids.append(partner_id)
                 continue
 
-            email_address = email_address[0]
             # first try: check in document's followers
             partner_id = next((partner.id for partner in followers if partner.email == email_address), False)
 
