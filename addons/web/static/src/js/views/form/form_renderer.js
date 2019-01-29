@@ -335,6 +335,7 @@ var FormRenderer = BasicRenderer.extend({
                 });
                 self.trigger_up('swipe_right');
             },
+            excludedElements: ".o_notebook .nav.nav-tabs",
         });
     },
     /**
