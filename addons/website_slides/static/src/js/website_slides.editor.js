@@ -34,8 +34,7 @@ WebsiteNewMenu.include({
             method: 'list_all',
             args: [[]],
         }).then(function (data) {
-            var def = $.Deferred();
-            new Dialog(self, {
+            var dialog = new Dialog(self, {
                 title: _t("New slide"),
                 subtitle: _t("On which channel do you want to add a slide?"),
                 size: 'medium',
@@ -47,17 +46,13 @@ WebsiteNewMenu.include({
                         var channel_url = this.$("option:selected").val();
                         if (channel_url) {
                             window.location.href = channel_url + '?enable_slide_upload';
-                        } else {
-                            def.reject();
                         }
                     }
                 }, {
                     text: _t("Cancel"), close: true
                 },]
-            }).open()
-                .on('closed', def.resolve.bind(def));
-
-            return def;
+            });
+            dialog.open();
         });
     },
 });
