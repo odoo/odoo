@@ -2070,7 +2070,7 @@ class MailThread(models.AbstractModel):
             prioritary_attachments = all_attachments.filtered(lambda x: x.mimetype.endswith('pdf')) \
                                      or all_attachments.filtered(lambda x: x.mimetype.startswith('image')) \
                                      or all_attachments
-            self.write({'message_main_attachment_id': prioritary_attachments[0].id})
+            self.sudo().write({'message_main_attachment_id': prioritary_attachments[0].id})
         # Notify recipients of the newly-created message (Inbox / Email + channels)
         if msg_vals.get('moderation_status') != 'pending_moderation':
             message._notify(
