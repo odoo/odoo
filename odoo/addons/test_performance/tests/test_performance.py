@@ -63,7 +63,7 @@ class TestPerformance(TransactionCase):
     @warmup
     def test_create_base_with_lines(self):
         """ Create records with one2many lines. """
-        with self.assertQueryCount(__system__=21, demo=22):
+        with self.assertQueryCount(__system__=20, demo=21):
             self.env['test_performance.base'].create({
                 'name': 'X',
                 'line_ids': [(0, 0, {'value': val}) for val in range(10)],
@@ -84,7 +84,7 @@ class TestPerformance(TransactionCase):
     @warmup
     def test_create_base_with_related(self):
         """ Create records with many2many tags. """
-        with self.assertQueryCount(__system__=10, demo=12):
+        with self.assertQueryCount(__system__=9, demo=10):
             self.env['test_performance.base'].create({
                 'name': 'X',
                 'partner_id': self.env.ref("base.res_partner_10").id,

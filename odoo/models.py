@@ -3631,6 +3631,24 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # a one2many checking constraints on records
             records.modified(self._fields)
 
+            # keep values inserted into database into the cache
+            # and discard recompute for these values
+            for data in data_list:
+                stored = data['stored']
+                record = data['record']
+                preserved_fields = []
+                vals_to_cache = {}
+                for fn, v in stored.items():
+                    fl = self._fields[fn]
+                    if fl.compute:
+                        continue
+                    preserved_fields.append(fl)
+                    vals_to_cache[fn] = v
+                cache_value = self._convert_to_cache(vals_to_cache)
+                record._cache.update(cache_value)
+                for fl in preserved_fields:
+                    self.env.remove_todo(fl, record)
+
             if other_fields:
                 # discard default values from context for other fields
                 others = records.with_context(clean_context(self._context))
