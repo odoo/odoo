@@ -116,6 +116,12 @@ class Channel(models.Model):
     completion = fields.Integer('Completion', compute='_compute_user_statistics')
     can_upload = fields.Boolean('Can Upload', compute='_compute_access')
     can_publish = fields.Boolean('Can Publish', compute='_compute_access')
+    # karma generation
+    karma_gen_slide_vote = fields.Integer(string='Lesson voted', default=1)
+    karma_gen_channel_share = fields.Integer(string='Course shared', default=2)
+    karma_gen_channel_rank = fields.Integer(string='Course ranked', default=5)
+    karma_gen_channel_finish = fields.Integer(string='Course finished', default=10)
+    # TODO DBE : Add karma based action rules (like in forum)
 
     @api.depends('custom_slide_id', 'promote_strategy', 'slide_ids.likes',
                  'slide_ids.total_views', "slide_ids.date_published")

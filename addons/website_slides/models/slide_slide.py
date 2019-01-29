@@ -362,6 +362,7 @@ class Slide(models.Model):
             new_slide.write({
                 'slide_partner_ids': [(0, 0, {'vote': new_vote, 'partner_id': self.env.user.partner_id.id})]
             })
+            self.env.user.add_karma(new_slide.channel_id.karma_gen_slide_vote)
 
     def action_view(self):
         self.check_access_rights('read')
