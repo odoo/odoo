@@ -145,6 +145,10 @@ class Channel(models.Model):
         if self.visibility == 'public':
             self.group_ids = False
 
+    @api.model
+    def create(self, vals):
+        return super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals)
+
     @api.multi
     def write(self, vals):
         res = super(Channel, self).write(vals)
