@@ -677,6 +677,8 @@ class Users(models.Model):
         # use singleton's id if called on a non-empty recordset, otherwise
         # context uid
         uid = self.id or self._uid
+        if not uid:
+            return False
         return self.sudo(user=uid)._has_group(group_ext_id)
 
     @api.model
