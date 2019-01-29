@@ -54,7 +54,7 @@ var TranslatableFieldMixin = {
      * @private
      */
     _onTranslate: function () {
-        this.trigger_up('translate', {fieldName: this.name, id: this.dataPointID, view: true});
+        this.trigger_up('translate', {fieldName: this.name, id: this.dataPointID});
     },
 };
 

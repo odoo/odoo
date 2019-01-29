@@ -1076,6 +1076,14 @@
     </t>
 </div>
 
+<t t-extend="ListView.buttons" t-name="TranslationListView.buttons">
+    <t t-jquery="button.o_list_button_save" t-operation="after">
+        <button type="button" class="btn btn-secondary o_list_button_cancel">
+            Cancel
+        </button>
+    </t>
+</t>
+
 <t t-name="DropdownMenu.MenuItems">
     <t t-if="widget.items.length !== 0">
         <t t-set="group" t-value="0"/>

@@ -670,14 +670,13 @@ class IrTranslation(models.Model):
         self._modified_model(field.model_name)
 
     @api.model
-    def translate_fields(self, model, id, field=None, view=False):
+    def translate_fields(self, model, id, field=None):
         """ Open a view for translating the field(s) of the record (model, id). """
         main_lang = 'en_US'
         if not self.env['res.lang'].search_count([('code', '!=', main_lang)]):
             raise UserError(_("Translation features are unavailable until you install an extra translation."))
 
         # determine domain for selecting translations
-        lang = self.env['res.lang'].search([('code', '!=', self.env.user.lang)])
         record = self.env[model].with_context(lang=main_lang).browse(id)
         domain = ['&', ('res_id', '=', id), ('name', '=like', model + ',%')]
 
@@ -705,7 +704,7 @@ class IrTranslation(models.Model):
             self.insert_missing(fld, rec)
 
         action = {
-            'name': 'Translate',
+            'name': _('Translate'),
             'res_model': 'ir.translation',
             'type': 'ir.actions.act_window',
             'view_mode': 'tree',
@@ -714,12 +713,11 @@ class IrTranslation(models.Model):
             'flags': {'search_view': True, 'action_buttons': True},
             'domain': domain,
         }
-        if view:
-            action['name'] = 'Translate Field'
+        if field:
+            action['name'] = _('Translate Field')
             action['view_id'] = self.env.ref('base.view_translation_field_tree').id
             action['target'] = 'new'
-            action['domain'] += [('lang', 'in', [l.code for l in lang])]
-        if field:
+            action['domain'] += [('lang', '!=', self._context.get('lang'))]
             fld = record._fields[field]
             if not fld.related:
                 action['context'] = {

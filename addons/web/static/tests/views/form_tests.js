@@ -5739,7 +5739,7 @@ QUnit.module('Views', {
                 if (route === '/web/dataset/call_kw/product/get_formview_id') {
                     return $.when(false);
                 } else if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
-                    assert.deepEqual(args.args, ["product",37,"name",true,{}], 'should call "call_button" route');
+                    assert.deepEqual(args.args, ["product",37,"name",{}], 'should call "call_button" route');
                     nbTranslateCalls++;
                     return $.when();
                 }

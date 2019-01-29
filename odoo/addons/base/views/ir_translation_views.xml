@@ -81,9 +81,10 @@
         <record id="view_translation_field_tree" model="ir.ui.view">
             <field name="model">ir.translation</field>
             <field name="arch" type="xml">
-                <tree string="Translations" editable="top" create="false">
+                <tree string="Translations" editable="top" create="false" js_class="translate_field_tree">
                     <field name="lang" readonly="1"/>
                     <field name="value"/>
+                    <field name="source" invisible="1"/>
                 </tree>
             </field>
         </record>
