@@ -413,9 +413,10 @@
     <!-- /shop/product product page -->
     <template id="product_edit_options" inherit_id="website.user_navbar" name="Edit Product Options">
         <xpath expr="//li[@id='edit-page-menu']" position="after">
-            <t t-if="main_object._name == 'product.template'" t-set="action" t-value="'product.product_template_action'" />
+            <t t-if="main_object._name == 'product.template'" t-set="action" t-value="'website_sale.product_template_action_website'" />
         </xpath>
     </template>
+
     <template id="product" name="Product">
 
         <t t-set="first_possible_combination" t-value="product._get_first_possible_combination()"/>
