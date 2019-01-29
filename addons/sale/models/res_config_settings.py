@@ -76,6 +76,18 @@ class ResConfigSettings(models.TransientModel):
                                   domain="[('model', '=', 'account.invoice')]",
                                   config_parameter='sale.default_email_template',
                                   default=lambda self: self.env.ref('account.email_template_edi_invoice', False))
+    is_multi_lang = fields.Boolean(compute='_compute_is_multi_lang', string="Is Multi Language")
+
+    @api.depends('sale_note')
+    def _compute_is_multi_lang(self):
+        if len(self.env['res.lang'].get_installed()) > 1:
+            for rec in self:
+                rec.is_multi_lang = True
+
+    @api.multi
+    def translate_sale_note(self):
+        self.ensure_one()
+        return self.env['ir.translation'].translate_fields('res.company', self.company_id.id, 'sale_note')
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()
