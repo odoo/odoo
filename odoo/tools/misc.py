@@ -349,6 +349,35 @@ def topological_sort(elems):
     return result
 
 
+def merge_sequences(*iterables):
+    """ Merge several iterables into a list. The result is the union of the
+        iterables, ordered following the partial order given by the iterables,
+        with a bias towards the end for the last iterable::
+
+            seq = merge_sequences(['A', 'B', 'C'])
+            assert seq == ['A', 'B', 'C']
+
+            seq = merge_sequences(
+                ['A', 'B', 'C'],
+                ['Z'],                  # 'Z' can be anywhere
+                ['Y', 'C'],             # 'Y' must precede 'C';
+                ['A', 'X', 'Y'],        # 'X' must follow 'A' and precede 'Y'
+            )
+            assert seq == ['A', 'B', 'X', 'Y', 'C', 'Z']
+    """
+    # we use an OrderedDict to keep elements in order by default
+    deps = OrderedDict()                # {item: elems_before_item}
+    for iterable in iterables:
+        prev = None
+        for index, item in enumerate(iterable):
+            if not index:
+                deps.setdefault(item, [])
+            else:
+                deps.setdefault(item, []).append(prev)
+            prev = item
+    return topological_sort(deps)
+
+
 try:
     import xlwt
 

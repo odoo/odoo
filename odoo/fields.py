@@ -23,7 +23,7 @@ except ImportError:
 import psycopg2
 
 from .tools import float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, \
-    ustr, OrderedSet, pycompat, sql, date_utils, unique, IterableGenerator, image_process
+    ustr, OrderedSet, pycompat, sql, date_utils, unique, IterableGenerator, image_process, merge_sequences
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _
@@ -1995,10 +1995,18 @@ class Image(Binary):
 class Selection(Field):
     """
     :param selection: specifies the possible values for this field.
-        It is given as either a list of pairs (``value``, ``string``), or a
-        model method, or a method name.
+        It is given as either a list of pairs ``(value, label)``, or a model
+        method, or a method name.
+
     :param selection_add: provides an extension of the selection in the case
-        of an overridden field. It is a list of pairs (``value``, ``string``).
+        of an overridden field. It is a list of pairs ``(value, label)`` or
+        singletons ``(value,)``, where singleton values must appear in the
+        overridden selection. The new values are inserted in an order that is
+        consistent with the overridden selection and this list::
+
+            selection = [('a', 'A'), ('b', 'B')]
+            selection_add = [('c', 'C'), ('b',)]
+            > result = [('a', 'A'), ('c', 'C'), ('b', 'B')]
 
     The attribute ``selection`` is mandatory except in the case of
     :ref:`related fields <field-related>` or :ref:`field extensions
@@ -2029,16 +2037,31 @@ class Selection(Field):
 
     def _setup_attrs(self, model, name):
         super(Selection, self)._setup_attrs(model, name)
+
         # determine selection (applying 'selection_add' extensions)
+        values = None
+        labels = {}
+
         for field in reversed(resolve_mro(model, name, self._can_setup_from)):
             # We cannot use field.selection or field.selection_add here
             # because those attributes are overridden by ``_setup_attrs``.
             if 'selection' in field.args:
-                self.selection = field.args['selection']
+                selection = field.args['selection']
+                if isinstance(selection, list):
+                    values = [kv[0] for kv in selection]
+                    labels.update(selection)
+                else:
+                    self.selection = selection
+
             if 'selection_add' in field.args:
-                # use an OrderedDict to update existing values
                 selection_add = field.args['selection_add']
-                self.selection = list(OrderedDict(self.selection + selection_add).items())
+                assert isinstance(selection_add, list)
+                assert values is not None
+                values = merge_sequences(values, [kv[0] for kv in selection_add])
+                labels.update(kv for kv in selection_add if len(kv) == 2)
+
+        if values is not None:
+            self.selection = [(value, labels[value]) for value in values]
 
     def _selection_modules(self, model):
         """ Return a mapping from selection values to modules defining each value. """
@@ -2055,8 +2078,9 @@ class Selection(Field):
                     for value, label in field.args['selection']:
                         value_modules[value].add(module)
             if 'selection_add' in field.args:
-                for value, label in field.args['selection_add']:
-                    value_modules[value].add(module)
+                for value_label in field.args['selection_add']:
+                    if len(value_label) > 1:
+                        value_modules[value_label[0]].add(module)
         return value_modules
 
     def _description_selection(self, env):
