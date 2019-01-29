@@ -234,7 +234,6 @@ class Slide(models.Model):
         if not self.user_has_groups('website.group_website_publisher'):
             values['website_published'] = False
         slide = super(Slide, self).create(values)
-        slide.channel_id.message_subscribe(partner_ids=self.env.user.partner_id.ids)
         slide._post_publication()
         return slide
 
@@ -325,7 +324,7 @@ class Slide(models.Model):
             publish_template = slide.channel_id.publish_template_id
             html_body = publish_template.with_context(base_url=base_url)._render_template(publish_template.body_html, 'slide.slide', slide.id)
             subject = publish_template._render_template(publish_template.subject, 'slide.slide', slide.id)
-            slide.channel_id.message_post(
+            slide.channel_id.with_context(mail_create_nosubscribe=True).message_post(
                 subject=subject,
                 body=html_body,
                 subtype='website_slides.mt_channel_slide_published',
