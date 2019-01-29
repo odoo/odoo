@@ -162,8 +162,8 @@ var MediaPlugin = AbstractPlugin.extend({
                 this.context.invoke('editor.clearTarget');
                 var start = previous.parentNode;
                 rng = this.context.invoke('editor.setRange', start, _.indexOf(start.childNodes, previous));
-                if (previous.tagName === "IMG" && $(previous).hasClass('img-fluid')) {
-                    $(newMedia).addClass('img img-fluid mx-auto');
+                if (previous.tagName === "IMG" && newMedia.tagName === "IMG") {
+                    $(newMedia).addClass(previous.className);
                 }
 
                 if (dom.isVideo(previous) || dom.isVideo(newMedia)) {
