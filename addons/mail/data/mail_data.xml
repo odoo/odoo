@@ -264,8 +264,8 @@
                 Best regards,
             </div>
             <div>&amp;nbsp;</div>
-            <div t-if="record.user_id and record.user_id.signature" style="font-size: 13px;">
-                <div t-raw="record.user_id.signature"/>
+            <div t-if="record.user_id and record.user_id.sudo().signature" style="font-size: 13px;">
+                <div t-raw="record.user_id.sudo().signature"/>
             </div>
         </td>
     </tr>
