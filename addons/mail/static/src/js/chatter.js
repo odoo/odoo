@@ -320,7 +320,7 @@ var Chatter = Widget.extend({
                             self.trigger_up('reload');
                         } else if (messageData.attachment_ids.length) {
                             self._reloadAttachmentBox();
-                            self.trigger_up('reload', {fieldNames: ['message_attachment_count']});
+                            self.trigger_up('reload', {fieldNames: ['message_attachment_count'], keepChanges: true});
                         }
                     }).fail(function () {
                         self._enableComposer();
