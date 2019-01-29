@@ -2078,6 +2078,17 @@ var PaymentScreenWidget = ScreenWidget.extend({
                             self.gui.show_screen('clientlist');
                         },
                     });
+                } else if (error.message === 'Backend Invoice') {
+                    self.gui.show_popup('confirm',{
+                        'title': _t('Please print the invoice from the backend'),
+                        'body': _t('The order has been synchronized earlier. Please make the invoice from the backend for the order: ') + error.data.order.name,
+                        confirm: function () {
+                            this.gui.show_screen('receipt');
+                        },
+                        cancel: function () {
+                            this.gui.show_screen('receipt');
+                        },
+                    });
                 } else if (error.code < 0) {        // XmlHttpRequest Errors
                     self.gui.show_popup('error',{
                         'title': _t('The order could not be sent'),

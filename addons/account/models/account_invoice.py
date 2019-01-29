@@ -1266,6 +1266,20 @@ class AccountInvoice(models.Model):
         return result
 
     @api.model
+    def _refund_tax_lines_account_change(self, lines, taxes_to_change):
+        # Let's change the account on tax lines when
+        # @param {list} lines: a list of orm commands
+        # @param {dict} taxes_to_change
+        #   key: tax ID, value: refund account
+
+        if not taxes_to_change:
+            return lines
+
+        for line in lines:
+            if isinstance(line[2], dict) and line[2]['tax_id'] in taxes_to_change:
+                line[2]['account_id'] = taxes_to_change[line[2]['tax_id']]
+        return lines
+
     def _get_refund_common_fields(self):
         return ['partner_id', 'payment_term_id', 'account_id', 'currency_id', 'journal_id']
 
@@ -1311,7 +1325,12 @@ class AccountInvoice(models.Model):
         values['invoice_line_ids'] = self._refund_cleanup_lines(invoice.invoice_line_ids)
 
         tax_lines = invoice.tax_line_ids
-        values['tax_line_ids'] = self._refund_cleanup_lines(tax_lines)
+        taxes_to_change = {
+            line.tax_id.id: line.tax_id.refund_account_id.id
+            for line in tax_lines.filtered(lambda l: l.tax_id.refund_account_id != l.tax_id.account_id)
+        }
+        cleaned_tax_lines = self._refund_cleanup_lines(tax_lines)
+        values['tax_line_ids'] = self._refund_tax_lines_account_change(cleaned_tax_lines, taxes_to_change)
 
         if journal_id:
             journal = self.env['account.journal'].browse(journal_id)

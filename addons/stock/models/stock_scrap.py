@@ -130,7 +130,8 @@ class StockScrap(models.Model):
                                                             self.package_id,
                                                             self.owner_id,
                                                             strict=True).mapped('quantity'))
-        if float_compare(available_qty, self.scrap_qty, precision_digits=precision) >= 0:
+        scrap_qty = self.product_uom_id._compute_quantity(self.scrap_qty, self.product_id.uom_id)
+        if float_compare(available_qty, scrap_qty, precision_digits=precision) >= 0:
             return self.do_scrap()
         else:
             return {
