@@ -779,6 +779,21 @@ class MassMailing(models.Model):
             _logger.info("Mass-mailing %s targets %s, no opt out list available", self, target._name)
         return opt_out
 
+    def _get_convert_links(self):
+        self.ensure_one()
+        utm_mixin = self.mass_mailing_campaign_id if self.mass_mailing_campaign_id else self
+        vals = {'mass_mailing_id': self.id}
+
+        if self.mass_mailing_campaign_id:
+            vals['mass_mailing_campaign_id'] = self.mass_mailing_campaign_id.id
+        if utm_mixin.campaign_id:
+            vals['campaign_id'] = utm_mixin.campaign_id.id
+        if utm_mixin.source_id:
+            vals['source_id'] = utm_mixin.source_id.id
+        if utm_mixin.medium_id:
+            vals['medium_id'] = utm_mixin.medium_id.id
+        return vals
+
     def _get_seen_list(self):
         """Returns a set of emails already targeted by current mailing/campaign (no duplicates)"""
         self.ensure_one()
@@ -814,6 +829,7 @@ class MassMailing(models.Model):
         return {
             'mass_mailing_opt_out_list': self._get_opt_out_list(),
             'mass_mailing_seen_list': self._get_seen_list(),
+            'post_convert_links': self._get_convert_links(),
         }
 
     def get_recipients(self):
@@ -855,13 +871,10 @@ class MassMailing(models.Model):
             if not res_ids:
                 raise UserError(_('There is no recipients selected.'))
 
-            # Convert links in absolute URLs before the application of the shortener
-            mailing.body_html = self.env['mail.thread']._replace_local_links(mailing.body_html)
-
             composer_values = {
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': mailing.convert_links()[mailing.id],
+                'body': mailing.body_html,
                 'subject': mailing.name,
                 'model': mailing.mailing_model_real,
                 'email_from': mailing.email_from,
