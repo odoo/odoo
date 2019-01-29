@@ -212,7 +212,6 @@ class TestAccountCustomerInvoice(AccountTestUsers):
 
         invoice = self.env['account.invoice'].create(dict(
             name="Test Customer Invoice",
-            reference_type="none",
             journal_id=journalrec.id,
             partner_id=partner3.id,
             invoice_line_ids=invoice_line_data
