@@ -16,7 +16,7 @@ from lxml import etree
 
 import odoo
 from odoo.loglevels import ustr
-from odoo.tools import pycompat, misc
+from odoo.tools import pycompat, misc, SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -539,3 +539,24 @@ def decode_smtp_header(smtp_header):
 # was mail_thread.decode_header()
 def decode_message_header(message, header, separator=' '):
     return separator.join(decode_smtp_header(h) for h in message.get_all(header, []) if h)
+
+
+def _name_email_superuser(partner_id, env=None, res_model=None, res_id=None):
+    env = env or partner_id.env
+    super_user = env['res.users'].browse(SUPERUSER_ID)
+    if partner_id == super_user.partner_id:
+        company = env['res.company'].browse(env.context.get('force_company') or env.context.get('company_id')) or env.user.company_id
+        if res_model and res_id:
+            model = env[res_model].browse(res_id)
+            company = (model.company_id or company) if hasattr(model, 'company_id') else company
+        format_name = '%s (%s)'
+        if not (company.email or company.catchall):
+            # last resort fallback
+            company = env.ref('base.main_company')
+
+        return format_name % (partner_id.name or u"False", company.name), (company.email or company.catchall or u"False")
+    return partner_id.name or u"False", partner_id.email or u"False"
+
+
+def format_address_superuser(partner_id, env=None, res_model=None, res_id=None):
+    return formataddr(_name_email_superuser(partner_id, env, res_model, res_id))

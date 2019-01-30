@@ -18,3 +18,4 @@ from . import test_discuss
 from . import test_performance
 from . import test_res_users
 from . import test_odoobot
+from . import test_send_mail

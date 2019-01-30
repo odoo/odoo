@@ -7,6 +7,7 @@ from email.utils import formataddr
 from functools import partial
 
 from odoo import api
+from odoo.tools import format_address_superuser
 from odoo.addons.bus.models.bus import json_dump
 from odoo.tests import common, tagged, new_test_user
 
@@ -132,6 +133,12 @@ class BaseFunctionalTest(common.SavepointCase):
             self.env = self.env(user=self.uid)
             self.test_record = self.test_record_old
 
+    @classmethod
+    def formataddr_superuser(cls, partner_from):
+        if partner_from._name == 'res.users':
+            partner_from = partner_from.partner_id
+        return format_address_superuser(partner_from)
+
 
 class TestRecipients(common.SavepointCase):
 
@@ -182,7 +189,7 @@ class MockEmails(common.SingleTransactionCase):
         expected_email_values = []
         for partners in recipients:
             if partner_from:
-                email_from = formataddr((partner_from.name, partner_from.email))
+                email_from = self.formataddr_superuser(partner_from)
             else:
                 email_from = values['email_from']
             expected = {
@@ -302,7 +309,7 @@ class Moderation(MockEmails, BaseFunctionalTest):
             'body': body,
             'moderation_status': status,
             'author_id': author.id,
-            'email_from': formataddr((author.name, author.email)),
+            'email_from': self.formataddr_superuser(author),
             'subtype_id': self.env['mail.message.subtype'].search([('name', '=', 'Discussions')]).id
             })
         return message
