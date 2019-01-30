@@ -45,12 +45,18 @@ class SurveyInvite(models.TransientModel):
         help="Author of the message.")
     # recipients
     partner_ids = fields.Many2many(
-        'res.partner', 'survey_mail_compose_message_res_partner_rel', 'wizard_id', 'partner_id', string='Recipients')
+        'res.partner', 'survey_invite_partner_ids', 'invite_id', 'partner_id', string='Recipients')
+    existing_partner_ids = fields.Many2many(
+        'res.partner', compute='_compute_existing_partner_ids', readonly=True, store=False)
     emails = fields.Text(string='Additional emails', help="This list of emails of recipients will not be converted in contacts.\
         Emails must be separated by commas, semicolons or newline.")
+    existing_emails = fields.Text(
+        'Existing emails', compute='_compute_existing_emails',
+        readonly=True, store=False)
     existing_mode = fields.Selection([
-        ('skip', 'Skip'), ('resend', 'Resend'), ('prevent', 'Prevent')],
-        string='Existing', default='skip')
+        ('new', 'New invite'), ('resend', 'Resend invite')],
+        string='Handle existing', default='resend', required=True)
+    existing_text = fields.Text('Resend Comment', compute='_compute_existing_text', readonly=True, store=False)
     # technical info
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
     # survey
@@ -59,6 +65,34 @@ class SurveyInvite(models.TransientModel):
     survey_access_mode = fields.Selection(related="survey_id.access_mode", readonly=True)
     survey_users_login_required = fields.Boolean(related="survey_id.users_login_required", readonly=True)
     deadline = fields.Datetime(string="Answer deadline")
+
+    @api.depends('partner_ids', 'survey_id')
+    def _compute_existing_partner_ids(self):
+        existing_answers = self.survey_id.user_input_ids
+        self.existing_partner_ids = existing_answers.mapped('partner_id') & self.partner_ids
+
+    @api.depends('emails', 'survey_id')
+    def _compute_existing_emails(self):
+        emails = list(set(emails_split.split(self.emails or "")))
+        existing_emails = self.survey_id.mapped('user_input_ids.email')
+        self.existing_emails = '\n'.join(email for email in emails if email in existing_emails)
+
+    @api.depends('existing_partner_ids', 'existing_emails')
+    def _compute_existing_text(self):
+        existing_text = False
+        if self.existing_partner_ids:
+            existing_text = '%s: %s.' % (
+                _('The following customers have already received an invite'),
+                ', '.join(self.mapped('existing_partner_ids.name'))
+            )
+        if self.existing_emails:
+            existing_text = '%s\n' % existing_text if existing_text else ''
+            existing_text += '%s: %s.' % (
+                _('The following emails have already received an invite'),
+                self.existing_emails
+            )
+
+        self.existing_text = existing_text
 
     @api.onchange('emails')
     def _onchange_emails(self):
@@ -133,19 +167,9 @@ class SurveyInvite(models.TransientModel):
         partners_done = self.env['res.partner']
         emails_done = []
         if existing_answers:
-            if self.existing_mode == 'prevent':
-                raise UserError(_('Some of recipients already started survey. Please update recipients list accordingly.'))
-
-            if self.existing_mode in ['skip', 'reset']:
+            if self.existing_mode == 'resend':
                 partners_done = existing_answers.mapped('partner_id')
                 emails_done = existing_answers.mapped('email')
-
-            if self.existing_mode == 'reset':
-                existing_answers.write({
-                    'deadline': self.deadline,
-                    'state': 'new',
-                    'user_input_line_ids': [(5, 0)],
-                })
                 answers |= existing_answers
 
         for new_partner in partners - partners_done:
