@@ -997,6 +997,7 @@ var ProductScreenWidget = ScreenWidget.extend({
         if (_.size(this.action_buttons)) {
             this.$('.control-buttons').removeClass('oe_hidden');
         }
+        this._onKeypadKeyDown = this._onKeypadKeyDown.bind(this);
     },
 
     click_product: function(product) {
@@ -1016,15 +1017,14 @@ var ProductScreenWidget = ScreenWidget.extend({
         if (this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard) {
             this.chrome.widget.keyboard.connect($(this.el.querySelector('.searchbox input')));
         }
-        $(document).on('keydown.productscreen',this._onKeypadKeyDown.bind(this));
+        $(document).on('keydown.productscreen', this._onKeypadKeyDown);
     },
-
     close: function(){
         this._super();
         if(this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard){
             this.chrome.widget.keyboard.hide();
         }
-        $(document).off('keydown.productscreen',this._onKeypadKeyDown.bind(this));
+        $(document).off('keydown.productscreen', this._onKeypadKeyDown);
     },
 
     _onKeypadKeyDown: function (ev) {
