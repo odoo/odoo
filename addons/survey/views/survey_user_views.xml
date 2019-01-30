@@ -14,6 +14,8 @@
                 <filter string="Partially Completed" name="partially_completed" domain="[('state', '=', 'skip')]"/>
                 <filter string="New" name="new" domain="[('state', '=', 'new')]"/>
                 <separator/>
+                <filter string="Invite" name="invite" domain="[('input_type', '=', 'link')]"/>
+                <separator/>
                 <filter string="Test Entries" name="test" domain="[('test_entry','=', True)]"/>
                 <group expand="0" string="Group By">
                     <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by': 'survey_id'}"/>
