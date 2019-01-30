@@ -2,6 +2,7 @@ odoo.define('board.BoardView', function (require) {
 "use strict";
 
 var Context = require('web.Context');
+var config = require('web.config');
 var core = require('web.core');
 var dataManager = require('web.data_manager');
 var Dialog = require('web.Dialog');
@@ -333,7 +334,7 @@ var BoardRenderer = FormRenderer.extend({
             });
         });
 
-        var $html = $('<div>').append($(QWeb.render('DashBoard', {node: node})));
+        var $html = $('<div>').append($(QWeb.render('DashBoard', {node: node, isMobile: config.device.isMobile})));
 
         // render each view
         _.each(this.actionsDescr, function (action) {
