@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
 import babel.dates
 import pytz
 
-from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from odoo import _, api, fields, models
+from odoo.tools import lazy
 
+class IrActionsActWindowView(models.Model):
+    _inherit = 'ir.actions.act_window.view'
+
+    view_mode = fields.Selection(selection_add=[('qweb', 'QWeb')])
 
 class Base(models.AbstractModel):
     _inherit = 'base'
@@ -78,3 +81,35 @@ class Base(models.AbstractModel):
                 data[group_by_value][field_value] += 1
 
         return data
+
+    ##### qweb view hooks #####
+    @api.model
+    def qweb_render_view(self, view_id, domain):
+        assert view_id
+        return self.env['ir.qweb'].render(
+            view_id, {
+            **self.env['ir.ui.view']._prepare_qcontext(),
+            **self._qweb_prepare_qcontext(view_id, domain),
+        })
+
+    def _qweb_prepare_qcontext(self, view_id, domain):
+        """
+        Base qcontext for rendering qweb views bound to this model
+        """
+        return {
+            'model': self,
+            'domain': domain,
+            # not necessarily necessary as env is already part of the
+            # non-minimal qcontext
+            'context': self.env.context,
+            'records': lazy(self.search, domain),
+        }
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        r = super().fields_view_get(view_id, view_type, toolbar, submenu)
+        # avoid leaking the raw (un-rendered) template, also avoids bloating
+        # the response payload for no reason
+        if r['type'] == 'qweb':
+            r['arch'] = '<qweb/>'
+        return r

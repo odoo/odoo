@@ -182,3 +182,10 @@ div.o_boolean_toggle.custom-control.custom-checkbox {
         overflow-x: initial;
     }
 }
+
+//== Action manager
+// ensure special links are styled as pointers even when they don't
+// have an href
+[type="action"], [type="toggle"] {
+  cursor: pointer !important;
+}
