@@ -31,7 +31,7 @@ class SurveyUserInput(models.Model):
     # description
     survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, ondelete='cascade')
     input_type = fields.Selection([
-        ('manually', 'Manually'), ('link', 'Link')],
+        ('manually', 'Manual'), ('link', 'Invitation')],
         string='Answer Type', default='manually', required=True, readonly=True,
         oldname="type")
     state = fields.Selection([
