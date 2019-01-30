@@ -513,7 +513,7 @@ QWeb2.Engine = (function() {
                         if (operation === 'attributes') {
                             jQuery('attribute', child).each(function () {
                                 var attrib = jQuery(this);
-                                target.attr(attrib.attr('name'), attrib.text());
+                                target.attr(attrib.attr('name'), attrib.text() || attrib.attr('value'));
                             });
                         } else {
                             target[operation](child.cloneNode(true).childNodes);
