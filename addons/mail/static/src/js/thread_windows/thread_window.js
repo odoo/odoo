@@ -276,8 +276,10 @@ var ThreadWindow = AbstractThreadWindow.extend({
                 clear_breadcrumbs: false,
                 active_id: this.hasThread() ? this._getThreadID() : undefined,
                 on_reverse_breadcrumb: function () {
-                    self.call('mail_service', 'getMailBus')
-                        .trigger('discuss_open', false);
+                    var mailBus = self.call('mail_service', 'getMailBus');
+                    if (mailBus) {
+                        mailBus.trigger('discuss_open', false);
+                    }
                 },
             });
         }

@@ -534,6 +534,16 @@ class Message(models.Model):
         failures_infos = []
         # for each channel, build the information header and include the logged partner information
         for message in self:
+            # Check if user has access to the record before displaying a notification about it.
+            # In case the user switches from one company to another, it might happen that he doesn't
+            # have access to the record related to the notification. In this case, we skip it.
+            if message.model and message.res_id:
+                record = self.env[message.model].browse(message.res_id)
+                try:
+                    record.check_access_rights('read')
+                    record.check_access_rule('read')
+                except AccessError:
+                    continue
             info = {
                 'message_id': message.id,
                 'record_name': message.record_name,
