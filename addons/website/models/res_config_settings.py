@@ -4,14 +4,13 @@
 from ast import literal_eval
 
 from odoo import api, fields, models
-from odoo.exceptions import AccessDenied
 
 
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     def _default_website(self):
-        return self.env['website'].search([], limit=1)
+        return self.env['website'].search([('company_id', '=', self.env.user.company_id.id)], limit=1)
 
     website_id = fields.Many2one('website', string="website",
                                  default=_default_website, ondelete='cascade')
@@ -23,7 +22,7 @@ class ResConfigSettings(models.TransientModel):
     language_count = fields.Integer(string='Number of languages', compute='_compute_language_count', readonly=True)
     website_default_lang_id = fields.Many2one(
         string='Default language', related='website_id.default_lang_id', readonly=False,
-        relation='res.lang', required=True,
+        relation='res.lang', required=False,
         oldname='default_lang_id')
     website_default_lang_code = fields.Char(
         'Default language code', related='website_id.default_lang_code', readonly=False,
