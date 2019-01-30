@@ -278,8 +278,8 @@
                         <field name="state" widget="statusbar"/>
                 </header>
                 <field name="scrapped" invisible="1"/>
-                <group>
-                    <group string="#Products">
+                <group name="infos">
+                    <group string="Products" name="products">
                         <field name="product_id"/>
                         <field name="picking_type_id" invisible="1"/>
                         <field name="group_id" invisible="1"/>
@@ -290,13 +290,13 @@
                         </div>
                         <field name="product_tmpl_id" invisible="1"/>
                     </group>
-                    <group string="Locations" groups="base.group_no_one">
+                    <group string="Locations" groups="base.group_no_one" name="locations">
                         <field name="name"/>
                         <field name="location_id"/>
                         <field name="location_dest_id"/>
                     </group>
                 </group>
-                <group>
+                <group name="Status">
                     <group string="Conditions">
                        <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="stock.group_adv_location"/>
                         <field name="create_date" invisible="1"/>
