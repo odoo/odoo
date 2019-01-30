@@ -79,8 +79,8 @@
                     <div class="oe_title">
                         <h1><field name="name" placeholder="Manufacturing Reference" nolabel="1"/></h1>
                     </div>
-                    <group>
-                        <group>
+                    <group name="production">
+                        <group name="specifications">
                             <field name="id" invisible="1"/>
                             <field name="product_id" attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('bom_ids', '!=', False), ('bom_ids.active', '=', True), ('bom_ids.type', '=', 'normal')]"/>
                             <field name="product_tmpl_id" invisible="1"/>
@@ -102,7 +102,7 @@
                                 context="{'default_product_tmpl_id': product_tmpl_id}" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="routing_id" groups="mrp.group_mrp_routings"/>
                         </group>
-                        <group>
+                        <group name="sidespec">
                             <field name="date_planned_start"/>
                             <field name="date_planned_finished" invisible="1"/>
                             <field name="date_start_wo" attrs="{'invisible': ['|', ('routing_id', '=', False), ('state', 'not in', ['draft', 'confirmed'])]}"/>
