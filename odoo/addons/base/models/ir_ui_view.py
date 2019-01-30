@@ -1161,8 +1161,7 @@ actual arch.
         arch = self.browse(view_id).read_combined(['arch'])['arch']
         arch_tree = etree.fromstring(arch)
         self.distribute_branding(arch_tree)
-        root = E.templates(arch_tree)
-        arch = etree.tostring(root, encoding='unicode')
+        arch = etree.tostring(arch_tree, encoding='unicode')
         return arch
 
     @api.model
