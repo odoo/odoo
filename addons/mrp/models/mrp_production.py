@@ -502,12 +502,12 @@ class MrpProduction(models.Model):
         return move
 
     def _get_moves_raw_values(self):
-        self.ensure_one()
         moves = []
-        factor = self.product_uom_id._compute_quantity(self.product_qty, self.bom_id.product_uom_id) / self.bom_id.product_qty
-        boms, lines = self.bom_id.explode(self.product_id, factor, picking_type=self.bom_id.picking_type_id)
-        for bom_line, line_data in lines:
-            moves.append(self._get_move_raw_values(bom_line, line_data))
+        for production in self:
+            factor = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id) / production.bom_id.product_qty
+            boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
+            for bom_line, line_data in lines:
+                moves.append(production._get_move_raw_values(bom_line, line_data))
         return moves
 
     def _get_move_raw_values(self, bom_line, line_data):
