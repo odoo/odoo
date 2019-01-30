@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models, tools
 from odoo.addons.rating.models.rating import RATING_LIMIT_SATISFIED, RATING_LIMIT_OK
+from odoo.osv import expression
 
 
 class RatingParentMixin(models.AbstractModel):
@@ -49,7 +50,8 @@ class RatingMixin(models.AbstractModel):
     rating_last_value = fields.Float('Rating Last Value', compute='_compute_rating_last_value', compute_sudo=True, store=True)
     rating_last_feedback = fields.Text('Rating Last Feedback', related='rating_ids.feedback', readonly=False)
     rating_last_image = fields.Binary('Rating Last Image', related='rating_ids.rating_image', readonly=False)
-    rating_count = fields.Integer('Rating count', compute="_compute_rating_count")
+    rating_count = fields.Integer('Rating count', compute="_compute_rating_stats")
+    rating_avg = fields.Float("Rating Average", compute='_compute_rating_stats')
 
     @api.multi
     @api.depends('rating_ids.rating')
@@ -61,15 +63,14 @@ class RatingMixin(models.AbstractModel):
 
     @api.multi
     @api.depends('rating_ids')
-    def _compute_rating_count(self):
-        read_group_res = self.env['rating.rating'].read_group(
-            [('res_model', '=', self._name), ('res_id', 'in', self.ids), ('consumed', '=', True)],
-            ['res_id'], groupby=['res_id'])
-        result = dict.fromkeys(self.ids, 0)
-        for data in read_group_res:
-            result[data['res_id']] += data['res_id_count']
+    def _compute_rating_stats(self):
+        """ Compute avg and count in one query, as thoses fields will be used together most of the time. """
+        domain = self._rating_domain()
+        read_group_res = self.env['rating.rating'].read_group(domain, ['rating:avg'], groupby=['res_id'], lazy=False)  # force average on rating column
+        mapping = {item['res_id']: {'rating_count': item['__count'], 'rating_avg': item['rating']} for item in read_group_res}
         for record in self:
-            record.rating_count = result.get(record.id)
+            record.rating_count = mapping.get(record.id, {}).get('rating_count', 0)
+            record.rating_avg = mapping.get(record.id, {}).get('rating_avg', 0)
 
     def write(self, values):
         """ If the rated ressource name is modified, we should update the rating res_name too.
@@ -99,6 +100,13 @@ class RatingMixin(models.AbstractModel):
         """Return the parent relation field name
            Should return a Many2One"""
         return None
+
+    @api.multi
+    def _rating_domain(self):
+        """ Returns a normalized domain on rating.rating to select the records to
+            include in count, avg, ... computation of current model.
+        """
+        return ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', self.ids), ('consumed', '=', True)]
 
     def rating_get_partner_id(self):
         if hasattr(self, 'partner_id') and self.partner_id:
@@ -204,7 +212,7 @@ class RatingMixin(models.AbstractModel):
                 otherwise, key is the value of the information (string) : either stat name (avg, total, ...) or 'repartition'
                 containing the same dict if add_stats was False.
         """
-        base_domain = [('res_model', '=', self._name), ('res_id', 'in', self.ids), ('rating', '>=', 1), ('consumed', '=', True)]
+        base_domain = expression.AND([self._rating_domain(), [('rating', '>=', 1)]])
         if domain:
             base_domain += domain
         data = self.env['rating.rating'].read_group(base_domain, ['rating'], ['rating', 'res_id'])
