@@ -1366,13 +1366,13 @@ QUnit.test('select emoji replaces cursor position', function (assert) {
         $composer[0].setSelectionRange(2, 4);
 
         testUtils.dom.click(discuss.$('.o_composer_button_emoji'));
-        testUtils.dom.click(discuss.$('.o_mail_emoji[data-emoji=":)"]'));
+        testUtils.dom.triggerMouseEvent(discuss.$('.o_mail_emoji[data-emoji=":)"]'), 'mousedown');
 
         assert.strictEqual($composer.val(), "ab :) efgh",
             "should have inserted emoji ");
 
         testUtils.dom.click(discuss.$('.o_composer_button_emoji'));
-        testUtils.dom.click(discuss.$('.o_mail_emoji[data-emoji=":)"]'));
+        testUtils.dom.triggerMouseEvent(discuss.$('.o_mail_emoji[data-emoji=":)"]'), 'mousedown');
 
         assert.strictEqual($composer.val(), "ab :)  :) efgh",
             "should have inserted emoji after previously inserted emoji");
