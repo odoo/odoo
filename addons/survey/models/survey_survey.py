@@ -54,9 +54,9 @@ class Survey(models.Model):
     users_can_signup = fields.Boolean('Users can signup', compute='_compute_users_can_signup')
     public_url = fields.Char("Public link", compute="_compute_survey_url")
     # statistics
-    tot_sent_survey = fields.Integer("Number of sent surveys", compute="_compute_survey_statistic")
-    tot_start_survey = fields.Integer("Number of started surveys", compute="_compute_survey_statistic")
-    tot_comp_survey = fields.Integer("Number of completed surveys", compute="_compute_survey_statistic")
+    invite_count = fields.Integer("Invite", compute="_compute_survey_statistic")
+    answer_count = fields.Integer("Started", compute="_compute_survey_statistic")
+    answer_done_count = fields.Integer("Completed", compute="_compute_survey_statistic")
 
     _sql_constraints = [
         ('access_token_unique', 'unique(access_token)', 'Access token should be unique')
@@ -68,19 +68,22 @@ class Survey(models.Model):
         for survey in self:
             survey.users_can_signup = signup_allowed
 
-    @api.multi
+    @api.depends('user_input_ids.state', 'user_input_ids.test_entry')
     def _compute_survey_statistic(self):
+        stat = dict.fromkeys(self.ids, {'invite_count': 0, 'answer_count': 0, 'answer_done_count': 0})
         UserInput = self.env['survey.user_input']
         base_domain = ['&', ('survey_id', 'in', self.ids), ('test_entry', '!=', True)]
 
-        sent_survey = UserInput.search(expression.AND([base_domain, [('input_type', '=', 'link')]]))
-        start_survey = UserInput.search(expression.AND([base_domain, ['|', ('state', '=', 'skip'), ('state', '=', 'done')]]))
-        complete_survey = UserInput.search(expression.AND([base_domain, [('state', '=', 'done')]]))
+        read_group_res = UserInput.read_group(base_domain, ['input_type', 'state'], ['survey_id', 'input_type', 'state'], lazy=False)
+        for item in read_group_res:
+            stat[item['survey_id'][0]]['answer_count'] += item['__count']
+            if item['state'] == 'done':
+                stat[item['survey_id'][0]]['answer_done_count'] += item['__count']
+            if item['input_type'] == 'link':
+                stat[item['survey_id'][0]]['invite_count'] += item['__count']
 
         for survey in self:
-            survey.tot_sent_survey = len(sent_survey.filtered(lambda user_input: user_input.survey_id == survey))
-            survey.tot_start_survey = len(start_survey.filtered(lambda user_input: user_input.survey_id == survey))
-            survey.tot_comp_survey = len(complete_survey.filtered(lambda user_input: user_input.survey_id == survey))
+            survey.update(stat[survey.id])
 
     def _compute_survey_url(self):
         """ Computes a public URL for the survey """
@@ -406,11 +409,21 @@ class Survey(models.Model):
         }
 
     @api.multi
-    def action_survey_user_input(self):
+    def action_survey_user_input_completed(self):
         action_rec = self.env.ref('survey.action_survey_user_input_notest')
         action = action_rec.read()[0]
         ctx = dict(self.env.context)
         ctx.update({'search_default_survey_id': self.ids[0],
                     'search_default_completed': 1})
+        action['context'] = ctx
+        return action
+
+    @api.multi
+    def action_survey_user_input_invite(self):
+        action_rec = self.env.ref('survey.action_survey_user_input_notest')
+        action = action_rec.read()[0]
+        ctx = dict(self.env.context)
+        ctx.update({'search_default_survey_id': self.ids[0],
+                    'search_default_invite': 1})
         action['context'] = ctx
         return action
