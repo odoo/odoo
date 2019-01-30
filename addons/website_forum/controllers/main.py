@@ -52,7 +52,7 @@ class WebsiteForum(http.Controller):
     @http.route('/forum/send_validation_email', type='json', auth='user', website=True)
     def send_validation_email(self, forum_id=None, **kwargs):
         if request.env.uid != request.website.user_id.id:
-            request.env.user.send_forum_validation_email(forum_id=forum_id)
+            request.env.user._send_forum_validation_email(forum_id=forum_id)
         request.session['validation_email_sent'] = True
         return True
 
