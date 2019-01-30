@@ -151,7 +151,7 @@ QUnit.test('activity menu widget: activity menu with 3 records', function (asser
 });
 
 QUnit.test('activity menu widget: activity view icon', function (assert) {
-    assert.expect(8);
+    assert.expect(10);
     var self = this;
     var activityMenu = new ActivityMenu();
     testUtils.mock.addMockEnvironment(activityMenu, {
@@ -177,9 +177,15 @@ QUnit.test('activity menu widget: activity view icon', function (assert) {
                        "Second activity action should link to 'Note'");
     assert.hasClass($second,'fa-clock-o', "should display the activity action icon");
 
-    testUtils.mock.intercept(activityMenu, 'do_action', function (event) {
-        assert.step('do_action:' +
-                    (event.data.action.name ? event.data.action.name : event.data.action));
+    testUtils.mock.intercept(activityMenu, 'do_action', function (ev) {
+        if (ev.data.action.name) {
+            assert.ok(ev.data.action.context, "should define a context on the action");
+            assert.ok(ev.data.action.context.search_default_activities_my,
+                "should auto-set search to 'My Activities' in the context of the action");
+            assert.step('do_action:' + ev.data.action.name);
+        } else {
+            assert.step('do_action:' + ev.data.action);
+        }
     }, true);
 
     // click on the "Issue" activity icon

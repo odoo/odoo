@@ -118,7 +118,8 @@ var ActivityMenu = Widget.extend({
                 name: targetAction.data('model_name'),
                 views: [[false, 'activity'], [false, 'kanban'], [false, 'list']],
                 view_mode: 'activity',
-                res_model: targetAction.data('res_model')
+                res_model: targetAction.data('res_model'),
+                context: { search_default_activities_my: true },
             });
         }
     },
