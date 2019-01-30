@@ -38,7 +38,7 @@ try:
 except ImportError:
     import profile as cProfile
 
-
+from .lru import LRU
 from .config import config
 from .cache import *
 from .parse_version import parse_version 
@@ -1089,9 +1089,15 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
             res = '%s %s' % (currency_obj.symbol, res)
     return res
 
+
+# Some accounting reports (eg: General Ledger) make an intensive use of this function:
+# caching it saves ~90% of time when format_date is called many times with the same values
+format_date_lru = LRU(128)
+
 def format_date(env, value, lang_code=False, date_format=False):
     '''
         Formats the date in a given format.
+        This function is cached to save execution time on recurring dates
 
         :param env: an environment.
         :param date, datetime or string value: the date to format.
@@ -1102,6 +1108,12 @@ def format_date(env, value, lang_code=False, date_format=False):
         :return: date formatted in the specified format.
         :rtype: string
     '''
+    key = (value, env.lang, lang_code, date_format)
+    try:
+        return format_date_lru[key]
+    except Exception:
+        pass
+
     if not value:
         return ''
     if isinstance(value, pycompat.string_types):
@@ -1119,7 +1131,10 @@ def format_date(env, value, lang_code=False, date_format=False):
     if not date_format:
         date_format = posix_to_ldml(lang.date_format, locale=locale)
 
-    return babel.dates.format_date(value, format=date_format, locale=locale)
+    result = babel.dates.format_date(value, format=date_format, locale=locale)
+    format_date_lru[key] = result
+
+    return result
 
 def _consteq(str1, str2):
     """ Constant-time string comparison. Suitable to compare bytestrings of fixed,
