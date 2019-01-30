@@ -71,4 +71,4 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         assert order.invoice_ids, "No any invoice is created for this sales order"
         # Now I validate pay invoice wihth Test User(invoicing and payment).
         for invoice in order.invoice_ids:
-            invoice.with_context(context).invoice_validate()
+            invoice.with_context(context).action_invoice_open()
