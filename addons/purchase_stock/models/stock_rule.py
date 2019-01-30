@@ -35,16 +35,19 @@ class StockRule(models.Model):
         procurements_by_po_domain = defaultdict(list)
         for procurement, rule in procurements:
 
-            product_id = procurement.product_id
-            suppliers = product_id.seller_ids\
-                .filtered(lambda r: (not r.company_id or r.company_id == procurement.company_id) and (not r.product_id or
-                r.product_id == product_id))
+            # Get the schedule date in order to find a valid seller
+            procurement_date_planned = fields.Datetime.from_string(procurement.values['date_planned'])
+            schedule_date = (procurement_date_planned - relativedelta(days=procurement.company_id.po_lead))
 
-            if not suppliers:
+            supplier = procurement.product_id._select_seller(
+                quantity=procurement.product_qty,
+                date=schedule_date.date(),
+                uom_id=procurement.product_uom)
+
+            if not supplier:
                 msg = _('There is no vendor associated to the product %s. Please define a vendor for this product.') % (procurement.product_id.display_name,)
                 raise UserError(msg)
 
-            supplier = self._make_po_select_supplier(procurement.values, suppliers)
             partner = supplier.name
             # we put `supplier_info` in values for extensibility purposes
             procurement.values['supplier'] = supplier
@@ -271,12 +274,6 @@ class StockRule(models.Model):
             'fiscal_position_id': fpos,
             'group_id': group
         }
-
-    def _make_po_select_supplier(self, values, suppliers):
-        """ Method intended to be overridden by customized modules to implement any logic in the
-            selection of supplier.
-        """
-        return suppliers[0]
 
     def _make_po_get_domain(self, company_id, values, partner):
         domain = super(StockRule, self)._make_po_get_domain(company_id, values, partner)

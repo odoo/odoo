@@ -24,7 +24,7 @@ class TestProcurementException(common.TransactionCase):
         so_form.payment_term_id = self.env.ref('account.account_payment_term')
         with so_form.order_line.new() as line:
             line.product_id = product_with_no_seller
-            line.product_uom_qty = 1
+            line.product_uom_qty = 3
             line.route_id = self.env.ref('stock_dropshipping.route_drop_shipping')
         sale_order_route_dropship01 = so_form.save()
 
