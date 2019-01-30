@@ -23,6 +23,7 @@ from contextlib import closing
 from distutils.version import LooseVersion
 from reportlab.graphics.barcode import createBarcodeDrawing
 from PyPDF2 import PdfFileWriter, PdfFileReader
+from collections import OrderedDict
 
 
 _logger = logging.getLogger(__name__)
@@ -601,7 +602,7 @@ class IrActionsReport(models.Model):
         if isinstance(self.env.cr, TestCursor):
             return self.with_context(context).render_qweb_html(res_ids, data=data)[0]
 
-        save_in_attachment = {}
+        save_in_attachment = OrderedDict()
         if res_ids:
             # Dispatch the records by ones having an attachment and ones requesting a call to
             # wkhtmltopdf.
