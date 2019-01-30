@@ -55,7 +55,7 @@ odoo.define('website_rating.thread', function(require) {
                 // rating card
                 if(result['rating_stats']){
                     var rating_data = {
-                        'avg': self.round_to_half(result['rating_stats']['avg']),
+                        'avg': Math.round(result['rating_stats']['avg'] * 100) / 100,
                         'percent': [],
                     };
                     _.each(_.keys(result['rating_stats']['percent']), function(rating){
