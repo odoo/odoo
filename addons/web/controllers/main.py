@@ -1040,7 +1040,7 @@ class Binary(http.Controller):
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                       filename_field='datas_fname', unique=None, filename=None, mimetype=None,
                       download=None, width=0, height=0, crop=False, access_token=None, avoid_if_small=False,
-                      upper_limit=False, **kw):
+                      upper_limit=False, placeholder='placeholder.png', **kw):
         status, headers, content = request.env['ir.http'].binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
@@ -1049,7 +1049,7 @@ class Binary(http.Controller):
         if status == 301 or (status != 200 and download):
             return request.env['ir.http']._response_by_status(status, headers, content)
         if not content:
-            content = base64.b64encode(self.placeholder(image='placeholder.png'))
+            content = base64.b64encode(self.placeholder(image=placeholder))
             headers = self.force_contenttype(headers, contenttype='image/png')
             if not (width or height):
                 suffix = 'big' if field == 'image' else field.split('_')[-1]
