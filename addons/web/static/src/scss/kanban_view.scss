@@ -564,6 +564,8 @@
     @include o-kanban-record-color;
 
     .oe_kanban_color_help {
-        @include o-position-absolute(0, 5px, 0, -1px);
+        @include o-position-absolute(0, auto, 0, -1px);
+        width: $o-kanban-color-border-width;
+        z-index: 1; // show the title over kanban color
     }
 }
