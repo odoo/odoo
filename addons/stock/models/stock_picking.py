@@ -684,7 +684,9 @@ class Picking(models.Model):
         prod2move_ids = {}
         still_to_do = []
         # make a dictionary giving for each product, the moves and related quantity that can be used in operation links
-        moves = sorted([x for x in self.move_lines if x.state not in ('done', 'cancel')], key=lambda x: (((x.state == 'assigned') and -2 or 0) + (x.partially_available and -1 or 0)))
+        # We pre-sort on 'product_qty' and rely on the Python's sort implementation which keeps
+        # the order in case of identical keys.
+        moves = sorted([x for x in self.move_lines.sorted('product_qty') if x.state not in ('done', 'cancel')], key=lambda x: (((x.state == 'assigned') and -2 or 0) + (x.partially_available and -1 or 0)))
         for move in moves:
             if not prod2move_ids.get(move.product_id.id):
                 prod2move_ids[move.product_id.id] = [{'move': move, 'remaining_qty': move.product_qty}]
@@ -693,7 +695,9 @@ class Picking(models.Model):
 
         need_rereserve = False
         # sort the operations in order to give higher priority to those with a package, then a lot/serial number
-        operations = self.pack_operation_ids
+        # We pre-sort on 'product_qty' and rely on the Python's sort implementation which keeps
+        # the order in case of identical keys.
+        operations = self.pack_operation_ids.sorted('product_qty')
         operations = sorted(operations, key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.pack_lot_ids and -1 or 0))
         # delete existing operations to start again from scratch
         links = OperationLink.search([('operation_id', 'in', [x.id for x in operations])])
