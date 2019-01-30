@@ -34,7 +34,6 @@ class Bank(models.Model):
     bic = fields.Char('Bank Identifier Code', index=True, help="Sometimes called BIC or Swift.")
 
     @api.multi
-    @api.depends('name', 'bic')
     def name_get(self):
         result = []
         for bank in self:
