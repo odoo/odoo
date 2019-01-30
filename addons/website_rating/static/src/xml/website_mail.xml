@@ -46,7 +46,7 @@
                                     </div>
                                 </td>
                                 <td class="o_website_rating_table_percent">
-                                    <strong><t t-esc="percent['percent']"/>%</strong>
+                                    <strong><t t-esc="Math.round(percent['percent'] * 100) / 100"/>%</strong>
                                 </td>
                                 <td class="o_website_rating_table_reset">
                                     <a href="#" role="button" class="btn btn-link o_website_rating_select_text" t-att-data-star="percent['num']">Remove selection</a>
