@@ -523,14 +523,10 @@ class IrActionsReport(models.Model):
         if len(save_in_attachment) == 1 and not pdf_content:
             return base64.decodestring(list(save_in_attachment.values())[0].datas)
 
-        # Create a dictionary of streams representing all sub-reports part of the final result
+        # Create a list of streams representing all sub-reports part of the final result
         # in order to append the existing attachments and the potentially modified sub-reports
         # by the postprocess_pdf_report calls.
-        streams = {}
-
-        # Create a list to append the pdf content if it cannot be related to an specific record 
-        # (and so it cannot be sorted)
-        unmapped_streams = []
+        streams = []
 
         # In wkhtmltopdf has been called, we need to split the pdf in order to call the postprocess method.
         if pdf_content:
@@ -540,7 +536,7 @@ class IrActionsReport(models.Model):
 
             # If no value in attachment or no record specified, only append the whole pdf.
             if not record_map or not self.attachment:
-                unmapped_streams.append(pdf_content_stream)
+                streams.append(pdf_content_stream)
             else:
                 if len(res_ids) == 1:
                     # Only one record, so postprocess directly and append the whole pdf.
@@ -550,7 +546,7 @@ class IrActionsReport(models.Model):
                         if new_stream and new_stream != pdf_content_stream:
                             close_streams([pdf_content_stream])
                             pdf_content_stream = new_stream
-                    streams[res_ids[0]] = pdf_content_stream
+                    streams.append(pdf_content_stream)
                 else:
                     # In case of multiple docs, we need to split the pdf according the records.
                     # To do so, we split the pdf based on outlines computed by wkhtmltopdf.
@@ -575,42 +571,35 @@ class IrActionsReport(models.Model):
                                 if new_stream and new_stream != stream:
                                     close_streams([stream])
                                     stream = new_stream
-                            streams[res_ids[i]] = stream
+                            streams.append(stream)
                         close_streams([pdf_content_stream])
                     else:
                         # If no outlines available, do not save each record
-                        unmapped_streams.append(pdf_content_stream)
+                        streams.append(pdf_content_stream)
 
         # If attachment_use is checked, the records already having an existing attachment
         # are not been rendered by wkhtmltopdf. So, create a new stream for each of them.
         if self.attachment_use:
-            for res_id, attachment_id in save_in_attachment.items():
+            for attachment_id in save_in_attachment.values():
                 content = base64.decodestring(attachment_id.datas)
-                streams[res_id] = io.BytesIO(content)
+                streams.append(io.BytesIO(content))
 
-        # A list is made with the unmapped streams and, if streams is not empty, its
-        # content, sorted by the table _order of the mapped records 
-        if streams:
-            stream_list = unmapped_streams + [streams[rec_id.id] for rec_id in self.env[self.model].search([('id', 'in', list(streams.keys()))])]
-        else:
-            stream_list = unmapped_streams
-        
         # Build the final pdf.
         # If only one stream left, no need to merge them (and then, preserve embedded files).
-        if len(stream_list) == 1:
-            result = stream_list[0].getvalue()
+        if len(streams) == 1:
+            result = streams[0].getvalue()
         else:
             writer = PdfFileWriter()
-            for stream in stream_list:
+            for stream in streams:
                 reader = PdfFileReader(stream)
                 writer.appendPagesFromReader(reader)
             result_stream = io.BytesIO()
-            stream_list.append(result_stream)
+            streams.append(result_stream)
             writer.write(result_stream)
             result = result_stream.getvalue()
 
         # We have to close the streams after PdfFileWriter's call to write()
-        close_streams(stream_list)
+        close_streams(streams)
         return result
 
     @api.multi
