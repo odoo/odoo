@@ -754,13 +754,6 @@ var StatementModel = BasicModel.extend({
         function checkAccountType (r) {
             return !isNaN(r.id) && r.account_type !== prop.account_type;
         }
-        if (_.any(line.reconciliation_proposition, checkAccountType)) {
-            new CrashManager().show_warning({data: {
-                exception_type: _t("Incorrect Operation"),
-                message: _t("You cannot mix items from receivable and payable accounts.")
-            }});
-            return $.when();
-        }
 
         line.reconciliation_proposition.push(prop);
     },
