@@ -19,6 +19,7 @@ class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     sales_count = fields.Float(compute='_compute_sales_count', string='Sold')
+    is_customizable = fields.Boolean(compute='_compute_is_customizable', string="Customizable", store=True)
 
     @api.multi
     def _compute_sales_count(self):
@@ -39,6 +40,33 @@ class ProductProduct(models.Model):
         for product in self:
             product.sales_count = float_round(r.get(product.id, 0), precision_rounding=product.uom_id.rounding)
         return r
+
+    @api.depends('attribute_value_ids', 'product_tmpl_id')
+    def _compute_is_customizable(self):
+        """ :returns bool: whether this product can be customized """
+        for product in self:
+            customizable = False
+            # Check whether this product has a custom attribute value
+            for attr_val_id in product.attribute_value_ids:
+                if attr_val_id.is_custom:
+                    customizable = True
+                    break
+
+            if customizable:
+                product.is_customizable = customizable
+                continue
+
+            # Check whether there is an attribute of the template that isn't
+            # defined in the product variant
+            for prod_tmpl_attr_line in product.product_tmpl_id.attribute_line_ids:
+                attribute = prod_tmpl_attr_line.attribute_id
+                if attribute not in product.mapped('attribute_value_ids.attribute_id'):
+                    # One of the attributes of the template is defined as "no variant"
+                    # The product can therefore be customized
+                    customizable = True
+                    break
+
+            product.is_customizable = customizable
 
     @api.multi
     def action_view_sales(self):
