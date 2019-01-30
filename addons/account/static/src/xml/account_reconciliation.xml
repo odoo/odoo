@@ -41,7 +41,7 @@
 
 <t t-name="reconciliation.manual.statement" t-extend="reconciliation.statement">
     <t t-jquery="div:first" t-operation="attributes">
-        <attribute name="class">o_manual_statement</attribute>
+        <attribute name="class" value="o_manual_statement" />
     </t>
     <t t-jquery=".o_view_noreconciliation p" t-operation="replace"></t>
     <t t-jquery=".o_view_noreconciliation" t-operation="append">
