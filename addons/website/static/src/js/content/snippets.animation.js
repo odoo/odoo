@@ -1094,14 +1094,21 @@ registry.anchorSlide = Animation.extend({
      * @private
      */
     _onAnimateClick: function (ev) {
-        var hash = ev.currentTarget.hash;
-        var $anchor = $(hash);
-        if ($anchor.length && $anchor.attr('data-anchor') && this.$target[0].pathname === window.location.pathname) {
-            ev.preventDefault();
-            $('html, body').animate({
-                scrollTop: $anchor.offset().top,
-            }, 500);
+        if (this.$target[0].pathname !== window.location.pathname) {
+            return;
         }
+        var hash = this.$target[0].hash;
+        if (!/^#[\w-]+$/.test(hash)) {
+            return;
+        }
+        var $anchor = $(hash);
+        if (!$anchor.length || !$anchor.attr('data-anchor')) {
+            return;
+        }
+        ev.preventDefault();
+        $('html, body').animate({
+            scrollTop: $anchor.offset().top,
+        }, 500);
     },
 });
 
