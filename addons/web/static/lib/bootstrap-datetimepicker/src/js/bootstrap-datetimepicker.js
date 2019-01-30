@@ -723,6 +723,9 @@
                 }
 
                 currentDate = viewDate.clone().startOf('M').startOf('w').startOf('d');
+                // !! ODOO FIX START !!
+                var now = getMoment();
+                // !! ODOO FIX END !!
 
                 for (i = 0; i < 42; i++) { //always display 42 days (should show 6 weeks)
                     if (currentDate.weekday() === 0) {
@@ -745,7 +748,9 @@
                     if (!isValid(currentDate, 'd')) {
                         clsNames.push('disabled');
                     }
-                    if (currentDate.isSame(getMoment(), 'd')) {
+                    // !! ODOO FIX START !!
+                    if (currentDate.date() === now.date() && currentDate.month() === now.month() && currentDate.year() === now.year()) {
+                    // !! ODOO FIX END !!
                         clsNames.push('today');
                     }
                     if (currentDate.day() === 0 || currentDate.day() === 6) {
