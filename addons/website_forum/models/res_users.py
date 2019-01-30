@@ -74,7 +74,7 @@ class Users(models.Model):
         )).encode('utf-8')).hexdigest()
 
     @api.one
-    def send_forum_validation_email(self, forum_id=None):
+    def _send_forum_validation_email(self, forum_id=None):
         if not self.email:
             return False
         token = self._generate_forum_token(self.id, self.email)
