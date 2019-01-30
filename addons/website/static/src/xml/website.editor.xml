@@ -107,7 +107,10 @@
             <label class="col-form-label col-md-3" for="anchorName">Choose an anchor name</label>
             <div class="col-md-9">
                 <input type="text" class="form-control o_input_anchor_name" id="anchorName" t-attf-value="#{currentAnchor}" placeholder="Anchor name"/>
-                <div class="invalid-feedback">The chosen name already exists</div>
+                <div class="invalid-feedback">
+                    <p class="d-none o_anchor_not_valid">The chosen name is not valid (use only a-Z A-Z 0-9 - _)</p>
+                    <p class="d-none o_anchor_already_exists">The chosen name already exists</p>
+                </div>
             </div>
         </div>
     </div>
