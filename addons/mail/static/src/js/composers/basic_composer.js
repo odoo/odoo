@@ -26,7 +26,7 @@ var BasicComposer = Widget.extend({
         'click .o_composer_button_add_attachment': '_onClickAddAttachment',
         'click .o_composer_button_emoji': '_onEmojiButtonClick',
         'focusout .o_composer_button_emoji': '_onEmojiButtonFocusout',
-        'click .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageClick',
+        'mousedown .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageClick',
         'focus .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageFocus',
         'dragover .o_file_drop_zone_container': '_onFileDragover',
         'drop .o_file_drop_zone_container': '_onFileDrop',
