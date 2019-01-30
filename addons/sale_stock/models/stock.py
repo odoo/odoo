@@ -12,6 +12,8 @@ class StockLocationRoute(models.Model):
 class StockMove(models.Model):
     _inherit = "stock.move"
     sale_line_id = fields.Many2one('sale.order.line', 'Sale Line')
+    is_name_informative = fields.Boolean("Whether customization information could be explained in move line name",
+                        related='sale_line_id.is_name_informative')
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):

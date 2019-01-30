@@ -105,5 +105,17 @@
                 </button>
             </field>
         </record>
+
+        <record id="stock_move_view_form_inherit_stock" model="ir.ui.view">
+          <field name="name">stock.move.inherit.form</field>
+          <field name="inherit_id" ref="stock.view_move_picking_form"/>
+          <field name="model">stock.move</field>
+          <field name="arch" type="xml">
+            <xpath expr="//group[@name='infos']/group[@name='products']/field[@name='product_id']" position="after">
+              <field name="is_name_informative" invisible="1"/>
+              <field name="name" attrs="{'invisible':[('is_name_informative','=',False)]}"/>
+            </xpath>
+          </field>
+        </record>
     </data>
 </odoo>

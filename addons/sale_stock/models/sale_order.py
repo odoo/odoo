@@ -169,6 +169,20 @@ class SaleOrderLine(models.Model):
     product_packaging = fields.Many2one('product.packaging', string='Package', default=False)
     route_id = fields.Many2one('stock.location.route', string='Route', domain=[('sale_selectable', '=', True)], ondelete='restrict')
     move_ids = fields.One2many('stock.move', 'sale_line_id', string='Stock Moves')
+    is_name_informative = fields.Boolean('SO line name may contain variant attributes values', compute='_is_name_informative', store=True)
+
+    @api.multi
+    @api.depends('product_id', 'name')
+    def _is_name_informative(self):
+        for sol in self:
+            product = sol.product_id
+            # Check if name of SO line is different from product name?
+            if product.name == sol.name:
+                sol.is_name_informative = False
+                continue
+
+            # Check if we can expect variants information in SO line name?
+            sol.is_name_informative = product.is_customizable
 
     @api.multi
     @api.depends('product_id')
