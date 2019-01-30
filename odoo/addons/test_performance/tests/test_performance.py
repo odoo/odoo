@@ -49,7 +49,7 @@ class TestPerformance(TransactionCase):
         records = self.env['test_performance.base'].search([])
         self.assertEqual(len(records), 5)
 
-        with self.assertQueryCount(__system__=3, demo=3):
+        with self.assertQueryCount(__system__=2, demo=2):
             records.write({'value': 42})
 
     @users('__system__', 'demo')

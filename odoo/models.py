@@ -3398,6 +3398,22 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # checking constraints on records
         self.modified(updated)
 
+        # keep values inserted into database into the cache
+        # and discard recompute for these values
+        preserved_fields = []
+        vals_to_cache = {}
+        for fn, v in vals.items():
+            fl = self._fields[fn]
+            if fl.compute:
+                continue
+            preserved_fields.append(fl)
+            vals_to_cache[fn] = v
+        cache_value = self._convert_to_cache(vals_to_cache)
+        for record in self:
+            record._cache.update(cache_value)
+            for fl in preserved_fields:
+                self.env.remove_todo(fl, record)
+
         # set the value of non-column fields
         if other_fields:
             # discard default values from context
