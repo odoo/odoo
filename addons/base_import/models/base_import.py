@@ -201,9 +201,9 @@ class Import(models.TransientModel):
     def _read_xls_book(self, book):
         sheet = book.sheet_by_index(0)
         # emulate Sheet.get_rows for pre-0.9.4
-        for row in pycompat.imap(sheet.row, range(sheet.nrows)):
+        for row_index, row in enumerate(pycompat.imap(sheet.row, range(sheet.nrows))):
             values = []
-            for cell in row:
+            for cell_index, cell in enumerate(row):
                 if cell.ctype is xlrd.XL_CELL_NUMBER:
                     is_float = cell.value % 1 != 0.0
                     values.append(
@@ -223,11 +223,11 @@ class Import(models.TransientModel):
                 elif cell.ctype is xlrd.XL_CELL_BOOLEAN:
                     values.append(u'True' if cell.value else u'False')
                 elif cell.ctype is xlrd.XL_CELL_ERROR:
+                    # Both the row_index and cell_index have a +1 for human readable input (computers start counting at 0, we start at 1).
                     raise ValueError(
-                        _("Error cell found while reading XLS/XLSX file: %s") %
-                        xlrd.error_text_from_code.get(
-                            cell.value, "unknown error code %s" % cell.value)
-                    )
+                        _(
+                            "Error cell found while reading XLS/XLSX file. Failed on line %s, column %s. Error code: %s") % (
+                        (row_index + 1), (cell_index + 1), cell.value))
                 else:
                     values.append(cell.value)
             if any(x for x in values if x.strip()):
