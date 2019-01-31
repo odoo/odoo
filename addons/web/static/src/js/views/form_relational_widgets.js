@@ -1014,7 +1014,10 @@ var X2ManyListView = ListView.extend({
  */
 var X2ManyList = ListView.List.extend({
     pad_table_to: function (count) {
-        if (!this.view.is_action_enabled('create') || this.view.x2m.get('effective_readonly')) {
+        if (this.view.x2m.field.type === 'many2many' && !this.view.x2m.get('effective_readonly')) {
+            this.options.deletable = true;
+    	}
+    	if (this.view.x2m.field.type != 'many2many' && !this.view.is_action_enabled('create') || this.view.x2m.get('effective_readonly')) {
             this._super(count);
             return;
         }
