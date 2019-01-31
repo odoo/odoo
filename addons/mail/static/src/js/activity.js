@@ -273,7 +273,7 @@ var BasicActivity = AbstractField.extend({
         var self = this;
         var $markDoneBtn = $(ev.currentTarget);
         var activityID = $markDoneBtn.data('activity-id');
-        var previousActivityTypeID = $markDoneBtn.data('previous-activity-type-id');
+        var previousActivityTypeID = $markDoneBtn.data('previous-activity-type-id') || false;
         var forceNextActivity = $markDoneBtn.data('force-next-activity');
 
         if ($markDoneBtn.data('toggle') == 'collapse') {

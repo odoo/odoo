@@ -46,7 +46,7 @@ var ActivityMenu = Widget.extend({
             kwargs: {context: session.user_context},
         }).then(function (data) {
             self._activities = data;
-            self.activityCounter = _.reduce(data, function (total_count, p_data) { return total_count + p_data.total_count; }, 0);
+            self.activityCounter = _.reduce(data, function (total_count, p_data) { return total_count + p_data.total_count || 0; }, 0);
             self.$('.o_notification_counter').text(self.activityCounter);
             self.$el.toggleClass('o_no_notification', !self.activityCounter);
         });

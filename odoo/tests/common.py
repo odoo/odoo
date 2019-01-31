@@ -915,7 +915,7 @@ class HttpCase(TransactionCase):
             if odoo.tools.config['logfile']:
                 self._logger.info('Starting screen cast')
                 self.browser.start_screencast()
-            self.browser.navigate_to(url)
+            self.browser.navigate_to(url, wait_stop=not bool(ready))
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
             # code = ""
@@ -1098,7 +1098,7 @@ class Form(object):
         else:
             view_id = view or False
         fvg = recordp.fields_view_get(view_id, 'form')
-        arch = etree.fromstring(fvg['arch'])
+        fvg['tree'] = etree.fromstring(fvg['arch'])
 
         object.__setattr__(self, '_view', fvg)
 
@@ -1138,13 +1138,23 @@ class Form(object):
         # if the default view is a kanban or a non-editable list, the
         # "edition controller" is the form view
         edition = views['form']
+        edition['tree'] = etree.fromstring(edition['arch'])
         if default_view == 'tree':
             subarch = etree.fromstring(views['tree']['arch'])
             if subarch.get('editable'):
                 edition = views['tree']
+                edition['tree'] = subarch
 
         self._process_fvg(submodel, edition)
         descr['views']['edition'] = edition
+
+    def _get_node(self, f):
+        """ Find etree node for the field ``f`` in the current arch
+        """
+        return next(
+            n for n in self._view['tree'].iter('field')
+            if n.get('name') == f
+        )
 
     def __str__(self):
         return "<%s %s(%s)>" % (
@@ -1164,7 +1174,7 @@ class Form(object):
         # pre-resolve modifiers & bind to arch toplevel
         modifiers = fvg['modifiers'] = {}
         contexts = fvg['contexts'] = {}
-        for f in etree.fromstring(fvg['arch']).xpath('//field[not(ancestor::field)]'):
+        for f in fvg['tree'].xpath('//field[not(ancestor::field)]'):
             fname = f.get('name')
             modifiers[fname] = {
                 modifier: domain if isinstance(domain, bool) else normalize_domain(domain)
@@ -1354,8 +1364,11 @@ class Form(object):
             # skip unmodified fields
             if f not in self._changed:
                 continue
+
             if self._get_modifier(f, 'readonly'):
-                continue
+                node = self._get_node(f)
+                if not node.get('force_save'):
+                    continue
             # TODO: filter out (1, _, {}) from o2m values
             values[f] = v
         return values

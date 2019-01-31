@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.addons.mail.wizard.mail_compose_message import _reopen
 
 
 class AccountInvoiceSend(models.TransientModel):
@@ -67,3 +67,11 @@ class AccountInvoiceSend(models.TransientModel):
         if self.is_print:
             return self._print_document()
         return {'type': 'ir.actions.act_window_close'}
+
+    @api.multi
+    def save_as_template(self):
+        self.ensure_one()
+        self.composer_id.save_as_template()
+        action = _reopen(self, self.id, self.model, context=self._context)
+        action.update({'name': _('Send Invoice')})
+        return action

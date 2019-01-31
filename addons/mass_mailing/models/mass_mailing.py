@@ -779,19 +779,47 @@ class MassMailing(models.Model):
             _logger.info("Mass-mailing %s targets %s, no opt out list available", self, target._name)
         return opt_out
 
+    def _get_convert_links(self):
+        self.ensure_one()
+        utm_mixin = self.mass_mailing_campaign_id if self.mass_mailing_campaign_id else self
+        vals = {'mass_mailing_id': self.id}
+
+        if self.mass_mailing_campaign_id:
+            vals['mass_mailing_campaign_id'] = self.mass_mailing_campaign_id.id
+        if utm_mixin.campaign_id:
+            vals['campaign_id'] = utm_mixin.campaign_id.id
+        if utm_mixin.source_id:
+            vals['source_id'] = utm_mixin.source_id.id
+        if utm_mixin.medium_id:
+            vals['medium_id'] = utm_mixin.medium_id.id
+        return vals
+
     def _get_seen_list(self):
         """Returns a set of emails already targeted by current mailing/campaign (no duplicates)"""
         self.ensure_one()
         target = self.env[self.mailing_model_real]
-        mail_field = 'email' if 'email' in target._fields else 'email_from'
-        # avoid loading a large number of records in memory
-        # + use a basic heuristic for extracting emails
-        query = """
-            SELECT lower(substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
-              FROM mail_mail_statistics s
-              JOIN %(target)s t ON (s.res_id = t.id)
-             WHERE substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
-        """
+        if set(['email', 'email_from']) & set(target._fields):
+            mail_field = 'email' if 'email' in target._fields else 'email_from'
+            # avoid loading a large number of records in memory
+            # + use a basic heuristic for extracting emails
+            query = """
+                SELECT lower(substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
+                  FROM mail_mail_statistics s
+                  JOIN %(target)s t ON (s.res_id = t.id)
+                 WHERE substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
+            """
+        elif 'partner_id' in target._fields:
+            mail_field = 'email'
+            query = """
+                SELECT lower(substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
+                  FROM mail_mail_statistics s
+                  JOIN %(target)s t ON (s.res_id = t.id)
+                  JOIN res_partner p ON (t.partner_id = p.id)
+                 WHERE substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
+            """
+        else:
+            raise UserError(_("Unsupported mass mailing model %s") % self.mailing_model_id.name)
+
         if self.mass_mailing_campaign_id.unique_ab_testing:
             query +="""
                AND s.mass_mailing_campaign_id = %%(mailing_campaign_id)s;
@@ -814,6 +842,7 @@ class MassMailing(models.Model):
         return {
             'mass_mailing_opt_out_list': self._get_opt_out_list(),
             'mass_mailing_seen_list': self._get_seen_list(),
+            'post_convert_links': self._get_convert_links(),
         }
 
     def get_recipients(self):
@@ -855,13 +884,10 @@ class MassMailing(models.Model):
             if not res_ids:
                 raise UserError(_('There is no recipients selected.'))
 
-            # Convert links in absolute URLs before the application of the shortener
-            mailing.body_html = self.env['mail.thread']._replace_local_links(mailing.body_html)
-
             composer_values = {
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': mailing.convert_links()[mailing.id],
+                'body': mailing.body_html,
                 'subject': mailing.name,
                 'model': mailing.mailing_model_real,
                 'email_from': mailing.email_from,

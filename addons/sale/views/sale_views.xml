@@ -6,7 +6,6 @@
             name="Sales"
             web_icon="sale,static/description/icon.png"
             active="False"
-            groups="sales_team.group_sale_salesman,sales_team.group_sale_salesman_all_leads,sales_team.group_sale_manager"
             sequence="7"/>
 
         <menuitem id="sale_order_menu"
@@ -17,6 +16,7 @@
         <menuitem id="report_sales_team"
             name="Sales Teams"
             parent="sale_order_menu"
+            groups="sales_team.group_sale_manager"
             action="sales_team.crm_team_salesteams_act"
             sequence="3"/>
 
@@ -314,6 +314,7 @@
                                             <field name="qty_delivered_manual" invisible="1"/>
                                             <field name="qty_delivered_method" invisible="1"/>
                                             <field name="price_total" invisible="1"/>
+                                            <field name="price_tax" invisible="1"/>
                                             <field name="price_subtotal" invisible="1"/>
                                             <label for="product_uom_qty" string="Ordered Quantity"/>
                                             <div>
@@ -322,6 +323,7 @@
                                                     name="product_uom_qty" class="oe_inline"/>
                                                 <field
                                                     name="product_uom"
+                                                    force_save="1"
                                                     groups="uom.group_uom"
                                                     class="oe_inline oe_no_button"
                                                     attrs="{
@@ -442,6 +444,7 @@
                                     <field name="qty_to_invoice" invisible="1"/>
                                     <field
                                         name="product_uom"
+                                        force_save="1"
                                         attrs="{
                                             'readonly': [('state', 'in', ('sale','done', 'cancel'))],
                                             'required': [('display_type', '=', False)],
@@ -473,6 +476,7 @@
                                     <field name="invoice_status" invisible="1"/>
                                     <field name="customer_lead" invisible="1"/>
                                     <field name="currency_id" invisible="1"/>
+                                    <field name="price_tax" invisible="1"/>
                                 </tree>
                                 <kanban class="o_kanban_mobile">
                                     <field name="name"/>
@@ -480,6 +484,7 @@
                                     <field name="product_uom_qty"/>
                                     <field name="product_uom" groups="uom.group_uom"/>
                                     <field name="price_subtotal"/>
+                                    <field name="price_tax" invisible="1"/>
                                     <field name="price_total" invisible="1"/>
                                     <field name="price_unit"/>
                                     <field name="display_type"/>
