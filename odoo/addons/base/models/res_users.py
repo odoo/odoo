@@ -224,6 +224,7 @@ class Users(models.Model):
              "a change of password, the user has to login again.")
     signature = fields.Html()
     active = fields.Boolean(default=True)
+    active_partner = fields.Boolean(related='partner_id.active', readonly=True, string="Partner is Active")
     action_id = fields.Many2one('ir.actions.actions', string='Home Action',
         help="If specified, this action will be opened at log on for this user, in addition to the standard menu.")
     groups_id = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=_default_groups)

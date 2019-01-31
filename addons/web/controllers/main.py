@@ -1063,21 +1063,19 @@ class Binary(http.Controller):
 
         if status != 200 and download:
             return request.env['ir.http']._response_by_status(status, headers, content)
+        if not content:
+            content = base64.b64encode(self.placeholder(image='placeholder.png'))
+            headers = self.force_contenttype(headers, contenttype='image/png')
+            if not (width or height):
+                suffix = field.split('_')[-1]
+                if suffix in ('small', 'medium', 'big'):
+                    content = getattr(odoo.tools, 'image_resize_image_%s' % suffix)(content)
+
 
         content = limited_image_resize(
             content, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
 
-        if content:
-            image_base64 = base64.b64decode(content)
-        else:
-            suffix = field.split('_')[-1]
-            if suffix in ('small', 'medium', 'big'):
-                encoded_placeholder = base64.b64encode(self.placeholder(image='placeholder.png'))
-                image_base64 = base64.b64decode(getattr(odoo.tools, 'image_resize_image_%s' % suffix)(encoded_placeholder))
-            else:
-                image_base64 = self.placeholder(image='placeholder.png')  # could return (contenttype, content) in master
-            headers = self.force_contenttype(headers, contenttype='image/png')
-
+        image_base64 = base64.b64decode(content)
         headers.append(('Content-Length', len(image_base64)))
         response = request.make_response(image_base64, headers)
         response.status_code = status

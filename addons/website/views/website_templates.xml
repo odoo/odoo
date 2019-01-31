@@ -57,6 +57,8 @@
         <script type="text/javascript" src="/website/static/src/js/content/zoomodoo.js"/>
 
         <script type="text/javascript" src="/website/static/src/js/menu/navbar.js"/>
+
+        <script type="text/javascript" src="/website/static/src/js/html_editor.test.js"/>
     </xpath>
 </template>
 
@@ -313,7 +315,7 @@
 </record>
 
 <!-- Features template -->
-<template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout">
+<template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout" priority="20">
     <xpath expr="t" position="replace">
         <t t-call="website.layout">
             <div class="oe_website_login_container" t-raw="0"/>
@@ -411,7 +413,7 @@
             <button type="button" t-attf-class="btn btn-default dropdown-toggle dropdown-toggle-split" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown"/>
             <div class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
                 <t t-raw="0"/>
-                <a role="menuitem" t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}"
+                <a role="menuitem" t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}&amp;menu_id=#{menu or object.env.ref('website.menu_website_configuration').id}"
                     title='Edit in backend' class="dropdown-item" t-if="publish_edit">Edit</a>
             </div>
         </div>
