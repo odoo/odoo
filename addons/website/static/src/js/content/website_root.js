@@ -18,10 +18,11 @@ odoo.define('website.WebsiteRoot', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var ServiceProviderMixin = require('web.ServiceProviderMixin');
+var session = require('web.session');
 var utils = require('web.utils');
-var BodyManager = require('web_editor.BodyManager');
-var wContext = require('website.context');
 var rootWidget = require('web_editor.root_widget');
+var wContext = require('website.context');
 var sAnimation = require('website.content.snippets.animation');
 require("website.content.zoomodoo");
 
@@ -34,8 +35,14 @@ var websiteRootRegistry = new rootWidget.RootWidgetRegistry();
 var lang = utils.get_cookie('frontend_lang') || wContext.get().lang; // FIXME the cookie value should maybe be in the ctx?
 var localeDef = ajax.loadJS('/web/webclient/locale/' + lang.replace('-', '_'));
 
-var WebsiteRoot = BodyManager.extend({
-    events: _.extend({}, BodyManager.prototype.events || {}, {
+/**
+ * Element which is designed to be unique and that will be the top-most element
+ * in the widget hierarchy. So, all other widgets will be indirectly linked to
+ * this Class instance. Its main role will be to retrieve RPC demands from its
+ * children and handle them.
+ */
+var WebsiteRoot = rootWidget.RootWidget.extend(ServiceProviderMixin, {
+    events: _.extend({}, rootWidget.RootWidget.prototype.events || {}, {
         'click .js_change_lang': '_onLangChangeClick',
         'click .js_publish_management .js_publish_btn': '_onPublishBtnClick',
         'submit .js_website_submit_form': '_onWebsiteFormSubmit',
@@ -43,7 +50,7 @@ var WebsiteRoot = BodyManager.extend({
         'click .js_multi_website_switch': '_multiWebsiteSwitch',
         'click .js_multi_company_switch': '_multiCompanySwitch',
     }),
-    custom_events: _.extend({}, BodyManager.prototype.custom_events || {}, {
+    custom_events: _.extend({}, rootWidget.RootWidget.prototype.custom_events || {}, {
         animation_start_demand: '_onAnimationStartDemand',
         animation_stop_demand: '_onAnimationStopDemand',
         main_object_request: '_onMainObjectRequest',
@@ -55,14 +62,19 @@ var WebsiteRoot = BodyManager.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
+        ServiceProviderMixin.init.call(this);
         this.animations = [];
     },
     /**
      * @override
      */
     willStart: function () {
-        // TODO would be even greater to wait for localeDef only when necessary
-        return $.when(this._super.apply(this, arguments), localeDef);
+        // TODO would be even greater to wait for those only if necessary
+        return $.when(
+            this._super.apply(this, arguments),
+            session.is_bound,
+            localeDef
+        );
     },
     /**
      * @override
@@ -115,6 +127,27 @@ var WebsiteRoot = BodyManager.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Automatically add the global context to RPC commands.
+     *
+     * @override
+     */
+    _call_service: function (ev) {
+        if (ev.data.service === 'ajax' && ev.data.method === 'rpc') {
+            var route = ev.data.args[0];
+            if (_.str.startsWith(route, '/web/dataset/call_kw/')) {
+                var params = ev.data.args[1];
+                var options = ev.data.args[2];
+                params.kwargs.context = _.extend({}, wContext.get(), params.kwargs.context || {});
+                if (options) {
+                    params.kwargs.context = _.omit(params.kwargs.context, options.noContextKeys);
+                    ev.data.args[2] = _.omit(options, 'noContextKeys');
+                }
+                params.kwargs.context = JSON.parse(JSON.stringify(params.kwargs.context));
+            }
+        }
+        return ServiceProviderMixin._call_service.apply(this, arguments);
+    },
     /**
      * As the WebsiteRoot instance is designed to be unique, the associated
      * registry has been instantiated outside of the class and is simply
