@@ -214,6 +214,7 @@ var BasicActivity = AbstractField.extend({
     _openActivityForm: function (id, callback) {
         var action = {
             type: 'ir.actions.act_window',
+            name: _t("Schedule Activity"),
             res_model: 'mail.activity',
             view_mode: 'form',
             view_type: 'form',
