@@ -91,7 +91,7 @@ class SaleOrderLine(models.Model):
             warning = {'warning': warning_mess}
         return warning
 
-    def _get_qty_procurement(self):
+    def _get_qty_procurement(self, previous_product_uom_qty=False):
         self.ensure_one()
         # Specific case when we change the qty on a SO for a kit product.
         # We don't try to be too smart and keep a simple approach: we compare the quantity before
@@ -99,8 +99,8 @@ class SaleOrderLine(models.Model):
         # sent, or any other exceptional case.
         bom = self.env['mrp.bom']._bom_find(product=self.product_id, bom_type='phantom')
         if bom and 'previous_product_uom_qty' in self.env.context:
-            return self.env.context['previous_product_uom_qty'].get(self.id, 0.0)
-        return super(SaleOrderLine, self)._get_qty_procurement()
+            return previous_product_uom_qty and previous_product_uom_qty.get(self.id, 0.0)
+        return super(SaleOrderLine, self)._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)
 
 
 class AccountInvoiceLine(models.Model):
