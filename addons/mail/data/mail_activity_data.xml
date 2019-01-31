@@ -11,17 +11,20 @@
             <field name="icon">fa-phone</field>
             <field name="delay_count">2</field>
             <field name="sequence">6</field>
+            <field name="is_master_data">True</field>
         </record>
         <record id="mail_activity_data_meeting" model="mail.activity.type">
             <field name="name">Meeting</field>
             <field name="icon">fa-users</field>
             <field name="sequence">9</field>
+            <field name="is_master_data">True</field>
         </record>
         <record id="mail_activity_data_todo" model="mail.activity.type">
             <field name="name">To Do</field>
             <field name="icon">fa-tasks</field>
             <field name="delay_count">5</field>
             <field name="sequence">12</field>
+            <field name="is_master_data">True</field>
         </record>
         <record id="mail_activity_data_upload_document" model="mail.activity.type">
             <field name="name">Upload Document</field>
@@ -36,6 +39,7 @@
             <field name="delay_count">0</field>
             <field name="sequence">99</field>
             <field name="decoration_type">warning</field>
+            <field name="is_master_data">True</field>
         </record>
     </data>
 </odoo>
