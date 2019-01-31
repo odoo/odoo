@@ -1501,9 +1501,13 @@ var AbstractFieldBinary = AbstractField.extend({
      * @private
      */
     _clearFile: function (){
+        var self = this;
         this.set_filename('');
-        this._setValue(false);
-        this._render();
+        if (!this.isDestroyed()) {
+            this._setValue(false).then(function() {
+                self._render();
+            });
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -1573,7 +1577,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
         }
         this.$('> img').remove();
         this.$el.prepend($img);
-        $img.on('error', function () {
+        $img.one('error', function () {
             self._clearFile();
             $img.attr('src', self.placeholder);
             self.do_warn(_t("Image"), _t("Could not display the selected image."));
