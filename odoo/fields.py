@@ -1676,13 +1676,20 @@ class Date(Field):
 
 class Datetime(Field):
     type = 'datetime'
-    column_type = ('timestamp', 'timestamp')
+    column_type = ('timestamp', 'timestamp(0)')
     column_cast_from = ('date',)
 
     start_of = staticmethod(date_utils.start_of)
     end_of = staticmethod(date_utils.end_of)
     add = staticmethod(date_utils.add)
     subtract = staticmethod(date_utils.subtract)
+
+    def update_db_column(self, model, column):
+        if (column and column['udt_name'] == 'timestamp' and
+            column.get('datetime_precision', -1) != 0):
+            # truncate microseconds if the column has them
+            sql.convert_column(model._cr, model._table, self.name, self.column_type[1])
+        super(Datetime, self).update_db_column(model, column)
 
     @staticmethod
     def now(*args):

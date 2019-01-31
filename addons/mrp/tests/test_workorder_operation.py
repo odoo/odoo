@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
+from odoo import fields
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import ValidationError, UserError
@@ -846,7 +847,7 @@ class TestWorkOrderProcess(TestMrpCommon):
 
         dining_table = self.env.ref("mrp.product_product_computer_desk")
 
-        date_start = datetime.now() + timedelta(days=1)
+        date_start = fields.Datetime.now() + timedelta(days=1)
 
         production_table_form = Form(self.env['mrp.production'])
         production_table_form.product_id = dining_table
