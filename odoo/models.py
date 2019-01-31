@@ -3114,6 +3114,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             Data = self.env['ir.model.data'].sudo().with_context({})
             Defaults = self.env['ir.default'].sudo()
             Attachment = self.env['ir.attachment']
+            Translation = self.env['ir.translation'].sudo()
 
             for sub_ids in cr.split_for_in_conditions(self.ids):
                 query = "DELETE FROM %s WHERE id IN %%s" % self._table
@@ -3143,6 +3144,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 attachments = Attachment.browse([row[0] for row in cr.fetchall()])
                 if attachments:
                     attachments.unlink()
+
+                if any(field.translate for field in self._fields.values()):
+                    # For the same reason, remove the relevant records in ir_translation
+                    translations = Translation.search([
+                        ('type', 'in', ['model', 'model_terms']),
+                        ('name', '=like', self._name+',%'),
+                        ('res_id', 'in', sub_ids)])
+                    if translations:
+                        translations.unlink()
 
             # invalidate the *whole* cache, since the orm does not handle all
             # changes made in the database, like cascading delete!
