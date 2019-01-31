@@ -192,7 +192,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
         })
         self.rule_1.match_label = False
 
-        # Check match_total_amount.
+        # Check match_total_amount: line amount >= total residual amount.
         self.rule_1.match_total_amount_param = 90.0
         self.bank_line_1.amount += 5
         self._check_statement_matching(self.rule_1, {
@@ -205,6 +205,20 @@ class TestReconciliationMatchingRules(AccountingTestCase):
         })
         self.rule_1.match_total_amount_param = 100.0
         self.bank_line_1.amount -= 5
+
+        # Check match_total_amount: line amount <= total residual amount.
+        self.rule_1.match_total_amount_param = 90.0
+        self.bank_line_1.amount -= 5
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1, 'status': 'write_off'},
+            self.bank_line_2.id: {'aml_ids': [
+                self.invoice_line_2.id,
+                self.invoice_line_3.id,
+            ], 'model': self.rule_1},
+            self.cash_line_1.id: {'aml_ids': [self.invoice_line_4.id], 'model': self.rule_1},
+        })
+        self.rule_1.match_total_amount_param = 100.0
+        self.bank_line_1.amount += 5
 
         # Check match_partner_category_ids.
         test_category = self.env.ref('base.res_partner_category_8')

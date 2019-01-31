@@ -176,15 +176,16 @@ class AccountReconcileModel(models.Model):
         line_residual = st_line.currency_id and st_line.amount_currency or st_line.amount
         line_currency = st_line.currency_id or st_line.journal_id.currency_id or st_line.company_id.currency_id
         total_residual = move_lines and sum(aml.currency_id and aml.amount_residual_currency or aml.amount_residual for aml in move_lines) or 0.0
-        balance = line_residual - total_residual
 
-        if not self.account_id\
-            or float_is_zero(balance, precision_rounding=line_currency.rounding)\
-            or (st_line.amount > 0 and balance < 0)\
-            or (st_line.amount < 0 and balance > 0):
+        balance = total_residual - line_residual
+
+        if not self.account_id or float_is_zero(balance, precision_rounding=line_currency.rounding):
             return []
 
-        line_balance = self.amount_type == 'percentage' and balance * (self.amount / 100.0) or self.amount
+        if self.amount_type == 'percentage':
+            line_balance = balance * (self.amount / 100.0)
+        else:
+            line_balance = self.amount * (1 if balance > 0.0 else -1)
 
         new_aml_dicts = []
 
@@ -194,8 +195,8 @@ class AccountReconcileModel(models.Model):
             'account_id': self.account_id.id,
             'analytic_account_id': self.analytic_account_id.id,
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
-            'debit': line_balance < 0 and -line_balance or 0,
-            'credit': line_balance > 0 and line_balance or 0,
+            'debit': line_balance > 0 and line_balance or 0,
+            'credit': line_balance < 0 and -line_balance or 0,
         }
         new_aml_dicts.append(writeoff_line)
 
@@ -214,8 +215,8 @@ class AccountReconcileModel(models.Model):
                 'account_id': self.second_account_id.id,
                 'analytic_account_id': self.second_analytic_account_id.id,
                 'analytic_tag_ids': [(6, 0, self.second_analytic_tag_ids.ids)],
-                'debit': line_balance < 0 and -line_balance or 0,
-                'credit': line_balance > 0 and line_balance or 0,
+                'debit': line_balance > 0 and line_balance or 0,
+                'credit': line_balance < 0 and -line_balance or 0,
             }
             new_aml_dicts.append(second_writeoff_line)
 
@@ -545,15 +546,14 @@ class AccountReconcileModel(models.Model):
         line_residual = statement_line.currency_id and statement_line.amount_currency or statement_line.amount
         line_currency = statement_line.currency_id or statement_line.journal_id.currency_id or statement_line.company_id.currency_id
 
-        # Statement line amount must not be lower than the total residual.
-        if float_compare(line_residual, total_residual, precision_rounding=line_currency.rounding) < 0:
-            return False
-
         # Statement line amount is equal to the total residual.
         if float_is_zero(total_residual - line_residual, precision_rounding=line_currency.rounding):
             return True
 
-        amount_percentage = (total_residual / line_residual) * 100
+        if line_residual > total_residual:
+            amount_percentage = (total_residual / line_residual) * 100
+        else:
+            amount_percentage = (line_residual / total_residual) * 100
         return amount_percentage >= self.match_total_amount_param
 
     @api.multi
