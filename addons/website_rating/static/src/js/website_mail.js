@@ -79,8 +79,7 @@ odoo.define('website_rating.thread', function(require) {
             if(decimal){
                 this.$('.stars').find("i:eq("+(index)+")").removeClass('fa-star-o fa-star fa-star-half-o').addClass('fa-star-half-o');
             }
-
-            this.$('.rate_text .label').text(this.labels[index]);
+            this.$('.rate_text .badge').text(this.labels[index]);
         },
         _onMouseleaveStar: function(e){
             this.$('.rate_text').hide();
