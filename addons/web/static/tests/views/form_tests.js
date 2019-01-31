@@ -16,7 +16,6 @@ var Widget = require('web.Widget');
 
 var _t = core._t;
 var createView = testUtils.createView;
-var createActionManager = testUtils.createActionManager;
 var createAsyncView = testUtils.createAsyncView;
 var createActionManager = testUtils.createActionManager;
 
@@ -5679,9 +5678,9 @@ QUnit.module('Views', {
 
         actionManager.doAction(1);
 
-        actionManager.controlPanel.$el.find('.o_form_button_edit').click();
+        actionManager.$('.o_form_button_edit').click();
         actionManager.$('input[name="foo"]').val("test").trigger("input");
-        actionManager.controlPanel.$el.find('.o_form_button_save').click();
+        actionManager.$('.o_form_button_save').click();
 
         assert.strictEqual(actionManager.$('.o_form_view > .alert > div').length, 1,
             "should have a translation alert");

@@ -27,8 +27,8 @@ class TestMassMailingShortener(common.TransactionCase):
             # 1px to avoid real request
             return 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg=='
 
-        patcher = patch('odoo.addons.link_tracker.models.link_tracker.link_tracker._compute_favicon', wraps=_compute_favicon)
-        patcher2 = patch('odoo.addons.link_tracker.models.link_tracker.link_tracker._get_title_from_url', wraps=_get_title_from_url)
+        patcher = patch('odoo.addons.link_tracker.models.link_tracker.LinkTracker._compute_favicon', wraps=_compute_favicon)
+        patcher2 = patch('odoo.addons.link_tracker.models.link_tracker.LinkTracker._get_title_from_url', wraps=_get_title_from_url)
         patcher.start()
         patcher2.start()
         self.addCleanup(patcher.stop)
