@@ -1832,6 +1832,7 @@ QUnit.test('form activity widget: edit next activity', function (assert) {
                       default_res_id: 2,
                       default_res_model: "partner"
                     },
+                    name: "Schedule Activity",
                     res_id: 1,
                     res_model: "mail.activity",
                     target: "new",

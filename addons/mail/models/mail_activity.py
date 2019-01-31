@@ -33,12 +33,12 @@ class MailActivityType(models.Model):
         return super(MailActivityType, self).default_get(fields)
 
     name = fields.Char('Name', required=True, translate=True)
-    summary = fields.Char('Summary', translate=True)
+    summary = fields.Char('Default Summary', translate=True)
     sequence = fields.Integer('Sequence', default=10)
     active = fields.Boolean(default=True)
     create_uid = fields.Many2one('res.users', index=True)
     delay_count = fields.Integer(
-        'After', default=0, oldname='days',
+        'Scheduled Date', default=0, oldname='days',
         help='Number of days/week/month before executing the action. It allows to plan the action deadline.')
     delay_unit = fields.Selection([
         ('days', 'days'),
@@ -59,7 +59,7 @@ class MailActivityType(models.Model):
              ' and not available when managing activities for other models.')
     default_next_type_id = fields.Many2one('mail.activity.type', 'Default Next Activity',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]")
-    force_next = fields.Boolean("Auto Schedule Next Activity", default=False)
+    force_next = fields.Boolean("Trigger Next Activity", default=False)
     next_type_ids = fields.Many2many(
         'mail.activity.type', 'mail_activity_rel', 'activity_id', 'recommended_id',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]",
@@ -69,7 +69,7 @@ class MailActivityType(models.Model):
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]",
         string='Preceding Activities')
     category = fields.Selection([
-        ('default', 'Other'), ('upload_file', 'Upload Document')
+        ('default', 'Standard'), ('upload_file', 'Upload Document')
     ], default='default', string='Category',
         help='Categories may trigger specific behavior like opening calendar view or automatically mark as done when a document is uploaded')
     mail_template_ids = fields.Many2many('mail.template', string='Mails templates')
@@ -78,6 +78,7 @@ class MailActivityType(models.Model):
     initial_res_model_id = fields.Many2one('ir.model', 'Initial model', compute="_compute_initial_res_model_id", store=False,
             help='Technical field to keep trace of the model at the beginning of the edition for UX related behaviour')
     res_model_change = fields.Boolean(string="Model has change", help="Technical field for UX related behaviour", default=False, store=False)
+    is_master_data = fields.Boolean(string="Master data", help="This field is used to prevent master data from the deletion.")
 
     @api.onchange('res_model_id')
     def _onchange_res_model_id(self):
@@ -87,6 +88,13 @@ class MailActivityType(models.Model):
     def _compute_initial_res_model_id(self):
         for activity_type in self:
             activity_type.initial_res_model_id = activity_type.res_model_id
+
+    @api.multi
+    def unlink(self):
+        for activity_type in self:
+            if activity_type.is_master_data:
+                raise exceptions.ValidationError("You can not delete activity type that are used as master data.")
+        return super(MailActivityType, self).unlink()
 
 
 class MailActivity(models.Model):
@@ -120,7 +128,7 @@ class MailActivity(models.Model):
         help="Display name of the related document.", readonly=True)
     # activity
     activity_type_id = fields.Many2one(
-        'mail.activity.type', 'Activity',
+        'mail.activity.type', string='Activity Type',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]", ondelete='restrict')
     activity_category = fields.Selection(related='activity_type_id.category', readonly=False)
     activity_decoration = fields.Selection(related='activity_type_id.decoration_type', readonly=False)

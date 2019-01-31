@@ -32,6 +32,7 @@
                                 </div>
                                 <field name="delay_from"/>
                             </div>
+                            <field name="is_master_data" groups="base.group_no_one"/>
                         </group>
                         <group name="activity_planning">
                             <field name="force_next"/>
@@ -127,8 +128,11 @@
                     </group>
                     <field name="note" placeholder="Log a note..."/>
                     <footer>
-                        <button string="Schedule" name="action_close_dialog"
-                            type="object" class="btn-primary"/>
+                        <field name="id" invisible="1"/>
+                        <button string="Schedule" name="action_close_dialog" type="object" class="btn-primary"
+                            attrs="{'invisible': [('id', '!=', False)]}"/>
+                        <button string="Save" name="action_close_dialog" type="object" class="btn-primary"
+                            attrs="{'invisible': [('id', '=', False)]}"/>
                         <button attrs="{'invisible': [('force_next', '=', True)]}" string="Mark as Done" name="action_done"
                             type="object" class="btn-secondary"
                             context="{'mail_activity_quick_update': True}"/>
