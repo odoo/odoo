@@ -476,9 +476,9 @@
                             >
                                 <tree string="Invoice Lines" editable="bottom">
                                     <control>
-                                        <create string="Add a line"/>
-                                        <create string="Add a section" context="{'default_display_type': 'line_section'}"/>
-                                        <create string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                        <create name="add_line_control" string="Add a line"/>
+                                        <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                        <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                                     </control>
 
                                     <field name="sequence" widget="handle"/>
