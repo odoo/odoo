@@ -1,4 +1,4 @@
-odoo.define('website_form_editor', function (require) {
+odoo.define('website_form.website_form_editor', function (require) {
 'use strict';
 
 var core = require('web.core');
