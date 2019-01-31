@@ -159,7 +159,7 @@ class CustomerPortal(CustomerPortal):
         if order_sudo and request.session.get('view_quote_%s' % order_sudo.id) != now and request.env.user.share and access_token:
             request.session['view_quote_%s' % order_sudo.id] = now
             body = _('Quotation viewed by customer')
-            _message_post_helper(res_model='sale.order', res_id=order_sudo.id, message=body, token=order_sudo.access_token, message_type='notification', subtype="mail.mt_note", partner_ids=order_sudo.user_id.sudo().partner_id.ids)
+            _message_post_helper('sale.order', order_sudo.id, body, token=order_sudo.access_token, message_type='notification', subtype="mail.mt_note", partner_ids=order_sudo.user_id.sudo().partner_id.ids)
 
         values = {
             'sale_order': order_sudo,
@@ -223,9 +223,7 @@ class CustomerPortal(CustomerPortal):
         pdf = request.env.ref('sale.action_report_saleorder').sudo().render_qweb_pdf([order_sudo.id])[0]
 
         _message_post_helper(
-            res_model='sale.order',
-            res_id=order_sudo.id,
-            message=_('Order signed by %s') % (name,),
+            'sale.order', order_sudo.id, _('Order signed by %s') % (name,),
             attachments=[('%s.pdf' % order_sudo.name, pdf)],
             **({'token': access_token} if access_token else {}))
 
@@ -249,7 +247,7 @@ class CustomerPortal(CustomerPortal):
         query_string = False
         if order_sudo.has_to_be_signed() and message:
             order_sudo.action_cancel()
-            _message_post_helper(message=message, res_id=order_id, res_model='sale.order', **{'token': access_token} if access_token else {})
+            _message_post_helper('sale.order', order_id, message, **{'token': access_token} if access_token else {})
         else:
             query_string = "&message=cant_reject"
 

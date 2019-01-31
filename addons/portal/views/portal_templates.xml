@@ -473,6 +473,8 @@
             :token string (optional): if you want your chatter to be available for non-logged user,
                      you can use a token to verify the identity of the user;
                      the message will be posted with the identity of the partner_id of the object
+            :hash : signed token with the partner_id using `_sign_token` method (on mail.thread)
+            :pid : identifier of the partner signing the token
     -->
     <template id="message_thread">
         <div id="discussion" class="d-print-none o_portal_chatter o_not_editable p-0"
