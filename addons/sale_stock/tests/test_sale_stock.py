@@ -396,14 +396,22 @@ class TestSaleStock(TestSale):
         self.assertEqual(move1.product_qty, 12)
 
         # edit the so line, sell 2 dozen, the move should now be 24 units
-        so1.order_line.product_uom_qty = 2
+        so1.write({
+            'order_line': [
+                (1, so1.order_line.id, {'product_uom_qty': 2}),
+            ]
+        })
         self.assertEqual(move1.product_uom_qty, 24)
         self.assertEqual(move1.product_uom.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 24)
 
         # force the propagation of the uom, sell 3 dozen
         self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', '1')
-        so1.order_line.product_uom_qty = 3
+        so1.write({
+            'order_line': [
+                (1, so1.order_line.id, {'product_uom_qty': 3}),
+            ]
+        })
         move2 = so1.picking_ids.move_lines.filtered(lambda m: m.product_uom.id == uom_dozen.id)
         self.assertEqual(move2.product_uom_qty, 1)
         self.assertEqual(move2.product_uom.id, uom_dozen.id)
