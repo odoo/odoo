@@ -10,7 +10,7 @@ class SaleOrderLine(models.Model):
     purchase_line_ids = fields.One2many('purchase.order.line', 'sale_line_id')
 
     @api.multi
-    def _get_qty_procurement(self):
+    def _get_qty_procurement(self, previous_product_uom_qty):
         # People without purchase rights should be able to do this operation
         purchase_lines_sudo = self.sudo().purchase_line_ids
         if not self.move_ids.filtered(lambda r: r.state != 'cancel') and purchase_lines_sudo.filtered(lambda r: r.state != 'cancel'):
@@ -19,5 +19,4 @@ class SaleOrderLine(models.Model):
                 qty += po_line.product_uom._compute_quantity(po_line.product_qty, self.product_uom, rounding_method='HALF-UP')
             return qty
         else:
-            return super(SaleOrderLine, self)._get_qty_procurement()
-
+            return super(SaleOrderLine, self)._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)
