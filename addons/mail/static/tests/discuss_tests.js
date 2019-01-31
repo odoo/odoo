@@ -179,7 +179,7 @@ QUnit.test('searchview filter messages', function (assert) {
 
         // interact with searchview so that there is only once message
         $('.o_searchview_input').val("ab").trigger('keyup');
-        $('.o_searchview_input_container').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER }));
+        $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER }));
 
         assert.strictEqual($('.o_searchview_facet').length, 1,
             "the searchview should have a facet");
@@ -191,7 +191,7 @@ QUnit.test('searchview filter messages', function (assert) {
         // interact with search view so that there are no matching messages
         testUtils.dom.click($('.o_facet_remove'));
         $('.o_searchview_input').val("abcd").trigger('keyup');
-        $('.o_searchview_input_container').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER }));
+        $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER }));
 
         assert.strictEqual($('.o_searchview_facet').length, 1,
             "the searchview should have a facet");
