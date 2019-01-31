@@ -384,10 +384,10 @@
                                     decoration-info="(not display_type and invoice_status == 'to invoice')"
                                 >
                                     <control>
-                                        <create string="Add a product"/>
-                                        <create string="Configure a product" context="{'open_product_configurator': True}" groups="product.group_product_variant"/>
-                                        <create string="Add a section" context="{'default_display_type': 'line_section'}"/>
-                                        <create string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                        <create name="add_product_control" string="Add a product"/>
+                                        <create name="configure_product_control" string="Configure a product" context="{'open_product_configurator': True}" groups="product.group_product_variant"/>
+                                        <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                        <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                                     </control>
 
                                     <field name="sequence" widget="handle" />
