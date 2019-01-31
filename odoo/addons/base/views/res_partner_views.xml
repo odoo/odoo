@@ -467,7 +467,7 @@
                    <filter string="Vendors" name="supplier" domain="[('supplier','=',True), ('parent_id', '=', False)]"/>
                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                    <separator/>
-                   <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/>
+                   <field name="category_id" string="Tag" filter_domain="[('category_id','child_of', self)]"/>
                    <field name="user_id"/>
                    <field name="phone" filter_domain="['|',('phone','ilike',self),('mobile','=',self)]"/>
                    <group expand="0" name="group_by" string="Group By">
