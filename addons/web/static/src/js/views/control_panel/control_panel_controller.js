@@ -35,6 +35,12 @@ var ControlPanelController = mvc.Controller.extend({
     on_attach_callback: function () {
         this.renderer.on_attach_callback();
     },
+    /**
+     * Called when the control panel is remove form the DOM.
+     */
+    on_detach_callback: function () {
+        this.renderer.on_detach_callback();
+    },
 
     //--------------------------------------------------------------------------
     // Public

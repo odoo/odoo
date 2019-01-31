@@ -96,6 +96,11 @@ var ControlPanelRenderer = Renderer.extend({
     on_attach_callback: function () {
         this._focusSearchInput();
     },
+    /**
+     * @override
+     */
+    on_detach_callback: function () {
+    },
 
     //--------------------------------------------------------------------------
     // Public

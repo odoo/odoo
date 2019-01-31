@@ -104,6 +104,9 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      * Called each time the controller is detached from the DOM.
      */
     on_detach_callback: function () {
+        if (this._controlPanel) {
+            this._controlPanel.on_detach_callback();
+        }
         this.renderer.on_detach_callback();
     },
 
