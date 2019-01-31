@@ -560,6 +560,7 @@ class IrActionsServer(models.Model):
         """
         res = False
         for action in self:
+            self.env[action.sudo().model_name].check_access_rights('read')
             eval_context = self._get_eval_context(action)
             if hasattr(self, 'run_action_%s_multi' % action.state):
                 # call the multi method
