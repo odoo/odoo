@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
 
-    <t t-extend="mail.discuss.Sidebar">
-        <t t-jquery=".o_mail_discuss_sidebar" t-operation="append">
+    <t t-extend="mail.discuss.SidebarChannels">
+        <t t-jquery="t[t-call='mail.discuss.SidebarItems']:last" t-operation="after">
             <t t-set="type" t-value="'livechat'"/>
             <t t-set="disableAddThread" t-value="true"/>
             <t t-call="mail.discuss.SidebarTitle">
