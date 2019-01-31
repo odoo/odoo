@@ -227,7 +227,6 @@ class AccountAccount(models.Model):
         self.group_id = group
 
     @api.multi
-    @api.depends('name', 'code')
     def name_get(self):
         result = []
         for account in self:
@@ -800,7 +799,6 @@ class AccountJournal(models.Model):
         }).id
 
     @api.multi
-    @api.depends('name', 'currency_id', 'company_id', 'company_id.currency_id')
     def name_get(self):
         res = []
         for journal in self:
@@ -945,7 +943,6 @@ class AccountTax(models.Model):
         default = dict(default or {}, name=_("%s (Copy)") % self.name)
         return super(AccountTax, self).copy(default=default)
 
-    @api.depends('name', 'type_tax_use')
     def name_get(self):
         if not self._context.get('append_type_to_tax_name'):
             return super(AccountTax, self).name_get()

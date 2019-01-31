@@ -135,6 +135,10 @@ class SurveyMailComposeMessage(models.TransientModel):
             Mail.create(values).send()
 
         def create_token(wizard, partner_id, email):
+            if context.get("survey_resent_user_input"):
+                survey_user_input = SurveyUserInput.browse(context.get("survey_resent_user_input"))
+                if survey_user_input.state in ('new', 'skip'):
+                    return survey_user_input.token
             if context.get("survey_resent_token"):
                 survey_user_input = SurveyUserInput.search([('survey_id', '=', wizard.survey_id.id),
                     ('state', 'in', ['new', 'skip']), '|', ('partner_id', '=', partner_id),
