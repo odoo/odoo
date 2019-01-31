@@ -2094,7 +2094,7 @@ var TempusDominusBootstrap4 = function ($) {
 
             currentDate = this._viewDate.clone().startOf('M').startOf('w').startOf('d');
             // !! ODOO FIX START !!
-            var now = getMoment();
+            var now = this.getMoment();
             // !! ODOO FIX END !!
 
             for (i = 0; i < 42; i++) {
