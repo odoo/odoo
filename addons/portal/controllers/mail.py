@@ -19,43 +19,59 @@ def _has_token_access(res_model, res_id, token=''):
     return (token and record and consteq(record[token_field], token))
 
 
-def _message_post_helper(res_model='', res_id=None, message='', token='', nosubscribe=True, **kw):
-    """ Generic chatter function, allowing to write on *any* object that inherits mail.thread.
-        If a token is specified, all logged in users will be able to write a message regardless
-        of access rights; if the user is the public user, the message will be posted under the name
-        of the partner_id of the object (or the public user if there is no partner_id on the object).
+def _message_post_helper(res_model, res_id, message, token='', nosubscribe=True, **kw):
+    """ Generic chatter function, allowing to write on *any* object that inherits mail.thread. We
+        distinguish 2 cases:
+            1/ If a token is specified, all logged in users will be able to write a message regardless
+            of access rights; if the user is the public user, the message will be posted under the name
+            of the partner_id of the object (or the public user if there is no partner_id on the object).
 
+            2/ If a signed token is specified (`hash`) and also a partner_id (`pid`), all post message will
+            be done under the name of the partner_id (as it is signed). This should be used to avoid leaking
+            token to all users.
+
+        Required parameters
         :param string res_model: model name of the object
         :param int res_id: id of the object
         :param string message: content of the message
 
-        optional keywords arguments:
+        Optional keywords arguments:
         :param string token: access token if the object's model uses some kind of public access
                              using tokens (usually a uuid4) to bypass access rules
+        :param string hash: signed token by a partner if model uses some token field to bypass access right
+                            post messages.
+        :param string pid: identifier of the res.partner used to sign the hash
         :param bool nosubscribe: set False if you want the partner to be set as follower of the object when posting (default to True)
 
         The rest of the kwargs are passed on to message_post()
     """
     record = request.env[res_model].browse(res_id)
     author_id = request.env.user.partner_id.id if request.env.user.partner_id else False
+    # Token Case: token required to post message as document customer (if not logged) or as itself even if user has not the access
     if token:
         access_as_sudo = _has_token_access(res_model, res_id, token=token)
         if access_as_sudo:
             record = record.sudo()
             if request.env.user._is_public():
-                if kw.get('pid') and consteq(kw.get('hash'), record._sign_token(int(kw.get('pid')))):
-                    author_id = kw.get('pid')
-                else:
-                    # TODO : After adding the pid and sign_token in access_url when send invoice by email, remove this line
-                    # TODO : Author must be Public User (to rename to 'Anonymous')
-                    author_id = record.partner_id.id if hasattr(record, 'partner_id') and record.partner_id.id else author_id
+                # TODO : After adding the pid and sign_token in access_url when send invoice by email, remove this line
+                # TODO : Author must be Public User (to rename to 'Anonymous')
+                author_id = record.partner_id.id if hasattr(record, 'partner_id') and record.partner_id.id else author_id
             else:
                 if not author_id:
                     raise NotFound()
         else:
             raise Forbidden()
+    # Signed Token Case: hash implies token is signed by partner. So author_id is forced
+    elif kw.get('hash') and kw.get('pid'):
+        if consteq(kw['hash'], record._sign_token(int(kw['pid']))):
+            record = record.sudo()
+            author_id = kw.get('pid')
+        else:
+            raise Forbidden()
     kw.pop('csrf_token', None)
     kw.pop('attachment_ids', None)
+    kw.pop('hash', None)
+    kw.pop('pid', None)
     return record.with_context(mail_create_nosubscribe=nosubscribe).message_post(body=message,
                                                                                    message_type=kw.pop('message_type', "comment"),
                                                                                    subtype=kw.pop('subtype', "mt_comment"),

@@ -83,8 +83,11 @@ var PortalChatter = Widget.extend({
             'pager_start': 1,
             'is_user_public': true,
             'is_user_publisher': false,
+            'hash': false,
+            'pid': false,
             'domain': [],
         });
+
         this.set('messages', []);
         this.set('message_count', this.options['message_count']);
         this.set('pager', {});
@@ -95,11 +98,11 @@ var PortalChatter = Widget.extend({
         var self = this;
         // load qweb template and init data
         return $.when(
-            this._super.apply(this, arguments),
             rpc.query({
                 route: '/mail/chatter_init',
                 params: this._messageFetchPrepareParams()
             }),
+            this._super.apply(this, arguments),
         ).then(function(result){
             self.result = result;
             self.options = _.extend(self.options, self.result['options'] || {});
