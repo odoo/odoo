@@ -143,7 +143,7 @@
                                     </group>
                                 </div>
                                 <group>
-                                    <field name="matrix_subtype" attrs="{'invisible':[('question_type','not in',['matrix'])]}"/>
+                                    <field name="matrix_subtype" attrs="{'invisible':[('question_type','not in',['matrix'])],'required':[('question_type','=','matrix')]}"/>
                                 </group>
                             </group>
                             <group string="Display mode" attrs="{'invisible':[('question_type','not in',['simple_choice', 'multiple_choice'])]}">
