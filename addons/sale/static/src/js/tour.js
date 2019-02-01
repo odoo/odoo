@@ -43,17 +43,19 @@ tour.register('sale_tour', {
     extra_trigger: ".o_sale_order",
     content: _t("Select a product, or create a new one on the fly."),
     position: "right",
-    run: 'text DESK0001'
-}, {
-    trigger: ".ui-menu-item > a",
-    auto: true,
-    in_modal: false,
     run: function (actions) {
-        actions.auto();
-        if ($('.modal-dialog:has(div.o_dialog_warning) footer.modal-footer .btn-primary').length) {
-            $('.modal-dialog:has(div.o_dialog_warning) footer.modal-footer .btn-primary').trigger('click');
-        }
-    },
+        actions.text("DESK0001", this.$anchor.find("input"));
+        var $descriptionElement = $('.o_form_editable textarea[name="name"]');
+        // when description changes, we know the product has been created
+        $descriptionElement.change(function () {
+            $descriptionElement.addClass('product_creation_success');
+        });
+    }
+}, {
+    trigger: '.o_m2o_dropdown_option a:contains("DESK0001")'
+}, {
+    trigger: '.o_form_editable textarea[name="name"].product_creation_success',
+    run: function () {} // wait for product creation
 }, {
     trigger: ".o_form_button_save",
     extra_trigger: ".o_sale_order",
