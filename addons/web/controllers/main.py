@@ -1061,7 +1061,7 @@ class Binary(http.Controller):
             filename_field=filename_field, download=download, mimetype=mimetype,
             default_mimetype='image/png', access_token=access_token)
 
-        if status != 200 and download:
+        if status == 301 or (status != 200 and download):
             return request.env['ir.http']._response_by_status(status, headers, content)
         if not content:
             content = base64.b64encode(self.placeholder(image='placeholder.png'))
