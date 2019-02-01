@@ -72,7 +72,7 @@ class Survey(http.Controller):
         if (survey_sudo.is_closed or not survey_sudo.active) and (not answer_sudo or not answer_sudo.test_entry):
             return 'survey_closed'
 
-        if not survey_sudo.page_ids:
+        if not survey_sudo.page_ids and survey_sudo.questions_layout != 'page_per_question':
             return 'survey_void'
 
         if answer_sudo and answer_sudo.state == 'done':
@@ -240,12 +240,13 @@ class Survey(http.Controller):
                 'start_datetime': fields.Datetime.now()
             })
 
+        page_or_question_key = 'question' if survey_sudo.questions_layout == 'page_per_question' else 'page'
         # Select the right page
         if answer_sudo.state == 'new':  # First page
-            page, last = survey_sudo.next_page(answer_sudo, 0, go_back=False)
+            page_or_question_id, last = survey_sudo.next_page_or_question(answer_sudo, 0, go_back=False)
             data = {
                 'survey': survey_sudo,
-                'page': page,
+                page_or_question_key: page_or_question_id,
                 'answer': answer_sudo
             }
             if last:
@@ -256,15 +257,15 @@ class Survey(http.Controller):
                                                        'answer': answer_sudo})
         elif answer_sudo.state == 'skip':
             flag = (True if prev and prev == 'prev' else False)
-            page, last = survey_sudo.next_page(answer_sudo, answer_sudo.last_displayed_page_id.id, go_back=flag)
+            page_or_question_id, last = survey_sudo.next_page_or_question(answer_sudo, answer_sudo.last_displayed_page_id.id, go_back=flag)
 
             #special case if you click "previous" from the last page, then leave the survey, then reopen it from the URL, avoid crash
-            if not page:
-                page, last = survey_sudo.next_page(answer_sudo, answer_sudo.last_displayed_page_id.id, go_back=True)
+            if not page_or_question_id:
+                page_or_question_id, last = survey_sudo.next_page_or_question(answer_sudo, answer_sudo.last_displayed_page_id.id, go_back=True)
 
             data = {
                 'survey': survey_sudo,
-                'page': page,
+                page_or_question_key: page_or_question_id,
                 'answer': answer_sudo
             }
             if last:
@@ -275,7 +276,7 @@ class Survey(http.Controller):
             return request.render("survey.403", {'survey': survey_sudo})
 
     @http.route('/survey/prefill/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
-    def survey_get_answers(self, survey_token, answer_token, page_id=None, **post):
+    def survey_get_answers(self, survey_token, answer_token, page_or_question_id=None, **post):
         """ TDE NOTE: original comment: # AJAX prefilling of a survey -> AJAX / http ?? """
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
         if access_data['validity_code'] is not True and access_data['validity_code'] != 'answer_done':
@@ -283,21 +284,23 @@ class Survey(http.Controller):
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
         try:
-            page_id = int(page_id)
+            page_or_question_id = int(page_or_question_id)
         except:
-            page_id = None
+            page_or_question_id = None
 
         # Fetch previous answers
-        if page_id:
-            previous_answers = answer_sudo.user_input_line_ids.filtered(lambda line: line.page_id.id == page_id)
-        else:
+        if survey_sudo.questions_layout == 'one_page' or not page_or_question_id:
             previous_answers = answer_sudo.user_input_line_ids
+        elif survey_sudo.questions_layout == 'page_per_section':
+            previous_answers = answer_sudo.user_input_line_ids.filtered(lambda line: line.page_id.id == page_or_question_id)
+        else:
+            previous_answers = answer_sudo.user_input_line_ids.filtered(lambda line: line.question_id.id == page_or_question_id)
 
         # Return non empty answers in a JSON compatible format
         ret = {}
         for answer in previous_answers:
             if not answer.skipped:
-                answer_tag = '%s_%s_%s' % (answer.survey_id.id, answer.page_id.id, answer.question_id.id)
+                answer_tag = '%s_%s' % (answer.survey_id.id, answer.question_id.id)
                 answer_value = None
                 if answer.answer_type == 'free_text':
                     answer_value = answer.value_free_text
@@ -357,17 +360,26 @@ class Survey(http.Controller):
             # prevent cheating with users creating multiple 'user_input' before their last attempt
             return {}
 
-        page_id = int(post['page_id'])
-        questions = request.env['survey.question'].sudo().search([
-            ('survey_id', '=', survey_sudo.id),
-            ('page_id', '=', page_id)
-        ])
+        if survey_sudo.questions_layout == 'page_per_section':
+            page_id = int(post['page_id'])
+            questions = request.env['survey.question'].sudo().search([('survey_id', '=', survey_sudo.id), ('page_id', '=', page_id)])
+            # we need the intersection of the questions of this page AND the questions prepared for that user_input
+            # (because randomized surveys do not use all the questions of every page)
+            questions = questions & answer_sudo.question_ids
+            page_or_question_id = page_id
+        elif survey_sudo.questions_layout == 'page_per_question':
+            question_id = int(post['question_id'])
+            questions = request.env['survey.question'].sudo().browse(question_id)
+            page_or_question_id = question_id
+        else:
+            questions = survey_sudo.question_ids
+            questions = questions & answer_sudo.question_ids
 
         errors = {}
         # Answer validation
         if not answer_sudo.is_time_limit_reached:
             for question in questions:
-                answer_tag = "%s_%s_%s" % (survey_sudo.id, page_id, question.id)
+                answer_tag = "%s_%s" % (survey_sudo.id, question.id)
                 errors.update(question.validate_question(post, answer_tag))
 
         ret = {}
@@ -375,18 +387,20 @@ class Survey(http.Controller):
             # Return errors messages to webpage
             ret['errors'] = errors
         else:
-            if answer_sudo.is_time_limit_reached:
+            if not answer_sudo.is_time_limit_reached:
+                for question in questions:
+                    answer_tag = "%s_%s" % (survey_sudo.id, question.id)
+                    request.env['survey.user_input_line'].sudo().save_lines(answer_sudo.id, question, post, answer_tag)
+
+            if answer_sudo.is_time_limit_reached or survey_sudo.questions_layout == 'one_page':
                 go_back = False
                 answer_sudo._send_certification()
                 vals = {'state': 'done'}
             else:
-                for question in questions:
-                    answer_tag = "%s_%s_%s" % (survey_sudo.id, page_id, question.id)
-                    request.env['survey.user_input_line'].sudo().save_lines(answer_sudo.id, question, post, answer_tag)
-
                 go_back = post['button_submit'] == 'previous'
-                next_page, last = request.env['survey.survey'].next_page(answer_sudo, page_id, go_back=go_back)
-                vals = {'last_displayed_page_id': page_id}
+                next_page, last = request.env['survey.survey'].next_page_or_question(answer_sudo, page_or_question_id, go_back=go_back)
+                vals = {'last_displayed_page_id': page_or_question_id}
+
                 if next_page is None and not go_back:
                     answer_sudo._send_certification()
                     vals.update({'state': 'done'})
@@ -411,6 +425,9 @@ class Survey(http.Controller):
             return self._redirect_with_error(access_data, access_data['validity_code'])
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
+
+        if survey_sudo.scoring_type == 'scoring_without_answers':
+            return request.render("survey.403", {'survey': survey_sudo})
 
         return request.render('survey.survey_print', {
             'survey': survey_sudo,
