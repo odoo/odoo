@@ -107,17 +107,6 @@ class Slide(models.Model):
     user_ids = fields.Many2many('res.users', 'slide_users', 'slide_id', 'user_id',
                                 string='Subscribers', groups='base.group_system')
     slide_user_ids = fields.One2many('slide.users', 'slide_id', string='Subscribers information', groups='base.group_system')
-
-    @api.depends('image')
-    def _get_image(self):
-        for record in self:
-            if record.image:
-                record.image_medium = image.crop_image(record.image, type='top', ratio=(4, 3), size=(500, 400))
-                record.image_thumb = image.crop_image(record.image, type='top', ratio=(4, 3), size=(200, 200))
-            else:
-                record.image_medium = False
-                record.iamge_thumb = False
-
     # content
     slide_type = fields.Selection([
         ('infographic', 'Infographic'),
@@ -132,31 +121,28 @@ class Slide(models.Model):
     url = fields.Char('Document URL', help="Youtube or Google Document URL")
     document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
     mime_type = fields.Char('Mime-type')
-
-    @api.onchange('url')
-    def on_change_url(self):
-        self.ensure_one()
-        if self.url:
-            res = self._parse_document_url(self.url)
-            if res.get('error'):
-                raise Warning(_('Could not fetch data from url. Document or access right not available:\n%s') % res['error'])
-            values = res['values']
-            if not values.get('document_id'):
-                raise Warning(_('Please enter valid Youtube or Google Doc URL'))
-            for key, value in values.items():
-                self[key] = value
-
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
     date_published = fields.Datetime('Publish Date')
     likes = fields.Integer('Likes', compute='_compute_user_info', store=True)
     dislikes = fields.Integer('Dislikes', compute='_compute_user_info', store=True)
     user_vote = fields.Integer('User vote', compute='_compute_user_info')
+    embed_code = fields.Text('Embed Code', readonly=True, compute='_get_embed_code')
     # views
     embedcount_ids = fields.One2many('slide.embed', 'slide_id', string="Embed Count")
     slide_views = fields.Integer('# of Website Views')
     embed_views = fields.Integer('# of Embedded Views')
     total_views = fields.Integer("Total # Views", default="0", compute='_compute_total', store=True)
+
+    @api.depends('image')
+    def _get_image(self):
+        for record in self:
+            if record.image:
+                record.image_medium = image.crop_image(record.image, type='top', ratio=(4, 3), size=(500, 400))
+                record.image_thumb = image.crop_image(record.image, type='top', ratio=(4, 3), size=(200, 200))
+            else:
+                record.image_medium = False
+                record.iamge_thumb = False
 
     @api.depends('slide_views', 'embed_views')
     def _compute_total(self):
@@ -181,8 +167,6 @@ class Slide(models.Model):
         for slide_sudo in self.sudo():
             slide_sudo.update(slide_data[slide_sudo.id])
 
-    embed_code = fields.Text('Embed Code', readonly=True, compute='_get_embed_code')
-
     def _get_embed_code(self):
         base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         if base_url[-1] == '/':
@@ -200,6 +184,19 @@ class Slide(models.Model):
                     record.embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
             else:
                 record.embed_code = False
+
+    @api.onchange('url')
+    def on_change_url(self):
+        self.ensure_one()
+        if self.url:
+            res = self._parse_document_url(self.url)
+            if res.get('error'):
+                raise Warning(_('Could not fetch data from url. Document or access right not available:\n%s') % res['error'])
+            values = res['values']
+            if not values.get('document_id'):
+                raise Warning(_('Please enter valid Youtube or Google Doc URL'))
+            for key, value in values.items():
+                self[key] = value
 
     @api.multi
     @api.depends('name')

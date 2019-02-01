@@ -23,6 +23,15 @@ class WebsiteSlides(http.Controller):
         'vote': 'likes desc',
     }
 
+    def sitemap_slide(env, rule, qs):
+        Channel = env['slide.channel']
+        dom = sitemap_qs2dom(qs=qs, route='/slides/', field=Channel._rec_name)
+        dom += env['website'].get_current_website().website_domain()
+        for channel in Channel.search(dom):
+            loc = '/slides/%s' % slug(channel)
+            if not qs or qs.lower() in loc:
+                yield {'loc': loc}
+
     def _set_viewed_slide(self, slide, view_mode):
         slide_key = '%s_%s' % (view_mode, request.session.sid)
         viewed_slides = request.session.setdefault(slide_key, list())
@@ -68,15 +77,6 @@ class WebsiteSlides(http.Controller):
             'user': request.env.user,
             'is_public_user': request.website.is_public_user(),
         })
-
-    def sitemap_slide(env, rule, qs):
-        Channel = env['slide.channel']
-        dom = sitemap_qs2dom(qs=qs, route='/slides/', field=Channel._rec_name)
-        dom += env['website'].get_current_website().website_domain()
-        for channel in Channel.search(dom):
-            loc = '/slides/%s' % slug(channel)
-            if not qs or qs.lower() in loc:
-                yield {'loc': loc}
 
     @http.route([
         '''/slides/<model("slide.channel"):channel>''',

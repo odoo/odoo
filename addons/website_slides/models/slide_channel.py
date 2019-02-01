@@ -20,11 +20,13 @@ class Channel(models.Model):
         'latest': 'date_published desc',
     }
 
+    # description
     name = fields.Char('Name', translate=True, required=True)
     active = fields.Boolean(default=True)
     description = fields.Html('Description', translate=html_translate, sanitize_attributes=False)
     sequence = fields.Integer(default=10, help='Display order')
     category_ids = fields.One2many('slide.category', 'channel_id', string="Categories")
+    # slides: promote, statistics
     slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides")
     promote_strategy = fields.Selection([
         ('none', 'No Featured Presentation'),
@@ -35,43 +37,12 @@ class Channel(models.Model):
         string="Featuring Policy", default='most_voted', required=True)
     custom_slide_id = fields.Many2one('slide.slide', string='Slide to Promote')
     promoted_slide_id = fields.Many2one('slide.slide', string='Featured Slide', compute='_compute_promoted_slide_id', store=True)
-
-    @api.depends('custom_slide_id', 'promote_strategy', 'slide_ids.likes',
-                 'slide_ids.total_views', "slide_ids.date_published")
-    def _compute_promoted_slide_id(self):
-        for record in self:
-            if record.promote_strategy == 'none':
-                record.promoted_slide_id = False
-            elif record.promote_strategy == 'custom':
-                record.promoted_slide_id = record.custom_slide_id
-            elif record.promote_strategy:
-                slides = self.env['slide.slide'].search(
-                    [('website_published', '=', True), ('channel_id', '=', record.id)],
-                    limit=1, order=self._order_by_strategy[record.promote_strategy])
-                record.promoted_slide_id = slides and slides[0] or False
-
     nbr_presentations = fields.Integer('Number of Presentations', compute='_count_presentations', store=True)
     nbr_documents = fields.Integer('Number of Documents', compute='_count_presentations', store=True)
     nbr_videos = fields.Integer('Number of Videos', compute='_count_presentations', store=True)
     nbr_infographics = fields.Integer('Number of Infographics', compute='_count_presentations', store=True)
     total = fields.Integer(compute='_count_presentations', store=True)
-
-    @api.depends('slide_ids.slide_type', 'slide_ids.website_published')
-    def _count_presentations(self):
-        result = dict.fromkeys(self.ids, dict())
-        res = self.env['slide.slide'].read_group(
-            [('website_published', '=', True), ('channel_id', 'in', self.ids)],
-            ['channel_id', 'slide_type'], ['channel_id', 'slide_type'],
-            lazy=False)
-        for res_group in res:
-            result[res_group['channel_id'][0]][res_group['slide_type']] = result[res_group['channel_id'][0]].get(res_group['slide_type'], 0) + res_group['__count']
-        for record in self:
-            record.nbr_presentations = result[record.id].get('presentation', 0)
-            record.nbr_documents = result[record.id].get('document', 0)
-            record.nbr_videos = result[record.id].get('video', 0)
-            record.nbr_infographics = result[record.id].get('infographic', 0)
-            record.total = record.nbr_presentations + record.nbr_documents + record.nbr_videos + record.nbr_infographics
-
+    # configuration
     publish_template_id = fields.Many2one(
         'mail.template', string='Published Template',
         help="Email template to send slide publication through email",
@@ -99,6 +70,37 @@ class Channel(models.Model):
     can_see = fields.Boolean('Can See', compute='_compute_access', search='_search_can_see')
     can_see_full = fields.Boolean('Full Access', compute='_compute_access')
     can_upload = fields.Boolean('Can Upload', compute='_compute_access')
+
+    @api.depends('custom_slide_id', 'promote_strategy', 'slide_ids.likes',
+                 'slide_ids.total_views', "slide_ids.date_published")
+    def _compute_promoted_slide_id(self):
+        for record in self:
+            if record.promote_strategy == 'none':
+                record.promoted_slide_id = False
+            elif record.promote_strategy == 'custom':
+                record.promoted_slide_id = record.custom_slide_id
+            elif record.promote_strategy:
+                slides = self.env['slide.slide'].search(
+                    [('website_published', '=', True), ('channel_id', '=', record.id)],
+                    limit=1, order=self._order_by_strategy[record.promote_strategy])
+                record.promoted_slide_id = slides and slides[0] or False
+
+    @api.depends('slide_ids.slide_type', 'slide_ids.website_published')
+    def _count_presentations(self):
+        result = dict.fromkeys(self.ids, dict())
+        res = self.env['slide.slide'].read_group(
+            [('website_published', '=', True), ('channel_id', 'in', self.ids)],
+            ['channel_id', 'slide_type'],
+            groupby=['channel_id', 'slide_type'],
+            lazy=False)
+        for res_group in res:
+            result[res_group['channel_id'][0]][res_group['slide_type']] = result[res_group['channel_id'][0]].get(res_group['slide_type'], 0) + res_group['__count']
+        for record in self:
+            record.nbr_presentations = result[record.id].get('presentation', 0)
+            record.nbr_documents = result[record.id].get('document', 0)
+            record.nbr_videos = result[record.id].get('video', 0)
+            record.nbr_infographics = result[record.id].get('infographic', 0)
+            record.total = record.nbr_presentations + record.nbr_documents + record.nbr_videos + record.nbr_infographics
 
     def _search_can_see(self, operator, value):
         if operator not in ('=', '!=', '<>'):
