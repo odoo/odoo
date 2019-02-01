@@ -285,7 +285,7 @@ class StockMove(models.Model):
             valuation_amount = self._context.get('force_valuation_amount')
         else:
             if self.product_id.cost_method == 'average':
-                valuation_amount = cost if self.location_id.usage == 'supplier' and self.location_dest_id.usage == 'internal' else self.product_id.standard_price
+                valuation_amount = cost if self.location_id.usage in ['supplier', 'production'] and self.location_dest_id.usage == 'internal' else self.product_id.standard_price
             else:
                 valuation_amount = cost if self.product_id.cost_method == 'real' else self.product_id.standard_price
         # the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
