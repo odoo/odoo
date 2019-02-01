@@ -44,6 +44,7 @@ var ListRenderer = BasicRenderer.extend({
         'click thead th.o_column_sortable': '_onSortColumn',
         'click .o_group_header': '_onToggleGroup',
         'click thead .o_list_record_selector input': '_onToggleSelection',
+        'click .o_list_group_selector input': '_onGroupToggleSelection',
         'keypress thead tr td': '_onKeyPress',
         'keydown td': '_onKeyDown',
         'keydown th': '_onKeyDown',
@@ -66,6 +67,7 @@ var ListRenderer = BasicRenderer.extend({
             }).value();
         this.hasSelectors = params.hasSelectors;
         this.selection = params.selectedRecords || [];
+        this.selectedGroups = params.selectedGroups || [];
         this.pagers = []; // instantiated pagers (only for grouped lists)
         this.isGrouped = this.state.groupedBy.length > 0;
         this.groupbys = params.groupbys;
@@ -595,7 +597,10 @@ var ListRenderer = BasicRenderer.extend({
         var $th = $('<th>')
             .addClass('o_group_name')
             .attr('tabindex', -1)
-            .text(name + ' (' + group.count + ')');
+            .append($('<span/>', {
+                'class': 'o_group_lable',
+                'text': name + ' (' + group.count + ')'
+            }));
         var $arrow = $('<span>')
             .css('padding-left', (groupLevel * 20) + 'px')
             .css('padding-right', '5px')
@@ -605,6 +610,7 @@ var ListRenderer = BasicRenderer.extend({
                 .toggleClass('fa-caret-down', group.isOpen);
         }
         $th.prepend($arrow);
+        $th.prepend(this._renderSelector('span', false, 'o_list_record_selector o_list_group_selector'));
         cells.push($th);
 
         var aggregateKeys = Object.keys(group.aggregateValues);
@@ -658,6 +664,7 @@ var ListRenderer = BasicRenderer.extend({
             .addClass('o_group_header')
             .toggleClass('o_group_open', group.isOpen)
             .toggleClass('o_group_has_content', group.count > 0)
+            .attr({'data-parent_id': group.parentID, "data-group_id": group.id})
             .data('group', group)
             .append(cells);
     },
@@ -806,7 +813,7 @@ var ListRenderer = BasicRenderer.extend({
         });
 
         var $tr = $('<tr/>', { class: 'o_data_row' })
-            .attr('data-id', record.id)
+            .attr({'data-id': record.id, 'data-parent_id': record.parentID})
             .append($cells);
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('td', !record.res_id));
@@ -875,15 +882,17 @@ var ListRenderer = BasicRenderer.extend({
      * @private
      * @param {string} tag either th or td
      * @param {boolean} disableInput if true, the input generated will be disabled
+     * @param {string} selectorClass class name for selector
      * @returns {jQueryElement}
      */
-    _renderSelector: function (tag, disableInput) {
+    _renderSelector: function (tag, disableInput, selectorClass) {
         var $content = dom.renderCheckbox();
         if (disableInput) {
             $content.find("input[type='checkbox']").prop('disabled', disableInput);
         }
+        var selectorClass = selectorClass || 'o_list_record_selector';
         return $('<' + tag + '>')
-            .addClass('o_list_record_selector')
+            .addClass(selectorClass)
             .append($content);
     },
     /**
@@ -953,6 +962,20 @@ var ListRenderer = BasicRenderer.extend({
                 });
                 $checked_rows.find('.o_list_record_selector input').prop('checked', true);
             }
+            if (self.selectedGroups.length) {
+                var $checkedGroups = self.$('tr').filter(function (index, el) {
+                    var group = $(el).data('group');
+                    return _.contains(self.selectedGroups, group && group.id);
+                });
+                $checkedGroups.find('.o_list_group_selector input').prop('checked', true);
+                _.each($checkedGroups, cg => {
+                    self._doCheck(true, $(cg).closest("tr").attr("data-group_id"));
+                    self._updateSelection();
+                })
+            }
+            if (self.$("tbody .o_list_record_selector input").filter((index, el) => {return !$(el).prop('checked')}).length == 0) {
+                self.$('thead .o_list_record_selector input').prop('checked', true);
+            }
         });
         return Promise.all([this._super.apply(this, arguments), prom]);
     },
@@ -993,12 +1016,20 @@ var ListRenderer = BasicRenderer.extend({
      * @private
      */
     _updateSelection: function () {
-        var $selectedRows = this.$('tbody .o_list_record_selector input:checked')
+        var $selectedRows = this.$('tbody .o_list_record_selector:not(".o_list_group_selector") input:checked')
             .closest('tr');
+        var $selectedGroups = this.$('tbody .o_list_record_selector.o_list_group_selector input:checked')
+            .closest('tr')
         this.selection = _.map($selectedRows, function (row) {
             return $(row).data('id');
         });
-        this.trigger_up('selection_changed', { selection: this.selection });
+        this.selectedGroups = _.map($selectedGroups, function (group) {
+            return $(group).data('group').id;
+        });
+        this.trigger_up('selection_changed', {
+            selection: this.selection,
+            selectedGroups: this.selectedGroups,
+        });
         this._updateFooter();
     },
 
@@ -1182,10 +1213,13 @@ var ListRenderer = BasicRenderer.extend({
      */
     _onSelectRecord: function (ev) {
         ev.stopPropagation();
-        this._updateSelection();
         if (!$(ev.currentTarget).find('input').prop('checked')) {
             this.$('thead .o_list_record_selector input').prop('checked', false);
         }
+        if ($(ev.currentTarget).closest('tbody').find('input').filter(function(){return !$(this).prop('checked')}).length > 0) {
+            this._doUnCheck($(ev.currentTarget).closest('tr').attr('data-parent_id'));
+        }
+        this._updateSelection();
     },
     /**
      * @private
@@ -1202,6 +1236,9 @@ var ListRenderer = BasicRenderer.extend({
     _onToggleGroup: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
+        if ($(ev.target).hasClass('o_list_group_selector')) {
+            return;
+        }
         var group = $(ev.currentTarget).closest('tr').data('group');
         if (group.count) {
             this.trigger_up('toggle_group', {
@@ -1218,6 +1255,47 @@ var ListRenderer = BasicRenderer.extend({
                     }
                 },
             });
+        }
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onGroupToggleSelection: function(ev) {
+        ev.stopPropagation();
+        var $checkeBox = $(ev.currentTarget);
+        var group = $checkeBox.closest('.o_group_has_content').data('group');
+        var checked = $checkeBox.prop('checked') || false;
+        this._doCheck(checked, group.id);
+        if (!checked) {
+            this._doUnCheck($checkeBox.closest('.o_group_has_content').attr('data-parent_id'));
+        }
+        this._updateSelection();
+        if (this.$("tbody .o_list_record_selector input").filter((index, el) => {return !$(el).prop('checked')}).length > 0) {
+            this.$('thead .o_list_record_selector input').prop('checked', false);
+        }
+    },
+    /**
+     * @private
+     * @param {boolean} checked
+     * @param {string} group_id check/uncheck child elements in heirarchy.
+     */
+    _doCheck: function(checked, group_id) {
+        this.$('tbody tr[data-parent_id="'+ group_id +'"] .o_list_record_selector input:not(":disabled")').prop('checked', checked);
+        _.each(this.$('tbody tr.o_group_header[data-parent_id="'+ group_id +'"]'), tr => {
+            if (this.$(tr).attr('data-group_id')) {
+                this._doCheck(checked, this.$(tr).attr('data-group_id'));
+            }
+        });
+    },
+    /**
+     * @private
+     * @param {string} parent_id uncheck parent elements in heirarchy. 
+     */
+    _doUnCheck: function (parent_id) {
+        this.$('tbody tr.o_group_open[data-group_id="'+ parent_id +'"] input').prop('checked', false);
+        if (this.$('tbody tr.o_group_open[data-group_id="'+ parent_id +'"]').attr('data-parent_id')) {
+            this._doUnCheck(this.$('tbody tr.o_group_open[data-group_id="'+ parent_id +'"]').attr('data-parent_id'));
         }
     },
     /**
