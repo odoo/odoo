@@ -396,6 +396,7 @@ class AccountJournal(models.Model):
     _name = "account.journal"
     _description = "Journal"
     _order = 'sequence, type, code'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     def _default_inbound_payment_methods(self):
         return self.env.ref('account.account_payment_method_manual_in')
@@ -778,7 +779,7 @@ class AccountJournal(models.Model):
             vals.update({'sequence_id': self.sudo()._create_sequence(vals).id})
         if vals.get('type') in ('sale', 'purchase') and vals.get('refund_sequence') and not vals.get('refund_sequence_id'):
             vals.update({'refund_sequence_id': self.sudo()._create_sequence(vals, refund=True).id})
-        journal = super(AccountJournal, self).create(vals)
+        journal = super(AccountJournal, self.with_context(mail_create_nolog=True)).create(vals)
         if journal.type == 'purchase':
             # create a mail alias for purchase journals (always, deactivated if alias_name isn't set)
             journal._update_mail_alias(vals)
