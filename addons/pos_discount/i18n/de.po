@@ -3,16 +3,17 @@
 # * pos_discount
 # 
 # Translators:
-# Martin Trigaux, 2016
 # Ermin Trevisan <trevi@twanda.com>, 2016
 # Fabian Liesch <fabian.liesch@gmail.com>, 2016
+# Martin Trigaux, 2016
 # e2f <projects@e2f.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:55+0000\n"
-"PO-Revision-Date: 2016-09-07 08:55+0000\n"
+"PO-Revision-Date: 2016-09-07 09:26+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -54,6 +55,13 @@ msgid "Discounts"
 msgstr "Rabatte"
 
 #. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:28
+#, python-format
+msgid "No discount product found"
+msgstr ""
+
+#. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_iface_discount
 msgid "Order Discounts"
 msgstr "Bestellrabatte"
@@ -62,6 +70,15 @@ msgstr "Bestellrabatte"
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_pc
 msgid "The default discount percentage"
 msgstr "Der Standard-Rabattprozentsatz"
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:29
+#, python-format
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
+" Sold' and 'Available in Point of Sale'."
+msgstr ""
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_product_id

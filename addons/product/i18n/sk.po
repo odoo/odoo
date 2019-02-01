@@ -8,7 +8,7 @@
 # Martin Trigaux, 2017
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
-# Jan Prokop, 2018
+# Jan Prokop, 2019
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2016-09-07 09:26+0000\n"
-"Last-Translator: Jan Prokop, 2018\n"
+"Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,12 +33,12 @@ msgstr "Kategória produktu"
 #: model:ir.model.fields,field_description:product.field_product_product_product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_template_product_variant_count
 msgid "# Product Variants"
-msgstr ""
+msgstr "# Varianty produktu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_product_count
 msgid "# Products"
-msgstr ""
+msgstr "# Produkty"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:438
@@ -149,11 +149,14 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Cost  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Verejná cena  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Náklady  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Iný cenník  -  </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Produkty</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -187,6 +190,9 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
+"<strong>Varovanie</strong>: pridanie alebo zmazanie atribútov\n"
+"zmaže a pretvorí existujúce varianty a povedie\n"
+"l strate ich možnej úpravy."
 
 #. module: product
 #: code:addons/product/models/product.py:167 sql_constraint:product.product:0
@@ -372,7 +378,7 @@ msgstr "Vlastnosť"
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 #: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Name"
-msgstr ""
+msgstr "Názov atribútu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_extra
@@ -427,6 +433,10 @@ msgid ""
 "Cost Price : The base price will be the cost price.\n"
 "Other Pricelist : Computation of the base price based on another Pricelist."
 msgstr ""
+"Základná cena pre výpočet.\n"
+"Verejná cena: Základná cena bude predajná / verejná cena.\n"
+"Cena nákladov: Základná cena bude cena nákladov.\n"
+"Iný cenník: Výpočet základnej ceny založený na inom cenníku."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_list_price
@@ -609,7 +619,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_create_variant
 msgid "Check this if you want to create multiple variants for this attribute."
-msgstr ""
+msgstr "Zaškrtnite ak chcete vytvárať viaceré varianty tohto atribútu."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_child_id
@@ -868,7 +878,7 @@ msgstr "Zákazkový počítač dodávaný ako súprava."
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Zákaznícka referencia"
 
 #. module: product
 #: model:product.product,name:product.product_delivery_02
@@ -1018,7 +1028,7 @@ msgstr ""
 msgid ""
 "Error! It is not allowed to choose more than one value for a given "
 "attribute."
-msgstr ""
+msgstr "Chyba! Nemožno vybrať viac ako jednu hodnotu pre daný atribút."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:419
@@ -1321,6 +1331,8 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"Koľko ráz je táto merná jednotka väčšia ako referenčná merná jednotka v tejto kategórii:\n"
+"1 * (táto jednotka) = pomer * (referenčná jednotka)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor
@@ -1328,6 +1340,8 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"O koľko väčšia alebo menšia je táto jednotka v porovnaní s referenčnou mernou jednotkou pre túto kategóriu:\n"
+"1 * (referenčná jednotka) = pomer * (táto jednotka)"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1993,7 +2007,7 @@ msgstr "Hodnota atribútu produktu"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 msgid "Product Attribute and Values"
-msgstr ""
+msgstr "Atribúty a hodnoty produktu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_attribute_line_ids
@@ -2045,7 +2059,7 @@ msgstr "Merná jednotka produktu"
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
 msgid "Product UoM Categories"
-msgstr ""
+msgstr "Kategórie merných jednotiek produktu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_id
@@ -2534,7 +2548,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_template_pricelist_id
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
-msgstr ""
+msgstr "Pomocné pole. Slúži na hľadanie v cenníkoch, neuložené v databáze."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2659,7 +2673,7 @@ msgstr ""
 msgid ""
 "The number of products under this category (Does not consider the children "
 "categories)"
-msgstr ""
+msgstr "Počet produktov v tejto kategórii (nezohľadňuje dcérske kategórie)"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:74
@@ -2751,7 +2765,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
 msgid "The total number of products you can have per pallet or box."
-msgstr ""
+msgstr "Celkový počet produktov ktoré si môžete na palete alebo v krabici."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -2908,6 +2922,8 @@ msgstr "Ultratenký dizajn"
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
+"Po odškrtnutí aktívneho políčka, môžete skryť mernú jednotku bez jej "
+"odstránenia."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -2951,6 +2967,9 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
+"Merné jednotky rovnakej kategórie môžu byť prepočítavané medzi sebou. Napríklad v kategórii\n"
+"            <i>'Čas'</i>, môžete mať nasledovné merné jednotky:\n"
+"            hodiny, dni."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -3007,7 +3026,7 @@ msgstr "Informácia varianty"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_price_extra
 msgid "Variant Price Extra"
-msgstr ""
+msgstr "Zvláštna cena variantu"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3193,6 +3212,8 @@ msgid ""
 "You cannot define the decimal precision of 'Account' as greater than the "
 "rounding factor of the company's main currency"
 msgstr ""
+"Nemôžete definovať desatinnú presnosť 'Účtu' vyššiu ako zaokrúhľovací faktor"
+" hlavnej meny spoločnosti."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
@@ -3200,6 +3221,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
+"Musíte definovať prepočítavací pomer medzi viacerými mernými\n"
+"jednotkami v tej istej kategórii."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action

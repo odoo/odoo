@@ -3,25 +3,27 @@
 # * point_of_sale
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Aleksander <aleksander@provendo.no>, 2016
-# Mari Løken <inactive+mari123@transifex.com>, 2016
-# Roy Edvard Ellingsen <roy@royedvard.com>, 2016
-# Henrik Norlin <henrik@appstogrow.net>, 2016
 # Joachim Flottorp (Joachim flottorp) <joachimflottorp@gmail.com>, 2016
+# Henrik Norlin <henrik@appstogrow.net>, 2016
 # Torvald Baade Bringsvor <bringsvor@bringsvor.com>, 2016
+# Roy Edvard Ellingsen <roy@royedvard.com>, 2016
+# Aleksander, 2016
+# Mari Løken <inactive+mari123@transifex.com>, 2016
+# Martin Trigaux, 2016
 # Henning Herfjord <henning@autobolig.no>, 2016
 # Hugo Fossen <hf@optice.no>, 2017
 # Viktor Basso <viktor@voit.no>, 2017
-# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
 # Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017
+# Jorunn D. Newth, 2017
+# Marius Stedjan <marius@stedjan.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:25+0000\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -134,12 +136,12 @@ msgstr "<strong>Firma</strong>:<br/>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Ending Balance</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Avslutningsbalanse</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Journal</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Journal</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
@@ -149,7 +151,7 @@ msgstr "<strong>Åpningsdato</strong>:<br/>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Starting Balance</strong>:<br/>"
-msgstr ""
+msgstr "Startbalanse"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
@@ -498,7 +500,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:806
 #, python-format
 msgid "CHANGE"
-msgstr ""
+msgstr "VEKSEL"
 
 #. module: point_of_sale
 #. openerp-web
@@ -547,7 +549,7 @@ msgstr "Kontant kontroll."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_journal_id
 msgid "Cash Journal"
-msgstr ""
+msgstr "Kassejournal"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_id
@@ -600,7 +602,7 @@ msgstr "Endre"
 #: code:addons/point_of_sale/static/src/js/chrome.js:102
 #, python-format
 msgid "Change Cashier"
-msgstr ""
+msgstr "Bytt Selger"
 
 #. module: point_of_sale
 #. openerp-web
@@ -622,7 +624,7 @@ msgstr "Endre tips"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1484
 #, python-format
 msgid "Change:"
-msgstr ""
+msgstr "Veksel:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product_to_weight
@@ -907,7 +909,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_default_cashbox_lines_ids
 msgid "Default Balance"
-msgstr ""
+msgstr "Standardbalanse"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_account_id
@@ -1339,7 +1341,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Header"
-msgstr ""
+msgstr "Topptekst"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_id
@@ -2209,6 +2211,13 @@ msgstr "Vennligst bekreft høyt beløp"
 #: code:addons/point_of_sale/models/pos_order.py:266
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2017
+#, python-format
+msgid "Please print the invoice from the backend"
 msgstr ""
 
 #. module: point_of_sale
@@ -3120,6 +3129,15 @@ msgstr "Ordren kunne ikke sendes"
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
 msgstr "Ordren kunne ikke sendes til server grunnet en ukjent feil"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2018
+#, python-format
+msgid ""
+"The order has been synchronized earlier. Please make the invoice from the "
+"backend for the order: "
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_precompute_cash

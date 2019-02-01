@@ -3,18 +3,19 @@
 # * base
 # 
 # Translators:
-# Martin Trigaux, 2016
-# Boško Stojaković <bluesoft83@gmail.com>, 2016
-# Bole <bole@dajmi5.com>, 2016
 # Malik K, 2016
-# Nemanja Dragovic <nemanjadragovic94@gmail.com>, 2016
+# Nemanja Dragovic <nemanjadragovic94@gmail.com>, 2017
+# Bole <bole@dajmi5.com>, 2017
+# Martin Trigaux, 2017
+# Boško Stojaković <bluesoft83@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-20 07:12+0000\n"
-"PO-Revision-Date: 2017-10-20 07:12+0000\n"
-"Last-Translator: Nemanja Dragovic <nemanjadragovic94@gmail.com>, 2016\n"
+"POT-Creation-Date: 2019-01-23 16:30+0000\n"
+"PO-Revision-Date: 2016-09-07 09:14+0000\n"
+"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2019\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -631,6 +632,18 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_account_lock
+msgid ""
+"\n"
+"    Make the lock date irreversible:\n"
+"\n"
+"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
+"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
+"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
 msgid ""
 "\n"
@@ -965,6 +978,14 @@ msgid ""
 "\n"
 "Lets the company customize which Pad installation should be used to link to new\n"
 "pads (by default, http://etherpad.com/).\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_be_intrastat_2019
+msgid ""
+"\n"
+"Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
 "    "
 msgstr ""
 
@@ -2453,6 +2474,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_account_cash_basis_base_account
+msgid ""
+"\n"
+"Move the cash basis lines to another account.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_nz
 msgid ""
 "\n"
@@ -3327,6 +3356,44 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_pos_cert
+msgid ""
+"\n"
+"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Install it if you use the Point of Sale app to sell to individuals.\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Inalterability: deactivation of all the ways to cancel or modify key data of POS orders, invoices and journal entries\n"
+"\n"
+"    Security: chaining algorithm to verify the inalterability\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_certification
+msgid ""
+"\n"
+"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Inalterability: deactivation of all the ways to cancel or modify key data, invoices and journal entries\n"
+"\n"
+"    Security: chaining algorithm to verify the inalterability\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_pos_cache
 msgid ""
 "\n"
@@ -3755,6 +3822,19 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_sale_closing
+msgid ""
+"\n"
+"This module adds support for automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_barcodes
 msgid ""
 "\n"
@@ -4125,7 +4205,7 @@ msgstr ""
 msgid ""
 "\n"
 "This module provides facility to the user to install mrp and purchase modules at a time.\n"
-"====================================================================================\n"
+"========================================================================================\n"
 "\n"
 "It is basically used when we want to keep track of production orders generated\n"
 "from purchase order.\n"
@@ -5133,6 +5213,11 @@ msgid "Access Rules"
 msgstr "Pravila pristupa"
 
 #. module: base
+#: model:res.groups,name:base.group_private_addresses
+msgid "Access to Private Addresses"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
 msgid "Account Analytic Defaults"
 msgstr "Zadane vrijednosti analitičkih konta"
@@ -5434,6 +5519,11 @@ msgid "Add RML Header"
 msgstr "Dodaj RML zaglavlje"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_account_cash_basis_base_account
+msgid "Add a custom account to handle base amount lines"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode
 msgid "Add barcode scanning facilities to Warehouse Management."
 msgstr ""
@@ -5476,6 +5566,7 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -5598,7 +5689,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "Advanced Properties"
-msgstr ""
+msgstr "Napredna svojstva"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_adyen
@@ -6131,6 +6222,7 @@ msgstr "Banka"
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_account_form
 #: model:ir.model,name:base.model_res_partner_bank
 #: model:ir.model.fields,field_description:base.field_res_company_bank_ids
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_partner_bank_search
 #: model:ir.ui.view,arch_db:base.view_partner_bank_tree
 msgid "Bank Accounts"
@@ -6284,6 +6376,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat_2019
+msgid "Belgian Intrastat Declaration - Complement for 2019"
 msgstr ""
 
 #. module: base
@@ -6906,6 +7003,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_company_city
 #: model:ir.model.fields,field_description:base.field_res_partner_city
 #: model:ir.model.fields,field_description:base.field_res_users_city
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -7198,6 +7296,11 @@ msgid "Compute"
 msgstr "Izračunaj"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_website_sale_taxcloud_delivery
+msgid "Compute taxes with TaxCloud after online delivery computation."
+msgstr ""
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid ""
 "Computed fields are defined with the fields\n"
@@ -7298,12 +7401,14 @@ msgid ""
 "Connection Test Failed! Here is what we got instead:\n"
 " %s"
 msgstr ""
+"Test konekcije neuspješan! Evo šta smo dobili umjesto toga:\n"
+" %s"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:189
 #, python-format
 msgid "Connection Test Succeeded! Everything seems properly set up!"
-msgstr ""
+msgstr "Test konekcije uspješan! Izgleda da je sve podešeno kako treba!"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint_name
@@ -7464,6 +7569,7 @@ msgstr "Zemlje"
 #: model:ir.model.fields,field_description:base.field_res_country_state_country_id
 #: model:ir.model.fields,field_description:base.field_res_partner_country_id
 #: model:ir.model.fields,field_description:base.field_res_users_country_id
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_country_tree
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
@@ -9498,11 +9604,6 @@ msgid "France - Accounting"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
-msgid "France - Accounting - Certified CGI 286 I-3 bis"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_reports
 msgid "France - Accounting Reports"
 msgstr ""
@@ -9510,6 +9611,23 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
 msgid "France - FEC"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
+msgid "France - VAT Anti-Fraud Certification (CGI 286 I-3 bis)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_sale_closing
+msgid ""
+"France - VAT Anti-Fraud Certification (CGI 286 I-3 bis) - Sale Closings"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_pos_cert
+msgid ""
+"France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)"
 msgstr ""
 
 #. module: base
@@ -9771,7 +9889,7 @@ msgstr "Meža"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_grid
 msgid "Grid View"
-msgstr ""
+msgstr "Grid Pogled"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid
@@ -9902,7 +10020,7 @@ msgstr ""
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "HTML"
-msgstr ""
+msgstr "HTML"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_report_xml_report_type
@@ -10522,6 +10640,9 @@ msgid ""
 "groups. If this field is empty, Odoo will compute visibility based on the "
 "related object's read access."
 msgstr ""
+"Ako imate grupe, vidljivost ovog menija će biti bazirano na ovim grupama. "
+"Ako je ovo polje prazno, Odoo će izračunati vidljivost na osnovu pristupa "
+"čitanja povezanog objekta."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_access_active
@@ -10530,6 +10651,8 @@ msgid ""
 " (if you delete a native ACL, it will be re-created when you reload the "
 "module)."
 msgstr ""
+"Ako otkačite aktivno polje, onemogućićete ACL bez da ga brišete (ako "
+"obrišete nativni ACL, može ponovno biti kreiran kada ponovno učitate modul)."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule_active
@@ -10538,11 +10661,14 @@ msgid ""
 "deleting it (if you delete a native record rule, it may be re-created when "
 "you reload the module)."
 msgstr ""
+"Ako otkačite aktivno polje, onemogućiće pravilo zapisa bez da ga brišete "
+"(ako obrišete nativno pravilo zapisa, može ponovno biti kreirano kada "
+"ponovno učitate modul)."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "If you wish to cancel the process, press the cancel button below"
-msgstr ""
+msgstr "Ako želite da otkažete proces, pritisnite dugme otkaži ispod"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_logo
@@ -10555,7 +10681,7 @@ msgstr "Slika"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "Impacted Apps"
-msgstr ""
+msgstr "Pogođene aplikacije"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_implementation
@@ -10604,7 +10730,7 @@ msgstr "Uvezi prevod"
 #. module: base
 #: model:ir.module.module,description:base.module_currency_rate_live
 msgid "Import exchange rates from the Internet.\n"
-msgstr ""
+msgstr "Uvezi kursne liste sa interneta.\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_modules
@@ -10890,12 +11016,15 @@ msgid ""
 "separated list of valid field names (optionally followed by asc/desc for the"
 " direction)"
 msgstr ""
+"Nepravilno specifiran \"order\". Pravilna specifikacija \"order\" je zarezom"
+" razdvojena lista validnih naziva polja (opcionalno praćena sa asc/desc za "
+"smjer)"
 
 #. module: base
 #: code:addons/base/res/res_users.py:315
 #, python-format
 msgid "Invalid 'group by' parameter"
-msgstr ""
+msgstr "Nepravilan parametar 'grupiši po'"
 
 #. module: base
 #: code:addons/base/ir/ir_cron.py:70
@@ -11019,6 +11148,11 @@ msgstr ""
 #: model:res.country,name:base.ie
 msgid "Ireland"
 msgstr "Irska"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_lock
+msgid "Irreversible Lock Date"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_is_company
@@ -11160,6 +11294,7 @@ msgstr "Kazahstan"
 msgid ""
 "Keep empty if you don't want the user to be able to connect on the system."
 msgstr ""
+"Ostavite prazno ako ne želite da korisnik ima mogućnost prijave na sistem."
 
 #. module: base
 #: model:res.country,name:base.ke
@@ -11196,6 +11331,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_si
 msgid "Kontni načrt za gospodarske družbe"
+msgstr ""
+
+#. module: base
+#: model:res.country,name:base.xk
+msgid "Kosovo"
 msgstr ""
 
 #. module: base
@@ -11754,7 +11894,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.ir_logging_search_view
 #: model:ir.ui.view,arch_db:base.ir_logging_tree_view
 msgid "Logs"
-msgstr ""
+msgstr "Logovi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_loyalty
@@ -11856,7 +11996,7 @@ msgstr "Glavna Sekvenca"
 #: selection:ir.actions.act_window,target:0
 #: selection:ir.actions.client,target:0
 msgid "Main action of Current Window"
-msgstr ""
+msgstr "Glavna akcija trenutnog prozora"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_maintainer
@@ -12097,18 +12237,6 @@ msgid "Memos pad"
 msgstr "Bilježnica"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:382
-#, python-format
-msgid "Model %s does not exist"
-msgstr ""
-
-#. module: base
-#: code:addons/base/ir/ir_model.py:383
-#, python-format
-msgid "Please specify a valid model for the object relation"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_name
 #: model:ir.ui.view,arch_db:base.edit_menu
 #: model:ir.ui.view,arch_db:base.edit_menu_access
@@ -12137,7 +12265,7 @@ msgstr "Meniji"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
 msgid "Menus Customization"
-msgstr ""
+msgstr "Prilagođavanje menija"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_mercury
@@ -12278,13 +12406,19 @@ msgid "Model"
 msgstr "Model"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:487
+#: code:addons/base/ir/ir_model.py:404
+#, python-format
+msgid "Model %s does not exist"
+msgstr "Model %s ne postoji"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:550
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "Ne postoji Model %s!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:132
+#: code:addons/base/ir/ir_model.py:138
 #, python-format
 msgid "Model '%s' contains module data and cannot be removed!"
 msgstr "Model '%s' sadrži modulske podatke koji ne mogu biti uklonjeni!"
@@ -12332,6 +12466,8 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
+"Model za kreiranje/ažuriranje zapisa. Postavite ovo polje samo ukoliko "
+"specifirate drugačiji model od baznog modela."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_model_ids
@@ -12930,7 +13066,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_settings_dashboard
 msgid "Odoo Settings Dashboard"
-msgstr ""
+msgstr "Odoo Ploča Postavki"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_voip
@@ -13010,6 +13146,8 @@ msgid ""
 "One of the documents you are trying to access has been deleted, please try "
 "again after refreshing."
 msgstr ""
+"Jedan od dokumenata kojem pokušavate da pristupite je bio obrisan, molimo "
+"pokušajte ponovno nakon osvježavanja."
 
 #. module: base
 #: code:addons/models.py:3626
@@ -13018,6 +13156,8 @@ msgid ""
 "One of the records you are trying to modify has already been deleted "
 "(Document type: %s)."
 msgstr ""
+"Jedan od zapisa koji pokušavate da uredite je već obrisan (Tip "
+"dokumenta:%s)."
 
 #. module: base
 #: code:addons/base/res/res_partner.py:381
@@ -13051,13 +13191,13 @@ msgstr ""
 #: code:addons/base/res/res_config.py:516
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "Samo administratori mogu izmjeniti postavke"
 
 #. module: base
 #: code:addons/base/ir/ir_attachment.py:56
 #, python-format
 msgid "Only administrators can execute this action."
-msgstr ""
+msgstr "Samo administratori mogu izvršiti ovu akciju."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view_mode
@@ -13085,7 +13225,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Open Apps"
-msgstr ""
+msgstr "Otvori Applikacije"
 
 #. module: base
 #: model:ir.actions.client,name:base.action_client_base_menu
@@ -13163,7 +13303,8 @@ msgid "Original View"
 msgstr "Izvorni prikaz"
 
 #. module: base
-#: code:addons/base/res/res_users.py:728 code:addons/base/res/res_users.py:888
+#: code:addons/base/res/res_users.py:785 code:addons/base/res/res_users.py:951
+#: model:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
 msgstr "Drugo"
@@ -13626,13 +13767,19 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:787
+#: code:addons/base/ir/ir_model.py:405
+#, python-format
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_actions.py:799
 #, python-format
 msgid "Please specify an action to launch!"
 msgstr "Molimo da specifirate neku akciju za pokretanje!"
 
 #. module: base
-#: code:addons/base/res/res_users.py:248
+#: code:addons/base/res/res_users.py:250
 #, python-format
 msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
@@ -13833,6 +13980,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_request_link_priority
 msgid "Priority"
 msgstr "Prioritet"
+
+#. module: base
+#: selection:res.partner,type:0
+msgid "Private Address"
+msgstr "Privatna adresa"
+
+#. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
+msgid "Private Address Form"
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:107
@@ -14200,12 +14357,15 @@ msgid ""
 "Record cannot be modified right now: This cron task is currently being "
 "executed and may not be modified Please try again in a few minutes"
 msgstr ""
+"Zapis trenutno ne može biti izmjenjen: Ovaj kron zadatak se trenutno "
+"izvršava i ne može biti izmjenjen. Molimo da pokušate ponovno za nekoliko "
+"minuta."
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:353 code:addons/models.py:4386
 #, python-format
 msgid "Record does not exist or has been deleted."
-msgstr ""
+msgstr "Zapis ili ne postoji ili je bio obrisan."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -14238,7 +14398,7 @@ msgstr "Rekurzivna greška u ovisnostima modula !"
 #: code:addons/base/ir/ir_actions.py:612
 #, python-format
 msgid "Recursion found in child server actions"
-msgstr ""
+msgstr "Pronađena je rekurzija u podređenim serverskim akcijama"
 
 #. module: base
 #: code:addons/models.py:3732
@@ -14903,7 +15063,7 @@ msgstr "Vidi sve moguće vrijednosti"
 #: code:addons/common.py:42
 #, python-format
 msgid "See http://openerp.com"
-msgstr ""
+msgstr "Pogledajte http://odoo.com"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_model_object_field
@@ -15255,7 +15415,7 @@ msgstr "Veličina"
 #. module: base
 #: sql_constraint:ir.model.fields:0
 msgid "Size of the field cannot be negative."
-msgstr ""
+msgstr "Veličina polja ne može biti negativna."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_installer
@@ -15480,6 +15640,7 @@ msgstr "Započni konfiguraciju"
 #: model:ir.model.fields,field_description:base.field_base_language_export_state
 #: model:ir.model.fields,field_description:base.field_res_partner_state_id
 #: model:ir.model.fields,field_description:base.field_res_users_state_id
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_country_state_form
 #: model:ir.ui.view,arch_db:base.view_country_state_tree
@@ -15577,6 +15738,7 @@ msgid "Street"
 msgstr "Ulica"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -15585,6 +15747,7 @@ msgid "Street 2..."
 msgstr "Ulica 2 ..."
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -15609,7 +15772,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_studio
 msgid "Studio"
-msgstr ""
+msgstr "Studio"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_sub_model_object_field
@@ -15657,7 +15820,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range_ids
 msgid "Subsequences"
-msgstr ""
+msgstr "Podsekvence"
 
 #. module: base
 #: model:res.country,name:base.sd
@@ -15884,6 +16047,11 @@ msgid "Target Window"
 msgstr "Ciljni prozor"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_cash_basis_base_account
+msgid "Tax Cash Basis Edit Base Account"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_vat
 msgid "Tax ID"
 msgstr "PDV Broj"
@@ -15895,6 +16063,11 @@ msgstr "PDV Broj"
 msgid ""
 "Tax Identification Number. Fill it if the company is subjected to taxes. "
 "Used by the some of the legal statements."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
+msgid "TaxCloud and Delivery - Ecommerce"
 msgstr ""
 
 #. module: base
@@ -15931,12 +16104,12 @@ msgstr "Tehnički naziv"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
-#: model:ir.ui.view,arch_db:base.user_groups_view
+#: model:ir.module.category,name:base.module_category_technical_settings
 msgid "Technical Settings"
 msgstr "Tehničke postavke"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:746
+#: code:addons/base/ir/ir_translation.py:792
 #, python-format
 msgid "Technical Translations"
 msgstr "Tehnički prevodi"
@@ -16012,7 +16185,7 @@ msgstr ""
 #: code:addons/base/res/res_users.py:288
 #, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
-msgstr ""
+msgstr "\"Odabir aplikacija\" ne može biti odabran kao početna akcija."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_code
@@ -16116,6 +16289,8 @@ msgid ""
 "The corresponding related field, if any. This must be a dot-separated list "
 "of field names."
 msgstr ""
+"Određeno povezano polje, ako postoji. Ovo mora biti tačkom odvojena lista "
+"naziva polja."
 
 #. module: base
 #: sql_constraint:res.currency:0
@@ -16295,7 +16470,7 @@ msgstr "Sljedeći korak ovisi o formatu fajla:"
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "The only predefined variables are"
-msgstr ""
+msgstr "Jedine predefinisane varijable su "
 
 #. module: base
 #: code:addons/model.py:125
@@ -16305,6 +16480,9 @@ msgid ""
 "- deletion: you may be trying to delete a record while other records still reference it\n"
 "- creation/update: a mandatory field is not correctly set"
 msgstr ""
+"Ova operacija nije mogla biti izvršena, vjerovatno iz nekog od sljedećih razloga:\n"
+"- brisanje: možda pokušavate da obrišete zapis dok još uvijek postoje zapisi koji imaju vezu sa njim\n"
+"- kreiranje/ažuriranje: obavezno polje možda nije pravilno postavljeno"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_domain
@@ -16337,6 +16515,8 @@ msgid ""
 "The path to the main report file (depending on Report Type) or empty if the "
 "content is in another field"
 msgstr ""
+"Putanja do datoteke glavnog izvještaja (zavisno od tipa izvještaja) ili "
+"prazno ako je sadržaj u drugom polju"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_report_xml_report_rml
@@ -16367,7 +16547,7 @@ msgstr "Kurs valute u odnosu na kurs sa valutom 1."
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment_res_id
 msgid "The record id this is attached to."
-msgstr ""
+msgstr "Id zapisa gdje je ovo zakačeno."
 
 #. module: base
 #: code:addons/models.py:2952 code:addons/models.py:3168
@@ -16535,9 +16715,16 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_website_sale_taxcloud_delivery
+msgid ""
+"This module ensures that when delivery price is computed online, and taxes are computed with TaxCloud, the tax computation is done correctly on both the order and delivery.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "This module will trigger the uninstallation of below modules."
-msgstr ""
+msgstr "Ovaj modul će aktivirati deinstalaciju dole navedenih modula."
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_bootswatch
@@ -16676,6 +16863,8 @@ msgstr "Treba biti nadograđeno"
 msgid ""
 "To enable it, make sure this directory exists and is writable on the server:"
 msgstr ""
+"Da bi ste ga omogućili, obezbjedite da ovaj direktorijum postoji i da se u "
+"njega može upisivati na serveru:"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree
@@ -16816,6 +17005,7 @@ msgstr "Komentari prevoda"
 msgid ""
 "Translation features are unavailable until you install an extra translation."
 msgstr ""
+"Mogućnost prevoda je onemogućena sve dok ne instalirate dodatni prevod."
 
 #. module: base
 #: selection:ir.translation,state:0
@@ -17014,6 +17204,8 @@ msgstr "Ukrajna"
 msgid ""
 "Unable to delete this document because it is used as a default property"
 msgstr ""
+"Nije moguće obrisati ovaj dokument jer se koristi kao svojstvo zadane "
+"vrijednosti "
 
 #. module: base
 #: code:addons/base/module/module.py:312
@@ -17252,7 +17444,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_use_date_range
 msgid "Use subsequences per date_range"
-msgstr ""
+msgstr "Koristi podsekvence po rasponima datuma (date_range)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_gamification
@@ -17295,7 +17487,7 @@ msgstr "Korišteno za prijavu u sistem"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_sequence
 msgid "Used to order Companies in the company switcher"
-msgstr ""
+msgstr "Koristi se za redosljed kompanija u izborniku kompanija"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_type
@@ -17459,6 +17651,8 @@ msgid ""
 "Various fields may use Python code or Python expressions. The following "
 "variables can be used:"
 msgstr ""
+"Različita polja mogu koristiti Python kod ili Python ekpresije. Sljedeće "
+"varijable možete koristiti:"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet
@@ -17603,11 +17797,14 @@ msgid ""
 "Views allows you to personalize each view of Odoo. You can add new fields, "
 "move fields, rename them or delete the ones that you do not need."
 msgstr ""
+"Pogledi dozvoljavaju da personalizujete svaki pogled u Odoo-i. Možete dodati"
+" nova polja, pomjeriti polja, preimenovati ih ili obrisati one koji vam nisu"
+" potrebni."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr ""
+msgstr "Pogledi koji su nasljeđeni od ovog"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -17867,7 +18064,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_theme_install
 msgid "Website Theme Install"
-msgstr ""
+msgstr "Instaliraj Websajt Temu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_version
@@ -17935,6 +18132,8 @@ msgid ""
 "When dealing with multiple actions, the execution order is based on the "
 "sequence. Low number means high priority."
 msgstr ""
+"Kada radite sa više akcija, redosljed izvršavanja je baziran na sekvenci. "
+"Manji broj znači veći prioritet."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server_sequence
@@ -17952,6 +18151,8 @@ msgid ""
 "When subsequences per date range are used, you can prefix variables with 'range_'\n"
 "                                to use the beginning of the range instead of the current date, e.g. %(range_year)s instead of %(year)s."
 msgstr ""
+"Kada se koriste podsekvence po rasponima datuma, možete dodati prefix 'range_' varijabli\n"
+"                                da koristite početak raspona umjesto trenutnog datuma, npr.: %(range_year)s umjesto %(year)s."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_wkf_transition_signal
@@ -17967,12 +18168,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_copy
 msgid "Whether the value is copied when duplicating a record."
-msgstr ""
+msgstr "Dali je ili ne vrijednost kopirana kada dupliciramo zapis."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_store
 msgid "Whether the value is stored in the database."
-msgstr ""
+msgstr "Dali je ili ne vrijednost sačuvana u bazi podataka."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_translate
@@ -18166,6 +18367,8 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
+"Možete ili učitati datoteku sa vašeg računara ili kopirati/nalijepiti link u"
+" vašu datoteku."
 
 #. module: base
 #: code:addons/base/res/res_partner.py:490
@@ -18192,6 +18395,8 @@ msgid ""
 "You can not remove the admin user as it is used internally for resources "
 "created by Odoo (updates, module installation, ...)"
 msgstr ""
+"Ne možete ukloniti admin korisnika jer se koristi interno za resurse "
+"kreirane od strane Odoo-a (nadogradnje, instalacije modula,...)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_address_format
@@ -18230,7 +18435,7 @@ msgstr "Ne možete kreirati rekurzivne hijerarhije partnera"
 #: code:addons/base/ir/ir_ui_view.py:314
 #, python-format
 msgid "You cannot create recursive inherited views."
-msgstr ""
+msgstr "Ne možete da kreirate rekurzivne nasljeđene poglede."
 
 #. module: base
 #: code:addons/base/res/res_users.py:340
@@ -18269,7 +18474,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
 msgid "You should try other search criteria."
-msgstr ""
+msgstr "Trebali bi ste pokušati drugi kriterijum pretrage."
 
 #. module: base
 #: code:addons/base/module/module.py:332
@@ -18295,6 +18500,8 @@ msgid ""
 "You try to upgrade the module %s that depends on the module: %s.\n"
 "But this module is not available in your system."
 msgstr ""
+"Pokušavate da nadogradite modul %s koji ovisi o modulu:: %s.\n"
+"Ovaj modul nije dostupan na vašem sistemu.."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_simple_form
@@ -18302,6 +18509,8 @@ msgid ""
 "You will be able to define additional access rights by editing the newly "
 "created user under the Settings / Users menu."
 msgstr ""
+"Bićete u mogućnosti da definišete dodatna pravila pristupa na način da "
+"uredite novokreiranog korisnika pod menijem Postavke / Korisnici."
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:206
@@ -18331,6 +18540,7 @@ msgid "Yugoslavia"
 msgstr "Jugoslavija (više ne postoji)"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -18380,6 +18590,16 @@ msgstr "_nepoznat"
 #. module: base
 #: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
 msgid "a new currency before creating a new company."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_online_sync
+msgid "account_online_sync"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_plaid
+msgid "account_plaid"
 msgstr ""
 
 #. module: base
@@ -18495,7 +18715,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "email@yourcompany.com"
-msgstr ""
+msgstr "email@vasakompanija.ba"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -18537,6 +18757,11 @@ msgstr "dohvati"
 #: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
 msgid "here"
 msgstr "ovdje"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_timesheet_sheet_timesheet_grid
+msgid "hr_timesheet_sheet_timesheet_grid"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,state:0
