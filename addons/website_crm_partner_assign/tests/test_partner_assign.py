@@ -158,3 +158,8 @@ class TestPartnerLeadPortal(TestCrmCases):
 
         self.assertEqual(opportunity.team_id, salesmanteam, 'The created opportunity should have the same team as the salesman default team of the opportunity creator.')
         self.assertEqual(opportunity.partner_assigned_id, self.portal_partner, 'Assigned Partner of created opportunity is the (portal) creator.')
+
+    def test_portal_mixin_url(self):
+        record_action = self.lead.get_access_action(self.portal_user.id)
+        self.assertEqual(record_action['url'], '/my/opportunity/%s' % self.lead.id)
+        self.assertEqual(record_action['type'], 'ir.actions.act_url')
