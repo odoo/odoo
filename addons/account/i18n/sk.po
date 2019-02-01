@@ -10,7 +10,7 @@
 # Martin Trigaux, 2017
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
 # gebri <gebri@inmail.sk>, 2018
-# Jan Prokop, 2018
+# Jan Prokop, 2019
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2016-09-07 09:15+0000\n"
-"Last-Translator: Jan Prokop, 2018\n"
+"Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -190,7 +190,7 @@ msgstr "\" Hlavná účtovná kniha"
 #: code:addons/account/models/account.py:397
 #, python-format
 msgid ": Refund"
-msgstr ""
+msgstr ": Vratka"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -1013,7 +1013,7 @@ msgstr "Zvolený riadok pohybu už bol potvrdený."
 #: code:addons/account/models/account_bank_statement.py:883
 #, python-format
 msgid "A selected statement line was already reconciled with an account move."
-msgstr ""
+msgstr "Zvolený riadok bankového výpisu už bol zosúladený s bankovým pohybom."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:218
@@ -1048,7 +1048,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr ""
+msgstr "Na partnera (účet) môže byť nastavené varovanie"
 
 #. module: account
 #. openerp-web
@@ -1714,7 +1714,7 @@ msgstr "Povoliť pro-forma faktúry"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_multi_currency
 msgid "Allows to work in a multi currency environment"
-msgstr ""
+msgstr "Povoľuje vám prácu s viacerými finančnými menami"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_proforma_invoices
@@ -2289,7 +2289,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr ""
+msgstr "Priradené k aktuálnej spoločnosti užívateľa"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5315,7 +5315,7 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:535
 #, python-format
 msgid "Invoice must be cancelled in order to reset it to draft."
-msgstr ""
+msgstr "Faktúra musí byť zrušená aby sa dala nastaviť ako Návrh."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:563
@@ -5606,7 +5606,7 @@ msgstr "Vstup účtovnej knihy"
 #: model:ir.model.fields,field_description:account.field_account_invoice_move_name
 #: model:ir.model.fields,field_description:account.field_account_payment_move_name
 msgid "Journal Entry Name"
-msgstr ""
+msgstr "Názov vstupu účtovnej knihy"
 
 #. module: account
 #: selection:account.print.journal,sort_selection:0
@@ -7165,7 +7165,7 @@ msgstr "Platobná informácia"
 #: model:ir.model.fields,field_description:account.field_account_payment_journal_id
 #: model:ir.model.fields,field_description:account.field_account_register_payments_journal_id
 msgid "Payment Journal"
-msgstr ""
+msgstr "Účtovná kniha platieb"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
@@ -8300,6 +8300,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"Vyberte 'Predaj' pre zákaznícke faktúry v účtovných knihách.\n"
+"Vyberte 'Nákup' pre účtenky dodávateľov v účtovných knihách.\n"
+"Vyberte 'Hotovosť'alebo'Banka'pre účtovné knihy, ktoré sa používajú u zákazníckých alebo dodávateľských platieb.\n"
+"Vyberte 'Všeobecné', pre rôzne operácie účtovných kníh."
 
 #. module: account
 #. openerp-web
@@ -10527,7 +10531,7 @@ msgstr "Nemôžete zmazať platbu ktorá už bola zverejnená"
 #: code:addons/account/models/account_invoice.py:1360
 #, python-format
 msgid "You can only delete an invoice line if the invoice is in draft state."
-msgstr ""
+msgstr "Vymazať položku faktúry môžete len ak je faktúra v stave Návrh."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:128

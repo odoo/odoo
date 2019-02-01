@@ -17,28 +17,30 @@
 # Eddie Lim <bhweelim@yahoo.com>, 2017
 # 朱仁杰 <johnson19960308@gmail.com>, 2017
 # zpq001 <zpq001@live.com>, 2017
-# 菜小蛇 <lttlsnk@gmail.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # fausthuang, 2017
 # xiaobin wu <bd5dml@gmail.com>, 2017
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
-# Martin Trigaux, 2018
 # e2f <projects@e2f.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # John Lin <linyinhuan@139.com>, 2018
-# 广州救火 <7017511@qq.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# 卫安琪 <weianqi1991@gmail.com>, 2018
+# Martin Trigaux, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# niulin lnc. <admin@niulin.net>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# 菜小蛇 <lttlsnk@gmail.com>, 2019
+# keecome <7017511@qq.com>, 2019
+# 卫安琪 <weianqi1991@gmail.com>, 2019
+# KWOKYUK CHEUNG <cheungkwokyuk@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-20 07:12+0000\n"
+"POT-Creation-Date: 2019-01-23 16:30+0000\n"
 "PO-Revision-Date: 2016-09-07 09:14+0000\n"
-"Last-Translator: 卫安琪 <weianqi1991@gmail.com>, 2018\n"
+"Last-Translator: KWOKYUK CHEUNG <cheungkwokyuk@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -921,6 +923,24 @@ msgstr ""
 "甘特视图请假仪表板"
 
 #. module: base
+#: model:ir.module.module,description:base.module_account_lock
+msgid ""
+"\n"
+"    Make the lock date irreversible:\n"
+"\n"
+"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
+"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
+"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    "
+msgstr ""
+"\n"
+"使锁定日期后不可逆转：\n"
+"\n"
+" *您无法在总账模块上给顾问定义比用户更严格的条件。然后，必须在用户的锁定日期之前设置总账模块程序上的锁定日期\n"
+" *您无法锁定尚未完成的期间。所以，必须在上个月的最后一天之前设置顾问的锁定日期\n"
+" *必须在上一个锁定日期之后设置总账的新锁定日期"
+
+#. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
 msgid ""
 "\n"
@@ -1391,6 +1411,14 @@ msgstr ""
 "由公司来定义链接到哪个服务器\n"
 "(默认是 http://etherpad.com/).\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_be_intrastat_2019
+msgid ""
+"\n"
+"Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_mercury
@@ -2720,7 +2748,7 @@ msgstr ""
 "*基于护照的合同\n"
 "*补贴/扣除\n"
 "*允许配置基本/毛/净薪资\n"
-"*员工工资单\n"
+"*员工工资条\n"
 "*每月工资表登记\n"
 "*集成假期管理\n"
 " "
@@ -3768,6 +3796,16 @@ msgstr ""
 "创建一些产品，你可以为其重新开具发票的费用。\n"
 "此模块不添加任何功能，只是一些演示数据\n"
 "方便地测试功能.\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_cash_basis_base_account
+msgid ""
+"\n"
+"Move the cash basis lines to another account.\n"
+"    "
+msgstr ""
+"\n"
+"将现金收付制明细行移到到另一个帐户"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nz
@@ -5121,6 +5159,71 @@ msgstr ""
 "========================================\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_pos_cert
+msgid ""
+"\n"
+"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Install it if you use the Point of Sale app to sell to individuals.\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Inalterability: deactivation of all the ways to cancel or modify key data of POS orders, invoices and journal entries\n"
+"\n"
+"    Security: chaining algorithm to verify the inalterability\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
+msgstr ""
+"\n"
+"这个附加组件带来了法国法规CGI艺术的技术需求。 286, I. 3° bis规定了与私人销售相关的数据的不可更改性，安全性，存储和存档的某些标准（B2C）。\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"如果您使用POS应用程序向个人销售，请安装它\n"
+"\n"
+"该模块增加了以下功能：\n"
+"\n"
+" 不可更改性：取消或取消修改POS订单，发票和日记账分录的关键数据的所有方法\n"
+"\n"
+" 安全性：链接算法验证不可比性\n"
+"\n"
+" 存储：自动销售关闭，计算期间和累计总数（每日，每月，每年）\n"
+"\n"
+" 访问下载Odoo SA提供的强制性符合性证书（仅适用于Odoo企业用户）\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_certification
+msgid ""
+"\n"
+"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Inalterability: deactivation of all the ways to cancel or modify key data, invoices and journal entries\n"
+"\n"
+"    Security: chaining algorithm to verify the inalterability\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
+msgstr ""
+"\n"
+"这个附加装置带来了法国法规CGI艺术的技术要求 CGI art. 286, I. 3° bis 规定了与私人销售相关的数据的不可更改性，安全性，存储和存档的某些标准（B2C）.\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"该模块增加了以下功能：\n"
+"\n"
+"不可更改性：取消激活取消或修改密钥的所有方法数据，发票和日记帐分录\n"
+"\n"
+"安全性：用于验证不可更改性的链接算法\n"
+"\n"
+"存储：自动销售结算，计算期间和累计总数（每日，每月，每年）\n"
+"\n"
+"访问下载强制性合格证书Odoo SA（仅适用于Odoo Enterprise用户）\n"
+
+#. module: base
 #: model:ir.module.module,description:base.module_pos_cache
 msgid ""
 "\n"
@@ -5806,6 +5909,27 @@ msgstr ""
 " "
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_sale_closing
+msgid ""
+"\n"
+"This module adds support for automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+msgstr ""
+"\n"
+"该模块增加了对自动销售结算的支持，计算期间和累计总数（每日，每月，每年）\n"
+"-------------------------------------------------- -------------------------------------------------- -------------------------------------------------- -------------------------------------------------- ---------------------------------------------\n"
+"\n"
+"该模块增加了以下功能：\n"
+"\n"
+" 存储：自动销售关闭，计算期间和累计总数（每日，每月，每年）\n"
+"\n"
+
+#. module: base
 #: model:ir.module.module,description:base.module_barcodes
 msgid ""
 "\n"
@@ -6375,19 +6499,18 @@ msgstr ""
 msgid ""
 "\n"
 "This module provides facility to the user to install mrp and purchase modules at a time.\n"
-"====================================================================================\n"
+"========================================================================================\n"
 "\n"
 "It is basically used when we want to keep track of production orders generated\n"
 "from purchase order.\n"
 "    "
 msgstr ""
 "\n"
-"该模块为用户一次安装MRP和购买模块提供了便利.\n"
-"====================================================================================\n"
+"该模块为用户同时提供安装MRP和销售模块的设施。\n"
+"==================================================================================== \n"
 "\n"
-"当我们想要跟踪生产订单时，它基本上被使用。\n"
-"来自采购订单.\n"
-"    "
+"通常用于跟踪由销售订单转化为生产单。\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_mrp
@@ -7562,6 +7685,11 @@ msgid "Access Rules"
 msgstr "访问规则"
 
 #. module: base
+#: model:res.groups,name:base.group_private_addresses
+msgid "Access to Private Addresses"
+msgstr "访问私人地址"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
 msgid "Account Analytic Defaults"
 msgstr "会计分析默认"
@@ -7881,6 +8009,11 @@ msgid "Add RML Header"
 msgstr "添加RML 页首"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_account_cash_basis_base_account
+msgid "Add a custom account to handle base amount lines"
+msgstr "添加自定义帐户以处理基本金额行"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode
 msgid "Add barcode scanning facilities to Warehouse Management."
 msgstr "增加条码扫描功能到仓库管理"
@@ -7923,6 +8056,7 @@ msgid ""
 msgstr "在前端门户添加销售单据(销售订单，报价，发票)"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -8630,6 +8764,7 @@ msgstr "银行"
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_account_form
 #: model:ir.model,name:base.model_res_partner_bank
 #: model:ir.model.fields,field_description:base.field_res_company_bank_ids
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_partner_bank_search
 #: model:ir.ui.view,arch_db:base.view_partner_bank_tree
 msgid "Bank Accounts"
@@ -8784,6 +8919,11 @@ msgstr "白俄罗斯"
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
 msgstr "比利时国际间组织申报"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat_2019
+msgid "Belgian Intrastat Declaration - Complement for 2019"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
@@ -9390,6 +9530,7 @@ msgstr "圣诞岛"
 #: model:ir.model.fields,field_description:base.field_res_company_city
 #: model:ir.model.fields,field_description:base.field_res_partner_city
 #: model:ir.model.fields,field_description:base.field_res_users_city
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -9687,6 +9828,11 @@ msgid "Compute"
 msgstr "计算"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_website_sale_taxcloud_delivery
+msgid "Compute taxes with TaxCloud after online delivery computation."
+msgstr "交货后使用TaxCloud计算税金计算在线交付。"
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid ""
 "Computed fields are defined with the fields\n"
@@ -9957,6 +10103,7 @@ msgstr "国家"
 #: model:ir.model.fields,field_description:base.field_res_country_state_country_id
 #: model:ir.model.fields,field_description:base.field_res_partner_country_id
 #: model:ir.model.fields,field_description:base.field_res_users_country_id
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_country_tree
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
@@ -12017,11 +12164,6 @@ msgid "France - Accounting"
 msgstr "法国-会计"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
-msgid "France - Accounting - Certified CGI 286 I-3 bis"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_reports
 msgid "France - Accounting Reports"
 msgstr "法国-会计报表"
@@ -12030,6 +12172,23 @@ msgstr "法国-会计报表"
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
 msgid "France - FEC"
 msgstr "法国-FEC"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
+msgid "France - VAT Anti-Fraud Certification (CGI 286 I-3 bis)"
+msgstr "法国 - 反欺诈认证增值税号（CGI 286 I-3 bis）"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_sale_closing
+msgid ""
+"France - VAT Anti-Fraud Certification (CGI 286 I-3 bis) - Sale Closings"
+msgstr "法国 - 反欺诈认证增值税号（CGI 286 I-3 bis） -关闭销售"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_pos_cert
+msgid ""
+"France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)"
+msgstr "法国 -POS的反欺诈认证增值税号（CGI 286 I-3 bis）"
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -13507,6 +13666,11 @@ msgid "Ireland"
 msgstr "爱尔兰"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_lock
+msgid "Irreversible Lock Date"
+msgstr "不可逆转的锁定日期"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_is_company
 #: model:ir.model.fields,field_description:base.field_res_users_is_company
 msgid "Is a Company"
@@ -13683,6 +13847,11 @@ msgstr "基于Odoo论坛的帮助知识库"
 #: model:ir.module.module,description:base.module_l10n_si
 msgid "Kontni načrt za gospodarske družbe"
 msgstr "公司科目表"
+
+#. module: base
+#: model:res.country,name:base.xk
+msgid "Kosovo"
+msgstr "科索沃"
 
 #. module: base
 #: model:res.country,name:base.kw
@@ -14585,18 +14754,6 @@ msgid "Memos pad"
 msgstr "记事簿"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:382
-#, python-format
-msgid "Model %s does not exist"
-msgstr "模型 %s 不存在"
-
-#. module: base
-#: code:addons/base/ir/ir_model.py:383
-#, python-format
-msgid "Please specify a valid model for the object relation"
-msgstr "请为对象关系指定有效的模型"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_name
 #: model:ir.ui.view,arch_db:base.edit_menu
 #: model:ir.ui.view,arch_db:base.edit_menu_access
@@ -14766,13 +14923,19 @@ msgid "Model"
 msgstr "模型"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:487
+#: code:addons/base/ir/ir_model.py:404
+#, python-format
+msgid "Model %s does not exist"
+msgstr "模型 %s 不存在"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:550
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "模型 %s 不存在！"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:132
+#: code:addons/base/ir/ir_model.py:138
 #, python-format
 msgid "Model '%s' contains module data and cannot be removed!"
 msgstr "模型 '%s' 包含了模块数据，不能被移除！"
@@ -15647,7 +15810,8 @@ msgid "Original View"
 msgstr "原始视图"
 
 #. module: base
-#: code:addons/base/res/res_users.py:728 code:addons/base/res/res_users.py:888
+#: code:addons/base/res/res_users.py:785 code:addons/base/res/res_users.py:951
+#: model:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
 msgstr "其他"
@@ -16107,13 +16271,19 @@ msgid ""
 msgstr "请设置动作的基本模型，以便启用动态表达式构建器。"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:787
+#: code:addons/base/ir/ir_model.py:405
+#, python-format
+msgid "Please specify a valid model for the object relation"
+msgstr "请为对象关系指定有效的模型"
+
+#. module: base
+#: code:addons/base/ir/ir_actions.py:799
 #, python-format
 msgid "Please specify an action to launch!"
 msgstr "请指定要运行的动作！"
 
 #. module: base
-#: code:addons/base/res/res_users.py:248
+#: code:addons/base/res/res_users.py:250
 #, python-format
 msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
@@ -16314,6 +16484,16 @@ msgstr "打印和邮寄你的销售订单"
 #: model:ir.model.fields,field_description:base.field_res_request_link_priority
 msgid "Priority"
 msgstr "优先级"
+
+#. module: base
+#: selection:res.partner,type:0
+msgid "Private Address"
+msgstr "家庭住址"
+
+#. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
+msgid "Private Address Form"
+msgstr "私人地址表单"
 
 #. module: base
 #: code:addons/models.py:107
@@ -17948,6 +18128,7 @@ msgstr "开始配置"
 #: model:ir.model.fields,field_description:base.field_base_language_export_state
 #: model:ir.model.fields,field_description:base.field_res_partner_state_id
 #: model:ir.model.fields,field_description:base.field_res_users_state_id
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_country_state_form
 #: model:ir.ui.view,arch_db:base.view_country_state_tree
@@ -18045,6 +18226,7 @@ msgid "Street"
 msgstr "街道"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -18053,6 +18235,7 @@ msgid "Street 2..."
 msgstr "街道2..."
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -18354,6 +18537,11 @@ msgid "Target Window"
 msgstr "目标窗口"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_cash_basis_base_account
+msgid "Tax Cash Basis Edit Base Account"
+msgstr "税金现金收付制日记账科目"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_vat
 msgid "Tax ID"
 msgstr "税号"
@@ -18366,6 +18554,11 @@ msgid ""
 "Tax Identification Number. Fill it if the company is subjected to taxes. "
 "Used by the some of the legal statements."
 msgstr "税务标识号。如果公司需要缴税，请填写。在一些法律声明中使用。"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
+msgid "TaxCloud and Delivery - Ecommerce"
+msgstr "交付和TaxCloud - 电子商务"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_taxcloud
@@ -18401,12 +18594,12 @@ msgstr "技术名称"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
-#: model:ir.ui.view,arch_db:base.user_groups_view
+#: model:ir.module.category,name:base.module_category_technical_settings
 msgid "Technical Settings"
 msgstr "技术设置"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:746
+#: code:addons/base/ir/ir_translation.py:792
 #, python-format
 msgid "Technical Translations"
 msgstr "技术翻译"
@@ -18998,6 +19191,13 @@ msgstr ""
 msgid ""
 "This module adds support for barcodes scanning to the manufacturing system."
 msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_sale_taxcloud_delivery
+msgid ""
+"This module ensures that when delivery price is computed online, and taxes are computed with TaxCloud, the tax computation is done correctly on both the order and delivery.\n"
+"    "
+msgstr "此模块可确保在线计算交货价格，并使用TaxCloud计算税额时，税务计算在订单和交货时都能正确完成。"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -20787,6 +20987,7 @@ msgid "Yugoslavia"
 msgstr "南斯拉夫"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -20837,6 +21038,16 @@ msgstr "_unknown"
 #: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
 msgid "a new currency before creating a new company."
 msgstr "在创建公司之前启用新币种"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_online_sync
+msgid "account_online_sync"
+msgstr "account_online_sync"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_plaid
+msgid "account_plaid"
+msgstr "account_plaid"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_partner_kanban_view
@@ -20995,6 +21206,11 @@ msgstr "获得"
 #: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
 msgid "here"
 msgstr "这里"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_timesheet_sheet_timesheet_grid
+msgid "hr_timesheet_sheet_timesheet_grid"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,state:0

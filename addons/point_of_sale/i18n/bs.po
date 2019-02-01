@@ -3,17 +3,18 @@
 # * point_of_sale
 # 
 # Translators:
-# Boško Stojaković <bluesoft83@gmail.com>, 2016
-# Martin Trigaux, 2016
-# Bole <bole@dajmi5.com>, 2016
 # Malik K, 2016
+# Bole <bole@dajmi5.com>, 2016
+# Martin Trigaux, 2016
+# Boško Stojaković <bluesoft83@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Malik K, 2016\n"
+"PO-Revision-Date: 2016-09-07 09:25+0000\n"
+"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2019\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2202,7 +2203,7 @@ msgstr "Tip prikupljanja"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_picking_count
 msgid "Picking count"
-msgstr ""
+msgstr "Broj prikupljanja"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2216,6 +2217,13 @@ msgstr "Molimo da potvrdite veliki iznos"
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Molimo definirajte konto prihoda za ovaj proizvod \"%s\" (id:%d)."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2017
+#, python-format
+msgid "Please print the invoice from the backend"
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:446
@@ -2399,7 +2407,7 @@ msgstr "Jedinica cijene"
 #: code:addons/point_of_sale/models/barcode_rule.py:13
 #, python-format
 msgid "Priced Product"
-msgstr ""
+msgstr "Proizvod sa cijenom"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pricelist_id
@@ -3123,6 +3131,15 @@ msgstr "Narudžba nije mogla bit poslana"
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
 msgstr "Narudžba nije poslana na server zbog nepoznate greške"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2018
+#, python-format
+msgid ""
+"The order has been synchronized earlier. Please make the invoice from the "
+"backend for the order: "
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_precompute_cash
