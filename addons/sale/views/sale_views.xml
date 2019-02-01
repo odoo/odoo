@@ -379,10 +379,6 @@
                                     </div>
                                     <field name="state" invisible="1"/>
                                 </form>
-                                <!-- This is inherited below to make the order lines non-editable (inline)
-                                    for the members of some usability groups (packaging, event):
-                                    Indeed in those cases we need a dialog because there are additional fields to input.
-                                -->
                                 <tree
                                     string="Sales Order Lines"
                                     editable="bottom"
@@ -456,6 +452,7 @@
                                         groups="uom.group_uom"
                                         options='{"no_open": True}'
                                     />
+                                    <field name="customer_lead" />
                                     <field
                                         name="analytic_tag_ids"
                                         groups="analytic.group_analytic_tags"
@@ -477,7 +474,6 @@
                                     <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
                                     <field name="state" invisible="1"/>
                                     <field name="invoice_status" invisible="1"/>
-                                    <field name="customer_lead" invisible="1"/>
                                     <field name="currency_id" invisible="1"/>
                                     <field name="price_tax" invisible="1"/>
                                 </tree>
@@ -598,20 +594,6 @@
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
-            </field>
-        </record>
-
-        <!-- inherited view to make the order lines list in the form non-editable
-             for the members of some usability groups -->
-        <record id="view_order_form_editable_list" model="ir.ui.view">
-            <field name="name">sale.order.form.editable.list</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="groups_id" eval="[(4, ref('product.group_stock_packaging'))]"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='order_line']/tree" position="attributes">
-                    <attribute name="editable"/>
-                </xpath>
             </field>
         </record>
 
