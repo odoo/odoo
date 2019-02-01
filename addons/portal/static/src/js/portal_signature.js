@@ -20,6 +20,9 @@ odoo.define('portal.signature_form', function (require) {
         events: {
             'click .o_portal_sign_submit': '_onClickSignSubmit',
         },
+        custom_events: {
+            'signature_changed': '_onChangeSignature',
+        },
 
         /**
          * Overridden to allow options.
@@ -133,6 +136,15 @@ odoo.define('portal.signature_form', function (require) {
                     return $.Deferred();
                 }
             });
+        },
+        /**
+         * Toggles the submit button depending on the signature state.
+         *
+         * @private
+         */
+        _onChangeSignature: function () {
+            var isEmpty = this.nameAndSignature.isSignatureEmpty();
+            this.$confirm_btn.prop('disabled', isEmpty);
         },
     });
 
