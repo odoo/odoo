@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import re
-
 from odoo.addons.survey.tests import common
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
@@ -10,16 +8,6 @@ from odoo.tests.common import HttpCase
 
 @tagged('functional')
 class TestSurveyFlow(common.SurveyCase, HttpCase):
-
-    def _access_start(self, survey):
-        return self.url_open('/survey/start/%s' % survey.access_token)
-
-    def _access_page(self, survey, token):
-        return self.url_open('/survey/fill/%s/%s' % (survey.access_token, token))
-
-    def _access_submit(self, survey, token, post_data):
-        return self.url_open('/survey/submit/%s/%s' % (survey.access_token, token), data=post_data)
-
     def _format_submission_data(self, page, answer_data, additional_post_data):
         post_data = {}
         post_data['page_id'] = page.id
@@ -28,11 +16,11 @@ class TestSurveyFlow(common.SurveyCase, HttpCase):
             if question.question_type == 'multiple_choice':
                 values = answer_vals['value']
                 for value in values:
-                    key = "%s_%s_%s_%s" % (page.survey_id.id, page.id, question.id, value)
+                    key = "%s_%s_%s" % (page.survey_id.id, question.id, value)
                     post_data[key] = value
             else:
                 [value] = answer_vals['value']
-                key = "%s_%s_%s" % (page.survey_id.id, page.id, question.id)
+                key = "%s_%s" % (page.survey_id.id, question.id)
                 post_data[key] = value
         post_data.update(**additional_post_data)
         return post_data
@@ -45,6 +33,8 @@ class TestSurveyFlow(common.SurveyCase, HttpCase):
                 'title': 'Public Survey for Tarte Al Djotte',
                 'access_mode': 'public',
                 'users_login_required': False,
+                'questions_layout': 'page_per_section',
+                'stage_id': self.env['survey.stage'].search([('closed', '=', False)]).id
             })
 
             # First page is about customer data
@@ -120,8 +110,7 @@ class TestSurveyFlow(common.SurveyCase, HttpCase):
         # Customer is redirected on second page and begins filling it
         r = self._access_page(survey, answer_token)
         self.assertResponse(r, 200)
-        csrf_token_re = re.compile("(input.+csrf_token.+value=\")([_a-zA-Z0-9]{51})", re.MULTILINE)
-        csrf_token = csrf_token_re.search(r.text).groups()[1]
+        csrf_token = self._find_csrf_token(r.text)
 
         # Customer submit second page answers
         answer_data = {

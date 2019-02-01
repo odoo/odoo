@@ -6,6 +6,7 @@ import uuid
 from collections import Counter, OrderedDict
 from itertools import product
 from werkzeug import urls
+import random
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import UserError
@@ -32,12 +33,23 @@ class Survey(models.Model):
     color = fields.Integer('Color Index', default=0)
     thank_you_message = fields.Html("Thanks Message", translate=True, help="This message will be displayed when survey is completed")
     active = fields.Boolean("Active", default=True)
-    question_and_page_ids = fields.One2many('survey.question', 'survey_id', string='Pages and Questions', copy=True)
+    question_and_page_ids = fields.One2many('survey.question', 'survey_id', string='Sections and Questions', copy=True)
     page_ids = fields.One2many('survey.question', string='Pages', compute="_compute_page_and_question_ids")
     question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_page_and_question_ids")
     stage_id = fields.Many2one('survey.stage', string="Stage", default=lambda self: self._get_default_stage_id(),
                                ondelete="restrict", copy=False, group_expand='_read_group_stage_ids')
     is_closed = fields.Boolean("Is closed", related='stage_id.closed', readonly=True)
+    questions_layout = fields.Selection([
+        ('one_page', 'One page with all the questions'),
+        ('page_per_section', 'One page per section'),
+        ('page_per_question', 'One page per question')],
+        string="Layout", required=True, default='one_page')
+    questions_selection = fields.Selection([
+        ('all', 'All questions'),
+        ('random', 'Randomized per section')],
+        string="Selection", required=True, default='all',
+        help="If randomized is selected, add the number of random questions next to the section.")
+
     category = fields.Selection([
         ('default', 'Generic Survey')], string='Category',
         default='default', required=True,
@@ -113,14 +125,6 @@ class Survey(models.Model):
         for survey in self:
             survey.public_url = urls.url_join(base_url, "survey/start/%s" % (survey.access_token))
 
-    @api.multi
-    @api.depends('question_and_page_ids.labels_ids.answer_score')
-    def _compute_total_possible_score(self):
-        for survey in self:
-            survey.total_possible_score = sum([
-                answer_score if answer_score > 0 else 0
-                for answer_score in survey.question_and_page_ids.mapped('labels_ids.answer_score')])
-
     @api.depends('question_and_page_ids')
     def _compute_page_and_question_ids(self):
         for survey in self:
@@ -188,6 +192,7 @@ class Survey(models.Model):
             answer_vals = {
                 'survey_id': survey.id,
                 'test_entry': test_entry,
+                'question_ids': [(6, 0, survey._prepare_answer_questions().ids)]
             }
             if user and not user._is_public():
                 answer_vals['partner_id'] = user.partner_id.id
@@ -228,7 +233,7 @@ class Survey(models.Model):
                 raise UserError(_('No attempts left.'))
 
     @api.model
-    def next_page(self, user_input, page_id, go_back=False):
+    def next_page_or_question(self, user_input, page_or_question_id, go_back=False):
         """ The next page to display to the user, knowing that page_id is the id
             of the last displayed page.
 
@@ -246,27 +251,35 @@ class Survey(models.Model):
                 (doing this will probably cause a giant worm to eat her house)
         """
         survey = user_input.survey_id
-        pages = list(enumerate(survey.page_ids))
+
+        if survey.questions_layout == 'page_per_question' and survey.questions_selection == 'random':
+            pages_or_questions = list(enumerate(
+                user_input.question_ids
+            ))
+        else:
+            pages_or_questions = list(enumerate(
+                survey.question_ids if survey.questions_layout == 'page_per_question' else survey.page_ids
+            ))
 
         # First page
-        if page_id == 0:
-            return (pages[0][1], len(pages) == 1)
+        if page_or_question_id == 0:
+            return (pages_or_questions[0][1], len(pages_or_questions) == 1)
 
-        current_page_index = pages.index(next(p for p in pages if p[1].id == page_id))
+        current_page_index = pages_or_questions.index(next(p for p in pages_or_questions if p[1].id == page_or_question_id))
 
         # All the pages have been displayed
-        if current_page_index == len(pages) - 1 and not go_back:
+        if current_page_index == len(pages_or_questions) - 1 and not go_back:
             return (None, False)
         # Let's get back, baby!
         elif go_back and survey.users_can_go_back:
-            return (pages[current_page_index - 1][1], False)
+            return (pages_or_questions[current_page_index - 1][1], False)
         else:
             # This will show the last page
-            if current_page_index == len(pages) - 2:
-                return (pages[current_page_index + 1][1], True)
+            if current_page_index == len(pages_or_questions) - 2:
+                return (pages_or_questions[current_page_index + 1][1], True)
             # This will show a regular page
             else:
-                return (pages[current_page_index + 1][1], False)
+                return (pages_or_questions[current_page_index + 1][1], False)
 
     @api.multi
     def filter_input_ids(self, filters, finished=False):
@@ -517,3 +530,26 @@ class Survey(models.Model):
             domain = expression.AND([domain, [('email', '=', email)]])
 
         return self.attempts_limit - self.env['survey.user_input'].search_count(domain)
+
+    @api.multi
+    def _prepare_answer_questions(self):
+        """ Will generate the questions for a randomized survey.
+        It uses the random_questions_count of every sections of the survey to
+        pick a random number of questions and returns the merged recordset """
+        self.ensure_one()
+
+        questions = self.env['survey.question']
+
+        for page in self.page_ids:
+            if self.questions_selection == 'all':
+                questions |= page.question_ids
+            else:
+                if page.random_questions_count > 0 and len(page.question_ids) > page.random_questions_count:
+                    questions = questions.concat(*random.sample(page.question_ids, page.random_questions_count))
+                else:
+                    questions |= page.question_ids
+
+        if not questions:
+            questions = self.question_ids
+
+        return questions

@@ -12,13 +12,17 @@
                 <field name="sequence" invisible="1"/>
                 <sheet>
                     <div class="oe_title" style="width: 100%;">
-                        <label for="title" string="Page name" class="oe_edit_only" attrs="{'invisible': [('is_page', '=', False)]}"/>
+                        <label for="title" string="Section name" class="oe_edit_only" attrs="{'invisible': [('is_page', '=', False)]}"/>
                         <label for="title" string="Question name" class="oe_edit_only" attrs="{'invisible': [('is_page', '=', True)]}"/>
                         <h1>
                             <field name="title" colspan="4" />
                         </h1>
                         <separator />
+                        <field name="questions_selection" invisible="1"/>
                     </div>
+                    <group attrs="{'invisible': ['|', ('is_page', '=', False), ('questions_selection', '=', 'all')]}">
+                        <field name="random_questions_count"/>
+                    </group>
                     <group attrs="{'invisible': [('is_page', '=', True)]}">
                         <group>
                             <field name="question_type" widget="radio" />
