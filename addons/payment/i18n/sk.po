@@ -8,7 +8,7 @@
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 # Martin Trigaux, 2017
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
-# Jan Prokop, 2018
+# Jan Prokop, 2019
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2016-09-07 09:24+0000\n"
-"Last-Translator: Jan Prokop, 2018\n"
+"Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,6 +42,8 @@ msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"o_warning_text\">Testovacie</span>\n"
+"                                    <span class=\"o_stat_text\">prostredie</span>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -49,6 +51,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"text-success\">Produkčné</span>\n"
+"                                    <span class=\"o_stat_text\">prostredie</span>"
 
 #. module: payment
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
@@ -99,6 +103,9 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
+"<span><i>Chyba,</i> Upozorňujeme, že počas transakcie došlo k chybe. "
+"Objednávka bola potvrdená ale nebude zaplatená. Neváhajte nás kontaktovať ak"
+" máte otázky ohľadom stavu vašej objednávky.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -122,7 +129,7 @@ msgstr ""
 msgid ""
 "<span><i>Pending</i>... The order will be validated after the "
 "payment.</span>"
-msgstr ""
+msgstr "<span><i>Čakajúce</i>... objednávka bude potvrdená po úhrade.</span>"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_journal_id
@@ -211,7 +218,7 @@ msgstr "Authorize.Net "
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Authorized"
-msgstr ""
+msgstr "Autorizované"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
@@ -232,7 +239,7 @@ msgstr "Zrušené"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Capture Transaction"
-msgstr ""
+msgstr "Zachytenie transakcie"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
@@ -268,13 +275,13 @@ msgstr "Nakonfigurovať metódy nadobúdania platby"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_id
 msgid "Corresponding Module"
-msgstr ""
+msgstr "Zodpovedajúci modul"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users_payment_token_count
 msgid "Count Payment Token"
-msgstr ""
+msgstr "Počet platobných tokenov"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_country_id
@@ -375,7 +382,7 @@ msgstr "Email"
 #. module: payment
 #: model:account.payment.method,name:payment.account_payment_method_electronic_in
 msgid "Electronic"
-msgstr ""
+msgstr "Elektronický"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
@@ -406,7 +413,7 @@ msgstr "Poplatky"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_implemented
 msgid "Fees Computation Supported"
-msgstr ""
+msgstr "Výpočet poplatkov podporovaný"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
@@ -443,7 +450,7 @@ msgstr "Formulár šablóny tlačidla"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form with tokenization"
-msgstr ""
+msgstr "Formulár s tokenizáciou"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
@@ -470,7 +477,7 @@ msgstr "Obrázok"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
 msgid "Ingenico"
-msgstr ""
+msgstr "Ingenico"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -481,7 +488,7 @@ msgstr "Nainštalovať"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_state
 msgid "Installation State"
-msgstr ""
+msgstr "Stav inštalácie"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_reference
@@ -517,7 +524,7 @@ msgstr "Naposledy upravované"
 #. module: payment
 #: selection:payment.acquirer,save_token:0
 msgid "Let the customer decide"
-msgstr ""
+msgstr "Nechajte zákazníka rozhodnúť"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
@@ -604,7 +611,7 @@ msgstr "Meno"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token_name
 msgid "Name of the payment token"
-msgstr ""
+msgstr "Názov platobného tokenu"
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
@@ -622,6 +629,8 @@ msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Tokeny od prijímateľa nastavené len na autorizovanie transakcie (namiesto "
+"zachytenia sumy) nie sú k dispozícii."
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
@@ -661,7 +670,7 @@ msgstr "Názov partnera"
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
 #: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
-msgstr ""
+msgstr "PayUmoney"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer
@@ -679,12 +688,12 @@ msgstr "Príjemcovia platby"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_journal_id
 msgid "Payment Journal"
-msgstr ""
+msgstr "Účtovná kniha platieb"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_token_id
 msgid "Payment Token"
-msgstr ""
+msgstr "Platobný token"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_ids
@@ -693,7 +702,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.payment_token_tree_view
 #: model:ir.ui.view,arch_db:payment.payment_token_view_search
 msgid "Payment Tokens"
-msgstr ""
+msgstr "Platobné tokeny"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -792,12 +801,12 @@ msgstr "Uložené dáta platby"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment_payment_token_id
 msgid "Saved payment token"
-msgstr ""
+msgstr "Platobný token uložený"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_token_implemented
 msgid "Saving Card Data supported"
-msgstr ""
+msgstr "Uloženie kariet podporované"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_sequence
@@ -812,7 +821,7 @@ msgstr "Server k serveru"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_short_name
 msgid "Short name"
-msgstr ""
+msgstr "Krátky názov"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_sips
@@ -850,7 +859,7 @@ msgstr ""
 #: model:payment.acquirer,name:payment.payment_acquirer_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr ""
+msgstr "Prúžok"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
@@ -938,7 +947,7 @@ msgstr "Viditeľné v portáli / webstránke"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Void Transaction"
-msgstr ""
+msgstr "Neplatná transakcia"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
@@ -982,6 +991,7 @@ msgid ""
 "You will be redirected to the Ingenico website after clicking on the payment"
 " button."
 msgstr ""
+"Po kliknutí na tlačidlo platby budete presmerovaný na webstránku Ingenico."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_payu
@@ -989,6 +999,7 @@ msgid ""
 "You will be redirected to the PayUmoney website after clicking on the "
 "payment button."
 msgstr ""
+"Po kliknutí na tlačidlo platby budete presmerovaný na webstránku PayUmoney."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_paypal

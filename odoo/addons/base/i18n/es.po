@@ -3,35 +3,20 @@
 # * base
 # 
 # Translators:
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
-# Martin Trigaux, 2016
-# Antonio Trueba, 2016
-# Sergio Flores <vitavitae1@gmail.com>, 2016
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
-# juani_aizean <juani@aizean.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# Alejandro Santana <alejandrosantana@anubia.es>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# David Perez <david@closemarketing.es>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# RGB Consulting <odoo@rgbconsulting.com>, 2016
-# Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2016
-# oihane <oihanecruce@gmail.com>, 2016
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
 # Gustavo Valverde, 2016
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Sergio Hevia <sah@talleresbernesga.com>, 2016
-# Gelo Joga Landoo <gj@landoo.es>, 2016
-# Rick Hunter <rick_hunter_ec@yahoo.com>, 2016
 # Jose Manuel <admin@jaboweb.com>, 2016
-# Andres Ruiz <andres.ruiz.otalora@gmail.com>, 2016
 # Wilcar José Angulo <wilcarjose@gmail.com>, 2016
 # Carlos rodriguez <carlosalbertor436@gmail.com>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Alejandro Die Sanchis <marketing@domatix.com>, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
+# Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# David Perez <david@closemarketing.es>, 2016
+# Alejandro Santana <alejandrosantana@anubia.es>, 2016
 # José Antonio Cuello <inactive+Yopli2k@transifex.com>, 2016
 # Kiko <kiko@comunitea.com>, 2016
 # Soluntec <abraham@soluntec.es>, 2017
@@ -39,19 +24,36 @@
 # Cristian Salamea <ovnicraft@gmail.com>, 2017
 # David Vidal <david.vidal@trespinos.es>, 2017
 # David Arnold <blaggacao@users.noreply.github.com>, 2017
+# Gelo Joga Landoo <gj@landoo.es>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
+# Rick Hunter <rick_hunter_ec@yahoo.com>, 2017
+# José Vicente <txusev@gmail.com>, 2017
 # Miguel Orueta <mo@landoo.es>, 2017
+# oihane <oihanecruce@gmail.com>, 2017
+# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
+# juani_aizean <juani@aizean.com>, 2017
+# Sergio Flores <vitavitae1@gmail.com>, 2017
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
+# Andres Ruiz <andres.ruiz.otalora@gmail.com>, 2017
+# Antonio Trueba, 2017
+# Alejandro Die Sanchis <marketing@domatix.com>, 2017
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 # Nacho Hermoso <nacho@domatix.com>, 2017
 # Raquel Iciarte <ric@odoo.com>, 2017
 # e2f <projects@e2f.com>, 2018
 # ES R1 <e2fes@hotmail.com>, 2018
+# Martin Trigaux, 2019
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
+# Nicolás Broggi <rnbroggi@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-20 07:12+0000\n"
-"PO-Revision-Date: 2017-10-20 07:12+0000\n"
-"Last-Translator: ES R1 <e2fes@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-23 16:30+0000\n"
+"PO-Revision-Date: 2016-09-07 09:14+0000\n"
+"Last-Translator: Nicolás Broggi <rnbroggi@gmail.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -928,6 +930,18 @@ msgstr ""
 "Tablero de Control Gantt de Ausencias"
 
 #. module: base
+#: model:ir.module.module,description:base.module_account_lock
+msgid ""
+"\n"
+"    Make the lock date irreversible:\n"
+"\n"
+"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
+"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
+"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
 msgid ""
 "\n"
@@ -1411,6 +1425,14 @@ msgstr ""
 "\n"
 "Permite a la compañía personalizar que instalación de Pad debe usarse para enlazar con nuevos pads (por defecto, http://etherpad.com/).\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_be_intrastat_2019
+msgid ""
+"\n"
+"Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_mercury
@@ -3734,6 +3756,14 @@ msgstr ""
 "datos de demostración para probar fácilmente las características.\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_account_cash_basis_base_account
+msgid ""
+"\n"
+"Move the cash basis lines to another account.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_nz
 msgid ""
 "\n"
@@ -5056,6 +5086,72 @@ msgstr ""
 "================================================================================\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_pos_cert
+msgid ""
+"\n"
+"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Install it if you use the Point of Sale app to sell to individuals.\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Inalterability: deactivation of all the ways to cancel or modify key data of POS orders, invoices and journal entries\n"
+"\n"
+"    Security: chaining algorithm to verify the inalterability\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
+msgstr ""
+"\n"
+"Este complemento trae los requisitos técnicos de la regulación francesa CGI art. 286, I. 3 ° bis que estipula ciertos criterios relativos a la inalterabilidad, seguridad, almacenamiento y archivo de los datos relacionados con las ventas a particulares (B2C).\n"
+"-------------------------------------------------- -------------------------------------------------- -------------------------------------------------- -------------------------------------------------- ---------------------------------------------\n"
+"\n"
+"Instálelo si usa la aplicación Punto de venta para vender a particulares.\n"
+"\n"
+"El módulo agrega las siguientes características:\n"
+"\n"
+" Inalterabilidad: desactivación de todas las formas de cancelar o modificar datos clave de órdenes POS, facturas y asientos diarios\n"
+"\n"
+" Seguridad: algoritmo de encadenamiento para verificar la inalterabilidad\n"
+"\n"
+" Almacenamiento: cierres automáticos de ventas con el cálculo del período y totales acumulados (diarios, mensuales, anuales)\n"
+"\n"
+" Acceso para descargar el Certificado de Conformidad obligatorio entregado por Odoo SA (solo para usuarios de Odoo Enterprise)\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_certification
+msgid ""
+"\n"
+"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Inalterability: deactivation of all the ways to cancel or modify key data, invoices and journal entries\n"
+"\n"
+"    Security: chaining algorithm to verify the inalterability\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
+msgstr ""
+"\n"
+"Este complemento trae los requisitos técnicos de la regulación francesa CGI art. 286, I. 3 ° bis que estipula ciertos criterios relativos a la inalterabilidad, seguridad, almacenamiento y archivo de los datos relacionados con las ventas a particulares (B2C).\n"
+"-------------------------------------------------- -------------------------------------------------- -------------------------------------------------- -------------------------------------------------- ---------------------------------------------\n"
+"\n"
+"El módulo agrega las siguientes características:\n"
+"\n"
+" Inalterabilidad: desactivación de todas las formas de cancelar o modificar datos clave, facturas y asientos diarios\n"
+"\n"
+" Seguridad: algoritmo de encadenamiento para verificar la inalterabilidad\n"
+"\n"
+" Almacenamiento: cierres automáticos de ventas con el cálculo del período y totales acumulados (diarios, mensuales, anuales)\n"
+"\n"
+" Acceso para descargar el Certificado de Conformidad obligatorio entregado por Odoo SA (solo para usuarios de Odoo Enterprise)\n"
+
+#. module: base
 #: model:ir.module.module,description:base.module_pos_cache
 msgid ""
 "\n"
@@ -5757,6 +5853,27 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_sale_closing
+msgid ""
+"\n"
+"This module adds support for automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+msgstr ""
+"\n"
+"Este módulo agrega soporte para el cierre automático de ventas con el cálculo del período y los totales acumulados (diarios, mensuales, anuales)\n"
+"-------------------------------------------------- -------------------------------------------------- -------------------------------------------------- -------------------------------------------------- ---------------------------------------------\n"
+"\n"
+"El módulo agrega las siguientes características:\n"
+"\n"
+" Almacenamiento: cierres automáticos de ventas con el cálculo del período y totales acumulados (diarios, mensuales, anuales)\n"
+"\n"
+
+#. module: base
 #: model:ir.module.module,description:base.module_barcodes
 msgid ""
 "\n"
@@ -6308,7 +6425,7 @@ msgstr ""
 msgid ""
 "\n"
 "This module provides facility to the user to install mrp and purchase modules at a time.\n"
-"====================================================================================\n"
+"========================================================================================\n"
 "\n"
 "It is basically used when we want to keep track of production orders generated\n"
 "from purchase order.\n"
@@ -7528,6 +7645,11 @@ msgid "Access Rules"
 msgstr "Reglas de acceso"
 
 #. module: base
+#: model:res.groups,name:base.group_private_addresses
+msgid "Access to Private Addresses"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
 msgid "Account Analytic Defaults"
 msgstr "Valores por defecto en la contabilidad analítica"
@@ -7845,6 +7967,11 @@ msgid "Add RML Header"
 msgstr "Añadir encabezado RML"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_account_cash_basis_base_account
+msgid "Add a custom account to handle base amount lines"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode
 msgid "Add barcode scanning facilities to Warehouse Management."
 msgstr ""
@@ -7893,6 +8020,7 @@ msgstr ""
 "presupuestos, facturas)"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -8598,6 +8726,7 @@ msgstr "Banco"
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_account_form
 #: model:ir.model,name:base.model_res_partner_bank
 #: model:ir.model.fields,field_description:base.field_res_company_bank_ids
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_partner_bank_search
 #: model:ir.ui.view,arch_db:base.view_partner_bank_tree
 msgid "Bank Accounts"
@@ -8754,6 +8883,11 @@ msgstr "Bielorrusia"
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
 msgstr "Declaración Intrasat belga"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat_2019
+msgid "Belgian Intrastat Declaration - Complement for 2019"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
@@ -9389,6 +9523,7 @@ msgstr "Isla Natividad"
 #: model:ir.model.fields,field_description:base.field_res_company_city
 #: model:ir.model.fields,field_description:base.field_res_partner_city
 #: model:ir.model.fields,field_description:base.field_res_users_city
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -9689,6 +9824,11 @@ msgid "Compute"
 msgstr "Calcular"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_website_sale_taxcloud_delivery
+msgid "Compute taxes with TaxCloud after online delivery computation."
+msgstr ""
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid ""
 "Computed fields are defined with the fields\n"
@@ -9966,6 +10106,7 @@ msgstr "Países"
 #: model:ir.model.fields,field_description:base.field_res_country_state_country_id
 #: model:ir.model.fields,field_description:base.field_res_partner_country_id
 #: model:ir.model.fields,field_description:base.field_res_users_country_id
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_country_tree
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
@@ -12080,11 +12221,6 @@ msgid "France - Accounting"
 msgstr "Francia - Contabilidad"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
-msgid "France - Accounting - Certified CGI 286 I-3 bis"
-msgstr "Francia - Contabilidad - Certificado CGI 286 I-3 bis"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_reports
 msgid "France - Accounting Reports"
 msgstr "Francia - informes contables"
@@ -12093,6 +12229,25 @@ msgstr "Francia - informes contables"
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
 msgid "France - FEC"
 msgstr "Francia - FEC"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
+msgid "France - VAT Anti-Fraud Certification (CGI 286 I-3 bis)"
+msgstr "France - VAT Anti-Fraud Certification (CGI 286 I-3 bis)"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_sale_closing
+msgid ""
+"France - VAT Anti-Fraud Certification (CGI 286 I-3 bis) - Sale Closings"
+msgstr ""
+"France - VAT Anti-Fraud Certification (CGI 286 I-3 bis) - Sale Closings"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_pos_cert
+msgid ""
+"France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)"
+msgstr ""
+"France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)"
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -13648,6 +13803,11 @@ msgid "Ireland"
 msgstr "Irlanda"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_lock
+msgid "Irreversible Lock Date"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_is_company
 #: model:ir.model.fields,field_description:base.field_res_users_is_company
 msgid "Is a Company"
@@ -13828,6 +13988,11 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_si
 msgid "Kontni načrt za gospodarske družbe"
 msgstr "Plan contable para las empresas"
+
+#. module: base
+#: model:res.country,name:base.xk
+msgid "Kosovo"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.kw
@@ -14746,18 +14911,6 @@ msgid "Memos pad"
 msgstr "Pad de memorándums"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:382
-#, python-format
-msgid "Model %s does not exist"
-msgstr ""
-
-#. module: base
-#: code:addons/base/ir/ir_model.py:383
-#, python-format
-msgid "Please specify a valid model for the object relation"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_name
 #: model:ir.ui.view,arch_db:base.edit_menu
 #: model:ir.ui.view,arch_db:base.edit_menu_access
@@ -14927,13 +15080,19 @@ msgid "Model"
 msgstr "Modelo"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:487
+#: code:addons/base/ir/ir_model.py:404
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:550
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "No existe el modelo %s!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:132
+#: code:addons/base/ir/ir_model.py:138
 #, python-format
 msgid "Model '%s' contains module data and cannot be removed!"
 msgstr "El modelo '%s' contiene un módulo de datos y no puede ser eliminado!"
@@ -15834,7 +15993,8 @@ msgid "Original View"
 msgstr "Vista original"
 
 #. module: base
-#: code:addons/base/res/res_users.py:728 code:addons/base/res/res_users.py:888
+#: code:addons/base/res/res_users.py:785 code:addons/base/res/res_users.py:951
+#: model:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
 msgstr "Otro"
@@ -16304,13 +16464,19 @@ msgstr ""
 "constructor de expresiones dinámicos."
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:787
+#: code:addons/base/ir/ir_model.py:405
+#, python-format
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_actions.py:799
 #, python-format
 msgid "Please specify an action to launch!"
 msgstr "¡Especifique una acción a lanzar!"
 
 #. module: base
-#: code:addons/base/res/res_users.py:248
+#: code:addons/base/res/res_users.py:250
 #, python-format
 msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
@@ -16516,6 +16682,16 @@ msgstr "Imprima y envíe su pedido de venta por correo"
 #: model:ir.model.fields,field_description:base.field_res_request_link_priority
 msgid "Priority"
 msgstr "Prioridad"
+
+#. module: base
+#: selection:res.partner,type:0
+msgid "Private Address"
+msgstr "Dirección Privada"
+
+#. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
+msgid "Private Address Form"
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:107
@@ -18194,6 +18370,7 @@ msgstr "Iniciar configuración"
 #: model:ir.model.fields,field_description:base.field_base_language_export_state
 #: model:ir.model.fields,field_description:base.field_res_partner_state_id
 #: model:ir.model.fields,field_description:base.field_res_users_state_id
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_country_state_form
 #: model:ir.ui.view,arch_db:base.view_country_state_tree
@@ -18291,6 +18468,7 @@ msgid "Street"
 msgstr "Calle"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -18299,6 +18477,7 @@ msgid "Street 2..."
 msgstr "Calle 2..."
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -18600,6 +18779,11 @@ msgid "Target Window"
 msgstr "Ventana destino"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_cash_basis_base_account
+msgid "Tax Cash Basis Edit Base Account"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_vat
 msgid "Tax ID"
 msgstr "NIF"
@@ -18614,6 +18798,11 @@ msgid ""
 msgstr ""
 "Número de identificación fiscal. Llénelo si la compañía esta sujeta a "
 "impuestos. Usado por algunos documentos legales."
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
+msgid "TaxCloud and Delivery - Ecommerce"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_taxcloud
@@ -18651,12 +18840,12 @@ msgstr "Nombre técnico"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
-#: model:ir.ui.view,arch_db:base.user_groups_view
+#: model:ir.module.category,name:base.module_category_technical_settings
 msgid "Technical Settings"
 msgstr "Configuración técnica"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:746
+#: code:addons/base/ir/ir_translation.py:792
 #, python-format
 msgid "Technical Translations"
 msgstr "Traducciones técnicas"
@@ -19310,6 +19499,13 @@ msgstr ""
 #: model:ir.module.module,description:base.module_mrp_barcode
 msgid ""
 "This module adds support for barcodes scanning to the manufacturing system."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_sale_taxcloud_delivery
+msgid ""
+"This module ensures that when delivery price is computed online, and taxes are computed with TaxCloud, the tax computation is done correctly on both the order and delivery.\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -21177,6 +21373,7 @@ msgid "Yugoslavia"
 msgstr "Yugoslavia"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -21227,6 +21424,16 @@ msgstr "_unknown"
 #: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
 msgid "a new currency before creating a new company."
 msgstr "una nueva moneda antes de crear una nueva compañía."
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_online_sync
+msgid "account_online_sync"
+msgstr "account_online_sync"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_plaid
+msgid "account_plaid"
+msgstr "account_plaid"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_partner_kanban_view
@@ -21386,6 +21593,11 @@ msgstr "obtener"
 #: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
 msgid "here"
 msgstr "aquí"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_timesheet_sheet_timesheet_grid
+msgid "hr_timesheet_sheet_timesheet_grid"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,state:0

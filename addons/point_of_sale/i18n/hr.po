@@ -3,23 +3,24 @@
 # * point_of_sale
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2016
-# Bole <bole@dajmi5.com>, 2016
-# Tina Milas <tina@uvid.hr>, 2016
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2016
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2016
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2016
 # Mario Jureša <mario.juresa@uvid.hr>, 2016
 # Marko Carević <marko.carevic@live.com>, 2016
 # Jasmina Otročak <jasmina@uvid.hr>, 2016
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2016
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2016
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2016
+# Martin Trigaux, 2016
+# Bole <bole@dajmi5.com>, 2016
+# Tina Milas, 2017
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Jasmina Otročak <jasmina@uvid.hr>, 2016\n"
+"PO-Revision-Date: 2016-09-07 09:25+0000\n"
+"Last-Translator: Tina Milas, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2241,6 +2242,13 @@ msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Molimo definirajte račun dohotka za ovaj proizvod \"%s\" (id:%d)."
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2017
+#, python-format
+msgid "Please print the invoice from the backend"
+msgstr ""
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:446
 #, python-format
 msgid "Please provide a partner for the sale."
@@ -3154,6 +3162,15 @@ msgstr "Narudžba se ne može poslati"
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
 msgstr "Narudžba se ne može poslati na server zbog nepoznate greške"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2018
+#, python-format
+msgid ""
+"The order has been synchronized earlier. Please make the invoice from the "
+"backend for the order: "
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_precompute_cash

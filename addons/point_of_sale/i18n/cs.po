@@ -12,7 +12,7 @@
 # Martin Trigaux, 2016
 # Michal Veselý <michal@veselyberanek.net>, 2018
 # milda dvorak <milda.dvorak@optimal4.cz>, 2018
-# trendspotter <j.podhorecky@volny.cz>, 2018
+# trendspotter <j.podhorecky@volny.cz>, 2019
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2016-09-07 09:25+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2018\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2241,6 +2241,13 @@ msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Nastavte prosím výnosový účet pro tento produkt: \"%s\" (id: %d)."
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2017
+#, python-format
+msgid "Please print the invoice from the backend"
+msgstr ""
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:446
 #, python-format
 msgid "Please provide a partner for the sale."
@@ -2461,7 +2468,7 @@ msgstr "Tiskárna"
 #: code:addons/point_of_sale/static/src/js/devices.js:427
 #, python-format
 msgid "Printing Error: "
-msgstr ""
+msgstr "Chyba tisku:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_product_id
@@ -2701,7 +2708,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/chrome.js:368
 #, python-format
 msgid "Scanner"
-msgstr ""
+msgstr "Skener"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2731,7 +2738,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/res_users.py:15
 #, python-format
 msgid "Security PIN can only contain digits"
-msgstr ""
+msgstr "Bezpečnostní kód PIN může obsahovat pouze číslice"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2775,7 +2782,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1055
 #, python-format
 msgid "Serial/Lot Number"
-msgstr ""
+msgstr "Seriové číslo / šarže"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3048,7 +3055,7 @@ msgstr "Daně:"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:707
 #, python-format
 msgid "Tel:"
-msgstr ""
+msgstr "Tel:"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3147,6 +3154,15 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/screens.js:1951
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:2018
+#, python-format
+msgid ""
+"The order has been synchronized earlier. Please make the invoice from the "
+"backend for the order: "
 msgstr ""
 
 #. module: point_of_sale
@@ -3520,7 +3536,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/screens.js:1950
 #, python-format
 msgid "Unknown Error"
-msgstr ""
+msgstr "Neznámá chyba"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3897,7 +3913,7 @@ msgstr "nepoužito"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1175
 #, python-format
 msgid "paid orders"
-msgstr ""
+msgstr "placené příkazy"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form

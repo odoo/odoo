@@ -9,6 +9,7 @@
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 # Martin Trigaux, 2017
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Jan Prokop, 2019
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 09:18+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017\n"
+"Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +53,7 @@ msgstr "# Výrobných objednávok"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_count
 msgid "# Product Variants"
-msgstr ""
+msgstr "# Varianty produktu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_count
@@ -421,7 +422,7 @@ msgstr "Dodacia lehota zákazníka"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Zákaznícka referencia"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
@@ -477,7 +478,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Delivery Information"
-msgstr ""
+msgstr "Dodacia informácia"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -727,7 +728,7 @@ msgstr "Výška"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Height must be positive"
-msgstr ""
+msgstr "Výška musí byť kladná"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
@@ -914,7 +915,7 @@ msgstr "Dĺžka"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Length must be positive"
-msgstr ""
+msgstr "Dĺžka musí byť kladná"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_location_id
@@ -967,12 +968,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
 msgid "Max Weight"
-msgstr ""
+msgstr "Maximálna váha"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Max Weight must be positive"
-msgstr ""
+msgstr "Maximálna váha musí byť kladná"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
@@ -1470,7 +1471,7 @@ msgstr "Cena dopravy"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
 msgid "Shipping Weight"
-msgstr ""
+msgstr "Váha dodávky"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
@@ -1571,13 +1572,13 @@ msgstr "Súčet množstva v účtenkách dodávateľov"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_pricelist_id
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
-msgstr ""
+msgstr "Pomocné pole. Slúži na hľadanie v cenníkoch, neuložené v databáze."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_move_ids
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_quant_ids
 msgid "Technical: used to compute quantities."
-msgstr ""
+msgstr "Technické: použité na výpočet množstiev"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
@@ -1801,7 +1802,7 @@ msgstr "Počítadlo neprečítaných správ"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "Valuation"
-msgstr ""
+msgstr "Hodnota"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
@@ -1821,7 +1822,7 @@ msgstr "Obrázok varianty"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_extra
 msgid "Variant Price Extra"
-msgstr ""
+msgstr "Zvláštna cena variantu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
@@ -1871,7 +1872,7 @@ msgstr "Váha * Objem"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_weight_uom_id
 msgid "Weight Unit of Measure"
-msgstr ""
+msgstr "Merná jednotka váhy"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
@@ -1961,7 +1962,7 @@ msgstr "Šírka"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Width must be positive"
-msgstr ""
+msgstr "Šírka musí byť kladná"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:187

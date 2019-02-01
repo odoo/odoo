@@ -9,7 +9,7 @@
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
 # Martin Trigaux, 2018
-# Jan Prokop, 2018
+# Jan Prokop, 2019
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-08 13:18+0000\n"
 "PO-Revision-Date: 2016-09-07 09:28+0000\n"
-"Last-Translator: Jan Prokop, 2018\n"
+"Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -107,6 +107,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}${object.state == 'draft' and "
 "'_draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -249,7 +251,7 @@ msgstr "<strong>Poznámka fiškálnej pozície:</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Payment Terms:</strong>"
-msgstr ""
+msgstr "<strong>Platobné podmienky:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -291,7 +293,7 @@ msgstr "Jednotlivá predajná cena za produkt"
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr ""
+msgstr "Na produkt alebo zákazníka je možné nastaviť varovanie."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -354,6 +356,8 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
+"Umožňuje spravovať rôzne ceny na základe pravidiel, podľa jednotlivých kategórií zákazníkov.\n"
+"Príklad: 10% pre maloobchodníkov, podpora 5 Euro na tomto výrobku, atď."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_uom
@@ -412,7 +416,7 @@ msgstr "Analytické účtovníctvo pre predaje"
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At cost"
-msgstr ""
+msgstr "Za cenu"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
@@ -679,7 +683,7 @@ msgstr "Dni dodania"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_invoice_partner_shipping_id
 msgid "Delivery address for current invoice."
-msgstr ""
+msgstr "Dodacia adresa aktuálnej faktúry"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
@@ -896,6 +900,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"Ak je predaj uzamknutý, nedá sa meniť. Avšak stále je možné ho dodať alebo "
+"fakturovať."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -1042,6 +1048,8 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
+"Faktúry budú vytvorené v návrhu, takže si ich môžete prehliadnuť\n"
+"pred potvrdením."
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -1089,6 +1097,8 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"Nasledovné polia na zamknutej objednávke je zakázané meniť:\n"
+"%s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
@@ -1312,7 +1322,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tour.js:59
 #, python-format
 msgid "Once your quotation is ready, you can save, print or send it by email."
-msgstr ""
+msgstr "Keď je ponuka hotová, možno ju uložiť, vytlačiť alebo zaslať mailom."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
@@ -1489,12 +1499,12 @@ msgstr "Cenové zníženie"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr ""
+msgstr "Cenové zníženie bez dane"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr ""
+msgstr "Cenové zníženie vč. dane"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_pricelist
@@ -2020,7 +2030,7 @@ msgstr "Zobraziť cenníky zákazníkom"
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
 msgid "Show public price & discount to the customer"
-msgstr ""
+msgstr "Zobraziť cenu & zľavu zákazníkom"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_show_price_subtotal
@@ -2120,6 +2130,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"Objednávka predaja %s prepojená na analytický účet%s bola zrušená. Nemožno "
+"registrovať náklady na zrušenú objednávku."
 
 #. module: sale
 #: code:addons/sale/models/sale_analytic.py:112
@@ -2128,6 +2140,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
 msgstr ""
+"Objednávka predaja %s prepojená na analytický účet %s musí byť overená pred "
+"registráciou nákladov."
 
 #. module: sale
 #: code:addons/sale/models/sale_analytic.py:115
@@ -2137,6 +2151,9 @@ msgid ""
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
 msgstr ""
+"Objednávka predaja %s prepojená na analytický účet%s je v súčasnosti "
+"zablokovaná. Nemožno registrovať náklady na zablokovanú objednávku. Vytvorte"
+" prosím novú objednávku priradenú k tomuto analytickému účtu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
@@ -2343,7 +2360,7 @@ msgstr "Nezdanená suma"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
 msgid "Untaxed Total"
-msgstr ""
+msgstr "Nezdanené celkom"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -2373,7 +2390,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tour.js:73
 #, python-format
 msgid "Use this menu to access quotations, sales orders and customers."
-msgstr ""
+msgstr "Toto menu sa používa pre prístup k ponukám, objednávkam a zákazníkom."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2428,6 +2445,7 @@ msgid ""
 "Write the name of your customer to create one on the fly, or select an "
 "existing one."
 msgstr ""
+"Zadajte meno zákazníka pre vytvorenie nového, alebo vyberte existujúceho"
 
 #. module: sale
 #. openerp-web
