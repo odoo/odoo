@@ -246,6 +246,10 @@
                                     <t t-set="object" t-value="channel"/>
                                     <t t-set="hash" t-value="message_post_hash"/>
                                     <t t-set="pid" t-value="message_post_pid"/>
+                                    <t t-set="default_message_id" t-value="last_message_id"/>
+                                    <t t-set="default_message" t-value="last_message"/>
+                                    <t t-set="default_rating_value" t-value="last_rating_value"/>
+                                    <t t-set="force_submit_url" t-value="'/slides/mail/update_comment' if last_message_id else False"/>
                                 </t>
                             </p>
                             <p class="row mt8">

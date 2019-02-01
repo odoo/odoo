@@ -49,7 +49,7 @@
                      the message will be posted with the identity of the partner_id of the object
     -->
     <template id="rating_stars_static_popup_composer" name="Rating: rating composer in popup">
-        <div class="row d-print-none o_rating_popup_composer o_not_editable p-0" t-att-data-rating-avg="rating_avg or 0.0" t-att-data-rating-total="rating_total or 0.0" t-att-data-token="token" t-att-data-hash="hash" t-att-data-pid="pid" t-att-data-res_model="object._name" t-att-data-res_id="object.id" t-att-data-partner_id="request.env.user.partner_id.id">
+        <div class="row d-print-none o_rating_popup_composer o_not_editable p-0" t-att-data-rating-avg="rating_avg or 0.0" t-att-data-rating-total="rating_total or 0.0" t-att-data-token="token" t-att-data-hash="hash" t-att-data-pid="pid" t-att-data-res_model="object._name" t-att-data-res_id="object.id" t-att-data-partner_id="request.env.user.partner_id.id" t-att-data-default_message="default_message" t-att-data-default_message_id="default_message_id" t-att-data-default_rating_value="default_rating_value" t-att-data-force_submit_url="force_submit_url">
         </div>
     </template>
 
