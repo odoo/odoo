@@ -223,7 +223,7 @@ var LivechatButton = Widget.extend({
         }
         def.then(function (livechatData) {
             if (!livechatData || !livechatData.operator_pid) {
-                alert(_t("None of our collaborators seems to be available, please try again later."));
+                alert(_t("None of our collaborators seem to be available, please try again later."));
             } else {
                 self._livechat = new WebsiteLivechat({
                     parent: self,

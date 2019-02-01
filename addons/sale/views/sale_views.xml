@@ -67,8 +67,8 @@
                 <p class="o_view_nocontent_smiling_face">
                     Create a new product
                 </p><p>
-                    You must define a product for everything you purchase,
-                    whether it's a physical product, a consumable or services.
+                    You must define a product for everything you sell or purchase,
+                    whether it's a storable product, a consumable or a service.
                 </p>
             </field>
         </record>
@@ -313,6 +313,7 @@
                                             <field name="qty_to_invoice" invisible="1"/>
                                             <field name="qty_delivered_manual" invisible="1"/>
                                             <field name="qty_delivered_method" invisible="1"/>
+                                            <field name="price_total" invisible="1"/>
                                             <field name="price_subtotal" invisible="1"/>
                                             <label for="product_uom_qty" string="Ordered Quantity"/>
                                             <div>
@@ -383,10 +384,10 @@
                                     decoration-info="(not display_type and invoice_status == 'to invoice')"
                                 >
                                     <control>
-                                        <create string="Add a product"/>
-                                        <create string="Configure a product" context="{'open_product_configurator': True}" groups="product.group_product_variant"/>
-                                        <create string="Add a section" context="{'default_display_type': 'line_section'}"/>
-                                        <create string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                        <create name="add_product_control" string="Add a product"/>
+                                        <create name="configure_product_control" string="Configure a product" context="{'open_product_configurator': True}" groups="product.group_product_variant"/>
+                                        <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                        <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                                     </control>
 
                                     <field name="sequence" widget="handle" />
@@ -479,6 +480,7 @@
                                     <field name="product_uom_qty"/>
                                     <field name="product_uom" groups="uom.group_uom"/>
                                     <field name="price_subtotal"/>
+                                    <field name="price_total" invisible="1"/>
                                     <field name="price_unit"/>
                                     <field name="display_type"/>
                                     <templates>
@@ -569,6 +571,13 @@
                                     <field groups="base.group_no_one" name="origin"/>
                                 </group>
                                 <group name="utm_link" groups="base.group_no_one"/>
+                            </group>
+                        </page>
+                        <page groups="base.group_no_one" string="Customer Signature" name="customer_signature" attrs="{'invisible': [('require_signature', '=', False), ('signed_by', '=', False), ('signature', '=', False), ('signed_on', '=', False)]}">
+                            <group>
+                                <field name="signed_by"/>
+                                <field name="signed_on"/>
+                                <field name="signature" widget="image"/>
                             </group>
                         </page>
                     </notebook>
@@ -776,12 +785,13 @@
               <p class="o_view_nocontent_smiling_face">
                 No orders to upsell found
               </p><p>
-                These are orders with products invoiced based on ordered quantities,
-                in the case you have delivered more than what was ordered.
+                You can upsell an order when you have delivered more quantities
+                than initially ordered, with an invoicing policy based on
+                ordered quantities.
               </p><p>
                 A typical example is the pre-paid hours of service,
-                where you want to sell extra hours to the customer
-                because the initial hours have already been used.
+                when you want to sell extra hours because the initial
+                hours have already been used.
               </p>
             </field>
         </record>

@@ -226,6 +226,7 @@ class StockRule(models.Model):
             'date': date_expected,
             'date_expected': date_expected,
             'propagate': self.propagate,
+            'description_picking': product_id._get_description(self.picking_type_id),
             'priority': values.get('priority', "1"),
         }
         for field in self._get_custom_move_fields():

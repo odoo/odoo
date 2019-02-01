@@ -62,8 +62,8 @@
           <p class="o_view_nocontent_smiling_face">
             Create a new product
           </p><p>
-            You must define a product for everything you purchase,
-            whether it's a physical product, a consumable or services.
+            You must define a product for everything you sell or purchase,
+            whether it's a storable product, a consumable or a service.
           </p>
         </field>
     </record>
@@ -83,8 +83,8 @@
               <p class="o_view_nocontent_smiling_face">
                 Create a new product variant
               </p><p>
-                You must define a product for everything you purchase,
-                whether it's a physical product, a consumable or services.
+                You must define a product for everything you sell or purchase,
+                whether it's a storable product, a consumable or a service.
               </p>
             </field>
         </record>
@@ -220,6 +220,7 @@
                                                 <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]" options="{'no_create': True}"/>
                                                 <field name="date_planned" widget="date"/>
                                                 <field name="account_analytic_id" colspan="2" groups="analytic.group_analytic_accounting"/>
+                                                <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                             </group>
                                         </group>

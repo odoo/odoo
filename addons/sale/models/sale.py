@@ -177,7 +177,8 @@ class SaleOrder(models.Model):
     team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True, default=_get_default_team, oldname='section_id')
 
     signature = fields.Binary('Signature', help='Signature received through the portal.', copy=False, attachment=True)
-    signed_by = fields.Char('Signed by', help='Name of the person that signed the SO.', copy=False)
+    signed_by = fields.Char('Signed By', help='Name of the person that signed the SO.', copy=False)
+    signed_on = fields.Datetime('Signed On', help='Date of the signature.', copy=False)
 
     commitment_date = fields.Datetime('Commitment Date',
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
@@ -306,8 +307,8 @@ class SaleOrder(models.Model):
         if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env.user.company_id.sale_note:
             values['note'] = self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note
 
-        if self.partner_id.team_id:
-            values['team_id'] = self.partner_id.team_id.id
+        # Use team of saleman before to fallback on team of partner.
+        values['team_id'] = self.partner_id.user_id and self.partner_id.user_id.sale_team_id.id or self.partner_id.team_id.id
         self.update(values)
 
     @api.onchange('partner_id')
@@ -572,6 +573,7 @@ class SaleOrder(models.Model):
             'state': 'draft',
             'signature': False,
             'signed_by': False,
+            'signed_on': False,
         })
 
     @api.multi
@@ -736,12 +738,12 @@ class SaleOrder(models.Model):
 
         return report_pages
 
-    def has_to_be_signed(self, also_in_draft=False):
-        return (self.state == 'sent' or (self.state == 'draft' and also_in_draft)) and not self.is_expired and self.require_signature and not self.signature
+    def has_to_be_signed(self, include_draft=False):
+        return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_signature and not self.signature
 
-    def has_to_be_paid(self, also_in_draft=False):
+    def has_to_be_paid(self, include_draft=False):
         transaction = self.get_portal_last_transaction()
-        return (self.state == 'sent' or (self.state == 'draft' and also_in_draft)) and not self.is_expired and self.require_payment and transaction.state != 'done' and self.amount_total
+        return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_payment and transaction.state != 'done' and self.amount_total
 
     @api.multi
     def _notify_get_groups(self, message, groups):
@@ -862,21 +864,6 @@ class SaleOrder(models.Model):
     def _get_report_base_filename(self):
         self.ensure_one()
         return '%s %s' % (self.type_name, self.name)
-
-    @api.multi
-    def get_access_action(self, access_uid=None):
-        """ Instead of the classic form view, redirect to the online quote if it exists. """
-        self.ensure_one()
-        user = access_uid and self.env['res.users'].sudo().browse(access_uid) or self.env.user
-
-        if not self.sale_order_template_id or (not user.share and not self.env.context.get('force_website')):
-            return super(SaleOrder, self).get_access_action(access_uid)
-        return {
-            'type': 'ir.actions.act_url',
-            'url': self.get_portal_url(),
-            'target': 'self',
-            'res_id': self.id,
-        }
 
     def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
         self.ensure_one()

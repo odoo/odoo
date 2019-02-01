@@ -291,7 +291,7 @@
                                         <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
                                         <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
                                     </group>
-                                    <group string="Accounting App Options" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase', 'bank', 'cash'])]}">
+                                    <group string="Accounting App Options">
                                         <field name="profit_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
                                         <field name="loss_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
                                         <field name="group_invoice_lines" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
@@ -811,6 +811,12 @@
             <field name="arch" type="xml">
                 <form string="Operation Templates">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button type="object" name="action_reconcile_stat"
+                              class="oe_stat_button" icon="fa-book">
+                                <field name="number_entries" string="Journal Entries" widget="statinfo"/> 
+                            </button>
+                        </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="e.g. Bank Fees"/></h1>
@@ -1360,6 +1366,7 @@
                     <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                     <field name="reconciled" invisible="1"/>
                     <field name="full_reconcile_id"/>
+                    <field name="reconcile_model_id" invisible="1"/>
                     <field name="debit" sum="Total Debit"/>
                     <field name="credit" sum="Total Credit"/>
                     <field name="amount_currency" readonly="True" groups="base.group_multi_currency"/>
@@ -1435,6 +1442,7 @@
                     <field name="move_id" string="Number (Move)"/>
                     <field name="tax_line_id"/>
                     <field name="tax_ids" />
+                    <field name="reconcile_model_id"/>
                     <group expand="0" string="Group By">
                         <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>
@@ -1655,6 +1663,7 @@
                     <field name="partner_id"/>
                     <field name="journal_id"/>
                     <field name="dummy_account_id"/>
+                    <field name="reconcile_model_id"/>
                     <group expand="0" string="Group By">
                         <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>

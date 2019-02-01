@@ -43,7 +43,7 @@ class WebsiteSlides(http.Controller):
             'most_viewed_slides': most_viewed_slides,
             'related_slides': related_slides,
             'user': request.env.user,
-            'is_public_user': request.env.user == request.website.user_id,
+            'is_public_user': request.website.is_public_user(),
             'comments': slide.channel_id.can_see_full and slide.website_message_ids or [],
             'private': not slide.channel_id.can_see_full,
         }
@@ -66,7 +66,7 @@ class WebsiteSlides(http.Controller):
         return request.render('website_slides.channels', {
             'channels': channels,
             'user': request.env.user,
-            'is_public_user': request.env.user == request.website.user_id
+            'is_public_user': request.website.is_public_user(),
         })
 
     def sitemap_slide(env, rule, qs):
@@ -142,7 +142,7 @@ class WebsiteSlides(http.Controller):
             'sorting': sorting,
             'user': user,
             'pager': pager,
-            'is_public_user': user == request.website.user_id,
+            'is_public_user': request.website.is_public_user(),
             'display_channel_settings': not request.httprequest.cookies.get('slides_channel_%s' % (channel.id), False) and channel.can_see_full,
         }
         if search:
@@ -209,16 +209,22 @@ class WebsiteSlides(http.Controller):
 
     # JSONRPC
     @http.route('/slides/slide/like', type='json', auth="user", website=True)
-    def slide_like(self, slide_id):
+    def slide_like(self, slide_id, upvote):
+        if request.website.is_public_user():
+            return {'error': 'public_user'}
+        slide_users = request.env['slide.users'].sudo().search([
+            ('slide_id', '=', slide_id),
+            ('user_id', '=', request.env.uid)
+        ])
+        if (upvote and slide_users.vote == 1) or (not upvote and slide_users.vote == -1):
+            return {'error': 'vote_done'}
         slide = request.env['slide.slide'].browse(int(slide_id))
-        slide.likes += 1
-        return slide.likes
-
-    @http.route('/slides/slide/dislike', type='json', auth="user", website=True)
-    def slide_dislike(self, slide_id):
-        slide = request.env['slide.slide'].browse(int(slide_id))
-        slide.dislikes += 1
-        return slide.dislikes
+        if upvote:
+            slide.action_like()
+        else:
+            slide.action_dislike()
+        slide.invalidate_cache()
+        return slide.read(['likes', 'dislikes', 'user_vote'])[0]
 
     @http.route(['/slides/slide/send_share_email'], type='json', auth='user', website=True)
     def slide_send_share_email(self, slide_id, email):
@@ -295,6 +301,22 @@ class WebsiteSlides(http.Controller):
             _logger.error(e)
             return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
         return {'url': "/slides/slide/%s" % (slide_id.id)}
+
+    @http.route(['/slides/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
+    def slide_tag_search_read(self, fields, domain):
+        can_create = request.env['slide.tag'].check_access_rights('create', raise_exception=False)
+        return {
+            'read_results': request.env['slide.tag'].search_read(domain, fields),
+            'can_create': can_create,
+        }
+
+    @http.route(['/slides/category/search_read'], type='json', auth='user', methods=['POST'], website=True)
+    def slide_category_search_read(self, fields, domain):
+        can_create = request.env['slide.category'].check_access_rights('create', raise_exception=False)
+        return {
+            'read_results': request.env['slide.category'].search_read(domain, fields),
+            'can_create': can_create,
+        }
 
     # --------------------------------------------------
     # EMBED IN THIRD PARTY WEBSITES

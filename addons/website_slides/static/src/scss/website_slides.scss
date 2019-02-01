@@ -84,7 +84,7 @@ img.oe_slides_promote_image {
    border-bottom: 1px solid $nav-tabs-border-color;
 }
 
-.oe_slide_js_like, .oe_slide_js_unlike{
+.o_wslides_like_up, .o_wslides_like_down {
     cursor: pointer;
     color: $link-color;
 }
@@ -151,6 +151,13 @@ textarea.o_slides_comment {
     background: rgb(0, 0, 0); /* fallback color */
     background: rgba(0, 0, 0, 0.7);
     padding: 10px;
+}
+
+// Slide display
+div.embed-responsive {
+    iframe.o_wslides_iframe_viewer {
+        position: relative;
+    }
 }
 
 // PDF Viewer Share bar

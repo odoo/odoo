@@ -129,11 +129,11 @@ class IrQWeb(models.AbstractModel, QWeb):
             return view.inherit_id is not None
 
         if isinstance(name, int) or is_child_view(name):
-            for node in etree.fromstring(template):
+            view = etree.fromstring(template)
+            for node in view:
                 if node.get('t-name'):
                     node.set('t-name', str(name))
-                    return node.getparent()
-            return None  # trigger "template not found" in QWeb
+            return view
         else:
             return template
 

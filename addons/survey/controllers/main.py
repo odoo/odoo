@@ -225,6 +225,10 @@ class Survey(http.Controller):
             return {}
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
+        try:
+            page_id = int(page_id)
+        except:
+            page_id = None
 
         # Fetch previous answers
         if page_id:

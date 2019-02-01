@@ -193,7 +193,7 @@
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <field string="Attributes" name="attribute_line_ids" groups="product.group_product_variant"/>
-                <field name="pricelist_id" widget="selection" context="{'pricelist': self}" filter_domain="[]" groups="product.group_sale_pricelist"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
+                <field name="pricelist_id" context="{'pricelist': self}" filter_domain="[]" groups="product.group_sale_pricelist"/>
                 <separator/>
                 <filter string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -253,8 +253,8 @@
               <p class="o_view_nocontent_smiling_face">
                 Create a new product variant
               </p><p>
-                You must define a product for everything you purchase,
-                whether it's a physical product, a consumable or services.
+                You must define a product for everything you sell or purchase,
+                whether it's a storable product, a consumable or a service.
               </p>
             </field>
         </record>
@@ -310,7 +310,7 @@
                                 <label for="weight"/>
                                 <div class="o_row">
                                     <field name="weight"/>
-                                    <span>kg</span>
+                                    <span><field name="weight_uom_name"/></span>
                                 </div>
                             </group>
                             <group name="packaging" string="Packaging" groups="product.group_stock_packaging">
@@ -338,8 +338,8 @@
               <p class="o_view_nocontent_smiling_face">
                 Create a new product variant
               </p><p>
-                You must define a product for everything you sell, whether it's a physical product,
-                a consumable or a service you offer to customers.
+                You must define a product for everything you sell or purchase,
+                whether it's a storable product, a consumable or a service.
                 The product form contains information to simplify the sale process:
                 price, notes in the quotation, accounting data, procurement methods, etc.
               </p>

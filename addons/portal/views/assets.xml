@@ -27,8 +27,12 @@
     </template>
 
     <template id="assets_common" inherit_id="web.assets_common" name="Portal Common Assets">
+        <xpath expr="link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/portal/static/src/scss/portal_name_and_signature.scss"/>
+        </xpath>
         <xpath expr="script[last()]" position="after">
             <script type="text/javascript" src="/web/static/lib/jSignature/jSignatureCustom.js"></script>
+            <script type="text/javascript" src="/portal/static/src/js/portal_name_and_signature.js"></script>
         </xpath>
     </template>
 </odoo>

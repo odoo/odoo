@@ -36,7 +36,7 @@ QUnit.module('widgets', {
 
 
     QUnit.test('exporting all data in list view', function (assert) {
-        assert.expect(7);
+        assert.expect(6);
 
         var blockUI = framework.blockUI;
         var unblockUI = framework.unblockUI;
@@ -94,16 +94,6 @@ QUnit.module('widgets', {
             },
         });
 
-        list.searchView = {
-            build_search_data: function () {
-                assert.step('build_search_data');
-                return {
-                    contexts: [],
-                    domains: [],
-                    groupbys: [],
-                };
-            },
-        };
         testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
         testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
         testUtils.dom.click(list.sidebar.$('a:contains(Export)'));
@@ -122,7 +112,6 @@ QUnit.module('widgets', {
         framework.blockUI = blockUI;
         framework.unblockUI = unblockUI;
         assert.verifySteps([
-            'build_search_data',
             'block UI',
             '/web/export/csv',
             'unblock UI',
@@ -130,7 +119,7 @@ QUnit.module('widgets', {
     });
 
     QUnit.test('saving fields list when exporting data', function (assert) {
-        assert.expect(6);
+        assert.expect(5);
 
         var create = data.DataSet.prototype.create;
 
@@ -172,17 +161,6 @@ QUnit.module('widgets', {
             },
         });
 
-        list.searchView = {
-            build_search_data: function () {
-                assert.step('build_search_data');
-                return {
-                    contexts: [],
-                    domains: [],
-                    groupbys: [],
-                };
-            },
-        };
-
         // Open the export modal
         testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
         testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
@@ -202,7 +180,7 @@ QUnit.module('widgets', {
         testUtils.dom.click($('.modal a:contains(Save fields list)'));
         testUtils.fields.editInput($('.modal .o_save_list > input'), 'fields list');
         testUtils.dom.click($('.modal .o_save_list > button'));
-        assert.verifySteps(['build_search_data', 'create'],
+        assert.verifySteps(['create'],
             "create should have been called");
 
         // Close the modal and destroy list

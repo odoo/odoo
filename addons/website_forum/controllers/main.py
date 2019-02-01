@@ -52,7 +52,7 @@ class WebsiteForum(http.Controller):
     @http.route('/forum/send_validation_email', type='json', auth='user', website=True)
     def send_validation_email(self, forum_id=None, **kwargs):
         if request.env.uid != request.website.user_id.id:
-            request.env.user.send_forum_validation_email(forum_id=forum_id)
+            request.env.user._send_forum_validation_email(forum_id=forum_id)
         request.session['validation_email_sent'] = True
         return True
 
@@ -100,7 +100,8 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/notification_read', type='json', auth="user", methods=['POST'], website=True)
     def notification_read(self, **kwargs):
-        request.env['mail.message'].browse([int(kwargs.get('notification_id'))]).set_message_done()
+        if kwargs.get('notification_id'):
+            request.env['mail.message'].browse([int(kwargs.get('notification_id'))]).set_message_done()
         return True
 
     def sitemap_forum(env, rule, qs):
@@ -564,11 +565,8 @@ class WebsiteForum(http.Controller):
         if searches.get('user'):
             dom += [('name', 'ilike', searches.get('user'))]
 
-        user_obj = User.sudo().search(dom, limit=step, offset=pager['offset'], order='karma DESC')
-        # put the users in block of 3 to display them as a table
-        users = [[] for i in range(len(user_obj) // 3 + 1)]
-        for index, user in enumerate(user_obj):
-            users[index // 3].append(user)
+        users = User.sudo().search(dom, limit=step, offset=pager['offset'], order='karma DESC')
+
         searches['users'] = 'True'
         values = self._prepare_forum_values(forum=forum, searches=searches)
         values .update({

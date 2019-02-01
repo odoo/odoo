@@ -143,7 +143,7 @@ KanbanRenderer.include({
             onSuccess: function () {
                 // update the columns and tabs positions (optionally with an animation)
                 var updateFunc = animate ? 'animate' : 'css';
-                self.$('.o_kanban_mobile_tab, .o_kanban_group').removeClass('o_current');
+                self.$('.o_kanban_mobile_tab').removeClass('o_current');
                 _.each(self.widgets, function (column, index) {
                     var columnID = column.id || column.db_id;
                     var $column = self.$('.o_kanban_group[data-id="' + columnID + '"]');
@@ -157,7 +157,6 @@ KanbanRenderer.include({
                     } else if (index === moveToIndex) {
                         $column[updateFunc]({left: '0%'});
                         $tab[updateFunc]({left: '50%'});
-                        $column.addClass('o_current');
                         $tab.addClass('o_current');
                     } else if (index < moveToIndex) {
                         $column.css({left: '-100%'});

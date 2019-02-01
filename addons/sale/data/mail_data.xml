@@ -59,11 +59,11 @@
         <template id="" inherit_id="mail.mail_notification_paynow" name="oezirhgoi">
             <xpath expr="//t[@t-set='access_name']" position="after">
                 <t t-if="record._name == 'sale.order'">
-                    <t t-if="record.has_to_be_signed()">
+                    <t t-if="record.has_to_be_signed(include_draft=True)">
                         <t t-if="record.has_to_be_paid()" t-set="access_name">Sign and pay online</t>
                         <t t-else="" t-set="access_name">Accept and sign online</t>
                     </t>
-                    <t t-elif="record.has_to_be_paid()">
+                    <t t-elif="record.has_to_be_paid(include_draft=True)">
                         <t t-set="access_name">Pay online</t>
                     </t>
                 </t>

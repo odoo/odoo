@@ -43,7 +43,7 @@ odoo.define("base.abstract_controller_tests", function(require) {
             QUnit.test(
                 'click on a a[type="action"] child triggers the correct action',
                 function(assert) {
-                    assert.expect(3);
+                    assert.expect(7);
 
                     var html =
                         "<div>" +
@@ -51,6 +51,9 @@ odoo.define("base.abstract_controller_tests", function(require) {
                             '<a name="a2" type="action" class="with-child">' +
                                 "<span>child</input>" +
                             "</a>" +
+                            '<a type="action" data-model="foo" data-method="bar" class="method">method</a>' +
+                            '<a type="action" data-model="foo" data-res-id="42" class="descr">descr</a>' +
+                            '<a type="action" data-model="foo" class="descr2">descr2</a>' +
                         "</div>";
 
                     var view = createView({
@@ -59,14 +62,24 @@ odoo.define("base.abstract_controller_tests", function(require) {
                         model: "test_model",
                         arch: "<test/>",
                         intercepts: {
-                            do_action: function(event) {
-                                assert.step(event.data.action);
+                            do_action: function (event) {
+                                assert.step(event.data.action.name || event.data.action);
                             }
+                        },
+                        mockRPC: function (route, args) {
+                            if (args.model === 'foo' && args.method === 'bar') {
+                                assert.step("method");
+                                return $.when({name: 'method'});
+                            }
+                            return this._super.apply(this, arguments);
                         }
                     });
                     testUtils.dom.click(view.$(".simple"));
                     testUtils.dom.click(view.$(".with-child span"));
-                    assert.verifySteps(["a1", "a2"]);
+                    testUtils.dom.click(view.$(".method"));
+                    testUtils.dom.click(view.$(".descr"));
+                    testUtils.dom.click(view.$(".descr2"));
+                    assert.verifySteps(["a1", "a2", "method", "method", "descr", "descr2"]);
                 }
             );
         }

@@ -133,9 +133,9 @@
                         <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
                             <li class="list-group-item flex-grow-1">
                                 <a t-if="sale_order.has_to_be_signed(True)" role="button" class="btn btn-primary btn-block mb8" data-toggle="modal" data-target="#modalaccept" href="#">
-                                    <i class="fa fa-check"/> Accept &amp; Sign
+                                    <i class="fa fa-check"/><t t-if="sale_order.has_to_be_paid(True)"> Sign &amp; Pay</t><t t-else=""> Accept &amp; Sign</t>
                                 </a>
-                                <a t-elif="sale_order.has_to_be_paid(True)" role="button" class="btn btn-primary btn-block mb8" data-toggle="modal" data-target="#modalaccept" href="#">
+                                <a t-elif="sale_order.has_to_be_paid(True)" role="button" id="o_sale_portal_paynow" class="btn btn-primary btn-block mb8" data-toggle="modal" data-target="#modalaccept" href="#">
                                     <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; Pay</t><t t-else="">Pay now</t>
                                 </a>
                                 <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
@@ -217,42 +217,42 @@
                                             <li t-if="sale_order.payment_term_id"><span>With payment terms:</span> <b t-field="sale_order.payment_term_id"/></li>
                                         </ul>
                                     </p>
-                                    <t t-call="portal.portal_signature">
-                                        <t t-set="object" t-value="sale_order"/>
-                                        <t t-set="partner_name" t-value="sale_order.partner_id.name"/>
-                                        <t t-set="callUrl" t-value="sale_order.get_portal_url(suffix='/accept')"/>
-                                        <t t-set="accessToken" t-value="sale_order.access_token"/>
+                                    <t t-call="portal.signature_form">
+                                        <t t-set="call_url" t-value="sale_order.get_portal_url(suffix='/accept')"/>
+                                        <t t-set="default_name" t-value="sale_order.partner_id.name"/>
                                     </t>
                                 </main>
                             </form>
                         </div>
 
-                        <div class="modal-dialog modal-content" t-if="not sale_order.has_to_be_signed(True) and sale_order.has_to_be_paid(True)">
-                            <header class="modal-header">
-                                <h4 class="modal-title">Validate Order</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
-                            </header>
-                            <main class="modal-body" id="sign-dialog">
-                                <p>
-                                    <span>By paying this proposal, I agree to the following terms:</span>
-                                    <ul>
-                                        <li><span>Accepted on the behalf of:</span> <b t-field="sale_order.partner_id.commercial_partner_id"/></li>
-                                        <li><span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/></li>
-                                        <li t-if="sale_order.payment_term_id"><span>With payment terms:</span> <b t-field="sale_order.payment_term_id"/></li>
-                                    </ul>
-                                </p>
-                                <div t-if="pms or acquirers" id="payment_method" class="text-left">
-                                    <h3 class="mb24">Pay with</h3>
-                                    <t t-call="payment.payment_tokens_list">
-                                        <t t-set="mode" t-value="'payment'"/>
-                                        <t t-set="submit_txt">Pay &amp; Confirm</t>
-                                        <t t-set="icon_class" t-value="'fa-lock'"/>
-                                        <t t-set="form_action" t-value="sale_order.get_portal_url(suffix='/transaction/token')"/>
-                                        <t t-set="prepare_tx_url" t-value="sale_order.get_portal_url(suffix='/transaction/')"/>
-                                        <t t-set="access_token" t-value="sale_order.access_token"/>
-                                    </t>
-                                </div>
-                            </main>
+                        <div class="modal-dialog" t-if="not sale_order.has_to_be_signed(True) and sale_order.has_to_be_paid(True)">
+                            <div class="modal-content">
+                                <header class="modal-header">
+                                    <h4 class="modal-title">Validate Order</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                                </header>
+                                <main class="modal-body" id="sign-dialog">
+                                    <p>
+                                        <span>By paying this proposal, I agree to the following terms:</span>
+                                        <ul>
+                                            <li><span>Accepted on the behalf of:</span> <b t-field="sale_order.partner_id.commercial_partner_id"/></li>
+                                            <li><span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/></li>
+                                            <li t-if="sale_order.payment_term_id"><span>With payment terms:</span> <b t-field="sale_order.payment_term_id"/></li>
+                                        </ul>
+                                    </p>
+                                    <div t-if="pms or acquirers" id="payment_method" class="text-left">
+                                        <h3 class="mb24">Pay with</h3>
+                                        <t t-call="payment.payment_tokens_list">
+                                            <t t-set="mode" t-value="'payment'"/>
+                                            <t t-set="submit_txt">Pay &amp; Confirm</t>
+                                            <t t-set="icon_class" t-value="'fa-lock'"/>
+                                            <t t-set="form_action" t-value="sale_order.get_portal_url(suffix='/transaction/token')"/>
+                                            <t t-set="prepare_tx_url" t-value="sale_order.get_portal_url(suffix='/transaction/')"/>
+                                            <t t-set="access_token" t-value="sale_order.access_token"/>
+                                        </t>
+                                    </div>
+                                </main>
+                            </div>
                         </div>
                     </div>
 
@@ -320,7 +320,7 @@
 
                         <t t-if="sale_order.has_to_be_signed(True)">
                             <div class="col-sm-auto mt8">
-                                <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept" href="#"><i class="fa fa-check"/> Accept &amp; Sign</a>
+                                <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept" href="#"><i class="fa fa-check"/><t t-if="sale_order.has_to_be_paid(True)"> Sign &amp; Pay</t><t t-else=""> Accept &amp; Sign</t></a>
                             </div>
                             <div class="col-sm-auto mt8">
                                 <a role="button" class="btn btn-secondary" href="#discussion"><i class="fa fa-comment"/> Feedback</a>
@@ -381,13 +381,16 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
-                        <strong class="d-block mb-1">Invoicing Address</strong>
+                        <strong t-if="sale_order.partner_shipping_id == sale_order.partner_invoice_id" class="d-block mb-1">Invoicing and Shipping Address</strong>
+                        <strong t-if="sale_order.partner_shipping_id != sale_order.partner_invoice_id" class="d-block mb-1">Invoicing Address</strong>
                         <address t-field="sale_order.partner_invoice_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                     </div>
-                    <div id="shipping_address" class="col-lg-6" groups="sale.group_delivery_invoice_address">
-                        <strong class="d-block mb-1">Shipping Address</strong>
-                        <address t-field="sale_order.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                    </div>
+                     <t t-if="sale_order.partner_shipping_id != sale_order.partner_invoice_id">
+                        <div id="shipping_address" class="col-lg-6">
+                            <strong class="d-block mb-1">Shipping Address</strong>
+                            <address t-field="sale_order.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                        </div>
+                    </t>
                 </div>
 
                 <t t-set="invoices" t-value="[i for i in sale_order.invoice_ids if i.state not in ['draft', 'cancel']]"/>

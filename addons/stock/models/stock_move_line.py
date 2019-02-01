@@ -53,6 +53,7 @@ class StockMoveLine(models.Model):
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
     origin = fields.Char(related='move_id.origin', string='Source')
     picking_type_entire_packs = fields.Boolean(related='picking_id.picking_type_id.show_entire_packs', readonly=True)
+    description_picking = fields.Text(string="Description picking")
 
     @api.one
     @api.depends('picking_id.picking_type_id', 'product_id.tracking')
@@ -97,6 +98,8 @@ class StockMoveLine(models.Model):
     @api.onchange('product_id', 'product_uom_id')
     def onchange_product_id(self):
         if self.product_id:
+            if self.picking_id:
+                self.description_picking = self.product_id._get_description(self.picking_id.picking_type_id)
             self.lots_visible = self.product_id.tracking != 'none'
             if not self.product_uom_id or self.product_uom_id.category_id != self.product_id.uom_id.category_id:
                 if self.move_id.product_uom:

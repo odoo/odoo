@@ -355,7 +355,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             By default 'group' is the group Employee.  Groups are given by their xml id.
             The attribute 'group' may contain several xml ids, separated by commas.
 
-        *   For a selection field like 'group_XXX' composed of 2 integers values ('0' and '1'),
+        *   For a selection field like 'group_XXX' composed of 2 string values ('0' and '1'),
             ``execute`` adds/removes 'implied_group' to/from the implied groups of 'group', 
             depending on the field's value.
             By default 'group' is the group Employee.  Groups are given by their xml id.
@@ -364,9 +364,9 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         *   For a boolean field like 'module_XXX', ``execute`` triggers the immediate
             installation of the module named 'XXX' if the field has value ``True``.
 
-        *   For a selection field like 'module_XXX' composed of 2 integers values ('0' and '1'), 
+        *   For a selection field like 'module_XXX' composed of 2 string values ('0' and '1'), 
             ``execute`` triggers the immediate installation of the module named 'XXX' 
-            if the field has the integer value ``1``.
+            if the field has the value ``'1'``.
 
         *   For a field with no specific prefix BUT an attribute 'config_parameter',
             ``execute``` will save its value in an ir.config.parameter (global setting for the
@@ -419,7 +419,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             [('name', '=', module_name.replace("module_", '')),
             ('state', 'in', ['to install', 'installed', 'to upgrade'])])
 
-        if modules and not field_value:
+        if modules and not int(field_value):
             deps = modules.sudo().downstream_dependencies()
             dep_names = (deps | modules).mapped('shortdesc')
             message = '\n'.join(dep_names)
@@ -508,13 +508,13 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         for name, groups, implied_group in classified['group']:
             res[name] = all(implied_group in group.implied_ids for group in groups)
             if self._fields[name].type == 'selection':
-                res[name] = int(res[name])
+                res[name] = str(int(res[name]))     # True, False -> '1', '0'
 
         # modules: which modules are installed/to install
         for name, module in classified['module']:
             res[name] = module.state in ('installed', 'to install', 'to upgrade')
             if self._fields[name].type == 'selection':
-                res[name] = int(res[name])
+                res[name] = str(int(res[name]))     # True, False -> '1', '0'
 
         # config: get & convert stored ir.config_parameter (or default)
         WARNING_MESSAGE = "Error when converting value %r of field %s for ir.config.parameter %r"
@@ -580,7 +580,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             for name, groups, implied_group in classified['group']:
                 if self[name] == current_settings[name]:
                     continue
-                if self[name]:
+                if int(self[name]):
                     groups.write({'implied_ids': [(4, implied_group.id)]})
                 else:
                     groups.write({'implied_ids': [(3, implied_group.id)]})
@@ -625,7 +625,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         to_uninstall_modules = self.env['ir.module.module']
         lm = len('module_')
         for name, module in classified['module']:
-            if self[name]:
+            if int(self[name]):
                 to_install.append((name[lm:], module))
             else:
                 if module and module.state in ('installed', 'to upgrade'):

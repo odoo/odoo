@@ -1054,3 +1054,5 @@ class AccountReconcileModelTemplate(models.Model):
     force_second_tax_included = fields.Boolean(string='Second Tax Included in Price',
         help='Force the second tax to be managed as a price included tax.')
     second_tax_id = fields.Many2one('account.tax.template', string='Second Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
+
+    number_entries = fields.Integer(string='Number of entries related to this model', compute='_compute_number_entries')

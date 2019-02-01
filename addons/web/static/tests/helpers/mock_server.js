@@ -70,6 +70,7 @@ var MockServer = Class.extend({
      *
      * @param {Object} params
      * @param {string|Object} params.arch a string OR a parsed xml document
+     * @param {Number} [params.view_id] the id of the arch's view
      * @param {string} params.model a model name (that should be in this.data)
      * @param {Object} params.toolbar the actions possible in the toolbar
      * @param {Object} [params.viewOptions] the view options set in the test (optional)
@@ -78,6 +79,7 @@ var MockServer = Class.extend({
     fieldsViewGet: function (params) {
         var model = params.model;
         var toolbar = params.toolbar;
+        var viewId = params.view_id;
         var viewOptions = params.viewOptions || {};
         if (!(model in this.data)) {
             throw new Error('Model ' + model + ' was not defined in mock server data');
@@ -86,6 +88,9 @@ var MockServer = Class.extend({
         var fvg = this._fieldsViewGet(params.arch, model, fields, viewOptions.context);
         if (toolbar) {
             fvg.toolbar = toolbar;
+        }
+        if (viewId) {
+            fvg.view_id = viewId;
         }
         return fvg;
     },
@@ -506,12 +511,17 @@ var MockServer = Class.extend({
                 }
             }
             var key = [model, viewID, viewType].join(',');
-            var arch = self.archs[key];
+            var arch = self.archs[key] || _.find(self.archs, function (_v, k) {
+                var ka = k.split(',');
+                viewID = parseInt(ka[1], 10);
+                return ka[0] === model && ka[2] === viewType;
+            });
             if (!arch) {
                 throw new Error('No arch found for key ' + key);
             }
             views[viewType] = {
                 arch: arch,
+                view_id: viewID,
                 model: model,
                 viewOptions: {
                     context: kwargs.context,

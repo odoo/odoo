@@ -45,6 +45,9 @@ var ThemeCustomizeDialog = Dialog.extend({
                 method: 'read_template',
                 args: ['website.theme_customize'],
             }).then(function (data) {
+                if (!/^<templates>/.test(data)) {
+                    data = _.str.sprintf('<templates>%s</templates>', data);
+                }
                 return core.qweb.add_template(data);
             });
         }

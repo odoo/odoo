@@ -560,6 +560,9 @@ class Field(MetaField('DummyField', (object,), {})):
         if self.inherited and field.required:
             self.required = True
 
+        if self.inherited:
+            self._modules.update(field._modules)
+
     def traverse_related(self, record):
         """ Traverse the fields of the related field `self` except for the last
         one, and return it as a pair `(last_record, last_field)`. """
@@ -1856,6 +1859,7 @@ class Selection(Field):
     <field-incremental-definition>`.
     """
     type = 'selection'
+    column_type = ('varchar', pg_varchar())
     _slots = {
         'selection': None,              # [(value, string), ...], function or method name
         'validate': True,               # whether validating upon write
@@ -1864,18 +1868,12 @@ class Selection(Field):
     def __init__(self, selection=Default, string=Default, **kwargs):
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
 
-    @property
-    def column_type(self):
-        if (self.selection and
-                isinstance(self.selection, list) and
-                isinstance(self.selection[0][0], int)):
-            return ('int4', 'integer')
-        else:
-            return ('varchar', pg_varchar())
-
     def _setup_regular_base(self, model):
         super(Selection, self)._setup_regular_base(model)
         assert self.selection is not None, "Field %s without selection" % self
+        if isinstance(self.selection, list):
+            assert all(isinstance(v, str) for v, _ in self.selection), \
+                "Field %s with non-str value in selection" % self
 
     def _setup_related_full(self, model):
         super(Selection, self)._setup_related_full(model)
@@ -2054,7 +2052,7 @@ class Many2one(_Relational):
     type = 'many2one'
     column_type = ('int4', 'int4')
     _slots = {
-        'ondelete': 'set null',         # what to do when value is deleted
+        'ondelete': None,               # what to do when value is deleted
         'auto_join': False,             # whether joins are generated upon search
         'delegate': False,              # whether self implements delegation
     }
@@ -2067,6 +2065,22 @@ class Many2one(_Relational):
         # determine self.delegate
         if not self.delegate:
             self.delegate = name in model._inherits.values()
+
+    def _setup_regular_base(self, model):
+        super()._setup_regular_base(model)
+        # 3 cases:
+        # 1) The ondelete attribute is not defined, we assign it a sensible default
+        # 2) The ondelete attribute is defined and its definition makes sense
+        # 3) The ondelete attribute is explicitly defined as 'set null' for a required m2o,
+        #    this is considered a programming error.
+        if not self.ondelete:
+            self.ondelete = 'restrict' if self.required else 'set null'
+        if self.ondelete == 'set null' and self.required:
+            raise ValueError(
+                "The m2o field %s of model %s is required but declares its ondelete policy "
+                "as being 'set null'. Only 'restrict' and 'cascade' make sense."
+                % (self.name, model._name)
+            )
 
     def update_db(self, model, columns):
         comodel = model.env[self.comodel_name]

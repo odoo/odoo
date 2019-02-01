@@ -519,7 +519,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls._inherits = {}
         cls._depends = {}
         cls._constraints = {}
-        cls._sql_constraints = []
+        cls._sql_constraints = {}
 
         for base in reversed(cls.__bases__):
             if not getattr(base, 'pool', None):
@@ -540,10 +540,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 # cons may override a constraint with the same function name
                 cls._constraints[getattr(cons[0], '__name__', id(cons[0]))] = cons
 
-            cls._sql_constraints += base._sql_constraints
+            for cons in base._sql_constraints:
+                cls._sql_constraints[cons[0]] = cons
 
         cls._sequence = cls._sequence or (cls._table + '_id_seq')
         cls._constraints = list(cls._constraints.values())
+        cls._sql_constraints = list(cls._sql_constraints.values())
 
         # update _inherits_children of parent models
         for parent_name in cls._inherits:
@@ -2776,14 +2778,16 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # retrieve results from records; this takes values from the cache and
         # computes remaining fields
+        self = self.with_prefetch(self._prefetch.copy())
         data = {record: {'id': record.id} for record in self}
         missing = set()
         use_name_get = (load == '_classic_read')
         for name in (stored + inherited + computed):
             convert = self._fields[name].convert_to_read
-            # read every field with prefetching limited to self; this avoids
+            # restrict the prefetching of self's model to self; this avoids
             # computing fields on a larger recordset than self
-            for record in self.with_prefetch():
+            self._prefetch[self._name] = set(self._ids)
+            for record in self:
                 try:
                     data[record][name] = convert(record[name], record, use_name_get)
                 except MissingError:
@@ -3110,6 +3114,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             Data = self.env['ir.model.data'].sudo().with_context({})
             Defaults = self.env['ir.default'].sudo()
             Attachment = self.env['ir.attachment']
+            Translation = self.env['ir.translation'].sudo()
 
             for sub_ids in cr.split_for_in_conditions(self.ids):
                 query = "DELETE FROM %s WHERE id IN %%s" % self._table
@@ -3139,6 +3144,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 attachments = Attachment.browse([row[0] for row in cr.fetchall()])
                 if attachments:
                     attachments.unlink()
+
+                if any(field.translate for field in self._fields.values()):
+                    # For the same reason, remove the relevant records in ir_translation
+                    translations = Translation.search([
+                        ('type', 'in', ['model', 'model_terms']),
+                        ('name', '=like', self._name+',%'),
+                        ('res_id', 'in', sub_ids)])
+                    if translations:
+                        translations.unlink()
 
             # invalidate the *whole* cache, since the orm does not handle all
             # changes made in the database, like cascading delete!
@@ -3736,6 +3750,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         modified_ids = {row[0] for row in cr.fetchall()}
         self.browse(modified_ids).modified(['parent_path'])
 
+    def _load_records_write(self, values):
+        self.write(values)
+
+    def _load_records_create(self, values):
+        return self.create(values)
+
     def _load_records(self, data_list, update=False):
         """ Create or update records of this model, and assign XMLIDs.
 
@@ -3793,7 +3813,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # update existing records
         for data in to_update:
-            data['record'].write(data['values'])
+            data['record']._load_records_write(data['values'])
 
         # determine existing parents for new records
         for parent_model, parent_field in self._inherits.items():
@@ -3820,7 +3840,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     _logger.warning("Creating record %s in module %s.", data['xml_id'], module)
 
         # create records
-        records = self.create([data['values'] for data in to_create])
+        records = self._load_records_create([data['values'] for data in to_create])
         for data, record in zip(to_create, records):
             data['record'] = record
 
@@ -4349,7 +4369,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def _get_external_ids(self):
         """Retrieve the External ID(s) of any database record.
 
-        **Synopsis**: ``_get_xml_ids() -> { 'id': ['module.xml_id'] }``
+        **Synopsis**: ``_get_external_ids() -> { 'id': ['module.external_id'] }``
 
         :return: map of ids to the list of their fully qualified External IDs
                  in the form ``module.key``, or an empty list when there's no External
