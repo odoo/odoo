@@ -67,6 +67,7 @@
                         </div>
                         <field name="category_ids" widget="many2many_tags" placeholder="Categories" context="{'default_channel_id': active_id}"
                             domain="[('channel_id','=', active_id)]"/>
+                        <field name="tag_ids" widget="many2many_tags" placeholder="Tags"/>
                         <notebook colspan="4">
                             <page string="General">
                                 <group>
