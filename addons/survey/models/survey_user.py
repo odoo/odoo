@@ -45,6 +45,8 @@ class SurveyUserInput(models.Model):
     test_entry = fields.Boolean(readonly=True)
     # identification and access
     token = fields.Char('Identification token', default=lambda self: str(uuid.uuid4()), readonly=True, required=True, copy=False)
+    # no unique constraint, as it identifies a pool of attempts
+    invite_token = fields.Char('Invite token', readonly=True, copy=False)
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     email = fields.Char('E-mail', readonly=True)
 
@@ -94,6 +96,10 @@ class SurveyUserInput(models.Model):
         self.search([('input_type', '=', 'manually'),
                      ('state', '=', 'new'),
                      ('create_date', '<', an_hour_ago)]).unlink()
+
+    @api.model
+    def _generate_invite_token(self):
+        return str(uuid.uuid4())
 
     @api.multi
     def action_resend(self):
