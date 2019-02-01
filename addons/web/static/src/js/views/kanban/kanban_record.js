@@ -52,6 +52,7 @@ var KanbanRecord = Widget.extend({
         this.editable = options.editable;
         this.deletable = options.deletable;
         this.read_only_mode = options.read_only_mode;
+        this.opensFromM2O = options.opensFromM2O;
         this.qweb = options.qweb;
         this.subWidgets = {};
 
@@ -345,6 +346,10 @@ var KanbanRecord = Widget.extend({
         this.$el.addClass('o_kanban_record').attr("tabindex", 0);
         this.$el.attr('role', 'article');
         this.$el.data('record', this);
+        // forcefully add class oe_kanban_global_click to have clickable record always to select it
+        if (this.opensFromM2O) {
+            this.$el.addClass('oe_kanban_global_click');
+        }
         if (this.$el.hasClass('oe_kanban_global_click') ||
             this.$el.hasClass('oe_kanban_global_click_edit')) {
             this.$el.on('click', this._onGlobalClick.bind(this));
