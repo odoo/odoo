@@ -1783,6 +1783,7 @@ class MailThread(models.AbstractModel):
                                             should not be used as partner emails but it could be the case due to some
                                             strange manipulation
         """
+        record = None
         if res_model is None:
             res_model = self._name
         if res_id is None and self.ids:
@@ -1818,7 +1819,10 @@ class MailThread(models.AbstractModel):
             if not partner_id:
                 partner_id = self._search_on_partner(email_address)
             if not partner_id and force_create:
-                partner_id = self.env['res.partner'].name_create(contact)[0]
+                Partner = self.env['res.partner']
+                if record and hasattr(record, 'company_id'):
+                    Partner = Partner.with_context({'default_company_id': record.company_id.id})
+                partner_id = Partner.name_create(contact)[0]
             partner_ids.append(partner_id)
         return partner_ids
 
