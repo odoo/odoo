@@ -567,6 +567,9 @@ system. Available semantic components are:
   ``password``
     indicates that a :class:`~odoo.fields.Char` field stores a password and
     that its data shouldn't be displayed
+  ``kanban_view_ref``
+    for opening specific kanban view when selecting records from m2o/m2m in mobile
+    environment
 
 .. todo:: classes for forms
 
@@ -1106,6 +1109,11 @@ Possible children of the view element are:
     self-explanatory
   ``read_only_mode``
     self-explanatory
+  ``selection_mode``
+    set to true when kanban view is opened in mobile environment from m2o/m2m field
+    for selecting records.
+
+    .. note:: clicking on m2o/m2m field in mobile environment opens kanban view
 
 
     .. rubric:: buttons and fields
