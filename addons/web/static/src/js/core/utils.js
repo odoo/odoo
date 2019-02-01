@@ -611,7 +611,7 @@ var utils = {
      * @param {boolean} casesensetive
      * @returns {string} ASCII string
      */
-    unaccent: function (str, casesensetive=false) {
+    unaccent: function (str, casesensetive) {
         str = str.replace(/[^\u0000-\u007E]/g, function (accented) {
             return diacriticsMap[accented] || accented;
         });
