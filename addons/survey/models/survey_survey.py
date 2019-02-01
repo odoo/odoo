@@ -171,7 +171,7 @@ class Survey(models.Model):
         return super(Survey, self).copy_data(default)
 
     @api.multi
-    def _create_answer(self, user=False, partner=False, email=False, test_entry=False, **additional_vals):
+    def _create_answer(self, user=False, partner=False, email=False, test_entry=False, check_attempts=True, **additional_vals):
         """ Main entry point to get a token back or create a new one. This method
         does check for current user access in order to explicitely validate
         security.
@@ -188,7 +188,8 @@ class Survey(models.Model):
             if partner and not user and partner.user_ids:
                 user = partner.user_ids[0]
 
-            survey._check_answer_creation(user, partner, email, test_entry=test_entry)
+            invite_token = additional_vals.pop('invite_token', False)
+            survey._check_answer_creation(user, partner, email, test_entry=test_entry, check_attempts=check_attempts, invite_token=invite_token)
             answer_vals = {
                 'survey_id': survey.id,
                 'test_entry': test_entry,
@@ -203,13 +204,21 @@ class Survey(models.Model):
             else:
                 answer_vals['email'] = email
 
+            if invite_token:
+                answer_vals['invite_token'] = invite_token
+            elif survey.is_attempts_limited and survey.access_mode != 'public':
+                # attempts limited: create a new invite_token
+                # exception made for 'public' access_mode since the attempts pool is global because answers are
+                # created every time the user lands on '/start'
+                answer_vals['invite_token'] = self.env['survey.user_input']._generate_invite_token()
+
             answer_vals.update(additional_vals)
             answers += answers.create(answer_vals)
 
         return answers
 
     @api.multi
-    def _check_answer_creation(self, user, partner, email, test_entry=False):
+    def _check_answer_creation(self, user, partner, email, test_entry=False, check_attempts=True, invite_token=False):
         """ Ensure conditions to create new tokens are met. """
         self.ensure_one()
         if test_entry:
@@ -229,7 +238,7 @@ class Survey(models.Model):
                     raise UserError(_('Creating token for external people is not allowed for surveys requesting authentication.'))
             if self.access_mode == 'internal' and (not user or not user.has_group('base.group_user')):
                 raise UserError(_('Creating token for anybody else than employees is not allowed for internal surveys.'))
-            if not self._has_attempts_left(partner or (user and user.partner_id), email):
+            if check_attempts and not self._has_attempts_left(partner or (user and user.partner_id), email, invite_token):
                 raise UserError(_('No attempts left.'))
 
     @api.model
@@ -505,16 +514,16 @@ class Survey(models.Model):
         return action
 
     @api.multi
-    def _has_attempts_left(self, partner, email):
+    def _has_attempts_left(self, partner, email, invite_token):
         self.ensure_one()
 
         if (self.access_mode != 'public' or self.users_login_required) and self.is_attempts_limited:
-            return self._get_number_of_attempts_lefts(partner, email) > 0
+            return self._get_number_of_attempts_lefts(partner, email, invite_token) > 0
 
         return True
 
     @api.multi
-    def _get_number_of_attempts_lefts(self, partner, email):
+    def _get_number_of_attempts_lefts(self, partner, email, invite_token):
         """ Returns the number of attempts left. """
         self.ensure_one()
 
@@ -528,6 +537,9 @@ class Survey(models.Model):
             domain = expression.AND([domain, [('partner_id', '=', partner.id)]])
         else:
             domain = expression.AND([domain, [('email', '=', email)]])
+
+        if invite_token:
+            domain = expression.AND([domain, [('invite_token', '=', invite_token)]])
 
         return self.attempts_limit - self.env['survey.user_input'].search_count(domain)
 

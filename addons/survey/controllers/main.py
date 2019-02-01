@@ -165,7 +165,10 @@ class Survey(http.Controller):
             return werkzeug.utils.redirect("/")
 
         try:
-            retry_answer_sudo = survey_sudo._create_answer(user=request.env.user, partner=answer_sudo.partner_id, email=answer_sudo.email)
+            retry_answer_sudo = survey_sudo._create_answer(user=request.env.user, partner=answer_sudo.partner_id, email=answer_sudo.email, invite_token=answer_sudo.invite_token, **{
+                'input_type': answer_sudo.input_type,
+                'deadline': answer_sudo.deadline,
+            })
         except:
             return werkzeug.utils.redirect("/")
         return request.redirect('/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=retry_answer_sudo.token)))
@@ -356,7 +359,7 @@ class Survey(http.Controller):
             return {}
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
-        if not survey_sudo._has_attempts_left(answer_sudo.partner_id, answer_sudo.email):
+        if not survey_sudo._has_attempts_left(answer_sudo.partner_id, answer_sudo.email, answer_sudo.invite_token):
             # prevent cheating with users creating multiple 'user_input' before their last attempt
             return {}
 
