@@ -5,9 +5,8 @@ var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
-var ListController = require('web.ListController');
-var ListView = require('web.ListView');
 var view_registry = require('web.view_registry');
+var selectCreateControllers = require('web.select_create_controllers');
 
 var _t = core._t;
 
@@ -279,26 +278,6 @@ var FormViewDialog = ViewDialog.extend({
     },
 });
 
-var SelectCreateListController = ListController.extend({
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Override to select the clicked record instead of opening it
-     *
-     * @override
-     * @private
-     */
-    _onOpenRecord: function (ev) {
-        var selectedRecord = this.model.get(ev.data.id);
-        this.trigger_up('select_record', {
-            id: selectedRecord.res_id,
-            display_name: selectedRecord.data.display_name,
-        });
-    },
-});
-
 /**
  * Search dialog (displays a list of records and permits to create a new one by switching to a form view)
  */
@@ -313,6 +292,15 @@ var SelectCreateDialog = ViewDialog.extend({
         selection_changed: function (event) {
             event.stopPropagation();
             this.$footer.find(".o_select_button").prop('disabled', !event.data.selection.length);
+        },
+        field_changed: function (ev) {
+            ev.stopPropagation();
+        },
+        switch_view: function (ev) {
+            ev.stopPropagation();
+        },
+        do_action: function (ev) {
+            ev.stopPropagation();
         },
     }),
 
@@ -338,12 +326,16 @@ var SelectCreateDialog = ViewDialog.extend({
         }
         var self = this;
         var _super = this._super.bind(this);
-        return this.loadViews(this.res_model, this.context, [[false, 'list'], [false, 'search']], {})
+        var viewType = config.device.isMobile ? 'kanban' : 'list';
+        var viewRefID = config.device.isMobile ?
+            (this.options.kanban_view_ref && JSON.parse(this.options.kanban_view_ref) || false) :
+            (this.options.tree_view_ref && JSON.parse(this.options.tree_view_ref) || false);
+        return this.loadViews(this.res_model, this.context, [[viewRefID, viewType], [false, 'search']], {})
             .then(this.setup.bind(this))
             .then(function (fragment) {
                 self.opened().then(function () {
                     dom.append(self.$el, fragment, {
-                        callbacks: [{widget: self.listController}],
+                        callbacks: [{widget: self.viewController}],
                         in_DOM: true,
                     });
                     self.set_buttons(self.__buttons);
@@ -360,29 +352,58 @@ var SelectCreateDialog = ViewDialog.extend({
         if (this.initialIDs) {
             domain = domain.concat([['id', 'in', this.initialIDs]]);
         }
-        var listView = new ListView(fieldsViews.list, _.extend({
+        var viewType = config.device.isMobile ? 'kanban' : 'list';
+        var ViewClass = view_registry.get(viewType);
+        var viewOptions = {};
+        if (viewType === 'list') { // add listview specific options
+            _.extend(viewOptions, {
+                hasSelectors: !this.options.disable_multiple_selection,
+                readonly: true,
+
+            }, this.options.list_view_options);
+        }
+        if (viewType === 'kanban') {
+            _.extend(viewOptions, {
+                noDefaultGroupby: true,
+                selectionMode: this.options.selectionMode || false,
+            });
+        }
+        var View = new ViewClass(fieldsViews[viewType], _.extend(viewOptions, {
             action: {
                 controlPanelFieldsView: fieldsViews.search,
+                help: _.str.sprintf("<p>%s</p>", _t("No records found!")),
             },
             action_buttons: false,
             dynamicFilters: this.options.dynamicFilters,
             context: this.context,
             domain: domain,
-            hasSelectors: !this.options.disable_multiple_selection,
             modelName: this.res_model,
-            readonly: true,
             withBreadcrumbs: false,
             withSearchPanel: false,
-        }, this.options.list_view_options));
-        listView.setController(SelectCreateListController);
-        return listView.getController(this).then(function (controller) {
-            self.listController = controller;
+        }));
+        var selectCreateController = config.device.isMobile ?
+            selectCreateControllers.SelectCreateKanbanController :
+            selectCreateControllers.SelectCreateListController;
+
+        View.setController(selectCreateController);
+        return View.getController(this).then(function (controller) {
+            self.viewController = controller;
             // render the footer buttons
             self.__buttons = [{
                 text: _t("Cancel"),
                 classes: 'btn-secondary o_form_button_cancel',
                 close: true,
             }];
+            if (self.options.selectionMode) {
+                self.__buttons.unshift({
+                    text: _t("Clear"),
+                    classes: 'btn-secondary o_clear_button',
+                    close: true,
+                    click: function () {
+                        self.on_clear();
+                    },
+                });
+            }
             if (!self.options.no_create) {
                 self.__buttons.unshift({
                     text: _t("Create"),
@@ -397,7 +418,7 @@ var SelectCreateDialog = ViewDialog.extend({
                     disabled: true,
                     close: true,
                     click: function () {
-                        var records = self.listController.getSelectedRecords();
+                        var records = self.viewController.getSelectedRecords();
                         var values = _.map(records, function (record) {
                             return {
                                 id: record.res_id,
@@ -408,7 +429,7 @@ var SelectCreateDialog = ViewDialog.extend({
                     },
                 });
             }
-            return self.listController.appendTo(fragment);
+            return self.viewController.appendTo(fragment);
         }).then(function () {
             return fragment;
         });

@@ -393,6 +393,7 @@ var FieldMany2One = AbstractField.extend({
             initial_view: view,
             disable_multiple_selection: true,
             no_create: !self.can_create,
+            kanban_view_ref: this.attrs.kanban_view_ref,
             on_selected: function (records) {
                 self.reinitialize(records[0]);
                 self.activate();
@@ -1750,6 +1751,7 @@ var FieldMany2Many = FieldX2Many.extend({
             title: _t("Add: ") + this.string,
             no_create: this.nodeOptions.no_create || !this.activeActions.create,
             fields_view: this.attrs.views.form,
+            kanban_view_ref: this.attrs.kanban_view_ref,
             on_selected: function (records) {
                 var resIDs = _.pluck(records, 'id');
                 var newIDs = _.difference(resIDs, self.value.res_ids);

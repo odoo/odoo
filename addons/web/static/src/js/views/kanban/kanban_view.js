@@ -70,6 +70,7 @@ var KanbanView = BasicView.extend({
             editable: activeActions.edit,
             deletable: activeActions.delete,
             read_only_mode: params.readOnlyMode,
+            selectionMode: params.selectionMode,
         };
         this.rendererParams.quickCreateEnabled = this._isQuickCreateEnabled();
         this.rendererParams.readOnlyMode = params.readOnlyMode;
