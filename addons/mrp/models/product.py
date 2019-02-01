@@ -42,7 +42,7 @@ class ProductTemplate(models.Model):
     @api.multi
     def action_view_mos(self):
         action = self.env.ref('mrp.mrp_production_report').read()[0]
-        action['domain'] = [('state', '=', 'done'), '&', ('product_tmpl_id', 'in', self.ids)]
+        action['domain'] = [('state', '=', 'done'), ('product_tmpl_id', 'in', self.ids)]
         action['context'] = {
             'search_default_last_year_mo_order': 1,
             'search_default_status': 1, 'search_default_scheduled_month': 1,
@@ -100,7 +100,7 @@ class ProductProduct(models.Model):
     @api.multi
     def action_view_mos(self):
         action = self.env.ref('mrp.mrp_production_report').read()[0]
-        action['domain'] = [('state', '=', 'done'), '&', ('product_id', 'in', self.ids)]
+        action['domain'] = [('state', '=', 'done'), ('product_id', 'in', self.ids)]
         action['context'] = {
             'search_default_last_year_mo_order': 1,
             'search_default_status': 1, 'search_default_scheduled_month': 1,
