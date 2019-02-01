@@ -25,6 +25,7 @@ Share and Publish Videos, Presentations and Documents'
     'data': [
         'views/assets.xml',
         'views/res_config_settings_views.xml',
+        'views/website_slides_templates_homepage.xml',
         'views/website_slides_templates.xml',
         'views/website_slides_embed_templates.xml',
         'views/slide_slide_views.xml',
