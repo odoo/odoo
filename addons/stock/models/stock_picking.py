@@ -737,7 +737,7 @@ class Picking(models.Model):
                             flag = quant.package_id == ops.package_id
                         else:
                             flag = not quant.package_id.id
-                        flag = flag and (ops.owner_id.id == quant.owner_id.id)
+                        flag = flag and (ops.owner_id.id == quant.owner_id.id) and (ops.location_id.id == quant.location_id.id)
                         if flag:
                             if not lot_qty:
                                 max_qty_on_link = min(quant.qty, qty_to_assign)
