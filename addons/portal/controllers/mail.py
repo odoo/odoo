@@ -13,10 +13,15 @@ from odoo.addons.mail.controllers.main import MailController
 from odoo.exceptions import AccessError
 
 
-def _has_token_access(res_model, res_id, token=''):
+def _check_special_access(res_model, res_id, token='', _hash='', pid=False):
     record = request.env[res_model].browse(res_id).sudo()
-    token_field = request.env[res_model]._mail_post_token_field
-    return (token and record and consteq(record[token_field], token))
+    if token:  # Token Case: token is the global one of the document
+        token_field = request.env[res_model]._mail_post_token_field
+        return (token and record and consteq(record[token_field], token))
+    elif _hash and pid:  # Signed Token Case: hash implies token is signed by partner pid
+        return consteq(_hash, record._sign_token(pid))
+    else:
+        raise Forbidden()
 
 
 def _message_post_helper(res_model, res_id, message, token='', nosubscribe=True, **kw):
@@ -46,28 +51,29 @@ def _message_post_helper(res_model, res_id, message, token='', nosubscribe=True,
         The rest of the kwargs are passed on to message_post()
     """
     record = request.env[res_model].browse(res_id)
+
+    # check if user can post
+    if _check_special_access(res_model, res_id, token=token, _hash=kw.get('hash'), pid=kw.get('pid')):
+        record = record.sudo()
+    else:
+        raise Forbidden()
+
+    # deduce author of message
     author_id = request.env.user.partner_id.id if request.env.user.partner_id else False
-    # Token Case: token required to post message as document customer (if not logged) or as itself even if user has not the access
+
+    # Token Case: author is document customer (if not logged) or itself even if user has not the access
     if token:
-        access_as_sudo = _has_token_access(res_model, res_id, token=token)
-        if access_as_sudo:
-            record = record.sudo()
-            if request.env.user._is_public():
-                # TODO : After adding the pid and sign_token in access_url when send invoice by email, remove this line
-                # TODO : Author must be Public User (to rename to 'Anonymous')
-                author_id = record.partner_id.id if hasattr(record, 'partner_id') and record.partner_id.id else author_id
-            else:
-                if not author_id:
-                    raise NotFound()
+        if request.env.user._is_public():
+            # TODO : After adding the pid and sign_token in access_url when send invoice by email, remove this line
+            # TODO : Author must be Public User (to rename to 'Anonymous')
+            author_id = record.partner_id.id if hasattr(record, 'partner_id') and record.partner_id.id else author_id
         else:
-            raise Forbidden()
-    # Signed Token Case: hash implies token is signed by partner. So author_id is forced
+            if not author_id:
+                raise NotFound()
+    # Signed Token Case: author_id is forced
     elif kw.get('hash') and kw.get('pid'):
-        if consteq(kw['hash'], record._sign_token(int(kw['pid']))):
-            record = record.sudo()
-            author_id = kw.get('pid')
-        else:
-            raise Forbidden()
+        author_id = kw.get('pid')
+
     kw.pop('csrf_token', None)
     kw.pop('attachment_ids', None)
     kw.pop('hash', None)
@@ -123,7 +129,7 @@ class PortalChatter(http.Controller):
         # Check access
         Message = request.env['mail.message']
         if kw.get('token'):
-            access_as_sudo = _has_token_access(res_model, res_id, token=kw.get('token'))
+            access_as_sudo = _check_special_access(res_model, res_id, token=kw.get('token'))
             if not access_as_sudo:  # if token is not correct, raise Forbidden
                 raise Forbidden()
             # Non-employee see only messages with not internal subtype (aka, no internal logs)
