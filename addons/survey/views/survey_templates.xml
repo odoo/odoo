@@ -33,7 +33,7 @@
                             <t t-else="">
                                 <div>Unfortunately, you have failed the test.</div>
                                 <t t-if="survey.is_attempts_limited">
-                                    <t t-set="attempts_left" t-value="survey._get_number_of_attempts_lefts(answer.partner_id, answer.email)" />
+                                    <t t-set="attempts_left" t-value="survey._get_number_of_attempts_lefts(answer.partner_id, answer.email, answer.invite_token)" />
                                     <t t-if="attempts_left > 0">
                                         <p><span>Number of attemps left</span>: <span t-esc="attempts_left"></span></p>
                                         <p>
