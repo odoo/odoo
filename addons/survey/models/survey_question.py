@@ -29,8 +29,14 @@ class SurveyQuestion(models.Model):
         Technical note:
 
         survey.question is also the model used for the survey's pages (with the "is_page" field set to True).
-        This allows to put all the pages and questions together in a o2m field on the view side and
-        easily reorganize your survey by dragging the items around.
+
+        A page corresponds to a "section" in the interface, and the fact that it separates the survey in
+        actual pages in the interface depends on the "questions_layout" parameter on the survey.survey model.
+        Pages are also used when randomizing questions. The randomization can happen within a "page".
+
+        Using the same model for questions and pages allows to put all the pages and questions together in a o2m field
+        (see survey.survey.question_and_page_ids) on the view side and easily reorganize your survey by dragging the
+        items around.
 
         It also removes on level of encoding by directly having 'Add a page' and 'Add a question'
         links on the tree view of questions, enabling a faster encoding.
@@ -58,6 +64,10 @@ class SurveyQuestion(models.Model):
     sequence = fields.Integer('Sequence', default=10)
     # Question
     is_page = fields.Boolean('Is a page?')
+    questions_selection = fields.Selection(related='survey_id.questions_selection', readonly=True,
+        help="If randomized is selected, add the number of random questions next to the section.")
+    random_questions_count = fields.Integer('Random questions count', default=1,
+        help="Used on randomized sections to take X random questions from all the questions of that section.")
     title = fields.Char('Title', required=True, translate=True)
     question = fields.Char('Question', related="title")
     description = fields.Html('Description', help="Use this field to add additional explanations about your question", translate=True)

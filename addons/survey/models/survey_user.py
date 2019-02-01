@@ -49,20 +49,26 @@ class SurveyUserInput(models.Model):
     email = fields.Char('E-mail', readonly=True)
 
     # Displaying data
-    last_displayed_page_id = fields.Many2one('survey.question', string='Last displayed page')
+    last_displayed_page_id = fields.Many2one('survey.question', string='Last displayed question/page')
     # answers
     user_input_line_ids = fields.One2many('survey.user_input_line', 'user_input_id', string='Answers', copy=True)
+    # Pre-defined questions
+    question_ids = fields.Many2many('survey.question', string='Predefined Questions', readonly=True)
     deadline = fields.Datetime('Deadline', help="Datetime until customer can open the survey and submit answers")
 
     quizz_score = fields.Float("Score for the quiz (%)", compute="_compute_quizz_score", default=0.0)
     # Stored for performance reasons while displaying results page
-    quizz_passed = fields.Boolean('Quizz Passed', compute='_compute_quizz_passed', store=True)
+    quizz_passed = fields.Boolean('Quizz Passed', compute='_compute_quizz_passed', store=True, compute_sudo=True)
 
     @api.multi
-    @api.depends('user_input_line_ids.answer_score', 'survey_id.total_possible_score')
+    @api.depends('user_input_line_ids.answer_score', 'user_input_line_ids.question_id')
     def _compute_quizz_score(self):
         for user_input in self:
-            total_possible_score = user_input.survey_id.total_possible_score
+            total_possible_score = sum([
+                answer_score if answer_score > 0 else 0
+                for answer_score in user_input.question_ids.mapped('labels_ids.answer_score')
+            ])
+
             if total_possible_score == 0:
                 user_input.quizz_score = 0
             else:

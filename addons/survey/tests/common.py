@@ -13,7 +13,6 @@ survey_new_test_user = partial(new_test_user, context={'mail_create_nolog': True
 
 
 class SurveyCase(common.SavepointCase):
-
     def setUp(self):
         super(SurveyCase, self).setUp()
 
@@ -45,7 +44,7 @@ class SurveyCase(common.SavepointCase):
 
         self.user_emp = survey_new_test_user(
             self.env, name='Eglantine Employee', login='user_emp', email='employee@example.com',
-            groups='base.group_user'
+            groups='base.group_user', password='user_emp'
         )
 
         self.user_portal = survey_new_test_user(
@@ -149,8 +148,13 @@ class SurveyCase(common.SavepointCase):
     def _add_question(self, page, name, qtype, **kwargs):
         constr_mandatory = kwargs.pop('constr_mandatory', True)
         constr_error_msg = kwargs.pop('constr_error_msg', 'TestError')
+
+        sequence = kwargs.pop('sequence', False)
+        if not sequence:
+            sequence = page.question_ids[-1].sequence + 1 if page.question_ids else page.sequence + 1
+
         base_qvalues = {
-            'sequence': page.question_ids[-1].sequence + 1 if page.question_ids else page.sequence + 1,
+            'sequence': sequence,
             'title': name,
             'question_type': qtype,
             'constr_mandatory': constr_mandatory,
@@ -158,8 +162,11 @@ class SurveyCase(common.SavepointCase):
         }
         if qtype in ('simple_choice', 'multiple_choice'):
             base_qvalues['labels_ids'] = [
-                (0, 0, {'value': label['value'], 'answer_score': label.get('answer_score', 0)})
-                for label in kwargs.pop('labels')
+                (0, 0, {
+                    'value': label['value'],
+                    'answer_score': label.get('answer_score', 0),
+                    'is_correct': label.get('is_correct', False)
+                }) for label in kwargs.pop('labels')
             ]
         elif qtype == 'matrix':
             base_qvalues['matrix_subtype'] = kwargs.pop('matrix_subtype', 'simple')
@@ -201,6 +208,15 @@ class SurveyCase(common.SavepointCase):
         base_alvals[answer_fname] = answer_value
         base_alvals.update(kwargs)
         return self.env['survey.user_input_line'].create(base_alvals)
+
+    def _access_start(self, survey):
+        return self.url_open('/survey/start/%s' % survey.access_token)
+
+    def _access_page(self, survey, token):
+        return self.url_open('/survey/fill/%s/%s' % (survey.access_token, token))
+
+    def _access_submit(self, survey, token, post_data):
+        return self.url_open('/survey/submit/%s/%s' % (survey.access_token, token), data=post_data)
 
     def _find_csrf_token(self, text):
         csrf_token_re = re.compile("(input.+csrf_token.+value=\")([_a-zA-Z0-9]{51})", re.MULTILINE)

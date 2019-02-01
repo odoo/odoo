@@ -49,16 +49,17 @@
                     </group>
                     <notebook>
                         <page string="Edit Pages and Questions">
-                            <field name="question_and_page_ids" mode="tree" context="{'default_survey_id': active_id}" class="o_survey_questions_and_pages">
+                            <field name="question_and_page_ids" mode="tree" context="{'default_survey_id': active_id, 'default_questions_selection': questions_selection}" class="o_survey_questions_and_pages">
                                 <tree decoration-bf="is_page==True">
                                     <control>
-                                        <create string="Add a section" context="{'default_is_page': True}"/>
+                                        <create string="Add a section" context="{'default_is_page': True, 'default_questions_selection': questions_selection}"/>
                                         <create string="Add a question" context="{'default_is_page': False}"/>
                                     </control>
                                     <field name="sequence" widget="handle"/>
                                     <field name="title"/>
                                     <field name="is_page" invisible="1"/>
-                                    <field name="question_ids"/>
+                                    <field name="questions_selection" invisible="1"/>
+                                    <field name="random_questions_count" attrs="{'column_invisible': [('parent.questions_selection', '=', 'all')], 'invisible': [('is_page', '=', False)]}" />
                                 </tree>
                             </field>
                             <group string="Description" name="description" >
@@ -74,8 +75,10 @@
                                 </group>
                                 <group string="Questions" name="questions">
                                     <field name="users_can_go_back" string="Enable back button"/>
+                                    <field name="questions_layout" widget="radio" />
                                     <field name="is_time_limited" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}" string="Time limit" />
                                     <field name="time_limit" widget="float_time" nolabel="1" attrs="{'invisible': [('is_time_limited', '=', False)]}" /><span attrs="{'invisible': [('is_time_limited', '=', False)]}"> minutes</span>
+                                    <field name="questions_selection" widget="radio" />
                                 </group>
                                 <group string="Scoring Informations" name="scoring">
                                     <field name="scoring_type" widget="radio" />
