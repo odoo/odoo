@@ -30,6 +30,14 @@ odoo.define('website_rating.thread', function(require) {
 
         init: function(parent, options){
             this._super.apply(this, arguments);
+
+            // default options
+            this.options = _.defaults(this.options, {
+                'default_message': false,
+                'default_message_id': false,
+                'default_rating_value': false,
+                'force_submit_url': false,
+            });
             // star input widget
             this.labels = {
                 '0': "",
