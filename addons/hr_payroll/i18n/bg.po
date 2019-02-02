@@ -3,13 +3,14 @@
 # * hr_payroll
 # 
 # Translators:
+# Boris Stefanov <borkata@clearlypro.eu>, 2019
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2018-09-10 16:08+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>\n"
+"PO-Revision-Date: 2019-01-22 13:25+0000\n"
+"Last-Translator: Boris Stefanov <borkata@clearlypro.eu>\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +31,7 @@ msgid ""
 "* If the payslip is under verification, the status is 'Waiting'.             \n"
 "* If the payslip is confirmed then status is set to 'Done'.            \n"
 "* When user cancel payslip the status is 'Rejected'."
-msgstr ""
+msgstr "* Когато фишът се създаде, статусът му е 'Чернова'.            \n* Ако фишът се проверява, статусът му е 'Чакащ одобрение'.             \n* Ако фишът се потвърди, статусът му става 'Готов'.            \n* Когато потребителят откаже фиш, статусът му е 'Отказан'."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -660,7 +661,7 @@ msgid ""
 "It is used in computation for percentage and fixed amount.For e.g. A rule "
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
-msgstr ""
+msgstr "Използва се при изчисление на процент и фиксирана сума. За например правило A - Ваучери за Храна фиксираната сума от 1 лв. на отработен ден ще се дефинира така:  worked_days.WORK100.number_of_days."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
@@ -1066,7 +1067,7 @@ msgstr "Обезщетение"
 #: code:addons/hr_payroll/hr_payroll.py:315
 #, python-format
 msgid "Refund Payslip"
-msgstr ""
+msgstr "Възстанови Фиш"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:306
@@ -1403,7 +1404,7 @@ msgstr "report.hr_payroll.report_contributionregister"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslip
 msgid "report.hr_payroll.report_payslip"
-msgstr ""
+msgstr "report.hr_payroll.report_payslip"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
