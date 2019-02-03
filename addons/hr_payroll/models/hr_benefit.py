@@ -21,6 +21,7 @@ class HrBenefit(models.Model):
     date_start = fields.Datetime(required=True, string='From')
     date_stop = fields.Datetime(string='To')
     duration = fields.Float(compute='_compute_duration', inverse='_inverse_duration', store=True, string="Period")
+    contract_id = fields.Many2one('hr.contract', string="Contract", required=True)
     benefit_type_id = fields.Many2one('hr.benefit.type')
     color = fields.Integer(related='benefit_type_id.color', readonly=True)
     state = fields.Selection([
@@ -190,6 +191,7 @@ class HrBenefit(models.Model):
                     'name': benefit.name,
                     'employee_id': benefit.employee_id.id,
                     'benefit_type_id': benefit.benefit_type_id.id,
+                    'contract_id': benefit.contract_id.id,
                 }
                 benefit_state = benefit.state
                 benefit.unlink()
@@ -256,7 +258,7 @@ class HrBenefit(models.Model):
                 'date_to': end.date(),
                 'hour_from':start.hour + start.minute/60,
                 'hour_to': end.hour + end.minute/60,
-                'calendar_id': benefit.employee_id.resource_calendar_id.id,
+                'calendar_id': benefit.contract_id.resource_calendar_id.id,
                 'day_period': 'morning' if end.hour <= 12 else 'afternoon',
                 'resource_id': benefit.employee_id.resource_id.id,
                 'benefit_type_id': benefit.benefit_type_id.id,

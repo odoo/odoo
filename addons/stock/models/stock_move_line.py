@@ -457,6 +457,16 @@ class StockMoveLine(models.Model):
             'date': fields.Datetime.now(),
         })
 
+    def _reservation_is_updatable(self, quantity, reserved_quant):
+        self.ensure_one()
+        if (self.product_id.tracking != 'serial' and
+                self.location_id.id == reserved_quant.location_id.id and
+                self.lot_id.id == reserved_quant.lot_id.id and
+                self.package_id.id == reserved_quant.package_id.id and
+                self.owner_id.id == reserved_quant.owner_id.id):
+            return True
+        return False
+
     def _log_message(self, record, move, template, vals):
         data = vals.copy()
         if 'lot_id' in vals and vals['lot_id'] != move.lot_id.id:

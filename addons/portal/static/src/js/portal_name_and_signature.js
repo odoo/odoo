@@ -19,6 +19,7 @@ var NameAndSignature = Widget.extend({
         'input .o_portal_sign_name_input': '_onInputSignName',
         // signature
         'click .o_portal_sign_signature': '_onClickSignature',
+        'change .o_portal_sign_signature': '_onChangeSignature',
         // draw
         'click .o_portal_sign_draw_button': '_onClickSignDrawButton',
         'click .o_portal_sign_draw_clear a': '_onClickSignDrawClear',
@@ -180,7 +181,7 @@ var NameAndSignature = Widget.extend({
      */
     isSignatureEmpty: function () {
         var signature = this.$signatureField.jSignature('getData');
-        return signature ? this.emptySignature === signature : true;
+        return signature && this.emptySignature ? this.emptySignature === signature : true;
     },
     /**
      * (Re)initializes the signature area:
@@ -390,6 +391,7 @@ var NameAndSignature = Widget.extend({
                     height
                 );
                 _.extend(context, ignoredContext);
+                self.trigger_up('signature_changed');
             }, 0);
         };
         image.src = imgSrc;
@@ -431,6 +433,29 @@ var NameAndSignature = Widget.extend({
                 $existingButtons.eq(i).find('img').attr('src', imgSrc);
             }
         }, 0);
+    },
+    /**
+     * Waits for the signature to be not empty and triggers up the event
+     * `signature_changed`.
+     * This is necessary because some methods of jSignature are async but
+     * they don't return a promise and don't trigger any event.
+     *
+     * @private
+     * @param {Deferred} [def=Deferred] - Deferred that will be returned by
+     *  the method and resolved when the signature is not empty anymore.
+     * @returns {Deferred}
+     */
+    _waitForSignatureNotEmpty: function (def) {
+        def = def || $.Deferred();
+        if (!this.isSignatureEmpty()) {
+            this.trigger_up('signature_changed');
+            def.resolve();
+        } else {
+            // Use the existing def to prevent the method from creating a new
+            // one at every loop.
+            setTimeout(this._waitForSignatureNotEmpty.bind(this, def), 10);
+        }
+        return def;
     },
 
     //----------------------------------------------------------------------
@@ -520,6 +545,15 @@ var NameAndSignature = Widget.extend({
         // open file upload automatically (saves 1 click)
         this.$loadFile.find('input').click();
         this.setMode('load');
+    },
+    /**
+     * Triggers up the signature change event.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onChangeSignature: function (ev) {
+        this.trigger_up('signature_changed');
     },
     /**
      * Handles change on load file input: displays the loaded image if the

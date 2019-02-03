@@ -39,9 +39,9 @@ class HrPayslip(models.Model):
             vals['journal_id'] = self.env.context.get('journal_id')
         return super(HrPayslip, self).create(vals)
 
-    @api.onchange('contract_id')
-    def onchange_contract(self):
-        super(HrPayslip, self).onchange_contract()
+    @api.onchange('employee_id', 'contract_id', 'date_from', 'date_to')
+    def onchange_employee(self):
+        super(HrPayslip, self).onchange_employee()
         self.journal_id = self.contract_id.journal_id.id or self.default_get(['journal_id'])['journal_id']
 
     @api.multi

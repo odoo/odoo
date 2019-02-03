@@ -509,6 +509,7 @@ class MrpProduction(models.Model):
         data = {
             'sequence': bom_line.sequence,
             'name': self.name,
+            'reference': self.name,
             'date': self.date_planned_start,
             'date_expected': self.date_planned_start,
             'bom_line_id': bom_line.id,
@@ -711,10 +712,15 @@ class MrpProduction(models.Model):
             duration_expected = (operation.workcenter_id.time_start +
                                  operation.workcenter_id.time_stop +
                                  cycle_number * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)
+            if self.product_uom_id.uom_type != 'reference':
+                todo_uom = self.env['uom.uom'].search([('category_id', '=', self.product_uom_id.category_id.id), ('uom_type', '=', 'reference')]).id
+            else:
+                todo_uom = self.product_uom_id.id
             workorder = workorders.create({
                 'name': operation.name,
                 'production_id': self.id,
                 'workcenter_id': operation.workcenter_id.id,
+                'product_uom_id': todo_uom,
                 'operation_id': operation.id,
                 'duration_expected': duration_expected,
                 'state': len(workorders) == 0 and 'ready' or 'pending',
@@ -733,7 +739,7 @@ class MrpProduction(models.Model):
             moves_raw.mapped('move_line_ids').write({'workorder_id': workorder.id})
             (moves_finished + moves_raw).write({'workorder_id': workorder.id})
 
-            workorder._generate_lot_ids()
+            workorder.generate_wo_lines()
         return workorders
 
     def _check_lots(self):
