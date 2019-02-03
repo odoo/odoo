@@ -64,6 +64,7 @@ sAnimations.registry.websiteSaleDelivery = sAnimations.Class.extend({
             $computeBadge.addClass('d-none');
             $payButton.data('disabled_reasons').carrier_selection = false;
             $payButton.prop('disabled', _.contains($payButton.data('disabled_reasons'), true));
+        } else {
             console.error(result.error_message);
             $computeBadge.text(result.error_message);
             $amountDelivery.text(result.new_amount_delivery);
