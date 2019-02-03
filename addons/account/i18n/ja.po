@@ -6,7 +6,6 @@
 # NOKA Shigekazu <shigekazu.noka@gmail.com>, 2017
 # Manami Hashi <manami@roomsfor.hk>, 2017
 # ook rio <riokoko5@gmail.com>, 2017
-# Kazuki Eda <edak1209@gmail.com>, 2017
 # kent_ocean <ke.tanabe@gmail.com>, 2017
 # Masayuki Takesue <m_takesue@nifty.com>, 2017
 # Kohji Katayama <kohji.katayama@dreamyard.co.jp>, 2017
@@ -73,7 +72,7 @@ msgstr "${(object.name or '').replace('/','-')}"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name} 発注 (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name} 請求書 (Ref ${object.number or 'n/a' })"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -8233,12 +8232,12 @@ msgstr "標準"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_company_signed
 msgid "Remaining amount due in the currency of the company."
-msgstr ""
+msgstr "会社通貨での未消込額"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_signed
 msgid "Remaining amount due in the currency of the invoice."
-msgstr ""
+msgstr "請求書通貨での未消込額"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual
@@ -8486,7 +8485,7 @@ msgstr "保存"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:199
 #, python-format
 msgid "Save and New"
-msgstr ""
+msgstr "保存して新たに追加"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
