@@ -33,12 +33,12 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_tree
 msgid "#Questions"
-msgstr "#Klausimai"
+msgstr "#Klausimų"
 
 #. module: survey
 #: model:mail.template,subject:survey.email_template_survey
 msgid "${object.title}: Survey"
-msgstr ""
+msgstr "${object.title}: Apklausa"
 
 #. module: survey
 #: code:addons/survey/models/survey.py:122
@@ -78,11 +78,24 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Sveiki,<br/><br/>\n"
+"        Atliekame apklausą ir vertintume jūsų atsakymus.\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"__URL__\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Pradėti apklausą\n"
+"            </a>\n"
+"        </div>\n"
+"        Ačiū už dalyvavimą!\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-2x\" role=\"img\" aria-label=\"Numeric\" title=\"Numeric\">123..</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-2x\" role=\"img\" aria-label=\"Numeric\" title=\"Numeric\">123..</i>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -90,6 +103,8 @@ msgid ""
 "<i class=\"fa fa-align-justify fa-4x\" role=\"img\" aria-label=\"Multiple "
 "lines\" title=\"Multiple Lines\"/>"
 msgstr ""
+"<i class=\"fa fa-align-justify fa-4x\" role=\"img\" aria-label=\"Multiple "
+"lines\" title=\"Multiple Lines\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_matrix
@@ -126,6 +141,8 @@ msgid ""
 "<i class=\"fa fa-circle-o fa-lg\" role=\"img\" aria-label=\"Not checked\" "
 "title=\"Not checked\"/>"
 msgstr ""
+"<i class=\"fa fa-circle-o fa-lg\" role=\"img\" aria-label=\"Not checked\" "
+"title=\"Not checked\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -133,6 +150,8 @@ msgid ""
 "<i class=\"fa fa-dot-circle-o fa-lg\" role=\"img\" aria-label=\"Checked\" "
 "title=\"Checked\"/>"
 msgstr ""
+"<i class=\"fa fa-dot-circle-o fa-lg\" role=\"img\" aria-label=\"Checked\" "
+"title=\"Checked\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -177,6 +196,8 @@ msgid ""
 "<i class=\"fa fa-minus fa-4x\" role=\"img\" aria-label=\"Single Line\" "
 "title=\"Single Line\"/>"
 msgstr ""
+"<i class=\"fa fa-minus fa-4x\" role=\"img\" aria-label=\"Single Line\" "
+"title=\"Single Line\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -195,6 +216,9 @@ msgid ""
 "surveys</span><span class=\"badge badge-secondary only_right_radius filter-"
 "finished\">Finished surveys</span>"
 msgstr ""
+"<span class=\"badge badge-primary only_left_radius filter-all\">Visos "
+"apklausos</span><span class=\"badge badge-secondary only_right_radius "
+"filter-finished\">Atliktos apklausos</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -202,6 +226,8 @@ msgid ""
 "<span class=\"badge badge-primary only_left_radius\"><i class=\"fa fa-"
 "filter\" role=\"img\" aria-label=\"Filter\" title=\"Filter\"/></span>"
 msgstr ""
+"<span class=\"badge badge-primary only_left_radius\"><i class=\"fa fa-"
+"filter\" role=\"img\" aria-label=\"Filter\" title=\"Filter\"/></span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -210,26 +236,29 @@ msgid ""
 "surveys</span><span class=\"badge badge-primary only_right_radius filter-"
 "finished\">Finished surveys</span>"
 msgstr ""
+"<span class=\"badge badge-secondary only_left_radius filter-all\">Visos "
+"apklausos</span><span class=\"badge badge-primary only_right_radius filter-"
+"finished\">Atliktos apklausos</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_number
 msgid "<span class=\"badge badge-secondary only_left_radius\">Average </span>"
-msgstr ""
+msgstr "<span class=\"badge badge-secondary only_left_radius\">Vidutinis </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_number
 msgid "<span class=\"badge badge-secondary only_left_radius\">Maximum </span>"
-msgstr ""
+msgstr "<span class=\"badge badge-secondary only_left_radius\">Maksimalus </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_number
 msgid "<span class=\"badge badge-secondary only_left_radius\">Minimum </span>"
-msgstr ""
+msgstr "<span class=\"badge badge-secondary only_left_radius\">Minimalus </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_number
 msgid "<span class=\"badge badge-secondary only_left_radius\">Sum </span>"
-msgstr ""
+msgstr "<span class=\"badge badge-secondary only_left_radius\">Suma</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result
@@ -242,6 +271,8 @@ msgid ""
 "<span style=\"font-size:1.5em;\" class=\"fa fa-bar-chart-o float-right \" "
 "role=\"img\" aria-label=\"Chart\" title=\"Chart\"/>"
 msgstr ""
+"<span style=\"font-size:1.5em;\" class=\"fa fa-bar-chart-o float-right \" "
+"role=\"img\" aria-label=\"Chart\" title=\"Chart\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.no_result
@@ -251,12 +282,16 @@ msgid ""
 "                        </span>\n"
 "                        Sorry, No one answered this survey yet"
 msgstr ""
+"<span>\n"
+"                            <i style=\"font-size:1.8em\" class=\"fa fa-users float-right\" role=\"img\" aria-label=\"No answer\" title=\"No answer\"/>\n"
+"                        </span>\n"
+"                        Atsiprašome, dar niekas neužpildė šios apklausos."
 
 #. module: survey
 #: code:addons/survey/models/survey.py:688
 #, python-format
 msgid "A label must be attached to only one question."
-msgstr ""
+msgstr "Etiketė turi būti prisegta tik prie vieno klausimo."
 
 #. module: survey
 #: sql_constraint:survey.question:0
@@ -344,7 +379,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Add a new survey"
-msgstr ""
+msgstr "Pridėti naują apklausą"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -485,7 +520,7 @@ msgstr "Kanalai"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__child_ids
 msgid "Child Messages"
-msgstr "Vaikiniai pranešimai"
+msgstr "Dukteriniai pranešimai"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -501,7 +536,7 @@ msgstr "Rinktis..."
 #: code:addons/survey/models/survey.py:110
 #, python-format
 msgid "Click here to start survey"
-msgstr "Paspauskite čia, norėdami pradėti apklausą"
+msgstr "Norėdami pradėti apklausą, paspauskite čia"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.page
@@ -862,7 +897,7 @@ msgstr "Pamėgo"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_choice
 msgid "Filter question"
-msgstr ""
+msgstr "Filtruoti klausimą"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_3
@@ -1288,7 +1323,7 @@ msgstr "Maks. vertė"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403
 msgid "Maybe you were looking for"
-msgstr ""
+msgstr "Galbūt ieškojote"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error
@@ -1357,12 +1392,12 @@ msgstr "Kelių eilučių teksto laukelis"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Multiple choice with multiple answers"
-msgstr ""
+msgstr "Keli pasirinkimai su keliais atsakymais"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Multiple choice with one answer"
-msgstr ""
+msgstr "Keli pasirinkimai su vienu atsakymu"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1433,17 +1468,17 @@ msgstr "Kitas puslapis"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_page_form
 msgid "No pages found"
-msgstr ""
+msgstr "Puslapių nerasta"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_question_form
 msgid "No questions found"
-msgstr ""
+msgstr "Klausimų nerasta"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_label_form
 msgid "No survey labels found"
-msgstr ""
+msgstr "Apklausos etikečių nerasta"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__no_auto_thread
@@ -1453,7 +1488,7 @@ msgstr "Nėra atsakymo gijų"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_user_input_line
 msgid "No user input lines found"
-msgstr ""
+msgstr "Nerasta vartotojo įvestis"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_4
@@ -1464,7 +1499,7 @@ msgstr "Ne, aš tik išbandžiau tai"
 #: model_terms:ir.actions.act_window,help:survey.action_selected_survey_user_input
 #: model_terms:ir.actions.act_window,help:survey.action_survey_user_input
 msgid "Nobody has replied to your surveys yet"
-msgstr ""
+msgstr "Dar niekas neužpildė jūsų apklausų"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.notopen
@@ -1623,7 +1658,7 @@ msgstr "Tėvinis pranešimas"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Partially Completed"
-msgstr ""
+msgstr "Dalinai atlikta"
 
 #. module: survey
 #: selection:survey.user_input,state:0
@@ -1783,7 +1818,7 @@ msgstr "Atmesta"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__res_id
 msgid "Related Document ID"
-msgstr "Susijęs dokumento ID"
+msgstr "Susijusio dokumento ID"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__model
@@ -1852,7 +1887,7 @@ msgstr "Matricos eilutės"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_4
 msgid "Running the configuration wizards is a good way to spare time"
-msgstr "Nustatymo vedlys yra geras būdas praleisti laiką"
+msgstr "Nustatymo vedlys yra geras būdas praleisti laisvą laiką"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_1
@@ -2173,7 +2208,7 @@ msgstr "Apklausos vartotojo įvestys"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_matrix
 msgid "Survey filter"
-msgstr ""
+msgstr "Apklausos filtras"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__page_id
@@ -2205,17 +2240,17 @@ msgstr "Testas"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Test Entries"
-msgstr ""
+msgstr "Testiniai įrašai"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__test_entry
 msgid "Test Entry"
-msgstr "Testinis įrašas"
+msgstr "Įrašo testas"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Test Survey"
-msgstr "Testuoti apklausą"
+msgstr "Apklausos testas"
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
@@ -2375,7 +2410,7 @@ msgid ""
 "Emails must be separated by commas, semicolons or newline."
 msgstr ""
 "Šis gavėjų laiškų sąrašas nebus paverstas kontaktais. El. paštai turi būti "
-"atskirti, kableliais, kabliataškiais arba būti naujoje eilutėje."
+"atskirti kableliais, kabliataškiais arba būti naujoje eilutėje."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__thank_you_message
@@ -2386,7 +2421,7 @@ msgstr "Šis pranešimas bus rodomas, kai apklausa bus atlikta"
 #: code:addons/survey/models/survey.py:806
 #, python-format
 msgid "This question cannot be unanswered or skipped."
-msgstr ""
+msgstr "Šis klausimas negali būti neatsakytas ar praleistas."
 
 #. module: survey
 #: code:addons/survey/models/survey.py:489
@@ -2675,6 +2710,8 @@ msgid ""
 "YYYY-MM-DD\n"
 "                                            <i class=\"fa fa-calendar fa-2x\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
+"YYYY-MM-DD\n"
+"                                            <i class=\"fa fa-calendar fa-2x\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_1
@@ -2735,7 +2772,7 @@ msgstr "Jūs surinkote"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "ans"
-msgstr ""
+msgstr "ats"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.layout
@@ -2765,7 +2802,7 @@ msgstr "peržiūrėti atsakymus"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.403
 msgid "this page"
-msgstr ""
+msgstr "šis puslapis"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.layout
