@@ -23,9 +23,9 @@
 # David Minneci <david@numeko.it>, 2018
 # efraimbiffi <eab@odoo.com>, 2018
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
 # Martin Trigaux, 2018
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Léonie Bouchat <lbo@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -259,12 +259,12 @@ msgstr "<em>Fattura in bozza</em>"
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_kanban
 msgid "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_kanban
 msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -277,6 +277,8 @@ msgid ""
 "<i class=\"fa fa-ellipsis-v\" aria-label=\"Selection\" role=\"img\" "
 "title=\"Selection\"/>"
 msgstr ""
+"<i class=\"fa fa-ellipsis-v\" aria-label=\"Selection\" role=\"img\" "
+"title=\"Selection\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -361,6 +363,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -368,6 +373,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -851,6 +858,8 @@ msgstr ""
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
+"Una posizione fiscale può essere definita una sola volta sulla stessa "
+"imposta."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -1016,7 +1025,7 @@ msgstr "Conto di credito"
 #. module: account
 #: model:ir.model,name:account.model_account_reconciliation_widget
 msgid "Account Reconciliation widget"
-msgstr ""
+msgstr "Widget riconciliazione conto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__account_src_id
@@ -1271,12 +1280,12 @@ msgstr "Mappatura conti"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Accounts Mapping Template of Fiscal Position"
-msgstr "Modello di mappatura di conti della posizione fiscale"
+msgstr "Modello di mappatura conti della posizione fiscale"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Mapping of Fiscal Position"
-msgstr ""
+msgstr "Mappatura conti della posizione fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_needaction
@@ -1755,6 +1764,7 @@ msgstr "Importo:"
 msgid ""
 "An account fiscal position could be defined only one time on same accounts."
 msgstr ""
+"Una posizione fiscale può essere definita una sola volta sullo stesso conto."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -2106,7 +2116,7 @@ msgstr "Importazione automatica"
 #: code:addons/account/models/account_move.py:399
 #, python-format
 msgid "Automatic reversal of: %s"
-msgstr ""
+msgstr "Inversione automatica di: %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_average
@@ -4367,7 +4377,7 @@ msgstr "Estratti conto in bozza"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "Due"
-msgstr "Debito"
+msgstr "Scadenza"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__residual
@@ -4743,12 +4753,12 @@ msgstr "Anni fiscali"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
 msgid "Fiscal year last day."
-msgstr ""
+msgstr "Ultimo giorno dell'anno fiscale."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_month
 msgid "Fiscal year last month."
-msgstr ""
+msgstr "Ultimo mese dell'anno fiscale."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -5685,7 +5695,7 @@ msgstr "Intervallo CAP non valido, configurarlo correttamente."
 #: code:addons/account/models/company.py:106
 #, python-format
 msgid "Invalid fiscal year last day"
-msgstr ""
+msgstr "Ultimo giorno dell'anno fiscale non valido"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1334
@@ -7990,7 +8000,7 @@ msgstr "Fattura aperta"
 #. module: account
 #: selection:account.payment.term.line,value:0
 msgid "Percent"
-msgstr "Aliquota"
+msgstr "Percentuale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__matched_percentage
@@ -11860,6 +11870,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_invoice_line__partner_id
 msgid "You can find a contact by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"È possibile trovare un contatto per nome, codice fiscale, email o "
+"riferimento interno."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1940
@@ -12191,7 +12203,7 @@ msgstr ""
 #: code:addons/account/models/account.py:142
 #, python-format
 msgid "You must first define an opening move."
-msgstr ""
+msgstr "Selezionare prima un movimento di apertura."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1683

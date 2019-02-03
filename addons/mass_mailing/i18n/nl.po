@@ -7,14 +7,14 @@
 # Thomas Pot <thomas@open2bizz.nl>, 2018
 # Martin Trigaux, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"POT-Creation-Date: 2019-01-15 10:48+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -140,6 +140,10 @@ msgid ""
 "attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
 "groups=\"base.group_user\"/>"
 msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"Deze "
+"e-mail staat op de blacklist voor bulkmalingen\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -152,6 +156,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-label=\"Warning\" "
 "title=\"Warning\"/>"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
+"label=\"Waarschuwing\" title=\"Waarschuwing\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
@@ -166,7 +172,7 @@ msgstr "<i class=\"fa fa-plus\"/> Marketing inhoud"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_kanban
 msgid "<i class=\"fa fa-user\" role=\"img\" aria-label=\"Contacts\" title=\"Contacts\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-user\" role=\"img\" aria-label=\"Contacten\" title=\"Contacten\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text
@@ -2330,6 +2336,12 @@ msgstr "Uitgeschreven"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_rel__unsubscription_date
 msgid "Unsubscription Date"
 msgstr "Datum uitschrijving"
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:806
+#, python-format
+msgid "Unsupported mass mailing model %r"
+msgstr "Niet ondersteund bulk mailing model %r"
 
 #. module: mass_mailing
 #. openerp-web

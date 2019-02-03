@@ -46,6 +46,21 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div>\n"
+"    Gerb. ${object.partner_name or ''}<br/>\n"
+"    Džiaugiamės galėdami informuoti, kad jūsų pasiūlymas ${object.name} buvo priimtas ir patvirtintas renginiui ${object.event_id.name}.\n"
+"    <br/>\n"
+"    Daugiau informacijos rasite čia:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            Žiūrėti renginį\n"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    Ačiū,\n"
+"</div>\n"
+"            "
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_view
@@ -126,7 +141,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track7
 msgid "A technical explanation of how to use computer design apps"
-msgstr ""
+msgstr "Techninis paaiškinimas, kai naudoti kompiuterinio dizaino programas"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__kanban_state
@@ -170,7 +185,7 @@ msgstr "Veiklos būsena"
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
 msgid "Add a new stage in the task pipeline"
-msgstr ""
+msgstr "Pridėti naują etapą užduoties piltuvėlyje"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
@@ -181,12 +196,12 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
 msgid "Advanced lead management : tips and tricks from the fields"
-msgstr ""
+msgstr "Išplėstinis šaltųjų kontaktų valdymas: pastabos ir patarimai"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track13
 msgid "Advanced reporting"
-msgstr ""
+msgstr "Išplėstinės ataskaitos"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event.py:97
@@ -216,7 +231,7 @@ msgstr "Paskelbta"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Application"
-msgstr "Programa"
+msgstr "Paraiška"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -246,7 +261,7 @@ msgstr "Kvietimas teikti pasiūlymus"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
 msgid "Canceled Stage"
-msgstr "Atšaukta būsena"
+msgstr "Atšauktas etapas"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage5
@@ -318,22 +333,22 @@ msgstr "Trinti"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track25
 msgid "Design contest (entire afternoon)"
-msgstr ""
+msgstr "Dizaino konkursas (visa popietė)"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track24
 msgid "Design contest (entire day)"
-msgstr ""
+msgstr "Dizaino konkursas (visa diena)"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track6
 msgid "Detailed roadmap of our new products"
-msgstr ""
+msgstr "Detalus naujų mūsų produktų planas"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track11
 msgid "Discover our new design team"
-msgstr ""
+msgstr "Susipažinkite su mūsų naująja dizaino komanda"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__display_name
@@ -378,29 +393,29 @@ msgstr "El. laiško šablonas"
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__event_id
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event"
-msgstr "Įvykis"
+msgstr "Renginys"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_type
 msgid "Event Category"
-msgstr "Įvykio kategorija"
+msgstr "Renginio kategorija"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
 msgid "Event Location"
-msgstr "Įvykio vieta"
+msgstr "Renginio vieta"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_location
 msgid "Event Locations"
-msgstr "Įvykio vietos"
+msgstr "Renginio vietos"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_proposal_menu_ids
 #: selection:website.event.menu,menu_type:0
 msgid "Event Proposals Menus"
-msgstr ""
+msgstr "Renginio pasiūlymų meniu"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_sponsor
@@ -411,24 +426,24 @@ msgstr "Renginio rėmėjas"
 #: model:ir.model,name:website_event_track.model_event_sponsor_type
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_sponsor_type_tree
 msgid "Event Sponsor Type"
-msgstr "Įvykio rėmėjo tipas"
+msgstr "Renginio rėmėjo tipas"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_sponsor_type_form
 msgid "Event Sponsor Types"
-msgstr "Įvykių rėmėjų tipai"
+msgstr "Renginio rėmėjų tipai"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_sponsor_search
 msgid "Event Sponsors"
-msgstr "Įvykio rėmėjai"
+msgstr "Renginio rėmėjai"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
 msgid "Event Track"
-msgstr "Įvykio įrašas"
+msgstr "Renginio įrašas"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_location
@@ -445,7 +460,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_tree
 msgid "Event Track Tag"
-msgstr "Įvykio įrašo žyma"
+msgstr "Renginio įrašo žyma"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_sponsor_from_event
@@ -466,7 +481,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Fill this form to propose your talk."
-msgstr "Norėdami pasiūlyti savo kalbą, užpildykite šią formą."
+msgstr "Norėdami pasiūlyti savo pranešimą, užpildykite šią formą."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda
@@ -510,7 +525,7 @@ msgstr "Būsimos veiklos"
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
 msgid "Gold"
-msgstr "Auksinė"
+msgstr "Auksas"
 
 #. module: website_event_track
 #: selection:event.track,kanban_state:0
@@ -540,47 +555,47 @@ msgstr "Aukščiausias"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
 msgid "House of World Cultures"
-msgstr ""
+msgstr "Pasaulio kultūrų namai"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track18
 msgid "How to build your marketing strategy within a competitive environment"
-msgstr ""
+msgstr "Kaip sukurti marketingo strategiją konkurencingoje aplinkoje"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track15
 msgid "How to communicate with your community"
-msgstr ""
+msgstr "Kaip bendrauti su savo bendruomene"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track1
 msgid "How to design a new piece of furniture"
-msgstr ""
+msgstr "Kaip sukurti naują baldą"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track4
 msgid "How to develop automated processes"
-msgstr ""
+msgstr "Kaip kurti automatizuotus proccesus"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track16
 msgid "How to follow us on the social media"
-msgstr ""
+msgstr "Kaip sekti mus socialiniuose tinkluose"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track9
 msgid "How to improve your quality processes"
-msgstr ""
+msgstr "Kaip pagerinti jūsų kokybės pocesus"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track2
 msgid "How to integrate hardware materials in your pieces of furniture"
-msgstr ""
+msgstr "Kaip integruoti techninę įrangą su jūsų baldais"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track8
 msgid "How to optimize your sales, from leads to sales orders"
-msgstr ""
+msgstr "Kaip optimizuoti jūsų pardavimus, nuo šaltųjų kontaktų iki užsakymų"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__id
@@ -645,7 +660,7 @@ msgstr "Kanban būsena"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track23
 msgid "Key Success factors selling our furniture"
-msgstr ""
+msgstr "Pagrindinės mūsų baldų pardavimo sėkmės priežastys"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor____last_update
@@ -688,7 +703,7 @@ msgstr "Vėluojančios veiklos"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track12
 msgid "Latest trends"
-msgstr ""
+msgstr "Paskutinės mados"
 
 #. module: website_event_track
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_location
@@ -718,7 +733,7 @@ msgstr "Pagrindinis prisegtukas"
 #. module: website_event_track
 #: selection:event.track,priority:0
 msgid "Medium"
-msgstr "Kanalas"
+msgstr "Vidutinis"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_sponsor__image_medium
@@ -740,7 +755,7 @@ msgstr "Meniu"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
 msgid "Menu Type"
-msgstr ""
+msgstr "Meniu tipas"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error
@@ -750,12 +765,12 @@ msgstr "Žinutės pristatymo klaida"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_ids
 msgid "Messages"
-msgstr "Pranešimai"
+msgstr "Žinutės"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track22
 msgid "Minimal but efficient design"
-msgstr ""
+msgstr "Minimalus, tačiau efektyvus dizainas"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track30
@@ -770,12 +785,12 @@ msgstr "Mano veiklos"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track27
 msgid "My Company global presentation"
-msgstr ""
+msgstr "Mano įmonės globalus pristatymas"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track20
 msgid "New Certification Program"
-msgstr ""
+msgstr "Nauja sertifikavimo programa"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_event_track
@@ -850,7 +865,7 @@ msgstr "Pavėluotas"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track14
 msgid "Partnership programs"
-msgstr ""
+msgstr "Partnerystės programos"
 
 #. module: website_event_track
 #: selection:event.track,activity_state:0
@@ -860,7 +875,7 @@ msgstr "Suplanuota"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track3
 msgid "Portfolio presentation"
-msgstr ""
+msgstr "Portfolio pristatymas"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_view
@@ -908,7 +923,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track10
 msgid "Raising qualitive insights from your customers"
-msgstr ""
+msgstr "Gaunant kokybines pastabas iš jūsų klientų"
 
 #. module: website_event_track
 #: selection:event.track,kanban_state:0
@@ -963,7 +978,7 @@ msgstr "Sidabras"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_social
 msgid "Social Stream"
-msgstr "Socialinių tinklų"
+msgstr "Socialinių tinklų srautas"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_id
@@ -997,12 +1012,12 @@ msgstr "Pranešėjo telefonas"
 #: code:addons/website_event_track/models/event_track.py:184
 #, python-format
 msgid "Speakers"
-msgstr "Kolonėlės"
+msgstr "Pranešėjai"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__sponsor_count
 msgid "Sponsor Count"
-msgstr ""
+msgstr "Rėmėjų skaičius"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__name
@@ -1045,12 +1060,12 @@ msgstr "Etapas"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__name
 msgid "Stage Name"
-msgstr "Stadijos pavadinimas"
+msgstr "Etapo pavadinimas"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track28
 msgid "Status & Strategy"
-msgstr ""
+msgstr "Būsena ir strategija"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_state
@@ -1126,18 +1141,18 @@ msgstr "Dėkojame už pasiūlymą."
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_url
 msgid "The full URL to access the document through the website."
-msgstr "Pilna nuoroda dokumento pasiekimui per tinklalapį."
+msgstr "Pilna nuoroda dokumento pasiekimui per svetainę."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track17
 #: model:event.track,name:website_event_track.event_track29
 msgid "The new marketing strategy"
-msgstr ""
+msgstr "Nauja rinkodaros strategija"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track5
 msgid "The new way to promote your creations"
-msgstr ""
+msgstr "Naujas būdas reklamuoti jūsų kūrinius"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1150,8 +1165,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Ši stadija bus suskleista kanban tipo peržiūroje, jei šioje stadijoje nebus "
-"nė vieno įrašo."
+"Šis etapas bus suskleistas Kanban tipo peržiūroje, jei šioje stadijoje nebus"
+" nė vieno įrašo."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1327,7 +1342,7 @@ msgstr "Mes įvertinsime jūsų pasiūlymą ir netrukus susisieksime su jumis."
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_event_menu
 msgid "Website Event Menu"
-msgstr ""
+msgstr "Svetainės renginių meniu"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_message_ids

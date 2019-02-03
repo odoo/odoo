@@ -15,9 +15,9 @@
 # Tiziano Zambelli <zstiziano@gmail.com>, 2018
 # Paolo Caruccio <paolo.caruccio66@gmail.com>, 2018
 # David Minneci <david@numeko.it>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
 # efraimbiffi <eab@odoo.com>, 2018
 # Sergio Zanchetta <primes2h@gmail.com>, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
 "PO-Revision-Date: 2018-08-24 09:15+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2018\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +38,7 @@ msgstr ""
 #: code:addons/account_bank_statement_import/static/src/js/account_bank_statement_import.js:13
 #, python-format
 msgid " Import Template for Bank Statements"
-msgstr ""
+msgstr "Importare un modello per gli estratti conto"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
@@ -507,10 +507,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"Seleziona 'Vendita' per i sezionali fatture cliente. \n"
-"Selezionare 'Acquisto' per i sezionali fatture fornitore. \n"
-"Seleziona 'Cassa' o 'Banca' per i sezionali che sono utilizzati nei pagamenti dei clienti o dei fornitori. \n"
-"Selezionare 'Generale' per i sezionali con operazioni di natura varia."
+"Selezionare \"Vendita\" per registri fatture clienti.\n"
+"Selezionare \"Acquisto\" per registri fatture fornitori.\n"
+"Selezionare \"Cassa\" o \"Banca\" per registri da usare per pagamenti clienti o fornitori.\n"
+"Selezionare \"Generale\" per registri operazioni varie."
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -526,8 +526,7 @@ msgstr "Sequenza"
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__active
 msgid "Set active to false to hide the Journal without removing it."
 msgstr ""
-"Se il campo \"attivo\" viene impostato come \"falso\", il Sezionale è "
-"nascosto senza essere eliminato."
+"Impostare \"attivo\" su falso per nascondere il registro senza rimuoverlo."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__code
@@ -565,6 +564,8 @@ msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
 "the journal (%s)."
 msgstr ""
+"La valuta dell'estratto conto (%s) non è la stessa di quella del registro "
+"(%s)."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
@@ -582,14 +583,12 @@ msgstr ""
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
 msgid "The next sequence number will be used for the next credit note."
 msgstr ""
-"Il prossimo numero di sequenza verrà utilizzato per la prossima nota di "
-"credito. "
+"Il numero sequenziale seguente verrà usato per la prossima nota di credito."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_number_next
 msgid "The next sequence number will be used for the next invoice."
-msgstr ""
-"Il prossimo numero di sequenza verrà utilizzato per la prossima fattura."
+msgstr "Il numero sequenziale seguente verrà usato per la prossima fattura."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_id
@@ -597,8 +596,8 @@ msgid ""
 "This field contains the information related to the numbering of the credit "
 "note entries of this journal."
 msgstr ""
-"Questo campo contiene le informazioni relative alla numerazione delle "
-"registrazioni di nota di credito di questo sezionale."
+"Questo campo contiene le informazioni sulla numerazione delle registrazioni "
+"contabili per le note di credito."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_id
@@ -670,12 +669,12 @@ msgstr ""
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
 #, python-format
 msgid "You already have imported that file."
-msgstr ""
+msgstr "Hai già importato questo file."
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "You can install more file formats by"
-msgstr ""
+msgstr "Si può installare più formati di file"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:47
@@ -695,7 +694,7 @@ msgstr "_Importa"
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "installing the related modules"
-msgstr ""
+msgstr "installazione dei moduli relativi"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit

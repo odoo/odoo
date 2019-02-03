@@ -10,7 +10,7 @@
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2018
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2018
 # Edgaras Kriukonis <edgaras@focusate.eu>, 2018
-# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +38,7 @@ msgstr "jau išėjo"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
 msgid "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__account_id
@@ -143,7 +143,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Create a new landed cost"
-msgstr ""
+msgstr "Sukurti naujus galutinius kaštus"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_uid
@@ -168,7 +168,7 @@ msgstr "Data"
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Define a new kind of landed cost"
-msgstr ""
+msgstr "Nustatyti naują galutinių kaštų tipą"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -199,7 +199,7 @@ msgstr "Juodraštis"
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
 msgid "Equal"
-msgstr "Vienodas"
+msgstr "Lygus"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method
@@ -278,7 +278,7 @@ msgstr "Jei pažymėta, yra žinučių, turinčių pristatymo klaidų."
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__landed_cost_ok
 msgid "Indicates whether the product is a landed cost."
-msgstr ""
+msgstr "Parodo, ar produktas yra galutiniai kaštai."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
@@ -326,7 +326,7 @@ msgstr "Galutinių kaštų pavadinimas"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_tree_view
 msgid "Landed Cost Type"
-msgstr "Pristatymo kaštų tipas"
+msgstr "Galutinių kaštų tipas"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.stock_landed_cost_type_action
@@ -389,7 +389,7 @@ msgstr "Žinutės pristatymo klaida"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_ids
 msgid "Messages"
-msgstr "Pranešimai"
+msgstr "Žinutės"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__name
@@ -491,7 +491,7 @@ msgstr "Skaidymo metodas"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__state
 msgid "State"
-msgstr "Regionas"
+msgstr "Būsena"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -506,7 +506,7 @@ msgstr "Atsargų galutiniai kaštai"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Line"
-msgstr ""
+msgstr "Atsargų galutinių kaštų eilutė"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_move
@@ -552,7 +552,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
 msgid "Valuation Adjustment Lines"
-msgstr ""
+msgstr "Vertinimo koregavimo eilutės"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
@@ -588,6 +588,9 @@ msgid ""
 "only be applied for products with automated inventory valuation and FIFO "
 "costing method."
 msgstr ""
+"Negalite taikyti galutinių kaštų pasirinktam perkėlimui (-ams). Galutiniai "
+"kaštai gali būti taikomi tik produktams su automatiniu inventoriaus "
+"vertinimu ir FIFO kaštų būdu."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form

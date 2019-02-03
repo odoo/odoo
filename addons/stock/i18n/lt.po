@@ -388,7 +388,7 @@ msgstr "<strong>Pradinis reikalavimas buvo atnaujintas.</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>To</strong>"
-msgstr ""
+msgstr "<strong>Į</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -630,6 +630,7 @@ msgid ""
 "Apply specific route(s) for the replenishment instead of product's default "
 "routes."
 msgstr ""
+"Taikyti konkrečius maršrutus atnaujinimui vietoje produkto numatytųjų."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_view_search
@@ -866,7 +867,7 @@ msgstr "Nepavyko rasti jokios kliento ar tiekėjo vietos."
 #: code:addons/stock/models/stock_warehouse.py:256
 #, python-format
 msgid "Can't find any generic route %s."
-msgstr ""
+msgstr "Nepavyko rasti jokio bendro maršruto %s."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
@@ -1112,7 +1113,7 @@ msgstr "Vartojami produktai"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__consume_line_ids
 msgid "Consume Line"
-msgstr "Sunaudoti eilutė"
+msgstr "Sunaudoti eilutę"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
@@ -1227,6 +1228,8 @@ msgid ""
 "                        products later. Do not create a backorder if you will not\n"
 "                        process the remaining products."
 msgstr ""
+"Sukurkite atidėtą užsakymą, jei planuojate apdoroti likusius produktus\n"
+"vėliau. Nekurkite jo, jei neapdorosite likusių produktų."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
@@ -1544,6 +1547,9 @@ msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
 "quotations or draft manufacturing orders to resupply your stock."
 msgstr ""
+"Nustatykite minimalių atsargų taisyklę, kad \"Odoo\" automatiškai sukurtų "
+"užklausas komerciniams pasiūlymams arba gamybos užsakymams, taip papildant "
+"jūsų atsargas."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
@@ -1596,7 +1602,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__delay
 msgid "Delay"
-msgstr "Uždelsta"
+msgstr "Uždelsimas"
 
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
@@ -1675,6 +1681,8 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO, etc."
 msgstr ""
+"Priklausomai nuo įdiegtų modulių, tai jums leis nustatyti produkto maršrutą:"
+" ar jis bus perkamas, gaminamas, MTO, ir t.t."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__name
@@ -1867,7 +1875,7 @@ msgstr "Atlikti perkėlimai pagal datą"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Don’t propagate scheduling changes through chains of operations"
-msgstr "Neiškelti planavimo pokyčių per operacijų grandines"
+msgstr "Neužpildyti planavimo pokyčių per operacijų grandines"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -1992,7 +2000,7 @@ msgstr "Fiksuota planinio užsakymo grupė"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_fixed_putaway_strat
 msgid "Fixed Putaway Strategy on Location"
-msgstr ""
+msgstr "Fiksuota atidėjimo strategija vietoje"
 
 #. module: stock
 #. openerp-web
@@ -3249,13 +3257,14 @@ msgstr "Būdas"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__propagation_minimum_delta
 msgid "Minimum Delta for Propagation"
-msgstr ""
+msgstr "Minimali užpildymo delta"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__propagation_minimum_delta
 msgid ""
 "Minimum Delta for Propagation of a Date Change on moves linked together"
 msgstr ""
+"Minimali užpildymo delta datos pakeitimui perkėlimams, kurie yra susieti"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
@@ -3501,12 +3510,14 @@ msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
 "can be returned)."
 msgstr ""
+"Nėra produktų grąžinimui (tik eilutės, kurios yra atliktos ir nepilnai "
+"grąžintos, gali būti grąžintos)."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:172
 #, python-format
 msgid "No source location defined on stock rule: %s!"
-msgstr ""
+msgstr "Šaltinio vieta nenurodyta atsargų taisyklėje: %s!"
 
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
@@ -3895,7 +3906,7 @@ msgstr "Pakuotės lygis"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__package_level_ids_details
 msgid "Package Level Ids Details"
-msgstr ""
+msgstr "Pakuotės lygio ID informacija"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -4128,7 +4139,7 @@ msgstr "Pageidaujamas pakavimas"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_ids
 msgid "Preferred Routes"
-msgstr ""
+msgstr "Pageidaujami maršrutai"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__route_ids
@@ -4401,7 +4412,7 @@ msgstr "Užpildyti atšaukimą ir padalijimą"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
 msgid "Propagation"
-msgstr ""
+msgstr "Užpildymas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__group_propagation_option
@@ -4421,7 +4432,7 @@ msgstr "Traukti iš"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Pull Rule"
-msgstr ""
+msgstr "Traukimo taisyklė"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -4898,12 +4909,12 @@ msgstr "Atsakingas vartotojas"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Resupply"
-msgstr ""
+msgstr "Papildomas tiekimas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_wh_ids
 msgid "Resupply From"
-msgstr ""
+msgstr "Papildomas tiekimas iš"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_route_ids
@@ -4986,6 +4997,8 @@ msgid ""
 "Routes will be created automatically to resupply this warehouse from the "
 "warehouses ticked"
 msgstr ""
+"Maršrutai bus automatiškai sukuriami papildomam šio sandėlio tiekimui iš "
+"pažymėtų sandėlių"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_route_ids
@@ -5318,7 +5331,7 @@ msgstr "Rodyti detalius veiksmus"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__show_lots_m2o
 msgid "Show Lots M2O"
-msgstr ""
+msgstr "Rodyti partijų M2O"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__show_lots_text
@@ -5344,7 +5357,7 @@ msgstr "Rodyti rezervuotus"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__show_resupply
 msgid "Show Resupply"
-msgstr ""
+msgstr "Rodyti papildomą tiekimą"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_validate
@@ -5456,7 +5469,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Start Inventory"
-msgstr "Pradėti inventorizaciją"
+msgstr "Pradėti inventorių"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__state
@@ -5625,12 +5638,12 @@ msgstr "Atsargų sekimo patvirtinimas"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_track_line
 msgid "Stock Track Line"
-msgstr ""
+msgstr "Atsargų sekimo eilutė"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids_without_package
 msgid "Stock moves not in package"
-msgstr ""
+msgstr "Atsargų perkėlimai ne pakuotėje"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -5913,13 +5926,15 @@ msgid ""
 "The rules defined per product will be applied before the rules defined per "
 "product category."
 msgstr ""
+"Produktui taikomos taisyklės bus taikomos prieš taisykles, taikomas produktų"
+" kategorijai."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:160
 #, python-format
 msgid ""
 "The selected inventory options are not coherent, the package doesn't exist."
-msgstr ""
+msgstr "Pasirinkti inventoriaus nustatymai nesutampa, pakuotė neegzistuoja."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:156
@@ -5931,7 +5946,7 @@ msgstr "Pasirinktas partijos numeris neegzistuoja."
 #: code:addons/stock/models/stock_inventory.py:158
 #, python-format
 msgid "The selected owner doesn't have the proprietary of that product."
-msgstr ""
+msgstr "Pasirinktas savininkas neturi to produkto nuosavybės."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:154
@@ -5944,12 +5959,14 @@ msgstr "Pasirinktas produktas nepriklauso tam savininkui..."
 msgid ""
 "The stock location used as destination when sending goods to this contact."
 msgstr ""
+"Atsargų vieta, naudojama kaip tikslas, kai prekės siunčiamos šiam kontaktui."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__property_stock_supplier
 msgid ""
 "The stock location used as source when receiving goods from this contact."
 msgstr ""
+"Atsargų vieta, naudojama kaip šaltinis, kai prekės gaunamos iš šio kontakto."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_id
@@ -5967,6 +5984,8 @@ msgid ""
 "The stock will be reserved for operations waiting for availability and the "
 "reordering rules will be triggered."
 msgstr ""
+"Atsargos bus rezervuotos operacijoms laukiančioms pasiekiamumo ir "
+"pakartotinio užsakymo taisyklės bus suaktyvintos."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_warehouse_id
@@ -6290,7 +6309,7 @@ msgstr "Perkėlimo tikslo adresas"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_overprocessed_transfer
 msgid "Transfer Over Processed Stock"
-msgstr ""
+msgstr "Perkelti apdorotas atsargas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_id
@@ -6318,7 +6337,7 @@ msgstr "Tranzitinės vietos"
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 #: selection:stock.rule,procure_method:0
 msgid "Trigger Another Rule"
-msgstr ""
+msgstr "Suaktyvinti kitą taisyklę"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
@@ -6411,7 +6430,7 @@ msgstr "Matavimo vienetai"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
 msgid "Unity of measure"
-msgstr ""
+msgstr "Matavimo vienetas"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:885
@@ -6473,7 +6492,7 @@ msgstr "Matavimo vienetų kategorijos"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_uom_category_id
 msgid "Uom category"
-msgstr ""
+msgstr "Mat. vnt. kategorija"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -6511,6 +6530,9 @@ msgid ""
 "                Depending on your product configuration, launching a replenishment may trigger a request for quotation,\n"
 "                a manufacturing order or a transfer."
 msgstr ""
+"Naudokite šį asistentą savo atsargų papildymui.\n"
+"Priklausomai nuo jūsų produkto konfigūracijos, naujo papildymo paleidimas gali suaktyvinti\n"
+"komercinio pasiūlymo užklausą, gamybos užsakymą arba perkėlimą."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6676,12 +6698,12 @@ msgstr "Sandėliai"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty
 msgid "Warn Insufficient Quantity"
-msgstr ""
+msgstr "Perspėti apie nepakankamą kiekį"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty_scrap
 msgid "Warn Insufficient Scrap Quantity"
-msgstr ""
+msgstr "Perspėti apie nepakankamą nurašymo kiekį"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:129
@@ -6856,6 +6878,9 @@ msgid ""
 "type. To change this, go on the operation type and tick the box \"Create New"
 " Lots/Serial Numbers\"."
 msgstr ""
+"Negalite sukurti partijos ar serijinio numerio su šiuo operacijos tipu. "
+"Norėdami tai pakeisti, nueikite į operacijos tipą ir pažymėkite \"Sukurti "
+"naujus partijų/serijinius numerius\"."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -6888,6 +6913,10 @@ msgid ""
 "                routes can be assigned to a product, a product category or be fixed\n"
 "                on procurement or sales order."
 msgstr ""
+"Čia galite nustatyti pagrindinius maršrutus, kurie\n"
+"veikia jūsų sandėliuose ir nustato jūsų produktų judėjimą.\n"
+"Šie maršrutai gali būti priskirti produktui, produktų kategorijai\n"
+"arba būti fiksuoti planiniam ar pardavimų užsakymui."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -7003,6 +7032,10 @@ msgid ""
 "Please first validate the first inventory adjustment before creating another"
 " one."
 msgstr ""
+"Negalite turėti dviejų inventoriaus koregavimų vykdomoje būsenoje su tuo "
+"pačiu produktu (%s), ta pačia vieta, ta pačia pakuote, tuo pačiu savininku "
+"ir ta pačia partija. Prieš sukuriant kitą, pirmiausia patvirtinkite pirmąją "
+"inventoriaus korekcija šiam produktui."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:1134
@@ -7086,6 +7119,9 @@ msgid ""
 "You cannot validate a transfer if no quantites are reserved nor done. To "
 "force the transfer, switch in edit more and encode the done quantities."
 msgstr ""
+"Negalite patvirtinti perkėlimo, jei nerezervuoti ir neatlikti jokie kiekiai."
+" Norėdami priverstinai perkelti, perjunkite į redagavimą ir įrašykite "
+"atliktus kiekius."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:112
@@ -7102,6 +7138,8 @@ msgid ""
 "You have not recorded <i>done</i> quantities yet, by clicking on <i>apply</i>\n"
 "                        Odoo will process all the <i>reserved</i> quantities."
 msgstr ""
+"Neįvedėte <i>aliktų</i> kiekių. Paspaudus <i>pritaikyt</i>\n"
+"\"Odoo\" apdoros visus <i>rezervuotus</i>kiekius."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -7133,6 +7171,8 @@ msgstr ""
 msgid ""
 "You have to define a groupby and sorted method and pass them as arguments."
 msgstr ""
+"Turite nustatyti grupavimo ir rikiavimo būdus ir perduoti juos kaip "
+"argumentus."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:911
@@ -7195,7 +7235,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "]<br/>min:"
-msgstr ""
+msgstr "]<br/>min:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_change_product_quantity

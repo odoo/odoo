@@ -33,6 +33,8 @@ msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
 "title=\"Receive button\"/>"
 msgstr ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
+"title=\"Receive button\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
@@ -48,7 +50,7 @@ msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"Amou
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Money\" title=\"Money\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Money\" title=\"Money\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
@@ -56,6 +58,8 @@ msgid ""
 "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" "
 "title=\"Order button\"/>"
 msgstr ""
+"<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" "
+"title=\"Order button\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
@@ -63,6 +67,8 @@ msgid ""
 "<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
 "title=\"Cancel button\"/>"
 msgstr ""
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
+"title=\"Cancel button\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -183,6 +189,111 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Pietų užsakymas</span><br/>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${user.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % company.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"    <div>\n"
+"        % set lines = ctx['lines']\n"
+"        % set order = ctx['order']\n"
+"        % set supplier = user.env['res.partner'].browse(order['supplier_id'])\n"
+"        % set currency = user.env['res.currency'].browse(order['currency_id'])\n"
+"        <p>\n"
+"        Gerb., ${order['supplier_name']},\n"
+"        </p><p>\n"
+"        Čia yra šiandienos užsakymai ${order['company_name']}:\n"
+"        </p>\n"
+"\n"
+"      <ul>\n"
+"        % for line in lines:\n"
+"            <li>\n"
+"                <strong>\n"
+"                    ${line['product']}\n"
+"                    (x${line['quantity']})\n"
+"                 </strong>\n"
+"                % if line['note']:\n"
+"                    <em>(${line['note']})</em>\n"
+"                % endif\n"
+"                <div style=\"display: inline-block; float:right\">\n"
+"                    ${format_amount(line['price'], currency)}\n"
+"                </div>\n"
+"            </li>\n"
+"        % endfor\n"
+"        </ul>\n"
+"\n"
+"        <p>Kurių suma yra <strong>${format_amount(order['amount_total'], currency)}</strong>.</p>\n"
+"        <p>Nedvejodami susisiekite su mumis, jei turite klausimų.</p>\n"
+"    </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    ${user.company_id.name}\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    ${user.company_id.phone}\n"
+"                    % if user.company_id.phone and (user.company_id.email or user.company_id.website)\n"
+"                    |\n"
+"                    % endif\n"
+"                    % if user.company_id.email\n"
+"                    <a href=\"'mailto:%s' % ${user.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${user.company_id.email}</a>\n"
+"                    % endif\n"
+"                    % if user.company_id.email and user.company_id.website\n"
+"                    |\n"
+"                    % endif\n"
+"                    % if user.company_id.website\n"
+"                    <a href=\"'%s' % ${user.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                    ${user.company_id.website}\n"
+"                    </a>\n"
+"                    % endif\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Technologija <a target=\"_blank\" href=\"https://www.odoo.com\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
@@ -321,12 +432,12 @@ msgstr "Atšauktas"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line__cashmove
 msgid "Cash Move"
-msgstr "Pinigų judėjimas"
+msgstr "Pinigų veiksmas"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__cash_move_balance
 msgid "Cash Move Balance"
-msgstr "Pinigų perkėlimo balansas"
+msgstr "Pinigų veiksmo balansas"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
@@ -335,6 +446,9 @@ msgid ""
 "                Click on the <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> to announce that the order is received.<br>\n"
 "                Click on the <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> red X to announce that the order isn't available."
 msgstr ""
+"Paspauskite <span class=\"fa fa-phone text-success\" title=\"Order button\"></span>, jei norite pranešti, kad užsakymas užsakytas.<br>\n"
+"                Paspauskite<span class=\"fa fa-check text-success\" title=\"Receive button\"></span>, jei norite paskelbti, kad užsakymas gautas.<br>\n"
+"                Paspauskite<span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> raudoną X, jei norite pranešti, kad užsakymas negalimas."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
@@ -343,6 +457,9 @@ msgid ""
 "                Click on the <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> to announce that the order is received.<br>\n"
 "                Click on the <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> to announce that the order isn't available."
 msgstr ""
+"Paspauskite <span class=\"fa fa-phone text-success\" title=\"Order button\"></span>, jei norite pranešti, kad užsakymas užsakytas.<br>\n"
+"                Paspauskite<span class=\"fa fa-check text-success\" title=\"Receive button\"></span>, jei norite paskelbti, kad užsakymas gautas.<br>\n"
+"                Paspauskite<span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> raudoną X, jei norite pranešti, kad užsakymas negalimas."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__company_id
@@ -368,22 +485,22 @@ msgstr "Tiekėjų valdymas"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_alert_action
 msgid "Create a new lunch alert"
-msgstr ""
+msgstr "Sukurti naują pietų pranešimą"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Create a new lunch category"
-msgstr ""
+msgstr "Sukurti naują pietų kategoriją"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
 msgid "Create a new payment"
-msgstr ""
+msgstr "Sukurti naują mokėjimą"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
 msgid "Create a new product for lunch"
-msgstr ""
+msgstr "Sukurti naują pietų produktą"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__create_uid
@@ -486,6 +603,10 @@ msgid ""
 "                Time interval: from 00h00 am to 11h59 pm,<br>\n"
 "                Message: \"You must order before 10h30 am\"."
 msgstr ""
+"Pavyzdys:<br>\n"
+"                Pasikartojimas: Kasdien,<br>\n"
+"                Laikotarpis: nuo 00h00 am iki 11h59 pm,<br>\n"
+"                Žinutė: \"Turite užsisakyti iki 10h30 am\"."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -529,6 +650,8 @@ msgid ""
 "Here you can see your cash moves.<br>A cash move can either be an expense or a payment.\n"
 "                An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager."
 msgstr ""
+"Čia galite pamatyti savo pinigų judėjimus. <br> Pinigų judėjimas gali būti išlaidos arba mokėjimai.\n"
+"Išlaidos sukuriamos automatiškai, kai gaunamas užsakymas, o mokėjimas yra kompensacija įmonei, sukurta vadovo."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
@@ -561,6 +684,8 @@ msgstr "ID"
 #: model:ir.model.fields,help:lunch.field_lunch_alert__partner_id
 msgid "If specified, the selected vendor can be ordered only on selected days"
 msgstr ""
+"Jei nurodyta, iš pasirinkto tiekėjo gali būti užsakoma tik pasirinktomis "
+"dienomis"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__state
@@ -635,27 +760,27 @@ msgstr "Pietų užsakymas"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Lunch Order Form"
-msgstr ""
+msgstr "Pietų užsakymo forma"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order_line
 msgid "Lunch Order Line"
-msgstr ""
+msgstr "Pietų užsakymo eilutė"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order_line_lucky
 msgid "Lunch Order Line Lucky"
-msgstr ""
+msgstr "Sėkminga pietų užsakymo eilutė"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
 msgid "Lunch Product"
-msgstr ""
+msgstr "Pietų produktas"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product_category
 msgid "Lunch Product Category"
-msgstr ""
+msgstr "Pietų produkto kategorija"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.action_server_lunch_archive_product
@@ -692,7 +817,7 @@ msgstr "Maks. biudžetas"
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__message
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "Message"
-msgstr "Pranešimas"
+msgstr "Žinutė"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__monday
@@ -733,17 +858,17 @@ msgstr "Naujas užsakymas"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
 msgid "No cash move yet"
-msgstr ""
+msgstr "Dar nėra pinigų perkėlimo"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
 msgid "No lunch order yet"
-msgstr ""
+msgstr "Dar nėra pietų užsakymo"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action
 msgid "No previous order found"
-msgstr ""
+msgstr "Nerasta ankstesnių užsakymų"
 
 #. module: lunch
 #: code:addons/lunch/wizard/lucky_order.py:40
@@ -764,7 +889,7 @@ msgstr "Pastaba"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 msgid "Nothing to order today"
-msgstr ""
+msgstr "Šiandien nėra ką užsakyti"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:318
@@ -828,7 +953,7 @@ msgstr "Užsakymai pagal tiekėją"
 #. module: lunch
 #: model:mail.template,subject:lunch.lunch_order_mail_supplier
 msgid "Orders for ${ctx['order']['company_name']}"
-msgstr ""
+msgstr "Užsakymai, skirti ${ctx['order']['company_name']}"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
@@ -842,6 +967,8 @@ msgid ""
 "Payments are used to register liquidity movements. You can process those "
 "payments by your own means or by using installed facilities."
 msgstr ""
+"Mokėjimai yra naudojami registruoti likvidumo judėjimus. Galite apdoroti "
+"šiuo mokėjimus patys arba naudodami įdiegtas priemones."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__previous_order_ids
@@ -851,7 +978,7 @@ msgstr "Ankstesnis užsakymas"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__previous_order_widget
 msgid "Previous Order Widget"
-msgstr "Ankstesnio užsakymo skydelis"
+msgstr "Ankstesnio užsakymo valdiklis"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_tree
@@ -931,11 +1058,12 @@ msgid ""
 "Products from this vendor can <strong>not</strong> be ordered at that "
 "moment."
 msgstr ""
+"Produktai iš šio tiekėjo <strong>negali</strong> būti užsakyti tuo metu."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "Products from this vendor can be ordered at that moment."
-msgstr ""
+msgstr "Produktai iš šio tiekėjo gali būti užsakyti tuo metu."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
@@ -957,12 +1085,12 @@ msgstr "Pasikartojimas"
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
 msgid "Register Cash Moves"
-msgstr "Registruoti pinigų perkėlimus"
+msgstr "Registruoti pinigų veiksmus"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
 msgid "Register a payment"
-msgstr ""
+msgstr "Registruoti mokėjimą"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__saturday
@@ -1089,6 +1217,8 @@ msgid ""
 "Validate order for one company at a time to send emails (mixed orders from "
 "%s and %s)"
 msgstr ""
+"Norėdami siųsti laiškus, patvirtinkite užsakymus vienai įmonei vienu metu "
+"(maišyti užsakymai nuo %s ir %s)"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:239
@@ -1097,6 +1227,8 @@ msgid ""
 "Validate order for one currency at a time to send emails (mixed orders from "
 "%s and %s)"
 msgstr ""
+"Norėdami siųsti laiškus, patvirtinkite užsakymus vienai valiutai vienu metu "
+"(maišyti užsakymai nuo %s ir %s)"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:229
@@ -1105,6 +1237,8 @@ msgid ""
 "Validate order for one supplier at a time to send emails (mixed orders from "
 "%s and %s)"
 msgstr ""
+"Norėdami siųsti laiškus, patvirtinkite užsakymus vienam tiekėjui vienu metu "
+"(maišyti užsakymai nuo %s ir %s)"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__partner_id
@@ -1119,13 +1253,13 @@ msgstr "Tiekėjas"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "Vendor Orders by Date"
-msgstr ""
+msgstr "Tiekėjo užsakymai pagal datą"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:192
 #, python-format
 msgid "Vendor(s) '%s' is not available today"
-msgstr ""
+msgstr "Tiekėjas (-ai) \"%s\" šiandien nepasiekiami"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__wednesday

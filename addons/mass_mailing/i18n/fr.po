@@ -13,16 +13,16 @@
 # Marie Willemyns <mwi@odoo.com>, 2018
 # Martin Trigaux, 2018
 # Fabien Bourgeois <fabien@yaltik.com>, 2018
-# Moka Tourisme <hello@mokatourisme.fr>, 2018
 # Melanie Bernard <mbe@odoo.com>, 2019
+# Moka Tourisme <hello@mokatourisme.fr>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"POT-Creation-Date: 2019-01-15 10:48+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Melanie Bernard <mbe@odoo.com>, 2019\n"
+"Last-Translator: Moka Tourisme <hello@mokatourisme.fr>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -626,7 +626,7 @@ msgstr "Créez un contact dans votre carnet d'adresse"
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
 msgid "Create a new mailing"
-msgstr ""
+msgstr "Créez un nouvel email"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_campaigns
@@ -636,12 +636,12 @@ msgstr "Créez une nouvelle campagne email"
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
 msgid "Create a new mailing list"
-msgstr ""
+msgstr "Créez une nouvelle liste d'envoi"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_stages
 msgid "Create a new mass mailing stage"
-msgstr ""
+msgstr "Créez une nouvelle étape de publipostage"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts_from_list
@@ -1571,6 +1571,8 @@ msgid ""
 "No need of importing your mailing lists, you can easily\n"
 "                send emails to any contact saved in other Odoo apps."
 msgstr ""
+"Pas besoin d'importer vos listes d'envoi, vous pouvez facilement\n"
+"                envoyer des emails à n'importe quel contact enregistré dans les applications Odoo."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
@@ -2325,6 +2327,12 @@ msgstr "Désinscrit "
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_rel__unsubscription_date
 msgid "Unsubscription Date"
 msgstr "Date de décinscription"
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:806
+#, python-format
+msgid "Unsupported mass mailing model %r"
+msgstr ""
 
 #. module: mass_mailing
 #. openerp-web
