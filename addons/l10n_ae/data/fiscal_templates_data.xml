@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="group_non_uae_countries" model="res.country.group">
+            <field name="name">Non-UAE Countries</field>
+            <field name="country_ids" eval="[(6,0,[ref('base.ad'),ref('base.af'),ref('base.ag'),ref('base.ai'),ref('base.al'),
+                                                ref('base.am'),ref('base.ao'),ref('base.aq'),ref('base.ar'),ref('base.as'),
+                                                ref('base.at'),ref('base.au'),ref('base.aw'),ref('base.ax'),ref('base.az'),
+                                                ref('base.ba'),ref('base.bb'),ref('base.bd'),ref('base.be'),ref('base.bf'),
+                                                ref('base.bg'),ref('base.bh'),ref('base.bi'),ref('base.bj'),ref('base.bl'),
+                                                ref('base.bm'),ref('base.bn'),ref('base.bo'),ref('base.bq'),ref('base.br'),
+                                                ref('base.bs'),ref('base.bt'),ref('base.bv'),ref('base.bw'),ref('base.by'),
+                                                ref('base.bz'),ref('base.ca'),ref('base.cc'),ref('base.cf'),ref('base.cd'),
+                                                ref('base.cg'),ref('base.ch'),ref('base.ci'),ref('base.ck'),ref('base.cl'),
+                                                ref('base.cm'),ref('base.cn'),ref('base.co'),ref('base.cr'),ref('base.cu'),
+                                                ref('base.cv'),ref('base.cw'),ref('base.cx'),ref('base.cy'),ref('base.cz'),
+                                                ref('base.de'),ref('base.dj'),ref('base.dk'),ref('base.dm'),ref('base.do'),
+                                                ref('base.dz'),ref('base.ec'),ref('base.ee'),ref('base.eg'),ref('base.eh'),
+                                                ref('base.er'),ref('base.es'),ref('base.et'),ref('base.fi'),ref('base.fj'),
+                                                ref('base.fk'),ref('base.fm'),ref('base.fo'),ref('base.fr'),ref('base.ga'),
+                                                ref('base.gd'),ref('base.ge'),ref('base.gf'),ref('base.gh'),ref('base.gi'),
+                                                ref('base.gg'),ref('base.gl'),ref('base.gm'),ref('base.gn'),ref('base.gp'),
+                                                ref('base.gq'),ref('base.gr'),ref('base.gs'),ref('base.gt'),ref('base.gu'),
+                                                ref('base.gw'),ref('base.gy'),ref('base.hk'),ref('base.hm'),ref('base.hn'),
+                                                ref('base.hr'),ref('base.ht'),ref('base.hu'),ref('base.id'),ref('base.ie'),
+                                                ref('base.il'),ref('base.im'),ref('base.in'),ref('base.io'),ref('base.iq'),
+                                                ref('base.ir'),ref('base.is'),ref('base.it'),ref('base.je'),ref('base.jm'),
+                                                ref('base.jo'),ref('base.jp'),ref('base.ke'),ref('base.kg'),ref('base.kh'),
+                                                ref('base.ki'),ref('base.km'),ref('base.kn'),ref('base.kp'),ref('base.kr'),
+                                                ref('base.kw'),ref('base.ky'),ref('base.kz'),ref('base.la'),ref('base.lb'),
+                                                ref('base.lc'),ref('base.li'),ref('base.lk'),ref('base.lr'),ref('base.ls'),
+                                                ref('base.lt'),ref('base.lu'),ref('base.lv'),ref('base.ly'),ref('base.ma'),
+                                                ref('base.mc'),ref('base.md'),ref('base.me'),ref('base.mf'),ref('base.mg'),
+                                                ref('base.mh'),ref('base.mk'),ref('base.ml'),ref('base.mm'),ref('base.mn'),
+                                                ref('base.mo'),ref('base.mp'),ref('base.mq'),ref('base.mr'),ref('base.ms'),
+                                                ref('base.mt'),ref('base.mu'),ref('base.mv'),ref('base.mw'),ref('base.mx'),
+                                                ref('base.my'),ref('base.mz'),ref('base.na'),ref('base.nc'),ref('base.ne'),
+                                                ref('base.nf'),ref('base.ng'),ref('base.ni'),ref('base.nl'),ref('base.no'),
+                                                ref('base.np'),ref('base.nr'),ref('base.nu'),ref('base.nz'),ref('base.om'),
+                                                ref('base.pa'),ref('base.pe'),ref('base.pf'),ref('base.pg'),ref('base.ph'),
+                                                ref('base.pk'),ref('base.pl'),ref('base.pm'),ref('base.pn'),ref('base.pr'),
+                                                ref('base.ps'),ref('base.pt'),ref('base.pw'),ref('base.py'),ref('base.qa'),
+                                                ref('base.re'),ref('base.ro'),ref('base.rs'),ref('base.ru'),ref('base.rw'),
+                                                ref('base.sa'),ref('base.sb'),ref('base.sc'),ref('base.sd'),ref('base.se'),
+                                                ref('base.sg'),ref('base.sh'),ref('base.si'),ref('base.sj'),ref('base.sk'),
+                                                ref('base.sl'),ref('base.sm'),ref('base.sn'),ref('base.so'),ref('base.sr'),
+                                                ref('base.ss'),ref('base.st'),ref('base.sv'),ref('base.sx'),ref('base.sy'),
+                                                ref('base.sz'),ref('base.tc'),ref('base.td'),ref('base.tf'),ref('base.tg'),
+                                                ref('base.th'),ref('base.tj'),ref('base.tk'),ref('base.tm'),ref('base.tn'),
+                                                ref('base.to'),ref('base.tl'),ref('base.tr'),ref('base.tt'),ref('base.tv'),
+                                                ref('base.tw'),ref('base.tz'),ref('base.ua'),ref('base.ug'),ref('base.uk'),
+                                                ref('base.um'),ref('base.us'),ref('base.uy'),ref('base.uz'),ref('base.va'),
+                                                ref('base.vc'),ref('base.ve'),ref('base.vg'),ref('base.vi'),ref('base.vn'),
+                                                ref('base.vu'),ref('base.wf'),ref('base.ws'),ref('base.ye'),ref('base.yt'),
+                                                ref('base.za'),ref('base.zm'),ref('base.zw'),ref('base.xk')])]"/>
+        </record>
+
+
+        <record id="account_fiscal_position_non_uae_countries" model="account.fiscal.position.template">
+            <field name="name">Fiscal Position for Non-UAE Countries</field>
+            <!-- <field name="is_taxcloud" eval="True"/> -->
+            <field name="auto_apply" eval="True"/>
+            <field name="country_group_id" ref="group_non_uae_countries"/>
+            <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        </record>
+        <record id="acccount_fiscal_position_tax_non_uae_01" model="account.fiscal.position.tax.template">
+            <field name="tax_src_id" ref="uae_sale_tax_5_template"/>
+            <field name="tax_dest_id" ref="uae_sale_tax_0_template"/>
+            <field name="position_id" ref="account_fiscal_position_non_uae_countries"/>
+        </record>
+        <record id="acccount_fiscal_position_tax_non_uae_02" model="account.fiscal.position.tax.template">
+            <field name="tax_src_id" ref="uae_tax_5_template"/>
+            <field name="tax_dest_id" ref="uae_purchase_tax_0_template"/>
+            <field name="position_id" ref="account_fiscal_position_non_uae_countries"/>
+        </record>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_ae_view_company_form" model="ir.ui.view">
+        <field name="name">l10n.ae.view.company.form</field>
+        <field name="model">res.company</field>
+        <field name="priority" eval="100"/>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="string">TRN</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

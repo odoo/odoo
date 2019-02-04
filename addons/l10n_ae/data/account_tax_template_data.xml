@@ -1,21 +1,275 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="sale_tax_template" model="account.tax.template">
+    <record id="tag_ae_01" model="account.account.tag">
+        <field name="name">Output VAT 5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_ae_02" model="account.account.tag">
+        <field name="name">Input VAT 5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_ae_03" model="account.account.tag">
+        <field name="name">Exampted Output VAT</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_ae_04" model="account.account.tag">
+        <field name="name">Exampted Input VAT</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_ae_05" model="account.account.tag">
+        <field name="name">Output VAT 0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_ae_06" model="account.account.tag">
+        <field name="name">Input VAT 0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_ae_07" model="account.account.tag">
+        <field name="name">Import VAT 5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_ae_08" model="account.account.tag">
+        <field name="name">Import VAT -5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_ae_09" model="account.account.tag">
+        <field name="name">Import VAT -2.5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_ae_10" model="account.account.tag">
+        <field name="name">Adjustment 100%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_ae_11" model="account.account.tag">
+        <field name="name">Adjustment 50%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_ae_12" model="account.account.tag">
+        <field name="name">Reverse Charge Provision</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_ae_13" model="account.account.tag">
+        <field name="name">Tourist Refund 0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <!-- account.tax.template -->
+    <record id="uae_sale_tax_5_template" model="account.tax.template">
         <field name="chart_template_id" ref="uae_chart_template_standard"/>
-        <field name="name">Tax 10%</field>
-        <field name="amount">10</field>
+        <field name="name">TVA 5%</field>
+        <field name="description">TVA 5%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="uae_account_3785"/>
         <field name="refund_account_id" ref="uae_account_3785"/>
-        <field name="tax_group_id" ref="tax_group_15"/>
+        <field name="tax_group_id" ref="ae_tax_group_5"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_01')])]"/>
     </record>
-    <record id="purchase_tax_template" model="account.tax.template">
+    <record id="uae_sale_tax_0_template" model="account.tax.template">
         <field name="chart_template_id" ref="uae_chart_template_standard"/>
-        <field name="name">Purchase Tax 10%</field>
-        <field name="amount">10</field>
+        <field name="name">TVA 0%</field>
+        <field name="description">TVA 0%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="uae_account_3785"/>
+        <field name="refund_account_id" ref="uae_account_3785"/>
+        <field name="tax_group_id" ref="ae_tax_group_0"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_05')])]"/>
+    </record>
+    <record id="uae_sale_tax_exempted_template" model="account.tax.template">
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="name">Exempted Tax</field>
+        <field name="description">Exempted</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="uae_account_3785"/>
+        <field name="refund_account_id" ref="uae_account_3785"/>
+        <field name="tax_group_id" ref="ae_tax_group_exampted"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_03')])]"/>
+    </record>
+    <record id="uae_import_tax_template_sale" model="account.tax.template">
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="name">Import Tax</field>
+        <field name="description">Import Tax</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_07')])]"/>
+    </record>
+
+    <record id="uae_vat_5_return_sale" model="account.tax.template">
+        <field name="name">TVA 5% (adjustment)</field>
+        <field name="description">5% adjustment to good import</field>
+        <field name="amount">-5.0</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence" eval="0"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="type_tax_use">sale</field>
+        <field name="refund_account_id" ref="uae_account_3726"/>
+        <field name="account_id" ref="uae_account_3726"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_08')])]"/>
+    </record>
+    <record id="uae_vat_2_5_sale_return" model="account.tax.template">
+        <field name="name">TVA 2.5% (adjustment)</field>
+        <field name="description">2.5% adjustment to good import</field>
+        <field name="amount">-2.5</field>
+        <field name="amount_type">percent</field>
+        <field name="sequence" eval="0"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="type_tax_use">sale</field>
+        <field name="refund_account_id" ref="uae_account_3726"/>
+        <field name="account_id" ref="uae_account_3726"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_09')])]"/>
+    </record>
+    <record id="uae_tax_5_template" model="account.tax.template">
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="name">TVA 5%</field>
+        <field name="description">TVA 5%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="uae_account_3726"/>
         <field name="refund_account_id" ref="uae_account_3726"/>
-        <field name="tax_group_id" ref="tax_group_15"/>
+        <field name="tax_group_id" ref="ae_tax_group_5"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_02')])]"/>
+    </record>
+    <record id="vat_50_percent_purchase_reverse" model="account.tax.template">
+        <field name="description">50% Adjustment to good imported</field>
+        <field name="name">Adjustment to good imported(50%)</field>
+        <field name="amount_type">group</field>
+        <field name="amount">5</field>
+        <field name="type_tax_use">sale</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('uae_vat_2_5_sale_return'), ref('uae_tax_5_template')])]"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_11')])]"/>
+    </record>
+    <record id="vat_100_percent_purchase_reverse" model="account.tax.template">
+        <field name="description">100% Adjustment to good imported</field>
+        <field name="name">Adjustment to good imported(100%)</field>
+        <field name="amount_type">group</field>
+        <field name="amount">5</field>
+        <field name="type_tax_use">sale</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('uae_vat_5_return_sale'), ref('uae_tax_5_template')])]"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_10')])]"/>
+    </record>
+    <record id="vat_reverse_charge_provision" model="account.tax.template">
+        <field name="description">Reverse Charge Provision 5%</field>
+        <field name="name">Reverse Charge Provision 5%</field>
+        <field name="amount_type">group</field>
+        <field name="amount">5</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_12')])]"/>
+    </record>
+    <record id="vat_reverse_charge_provision" model="account.tax.template">
+        <field name="description">Tourist Refund scheme 0%</field>
+        <field name="name">Tourist Refund scheme 0%</field>
+        <field name="amount_type">group</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_13')])]"/>
+    </record>
+
+    <record id="uae_purchase_tax_0_template" model="account.tax.template">
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="name">TVA 0%</field>
+        <field name="description">TVA 0%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="uae_account_3726"/>
+        <field name="refund_account_id" ref="uae_account_3726"/>
+        <field name="tax_group_id" ref="ae_tax_group_0"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_06')])]"/>
+    </record>
+    <record id="uae_purchase_tax_exempted_template" model="account.tax.template">
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="name">Exempted Tax</field>
+        <field name="description">Exempted Tax</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="uae_account_3726"/>
+        <field name="refund_account_id" ref="uae_account_3726"/>
+        <field name="tax_group_id" ref="ae_tax_group_exampted"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_04')])]"/>
+    </record>
+
+    <record id="uae_import_tax_template" model="account.tax.template">
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="name">Import Tax</field>
+        <field name="description">Import Tax</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_07')])]"/>
+    </record>
+
+    <record id="uae_vat_5_return" model="account.tax.template">
+        <field name="name">TVA due a 5% (adjustment)</field>
+        <field name="description">5% adjustment to good import</field>
+        <field name="amount" eval="-5.0"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence" eval="0"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="refund_account_id" ref="uae_account_3726"/>
+        <field name="account_id" ref="uae_account_3726"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_08')])]"/>
+    </record>
+    <record id="uae_vat_2_5_purchase_return" model="account.tax.template">
+        <field name="name">TVA due a 2.5% (adjustment)</field>
+        <field name="description">2.5% adjustment to good import</field>
+        <field name="amount" eval="-2.5"/>
+        <field name="amount_type">percent</field>
+        <field name="sequence" eval="0"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="refund_account_id" ref="uae_account_3726"/>
+        <field name="account_id" ref="uae_account_3726"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_09')])]"/>
+    </record>
+    <record id="vat_50_percent_purchase_reverse" model="account.tax.template">
+        <field name="description">50% Adjustment to good imported</field>
+        <field name="name">Adjustment to good imported(50%)</field>
+        <field name="amount_type">group</field>
+        <field name="amount">5</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('uae_vat_2_5_purchase_return'), ref('uae_tax_5_template')])]"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_11')])]"/>
+    </record>
+    <record id="vat_100_percent_purchase_reverse" model="account.tax.template">
+        <field name="description">100% Adjustment to good imported</field>
+        <field name="name">Adjustment to good imported(100%)</field>
+        <field name="amount_type">group</field>
+        <field name="amount">5</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('uae_vat_5_return'), ref('uae_tax_5_template')])]"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_10')])]"/>
+    </record>
+    <record id="vat_reverse_charge_provision" model="account.tax.template">
+        <field name="description">Reverse Charge Provision 5%</field>
+        <field name="name">Reverse Charge Provision 5%</field>
+        <field name="amount_type">group</field>
+        <field name="amount">5</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_12')])]"/>
+    </record>
+    <record id="vat_reverse_charge_provision" model="account.tax.template">
+        <field name="description">Tourist Refund scheme 0%</field>
+        <field name="name">Tourist Refund scheme 0%</field>
+        <field name="amount_type">group</field>
+        <field name="amount">0</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_13')])]"/>
     </record>
 </odoo>
