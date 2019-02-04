@@ -1,43 +1,61 @@
 odoo.define('mail.ActivityModel', function (require) {
 'use strict';
 
-var AbstractModel = require('web.AbstractModel');
+var BasicModel = require('web.BasicModel');
 var session = require('web.session');
 
-var ActivityModel = AbstractModel.extend({
+var ActivityModel = BasicModel.extend({
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
     /**
-    * @override
-    */
+     * Add the following (activity specific) keys when performing a `get` on the
+     * main list datapoint:
+     * - activity_types
+     * - activity_res_ids
+     * - grouped_activities
+     *
+     * @override
+     */
     get: function () {
-        return this.data;
+        var result = this._super.apply(this, arguments);
+        if (result && result.model === this.modelName && result.type === 'list') {
+            _.extend(result, this.additionalData);
+        }
+        return result;
     },
     /**
      * @override
-     * @param {Object} params
      * @param {Array[]} params.domain
-     * @returns {Promise}
      */
     load: function (params) {
+        params.domain.push(['activity_ids', '!=', false]);
         this.domain = params.domain;
         this.modelName = params.modelName;
-        this.data = {};
-        return this._fetchData();
+        params.groupedBy = [];
+        var def = this._super.apply(this, arguments);
+        return Promise.all([def, this._fetchData()]).then(function (result) {
+            return result[0];
+        });
     },
     /**
-     * @param {any} handle
-     * @param {Object} params
-     * @param {Array[]} params.domain
-     * @returns {Promise}
+     * @override
+     * @param {Array[]} [params.domain]
      */
     reload: function (handle, params) {
         if (params && 'domain' in params) {
+            params.domain.push(['activity_ids', '!=', false]);
             this.domain = params.domain;
         }
-        return this._fetchData();
+        if (params && 'groupBy' in params) {
+            params.groupBy = [];
+        }
+        var def = this._super.apply(this, arguments);
+        return Promise.all([def, this._fetchData()]).then(function (result) {
+            return result[0];
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -61,7 +79,7 @@ var ActivityModel = AbstractModel.extend({
                 context: session.user_context,
             }
         }).then(function (result) {
-            self.data.data = result;
+            self.additionalData = result;
         });
     },
 });

@@ -2,17 +2,32 @@ odoo.define('mail.ActivityRenderer', function (require) {
 "use strict";
 
 var AbstractRenderer = require('web.AbstractRenderer');
+var ActivityRecord = require('mail.ActivityRecord');
 var core = require('web.core');
 var field_registry = require('web.field_registry');
+var qweb = require('web.QWeb');
+var session = require('web.session');
+var utils = require('web.utils');
 
+var KanbanActivity = field_registry.get('kanban_activity');
 var _t = core._t;
 var QWeb = core.qweb;
 
 var ActivityRenderer = AbstractRenderer.extend({
     className: 'o_activity_view',
     events: {
-        'click .o_res_name_cell': '_onResNameClicked',
         'click .o_send_mail_template': '_onSenMailTemplateClicked',
+    },
+
+    /**
+     * @override
+     * @param {Object} params.templates
+     */
+    init: function (parent, state, params) {
+        this._super.apply(this, arguments);
+
+        this.qweb = new qweb(session.debug, {_s: session.origin});
+        this.qweb.add_template(utils.json_node_to_xml(params.templates));
     },
 
     //--------------------------------------------------------------------------
@@ -23,12 +38,19 @@ var ActivityRenderer = AbstractRenderer.extend({
      * @override
      * @private
      */
+    _getRecord: function (recordId) {
+        return _.findWhere(this.state.data, { res_id: recordId });
+    },
+    /**
+     * @override
+     * @private
+     */
     _render: function () {
         this.$el
             .removeClass('table-responsive')
             .empty();
 
-        if (this.state.data.activity_types.length === 0) {
+        if (this.state.activity_types.length === 0) {
             this.$el.append(QWeb.render('ActivityView.nodata'));
         } else {
             var $table = $('<table>')
@@ -46,7 +68,7 @@ var ActivityRenderer = AbstractRenderer.extend({
      * @returns {jQueryElement} a jquery element <tbody>
      */
     _renderBody: function () {
-        var $rows = _.map(this.state.data.res_ids, this._renderRow.bind(this));
+        var $rows = _.map(this.state.activity_res_ids, this._renderRow.bind(this));
         return $('<tbody>').append($rows);
     },
     /**
@@ -56,7 +78,7 @@ var ActivityRenderer = AbstractRenderer.extend({
     _renderHeader: function () {
         var $tr = $('<tr>')
                 .append($('<th>')) //empty cell for name
-                .append(_.map(this.state.data.activity_types, this._renderHeaderCell.bind(this)));
+                .append(_.map(this.state.activity_types, this._renderHeaderCell.bind(this)));
         return $('<thead>').append($tr);
     },
     /**
@@ -73,22 +95,23 @@ var ActivityRenderer = AbstractRenderer.extend({
     },
     /**
      * @private
-     * @param {Object} data
+     * @param {integer} resId
      * @returns {jQueryElement} a <tr> element
      */
-    _renderRow: function (data) {
+    _renderRow: function (resId) {
         var self = this;
-        var res_id = data[0];
-        var name = data[1];
-        var $nameTD = $('<td>')
-            .addClass("o_res_name_cell")
-            .html(name)
-            .data('res-id', res_id);
-        var $cells = _.map(this.state.data.activity_types, function (node) {
+        var record = this._getRecord(resId);
+        var $nameTD = $('<td>', {
+            class: _.contains(this.filteredResIDs, resId) ? 'o_activity_filter_' + this.activeFilter : '',
+        });
+        var activityRecord = new ActivityRecord(this, record, { qweb: this.qweb });
+        this.defs.push(activityRecord.appendTo($nameTD));
+
+        var $cells = _.map(this.state.activity_types, function (node) {
             var $td = $('<td>').addClass("o_activity_summary_cell");
             var activity_type_id = node[0];
-            var activity_group = self.state.data.grouped_activities[res_id][activity_type_id];
-            activity_group = activity_group || {count: 0, ids: [], state: false};
+            var activity_group = self.state.grouped_activities[resId];
+            activity_group = activity_group && activity_group[activity_type_id] || {count: 0, ids: [], state: false};
             if (activity_group.state) {
                 $td.addClass(activity_group.state);
             }
@@ -114,16 +137,15 @@ var ActivityRenderer = AbstractRenderer.extend({
                     },
                 },
                 fieldsInfo: {},
-                model: self.state.data.model,
-                ref: res_id, // not necessary, i think
+                model: self.state.model,
+                ref: resId, // not necessary, i think
                 type: 'record',
-                res_id: res_id,
+                res_id: resId,
                 getContext: function () {
                     return {}; // session.user_context
                 },
                 //todo intercept event or changes on record to update view
             };
-            var KanbanActivity = field_registry.get('kanban_activity');
             var widget = new KanbanActivity(self, "activity_ids", record, {});
             widget.appendTo($td).then(function() {
                 // replace clock by closest deadline
@@ -165,15 +187,6 @@ var ActivityRenderer = AbstractRenderer.extend({
             activityTypeID: activityTypeID,
             templateID: templateID,
         });
-    },
-    /**
-     * @private
-     * @override
-     * @param {MouseEvent} ev
-     */
-    _onResNameClicked: function (ev) {
-        var resID = $(ev.currentTarget).data('res-id');
-        this.trigger_up('open_view_form', {resID: resID});
     },
 });
 
