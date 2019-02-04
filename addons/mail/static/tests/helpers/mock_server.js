@@ -141,6 +141,42 @@ MockServer.include({
             'mail_failures': [],
         });
     },
+
+    /**
+     * Simulate the custom action buttons for activity
+     *
+     * @private
+     * @return {Array}
+     */
+    _mockActivityCustomActions: function (activity) {
+        var customActions = [{
+            'text': 'Edit',
+            'selector_class': 'o_edit_activity',
+            'icon': 'fa-pencil',
+            'action_type': 'edit'
+        }, {
+            'text': 'Cancel',
+            'selector_class': 'o_unlink_activity',
+            'icon': 'fa-times',
+            'action_type': 'cancel'
+        }];
+        if (activity.activity_category == 'upload_file') {
+            customActions.unshift({
+                'text': 'Upload Document',
+                'selector_class': 'o_mark_as_done_upload_file',
+                'icon': 'fa-upload',
+                'action_type': 'upload'
+            });
+        } else {
+            customActions.unshift({
+                'text': 'Mark Done',
+                'selector_class': 'o_mark_as_done',
+                'icon': 'fa-check',
+                'action_type': 'done'
+            });
+        }
+        return customActions;
+    },
     /**
      * Simulate the 'message_fetch' Python method
      *
@@ -256,6 +292,7 @@ MockServer.include({
      * @override
      */
     _performRpc: function (route, args) {
+        var self = this;
         // routes
         if (route === '/mail/init_messaging') {
             return Promise.resolve(this._mockInitMessaging(args));
@@ -293,6 +330,7 @@ MockServer.include({
                         return {id:template_id, name:"template"+template_id};
                     });
                 }
+                record.activity_actions = self._mockActivityCustomActions(record);
                 return record;
             });
             return Promise.resolve(res);

@@ -90,6 +90,35 @@ QUnit.module('Chatter', {
                     activity_ids: [],
                 }]
             },
+            'hr.leave': {
+                fields: {
+                    name: { string: "Description", type: "char" },
+                    state: {
+                        string: 'Status',
+                        type: 'selection',
+                        selection: [
+                            ['draft', 'To Submit'],
+                            ['cancel', 'Cancelled'],
+                            ['confirm', 'To Approve'],
+                            ['refuse', 'Refused'],
+                            ['validate1', 'Second Approval'],
+                            ['validate', 'Approved']
+                        ],
+                    },
+                    activity_ids: {
+                        string: 'Activities',
+                        type: 'one2many',
+                        relation: 'mail.activity',
+                        relation_field: 'res_id',
+                    },
+                },
+                records: [{
+                    id: 1,
+                    name: "Going on a Tour",
+                    state: 'confirm',
+                    activity_ids: [],
+                }],
+            },
             'mail.activity': {
                 fields: {
                     activity_type_id: { string: "Activity type", type: "many2one", relation: "mail.activity.type" },
@@ -2289,6 +2318,134 @@ QUnit.test('form activity widget: clic mail template', async function (assert) {
     await testUtils.dom.click(form.$('.o_activity_template_preview[data-template-id=100]'));
     assert.containsOnce(form, '.o_mail_activity .o_thread_message',
         "activity should still be there");
+    form.destroy();
+});
+
+QUnit.test('activity: adding custom actions in activities', async function (assert) {
+    assert.expect(9);
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "Time Off Approval",
+        can_write: true,
+        state: "today",
+        user_id: 2,
+        create_uid: 2,
+        activity_type_id: 12,
+    }];
+    this.data['hr.leave'].records[0].activity_ids = [1];
+
+    var form = await createView({
+        View: FormView,
+        model: 'hr.leave',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Leaves">' +
+                '<div class="oe_chatter">' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 1,
+        mockRPC: function(route, args) {
+            if (args.method === 'activity_format') {
+                return this._super.apply(this, arguments).then(function (activities) {
+                    activities[0].activity_actions.unshift({
+                        'text': 'Approve',
+                        'selector_class': 'o_activity_custom_action',
+                        'icon': 'fa-check',
+                        'action': 'action_approve',
+                        'action_type': 'object'
+                    }, {
+                        'text': 'Refuse',
+                        'selector_class': 'o_activity_custom_action',
+                        'icon': 'fa-ban',
+                        'action': 'action_refuse',
+                        'action_type': 'object'
+                    });
+                    return activities;
+                });
+            }
+            if (args.method === 'action_approve') {
+                assert.strictEqual(args.model, 'hr.leave', "should call 'action_approve' of hr.leave model");
+                assert.strictEqual(args.args[0][0], 1, "should call 'action_approve' for id 1");
+                return $.when();
+            }
+            if (args.method === 'action_refuse') {
+                assert.strictEqual(args.model, 'hr.leave', "should call 'action_refuse' of hr.leave model");
+                assert.strictEqual(args.args[0][0], 1, "should call 'action_refuse' for id 1");
+                return $.when();
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    assert.containsOnce(form, 'span.o_activity_custom_action a.o_activity_link:contains(Approve)', 'should contain Approve custom action');
+    assert.containsOnce(form, 'span.o_activity_custom_action a.o_activity_link:contains(Refuse)', 'should contain Refuse custom action');
+    assert.containsOnce(form, '.o_thread_message_tools .o_mark_as_done', 'should contain Mark Done action');
+    assert.containsOnce(form, '.o_thread_message_tools .o_edit_activity', 'should contain Edit action');
+    assert.containsOnce(form, '.o_thread_message_tools .o_unlink_activity', 'should contain Cancel action');
+
+    // approve a time off request
+    await testUtils.dom.click(form.$('.o_activity_custom_action[data-action=action_approve]'));
+
+    // refuse a time off request
+    await testUtils.dom.click(form.$('.o_activity_custom_action[data-action=action_refuse]'));
+
+    form.destroy();
+});
+
+QUnit.test('activity: replacing default actions by custom actions in activities', async function (assert) {
+    assert.expect(4);
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "Time Off Approval",
+        can_write: true,
+        state: "today",
+        user_id: 2,
+        create_uid: 2,
+        activity_type_id: 12,
+    }];
+    this.data['hr.leave'].records[0].activity_ids = [1];
+
+    var form = await createView({
+        View: FormView,
+        model: 'hr.leave',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Leaves">' +
+                '<div class="oe_chatter">' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 1,
+        mockRPC: function(route, args) {
+            if (args.method === 'activity_format') {
+                return this._super.apply(this, arguments).then(function (activities) {
+                    // replacing default actions by custom actions
+                    activities[0].activity_actions = [{
+                        'text': 'Approve',
+                        'selector_class': 'o_activity_custom_action',
+                        'icon': 'fa-check',
+                        'action': 'action_approve',
+                        'action_type': 'object'
+                    }, {
+                        'text': 'Refuse',
+                        'selector_class': 'o_activity_custom_action',
+                        'icon': 'fa-ban',
+                        'action': 'action_refuse',
+                        'action_type': 'object'
+                    }];
+                    return activities;
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    assert.containsN(form, '.o_activity_custom_action', 2, "should contain 2 custom actions");
+    assert.containsNone(form, '.o_mark_as_done', 'should not contain Mark Done action');
+    assert.containsNone(form,'.o_edit_activity', 'should not contain Edit action');
+    assert.containsNone(form, '.o_unlink_activity', 'should not contain Cancel action');
+
     form.destroy();
 });
 

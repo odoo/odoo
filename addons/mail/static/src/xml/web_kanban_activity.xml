@@ -58,7 +58,7 @@
             <div t-attf-class="o_activity_title_entry {{! log.force_next ? 'align-items-center' : 'mb-1'}}">
                 <span t-attf-class="fa #{log.icon ? log.icon : 'fa-bell' } fa-fw mr-2 text-center text-muted" role="img" aria-label="Log" title="Log"/>
                 <strong class="text-dark"><t t-esc="log.title_action or log.activity_type_id[1]"/></strong>
-                <button t-if="! log.force_next and log.can_write" class="btn btn-sm btn-link py-0 o_edit_button"><i class="fa fa-pencil"/></button>
+                <button t-if="! log.force_next and log.can_write and _.where(log.activity_actions, {'action_type': 'edit'}).length" class="btn btn-sm btn-link py-0 o_edit_button"><i class="fa fa-pencil"/></button>
             </div>
             <div class="o_activity_title_entry mt-1" t-if="log.state != 'today'">
                 <span class="fa fa-clock-o fa-fw mr-2 text-center text-muted" role="img" aria-label="Deadline" title="Deadline"/>
@@ -79,6 +79,18 @@
                 <span class="fa fa-user fa-fw mr-2 text-center text-muted" role="img" aria-label="User" title="User"/>
                 <span><t t-esc="log.user_id[1]" /></span>
             </div>
+            <div class="o_activity_title_entry">
+                <div class="btn-group" t-if="log.activity_actions">
+                    <t t-foreach="log.activity_actions" t-as="custom_action">
+                        <t t-if="!_.contains(['done', 'edit', 'cancel', 'upload'], custom_action.action_type)">
+                            <a role="button" href="#" class="btn btn-link o_activity_custom_action o_activity_link px-0 mr-2" t-att-data-activity-id="log.id" t-att-data-action="custom_action.action"  t-att-data-action-type="custom_action.action_type">
+                                <span t-attf-class="fa #{custom_action.icon} fa-fw text-center" role="img"/>
+                                <span><t t-esc="custom_action.text"/></span>
+                            </a>
+                        </t>
+                    </t>
+                </div>
+            </div>
         </div>
         <div t-if="log.can_write" class="flex-grow-1 text-right">
             <t t-if="log.activity_category === 'upload_file'">
@@ -96,7 +108,7 @@
                         </t>
                     </span>
             </t>
-            <t t-else="">
+            <t t-if="_.where(log.activity_actions, {'action_type': 'done'}).length">
                 <a  t-att-data-force-next-activity="log.force_next"
                     t-att-data-previous-activity-type-id="log.activity_type_id[0]"
                     t-att-data-activity-id="log.id"

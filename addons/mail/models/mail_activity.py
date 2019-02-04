@@ -502,6 +502,7 @@ class MailActivity(models.Model):
         mail_template_dict = dict([(mail_template['id'], mail_template) for mail_template in mail_template_info])
         for activity in activities:
             activity['mail_template_ids'] = [mail_template_dict[mail_template_id] for mail_template_id in activity['mail_template_ids']]
+            activity['activity_actions'] = self.env[activity['res_model']].browse(activity['res_id']).activity_custom_actions(activity)
         return activities
 
     @api.model
@@ -713,6 +714,38 @@ class MailActivityMixin(models.AbstractModel):
                 composition_mode='comment'
             )
         return True
+
+    def activity_custom_actions(self, activity):
+        """ Display the custom buttons on particular activity
+        :returns: return list of dict with default done/edit/cancel buttons
+        where each buttons args can be,
+            text: Text to display on button, e.g. 'Done'
+            selector_class: Particular class to bind event or To decorate button
+            icon: Font awesome icon class, e.g. fa-check
+            action: Action to be called when button is clicked, e.g. action_approve
+            action_type: should be one of the [done, upload, cancel, edit, action, object]
+        """
+
+        self.ensure_one()
+        res = [
+            {'text': 'Edit', 'selector_class': 'o_edit_activity', 'icon': 'fa-pencil', 'action_type': 'edit'},
+            {'text': 'Cancel', 'selector_class': 'o_unlink_activity', 'icon': 'fa-times', 'action_type': 'cancel'},
+        ]
+        if activity.get('activity_category') == 'upload_file':
+            res.insert(0, {
+                'text': 'Upload Document',
+                'selector_class': 'o_mark_as_done_upload_file',
+                'icon': 'fa-upload',
+                'action_type': 'upload'
+            })
+        else:
+            res.insert(0, {
+                'text': 'Mark Done',
+                'selector_class': 'o_mark_as_done',
+                'icon': 'fa-check',
+                'action_type': 'done'
+            })
+        return res
 
     def activity_schedule(self, act_type_xmlid='', date_deadline=None, summary='', note='', **act_values):
         """ Schedule an activity on each record of the current record set.
