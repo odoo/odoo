@@ -18,6 +18,7 @@ var _t = core._t;
 var qweb = core.qweb;
 
 var KanbanController = BasicController.extend({
+    buttons_template: 'KanbanView.buttons',
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
         quick_create_add_column: '_onAddColumn',
         quick_create_record: '_onQuickCreateRecord',
@@ -78,7 +79,7 @@ var KanbanController = BasicController.extend({
      */
     renderButtons: function ($node) {
         if (this.hasButtons && this.is_action_enabled('create')) {
-            this.$buttons = $(qweb.render('KanbanView.buttons', {
+            this.$buttons = $(qweb.render(this.buttons_template, {
                 btnClass: 'btn-primary',
                 widget: this,
             }));
