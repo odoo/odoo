@@ -62,7 +62,8 @@ sAnimations.registry.websiteSaleDelivery = sAnimations.Class.extend({
             $carrierBadge.children('span').text(result.new_amount_delivery);
             $carrierBadge.removeClass('d-none');
             $computeBadge.addClass('d-none');
-            $payButton.prop('disabled', false);
+            $payButton.data('disabled_reasons').carrier_selection = false;
+            $payButton.prop('disabled', _.contains($payButton.data('disabled_reasons'), true));
         } else {
             console.error(result.error_message);
             $computeBadge.text(result.error_message);
@@ -84,7 +85,10 @@ sAnimations.registry.websiteSaleDelivery = sAnimations.Class.extend({
     _onCarrierClick: function (ev) {
         var $radio = $(ev.currentTarget).find('input[type="radio"]');
         $radio.prop("checked", true);
-        $('#o_payment_form_pay').prop('disabled', true);
+        var $payButton = $('#o_payment_form_pay');
+        $payButton.prop('disabled', true);
+        $payButton.data('disabled_reasons', $payButton.data('disabled_reasons') || {});
+        $payButton.data('disabled_reasons').carrier_selection = true;
         this._rpc({
             route: '/shop/update_carrier',
             params: {

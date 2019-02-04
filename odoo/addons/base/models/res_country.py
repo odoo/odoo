@@ -128,3 +128,10 @@ class CountryState(models.Model):
         search_domain.append(('id', 'not in', first_state_ids))
         state_ids = first_state_ids + self._search(search_domain + args, limit=limit, access_rights_uid=name_get_uid)
         return [(state.id, state.display_name) for state in self.browse(state_ids)]
+
+    @api.multi
+    def name_get(self):
+        result = []
+        for record in self:
+            result.append((record.id, "{} ({})".format(record.name, record.country_id.code)))
+        return result

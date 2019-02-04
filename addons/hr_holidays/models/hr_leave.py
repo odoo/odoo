@@ -501,7 +501,8 @@ class HolidaysRequest(models.Model):
             holiday.sudo().action_validate()
             holiday.message_subscribe(partner_ids=[holiday._get_responsible_for_approval().partner_id.id])
             holiday.sudo().message_post(body=_("The time off has been automatically approved"), subtype="mt_comment") # Message from OdooBot (sudo)
-        holiday.activity_update()
+        if not self._context.get('import_file'):
+            holiday.activity_update()
         return holiday
 
     def _read_from_database(self, field_names, inherited_field_names=[]):

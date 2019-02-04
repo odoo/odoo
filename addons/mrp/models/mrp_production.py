@@ -8,7 +8,7 @@ import math
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.tools import float_compare, float_round, DEFAULT_SERVER_DATETIME_FORMAT
 
 class MrpProduction(models.Model):
@@ -33,6 +33,10 @@ class MrpProduction(models.Model):
             location = self.env['stock.picking.type'].browse(self.env.context['default_picking_type_id']).default_location_src_id
         if not location:
             location = self.env.ref('stock.stock_location_stock', raise_if_not_found=False)
+            try:
+                location.check_access_rule('read')
+            except (AttributeError, AccessError):
+                location = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
         return location and location.id or False
 
     @api.model
@@ -42,6 +46,10 @@ class MrpProduction(models.Model):
             location = self.env['stock.picking.type'].browse(self.env.context['default_picking_type_id']).default_location_dest_id
         if not location:
             location = self.env.ref('stock.stock_location_stock', raise_if_not_found=False)
+            try:
+                location.check_access_rule('read')
+            except (AttributeError, AccessError):
+                location = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
         return location and location.id or False
 
     name = fields.Char(
@@ -425,6 +433,10 @@ class MrpProduction(models.Model):
     @api.onchange('picking_type_id')
     def onchange_picking_type(self):
         location = self.env.ref('stock.stock_location_stock')
+        try:
+            location.check_access_rule('read')
+        except (AttributeError, AccessError):
+            location = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
         self.move_raw_ids.update({'picking_type_id': self.picking_type_id})
         self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id

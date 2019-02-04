@@ -2,7 +2,6 @@ odoo.define('web.search_view_tests', function (require) {
 "use strict";
 
 var FormView = require('web.FormView');
-var ListView = require('web.ListView');
 var testUtils = require('web.test_utils');
 
 var createActionManager = testUtils.createActionManager;
@@ -1027,6 +1026,7 @@ QUnit.module('Search View', {
         assert.strictEqual(searchRead, 1, "there should be 1 search_read");
 
         // 'r' key to filter on bar "First Record"
+        $('.o_searchview_input').val('r');
         $('.o_searchview_input').trigger($.Event('keypress', { which: 82, keyCode: 82 }));
         $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.DOWN, keyCode: $.ui.keyCode.DOWN }));
         $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.RIGHT, keyCode: $.ui.keyCode.RIGHT }));
@@ -1038,6 +1038,7 @@ QUnit.module('Search View', {
         assert.strictEqual(searchRead, 2, "there should be 2 search_read");
 
         // 'r' key to filter on bar "Second Record"
+        $('.o_searchview_input').val('r');
         $('.o_searchview_input').trigger($.Event('keypress', { which: 82, keyCode: 82 }));
         $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.DOWN, keyCode: $.ui.keyCode.DOWN }));
         $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.RIGHT, keyCode: $.ui.keyCode.RIGHT }));
@@ -1048,6 +1049,36 @@ QUnit.module('Search View', {
         assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(), "First record or Second record",
             "the autocompletion facet should be correct");
         assert.strictEqual(searchRead, 3, "there should be 3 search_read");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('no search text triggers a reload', function (assert) {
+        assert.expect(2);
+        var rpcs = 0;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function () {
+                rpcs++;
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        actionManager.doAction(10);
+        rpcs = 0;
+        $('.o_searchview_input').trigger($.Event('keydown', {
+            which: $.ui.keyCode.ENTER,
+            keyCode: $.ui.keyCode.ENTER,
+        }));
+        $('.o_searchview_input').trigger($.Event('keyup', {
+            which: $.ui.keyCode.ENTER,
+            keyCode: $.ui.keyCode.ENTER,
+        }));
+
+        assert.containsNone(actionManager, '.o_searchview_facet_label');
+        assert.strictEqual(rpcs, 2, "should have reloaded");
 
         actionManager.destroy();
     });

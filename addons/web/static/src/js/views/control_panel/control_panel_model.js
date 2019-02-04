@@ -483,15 +483,13 @@ var ControlPanelModel = mvc.Model.extend({
      * @param {'previous_period'|'previous_year'} [defaultTimeRanges.comparisonRange]
      */
     _activateDefaultTimeRanges: function (defaultTimeRanges) {
-        var self = this;
         if (defaultTimeRanges) {
-            var filterId = Object.keys(this.filters).find(function (filterId) {
-                var filter = self.filters[filterId];
+            var filter = _.find(this.filters, function (filter) {
                 return filter.type === 'timeRange' && filter.fieldName === defaultTimeRanges.field;
             });
-            if (filterId) {
+            if (filter) {
                 this.activateTimeRange(
-                    filterId,
+                    filter.id,
                     defaultTimeRanges.range,
                     defaultTimeRanges.comparisonRange
                 );
@@ -805,7 +803,7 @@ var ControlPanelModel = mvc.Model.extend({
      */
     _getGroupIdOfType: function (type) {
         var self = this;
-        return Object.keys(this.groups).find(function (groupId) {
+        return _.find(Object.keys(this.groups), function (groupId) {
             var group = self.groups[groupId];
             return group.type === type;
         });
@@ -874,7 +872,7 @@ var ControlPanelModel = mvc.Model.extend({
                     filter.timeRangeId,
                     filter.fieldType
                 );
-            var timeRangeDescription = filter.timeRangeOptions.find(function (option) {
+            var timeRangeDescription = _.find(filter.timeRangeOptions, function (option) {
                 return option.optionId === filter.timeRangeId;
             }).description.toString();
             if (filter.comparisonTimeRangeId) {
@@ -885,7 +883,7 @@ var ControlPanelModel = mvc.Model.extend({
                     null,
                     filter.comparisonTimeRangeId
                 );
-                comparisonTimeRangeDescription = filter.comparisonTimeRangeOptions.find(function (comparisonOption) {
+                comparisonTimeRangeDescription = _.find(filter.comparisonTimeRangeOptions, function (comparisonOption) {
                     return comparisonOption.optionId === filter.comparisonTimeRangeId;
                 }).description.toString();
             }
@@ -952,12 +950,11 @@ var ControlPanelModel = mvc.Model.extend({
                 });
                 self._createGroupOfFilters(favorites);
                 if (self.activateDefaultFavorite) {
-                    var defaultFavoriteId = Object.keys(self.filters).find(function (filterId) {
-                        var filter = self.filters[filterId];
+                    var defaultFavorite = _.find(self.filters, function (filter) {
                         return filter.type === 'favorite' && filter.isDefault;
                     });
-                    if (defaultFavoriteId) {
-                        self.toggleFilter(defaultFavoriteId);
+                    if (defaultFavorite) {
+                        self.toggleFilter(defaultFavorite.id);
                     }
                 }
             } else {
