@@ -7,6 +7,12 @@
             <field name="model">product.category</field>
             <field name="inherit_id" ref="product.product_category_form_view" />
             <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button string="Putaway Rules"
+                        class="oe_stat_button"
+                        icon="fa-random" name="%(category_open_putaway)d" type="action"
+                        groups="stock.group_stock_multi_locations"/>
+                </div>
                 <group name="first" position="after">
                     <group string="Logistics">
                         <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
@@ -173,6 +179,12 @@
                             attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
                 </sheet>
+                <button name="toggle_active" position="before">
+                    <button string="Putaway Rules" type="object"
+                        name="action_view_related_putaway_rules"
+                        class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
+                        context="{'invisible_handle': True, 'single_product': True}"/>
+                </button>
             </field>
         </record>
 
@@ -253,6 +265,10 @@
                             class="oe_stat_button" icon="fa-cogs"
                             context="{'default_product_id': id}"
                             groups="stock.group_stock_multi_locations"/>
+                        <button string="Putaway Rules" type="object"
+                            name="action_view_related_putaway_rules"
+                            class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
+                            context="{'invisible_handle': True, 'single_product': True}"/>
                         <button string="Lot/Serial Number" type="object"
                             name="action_open_product_lot"
                             attrs="{'invisible': [('tracking', '=', 'none')]}"
@@ -337,6 +353,13 @@
                             class="oe_stat_button" icon="fa-cogs"
                             context="{'default_product_tmpl_id': id}"
                             groups="stock.group_stock_multi_locations"/>
+                        <button string="Putaway Rules" type="object"
+                            name="action_view_related_putaway_rules"
+                            class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
+                            context="{
+                                'invisible_handle': True,
+                                'single_product': product_variant_count == 1,
+                            }"/>
                         <button string="Lot/Serial Number" type="object"
                             name="action_open_product_lot"
                             attrs="{'invisible': [('tracking', '=', 'none')]}"
