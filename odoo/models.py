@@ -2593,20 +2593,20 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # retrieve results from records; this takes values from the cache and
         # computes remaining fields
         self = self.with_prefetch(self._prefetch.copy())
-        data = {record: {'id': record.id} for record in self}
         missing = set()
+        data = [(record, {'id': record._ids[0]}) for record in self]
         use_name_get = (load == '_classic_read')
         for name in (stored + inherited + computed):
             convert = self._fields[name].convert_to_read
             # restrict the prefetching of self's model to self; this avoids
             # computing fields on a larger recordset than self
             self._prefetch[self._name] = set(self._ids)
-            for record in self:
+            for record, vals in data:
                 try:
-                    data[record][name] = convert(record[name], record, use_name_get)
+                    vals[name] = convert(record[name], record, use_name_get)
                 except MissingError:
                     missing.add(record)
-        result = [data[record] for record in self if record not in missing]
+        result = [vals for record, vals in data if record not in missing]
 
         return result
 
