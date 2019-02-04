@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import logging
 import pytz
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -263,6 +263,15 @@ class IrSequence(models.Model):
         return self._next()
 
     @api.model
+    @tools.ormcache('sequence_code', 'force_company')
+    def seq_by_code(self, sequence_code, force_company):
+        seq_ids = self.search([('code', '=', sequence_code), ('company_id', 'in', [force_company, False])], order='company_id')
+        if not seq_ids:
+            _logger.debug("No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company." % sequence_code)
+            return False
+        return seq_ids[0]
+
+    @api.model
     def next_by_code(self, sequence_code):
         """ Draw an interpolated string using a sequence with the requested code.
             If several sequences with the correct code are available to the user
@@ -279,12 +288,8 @@ class IrSequence(models.Model):
         force_company = self._context.get('force_company')
         if not force_company:
             force_company = self.env.user.company_id.id
-        seq_ids = self.search([('code', '=', sequence_code), ('company_id', 'in', [force_company, False])], order='company_id')
-        if not seq_ids:
-            _logger.debug("No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company." % sequence_code)
-            return False
-        seq_id = seq_ids[0]
-        return seq_id._next()
+        seq_id = self.seq_by_code(sequence_code, force_company)
+        return seq_id and seq_id._next()
 
     @api.model
     def get_id(self, sequence_code_or_id, code_or_id='id'):
