@@ -27,15 +27,59 @@
                 line-height: 42px;
             }
         }
-    }
-    .o_res_name_cell {
-        padding: 0 10px;
-        color: #008784;
-        &:hover {
-            color: #666;
-            cursor: pointer;
+        > .o_activity_empty_cell {
+            display: none;
         }
+        &:hover > .o_activity_empty_cell {
+            color: gray;
+            display: block;
+            font-style: italic;
+        }
+        .o_activity_btn > span {
+            bottom: 5px;
+            position: relative;
+            &.planned {
+                color: theme-color('success');
+            }
+            &.overdue {
+                color: theme-color('danger');
+            }
+            &.today {
+                color: theme-color('warning');
+            }
+        }
+    }
+
+    // it contains a kanban card representing the record
+    .o_activity_record {
+        display: flex;
+        flex: 1 1 auto;
+        align-items: center;
+        padding: 8px 8px;
         cursor: pointer;
+
+        > img {
+            width: 32px;
+            max-height: 32px;
+            margin-right: 16px;
+        }
+
+        > div {
+            max-width: 200px;
+
+            .o_text_block {
+                @include o-text-overflow;
+                display: block;
+            }
+        }
+
+        .o_text_bold {
+            font-weight: bold;
+        }
+
+        .o_text_block {
+            display: block;
+        }
     }
     .o_activity_type_cell {
         padding:10px;
