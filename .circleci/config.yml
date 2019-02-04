@@ -1,0 +1,28 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.5.6
+    steps:
+      - checkout
+      - restore-cache:
+          - v1-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "doc/requirements.txt" }}
+          - v1-dependencies-
+      - run:
+          name: install dependencies
+          command: |
+            python3 -mvenv ./venv
+            . venv/bin/activate
+            # FIXME: Python version?
+            pip install -r doc/requiements.txt
+            pip install -r requirements.txt
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "doc/requirements.txt" }}
+
+      - run:
+          name: build docs
+          command: |
+            . venv/bin/activate
+            PYTHONWARNINGS=once::DeprecationWarning,once::PendingDeprecationWarning make -C doc -e SPHINXOPTS='-vv -t solutions' html
