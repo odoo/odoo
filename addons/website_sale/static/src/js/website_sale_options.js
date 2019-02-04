@@ -4,7 +4,6 @@ odoo.define('website_sale_options.website_sale', function (require) {
 var core = require('web.core');
 var _t = core._t;
 var OptionalProductsModal = require('sale.OptionalProductsModal');
-var wContext = require('website.context');
 var sAnimations = require('website.content.snippets.animation');
 var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
 require('website_sale.website_sale');
@@ -86,7 +85,7 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
                 okButtonText: _t('Proceed to Checkout'),
                 cancelButtonText: _t('Continue Shopping'),
                 title: _t('Add to cart'),
-                context: wContext.get(),
+                context: self._getContext(),
             }).open();
 
             self.optionalProductsModal.on('options_empty', null, self._onModalOptionsEmpty.bind(self));
@@ -172,7 +171,7 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
         this.$form.ajaxSubmit({
             url:  '/shop/cart/update_option',
             data: {
-                lang: wContext.get().lang,
+                lang: this._getContext().lang,
                 custom_values: customValues
             },
             success: function (quantity) {

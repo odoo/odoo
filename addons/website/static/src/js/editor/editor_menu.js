@@ -4,7 +4,6 @@ odoo.define('website.editor.menu', function (require) {
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var core = require('web.core');
-var wContext = require('website.context');
 var WysiwygMultizone = require('web_editor.wysiwyg.multizone');
 
 var _t = core._t;
@@ -147,12 +146,18 @@ var EditorMenu = Widget.extend({
      * @private
      */
     _wysiwygInstance: function () {
+        var context;
+        this.trigger_up('context_get', {
+            callback: function (ctx) {
+                context = ctx;
+            },
+        });
         return new WysiwygMultizone(this, {
             snippets: 'website.snippets',
             recordInfo: {
-                context: wContext.get(),
+                context: context,
                 data_res_model: 'website',
-                data_res_id: wContext.get().website_id,
+                data_res_id: context.website_id,
             }
         });
     },

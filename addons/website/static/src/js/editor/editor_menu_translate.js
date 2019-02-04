@@ -5,14 +5,8 @@ require('web.dom_ready');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var localStorage = require('web.local_storage');
-var wContext = require('website.context');
 var WysiwygTranslate = require('web_editor.wysiwyg.multizone.translate');
 var EditorMenu = require('website.editor.menu');
-
-var lang = $('html').attr('lang').replace('-', '_');
-if ($('.js_change_lang[data-lang="' + lang + '"]').data('default-lang')) {
-    return $.Deferred().reject("It's the default language");
-}
 
 var _t = core._t;
 
@@ -95,10 +89,15 @@ var TranslatorMenu = EditorMenu.extend({
      * @private
      */
     _wysiwygInstance: function () {
-        return new WysiwygTranslate(this, {lang: lang || wContext.get().lang});
+        var context;
+        this.trigger_up('context_get', {
+            callback: function (ctx) {
+                context = ctx;
+            },
+        });
+        return new WysiwygTranslate(this, {lang: context.lang});
     },
 });
 
 return TranslatorMenu;
-
 });
