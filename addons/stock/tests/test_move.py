@@ -671,15 +671,14 @@ class StockMove(TransactionCase):
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        putaway = self.env['product.putaway'].create({
-            'name': 'putaway stock->shelf1',
-            'fixed_location_ids': [(0, 0, {
-                'category_id': self.env.ref('product.product_category_all').id,
-                'fixed_location_id': shelf1_location.id,
-            })]
+        # putaway from stock to shelf1
+        putaway = self.env['stock.putaway.rule'].create({
+            'category_id': self.env.ref('product.product_category_all').id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': shelf1_location.id,
         })
         self.stock_location.write({
-            'putaway_strategy_id': putaway.id,
+            'putaway_rule_ids': [(4, putaway.id, 0)]
         })
 
         # creation
@@ -713,15 +712,14 @@ class StockMove(TransactionCase):
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        putaway = self.env['product.putaway'].create({
-            'name': 'putaway stock->shelf1',
-            'product_location_ids': [(0, 0, {
-                'product_id': self.env.ref('product.product_product_5').id,
-                'fixed_location_id': shelf1_location.id,
-            })]
+        # putaway from stock to shelf1
+        putaway = self.env['stock.putaway.rule'].create({
+            'product_id': self.env.ref('product.product_product_5').id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': shelf1_location.id,
         })
         self.stock_location.write({
-            'putaway_strategy_id': putaway.id,
+            'putaway_rule_ids': [(4, putaway.id, 0)],
         })
 
         # creation
@@ -761,19 +759,21 @@ class StockMove(TransactionCase):
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        putaway = self.env['product.putaway'].create({
-            'name': 'putaway stock->shelf1',
-            'fixed_location_ids': [(0, 0, {
-                'category_id': self.env.ref('product.product_category_all').id,
-                'fixed_location_id': shelf1_location.id,
-            })],
-            'product_location_ids': [(0, 0, {
-                'product_id': self.env.ref('stock.product_cable_management_box').id,
-                'fixed_location_id': shelf2_location.id,
-            })],
+        putaway_category = self.env['stock.putaway.rule'].create({
+            'category_id': self.env.ref('product.product_category_all').id,
+            'location_in_id': self.supplier_location.id,
+            'location_out_id': shelf1_location.id,
+        })
+        putaway_product = self.env['stock.putaway.rule'].create({
+            'product_id': self.env.ref('stock.product_cable_management_box').id,
+            'location_in_id': self.supplier_location.id,
+            'location_out_id': shelf2_location.id,
         })
         self.stock_location.write({
-            'putaway_strategy_id': putaway.id,
+            'putaway_rule_ids': [(6, 0, [
+                putaway_category.id,
+                putaway_product.id
+            ])],
         })
 
         # creation
@@ -814,19 +814,22 @@ class StockMove(TransactionCase):
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        putaway = self.env['product.putaway'].create({
-            'name': 'putaway stock->shelf1',
-            'fixed_location_ids': [(0, 0, {
-                'category_id': self.env.ref('product.product_category_all').id,
-                'fixed_location_id': shelf1_location.id,
-            })],
-            'product_location_ids': [(0, 0, {
-                'product_id': self.env.ref('stock.product_cable_management_box').id,
-                'fixed_location_id': shelf2_location.id,
-            })],
+        # putaway from stock to shelf1
+        putaway_category = self.env['stock.putaway.rule'].create({
+            'category_id': self.env.ref('product.product_category_all').id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': shelf1_location.id,
+        })
+        putaway_product = self.env['stock.putaway.rule'].create({
+            'product_id': self.env.ref('stock.product_cable_management_box').id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': shelf2_location.id,
         })
         self.stock_location.write({
-            'putaway_strategy_id': putaway.id,
+            'putaway_rule_ids': [(6, 0, [
+                putaway_category.id,
+                putaway_product.id,
+            ])],
         })
 
         # creation
@@ -849,6 +852,103 @@ class StockMove(TransactionCase):
         # check if the putaway was rightly applied
         self.assertEqual(move1.move_line_ids.location_dest_id.id, shelf1_location.id)
 
+    def test_putaway_5(self):
+        """ Receive products from a supplier. Check that putaway rules are rightly applied on
+        the receipt move line.
+        """
+        # This test will apply putaway strategy by category.
+        # We check here that the putaway by category works when the category is
+        # set on parent category of the product.
+
+        shelf_location = self.env['stock.location'].create({
+            'name': 'shelf',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        putaway = self.env['stock.putaway.rule'].create({
+            'category_id': self.env.ref('product.product_category_all').id,
+            'location_in_id': self.supplier_location.id,
+            'location_out_id': shelf_location.id,
+        })
+        self.stock_location.write({
+            'putaway_rule_ids': [(6, 0, [
+                putaway.id,
+            ])],
+        })
+
+        # creation
+        move1 = self.env['stock.move'].create({
+            'name': 'test_putaway_5',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.env.ref('stock.product_cable_management_box').id,
+            'product_uom': self.env.ref('uom.product_uom_kgm').id,
+            'product_uom_qty': 100.0,
+        })
+        move1._action_confirm()
+        self.assertEqual(move1.state, 'confirmed')
+
+        # assignment
+        move1._action_assign()
+        self.assertEqual(move1.state, 'assigned')
+        self.assertEqual(len(move1.move_line_ids), 1)
+
+        # check if the putaway was rightly applied
+        self.assertEqual(move1.move_line_ids.location_dest_id.id, shelf_location.id)
+
+    def test_putaway_6(self):
+        """ Receive products from a supplier. Check that putaway rules are rightly applied on
+        the receipt move line.
+        """
+        # This test will apply two putaway strategies by category. We check here
+        # that the most specific putaway takes precedence.
+
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        shelf2_location = self.env['stock.location'].create({
+            'name': 'shelf2',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        putaway_category_all = self.env['stock.putaway.rule'].create({
+            'category_id': self.env.ref('product.product_category_all').id,
+            'location_in_id': self.supplier_location.id,
+            'location_out_id': shelf1_location.id,
+        })
+        putaway_category_office_furn = self.env['stock.putaway.rule'].create({
+            'category_id': self.env.ref('product.product_category_5').id,
+            'location_in_id': self.supplier_location.id,
+            'location_out_id': shelf2_location.id,
+        })
+        self.stock_location.write({
+            'putaway_rule_ids': [(6, 0, [
+                putaway_category_all.id,
+                putaway_category_office_furn.id,
+            ])],
+        })
+
+        # creation
+        move1 = self.env['stock.move'].create({
+            'name': 'test_putaway_6',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.env.ref('stock.product_cable_management_box').id,
+            'product_uom': self.env.ref('uom.product_uom_kgm').id,
+            'product_uom_qty': 100.0,
+        })
+        move1._action_confirm()
+        self.assertEqual(move1.state, 'confirmed')
+
+        # assignment
+        move1._action_assign()
+        self.assertEqual(move1.state, 'assigned')
+        self.assertEqual(len(move1.move_line_ids), 1)
+
+        # check if the putaway was rightly applied
+        self.assertEqual(move1.move_line_ids.location_dest_id.id, shelf2_location.id)
 
     def test_availability_1(self):
         """ Check that the `availability` field on a move is correctly computed when there is

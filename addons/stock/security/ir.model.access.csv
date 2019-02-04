@@ -56,11 +56,9 @@ access_stock_rule_internal,stock.rule.flow internal,model_stock_rule,base.group_
 access_stock_move_line_manager,stock.move.line manager,model_stock_move_line,stock.group_stock_manager,1,1,1,1
 access_stock_move_line_user,stock.move.line user,model_stock_move_line,stock.group_stock_user,1,1,1,1
 access_stock_move_line_all,stock.move.line all users,model_stock_move_line,base.group_user,1,1,1,1
-access_product_putaway_all,product.putaway all users,model_product_putaway,base.group_user,1,0,0,0
-access_product_putaway_manager,product.putaway all managers,model_product_putaway,stock.group_stock_manager,1,1,1,1
+access_stock_putaway_all,stock.putaway.rule all users,model_stock_putaway_rule,base.group_user,1,0,0,0
+access_stock_putaway_manager,stock.putaway.rule all managers,model_stock_putaway_rule,stock.group_stock_manager,1,1,1,1
 access_stock_removal_all,product.removal all users,model_product_removal,base.group_user,1,0,0,0
-access_stock_fixed_putaway_strat,stock_fixed_putaway_strat managers,model_stock_fixed_putaway_strat,stock.group_stock_manager,1,1,1,1
-access_stock_fixed_putaway_user,stock_fixed_putaway_strat user,model_stock_fixed_putaway_strat,stock.group_stock_user,1,0,0,0
 access_stock_move_line_portal,stock.move.line portal,stock.model_stock_move_line,base.group_portal,0,0,0,0
 access_product_price_history_stock_user,prices.history stock user,product.model_product_price_history,stock.group_stock_user,1,0,0,0
 access_product_price_history_stock_manager,prices.history stock manager,product.model_product_price_history,stock.group_stock_manager,1,1,1,1
