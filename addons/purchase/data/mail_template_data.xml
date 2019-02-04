@@ -5,7 +5,7 @@
         <!--Email template -->
         <record id="email_template_edi_purchase" model="mail.template">
             <field name="name">RFQ - Send by Email</field>
-            <field name="email_from">${(object.create_uid.email and '&quot;%s&quot; &lt;%s&gt;' % (object.create_uid.name, object.create_uid.email) or '')|safe}</field>
+            <field name="email_from">${(object.sudo().create_uid.email and '&quot;%s&quot; &lt;%s&gt;' % (object.sudo().create_uid.name, object.sudo().create_uid.email) or '')|safe}</field>
             <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
@@ -32,11 +32,11 @@ amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</
 from ${object.company_id.name}.
 </p>
 
-<p>Do not hesitate to contact us, further you have any question.</p>
+<p>Do not hesitate to contact us if you have any further question.</p>
 <p>Best regards,</p>
 <p style="color:#888888;">
-% if object.user_id and object.user_id.signature:
-    ${object.user_id.signature | safe}
+% if object.sudo().create_uid and object.sudo().create_uid.signature:
+    ${object.sudo().create_uid.signature | safe}
 % endif
 </p>
 ]]></field>
@@ -46,7 +46,7 @@ from ${object.company_id.name}.
         <!--Email template -->
         <record id="email_template_edi_purchase_done" model="mail.template">
             <field name="name">Purchase Order - Send by Email</field>
-            <field name="email_from">${(object.create_uid.email and '&quot;%s&quot; &lt;%s&gt;' % (object.create_uid.name, object.create_uid.email) or '')|safe}</field>
+            <field name="email_from">${(object.sudo().create_uid.email and '&quot;%s&quot; &lt;%s&gt;' % (object.sudo().create_uid.name, object.sudo().create_uid.email) or '')|safe}</field>
             <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
@@ -74,6 +74,11 @@ from ${object.company_id.name}.
 
 <p>You can reply to this email if you have any questions.</p>
 <p>Thank you,</p>
+<p style="color:#888888;">
+% if object.sudo().create_uid and object.sudo().create_uid.signature:
+    ${object.sudo().create_uid.signature | safe}
+% endif
+</p>
 ]]></field>
         </record>
 
