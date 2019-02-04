@@ -3,3 +3,4 @@
 
 from . import common
 from . import test_security
+from . import test_statistics

@@ -291,7 +291,7 @@
             <section>
                 <div class="container mt16">
                     <div class="row">
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-12" style="padding-left: 15px;padding-right: 15px;" t-if="channel.total == 0">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-12" style="padding-left: 15px;padding-right: 15px;" t-if="channel.total_slides == 0">
                             <div class="jumbotron">
                                 <h1>No presentation published yet.</h1>
                                 <p>
@@ -329,7 +329,7 @@
                                         <span t-if="not category['id']" title="Uncategorized presentation" class="h3 mt0 mb0">
                                             <t t-esc="category['name']"/>
                                         </span>
-                                        <a t-attf-href="/slides/#{slug(channel)}/category/#{category['id']}" class="float-right" t-if="category['total'] - 4 > 0 and category['id']">
+                                        <a t-attf-href="/slides/#{slug(channel)}/category/#{category['id']}" class="float-right" t-if="category['total_slides'] - 4 > 0 and category['id']">
                                             <i class="fa fa-arrow-right"/> See all
                                         </a>
                                     </div>

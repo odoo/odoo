@@ -176,7 +176,7 @@ class WebsiteSlides(http.Controller):
                 category_datas.append({
                     'id': category_id,
                     'name': name,
-                    'total': category['category_id_count'],
+                    'total_slides': category['category_id_count'],
                     'slides': Slide.search(category['__domain'], limit=4, offset=0, order=order)
                 })
             values.update({
