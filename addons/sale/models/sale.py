@@ -617,7 +617,8 @@ class SaleOrder(models.Model):
             'mark_so_as_sent': True,
             'custom_layout': "mail.mail_notification_paynow",
             'proforma': self.env.context.get('proforma', False),
-            'force_email': True
+            'force_email': True,
+            'model_description': self.type_name
         }
         return {
             'type': 'ir.actions.act_window',
