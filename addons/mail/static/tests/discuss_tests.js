@@ -107,6 +107,25 @@ QUnit.test('basic rendering', function (assert) {
     });
 });
 
+QUnit.test('Focus is on searchview', function (assert) {
+    assert.expect(1);
+    var done = assert.async();
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+    })
+    .then(function (discuss) {
+        assert.strictEqual(document.activeElement, $('.o_searchview_input')[0],
+            "focus should be set on searchview input");
+        discuss.destroy();
+        done();
+    });
+});
+
 QUnit.test('searchview options visibility', function (assert) {
     assert.expect(4);
     var done = assert.async();
