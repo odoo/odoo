@@ -174,10 +174,10 @@ class Lead2OpportunityMassConvert(models.TransientModel):
     user_ids = fields.Many2many('res.users', string='Salesmen')
     team_id = fields.Many2one('crm.team', 'Sales Team', index=True)
     deduplicate = fields.Boolean('Apply deduplication', default=True, help='Merge with existing leads/opportunities of each partner')
-    action = fields.Selection([
+    action = fields.Selection(selection_add=[
         ('each_exist_or_create', 'Use existing partner or create'),
         ('nothing', 'Do not link to a customer')
-    ], 'Related Customer', required=True)
+    ], string='Related Customer', required=True)
     force_assignation = fields.Boolean('Force assignation', help='If unchecked, this will leave the salesman of duplicated opportunities')
 
     @api.onchange('action')
