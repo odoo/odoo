@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_termination_fees">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <h2 t-field="o.name"/>
+
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td><strong>Company Information</strong></td>
+                            <td>
+                                <div><span t-field="o.company_id.name"/></div>
+                                <div><span t-field="o.company_id.street"/></div>
+                                <div><span t-field="o.company_id.street2" t-if="o.company_id.street2"/></div>
+                                <div>
+                                    <span t-field="o.company_id.city"/>
+                                    <span t-field="o.company_id.state_id"/>
+                                    <span t-field="o.company_id.zip"/>
+                                </div>
+                                <div><span t-field="o.company_id.country_id"/></div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td><strong>Name</strong></td>
+                            <td><span t-field="o.employee_id"/></td>
+                            <td><strong>Designation</strong></td>
+                            <td><span t-field="o.employee_id.job_id"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Address</strong></td>
+                            <td colspan="3">
+                                <div t-field="o.employee_id.address_home_id"
+                                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email</strong></td>
+                            <td><span t-field="o.employee_id.work_email"/></td>
+                            <td><strong>Identification No</strong></td>
+                            <td><span t-field="o.employee_id.identification_id"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reference</strong></td>
+                            <td><span t-field="o.number"/></td>
+                            <td><strong>Bank Account</strong></td>
+                            <td><span t-field="o.employee_id.bank_account_id"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Start notice period</strong></td>
+                            <td><span t-field="o.date_from"/></td>
+                            <td><strong>Registration Number</strong></td>
+                            <td><span t-field="o.employee_id.registration_number"/></td>
+                        </tr>
+                    </table>
+
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr class="table-secondary">
+                                <th colspan="4"><strong>Employee</strong></th>
+                            </tr>
+                            <tr t-foreach="o.line_ids.filtered(lambda line: line.category_id.code in ['BASIC', 'DIV. IMPOS'])" t-as="line">
+                                <td width="50%"><span t-field="line.name"/></td>
+                                <td><span t-esc="line.amount"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                <td t-if="line.rate == 100">* <span t-field="line.quantity"/> =</td>
+                                <td t-else=""><span t-field="line.rate"/> % =</td>
+                                <td><span t-esc="line.total"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            </tr>
+                            <tr class="table-secondary" t-foreach="o.line_ids.filtered(lambda line: line.code == 'ANNUAL_SALARY_REVALUED')" t-as="line">
+                                <td class="text-center"><span t-field="line.name"/></td>
+                                <td colspan="2"></td>
+                                <td><span t-esc="line.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            </tr>
+
+                            <t t-set="line_count" t-value="0" />
+                            <tr t-foreach="o.line_ids.filtered(lambda line: line.category_id.code == 'NOTICE_DURATION')" t-as="line">
+                                <t t-if="line_count == 0">
+                                    <td rowspan="3">Notice duration</td>
+                                </t>
+                                <td><span t-field="line.quantity"/></td>
+                                <td><span t-field="line.name"/></td>
+                                <td><span t-esc="line.total"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                <t t-set="line_count" t-value="line_count+1" />
+                            </tr>
+                            <t t-foreach="o.line_ids.filtered(lambda line: line.category_id.code in ['NOTICE_SALARY', 'SSC'])" t-as="line">
+                            <tr class="table-secondary" t-if="line.code in ['NET', 'BASIC']">
+                                <td class="text-center"><span t-field="line.name"/></td>
+                                <td colspan="2"></td>
+                                <td><span t-esc="line.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            </tr>
+                            <tr t-else="">
+                                <td colspan="3"><span t-field="line.name"/></td>
+                                <td><span t-esc="line.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <p class="text-right"><strong>Established on <span t-field="o.compute_date"/></strong></p>
+                    <p class="text-right"><strong>Authorized signature</strong></p>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</odoo>

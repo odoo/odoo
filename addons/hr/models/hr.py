@@ -210,8 +210,8 @@ class Employee(models.Model):
         ('fired', 'Fired'),
         ('resigned', 'Resigned'),
         ('retired', 'Retired')
-    ], string="Departure Reason")
-    departure_description = fields.Text(string="Additional Information")
+    ], string="Departure Reason", copy=False, tracking=True)
+    departure_description = fields.Text(string="Additional Information", copy=False, tracking=True)
 
     _sql_constraints = [
         ('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee."),

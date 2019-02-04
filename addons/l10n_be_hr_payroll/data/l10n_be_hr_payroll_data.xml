@@ -92,6 +92,31 @@
         <field name="name">Double Holiday Pay</field>
         <field name="code">DP</field>
     </record>
+    <record id="hr_payroll_termination" model="hr.salary.rule.category">
+        <field name="name">Annual salary revalued</field>
+        <field name="code">REVALUED</field>
+    </record>
+    <record id="hr_payroll_termination_salary" model="hr.salary.rule.category">
+        <field name="name">Notice salary</field>
+        <field name="code">NOTICE_SALARY</field>
+    </record>
+    <record id="hr_payroll_notice_duration" model="hr.salary.rule.category">
+        <field name="name">Notice Duration</field>
+        <field name="code">NOTICE_DURATION</field>
+    </record>
+    <record id="hr_payroll_termination_holidays_simple" model="hr.salary.rule.category">
+        <field name="name">Terminaison Holidays Simple Pay</field>
+        <field name="code">TERMINAISON_SIMPLE</field>
+    </record>
+    <record id="hr_payroll_termination_holidays_double" model="hr.salary.rule.category">
+        <field name="name">Terminaison Holidays Double Pay</field>
+        <field name="code">TERMINAISON_DOUBLE</field>
+    </record>
+    <record id="hr_payroll_termination_holidays" model="hr.salary.rule.category">
+        <field name="name">Terminaison Holidays</field>
+        <field name="code">TERMINAISON</field>
+    </record>
+
 
     <!-- Default advantage values -->
     <function model="ir.default" name="set" eval="('hr.contract', 'holidays', 0.0)"/>

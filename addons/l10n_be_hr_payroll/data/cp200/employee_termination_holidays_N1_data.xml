@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Salary Structure -->
+    <record id="hr_payroll_structure_cp200_employee_departure_n1_holidays" model="hr.payroll.structure">
+        <field name="name">CP200: Employees Termination Holidays N-1</field>
+        <field name="rule_ids" eval="False"/>
+        <field name="type_id" ref="l10n_be_hr_payroll.structure_type_employee_cp200"/>
+        <field name="country_id" ref="base.be"/>
+        <field name="report_id" ref="l10n_be_hr_payroll.action_report_termination_holidays_n1"/>
+        <field name="payslip_name">Certificate Relating To Annual Vacations For The Calendar Year Preceding The End Of The Contract Of Employment</field>
+    </record>
+
+    <!-- Salary Rules -->
+    <record id="cp200_employees_termination_n1_pay_simple" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays_simple"/>
+        <field name="name">Pay simple</field>
+        <field name="code">PAY_SIMPLE</field>
+        <field name="sequence">1</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if inputs.ALLOCATION and inputs.ALLOCATION.amount:
+    result_qty = 1 - (inputs.TIME_OFF_TAKEN.amount / inputs.ALLOCATION.amount)
+result_rate = 7.67
+result = inputs.GROSS_REF.amount if inputs.GROSS_REF else 0
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_pay_double" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays_double"/>
+        <field name="name">Pay double</field>
+        <field name="code">PAY DOUBLE</field>
+        <field name="sequence">2</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if inputs.TIME_OFF_TAKEN and inputs.TIME_OFF_TAKEN.amount and inputs.ALLOCATION and inputs.ALLOCATION.amount:
+    if inputs.TIME_OFF_TAKEN.amount &lt; (inputs.ALLOCATION.amount / 2):
+        result_qty = 1
+    else:
+        result_qty = 0
+result_rate = 6.8
+result = inputs.GROSS_REF.amount if inputs.GROSS_REF else 0
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_pay_double_complementary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays_double"/>
+        <field name="name">Pay double complementary</field>
+        <field name="code">PAY DOUBLE COMPLEMENTARY</field>
+        <field name="sequence">3</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if inputs.TIME_OFF_TAKEN and inputs.TIME_OFF_TAKEN.amount and inputs.ALLOCATION and inputs.ALLOCATION.amount:
+    if inputs.TIME_OFF_TAKEN.amount &lt; (inputs.ALLOCATION.amount / 2):
+        result_qty = 1
+    else:
+        result_qty = 0
+result_rate = 0.87
+result = inputs.GROSS_REF.amount if inputs.GROSS_REF else 0
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_total_n" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays"/>
+        <field name="name">Total</field>
+        <field name="code">BASIC</field>
+        <field name="sequence">4</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories.TERMINAISON_SIMPLE + categories.TERMINAISON_DOUBLE
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_rules_onss_termination" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_onss"/>
+        <field name="name">Social contribution</field>
+        <field name="code">ONSS</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">PAY_SIMPLE</field>
+        <field name="amount_percentage">-13.07</field>
+        <field name="register_id" ref="contrib_register_onss"/>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_rules_special_contribution_termination" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_onss"/>
+        <field name="name">Special Social contribution</field>
+        <field name="code">M_ONSS</field>
+        <field name="sequence">11</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories.TERMINAISON_DOUBLE
+result_rate = -13.07
+result_qty = 6.8/7.67
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_rules_taxable_termination" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_onss"/>
+        <field name="name">Taxable Termination Amount</field>
+        <field name="code">TAXABLE</field>
+        <field name="sequence">12</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = BASIC + ONSS + M_ONSS
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_rules_professional_tax_termination" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_onss"/>
+        <field name="name">Professional Tax</field>
+        <field name="code">PROF_TAX</field>
+        <field name="sequence">13</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = TAXABLE
+result_rate = -36.34
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+    <record id="cp200_employees_termination_n1_pay_net_termination" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="name">Net</field>
+        <field name="code">NET</field>
+        <field name="sequence">14</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = TAXABLE + PROF_TAX
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_departure_n1_holidays"/>
+    </record>
+
+</odoo>

@@ -136,6 +136,13 @@
                     <field name="spouse_net_revenue" attrs="{'invisible': ['|', ('marital', 'not in', ['married', 'cohabitant']), ('spouse_fiscal_status', '!=', 'with income')]}"/>
                     <field name="spouse_other_net_revenue" attrs="{'invisible': ['|', ('marital', 'not in', ['married', 'cohabitant']), ('spouse_fiscal_status', '!=', 'with income')]}"/>
                 </xpath>
+                <xpath expr="//group[@name='departure']" position="attributes">
+                    <attribute name="attrs">{'invisible': ['&amp;', ('active', '=', True), ('departure_reason', '=', False)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='departure_reason']" position="after">
+                    <field name="start_notice_period" groups="base.group_no_one"/>
+                    <field name="end_notice_period" groups="base.group_no_one"/>
+                </xpath>
             </field>
         </record>
 
