@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from odoo.addons.account.tests.account_test_users import AccountTestUsers
 import datetime
 from odoo.tests import tagged
@@ -165,3 +167,174 @@ class TestAccountCustomerInvoice(AccountTestUsers):
         ))
 
         self.assertEquals(invoice.amount_untaxed, sum([x.base for x in invoice.tax_line_ids]))
+
+    def test_customer_invoice_tax_refund(self):
+        company = self.env.user.company_id
+        tax_account = self.env['account.account'].create({
+            'name': 'TAX',
+            'code': 'TAX',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': company.id,
+        })
+
+        tax_refund_account = self.env['account.account'].create({
+            'name': 'TAX_REFUND',
+            'code': 'TAX_R',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': company.id,
+        })
+
+        journalrec = self.env['account.journal'].search([('type', '=', 'sale')])[0]
+        partner3 = self.env.ref('base.res_partner_3')
+        account_id = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id
+
+        tax = self.env['account.tax'].create({
+            'name': 'Tax 15.0',
+            'amount': 15.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'account_id': tax_account.id,
+            'refund_account_id': tax_refund_account.id
+        })
+
+        invoice_line_data = [
+            (0, 0,
+                {
+                    'product_id': self.env.ref('product.product_product_1').id,
+                    'quantity': 40.0,
+                    'account_id': account_id,
+                    'name': 'product test 1',
+                    'discount': 10.00,
+                    'price_unit': 2.27,
+                    'invoice_line_tax_ids': [(6, 0, [tax.id])],
+                }
+             )]
+
+        invoice = self.env['account.invoice'].create(dict(
+            name="Test Customer Invoice",
+            journal_id=journalrec.id,
+            partner_id=partner3.id,
+            invoice_line_ids=invoice_line_data
+        ))
+
+        invoice.action_invoice_open()
+
+        refund = invoice.refund()
+        self.assertEqual(invoice.tax_line_ids.mapped('account_id'), tax_account)
+        self.assertEqual(refund.tax_line_ids.mapped('account_id'), tax_refund_account)
+
+    def test_customer_invoice_dashboard(self):
+        def patched_today(*args, **kwargs):
+            return '2019-01-22'
+
+        date_invoice = '2019-01-21'
+        partner3 = self.env.ref('base.res_partner_3')
+        account_id = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id
+
+        journal = self.env['account.journal'].create({
+            'name': 'sale_0',
+            'code': 'SALE0',
+            'type': 'sale',
+        })
+
+        invoice_line_data = [
+            (0, 0,
+                {
+                    'product_id': self.env.ref('product.product_product_1').id,
+                    'quantity': 40.0,
+                    'account_id': account_id,
+                    'name': 'product test 1',
+                    'discount': 10.00,
+                    'price_unit': 2.27,
+                }
+             )
+        ]
+
+        invoice = self.env['account.invoice'].create(dict(
+            name="Test Customer Invoice",
+            journal_id=journal.id,
+            partner_id=partner3.id,
+            invoice_line_ids=invoice_line_data,
+            date_invoice=date_invoice,
+        ))
+
+        refund_line_data = [
+            (0, 0,
+                {
+                    'product_id': self.env.ref('product.product_product_1').id,
+                    'quantity': 1.0,
+                    'account_id': account_id,
+                    'name': 'product test 1',
+                    'price_unit': 13.3,
+                }
+             )]
+
+        refund = self.env['account.invoice'].create(dict(
+            name="Test Customer Refund",
+            type='out_refund',
+            journal_id=journal.id,
+            partner_id=partner3.id,
+            invoice_line_ids=refund_line_data,
+            date_invoice=date_invoice,
+        ))
+
+        # Check Draft
+        dashboard_data = journal.get_journal_dashboard_datas()
+
+        self.assertEquals(dashboard_data['number_draft'], 2)
+        self.assertEquals(dashboard_data['sum_draft'], '$ 68.42')
+
+        self.assertEquals(dashboard_data['number_waiting'], 0)
+        self.assertEquals(dashboard_data['sum_waiting'], '$ 0.00')
+
+        # Check Both
+        invoice.action_invoice_open()
+
+        dashboard_data = journal.get_journal_dashboard_datas()
+        self.assertEquals(dashboard_data['number_draft'], 1)
+        self.assertEquals(dashboard_data['sum_draft'], '$ -13.30')
+
+        self.assertEquals(dashboard_data['number_waiting'], 1)
+        self.assertEquals(dashboard_data['sum_waiting'], '$ 81.72')
+
+        # Check waiting payment
+        refund.action_invoice_open()
+
+        dashboard_data = journal.get_journal_dashboard_datas()
+        self.assertEquals(dashboard_data['number_draft'], 0)
+        self.assertEquals(dashboard_data['sum_draft'], '$ 0.00')
+
+        self.assertEquals(dashboard_data['number_waiting'], 2)
+        self.assertEquals(dashboard_data['sum_waiting'], '$ 68.42')
+
+        # Check partial
+        receivable_account = refund.move_id.line_ids.mapped('account_id').filtered(lambda a: a.internal_type == 'receivable')
+        payment_move = self.env['account.move'].create({
+            'journal_id': journal.id,
+        })
+        payment_move_line = self.env['account.move.line'].with_context(check_move_validity=False).create({
+            'move_id': payment_move.id,
+            'account_id': receivable_account.id,
+            'debit': 10.00,
+        })
+        self.env['account.move.line'].with_context(check_move_validity=False).create({
+            'move_id': payment_move.id,
+            'account_id': self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_liquidity').id)], limit=1).id,
+            'credit': 10.00,
+        })
+
+        payment_move.post()
+
+        refund.register_payment(payment_move_line)
+
+        dashboard_data = journal.get_journal_dashboard_datas()
+        self.assertEquals(dashboard_data['number_draft'], 0)
+        self.assertEquals(dashboard_data['sum_draft'], '$ 0.00')
+
+        self.assertEquals(dashboard_data['number_waiting'], 2)
+        self.assertEquals(dashboard_data['sum_waiting'], '$ 78.42')
+
+        with patch('odoo.fields.Date.today', patched_today):
+            dashboard_data = journal.get_journal_dashboard_datas()
+            self.assertEquals(dashboard_data['number_late'], 2)
+            self.assertEquals(dashboard_data['sum_late'], '$ 78.42')

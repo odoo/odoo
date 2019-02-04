@@ -830,6 +830,55 @@ class TestSinglePicking(TestStockCommon):
         backorder = self.env['stock.picking'].search([('backorder_id', '=', delivery_order.id)])
         self.assertEqual(backorder.state, 'confirmed')
 
+    def test_backorder_4(self):
+        """ Check the good behavior if no backorder are created
+        for a picking with a missing product.
+        """
+        delivery_order = self.env['stock.picking'].create({
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery_order.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': delivery_order.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+        })
+
+        # Update available quantities for each products
+        pack_location = self.env['stock.location'].browse(self.pack_location)
+        self.env['stock.quant']._update_available_quantity(self.productA, pack_location, 2)
+        self.env['stock.quant']._update_available_quantity(self.productB, pack_location, 2)
+
+        delivery_order.action_confirm()
+        delivery_order.action_assign()
+        self.assertEqual(delivery_order.state, 'assigned')
+
+        # Process only one product without creating a backorder
+        delivery_order.move_lines[0].move_line_ids[0].qty_done = 2
+        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, delivery_order.id)]})
+        backorder_wizard.process_cancel_backorder()
+
+        # No backorder should be created and the move corresponding to the missing product should be cancelled
+        backorder = self.env['stock.picking'].search([('backorder_id', '=', delivery_order.id)])
+        self.assertFalse(backorder)
+        self.assertEquals(delivery_order.state, 'done')
+        self.assertEquals(delivery_order.move_lines[1].state, 'cancel')
+
     def test_extra_move_1(self):
         """ Check the good behavior of creating an extra move in a delivery order. This usecase
         simulates the delivery of 2 item while the initial stock move had to move 1 and there's

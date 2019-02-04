@@ -26,7 +26,7 @@ var BasicComposer = Widget.extend({
         'click .o_composer_button_add_attachment': '_onClickAddAttachment',
         'click .o_composer_button_emoji': '_onEmojiButtonClick',
         'focusout .o_composer_button_emoji': '_onEmojiButtonFocusout',
-        'click .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageClick',
+        'mousedown .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageClick',
         'focus .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageFocus',
         'dragover .o_file_drop_zone_container': '_onFileDragover',
         'drop .o_file_drop_zone_container': '_onFileDrop',
@@ -58,7 +58,7 @@ var BasicComposer = Widget.extend({
         // Attachments
         this._attachmentDataSet = new data.DataSetSearch(this, 'ir.attachment', this.context);
         this.fileuploadID = _.uniqueId('o_chat_fileupload');
-        this.set('attachment_ids', []);
+        this.set('attachment_ids', options.attachmentIds || []);
 
         // Mention
         this._mentionManager = new MentionManager(this);
@@ -120,6 +120,7 @@ var BasicComposer = Widget.extend({
         });
 
         // Attachments
+        this._renderAttachments();
         $(window).on(this.fileuploadID, this._onAttachmentLoaded.bind(this));
         this.on('change:attachment_ids', this, this._renderAttachments);
 

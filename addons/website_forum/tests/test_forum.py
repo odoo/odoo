@@ -5,9 +5,123 @@ from .common import KARMA, TestForumCommon
 from ..models.forum import KarmaError
 from odoo.exceptions import UserError, AccessError
 from odoo.tools import mute_logger
+from psycopg2 import IntegrityError
 
 
 class TestForum(TestForumCommon):
+
+    def test_crud_rights(self):
+        Post = self.env['forum.post']
+        Vote = self.env['forum.post.vote']
+        self.user_portal.karma = 500
+        self.user_employee.karma = 500
+
+        # create some posts
+        self.admin_post = self.post
+        self.portal_post = Post.sudo(self.user_portal).create({
+            'name': 'Post from Portal User',
+            'content': 'I am not a bird.',
+            'forum_id': self.forum.id,
+        })
+        self.employee_post = Post.sudo(self.user_employee).create({
+            'name': 'Post from Employee User',
+            'content': 'I am not a bird.',
+            'forum_id': self.forum.id,
+        })
+
+        # vote on some posts
+        self.employee_vote_on_admin_post = Vote.sudo(self.user_employee).create({
+            'post_id': self.admin_post.id,
+            'vote': '1',
+        })
+        self.portal_vote_on_admin_post = Vote.sudo(self.user_portal).create({
+            'post_id': self.admin_post.id,
+            'vote': '1',
+        })
+        self.admin_vote_on_portal_post = Vote.create({
+            'post_id': self.portal_post.id,
+            'vote': '1',
+        })
+        self.admin_vote_on_employee_post = Vote.create({
+            'post_id': self.employee_post.id,
+            'vote': '1',
+        })
+
+        # One should not be able to modify someone else's vote
+        with self.assertRaises(UserError):
+            self.admin_vote_on_portal_post.sudo(self.user_employee).write({
+                'vote': '-1',
+            })
+        with self.assertRaises(UserError):
+            self.admin_vote_on_employee_post.sudo(self.user_portal).write({
+                'vote': '-1',
+            })
+
+        # One should not be able to give his vote to someone else
+        self.employee_vote_on_admin_post.sudo(self.user_employee).write({
+            'user_id': 1,
+        })
+        self.assertEqual(self.employee_vote_on_admin_post.user_id, self.user_employee, 'User employee should not be able to give its vote ownership to someone else')
+        # One should not be able to change his vote's post to a post of his own (would be self voting)
+        with self.assertRaises(UserError):
+            self.employee_vote_on_admin_post.sudo(self.user_employee).write({
+                'post_id': self.employee_post.id,
+            })
+
+        # One should not be able to give his vote to someone else
+        self.portal_vote_on_admin_post.sudo(self.user_portal).write({
+            'user_id': 1,
+        })
+        self.assertEqual(self.portal_vote_on_admin_post.user_id, self.user_portal, 'User portal should not be able to give its vote ownership to someone else')
+        # One should not be able to change his vote's post to a post of his own (would be self voting)
+        with self.assertRaises(UserError):
+            self.portal_vote_on_admin_post.sudo(self.user_portal).write({
+                'post_id': self.portal_post.id,
+            })
+
+        # One should not be able to vote for its own post
+        with self.assertRaises(UserError):
+            Vote.sudo(self.user_employee).create({
+                'post_id': self.employee_post.id,
+                'vote': '1',
+            })
+        # One should not be able to vote for its own post
+        with self.assertRaises(UserError):
+            Vote.sudo(self.user_portal).create({
+                'post_id': self.portal_post.id,
+                'vote': '1',
+            })
+
+        with mute_logger('odoo.sql_db'):
+            with self.assertRaises(IntegrityError):
+                with self.cr.savepoint():
+                    # One should not be able to vote more than once on a same post
+                    Vote.sudo(self.user_employee).create({
+                        'post_id': self.admin_post.id,
+                        'vote': '1',
+                    })
+            with self.assertRaises(IntegrityError):
+                with self.cr.savepoint():
+                    # One should not be able to vote more than once on a same post
+                    Vote.sudo(self.user_employee).create({
+                        'post_id': self.admin_post.id,
+                        'vote': '1',
+                    })
+
+        # One should not be able to create a vote for someone else
+        new_employee_vote = Vote.sudo(self.user_employee).create({
+            'post_id': self.portal_post.id,
+            'user_id': 1,
+            'vote': '1',
+        })
+        self.assertEqual(new_employee_vote.user_id, self.user_employee, 'Creating a vote for someone else should not be allowed. It should create it for yourself instead')
+        # One should not be able to create a vote for someone else
+        new_portal_vote = Vote.sudo(self.user_portal).create({
+            'post_id': self.employee_post.id,
+            'user_id': 1,
+            'vote': '1',
+        })
+        self.assertEqual(new_portal_vote.user_id, self.user_portal, 'Creating a vote for someone else should not be allowed. It should create it for yourself instead')
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_ask(self):
