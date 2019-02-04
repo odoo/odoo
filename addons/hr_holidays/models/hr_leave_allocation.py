@@ -338,6 +338,8 @@ class HolidaysAllocation(models.Model):
             values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
         holiday = super(HolidaysAllocation, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
         holiday.add_follower(employee_id)
+        if holiday.validation_type == 'hr':
+            holiday.message_subscribe(partner_ids=(holiday.employee_id.parent_id.user_id.partner_id | holiday.employee_id.leave_manager_id.partner_id).ids)
         if 'employee_id' in values:
             holiday._onchange_employee()
         holiday.activity_update()
@@ -520,6 +522,12 @@ class HolidaysAllocation(models.Model):
     # ------------------------------------------------------------
 
     def _get_responsible_for_approval(self):
+        self.ensure_one()
+        if self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
+            return self.env['res.users'].search([
+                ('company_id', '=', self.employee_id.company_id.id),
+                ('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id)
+            ], limit=1)
         if self.state == 'confirm' and self.employee_id.parent_id.user_id:
             return self.employee_id.parent_id.user_id
         elif self.department_id.manager_id.user_id:
