@@ -487,6 +487,23 @@ var Animation = Widget.extend({
             new AnimationEffect(this, updateCallback, startEvents, $startTarget, options)
         );
     },
+    /**
+     * @private
+     * @param {boolean} [extra=false]
+     * @param {Object} [extraContext]
+     * @returns {Object}
+     */
+    _getContext: function (extra, extraContext) {
+        var context;
+        this.trigger_up('context_get', {
+            extra: extra || false,
+            context: extraContext,
+            callback: function (ctx) {
+                context = ctx;
+            },
+        });
+        return context;
+    },
 });
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

@@ -7,7 +7,6 @@ var Dialog = require('web.Dialog');
 var mixins = require('web.mixins');
 var rpc = require('web.rpc');
 var Widget = require('web.Widget');
-var wContext = require('website.context');
 var weWidgets = require('wysiwyg.widgets');
 var websiteNavbarData = require('website.navbar');
 
@@ -49,7 +48,13 @@ var SuggestionList = Widget.extend({
     refresh: function () {
         var self = this;
         self.$el.append(_t("Loading..."));
-        var language = self.language || wContext.get().lang.toLowerCase();
+        var context;
+        this.trigger_up('context_get', {
+            callback: function (ctx) {
+                context = ctx;
+            },
+        });
+        var language = self.language || context.lang.toLowerCase();
         this._rpc({
             route: '/website/seo_suggest',
             params: {
@@ -475,14 +480,20 @@ var MetaKeywords = Widget.extend({
     },
     _getLanguages: function () {
         var self = this;
+        var context;
+        this.trigger_up('context_get', {
+            callback: function (ctx) {
+                context = ctx;
+            },
+        });
         this._rpc({
             model: 'website',
             method: 'get_languages',
-            args: [[wContext.get().website_id]],
+            args: [[context.website_id]],
         }).then( function (data) {
             self.$('#language-box').html(core.qweb.render('Configurator.language_promote', {
                 'language': data,
-                'def_lang': wContext.get().lang
+                'def_lang': context.lang
             }));
         });
     },

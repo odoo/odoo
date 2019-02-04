@@ -2,7 +2,6 @@ odoo.define("website.ace", function (require) {
 "use strict";
 
 var AceEditor = require('web_editor.ace');
-var weContext = require('website.context');
 
 /**
  * Extends the default view editor so that the URL hash is updated with view ID
@@ -45,7 +44,12 @@ var WebsiteAceEditor = AceEditor.extend({
                     // When saving a generic view, the view will be COW'd and
                     // replace by the specific view after the reload. Thus the id in
                     // URL won't exist anymore. We need to find the specific ID.
-                    var context = weContext.get();
+                    var context;
+                    this.trigger_up('context_get', {
+                        callback: function (ctx) {
+                            context = ctx;
+                        },
+                    });
                     defs.push(this._rpc({
                         model: 'ir.ui.view',
                         method: 'search_read',
