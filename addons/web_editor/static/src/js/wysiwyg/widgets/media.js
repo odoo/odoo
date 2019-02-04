@@ -561,10 +561,10 @@ var ImageWidget = MediaWidget.extend({
         var self = this;
         Dialog.confirm(this, _t("Are you sure you want to delete this file ?"), {
             confirm_callback: function () {
-                var $helpBlock = this.$('.form-text').empty();
+                var $helpBlock = self.$('.form-text').empty();
                 var $a = $(ev.currentTarget);
                 var id = parseInt($a.data('id'), 10);
-                var attachment = _.findWhere(this.records, {id: id});
+                var attachment = _.findWhere(self.records, {id: id});
                  return self._rpc({
                     route: '/web_editor/attachment/remove',
                     params: {
