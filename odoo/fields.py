@@ -2048,6 +2048,11 @@ class Selection(Field):
             if 'selection' in field.args:
                 selection = field.args['selection']
                 if isinstance(selection, list):
+                    if (
+                        values is not None
+                        and values != [kv[0] for kv in selection]
+                    ):
+                        _logger.warning("%s: selection=%r overrides existing selection; use selection_add instead", self, selection)
                     values = [kv[0] for kv in selection]
                     labels.update(selection)
                 else:
@@ -2055,8 +2060,10 @@ class Selection(Field):
 
             if 'selection_add' in field.args:
                 selection_add = field.args['selection_add']
-                assert isinstance(selection_add, list)
-                assert values is not None
+                assert isinstance(selection_add, list), \
+                    "%s: selection_add=%r must be a list" % (self, selection_add)
+                assert values is not None, \
+                    "%s: selection_add=%r on non-list selection %r" % (self, selection_add, self.selection)
                 values = merge_sequences(values, [kv[0] for kv in selection_add])
                 labels.update(kv for kv in selection_add if len(kv) == 2)
 
