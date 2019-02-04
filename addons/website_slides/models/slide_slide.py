@@ -25,6 +25,7 @@ class SlidePartnerRelation(models.Model):
     _table = 'slide_slide_partner'
 
     slide_id = fields.Many2one('slide.slide', index=True, required=True)
+    channel_id = fields.Many2one('slide.channel', string="Channel", related="slide_id.channel_id", store=True, index=True)
     partner_id = fields.Many2one('res.partner', index=True, required=True)
     vote = fields.Integer('Vote', default=0)
 
@@ -106,7 +107,8 @@ class Slide(models.Model):
         [('none', 'No One'), ('user', 'Authenticated Users Only'), ('public', 'Everyone')],
         string='Download Security',
         required=True, default='user')
-    is_preview = fields.Boolean('Previewable', default=False)  # TDE FIXME: clean name + help
+    is_preview = fields.Boolean('Always visible', default=False)
+    completion_time = fields.Float('# Hours', default=1, digits=(10, 4))
     image = fields.Binary('Image', attachment=True)
     image_medium = fields.Binary('Medium', compute="_get_image", store=True, attachment=True)
     image_thumb = fields.Binary('Thumbnail', compute="_get_image", store=True, attachment=True)
@@ -359,6 +361,20 @@ class Slide(models.Model):
             new_slide.write({
                 'slide_partner_ids': [(0, 0, {'vote': new_vote, 'partner_id': self.env.user.partner_id.id})]
             })
+
+    def action_view(self):
+        self.check_access_rights('read')
+        self.check_access_rule('read')
+
+        self_sudo = self.sudo()
+        SlidePartnerSudo = self.env['slide.slide.partner'].sudo()
+        slide_partners = SlidePartnerSudo.search([
+            ('slide_id', 'in', self.ids),
+            ('partner_id', '=', self.env.user.partner_id.id)
+        ])
+        new_slides = self_sudo - slide_partners.mapped('slide_id')
+        vals = [{'slide_id': new_slide.id, 'channel_id': new_slide.channel_id.id, 'partner_id': self.env.user.partner_id.id, 'vote': 0} for new_slide in new_slides]
+        return SlidePartnerSudo.create(vals)
 
     # --------------------------------------------------
     # Parsing methods
