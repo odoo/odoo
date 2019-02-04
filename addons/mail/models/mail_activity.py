@@ -524,8 +524,6 @@ class MailActivity(models.Model):
                 'state': state,
                 'o_closest_deadline': group['date_deadline'],
             }
-        res_ids_sorted = sorted(res_id_to_deadline, key=lambda item: res_id_to_deadline[item])
-        res_id_to_name = dict(self.env[res_model].browse(res_ids_sorted).name_get())
         activity_type_infos = []
         for elem in sorted(activity_type_ids, key=lambda item: item.sequence):
             mail_template_info = []
@@ -535,9 +533,8 @@ class MailActivity(models.Model):
 
         return {
             'activity_types': activity_type_infos,
-            'res_ids': [(rid, res_id_to_name[rid]) for rid in res_ids_sorted],
+            'activity_res_ids': sorted(res_id_to_deadline, key=lambda item: res_id_to_deadline[item]),
             'grouped_activities': activity_data,
-            'model': res_model,
         }
 
 
