@@ -23,7 +23,11 @@ Belgian Payroll Rules.
     'data': [
         'views/report_payslip_template.xml',
         'views/reports.xml',
+        'wizard/hr_payroll_employee_departure_notice_view.xml',
+        'wizard/hr_payroll_employee_departure_termination_view.xml',
         'views/l10n_be_hr_payroll_view.xml',
+        'views/l10n_be_hr_payroll_report.xml',
+        'views/report_termination_fees.xml',
         'data/l10n_be_hr_payroll_data.xml',
         'data/report_paperformat.xml',
         'views/res_config_settings_views.xml',

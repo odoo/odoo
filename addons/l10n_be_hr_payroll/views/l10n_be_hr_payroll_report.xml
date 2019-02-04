@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- QWeb Reports -->
+        <report
+            id="termination_fees"
+            model="hr.payslip.employee.depature.termination"
+            string="Termination Fees"
+            report_type="qweb-pdf"
+            name="l10n_be_hr_payroll.report_termination_fees"
+            file="l10n_be_hr_payroll.report_termination_fees"
+            print_report_name="(object._get_report_base_filename())"
+            groups="hr.group_hr_manager"
+        />
+
+        <!-- <report
+            id="account_invoices_without_payment"
+            model="account.invoice"
+            string="Invoices without Payment"
+            report_type="qweb-pdf"
+            name="account.report_invoice"
+            file="account.report_invoice"
+            attachment="(object.state in ('open','in_payment','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            print_report_name="(object._get_report_base_filename())"
+        />
+
+        <report
+            id="action_report_aged_partner_balance"
+            model="res.partner"
+            string="Aged Partner Balance"
+            menu="False"
+            report_type="qweb-pdf"
+            name="account.report_agedpartnerbalance"
+            file="account.report_agedpartnerbalance"
+        />
+
+        <report
+            id="action_report_journal"
+            model="account.common.journal.report"
+            string="Journals Audit"
+            report_type="qweb-pdf"
+            name="account.report_journal"
+            file="account.report_journal"
+            />
+
+        <report
+            id="action_report_payment_receipt"
+            model="account.payment"
+            string="Payment Receipt"
+            report_type="qweb-pdf"
+            name="account.report_payment_receipt"
+            file="account.report_payment_receipt"
+            menu="True"
+        /> -->
+
+    </data>
+</odoo>

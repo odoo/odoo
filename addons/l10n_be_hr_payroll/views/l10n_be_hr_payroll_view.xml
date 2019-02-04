@@ -122,6 +122,9 @@
             <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
             <field name="priority">30</field>
             <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="%(departure_notice_wizard_action)d" string="Employee Departure" type="action" groups="hr.group_hr_manager"/>
+                </xpath>
                 <xpath expr="//field[@name='vehicle']" position="after">
                     <field name="resident_bool" eval="False"/>
                 </xpath>

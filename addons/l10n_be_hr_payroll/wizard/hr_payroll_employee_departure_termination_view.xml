@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_payroll_employee_departure_termination" model="ir.ui.view">
+        <field name="name">hr_payroll_employee_departure_termination</field>
+        <field name="model">hr.payslip.employee.depature.termination</field>
+        <field name="arch" type="xml">
+            <form string="Employee Departure">
+                <group>
+                    <group>
+                        <field name="employee_id" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="current_contract_id" domain="[('employee_id', '=', employee_id)]"/>
+                    </group>
+                </group>
+                <!-- <group>
+                    <group class="o_label_nowrap">
+                        <field name="wage"/>
+                        <field name="home_allowance"/>
+                        <field name="expat_allowance"/>
+                        <field name="meal_vouchers"/>
+                        <field name="eco_voucher"/>
+                        <field name="variable_salary"/>
+                        <field name="pay_variable"/>
+                        <field name="benefit_in_kind"/>
+                        <field name="benefit_any_kind"/>
+                        <field name="car"/>
+                        <field name="hospital_insurance"/>
+                        <field name="group_insurance"/>
+                        <field name="stock_option"/>
+                        <field name="other"/>
+                    </group>
+                    <group>
+                        <span>* 12.92 = </span><field name="wage_sum" nolabel="1" class="oe_inline o_form_label" readonly="1"/>
+                        <span>* 1     = </span><field name="home_allowance_sum" nolabel="1" class="oe_inline" readonly="1"/>
+                        <span>* 13.92 = </span><field name="expat_allowance_sum" nolabel="1" class="oe_inline" readonly="1"/>
+                        <span>* 231   = </span><field name="meal_vouchers_sum" nolabel="1" class="oe_inline" readonly="1"/>
+                        <span>* 1     = </span><field name="eco_voucher" nolabel="1" class="oe_inline" readonly="1"/>
+                        <span>* 1     = </span><field name="variable_salary" nolabel="1" class="oe_inline" readonly="1"/>
+                        <span>* 12.92 = </span><field name="pay_variable" nolabel="1" class="oe_inline" readonly="1"/>
+                        <span>* 12.92 = </span><field name="benefit_in_kind_sum" nolabel="1" class="oe_inline" readonly="1"/>
+                        <span>* 12.92 = </span><field name="benefit_any_kind_sum" nolabel="1" class="oe_inline" readonly="1"/>
+                        <span>* 12    = </span><field name="car_sum" nolabel="1" class="oe_inline" readonly="1"/>
+                        <span>* 12    = </span><field name="hospital_insurance_sum" nolabel="1" class="oe_inline" readonly="1"/>
+                        <span>* 12    = </span><field name="group_insurance_sum" nolabel="1" class="oe_inline" readonly="1"/>
+                        <span>* 12    = </span><field name="stock_option_sum" nolabel="1" class="oe_inline" readonly="1"/>
+                        <span>* 12    = </span><field name="other_sum" nolabel="1" class="oe_inline" readonly="1"/>
+                    </group>
+
+                </group> -->
+                <group>
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <td>Gross Monthly Salary</td>
+                                <td><field name="wage"/></td>
+                                <td>* 12.92 =</td>
+                                <td><field name="wage_sum"/></td>
+                            </tr>
+                            <tr>
+                                <td>Home/Residence Allowance</td>
+                                <td><field name="home_allowance"/></td>
+                                <td>* 13.92 =</td>
+                                <td><field name="home_allowance_sum"/></td>
+                            </tr>
+                            <tr>
+                                <td>Expatrie Allowance</td>
+                                <td><field name="expat_allowance"/></td>
+                                <td>* 12 =</td>
+                                <td><field name="expat_allowance_sum"/></td>
+                            </tr>
+                            <tr>
+                                <td>Meal Voucher Value</td>
+                                <td><field name="meal_vouchers"/></td>
+                                <td>* 231 =</td>
+                                <td><field name="meal_vouchers_sum"/></td>
+                            </tr>
+                            <tr>
+                                <td>Eco Vouchers</td>
+                                <td><field name="eco_voucher"/></td>
+                                <td>* 1 =</td>
+                                <td><field name="eco_voucher" readonly="1"/></td>
+                            </tr>
+                            <tr>
+                                <td>Annual variable salary</td>
+                                <td><field name="variable_salary"/></td>
+                                <td>* 1 =</td>
+                                <td><field name="variable_salary" readonly="1"/></td>
+                            </tr>
+                            <tr>
+                                <td>Pay on variable (15.34 of the annual amount)</td>
+                                <td><field name="variable_salary" readonly="1"/></td>
+                                <td>15.34% =</td>
+                                <td><field name="pay_variable_sum"/></td>
+                            </tr>
+                            <tr>
+                                <td>Monthly benefit in kind</td>
+                                <td><field name="benefit_in_kind"/></td>
+                                <td>* 12.92 =</td>
+                                <td><field name="benefit_in_kind_sum"/></td>
+                            </tr>
+                            <tr>
+                                <td>Advantage of any kind monthly</td>
+                                <td><field name="benefit_any_kind"/></td>
+                                <td>* 12.92 =</td>
+                                <td><field name="benefit_any_kind_sum"/></td>
+                            </tr>
+                            <tr>
+                                <td>Company Car</td>
+                                <td><field name="car"/></td>
+                                <td>* 12 =</td>
+                                <td><field name="car_sum"/></td>
+                            </tr>
+                            <tr>
+                                <td>Monthly hospital insurance (employer's share)</td>
+                                <td><field name="hospital_insurance"/></td>
+                                <td>* 12 =</td>
+                                <td><field name="hospital_insurance_sum"/></td>
+                            </tr>
+                            <tr>
+                                <td>Monthly group insurance (employer's share)</td>
+                                <td><field name="group_insurance"/></td>
+                                <td>* 12 =</td>
+                                <td><field name="group_insurance_sum"/></td>
+                            </tr>
+                            <tr>
+                                <td>Stock Option</td>
+                                <td><field name="stock_option"/></td>
+                                <td>* 12 =</td>
+                                <td><field name="stock_option_sum"/></td>
+                            </tr>
+                            <tr>
+                                <td>Other monthly/yearly</td>
+                                <td><field name="other"/></td>
+                                <td>* 12 =</td>
+                                <td><field name="other_sum"/></td>
+                            </tr>
+                            <tr class="table-secondary">
+                                <td class="text-center">Annual salary revalued</td>
+                                <td colspan="2"></td>
+                                <td><field name="salary_revalued"/></td>
+                            </tr>
+                            <tr>
+                                <td>Notice duration</td>
+                                <td colspan="3">
+                                    <!-- <table class="table table-sm">
+                                        <tbody>
+                                            <tr> -->
+                                                <!-- <td> -->
+                                                    <tr>
+                                                        <td><field name="notice_months"/></td>
+                                                        <td>months</td>
+                                                        <td><field name="salary_revalued_months"/></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><field name="notice_weeks"/></td>
+                                                        <td>weeks</td>
+                                                        <td><field name="salary_revalued_weeks"/></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><field name="notice_days"/></td>
+                                                        <td>calendar days</td>
+                                                        <td><field name="salary_revalued_days"/></td>
+                                                    </tr>
+                                                <!-- </td> -->
+                                            <!-- </tr>
+                                        </tbody>
+                                    </table> -->
+                                </td>
+                            </tr>
+                            <tr class="table-secondary">
+                                <td class="text-center">Total</td>
+                                <td colspan="2"></td>
+                                <td><field name="total"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </group>
+                <!-- <group>
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <td>Notice duration</td>
+                                <td>
+                                    <tr>
+                                        <td><field name="notice_months"/></td>
+                                        <td>months</td>
+                                        <td><field name="salary_revalued_months"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><field name="notice_weeks"/></td>
+                                        <td>weeks</td>
+                                        <td><field name="salary_revalued_weeks"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><field name="notice_days"/></td>
+                                        <td>days</td>
+                                        <td><field name="salary_revalued_days"/></td>
+                                    </tr>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </group> -->
+                <footer>
+                    <button name="validate" string="Validate" type="object" class="oe_highlight"/>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="departure_termination_wizard_action" model="ir.actions.act_window">
+        <field name="name">Employee Departure</field>
+        <field name="res_model">hr.payslip.employee.depature.termination</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
