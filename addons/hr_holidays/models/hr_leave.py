@@ -951,6 +951,19 @@ class HolidaysRequest(models.Model):
         if to_do:
             to_do.activity_feedback(['hr_holidays.mail_act_leave_approval', 'hr_holidays.mail_act_leave_second_approval'])
 
+    def activity_custom_actions(self, activity):
+        self.ensure_one()
+        res = super(HolidaysRequest, self).activity_custom_actions(activity)
+        if self.state in ['draft', 'refuse', 'cancel', 'validate'] or not activity['automated']:
+            return res
+        if self.can_approve:
+            res.insert(0, {'text': 'Refuse', 'selector_class': 'o_activity_custom_action', 'icon': 'fa-ban', 'action': 'action_refuse', 'action_type': 'object'})
+            if self.state == 'confirm':
+                res.insert(0, {'text': 'Approve', 'selector_class': 'o_activity_custom_action', 'icon': 'fa-check', 'action': 'action_approve', 'action_type': 'object'})
+            else:
+                res.insert(0, {'text': 'Validate', 'selector_class': 'o_activity_custom_action', 'icon': 'fa-check', 'action': 'action_validate', 'action_type': 'object'})
+        return res
+
     ####################################################
     # Messaging methods
     ####################################################

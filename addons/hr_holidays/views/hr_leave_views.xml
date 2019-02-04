@@ -95,6 +95,7 @@
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile" create="0">
+                <field name="activity_state"/>
                 <field name="employee_id"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
@@ -152,6 +153,9 @@
                                     <button t-if="record.state.raw_value === 'confirm'" name="action_approve" type="object" class="btn btn-primary btn-sm mt8">Approve</button>
                                     <button t-if="record.state.raw_value === 'validate1'" name="action_validate" type="object" class="btn btn-primary btn-sm mt8" groups="hr_holidays.group_hr_holidays_manager">Validate</button>
                                     <button t-if="['confirm', 'validate', 'validate1'].includes(record.state.raw_value)" name="action_refuse" type="object" class="btn btn-secondary btn-sm mt8">Refuse</button>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="activity_ids" widget="kanban_activity"/>
                                 </div>
                             </div>
                         </div>
