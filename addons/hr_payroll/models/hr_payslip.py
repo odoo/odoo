@@ -270,7 +270,7 @@ class HrPayslip(models.Model):
         employee = self.employee_id
         date_from = self.date_from
         date_to = self.date_to
-        
+
         self.company_id = employee.company_id
 
         if not self.contract_id: # Add a default contract if not already defined
@@ -410,6 +410,8 @@ class HrPayslipRun(models.Model):
         states={'draft': [('readonly', False)]},
         help="If its checked, indicates that all payslips generated from here are refund payslips.")
     payslip_count = fields.Integer(compute='_compute_payslip_count')
+    company_id = fields.Many2one('res.company', string='Company', readonly=True, required=True,
+        default=lambda self: self.env['res.company']._company_default_get())
 
     def _compute_payslip_count(self):
         for payslip_run in self:
