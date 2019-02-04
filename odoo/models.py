@@ -4367,9 +4367,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """ Verifies that the current recorset holds a single record. Raises
         an exception otherwise.
         """
-        if len(self) == 1:
+        try:
+            # unpack to ensure there is only one value is faster than len for big lists
+            _id, = self._ids
             return self
-        raise ValueError("Expected singleton: %s" % self)
+        except ValueError:
+            raise ValueError("Expected singleton: %s" % self)
 
     def with_env(self, env):
         """ Returns a new version of this recordset attached to the provided
