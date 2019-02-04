@@ -523,16 +523,17 @@ class HolidaysAllocation(models.Model):
 
     def _get_responsible_for_approval(self):
         self.ensure_one()
+        responsible = self.env.user
+
         if self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
-            return self.env['res.users'].search([
-                ('company_id', '=', self.employee_id.company_id.id),
-                ('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id)
-            ], limit=1)
+            if self.holiday_status_id.responsible_id:
+                responsible = self.holiday_status_id.responsible_id
         if self.state == 'confirm' and self.employee_id.parent_id.user_id:
-            return self.employee_id.parent_id.user_id
+            responsible = self.employee_id.parent_id.user_id
         elif self.department_id.manager_id.user_id:
-            return self.department_id.manager_id.user_id
-        return self.env.user
+            responsible = self.department_id.manager_id.user_id
+
+        return responsible
 
     def activity_update(self):
         to_clean, to_do = self.env['hr.leave.allocation'], self.env['hr.leave.allocation']
