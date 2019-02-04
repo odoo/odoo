@@ -100,7 +100,7 @@ class Website(Home):
                 redirect = b'/web?' + request.httprequest.query_string
             else:
                 redirect = '/'
-            return http.redirect_with_hash(redirect)
+            return werkzeug.utils.redirect(redirect)
         return response
 
     # ------------------------------------------------------

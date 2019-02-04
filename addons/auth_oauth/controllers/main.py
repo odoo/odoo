@@ -88,7 +88,7 @@ class OAuthLogin(Home):
         ensure_db()
         if request.httprequest.method == 'GET' and request.session.uid and request.params.get('redirect'):
             # Redirect if already logged in and redirect param is present
-            return http.redirect_with_hash(request.params.get('redirect'))
+            return werkzeug.utils.redirect(request.params.get('redirect'))
         providers = self.list_providers()
 
         response = super(OAuthLogin, self).web_login(*args, **kw)
