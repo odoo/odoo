@@ -257,7 +257,7 @@ class account_journal(models.Model):
             rslt_count += 1
             date = result.get('date_invoice') or fields.Date.today()
 
-            amount = result.get('amount_total', 0)
+            amount = result.get('amount_total', 0) or 0
             if cur != target_currency:
                 key = (cur, target_currency, company, date)
                 # Using setdefault will call _get_conversion_rate, so we explicitly check the
