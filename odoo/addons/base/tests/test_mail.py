@@ -92,16 +92,6 @@ class TestSanitizer(unittest.TestCase):
         for attr in ['javascript']:
             self.assertNotIn(attr, sanitized_html, 'html_sanitize did not remove enough unwanted attributes')
 
-    def test_sanitize_escape_emails(self):
-        emails = [
-            "Charles <charles.bidule@truc.fr>",
-            "Dupuis <'tr/-: ${dupuis#$'@truc.baz.fr>",
-            "Technical <service/technical+2@open.com>",
-            "Div nico <div-nico@open.com>"
-        ]
-        for email in emails:
-            self.assertIn(misc.html_escape(email), html_sanitize(email), 'html_sanitize stripped emails of original html')
-
     def test_sanitize_unescape_emails(self):
         not_emails = [
             '<blockquote cite="mid:CAEJSRZvWvud8c6Qp=wfNG6O1+wK3i_jb33qVrF7XyrgPNjnyUA@mail.gmail.com" type="cite">cat</blockquote>',
