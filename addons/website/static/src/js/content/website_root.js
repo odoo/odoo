@@ -22,7 +22,6 @@ var ServiceProviderMixin = require('web.ServiceProviderMixin');
 var session = require('web.session');
 var utils = require('web.utils');
 var rootWidget = require('web_editor.root_widget');
-var wContext = require('website.context');
 var sAnimation = require('website.content.snippets.animation');
 require("website.content.zoomodoo");
 
@@ -32,7 +31,11 @@ var websiteRootRegistry = new rootWidget.RootWidgetRegistry();
 
 // Load localizations outside the WebsiteRoot to not wait for DOM ready (but
 // wait for them in WebsiteRoot)
-var lang = utils.get_cookie('frontend_lang') || wContext.get().lang; // FIXME the cookie value should maybe be in the ctx?
+function getLang() {
+    var html = document.documentElement;
+    return (html.getAttribute('lang') || 'en_US').replace('-', '_');
+}
+var lang = utils.get_cookie('frontend_lang') || getLang(); // FIXME the cookie value should maybe be in the ctx?
 var localeDef = ajax.loadJS('/web/webclient/locale/' + lang.replace('-', '_'));
 
 /**
@@ -53,6 +56,7 @@ var WebsiteRoot = rootWidget.RootWidget.extend(ServiceProviderMixin, {
     custom_events: _.extend({}, rootWidget.RootWidget.prototype.custom_events || {}, {
         animation_start_demand: '_onAnimationStartDemand',
         animation_stop_demand: '_onAnimationStopDemand',
+        context_get: '_onContextGet',
         main_object_request: '_onMainObjectRequest',
         ready_to_clean_for_save: '_onAnimationStopDemand',
     }),
@@ -138,7 +142,7 @@ var WebsiteRoot = rootWidget.RootWidget.extend(ServiceProviderMixin, {
             if (_.str.startsWith(route, '/web/dataset/call_kw/')) {
                 var params = ev.data.args[1];
                 var options = ev.data.args[2];
-                params.kwargs.context = _.extend({}, wContext.get(), params.kwargs.context || {});
+                params.kwargs.context = _.extend({}, this._getContext(), params.kwargs.context || {});
                 if (options) {
                     params.kwargs.context = _.omit(params.kwargs.context, options.noContextKeys);
                     ev.data.args[2] = _.omit(options, 'noContextKeys');
@@ -147,6 +151,38 @@ var WebsiteRoot = rootWidget.RootWidget.extend(ServiceProviderMixin, {
             }
         }
         return ServiceProviderMixin._call_service.apply(this, arguments);
+    },
+    /**
+     * Retrieves the global context of the public environment. This is the
+     * context which is automatically added to each RPC.
+     *
+     * @private
+     * @param {Object} [context]
+     * @returns {Object}
+     */
+    _getContext: function (context) {
+        var html = document.documentElement;
+        return _.extend({
+            'lang': getLang(),
+            'website_id': html.getAttribute('data-website-id') | 0,
+        }, context || {});
+    },
+    /**
+     * Retrieves the global context of the public environment (as
+     * @see _getContext) but with extra informations that would be useless to
+     * send with each RPC.
+     *
+     * @private
+     * @param {Object} [context]
+     * @returns {Object}
+     */
+    _getExtraContext: function (context) {
+        var html = document.documentElement;
+        return _.extend(this._getContext(), {
+            'editable': !!(html.dataset.editable || $('[data-oe-model]').length), // temporary hack, this should be done in python
+            'translatable': !!html.dataset.translatable,
+            'edit_translations': !!html.dataset.edit_translations,
+        }, context || {});
     },
     /**
      * As the WebsiteRoot instance is designed to be unique, the associated
@@ -241,6 +277,19 @@ var WebsiteRoot = rootWidget.RootWidget.extend(ServiceProviderMixin, {
      */
     _onAnimationStopDemand: function (ev) {
         this._stopAnimations(ev.data.$target);
+    },
+    /**
+     * Called when someone asked for the global public context.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onContextGet: function (ev) {
+        if (ev.data.extra) {
+            ev.data.callback(this._getExtraContext(ev.data.context));
+        } else {
+            ev.data.callback(this._getContext(ev.data.context));
+        }
     },
     /**
      * @todo review
