@@ -59,6 +59,25 @@
             </field>
         </record>
 
+        <record id="res_partner_view_activity" model="ir.ui.view">
+            <field name="name">res.partner.activity</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <activity string="Contacts">
+                    <field name="id"/>
+                    <templates>
+                        <div t-name="activity-box">
+                            <img t-att-src="activity_image('res.partner', 'image_small', record.id.raw_value)" role="img" t-att-title="record.id.value" t-att-alt="record.id.value"/>
+                            <div>
+                                <field name="name" display="full"/>
+                                <field name="parent_id" muted="1" display="full"/>
+                            </div>
+                        </div>
+                    </templates>
+                </activity>
+            </field>
+        </record>
+
         <!--Definition of an email template with an empty body that will be used in partner mailing. Used to give a
             basis for email recipients, name and to ease the definition of a further elaborated template. -->
         <record id="email_template_partner" model="mail.template">
