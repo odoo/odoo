@@ -24,6 +24,7 @@ var EditorMenu = Widget.extend({
     },
     custom_events: {
         request_save: '_onSnippetRequestSave',
+        get_clean_html: '_onGetCleanHTML',
     },
 
     /**
@@ -196,6 +197,15 @@ var EditorMenu = Widget.extend({
      */
     _onCancelClick: function () {
         this.cancel(false);
+    },
+    /**
+     * Get the cleaned value of the editable element.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onGetCleanHTML: function (ev) {
+        ev.data.callback(this.wysiwyg.getValue({$layout: ev.data.$layout}));
     },
     /**
      * Snippet (menu_data) can request to save the document to leave the page
