@@ -510,7 +510,7 @@ class HolidaysRequest(models.Model):
                 return
             current_employee = self.env['hr.employee'].sudo().search([('user_id', '=', self.env.uid)], limit=1)
             for record in self:
-                emp_id = record._cache.get('employee_id', [False])[0]
+                emp_id = (record._cache.get('employee_id', [False]) or [False])[0]
                 if emp_id != current_employee.id:
                     try:
                         record._cache['name']
