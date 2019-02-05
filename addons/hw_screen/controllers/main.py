@@ -4,7 +4,6 @@
 from odoo import http
 from odoo.tools import config
 from odoo.addons.web.controllers import main as web
-from openerp.addons.hw_posbox_homepage.controllers import main as homepage
 
 import jinja2
 import json
@@ -32,15 +31,6 @@ jinja_env.filters["json"] = json.dumps
 
 pos_display_template = jinja_env.get_template('pos_display.html')
 
-
-class Homepage(homepage.IoTboxHomepage):
-
-    def get_hw_screen_message(self):
-        return """
-<p>
-If you need to display the current customer basket on another device, you can do it <a href='/point_of_sale/display'>here</a>.
-</p>
-"""
 
 class HardwareScreen(web.Home):
 
