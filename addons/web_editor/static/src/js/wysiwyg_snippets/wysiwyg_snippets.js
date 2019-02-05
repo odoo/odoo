@@ -50,7 +50,6 @@ Wysiwyg.include({
      * snippets can by url begin with '/' or an view xml_id.
      *
      * @override
-     * @param {string} [options.snippets]
      */
     start: function () {
         var self = this;
