@@ -1802,7 +1802,7 @@ class MailThread(models.AbstractModel):
                 if False/0, mail.message model will also be set as False
             :param str body: body of the message, usually raw HTML that will
                 be sanitized
-            :param str type: see mail_message.type field
+            :param str type: see mail_message.message_type field
             :param int parent_id: handle reply to a previous message by adding the
                 parent partners to the message in case of private discussion
             :param tuple(str,str) attachments or list id: list of attachment tuples in the form
