@@ -4,9 +4,11 @@
 import odoo
 import odoo.tests
 
+import unittest
 
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestUiHtmlEditor(odoo.tests.HttpCase):
+    @unittest.skip("FIXME")
     def test_html_editor_multiple_templates(self):
         Website = self.env['website']
         View = self.env['ir.ui.view']
@@ -29,6 +31,7 @@ class TestUiHtmlEditor(odoo.tests.HttpCase):
         self.assertTrue(specific_aboutus.arch != oe_structure_layout, "Specific Aboutus view should have been changed")
         self.assertEqual(len(specific_aboutus.inherit_children_ids.filtered(lambda v: 'oe_structure' in v.name)), 1, "oe_structure view should have been created on the specific tree")
 
+    @unittest.skip("FIXME")
     def test_html_editor_scss(self):
         self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('test_html_editor_scss')", "odoo.__DEBUG__.services['web_tour.tour'].tours.test_html_editor_scss.ready", login='admin')
 
