@@ -33,13 +33,22 @@ class TestExecute(unittest.TestCase):
 
 
 class TestTestCursor(common.TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super(TestTestCursor, cls).setUpClass()
+        r = registry()
+        r.enter_test_mode(r.cursor())
+
+    @classmethod
+    def tearDownClass(cls):
+        r = registry()
+        r.test_cr.close()
+        r.leave_test_mode()
+        super(TestTestCursor, cls).tearDownClass()
 
     def setUp(self):
         super(TestTestCursor, self).setUp()
-        self.registry.enter_test_mode(self.cr)
-        self.addCleanup(self.registry.leave_test_mode)
         self.record = self.env['res.partner'].create({'name': 'Foo'})
-        self.cr = self.cursor()
 
     def write(self, record, value):
             record.ref = value
