@@ -8,6 +8,19 @@ from odoo.tools.translate import html_translate
 from odoo.osv import expression
 
 
+class ChannelUsersRelation(models.Model):
+    _name = 'slide.channel.partner'
+    _description = 'Channel / Partners (Members)'
+    _table = 'slide_channel_partner'
+
+    channel_id = fields.Many2one('slide.channel', index=True, required=True)
+    state = fields.Selection([
+        ('draft', 'Waiting confirmation'),
+        ('confirmed', 'Confirmed'),
+        ('canceled', 'Canceled')], default='draft', string='Member status')
+    partner_id = fields.Many2one('res.partner', index=True, required=True)
+
+
 class Channel(models.Model):
     """ A channel is a container of slides. It has group-based access configuration
     allowing to configure slide upload and access. Slides can be promoted in
@@ -74,22 +87,24 @@ class Channel(models.Model):
         default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('website_slides.slide_template_shared'))
     visibility = fields.Selection([
         ('public', 'Public'),
-        ('private', 'Private'),
-        ('partial', 'Show channel but restrict presentations')],
+        ('invite', 'Invite')],
         default='public', required=True)
-    group_ids = fields.Many2many(
-        'res.groups', 'rel_channel_groups', 'channel_id', 'group_id',
-        string='Channel Groups', help="Groups allowed to see presentations in this channel")
-    access_error_msg = fields.Html(
-        'Error Message', help="Message to display when not accessible due to access rights",
-        default=lambda s: _("<p>This channel is private and its content is restricted to some users.</p>"),
-        translate=html_translate, sanitize_attributes=False)
+    # members and access
+    partner_ids = fields.Many2many(
+        'res.partner', 'slide_channel_partner', 'channel_id', 'partner_id',
+        string='Members', help="All participants to the channel whatever their state.")
+    member_ids = fields.One2many(
+        comodel_name='res.partner', compute='_compute_member_ids', search='_search_member_ids',
+        string='Confirmed Members')
+    is_member = fields.Boolean(string='Is Member', compute='_compute_member_ids')
+    channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='base.group_system')
+    enroll_msg = fields.Html(
+        'Enroll Message', help="Message explaining the enroll process",
+        default=False, translate=html_translate, sanitize_attributes=False)
     upload_group_ids = fields.Many2many(
         'res.groups', 'rel_upload_groups', 'channel_id', 'group_id',
         string='Upload Groups', help="Groups allowed to upload presentations in this channel. If void, every user can upload.")
     # not stored access fields, depending on each user
-    can_see = fields.Boolean('Can See', compute='_compute_access', search='_search_can_see')
-    can_see_full = fields.Boolean('Full Access', compute='_compute_access')
     can_upload = fields.Boolean('Can Upload', compute='_compute_access')
 
     @api.depends('custom_slide_id', 'promote_strategy', 'slide_ids.likes',
@@ -105,6 +120,28 @@ class Channel(models.Model):
                     [('website_published', '=', True), ('channel_id', '=', record.id)],
                     limit=1, order=self._order_by_strategy[record.promote_strategy])
                 record.promoted_slide_id = slides and slides[0] or False
+
+    @api.depends('channel_partner_ids.partner_id', 'channel_partner_ids.state')
+    @api.model
+    def _compute_member_ids(self):
+        channel_partners = self.env['slide.channel.partner'].sudo().search([
+            ('state', '=', 'confirmed'),
+            ('channel_id', 'in', self.ids),
+        ])
+        result = dict()
+        for cp in channel_partners:
+            result.setdefault(cp.channel_id.id, []).append(cp.partner_id.id)
+        for channel in self:
+            channel.valid_channel_partner_ids = result.get(channel.id, False)
+            channel.is_member = self.env.user.partner_id.id in channel.valid_channel_partner_ids if channel.valid_channel_partner_ids else False
+
+    @api.model
+    def _search_member_ids(self, operator, operand):
+        assert operator != "not in", "Do not search with 'not in'"
+        members = self.env['slide.channel.partner'].sudo().search([
+            ('state', '=', 'confirmed'),
+            ('partner_id', operator, operand)])
+        return [('id', 'in', [m.channel_id.id for m in members])]
 
     @api.depends('slide_ids.slide_type', 'slide_ids.website_published')
     def _count_presentations(self):
@@ -123,35 +160,9 @@ class Channel(models.Model):
             record.nbr_infographics = result[record.id].get('infographic', 0)
             record.total = record.nbr_presentations + record.nbr_documents + record.nbr_videos + record.nbr_infographics
 
-    def _search_can_see(self, operator, value):
-        if operator not in ('=', '!=', '<>'):
-            raise ValueError('Invalid operator: %s' % (operator,))
-
-        if not value:
-            operator = operator == "=" and '!=' or '='
-
-        if self._uid == SUPERUSER_ID:
-            return [(1, '=', 1)]
-
-        # Better perfs to split request and use inner join that left join
-        req = """
-            SELECT id FROM slide_channel WHERE visibility='public'
-                UNION
-            SELECT c.id
-                FROM slide_channel c
-                    INNER JOIN rel_channel_groups rg on c.id = rg.channel_id
-                    INNER JOIN res_groups g on g.id = rg.group_id
-                    INNER JOIN res_groups_users_rel u on g.id = u.gid and uid = %s
-        """
-        op = operator == "=" and "inselect" or "not inselect"
-        # don't use param named because orm will add other param (test_active, ...)
-        return [('id', op, (req, (self._uid, )))]
-
     @api.one
-    @api.depends('visibility', 'group_ids', 'upload_group_ids')
+    @api.depends('visibility', 'partner_ids', 'upload_group_ids')
     def _compute_access(self):
-        self.can_see = self.visibility in ['public', 'partial'] or bool(self.group_ids & self.env.user.groups_id)
-        self.can_see_full = self.visibility == 'public' or bool(self.group_ids & self.env.user.groups_id)
         self.can_upload = not self.env.user.share and (not self.upload_group_ids or bool(self.upload_group_ids & self.env.user.groups_id))
 
     @api.multi
@@ -165,8 +176,7 @@ class Channel(models.Model):
 
     @api.onchange('visibility')
     def change_visibility(self):
-        if self.visibility == 'public':
-            self.group_ids = False
+        pass
 
     # ---------------------------------------------------------
     # ORM Overrides
@@ -191,6 +201,12 @@ class Channel(models.Model):
 
     @api.model
     def create(self, vals):
+        # Ensure creator is member of its channel it is easier for him to manage it
+        if vals.get('visibility') == 'invite' and not vals.get('channel_partner_ids'):
+            vals['channel_partner_ids'] = [(0, 0, {
+                'partner_id': self.env.user.partner_id.id,
+                'state': 'confirmed',
+            })]
         return super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals)
 
     @api.multi

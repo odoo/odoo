@@ -100,6 +100,7 @@ class Slide(models.Model):
         [('none', 'No One'), ('user', 'Authenticated Users Only'), ('public', 'Everyone')],
         string='Download Security',
         required=True, default='user')
+    is_preview = fields.Boolean('Previewable', default=False)  # TDE FIXME: clean name + help
     image = fields.Binary('Image', attachment=True)
     image_medium = fields.Binary('Medium', compute="_get_image", store=True, attachment=True)
     image_thumb = fields.Binary('Thumbnail', compute="_get_image", store=True, attachment=True)
@@ -249,33 +250,6 @@ class Slide(models.Model):
             self._post_publication()
         return res
 
-    @api.model
-    def check_field_access_rights(self, operation, fields):
-        """ As per channel access configuration (visibility)
-         - public  ==> no restriction on slides access
-         - private ==> restrict all slides of channel based on access group defined on channel group_ids field
-         - partial ==> show channel, but presentations based on groups means any user can see channel but not slide's content.
-        For private: implement using record rule
-        For partial: user can see channel, but channel gridview have slide detail so we have to implement
-        partial field access mechanism for public user so he can have access of promotional field (name, view_count) of slides,
-        but not all fields like data (actual pdf content)
-        all fields should be accessible only for user group defined on channel group_ids
-        """
-        if self.env.uid == SUPERUSER_ID:
-            return fields or list(self._fields)
-        fields = super(Slide, self).check_field_access_rights(operation, fields)
-        # still read not perform so we can not access self.channel_id
-        if self.ids:
-            self.env.cr.execute('SELECT DISTINCT channel_id FROM ' + self._table + ' WHERE id IN %s', (tuple(self.ids),))
-            channel_ids = [x[0] for x in self.env.cr.fetchall()]
-            channels = self.env['slide.channel'].sudo().browse(channel_ids)
-            limited_access = all(channel.visibility == 'partial' and
-                                 not len(channel.group_ids & self.env.user.groups_id)
-                                 for channel in channels)
-            if limited_access:
-                fields = [field for field in fields if field in self._PROMOTIONAL_FIELDS]
-        return fields
-
     @api.multi
     def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to website if it is published. """
@@ -303,7 +277,7 @@ class Slide(models.Model):
 
     def get_related_slides(self, limit=20):
         domain = request.website.website_domain()
-        domain += [('website_published', '=', True), ('channel_id.visibility', '!=', 'private'), ('id', '!=', self.id)]
+        domain += [('website_published', '=', True), ('id', '!=', self.id)]
         if self.category_id:
             domain += [('category_id', '=', self.category_id.id)]
         for record in self.search(domain, limit=limit):
@@ -311,7 +285,7 @@ class Slide(models.Model):
 
     def get_most_viewed_slides(self, limit=20):
         domain = request.website.website_domain()
-        domain += [('website_published', '=', True), ('channel_id.visibility', '!=', 'private'), ('id', '!=', self.id)]
+        domain += [('website_published', '=', True), ('id', '!=', self.id)]
         for record in self.search(domain, limit=limit, order='total_views desc'):
             yield record
 
