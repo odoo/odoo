@@ -46,10 +46,10 @@ class FleetVehicle(models.Model):
                     car.total_cost += contract.cost_generated / 12.0
 
     def _get_co2_fee(self, co2, fuel_type):
-        fuel_coefficient = {'diesel': 600, 'gasoline': 768, 'lpg': 990, 'electric': 0, 'hybrid': 0}
+        fuel_coefficient = {'diesel': 600, 'gasoline': 768, 'lpg': 990, 'electric': 0, 'hybrid': 600}
         co2_fee = 26.47
         if fuel_type and fuel_type not in ['electric', 'hybrid']:
-            co2_fee = (((co2 * 9.0) - fuel_coefficient.get(fuel_type)) * 1.2488) / 12.0
+            co2_fee = (((co2 * 9.0) - fuel_coefficient.get(fuel_type)) * 144.97 / 114.08) / 12.0
         return max(co2_fee , 26.47)
 
     @api.depends('co2', 'fuel_type')
@@ -117,7 +117,7 @@ class FleetVehicle(models.Model):
                 if fuel_type in ['diesel', 'hybrid']:
                     reference = 86.0
                 else:
-                    reference = 105.0
+                    reference = 88.0
 
                 if co2 <= reference:
                     atn = car_value * max(0.04, (0.055 - 0.001 * (reference - co2))) * magic_coeff
