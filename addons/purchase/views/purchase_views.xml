@@ -387,6 +387,23 @@
             </field>
         </record>
 
+        <record id="purchase_order_view_activity" model="ir.ui.view">
+            <field name="name">purchase.order.activity</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <activity string="Purchase Order">
+                    <templates>
+                        <div t-name="activity-box">
+                            <div>
+                                <field name="name" display="full"/>
+                                <field name="partner_id" muted="1" display="full"/>
+                            </div>
+                        </div>
+                    </templates>
+                </activity>
+            </field>
+        </record>
+
         <record id="purchase_order_action_generic" model="ir.actions.act_window">
             <field name="name">Purchase Orders</field>
             <field name="type">ir.actions.act_window</field>
