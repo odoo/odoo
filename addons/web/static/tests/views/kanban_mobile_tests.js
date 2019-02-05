@@ -174,5 +174,34 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
+
+    QUnit.test('kanban with searchpanel: there should be no searchpanel in mobile', function (assert) {
+        assert.expect(3);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="foo"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                    '<searchpanel>' +
+                        '<field name="product_id"/>' +
+                    '</searchpanel>' +
+                '</kanban>',
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.containsNone(kanban, '.o_search_panel');
+        assert.verifySteps(['/web/dataset/search_read']);
+
+        kanban.destroy();
+    });
 });
 });
