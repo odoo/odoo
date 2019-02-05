@@ -424,7 +424,7 @@ QUnit.test('@ mention in channel', function (assert) {
 });
 
 QUnit.test('@ mention with special chars', function (assert) {
-    assert.expect(10);
+    assert.expect(11);
     var done = assert.async();
     var fetchListenersDef = $.Deferred();
     var receiveMessageDef = $.Deferred();
@@ -452,6 +452,9 @@ QUnit.test('@ mention with special chars', function (assert) {
                 ]);
             }
             if (args.method === 'message_post') {
+                assert.deepEqual(args.kwargs.partner_ids, [1],
+                    "mentioned partners are sent to server"
+                )
                 var data = {
                     author_id: ["42", "Me"],
                     body: args.kwargs.body,
