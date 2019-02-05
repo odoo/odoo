@@ -25,13 +25,6 @@ var LunchKanbanView = KanbanView.extend({
         Renderer: LunchKanbanRenderer,
     }),
     display_name: _lt('Lunch Kanban'),
-
-    /**
-     * @override
-     */
-    init: function () {
-        return this._super.apply(this, arguments);
-    },
 });
 
 view_registry.add('lunch_kanban', LunchKanbanView);
