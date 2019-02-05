@@ -32,7 +32,7 @@
                                 <field name="product_qty"/>
                                 <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
                             </div>
-                            <field name="routing_id" attrs="{'invisible': [('type','=','phantom')]}" groups="mrp.group_mrp_routings"/>
+                            <field name="routing_id" groups="mrp.group_mrp_routings"/>
                         </group>
                         <group>
                             <field name="code"/>
@@ -68,7 +68,7 @@
                                     <field name="parent_product_tmpl_id" invisible="1" />
                                     <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
                                     <field name="attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}" groups="product.group_product_variant"/>
-                                    <field name="operation_id" groups="mrp.group_mrp_routings" domain="[('routing_id', '=', parent.routing_id)]" options="{'no_quick_create':True,'no_create_edit':True}" attrs="{'column_invisible': [('parent.type', '=', 'phantom')]}"/>
+                                    <field name="operation_id" groups="mrp.group_mrp_routings" domain="[('routing_id', '=', parent.routing_id)]" options="{'no_quick_create':True,'no_create_edit':True}"/>
                                 </tree>
                             </field>
                         </page>
