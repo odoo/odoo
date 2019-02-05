@@ -56,8 +56,7 @@ class WebsiteSlides(http.Controller):
             'related_slides': related_slides,
             'user': request.env.user,
             'is_public_user': request.website.is_public_user(),
-            'comments': slide.channel_id.can_see_full and slide.website_message_ids or [],
-            'private': not slide.channel_id.can_see_full,
+            'comments': slide.website_message_ids or [],
         }
 
     # --------------------------------------------------
@@ -152,7 +151,6 @@ class WebsiteSlides(http.Controller):
             'user': user,
             'pager': pager,
             'is_public_user': request.website.is_public_user(),
-            'display_channel_settings': not request.httprequest.cookies.get('slides_channel_%s' % (channel.id), False) and channel.can_see_full,
             'rating_avg': channel.rating_avg,
             'rating_count': channel.rating_count,
         }
@@ -191,14 +189,13 @@ class WebsiteSlides(http.Controller):
     # SLIDE.SLIDE CONTOLLERS
     # --------------------------------------------------
 
-    @http.route('''/slides/slide/<model("slide.slide", "[('channel_id.can_see', '=', True), ('website_id', 'in', (False, current_website_id))]"):slide>''', type='http', auth="public", website=True)
+    @http.route('''/slides/slide/<model("slide.slide", "[('website_id', 'in', (False, current_website_id))]"):slide>''', type='http', auth="public", website=True)
     def slide_view(self, slide, **kwargs):
         if not slide.channel_id.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
 
         values = self._get_slide_detail(slide)
-        if not values.get('private'):
-            self._set_viewed_slide(slide, 'slide')
+        self._set_viewed_slide(slide, 'slide')
         return request.render('website_slides.slide_detail_view', values)
 
     @http.route('''/slides/slide/<model("slide.slide"):slide>/pdf_content''',
@@ -253,23 +250,6 @@ class WebsiteSlides(http.Controller):
         slide = request.env['slide.slide'].browse(int(slide_id))
         result = slide.send_share_email(email)
         return result
-
-    @http.route('/slides/slide/overlay', type='json', auth="public", website=True)
-    def slide_get_next_slides(self, slide_id):
-        slide = request.env['slide.slide'].browse(int(slide_id))
-        slides_to_suggest = 9
-
-        def slide_mapped_dict(slide):
-            return {
-                'img_src': '/web/image/slide.slide/%s/image_thumb' % (slide.id),
-                'caption': slide.name,
-                'url': slide.website_url
-            }
-        vals = [slide_mapped_dict(s) for s in slide.get_related_slides(slides_to_suggest)]
-        add_more_slide = slides_to_suggest - len(vals)
-        if max(add_more_slide, 0):
-            vals.extend(slide_mapped_dict(s) for s in slide.get_most_viewed_slides(add_more_slide))
-        return vals
 
     # --------------------------------------------------
     # TOOLS
@@ -361,10 +341,8 @@ class WebsiteSlides(http.Controller):
             values = self._get_slide_detail(slide)
             values['page'] = page
             values['is_embedded'] = is_embedded
-            if not values.get('private'):
-                self._set_viewed_slide(slide, 'embed')
+            self._set_viewed_slide(slide, 'embed')
             return request.render('website_slides.embed_slide', values)
         except AccessError: # TODO : please, make it clean one day, or find another secure way to detect
                             # if the slide can be embedded, and properly display the error message.
-            slide = request.env['slide.slide'].sudo().browse(slide_id)
-            return request.render('website_slides.embed_slide_forbidden', {'slide': slide})
+            return request.render('website_slides.embed_slide_forbidden', {})

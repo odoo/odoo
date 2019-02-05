@@ -7,20 +7,13 @@
         -->
         <template id="embed_slide" name="Embedded Slide Page">
             <html>
-                <head t-if="not private">
+                <head>
                     <title><t t-esc="slide.name"/></title>
                     <t t-call-assets="web.assets_common" t-js="false"/>
                     <t t-call-assets="website_slides.slide_embed_assets" t-js="false"/>
                     <t t-call-assets="web.assets_common" t-css="false"/>
                     <t t-call-assets="website_slides.slide_embed_assets" t-css="false"/>
                 </head>
-                <body t-if="private" style="position: inherit;">
-                    <title><t t-esc="slide.name"/></title>
-                    <div class="slide-private-view">
-                        <h3 style="border-bottom: 1px solid !important;padding-bottom: 10px;"><i class="fa fa-exclamation-triangle" role="img" aria-label="Attention" title="Attention"></i> This <t t-esc="slide.slide_type"/> is private.</h3>
-                        <div t-field="slide.channel_id.access_error_msg" />
-                    </div>
-                </body>
                 <body t-else="">
                     <div id="PDFViewer" class="d-flex flex-column h-100 border">
                         <!-- PDF Viewer Header : contains the name, and the share links -->
@@ -134,15 +127,12 @@
         -->
         <template id="embed_slide_forbidden" name="Forbidden Embedded Slide">
             <html>
-                <head t-if="not private">
-                    <title><t t-esc="slide.name"/></title>
+                <head>
                     <t t-call-assets="website_slides.slide_embed_assets" t-js="false"/>
                 </head>
                 <body>
-                    <title><t t-esc="slide.name"/></title>
                     <div class="slide-private-view">
-                        <h3 style="border-bottom: 1px solid !important;padding-bottom: 10px;"><i class="fa fa-exclamation-triangle" role="img" aria-label="Attention" title="Attention"></i> This <t t-esc="slide.slide_type"/> is private.</h3>
-                        <div t-field="slide.channel_id.access_error_msg" />
+                        <h3 style="border-bottom: 1px solid !important;padding-bottom: 10px;"><i class="fa fa-exclamation-triangle" role="img" aria-label="Attention" title="Attention"></i> This document is private.</h3>
                     </div>
                 </body>
             </html>
