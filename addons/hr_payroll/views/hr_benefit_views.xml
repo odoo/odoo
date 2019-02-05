@@ -5,7 +5,26 @@
         <field name="name">Benefit</field>
         <field name="res_model">hr.benefit</field>
         <field name="view_type">form</field>
-        <field name="view_mode">calendar,tree,form,pivot</field>
+        <field name="view_mode">gantt,calendar,tree,form,pivot</field>
+    </record>
+
+    <record id="hr_benefit_gantt" model="ir.ui.view">
+        <field name="name">hr.benefit.gantt</field>
+        <field name="model">hr.benefit</field>
+        <field name="arch" type="xml">
+            <gantt string="Benefit"
+                   date_start="date_start"
+                   date_stop="date_stop"
+                   color="benefit_type_id"
+                   default_group_by='employee_id'
+                   decoration-secondary="state == 'validated'"
+                   decoration-warning="display_warning">
+                <field name="state"/>
+                <field name="employee_id"/>
+                <field name="display_warning"/>
+                <field name="name"/>
+            </gantt>
+        </field>
     </record>
 
     <record id="hr_benefit_calendar" model="ir.ui.view">
