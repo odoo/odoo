@@ -125,7 +125,7 @@ var HelperPlugin = AbstractPlugin.extend({
      * Returns the number of leading breakable space in the textNode.
      * Note: returns 0 if the node is not a textNode.
      *
-     * @param {Node}
+     * @param {Node} node
      */
     countLeadingBreakableSpace: function (node) {
         if (!dom.isText(node)) {
@@ -704,7 +704,7 @@ var HelperPlugin = AbstractPlugin.extend({
     /**
      * Returns the node targeted by a path
      *
-     * @param {Object[]} list of object (tagName, offset)
+     * @param {Object[]} path list of object (tagName, offset)
      * @returns {Node}
      */
     fromPath: function (path) {
