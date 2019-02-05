@@ -2,7 +2,7 @@ odoo.define("website.ace", function (require) {
 "use strict";
 
 var AceEditor = require('web_editor.ace');
-var weContext = require('web_editor.context');
+var weContext = require('website.context');
 
 /**
  * Extends the default view editor so that the URL hash is updated with view ID
