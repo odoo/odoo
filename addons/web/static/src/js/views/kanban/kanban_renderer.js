@@ -167,6 +167,17 @@ var KanbanRenderer = BasicRenderer.extend({
         this._toggleNoContentHelper();
     },
     /**
+     * Allow the rendering to be triggered from outside. This is used for kanban
+     * views with a searchPanel, to synchronize updates (the view is updated
+     * with param 'noRender', so that it is not re-rendered before the
+     * searchPanel).
+     *
+     * @returns {$.Promise}
+     */
+    render: function () {
+        return this._render();
+    },
+    /**
      * Updates a given column with its new state.
      *
      * @param {string} localID the column id
