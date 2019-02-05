@@ -12,11 +12,10 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
     'category': 'Website',
     'depends': ['website', 'mass_mailing'],
     'data': [
-        'security/mass_mailing_security.xml',
+        'security/ir.model.access.csv',
         'views/website_mass_mailing_templates.xml',
         'views/snippets_templates.xml',
         'views/mass_mailing_view.xml',
-        'views/res_config_settings_views.xml',
     ],
     'qweb': [
         'static/src/xml/*.xml',
