@@ -48,7 +48,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         var def = this._super.apply(this, arguments);
 
         // Check that the page is empty
-        var $wrap = this._targetForEdition().find('#wrap');
+        var $wrap = this._targetForEdition().filter('#wrapwrap.homepage').find('#wrap');
         this.$wrap = $wrap;
 
         if ($wrap.length && $wrap.html().trim() === '') {
