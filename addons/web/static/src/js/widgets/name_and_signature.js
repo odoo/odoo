@@ -52,8 +52,9 @@ var NameAndSignature = Widget.extend({
      * @param {string} [options.mode='draw'] - @see this.setMode
      * @param {string} [options.signatureType='signature'] - The type of
      *  signature used in 'auto' mode. Can be one of the following values:
+     *
      *  - 'signature': it will adapt the characters width to fit the whole
-     *      text in the image.
+     *    text in the image.
      *  - 'initial': it will adapt the space between characters to fill
      *      the image with the text. The text will be the first letter of
      *      every word in the name, separated by dots.
