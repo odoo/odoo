@@ -7,13 +7,10 @@ odoo.define('lunch.LunchKanbanController', function (require) {
  */
 
 var core = require('web.core');
-var Domain = require('web.Domain');
 var KanbanController = require('web.KanbanController');
 var LunchKanbanWidget = require('lunch.LunchKanbanWidget');
 var LunchPaymentDialog = require('lunch.LunchPaymentDialog');
-var session = require('web.session');
 
-var qweb = core.qweb;
 var _t = core._t;
 
 var LunchKanbanController = KanbanController.extend({
@@ -44,7 +41,11 @@ var LunchKanbanController = KanbanController.extend({
         return this._super.apply(this, arguments);
     },
 
-    _fetchPaymentInfo: function (){
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    _fetchPaymentInfo: function () {
         return this._rpc({
             route: '/lunch/payment_message',
         });
@@ -62,6 +63,34 @@ var LunchKanbanController = KanbanController.extend({
             self.model._updateLocation(data.user_location[0]);
         });
     },
+    _showPaymentDialog: function (title) {
+        var self = this;
+
+        title = title || '';
+
+        this._fetchPaymentInfo().then(function (data) {
+            var paymentDialog = new LunchPaymentDialog(self, _.extend(data, {title: title}));
+            paymentDialog.open();
+        });
+    },
+    _update: function () {
+        var self = this;
+
+        this._fetchWidgetData().then(function () {
+            if (self.widget) {
+                self.widget.destroy();
+            }
+            self.widgetData.wallet = parseFloat(self.widgetData.wallet).toFixed(2);
+            self.widget = new LunchKanbanWidget(self, _.extend(self.widgetData, {edit: self.editMode}));
+            self.widget.insertBefore(self.$('.o_kanban_view'));
+        });
+        return this._super.apply(self, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
     _onAddProduct: function (ev) {
         var self = this;
         ev.stopPropagation();
@@ -101,7 +130,7 @@ var LunchKanbanController = KanbanController.extend({
         var self = this;
         ev.stopPropagation();
 
-        var ctx = this.userId ? {default_user_id: this.userId}: {};
+        var ctx = this.userId ? {default_user_id: this.userId} : {};
 
         var options = {
             on_close: function () {
@@ -176,35 +205,6 @@ var LunchKanbanController = KanbanController.extend({
         }).then(function () {
             self.reload();
         });
-    },
-    _orderPaid: function () {
-        Dialog.alert(this, _t('Your order has been paid have a nice day'), {'title': _t('Order Paid')});
-    },
-    _orderNotPaid: function () {
-        this._showPaymentDialog();
-    },
-    _showPaymentDialog: function (title) {
-        var self = this;
-
-        title = title || '';
-
-        this._fetchPaymentInfo().then(function (data) {
-            var paymentDialog = new LunchPaymentDialog(self, _.extend(data, {title: title}));
-            paymentDialog.open();
-        });
-    },
-    _update: function () {
-        var self = this;
-
-        this._fetchWidgetData().then(function () {
-            if (self.widget) {
-                self.widget.destroy();
-            }
-            self.widgetData.wallet = parseFloat(self.widgetData.wallet).toFixed(2);
-            self.widget = new LunchKanbanWidget(self, _.extend(self.widgetData, {edit: self.editMode}));
-            self.widget.insertBefore(self.$('.o_kanban_view'));
-        });
-        return this._super.apply(self, arguments);
     },
 });
 

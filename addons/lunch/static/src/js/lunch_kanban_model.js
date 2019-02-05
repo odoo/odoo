@@ -7,18 +7,20 @@ odoo.define('lunch.LunchKanbanModel', function (require) {
  */
 
 var KanbanModel = require('web.KanbanModel');
-var core = require('web.core');
-
-var _t = core._t;
 
 var LunchKanbanModel = KanbanModel.extend({
     init: function () {
         this.locationId = false;
         this.userId = false;
 
-        return this._super.apply(this, arguments);
+        this._super.apply(this, arguments);
     },
-    load: function() {
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    load: function () {
         var self = this;
         var args = arguments;
         var _super = this._super;
@@ -39,6 +41,10 @@ var LunchKanbanModel = KanbanModel.extend({
 
         return this._super.apply(this, arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
     _addOrUpdate: function (domain, subDomain) {
         var key = subDomain[0];
