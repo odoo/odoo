@@ -20,6 +20,12 @@ var LunchKanbanModel = KanbanModel.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * @returns {integer|false}
+     */
+    getCurrentLocationId: function () {
+        return this.locationId;
+    },
     load: function () {
         var self = this;
         var args = arguments;

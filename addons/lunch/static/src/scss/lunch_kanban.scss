@@ -7,6 +7,21 @@
 }
 
 .o_lunch_kanban {
+    display: flex;
+    flex-direction: column; // display lunch widget above kanban renderer
+    flex: 1 1 100%; // displayed to the right of the searchPanel
+    min-width: 0; // prevent grouped kanban from horizontally overflowing
+    height: 100%;
+    .o_lunch_kanban_banner {
+        flex: 0 0 auto;
+    }
+    .o_kanban_view {
+        flex: 1 1 100%;
+        &.o_kanban_grouped {
+            min-height: auto; // override min-height: 100%
+        }
+    }
+
     .o_lunch_purple {
         color: $o-brand-odoo;
     }
