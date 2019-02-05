@@ -2,19 +2,25 @@ odoo.define('lunch.LunchKanbanWidget', function (require) {
 "use strict";
 
 var core = require('web.core');
-var dialogs = require('web.view_dialogs');
 var field_registry = require('web.field_registry');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
 var _t = core._t;
-var qweb = core.qweb;
 var FieldMany2One = field_registry.get('many2one');
+
+
+var LunchMany2One = FieldMany2One.extend({
+    start: function () {
+        this.$el.addClass('w-100');
+        return this._super.apply(this, arguments);
+    }
+});
 
 var LunchKanbanWidget = Widget.extend({
     template: 'LunchKanbanWidget',
     custom_events: {
-        'field_changed': '_onFieldChanged',
+        field_changed: '_onFieldChanged',
     },
     events: {
         'click .o_add_money': '_onAddMoney',
@@ -47,7 +53,9 @@ var LunchKanbanWidget = Widget.extend({
         });
 
         if (this.is_manager) {
-            this.lunchUserField = this._createMany2One('users', 'res.users', this.username, function (params) { return [['groups_id', 'not in', [self.group_portal_id]]]; });
+            this.lunchUserField = this._createMany2One('users', 'res.users', this.username, function () {
+                return [['groups_id', 'not in', [self.group_portal_id]]];
+            });
         }
 
         this.locations = params.locations || [];
@@ -66,7 +74,6 @@ var LunchKanbanWidget = Widget.extend({
         this.currency = params.currency || session.get_currency(session.company_currency_id);
     },
     renderElement: function () {
-        var self = this;
         this._super.apply(this, arguments);
         if (this.lunchUserField) {
             this.lunchUserField.appendTo(this.$('.o_lunch_user_field'));
@@ -75,6 +82,10 @@ var LunchKanbanWidget = Widget.extend({
         }
         this.lunchLocationField.appendTo(this.$('.o_lunch_location_field'));
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
     _createMany2One: function (name, model, value, domain, context) {
         var fields = {};
@@ -91,8 +102,8 @@ var LunchKanbanWidget = Widget.extend({
                 default: fields,
             },
             data: data,
-            getDomain: domain || function (params) { return []; },
-            getContext: context || function (params) { return {}; },
+            getDomain: domain || function () { return []; },
+            getContext: context || function () { return {}; },
         };
         var options = {
             mode: 'edit',
@@ -104,6 +115,11 @@ var LunchKanbanWidget = Widget.extend({
         };
         return new LunchMany2One(this, name, record, options);
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
     _onAddMoney: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
@@ -155,13 +171,6 @@ var LunchKanbanWidget = Widget.extend({
 
         this.trigger_up('unlink_order', {});
     },
-});
-
-var LunchMany2One = FieldMany2One.extend({
-    start: function () {
-        this.$el.addClass('w-100');
-        return this._super.apply(this, arguments);
-    }
 });
 
 return LunchKanbanWidget;
