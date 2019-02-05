@@ -202,7 +202,7 @@ class ProcurementGroup(models.Model):
             if product_routes:
                 res = Pull.search(expression.AND([[('route_id', 'in', product_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
         if not res:
-            warehouse_routes = values['warehouse_id'].route_ids
+            warehouse_routes = values['warehouse_id'].route_ids.filtered(lambda wr: wr.warehouse_selectable)
             if warehouse_routes:
                 res = Pull.search(expression.AND([[('route_id', 'in', warehouse_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
         return res
