@@ -171,7 +171,12 @@ class Route(models.Model):
     warehouse_ids = fields.Many2many('stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id', 'Warehouses')
 
     def write(self, values):
-        '''when a route is deactivated, deactivate also its pull and push rules'''
+        '''
+            when a route is deactivated, deactivate also its pull and push rules
+            when the user unselected the applicability on warehouses we remove the relation automatically
+        '''
+        if 'warehouse_selectable' in values and not values.get('warehouse_selectable'):
+            values['warehouse_ids'] = [(6, 0, [])]
         res = super(Route, self).write(values)
         if 'active' in values:
             self.mapped('push_ids').filtered(lambda path: path.active != values['active']).write({'active': values['active']})
