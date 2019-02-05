@@ -338,7 +338,7 @@ QUnit.test('activity view: activity widget', function (assert) {
     activity.destroy();
 });
 QUnit.test('activity view: no group by', function (assert) {
-    assert.expect(4);
+    assert.expect(5);
 
     var actionManager = createActionManager({
         actions: [{
@@ -353,8 +353,13 @@ QUnit.test('activity view: no group by', function (assert) {
             'task,false,search': '<search></search>',
         },
         data: this.data,
+        session: {
+            user_context: {lang: 'zz_ZZ'},
+        },
         mockRPC: function(route, args) {
             if (args.method === 'get_activity_data') {
+                assert.deepEqual(args.kwargs.context, {lang: 'zz_ZZ'},
+                    'The context should have been passed');
                 return $.when(ACTIVITY_DATA);
             }
             return this._super(route, args);
