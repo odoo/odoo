@@ -57,16 +57,6 @@ six_payment_terminal_template = jinja_env.get_template('six_payment_terminal.htm
 
 class IoTboxHomepage(web.Home):
 
-    def get_hw_screen_message(self):
-        return """
-        <p>
-            The activate the customer display feature, you will need to reinstall the IoT Box software.
-            You can find the latest images on the <a href="http://nightly.odoo.com/master/posbox/">Odoo Nightly builds</a> website.
-            Make sure to download at least the version 16.<br/>
-            Odoo version 11, or above, is required to use the customer display feature.
-        </p>
-        """
-
     def get_pos_device_status(self):
         statuses = {}
         for driver in hw_proxy.drivers:
