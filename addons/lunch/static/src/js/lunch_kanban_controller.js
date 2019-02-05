@@ -36,9 +36,18 @@ var LunchKanbanController = KanbanController.extend({
         this.widgetData = null;
         return this._super.apply(this, arguments);
     },
+    /**
+     * @override
+     */
     start: function () {
-        this.$el.addClass('o_lunch_kanban');
-        return this._super.apply(this, arguments);
+        // create a div inside o_content that will be used to wrap the lunch
+        // banner and kanban renderer (this is required to get the desired
+        // layout with the searchPanel to the left)
+        var self = this;
+        this.$('.o_content').append($('<div>').addClass('o_lunch_kanban'));
+        return this._super.apply(this, arguments).then(function () {
+            self.$('.o_lunch_kanban').append(self.$('.o_kanban_view'));
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -73,18 +82,40 @@ var LunchKanbanController = KanbanController.extend({
             paymentDialog.open();
         });
     },
+    /**
+     * Override to fetch and display the lunch data. Because of the presence of
+     * the searchPanel, also wrap the lunch widget and the kanban renderer into
+     * a div, to get the desired layout.
+     *
+     * @override
+     * @private
+     */
     _update: function () {
         var self = this;
 
-        this._fetchWidgetData().then(function () {
+        var def = this._fetchWidgetData().then(function () {
             if (self.widget) {
                 self.widget.destroy();
             }
             self.widgetData.wallet = parseFloat(self.widgetData.wallet).toFixed(2);
             self.widget = new LunchKanbanWidget(self, _.extend(self.widgetData, {edit: self.editMode}));
-            self.widget.insertBefore(self.$('.o_kanban_view'));
+            return self.widget.appendTo(document.createDocumentFragment()).then(function () {
+                self.$('.o_lunch_kanban').prepend(self.widget.$el);
+            });
         });
-        return this._super.apply(self, arguments);
+        return $.when(def, this._super.apply(self, arguments));
+    },
+    /**
+     * Override to add the location domain (coming from the lunchKanbanWidget)
+     * to the searchDomain (coming from the controlPanel).
+     *
+     * @override
+     * @private
+     */
+    _updateSearchPanel: function () {
+        var locationId = this.model.getCurrentLocationId();
+        var domain = this.controlPanelDomain.concat([['is_available_at', 'in', [locationId]]]);
+        return this._searchPanel.update({searchDomain: domain});
     },
 
     //--------------------------------------------------------------------------
