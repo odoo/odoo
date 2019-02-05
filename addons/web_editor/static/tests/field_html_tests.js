@@ -517,6 +517,27 @@ QUnit.test('rendering with iframe for edit mode', function (assert) {
     });
 });
 
+QUnit.test('save immediately before iframe is rendered in edit mode', function (assert) {
+    var done = assert.async();
+    assert.expect(1);
+
+    testUtils.createAsyncView({
+        View: FormView,
+        model: 'note.note',
+        data: this.data,
+        arch: '<form>' +
+            '<field name="body" widget="html" style="height: 100px" options="{\'cssEdit\': \'template.assets\'}"/>' +
+            '</form>',
+        res_id: 1,
+    }).then(function (form) {
+        testUtils.form.clickEdit(form);
+        testUtils.form.clickSave(form);
+        assert.ok(true, "No traceback encountered. The wysiwyg was cut while not loaded.");
+        form.destroy();
+        done();
+    });
+});
+
 QUnit.test('use colorpicker and save', function (assert) {
     var done = assert.async();
     assert.expect(1);
