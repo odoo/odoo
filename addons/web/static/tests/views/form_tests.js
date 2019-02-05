@@ -16,7 +16,6 @@ var Widget = require('web.Widget');
 
 var _t = core._t;
 var createView = testUtils.createView;
-var createActionManager = testUtils.createActionManager;
 var createAsyncView = testUtils.createAsyncView;
 var createActionManager = testUtils.createActionManager;
 
@@ -106,6 +105,14 @@ QUnit.module('Views', {
                 ]
             },
         };
+
+        this.actions = [{
+            id: 1,
+            name: 'Partners Action 1',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'kanban'], [false, 'form']],
+        }];
     }
 }, function () {
 
@@ -7516,6 +7523,37 @@ QUnit.module('Views', {
         testUtils.fields.many2one.clickOpenDropdown('trululu');
 
         form.destroy();
+    });
+
+    QUnit.test('discard after a failed save', function (assert) {
+        assert.expect(2);
+
+        var actionManager = createActionManager({
+            data: this.data,
+            archs: {
+                'partner,false,form': '<form>' +
+                                        '<field name="date" required="true"/>' +
+                                        '<field name="foo" required="true"/>' +
+                                    '</form>',
+                'partner,false,kanban': '<kanban><templates><t t-name="kanban-box">' +
+                                        '</t></templates></kanban>',
+                'partner,false,search': '<search></search>',
+            },
+            actions: this.actions,
+        });
+
+        actionManager.doAction(1);
+
+        testUtils.dom.click('.o_control_panel .o-kanban-button-new');
+
+        //cannot save because there is a required field
+        testUtils.dom.click('.o_control_panel .o_form_button_save');
+        testUtils.dom.click('.o_control_panel .o_form_button_cancel');
+
+        assert.containsNone(actionManager, '.o_form_view');
+        assert.containsOnce(actionManager, '.o_kanban_view');
+
+        actionManager.destroy();
     });
 
     QUnit.module('FormViewTABMainButtons');
