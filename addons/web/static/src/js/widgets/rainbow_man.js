@@ -30,7 +30,7 @@ var RainbowMan = Widget.extend({
      */
     init: function (options) {
         this._super.apply(this, arguments);
-        var rainbowDelay = {slow: 4500, medium: 3500, fast:2000, no: false };
+        var rainbowDelay = {slow: 4500, medium: 3500, fast: 2000, no: false};
         this.options = _.defaults(options || {}, {
             fadeout: 'medium',
             img_url: '/web/static/src/img/smile.svg',
@@ -43,10 +43,15 @@ var RainbowMan = Widget.extend({
      */
     start: function () {
         var self = this;
-        core.bus.on('click', this, function (ev) {
-            if (ev.originalEvent && ev.target.className.indexOf('o_reward') === -1) {
-                this.destroy();
-            }
+        // destroy rainbow man when the user clicks outside
+        // this is done in a setTimeout to prevent the click that triggered the
+        // rainbow man to close it directly
+        setTimeout(function () {
+            core.bus.on('click', self, function (ev) {
+                if (ev.originalEvent && ev.target.className.indexOf('o_reward') === -1) {
+                    this.destroy();
+                }
+            });
         });
         if (this.delay) {
             setTimeout(function () {
