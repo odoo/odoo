@@ -105,12 +105,20 @@ class StockPicking(models.Model):
     package_ids = fields.Many2many('stock.quant.package', compute='_compute_packages', string='Packages')
     weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight')
     shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight', help="Total weight of the packages and products which are not in a package. That's the weight used to compute the cost of the shipping.")
+    is_return_picking = fields.Boolean(compute='_compute_return_picking')
 
     @api.depends('carrier_id', 'carrier_tracking_ref')
     def _compute_carrier_tracking_url(self):
         for picking in self:
             picking.carrier_tracking_url = picking.carrier_id.get_tracking_link(picking) if picking.carrier_id and picking.carrier_tracking_ref else False
 
+    @api.depends('carrier_id', 'move_ids_without_package')
+    def _compute_return_picking(self):
+        for picking in self:
+            if picking.carrier_id and hasattr(picking.carrier_id, '%s_get_return_label' % picking.carrier_id.delivery_type):
+                picking.is_return_picking = any(m.origin_returned_move_id for m in picking.move_ids_without_package)
+            else:
+                picking.is_return_picking = False
     @api.depends('move_lines')
     def _cal_weight(self):
         for picking in self:
@@ -121,7 +129,7 @@ class StockPicking(models.Model):
         res = super(StockPicking, self).action_done()
         for pick in self:
             if pick.carrier_id:
-                if pick.carrier_id.integration_level == 'rate_and_ship':
+                if pick.carrier_id.integration_level == 'rate_and_ship' and pick.picking_type_code != 'incoming':
                     pick.send_to_shipper()
                 pick._add_delivery_cost_to_so()
         return res
@@ -193,6 +201,11 @@ class StockPicking(models.Model):
                 self.carrier_price = res['price']
             else:
                 raise UserError(_("Unable to update the delivery price because of: ") + res['error_message'])
+
+    @api.multi
+    def print_return_label(self):
+        self.ensure_one()
+        res = self.carrier_id.get_return_label(self)
 
     @api.multi
     def _add_delivery_cost_to_so(self):

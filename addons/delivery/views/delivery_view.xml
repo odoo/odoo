@@ -206,6 +206,7 @@
               <data>
                 <xpath expr="//group[@name='other_infos']" position="before">
                     <group name='carrier_data' string="Shipping Information">
+                        <field name="is_return_picking" invisible="1"/>
                         <field name="carrier_id" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}" options="{'no_create': True, 'no_open': True}"/>
                         <field name="delivery_type" attrs="{'invisible':True}"/>
                         <label for="carrier_tracking_ref"/>
@@ -230,7 +231,10 @@
                          attrs="{'invisible': ['|','|',('carrier_tracking_ref','=',False),('carrier_id', '=', False),('delivery_type','=','grid')]}" />
                 </div>
                 <xpath expr="/form/header/button[last()]" position="after">
-                    <button name="send_to_shipper" string="Send to Shipper" type="object" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','!=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
+                    <button name="send_to_shipper" string="Send to Shipper" type="object" attrs="{'invisible':['|','|','|','|',('carrier_tracking_ref','!=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done')),('picking_type_code', '=', 'incoming')]}"/>
+                </xpath>
+                <xpath expr="/form/header/button[last()]" position="after">
+                    <button name="print_return_label" string="Print Return Label" type="object" attrs="{'invisible':['|', ('is_return_picking', '=', False),('state', '=', 'done')]}"/>
                 </xpath>
                 <xpath expr="//button[@name='do_print_picking']" position="after">
                     <button name="action_send_confirmation_email" string="Send Confirmation Email" type="object" attrs="{'invisible':['|', ('state', '!=', 'done'), ('carrier_id', '=', False)]}"/>
