@@ -72,7 +72,7 @@ class MailActivityType(models.Model):
         ('default', 'Standard'), ('upload_file', 'Upload Document')
     ], default='default', string='Category',
         help='Categories may trigger specific behavior like opening calendar view or automatically mark as done when a document is uploaded')
-    mail_template_ids = fields.Many2many('mail.template', string='Mails templates')
+    mail_template_ids = fields.Many2many('mail.template', string='Email templates')
 
     #Fields for display purpose only
     initial_res_model_id = fields.Many2one('ir.model', 'Initial model', compute="_compute_initial_res_model_id", store=False,
