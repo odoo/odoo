@@ -241,7 +241,8 @@ class Picking(models.Model):
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Picking Type',
         required=True,
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        readonly=True,
+        states={'draft': [('readonly', False)]})
     picking_type_code = fields.Selection([
         ('incoming', 'Vendors'),
         ('outgoing', 'Customers'),
@@ -736,7 +737,7 @@ class Picking(models.Model):
                             flag = quant.package_id == ops.package_id
                         else:
                             flag = not quant.package_id.id
-                        flag = flag and (ops.owner_id.id == quant.owner_id.id)
+                        flag = flag and (ops.owner_id.id == quant.owner_id.id) and (ops.location_id.id == quant.location_id.id)
                         if flag:
                             if not lot_qty:
                                 max_qty_on_link = min(quant.qty, qty_to_assign)
