@@ -615,6 +615,10 @@ data.Class = Widget.extend({
         var self = this;
         var zone_template = $("<div class='oe_drop_zone oe_insert'/>");
 
+        function isFullWidth($elem) {
+            return $elem.parent().width() === $elem.outerWidth(true);
+        }
+
         if ($selector_children) {
             $selector_children.each(function () {
                 var $zone = $(this);
@@ -632,7 +636,10 @@ data.Class = Widget.extend({
                         'display': 'inline-block'
                     });
                 } else if (float === "left" || float === "right") {
-                    $drop.addClass("oe_vertical").css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().last().outerHeight()), 30));
+                    $drop.css('float', float);
+                    if (!isFullWidth($zone)) {
+                        $drop.addClass("oe_vertical").css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().last().outerHeight()), 30));
+                    }
                 }
 
                 $drop = $drop.clone();
@@ -647,7 +654,10 @@ data.Class = Widget.extend({
                         'display': 'inline-block'
                     });
                 } else if (float === "left" || float === "right") {
-                    $drop.addClass("oe_vertical").css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().first().outerHeight()), 30));
+                    $drop.css('float', float);
+                    if (!isFullWidth($zone)) {
+                        $drop.addClass("oe_vertical").css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().first().outerHeight()), 30));
+                    }
                 }
                 if (test) {
                     $drop.css({'float': 'none', 'display': 'inline-block'});
@@ -668,14 +678,20 @@ data.Class = Widget.extend({
                 if($zone.prev('.oe_drop_zone:visible').length === 0) {
                     $drop = zone_template.clone();
                     if (float === "left" || float === "right") {
-                        $drop.addClass("oe_vertical").css('height', Math.max(Math.min($zone.outerHeight(), $zone.prev().outerHeight() || Infinity), 30));
+                        $drop.css('float', float);
+                        if (!isFullWidth($zone)) {
+                            $drop.addClass("oe_vertical").css('height', Math.max(Math.min($zone.outerHeight(), $zone.prev().outerHeight() || Infinity), 30));
+                        }
                     }
                     $zone.before($drop);
                 }
                 if($zone.next('.oe_drop_zone:visible').length === 0) {
                     $drop = zone_template.clone();
                     if (float === "left" || float === "right") {
-                        $drop.addClass("oe_vertical").css('height', Math.max(Math.min($zone.outerHeight(), $zone.next().outerHeight() || Infinity), 30));
+                        $drop.css('float', float);
+                        if (!isFullWidth($zone)) {
+                            $drop.addClass("oe_vertical").css('height', Math.max(Math.min($zone.outerHeight(), $zone.next().outerHeight() || Infinity), 30));
+                        }
                     }
                     $zone.after($drop);
                 }
@@ -862,6 +878,7 @@ data.Editor = Class.extend({
     },
     _drag_and_drop_start: function () {
         var self = this;
+        this.dropped = false;
         self.buildingBlock.editor_busy = true;
         self.size = {
             width: self.$target.width(),
@@ -890,8 +907,17 @@ data.Editor = Class.extend({
         self._drag_and_drop_after_insert_dropzone();
         self._drag_and_drop_active_drop_zone($('.oe_drop_zone'));
     },
-    _drag_and_drop_stop: function () {
+    _drag_and_drop_stop: function (ev, ui) {
         var self = this;
+
+        // TODO lot of this is duplicated code of the d&d feature of snippets
+        if (!this.dropped) {
+            var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone').first();
+            if ($el.length) {
+                $el.after(this.$target);
+                this.dropped = true;
+            }
+        }
 
         $(".oe_drop_zone").droppable('destroy').remove();
 
