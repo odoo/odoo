@@ -13,5 +13,5 @@ class MailComposeMessage(models.TransientModel):
             order = self.env['sale.order'].browse([self._context['default_res_id']])
             if order.state == 'draft':
                 order.with_context(tracking_disable=True).state = 'sent'
-            self = self.with_context(mail_post_autofollow=True)
+            self = self.with_context(mail_post_autofollow=True, lang=order.partner_id.lang)
         return super(MailComposeMessage, self).send_mail(auto_commit=auto_commit)
