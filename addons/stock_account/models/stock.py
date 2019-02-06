@@ -397,7 +397,7 @@ class StockMove(models.Model):
                 # Get the standard price
                 amount_unit = std_price_update.get((move.company_id.id, move.product_id.id)) or move.product_id.standard_price
                 qty = forced_qty or qty_done
-                new_std_price = ((amount_unit * product_tot_qty_available) + (move._get_price_unit() * qty)) / (product_tot_qty_available + qty_done)
+                new_std_price = ((amount_unit * product_tot_qty_available) + (move._get_price_unit() * qty)) / (product_tot_qty_available + qty)
 
             tmpl_dict[move.product_id.id] += qty_done
             # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products

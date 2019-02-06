@@ -127,7 +127,12 @@ class AccountInvoice(models.Model):
     def _get_outstanding_info_JSON(self):
         self.outstanding_credits_debits_widget = json.dumps(False)
         if self.state == 'open':
-            domain = [('account_id', '=', self.account_id.id), ('partner_id', '=', self.env['res.partner']._find_accounting_partner(self.partner_id).id), ('reconciled', '=', False), '|', ('amount_residual', '!=', 0.0), ('amount_residual_currency', '!=', 0.0)]
+            domain = [('account_id', '=', self.account_id.id),
+                      ('partner_id', '=', self.env['res.partner']._find_accounting_partner(self.partner_id).id),
+                      ('reconciled', '=', False),
+                      '|',
+                        '&', ('amount_residual_currency', '!=', 0.0), ('currency_id','!=', None),
+                        '&', ('amount_residual_currency', '=', 0.0), '&', ('currency_id','=', None), ('amount_residual', '!=', 0.0)]
             if self.type in ('out_invoice', 'in_refund'):
                 domain.extend([('credit', '>', 0), ('debit', '=', 0)])
                 type_payment = _('Outstanding credits')

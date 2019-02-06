@@ -347,7 +347,11 @@ var BooleanField = SelectionField.extend(/** @lends instance.web.search.BooleanF
 var DateField = Field.extend(/** @lends instance.web.search.DateField# */{
     value_from: function (facetValue) {
         var serverFormat = (this.attrs && this.attrs.type === 'datetime') ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD';
-        return facetValue.get('valueAsMoment').clone().format(serverFormat);
+        if (facetValue.get('valueAsMoment')) {
+            return facetValue.get('valueAsMoment').clone().format(serverFormat);
+        } else {
+            return moment(facetValue.get('value')).format(serverFormat);
+        }
     },
     complete: function (needle) {
         // Make sure the needle has a correct format before the creation of the moment object. See
