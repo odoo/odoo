@@ -1,18 +1,16 @@
-odoo.define('website_slides.slides_like', function (require) {
+odoo.define('website_slides.slides_join_channel', function (require) {
 'use strict';
 
 var core = require('web.core');
 var Widget = require('web.Widget');
-var localStorage = require('web.local_storage');
 var sAnimations = require('website.content.snippets.animation');
 require('website_slides.slides');
 
 var _t = core._t;
 
-var LikeButton = Widget.extend({
+var JoinChannelButton = Widget.extend({
     events: {
-        'click .o_wslides_like_up': '_onClickUp',
-        'click .o_wslides_like_down': '_onClickDown',
+        'click .o_wslides_join_channel_link': '_onClickJoin',
     },
 
     //--------------------------------------------------------------------------
@@ -43,42 +41,31 @@ var LikeButton = Widget.extend({
     /**
      * @private
      */
-    _onClick: function (slideId, voteType) {
+    _onClickJoin: function (event) {
+        var channelId = $(event.currentTarget).data('channel-id');
         var self = this;
         this._rpc({
-            route: '/slides/slide/like',
+            route: '/slides/channel/join',
             params: {
-                slide_id: slideId,
-                upvote: voteType === 'like',
+                channel_id: channelId,
             },
         }).then(function (data) {
             if (! data.error) {
-                self.$el.find('span.o_wslides_like_up span').text(data.likes);
-                self.$el.find('span.o_wslides_like_down span').text(data.dislikes);
+                self.$('a.o_wslides_join_channel_link').text(_t('Joined'));
             } else {
                 if (data.error === 'public_user') {
-                    self._popoverAlert(self.$el, _.str.sprintf(_t('Please <a href="/web/login?redirect=%s">login</a> to vote this slide'), (document.URL)));
-                } else if (data.error === 'vote_done') {
-                    self._popoverAlert(self.$el, _t('You have already voted for this slide'));
+                    self._popoverAlert(self.$el, _.str.sprintf(_t('Please <a href="/web/login?redirect=%s">login</a> to join this channel.'), (document.URL)));
+                } else if (data.error === 'join_done') {
+                    self._popoverAlert(self.$el, _t('You have already joined this channel'));
                 } else {
                     self._popoverAlert(self.$el, _t('Unknown error'));
                 }
             }
         });
     },
-
-    _onClickUp: function (event) {
-        var slideId = $(event.currentTarget).data('slide-id');
-        return this._onClick(slideId, 'like');
-    },
-
-    _onClickDown: function (event) {
-        var slideId = $(event.currentTarget).data('slide-id');
-        return this._onClick(slideId, 'dislike');
-    },
 });
 
-sAnimations.registry.websiteSlidesLike = sAnimations.Class.extend({
+sAnimations.registry.websiteSlidesJoinChannel = sAnimations.Class.extend({
     selector: '#wrapwrap',
 
     /**
@@ -87,7 +74,7 @@ sAnimations.registry.websiteSlidesLike = sAnimations.Class.extend({
      */
     start: function () {
         var defs = [this._super.apply(this, arguments)];
-        defs.push(new LikeButton(this).attachTo($('.o_wslides_like')));
+        defs.push(new JoinChannelButton(this).attachTo($('.o_wslides_join_channel')));
         return $.when.apply($, defs);
     },
 });
