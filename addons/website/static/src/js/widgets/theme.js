@@ -467,8 +467,10 @@ var ThemeCustomizeDialog = Dialog.extend({
                     key: 'website.layout',
                     get_views: false,
                     get_scss: true,
+                    get_js: false,
                     bundles: false,
                     bundles_restriction: [],
+                    only_user_custom_files: false,
                 },
             }).then(function (data) {
                 var files = data.scss[0][1];
@@ -501,11 +503,12 @@ var ThemeCustomizeDialog = Dialog.extend({
                 });
 
                 return self._rpc({
-                    route: '/web_editor/save_scss',
+                    route: '/web_editor/save_scss_or_js',
                     params: {
                         url: file.url,
                         bundle_xmlid: 'web.assets_common',
                         content: updatedFileContent,
+                        file_type: 'scss',
                     },
                 });
             }).then(function () {

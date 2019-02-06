@@ -11,16 +11,16 @@ class Web_Editor(Web_Editor):
         res.append('website_id')
         return res
 
-    def save_scss_view_hook(self):
-        res = super(Web_Editor, self).save_scss_view_hook()
+    def save_scss_or_js_view_hook(self):
+        res = super(Web_Editor, self).save_scss_or_js_view_hook()
 
         website = request.env['website'].get_current_website()
         if website:
             res['website_id'] = website.id
         return res
 
-    def save_scss_attachment_hook(self):
-        res = super(Web_Editor, self).save_scss_attachment_hook()
+    def save_scss_or_js_attachment_hook(self):
+        res = super(Web_Editor, self).save_scss_or_js_attachment_hook()
 
         website = request.env['website'].get_current_website()
         if website:
