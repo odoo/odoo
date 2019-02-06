@@ -255,6 +255,15 @@ class WebsiteSlides(http.Controller):
     # TOOLS
     # --------------------------------------------------
 
+    @http.route(['/slides/channel/join'], type='json', auth='public', website=True)
+    def slide_channel_join(self, channel_id):
+        if request.website.is_public_user():
+            return {'error': 'public_user'}
+        joined = request.env['slide.channel'].browse(channel_id).action_add_member(state='confirmed')
+        if not joined:
+            return {'error': 'join_done'}
+        return joined.ids
+
     @http.route(['/slides/dialog_preview'], type='json', auth='user', methods=['POST'], website=True)
     def dialog_preview(self, **data):
         Slide = request.env['slide.slide']

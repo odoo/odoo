@@ -105,6 +105,19 @@
                 <div class="float-left col-lg-8 col-md-12 col-12 mt16 mb8">
                     <h3 class="mt0">
                         <a t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
+                        <span t-if="not channel.is_member" class="o_wslides_join_channel">
+                            <a role="button" class="btn btn-primary o_wslides_join_channel_link"
+                                title="Join Channel" aria-label="Join Channel" href="#"
+                                t-att-data-channel-id="channel.id">
+                                <i class="fa fa-chevron-right"></i> Join
+                            </a>
+                        </span>
+                        <span t-if="channel.is_member">
+                            <a role="button" class="btn btn-primary o_wslides_join_channel_link"
+                                title="Join Channel" aria-label="Join Channel" href="#">
+                                <i class="fa fa-chevron-right"></i> Joined
+                            </a>
+                        </span>
                         <t t-if="category">
                             / <a t-attf-href="/slides/#{slug(channel)}/category/#{slug(category)}" t-esc="category.name"/>
                         </t>
