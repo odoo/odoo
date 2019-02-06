@@ -605,7 +605,17 @@ class Field(MetaField('DummyField', (object,), {})):
         #
         values = list(others)
         for name in self.related[:-1]:
-            values = [first(value[name]) for value in values]
+            try:
+                values = [first(value[name]) for value in values]
+            except AccessError as e:
+                description = records.env['ir.model']._get(records._name).name
+                raise AccessError(
+                    _("%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).") % {
+                        'previous_message': e.args[0],
+                        'document_kind': description,
+                        'document_model': records._name,
+                    }
+                )
         # assign final values to records
         for record, value in zip(records, values):
             record[self.name] = value[self.related_field.name]

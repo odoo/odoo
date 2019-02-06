@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 import time
-from collections import defaultdict
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.osv import expression
 from odoo.tools import config
 from odoo.tools.safe_eval import safe_eval
 
-
+_logger = logging.getLogger(__name__)
 class IrRule(models.Model):
     _name = 'ir.rule'
     _description = 'Record Rule'
@@ -66,18 +66,49 @@ class IrRule(models.Model):
         """ Return the list of context keys to use for caching ``_compute_domain``. """
         return []
 
-    @api.model
-    @tools.conditional(
-        'xml' not in config['dev_mode'],
-        tools.ormcache('self._uid', 'model_name', 'mode',
-                       'tuple(self._context.get(k) for k in self._compute_domain_keys())'),
-    )
-    def _compute_domain(self, model_name, mode="read"):
+    def _get_failing(self, for_records, mode='read'):
+        """ Returns the rules for the mode for the current user which fail on
+        the specified records.
+
+        Can return any global rule and/or all local rules (since local rules
+        are OR-ed together, the entire group succeeds or fails, while global
+        rules get AND-ed and can each fail)
+        """
+        Model = for_records.browse(()).sudo()
+        eval_context = self._eval_context()
+
+        all_rules = self._get_rules(Model._name, mode=mode).sudo()
+
+        # first check if the group rules fail for any record (aka if
+        # searching on (records, group_rules) filters out some of the records)
+        group_rules = all_rules.filtered(lambda r: r.groups and r.groups & self.env.user.groups_id)
+        group_domains = expression.OR([
+            safe_eval(r.domain_force, eval_context) if r.domain_force else []
+            for r in group_rules
+        ])
+        # if all records get returned, the group rules are not failing
+        if Model.search_count(expression.AND([[('id', 'in', for_records.ids)], group_domains])) == len(for_records):
+            group_rules = self.browse(())
+
+        # failing rules are previously selected group rules or any failing global rule
+        def is_failing(r, ids=for_records.ids):
+            dom = safe_eval(r.domain_force, eval_context) if r.domain_force else []
+            return Model.search_count(expression.AND([
+                [('id', 'in', ids)],
+                expression.normalize_domain(dom)
+            ])) < len(ids)
+
+        return all_rules.filtered(lambda r: r in group_rules or (not r.groups and is_failing(r))).sudo(self.env.user)
+
+    def _get_rules(self, model_name, mode='read'):
+        """ Returns all the rules matching the model for the mode for the
+        current user.
+        """
         if mode not in self._MODES:
             raise ValueError('Invalid mode: %r' % (mode,))
 
         if self._uid == SUPERUSER_ID:
-            return None
+            return self.browse(())
 
         query = """ SELECT r.id FROM ir_rule r JOIN ir_model m ON (r.model_id=m.id)
                     WHERE m.model=%s AND r.active AND r.perm_{mode}
@@ -85,18 +116,28 @@ class IrRule(models.Model):
                                   JOIN res_groups_users_rel gu ON (rg.group_id=gu.gid)
                                   WHERE gu.uid=%s)
                          OR r.global)
+                    ORDER BY r.id
                 """.format(mode=mode)
         self._cr.execute(query, (model_name, self._uid))
-        rule_ids = [row[0] for row in self._cr.fetchall()]
-        if not rule_ids:
-            return []
+        return self.browse(row[0] for row in self._cr.fetchall())
+
+    @api.model
+    @tools.conditional(
+        'xml' not in config['dev_mode'],
+        tools.ormcache('self._uid', 'model_name', 'mode',
+                       'tuple(self._context.get(k) for k in self._compute_domain_keys())'),
+    )
+    def _compute_domain(self, model_name, mode="read"):
+        rules = self._get_rules(model_name, mode=mode)
+        if not rules:
+            return
 
         # browse user and rules as SUPERUSER_ID to avoid access errors!
         eval_context = self._eval_context()
         user_groups = self.env.user.groups_id
         global_domains = []                     # list of domains
         group_domains = []                      # list of domains
-        for rule in self.browse(rule_ids).sudo():
+        for rule in rules.sudo():
             # evaluate the domain for the current user
             dom = safe_eval(rule.domain_force, eval_context) if rule.domain_force else []
             dom = expression.normalize_domain(dom)
@@ -142,6 +183,34 @@ class IrRule(models.Model):
         res = super(IrRule, self).write(vals)
         self.clear_caches()
         return res
+
+    def _make_access_error(self, operation, records):
+        _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, records.ids[:6], self._uid, records._name)
+
+        model = records._name
+        description = self.env['ir.model']._get(model).name or model
+        if not self.env.user.has_group('base.group_no_one'):
+            return AccessError(_('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: "%(document_kind)s" (%(document_model)s), Operation: %(operation)s)') % {
+                'document_kind': description,
+                'document_model': model,
+                'operation': operation,
+             })
+
+        # debug mode, provide more info
+        rules = self._get_failing(records, mode=operation).sudo()
+        return AccessError(_("""The requested operation ("%(operation)s" on "%(document_kind)s" (%(document_model)s)) was rejected because of the following rules:
+%(rules_list)s
+%(multi_company_warning)s
+(records: %(example_records)s, uid: %(user_id)d)""") % {
+            'operation': operation,
+            'document_kind': description,
+            'document_model': model,
+            'rules_list': '\n'.join('- %s' % rule.name for rule in rules),
+            'multi_company_warning': ('\n' + _('Note: this might be a multi-company issue.') + '\n') if any(
+                'company_id' in r.domain_force for r in rules) else '',
+            'example_records': list(records.ids[:6]),
+            'user_id': self.env.user.id,
+        })
 
 #
 # Hack for field 'global': this field cannot be defined like others, because
