@@ -7,13 +7,19 @@
         <field name="model">survey.question</field>
         <field name="arch" type="xml">
             <form string="Survey Question" create="false">
+                <field name="is_page" invisible="1"/>
+                <field name="survey_id" invisible="1"/>
+                <field name="sequence" invisible="1"/>
                 <sheet>
                     <div class="oe_title" style="width: 100%;">
-                        <label for="question" string="Question name" class="oe_edit_only"/>
-                        <h1><field name="question" colspan="4" placeholder="Question Name"/></h1>
+                        <label for="title" string="Page name" class="oe_edit_only" attrs="{'invisible': [('is_page', '=', False)]}"/>
+                        <label for="title" string="Question name" class="oe_edit_only" attrs="{'invisible': [('is_page', '=', True)]}"/>
+                        <h1>
+                            <field name="title" colspan="4" />
+                        </h1>
                         <separator />
                     </div>
-                    <group>
+                    <group attrs="{'invisible': [('is_page', '=', True)]}">
                         <group>
                             <field name="question_type" widget="radio" />
                         </group>
@@ -85,7 +91,7 @@
                             </div>
                         </group>
                     </group>
-                    <notebook>
+                    <notebook attrs="{'invisible': [('is_page', '=', True)]}">
                         <page string="Answers">
                             <field name="validation_email" attrs="{'invisible': [('question_type', '!=', 'textbox')]}"/>
                             <label for="validation_email" attrs="{'invisible': [('question_type', '!=', 'textbox')]}"/>
@@ -154,7 +160,6 @@
             <tree string="Survey Question" create="false">
                 <field name="sequence" widget="handle"/>
                 <field name="question"/>
-                <field name="page_id"/>
                 <field name="survey_id"/>
                 <field name="question_type"/>
             </tree>
@@ -167,10 +172,8 @@
             <search string="Search Question">
                 <field name="question" string="Question"/>
                 <field name="survey_id" string="Survey"/>
-                <field name="page_id" string="Page"/>
                 <field name="question_type" string="Type"/>
                 <group expand="1" string="Group By">
-                    <filter name="group_by_page" string="Page" domain="[]"  context="{'group_by':'page_id'}"/>
                     <filter name="group_by_type" string="Type" domain="[]"  context="{'group_by':'question_type'}"/>
                 </group>
             </search>

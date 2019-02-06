@@ -67,19 +67,24 @@ class SurveyCase(common.SavepointCase):
             'access_mode': 'public',
             'users_login_required': True,
             'users_can_go_back': False,
+            'stage_id': self.env['survey.stage'].search([('closed', '=', False)]).id,
         })
-        self.page_0 = self.env['survey.page'].sudo(self.survey_manager).create({
+        self.page_0 = self.env['survey.question'].sudo(self.survey_manager).create({
             'title': 'First page',
             'survey_id': self.survey.id,
+            'sequence': 1,
+            'is_page': True,
         })
         self.question_ft = self.env['survey.question'].sudo(self.survey_manager).create({
-            'question': 'Test Free Text',
-            'page_id': self.page_0.id,
+            'title': 'Test Free Text',
+            'survey_id': self.survey.id,
+            'sequence': 2,
             'question_type': 'free_text',
         })
         self.question_num = self.env['survey.question'].sudo(self.survey_manager).create({
-            'question': 'Test NUmerical Box',
-            'page_id': self.page_0.id,
+            'title': 'Test NUmerical Box',
+            'survey_id': self.survey.id,
+            'sequence': 3,
             'question_type': 'numerical_box',
         })
 
@@ -143,8 +148,8 @@ class SurveyCase(common.SavepointCase):
         constr_mandatory = kwargs.pop('constr_mandatory', True)
         constr_error_msg = kwargs.pop('constr_error_msg', 'TestError')
         base_qvalues = {
-            'page_id': page.id,
-            'question': name,
+            'sequence': page.question_ids[-1].sequence + 1 if page.question_ids else page.sequence + 1,
+            'title': name,
             'question_type': qtype,
             'constr_mandatory': constr_mandatory,
             'constr_error_msg': constr_error_msg,
