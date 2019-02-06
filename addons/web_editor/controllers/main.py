@@ -6,11 +6,11 @@ import json
 import logging
 import os
 import re
-import time
 import uuid
 import werkzeug.wrappers
 from PIL import Image, ImageFont, ImageDraw
 from lxml import etree, html
+from datetime import datetime, timedelta
 
 from odoo.http import request
 from odoo import http, tools
@@ -83,8 +83,9 @@ class Web_Editor(http.Controller):
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers['Access-Control-Allow-Methods'] = 'GET, POST'
         response.headers['Connection'] = 'close'
-        response.headers['Date'] = time.strftime("%a, %d-%b-%Y %T GMT", time.gmtime())
-        response.headers['Expires'] = time.strftime("%a, %d-%b-%Y %T GMT", time.gmtime(time.time()+604800*60))
+        _fmt = "%a, %d-%b-%Y %T GMT"
+        response.headers['Date'] = datetime.utcnow().strftime(_fmt)
+        response.headers['Expires'] = (datetime.utcnow() + timedelta(hours=10080)).strftime(_fmt)
 
         return response
 
