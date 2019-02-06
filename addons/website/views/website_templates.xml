@@ -14,6 +14,12 @@
     </xpath>
 </template>
 
+<template id="assets_common" name="Website Assets Common" inherit_id="web.assets_common">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website/static/src/js/tours/website_tour_reset_password.js"></script>
+    </xpath>
+</template>
+
 <template id="assets_backend" inherit_id="web.assets_backend" name="Website Backend Assets (used in backend interface)">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.backend.scss"/>
