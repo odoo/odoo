@@ -477,10 +477,23 @@ added.
     is not written to the database, just used to know which value to send back
     to the client
     
-.. warning::
+Onchange can now be used with one2many and many2many fields. It is recommended 
+to add the fields you modify to the tree view of the one2many/many2many field, 
+so that the user can see the changes.
 
-    It is not possible for a ``one2many`` or ``many2many`` field to modify 
-    itself via onchange. This is a webclient limitation - see `#2693 <https://github.com/odoo/odoo/issues/2693>`_.
+ For example::
+ 
+    @api.onchange('name')
+    def onchange_name(self):
+        for rec in self.field_ids:
+            rec.description = self.name
+The view is recommended to include the modified ``description`` field::
+
+            <field name="field_ids">
+                <tree>
+                    <field name="description"/>
+                </tree>
+            </field>
 
 Low-level SQL
 -------------
