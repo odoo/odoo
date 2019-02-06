@@ -269,13 +269,15 @@ class PosOrder(models.Model):
 
         # Search for the income account
         if line.product_id.property_account_income_id.id:
-            income_account = line.product_id.property_account_income_id.id
+            income_account = line.product_id.property_account_income_id
         elif line.product_id.categ_id.property_account_income_categ_id.id:
-            income_account = line.product_id.categ_id.property_account_income_categ_id.id
+            income_account = line.product_id.categ_id.property_account_income_categ_id
         else:
             raise UserError(_('Please define income '
                               'account for this product: "%s" (id:%d).')
                             % (line.product_id.name, line.product_id.id))
+        if order.fiscal_position_id.account_ids:
+            income_account = order.fiscal_position_id.map_account(income_account)
 
         name = line.product_id.name
         if line.notice:
@@ -290,7 +292,7 @@ class PosOrder(models.Model):
             'name': name,
             'quantity': line.qty,
             'product_id': line.product_id.id,
-            'account_id': income_account,
+            'account_id': income_account.id,
             'analytic_account_id': self._prepare_analytic_account(line),
             'credit': ((amount_subtotal > 0) and amount_subtotal) or 0.0,
             'debit': ((amount_subtotal < 0) and -amount_subtotal) or 0.0,
@@ -317,7 +319,7 @@ class PosOrder(models.Model):
                     'name': _('Tax') + ' ' + tax['name'],
                     'product_id': line.product_id.id,
                     'quantity': line.qty,
-                    'account_id': tax['account_id'] or income_account,
+                    'account_id': tax['account_id'] or income_account.id,
                     'credit': ((amount_tax > 0) and amount_tax) or 0.0,
                     'debit': ((amount_tax < 0) and -amount_tax) or 0.0,
                     'tax_line_id': tax['id'],
