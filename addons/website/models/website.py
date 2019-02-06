@@ -731,6 +731,19 @@ class Website(models.Model):
             'target': 'self',
         }
 
+    @api.multi
+    def _get_http_domain(self):
+        """Get the domain of the current website, prefixed by http if no
+        scheme is specified.
+
+        Empty string if no domain is specified on the website.
+        """
+        self.ensure_one()
+        if not self.domain:
+            return ''
+        res = urls.url_parse(self.domain)
+        return 'http://' + self.domain if not res.scheme else self.domain
+
 
 class SeoMetadata(models.AbstractModel):
 

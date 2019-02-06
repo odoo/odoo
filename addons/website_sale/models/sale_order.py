@@ -338,6 +338,13 @@ class SaleOrder(models.Model):
             },
         }
 
+    @api.multi
+    def get_base_url(self):
+        """When using multi-website, we want the user to be redirected to the
+        most appropriate website if possible."""
+        res = super(SaleOrder, self).get_base_url()
+        return self.website_id and self.website_id._get_http_domain() or res
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
