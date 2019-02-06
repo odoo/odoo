@@ -2648,6 +2648,40 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('do not call name_get if display_name already given by onchange', function (assert) {
+            // default_get only returns the id for many2one fields
+            // onchange returns an array with the id and the display_name
+            // thus, when an onchange is performed, there is no need to call name_get as the
+            // display_name is alreay available
+            assert.expect(2);
+
+            this.data.partner.onchanges = {
+                trululu: function (obj) {
+                    obj.trululu = [1, 'first record'];
+                },
+            };
+
+            var form = createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form>' +
+                        '<field name="trululu"/>' +
+                    '</form>',
+                mockRPC: function (route, args) {
+                    if (args.method === 'name_get') {
+                        assert.step('name_get');
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+
+            assert.strictEqual(form.$('.o_field_widget input').val(), 'first record');
+            assert.verifySteps([]);
+
+            form.destroy();
+        });
+
         QUnit.test('x2many list sorted by many2one', function (assert) {
             assert.expect(3);
 
