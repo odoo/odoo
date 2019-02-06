@@ -9,6 +9,8 @@ import uuid
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
+from dateutil.relativedelta import relativedelta
+
 email_validator = re.compile(r"[^@]+@[^@]+\.[^@]+")
 _logger = logging.getLogger(__name__)
 
@@ -30,6 +32,8 @@ class SurveyUserInput(models.Model):
 
     # description
     survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, ondelete='cascade')
+    start_datetime = fields.Datetime('Start date and time', readonly=True)
+    is_time_limit_reached = fields.Boolean("Is time limit reached?", compute='_compute_is_time_limit_reached')
     input_type = fields.Selection([
         ('manually', 'Manual'), ('link', 'Invitation')],
         string='Answer Type', default='manually', required=True, readonly=True,
@@ -49,12 +53,27 @@ class SurveyUserInput(models.Model):
     # answers
     user_input_line_ids = fields.One2many('survey.user_input_line', 'user_input_id', string='Answers', copy=True)
     deadline = fields.Datetime('Deadline', help="Datetime until customer can open the survey and submit answers")
-    quizz_score = fields.Float("Score for the quiz", compute="_compute_quizz_score", default=0.0)
 
-    @api.depends('user_input_line_ids.quizz_mark')
+    quizz_score = fields.Float("Score for the quiz (%)", compute="_compute_quizz_score", default=0.0)
+    # Stored for performance reasons while displaying results page
+    quizz_passed = fields.Boolean('Quizz Passed', compute='_compute_quizz_passed', store=True)
+
+    @api.multi
+    @api.depends('user_input_line_ids.answer_score', 'survey_id.total_possible_score')
     def _compute_quizz_score(self):
         for user_input in self:
-            user_input.quizz_score = sum(user_input.user_input_line_ids.mapped('quizz_mark'))
+            total_possible_score = user_input.survey_id.total_possible_score
+            if total_possible_score == 0:
+                user_input.quizz_score = 0
+            else:
+                score = (sum(user_input.user_input_line_ids.mapped('answer_score')) / total_possible_score) * 100
+                user_input.quizz_score = round(score, 2) if score > 0 else 0
+
+    @api.multi
+    @api.depends('quizz_score', 'survey_id.passing_score')
+    def _compute_quizz_passed(self):
+        for user_input in self:
+            user_input.quizz_passed = user_input.quizz_score >= user_input.survey_id.passing_score
 
     _sql_constraints = [
         ('unique_token', 'UNIQUE (token)', 'A token must be unique!'),
@@ -97,6 +116,23 @@ class SurveyUserInput(models.Model):
             'url': '/survey/print/%s?answer_token=%s' % (self.survey_id.access_token, self.token)
         }
 
+    @api.depends('start_datetime', 'survey_id.is_time_limited', 'survey_id.time_limit')
+    def _compute_is_time_limit_reached(self):
+        """ Checks that the user_input is not exceeding the survey's time limit. """
+        for user_input in self:
+            user_input.is_time_limit_reached = user_input.survey_id.is_time_limited and fields.Datetime.now() \
+                > user_input.start_datetime + relativedelta(minutes=user_input.survey_id.time_limit)
+
+    @api.multi
+    def _send_certification(self):
+        """ Will send the certification email with attached document if
+        - The survey is a certification
+        - It has a certification_mail_template_id set
+        - The user succeeded the test """
+        for user_input in self:
+            if user_input.survey_id.certificate and user_input.quizz_passed and user_input.survey_id.certification_mail_template_id:
+                user_input.survey_id.certification_mail_template_id.send_mail(user_input.id, notif_layout="mail.mail_notification_light")
+
 
 class SurveyUserInputLine(models.Model):
     _name = 'survey.user_input_line'
@@ -122,7 +158,7 @@ class SurveyUserInputLine(models.Model):
     value_free_text = fields.Text('Free Text answer')
     value_suggested = fields.Many2one('survey.label', string="Suggested answer")
     value_suggested_row = fields.Many2one('survey.label', string="Row answer")
-    quizz_mark = fields.Float('Score given for this choice')
+    answer_score = fields.Float('Score given for this choice')
 
     @api.constrains('skipped', 'answer_type')
     def _answered_or_skipped(self):
@@ -145,7 +181,7 @@ class SurveyUserInputLine(models.Model):
 
     def _get_mark(self, value_suggested):
         label = self.env['survey.label'].browse(int(value_suggested))
-        mark = label.quizz_mark if label.exists() else 0.0
+        mark = label.answer_score if label.exists() else 0.0
         return mark
 
     @api.model_create_multi
@@ -153,14 +189,14 @@ class SurveyUserInputLine(models.Model):
         for vals in vals_list:
             value_suggested = vals.get('value_suggested')
             if value_suggested:
-                vals.update({'quizz_mark': self._get_mark(value_suggested)})
+                vals.update({'answer_score': self._get_mark(value_suggested)})
         return super(SurveyUserInputLine, self).create(vals_list)
 
     @api.multi
     def write(self, vals):
         value_suggested = vals.get('value_suggested')
         if value_suggested:
-            vals.update({'quizz_mark': self._get_mark(value_suggested)})
+            vals.update({'answer_score': self._get_mark(value_suggested)})
         return super(SurveyUserInputLine, self).write(vals)
 
     @api.model

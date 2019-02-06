@@ -20,10 +20,6 @@ class TestSurveyFlow(common.SurveyCase, HttpCase):
     def _access_submit(self, survey, token, post_data):
         return self.url_open('/survey/submit/%s/%s' % (survey.access_token, token), data=post_data)
 
-    def _find_csrf_token(self, text):
-        csrf_token_re = re.compile("(input.+csrf_token.+value=\")([_a-zA-Z0-9]{51})", re.MULTILINE)
-        return csrf_token_re.search(text).groups()[1]
-
     def _format_submission_data(self, page, answer_data, additional_post_data):
         post_data = {}
         post_data['page_id'] = page.id

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+
 from collections import Counter
 from contextlib import contextmanager
 from functools import partial
@@ -156,17 +158,17 @@ class SurveyCase(common.SavepointCase):
         }
         if qtype in ('simple_choice', 'multiple_choice'):
             base_qvalues['labels_ids'] = [
-                (0, 0, {'value': label['value'], 'quizz_mark': label.get('quizz_mark', 0)})
+                (0, 0, {'value': label['value'], 'answer_score': label.get('answer_score', 0)})
                 for label in kwargs.pop('labels')
             ]
         elif qtype == 'matrix':
             base_qvalues['matrix_subtype'] = kwargs.pop('matrix_subtype', 'simple')
             base_qvalues['labels_ids'] = [
-                (0, 0, {'value': label['value'], 'quizz_mark': label.get('quizz_mark', 0)})
+                (0, 0, {'value': label['value'], 'answer_score': label.get('answer_score', 0)})
                 for label in kwargs.pop('labels')
             ]
             base_qvalues['labels_ids_2'] = [
-                (0, 0, {'value': label['value'], 'quizz_mark': label.get('quizz_mark', 0)})
+                (0, 0, {'value': label['value'], 'answer_score': label.get('answer_score', 0)})
                 for label in kwargs.pop('labels_2')
             ]
         else:
@@ -199,3 +201,7 @@ class SurveyCase(common.SavepointCase):
         base_alvals[answer_fname] = answer_value
         base_alvals.update(kwargs)
         return self.env['survey.user_input_line'].create(base_alvals)
+
+    def _find_csrf_token(self, text):
+        csrf_token_re = re.compile("(input.+csrf_token.+value=\")([_a-zA-Z0-9]{51})", re.MULTILINE)
+        return csrf_token_re.search(text).groups()[1]

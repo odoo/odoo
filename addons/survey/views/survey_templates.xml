@@ -21,15 +21,39 @@
         <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
-                    <div class="alert alert-danger text-center no_print" t-if="user_input.test_entry">
-                        <span>This is a test survey. Your answer will not be registered in the answers. </span>
-                    </div>
-                    <t t-call="survey.back" />
+                    <t t-if="answer.test_entry" t-call="survey.back" />
                     <div class="jumbotron mt32">
                         <h1>Thank you!</h1>
                         <div t-field="survey.thank_you_message" class="oe_no_empty" />
-                        <div t-if='survey.quizz_mode'>You scored <t t-esc="user_input.quizz_score" /> points.</div>
-                        <div>If you wish, you can <a t-att-href="'/survey/print/%s?answer_token=%s' % (survey.access_token, user_input.token)">review your answers</a>.</div>
+                        <t t-if="survey.scoring_type != 'no_scoring'">
+                            <div>You scored <t t-esc="answer.quizz_score" />%</div>
+                            <t t-if="answer.quizz_passed">
+                                <div>Congratulations, you have passed the test!</div>
+                            </t>
+                            <t t-else="">
+                                <div>Unfortunately, you have failed the test.</div>
+                                <t t-if="survey.is_attempts_limited">
+                                    <t t-set="attempts_left" t-value="survey._get_number_of_attempts_lefts(answer.partner_id, answer.email)" />
+                                    <t t-if="attempts_left > 0">
+                                        <p><span>Number of attemps left</span>: <span t-esc="attempts_left"></span></p>
+                                        <p>
+                                            <a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.token)">
+                                                Retry
+                                            </a>
+                                        </p>
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <br/>
+                                    <p>
+                                        <a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.token)">
+                                            Retry
+                                        </a>
+                                    </p>
+                                </t>
+                            </t>
+                        </t>
+                        <div t-if="survey.scoring_type != 'scoring_without_answers'">If you wish, you can <a t-att-href="'/survey/print/%s?answer_token=%s' % (survey.access_token, answer.token)">review your answers</a>.</div>
                     </div>
                 </div>
             </div>
@@ -71,7 +95,7 @@
         <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
-                    <t t-call="survey.back" />
+                    <t t-if="answer.test_entry" t-call="survey.back" />
                     <div class="jumbotron mt32">
                         <h1><span t-field="survey.title"/> survey is void</h1>
                         <p>This survey has no question defined currently.<br />
@@ -87,8 +111,11 @@
 
     <!-- Back Button to redirect in form view of survey -->
     <template id="back" name="Back">
-        <div groups="website.group_website_publisher" t-ignore="true" class="float-right">
-            <a role="button" t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form" class="btn btn-secondary">Back to Survey</a>
+        <div groups="survey.group_survey_manager" t-ignore="true" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
+            <div t-ignore="true" class="text-center">
+                <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form"><i class="fa fa-fw fa-arrow-right"/><span t-if="answer and answer.test_entry">This is a test survey. </span>Edit Survey.</a>
+            </div>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"> &#215; </button>
         </div>
     </template>
 
@@ -140,13 +167,16 @@
             <div class="wrap">
                 <div class="oe_structure" id="oe_structure_survey_init_1"/>
                 <div class="container">
-                    <div class="alert alert-danger text-center no_print" t-if="answer.test_entry">
-                        <span>This is a test survey. Your answer will not be registered in the answers. </span>
-                    </div>
-                    <t t-call="survey.back" />
+                    <t t-if="answer.test_entry" t-call="survey.back" />
                     <div class='jumbotron mt32'>
                         <h1 t-field='survey.title' />
                         <div t-field='survey.description' class="oe_no_empty"/>
+                        <div t-if="survey.is_time_limited">
+                            <p>
+                                <span>Time limit for this survey: </span>
+                                <span class="font-weight-bold text-danger" t-field="survey.time_limit" t-options="{'widget': 'duration', 'unit': 'minute'}"></span>
+                            </p>
+                        </div>
                         <a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/fill/%s/%s' % (survey.access_token, answer.token)">
                             Start Survey
                         </a>
@@ -163,7 +193,7 @@
             <div class="wrap">
                 <div class="oe_structure" id="oe_structure_survey_survey_1"/>
                 <div class="container">
-                    <t t-call="survey.back" />
+                    <t t-if="answer.test_entry" t-call="survey.back" />
                     <t t-call="survey.page" />
                 </div>
                 <div class="oe_structure" id="oe_structure_survey_survey_2"/>
@@ -173,11 +203,39 @@
 
     <!-- A page -->
     <template id="page" name="Page">
-        <div class="o_page_header">
-            <div class="alert alert-danger text-center no_print" t-if="answer.test_entry">
-                <span>This is a test survey. Your answer will not be registered in the answers. </span>
+        <div class="o_page_header o_survey_header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8"><h1 t-esc="survey.title"></h1></div>
+                    <div
+                        t-if="survey.is_time_limited"
+                        class="js_survey_timer col-lg-4"
+                        t-att-data-timer="answer.start_datetime.isoformat()"
+                        t-att-data-time_limit_minutes="survey.time_limit">
+                        <h1 class="timer text-right">00:00</h1>
+                    </div>
+                </div>
             </div>
-            <p class="float-right">Page <span t-raw='page_nr + 1'/> of <span t-raw="len(survey.page_ids)"/></p>
+            <ol class="breadcrumb mt8 justify-content-end">
+                <t t-set="can_go_back" t-value="survey.users_can_go_back" />
+                <t t-foreach='survey.page_ids' t-as='breadcrumb_page'>
+                    <li t-attf-class="breadcrumb-item #{'active' if breadcrumb_page == page else ''}">
+                        <t t-if="page == breadcrumb_page">
+                            <!-- Users can only go back and not forward -->
+                            <!-- As soon as we reach the current page, set "can_go_back" to False -->
+                            <t t-set="can_go_back" t-value="False" />
+                        </t>
+                        <t t-if="can_go_back">
+                            <a t-att-href="'/survey/page/%s/%s/%s' % (survey.access_token, answer.token, breadcrumb_page.id)">
+                                <span t-field='breadcrumb_page.title' />
+                            </a>
+                        </t>
+                        <t t-else="">
+                            <span t-field='breadcrumb_page.title' />
+                        </t>
+                    </li>
+                </t>
+            </ol>
             <h1 t-field='page.title' />
             <div t-field='page.description' class="oe_no_empty"/>
         </div>
@@ -210,7 +268,7 @@
                 </div>
             </t>
             <div class="text-center mt16 mb16">
-                <button t-if="survey.users_can_go_back and page_nr > 0" type="submit" class="btn btn-secondary" name="button_submit" value="previous">Previous page</button>
+                <button t-if="survey.users_can_go_back and page != survey.page_ids[0]" type="submit" class="btn btn-secondary" name="button_submit" value="previous">Previous page</button>
                 <button t-if="not last" type="submit" class="btn btn-primary" name="button_submit" value="next">Next page</button>
                 <button t-if="last" type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit survey</button>
             </div>
@@ -295,7 +353,7 @@
         </div>
         <div t-if="question.display_mode == 'columns' or not answer.token" class="row js_radio">
             <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">
-                <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else None">
+                <label t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else None">
                     <input type="radio" t-att-name="prefix" t-att-value='label.id' />
                     <span t-field='label.value'/>
                 </label>
@@ -317,7 +375,7 @@
     <template id="multiple_choice" name="Multiple choice">
         <div class="row">
             <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">
-                <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else None">
+                <label t-att-class="' bg-success ' if quizz_correction and label.answer_score > 0.0 else None">
                     <input type="checkbox" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />
                     <span t-field='label.value'/>
                 </label>
@@ -365,10 +423,7 @@
         <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
-                    <div class="alert alert-danger text-center no_print" t-if="answer and answer.test_entry">
-                        <span>This is a test survey. Your answer will not be registered in the answers. </span>
-                    </div>
-                    <t t-call="survey.back" />
+                    <t t-if="answer.test_entry" t-call="survey.back" />
                     <div class='jumbotron mt32'>
                         <h1><span t-field='survey.title'/></h1>
                         <t t-if="survey.description"><div t-field='survey.description' class="oe_no_empty"/></t>
@@ -413,7 +468,8 @@
             <div class="container js_surveyresult">
                 <t t-call="survey.back" />
                 <div class="jumbotron mt32">
-                    <h1><span t-field="survey.title" /> <span style="font-size:1.5em;" class="fa fa-bar-chart-o float-right " role="img" aria-label="Chart" title="Chart"/></h1>
+                    <h1><span t-field="survey.title" />
+                    <span style="font-size:1.5em;" t-attf-class="fa fa-bar-chart-o #{'fa-bar-chart-o' if survey.scoring_type == 'no_scoring' else 'fa-trophy' if survey.certificate else 'fa-question-circle-o'} float-right " role="img" aria-label="Chart" title="Chart"/></h1>
                     <div t-field="survey.description" class="oe_no_empty" />
                     <h2 t-if="not answers">
                         Sorry, no one answered this survey yet.
@@ -433,6 +489,15 @@
                         </span>
                     </div>
                 </div>
+                <div t-if="survey.scoring_type in ['scoring_with_answers', 'scoring_without_answers']">
+                    <h1 class="mt16">Results Overview</h1>
+                    <div>Success rate: <mark class="font-weight-bold"><t t-esc="survey_dict['success_rate']"></t>%</mark></div>
+                    <div id="scoring_results_chart" t-att-data-graph_data="survey_dict['scoring_graph_data']">
+                        <!-- svg element for drawing pie chart -->
+                        <svg style="height:20em"></svg>
+                    </div>
+                    <hr/>
+                </div>
                 <div t-if="answers" t-foreach="survey_dict['page_ids']" t-as='page_ids'>
                     <t t-set="page" t-value="page_ids['page']"/>
                     <h1 class="mt16" t-field='page.title'></h1>
@@ -443,6 +508,7 @@
                         <t t-set="question" t-value="question_ids['question']"/>
                         <t t-set="graph_data" t-value="question_ids['graph_data']"/>
                         <t t-set="prepare_result" t-value="question_ids['prepare_result']"/>
+                        <t t-set="question_with_correct_answers" t-value="survey.scoring_type in ['scoring_with_answers', 'scoring_without_answers'] and question.question_type in ['simple_choice', 'multiple_choice']" />
                         <h4>
                             <b>Question </b>
                             <span t-field='question.question'></span>
@@ -454,9 +520,25 @@
                             </t>
                             <span class="float-right">
                                 <span class="badge badge-success"><span t-esc="input_summary['answered']"></span> Answered</span>
-                                <span class="badge badge-danger"><span t-esc="input_summary['skipped']"></span> Skipped</span>
+                                <span class="badge badge-warning"><span t-esc="input_summary['skipped']"></span> Skipped</span>
                             </span>
                         </h4>
+                        <t t-if="question_with_correct_answers">
+                            <t t-set="correct_answers" t-value="question.get_correct_answer_ids()" />
+                            <div t-if="correct_answers">
+                                <t t-if="question.question_type == 'simple_choice'">
+                                    <p><span>Correct answer</span>: <span class="font-weight-bold" t-esc="correct_answers[0].value"></span></p>
+                                </t>
+                                <t t-if="question.question_type == 'multiple_choice'">
+                                    <span>Correct answers</span>:
+                                    <ul>
+                                        <li t-foreach="correct_answers" t-as="correct_answer">
+                                            <t t-esc="correct_answer.value" />
+                                        </li>
+                                    </ul>
+                                </t>
+                            </div>
+                        </t>
                         <t t-if="input_summary['answered'] != 0">
                             <t t-if="question.description">
                                 <div class="text-muted oe_no_empty" t-field="question.description" />
@@ -575,6 +657,7 @@
                             <tr>
                                 <th>Answer Choices</th>
                                 <th>User Responses</th>
+                                <th t-if="question_with_correct_answers">Answer Score</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -586,6 +669,8 @@
                                     <span t-esc="round(user_input['count']*100.0/(input_summary['answered'] or 1),2)"></span> %
                                     <span t-esc="user_input['count']" class="badge badge-primary">Vote</span>
                                     <i class="fa fa-filter text-primary invisible survey_filter" t-att-data-question_id="question.id" t-att-data-answer_id="user_input['answer_id']" role="img" aria-label="Filter question" title="Filter question"/>
+                                </td>
+                                <td t-if="question_with_correct_answers" t-esc="user_input['answer_score']">
                                 </td>
                             </tr>
                         </tbody>

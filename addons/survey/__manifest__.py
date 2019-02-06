@@ -22,6 +22,8 @@ sent mails with personal token for the invitation of the survey.
         'mail',
         'web_tour'],
     'data': [
+        'views/survey_report_templates.xml',
+        'views/survey_reports.xml',
         'data/mail_template_data.xml',
         'data/survey_data.xml',
         'data/ir_actions_data.xml',
@@ -39,6 +41,7 @@ sent mails with personal token for the invitation of the survey.
     'demo': [
         'data/survey_demo_user.xml',
         'data/survey_demo_feedback.xml',
+        'data/survey_demo_certification.xml',
         'data/survey.user_input_line.csv'
     ],
     'installable': True,
