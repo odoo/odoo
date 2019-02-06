@@ -4850,7 +4850,29 @@ QUnit.module('Views', {
         }
     });
 
-    QUnit.test('test displaying image', function (assert) {
+    QUnit.test('test displaying image (URL)', function (assert) {
+        assert.expect(1);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                      '<field name="id"/>' +
+                      '<templates><t t-name="kanban-box"><div>' +
+                          '<img t-att-src="kanban_image(\'partner\', \'image\', record.id.raw_value)"/>' +
+                      '</div></t></templates>' +
+                  '</kanban>',
+        });
+
+        // since the field image is not set, kanban_image will generate an URL
+        var imageOnRecord = kanban.$('img[data-src*="/web/image"][data-src*="&id=1"]');
+        assert.strictEqual(imageOnRecord.length, 1, "partner with image display image by url");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('test displaying image (binary & placeholder)', function (assert) {
         assert.expect(2);
 
         var kanban = createView({
@@ -4864,10 +4886,14 @@ QUnit.module('Views', {
                           '<img t-att-src="kanban_image(\'partner\', \'image\', record.id.raw_value)"/>' +
                       '</div></t></templates>' +
                   '</kanban>',
+            mockRPC: function (route, args) {
+                if (route === 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==') {
+                    assert.ok("The view's image should have been fetched.");
+                    return $.when();
+                }
+                return this._super.apply(this, arguments);
+            },
         });
-
-        var imageOnRecord = kanban.$('img[data-src*="/web/image"][data-src*="&id=1"]');
-        assert.strictEqual(imageOnRecord.length, 1, "partner with image display image");
 
         var placeholders = kanban.$('img[data-src$="/web/static/src/img/placeholder.png"]');
         assert.strictEqual(placeholders.length, this.data.partner.records.length - 1,
