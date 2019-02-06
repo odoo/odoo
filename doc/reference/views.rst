@@ -1023,6 +1023,8 @@ attributes:
   the list view)
 ``class``
   adds HTML classes to the root HTML element of the Kanban view
+``examples``
+  if set to a key in the `KanbanExamplesRegistry`_, examples on column setups will be available in the grouped kanban view. `Here <https://github.com/odoo/odoo/blob/99821fdcf89aa66ac9561a972c6823135ebf65c0/addons/project/static/src/js/project_task_kanban_examples.js#L27>`_ is an example of how to define those setups.
 ``group_create``
   whether the "Add a new column" bar is visible or not. Default: true.
 ``group_delete``
@@ -2095,3 +2097,4 @@ The main additions of qweb-as-view to the basic qweb-as-template are:
 .. _kanban board: http://en.wikipedia.org/wiki/Kanban_board
 .. _pivot table: http://en.wikipedia.org/wiki/Pivot_table
 .. _XPath: http://en.wikipedia.org/wiki/XPath
+.. _KanbanExamplesRegistry: https://github.com/odoo/odoo/blob/99821fdcf89aa66ac9561a972c6823135ebf65c0/addons/web/static/src/js/views/kanban/kanban_examples_registry.js
