@@ -2400,7 +2400,7 @@ var BasicModel = AbstractModel.extend({
             if (field.type === 'many2one' && !record.fieldsInfo[record.viewType][name].__no_fetch) {
                 var localId = (record._changes && record._changes[name]) || record.data[name];
                 var relatedRecord = self.localData[localId];
-                if (!relatedRecord) {
+                if (!relatedRecord || relatedRecord.data.display_name) {
                     return;
                 }
                 toBeFetched.push({
