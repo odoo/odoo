@@ -69,8 +69,8 @@ class Holidays(models.Model):
             holiday_task = holiday.holiday_status_id.timesheet_task_id
 
             work_hours_data = holiday.employee_id.list_work_time_per_day(
-                fields.Datetime.from_string(holiday.date_from),
-                fields.Datetime.from_string(holiday.date_to),
+                holiday.date_from,
+                holiday.date_to,
             )
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
                 self.env['account.analytic.line'].create({
@@ -80,7 +80,7 @@ class Holidays(models.Model):
                     'account_id': holiday_project.analytic_account_id.id,
                     'unit_amount': work_hours_count,
                     'user_id': holiday.employee_id.user_id.id,
-                    'date': fields.Date.to_string(day_date),
+                    'date': day_date,
                     'holiday_id': holiday.id,
                     'employee_id': holiday.employee_id.id,
                 })
