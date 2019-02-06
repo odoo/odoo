@@ -106,6 +106,7 @@ class Channel(models.Model):
         string='Upload Groups', help="Groups allowed to upload presentations in this channel. If void, every user can upload.")
     # not stored access fields, depending on each user
     can_upload = fields.Boolean('Can Upload', compute='_compute_access')
+    can_publish = fields.Boolean('Can Publish', compute='_compute_access')
 
     @api.depends('custom_slide_id', 'promote_strategy', 'slide_ids.likes',
                  'slide_ids.total_views', "slide_ids.date_published")
@@ -164,6 +165,7 @@ class Channel(models.Model):
     @api.depends('visibility', 'partner_ids', 'upload_group_ids')
     def _compute_access(self):
         self.can_upload = not self.env.user.share and (not self.upload_group_ids or bool(self.upload_group_ids & self.env.user.groups_id))
+        self.can_publish = self.can_upload and self.env.user.has_group('website.group_website_publisher')
 
     @api.multi
     @api.depends('name')

@@ -293,16 +293,29 @@ class WebsiteSlides(http.Controller):
                 values['category_id'] = post['category_id'][0]
 
         # handle exception during creation of slide and sent error notification to the client
-        # otherwise client slide create dialog box continue processing even server fail to create a slide.
+        # otherwise client slide create dialog box continue processing even server fail to create a slide
         try:
-            slide_id = request.env['slide.slide'].create(values)
+            channel = request.env['slide.channel'].browse(values['channel_id'])
+            can_upload = channel.can_upload
+            can_publish = channel.can_publish
+        except (UserError, AccessError) as e:
+            _logger.error(e)
+            return {'error': e.name}
+        else:
+            if not can_upload:
+                return {'error': _('You cannot upload on this channel.')}
+
+        try:
+            values['user_id'] = request.env.uid
+            values['website_published'] = values.get('website_published', False) and can_publish
+            slide = request.env['slide.slide'].sudo().create(values)
         except (UserError, AccessError) as e:
             _logger.error(e)
             return {'error': e.name}
         except Exception as e:
             _logger.error(e)
             return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
-        return {'url': "/slides/slide/%s" % (slide_id.id)}
+        return {'url': "/slides/slide/%s" % (slide.id)}
 
     @http.route(['/slides/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_tag_search_read(self, fields, domain):
