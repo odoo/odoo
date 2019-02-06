@@ -4,7 +4,7 @@
     <!--=== Normal VAT ===-->
     <record id="fiscal_position_with_vat" model="account.fiscal.position.template">
         <field name="name">Normaali ALV</field>
-        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="chart_template_id" ref="chart_template_fi"/>
         <field name="country_id" ref="base.fi"/>
     </record>
 
@@ -12,7 +12,7 @@
     <!--=== Intra-community (=EU with a few regional exceptions) ===-->
     <record id="fiscal_position_intracommunity" model="account.fiscal.position.template">
         <field name="name">Yhteisökauppa</field>
-        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="chart_template_id" ref="chart_template_fi"/>
     </record>
 
     <!-- Sales 24 % -> Intra-Community Goods & Services -->
@@ -122,7 +122,7 @@
     <!--=== Outside EU ===-->
     <record id="fiscal_position_non_ic" model="account.fiscal.position.template">
         <field name="name">EU:n ulkopuolella</field>
-        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="chart_template_id" ref="chart_template_fi"/>
     </record>
 
     <!-- Sales 24 % -> VAT 0 % -->
