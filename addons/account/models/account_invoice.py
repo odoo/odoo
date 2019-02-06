@@ -1834,5 +1834,5 @@ class MailComposeMessage(models.TransientModel):
             invoice = self.env['account.invoice'].browse(context['default_res_id'])
             if not invoice.sent:
                 invoice.sent = True
-            self = self.with_context(mail_post_autofollow=True)
+            self = self.with_context(mail_post_autofollow=True, lang=invoice.partner_id.lang)
         return super(MailComposeMessage, self).send_mail(auto_commit=auto_commit)
