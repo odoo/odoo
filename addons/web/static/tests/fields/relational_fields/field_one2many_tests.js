@@ -8127,6 +8127,39 @@ QUnit.module('fields', {}, function () {
                 "should be 1 column after the value change");
             form.destroy();
         });
+
+        QUnit.test('field context is correctly passed to x2m subviews', function (assert) {
+            assert.expect(2);
+
+             var form = createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form>' +
+                        '<field name="turtles" context="{\'some_key\': 1}">' +
+                            '<kanban>' +
+                                '<templates>' +
+                                    '<t t-name="kanban-box">' +
+                                        '<div>' +
+                                            '<t t-if="context.some_key">' +
+                                                '<field name="turtle_foo"/>' +
+                                            '</t>' +
+                                        '</div>' +
+                                    '</t>' +
+                                '</templates>' +
+                            '</kanban>' +
+                        '</field>' +
+                    '</form>',
+                res_id: 1,
+            });
+
+            assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 1,
+                "should have a record in the relation");
+            assert.strictEqual(form.$('.o_kanban_record span:contains(blip)').length, 1,
+                "condition in the kanban template should have been correctly evaluated");
+
+            form.destroy();
+        });
     });
 });
 });
