@@ -191,9 +191,9 @@
     <div class="o_kanban_example_background_container">
         <div class="o_kanban_example_background">
             <div class="o_kanban_examples">
-                <t t-foreach="_.range(1,5)" t-as="num">
+                <t t-foreach="ghostColumns" t-as="column">
                     <div class="o_kanban_examples_group">
-                        <h6><b>Column <t t-esc="num"/></b></h6>
+                        <h6><b><t t-esc="column"/></b></h6>
                         <t t-foreach="_.random(2,6)">
                             <t t-call="KanbanView.ExamplesBackground.RecordGhost"/>
                         </t>
