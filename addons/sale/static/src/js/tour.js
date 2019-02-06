@@ -10,12 +10,12 @@ tour.register('sale_tour', {
     url: "/web",
 }, [tour.STEPS.SHOW_APPS_MENU_ITEM, {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
-    content: _t('Organize your sales activities with the <b>Sales Management app</b>.'),
+    content: _t('Open Sales app to send your first quotation in a few clicks.'),
     position: 'right',
     edition: 'community'
 }, {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
-    content: _t('Organize your sales activities with the <b>Sales Management app</b>.'),
+    content: _t('Open Sales app to send your first quotation in a few clicks.'),
     position: 'bottom',
     edition: 'enterprise'
 }, {
@@ -24,13 +24,11 @@ tour.register('sale_tour', {
     content: _t("Let's create a new quotation.<br/><i>Note that colored buttons usually point to the next logical actions.</i>"),
     position: "bottom",
 }, {
-    trigger: ".o_form_editable .o_field_many2one[name='partner_id']",
+    trigger: ".o_form_editable .o_field_many2one[name='partner_id'] input",
     extra_trigger: ".o_sale_order",
     content: _t("Write the name of your customer to create one on the fly, or select an existing one."),
     position: "bottom",
-    run: function (actions) {
-        actions.text("Agrolait", this.$anchor.find("input"));
-    },
+    run: 'text Agrolait'
 }, {
     trigger: ".ui-menu-item > a",
     auto: true,
@@ -41,13 +39,11 @@ tour.register('sale_tour', {
     content: _t("Click here to add some products or services to your quotation."),
     position: "bottom",
 }, {
-    trigger: ".o_form_editable .o_field_many2one[name='product_id']",
+    trigger: ".o_form_editable .o_field_many2one[name='product_id'] input",
     extra_trigger: ".o_sale_order",
     content: _t("Select a product, or create a new one on the fly."),
     position: "right",
-    run: function (actions) {
-        actions.text("Chair", this.$anchor.find("input"));
-    },
+    run: 'text DESK0001'
 }, {
     trigger: ".ui-menu-item > a",
     auto: true,
