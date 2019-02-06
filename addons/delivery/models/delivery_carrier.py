@@ -148,6 +148,11 @@ class DeliveryCarrier(models.Model):
         if hasattr(self, '%s_send_shipping' % self.delivery_type):
             return getattr(self, '%s_send_shipping' % self.delivery_type)(pickings)
 
+    def get_return_label(self,pickings):
+        self.ensure_one()
+        if hasattr(self, '%s_get_return_label' % self.delivery_type):
+            return getattr(self, '%s_get_return_label' % self.delivery_type)(pickings)
+
     def get_tracking_link(self, picking):
         ''' Ask the tracking link to the service provider
 
