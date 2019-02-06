@@ -55,6 +55,36 @@ class Holidays(models.Model):
 
     timesheet_ids = fields.One2many('account.analytic.line', 'holiday_id', string="Analytic Lines")
 
+    @api.multi
+    def _create_timesheet_lines(self):
+        self.ensure_one()
+
+        work_hours_data = self.employee_id.list_work_time_per_day(
+            self.date_from,
+            self.date_to,
+        )
+
+        for index, (day_date, work_hours_count) in enumerate(work_hours_data):
+            self.env['account.analytic.line'].create(
+                self._create_timesheet_line_data(index, work_hours_data, day_date, work_hours_count)
+            )
+
+    @api.multi
+    def _create_timesheet_line_data(self, index, work_hours_data, day_date, work_hours_count):
+        self.ensure_one()
+
+        return {
+            'name': "%s (%s/%s)" % (self.holiday_status_id.name or '', index + 1, len(work_hours_data)),
+            'project_id': self.holiday_status_id.timesheet_project_id.id,
+            'task_id': self.holiday_status_id.timesheet_task_id.id,
+            'account_id': self.holiday_status_id.timesheet_project_id.analytic_account_id.id,
+            'unit_amount': work_hours_count,
+            'user_id': self.employee_id.user_id.id,
+            'date': day_date,
+            'holiday_id': self.id,
+            'employee_id': self.employee_id.id,
+        }
+
     def _validate_leave_request(self):
         """ Timesheet will be generated on leave validation only if a timesheet_project_id and a
             timesheet_task_id are set on the corresponding leave type. The generated timesheet will
@@ -65,25 +95,7 @@ class Holidays(models.Model):
                 lambda request: request.holiday_type == 'employee' and
                                 request.holiday_status_id.timesheet_project_id and
                                 request.holiday_status_id.timesheet_task_id):
-            holiday_project = holiday.holiday_status_id.timesheet_project_id
-            holiday_task = holiday.holiday_status_id.timesheet_task_id
-
-            work_hours_data = holiday.employee_id.list_work_time_per_day(
-                fields.Datetime.from_string(holiday.date_from),
-                fields.Datetime.from_string(holiday.date_to),
-            )
-            for index, (day_date, work_hours_count) in enumerate(work_hours_data):
-                self.env['account.analytic.line'].create({
-                    'name': "%s (%s/%s)" % (holiday.name or '', index + 1, len(work_hours_data)),
-                    'project_id': holiday_project.id,
-                    'task_id': holiday_task.id,
-                    'account_id': holiday_project.analytic_account_id.id,
-                    'unit_amount': work_hours_count,
-                    'user_id': holiday.employee_id.user_id.id,
-                    'date': fields.Date.to_string(day_date),
-                    'holiday_id': holiday.id,
-                    'employee_id': holiday.employee_id.id,
-                })
+            holiday._create_timesheet_lines()
 
         return super(Holidays, self)._validate_leave_request()
 
