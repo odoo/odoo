@@ -3,6 +3,7 @@
 from odoo import api, fields, models, tools, _
 from odoo.addons import decimal_precision as dp
 from odoo.tools.translate import html_translate
+from odoo.osv import expression
 
 
 class ProductStyle(models.Model):
@@ -334,6 +335,16 @@ class ProductTemplate(models.Model):
         super(ProductTemplate, self)._compute_website_url()
         for product in self:
             product.website_url = "/shop/product/%s" % (product.id,)
+
+    # ---------------------------------------------------------
+    # Rating Mixin API
+    # ---------------------------------------------------------
+
+    @api.multi
+    def _rating_domain(self):
+        """ Only take the published rating into account to compute avg and count """
+        domain = super(ProductTemplate, self)._rating_domain()
+        return expression.AND([domain, [('website_published', '=', True)]])
 
 
 class Product(models.Model):

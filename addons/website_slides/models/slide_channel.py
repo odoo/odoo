@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import uuid
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools.translate import html_translate
+from odoo.osv import expression
 
 
 class Channel(models.Model):
@@ -12,13 +14,16 @@ class Channel(models.Model):
     channels. """
     _name = 'slide.channel'
     _description = 'Slide Channel'
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin', 'rating.mixin']
     _order = 'sequence, id'
     _order_by_strategy = {
         'most_viewed': 'total_views desc',
         'most_voted': 'likes desc',
         'latest': 'date_published desc',
     }
+
+    def _default_access_token(self):
+        return str(uuid.uuid4())
 
     # description
     name = fields.Char('Name', translate=True, required=True)
@@ -37,6 +42,22 @@ class Channel(models.Model):
         string="Featuring Policy", default='most_voted', required=True)
     custom_slide_id = fields.Many2one('slide.slide', string='Slide to Promote')
     promoted_slide_id = fields.Many2one('slide.slide', string='Featured Slide', compute='_compute_promoted_slide_id', store=True)
+    access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
+
+    @api.depends('custom_slide_id', 'promote_strategy', 'slide_ids.likes',
+                 'slide_ids.total_views', "slide_ids.date_published")
+    def _compute_promoted_slide_id(self):
+        for record in self:
+            if record.promote_strategy == 'none':
+                record.promoted_slide_id = False
+            elif record.promote_strategy == 'custom':
+                record.promoted_slide_id = record.custom_slide_id
+            elif record.promote_strategy:
+                slides = self.env['slide.slide'].search(
+                    [('website_published', '=', True), ('channel_id', '=', record.id)],
+                    limit=1, order=self._order_by_strategy[record.promote_strategy])
+                record.promoted_slide_id = slides and slides[0] or False
+
     nbr_presentations = fields.Integer('Number of Presentations', compute='_count_presentations', store=True)
     nbr_documents = fields.Integer('Number of Documents', compute='_count_presentations', store=True)
     nbr_videos = fields.Integer('Number of Videos', compute='_count_presentations', store=True)
@@ -147,6 +168,27 @@ class Channel(models.Model):
         if self.visibility == 'public':
             self.group_ids = False
 
+    # ---------------------------------------------------------
+    # ORM Overrides
+    # ---------------------------------------------------------
+
+    @api.model_cr_context
+    def _init_column(self, column_name):
+        """ Initialize the value of the given column for existing rows.
+            Overridden here because we need to generate different access tokens
+            and by default _init_column calls the default method once and applies
+            it for every record.
+        """
+        if column_name != 'access_token':
+            super(Channel, self)._init_column(column_name)
+        else:
+            query = """
+                UPDATE %(table_name)s
+                SET %(column_name)s = md5(md5(random()::varchar || id::varchar) || clock_timestamp()::varchar)::uuid::varchar
+                WHERE %(column_name)s IS NULL
+            """ % {'table_name': self._table, 'column_name': column_name}
+            self.env.cr.execute(query)
+
     @api.model
     def create(self, vals):
         return super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals)
@@ -178,6 +220,16 @@ class Channel(models.Model):
         return {
             'channels': [{'id': channel.id, 'name': channel.name, 'website_url': channel.website_url} for channel in self.search([])]
         }
+
+    # ---------------------------------------------------------
+    # Rating Mixin API
+    # ---------------------------------------------------------
+
+    @api.multi
+    def _rating_domain(self):
+        """ Only take the published rating into account to compute avg and count """
+        domain = super(Channel, self)._rating_domain()
+        return expression.AND([domain, [('website_published', '=', True)]])
 
 
 class Category(models.Model):

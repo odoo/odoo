@@ -8,8 +8,11 @@ import werkzeug
 from odoo import http, _
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
+from odoo.osv import expression
+
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.tools import html2plaintext
 
 _logger = logging.getLogger(__name__)
 
@@ -67,15 +70,21 @@ class WebsiteSlides(http.Controller):
             redirects directly to its slides
         """
         domain = request.website.website_domain()
+        # search bar
+        search_term = post.get('search')
+        if search_term:
+            domain = expression.AND([domain, ['|', ('name', 'ilike', search_term), ('description', 'ilike', search_term)]])
+
         channels = request.env['slide.channel'].search(domain, order='sequence, id')
         if not channels:
-            return request.render("website_slides.channel_not_found")
-        elif len(channels) == 1:
+            return request.render("website_slides.channel_not_found", {'search_term': search_term})
+        elif len(channels) == 1 and not search_term:  # don't auto redirect to only result when searching
             return request.redirect("/slides/%s" % channels.id)
         return request.render('website_slides.channels', {
             'channels': channels,
             'user': request.env.user,
             'is_public_user': request.website.is_public_user(),
+            'search_term': search_term,
         })
 
     @http.route([
@@ -144,7 +153,19 @@ class WebsiteSlides(http.Controller):
             'pager': pager,
             'is_public_user': request.website.is_public_user(),
             'display_channel_settings': not request.httprequest.cookies.get('slides_channel_%s' % (channel.id), False) and channel.can_see_full,
+            'rating_avg': channel.rating_avg,
+            'rating_count': channel.rating_count,
         }
+        if not request.env.user._is_public():
+            last_message_values = request.env['mail.message'].search([('model', '=', channel._name), ('res_id', '=', channel.id), ('author_id', '=', user.partner_id.id), ('website_published', '=', True)], order='write_date DESC', limit=1).read(['body', 'rating_value'])
+            last_message_data = last_message_values[0] if last_message_values else {}
+            values.update({
+                'message_post_hash': channel._sign_token(request.env.user.partner_id.id),
+                'message_post_pid': request.env.user.partner_id.id,
+                'last_message_id': last_message_data.get('id'),
+                'last_message': html2plaintext(last_message_data.get('body', '')),
+                'last_rating_value': last_message_data.get('rating_value'),
+            })
         if search:
             values['search'] = search
             return request.render('website_slides.slides_search', values)
@@ -163,6 +184,7 @@ class WebsiteSlides(http.Controller):
             values.update({
                 'category_datas': category_datas,
             })
+
         return request.render('website_slides.home', values)
 
     # --------------------------------------------------
