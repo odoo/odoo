@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!--
+        Inherited templates from portal to custom chatter with rating
+    -->
+    <t t-extend="portal.Composer">
+        <t t-jquery="textarea" t-operation="inner"><t t-esc="_.str.trim(widget.options['default_message'])"/></t><!-- need to be one line to avoid \t in textarea -->
+        <t t-jquery="form" t-operation="attributes">
+            <attribute name="t-attf-action">#{widget.options['force_submit_url'] ? widget.options['force_submit_url'] : '/mail/chatter_post'}</attribute>
+        </t>
+        <t t-jquery=".o_portal_chatter_composer_form input[name='csrf_token']" t-operation="after">
+            <t t-call="website_rating.rating_star_input">
+                <t t-set="default_rating" t-value="widget.options['default_rating_value']"/>
+            </t>
+            <input type="hidden" name="message_id" t-att-value="widget.options['default_message_id']" t-if="widget.options['default_message_id']"/>
+        </t>
+    </t>
+
+    <t t-extend="portal.chatter_messages">
+        <t t-jquery="t[t-raw='message.body']" t-operation="before">
+            <t t-if="message['rating_value']">
+                <t t-call="website_rating.rating_stars_static">
+                    <t t-set="val" t-value="message.rating_value"/>
+                </t>
+            </t>
+        </t>
+    </t>
+
+    <t t-extend="portal.Chatter">
+        <t t-jquery="t[t-call='portal.chatter_message_count']" t-operation="replace">
+            <t t-if="widget.options['display_rating']">
+                <t t-call="website_rating.rating_card"/>
+            </t>
+            <t t-if="!widget.options['display_rating']">
+                <t t-call="portal.chatter_message_count"/>
+            </t>
+        </t>
+    </t>
+
+
+    <!--
+        Popup Rating Composer Widget
+        It can alse be used to modify a message
+    -->
+    <t t-name="website_rating.PopupComposer">
+        <div>
+            <button t-if="widget.options['display_composer']" type="button" class="btn btn-primary" data-toggle="modal" data-target="#ratingpopupcomposer">
+                <t t-if="widget.options['display_composer']">
+                    <t t-if="widget.options['default_message_id']">
+                        Modify your review
+                    </t>
+                    <t t-else="">
+                        Add a review
+                    </t>
+                </t>
+            </button>
+            <div>
+                <t t-call="website_rating.rating_stars_static">
+                    <t t-set="val" t-value="widget.rating_avg || 0"/>
+                    <t t-set="inline_mode" t-value="true"/>
+                </t>
+                <t t-if="widget.rating_total">
+                   <t t-esc="widget.rating_avg"/> (<t t-esc="widget.rating_total"/>)
+                </t>
+            </div>
+        </div>
+
+        <div t-if="widget.options['display_composer']" class="modal fade" id="ratingpopupcomposer" tabindex="-1" role="dialog" aria-labelledby="ratingpopupcomposerlabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ratingpopupcomposerlabel">
+                            <t t-if="widget.options['default_message_id']">
+                                Modify your review
+                            </t>
+                            <t t-else="">
+                                Add a review
+                            </t>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span>&amp;times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="o_portal_chatter_composer"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

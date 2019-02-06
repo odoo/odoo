@@ -13,6 +13,43 @@ var qweb = core.qweb;
 var _t = core._t;
 
 /**
+ * Widget PortalComposer
+ *
+ * Display the composer (according to access right)
+ *
+ */
+var PortalComposer = Widget.extend({
+    template: 'portal.Composer',
+    events: {
+        'click .o_portal_chatter_composer_btn': '_onSubmitButtonClick',
+    },
+    init: function(parent, options){
+        this._super.apply(this, arguments);
+        this.options = _.defaults(options || {}, {
+            'allow_composer': true,
+            'display_composer': false,
+            'csrf_token': odoo.csrf_token,
+            'token': false,
+            'res_model': false,
+            'res_id': false,
+        });
+
+        // TODO simplify this using the 'async' keyword in the events
+        // property definition as soon as this widget is converted in
+        // frontend widget.
+        this._onSubmitButtonClick = dom.makeButtonHandler(this._onSubmitButtonClick);
+    },
+    /**
+     * @private
+     */
+    _onSubmitButtonClick: function () {
+        return $.Deferred();
+    },
+});
+
+
+
+/**
  * Widget PortalChatter
  *
  * - Fetch message fron controller
@@ -20,15 +57,23 @@ var _t = core._t;
  * - Provider API to filter displayed messages
  */
 var PortalChatter = Widget.extend({
-    template: 'portal.chatter',
+    template: 'portal.Chatter',
     events: {
         "click .o_portal_chatter_pager_btn": '_onClickPager',
-        'click .o_portal_chatter_composer_btn': '_onSubmitButtonClick',
     },
+    xmlDependencies: ['/portal/static/src/xml/portal_chatter.xml'],
 
     init: function(parent, options){
+        var self = this;
+        this.options = {};
         this._super.apply(this, arguments);
-        this.options = _.defaults(options || {}, {
+
+        // underscorize the camelcased option keys
+        _.each(options, function(val, key) {
+            self.options[_.str.underscored(key)] = val;
+        });
+        // set default options
+        this.options = _.defaults(this.options, {
             'allow_composer': true,
             'display_composer': false,
             'csrf_token': odoo.csrf_token,
@@ -38,18 +83,16 @@ var PortalChatter = Widget.extend({
             'pager_start': 1,
             'is_user_public': true,
             'is_user_publisher': false,
+            'hash': false,
+            'pid': false,
             'domain': [],
         });
+
         this.set('messages', []);
         this.set('message_count', this.options['message_count']);
         this.set('pager', {});
         this.set('domain', this.options['domain']);
         this._current_page = this.options['pager_start'];
-
-        // TODO simplify this using the 'async' keyword in the events
-        // property definition as soon as this widget is converted in
-        // frontend widget.
-        this._onSubmitButtonClick = dom.makeButtonHandler(this._onSubmitButtonClick);
     },
     willStart: function(){
         var self = this;
@@ -58,7 +101,8 @@ var PortalChatter = Widget.extend({
             rpc.query({
                 route: '/mail/chatter_init',
                 params: this._messageFetchPrepareParams()
-            }), this._loadTemplates()
+            }),
+            this._super.apply(this, arguments),
         ).then(function(result){
             self.result = result;
             self.options = _.extend(self.options, self.result['options'] || {});
@@ -80,7 +124,18 @@ var PortalChatter = Widget.extend({
         // set options and parameters
         this.set('message_count', this.options['message_count']);
         this.set('messages', this.preprocessMessages(this.result['messages']));
-        return this._super.apply(this, arguments);
+
+
+        var defs = [];
+        defs.push(this._super.apply(this, arguments));
+
+        // instanciate and insert composer widget
+        if (this.options['display_composer']) {
+            this._composer = new PortalComposer(this, this.options);
+            defs.push(this._composer.replace(this.$('.o_portal_chatter_composer')));
+        }
+
+        return $.when.apply($, defs);
     },
 
     //--------------------------------------------------------------------------
@@ -133,13 +188,6 @@ var PortalChatter = Widget.extend({
         this._current_page = page;
         var d = domain ? domain : _.clone(this.get('domain'));
         this.set('domain', d); // trigger fetch message
-    },
-    /**
-     * @private
-     * @returns {Deferred}
-     */
-    _loadTemplates: function(){
-        return ajax.loadXML('/portal/static/src/xml/portal_chatter.xml', qweb);
     },
     _messageFetchPrepareParams: function(){
         var self = this;
@@ -234,12 +282,6 @@ var PortalChatter = Widget.extend({
         var page = $(ev.currentTarget).data('page');
         this._changeCurrentPage(page);
     },
-    /**
-     * @private
-     */
-    _onSubmitButtonClick: function () {
-        return $.Deferred();
-    },
 });
 
 base.ready().then(function () {
@@ -251,6 +293,7 @@ base.ready().then(function () {
 });
 
 return {
+    PortalComposer: PortalComposer,
     PortalChatter: PortalChatter,
 };
 
