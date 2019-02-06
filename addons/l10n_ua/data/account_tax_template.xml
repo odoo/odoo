@@ -81,8 +81,8 @@
         <record id="sale_tax_template_vat_not_psbo" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
             <field name="sequence">14</field>
-            <field name="name">Реалізація не є ПДВ</field>
-            <field name="description">Не є ПДВ</field>
+            <field name="name">Реалізація Не є об'єктом ПДВ</field>
+            <field name="description">Не є об'єктом ПДВ</field>
             <field name="amount">0</field>
             <field name="type_tax_use">sale</field>
             <field name="account_id" ref="ua_psbp_6431"/>
@@ -165,8 +165,8 @@
         <record id="purchase_tax_template_vat_not_psbo" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
             <field name="sequence">24</field>
-            <field name="name">Придбання не є ПДВ</field>
-            <field name="description">Не є ПДВ</field>
+            <field name="name">Придбання Не є об'єктом ПДВ</field>
+            <field name="description">Не є об'єктом ПДВ</field>
             <field name="amount">0</field>
             <field name="type_tax_use">purchase</field>
             <field name="account_id" ref="ua_psbp_6441"/>
@@ -239,55 +239,6 @@
             <field name="description">Витрати інші</field>
             <field name="amount">0</field>
             <field name="type_tax_use">purchase</field>
-        </record>
-        <!-- salary taxes -->
-        <!-- esv -->
-        <record id="salary_tax_esv22_psbo" model="account.tax.template">
-            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
-            <field name="sequence">100</field>
-            <field name="name">ЄСВ  22%</field>
-            <field name="description">ЄСВ 22%</field>
-            <field name="amount">0</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_esv')])]"/>
-        </record>
-        <record id="salary_tax_esv_inval_psbo" model="account.tax.template">
-            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
-            <field name="sequence">101</field>
-            <field name="name">ЄСВ  8,41%</field>
-            <field name="description">ЄСВ для інвалідів</field>
-            <field name="amount">0</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_esv')])]"/>
-        </record>
-        <!-- pdfo -->
-        <record id="salary_tax_pdfo18_psbo" model="account.tax.template">
-            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
-            <field name="sequence">120</field>
-            <field name="name">ПДФО  18%</field>
-            <field name="description">ПДФО 18% без ПСП</field>
-            <field name="amount">0</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_pdfo')])]"/>
-        </record>
-        <record id="salary_tax_pdfo18psp_psbo" model="account.tax.template">
-            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
-            <field name="sequence">121</field>
-            <field name="name">ПДФО  18% з ПСП</field>
-            <field name="description">ПДФО 18% з ПСП</field>
-            <field name="amount">0</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_pdfo')])]"/>
-        </record>
-        <!-- vz -->
-        <record id="salary_tax_vz_psbo" model="account.tax.template">
-            <field name="chart_template_id" ref="l10n_ua_psbo_chart_template"/>
-            <field name="sequence">140</field>
-            <field name="name">Військовий  збір</field>
-            <field name="description">Військовий збір 1,5%</field>
-            <field name="amount">0</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vz')])]"/>
         </record>
 
         <!-- IAS -->
@@ -371,8 +322,8 @@
         <record id="sale_tax_template_vat_not" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
             <field name="sequence">14</field>
-            <field name="name">Реалізація не є об’єктом ПДВ</field>
-            <field name="description">Не є ПДВ</field>
+            <field name="name">Реалізація не є об'єктом ПДВ</field>
+            <field name="description">Не є об'єктом ПДВ</field>
             <field name="amount">0</field>
             <field name="type_tax_use">sale</field>
             <field name="account_id" ref="ua_ias_1204"/>
@@ -455,8 +406,8 @@
         <record id="purchase_tax_template_vat_not" model="account.tax.template">
             <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
             <field name="sequence">24</field>
-            <field name="name">Придбання не є об’єктом ПДВ</field>
-            <field name="description">Не є ПДВ</field>
+            <field name="name">Придбання не є об'єктом ПДВ</field>
+            <field name="description">Не є об'єктом ПДВ</field>
             <field name="amount">0</field>
             <field name="type_tax_use">purchase</field>
             <field name="account_id" ref="ua_ias_1140"/>
@@ -529,55 +480,6 @@
             <field name="description">Витрати інші</field>
             <field name="amount">0</field>
             <field name="type_tax_use">purchase</field>
-        </record>
-        <!-- salary taxes -->
-        <!-- esv -->
-        <record id="salary_tax_esv22" model="account.tax.template">
-            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
-            <field name="sequence">100</field>
-            <field name="name">ЄСВ 22%</field>
-            <field name="description">ЄСВ 22%</field>
-            <field name="amount">0</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_esv')])]"/>
-        </record>
-        <record id="salary_tax_esv_inval" model="account.tax.template">
-            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
-            <field name="sequence">101</field>
-            <field name="name">ЄСВ 8,41%</field>
-            <field name="description">ЄСВ для інвалідів</field>
-            <field name="amount">0</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_esv')])]"/>
-        </record>
-        <!-- pdfo -->
-        <record id="salary_tax_pdfo18" model="account.tax.template">
-            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
-            <field name="sequence">120</field>
-            <field name="name">ПДФО 18%</field>
-            <field name="description">ПДФО 18% без ПСП</field>
-            <field name="amount">0</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_pdfo')])]"/>
-        </record>
-        <record id="salary_tax_pdfo18psp" model="account.tax.template">
-            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
-            <field name="sequence">121</field>
-            <field name="name">ПДФО 18% з ПСП</field>
-            <field name="description">ПДФО 18% з ПСП</field>
-            <field name="amount">0</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_pdfo')])]"/>
-        </record>
-        <!-- vz -->
-        <record id="salary_tax_vz" model="account.tax.template">
-            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
-            <field name="sequence">140</field>
-            <field name="name">Військовий збір</field>
-            <field name="description">Військовий збір 1,5%</field>
-            <field name="amount">0</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_ua.tax_tag_vz')])]"/>
         </record>
     </data>
 </odoo>
