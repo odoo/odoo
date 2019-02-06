@@ -25,9 +25,9 @@ class TestAccess(common.SurveyCase):
         with self.assertRaises(AccessError):
             self.env['survey.survey'].create({'title': 'Test Survey 2'})
         with self.assertRaises(AccessError):
-            self.env['survey.page'].create({'title': 'My Page', 'survey_id': self.survey.id})
+            self.env['survey.question'].create({'title': 'My Page', 'sequence': 0, 'is_page': True, 'survey_id': self.survey.id})
         with self.assertRaises(AccessError):
-            self.env['survey.question'].create({'question': 'My Question', 'page_id': self.page_0.id})
+            self.env['survey.question'].create({'title': 'My Question', 'sequence': 1, 'page_id': self.page_0.id})
 
         # Read: nope
         with self.assertRaises(AccessError):
@@ -58,9 +58,9 @@ class TestAccess(common.SurveyCase):
         with self.assertRaises(AccessError):
             self.env['survey.survey'].create({'title': 'Test Survey 2'})
         with self.assertRaises(AccessError):
-            self.env['survey.page'].create({'title': 'My Page', 'survey_id': self.survey.id})
+            self.env['survey.question'].create({'title': 'My Page', 'sequence': 0, 'is_page': True, 'survey_id': self.survey.id})
         with self.assertRaises(AccessError):
-            self.env['survey.question'].create({'question': 'My Question', 'page_id': self.page_0.id})
+            self.env['survey.question'].create({'title': 'My Question', 'sequence': 1, 'page_id': self.page_0.id})
 
         # Read: nope
         with self.assertRaises(AccessError):
@@ -91,9 +91,9 @@ class TestAccess(common.SurveyCase):
         with self.assertRaises(AccessError):
             self.env['survey.survey'].create({'title': 'Test Survey 2'})
         with self.assertRaises(AccessError):
-            self.env['survey.page'].create({'title': 'My Page', 'survey_id': self.survey.id})
+            self.env['survey.question'].create({'title': 'My Page', 'sequence': 0, 'is_page': True, 'survey_id': self.survey.id})
         with self.assertRaises(AccessError):
-            self.env['survey.question'].create({'question': 'My Question', 'page_id': self.page_0.id})
+            self.env['survey.question'].create({'title': 'My Question', 'sequence': 1, 'page_id': self.page_0.id})
 
         # Read: nope
         with self.assertRaises(AccessError):
@@ -121,8 +121,8 @@ class TestAccess(common.SurveyCase):
     def test_access_survey_survey_manager(self):
         # Create: all
         survey = self.env['survey.survey'].create({'title': 'Test Survey 2'})
-        page = self.env['survey.page'].create({'title': 'My Page', 'survey_id': survey.id})
-        self.env['survey.question'].create({'question': 'My Question', 'page_id': page.id})
+        self.env['survey.question'].create({'title': 'My Page', 'sequence': 0, 'is_page': True, 'survey_id': survey.id})
+        self.env['survey.question'].create({'title': 'My Question', 'sequence': 1, 'survey_id': survey.id})
 
         # Read: all
         surveys = self.env['survey.survey'].search([('title', 'ilike', 'Test')])
@@ -140,8 +140,8 @@ class TestAccess(common.SurveyCase):
     def test_access_survey_survey_user(self):
         # Create: own only
         survey = self.env['survey.survey'].create({'title': 'Test Survey 2'})
-        page = self.env['survey.page'].create({'title': 'My Page', 'survey_id': survey.id})
-        self.env['survey.question'].create({'question': 'My Question', 'page_id': page.id})
+        self.env['survey.question'].create({'title': 'My Page', 'sequence': 0, 'is_page': True, 'survey_id': survey.id})
+        self.env['survey.question'].create({'title': 'My Question', 'sequence': 1, 'survey_id': survey.id})
 
         # Read: all
         surveys = self.env['survey.survey'].search([('title', 'ilike', 'Test')])
@@ -249,8 +249,8 @@ class TestAccess(common.SurveyCase):
     @users('survey_user')
     def test_access_answers_survey_user(self):
         survey_own = self.env['survey.survey'].create({'title': 'Other'})
-        page_own = self.env['survey.page'].create({'title': 'Other', 'survey_id': survey_own.id})
-        question_own = self.env['survey.question'].create({'question': 'Other Question', 'page_id': page_own.id})
+        self.env['survey.question'].create({'title': 'Other', 'sequence': 0, 'is_page': True, 'survey_id': survey_own.id})
+        question_own = self.env['survey.question'].create({'title': 'Other Question', 'sequence': 1, 'survey_id': survey_own.id})
 
         # Create: own survey only
         answer_own = self.env['survey.user_input'].create({'survey_id': survey_own.id})
@@ -293,8 +293,8 @@ class TestAccess(common.SurveyCase):
         admin = self.env.ref('base.user_admin')
         with self.sudo(admin):
             survey_other = self.env['survey.survey'].create({'title': 'Other'})
-            page_other = self.env['survey.page'].create({'title': 'Other', 'survey_id': survey_other.id})
-            question_other = self.env['survey.question'].create({'question': 'Other Question', 'page_id': page_other.id})
+            self.env['survey.question'].create({'title': 'Other', 'sequence': 0, 'is_page': True, 'survey_id': survey_other.id})
+            question_other = self.env['survey.question'].create({'title': 'Other Question', 'sequence': 1, 'survey_id': survey_other.id})
             self.assertEqual(survey_other.create_uid, admin)
             self.assertEqual(question_other.create_uid, admin)
 
