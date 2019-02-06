@@ -251,6 +251,36 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('context can be used in kanban template', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                    '<templates>' +
+                        '<t t-name="kanban-box">' +
+                            '<div>' +
+                                '<t t-if="context.some_key">' +
+                                    '<field name="foo"/>' +
+                                '</t>' +
+                            '</div>' +
+                        '</t>' +
+                    '</templates>' +
+                '</kanban>',
+            context: {some_key: 1},
+            domain: [['id', '=', 1]],
+        });
+
+        assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 1,
+            "there should be one record");
+        assert.strictEqual(form.$('.o_kanban_record span:contains(yop)').length, 1,
+            "condition in the kanban template should have been correctly evaluated");
+
+        form.destroy();
+    });
+
     QUnit.test('pager should be hidden in grouped mode', function (assert) {
         assert.expect(1);
 

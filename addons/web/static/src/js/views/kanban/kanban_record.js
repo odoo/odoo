@@ -395,6 +395,7 @@ var KanbanRecord = Widget.extend({
         this.recordData = recordState.data;
         this.record = this._transformRecord(recordState.data);
         this.qweb_context = {
+            context: this.state.getContext(),
             kanban_image: this._getImageURL.bind(this),
             kanban_color: this._getColorClassname.bind(this),
             kanban_getcolor: this._getColorID.bind(this),
