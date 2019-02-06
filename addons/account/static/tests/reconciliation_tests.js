@@ -29,6 +29,7 @@ var db = {
             customer: {string: "customer", type: 'boolean'},
             supplier: {string: "supplier", type: 'boolean'},
             parent_id: {string: "Parent", type: 'boolean'},
+            is_company: {string: "Is company", type: 'boolean'},
             property_account_receivable_id: {string: 'Account receivable', type: 'many2one', relation: 'account.account'},
             property_account_payable_id: {string: 'Account payable', type: 'many2one', relation: 'account.account'},
         },
