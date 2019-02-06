@@ -1,16 +1,25 @@
 odoo.define('auth_signup.signup', function (require) {
-    'use strict';
+'use strict';
 
-require('web.dom_ready');
+var publicWidget = require('web.public.widget');
 
-// Disable 'Sign Up' button to prevent user form continuous clicking
-if ($('.oe_signup_form').length > 0) {
-    $('.oe_signup_form').on('submit', function (ev) {
-        var $form = $(ev.currentTarget);
-        var $btn = $form.find('.oe_login_buttons > button[type="submit"]');
+publicWidget.registry.SignUpForm = publicWidget.Widget.extend({
+    selector: '.oe_signup_form',
+    events: {
+        'submit': '_onSubmit',
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onSubmit: function () {
+        var $btn = this.$('.oe_login_buttons > button[type="submit"]');
         $btn.attr('disabled', 'disabled');
         $btn.prepend('<i class="fa fa-refresh fa-spin"/> ');
-    });
-}
-
+    },
+});
 });
