@@ -24,11 +24,16 @@ class View(models.Model):
     website_id = fields.Many2one('website', ondelete='cascade', string="Website")
     page_ids = fields.One2many('website.page', 'view_id')
     first_page_id = fields.Many2one('website.page', string='Website Page', help='First page linked to this view', compute='_compute_first_page_id')
+    has_duplicate_key = fields.Boolean(compute='_compute_has_duplicate_key')
 
     @api.multi
     def _compute_first_page_id(self):
         for view in self:
             view.first_page_id = self.env['website.page'].search([('view_id', '=', view.id)], limit=1)
+
+    def _compute_has_duplicate_key(self):
+        for view in self:
+            view.has_duplicate_key = self.search_count([('key', '=', view.key), ('website_id', '=', view.website_id.id)]) > 1
 
     @api.multi
     def write(self, vals):
@@ -390,3 +395,9 @@ class View(models.Model):
             if website_specific_view:
                 self = website_specific_view
         super(View, self).save(value, xpath=xpath)
+
+    def action_duplicate_key_views(self):
+        self.ensure_one()
+        action = self.env.ref('base.action_ui_view').read()[0]
+        action['domain'] = [('key', '=', self.key), ('website_id', '=', self.website_id.id)]
+        return action

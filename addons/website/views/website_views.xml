@@ -283,6 +283,14 @@
                             type="object" attrs="{'invisible': [('page_ids', '=', [])]}"/>
                     </header>
                 </sheet>
+                <xpath expr='//group[@groups="base.group_no_one"]' position="after">
+                    <group colspan="4">
+                        <field name="has_duplicate_key" invisible="1"/>
+                        <div class="alert alert-danger" attrs="{'invisible': [('has_duplicate_key', '=', False)]}">
+                            <p>This view has the same key than <button type="object" name="action_duplicate_key_views" class="btn oe_inline btn-link">other views</button> in this website. This may lead to erratic behaviors.</p>
+                        </div>
+                    </group>
+                </xpath>
             </field>
         </record>
         <record id="view_view_tree_inherit_website" model="ir.ui.view">
