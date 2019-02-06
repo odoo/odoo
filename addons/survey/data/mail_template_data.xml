@@ -27,5 +27,43 @@
             <field name="user_signature" eval="False"/>
         </record>
 
+        <!-- Certification Email template -->
+        <record id="mail_template_certification" model="mail.template">
+            <field name="name">Certification: Send by email</field>
+            <field name="model_id" ref="survey.model_survey_user_input"/>
+            <field name="email_to">${(object.partner_id.email_formatted or object.email) |safe}</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="subject">Certification: ${object.survey_id.display_name}</field>
+            <field name="report_template" ref="certification_report"/>
+            <field name="report_name">Certification Document</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="xml">
+                <div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+                    <table style="width:600px;margin:5px auto;">
+                        <tbody>
+                            <tr><td>
+                                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->
+                                <a href="/"><img src="/logo.png?company=${object.survey_id.create_uid.company_id.id}" style="vertical-align:baseline;max-width:100px;" /></a>
+                            </td><td style="text-align:right;vertical-align:middle;">
+                                    Certification: ${object.survey_id.display_name}
+                            </td></tr>
+                        </tbody>
+                    </table>
+                    <table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">
+                        <tbody>
+                            <tr><td style="padding:15px 20px 10px 20px;">
+                                <p>Dear <span>${object.partner_id.name or 'participant'}</span></p>
+                                <p>
+                                    Here is, in attachment, your certification document for
+                                        <strong>${object.survey_id.display_name}</strong>
+                                </p>
+                                <p>Congratulations for succeeding the test!</p>
+                            </td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </field>
+        </record>
     </data>
 </odoo>

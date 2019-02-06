@@ -5,7 +5,7 @@
         <record id="stage_draft" model="survey.stage">
             <field name="name">Draft</field>
             <field name="sequence" eval="1" />
-            <field name="closed" eval="False" />
+            <field name="closed" eval="True" />
             <field name="fold" eval="False" />
         </record>
         <record id="stage_in_progress" model="survey.stage">
@@ -18,12 +18,6 @@
             <field name="name">Closed</field>
             <field name="sequence" eval="3" />
             <field name="closed" eval="True" />
-            <field name="fold" eval="True" />
-        </record>
-        <record id="stage_permanent" model="survey.stage">
-            <field name="name">Permanent</field>
-            <field name="sequence" eval="4" />
-            <field name="closed" eval="False" />
             <field name="fold" eval="True" />
         </record>
     </data>

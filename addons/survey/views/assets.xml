@@ -11,6 +11,7 @@
 
         <script type="text/javascript" src="/survey/static/src/js/survey_result.js" />
         <script type="text/javascript" src="/survey/static/src/js/survey.js" />
+        <script type="text/javascript" src="/survey/static/src/js/survey_timer.js" />
         <script type="text/javascript" src="/survey/static/src/js/tour_test_survey.js"></script>
 
         <t t-call="web._assets_helpers">
@@ -25,9 +26,21 @@
         <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
     </template>
 
+    <template id="survey_report_assets_pdf" inherit_id="web.report_assets_pdf">
+        <xpath expr="link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/survey/static/src/scss/survey_reports.scss"/>
+        </xpath>
+    </template>
+
     <template id="assets_backend" name="survey assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
             <link rel="stylesheet" href="/survey/static/src/css/survey_result.css"/>
+        </xpath>
+    </template>
+
+    <template id="assets_backend_inherit_survey" inherit_id="web.assets_backend" name="Survey backend assets">
+        <xpath expr="link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/survey/static/src/scss/survey_views.scss"/>
         </xpath>
     </template>
 </data>
