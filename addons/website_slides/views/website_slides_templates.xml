@@ -108,9 +108,12 @@
                         <t t-if="category">
                             / <a t-attf-href="/slides/#{slug(channel)}/category/#{slug(category)}" t-esc="category.name"/>
                         </t>
-                        <!-- Public user has not right to create/write on slide -->
                         <t t-if="channel.can_upload">
-                            <a role="button" class="btn btn-primary oe_slide_js_upload" title="Upload Presentation" t-attf-channel_id="#{channel.id}" aria-label="Upload Presentation" href="#">
+                            <a role="button" class="btn btn-primary oe_slide_js_upload" title="Upload Presentation"
+                                aria-label="Upload Presentation" href="#"
+                                t-att-data-channel-id="channel.id"
+                                t-att-data-can-upload="channel.can_upload"
+                                t-att-data-can-publish="channel.can_publish">
                                 <i class="fa fa-cloud-upload"></i> Upload
                             </a>
                         </t>
@@ -286,7 +289,7 @@
                                 </p>
                                 <p>
                                     <!-- Public user has not right to create/write on slide-->
-                                    <a role="button" t-if="channel.can_upload" class="btn btn-primary oe_slide_js_upload" t-attf-channel_id="#{channel.id}" aria-label="Upload Presentation" title="Upload Presentation" href="#">
+                                    <a role="button" t-if="channel.can_upload" class="btn btn-primary oe_slide_js_upload" t-attf-channel-id="#{channel.id}" aria-label="Upload Presentation" title="Upload Presentation" href="#">
                                         <i class="fa fa-cloud-upload"></i> Upload
                                     </a>
                                 </p>

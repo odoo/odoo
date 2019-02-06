@@ -92,6 +92,7 @@ class Slide(models.Model):
     # description
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)
+    user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
     description = fields.Text('Description', translate=True)
     channel_id = fields.Many2one('slide.channel', string="Channel", required=True)
     category_id = fields.Many2one('slide.category', string="Category", domain="[('channel_id', '=', channel_id)]")
@@ -218,6 +219,12 @@ class Slide(models.Model):
 
     @api.model
     def create(self, values):
+        # Do not publish slide if user has not publisher rights
+        channel = self.env['slide.channel'].browse(values['channel_id'])
+        if not channel.can_publish:
+            values['website_published'] = False
+            values['date_published'] = False
+
         if not values.get('index_content'):
             values['index_content'] = values.get('description')
         if values.get('slide_type') == 'infographic' and not values.get('image'):
@@ -228,15 +235,18 @@ class Slide(models.Model):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.items():
                 values.setdefault(key, value)
-        # Do not publish slide if user has not publisher rights
-        if not self.user_has_groups('website.group_website_publisher'):
-            values['website_published'] = False
+
         slide = super(Slide, self).create(values)
-        slide._post_publication()
+
+        if slide.website_published:
+            slide._post_publication()
         return slide
 
     @api.multi
     def write(self, values):
+        if values.get('website_published') and any(not slide.channel_id.can_publish for slide in self):
+            values.pop('website_published')
+
         if values.get('url') and values['url'] != self.url:
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.items():
