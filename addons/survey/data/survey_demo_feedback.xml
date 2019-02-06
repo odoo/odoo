@@ -14,31 +14,32 @@
     </record>
 
     <!-- Page1: general information -->
-    <record model="survey.page" id="survey_feedback_p1">
+    <record model="survey.question" id="survey_feedback_p1">
         <field name="title">General information</field>
         <field name="survey_id" ref="survey_feedback" />
         <field name="sequence">1</field>
+        <field name="is_page" eval="True" />
         <field name="description" type="html">
 <p>This section is about general informations about you. Answering them helps qualifying your answers.</p></field>
     </record>
     <record model="survey.question" id="survey_feedback_p1_q1">
-        <field name="page_id" ref="survey_feedback_p1"/>
-        <field name="sequence">1</field>
-        <field name="question">Where do you live ?</field>
+        <field name="survey_id" ref="survey_feedback" />
+        <field name="sequence">2</field>
+        <field name="title">Where do you live ?</field>
         <field name="question_type">textbox</field>
         <field name="constr_mandatory" eval="False"/>
     </record>
     <record model="survey.question" id="survey_feedback_p1_q2">
-        <field name="page_id" ref="survey_feedback_p1"/>
-        <field name="sequence">2</field>
-        <field name="question">When is your date of birth ?</field>
+        <field name="survey_id" ref="survey_feedback" />
+        <field name="sequence">3</field>
+        <field name="title">When is your date of birth ?</field>
         <field name="question_type">date</field>
         <field name="constr_mandatory" eval="False"/>
     </record>
     <record model="survey.question" id="survey_feedback_p1_q3">
-        <field name="page_id" ref="survey_feedback_p1"/>
-        <field name="sequence">3</field>
-        <field name="question">How frequently do you buy products online ?</field>
+        <field name="survey_id" ref="survey_feedback" />
+        <field name="sequence">4</field>
+        <field name="title">How frequently do you buy products online ?</field>
         <field name="question_type">simple_choice</field>
         <field name="display_mode">dropdown</field>
         <field name="comments_allowed" eval="True"/>
@@ -71,25 +72,26 @@
         <field name="value">Other (answer in comment)</field>
     </record>
     <record model="survey.question" id="survey_feedback_p1_q4">
-        <field name="page_id" ref="survey_feedback_p1"/>
-        <field name="sequence">4</field>
-        <field name="question">How many times did you order products on our website ?</field>
+        <field name="survey_id" ref="survey_feedback" />
+        <field name="sequence">5</field>
+        <field name="title">How many times did you order products on our website ?</field>
         <field name="question_type">numerical_box</field>
         <field name="constr_mandatory" eval="True"/>
     </record>
 
     <!-- Page 2 -->
-    <record model="survey.page" id="survey_feedback_p2">
+    <record model="survey.question" id="survey_feedback_p2">
         <field name="title">About our ecommerce</field>
         <field name="survey_id" ref="survey_feedback" />
-        <field name="sequence">2</field>
+        <field name="sequence">6</field>
+        <field name="is_page" eval="True" />
         <field name="description" type="html">
 <p>This section is about our eCommerce experience itself.</p></field>
     </record>
     <record model="survey.question" id="survey_feedback_p2_q1">
-        <field name="page_id" ref="survey_feedback_p2"/>
-        <field name="sequence">1</field>
-        <field name="question">Which of the following words would you use to describe our products ?</field>
+        <field name="survey_id" ref="survey_feedback" />
+        <field name="sequence">7</field>
+        <field name="title">Which of the following words would you use to describe our products ?</field>
         <field name="question_type">multiple_choice</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="comments_allowed" eval="True"/>
@@ -141,9 +143,9 @@
         <field name="value">Other</field>
     </record>
     <record model="survey.question" id="survey_feedback_p2_q2">
-        <field name="page_id" ref="survey_feedback_p2"/>
-        <field name="sequence">2</field>
-        <field name="question">What do your think about our new eCommerce ?</field>
+        <field name="survey_id" ref="survey_feedback" />
+        <field name="sequence">8</field>
+        <field name="title">What do your think about our new eCommerce ?</field>
         <field name="question_type">matrix</field>
         <field name="matrix_subtype">multiple</field>
         <field name="constr_mandatory" eval="True"/>
@@ -194,9 +196,9 @@
         <field name="value">I have added products to my wishlist</field>
     </record>
     <record model="survey.question" id="survey_feedback_p2_q3">
-        <field name="page_id" ref="survey_feedback_p2"/>
-        <field name="sequence">3</field>
-        <field name="question">Do you have any other comments, questions, or concerns ?</field>
+        <field name="survey_id" ref="survey_feedback" />
+        <field name="sequence">9</field>
+        <field name="title">Do you have any other comments, questions, or concerns ?</field>
         <field name="question_type">free_text</field>
         <field name="constr_mandatory" eval="False"/>
     </record>

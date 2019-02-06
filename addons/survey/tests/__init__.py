@@ -7,3 +7,4 @@ from . import test_survey_flow
 from . import test_survey_invite
 from . import test_survey_security
 from . import test_survey_ui
+from . import test_survey_compute_pages_questions
