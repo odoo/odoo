@@ -4139,7 +4139,7 @@ var BasicModel = AbstractModel.extend({
                     }
                 } else {
                     dataPoint = self._makeDataPoint({
-                        context: list.context,
+                        context: list.getContext(),
                         data: data,
                         fieldsInfo: list.fieldsInfo,
                         fields: list.fields,
