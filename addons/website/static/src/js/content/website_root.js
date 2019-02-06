@@ -16,6 +16,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
         'click .js_publish_management .js_publish_btn': '_onPublishBtnClick',
         'click .js_multi_website_switch': '_onWebsiteSwitch',
         'click .js_multi_company_switch': '_onCompanySwitch',
+        'shown.bs.modal': '_onModalShown',
     }),
     custom_events: _.extend({}, publicRootData.PublicRoot.prototype.custom_events || {}, {
         'ready_to_clean_for_save': '_onAnimationStopDemand',
@@ -166,6 +167,13 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
         }).then(function () {
             window.location.reload(true);
         });
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onModalShown: function (ev) {
+        $(ev.target).addClass('modal_shown');
     },
 });
 
