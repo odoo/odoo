@@ -5,6 +5,7 @@ from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields
+from odoo.exceptions import UserError
 
 from odoo.tests import common, new_test_user
 from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
@@ -117,3 +118,19 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         })
         holiday.sudo().action_validate()
         self.assertEquals(len(holiday.timesheet_ids), 0, 'Number of generated timesheets should be zero since the leave type does not generate timesheet')
+
+    def test_error_on_modification(self):
+        """Timesheets generated from leaves should not be modifiable by user"""
+        number_of_days = (self.leave_end_datetime - self.leave_start_datetime).days
+        holiday = self.Requests.sudo(self.user_employee.id).create({
+            'name': 'Leave 1',
+            'employee_id': self.empl_employee.id,
+            'holiday_status_id': self.hr_leave_type_with_ts.id,
+            'date_from': self.leave_start_datetime,
+            'date_to': self.leave_end_datetime,
+            'number_of_days': number_of_days,
+        })
+        holiday.sudo().action_validate()
+
+        with self.assertRaises(UserError):
+            holiday.timesheet_ids[0].unit_amount = 4
