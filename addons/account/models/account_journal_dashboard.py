@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from babel.dates import format_datetime, format_date
 
 from odoo import models, api, _, fields
+from odoo.osv import expression
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, safe_eval
 from odoo.tools.misc import formatLang
@@ -374,7 +375,7 @@ class account_journal(models.Model):
         if not self.env.context.get('use_domain'):
             ctx['search_default_journal_id'] = self.id
         action['context'] = ctx
-        action['domain'] = self._context.get('use_domain', [])
+        action['domain'] = expression.AND([self._context.get('use_domain', []), [('journal_id', '=', self.id)]])
         account_invoice_filter = self.env.ref('account.view_account_invoice_filter', False)
         if action_name in ['action_invoice_tree1', 'action_vendor_bill_template']:
             action['search_view_id'] = account_invoice_filter and account_invoice_filter.id or False
