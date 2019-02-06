@@ -53,7 +53,7 @@ class ResourceMixin(models.AbstractModel):
         default['resource_calendar_id'] = resource.calendar_id.id
         return super(ResourceMixin, self).copy_data(default)
 
-    def _get_work_days_data(self, from_datetime, to_datetime, compute_leaves=True, calendar=None, domain=None):
+    def _get_work_days_data(self, from_datetime, to_datetime, compute_leaves=True, calendar=None, domain=None, exclude_global_leaves=False):
         """
             By default the resource calendar is used, but it can be
             changed using the `calendar` argument.
@@ -75,13 +75,13 @@ class ResourceMixin(models.AbstractModel):
 
         # actual hours per day
         if compute_leaves:
-            intervals = calendar._work_intervals(from_datetime, to_datetime, resource, domain)
+            intervals = calendar._work_intervals(from_datetime, to_datetime, resource, domain, exclude_global_leaves)
         else:
             intervals = calendar._attendance_intervals(from_datetime, to_datetime, resource)
 
         return calendar._get_days_data(intervals, day_total)
 
-    def _get_leave_days_data(self, from_datetime, to_datetime, calendar=None, domain=None):
+    def _get_leave_days_data(self, from_datetime, to_datetime, calendar=None, domain=None, exclude_global_leaves=False):
         """
             By default the resource calendar is used, but it can be
             changed using the `calendar` argument.
@@ -104,10 +104,13 @@ class ResourceMixin(models.AbstractModel):
         # compute actual hours per day
         attendances = calendar._attendance_intervals(from_datetime, to_datetime, resource)
         leaves = calendar._leave_intervals(from_datetime, to_datetime, resource, domain)
+        if exclude_global_leaves:
+            global_leaves = calendar._leave_intervals(from_datetime, to_datetime, None, domain)
+            leaves = leaves - global_leaves
 
         return calendar._get_days_data(attendances & leaves, day_total)
 
-    def list_work_time_per_day(self, from_datetime, to_datetime, calendar=None, domain=None):
+    def list_work_time_per_day(self, from_datetime, to_datetime, calendar=None, domain=None, exclude_global_leaves=False):
         """
             By default the resource calendar is used, but it can be
             changed using the `calendar` argument.
@@ -127,7 +130,7 @@ class ResourceMixin(models.AbstractModel):
         if not to_datetime.tzinfo:
             to_datetime = to_datetime.replace(tzinfo=utc)
 
-        intervals = calendar._work_intervals(from_datetime, to_datetime, resource, domain)
+        intervals = calendar._work_intervals(from_datetime, to_datetime, resource, domain, exclude_global_leaves)
         result = defaultdict(float)
         for start, stop, meta in intervals:
             result[start.date()] += (stop - start).total_seconds() / 3600

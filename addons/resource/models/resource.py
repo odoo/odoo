@@ -395,10 +395,15 @@ class ResourceCalendar(models.Model):
 
         return Intervals(result)
 
-    def _work_intervals(self, start_dt, end_dt, resource=None, domain=None):
+    def _work_intervals(self, start_dt, end_dt, resource=None, domain=None, exclude_global_leaves=False):
         """ Return the effective work intervals between the given datetimes. """
-        return (self._attendance_intervals(start_dt, end_dt, resource) -
-                self._leave_intervals(start_dt, end_dt, resource, domain))
+        attendance = self._attendance_intervals(start_dt, end_dt, resource)
+        leaves = self._leave_intervals(start_dt, end_dt, resource, domain)
+        if exclude_global_leaves:
+            global_leaves = self._leave_intervals(start_dt, end_dt, None, domain)
+            leaves = leaves - global_leaves
+
+        return attendance - leaves
 
     # --------------------------------------------------
     # Private Methods / Helpers
@@ -443,7 +448,7 @@ class ResourceCalendar(models.Model):
     # External API
     # --------------------------------------------------
 
-    def get_work_hours_count(self, start_dt, end_dt, compute_leaves=True, domain=None):
+    def get_work_hours_count(self, start_dt, end_dt, compute_leaves=True, domain=None, exclude_global_leaves=False):
         """
             `compute_leaves` controls whether or not this method is taking into
             account the global leaves.
@@ -460,7 +465,7 @@ class ResourceCalendar(models.Model):
             end_dt = end_dt.replace(tzinfo=utc)
 
         if compute_leaves:
-            intervals = self._work_intervals(start_dt, end_dt, domain=domain)
+            intervals = self._work_intervals(start_dt, end_dt, domain=domain, exclude_global_leaves=exclude_global_leaves)
         else:
             intervals = self._attendance_intervals(start_dt, end_dt)
 
