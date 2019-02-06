@@ -95,12 +95,16 @@
                         <page string="Answers">
                             <field name="validation_email" attrs="{'invisible': [('question_type', '!=', 'textbox')]}"/>
                             <label for="validation_email" attrs="{'invisible': [('question_type', '!=', 'textbox')]}"/>
+                            <field name="page_id" invisible="1" required="0"/>
+                            <field name="survey_id" invisible="1" readonly="1"/>
+                            <field name="scoring_type" invisible="1"/>
                             <separator />
                             <field name="labels_ids" string="Type of answers" context="{'default_question_id': active_id}" attrs="{'invisible': [('question_type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="value" string="Choices"/>
-                                    <field name="quizz_mark" groups="base.group_no_one"/>
+                                    <field name="is_correct" attrs="{'column_invisible': ['|', ('parent.scoring_type', '=', 'no_scoring'), ('parent.question_type', '=', 'matrix')]}"/>
+                                    <field name="answer_score" attrs="{'column_invisible': ['|', ('parent.scoring_type', '=', 'no_scoring'), ('parent.question_type', '=', 'matrix')]}"/>
                                 </tree>
                             </field>
                             <separator />
@@ -204,7 +208,7 @@
                 <field name="question_id"/>
                 <field name="question_id_2"/>
                 <field name="value"/>
-                <field name="quizz_mark" groups="base.group_no_one"/>
+                <field name="answer_score" groups="base.group_no_one"/>
             </tree>
         </field>
     </record>

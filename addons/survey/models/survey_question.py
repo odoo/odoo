@@ -54,6 +54,7 @@ class SurveyQuestion(models.Model):
     survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade')
     page_id = fields.Many2one('survey.question', string='Page', compute="_compute_page_id", store=True)
     question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_question_ids")
+    scoring_type = fields.Selection(related='survey_id.scoring_type', string='Scoring Type', readonly=True)
     sequence = fields.Integer('Sequence', default=10)
     # Question
     is_page = fields.Boolean('Is a page?')
@@ -350,6 +351,11 @@ class SurveyQuestion(models.Model):
         self.ensure_one()
         return list(self.survey_id.question_and_page_ids).index(self)
 
+    def get_correct_answer_ids(self):
+        self.ensure_one()
+
+        return self.labels_ids.filtered(lambda label: label.is_correct)
+
 class SurveyLabel(models.Model):
     """ A suggested answer for a question """
     _name = 'survey.label'
@@ -361,7 +367,9 @@ class SurveyLabel(models.Model):
     question_id_2 = fields.Many2one('survey.question', string='Question 2', ondelete='cascade')
     sequence = fields.Integer('Label Sequence order', default=10)
     value = fields.Char('Suggested value', translate=True, required=True)
-    quizz_mark = fields.Float('Score for this choice', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
+    is_correct = fields.Boolean('Is a correct answer')
+    answer_score = fields.Float('Score for this choice',
+    help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
 
     @api.one
     @api.constrains('question_id', 'question_id_2')
