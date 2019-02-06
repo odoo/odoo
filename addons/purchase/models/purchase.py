@@ -5,6 +5,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare
 from odoo.exceptions import UserError, AccessError
@@ -136,7 +137,7 @@ class PurchaseOrder(models.Model):
         domain = []
         if name:
             domain = ['|', ('name', operator, name), ('partner_ref', operator, name)]
-        purchase_order_ids = self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
+        purchase_order_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return self.browse(purchase_order_ids).name_get()
 
     @api.multi

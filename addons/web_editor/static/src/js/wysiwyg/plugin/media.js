@@ -162,8 +162,10 @@ var MediaPlugin = AbstractPlugin.extend({
                 this.context.invoke('editor.clearTarget');
                 var start = previous.parentNode;
                 rng = this.context.invoke('editor.setRange', start, _.indexOf(start.childNodes, previous));
-                if (previous.tagName === "IMG" && newMedia.tagName === "IMG") {
-                    $(newMedia).addClass(previous.className);
+                if (previous.tagName === newMedia.tagName) {
+                    // Eg: replace an image with an image -> reapply classes removed by `clear`
+                    var reFaIcons = /fa-(?!spin(\s|$))\S+/g; // do not keep fontawesome icons but keep fa-spin
+                    $(newMedia).addClass(previous.className.replace(reFaIcons, ''));
                 }
 
                 if (dom.isVideo(previous) || dom.isVideo(newMedia)) {

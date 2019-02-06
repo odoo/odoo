@@ -224,6 +224,7 @@ class Users(models.Model):
              "a change of password, the user has to login again.")
     signature = fields.Html()
     active = fields.Boolean(default=True)
+    active_partner = fields.Boolean(related='partner_id.active', readonly=True, string="Partner is Active")
     action_id = fields.Many2one('ir.actions.actions', string='Home Action',
         help="If specified, this action will be opened at log on for this user, in addition to the standard menu.")
     groups_id = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=_default_groups)
@@ -503,13 +504,14 @@ class Users(models.Model):
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        if args is None:
-            args = []
-        user_ids = []
-        if name and operator in ['=', 'ilike']:
-            user_ids = self._search([('login', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        args = args or []
+        if operator == 'ilike' and not (name or '').strip():
+            domain = []
+        else:
+            domain = [('login', '=', name)]
+        user_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         if not user_ids:
-            user_ids = self._search([('name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
+            user_ids = self._search(expression.AND([[('name', operator, name)], args]), limit=limit, access_rights_uid=name_get_uid)
         return self.browse(user_ids).name_get()
 
     @api.multi

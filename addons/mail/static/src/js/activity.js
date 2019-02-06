@@ -214,6 +214,7 @@ var BasicActivity = AbstractField.extend({
     _openActivityForm: function (id, callback) {
         var action = {
             type: 'ir.actions.act_window',
+            name: _t("Schedule Activity"),
             res_model: 'mail.activity',
             view_mode: 'form',
             view_type: 'form',
@@ -333,7 +334,7 @@ var BasicActivity = AbstractField.extend({
         var self = this;
         var $markDoneBtn = $(ev.currentTarget);
         var activityID = $markDoneBtn.data('activity-id');
-        var previousActivityTypeID = $markDoneBtn.data('previous-activity-type-id');
+        var previousActivityTypeID = $markDoneBtn.data('previous-activity-type-id') || false;
         var forceNextActivity = $markDoneBtn.data('force-next-activity');
 
         if ($markDoneBtn.data('toggle') == 'collapse') {

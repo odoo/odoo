@@ -2,14 +2,8 @@ odoo.define('website.translateMenu', function (require) {
 'use strict';
 
 var utils = require('web.utils');
-var wContext = require('website.context');
 var TranslatorMenu = require('website.editor.menu.translate');
 var websiteNavbarData = require('website.navbar');
-
-var ctx = wContext.getExtra();
-if (!ctx.translatable) {
-    return;
-}
 
 var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     actions: _.extend({}, websiteNavbarData.WebsiteNavbar.prototype.actions || {}, {
@@ -21,7 +15,15 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @override
      */
     start: function () {
-        if (ctx.edit_translations) {
+        var context;
+        this.trigger_up('context_get', {
+            extra: true,
+            callback: function (ctx) {
+                context = ctx;
+            },
+        });
+        this._mustEditTranslations = context.edit_translations;
+        if (this._mustEditTranslations) {
             this._startTranslateMode();
         }
         return this._super.apply(this, arguments);
@@ -63,7 +65,7 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @returns {Deferred}
      */
     _startTranslateMode: function () {
-        if (!ctx.edit_translations) {
+        if (!this._mustEditTranslations) {
             window.location.search += '&edit_translations';
             return $.Deferred();
         }
@@ -72,5 +74,5 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     },
 });
 
-websiteNavbarData.websiteNavbarRegistry.add(TranslatePageMenu, '.o_menu_systray');
+websiteNavbarData.websiteNavbarRegistry.add(TranslatePageMenu, '.o_menu_systray:has([data-action="translate"])');
 });

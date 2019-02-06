@@ -119,7 +119,7 @@ class WebsitePublishedMixin(models.AbstractModel):
     _description = 'Website Published Mixin'
 
     website_published = fields.Boolean('Visible on current website', related='is_published', readonly=False)
-    is_published = fields.Boolean('Is published')
+    is_published = fields.Boolean('Is published', copy=False)
     website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
 
     @api.multi

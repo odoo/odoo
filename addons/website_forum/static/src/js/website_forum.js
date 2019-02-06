@@ -2,7 +2,6 @@ odoo.define('website_forum.website_forum', function (require) {
 'use strict';
 
 var core = require('web.core');
-var wContext = require('website.context');
 var Wysiwyg = require('web_editor.wysiwyg');
 var sAnimations = require('website.content.snippets.animation');
 var session = require('web.session');
@@ -138,7 +137,7 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
                 toolbar: toolbar,
                 styleWithSpan: false,
                 recordInfo: {
-                    context: wContext.get(),
+                    context: self._getContext(),
                     res_model: 'forum.post',
                     res_id: +window.location.pathname.split('-').pop(),
                 },

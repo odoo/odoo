@@ -6,16 +6,21 @@ from odoo.http import request
 
 class Web_Editor(Web_Editor):
 
-    def save_scss_view_hook(self):
-        res = super(Web_Editor, self).save_scss_view_hook()
+    def _get_view_fields_to_read(self):
+        res = super(Web_Editor, self)._get_view_fields_to_read()
+        res.append('website_id')
+        return res
+
+    def save_scss_or_js_view_hook(self):
+        res = super(Web_Editor, self).save_scss_or_js_view_hook()
 
         website = request.env['website'].get_current_website()
         if website:
             res['website_id'] = website.id
         return res
 
-    def save_scss_attachment_hook(self):
-        res = super(Web_Editor, self).save_scss_attachment_hook()
+    def save_scss_or_js_attachment_hook(self):
+        res = super(Web_Editor, self).save_scss_or_js_attachment_hook()
 
         website = request.env['website'].get_current_website()
         if website:

@@ -48,14 +48,14 @@ class account_abstract_payment(models.AbstractModel):
     payment_method_code = fields.Char(related='payment_method_id.code',
         help="Technical field used to adapt the interface to the payment type selected.", readonly=True)
 
-    partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')])
-    partner_id = fields.Many2one('res.partner', string='Partner')
+    partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')], tracking=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', tracking=True)
 
-    amount = fields.Monetary(string='Payment Amount', required=True)
+    amount = fields.Monetary(string='Payment Amount', required=True, tracking=True)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.user.company_id.currency_id)
-    payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False)
+    payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False, tracking=True)
     communication = fields.Char(string='Memo')
-    journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])
+    journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True, tracking=True, domain=[('type', 'in', ('bank', 'cash'))])
 
     hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
         help="Technical field used to hide the payment method if the selected journal has only one available which is 'manual'")
@@ -324,7 +324,7 @@ class account_register_payments(models.TransientModel):
         pmt_communication = self.show_communication_field and self.communication \
                             or self.group_invoices and ' '.join([inv.reference or inv.number for inv in invoices]) \
                             or invoices[0].reference # in this case, invoices contains only one element, since group_invoices is False
-        return {
+        values = {
             'journal_id': self.journal_id.id,
             'payment_method_id': self.payment_method_id.id,
             'payment_date': self.payment_date,
@@ -337,7 +337,12 @@ class account_register_payments(models.TransientModel):
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
             'partner_bank_account_id': bank_account.id,
             'multi': False,
+            'payment_difference_handling': self.payment_difference_handling,
+            'writeoff_account_id': self.writeoff_account_id.id,
+            'writeoff_label': self.writeoff_label,
         }
+
+        return values
 
     @api.multi
     def get_payments_vals(self):
@@ -388,6 +393,10 @@ class account_payment(models.Model):
     _order = "payment_date desc, name desc"
 
     @api.multi
+    def name_get(self):
+        return [(payment.id, payment.name or _('Draft Payment')) for payment in self]
+
+    @api.multi
     @api.depends('move_line_ids.reconciled')
     def _get_move_reconciled(self):
         for payment in self:
@@ -429,6 +438,8 @@ class account_payment(models.Model):
             if move_line.account_id.reconcile:
                 move_line_id = move_line.id
                 break;
+        if not self.partner_id:
+            raise UserError(_("Payments without a customer can't be matched"))
         action_context = {'company_ids': [self.company_id.id], 'partner_ids': [self.partner_id.commercial_partner_id.id]}
         if self.partner_type == 'customer':
             action_context.update({'mode': 'customers'})

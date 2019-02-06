@@ -157,11 +157,11 @@ class AccountAnalyticAccount(models.Model):
         if operator not in ('ilike', 'like', '=', '=like', '=ilike'):
             return super(AccountAnalyticAccount, self)._name_search(name, args, operator, limit, name_get_uid=name_get_uid)
         args = args or []
-        domain = ['|', ('code', operator, name), ('name', operator, name)]
-        partners_ids = self.env['res.partner']._search([('name', operator, name)], access_rights_uid=name_get_uid)
-        if partners_ids:
-            domain = ['|'] + domain + [('partner_id', 'in', partners_ids)]
-        analytic_account_ids = self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
+        if operator == 'ilike' and not (name or '').strip():
+            domain = []
+        else:
+            domain = ['|', '|', ('code', operator, name), ('name', operator, name), ('partner_id.name', operator, name)]
+        analytic_account_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return self.browse(analytic_account_ids).name_get()
 
 

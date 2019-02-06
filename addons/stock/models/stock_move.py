@@ -1095,7 +1095,7 @@ class StockMove(models.Model):
         # this operation could trigger a merge of moves.
         for move in moves:
             if move.quantity_done <= 0:
-                if float_compare(move.product_uom_qty, 0.0, precision_rounding=move.product_uom.rounding) == 0:
+                if float_compare(move.product_uom_qty, 0.0, precision_rounding=move.product_uom.rounding) == 0 or cancel_backorder:
                     move._action_cancel()
 
         # Create extra moves where necessary

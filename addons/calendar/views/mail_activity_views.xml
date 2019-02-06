@@ -13,7 +13,7 @@
                   <attribute name="attrs">{'invisible': [('activity_category', '=', 'meeting')]}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_close_dialog']" position="attributes">
-                  <attribute name="attrs">{'invisible': [('activity_category', '=', 'meeting')]}</attribute>
+                  <attribute name="attrs">{'invisible': ['|', ('activity_category', '=', 'meeting'), ('id', '!=', False)]}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_done']" position="attributes">
                   <attribute name="attrs">{'invisible': ['|', ('activity_category', '=', 'meeting'), ('force_next', '=', True)]}</attribute>

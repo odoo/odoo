@@ -55,7 +55,10 @@ return Widget.extend({
             }
         });
         this.$input.on('keypress', function (ev) {
-            self.search_string = self.search_string + String.fromCharCode(ev.which);
+            if (ev.which > 31 && ev.which !== 127) {
+                // we filter control character out of the search string
+                self.search_string = self.search_string + String.fromCharCode(ev.which);
+            }
             if (self.search_string.length) {
                 self.searching = true;
                 var search_string = self.search_string;

@@ -6,11 +6,13 @@
             <field name="name">Time Off Approval</field>
             <field name="icon">fa-sun-o</field>
             <field name="res_model_id" ref="hr_holidays.model_hr_leave"/>
+            <field name="is_master_data">True</field>
         </record>
         <record id="mail_act_leave_second_approval" model="mail.activity.type">
             <field name="name">Time Off Second Approve</field>
             <field name="icon">fa-sun-o</field>
             <field name="res_model_id" ref="hr_holidays.model_hr_leave"/>
+            <field name="is_master_data">True</field>
         </record>
 
         <!-- Leave specific activities -->
@@ -18,11 +20,13 @@
             <field name="name">Allocation Approval</field>
             <field name="icon">fa-sun-o</field>
             <field name="res_model_id" ref="hr_holidays.model_hr_leave_allocation"/>
+            <field name="is_master_data">True</field>
         </record>
         <record id="mail_act_leave_allocation_second_approval" model="mail.activity.type">
             <field name="name">Allocation Second Approve</field>
             <field name="icon">fa-sun-o</field>
             <field name="res_model_id" ref="hr_holidays.model_hr_leave_allocation"/>
+            <field name="is_master_data">True</field>
         </record>
 
         <!-- Holidays-related subtypes for messaging / Chatter -->

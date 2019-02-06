@@ -16,6 +16,7 @@ var ControlPanelController = mvc.Controller.extend({
         new_groupBy: '_onNewGroupBy',
         activate_time_range: '_onActivateTimeRange',
         autocompletion_filter: '_onAutoCompletionFilter',
+        reload: '_onReload',
     },
 
     /**
@@ -228,6 +229,14 @@ var ControlPanelController = mvc.Controller.extend({
         ev.stopPropagation();
         this.model.createNewGroupBy(ev.data);
         this._reportNewQueryAndRender();
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onReload: function (ev) {
+        ev.stopPropagation();
+        this.trigger_up('search', this.model.getQuery());
     },
 });
 

@@ -3106,7 +3106,7 @@ var keyboardTestsBackspace = [{
         }],
         test: {
             content: '<table class="table table-bordered"><tbody><tr><td><p>dom not to edit</p></td><td><p><br></p></td></tr></tbody></table>',
-            start: "p:eq(1)->0",
+            start: "p:eq(1):contents()[0]->0",
         },
     },
     {
