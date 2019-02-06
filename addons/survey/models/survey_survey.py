@@ -6,6 +6,7 @@ import uuid
 from collections import Counter, OrderedDict
 from itertools import product
 from werkzeug import urls
+import random
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import UserError
@@ -31,24 +32,36 @@ class Survey(models.Model):
     description = fields.Html("Description", translate=True, help="A long description of the purpose of the survey")
     color = fields.Integer('Color Index', default=0)
     thank_you_message = fields.Html("Thanks Message", translate=True, help="This message will be displayed when survey is completed")
-    quizz_mode = fields.Boolean("Quizz Mode")
     active = fields.Boolean("Active", default=True)
+    question_and_page_ids = fields.One2many('survey.question', 'survey_id', string='Sections and Questions', copy=True)
+    page_ids = fields.One2many('survey.question', string='Pages', compute="_compute_page_and_question_ids")
+    question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_page_and_question_ids")
     stage_id = fields.Many2one('survey.stage', string="Stage", default=lambda self: self._get_default_stage_id(),
                                ondelete="restrict", copy=False, group_expand='_read_group_stage_ids')
     is_closed = fields.Boolean("Is closed", related='stage_id.closed', readonly=True)
+    questions_layout = fields.Selection([
+        ('one_page', 'One page with all the questions'),
+        ('page_per_section', 'One page per section'),
+        ('page_per_question', 'One page per question')],
+        string="Layout", required=True, default='one_page')
+    questions_selection = fields.Selection([
+        ('all', 'All questions'),
+        ('random', 'Randomized per section')],
+        string="Selection", required=True, default='all',
+        help="If randomized is selected, add the number of random questions next to the section.")
+
     category = fields.Selection([
         ('default', 'Generic Survey')], string='Category',
         default='default', required=True,
         help='Category is used to know in which context the survey is used. Various apps may define their own categories when they use survey like jobs recruitment or employee appraisal surveys.')
     # content
-    page_ids = fields.One2many('survey.page', 'survey_id', string='Pages', copy=True)
     user_input_ids = fields.One2many('survey.user_input', 'survey_id', string='User responses', readonly=True, groups='survey.group_survey_user')
     # security / access
     access_mode = fields.Selection([
         ('public', 'Anyone with the link'),
         ('token', 'Invited people only')], string='Access Mode',
         default='public', required=True)
-    access_token = fields.Char('Access Token', default=lambda self: self._get_default_access_token())
+    access_token = fields.Char('Access Token', default=lambda self: self._get_default_access_token(), copy=False)
     users_login_required = fields.Boolean('Login required', help="If checked, users have to login before answering even with a valid token.")
     users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
     users_can_signup = fields.Boolean('Users can signup', compute='_compute_users_can_signup')
@@ -58,8 +71,29 @@ class Survey(models.Model):
     answer_count = fields.Integer("Started", compute="_compute_survey_statistic")
     answer_done_count = fields.Integer("Completed", compute="_compute_survey_statistic")
 
+    # scoring and certification fields
+    scoring_type = fields.Selection([
+        ('no_scoring', 'No scoring'),
+        ('scoring_with_answers', 'Scoring with answers at the end'),
+        ('scoring_without_answers', 'Scoring without answers at the end')],
+        string="Scoring", required=True, default='no_scoring')
+    passing_score = fields.Float('Passing score (%)', required=True, default=80.0)
+    is_attempts_limited = fields.Boolean('Limited number of attempts',
+        help="Check this option if you want to limit the number of attempts per user")
+    attempts_limit = fields.Integer('Number of attempts', default=1)
+    is_time_limited = fields.Boolean('The survey is limited in time')
+    time_limit = fields.Float("Time limit (minutes)")
+    certificate = fields.Boolean('Certificate')
+    certification_mail_template_id = fields.Many2one(
+        'mail.template', 'Certification Email Template',
+        domain="[('model', '=', 'survey.user_input')]",
+        help="Automated email sent to the user when he succeeds the certification, containing his certification document.")
+
     _sql_constraints = [
-        ('access_token_unique', 'unique(access_token)', 'Access token should be unique')
+        ('access_token_unique', 'unique(access_token)', 'Access token should be unique'),
+        ('certificate_check', "CHECK( scoring_type!='no_scoring' OR certificate=False )", 'You can only create certifications for surveys that have a scoring mechanism.'),
+        ('time_limit_check', "CHECK( (is_time_limited=False) OR (time_limit is not null AND time_limit > 0) )", 'The time limit needs to be a positive number if the survey is time limited.'),
+        ('attempts_limit_check', "CHECK( (is_attempts_limited=False) OR (attempts_limit is not null AND attempts_limit > 0) )", 'The attempts limit needs to be a positive number if the survey has a limited number of attempts.')
     ]
 
     @api.multi
@@ -91,6 +125,37 @@ class Survey(models.Model):
         for survey in self:
             survey.public_url = urls.url_join(base_url, "survey/start/%s" % (survey.access_token))
 
+    @api.depends('question_and_page_ids')
+    def _compute_page_and_question_ids(self):
+        for survey in self:
+            survey.page_ids = survey.question_and_page_ids.filtered(lambda question: question.is_page)
+            survey.question_ids = survey.question_and_page_ids - survey.page_ids
+
+    @api.onchange('passing_score')
+    def _onchange_passing_score(self):
+        if self.passing_score < 0 or self.passing_score > 100:
+            self.passing_score = 80.0
+
+    @api.onchange('scoring_type')
+    def _onchange_scoring_type(self):
+        if self.scoring_type != 'no_scoring':
+            self.certificate = False
+
+    @api.onchange('users_login_required', 'access_mode')
+    def _onchange_access_mode(self):
+        if self.access_mode == 'public' and not self.users_login_required:
+            self.is_attempts_limited = False
+
+    @api.onchange('attempts_limit')
+    def _onchange_attempts_limit(self):
+        if self.attempts_limit <= 0:
+            self.attempts_limit = 1
+
+    @api.onchange('is_time_limited', 'time_limit')
+    def _onchange_time_limit(self):
+        if self.is_time_limited and (not self.time_limit or self.time_limit <= 0):
+            self.time_limit = 10
+
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
         """ Read group customization in order to display all the stages in the
@@ -106,7 +171,7 @@ class Survey(models.Model):
         return super(Survey, self).copy_data(default)
 
     @api.multi
-    def _create_answer(self, user=False, partner=False, email=False, test_entry=False, **additional_vals):
+    def _create_answer(self, user=False, partner=False, email=False, test_entry=False, check_attempts=True, **additional_vals):
         """ Main entry point to get a token back or create a new one. This method
         does check for current user access in order to explicitely validate
         security.
@@ -118,15 +183,17 @@ class Survey(models.Model):
         self.check_access_rights('read')
         self.check_access_rule('read')
 
-        tokens = self.env['survey.user_input']
+        answers = self.env['survey.user_input']
         for survey in self:
             if partner and not user and partner.user_ids:
                 user = partner.user_ids[0]
 
-            survey._check_answer_creation(user, partner, email, test_entry=test_entry)
+            invite_token = additional_vals.pop('invite_token', False)
+            survey._check_answer_creation(user, partner, email, test_entry=test_entry, check_attempts=check_attempts, invite_token=invite_token)
             answer_vals = {
                 'survey_id': survey.id,
                 'test_entry': test_entry,
+                'question_ids': [(6, 0, survey._prepare_answer_questions().ids)]
             }
             if user and not user._is_public():
                 answer_vals['partner_id'] = user.partner_id.id
@@ -137,13 +204,21 @@ class Survey(models.Model):
             else:
                 answer_vals['email'] = email
 
-            answer_vals.update(additional_vals)
-            tokens += tokens.create(answer_vals)
+            if invite_token:
+                answer_vals['invite_token'] = invite_token
+            elif survey.is_attempts_limited and survey.access_mode != 'public':
+                # attempts limited: create a new invite_token
+                # exception made for 'public' access_mode since the attempts pool is global because answers are
+                # created every time the user lands on '/start'
+                answer_vals['invite_token'] = self.env['survey.user_input']._generate_invite_token()
 
-        return tokens
+            answer_vals.update(additional_vals)
+            answers += answers.create(answer_vals)
+
+        return answers
 
     @api.multi
-    def _check_answer_creation(self, user, partner, email, test_entry=False):
+    def _check_answer_creation(self, user, partner, email, test_entry=False, check_attempts=True, invite_token=False):
         """ Ensure conditions to create new tokens are met. """
         self.ensure_one()
         if test_entry:
@@ -163,9 +238,11 @@ class Survey(models.Model):
                     raise UserError(_('Creating token for external people is not allowed for surveys requesting authentication.'))
             if self.access_mode == 'internal' and (not user or not user.has_group('base.group_user')):
                 raise UserError(_('Creating token for anybody else than employees is not allowed for internal surveys.'))
+            if check_attempts and not self._has_attempts_left(partner or (user and user.partner_id), email, invite_token):
+                raise UserError(_('No attempts left.'))
 
     @api.model
-    def next_page(self, user_input, page_id, go_back=False):
+    def next_page_or_question(self, user_input, page_or_question_id, go_back=False):
         """ The next page to display to the user, knowing that page_id is the id
             of the last displayed page.
 
@@ -183,27 +260,35 @@ class Survey(models.Model):
                 (doing this will probably cause a giant worm to eat her house)
         """
         survey = user_input.survey_id
-        pages = list(enumerate(survey.page_ids))
+
+        if survey.questions_layout == 'page_per_question' and survey.questions_selection == 'random':
+            pages_or_questions = list(enumerate(
+                user_input.question_ids
+            ))
+        else:
+            pages_or_questions = list(enumerate(
+                survey.question_ids if survey.questions_layout == 'page_per_question' else survey.page_ids
+            ))
 
         # First page
-        if page_id == 0:
-            return (pages[0][1], 0, len(pages) == 1)
+        if page_or_question_id == 0:
+            return (pages_or_questions[0][1], len(pages_or_questions) == 1)
 
-        current_page_index = pages.index(next(p for p in pages if p[1].id == page_id))
+        current_page_index = pages_or_questions.index(next(p for p in pages_or_questions if p[1].id == page_or_question_id))
 
         # All the pages have been displayed
-        if current_page_index == len(pages) - 1 and not go_back:
-            return (None, -1, False)
+        if current_page_index == len(pages_or_questions) - 1 and not go_back:
+            return (None, False)
         # Let's get back, baby!
         elif go_back and survey.users_can_go_back:
-            return (pages[current_page_index - 1][1], current_page_index - 1, False)
+            return (pages_or_questions[current_page_index - 1][1], False)
         else:
             # This will show the last page
-            if current_page_index == len(pages) - 2:
-                return (pages[current_page_index + 1][1], current_page_index + 1, True)
+            if current_page_index == len(pages_or_questions) - 2:
+                return (pages_or_questions[current_page_index + 1][1], True)
             # This will show a regular page
             else:
-                return (pages[current_page_index + 1][1], current_page_index + 1, False)
+                return (pages_or_questions[current_page_index + 1][1], False)
 
     @api.multi
     def filter_input_ids(self, filters, finished=False):
@@ -270,7 +355,7 @@ class Survey(models.Model):
         # Calculate and return statistics for choice
         if question.question_type in ['simple_choice', 'multiple_choice']:
             comments = []
-            answers = OrderedDict((label.id, {'text': label.value, 'count': 0, 'answer_id': label.id}) for label in question.labels_ids)
+            answers = OrderedDict((label.id, {'text': label.value, 'count': 0, 'answer_id': label.id, 'answer_score': label.answer_score}) for label in question.labels_ids)
             for input_line in input_lines:
                 if input_line.answer_type == 'suggestion' and answers.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     answers[input_line.value_suggested.id]['count'] += 1
@@ -427,3 +512,56 @@ class Survey(models.Model):
                     'search_default_invite': 1})
         action['context'] = ctx
         return action
+
+    @api.multi
+    def _has_attempts_left(self, partner, email, invite_token):
+        self.ensure_one()
+
+        if (self.access_mode != 'public' or self.users_login_required) and self.is_attempts_limited:
+            return self._get_number_of_attempts_lefts(partner, email, invite_token) > 0
+
+        return True
+
+    @api.multi
+    def _get_number_of_attempts_lefts(self, partner, email, invite_token):
+        """ Returns the number of attempts left. """
+        self.ensure_one()
+
+        domain = [
+            ('survey_id', '=', self.id),
+            ('test_entry', '=', False),
+            ('state', '=', 'done')
+        ]
+
+        if partner:
+            domain = expression.AND([domain, [('partner_id', '=', partner.id)]])
+        else:
+            domain = expression.AND([domain, [('email', '=', email)]])
+
+        if invite_token:
+            domain = expression.AND([domain, [('invite_token', '=', invite_token)]])
+
+        return self.attempts_limit - self.env['survey.user_input'].search_count(domain)
+
+    @api.multi
+    def _prepare_answer_questions(self):
+        """ Will generate the questions for a randomized survey.
+        It uses the random_questions_count of every sections of the survey to
+        pick a random number of questions and returns the merged recordset """
+        self.ensure_one()
+
+        questions = self.env['survey.question']
+
+        for page in self.page_ids:
+            if self.questions_selection == 'all':
+                questions |= page.question_ids
+            else:
+                if page.random_questions_count > 0 and len(page.question_ids) > page.random_questions_count:
+                    questions = questions.concat(*random.sample(page.question_ids, page.random_questions_count))
+                else:
+                    questions |= page.question_ids
+
+        if not questions:
+            questions = self.question_ids
+
+        return questions

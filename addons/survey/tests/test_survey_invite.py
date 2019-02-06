@@ -30,12 +30,15 @@ class TestSurveyInvite(common.SurveyCase):
             # no page
             self.env['survey.survey'].create({'title': 'Test survey'}),
             # no questions
-            self.env['survey.survey'].create({'title': 'Test survey', 'page_ids': [(0, 0, {'title': 'P0'})]}),
+            self.env['survey.survey'].create({'title': 'Test survey', 'question_and_page_ids': [(0, 0, {'is_page': True, 'title': 'P0', 'sequence': 1})]}),
             # closed
             self.env['survey.survey'].sudo(self.survey_manager).create({
                 'title': 'S0',
-                'stage_id': self.env['survey.stage'].search([('closed', '=', True)]).id,
-                'page_ids': [(0, 0, {'title': 'P0', 'question_ids': [(0, 0, {'question': 'Q0', 'question_type': 'free_text'})]})]
+                'stage_id': self.env['survey.stage'].search([('sequence', '=', 3)]).id,
+                'question_and_page_ids': [
+                    (0, 0, {'is_page': True, 'title': 'P0', 'sequence': 1}),
+                    (0, 0, {'title': 'Q0', 'sequence': 2, 'question_type': 'free_text'})
+                ]
             })
         ]
         for survey in surveys:

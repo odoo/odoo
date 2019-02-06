@@ -170,12 +170,23 @@ class SurveyInvite(models.TransientModel):
             if self.existing_mode == 'resend':
                 partners_done = existing_answers.mapped('partner_id')
                 emails_done = existing_answers.mapped('email')
-                answers |= existing_answers
+
+                # only add the last answer for each user of each type (partner_id & email)
+                # to have only one mail sent per user
+                for partner_done in partners_done:
+                    answers |= next(existing_answer for existing_answer in
+                        existing_answers.sorted(lambda answer: answer.create_date, reverse=True)
+                        if existing_answer.partner_id == partner_done)
+
+                for email_done in emails_done:
+                    answers |= next(existing_answer for existing_answer in
+                        existing_answers.sorted(lambda answer: answer.create_date, reverse=True)
+                        if existing_answer.email == email_done)
 
         for new_partner in partners - partners_done:
-            answers |= self.survey_id._create_answer(partner=new_partner, **self._get_answers_values())
+            answers |= self.survey_id._create_answer(partner=new_partner, check_attempts=False, **self._get_answers_values())
         for new_email in [email for email in emails if email not in emails_done]:
-            answers |= self.survey_id._create_answer(email=new_email, **self._get_answers_values())
+            answers |= self.survey_id._create_answer(email=new_email, check_attempts=False, **self._get_answers_values())
 
         return answers
 

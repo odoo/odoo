@@ -55,12 +55,11 @@
                     </group>
                     <field name="user_input_line_ids" mode="tree" attrs="{'readonly': False}">
                         <tree>
-                            <field name="page_id"/>
                             <field name="question_id"/>
                             <field name="answer_type"/>
                             <field name="skipped"/>
                             <field name="create_date"/>
-                            <field name="quizz_mark" groups="base.group_no_one"/>
+                            <field name="answer_score" groups="base.group_no_one"/>
                         </tree>
                     </field>
                 </sheet>
@@ -161,7 +160,7 @@
                         <field name="create_date"/>
                         <field name="answer_type"/>
                         <field name="skipped" />
-                        <field name="quizz_mark" groups="base.group_no_one"/>
+                        <field name="answer_score" groups="base.group_no_one"/>
                     </group>
                     <group>
                         <field name="value_text" colspan='2' attrs="{'invisible': [('answer_type','!=','text')]}"/>
@@ -182,12 +181,11 @@
             <tree string="Survey Answer Line" create="false">
                 <field name="survey_id"/>
                 <field name="user_input_id"/>
-                <field name="page_id"/>
                 <field name="question_id"/>
                 <field name="create_date"/>
                 <field name="answer_type"/>
                 <field name="skipped"/>
-                <field name="quizz_mark" groups="base.group_no_one"/>
+                <field name="answer_score" groups="base.group_no_one"/>
             </tree>
         </field>
     </record>
