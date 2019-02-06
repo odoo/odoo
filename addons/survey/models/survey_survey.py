@@ -33,6 +33,9 @@ class Survey(models.Model):
     thank_you_message = fields.Html("Thanks Message", translate=True, help="This message will be displayed when survey is completed")
     quizz_mode = fields.Boolean("Quizz Mode")
     active = fields.Boolean("Active", default=True)
+    question_and_page_ids = fields.One2many('survey.question', 'survey_id', string='Pages and Questions', copy=True)
+    page_ids = fields.One2many('survey.question', string='Pages', compute="_compute_page_and_question_ids")
+    question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_page_and_question_ids")
     stage_id = fields.Many2one('survey.stage', string="Stage", default=lambda self: self._get_default_stage_id(),
                                ondelete="restrict", copy=False, group_expand='_read_group_stage_ids')
     is_closed = fields.Boolean("Is closed", related='stage_id.closed', readonly=True)
@@ -41,7 +44,6 @@ class Survey(models.Model):
         default='default', required=True,
         help='Category is used to know in which context the survey is used. Various apps may define their own categories when they use survey like jobs recruitment or employee appraisal surveys.')
     # content
-    page_ids = fields.One2many('survey.page', 'survey_id', string='Pages', copy=True)
     user_input_ids = fields.One2many('survey.user_input', 'survey_id', string='User responses', readonly=True, groups='survey.group_survey_user')
     # security / access
     access_mode = fields.Selection([
@@ -90,6 +92,12 @@ class Survey(models.Model):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for survey in self:
             survey.public_url = urls.url_join(base_url, "survey/start/%s" % (survey.access_token))
+
+    @api.depends('question_and_page_ids')
+    def _compute_page_and_question_ids(self):
+        for survey in self:
+            survey.page_ids = survey.question_and_page_ids.filtered(lambda question: question.is_page)
+            survey.question_ids = survey.question_and_page_ids - survey.page_ids
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):

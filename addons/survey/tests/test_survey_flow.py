@@ -52,21 +52,25 @@ class TestSurveyFlow(common.SurveyCase, HttpCase):
             })
 
             # First page is about customer data
-            page_0 = self.env['survey.page'].create({
+            page_0 = self.env['survey.question'].create({
+                'is_page': True,
+                'sequence': 1,
                 'title': 'Page1: Your Data',
                 'survey_id': survey.id,
             })
             page0_q0 = self._add_question(
                 page_0, 'What is your name', 'free_text',
                 comments_allowed=False,
-                constr_mandatory=True, constr_error_msg='Please enter your name')
+                constr_mandatory=True, constr_error_msg='Please enter your name', survey_id=survey.id)
             page0_q1 = self._add_question(
                 page_0, 'What is your age', 'numerical_box',
                 comments_allowed=False,
-                constr_mandatory=True, constr_error_msg='Please enter your name')
+                constr_mandatory=True, constr_error_msg='Please enter your name', survey_id=survey.id)
 
             # Second page is about tarte al djotte
-            page_1 = self.env['survey.page'].create({
+            page_1 = self.env['survey.question'].create({
+                'is_page': True,
+                'sequence': 4,
                 'title': 'Page2: Tarte Al Djotte',
                 'survey_id': survey.id,
             })
@@ -75,7 +79,7 @@ class TestSurveyFlow(common.SurveyCase, HttpCase):
                 labels=[{'value': 'The gras'},
                         {'value': 'The bette'},
                         {'value': 'The tout'},
-                        {'value': 'The regime is fucked up'}])
+                        {'value': 'The regime is fucked up'}], survey_id=survey.id)
 
         # fetch starting data to check only newly created data during this flow
         answers = self.env['survey.user_input'].search([('survey_id', '=', survey.id)])
@@ -95,12 +99,12 @@ class TestSurveyFlow(common.SurveyCase, HttpCase):
         self.assertEqual(len(answers), 1)
         answer_token = answers.token
         self.assertTrue(answer_token)
-        self.assertAnswer(answers, 'new', self.env['survey.page'])
+        self.assertAnswer(answers, 'new', self.env['survey.question'])
 
         # Customer begins survey with first page
         r = self._access_page(survey, answer_token)
         self.assertResponse(r, 200)
-        self.assertAnswer(answers, 'new', self.env['survey.page'])
+        self.assertAnswer(answers, 'new', self.env['survey.question'])
         csrf_token = self._find_csrf_token(r.text)
 
         # Customer submit first page answers
