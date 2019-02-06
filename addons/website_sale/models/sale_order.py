@@ -316,7 +316,8 @@ class SaleOrder(models.Model):
         try:
             default_template = self.env.ref('website_sale.mail_template_sale_cart_recovery', raise_if_not_found=False)
             default_template_id = default_template.id if default_template else False
-            template_id = self.website_id and self.website_id.cart_recovery_mail_template_id.id or default_template_id
+            template_id = (self.filtered('website_id') == self and
+                           self.mapped('website_id')[-1:1].cart_recovery_mail_template_id.id) or default_template_id
         except:
             template_id = False
         return {
