@@ -3,6 +3,7 @@ odoo.define('mail.Manager.Status', function (require) {
 
 var core = require('web.core');
 var MailManager = require('mail.Manager');
+var mailUtils = require('mail.utils');
 var QWeb = core.qweb;
 
 /**
@@ -33,8 +34,8 @@ MailManager.include({
             // Add to list to call it in next bus update or _fetchMissingImStatus
             this._imStatus[partnerID] = undefined;
             // fetch after some time if no other getImStatus occurs
-            this._clearStatusServiceTimeout(this._fetchStatusTimeout);
-            this._fetchStatusTimeout = this._setStatusServiceTimeout(function () {
+            mailUtils.clearTimeout(this._fetchStatusTimeout);
+            this._fetchStatusTimeout = mailUtils.setTimeout(function () {
                 self._fetchMissingImStatus();
             }, 500);
         }
@@ -67,15 +68,6 @@ MailManager.include({
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * A simple clearTimeout, useful for test
-     *
-     * @private
-     * @param {integer} ids
-     */
-    _clearStatusServiceTimeout: function (id) {
-        clearTimeout(id);
-    },
     /**
      * Fetch the list of im_status for partner with id in ids list and triggers
      * an update.
@@ -169,17 +161,6 @@ MailManager.include({
         });
     },
     /**
-     * A simple setTimeout, useful for test
-     *
-     * @private
-     * @param {function} func
-     * @param {integer} duration
-     * @return {integer}
-     */
-    _setStatusServiceTimeout: function (func, duration) {
-        return setTimeout(func, duration);
-    },
-    /**
      * Once initialised, this loop will update the im_status of registered
      * users.
      *
@@ -191,7 +172,7 @@ MailManager.include({
         if (!_.isNumber(counter)) {
             counter = 0;
         }
-        this._setStatusServiceTimeout(function () {
+        mailUtils.setTimeout(function () {
             if (counter >= self._UPDATE_INTERVAL && self._isTabFocused) {
                 self._fetchImStatus({ partnerIDs: self._getImStatusToUpdate() });
                 counter = 0;
