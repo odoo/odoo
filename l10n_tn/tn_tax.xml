@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Note : I set a sequence of 10 on all VAT taxes, because it is then
+     easier to create an eco-tax with a lower sequence (VAT applies on the
+     amount of the eco-tax)
+-->
+
+    <!-- Account Tags -->
+
+        <record id="tax_ACH-0_0" model="account.account.tag">
+            <field name="name">ACH-0.0</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_0_0" model="account.account.tag">
+            <field name="name">0.0</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_13_0" model="account.account.tag">
+            <field name="name">13.0</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_19" model="account.account.tag">
+            <field name="name">19</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+       <record id="tax_ACH-7" model="account.account.tag">
+            <field name="name">ACH-7</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_ACH-13_0" model="account.account.tag">
+            <field name="name">ACH-13_0</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_ACH-19" model="account.account.tag">
+            <field name="name">ACH-19</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_ACH-0_0_TTC" model="account.account.tag">
+            <field name="name">ACH-0.0-TTC</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_ACH-7_TTC" model="account.account.tag">
+            <field name="name">ACH-7_TTC</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_ACH-13_0_TTC" model="account.account.tag">
+            <field name="name">ACH-13.0-TTC</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_ACH-19_TTC" model="account.account.tag">
+            <field name="name">ACH-19-TTC</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+       <record id="tax_IMMO_0_0" model="account.account.tag">
+            <field name="name">IMMO-0.0</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_IMMO_7" model="account.account.tag">
+            <field name="name">IMMO_7</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_IMMO-13_0" model="account.account.tag">
+            <field name="name">IMMO-13.0</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_IMMO_19" model="account.account.tag">
+            <field name="name">IMMO-19</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_ACH_UE_due_0_0" model="account.account.tag">
+            <field name="name">ACH_UE_due-0.0</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_ACH_UE_due_7" model="account.account.tag">
+            <field name="name">ACH_UE_due-7</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_ACH_UE_due_13_0" model="account.account.tag">
+            <field name="name">ACH_UE_due-13.0</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_ACH_UE_due_19" model="account.account.tag">
+            <field name="name">ACH_UE_due-19</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_ACH_UE_ded_0_0" model="account.account.tag">
+            <field name="name">ACH_UE_ded.-0.0</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_ACH_UE_ded_7" model="account.account.tag">
+            <field name="name">ACH_UE_ded.-7</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_ACH_UE_ded_13_0" model="account.account.tag">
+            <field name="name">ACH_UE_ded.-13.0</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_ACH_UE_ded_19" model="account.account.tag">
+            <field name="name">ACH_UE_ded.-19</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_EXO_0" model="account.account.tag">
+            <field name="name">EXO-0</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_EXPORT_0" model="account.account.tag">
+            <field name="name">EXPORT-0</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_UE_0" model="account.account.tag">
+            <field name="name">UE-0</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_IMPORT_0" model="account.account.tag">
+            <field name="name">IMPORT-0</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tax_7" model="account.account.tag">
+            <field name="name">7</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+
+
+<!-- VENTES Tax excluded from price -->
+    <record model="account.tax.template" id="tva_normale">
+      <field name="chart_template_id" ref="l10n_tn_pcg_chart_template"/>
+      <field name="name">TVA collectée (vente) 0,0%</field>
+      <field name="description">0.0</field>
+      <field name="amount" eval="0.0"/>
+      <field name="amount_type">percent</field>
+      <field name="refund_account_id" ref="pcg_436711"/>
+      <field name="account_id" ref="pcg_436711"/>
+      <field name="sequence" eval="1"/>
+      <field name="type_tax_use">sale</field>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_tn.tax_0_0')])]"/>
+    </record>
+
+    <record model="account.tax.template" id="tva_specifique">
+      <field name="chart_template_id" ref="l10n_tn_pcg_chart_template"/>
+      <field name="name">TVA collectée (vente) 7%</field>
+      <field name="description">7</field>
+      <field name="amount" eval="7"/>
+      <field name="amount_type">percent</field>
+      <field name="refund_account_id" ref="pcg_43671101"/>
+      <field name="account_id" ref="pcg_43671101"/>
+      <field name="sequence" eval="10"/>
+      <field name="type_tax_use">sale</field>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_tn.tax_7')])]"/>
+    </record>
+
+    <record model="account.tax.template" id="tva_intermediaire">
+      <field name="chart_template_id" ref="l10n_tn_pcg_chart_template"/>
+      <field name="name">TVA collectée (vente) 13,0%</field>
+      <field name="description">13.0</field>
+      <field name="amount" eval="13.0"/>
+      <field name="amount_type">percent</field>
+      <field name="refund_account_id" ref="pcg_43671102"/>
+      <field name="account_id" ref="pcg_43671102"/>
+      <field name="sequence" eval="10"/>
+      <field name="type_tax_use">sale</field>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_tn.tax_13_0')])]"/>
+    </record>
+
+    <record model="account.tax.template" id="tva_reduite">
+      <field name="chart_template_id" ref="l10n_tn_pcg_chart_template"/>
+      <field name="name">TVA collectée (vente) 19%</field>
+      <field name="description">19</field>
+      <field name="amount" eval="19"/>
+      <field name="amount_type">percent</field>
+      <field name="refund_account_id" ref="pcg_43671103"/>
+      <field name="account_id" ref="pcg_43671103"/>
+      <field name="sequence" eval="10"/>
+      <field name="type_tax_use">sale</field>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_tn.tax_19')])]"/>
+    </record>
+
+<!-- ACHATS Tax excluded from price -->
+    <record model="account.tax.template" id="tva_acq_normale">
+      <field name="chart_template_id" ref="l10n_tn_pcg_chart_template"/>
+      <field name="name">TVA déductible (achat) 0,0%</field>
+      <field name="description">ACH-0.0</field>
+      <field name="amount" eval="0.0"/>
+      <field name="amount_type">percent</field>
+      <field name="refund_account_id" ref="pcg_43651"/>
+      <field name="account_id" ref="pcg_43651"/>
+      <field name="sequence" eval="1"/>
+      <field name="type_tax_use">purchase</field>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_tn.tax_ACH-0_0')])]"/>
+    </record>
+
+    <record model="account.tax.template" id="tva_acq_specifique">
+      <field name="chart_template_id" ref="l10n_tn_pcg_chart_template"/>
+      <field name="name">TVA déductible (achat) 7%</field>
+      <field name="description">ACH-7</field>
+      <field name="amount" eval="7"/>
+      <field name="amount_type">percent</field>
+      <field name="refund_account_id" ref="pcg_43651001"/>
+      <field name="account_id" ref="pcg_43651001"/> 
+      <field name="sequence" eval="10"/>
+      <field name="type_tax_use">purchase</field>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_tn.tax_ACH-7')])]"/>
+    </record>
+
+    <record model="account.tax.template" id="tva_acq_intermediaire">
+      <field name="chart_template_id" ref="l10n_tn_pcg_chart_template"/>
+      <field name="name">TVA déductible (achat) 13,0%</field>
+      <field name="description">ACH-13.0</field>
+      <field name="amount" eval="13.0"/>
+      <field name="amount_type">percent</field>
+      <field name="refund_account_id" ref="pcg_43651002"/>
+      <field name="account_id" ref="pcg_43651002"/>
+      <field name="sequence" eval="10"/>
+      <field name="type_tax_use">purchase</field>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_tn.tax_ACH-13_0')])]"/>
+    </record>
+
+    <record model="account.tax.template" id="tva_acq_reduite">
+      <field name="chart_template_id" ref="l10n_tn_pcg_chart_template"/>
+      <field name="name">TVA déductible (achat) 19%</field>
+      <field name="description">ACH-19</field>
+      <field name="amount" eval="19"/>
+      <field name="amount_type">percent</field>
+      <field name="refund_account_id" ref="pcg_43651003"/>
+      <field name="account_id" ref="pcg_43651003"/>
+      <field name="sequence" eval="10"/>
+      <field name="type_tax_use">purchase</field>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_tn.tax_ACH-19')])]"/>
+    </record>
+  
+ <!-- ImmoBILISATIONS (achats) -->
+    <record model="account.tax.template" id="tva_imm_normale">
+      <field name="chart_template_id" ref="l10n_tn_pcg_chart_template"/>
+      <field name="name">TVA déd./immobilisation (achat) 0,0%</field>
+      <field name="description">IMMO-0.0</field>
+      <field name="amount" eval="0.0"/>
+      <field name="amount_type">percent</field>
+      <field name="refund_account_id" ref="pcg_442"/>
+      <field name="account_id" ref="pcg_442"/>
+      <field name="sequence" eval="10"/>
+      <field name="type_tax_use">purchase</field>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_tn.tax_IMMO_0_0')])]"/>
+    </record>
+
+    <record model="account.tax.template" id="tva_imm_specifique">
+      <field name="chart_template_id" ref="l10n_tn_pcg_chart_template"/>
+      <field name="name">TVA déd./immobilisation (achat) 7%</field>
+      <field name="description">IMMO-7</field>
+      <field name="amount" eval="7"/>
+      <field name="amount_type">percent</field>
+      <field name="refund_account_id" ref="pcg_442"/>
+      <field name="account_id" ref="pcg_442"/>
+      <field name="sequence" eval="10"/>
+      <field name="type_tax_use">purchase</field>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_tn.tax_IMMO_7')])]"/>
+    </record>
+
+    <record model="account.tax.template" id="tva_imm_intermediaire">
+      <field name="chart_template_id" ref="l10n_tn_pcg_chart_template"/>
+      <field name="name">TVA déd./immobilisation (achat) 13,0%</field>
+      <field name="description">IMMO-13.0</field>
+      <field name="amount" eval="13.0"/>
+      <field name="amount_type">percent</field>
+      <field name="refund_account_id" ref="pcg_442"/>
+      <field name="account_id" ref="pcg_442"/>
+      <field name="sequence" eval="10"/>
+      <field name="type_tax_use">purchase</field>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_tn.tax_IMMO-13_0')])]"/>
+    </record>
+
+    <record model="account.tax.template" id="tva_imm_reduite">
+      <field name="chart_template_id" ref="l10n_tn_pcg_chart_template"/>
+      <field name="name">TVA déd./immobilisation (achat) 19%</field>
+      <field name="description">IMMO-19</field>
+      <field name="amount" eval="19"/>
+      <field name="amount_type">percent</field>
+      <field name="refund_account_id" ref="pcg_442"/>
+      <field name="account_id" ref="pcg_442"/>
+      <field name="sequence" eval="10"/>
+      <field name="type_tax_use">purchase</field>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_tn.tax_IMMO_19')])]"/>
+    </record>
+
+<!-- AUTRE -->
+    <record model="account.tax.template" id="tva_0">
+      <field name="chart_template_id" ref="l10n_tn_pcg_chart_template"/>
+      <field name="name">TVA 0% autres opérations non imposables (vente)</field>
+      <field name="description">EXO-0</field>
+      <field name="amount" eval="0.0"/>
+      <field name="amount_type">percent</field>
+      <field name="sequence" eval="10"/>
+      <field name="type_tax_use">sale</field>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_tn.tax_EXO_0')])]"/>
+    </record>
+
+    <record model="account.tax.template" id="tva_export_0">
+      <field name="chart_template_id" ref="l10n_tn_pcg_chart_template"/>
+      <field name="name">TVA 0% export (vente)</field>
+      <field name="description">EXPORT-0</field>
+      <field name="amount" eval="0.0"/>
+      <field name="amount_type">percent</field>
+      <field name="sequence" eval="10"/>
+      <field name="type_tax_use">sale</field>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_tn.tax_EXPORT_0')])]"/>
+    </record>
+
+    <record model="account.tax.template" id="tva_intra_0">
+      <field name="chart_template_id" ref="l10n_tn_pcg_chart_template"/>
+      <field name="name">TVA 0% livraisons intracommunautaires (vente)</field>
+      <field name="description">UE-0</field>
+      <field name="amount" eval="0.00"/>
+      <field name="amount_type">percent</field>
+      <field name="refund_account_id" ref="pcg_44"/>
+      <field name="account_id" ref="pcg_44"/>
+      <field name="sequence" eval="10"/>
+      <field name="type_tax_use">sale</field>
+      <field name="tag_ids" eval="[(6,0,[ref('l10n_tn.tax_UE_0')])]"/>
+    </record>
+
+    <record model="account.tax.template" id="tva_import_0">
+        <field name="chart_template_id" ref="l10n_tn_pcg_chart_template"/>
+        <field name="name">TVA 0% import (achat)</field>
+        <field name="description">IMPORT-0</field>
+        <field name="amount" eval="0.00"/>
+        <field name="amount_type">percent</field>
+        <field name="refund_account_id" ref="pcg_44"/>
+        <field name="account_id" ref="pcg_44"/>
+        <field name="sequence" eval="10"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="tag_ids" eval="[(6,0,[ref('l10n_tn.tax_IMPORT_0')])]"/>
+    </record>
+
+<!--
+    Comptes sur lesquels les taxes s'appliquent par défaut
+-->
+
+<!-- Charges -->
+    <record id="pcg_601" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_602" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_reduite')])]"/>
+    </record>
+
+    <record id="pcg_602" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_602" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_602" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_602" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_602" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_602" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_602" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_602" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_602" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_602" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_604" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_604" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_604" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_604" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_605" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_606" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_606" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_606" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_606" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_607" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_607" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_608" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_609" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_609" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_609" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_6098" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_609" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_609" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_609" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_611" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_612" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_612" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_613" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_613" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_613" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_614" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_615" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_615" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_615" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_622" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_622" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_622" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_622" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_623" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_623" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_623" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_623" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_623" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_623" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_623" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_623" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_623" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_623" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_623" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_623" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_623" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+    <record id="pcg_623" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_acq_normale')])]"/>
+    </record>
+
+
+<!-- Produits -->
+    <record id="pcg_701" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
+    </record>
+
+    <record id="pcg_701" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
+    </record>
+
+    <record id="pcg_702" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
+    </record>
+
+    <record id="pcg_703" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
+    </record>
+
+    <record id="pcg_704" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
+    </record>
+
+    <record id="pcg_704" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
+    </record>
+
+    <record id="pcg_705" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
+    </record>
+
+    <record id="pcg_706" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
+    </record>
+
+    <record id="pcg_707" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
+    </record>
+
+    <record id="pcg_707" model="account.account.template">
+      <field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
+    </record>
+
+</odoo>
