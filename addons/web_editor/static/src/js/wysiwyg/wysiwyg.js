@@ -200,6 +200,7 @@ var Wysiwyg = Widget.extend({
         $editable.find('[style=""]').removeAttr('style');
         $editable.find('[title=""]').removeAttr('title');
         $editable.find('[alt=""]').removeAttr('alt');
+        $editable.find('[data-original-title=""]').removeAttr('data-original-title');
         $editable.find('a.o_image, span.fa, i.fa').html('');
         $editable.find('[aria-describedby]').removeAttr('aria-describedby').removeAttr('data-original-title');
 
