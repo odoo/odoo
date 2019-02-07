@@ -114,7 +114,11 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @see _.discardChanges
      */
     discardChanges: function (recordID, options) {
-        return $.when(this.mutex.getUnlockedDef(), this.savingDef)
+        var deferreds = [this.mutex.getUnlockedDef()];
+        if (this.savingDef && this.savingDef.state() !== 'rejected') {
+            deferreds.push(this.savingDef);
+        }
+        return $.when.apply($, deferreds)
             .then(this._discardChanges.bind(this, recordID || this.handle, options));
     },
     /**
