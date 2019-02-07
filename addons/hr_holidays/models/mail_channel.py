@@ -8,14 +8,10 @@ class Channel(models.Model):
     _inherit = 'mail.channel'
 
     @api.multi
-    def channel_info(self, extra_info=False):
-        channel_infos = super(Channel, self).channel_info(extra_info)
-        partners_on_leave = []
-        for channel_info in channel_infos:
-            if 'direct_partner' in channel_info:
-                for direct_partner in channel_info['direct_partner']:
-                    if 'leave' in direct_partner['im_status']:
-                        partners_on_leave.append(direct_partner['id'])
+    def partner_info(self, all_partners, direct_partners):
+        partner_infos = super(Channel, self).partner_info(all_partners, direct_partners)
+        # only search for leave out_of_office_message if im_status is on leave
+        partners_on_leave = [partner_id for partner_id in direct_partners.ids if 'leave' in partner_infos[partner_id]['im_status']]
         if partners_on_leave:
             now = fields.Datetime.now()
             self.env.cr.execute('''SELECT res_users.partner_id as partner_id, hr_leave.out_of_office_message as out_of_office_message, hr_leave.date_to as date_to
@@ -26,11 +22,8 @@ class Channel(models.Model):
                                 AND hr_leave.date_from <= %s
                                 AND hr_leave.date_to >= %s
                                 AND res_users.partner_id in %s''', (now, now, tuple(partners_on_leave)))
-            out_of_office_info = dict(((res['partner_id'], res) for res in self.env.cr.dictfetchall()))
-            for channel_info in channel_infos:
-                if 'direct_partner' in channel_info:
-                    for direct_partner in channel_info['direct_partner']:
-                        if 'leave' in direct_partner['im_status']:
-                            direct_partner['out_of_office_date_end'] = out_of_office_info.get(direct_partner['id'], {}).get('date_to')
-                            direct_partner['out_of_office_message'] = out_of_office_info.get(direct_partner['id'], {}).get('out_of_office_message')
-        return channel_infos
+            out_of_office_infos = dict(((res['partner_id'], res) for res in self.env.cr.dictfetchall()))
+            for partner_id, out_of_office_info in out_of_office_infos.items():
+                partner_infos[partner_id]['out_of_office_date_end'] = out_of_office_info['date_to']
+                partner_infos[partner_id]['out_of_office_message'] = out_of_office_info['out_of_office_message']
+        return partner_infos
