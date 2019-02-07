@@ -14,7 +14,7 @@ class SaleOrderLine(models.Model):
 
         # In the case of a kit, we need to check if all components are shipped. Since the BOM might
         # have changed, we don't compute the quantities but verify the move state.
-        bom = self.env['mrp.bom']._bom_find(product=self.product_id)
+        bom = self.env['mrp.bom']._bom_find(product=self.product_id,company_id=self.company_id.id)
         if bom and bom.type == 'phantom':
             moves = self.move_ids.filtered(lambda m: m.picking_id and m.picking_id.state != 'cancel')
             bom_delivered = all([move.state == 'done' for move in moves])
