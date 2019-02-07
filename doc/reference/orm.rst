@@ -2,19 +2,12 @@
 
 .. _reference/orm:
 
-=======
-ORM API
-=======
+===
+ORM
+===
 
 Recordsets
 ==========
-
-.. versionadded:: 8.0
-
-    This page documents the New API added in Odoo 8.0 which should be the
-    primary development API going forward. It also provides information about
-    porting from or bridging with the "old API" of versions 7 and earlier, but
-    does not explicitly document that API. See the old documentation for that.
 
 Interaction with models and records is performed through recordsets, a sorted
 set of records of the same model.
@@ -288,9 +281,6 @@ Common ORM methods
         >>> self.create([{'name': "Jack"}, {'name': "William"}, {'name': "Averell"}])
         res.partner(79, 80, 81)
 
-    See :ref:`how to define method \`create\` with one API or the other
-    <reference/orm/oldapi>`.
-
 :meth:`~odoo.models.Model.write`
     Takes a number of field values, writes them to all the records in its
     recordset. Does not return anything::
@@ -300,8 +290,7 @@ Common ORM methods
 :meth:`~odoo.models.Model.browse`
     Takes a database id or a list of ids and returns a recordset, useful when
     record ids are obtained from outside Odoo (e.g. round-trip through
-    external system) or :ref:`when calling methods in the old API
-    <reference/orm/oldapi>`::
+    external system)::
 
         >>> self.browse([7, 18, 12])
         res.partner(7, 18, 12)
@@ -359,14 +348,14 @@ For the various field types and parameters, see :ref:`the fields reference
 
 Default values are defined as parameters on fields, either a value::
 
-    a_field = fields.Char(default="a value")
+    name = fields.Char(default="a value")
 
 or a function called to compute the default value, which should return that
 value::
 
-    def compute_default_value(self):
+    def _default_name(self):
         return self.get_value()
-    a_field = fields.Char(default=compute_default_value)
+    name = fields.Char(default=_default_name)
 
 Computed fields
 ---------------
@@ -466,7 +455,7 @@ added.
   the changes performed during the method are then sent to the client program
   and become visible to the user
 
-* Both computed fields and new-API onchanges are automatically called by the
+* Both computed fields and onchanges are automatically called by the
   client without having to add them in views
 * It is possible to suppress the trigger from a specific field by adding
   ``on_change="0"`` in a view::
@@ -482,10 +471,10 @@ added.
     ``onchange`` methods work on virtual records assignment on these records
     is not written to the database, just used to know which value to send back
     to the client
-    
+
 .. warning::
 
-    It is not possible for a ``one2many`` or ``many2many`` field to modify 
+    It is not possible for a ``one2many`` or ``many2many`` field to modify
     itself via onchange. This is a webclient limitation - see `#2693 <https://github.com/odoo/odoo/issues/2693>`_.
 
 Low-level SQL
@@ -508,107 +497,6 @@ Clearing caches can be performed using the
 :meth:`~odoo.models.BaseModel.invalidate_cache` method of the
 :class:`~odoo.models.BaseModel` object.
 
-
-.. _reference/orm/oldapi:
-
-Compatibility between new API and old API
-=========================================
-
-Odoo is currently transitioning from an older (less regular) API, it can be
-necessary to manually bridge from one to the other manually:
-
-* RPC layers (both XML-RPC and JSON-RPC) are expressed in terms of the old
-  API, methods expressed purely in the new API are not available over RPC
-* overridable methods may be called from older pieces of code still written
-  in the old API style
-
-The big differences between the old and new APIs are:
-
-* values of the :class:`~odoo.api.Environment` (cursor, user id and
-  context) are passed explicitly to methods instead
-* record data (:attr:`~odoo.models.Model.ids`) are passed explicitly to
-  methods, and possibly not passed at all
-* methods tend to work on lists of ids instead of recordsets
-
-By default, methods are assumed to use the new API style and are not callable
-from the old API style.
-
-.. tip:: calls from the new API to the old API are bridged
-    :class: aphorism
-
-    when using the new API style, calls to methods defined using the old API
-    are automatically converted on-the-fly, there should be no need to do
-    anything special::
-
-        >>> # method in the old API style
-        >>> def old_method(self, cr, uid, ids, context=None):
-        ...    print ids
-
-        >>> # method in the new API style
-        >>> def new_method(self):
-        ...     # system automatically infers how to call the old-style
-        ...     # method from the new-style method
-        ...     self.old_method()
-
-        >>> env[model].browse([1, 2, 3, 4]).new_method()
-        [1, 2, 3, 4]
-
-Two decorators can expose a new-style method to the old API:
-
-:func:`~odoo.api.model`
-    the method is exposed as not using ids, its recordset will generally be
-    empty. Its "old API" signature is ``cr, uid, *arguments, context``::
-
-        @api.model
-        def some_method(self, a_value):
-            pass
-        # can be called as
-        old_style_model.some_method(cr, uid, a_value, context=context)
-
-:func:`~odoo.api.multi`
-    the method is exposed as taking a list of ids (possibly empty), its
-    "old API" signature is ``cr, uid, ids, *arguments, context``::
-
-        @api.multi
-        def some_method(self, a_value):
-            pass
-        # can be called as
-        old_style_model.some_method(cr, uid, [id1, id2], a_value, context=context)
-
-Note that a method `create` decorated with :func:`~odoo.api.model` will always
-be called with a single dictionary. A method `create` decorated with the variant
-:func:`~odoo.api.model_create_multi` will always be called with a list of dicts.
-The decorators take care of converting the argument to one form or the other::
-
-    @api.model
-    def create(self, vals):
-        ...
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        ...
-
-Because new-style APIs tend to return recordsets and old-style APIs tend to
-return lists of ids, there is also a decorator managing this:
-
-:func:`~odoo.api.returns`
-    the function is assumed to return a recordset, the first parameter should
-    be the name of the recordset's model or ``self`` (for the current model).
-
-    No effect if the method is called in new API style, but transforms the
-    recordset into a list of ids when called from the old API style::
-
-        >>> @api.multi
-        ... @api.returns('self')
-        ... def some_method(self):
-        ...     return self
-        >>> new_style_model = env['a.model'].browse(1, 2, 3)
-        >>> new_style_model.some_method()
-        a.model(1, 2, 3)
-        >>> old_style_model = pool['a.model']
-        >>> old_style_model.some_method(cr, uid, [1, 2, 3], context=context)
-        [1, 2, 3]
-
 .. _reference/orm/model:
 
 Model Reference
@@ -617,225 +505,224 @@ Model Reference
 .. - can't get autoattribute to import docstrings, so use regular attribute
    - no autoclassmethod
 
+.. .. autoattribute:: odoo.models.BaseModel._name works
+  autoattribute doesn't seem to support :private-members: parameter
+  Therefore, we should specify all wanted attributes directly for it to work.
+  Should we adapt ORM in-code documentation and use autoattribute here instead.
+  Attribute documentation should begin with #: or be a docstring
+
 .. currentmodule:: odoo.models
 
 .. autoclass:: odoo.models.Model
+  :members:
+  :noindex:
 
-    .. rubric:: Structural attributes
+  .. rubric:: Structural attributes
 
-    .. attribute:: _name
+  .. attribute:: _name
 
-        business object name, in dot-notation (in module namespace)
+      business object name, in dot-notation (in module namespace)
 
-    .. attribute:: _rec_name
+  .. attribute:: _rec_name
 
-        Alternative field to use as name, used by osv’s name_get()
-        (default: ``'name'``)
+      Alternative field to use as name, used by osv’s name_get()
+      (default: ``name``)
 
-    .. attribute:: _inherit
+  .. attribute:: _inherit
 
-        * If :attr:`._name` is set, names of parent models to inherit from.
-          Can be a ``str`` if inheriting from a single parent
-        * If :attr:`._name` is unset, name of a single model to extend
-          in-place
+      * If :attr:`._name` is set, names of parent models to inherit from.
+        Can be a ``str`` if inheriting from a single parent
+      * If :attr:`._name` is unset, name of a single model to extend
+        in-place
 
-        See :ref:`reference/orm/inheritance`.
+      See :ref:`reference/orm/inheritance`.
 
-    .. attribute:: _order
+  .. attribute:: _order
 
-        Ordering field when searching without an ordering specified (default:
-        ``'id'``)
+      Ordering field when searching without an ordering specified (default:
+      ``id``)
 
-        :type: str
+      :type: str
 
-    .. attribute:: _auto
+  .. attribute:: _auto
 
-        Whether a database table should be created (default: ``True``)
+    Whether a database table should be created (default: ``True``)
 
-        If set to ``False``, override :meth:`.init` to create the database
-        table
-        
-     .. tip:: To create a model without any table, inherit
-              from ``odoo.models.AbstractModel``
+    If set to ``False``, override :meth:`~odoo.models.BaseModel.init` to create the database
+    table
 
-    .. attribute:: _table
+    .. tip:: To create a model without any table, inherit
+            from ``odoo.models.AbstractModel``
 
-        Name of the table backing the model created when
-        :attr:`~odoo.models.Model._auto`, automatically generated by
-        default.
+  .. attribute:: _table
 
-    .. attribute:: _inherits
+      Name of the table backing the model created when
+      :attr:`~odoo.models.Model._auto`, automatically generated by
+      default.
 
-        dictionary mapping the _name of the parent business objects to the
-        names of the corresponding foreign key fields to use::
+  .. attribute:: _inherits
 
-            _inherits = {
-                'a.model': 'a_field_id',
-                'b.model': 'b_field_id'
-            }
+      dictionary mapping the _name of the parent business objects to the
+      names of the corresponding foreign key fields to use::
 
-        implements composition-based inheritance: the new model exposes all
-        the fields of the :attr:`~odoo.models.Model._inherits`-ed model but
-        stores none of them: the values themselves remain stored on the linked
-        record.
+          _inherits = {
+              'a.model': 'a_field_id',
+              'b.model': 'b_field_id'
+          }
 
-        .. warning::
+      implements composition-based inheritance: the new model exposes all
+      the fields of the :attr:`~odoo.models.Model._inherits`-ed model but
+      stores none of them: the values themselves remain stored on the linked
+      record.
 
-            if the same field is defined on multiple
-            :attr:`~odoo.models.Model._inherits`-ed
+      .. warning::
 
-    .. attribute:: _constraints
+          if the same field is defined on multiple
+          :attr:`~odoo.models.Model._inherits`-ed
 
-        list of ``(constraint_function, message, fields)`` defining Python
-        constraints. The fields list is indicative
+  .. attribute:: _sql_constraints
 
-        .. deprecated:: 8.0
+      list of ``(name, sql_definition, message)`` triples defining SQL
+      constraints to execute when generating the backing table
 
-            use :func:`~odoo.api.constrains`
+  .. attribute:: _parent_store
 
-    .. attribute:: _sql_constraints
+      Alongside a :attr:`~.parent_path` field, sets up an indexed storage
+      of the tree structure of records, to enable faster hierarchical queries
+      on the records of the current model using the ``child_of`` and
+      ``parent_of`` domain operators.
+      (default: ``False``)
 
-        list of ``(name, sql_definition, message)`` triples defining SQL
-        constraints to execute when generating the backing table
+      :type: bool
 
-    .. attribute:: _parent_store
+  .. rubric:: CRUD
 
-        Alongside a :attr:`~.parent_path` field, sets up an indexed storage
-        of the tree structure of records, to enable faster hierarchical queries
-        on the records of the current model using the ``child_of`` and
-        ``parent_of`` domain operators.
-        (default: ``False``)
+  .. automethod:: create
+  .. automethod:: browse
+  .. automethod:: unlink
+  .. automethod:: write
 
-        :type: bool
+  .. automethod:: read
+  .. automethod:: read_group
 
-    .. rubric:: CRUD
+  .. rubric:: Searching
 
-    .. automethod:: create
-    .. automethod:: browse
-    .. automethod:: unlink
-    .. automethod:: write
+  .. automethod:: search
+  .. automethod:: search_count
+  .. automethod:: name_search
 
-    .. automethod:: read
-    .. automethod:: read_group
+  .. rubric:: Recordset operations
 
-    .. rubric:: Searching
+  .. autoattribute:: ids
+  .. automethod:: ensure_one
+  .. automethod:: exists
+  .. automethod:: filtered
+  .. automethod:: sorted
+  .. automethod:: mapped
 
-    .. automethod:: search
-    .. automethod:: search_count
-    .. automethod:: name_search
+  .. rubric:: Environment swapping
 
-    .. rubric:: Recordset operations
+  .. automethod:: sudo
+  .. automethod:: with_context
+  .. automethod:: with_env
 
-    .. autoattribute:: ids
-    .. automethod:: ensure_one
-    .. automethod:: exists
-    .. automethod:: filtered
-    .. automethod:: sorted
-    .. automethod:: mapped
+  .. rubric:: Fields and views querying
 
-    .. rubric:: Environment swapping
+  .. automethod:: fields_get
+  .. automethod:: fields_view_get
 
-    .. automethod:: sudo
-    .. automethod:: with_context
-    .. automethod:: with_env
+  .. rubric:: Miscellaneous methods
 
-    .. rubric:: Fields and views querying
+  .. automethod:: default_get
+  .. automethod:: copy
+  .. automethod:: name_get
+  .. automethod:: name_create
 
-    .. automethod:: fields_get
-    .. automethod:: fields_view_get
+  .. _reference/orm/model/automatic:
 
-    .. rubric:: Miscellaneous methods
+  .. rubric:: Automatic fields
 
-    .. automethod:: default_get
-    .. automethod:: copy
-    .. automethod:: name_get
-    .. automethod:: name_create
+  .. attribute:: id
 
-    .. _reference/orm/model/automatic:
+    Identifier :class:`field <odoo.fields.Field>`
 
-    .. rubric:: Automatic fields
+  .. attribute:: _log_access
 
-    .. attribute:: id
+    Whether log access fields (``create_date``, ``write_uid``, ...) should
+    be generated (default: ``True``)
 
-        Identifier :class:`field <odoo.fields.Field>`
+  .. attribute:: create_date
 
-    .. attribute:: _log_access
+    Date at which the record was created
 
-        Whether log access fields (``create_date``, ``write_uid``, ...) should
-        be generated (default: ``True``)
+    :type: :class:`~odoo.field.Datetime`
 
-    .. attribute:: create_date
+  .. attribute:: create_uid
 
-        Date at which the record was created
+    Relational field to the user who created the record
 
-        :type: :class:`~odoo.field.Datetime`
+    :type: ``res.users``
 
-    .. attribute:: create_uid
+  .. attribute:: write_date
 
-        Relational field to the user who created the record
+    Date at which the record was last modified
 
-        :type: ``res.users``
+    :type: :class:`~odoo.field.Datetime`
 
-    .. attribute:: write_date
+  .. attribute:: write_uid
 
-        Date at which the record was last modified
+    Relational field to the last user who modified the record
 
-        :type: :class:`~odoo.field.Datetime`
+    :type: ``res.users``
 
-    .. attribute:: write_uid
+  .. rubric:: Reserved field names
 
-        Relational field to the last user who modified the record
+  A few field names are reserved for pre-defined behaviors beyond that of
+  automated fields. They should be defined on a model when the related
+  behavior is desired:
 
-        :type: ``res.users``
+  .. attribute:: name
 
-    .. rubric:: Reserved field names
+    default value for :attr:`~._rec_name`, used to
+    display records in context where a representative "naming" is
+    necessary.
 
-    A few field names are reserved for pre-defined behaviors beyond that of
-    automated fields. They should be defined on a model when the related
-    behavior is desired:
+    :type: :class:`~odoo.fields.Char`
 
-    .. attribute:: name
+  .. attribute:: active
 
-        default value for :attr:`~._rec_name`, used to
-        display records in context where a representative "naming" is
-        necessary.
+    toggles the global visibility of the record, if ``active`` is set to
+    ``False`` the record is invisible in most searches and listing
 
-        :type: :class:`~odoo.fields.Char`
+    :type: :class:`~odoo.fields.Boolean`
 
-    .. attribute:: active
+  .. attribute:: sequence
 
-        toggles the global visibility of the record, if ``active`` is set to
-        ``False`` the record is invisible in most searches and listing
+    Alterable ordering criteria, allows drag-and-drop reordering of models
+    in list views
 
-        :type: :class:`~odoo.fields.Boolean`
+    :type: :class:`~odoo.fields.Integer`
 
-    .. attribute:: sequence
+  .. attribute:: state
 
-        Alterable ordering criteria, allows drag-and-drop reordering of models
-        in list views
+    lifecycle stages of the object, used by the ``states`` attribute on
+    :class:`fields <odoo.fields.Field>`
 
-        :type: :class:`~odoo.fields.Integer`
+    :type: :class:`~odoo.fields.Selection`
 
-    .. attribute:: state
+  .. attribute:: parent_id
 
-        lifecycle stages of the object, used by the ``states`` attribute on
-        :class:`fields <odoo.fields.Field>`
+    used to order records in a tree structure and enables the ``child_of``
+    and ``parent_of`` operators in domains
 
-        :type: :class:`~odoo.fields.Selection`
+    :type: :class:`~odoo.fields.Many2one`
 
-    .. attribute:: parent_id
+  .. attribute:: parent_path
 
-        used to order records in a tree structure and enables the ``child_of``
-        and ``parent_of`` operators in domains
+    used to store an index of the tree structure when :attr:`~._parent_store`
+    is set to True - must be declared with ``index=True`` for proper operation.
 
-        :type: :class:`~odoo.fields.Many2one`
-
-    .. attribute:: parent_path
-
-        used to store an index of the tree structure when :attr:`~._parent_store`
-        is set to True - must be declared with ``index=True`` for proper operation.
-
-        :type: :class:`~odoo.fields.Char`
+    :type: :class:`~odoo.fields.Char`
 
 
 .. _reference/orm/decorators:
@@ -844,8 +731,8 @@ Method decorators
 =================
 
 .. automodule:: odoo.api
-    :members: multi, model, depends, constrains, onchange, returns,
-              one, v7, v8
+    :members: multi, model, depends, constrains, onchange, returns
+    :noindex:
 
 .. _reference/orm/fields:
 
@@ -864,27 +751,55 @@ Basic fields
    (because we don't support pluggable field types) (or do we?)
 
 .. autoclass:: odoo.fields.Field
+    :noindex:
 
-.. autoclass:: odoo.fields.Char
-    :show-inheritance:
+.. _reference/orm/fields/boolean:
 
 .. autoclass:: odoo.fields.Boolean
     :show-inheritance:
+    :noindex:
 
-.. autoclass:: odoo.fields.Integer
+.. _reference/orm/fields/char:
+
+.. autoclass:: odoo.fields.Char
     :show-inheritance:
+    :noindex:
+
+.. _reference/orm/fields/float:
 
 .. autoclass:: odoo.fields.Float
     :show-inheritance:
+    :noindex:
 
-.. autoclass:: odoo.fields.Text
-    :show-inheritance:
+.. _reference/orm/fields/integer:
 
-.. autoclass:: odoo.fields.Selection
+.. autoclass:: odoo.fields.Integer
     :show-inheritance:
+    :noindex:
+
+.. _reference/orm/fields/html:
 
 .. autoclass:: odoo.fields.Html
     :show-inheritance:
+    :noindex:
+
+.. _reference/orm/fields/monetary:
+
+.. autoclass:: odoo.fields.Monetary
+    :show-inheritance:
+    :noindex:
+
+.. _reference/orm/fields/selection:
+
+.. autoclass:: odoo.fields.Selection
+    :show-inheritance:
+    :noindex:
+
+.. _reference/orm/fields/text:
+
+.. autoclass:: odoo.fields.Text
+    :show-inheritance:
+    :noindex:
 
 .. _reference/orm/fields/date_datetime:
 
@@ -933,27 +848,41 @@ These helpers are also available by importing `odoo.tools.date_utils`.
 .. autoclass:: odoo.fields.Date
     :show-inheritance:
     :members: today, context_today, to_date, to_string, start_of, end_of, add, subtract
+    :noindex:
 
 .. autoclass:: odoo.fields.Datetime
     :show-inheritance:
     :members: now, today, context_timestamp, to_datetime, to_string, start_of, end_of, add, subtract
+    :noindex:
 
 .. _reference/orm/fields/relational:
 
 Relational fields
 -----------------
 
+.. _reference/orm/fields/many2one:
+
 .. autoclass:: odoo.fields.Many2one
     :show-inheritance:
+    :noindex:
+
+.. _reference/orm/fields/one2many:
 
 .. autoclass:: odoo.fields.One2many
     :show-inheritance:
+    :noindex:
+
+.. _reference/orm/fields/many2many:
 
 .. autoclass:: odoo.fields.Many2many
     :show-inheritance:
+    :noindex:
+
+.. _reference/orm/fields/reference:
 
 .. autoclass:: odoo.fields.Reference
     :show-inheritance:
+    :noindex:
 
 .. _reference/orm/inheritance:
 
@@ -982,7 +911,7 @@ fields, methods and meta-information (defaults & al) from its base.
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/inheritance.py
     :language: python
-    :lines: 5-
+    :lines: 6-
 
 and using them:
 
@@ -1011,7 +940,7 @@ them (e.g. to change their default sort order):
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/extension.py
     :language: python
-    :lines: 7-
+    :lines: 6-
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_extension.py
     :language: python
@@ -1160,149 +1089,3 @@ Domain criteria can be combined using logical operators in *prefix* form:
             (name is 'ABC')
         AND (language is NOT english)
         AND (country is Belgium OR Germany)
-
-Porting from the old API to the new API
-=======================================
-
-* bare lists of ids are to be avoided in the new API, use recordsets instead
-* methods still written in the old API should be automatically bridged by the
-  ORM, no need to switch to the old API, just call them as if they were a new
-  API method. See :ref:`reference/orm/oldapi/bridging` for more details.
-* :meth:`~odoo.models.Model.search` returns a recordset, no point in e.g.
-  browsing its result
-* ``fields.related`` and ``fields.function`` are replaced by using a normal
-  field type with either a ``related=`` or a ``compute=`` parameter
-* :func:`~odoo.api.depends` on ``compute=`` methods **must be complete**,
-  it must list **all** the fields and sub-fields which the compute method
-  uses. It is better to have too many dependencies (will recompute the field
-  in cases where that is not needed) than not enough (will forget to recompute
-  the field and then values will be incorrect)
-* **remove** all ``onchange`` methods on computed fields. Computed fields are
-  automatically re-computed when one of their dependencies is changed, and
-  that is used to auto-generate ``onchange`` by the client
-* the decorators :func:`~odoo.api.model` and :func:`~odoo.api.multi` are
-  for bridging *when calling from the old API context*, for internal or pure
-  new-api (e.g. compute) they are useless
-* remove :attr:`~odoo.models.Model._default`, replace by ``default=``
-  parameter on corresponding fields
-* if a field's ``string=`` is the titlecased version of the field name::
-
-    name = fields.Char(string="Name")
-
-  it is useless and should be removed
-* the ``multi=`` parameter does not do anything on new API fields use the same
-  ``compute=`` methods on all relevant fields for the same result
-* provide ``compute=``, ``inverse=`` and ``search=`` methods by name (as a
-  string), this makes them overridable (removes the need for an intermediate
-  "trampoline" function)
-* double check that all fields and methods have different names, there is no
-  warning in case of collision (because Python handles it before Odoo sees
-  anything)
-* the normal new-api import is ``from odoo import fields, models``. If
-  compatibility decorators are necessary, use ``from odoo import api,
-  fields, models``
-* avoid the :func:`~odoo.api.one` decorator, it probably does not do what
-  you expect
-* remove explicit definition of :attr:`~odoo.models.Model.create_uid`,
-  :attr:`~odoo.models.Model.create_date`,
-  :attr:`~odoo.models.Model.write_uid` and
-  :attr:`~odoo.models.Model.write_date` fields: they are now created as
-  regular "legitimate" fields, and can be read and written like any other
-  field out-of-the-box
-* when straight conversion is impossible (semantics can not be bridged) or the
-  "old API" version is not desirable and could be improved for the new API, it
-  is possible to use completely different "old API" and "new API"
-  implementations for the same method name using :func:`~odoo.api.v7` and
-  :func:`~odoo.api.v8`. The method should first be defined using the
-  old-API style and decorated with :func:`~odoo.api.v7`, it should then be
-  re-defined using the exact same name but the new-API style and decorated
-  with :func:`~odoo.api.v8`. Calls from an old-API context will be
-  dispatched to the first implementation and calls from a new-API context will
-  be dispatched to the second implementation. One implementation can call (and
-  frequently does) call the other by switching context.
-
-  .. danger:: using these decorators makes methods extremely difficult to
-              override and harder to understand and document
-* uses of :attr:`~odoo.models.Model._columns` or
-  :attr:`~odoo.models.Model._all_columns` should be replaced by
-  :attr:`~odoo.models.Model._fields`, which provides access to instances of
-  new-style :class:`odoo.fields.Field` instances (rather than old-style
-  :class:`odoo.osv.fields._column`).
-
-  Non-stored computed fields created using the new API style are *not*
-  available in :attr:`~odoo.models.Model._columns` and can only be
-  inspected through :attr:`~odoo.models.Model._fields`
-* reassigning ``self`` in a method is probably unnecessary and may break
-  translation introspection
-* :class:`~odoo.api.Environment` objects rely on some threadlocal state,
-  which has to be set up before using them. It is necessary to do so using the
-  :meth:`odoo.api.Environment.manage` context manager when trying to use
-  the new API in contexts where it hasn't been set up yet, such as new threads
-  or a Python interactive environment::
-
-    >>> from odoo import api, modules
-    >>> r = modules.registry.RegistryManager.get('test')
-    >>> cr = r.cursor()
-    >>> env = api.Environment(cr, 1, {})
-    Traceback (most recent call last):
-      ...
-    AttributeError: environments
-    >>> with api.Environment.manage():
-    ...     env = api.Environment(cr, 1, {})
-    ...     print env['res.partner'].browse(1)
-    ...
-    res.partner(1,)
-
-.. _reference/orm/oldapi/bridging:
-
-Automatic bridging of old API methods
--------------------------------------
-
-When models are initialized, all methods are automatically scanned and bridged
-if they look like models declared in the old API style. This bridging makes
-them transparently callable from new-API-style methods.
-
-Methods are matched as "old-API style" if their second positional parameter
-(after ``self``) is called either ``cr`` or ``cursor``. The system also
-recognizes the third positional parameter being called ``uid`` or ``user`` and
-the fourth being called ``id`` or ``ids``. It also recognizes the presence of
-any parameter called ``context``.
-
-When calling such methods from a new API context, the system will
-automatically fill matched parameters from the current
-:class:`~odoo.api.Environment` (for :attr:`~odoo.api.Environment.cr`,
-:attr:`~odoo.api.Environment.user` and
-:attr:`~odoo.api.Environment.context`) or the current recordset (for ``id``
-and ``ids``).
-
-In the rare cases where it is necessary, the bridging can be customized by
-decorating the old-style method:
-
-* disabling it entirely, by decorating a method with
-  :func:`~odoo.api.noguess` there will be no bridging and methods will be
-  called the exact same way from the new and old API styles
-* defining the bridge explicitly, this is mostly for methods which are matched
-  incorrectly (because parameters are named in unexpected ways):
-
-  :func:`~odoo.api.cr`
-     will automatically prepend the current cursor to explicitly provided
-     parameters, positionally
-  :func:`~odoo.api.cr_uid`
-     will automatically prepend the current cursor and user's id to explictly
-     provided parameters
-  :func:`~odoo.api.cr_uid_ids`
-     will automatically prepend the current cursor, user's id and recordset's
-     ids to explicitly provided parameters
-  :func:`~odoo.api.cr_uid_id`
-     will loop over the current recordset and call the method once for each
-     record, prepending the current cursor, user's id and record's id to
-     explicitly provided parameters.
-
-     .. danger:: the result of this wrapper is *always a list* when calling
-                 from a new-API context
-
-  All of these methods have a ``_context``-suffixed version
-  (e.g. :func:`~odoo.api.cr_uid_context`) which also passes the current
-  context *by keyword*.
-* dual implementations using :func:`~odoo.api.v7` and
-  :func:`~odoo.api.v8` will be ignored as they provide their own "bridging"
