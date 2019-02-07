@@ -56,21 +56,6 @@ class Channel(models.Model):
     custom_slide_id = fields.Many2one('slide.slide', string='Slide to Promote')
     promoted_slide_id = fields.Many2one('slide.slide', string='Featured Slide', compute='_compute_promoted_slide_id', store=True)
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
-
-    @api.depends('custom_slide_id', 'promote_strategy', 'slide_ids.likes',
-                 'slide_ids.total_views', "slide_ids.date_published")
-    def _compute_promoted_slide_id(self):
-        for record in self:
-            if record.promote_strategy == 'none':
-                record.promoted_slide_id = False
-            elif record.promote_strategy == 'custom':
-                record.promoted_slide_id = record.custom_slide_id
-            elif record.promote_strategy:
-                slides = self.env['slide.slide'].search(
-                    [('website_published', '=', True), ('channel_id', '=', record.id)],
-                    limit=1, order=self._order_by_strategy[record.promote_strategy])
-                record.promoted_slide_id = slides and slides[0] or False
-
     nbr_presentations = fields.Integer('Number of Presentations', compute='_count_presentations', store=True)
     nbr_documents = fields.Integer('Number of Documents', compute='_count_presentations', store=True)
     nbr_videos = fields.Integer('Number of Videos', compute='_count_presentations', store=True)
