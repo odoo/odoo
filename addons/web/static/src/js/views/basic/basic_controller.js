@@ -188,12 +188,18 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         // mutex-protected as commitChanges function of x2m has to be aware of
         // all final changes made to a row.
         var self = this;
-        this.savingDef = this.mutex.getUnlockedDef().then(function () {
-            return self.renderer.commitChanges(recordID || self.handle).then(function () {
+        var savingDef = $.Deferred();
+        this.savingDef = savingDef;
+
+        return this.mutex.getUnlockedDef()
+            .then(function () {
+                return self.renderer.commitChanges(recordID || self.handle);
+            })
+            .then(function () {
                 return self.mutex.exec(self._saveRecord.bind(self, recordID, options));
-            });
-        });
-        return this.savingDef;
+            })
+            .then(savingDef.resolve.bind(savingDef))
+            .fail(savingDef.resolve.bind(savingDef));
     },
     /**
      * @override

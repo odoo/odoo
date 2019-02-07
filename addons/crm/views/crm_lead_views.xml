@@ -117,8 +117,8 @@
                         </page>
                         <page name="extra" string="Extra Info">
                             <group>
-                                <group string="Email">
-                                    <field name="message_bounce" readonly="1" groups="base.group_no_one"/>
+                                <group string="Email" groups="base.group_no_one">
+                                    <field name="message_bounce" readonly="1"/>
                                 </group>
                                 <group string="Tracking" groups="base.group_multi_company,base.group_no_one" name="categorization">
                                     <field name="company_id"
