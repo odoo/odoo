@@ -26,10 +26,14 @@ necessary:
 
 .. code:: bash
 
-    odoo-bin
+    $ odoo-bin
 
-The server is stopped by hitting ``Ctrl-C`` twice from the terminal, or by
-killing the corresponding OS process.
+.. note:: The server is stopped by hitting ``Ctrl-C`` once from the terminal.
+
+    Hitting ``Ctrl-C`` a second time (or killing the corresponding OS process)
+    will force the shutdown.
+
+    Additional information on odoo-bin usage can be found :ref:`here <reference/cmdline>`:
 
 Build an Odoo module
 ====================
@@ -70,21 +74,18 @@ Each module is a directory within a *module directory*. Module directories
 are specified by using the :option:`--addons-path <odoo-bin --addons-path>`
 option.
 
-.. tip::
-    :class: aphorism
+.. note::
 
-    most command-line options can also be set using :ref:`a configuration
-    file <reference/cmdline/config>`
+    Most command-line options can also be set using :ref:`a configuration
+    file <reference/cmdline/config>`.
 
 An Odoo module is declared by its :ref:`manifest <reference/module/manifest>`.
-See the :ref:`manifest documentation <reference/module/manifest>` about it.
-
-A module is also a
-`Python package <http://docs.python.org/2/tutorial/modules.html#packages>`_
+It is also a
+`Python package <https://docs.python.org/3/tutorial/modules.html#packages>`_
 with a ``__init__.py`` file, containing import instructions for various Python
 files in the module.
 
-For instance, if the module has a single ``mymodule.py`` file ``__init__.py``
+For instance, if the module has a single ``mymodule.py``, file ``__init__.py``
 might contain::
 
     from . import mymodule
@@ -119,10 +120,14 @@ Object-Relational Mapping
 
 A key component of Odoo is the :abbr:`ORM (Object-Relational Mapping)` layer.
 This layer avoids having to write most :abbr:`SQL (Structured Query Language)`
-by hand and provides extensibility and security services\ [#rawsql]_.
+by hand and provides extensibility and security services.
+
+.. warning::
+    Writing raw SQL queries is possible,
+    but requires care as it bypasses all Odoo authentication and security mechanisms
 
 Business objects are declared as Python classes extending
-:class:`~odoo.models.Model` which integrates them into the automated
+:class:`odoo.models.Model` which integrates them into the automated
 persistence system.
 
 Models can be configured by setting a number of attributes at their
@@ -148,8 +153,23 @@ defined as attributes on the model class::
 
         name = fields.Char()
 
-Common Attributes
-#################
+.. note::
+    By default, Odoo also requires a ``name`` field on all models for various
+    display and search behaviors. The field used for these purposes can be
+    overridden by setting :attr:`~odoo.models.Model._rec_name`.
+
+Simple fields
+#############
+
+There are two broad categories of fields: "simple" fields which are atomic
+values stored directly in the model's table and "relational" fields linking
+records (of the same model or of different models).
+
+Example of simple fields are :class:`~odoo.fields.Boolean`,
+:class:`~odoo.fields.Date`, :class:`~odoo.fields.Char`.
+
+Common Field Attributes
+#######################
 
 Much like the model itself, its fields can be configured, by passing
 configuration attributes as parameters::
@@ -166,42 +186,7 @@ Some attributes are available on all fields, here are the most common ones:
 :attr:`~odoo.fields.Field.help` (``unicode``, default: ``''``)
     Long-form, provides a help tooltip to users in the UI.
 :attr:`~odoo.fields.Field.index` (``bool``, default: ``False``)
-    Requests that Odoo create a `database index`_ on the column.
-
-Simple fields
-#############
-
-There are two broad categories of fields: "simple" fields which are atomic
-values stored directly in the model's table and "relational" fields linking
-records (of the same model or of different models).
-
-Example of simple fields are :class:`~odoo.fields.Boolean`,
-:class:`~odoo.fields.Date`, :class:`~odoo.fields.Char`.
-
-Reserved fields
-###############
-
-Odoo creates a few fields in all models\ [#autofields]_. These fields are
-managed by the system and shouldn't be written to. They can be read if
-useful or necessary:
-
-:attr:`~odoo.fields.Model.id` (:class:`~odoo.fields.Id`)
-    The unique identifier for a record in its model.
-:attr:`~odoo.fields.Model.create_date` (:class:`~odoo.fields.Datetime`)
-    Creation date of the record.
-:attr:`~odoo.fields.Model.create_uid` (:class:`~odoo.fields.Many2one`)
-    User who created the record.
-:attr:`~odoo.fields.Model.write_date` (:class:`~odoo.fields.Datetime`)
-    Last modification date of the record.
-:attr:`~odoo.fields.Model.write_uid` (:class:`~odoo.fields.Many2one`)
-    user who last modified the record.
-
-Special fields
-##############
-
-By default, Odoo also requires a ``name`` field on all models for various
-display and search behaviors. The field used for these purposes can be
-overridden by setting :attr:`~odoo.models.Model._rec_name`.
+    Requests the creation of a `database index`_ on the column.
 
 .. exercise:: Define a model
 
@@ -214,14 +199,34 @@ overridden by setting :attr:`~odoo.models.Model._rec_name`.
 
         .. patch::
 
+Reserved fields
+###############
+
+Odoo creates a few fields in all models\ [#autofields]_. These fields are
+managed by the system and shouldn't be written to. They can be read if
+useful or necessary.
+
+:attr:`~odoo.fields.Model.id` (:class:`~odoo.fields.Id`)
+    The unique identifier for a record in its model.
+:attr:`~odoo.fields.Model.create_date` (:class:`~odoo.fields.Datetime`)
+    Creation date of the record.
+:attr:`~odoo.fields.Model.create_uid` (:class:`~odoo.fields.Many2one`)
+    User who created the record.
+:attr:`~odoo.fields.Model.write_date` (:class:`~odoo.fields.Datetime`)
+    Last modification date of the record.
+:attr:`~odoo.fields.Model.write_uid` (:class:`~odoo.fields.Many2one`)
+    user who last modified the record.
+
+.. [#autofields] it is possible to :attr:`disable the automatic creation of some
+                 fields <odoo.models.Model._log_access>`
+
 Data files
 ----------
 
 Odoo is a highly data driven system. Although behavior is customized using
-Python_ code part of a module's value is in the data it sets up when loaded.
+Python_ code, part of a module's content is in the data it sets up when loaded.
 
-.. tip:: some modules exist solely to add data into Odoo
-    :class: aphorism
+.. note:: Some modules exist solely to add data into Odoo.
 
 Module data is declared via :ref:`data files <reference/data>`, XML files with
 ``<record>`` elements. Each ``<record>`` element creates or updates a database
@@ -325,7 +330,7 @@ used (so the lowest-priority view of each type is the default view for that
 type).
 
 :ref:`View inheritance <reference/views/inheritance>` allows altering views
-declared elsewhere (adding or removing content).
+declared elsewhere (adding, removing or altering content).
 
 Generic view declaration
 ------------------------
@@ -513,7 +518,7 @@ Relational field types are:
 
         print foo.other_id.name
 
-    .. seealso:: `foreign keys <http://www.postgresql.org/docs/9.3/static/tutorial-fk.html>`_
+    .. seealso:: `foreign keys <https://www.postgresql.org/docs/9.3/static/tutorial-fk.html>`_
 
 :class:`One2many(other_model, related_field) <odoo.fields.One2many>`
     A virtual relationship, inverse of a :class:`~odoo.fields.Many2one`.
@@ -754,8 +759,11 @@ records for the relation when trying to select records in the client interface.
 
         .. patch::
 
-Computed fields and default values
-==================================
+Advanced Model logic
+====================
+
+Computed fields
+---------------
 
 So far fields have been stored directly in and retrieved directly from the
 database. Fields can also be *computed*. In that case, the field's value is not
@@ -794,9 +802,8 @@ method should simply set the value of the field to compute on every record in
             for record in self:
                 record.name = str(random.randint(1, 1e6))
 
-
 Dependencies
-------------
+############
 
 The value of a computed field usually depends on the values of other fields on
 the computed record. The ORM expects the developer to specify those dependencies
@@ -830,8 +837,8 @@ field whenever some of its dependencies have been modified::
 
         .. patch::
 
-Default values
---------------
+Default field values
+--------------------
 
 Any field can be given a default value. In the field definition, add the option
 ``default=X`` where ``X`` is either a Python literal value (boolean, integer,
@@ -870,7 +877,7 @@ float, string), or a function taking a recordset and returning a value::
             to ``False`` invisible.
 
 Onchange
-========
+--------
 
 The "onchange" mechanism provides a way for the client interface to update a
 form whenever the user has filled in a value in a field, without saving anything
@@ -919,7 +926,7 @@ the ``taken_seats`` progressbar is automatically updated.
         .. patch::
 
 Model constraints
-=================
+-----------------
 
 Odoo provides two ways to set up automatically verified invariants:
 :func:`Python constraints <odoo.api.constrains>` and
@@ -1460,7 +1467,7 @@ for editing and merging PO/POT files.
          | - pt_BR.po # Brazilian Portuguese translation
          | (...)
 
-.. tip:: 
+.. tip::
 
    By default Odoo's POT export only extracts labels inside XML files or
    inside field definitions in Python code, but any Python string can be
@@ -1509,7 +1516,7 @@ Printed reports
 ---------------
 
 Odoo uses a report engine based on :ref:`reference/qweb`,
-`Twitter Bootstrap`_ and Wkhtmltopdf_. 
+`Twitter Bootstrap`_ and Wkhtmltopdf_.
 
 A report is a combination two elements:
 
@@ -1762,27 +1769,22 @@ Examples can be easily adapted from XML-RPC to JSON-RPC.
     * https://github.com/akretion/ooor
     * https://github.com/OCA/odoorpc
     * https://github.com/nicolas-van/openerp-client-lib
-    * http://pythonhosted.org/OdooRPC
+    * https://pythonhosted.org/OdooRPC
     * https://github.com/abhishek-jaiswal/php-openerp-lib
 
-.. [#autofields] it is possible to :attr:`disable the automatic creation of some
-                 fields <odoo.models.Model._log_access>`
-.. [#rawsql] writing raw SQL queries is possible, but requires care as it
-             bypasses all Odoo authentication and security mechanisms.
-
 .. _database index:
-    http://use-the-index-luke.com/sql/preface
+    https://use-the-index-luke.com/sql/preface
 
-.. _POEdit: http://poedit.net
+.. _POEdit: https://poedit.net
 
 .. _PostgreSQL's documentation:
 .. _table_constraint:
-    http://www.postgresql.org/docs/9.3/static/ddl-constraints.html
+    https://www.postgresql.org/docs/9.3/static/ddl-constraints.html
 
-.. _python: http://python.org
+.. _python: https://python.org
 
-.. _XPath: http://w3.org/TR/xpath
+.. _XPath: https://w3.org/TR/xpath
 
-.. _twitter bootstrap: http://getbootstrap.com
+.. _twitter bootstrap: https://getbootstrap.com
 
-.. _wkhtmltopdf: http://wkhtmltopdf.org
+.. _wkhtmltopdf: https://wkhtmltopdf.org

@@ -9,7 +9,7 @@ Building a Website
 .. warning::
 
     * This guide assumes `basic knowledge of Python
-      <http://docs.python.org/2/tutorial/>`_
+      <https://docs.python.org/3/tutorial/>`_
     * This guide assumes :ref:`an installed Odoo <setup/install>`
 
 Creating a basic module
@@ -504,10 +504,10 @@ to *active="True"*:
 With this, the *Product Categories* sidebar will automatically be enabled when
 the *Academy* module is installed.
 
-.. _templates: http://en.wikipedia.org/wiki/Web_template
+.. _templates: https://en.wikipedia.org/wiki/Web_template
 .. _postgres:
 .. _postgresql:
-    http://www.postgresql.org
+    https://www.postgresql.org
 .. _converter pattern:
 .. _converter patterns:
     http://werkzeug.pocoo.org/docs/routing/#rule-format

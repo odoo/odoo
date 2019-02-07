@@ -1,13 +1,16 @@
+:orphan:
 :banner: banners/build_interface_ext.jpg
 
 =============================
 Customizing the web client
 =============================
 
-Note: this section is really really out of date. It will be updated someday,
-but meanwhile, this tutorial will probably be frustrating to follow, since it
-was written a long time ago.
+.. warning:: this section is really really out of date. It will be updated someday,
+  but meanwhile, this tutorial will probably be frustrating to follow, since it
+  was written a long time ago.
 
+  Please refer to the :ref:`Javascript CheatSheet <reference/jscs>`
+  for up to date information until a future rework of this tutorial.
 
 .. highlight:: javascript
 
@@ -2325,4 +2328,4 @@ the most useful being:
 .. _PostgreSQL: http://en.wikipedia.org/wiki/PostgreSQL
 .. _positional arguments:
 .. _keyword arguments:
-    https://docs.python.org/2/glossary.html#term-argument
+    https://docs.python.org/3/glossary.html#term-argument
