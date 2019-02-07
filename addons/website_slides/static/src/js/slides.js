@@ -7,7 +7,6 @@ var sAnimations = require('website.content.snippets.animation');
 sAnimations.registry.websiteSlides = sAnimations.Class.extend({
     selector: '#wrapwrap',
     read_events: {
-        'click .o_slides_hide_channel_settings': '_onHideChannelSettings',
     },
 
     /**
@@ -32,22 +31,6 @@ sAnimations.registry.websiteSlides = sAnimations.Class.extend({
         });
 
         return $.when.apply($, defs);
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * To prevent showing channel settings alert box once user closed it.
-     *
-     * @private
-     * @param {Object} ev
-     */
-    _onHideChannelSettings: function (ev) {
-        ev.preventDefault();
-        var channelID = $(ev.currentTarget).data('channelId');
-        document.cookie = 'slides_channel_' + channelID + ' = closed';
     },
 });
 });

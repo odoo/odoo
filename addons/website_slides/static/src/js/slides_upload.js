@@ -24,11 +24,14 @@ var SlideDialog = Widget.extend({
     /**
      * @override
      * @param {Object} el
-     * @param {number} channel_id
+     * @param {Object} data holding channelId and optionally upload and publish control parameters
      */
-    init: function (el, channelID) {
-        this._super(el, channelID);
-        this.channel_id = parseInt(channelID, 10);
+    init: function (el, data) {
+        this._super(el, data);
+        this.channelId = parseInt(data.channelId, 10);
+        this.canUpload = data.canUpload === 'True';
+        this.canPublish = data.canPublish === 'True';
+        console.log(this.channelId, this.canUpload, this.canPublish);
         this.file = {};
         this.index_content = '';
     },
@@ -56,7 +59,7 @@ var SlideDialog = Widget.extend({
         return this._rpc({
             model: 'slide.slide',
             method: 'search_count',
-            args: [[['channel_id', '=', self.channel_id], ['name', '=', fileName]]],
+            args: [[['channel_id', '=', self.channelId], ['name', '=', fileName]]],
         });
     },
     /**
@@ -156,7 +159,7 @@ var SlideDialog = Widget.extend({
                     route: '/slides/category/search_read',
                     params: {
                         fields: ['name'],
-                        domain: [['channel_id', '=', self.channel_id]],
+                        domain: [['channel_id', '=', self.channelId]],
                     }
                 });
             }));
@@ -224,7 +227,7 @@ var SlideDialog = Widget.extend({
     _getValue: function () {
         var canvas = this.$('#data_canvas')[0],
             values = {
-                'channel_id': this.channel_id || '',
+                'channel_id': this.channelId || '',
                 'name': this.$('#name').val(),
                 'url': this.$('#url').val(),
                 'description': this.$('#description').val(),
@@ -418,7 +421,7 @@ var SlideDialog = Widget.extend({
         var self = this,
             value = {
                 'url': $(ev.target).val(),
-                'channel_id': self.channel_id
+                'channel_id': self.channelId
             };
         this.$('.alert-warning').remove();
         this.is_valid_url = false;
@@ -454,7 +457,7 @@ sAnimations.registry.websiteSlidesUpload = sAnimations.Class.extend({
     start: function () {
         // Automatically open the upload dialog if requested from query string
         if ($.deparam.querystring().enable_slide_upload !== undefined) {
-            this._openDialog(this.$el.attr('channel_id'));
+            this._openDialog(this.$el);
         }
         return this._super.apply(this, arguments);
     },
@@ -463,8 +466,9 @@ sAnimations.registry.websiteSlidesUpload = sAnimations.Class.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    _openDialog: function (channelID) {
-        new SlideDialog(this, channelID).appendTo(document.body);
+    _openDialog: function ($element) {
+        var data = $element.data();
+        new SlideDialog(this, data).appendTo(document.body);
     },
 
     //--------------------------------------------------------------------------
@@ -476,7 +480,7 @@ sAnimations.registry.websiteSlidesUpload = sAnimations.Class.extend({
      * @param {Event} ev
      */
     _onUploadClick: function (ev) {
-        this._openDialog($(ev.currentTarget).attr('channel_id'));
+        this._openDialog($(ev.currentTarget));
     },
 });
 });

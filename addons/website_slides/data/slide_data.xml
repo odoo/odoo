@@ -8,19 +8,12 @@
             <field name="visibility">public</field>
             <field name="description">Default channel for slides, all public users can access content of this channel.</field>
         </record>
-        <record model="slide.channel" id="channel_partial">
-            <field name="name">Partner Channel</field>
+        <record model="slide.channel" id="channel_invite">
+            <field name="name">Private Channel</field>
             <field name="website_published" eval="True"/>
-            <field name="group_ids" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
             <field name="upload_group_ids" eval="[(4, ref('base.group_user'))]"/>
-            <field name="visibility">partial</field>
+            <field name="visibility">invite</field>
             <field name="description">Used to publish slides in partner network privately.</field>
-        </record>
-        <record model="slide.channel" id="channel_private">
-            <field name="name">Employee Channel</field>
-            <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
-            <field name="visibility">private</field>
-            <field name="description">Used to publish internal slides of company.</field>
         </record>
     </data>
 </odoo>

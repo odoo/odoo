@@ -88,11 +88,10 @@
                                 <group>
                                     <field name="upload_group_ids" widget="many2many_tags"/>
                                     <field name="visibility" string="Channel visibility" widget="radio"/>
-                                    <field name="group_ids" widget="many2many_tags" attrs="{'invisible':[('visibility', '=', 'public')], 'required':[('visibility', 'in',('private', 'partial'))]}"/>
                                 </group>
-                                <group attrs="{'invisible':[('visibility','in',('public'))]}" colspan="4">
-                                        <label for="access_error_msg" string="Error Message"/>
-                                        <field name="access_error_msg" colspan="4" nolabel="1"/>
+                                <group colspan="4">
+                                        <label for="enroll_msg"/>
+                                        <field name="enroll_msg" colspan="4" nolabel="1"/>
                                 </group>
                             </page>
                         </notebook>

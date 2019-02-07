@@ -92,6 +92,7 @@ class Slide(models.Model):
     # description
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)
+    user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
     description = fields.Text('Description', translate=True)
     channel_id = fields.Many2one('slide.channel', string="Channel", required=True)
     category_id = fields.Many2one('slide.category', string="Category", domain="[('channel_id', '=', channel_id)]")
@@ -100,6 +101,7 @@ class Slide(models.Model):
         [('none', 'No One'), ('user', 'Authenticated Users Only'), ('public', 'Everyone')],
         string='Download Security',
         required=True, default='user')
+    is_preview = fields.Boolean('Previewable', default=False)  # TDE FIXME: clean name + help
     image = fields.Binary('Image', attachment=True)
     image_medium = fields.Binary('Medium', compute="_get_image", store=True, attachment=True)
     image_thumb = fields.Binary('Thumbnail', compute="_get_image", store=True, attachment=True)
@@ -217,6 +219,12 @@ class Slide(models.Model):
 
     @api.model
     def create(self, values):
+        # Do not publish slide if user has not publisher rights
+        channel = self.env['slide.channel'].browse(values['channel_id'])
+        if not channel.can_publish:
+            values['website_published'] = False
+            values['date_published'] = False
+
         if not values.get('index_content'):
             values['index_content'] = values.get('description')
         if values.get('slide_type') == 'infographic' and not values.get('image'):
@@ -227,15 +235,18 @@ class Slide(models.Model):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.items():
                 values.setdefault(key, value)
-        # Do not publish slide if user has not publisher rights
-        if not self.user_has_groups('website.group_website_publisher'):
-            values['website_published'] = False
+
         slide = super(Slide, self).create(values)
-        slide._post_publication()
+
+        if slide.website_published:
+            slide._post_publication()
         return slide
 
     @api.multi
     def write(self, values):
+        if values.get('website_published') and any(not slide.channel_id.can_publish for slide in self):
+            values.pop('website_published')
+
         if values.get('url') and values['url'] != self.url:
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.items():
@@ -248,33 +259,6 @@ class Slide(models.Model):
             self.date_published = datetime.datetime.now()
             self._post_publication()
         return res
-
-    @api.model
-    def check_field_access_rights(self, operation, fields):
-        """ As per channel access configuration (visibility)
-         - public  ==> no restriction on slides access
-         - private ==> restrict all slides of channel based on access group defined on channel group_ids field
-         - partial ==> show channel, but presentations based on groups means any user can see channel but not slide's content.
-        For private: implement using record rule
-        For partial: user can see channel, but channel gridview have slide detail so we have to implement
-        partial field access mechanism for public user so he can have access of promotional field (name, view_count) of slides,
-        but not all fields like data (actual pdf content)
-        all fields should be accessible only for user group defined on channel group_ids
-        """
-        if self.env.uid == SUPERUSER_ID:
-            return fields or list(self._fields)
-        fields = super(Slide, self).check_field_access_rights(operation, fields)
-        # still read not perform so we can not access self.channel_id
-        if self.ids:
-            self.env.cr.execute('SELECT DISTINCT channel_id FROM ' + self._table + ' WHERE id IN %s', (tuple(self.ids),))
-            channel_ids = [x[0] for x in self.env.cr.fetchall()]
-            channels = self.env['slide.channel'].sudo().browse(channel_ids)
-            limited_access = all(channel.visibility == 'partial' and
-                                 not len(channel.group_ids & self.env.user.groups_id)
-                                 for channel in channels)
-            if limited_access:
-                fields = [field for field in fields if field in self._PROMOTIONAL_FIELDS]
-        return fields
 
     @api.multi
     def get_access_action(self, access_uid=None):
@@ -303,7 +287,7 @@ class Slide(models.Model):
 
     def get_related_slides(self, limit=20):
         domain = request.website.website_domain()
-        domain += [('website_published', '=', True), ('channel_id.visibility', '!=', 'private'), ('id', '!=', self.id)]
+        domain += [('website_published', '=', True), ('id', '!=', self.id)]
         if self.category_id:
             domain += [('category_id', '=', self.category_id.id)]
         for record in self.search(domain, limit=limit):
@@ -311,7 +295,7 @@ class Slide(models.Model):
 
     def get_most_viewed_slides(self, limit=20):
         domain = request.website.website_domain()
-        domain += [('website_published', '=', True), ('channel_id.visibility', '!=', 'private'), ('id', '!=', self.id)]
+        domain += [('website_published', '=', True), ('id', '!=', self.id)]
         for record in self.search(domain, limit=limit, order='total_views desc'):
             yield record
 
