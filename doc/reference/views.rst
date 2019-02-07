@@ -1073,6 +1073,11 @@ Possible children of the view element are:
     a :meth:`~odoo.models.Model.read` (except for date and datetime fields
     that are `formatted according to user's locale
     <https://github.com/odoo/odoo/blob/a678bd4e/addons/web_kanban/static/src/js/kanban_record.js#L102>`_)
+  ``context``
+    the current context, coming from the action, and the one2many or many2many
+    field in the case of a Kanban view embedded in a Form view
+  ``user_context``
+    self-explanatory
   ``read_only_mode``
     self-explanatory
 

@@ -67,7 +67,7 @@ if(!$('.js_surveyresult').length) {
     }
 
     //load chart to svg element chart:initialized chart, response:AJAX response, quistion_id:if of survey question, tick_limit:text length limit
-    function load_chart(chart, response, question_id, tick_limit, graph_type){
+    function load_chart(chart, response, svgSelector, tick_limit, graph_type){
         // Custom Tick fuction for replacing long text with '...'
         var customtick_function = function(d){
             if(! this || d.length <= tick_limit){
@@ -83,7 +83,7 @@ if(!$('.js_surveyresult').length) {
             chart.yAxis
                 .tickFormat(d3.format('d'));
         }
-        d3.select('#graph_question_' + question_id + ' svg')
+        d3.select(svgSelector)
             .datum(response)
             .transition().duration(500).call(chart);
         nv.utils.windowResize(chart.update);
@@ -95,25 +95,34 @@ if(!$('.js_surveyresult').length) {
         var question_id = $(graph).attr("data-question_id");
         var graph_type = $(graph).attr("data-graph_type");
         var graph_data = JSON.parse($(graph).attr("graph-data"));
+        var svgSelector = '#graph_question_' + question_id + ' svg';
         if(graph_type == 'multi_bar'){
             nv.addGraph(function(){
                 var chart = init_multibar_chart();
-                return load_chart(chart, graph_data, question_id, 25);
+                return load_chart(chart, graph_data, svgSelector, 25);
             });
         }
         else if(graph_type == 'bar'){
             nv.addGraph(function() {
                 var chart = init_bar_chart();
-                return load_chart(chart, graph_data, question_id, 35);
+                return load_chart(chart, graph_data, svgSelector, 35);
             });
         }
         else if(graph_type == 'pie'){
             nv.addGraph(function() {
                 var chart = init_pie_chart();
-                return load_chart(chart, graph_data, question_id, 25, 'pie');
+                return load_chart(chart, graph_data, svgSelector, 25, 'pie');
             });
         }
     });
+
+    var $scoringResultsChart = $('#scoring_results_chart');
+    if ($scoringResultsChart.length > 0) {
+        nv.addGraph(function () {
+            var chart = init_pie_chart();
+            return load_chart(chart, $scoringResultsChart.data('graph_data'), '#scoring_results_chart svg', 25, 'pie');
+        });
+    }
 
     // Script for filter
     $('td.survey_answer').hover(function(){

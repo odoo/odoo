@@ -2734,10 +2734,53 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             invalid_fields = {name for name in fields if not valid(name)}
             if invalid_fields:
                 _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s',
-                    operation, self._uid, self._name, ', '.join(invalid_fields))
-                raise AccessError(_('The requested operation cannot be completed due to security restrictions. '
-                                    'Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
-                                  (self._description, operation))
+                             operation, self._uid, self._name, ', '.join(invalid_fields))
+
+                description = self.env['ir.model']._get(self._name).name
+                if not self.env.user.has_group('base.group_no_one'):
+                    raise AccessError(
+                        _('The requested operation cannot be completed due to security restrictions. '
+                          'Please contact your system administrator.\n\n(Document type: %(document_kind)s (%(document_model)s), Operation: %(operation)s)') % {
+                        'document_kind': description,
+                        'document_model': self._name,
+                        'operation': operation,
+                    })
+
+                def format_groups(field):
+                    anyof = self.env['res.groups']
+                    noneof = self.env['res.groups']
+                    for g in field.groups.split(','):
+                        if g.startswith('!'):
+                            noneof |= self.env.ref(g[1:])
+                        else:
+                            anyof |= self.env.ref(g)
+                    strs = []
+                    if anyof:
+                        strs.append(_("allowed for groups %s") % ', '.join(
+                            anyof.sorted(lambda g: g.id)
+                                 .mapped(lambda g: repr(g.display_name))
+                        ))
+                    if noneof:
+                        strs.append(_("forbidden for groups %s") % ', '.join(
+                            noneof.sorted(lambda g: g.id)
+                                  .mapped(lambda g: repr(g.display_name))
+                        ))
+                    return '; '.join(strs)
+
+                raise AccessError(_("""The requested operation can not be completed due to security restrictions.
+
+Document type: %(document_kind)s (%(document_model)s)
+Operation: %(operation)s
+Fields:
+%(fields_list)s""") % {
+                    'document_model': self._name,
+                    'document_kind': description or self._name,
+                    'operation': operation,
+                    'fields_list': '\n'.join(
+                        '- %s (%s)' % (f, format_groups(self._fields[f]))
+                        for f in sorted(invalid_fields)
+                    )
+                })
 
         return fields
 
@@ -2943,14 +2986,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # mark non-existing records in missing
             forbidden = missing.exists()
             if forbidden:
-                _logger.info(
-                    _('The requested operation cannot be completed due to record rules: Document type: %s, Operation: %s, Records: %s, User: %s') % \
-                    (self._name, 'read', ','.join([str(r.id) for r in self][:6]), self._uid))
-                # store an access error exception in existing records
-                exc = AccessError(
-                    _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
-                    (self._name, 'read')
-                )
+                exc = self.env['ir.rule']._make_access_error('read', forbidden)
                 self.env.cache.set_failed(forbidden, self._fields.values(), exc)
 
     @api.multi
@@ -3037,10 +3073,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # the invalid records are (partially) hidden by access rules
             if self.is_transient():
                 raise AccessError(_('For this kind of document, you may only access records you created yourself.\n\n(Document type: %s)') % (self._description,))
-            else:
-                _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, forbidden.ids, self._uid, self._name)
-                raise AccessError(_('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
-                                  (self._description, operation))
+
+            raise self.env['ir.rule']._make_access_error(operation, forbidden)
 
         # If we get here, the invalid records are not in the database.
         if operation in ('read', 'unlink'):
@@ -3301,7 +3335,17 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     cr.execute(query, [sub_ids])
                     parent_ids.update(row[0] for row in cr.fetchall())
 
-                self.env[model_name].browse(parent_ids).write(parent_vals)
+                try:
+                    self.env[model_name].browse(parent_ids).write(parent_vals)
+                except AccessError as e:
+                    description = self.env['ir.model']._get(self._name).name
+                    raise AccessError(
+                        _("%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).") % {
+                            'previous_message': e.args[0],
+                            'document_kind': description,
+                            'document_model': self._name,
+                        }
+                    )
 
             if inverse_vals:
                 self.modified(set(inverse_vals) - set(store_vals))

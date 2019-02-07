@@ -21,22 +21,57 @@ def dict_keys_startswith(dictionary, string):
 
 
 class SurveyQuestion(models.Model):
-    """ Questions that will be asked in a survey. Each question can have one of more suggested answers (eg. in case of
-    dropdown choices, multi-answer checkboxes, radio buttons...). """
+    """ Questions that will be asked in a survey.
+
+        Each question can have one of more suggested answers (eg. in case of
+        dropdown choices, multi-answer checkboxes, radio buttons...).
+
+        Technical note:
+
+        survey.question is also the model used for the survey's pages (with the "is_page" field set to True).
+
+        A page corresponds to a "section" in the interface, and the fact that it separates the survey in
+        actual pages in the interface depends on the "questions_layout" parameter on the survey.survey model.
+        Pages are also used when randomizing questions. The randomization can happen within a "page".
+
+        Using the same model for questions and pages allows to put all the pages and questions together in a o2m field
+        (see survey.survey.question_and_page_ids) on the view side and easily reorganize your survey by dragging the
+        items around.
+
+        It also removes on level of encoding by directly having 'Add a page' and 'Add a question'
+        links on the tree view of questions, enabling a faster encoding.
+
+        However, this has the downside of making the code reading a little bit more complicated.
+        Efforts were made at the model level to create computed fields so that the use of these models
+        still seems somewhat logical. That means:
+        - A survey still has "page_ids" (question_and_page_ids filtered on is_page = True)
+        - These "page_ids" still have question_ids (questions located between this page and the next)
+        - These "question_ids" still have a "page_id"
+
+        That makes the use and display of these information at view and controller levels easier to understand.
+    """
+
     _name = 'survey.question'
     _description = 'Survey Question'
     _rec_name = 'question'
     _order = 'sequence,id'
 
     # Question metadata
-    page_id = fields.Many2one(
-        'survey.page', string='Survey page',
-        ondelete='cascade', required=True, default=lambda self: self.env.context.get('page_id'))
-    survey_id = fields.Many2one('survey.survey', related='page_id.survey_id', string='Survey', readonly=False)
+    survey_id = fields.Many2one('survey.survey', string='Survey', ondelete='cascade')
+    page_id = fields.Many2one('survey.question', string='Page', compute="_compute_page_id", store=True)
+    question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_question_ids")
+    scoring_type = fields.Selection(related='survey_id.scoring_type', string='Scoring Type', readonly=True)
     sequence = fields.Integer('Sequence', default=10)
     # Question
-    question = fields.Char('Question Name', required=True, translate=True)
+    is_page = fields.Boolean('Is a page?')
+    questions_selection = fields.Selection(related='survey_id.questions_selection', readonly=True,
+        help="If randomized is selected, add the number of random questions next to the section.")
+    random_questions_count = fields.Integer('Random questions count', default=1,
+        help="Used on randomized sections to take X random questions from all the questions of that section.")
+    title = fields.Char('Title', required=True, translate=True)
+    question = fields.Char('Question', related="title")
     description = fields.Html('Description', help="Use this field to add additional explanations about your question", translate=True)
+
     question_type = fields.Selection([
         ('free_text', 'Multiple Lines Text Box'),
         ('textbox', 'Single Line Text Box'),
@@ -282,6 +317,54 @@ class SurveyQuestion(models.Model):
                 errors.update({answer_tag: self.constr_error_msg})
         return errors
 
+    @api.multi
+    @api.depends('survey_id.question_and_page_ids.is_page', 'survey_id.question_and_page_ids.sequence')
+    def _compute_question_ids(self):
+        """Will take all questions of the survey for which the index is higher than the index of this page
+        and lower than the index of the next page."""
+        for question in self:
+            if question.is_page:
+                next_page_index = False
+                for page in question.survey_id.page_ids:
+                    if page._index() > question._index():
+                        next_page_index = page._index()
+                        break
+
+                question.question_ids = question.survey_id.question_ids.filtered(lambda q:
+                    q._index() > question._index() and (not next_page_index or q._index() < next_page_index))
+            else:
+                question.question_ids = self.env['survey.question']
+
+    @api.multi
+    @api.depends('survey_id.question_and_page_ids.is_page', 'survey_id.question_and_page_ids.sequence')
+    def _compute_page_id(self):
+        """Will find the page to which this question belongs to by looking inside the corresponding survey"""
+        for question in self:
+            if question.is_page:
+                question.page_id = None
+            else:
+                question.page_id = next(
+                    (iter(question
+                        .survey_id
+                        .question_and_page_ids
+                        .filtered(lambda q: q.is_page and q.sequence < question.sequence)
+                        .sorted(reverse=True))),
+                    None
+                )
+
+    @api.multi
+    def _index(self):
+        """We would normally just use the 'sequence' field of questions BUT, if the pages and questions are
+        created without ever moving records around, the sequence field can be set to 0 for all the questions.
+
+        However, the order of the recordset is always correct so we can rely on the index method."""
+        self.ensure_one()
+        return list(self.survey_id.question_and_page_ids).index(self)
+
+    def get_correct_answer_ids(self):
+        self.ensure_one()
+
+        return self.labels_ids.filtered(lambda label: label.is_correct)
 
 class SurveyLabel(models.Model):
     """ A suggested answer for a question """
@@ -294,7 +377,9 @@ class SurveyLabel(models.Model):
     question_id_2 = fields.Many2one('survey.question', string='Question 2', ondelete='cascade')
     sequence = fields.Integer('Label Sequence order', default=10)
     value = fields.Char('Suggested value', translate=True, required=True)
-    quizz_mark = fields.Float('Score for this choice', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
+    is_correct = fields.Boolean('Is a correct answer')
+    answer_score = fields.Float('Score for this choice',
+    help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
 
     @api.one
     @api.constrains('question_id', 'question_id_2')

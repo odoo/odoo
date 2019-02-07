@@ -16,7 +16,7 @@ class WebsiteRating(PortalChatter):
         if kwargs.get('rating_include'):
             record = request.env[res_model].browse(res_id)
             if hasattr(record, 'rating_get_stats'):
-                result['rating_stats'] = record.rating_get_stats([('website_published', '=', True)])
+                result['rating_stats'] = record.rating_get_stats()
         return result
 
     @http.route()

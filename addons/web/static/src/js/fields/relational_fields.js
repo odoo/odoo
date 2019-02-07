@@ -2752,6 +2752,7 @@ return {
     KanbanFieldMany2One: KanbanFieldMany2One,
     ListFieldMany2One: ListFieldMany2One,
 
+    FieldX2Many : FieldX2Many,
     FieldOne2Many: FieldOne2Many,
 
     FieldMany2Many: FieldMany2Many,

@@ -16,7 +16,22 @@
 <template id="channels" name="Channels">
     <t t-call="website.layout">
         <div class="container mt16">
-            <h1>Select a Channel</h1>
+            <div class="d-flex justify-content-between mb-4">
+                <h1 t-if="not search_term">Select a Channel</h1>
+                <h1 t-if="search_term">Channel found for "<i><t t-esc="search_term"/></i>"</h1>
+                <div class="form-inline justify-content-center">
+                    <form method="GET" class="o_website_slides_search">
+                        <div class="input-group">
+                            <input type="text" name="search" class="search-query form-control oe_search_box" placeholder="Search..." t-att-value="search_term"/>
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary oe_search_button" aria-label="Search" title="Search">
+                                    <i class="fa fa-search"/>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <div class="row">
                 <t t-foreach="channels" t-as="channel">
                     <div t-if="channel_index % 3 == 0" class="clearfix"/>
@@ -44,6 +59,10 @@
                             <div>
                                 <p class="text-muted oe_no_empty" t-field="channel.description"/>
                             </div>
+                            <t t-call="website_rating.rating_widget_stars_static">
+                                <t t-set="rating_avg" t-value="channel.rating_avg"/>
+                                <t t-set="rating_count" t-value="channel.rating_count"/>
+                            </t>
                         </div>
                     </div>
                 </t>
@@ -69,7 +88,12 @@
     <t t-call="website.layout">
         <div class="container">
             <div class="oe_structure">
-                <h2>No channel created or published yet.</h2>
+                <t t-if="search_term">
+                    <h2>No channel found when searching "<i><t t-esc="search_term"/></i>".</h2>
+                </t>
+                <t t-else="">
+                    <h2>No channel created or published yet.</h2>
+                </t>
             </div>
         </div>
     </t>
@@ -216,11 +240,38 @@
                             </div>
                             <div class="row oe_no_empty" t-esc="channel.promoted_slide_id.description"/>
                             <p class="row mt8">
+                                <t t-call="website_rating.rating_stars_static_popup_composer">
+                                    <t t-set="rating_avg" t-value="rating_avg"/>
+                                    <t t-set="rating_total" t-value="rating_count"/>
+                                    <t t-set="object" t-value="channel"/>
+                                    <t t-set="hash" t-value="message_post_hash"/>
+                                    <t t-set="pid" t-value="message_post_pid"/>
+                                    <t t-set="default_message_id" t-value="last_message_id"/>
+                                    <t t-set="default_message" t-value="last_message"/>
+                                    <t t-set="default_rating_value" t-value="last_rating_value"/>
+                                    <t t-set="force_submit_url" t-value="'/slides/mail/update_comment' if last_message_id else False"/>
+                                </t>
+                            </p>
+                            <p class="row mt8">
                                 <b>Share:</b>
                                 <t t-call="website_slides.slides_share">
                                     <t t-set="slide" t-value="channel.promoted_slide_id"/>
                                 </t>
                             </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="o_slides_discussion_rating">
+                <div class="container mt16 mb16">
+                    <hr/>
+                    <div class="row">
+                        <div class="col-lg-8 offset-lg-2">
+                            <t t-call="portal.message_thread">
+                                <t t-set="object" t-value="channel"/>
+                                <t t-set="display_rating" t-value="True"/>
+                                <t t-set="disable_composer" t-value="True"/>
+                            </t>
                         </div>
                     </div>
                 </div>
