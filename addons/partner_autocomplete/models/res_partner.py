@@ -18,6 +18,26 @@ class ResPartner(models.Model):
 
     partner_gid = fields.Integer('Company database ID')
     additional_info = fields.Char('Additional info')
+    autocomplete_vat_synched = fields.Boolean()
+
+    @api.onchange('vat')
+    def _synch_vat_number(self):
+        self.autocomplete_vat_synched = False
+
+    @api.model
+    def start_sync(self):
+        partners_to_sync = self.search([('autocomplete_vat_synched', '=', False), ('partner_gid', '!=', False)])
+        for partner in partners_to_sync:
+            if partner.vat and partner._is_vat_syncable():
+                params = {
+                    'partner_gid': partner.partner_gid,
+                    'vat': partner.vat,
+                }
+                result, error = partner._rpc_remote_api('update', params)
+                if error:
+                    _logger.error('Send Partner to sync failed: %s' % str(error))
+
+            partner.write({'autocomplete_vat_synched': True})
 
     @api.model
     def _replace_location_code_by_id(self, record):
@@ -157,39 +177,22 @@ class ResPartner(models.Model):
                 return False
         return True
 
-    def _is_vat_syncable(self, vat):
-        vat_country_code = vat[:2]
+    @api.multi
+    def _is_vat_syncable(self):
+        self.ensure_one()
+        vat_country_code = self.vat[:2]
         partner_country_code = self.country_id and self.country_id.code
         return self._is_company_in_europe(vat_country_code) and (partner_country_code == vat_country_code or not partner_country_code)
-
-    def _is_synchable(self):
-        already_synched = self.env['res.partner.autocomplete.sync'].search([('partner_id', '=', self.id), ('synched', '=', True)])
-        return self.is_company and self.partner_gid and not already_synched
-
-    def _update_autocomplete_data(self, vat):
-        self.ensure_one()
-        if vat and self._is_synchable() and self._is_vat_syncable(vat):
-            self.env['res.partner.autocomplete.sync'].sudo().add_to_queue(self.id)
 
     @api.model_create_multi
     def create(self, vals_list):
         partners = super(ResPartner, self).create(vals_list)
-        if len(vals_list) == 1:
-            partners._update_autocomplete_data(vals_list[0].get('vat', False))
-            if partners.additional_info:
-                partners.message_post_with_view(
-                    'partner_autocomplete.additional_info_template',
-                    values=json.loads(partners.additional_info),
-                    subtype_id=self.env.ref('mail.mt_note').id,
-                )
-                partners.write({'additional_info': False})
+        if len(vals_list) == 1 and partners.additional_info:
+            partners.message_post_with_view(
+                'partner_autocomplete.additional_info_template',
+                values=json.loads(partners.additional_info),
+                subtype_id=self.env.ref('mail.mt_note').id,
+            )
+            partners.write({'additional_info': False})
 
         return partners
-
-    @api.multi
-    def write(self, values):
-        res = super(ResPartner, self).write(values)
-        if len(self) == 1:
-            self._update_autocomplete_data(values.get('vat', False))
-
-        return res

@@ -117,6 +117,12 @@ var FieldAutocomplete = FieldChar.extend(AutocompleteMixin, {
                 var logoField = self.model === 'res.partner' ? 'image' : 'logo';
                 data.company[logoField] = data.logo;
             }
+            if (data.vat) {
+              data.autocomplete_vat_synched = true;
+            }
+            else {
+              data.autocomplete_vat_synched = false;
+            }
 
             // Some fields are unnecessary in res.company
             if (self.model === 'res.company') {
