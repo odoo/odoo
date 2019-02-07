@@ -372,14 +372,14 @@ var KeyboardPlugin = AbstractPlugin.extend({
                 return $(n).hasClass('btn');
             });
 
-            // Move carret to the new button
-            range = this.context.invoke('editor.setRange', next.firstChild, 0);
-            range.select();
-
             // Force content in empty buttons, the carret can be moved there
             this.context.invoke('LinkPopover.hide');
             this.context.invoke('LinkPopover.fillEmptyLink', next, true);
             this.context.invoke('LinkPopover.fillEmptyLink', btn, true);
+
+            // Move carret to the new button
+            range = this.context.invoke('editor.setRange', next.firstChild, 0);
+            range.select();
         } else {
             range = this.context.invoke('editor.setRange', point.node, point.offset);
             range.normalize().select();
