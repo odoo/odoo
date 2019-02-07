@@ -109,7 +109,7 @@ odoo.define('website_slides.add.section', function (require) {
     sAnimations.registry.websiteSlidesSection = sAnimations.Class.extend({
         selector: '.oe_slide_js_add_section',
         xmlDependencies: ['/website_slides/static/src/xml/website_slides_upload.xml'],
-        read_events: {
+        events: {
             'click': '_onAddSectionClick',
         },
 

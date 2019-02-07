@@ -6,8 +6,6 @@ var sAnimations = require('website.content.snippets.animation');
 
 sAnimations.registry.websiteSlides = sAnimations.Class.extend({
     selector: '#wrapwrap',
-    read_events: {
-    },
 
     /**
      * @override

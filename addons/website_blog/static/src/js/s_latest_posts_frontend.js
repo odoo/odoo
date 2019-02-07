@@ -8,6 +8,7 @@ var _t = core._t;
 
 sAnimation.registry.js_get_posts = sAnimation.Class.extend({
     selector : '.js_get_posts',
+    disabledInEditableMode: false,
 
     /**
      * @override

@@ -59,7 +59,7 @@ odoo.define('website_slides.delete.slide', function (require) {
     sAnimations.registry.websiteSlidesDeleteSlide = sAnimations.Class.extend({
         selector: '.oe_slide_js_delete_slide',
         xmlDependencies: ['/website_slides/static/src/xml/website_slides_upload.xml'],
-        read_events: {
+        events: {
             'click': '_onDeleteSlideClick',
         },
 

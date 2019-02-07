@@ -339,7 +339,7 @@ var RecentLinks = Widget.extend({
 
 sAnimations.registry.websiteLinks = sAnimations.Class.extend({
     selector: '.o_website_links_create_tracked_url',
-    read_events: {
+    events: {
         'click #filter-newest-links': '_onFilterNewestLinksClick',
         'click #filter-most-clicked-links': '_onFilterMostClickedLinksClick',
         'click #filter-recently-used-links': '_onFilterRecentlyUsedLinksClick',

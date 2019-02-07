@@ -8,7 +8,7 @@ var _t = core._t;
 
 sAnimations.registry.websiteLinksCodeEditor = sAnimations.Class.extend({
     selector: '#wrapwrap:has(.o_website_links_edit_code)',
-    read_events: {
+    events: {
         'click .o_website_links_edit_code': '_onEditCodeClick',
         'click .o_website_links_cancel_edit': '_onCancelEditClick',
         'submit #edit-code-form': '_onEditCodeFormSubmit',

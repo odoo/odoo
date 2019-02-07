@@ -5,7 +5,7 @@ var publicWidget = require('web.public.widget');
 
 publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     selector: '.o_portal_details',
-    read_events: {
+    events: {
         'change select[name="country_id"]': '_onCountryChange',
     },
 
@@ -14,9 +14,6 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        if (this.editableMode) {
-            return;
-        }
 
         this.$state = this.$('select[name="state_id"]');
         this.$stateOptions = this.$state.filter(':enabled').find('option:not(:first)');
@@ -55,7 +52,7 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
 
 publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
     selector: '.o_portal_search_panel',
-    read_events: {
+    events: {
         'click .search-submit': '_onSearchSubmitClick',
         'click .dropdown-item': '_onDropdownItemClick',
         'keyup input[name="search"]': '_onSearchInputKeyup',
@@ -66,12 +63,7 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        if (this.editableMode) {
-            return;
-        }
-
         this._adaptSearchLabel(this.$('.dropdown-item.active'));
-
         return def;
     },
 

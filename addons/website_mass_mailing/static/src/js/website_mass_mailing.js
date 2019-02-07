@@ -6,6 +6,8 @@ var sAnimation = require('website.content.snippets.animation');
 
 sAnimation.registry.subscribe = sAnimation.Class.extend({
     selector: ".js_subscribe",
+    disabledInEditableMode: false,
+
     start: function () {
         var self = this;
 
@@ -65,6 +67,8 @@ sAnimation.registry.subscribe = sAnimation.Class.extend({
 
 sAnimation.registry.newsletter_popup = sAnimation.Class.extend({
     selector: ".o_newsletter_popup",
+    disabledInEditableMode: false,
+
     start: function () {
         var self = this;
 

@@ -563,7 +563,7 @@ var SlideUploadDialog = Dialog.extend({
 sAnimations.registry.websiteSlidesUpload = sAnimations.Class.extend({
     selector: '.oe_slide_js_upload',
     xmlDependencies: ['/website_slides/static/src/xml/website_slides_upload.xml'],
-    read_events: {
+    events: {
         'click': '_onUploadClick',
     },
 
@@ -584,9 +584,7 @@ sAnimations.registry.websiteSlidesUpload = sAnimations.Class.extend({
 
     _openDialog: function ($element) {
         var data = $element.data();
-        var dialog = new SlideUploadDialog(this, data)
-        dialog.appendTo(document.body);
-        return dialog.open();
+        return new SlideUploadDialog(this, data).open();
     },
 
     //--------------------------------------------------------------------------

@@ -41,7 +41,7 @@ var ShareMail = Widget.extend({
 
 sAnimations.registry.websiteSlidesShare = sAnimations.Class.extend({
     selector: '#wrapwrap',
-    read_events: {
+    events: {
         'click a.o_slides_social_share': '_onSlidesSocialShare',
     },
 
