@@ -138,7 +138,11 @@ class Message(models.Model):
     @api.one
     @api.depends('author.name', 'discussion.name')
     def _compute_name(self):
-        self.name = "[%s] %s" % (self.discussion.name or '', self.author.name or '')
+        # one may force the value through the context
+        self.name = (
+            self._context.get('compute_name') or
+            "[%s] %s" % (self.discussion.name or '', self.author.name or '')
+        )
 
     @api.one
     @api.depends('author.name', 'discussion.name', 'body')
