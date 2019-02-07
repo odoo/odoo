@@ -163,6 +163,12 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
 
         if ($from === undefined) {
             $from = this.$('#wrapwrap');
+            if (!$from.length) {
+                // TODO Remove this once all frontend layouts possess a
+                // #wrapwrap element (which is necessary for those pages to be
+                // adapted correctly if the user installs website).
+                $from = this.$el;
+            }
         }
         if (options === undefined) {
             options = {};
