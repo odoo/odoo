@@ -2354,9 +2354,9 @@ function summernote_table_update(oStyle) {
         if ($(td).siblings().length) {
             var eq = $(td).index();
             $table.find('tr').each(function () {
-                $('> td:eq('+eq+')', this).remove();
+                $('> th:eq('+eq+'),> td:eq('+eq+')', this).remove();
             });
-            newTd = $table.find('tr:first > td:eq('+eq+'), tr:first > td:last').first();
+            newTd = $table.find('tr:first > td:eq('+eq+'), tr:first > th:eq('+eq+'), tr:first > td:last, tr:first > th:last').first();
         } else {
             var prev = dom.lastChild(dom.hasContentBefore(dom.ancestorHavePreviousSibling($table[0])));
             $table.remove();
@@ -2380,8 +2380,9 @@ function summernote_table_update(oStyle) {
             var eq = $(td).index();
             $table.find('tr').each(function () {
                 $('td:eq('+eq+')', this).before('<td>'+dom.blank+'</td>');
+                $('th:eq('+eq+')', this).before('<th>'+dom.blank+'</th>');
             });
-            newTd = $table.find('tr:first td:eq('+eq+')');
+            newTd = $table.find('tr:first td:eq('+eq+'),tr:first th:eq('+eq+')');
         } else {
             $table.find('tr').each(function () {
                 $(this).append('<td>'+dom.blank+'</td>');

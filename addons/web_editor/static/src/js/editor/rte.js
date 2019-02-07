@@ -719,7 +719,7 @@ var RTEWidget = Widget.extend({
         // selected too)
         //
         // The triple click behavior is reimplemented for all browsers here
-        if (ev.originalEvent.detail === 3) {
+        if (ev.originalEvent && ev.originalEvent.detail === 3) {
             // Select the whole content inside the deepest DOM element that was
             // triple-clicked
             range.create(ev.target, 0, ev.target, ev.target.childNodes.length).select();
