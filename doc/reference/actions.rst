@@ -160,7 +160,7 @@ via two fields:
 
     {
         "type": "ir.actions.act_url",
-        "url": "http://odoo.com",
+        "url": "https://odoo.com",
         "target": "self",
     }
 
@@ -420,3 +420,41 @@ how the POS interface works.
 
 .. [#notquitem2m] technically not an M2M: adds a sequence field and may be
                   composed of just a view type, without a view id.
+
+.. _reference/actions/cron:
+
+Automated Actions (``ir.cron``)
+======================================
+
+Actions triggered automatically on a predefined frequency.
+
+``name``
+    Name of the automated action (Mainly used in log display)
+
+``interval_number``
+    Number of *interval_type* uom between two executions of the action
+
+``interval_type``
+    Unit of measure of frequency interval (``minutes``, ``hours``, ``days``, ``weeks``, ``months``,
+
+``numbercall``
+    Number of times this action has to be run.
+    If the action is expected to run indefinitely, set to ``-1``.
+
+``doall``
+    Boolean precising whether the missed actions have to be executed in case of
+    server restarts.
+
+``model_id``
+    Model on which this action will be called
+
+``code``
+    Code content of the action.
+    Can be a simple call to the model's method :
+
+    .. code-block:: python
+
+      model.<method_name>()
+
+``nextcall``
+    Next planned execution date of this action (date/time format)
