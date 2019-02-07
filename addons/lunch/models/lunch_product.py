@@ -109,7 +109,6 @@ class LunchProduct(models.Model):
     new_until = fields.Date('New Until')
     favorite_user_ids = fields.Many2many('res.users', 'lunch_product_favorite_user_rel', 'product_id', 'user_id')
 
-
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
