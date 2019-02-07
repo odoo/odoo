@@ -273,7 +273,6 @@ class AccountVoucher(models.Model):
             'currency_id': self.currency_id.id,
             'payment_date': self.date,
             'journal_id': self.payment_journal_id.id,
-            'company_id': self.company_id.id,
             'communication': self.name,
         }
 
