@@ -70,6 +70,18 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
             'edit_translations': !!html.dataset.edit_translations,
         }, this._super.apply(this, arguments));
     },
+    /**
+     * @override
+     */
+    _getPublicWidgetsRegistry: function (options) {
+        var registry = this._super.apply(this, arguments);
+        if (options.editableMode) {
+            return _.pick(registry, function (PublicWidget) {
+                return !PublicWidget.prototype.disabledInEditableMode;
+            });
+        }
+        return registry;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers

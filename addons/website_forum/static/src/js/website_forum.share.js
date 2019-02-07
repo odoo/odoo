@@ -11,15 +11,15 @@ var ForumShare = sAnimations.registry.socialShare.extend({
     selector: '',
     xmlDependencies: sAnimations.registry.socialShare.prototype.xmlDependencies
         .concat(['/website_forum/static/src/xml/website_forum_share_templates.xml']),
-    read_events: {},
+    events: {},
 
     /**
      * @override
      * @param {Object} parent
-     * @param {boolean} editableMode
+     * @param {Object} options
      * @param {string} targetType
      */
-    init: function (parent, editableMode, targetType) {
+    init: function (parent, options, targetType) {
         this._super.apply(this, arguments);
         this.targetType = targetType;
     },
@@ -71,7 +71,7 @@ var ForumShare = sAnimations.registry.socialShare.extend({
 
 sAnimations.registry.websiteForumShare = sAnimations.Class.extend({
     selector: '.website_forum',
-    read_events: {
+    events: {
         'click :not(.karma_required).oe_social_share_call': '_onShareCallClick',
     },
 

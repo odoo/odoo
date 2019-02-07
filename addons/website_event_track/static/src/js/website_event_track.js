@@ -5,7 +5,7 @@ var sAnimations = require('website.content.snippets.animation');
 
 sAnimations.registry.websiteEventTrack = sAnimations.Class.extend({
     selector: '.o_website_event',
-    read_events: {
+    events: {
         'input #event_track_search': '_onEventTrackSearchInput',
     },
 

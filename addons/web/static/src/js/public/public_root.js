@@ -136,6 +136,14 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
         return this._getContext(context);
     },
     /**
+     * @private
+     * @param {Object} [options]
+     * @returns {Object}
+     */
+    _getPublicWidgetsRegistry: function (options) {
+        return publicWidget.registry;
+    },
+    /**
      * As the root instance is designed to be unique, the associated
      * registry has been instantiated outside of the class and is simply
      * returned here.
@@ -176,7 +184,7 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
 
         this._stopAnimations($from);
 
-        var defs = _.map(publicWidget.registry, function (WebsiteWidget) {
+        var defs = _.map(this._getPublicWidgetsRegistry(options), function (WebsiteWidget) {
             var selector = WebsiteWidget.prototype.selector || '';
             var $target = $from.find(selector).addBack(selector);
 

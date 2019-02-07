@@ -34,6 +34,54 @@ if (!window.performance || !window.performance.now) {
 }
 
 /**
+ * Add the notion of edit mode to public widgets.
+ */
+publicWidget.Widget.include({
+    /**
+     * Indicates if the widget should not be instantiated in edit. The default
+     * is true, indeed most (all?) defined widgets only want to initialize
+     * events and states which should not be active in edit mode (this is
+     * especially true for non-website widgets).
+     *
+     * @type {boolean}
+     */
+    disabledInEditableMode: true,
+    /**
+     * Acts as @see Widget.events except that the events are only binded if the
+     * Animation instance is instanciated in edit mode. The property is not
+     * considered if @see disabledInEditableMode is false.
+     */
+    edit_events: null,
+    /**
+     * Acts as @see Widget.events except that the events are only binded if the
+     * Animation instance is instanciated in readonly mode. The property only
+     * makes sense if @see disabledInEditableMode is false, you should simply
+     * use @see Widget.events otherwise.
+     */
+    read_events: null,
+
+    /**
+     * Initializes the events that will need to be binded according to the
+     * given mode.
+     *
+     * @constructor
+     * @param {Object} parent
+     * @param {Object} [options]
+     * @param {boolean} [options.editableMode=false]
+     *        true if the page is in edition mode
+     */
+    init: function (parent, options) {
+        this._super.apply(this, arguments);
+
+        this.editableMode = this.options.editableMode || false;
+        var extraEvents = this.editableMode ? this.edit_events : this.read_events;
+        if (extraEvents) {
+            this.events = _.extend(this.events || {}, extraEvents);
+        }
+    },
+});
+
+/**
  * In charge of handling one animation loop using the requestAnimationFrame
  * feature. This is used by the `Animation` class below and should not be called
  * directly by an end developer.
@@ -379,6 +427,7 @@ var registry = publicWidget.registry;
 
 registry.slider = publicWidget.Widget.extend({
     selector: '.carousel',
+    disabledInEditableMode: false,
     edit_events: {
         'slid.bs.carousel': '_onEditionSlide',
     },
@@ -669,7 +718,7 @@ registry.ul = publicWidget.Widget.extend({
 registry.gallery = publicWidget.Widget.extend({
     selector: '.o_gallery:not(.o_slideshow)',
     xmlDependencies: ['/website/static/src/xml/website.gallery.xml'],
-    read_events: {
+    events: {
         'click img': '_onClickImg',
     },
 
@@ -741,6 +790,7 @@ registry.gallery = publicWidget.Widget.extend({
 registry.gallerySlider = publicWidget.Widget.extend({
     selector: '.o_slideshow',
     xmlDependencies: ['/website/static/src/xml/website.gallery.xml'],
+    disabledInEditableMode: false,
 
     /**
      * @override
@@ -820,7 +870,7 @@ registry.gallerySlider = publicWidget.Widget.extend({
 registry.socialShare = publicWidget.Widget.extend({
     selector: '.oe_social_share',
     xmlDependencies: ['/website/static/src/xml/website.share.xml'],
-    read_events: {
+    events: {
         'mouseenter': '_onMouseEnter',
     },
 
@@ -947,7 +997,7 @@ registry.facebookPage = publicWidget.Widget.extend({
 
 registry.anchorSlide = publicWidget.Widget.extend({
     selector: 'a[href^="/"][href*="#"], a[href^="#"]',
-    read_events: {
+    events: {
         'click': '_onAnimateClick',
     },
 

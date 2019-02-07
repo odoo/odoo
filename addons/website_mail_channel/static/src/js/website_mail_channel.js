@@ -5,7 +5,7 @@ var sAnimations = require('website.content.snippets.animation');
 
 sAnimations.registry.websiteMailChannel = sAnimations.Class.extend({
     selector: '#wrapwrap',
-    read_events: {
+    events: {
         'click .o_mg_link_hide': '_onHideLinkClick',
         'click .o_mg_link_show': '_onShowLinkClick',
         'click button.o_mg_read_more': '_onReadMoreClick',
