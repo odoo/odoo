@@ -363,12 +363,12 @@ class AccountVoucher(models.Model):
             line_total = voucher.with_context(ctx).voucher_move_line_create(line_total, move.id, company_currency, current_currency)
 
             # Create a payment to allow the reconciliation when pay_now = 'pay_now'.
-            if self.pay_now == 'pay_now':
-                payment_id = self.env['account.payment'].create(self.voucher_pay_now_payment_create())
+            if voucher.pay_now == 'pay_now':
+                payment_id = self.env['account.payment'].create(voucher.voucher_pay_now_payment_create())
                 payment_id.post()
 
                 # Reconcile the receipt with the payment
-                lines_to_reconcile = (payment_id.move_line_ids + move.line_ids).filtered(lambda l: l.account_id == self.account_id)
+                lines_to_reconcile = (payment_id.move_line_ids + move.line_ids).filtered(lambda l: l.account_id == voucher.account_id)
                 lines_to_reconcile.reconcile()
 
             # Add tax correction to move line if any tax correction specified
