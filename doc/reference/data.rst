@@ -154,6 +154,8 @@ values).
 
 .. ignored assert
 
+.. _reference/data/shortcuts:
+
 Shortcuts
 =========
 
@@ -263,5 +265,5 @@ For each row (record):
 * the third column is the ``name`` field for ``res.country.state``
 * the fourth column is the ``code`` field for ``res.country.state``
 
-.. _base64: http://tools.ietf.org/html/rfc3548.html#section-3
-.. _csv: http://en.wikipedia.org/wiki/Comma-separated_values
+.. _base64: https://tools.ietf.org/html/rfc3548.html#section-3
+.. _csv: https://en.wikipedia.org/wiki/Comma-separated_values

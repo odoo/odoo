@@ -7,6 +7,11 @@
 Translating Modules
 ===================
 
+This section explains how to provide translation abilities to your module.
+
+.. note:: If you want to contribute to the translation of Odoo itself, please refer to the
+  `Odoo Wiki page <https://github.com/odoo/odoo/wiki/Translations>`_.
+
 Exporting translatable term
 ===========================
 
@@ -184,6 +189,6 @@ Read vs Run Time
     };
 
 
-.. _PO File: http://en.wikipedia.org/wiki/Gettext#Translating
-.. _msginit: http://www.gnu.org/software/gettext/manual/gettext.html#Creating
-.. _POEdit: http://poedit.net/
+.. _PO File: https://en.wikipedia.org/wiki/Gettext#Translating
+.. _msginit: https://www.gnu.org/software/gettext/manual/gettext.html#Creating
+.. _POEdit: https://poedit.net/
