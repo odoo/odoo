@@ -67,8 +67,9 @@
                     </main>
                     <footer class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
-                        <button type="button" data-loading-text="Loading..." class="btn btn-primary save">Save as Draft</button>
-                        <button type="button" data-loading-text="Loading..." data-published="true" class="btn btn-primary save">Save and Publish</button>
+                        <button type="button" data-loading-text="Loading..." t-if="widget.canUpload &amp;&amp; widget.canPublish" class="btn btn-primary save">Save as Draft</button>
+                        <button type="button" data-loading-text="Loading..." t-if="widget.canUpload &amp;&amp; ! widget.canPublish" class="btn btn-primary save">Submit</button>
+                        <button type="button" data-loading-text="Loading..." t-if="widget.canUpload &amp;&amp; widget.canPublish" data-published="true" class="btn btn-primary save">Publish</button>
                     </footer>
                 </div>
             </div>

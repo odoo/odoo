@@ -54,7 +54,6 @@
                                 <h3 class="mt4 mb4 lead" t-att-title="channel.name" style="width:55%">
                                     <a t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
                                 </h3>
-                                <span class="badge badge-warning" t-if="not channel.can_see_full">Private channel</span>
                             </div>
                             <div>
                                 <p class="text-muted oe_no_empty" t-field="channel.description"/>
@@ -74,11 +73,9 @@
 <!-- Channels View: option: subscription -->
 <template id="opt_subscription_on_channels" name="Subscription" customize_show="True" inherit_id="website_slides.channels">
     <xpath expr="//p[@t-field='channel.description']" position="after">
-        <t t-if="channel.can_see_full">
-            <t t-call="website_mail.follow">
-                <t t-set="email" t-value="user.email"/>
-                <t t-set="object" t-value="channel"/>
-            </t>
+        <t t-call="website_mail.follow">
+            <t t-set="email" t-value="user.email"/>
+            <t t-set="object" t-value="channel"/>
         </t>
     </xpath>
 </template>
@@ -108,12 +105,28 @@
                 <div class="float-left col-lg-8 col-md-12 col-12 mt16 mb8">
                     <h3 class="mt0">
                         <a t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
+                        <span t-if="not channel.is_member" class="o_wslides_join_channel">
+                            <a role="button" class="btn btn-primary o_wslides_join_channel_link"
+                                title="Join Channel" aria-label="Join Channel" href="#"
+                                t-att-data-channel-id="channel.id">
+                                <i class="fa fa-chevron-right"></i> Join
+                            </a>
+                        </span>
+                        <span t-if="channel.is_member">
+                            <a role="button" class="btn btn-primary o_wslides_join_channel_link"
+                                title="Join Channel" aria-label="Join Channel" href="#">
+                                <i class="fa fa-chevron-right"></i> Joined
+                            </a>
+                        </span>
                         <t t-if="category">
                             / <a t-attf-href="/slides/#{slug(channel)}/category/#{slug(category)}" t-esc="category.name"/>
                         </t>
-                        <!-- Public user has not right to create/write on slide -->
-                        <t t-if="channel.can_see and channel.can_upload and not is_public_user">
-                            <a role="button" class="btn btn-primary oe_slide_js_upload" title="Upload Presentation" t-attf-channel_id="#{channel.id}" aria-label="Upload Presentation" href="#">
+                        <t t-if="channel.can_upload">
+                            <a role="button" class="btn btn-primary oe_slide_js_upload" title="Upload Presentation"
+                                aria-label="Upload Presentation" href="#"
+                                t-att-data-channel-id="channel.id"
+                                t-att-data-can-upload="channel.can_upload"
+                                t-att-data-can-publish="channel.can_publish">
                                 <i class="fa fa-cloud-upload"></i> Upload
                             </a>
                         </t>
@@ -206,10 +219,9 @@
                     <t t-set="header_object" t-value="category"/>
                 </t>
             </t>
-            <section t-if="not channel.promoted_slide_id and not tag and not slide_type and not search and not is_public_user and not category and display_channel_settings" class="wrap mt16 mb0" groups="website.group_website_designer">
+            <section t-if="not channel.promoted_slide_id and not tag and not slide_type and not search and not is_public_user and not category" class="wrap mt16 mb0" groups="website.group_website_designer">
                 <div class="container">
                     <div class="alert alert-danger alert-dismissable mb0" role="alert">
-                        <button type="button" class="close o_slides_hide_channel_settings" t-att-data-channel-id="channel.id" data-dismiss="alert">x</button>
                         <p>
                             Review your channel settings to promote your most viewed or recent published presentation
                         </p>
@@ -284,13 +296,13 @@
                                 <h1>No presentation published yet.</h1>
                                 <p>
                                     The <i><t t-esc="channel.name"/></i> is empty.
-                                    <span t-if="channel.can_see and channel.can_upload">
+                                    <span t-if="channel.can_upload">
                                         Upload PDF presentations, documents, videos or infographic using the button below.
                                     </span>
                                 </p>
                                 <p>
                                     <!-- Public user has not right to create/write on slide-->
-                                    <a role="button" t-if="channel.can_see and channel.can_upload and not is_public_user" class="btn btn-primary oe_slide_js_upload" t-attf-channel_id="#{channel.id}" aria-label="Upload Presentation" title="Upload Presentation" href="#">
+                                    <a role="button" t-if="channel.can_upload" class="btn btn-primary oe_slide_js_upload" t-attf-channel-id="#{channel.id}" aria-label="Upload Presentation" title="Upload Presentation" href="#">
                                         <i class="fa fa-cloud-upload"></i> Upload
                                     </a>
                                 </p>
@@ -372,7 +384,7 @@
                 </a>
                 <span t-if="not slide.website_published" class="badge badge-danger" style="position: absolute;right: 20px;top: 7px;">Unpublished</span>
                 <a t-if="not is_public_user and slide.website_published and slide.channel_id.promote_strategy == 'custom' and slide.channel_id.promoted_slide_id.id != slide.id"
-                    groups="base.group_user"
+                    groups="website.group_website_publisher"
                     t-attf-href="/slides/slide/#{slide.id}/promote"
                     style="position: absolute;right: 20px;top: 7px;"
                     t-attf-title="Promote this #{slide.slide_type}"
@@ -414,16 +426,7 @@
         <div class="container mt16">
             <div class="row">
                 <div class="col-xl-8 col-lg-8 col-md-12 col-12">
-                    <div t-if="private" class="mb16">
-                        <h3 class="alert alert-danger" role="alert">
-                            <i class="fa fa-exclamation-triangle" role="img" aria-label="Attention" title="Attention"></i> This <t t-esc="slide.slide_type"/> is private
-                        </h3>
-                        <t t-if="slide.channel_id.access_error_msg">
-                            <div t-field="slide.channel_id.access_error_msg" class="card card-body oe_no_empty"/>
-                        </t>
-                    </div>
-
-                    <div t-if="not private">
+                    <div>
                             <t t-if="slide.datas and slide.slide_type == 'infographic'">
                                 <img t-attf-src="/web/image/slide.slide/#{slide.id}/datas" class="img-fluid" style="width:100%" alt="Slide image"/>
                             </t>
