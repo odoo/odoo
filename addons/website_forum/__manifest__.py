@@ -13,9 +13,9 @@ Ask questions, get answers, no distractions
     'website': 'https://www.odoo.com/page/community-builder',
     'depends': [
         'auth_signup',
-        'gamification',
         'website_mail',
-        'website_partner'
+        'website_partner',
+        'website_profile',
     ],
     'data': [
         'data/forum_data.xml',
