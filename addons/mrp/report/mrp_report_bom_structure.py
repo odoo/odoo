@@ -225,7 +225,7 @@ class ReportBomStructure(models.AbstractModel):
                 })
                 if bom_line['child_bom'] and (unfolded or bom_line['child_bom'] in child_bom_ids):
                     line = self.env['mrp.bom.line'].browse(bom_line['line_id'])
-                    lines += (get_sub_lines(line.child_bom_id, line.product_id, line.product_qty * data['bom_qty'], line, level + 1))
+                    lines += (get_sub_lines(line.child_bom_id, line.product_id, bom_line['prod_qty'], line, level + 1))
             if data['operations']:
                 lines.append({
                     'name': _('Operations'),

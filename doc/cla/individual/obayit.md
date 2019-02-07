@@ -1,4 +1,4 @@
-Italy, 2015-02-18
+Sudan, 2019/1/31
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -8,5 +8,4 @@ declaration.
 
 Signed,
 
-Lorenzo Battistini lorenzo.battistini@agilebg.com (up to 2019-02-01) https://github.com/eLBati
-Lorenzo Battistini elbaddy@gmail.com https://github.com/eLBati
+Obay obayit@gmail.com https://github.com/obayit
