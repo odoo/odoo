@@ -4,7 +4,7 @@
 import math
 import uuid
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools.translate import html_translate
 from odoo.osv import expression
@@ -48,9 +48,7 @@ class ChannelUsersRelation(models.Model):
 
 
 class Channel(models.Model):
-    """ A channel is a container of slides. It has group-based access configuration
-    allowing to configure slide upload and access. Slides can be promoted in
-    channels. """
+    """ A channel is a container of slides. """
     _name = 'slide.channel'
     _description = 'Slide Channel'
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin', 'rating.mixin']
@@ -63,11 +61,17 @@ class Channel(models.Model):
     name = fields.Char('Name', translate=True, required=True)
     active = fields.Boolean(default=True)
     description = fields.Html('Description', translate=html_translate, sanitize_attributes=False)
+    channel_type = fields.Selection([
+        ('documentation', 'Documentation'), ('training', 'Training')],
+        string="Course type", default="documentation", required=True)
     sequence = fields.Integer(default=10, help='Display order')
     tag_ids = fields.Many2many(
         'slide.channel.tag', 'slide_channel_tag_rel', 'channel_id', 'tag_id',
         string='Tags', help='Used to categorize and filter displayed channels/courses')
     category_ids = fields.One2many('slide.category', 'channel_id', string="Categories")
+    image = fields.Binary("Image", attachment=True)
+    image_medium = fields.Binary("Medium image", attachment=True)
+    image_small = fields.Binary("Small image", attachment=True)
     # slides: promote, statistics
     slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides")
     slide_partner_ids = fields.One2many('slide.slide.partner', 'channel_id', string="Slide User Data", groups='website.group_website_publisher')
@@ -78,8 +82,7 @@ class Channel(models.Model):
         ('most_viewed', 'Most Viewed'),
         ('custom', 'Featured Presentation')],
         string="Featuring Policy", default='most_voted', required=True)
-    custom_slide_id = fields.Many2one('slide.slide', string='Slide to Promote')
-    promoted_slide_id = fields.Many2one('slide.slide', string='Featured Slide', compute='_compute_promoted_slide_id', store=True)
+
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     nbr_presentations = fields.Integer('Number of Presentations', compute='_compute_slides_statistics', store=True)
     nbr_documents = fields.Integer('Number of Documents', compute='_compute_slides_statistics', store=True)
@@ -118,20 +121,6 @@ class Channel(models.Model):
     completion = fields.Integer('Completion', compute='_compute_user_statistics')
     can_upload = fields.Boolean('Can Upload', compute='_compute_access')
     can_publish = fields.Boolean('Can Publish', compute='_compute_access')
-
-    @api.depends('custom_slide_id', 'promote_strategy', 'slide_ids.likes',
-                 'slide_ids.total_views', "slide_ids.date_published")
-    def _compute_promoted_slide_id(self):
-        for record in self:
-            if record.promote_strategy == 'none':
-                record.promoted_slide_id = False
-            elif record.promote_strategy == 'custom':
-                record.promoted_slide_id = record.custom_slide_id
-            elif record.promote_strategy:
-                slides = self.env['slide.slide'].search(
-                    [('website_published', '=', True), ('channel_id', '=', record.id)],
-                    limit=1, order=self.env['slide.slide']._order_by_strategy[record.promote_strategy])
-                record.promoted_slide_id = slides and slides[0] or False
 
     @api.depends('channel_partner_ids.partner_id')
     @api.model
@@ -227,10 +216,14 @@ class Channel(models.Model):
             vals['channel_partner_ids'] = [(0, 0, {
                 'partner_id': self.env.user.partner_id.id
             })]
+        if 'image' in vals:
+            tools.image_resize_images(vals)
         return super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals)
 
     @api.multi
     def write(self, vals):
+        if 'image' in vals:
+            tools.image_resize_images(vals)
         res = super(Channel, self).write(vals)
         if 'active' in vals:
             # archiving/unarchiving a channel does it on its slides, too
