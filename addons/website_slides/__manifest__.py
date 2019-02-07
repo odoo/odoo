@@ -17,7 +17,11 @@ Share and Publish Videos, Presentations and Documents'
  * Channel Subscription
  * Supported document types : PDF, images, YouTube videos and Google Drive documents)
 """,
-    'depends': ['website', 'website_mail', 'website_rating'],
+    'depends': [
+        'website',
+        'website_mail',
+        'website_profile',
+        'website_rating'],
     'data': [
         'views/assets.xml',
         'views/res_config_settings_views.xml',
