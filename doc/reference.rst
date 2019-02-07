@@ -7,21 +7,19 @@ Reference
 .. toctree::
     :titlesonly:
 
-    reference/orm
-    reference/data
     reference/actions
-    reference/views
-    reference/module
     reference/cmdline
-    reference/security
-    reference/testing
-
-    reference/http
-    reference/qweb
-    reference/javascript_cheatsheet
-    reference/javascript_reference
-    reference/translations
-    reference/reports
-    reference/mixins
+    reference/controllers
+    reference/data
     reference/guidelines
+    reference/javascript_reference
+    reference/mixins
     reference/mobile
+    reference/module
+    reference/orm
+    reference/qweb
+    reference/reports
+    reference/security
+    reference/translations
+    reference/testing
+    reference/views
