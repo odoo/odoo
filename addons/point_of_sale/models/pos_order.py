@@ -583,6 +583,20 @@ class PosOrder(models.Model):
 
     @api.onchange('statement_ids', 'lines')
     def _onchange_amount_all(self):
+        for order in self:
+            currency = order.pricelist_id.currency_id
+            order.amount_paid = sum(payment.amount for payment in order.statement_ids)
+            order.amount_return = sum(payment.amount < 0 and payment.amount or 0 for payment in order.statement_ids)
+            order.amount_tax = currency.round(sum(self._amount_line_tax(line, order.fiscal_position_id) for line in order.lines))
+            amount_untaxed = currency.round(sum(line.price_subtotal for line in order.lines))
+            order.amount_total = order.amount_tax + amount_untaxed
+
+    def _compute_batch_amount_all(self):
+        """
+        Does essentially the same thing as `_onchange_amount_all` but only for actually existing records
+        It is intended as a helper method , not as a business one
+        Practical to be used for migrations
+        """
         amounts = {order_id: {'paid': 0, 'return': 0, 'taxed': 0, 'taxes': 0} for order_id in self.ids}
         for order in self.env['account.bank.statement.line'].read_group([('pos_statement_id', 'in', self.ids)], ['pos_statement_id', 'amount'], ['pos_statement_id']):
             amounts[order['pos_statement_id'][0]]['paid'] = order['amount']
@@ -594,10 +608,12 @@ class PosOrder(models.Model):
 
         for order in self:
             currency = order.pricelist_id.currency_id
-            order.amount_paid = amounts[order.id]['paid']
-            order.amount_return = amounts[order.id]['return']
-            order.amount_tax = currency.round(amounts[order.id]['taxes'])
-            order.amount_total = currency.round(amounts[order.id]['taxed'])
+            order.write({
+                'amount_paid': amounts[order.id]['paid'],
+                'amount_return': amounts[order.id]['return'],
+                'amount_tax': currency.round(amounts[order.id]['taxes']),
+                'amount_total': currency.round(amounts[order.id]['taxed'])
+            })
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
