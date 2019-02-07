@@ -148,7 +148,7 @@
                 <page string="Current Production">
                     <group>
                         <group>
-                            <field name="qty_producing" string="Current Qty" attrs="{'readonly': ['|', ('product_tracking', '=', 'serial'), ('state', 'in', ('done', 'cancel'))]}"/>
+                            <field name="qty_producing" string="Quantity in Production" attrs="{'readonly': ['|', ('product_tracking', '=', 'serial'), ('state', 'in', ('done', 'cancel'))]}"/>
                             <field name="final_lot_id" context="{'default_product_id': product_id}" domain="[('id', 'in', final_lot_domain)]" attrs="{'invisible': [('product_tracking', '=', 'none')]}" groups="stock.group_production_lot"/>
                             <field name="product_tracking" invisible="1"/>
                         </group>
@@ -156,9 +156,11 @@
                     <field name="move_raw_ids" invisible="1"/>
                     <field name="workorder_line_ids" attrs="{'invisible': [('workorder_line_ids', '=', [])], 'readonly': [('state', 'in', 'cancel', 'done')]}">
                         <tree editable="bottom" create="0" delete="0">
-                            <field name="product_id"/>
+                            <field name="product_id" string="Components"/>
                             <field name="product_tracking" invisible="1"/>
                             <field name="lot_id" attrs="{'readonly': [('product_tracking', '=', 'none')]}" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
+                            <field name="qty_to_consume" readonly="1"/>
+                            <field name="qty_reserved" readonly="1"/>
                             <field name="qty_done" string="Done"/>
                             <field name="product_uom_id" invisible="1"/>
                             <field name="move_id" invisible="1"/>
@@ -227,10 +229,9 @@
                         </field>
                     </group>
                 </page>
-                <page string="Miscellaneous" groups="mrp.group_mrp_manager">
+                <page string="Miscellaneous" name="workorder_page_misc" groups="mrp.group_mrp_manager">
                     <group>
                         <group>
-                            <field name="name"/>
                             <field name="workcenter_id" readonly="1"/>
                             <field name="production_id" readonly="1"/>
                         </group>
