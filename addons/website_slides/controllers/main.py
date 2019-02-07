@@ -251,7 +251,7 @@ class WebsiteSlides(http.Controller):
     @http.route(['/slides/slide/send_share_email'], type='json', auth='user', website=True)
     def slide_send_share_email(self, slide_id, email):
         slide = request.env['slide.slide'].browse(int(slide_id))
-        result = slide.send_share_email(email)
+        result = slide._send_share_email(email)
         return result
 
     @http.route('/slides/slide/overlay', type='json', auth="public", website=True)
