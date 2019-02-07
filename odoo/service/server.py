@@ -900,7 +900,7 @@ def load_test_file_py(registry, test_file):
     test_path, _ = os.path.splitext(os.path.abspath(test_file))
     for mod_name, mod_mod in list(sys.modules.items()):
         if mod_mod:
-            mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
+            mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', None) or '')
             if test_path == mod_path:
                 suite = unittest.TestSuite()
                 for t in unittest.TestLoader().loadTestsFromModule(mod_mod):
