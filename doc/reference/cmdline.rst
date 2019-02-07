@@ -85,8 +85,8 @@ Running the server
 
 .. option:: --max-cron-threads <count>
 
-    number of workers dedicated to cron jobs. Defaults to 2. The workers are
-    threads in multi-threading mode and processes in multi-processing mode.
+    number of workers dedicated to :ref:`cron <reference/actions/cron>` jobs. Defaults to 2.
+    The workers are threads in multi-threading mode and processes in multi-processing mode.
 
     For multi-processing mode, this is in addition to the HTTP worker
     processes.
@@ -175,10 +175,10 @@ database
     listen by using the --database parameter and specifying a comma-separated
     list of databases
 
-    When combining the two parameters, db-filter superseed the comma-separated
+    When combining the two parameters, db-filter supersedes the comma-separated
     database list for restricting database list, while the comma-separated list
     is used for performing requested operations like upgrade of modules.
-    
+
     .. code-block:: bash
 
         odoo-bin --db-filter ^11.*$
@@ -190,7 +190,7 @@ database
         odoo-bin --database 11firstdatabase,11seconddatabase
 
     Restrict access to only two databases, 11firstdatabase and 11seconddatabase
-    
+
     .. code-block:: bash
 
         odoo-bin --database 11firstdatabase,11seconddatabase -u base
@@ -199,16 +199,16 @@ database
     and update base module on one database: 11firstdatabase
     If database 11seconddatabase doesn't exist, the database is created and base modules
     is installed
-    
+
     .. code-block:: bash
 
         odoo-bin --db-filter ^11.*$ --database 11firstdatabase,11seconddatabase -u base
-        
+
     Restrict access to databases whose name starts with 11,
     and update base module on one database: 11firstdatabase
     If database 11seconddatabase doesn't exist, the database is created and base modules
     is installed
-    
+
 .. option:: --db-template <template>
 
     when creating new databases from the database-management screens, use the
@@ -223,7 +223,7 @@ database
 .. option:: --no-database-list
 
     Suppresses the ability to list databases available on the system
-    
+
 .. option:: --db_sslmode
 
     Control the SSL security of the connection between Odoo and PostgreSQL.
@@ -275,7 +275,7 @@ built-in HTTP
 
 .. option:: --no-http
 
-    do not start the HTTP or long-polling workers (may still start cron
+    do not start the HTTP or long-polling workers (may still start :ref:`cron <reference/actions/cron>`
     workers)
 
     .. warning:: has no effect if :option:`--test-enable` is set, as tests
@@ -307,13 +307,13 @@ customize the amount of logging output
 
     sends logging output to the specified file instead of stdout. On Unix, the
     file `can be managed by external log rotation programs
-    <https://docs.python.org/2/library/logging.handlers.html#watchedfilehandler>`_
+    <https://docs.python.org/3/library/logging.handlers.html#watchedfilehandler>`_
     and will automatically be reopened when replaced
 
 .. option:: --syslog
 
-    logs to the system's event logger: `syslog on unices <https://docs.python.org/2/library/logging.handlers.html#sysloghandler>`_
-    and `the Event Log on Windows <https://docs.python.org/2/library/logging.handlers.html#nteventloghandler>`_.
+    logs to the system's event logger: `syslog on unices <https://docs.python.org/3/library/logging.handlers.html#sysloghandler>`_
+    and `the Event Log on Windows <https://docs.python.org/3/library/logging.handlers.html#nteventloghandler>`_.
 
     Neither is configurable
 
@@ -473,15 +473,15 @@ can be overridden using :option:`--config <odoo-bin -c>`. Specifying
 to that file.
 
 .. _jinja2: http://jinja.pocoo.org
-.. _regular expression: https://docs.python.org/2/library/re.html
+.. _regular expression: https://docs.python.org/3/library/re.html
 .. _password authentication:
-    http://www.postgresql.org/docs/9.3/static/auth-methods.html#AUTH-PASSWORD
+    https://www.postgresql.org/docs/9.3/static/auth-methods.html#AUTH-PASSWORD
 .. _template database:
-    http://www.postgresql.org/docs/9.3/static/manage-ag-templatedbs.html
+    https://www.postgresql.org/docs/9.3/static/manage-ag-templatedbs.html
 .. _level:
-    https://docs.python.org/2/library/logging.html#logging.Logger.setLevel
+    https://docs.python.org/3/library/logging.html#logging.Logger.setLevel
 .. _a PostgreSQL URI:
-    http://www.postgresql.org/docs/9.2/static/libpq-connect.html#AEN38208
+    https://www.postgresql.org/docs/9.2/static/libpq-connect.html#AEN38208
 .. _Werkzeug's proxy support:
     http://werkzeug.pocoo.org/docs/contrib/fixers/#werkzeug.contrib.fixers.ProxyFix
 .. _pyinotify: https://github.com/seb-m/pyinotify/wiki
