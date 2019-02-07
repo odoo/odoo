@@ -46,7 +46,7 @@ Other optional directories compose the module.
 - *wizard/* : regroups the transient models (``models.TransientModel``) and their views
 - *report/* : contains the printable reports and models based on SQL views. Python objects and XML views are included in this directory
 - *tests/* : contains the Python tests
-
+- *security/* : contains the access rules to the module content
 
 File naming
 -----------
@@ -270,14 +270,14 @@ To declare a record in XML, the **record** notation (using *<record>*) is recomm
         </field>
     </record>
 
-Odoo supports custom tags acting as syntactic sugar:
+Odoo supports :ref:`custom tags <reference/data/shortcuts>` acting as syntactic sugar:
 
 - menuitem: use it as a shortcut to declare a ``ir.ui.menu``
 - template: use it to declare a QWeb View requiring only the ``arch`` section of the view.
 - report: use to declare a :ref:`report action <reference/actions/report>`
-- act_window: use it if the record notation can't do what you want
+- act_window: use to declare a :ref:`window action <reference/actions/window>`
 
-The 4 first tags are prefered over the *record* notation.
+The 4 first tags are prefered over the :ref:`record <reference/data/record>` notation.
 
 
 XML IDs and naming
@@ -344,6 +344,15 @@ should have a real naming as it is used as display name.
         sequence="10"
     />
 
+    <!-- actions -->
+    <act_window id="model_name_action">
+        ...
+    </act_window>
+
+    <act_window id="model_name_action_child_list">
+        ...
+    </act_window>
+
     <!-- security -->
     <record id="module_name_group_user" model="res.groups">
         ...
@@ -393,10 +402,17 @@ Python
 PEP8 options
 ------------
 
-Using a linter can help show syntax and semantic warnings or errors. Odoo
-source code tries to respect Python standard, but some of them can be ignored.
+Using a linter can help show syntax and semantic warnings or errors.
+We recommend `flake8 <https://pypi.python.org/pypi/flake8>`_ for Python and
+`jshint <https://jshint.com/install/>`_ for JavaScript.
+Odoo source code tries to respect Python standard, but some of them can be ignored.
+
 
 - E501: line too long
+
+.. note:: A good max line length standard would be **99** characters for us,
+          but not mandatory.
+
 - E301: expected 1 blank line, found 0
 - E302: expected 2 blank lines, found 1
 
@@ -427,166 +443,42 @@ Inside these 3 groups, the imported lines are alphabetically sorted.
     from odoo.addons.web.controllers.main import login_redirect
 
 
-Idiomatics Python Programming
------------------------------
+Idiomatics of Programming (Python)
+----------------------------------
 
-- Each python file should have ``# -*- coding: utf-8 -*-`` as first line.
 - Always favor *readability* over *conciseness* or using the language features or idioms.
-- Don't use ``.clone()``
 
-.. code-block:: python
+- Think about *performance* and :ref:`*security* <reference/security/guidelines>` all along the development process.
 
-    # bad
-    new_dict = my_dict.clone()
-    new_list = old_list.clone()
-    # good
-    new_dict = dict(my_dict)
-    new_list = list(old_list)
-
-- Python dictionary : creation and update
-
-.. code-block:: python
-
-    # -- creation empty dict
-    my_dict = {}
-    my_dict2 = dict()
-
-    # -- creation with values
-    # bad
-    my_dict = {}
-    my_dict['foo'] = 3
-    my_dict['bar'] = 4
-    # good
-    my_dict = {'foo': 3, 'bar': 4}
-
-    # -- update dict
-    # bad
-    my_dict['foo'] = 3
-    my_dict['bar'] = 4
-    my_dict['baz'] = 5
-    # good
-    my_dict.update(foo=3, bar=4, baz=5)
-    my_dict = dict(my_dict, **my_dict2)
-
-- Use meaningful variable/class/method names
-- Useless variable : Temporary variables can make the code clearer by giving
-  names to objects, but that doesn't mean you should create temporary variables
-  all the time:
-
-.. code-block:: python
-
-    # pointless
-    schema = kw['schema']
-    params = {'schema': schema}
-    # simpler
-    params = {'schema': kw['schema']}
-
-- Multiple return points are OK, when they're simpler
-
-.. code-block:: python
-
-    # a bit complex and with a redundant temp variable
-    def axes(self, axis):
-            axes = []
-            if type(axis) == type([]):
-                    axes.extend(axis)
-            else:
-                    axes.append(axis)
-            return axes
-
-     # clearer
-    def axes(self, axis):
-            if type(axis) == type([]):
-                    return list(axis) # clone the axis
-            else:
-                    return [axis] # single-element list
-
-- Know your builtins : You should at least have a basic understanding of all
-  the Python builtins (http://docs.python.org/library/functions.html)
-
-.. code-block:: python
-
-    value = my_dict.get('key', None) # very very redundant
-    value = my_dict.get('key') # good
-
-Also, ``if 'key' in my_dict`` and ``if my_dict.get('key')`` have very different
-meaning, be sure that you're using the right one.
-
-- Learn list comprehensions : Use list comprehension, dict comprehension, and
-  basic manipulation using ``map``, ``filter``, ``sum``, ... They make the code
-  easier to read.
-
-.. code-block:: python
-
-    # not very good
-    cube = []
-    for i in res:
-            cube.append((i['id'],i['name']))
-    # better
-    cube = [(i['id'], i['name']) for i in res]
-
-- Collections are booleans too : In python, many objects have "boolean-ish" value
-  when evaluated in a boolean context (such as an if). Among these are collections
-  (lists, dicts, sets, ...) which are "falsy" when empty and "truthy" when containing
-  items:
-
-.. code-block:: python
-
-    bool([]) is False
-    bool([1]) is True
-    bool([False]) is True
-
-So, you can write ``if some_collection:`` instead of ``if len(some_collection):``.
-
-
-- Iterate on iterables
-
-.. code-block:: python
-
-    # creates a temporary list and looks bar
-    for key in my_dict.keys():
-            "do something..."
-    # better
-    for key in my_dict:
-            "do something..."
-    # accessing the key,value pair
-    for key, value in my_dict.items():
-            "do something..."
-
-- Use dict.setdefault
-
-.. code-block:: python
-
-    # longer.. harder to read
-    values = {}
-    for element in iterable:
-        if element not in values:
-            values[element] = []
-        values[element].append(other_value)
-
-    # better.. use dict.setdefault method
-    values = {}
-    for element in iterable:
-        values.setdefault(element, []).append(other_value)
-
-- As a good developper, document your code (docstring on methods, simple
+- As a good developper, document your code (docstrings on methods, simple
   comments for tricky part of code)
-- In additions to these guidelines, you may also find the following link
-  interesting: http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html
-  (a little bit outdated, but quite relevant)
+
+- As python is the main language of Odoo models, know it =) :
+
+  - Know your `builtins <https://docs.python.org/3/library/functions.html>`_ : You should at least have a basic understanding of all
+    the Python builtins.
+
+  - Learn list/dict comprehensions : Use list comprehension, dict comprehension, and
+    basic manipulation using ``map``, ``filter``, ``sum``, ... They make the code
+    easier to read.
+
+  - Don't hesitate to refresh your `knowledge <https://learnxinyminutes.com/docs/python3/>`_ or
+    to get more familiar with `Python <https://docs.python.org/3/tutorial/>`_
+
 
 Programming in Odoo
 -------------------
 
 - Avoid to create generators and decorators: only use the ones provided by
   the Odoo API.
-- As in python, use ``filtered``, ``mapped``, ``sorted``, ... methods to
+- As in python, use ``filtered``, ``mapped``, ``sorted``, ... :ref:`ORM <reference/orm>` methods to
   ease code reading and performance.
-
+- Don't reinvent the wheel: use or extend existing functionalities when you need them.
+  Use :ref:`Odoo Mixins <reference/mixins>` to integrate interesting functionalities easily.
 
 Make your method work in batch
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-When adding a function, make sure it can process multiple records. Typically,
+When adding a function, make sure it can process multiple records (:ref:`recordsets <reference/orm>`). Typically,
 such methods are decorated with the ``api.multi`` decorator. Then you will have
 to iterate on ``self`` to treat each record.
 
@@ -597,9 +489,9 @@ to iterate on ``self`` to treat each record.
         for record in self:
             record.do_cool_stuff()
 
-Avoid to use ``api.one``  decorator : this will probably not do what you expected,
-and extending a such method is not as easy than a *api.multi* method, since it
-returns a list of result (ordered by recordset ids).
+.. note :: Avoid to use ``api.one``  decorator : this will probably not do what you expected,
+              and extending a such method is not as easy than a *api.multi* method, since it
+              returns a list of result (ordered by recordset ids).
 
 For performance issue, when developping a 'stat button' (for instance), do not
 perform a ``search`` or a ``search_count`` in a loop in a ``api.multi`` method. It
@@ -626,84 +518,18 @@ a different context, the ``with_context`` method should be used :
     records.with_context(new_context).do_stuff() # all the context is replaced
     records.with_context(**additionnal_context).do_other_stuff() # additionnal_context values override native context ones
 
-Passing parameter in context can have dangerous side-effects. Since the values
-are propagated automatically, some behavior can appears. Calling ``create()``
-method of a model with *default_my_field* key in context will set the default
-value of *my_field* for the concerned model. But if curing this creation, other
-object (such as sale.order.line, on sale.order creation) having a field
-name *my_field*, their default value will be set too.
+.. note :: Passing parameter in context can have dangerous side-effects. Since the values
+      are propagated automatically, some behavior can appears. Calling ``create()``
+      method of a model with *default_my_field* key in context will set the default
+      value of *my_field* for the concerned model. But if curing this creation, other
+      object (such as sale.order.line, on sale.order creation) having a field
+      name *my_field*, their default value will be set too.
 
 If you need to create a key context influencing the behavior of some object,
-choice a good name, and eventually prefix it by the name of the module to
+choose a good name, and eventually prefix it by the name of the module to
 isolate its impact. A good example are the keys of ``mail`` module :
 *mail_create_nosubscribe*, *mail_notrack*, *mail_notify_user_signature*, ...
 
-
-Do not bypass the ORM
-~~~~~~~~~~~~~~~~~~~~~
-You should never use the database cursor directly when the ORM can do the same
-thing! By doing so you are bypassing all the ORM features, possibly the
-transactions, access rights and so on.
-
-And chances are that you are also making the code harder to read and probably
-less secure.
-
-.. code-block:: python
-
-    # very very wrong
-    self.env.cr.execute('SELECT id FROM auction_lots WHERE auction_id in (' + ','.join(map(str, ids))+') AND state=%s AND obj_price > 0', ('draft',))
-    auction_lots_ids = [x[0] for x in self.env.cr.fetchall()]
-
-    # no injection, but still wrong
-    self.env.cr.execute('SELECT id FROM auction_lots WHERE auction_id in %s '\
-               'AND state=%s AND obj_price > 0', (tuple(ids), 'draft',))
-    auction_lots_ids = [x[0] for x in self.env.cr.fetchall()]
-
-    # better
-    auction_lots_ids = self.search([('auction_id','in',ids), ('state','=','draft'), ('obj_price','>',0)])
-
-
-No SQL injections, please !
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Care must be taken not to introduce SQL injections vulnerabilities when using
-manual SQL queries. The vulnerability is present when user input is either
-incorrectly filtered or badly quoted, allowing an attacker to introduce
-undesirable clauses to a SQL query (such as circumventing filters or
-executing UPDATE or DELETE commands).
-
-The best way to be safe is to never, NEVER use Python string concatenation (+)
-or string parameters interpolation (%) to pass variables to a SQL query string.
-
-The second reason, which is almost as important, is that it is the job of the
-database abstraction layer (psycopg2) to decide how to format query parameters,
-not your job! For example psycopg2 knows that when you pass a list of values
-it needs to format them as a comma-separated list, enclosed in parentheses !
-
-.. code-block:: python
-
-    # the following is very bad:
-    #   - it's a SQL injection vulnerability
-    #   - it's unreadable
-    #   - it's not your job to format the list of ids
-    self.env.cr.execute('SELECT distinct child_id FROM account_account_consol_rel ' +
-               'WHERE parent_id IN ('+','.join(map(str, ids))+')')
-
-    # better
-    self.env.cr.execute('SELECT DISTINCT child_id '\
-               'FROM account_account_consol_rel '\
-               'WHERE parent_id IN %s',
-               (tuple(ids),))
-
-This is very important, so please be careful also when refactoring, and most
-importantly do not copy these patterns!
-
-Here is a memorable example to help you remember what the issue is about (but
-do not copy the code there). Before continuing, please be sure to read the
-online documentation of pyscopg2 to learn of to use it properly:
-
-- The problem with query parameters (http://initd.org/psycopg/docs/usage.html#the-problem-with-the-query-parameters)
-- How to pass parameters with psycopg2 (http://initd.org/psycopg/docs/usage.html#passing-parameters-to-sql-queries)
-- Advanced parameter types (http://initd.org/psycopg/docs/usage.html#adaptation-of-python-values-to-sql-types)
 
 
 Think extendable
@@ -711,10 +537,10 @@ Think extendable
 Functions and methods should not contain too much logic: having a lot of small
 and simple methods is more advisable than having few large and complex methods.
 A good rule of thumb is to split a method as soon as it has more than one
-responsibility (see http://en.wikipedia.org/wiki/Single_responsibility_principle).
+responsibility (see `Wikipedia <https://en.wikipedia.org/wiki/Single_responsibility_principle>`_ ).
 
-Hardcoding a business logic in a method should be avoided as it prevents to be
-easily extended by a submodule.
+Hardcoding a business logic in a method should be avoided as it prevents
+an easy extension by a submodule.
 
 .. code-block:: python
 
@@ -746,76 +572,7 @@ Also, name your functions accordingly: small and properly named functions are
 the starting point of readable/maintainable code and tighter documentation.
 
 This recommendation is also relevant for classes, files, modules and packages.
-(See also http://en.wikipedia.org/wiki/Cyclomatic_complexity)
-
-
-Never commit the transaction
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The Odoo framework is in charge of providing the transactional context for
-all RPC calls. The principle is that a new database cursor is opened at the
-beginning of each RPC call, and committed when the call has returned, just
-before transmitting the answer to the RPC client, approximately like this:
-
-.. code-block:: python
-
-    def execute(self, db_name, uid, obj, method, *args, **kw):
-        db, pool = pooler.get_db_and_pool(db_name)
-        # create transaction cursor
-        cr = db.cursor()
-        try:
-            res = pool.execute_cr(cr, uid, obj, method, *args, **kw)
-            cr.commit() # all good, we commit
-        except Exception:
-            cr.rollback() # error, rollback everything atomically
-            raise
-        finally:
-            cr.close() # always close cursor opened manually
-        return res
-
-If any error occurs during the execution of the RPC call, the transaction is
-rolled back atomically, preserving the state of the system.
-
-Similarly, the system also provides a dedicated transaction during the execution
-of tests suites, so it can be rolled back or not depending on the server
-startup options.
-
-The consequence is that if you manually call ``cr.commit()`` anywhere there is
-a very high chance that you will break the system in various ways, because you
-will cause partial commits, and thus partial and unclean rollbacks, causing
-among others:
-
-#. inconsistent business data, usually data loss
-#. workflow desynchronization, documents stuck permanently
-#. tests that can't be rolled back cleanly, and will start polluting the
-   database, and triggering error (this is true even if no error occurs
-   during the transaction)
-
-Here is the very simple rule:
-    You should **NEVER** call ``cr.commit()`` yourself, **UNLESS** you have
-    created your own database cursor explicitly! And the situations where you
-    need to do that are exceptional!
-
-    And by the way if you did create your own cursor, then you need to handle
-    error cases and proper rollback, as well as properly close the cursor when
-    you're done with it.
-
-And contrary to popular belief, you do not even need to call ``cr.commit()``
-in the following situations:
-- in the ``_auto_init()`` method of an *models.Model* object: this is taken
-care of by the addons initialization method, or by the ORM transaction when
-creating custom models
-- in reports: the ``commit()`` is handled by the framework too, so you can
-update the database even from within a report
-- within *models.Transient* methods: these methods are called exactly like
-regular *models.Model* ones, within a transaction and with the corresponding
-``cr.commit()/rollback()`` at the end
-- etc. (see general rule above if you have in doubt!)
-
-All ``cr.commit()`` calls outside of the server framework from now on must
-have an **explicit comment** explaining why they are absolutely necessary, why
-they are indeed correct, and why they do not break the transactions. Otherwise
-they can and will be removed !
-
+(See also `Wikipedia <https://en.wikipedia.org/wiki/Cyclomatic_complexity>`_)
 
 Use translation method correctly
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
