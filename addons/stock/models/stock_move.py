@@ -119,7 +119,7 @@ class StockMove(models.Model):
              "The other possibility allows you to directly create a procurement on the source location (and thus ignore "
              "its current stock) to gather products. If we want to chain moves and have this one to wait for the previous, "
              "this second option should be chosen.")
-    scrapped = fields.Boolean('Scrapped', related='location_dest_id.scrap_location', readonly=True, store=True)
+    scrapped = fields.Boolean('Scrapped', compute='_compute_scrapped', readonly=True, store=True)
     scrap_ids = fields.One2many('stock.scrap', 'move_id')
     group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id)
     rule_id = fields.Many2one('procurement.rule', 'Procurement Rule', ondelete='restrict', help='The procurement rule that created this stock move')
@@ -159,6 +159,10 @@ class StockMove(models.Model):
     is_quantity_done_editable = fields.Boolean('Is quantity done editable', compute='_compute_is_quantity_done_editable')
     reference = fields.Char(compute='_compute_reference', string="Reference", store=True)
     has_move_lines = fields.Boolean(compute='_compute_has_move_lines')
+
+    def _compute_scrapped(self):
+        for move in self:
+            move.scrapped = bool(move.scrap_ids) or move.location_dest_id.scrap_location
 
     @api.depends('picking_id.is_locked')
     def _compute_is_locked(self):
