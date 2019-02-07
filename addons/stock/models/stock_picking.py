@@ -637,7 +637,7 @@ class Picking(models.Model):
         self.write({'date_done': fields.Datetime.now()})
         return True
 
-    @api.depends('state', 'move_lines', 'move_lines.state', 'move_lines.package_level_id')
+    @api.depends('state', 'move_lines', 'move_lines.state', 'move_lines.package_level_id', 'move_lines.move_line_ids.package_level_id')
     def _compute_move_without_package(self):
         for picking in self:
             move_ids_without_package = self.env['stock.move']
