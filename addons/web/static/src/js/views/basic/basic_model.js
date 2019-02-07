@@ -691,7 +691,7 @@ var BasicModel = AbstractModel.extend({
             return this._makeDefaultRecord(params.modelName, params);
         }
         var dataPoint = this._makeDataPoint(params);
-        return this._load(dataPoint).then(function () {
+        return this._load(dataPoint, {flags: params.flags}).then(function () {
             return dataPoint.id;
         });
     },
@@ -3241,8 +3241,13 @@ var BasicModel = AbstractModel.extend({
      * @returns {Deferred}
      */
     _load: function (dataPoint, options) {
-        if (options && options.onlyGroups &&
-          !(dataPoint.type === 'list' && dataPoint.groupedBy.length)) {
+        if (
+                (
+                    options && options.onlyGroups &&
+                    !(dataPoint.type === 'list' && dataPoint.groupedBy.length)
+                ) ||
+                options && options.flags && options.flags.auto_search === false
+            ) {
             return $.when(dataPoint);
         }
 
