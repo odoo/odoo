@@ -10,9 +10,9 @@ require('website_sale.website_sale');
 
 sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfiguratorMixin, {
     selector: '.oe_website_sale',
-    read_events: {
+    events: _.extend({}, ProductConfiguratorMixin.events || {}, {
         'click #add_to_cart, #products_grid .product_price .a-submit': 'async _onClickAdd',
-    },
+    }),
 
     /**
      * @constructor

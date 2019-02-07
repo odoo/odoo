@@ -237,7 +237,7 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
 
 sAnimations.registry.ProductComparison = sAnimations.Class.extend({
     selector: '.oe_website_sale',
-    read_events: {
+    events: {
         'click .o_add_compare, .o_add_compare_dyn': '_onClickAddCompare',
         'click #o_comparelist_table tr': '_onClickComparelistTr',
     },
@@ -247,10 +247,6 @@ sAnimations.registry.ProductComparison = sAnimations.Class.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        if (this.editableMode) {
-            return def;
-        }
-
         this.productComparison = new ProductComparison(this);
         return $.when(def, this.productComparison.appendTo(this.$el));
     },

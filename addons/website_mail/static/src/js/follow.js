@@ -5,6 +5,7 @@ var sAnimation = require('website.content.snippets.animation');
 
 sAnimation.registry.follow = sAnimation.Class.extend({
     selector: '.js_follow',
+    disabledInEditableMode: false,
 
     start: function () {
         var self = this;

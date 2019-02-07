@@ -12,7 +12,7 @@ var _t = core._t;
 sAnimations.registry.websiteForum = sAnimations.Class.extend({
     selector: '.website_forum',
     xmlDependencies: ['/website_forum/static/src/xml/website_forum_share_templates.xml'],
-    read_events: {
+    events: {
         'click .karma_required': '_onKarmaRequiredClick',
         'mouseenter .o_js_forum_tag_follow': '_onTagFollowBoxMouseEnter',
         'mouseleave .o_js_forum_tag_follow': '_onTagFollowBoxMouseLeave',
@@ -506,7 +506,7 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
 sAnimations.registry.websiteForumSpam = sAnimations.Class.extend({
     selector: '.o_wforum_moderation_queue',
     xmlDependencies: ['/website_forum/static/src/xml/website_forum_share_templates.xml'],
-    read_events: {
+    events: {
         'click .o_wforum_select_all_spam': '_onSelectallSpamClick',
         'click .o_wforum_mark_spam': 'async _onMarkSpamClick',
         'input #spamSearch': '_onSpamSearchInput',

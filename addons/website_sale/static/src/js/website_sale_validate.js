@@ -11,13 +11,8 @@ sAnimations.registry.websiteSaleValidate = sAnimations.Class.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        if (this.editableMode) {
-            return def;
-        }
-
         this._poll_nbr = 0;
         this._paymentTransationPollStatus();
-
         return def;
     },
 

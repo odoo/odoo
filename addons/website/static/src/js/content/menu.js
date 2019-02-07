@@ -13,9 +13,6 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        if (this.editableMode) {
-            return def;
-        }
 
         var self = this;
         this.$headerClone = this.$target.clone().addClass('o_header_affix affix').removeClass('o_affix_enabled');

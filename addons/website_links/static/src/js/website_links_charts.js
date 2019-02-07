@@ -150,7 +150,7 @@ var PieChart = Widget.extend({
 
 sAnimations.registry.websiteLinksCharts = sAnimations.Class.extend({
     selector: '.o_website_links_chart',
-    read_events: {
+    events: {
         'click .graph-tabs li a': '_onGraphTabClick',
         'click .copy-to-clipboard': '_onCopyToClipboardClick',
     },

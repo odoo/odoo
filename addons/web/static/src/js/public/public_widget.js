@@ -207,41 +207,15 @@ var PublicWidget = Widget.extend({
      * @type {Object}
      */
     events: {},
-    /**
-     * Acts as @see Widget.events except that the events are only binded if the
-     * Animation instance is instanciated in edit mode.
-     */
-    edit_events: {},
-    /**
-     * Acts as @see Widget.events except that the events are only binded if the
-     * Animation instance is instanciated in readonly mode.
-     */
-    read_events: {},
 
     /**
-     * Initializes the events that will need to be binded according to the
-     * given mode.
-     *
      * @constructor
      * @param {Object} parent
-     * @param {Object} options
-     * @param {boolean} options.editableMode - true if the page is in edition mode
+     * @param {Object} [options]
      */
     init: function (parent, options) {
         this._super.apply(this, arguments);
-
-        // Note that the notion of editable mode is kept here for now even
-        // though nothing can be edited here. This allows to have a readable
-        // code for frontend widgets and mainly to prevent having loading
-        // problems an "include" could have caused.
         this.options = options || {};
-        this.editableMode = this.options.editableMode || false;
-
-        if (this.editableMode) {
-            this.events = _.extend({}, this.events || {}, this.edit_events || {});
-        } else {
-            this.events = _.extend({}, this.events || {}, this.read_events || {});
-        }
     },
     /**
      * Destroys the animation and basically restores the target to the state it
