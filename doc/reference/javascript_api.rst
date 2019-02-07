@@ -4,6 +4,8 @@
 
 .. default-domain:: js
 
+.. _api/js:
+
 ==============
 Javascript API
 ==============
