@@ -53,7 +53,8 @@ def _message_post_helper(res_model, res_id, message, token='', nosubscribe=True,
     record = request.env[res_model].browse(res_id)
 
     # check if user can post
-    if _check_special_access(res_model, res_id, token=token, _hash=kw.get('hash'), pid=kw.get('pid')):
+    pid = int(kw['pid']) if kw.get('pid') else False
+    if _check_special_access(res_model, res_id, token=token, _hash=kw.get('hash'), pid=pid):
         record = record.sudo()
     else:
         raise Forbidden()
