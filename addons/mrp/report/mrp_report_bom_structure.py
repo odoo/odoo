@@ -140,7 +140,7 @@ class ReportBomStructure(models.AbstractModel):
             price = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id) * line_quantity
             if line.child_bom_id:
                 factor = line.product_uom_id._compute_quantity(line_quantity, line.child_bom_id.product_uom_id) / line.child_bom_id.product_qty
-                sub_total = self._get_price(line.child_bom_id, factor)
+                sub_total = self._get_price(line.child_bom_id, factor, line.product_id)
             else:
                 sub_total = price
             sub_total = self.env.user.company_id.currency_id.round(sub_total)
@@ -180,7 +180,7 @@ class ReportBomStructure(models.AbstractModel):
             })
         return operations
 
-    def _get_price(self, bom, factor):
+    def _get_price(self, bom, factor, product):
         price = 0
         if bom.routing_id:
             # routing are defined on a BoM and don't have a concept of quantity.
@@ -194,9 +194,11 @@ class ReportBomStructure(models.AbstractModel):
             price += sum([op['total'] for op in operations])
 
         for line in bom.bom_line_ids:
+            if line._skip_bom_line(product):
+                continue
             if line.child_bom_id:
                 qty = line.product_uom_id._compute_quantity(line.product_qty * factor, line.child_bom_id.product_uom_id)
-                sub_price = self._get_price(line.child_bom_id, qty)
+                sub_price = self._get_price(line.child_bom_id, qty, line.product_id)
                 price += sub_price
             else:
                 prod_qty = line.product_qty * factor
