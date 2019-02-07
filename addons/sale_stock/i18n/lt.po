@@ -3,19 +3,20 @@
 # * sale_stock
 # 
 # Translators:
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
 # Martin Trigaux, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Silvija Butko <silvija.butko@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:23+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:170
+#: code:addons/sale_stock/models/sale_order.py:179
 #, python-format
 msgid ""
 "\n"
@@ -32,6 +33,15 @@ msgid ""
 msgstr ""
 "\n"
 "Yra %s %s galimų per visus sandėlius."
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -53,6 +63,7 @@ msgstr "Po pardavimo"
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
 msgstr ""
+"Taikyti specialius maršrutus iš užsakymų (pvz., tiesioginis pristatymas)"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -214,7 +225,7 @@ msgstr "Pakuotė"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_ids
 msgid "Pickings"
-msgstr "Važtaraščiai"
+msgstr "Paėmimai"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_procurement_group_id
@@ -224,7 +235,7 @@ msgstr "Planinio užsakymo grupė"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr "Užsakymo paraiška"
+msgstr "Planinio užsakymo pareikalavimas"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_rule
@@ -367,6 +378,10 @@ msgid ""
 "available in sales orders, routes must have 'Sales Order Line' option "
 "checked in their setup form."
 msgstr ""
+"Tai leidžia nestandartinio užsakymo atveju taikyti specialius maršrutus "
+"pardavimo užsakymo eilutėms (pvz., tiesioginis pristatymas, gaminimas po "
+"užsakymo). Norint, kad jie būtų pasiekiami pardavimo užsakymuose, maršrutai "
+"savo formoje turi turėti pažymėtą pasirinkimą \"Pardavimo užsakymo eilutė\"."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:273

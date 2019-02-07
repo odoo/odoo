@@ -3,9 +3,6 @@
 # * product
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Sergio Zanchetta <primes2h@gmail.com>, 2017
-# Paolo Valier, 2017
 # Paolo Caruccio <paolo.caruccio66@gmail.com>, 2018
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
 # Alberto Carollo <baba75@gmail.com>, 2018
@@ -14,22 +11,26 @@
 # Luigi Di Naro <gigidn@gmail.com>, 2018
 # Niccolò Lubello <nlubello@gmail.com>, 2018
 # David Minneci <david@numeko.it>, 2018
-# maiolif <maiolif@mgftools.com>, 2018
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
-# Simone Bernini <simone@aperturelabs.it>, 2018
-# Giuseppe Castellani <giuseppecastellani@gmail.com>, 2018
-# Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
 # Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2018
+# Giuseppe Castellani <giuseppecastellani@gmail.com>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 # Alessandro Forte <a.forte1010@gmail.com>, 2018
+# maiolif <maiolif@mgftools.com>, 2018
+# Martin Trigaux, 2018
+# Simone Bernini <simone@aperturelabs.it>, 2018
+# Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
+# Paolo Valier, 2018
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:22+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,7 +67,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr "%s %% sconto e %s ricarico"
 
 #. module: product
-#: code:addons/product/models/product_template.py:324
+#: code:addons/product/models/product_template.py:333
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -582,7 +583,7 @@ msgstr "Calcola prezzo prodotto per unità basato sulla versione di listino."
 #: model:ir.model.fields,field_description:product.field_product_template_purchase_ok
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Can be Purchased"
-msgstr "Può essere Acquistato"
+msgstr "Può essere acquistato"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_rental
@@ -595,7 +596,7 @@ msgstr "Può essere noleggiato"
 #: model:ir.model.fields,field_description:product.field_product_template_sale_ok
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Can be Sold"
-msgstr "Può essere Venduto"
+msgstr "Può essere venduto"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
@@ -765,9 +766,7 @@ msgid "Computer SC234"
 msgstr "Computer SC234"
 
 #. module: product
-#: code:addons/product/models/product_template.py:50
 #: selection:product.template,type:0
-#, python-format
 msgid "Consumable"
 msgstr "Consumabile"
 
@@ -990,6 +989,11 @@ msgid "Description for Customers"
 msgstr "Descrizione per Clienti"
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Description for Internal"
+msgstr ""
+
+#. module: product
 #: model:product.product,website_description:product.product_product_11
 #: model:product.product,website_description:product.product_product_11b
 #: model:product.template,website_description:product.product_product_11_product_template
@@ -1072,20 +1076,20 @@ msgid "Ending valid for the pricelist item validation"
 msgstr "Termine valido per la convalida dell'articolo del listino"
 
 #. module: product
-#: code:addons/product/models/product.py:53
+#: code:addons/product/models/product.py:56
 #, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Errore! Non è possibile creare categorie ricorsive."
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:101
+#: code:addons/product/models/product_attribute.py:102
 #, python-format
 msgid "Error ! You cannot use this attribute with the following value."
 msgstr ""
 "Errore! Questo attributo non può essere utilizzato con il seguente valore."
 
 #. module: product
-#: code:addons/product/models/product.py:283
+#: code:addons/product/models/product.py:293
 #, python-format
 msgid ""
 "Error! It is not allowed to choose more than one value for a given "
@@ -1109,7 +1113,7 @@ msgstr ""
 "articolo del listino!"
 
 #. module: product
-#: code:addons/product/models/product_template.py:274
+#: code:addons/product/models/product_template.py:283
 #, python-format
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
@@ -1545,6 +1549,16 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
 msgstr "Inventario"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
+msgid "Is Product Variant"
+msgstr "È una variante prodotto"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
+msgid "Is a product variant"
+msgstr "È una variante di prodotto"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2179,7 +2193,7 @@ msgid "Products Price Search"
 msgstr "Ricerca prezzo prodotti"
 
 #. module: product
-#: code:addons/product/models/product.py:448
+#: code:addons/product/models/product.py:464
 #, python-format
 msgid "Products: "
 msgstr "Prodotti:"
@@ -2345,7 +2359,7 @@ msgstr "Descrizione Vendita"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_lst_price
 msgid "Sale Price"
-msgstr "Prezzo di Vendita"
+msgstr "Prezzo di vendita"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner_property_product_pricelist
@@ -2367,7 +2381,7 @@ msgstr "Vendite"
 #: model:ir.model.fields,field_description:product.field_product_product_list_price
 #: model:ir.model.fields,field_description:product.field_product_template_list_price
 msgid "Sales Price"
-msgstr "Prezzo di Vendita"
+msgstr "Prezzo di vendita"
 
 #. module: product
 #: model:res.groups,name:product.group_sale_pricelist
@@ -2419,9 +2433,7 @@ msgid "Server"
 msgstr "Server"
 
 #. module: product
-#: code:addons/product/models/product_template.py:51
 #: selection:product.template,type:0
-#, python-format
 msgid "Service"
 msgstr "Servizio"
 
@@ -2581,7 +2593,7 @@ msgstr "Specifica l'importo minimo per il margine sul prezzo base."
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_start
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_date_start
 msgid "Start Date"
-msgstr "Data d'Inizio"
+msgstr "Data Inizio"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_start
@@ -2770,7 +2782,7 @@ msgstr ""
 "bambini)"
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:74
+#: code:addons/product/models/product_attribute.py:75
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
@@ -2943,6 +2955,11 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr "Questa è la somma del prezzo extra di tutti gli attributi."
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "This note is only for internal purposes."
+msgstr "Questa nota è destinata esclusivamente ad uso interno."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3179,17 +3196,17 @@ msgstr "Informazioni Fornitore"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
 msgid "Vendor Pricelists"
-msgstr "Listini prezzo Fornitore"
+msgstr "Listini Prezzi Fornitori"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
 msgid "Vendor Product Code"
-msgstr "Codice prodotto del fornitore"
+msgstr "Codice fornitore"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_name
 msgid "Vendor Product Name"
-msgstr "Nome prodotto del fornitore"
+msgstr "Nome Prodotto Fornitore"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_uom

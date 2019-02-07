@@ -3,42 +3,44 @@
 # * base
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Cécile Collart <cco@odoo.com>, 2017
-# Davide Corio <enlightx@gmail.com>, 2017
-# Paolo Valier, 2017
 # Pietro Della Notte <pdellanotte@gmail.com>, 2017
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
+# Davide Corio <enlightx@gmail.com>, 2018
 # David Minneci <david@numeko.it>, 2018
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
-# Simone Bernini <simone@aperturelabs.it>, 2018
-# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
-# p_amoruso <p.amoruso@elvenstudio.it>, 2018
-# Fabio Genovese <ing.fabiogenovese@gmail.com>, 2018
+# Cécile Collart <cco@odoo.com>, 2018
 # Niccolò Lubello <nlubello@gmail.com>, 2018
-# Giovanni Perteghella <giovanni@perteghella.org>, 2018
-# Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2018
-# Maurizio Delmonte <maurizio.delmonte@gmail.com>, 2018
 # Francesco Arillotta <frarillotta@gmail.com>, 2018
-# Alex Siviero <dolanblu@gmail.com>, 2018
 # Marius Marolla <mariusmarolla@entersys.it>, 2018
-# Alberto Vincenzi <alberto.vincenzi@gmail.com>, 2018
 # Leonardo Donelli <learts92@gmail.com>, 2018
 # Giovanni Casalini <casalini.g@gmail.com>, 2018
 # Luca Tralli, 2018
+# Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2018
+# Maurizio Delmonte <maurizio.delmonte@gmail.com>, 2018
 # maiolif <maiolif@mgftools.com>, 2018
-# mymage <stefano.consolaro@mymage.it>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
+# Martin Trigaux, 2018
+# Giovanni Perteghella <giovanni@perteghella.org>, 2018
+# Simone Bernini <simone@aperturelabs.it>, 2018
+# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
+# Alex Siviero <dolanblu@gmail.com>, 2018
+# p_amoruso <p.amoruso@elvenstudio.it>, 2018
+# Fabio Genovese <ing.fabiogenovese@gmail.com>, 2018
 # Simone Rubino <simone.rubino@agilebg.com>, 2018
+# Paolo Valier, 2018
+# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# mymage <stefano.consolaro@mymage.it>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:47+0000\n"
-"PO-Revision-Date: 2018-08-02 09:47+0000\n"
-"Last-Translator: Simone Rubino <simone.rubino@agilebg.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:05+0000\n"
+"PO-Revision-Date: 2017-09-20 10:13+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -359,8 +361,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Questo modulo consente al cassiere di applicare velocemente\n"
-"uno sconto in percentuale al cliente.\n"
+"Questo modulo consente al cassiere di applicare uno sconto\n"
+"percentuale al cliente in modo veloce.\n"
 "\n"
 
 #. module: base
@@ -729,6 +731,9 @@ msgid ""
 "        Generate Electronic Invoice with Customs Number\n"
 "    "
 msgstr ""
+"\n"
+"        Genera fatture elettroniche con numeri personalizzati\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -801,7 +806,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Questo modulo aggiunge la lettura dei codici a barre nel pacchetto di consegna.\n"
+"        Questo modulo aggiunge la lettura dei codici a barre nel modulo consegne.\n"
 "    "
 
 #. module: base
@@ -965,8 +970,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Durante la fatturazione dei timesheet, consente di fatturare tutti i timesheet\n"
-"        associati a un ordine cliente o solo i timesheet convalidati\n"
+"        Nella fatturazione dei fogli ore, consente di fatturare tutti quelli\n"
+"        associati a un ordine cliente o solo quelli convalidati\n"
 "    "
 
 #. module: base
@@ -1041,6 +1046,13 @@ msgid ""
 "    * The new lock date for advisors must be set after the previous lock date.\n"
 "    "
 msgstr ""
+"\n"
+"    Rendi la lock date irreversibile:\n"
+"\n"
+"    * Non è possibile definire condizioni più severe per i consulenti che per gli utenti. La lock date per i consulenti deve quindi essere impostata prima di quella per gli utenti.\n"
+"    * Non è possibile bloccare un periodo che non è ancora terminato. La lock date per i consulenti deve essere fissata dopo l'ultimo giorno del mese precedente.\n"
+"    * La nuova lock date per i consulenti deve essere impostata dopo quella precedente.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -1050,7 +1062,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    Modulo di collegamento tra il modulo di presenze e l'app timesheet.\n"
+"    Modulo che collega l'app \"Presenza\" e il modulo \"Foglio ore\".\n"
 "    "
 
 #. module: base
@@ -1067,6 +1079,15 @@ msgstr ""
 "\n"
 "    Gateway di pagamento PayUMoney che accetta solo la valuta INR.\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_mx_tax_cash_basis
+msgid ""
+"\n"
+"    Properly create the Journal Entries on Tax Cash basis when using foreign\n"
+"    currencies the Tax must be set at date of payment\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_forecast
@@ -1614,11 +1635,11 @@ msgid ""
 "invoices from picking, the system is able to add and compute the shipping line.\n"
 msgstr ""
 "\n"
-"Consente di aggiungere metodi di consegna per gli ordini di vendita e la confezione di pacchi.\n"
+"Consente di aggiungere metodi di spedizione per gli ordini di vendita e i prelievi.\n"
 "==============================================================\n"
 "\n"
-"Puoi scegliere il tuo proprio vettore per i prezzi. Quando si crea una fattura\n"
-"dall'ordine di vendita, il sistema può aggiungere e calcolare le linee di trasporto.\n"
+"Si può definire un prorio vettore per i prezzi. Nella fatturazione\n"
+"da prelievo, il sistema può aggiungere e calcolare le righe relative al trasporto.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_account
@@ -1697,6 +1718,13 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Gestione degli asset\n"
+"=================\n"
+"Gestione degli asset di un'azienda o di una persona.\n"
+"Tiene traccia degli ammortamenti e crea le corrispondenti registrazioni contabili.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_document
@@ -1787,15 +1815,15 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Traduzione Automatica tramite l'API Gengo\n"
+"Traduzione automatica tramite l'API Gengo\n"
 "========================================\n"
 "\n"
 "Questo modulo installerà un pianificatore passivo per le traduzioni automatiche\n"
-"usando l'API Gengo. Per attivarlo, devi\n"
-"1) Configurare i parametri di autenticazione di Gengo in `Impostazioni > Aziende > Parametri Gengo`\n"
-"2) Avvia il wizard in `Impostazioni > Termini di applicazione > Gengo: Richiesta Manuale di Traduzione` e segui il wizard.\n"
+"usando l'API Gengo. Per attivarlo, bisogna\n"
+"1) configurare i parametri di autenticazione di Gengo in Impostazioni > Aziende > Parametri Gengo\n"
+"2) avviare la guida in Impostazioni > Termini di applicazione > Gengo: Richiesta Manuale di Traduzione e seguirla.\n"
 "\n"
-"Questo wizard attiverà il task CRON e il pianificatore e avvierà la traduzione automatica tramite i Servizi Gengo per tutti i termini per i quali è stata richiesta la traduzione.\n"
+"Questa guida attiverà il lavoro CRON e il pianificatore, e avvierà la traduzione automatica tramite i servizi Gengo per tutti i termini per i quali è stata richiesta la traduzione.\n"
 "    "
 
 #. module: base
@@ -1981,7 +2009,8 @@ msgid ""
 "Legal\n"
 "-----\n"
 "**The use of pos_blackbox_be sources is only certified on odoo.com SaaS platform\n"
-"for version 9.0.**\n"
+"for version 11.0.** Contact Odoo SA before installing pos_blackbox_be module.\n"
+"\n"
 "An obfuscated and certified version of the pos_blackbox_be may be provided on\n"
 "requests for on-premise installations.\n"
 "No modified version is certified and supported by Odoo SA.\n"
@@ -2028,11 +2057,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Modulo intermedio per integrare le ferie nel timesheet\n"
-"================================================\n"
+"Modulo ponte per integrare i permessi nel foglio ore\n"
+"=====================================================\n"
 "\n"
-"Questo modulo consente di registrare automaticamente timesheet quando un dipendente\n"
-"è in ferie. È possibile configurare progetti e compiti in tutta l'azienda.\n"
+"Questo modulo consente di compilare automaticamente i fogli ore durante i permessi\n"
+"dei dipendenti. È possibile configurare progetti e attività di tutta l'azienda.\n"
 "    "
 
 #. module: base
@@ -2057,6 +2086,11 @@ msgid ""
 "\n"
 "This module allows for validate and format phone numbers for leads and contacts."
 msgstr ""
+"\n"
+"Convalida di numeri di telefono CRM\n"
+"============================\n"
+"\n"
+"Questo modulo consente di convalidare et di strutturare i numeri di telefono dei lead e dei contatti. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ve
@@ -2090,6 +2124,31 @@ msgid ""
 "If you install this module, and select Custom chart a basic chart will be proposed, \n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
+"\n"
+"Piano dei conti per il Venezuela.\n"
+"===============================\n"
+"\n"
+"Il Venezuela non ha un piano dei conti legale, ma quello di default proposto in Odoo dovrebbe essere in linea con le migliori pratiche accettate in Venezuela.\n"
+"\n"
+"Questo modulo è stato testato come base per più di 1000 aziende, perché\n"
+"si basa sull'osservazione del software più comune sul mercato venezuelano.\n"
+"Questo permetterà certamente ai contabili di sentirsi a proprio agio fin dal primo contatto con Odoo.\n"
+"\n"
+"Questo modulo non pretende di essere la localizzazione completa per il Venezuela\n"
+"ma ti aiuta ad iniziare molto rapidamente con Odoo in questo paese.\n"
+"\n"
+"Questo modulo offre:\n"
+"---------------------\n"
+"\n"
+"- Le imposte di base del Venezuela.\n"
+"- I dati di base per lanciare i test di localizzazione della comunità.\n"
+"- La possibilità di creare un'azienda da 0, se le tue esigenze di contabilità sono di base.\n"
+"\n"
+"Consigliamo di installare la contabilità anglosassone per valorizzare le scorte\n"
+"come fa il Venezuale con le fatture in uscita.\n"
+"\n"
+"Se installi questo modulo e selezioni \"Piano dei conti personalizzato\", verrà proposto un piano dei conti di base, \n"
+"ma è necessario definire manualmente le impostazioni predefinite per le imposte\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -2291,12 +2350,12 @@ msgstr ""
 "Creazione di iscrizioni con gli ordini di vendita.\n"
 "========================================\n"
 "\n"
-"Questo modulo ti consente di automatizzare e di collegare il processo di creazione di iscrizioni al\n"
-"tuo processo di vendita e quindi di attivare la funzionalità di fatturazione delle iscrizioni.\n"
+"Questo modulo consente di automatizzare e collegare il processo di creazione delle iscrizioni al\n"
+"processo di vendita e quindi di attivare la funzionalità di fatturazione delle iscrizioni.\n"
 "\n"
-"Definisce un nuovo tipo di prodotti di tipo servizio che ti consente di \n"
-"scegliere una categoria di evento associata. Quando creerai un ordine di vendita per\n"
-"questo prodotto, avrai la possibilità di scegliere un evento di questa categoria e\n"
+"Definisce un nuovo tipo di prodotti servizio con la possibilità di \n"
+"associare una categoria evento. Quando si crea un ordine di vendita per\n"
+"questo prodotto, si ha la possibilità di scegliere un evento di questa categoria e\n"
 "quando l'ordine di vendita sarà confermato, l'iscrizione a questo evento sarà automaticamente creata.\n"
 
 #. module: base
@@ -2468,6 +2527,16 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_payment_bank
+msgid ""
+"\n"
+"EDI Mexican Localization\n"
+"========================\n"
+"Allow the user to select the bank account that was used the customer to paid the invoices.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_hw_escpos
 msgid ""
 "\n"
@@ -2596,6 +2665,10 @@ msgid ""
 "=====================================================\n"
 "        "
 msgstr ""
+"\n"
+"Attiva i tracker UTM nei link condivisi.\n"
+"=====================================================\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_crypt
@@ -2641,6 +2714,15 @@ msgid ""
 "with the street name, the house number, and room number.\n"
 "        "
 msgstr ""
+"\n"
+"Gestione avanzata degli indirizzi\n"
+"=============================\n"
+"\n"
+"Questo modulo contiene tutti i campi aggiuntivi necessari per gestire accuramente gli indirizzi.\n"
+"\n"
+"Per esempio, nei rapporti legali, e per alcuni paesi, il campo Strada deve essere diviso in diversi campi,\n"
+"con il nome della strada, il numero civico e il numero civico della stanza.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_blackbox_be
@@ -2696,6 +2778,17 @@ msgid ""
 "\n"
 "Both goals and badges are flexibles and can be adapted to a large range of modules and actions. When installed, this module creates easy goals to help new users to discover Odoo and configure their user profile.\n"
 msgstr ""
+"\n"
+"Processo di gamification\n"
+"====================\n"
+"Il modulo Gamification fornisce modi per valutare e motivare gli utenti di Odoo.\n"
+"\n"
+"Gli utenti possono essere valutati utilizzando obiettivi numerici o non numerici da raggiungere.\n"
+"Gli **obiettivi** sono assegnati attraverso **sfide** per valutare e confrontare i membri di un team tra loro e nel tempo.\n"
+"\n"
+"Per i successi non numerici, **medaglie** sono assegnate agli utenti. Da un semplice \"grazie\" ad un riconoscimento eccezionale, una medaglia è un modo semplice per esprimere gratitudine ad un utente per il suo lavoro .\n"
+"\n"
+"Gli obiettivi e le medaglie sono entrambi flessibili e possono essere adattati ad una vasta gamma di moduli e azioni. Una volta installato, questo modulo crea semplici obiettivi per aiutare i nuovi utenti a scoprire Odoo e configurare il loro profilo utente.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy
@@ -2739,6 +2832,14 @@ msgid ""
 "    * Company Contribution Management\n"
 "    "
 msgstr ""
+"\n"
+"Sistema retributivo generico integrato alla contabilità.\n"
+"==================================================\n"
+"\n"
+"    * Codifica delle spese\n"
+"    * Codifica dei pagamenti\n"
+"    * Gestione dei contributi dell'azienda\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_push
@@ -2956,6 +3057,12 @@ msgid ""
 "This Module integrates all post commits, pull requests and activity of github issue to channels in Odoo.\n"
 "    "
 msgstr ""
+"\n"
+"Integra Github a Odoo Discussione.\n"
+"======================================\n"
+"\n"
+"Questo modulo integra tutte le convalide di pubblicazioni, le richieste di estrazione e l'attività di github nei canali di Odoo.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_drive
@@ -3002,6 +3109,11 @@ msgid ""
 "This module allows you to easily add extra costs on pickings and decide the split of these costs among their stock moves in order to take them into account in your stock valuation.\n"
 "    "
 msgstr ""
+"\n"
+"Gestione dei costi allo sbarco\n"
+"=======================\n"
+"Questo modulo consente di aggiungere facilmente costi aggiuntivi e di decidere come ripartire questi costi tra i movimenti di magazzino, per tenerne conto nella valutazione delle scorte.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_score
@@ -3074,6 +3186,16 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Supporto con la Live Chat\n"
+"==========================\n"
+"\n"
+"Consente di lasciare widget di messaggistica istantanea su una pagina Web che comunicherà\n"
+"con il server corrente e distribuirà le richieste dei visitatori tra\n"
+"più operatori.\n"
+"Aiuta i tuoi clienti con questa chat e analizza i loro commenti.\n"
+"\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_maintenance
@@ -3087,6 +3209,14 @@ msgid ""
 "* Equipments related to workcenters\n"
 "* MTBF, MTTR, ...\n"
 msgstr ""
+"\n"
+"Manutenzione nel modulo MRP\n"
+"==================\n"
+"* Manutenzione preventiva contro manutenzione correttiva\n"
+"* Definisci le diverse fasi delle tue richieste di manutenzione\n"
+"* Pianifica le richieste di manutenzione (compresa la regolare manutenzione preventiva)\n"
+"* Attrezzature relative ai workcenter\n"
+"* MTBF, MTTR, ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_3way_match
@@ -3760,6 +3890,26 @@ msgid ""
 "* In a module, so that administrators and users of Odoo who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
 msgstr ""
+"\n"
+"Nuova importazione di file estensibile per Odoo\n"
+"======================================\n"
+"\n"
+"Reimplementazione del sistema di importazione di file di Odoo:\n"
+"\n"
+"* Lato server: il sistema precedente effettuava principalmente elaborazioni\n"
+"  lato client. Il lavoro era così duplicato (tra i client), era molto più difficile\n"
+"  usare il sistema di importazione senza un client (RPC diretto o\n"
+"  altre forme di automazione) e era molto più difficile controllare il\n"
+"  sistema di importazione/esportazione in quanto era distribuito\n"
+"  su più di 3 progetti diversi.\n"
+"\n"
+"* Più in generale: gli utenti e i partner possono creare la propria interfaccia\n"
+"  front-end per importare altri formati di file (ad esempio, dei file\n"
+"  OpenDocument) che possono essere più facili da gestire nel loro flusso di\n"
+"  lavoro o dalle loro fonti di produzione di dati.\n"
+"\n"
+"* In un modulo: gli amministratori di Odoo e gli utenti, secondo le loro\n"
+"  esigenze o desideri, possono evitare che un'importazione online sia disponibile per gli utenti.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa
@@ -3989,7 +4139,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Biglietti per Eventi Online\n"
+"Biglietti per eventi online\n"
 "======================\n"
 "\n"
 "        "
@@ -4066,11 +4216,11 @@ msgstr ""
 "Organizzazione e gestione di Eventi.\n"
 "======================================\n"
 "\n"
-"Il modulo Eventi consente di organizzare eventi e tutti i compiti collegati: pianificazione, tracciamento delle registrazioni, presenze ecc...\n"
+"Il modulo Eventi consente di organizzare eventi e tutte le attività collegate: pianificazione, tracciamento delle registrazioni, presenze ecc...\n"
 "\n"
 "Caratteristiche principali\n"
 "------------\n"
-"* Gestione di Eventi e Registrazioni\n"
+"* Gestione di eventi e registrazioni\n"
 "* Utilizzo di email per confermare ed inviare automaticamente ringraziamenti per ciascuna registrazione ad un evento\n"
 
 #. module: base
@@ -4250,7 +4400,7 @@ msgstr ""
 "===============\n"
 "\n"
 "Questo modulo sostituisce l'interfaccia Web di Odoo per visualizzare una semplice\n"
-"Homepage che spiega che cos'è una posbox, che mostra il stato e\n"
+"Homepage che spiega che cos'è una posbox, che mostra lo stato e\n"
 "dove si può trovare la documentazione.\n"
 "\n"
 "Se attivi questo modulo, non potrai più accedere\n"
@@ -4429,6 +4579,34 @@ msgid ""
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 "    "
 msgstr ""
+"\n"
+"Recupera le email in arrivo sui server POP/IMAP.\n"
+"============================================\n"
+"\n"
+"Inserisci i parametri dei tuoi account POP/IMAP, e tutte le email che arrivano su\n"
+"questi account saranno scaricate automaticamente nel tuo sistema Odoo. Sono\n"
+"supportati tutti i server compatibili POP3/IMAP, compresi quelli che richiedono\n"
+"una connessione SSL/TLS criptata.\n"
+"\n"
+"Puoi così creare facilmente flussi di lavoro basati su email per molti documenti Odoo utilizzando le funzioni email, ad esempio:\n"
+"----------------------------------------------------------------------------------------------------------\n"
+"    * Lead/Opportunità CRM\n"
+"    * Richieste CRM\n"
+"    * Domande di progetto\n"
+"    * Compiti di progetto\n"
+"    * Assunzioni in risorse umane (candidati)\n"
+"\n"
+"Basta installare l'applicazione in questione per poter assegnare uno qualsiasi\n"
+"di questi tipi di documenti (lead, domande di progetto) al proprio account di posta elettronica in arrivo. Le nuove email\n"
+"genereranno automaticamente nuovi documenti del tipo scelto, quindi è molto veloce per creare\n"
+"un'integrazione email-verso-Odoo. Ancora meglio: questi documenti funzionano direttamente come mini\n"
+"conversazioni sincronizzate per email. Puoi rispondere da Odoo e\n"
+"le risposte saranno raccolte automaticamente al loro ritorno, e allegate\n"
+"allo stesso documento di *conversazione*.\n"
+"\n"
+"Per esigenze più specifiche, è anche possibile assegnare azioni personalizzate\n"
+"(tecnicamente: Azioni Server) da attivare per ogni email in arrivo.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_dashboard
@@ -5049,6 +5227,35 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Modulo di gestione del piano dei conti per il Belgio in Odoo.\n"
+"==============================================================================\n"
+"\n"
+"Dopo l'installazione di questo modulo, viene avviata il wizard di configurazione per la contabilità.\n"
+"    * Abbiamo i modelli di conto che possono essere utili per generare i piani dei conti.\n"
+"    * Su questo particolare wizard, ti sarà chiesto di inserire il nome dell'azienda,\n"
+"      il modello del piano da seguire, il numero di cifre da generare, il codice\n"
+"      dell'account e il conto bancario e la valuta per creare i sezionali.\n"
+"\n"
+"Così, la copia pura del modello di piano viene generata.\n"
+"\n"
+"Wizard forniti da questo modulo:\n"
+"--------------------------------\n"
+"    * Partner IVA Intra: Registra i partner con la loro partita IVA e gli importi\n"
+"      fatturati. Prepara un formato di file XML.\n"
+"      \n"
+"        **Percorso di accesso:** Fatturazione/Analisi/Rapporti legali/Dichiarazioni del Belgio /Partner IVA Intra\n"
+"    * Dichiarazione periodica dell'IVA: Prepara un file XML per la dichiarazione dell'IVA\n"
+"      dell'azienda principale dell'utente attualmente connesso.\n"
+"      \n"
+"        **Percorso di accesso:** Fatturazione/Analisi/Rapporti legali/Dichiarazioni del Belgio/Dichiarazioni periodiche dell'IVA\n"
+"    * Elenco annuale dei clienti assoggettati all'IVA: Prepara un file XML per la dichiarazione\n"
+"      dell'IVA dell'azienda principale dell'utente attualmente connesso in base\n"
+"      all'anno fiscale.\n"
+"      \n"
+"        **Percorso di accesso :** Fatturazione/Analisi/Rapporti legali/Dichiarazioni del Belgio/Elenco annuale dei clienti assoggettati all'IVA.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do_reports
@@ -5450,6 +5657,15 @@ msgid ""
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website edition and customization capabilities."
 msgstr ""
+"\n"
+"Questo modulo aggiunge il codice di base richiesto per un portale clienti completamente integrato.\n"
+"Contiene la classe di controller di base e modelli di base. I moduli aziendali\n"
+"aggiungono i propri modelli e controller per sviluppare il portale\n"
+"clienti.\n"
+"\n"
+"Questo modulo contiene essenzialmente il codice del website_portale versione 10 di Odoo. L'obiettivo\n"
+"di questo modulo è quello di consentire la visualizzazione di un portale clienti senza\n"
+"dipendere dalle funzionalità di modifica e di personalizzazione del sito Web."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_sale_closing
@@ -5474,8 +5690,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Questo modulo aggiunge un supporto per la lettura di codici a barre al sistema di gestione degli Eventi.\n"
-"Per ogni partecipante viene generato un codice a barre che viene stampato sul badge. Una volta scannerizzato,\n"
+"Questo modulo aggiunge il supporto per la lettura di codici a barre al sistema di gestione degli eventi.\n"
+"Per ogni partecipante viene generato un codice a barre che viene stampato sul badge. Una volta acquisito,\n"
 "la registrazione è confermata.\n"
 "    "
 
@@ -5506,6 +5722,9 @@ msgid ""
 "=================================================================\n"
 "    "
 msgstr ""
+"\n"
+"Questo modulo aggiunge l'opzione del prelievo dei lotti nella gestione del magazzino.\n"
+"================================================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_attendance
@@ -5660,18 +5879,18 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Modulo di gestione delle adesioni\n"
+"Questo modulo consente di gestire le iscrizioni\n"
 "=========================================================================\n"
 "\n"
-"Supporta diversi tipi di membri:\n"
+"Supporta diversi tipi di iscritti:\n"
 "--------------------------------------\n"
-"    * Membro gratuito\n"
-"    * Membro associato (ad esempio: un gruppo si iscrive per tutte le filiali)\n"
-"    * Membro che ha pagato\n"
-"    * Membro che beneficia di prezzi speciali\n"
+"    * Socio con iscrizione gratuita\n"
+"    * Socio associato (ad esempio: un gruppo si iscrive per tutte le filiali)\n"
+"    * Socio che ha pagato\n"
+"    * Socio che beneficia di prezzi speciali\n"
 "\n"
-"È integrato con i moduli \"Vendita\" e \"Contabilità\" per fatturare \n"
-"e per mandare automaticamente proposte di rinnovo dell'adesione.\n"
+"È integrato con i moduli \"Vendita\" e \"Contabilità\" per automatizzare \n"
+"le fatture e l'invio delle proposte di rinnovo iscrizione.\n"
 "    "
 
 #. module: base
@@ -5852,15 +6071,15 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Questo modello implementa un sistema di timesheet.\n"
-"==========================================\n"
+"Questo modulo implementa un sistema di fogli ore.\n"
+"===============================================\n"
 "\n"
-"Ogni dipendente può registrare e tracciare il tempo che dedica ai diversi progetti.\n"
+"Ciascun dipendente può definire e tenere traccia del tempo dedicato ai diversi progetti.\n"
 "\n"
-"Vengono forniti molti report sul tempo e la traccia dei dipendenti.\n"
+"Fornisce molti resoconti sul monitoraggio di tempi e dipendenti.\n"
 "\n"
-"È completamente integrato con il modulo di contabilità dei costi. Consente di\n"
-"impostare una gestione per affare.\n"
+"È completamente integrato con il modulo di contabilità analitica. Consente di\n"
+"organizzare la gestione per lavoro.\n"
 "    "
 
 #. module: base
@@ -6072,6 +6291,9 @@ msgid ""
 "This module will test the main workflow of Odoo.\n"
 "It will install some main apps and will try to execute the most important actions.\n"
 msgstr ""
+"\n"
+"Questo modulo verificherà il flusso di lavoro principale di Odoo\n"
+"Installerà alcune applicazioni principali e cercherà di eseguire le azioni più importanti.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_kanban_gauge
@@ -6096,6 +6318,18 @@ msgid ""
 "\n"
 "Also implements the removal strategy First Expiry First Out (FEFO) widely used, for example, in food industries.\n"
 msgstr ""
+"\n"
+"Traccia le diverse date sui prodotti e sui lotti di produzione.\n"
+"======================================================\n"
+"\n"
+"Le seguenti date possono essere tracciate::\n"
+"-------------------------------\n"
+"    - fine vita\n"
+"    - data di scadenza\n"
+"    - data di rimozione\n"
+"    - data avviso\n"
+"\n"
+"Attua anche la strategia di rimozione ampiamente utilizzata, ad esempio, nell'industria alimentare: First Expiry First Out (FEFO)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_transifex
@@ -6339,10 +6573,10 @@ msgid ""
 "Translate you website in one click\n"
 msgstr ""
 "\n"
-"Traduttore di sito Web Gengo\n"
+"Traduttore di sito web Gengo\n"
 "========================\n"
 "\n"
-"Traduci il tuo sito Web in un clic\n"
+"Traduci il tuo sito web in un clic\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk_livechat
@@ -6386,7 +6620,7 @@ msgid ""
 "=========================================================\n"
 msgstr ""
 "\n"
-"Sito Web per visualizzare le Associazioni, i Gruppi e le Adesioni\n"
+"Sito web per visualizzare le associazioni, i gruppi e le iscrizioni\n"
 "=========================================================\n"
 
 #. module: base
@@ -6418,7 +6652,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Interfaccia del sito Web per creare URL brevi e tracciabili.\n"
+"Interfaccia del sito web per creare URL brevi e tracciabili.\n"
 "=====================================================\n"
 "\n"
 "        "
@@ -6449,7 +6683,7 @@ msgstr ""
 #: code:addons/base/ir/ir_ui_view.py:1054
 #, python-format
 msgid " - %r in %s=%r"
-msgstr ""
+msgstr " - %r in %s=%r"
 
 #. module: base
 #: model:ir.module.module,description:base.module_inter_company_rules
@@ -6825,7 +7059,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_kanban
 msgid "<strong><span>Current Rate: </span></strong>"
-msgstr ""
+msgstr "<strong><span>Tasso attuale: </span></strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -6890,17 +7124,17 @@ msgstr "<strong>Report:</strong>"
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Ro</strong>"
-msgstr ""
+msgstr "<strong>Ro</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Rq</strong>"
-msgstr ""
+msgstr "<strong>Rq</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Seq</strong>"
-msgstr ""
+msgstr "<strong>Seq</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -6914,7 +7148,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Tr</strong>"
-msgstr ""
+msgstr "<strong>Tr</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -7092,6 +7326,147 @@ msgid ""
 "<button name=\"validate\" type=\"object\" barcode_trigger=\"validate\"/> will be triggered when a barcode containing\n"
 "\"O-BTN.validate\" is scanned.\n"
 msgstr ""
+"==============================\n"
+"Documentazione modulo codice a barre\n"
+"==============================\n"
+"\n"
+"Questo modulo fornisce la logica della codifica del codice a barre e le utilità di scansione lato cliente.\n"
+"\n"
+"\n"
+"Codifica codici a barre\n"
+"==============================\n"
+"\n"
+"Il modulo definisce le nomenclature del codice a barre le cui regole identificano tipi specifici\n"
+"di oggetti come prodotti, località. Contiene le seguenti funzionalità:\n"
+"\n"
+"- Schemi per identificare codici a barre che contengono un valore numerico (es. peso, prezzo)\n"
+"- Definizione di alias dei codici che consentono di identificare lo stesso prodotto con diversi codici a barre\n"
+"- Illimitato numero di schemi e definizioni di codici a barre,\n"
+"- Supporto per le codifiche EAN-13, EAN-8 e UPC-A\n"
+"\n"
+"Codifiche codice a barre\n"
+"-----------------\n"
+"\n"
+"Un codice a barre è una sequenza di lunghezza arbitraria di caratteri ASCII. Un codice EAN-13 è un codice a barre di 13 cifre,\n"
+"la cui tredicesima cifra è il checksum. \n"
+"\n"
+"Codici a barre semplici e regole\n"
+"-------------------------\n"
+"\n"
+"La nomenclatura standard prevede un codice EAN-13 per i codici a barre dei prodotti. Definisce una regola \n"
+"per i \"prodotti unità\" la cui codifica è EAN-13, e il cui schema è '.', es. ogni codice a barre \n"
+"soddisfa questo schema. Acquisire il codice a barre di un prodotto, es. '5410013101703', soddisfa questa regola. \n"
+"L'oggetto acquisito viene quindi identificato come un \"prodotto unità\", e viene recuperato dalla tabella dei prodotti.\n"
+"\n"
+"Nota: il carattere speciale '.' negli schemi corrisponde a qualsiasi carattere. Per utilizzare esplicitamente \n"
+"il carattere '.' in uno schema, anteporre (escape) il carattere '\\'. Anche il carattere '\\' deve essere gestito con l'escape\n"
+"('\\\\') per essere utilizzato esplicitamente.\n"
+"\n"
+"Supponiamo di identificare altri oggetti con i codici a barre, diciamo ubicazioni di magazzino. Definiamo una\n"
+"nuova regola nella nomenclatura con il tipo corrispondente (nel nostro esempio, il tipo è 'Ubicazione'),\n"
+"e il cui schema è ad esempio '414.', ovvero, ogni codice a barre di ubicazione inizia con '414'. Acquisendo un codice a barre\n"
+"ubicazione, es. '41401', soddisfa la regola Ubicazione, e la corrispondente ubicazione è ottenuta dalla \n"
+"tabella delle ubicazioni.\n"
+"\n"
+"Nota: la regole hanno un campo sequenza che indica l'ordine in cui le regole vengono valutate (ASC). Nel nostro \n"
+"esempio precedente, la regola Prodotto unità deve avere una sequenza superiore alla regola Ubicazione, \n"
+"perché vogliamo che la seconda sia valutata per prima.\n"
+"\n"
+"Codici a barre con contenuto numerico\n"
+"--------------------------------\n"
+"\n"
+"I codici a barre possono codificare contenuto numerico, che è decodificato dal modulo codice a barre. A tal fine,\n"
+"deve essere definita una nuova regola per i codici a barre con contenuto numerico (es. codici per prodotti \n"
+"pesati). Il contenuto numerico in uno schema è indicato tra parentesi graffe (caratteri speciali '{' e \n"
+"'}'). Il contenuto delle parentesi deve essere una sequenza di 'N' (che rappresentano la parte intera del contenuto \n"
+"numerico) seguita da una sequenza di 'D' (che rappresentano la parte decimale del contenuto numerico). \n"
+"Per esempio, definiamo una nuova regola per prodotti pesati il cui schema è '21.....{NNDDD}.'. Poiché\n"
+"assumiamo una codifica EAN-13 per i codici a barre dei prodotti, anche la codifica di questa regola deve essere EAN-13.\n"
+"\n"
+"Supponiamo di voler scrivere un codice a barre per una dato prodotto pesato, diciamo arance. Innanzitutto \n"
+"dobbiamo definire nel prodotto arance un codice a barre che soddisfa la regola prodotti pesati. Questo codice \n"
+"deve iniziare con '21' ed avere una codifica EAN-13 corretta (cioè la tredicesima cifra deve essere un checksum corretto). \n"
+"Inoltre, tutto il contenuto numerico deve essere impostato a '0'. Per esempio, impostiamo il codice a barre a \n"
+"'2100001000004'. \n"
+"\n"
+"Ora vogliamo scrivere un code a barre per 2.75kg di arance. Questo codice deve essere '2100001027506' (il \n"
+"contenuto numerico di questo codice è '02750', e il checksum corretto è '6'). Quando acquisito, questo \n"
+"codice corrisponde alla regola prodotto pesato (perché inizia con '21'). Il contenuto numerico è estratto, \n"
+"e sostituito da una sequenza di '0'. Il checksum corretto è quindi calcolato per il codice a barre ottenuto\n"
+"('2100001000004') e il prodotto corrispondente (arance) è recuperato dalla tabella prodotto.\n"
+"\n"
+"Nota: i caratteri speciali '{' e '}' nello schema vengono utilizzati per identificare il contenuto numerico. Per \n"
+"usare esplicitamente '{' o '}' in uno schema, deve essere utilizzato l'escape.\n"
+"\n"
+"\n"
+"Campi rigorosamente EAN-13 in nomenclature di codici a barre\n"
+"--------------------------------------------\n"
+"\n"
+"Molti lettori di codici a barre eliminano gli zeri iniziali all'acquisizione di codici EAN-13. Le nomenclature dei codici a barre\n"
+"hanno un campo booleano \"Usare solo EAN13\". Se falso, quando si tenta di collegare un codice acquisito con \n"
+"una regola la cui codifica è EAN-13, se il codice è lungo 12 e, anteponendo al codice uno 0,\n"
+"l'ultima cifra è il checksum corretto, si antepone automaticamente il codice con 0 e si cerca di\n"
+"trovare una corrispondenza con il nuovo codice. Se \"Usare solo EAN13\" è impostato a vero, viene cercato uno schema\n"
+"che corrisponde al codice a barre originale di 12 cifre.\n"
+"\n"
+"\n"
+"\n"
+"Acquisizione codici a barre\n"
+"==============================\n"
+"\n"
+"Acquisizione\n"
+"--------\n"
+"\n"
+"Per utilizzare i codici a barre in Odoo utilizzare un lettore USB (che imita gli ingressi da tastiera).\n"
+"Il lettore deve essere configurato per non utilizzare prefissi e un carattere ritorno carrello (CR) come suffisso.\n"
+"Il ritardo tra ogni carattere in ingresso deve essere inferiore o uguale a 50 millisecondi.\n"
+"Molti lettori di codici a barre sono pronti all'uso.\n"
+"Comunque, verificare che il lettore utilizzi lo stesso schema tastiera che usa il dispositivo cui è collegato.\n"
+"Oppure impostando lo schema tastiera del dispositivo a US QWERTY (valore predefinito di molti lettori)\n"
+"o modificando lo schema tastiera del lettore (controllare il manuale).\n"
+"\n"
+"\n"
+"Eventi codici a barre\n"
+"------------------------------\n"
+"\n"
+"Quando il modulo codici a barre è installato, viene istanziato un singleton della classe javascript BarcodeEvents.\n"
+"Lo scopo di questo componente è di controllare la pressione dei tasti per rilevare i codici a barre, quindi inviare i codici a barre nel core.bus all'interno di un 'barcode_event'.\n"
+"Tutti gli eventi di tasto premuto sono accodati finché non ci sono tasti premuti per 50ms o viene inserito un carattere CR / TAB\n"
+"(perché molti lettori usano questo carattere come suffisso).\n"
+"Se i codici accodati assomigliano ad un codice a barre, viene richiamato un evento :\n"
+"core.bus.trigger('barcode_scanned', barcode);\n"
+"Altrimenti, i tasti premuti vengono 'rispediti'. Comunque, per questioni di sicurezza, un evento di tasto premuto generato\n"
+"programmaticamente non attiva comportamenti nativi del browser. Per questo motivo, BarcodeEvents non intercetta i tasti premuti\n"
+"il cui obiettivo è un elemento editabile (es. ingressi) o quanto ctrl/cmd/alt è premuto.\n"
+"Per acquisire i tasti premuti su un elemento editabile, deve avere l'attributo barcode_events=\"true\".\n"
+"\n"
+"\n"
+"Handler codice a barre\n"
+"------------------------------\n"
+"\n"
+"Per mantenere il cliente web coerente, i componenti che devono ricevere gli eventi codici a barre devono includere BarcodeHandlerMixin.\n"
+"Richiede l'implementazione del metodo on_barcode_scanned(barcode) ed espone i metodi start_listening e stop_listening\n"
+"Quando è un erede di una View gestita da un ViewManager viene ascoltato solo mentre la vista è collegata.\n"
+"\n"
+"\n"
+"Handler viste form codici a barre\n"
+"------------------------------\n"
+"\n"
+"È possibile per una vista form ascoltare eventi barcode, gestendoli lato client e/o lato server.\n"
+"Quando gli eventi barcode sono gestiti lato server, lavorano come l'evento onchange. Il modello pertinente deve includere\n"
+"BarcodeEventsMixin e ridefinire il metodo  on_barcode_scanned. Questo metodo riceve il codice a barre acquisito e\n"
+"`self` è un pseudo-record che rappresenta il contenuto della vista form, come in @api.onchange methods.\n"
+"I codici a barre con prefisso 'O-CMD' o 'O-BTN' sono riservati per caratteristiche speciali e non vengono mai passati a on_barcode_scanned.\n"
+"L'handler barcode della vista form può essere estesa per aggiungere l'handler lato client. Fare riferimento alla (speriamo\n"
+"abbastanza buona) documentazione per altre informazioni.\n"
+"\n"
+"\n"
+"Bottone handler codici a barre\n"
+"------------------------------\n"
+"\n"
+"Aggiungere un attributo 'barcode_trigger' ad un bottone per consentire di attivarlo con la lettura di un codice a barre. Esempio :\n"
+"<button name=\"validate\" type=\"object\" barcode_trigger=\"validate\"/> verrà attivato quando un codice a barre che contiene\n"
+"\"O-BTN.validate\" viene acquisito.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_landing
@@ -7281,6 +7656,11 @@ msgstr "Un modulo per testare le API."
 #: model:ir.module.module,description:base.module_test_uninstall
 msgid "A module to test the uninstall feature."
 msgstr "Un modulo per testare la funzione di disinstallazione."
+
+#. module: base
+#: model:ir.module.module,description:base.module_test_translation_import
+msgid "A module to test translation import."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_assetsbundle
@@ -7685,7 +8065,7 @@ msgstr "Aggiunge un link per modificare una traduzione in Transifex"
 #. module: base
 #: model:ir.module.module,summary:base.module_base_address_city
 msgid "Add a many2one field city on addresses"
-msgstr ""
+msgstr "Aggiunge un campo città many2one agli indirizzi"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_barcode
@@ -8158,7 +8538,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_fs
 msgid "Arch Filename"
-msgstr ""
+msgstr "Nome file arch"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_form
@@ -8218,7 +8598,7 @@ msgstr "Gestione associazioni"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_membership
 msgid "Associations: Members"
-msgstr "Associazioni: Membri"
+msgstr "Associazioni: membri"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:53
@@ -8229,7 +8609,7 @@ msgstr "Almeno una lingua deve essere attiva."
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attached Document Name"
-msgstr "Nome del Documento in Allegato"
+msgstr "Nome documento allegato"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
@@ -8244,7 +8624,7 @@ msgstr "Allegato"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_name
 msgid "Attachment Name"
-msgstr "Nome Allegato"
+msgstr "Nome allegato"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_attachment
@@ -8341,7 +8721,7 @@ msgstr "Azione Automatica basata sui Contratti dei Dipendenti"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_gengo
 msgid "Automated Translations through Gengo API"
-msgstr "Tradotto Automaticamente con Gengo API"
+msgstr "Tradotto automaticamente con API Gengo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_auto_install
@@ -8494,6 +8874,16 @@ msgid "Bank account"
 msgstr "Conto bancario"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_mx_edi_payment_bank
+msgid "Bank account in the payments"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_payment_bank
+msgid "Bank account payment to Mexico"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_partner_bank_acc_type
 msgid "Bank account type, inferred from account number"
 msgstr "Tipo di conto bancario, desunto dal numero di conto"
@@ -8540,12 +8930,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes
 msgid "Barcodes"
-msgstr "Codici a Barre"
+msgstr "Codici a barre"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes
 msgid "Barcodes Scanning and Parsing"
-msgstr "Lettura e Analisi dei Codici a barre"
+msgstr "Lettura e analisi dei codici a barre"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_base
@@ -8604,7 +8994,7 @@ msgstr "Vista base"
 #: model:ir.cron,cron_name:base.autovacuum_job
 #: model:ir.cron,name:base.autovacuum_job
 msgid "Base: Auto-vacuum internal data"
-msgstr ""
+msgstr "Base: pulizia automatica dati interni"
 
 #. module: base
 #: model:ir.actions.server,name:base.action_server_module_immediate_install
@@ -8818,7 +9208,7 @@ msgstr "Isola Bouvet"
 #. module: base
 #: selection:res.company,external_report_layout:0
 msgid "Boxed"
-msgstr ""
+msgstr "Inscatolato"
 
 #. module: base
 #: model:res.country,name:base.br
@@ -9479,9 +9869,15 @@ msgid "Commercial Entity"
 msgstr "Ente commerciale"
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_res_partner_commercial_partner_country_id
+#: model:ir.model.fields,field_description:base.field_res_users_commercial_partner_country_id
+msgid "Commercial Entity's Country"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_pos_data_drinks
 msgid "Common Drinks data for points of sale"
-msgstr ""
+msgstr "Dati su bevande comuni per il punto vendita"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
@@ -9562,7 +9958,7 @@ msgstr "Proprietà dell'Azienda"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_company_registry
 msgid "Company Registry"
-msgstr "Registro delle Imprese"
+msgstr "Registro Imprese"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_report_header
@@ -9873,9 +10269,7 @@ msgstr "Nazioni"
 #: model:ir.model.fields,field_description:base.field_res_bank_country
 #: model:ir.model.fields,field_description:base.field_res_company_country_id
 #: model:ir.model.fields,field_description:base.field_res_country_state_country_id
-#: model:ir.model.fields,field_description:base.field_res_partner_commercial_partner_country_id
 #: model:ir.model.fields,field_description:base.field_res_partner_country_id
-#: model:ir.model.fields,field_description:base.field_res_users_commercial_partner_country_id
 #: model:ir.model.fields,field_description:base.field_res_users_country_id
 #: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
@@ -10421,8 +10815,8 @@ msgstr "D FORNITURA DI ELETTRICITÀ, GAS, VAPORE E ARIA CONDIZIONATA"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl
-msgid "DHL Shipping"
-msgstr "Spedizione con DHL"
+msgid "DHL Express Shipping"
+msgstr ""
 
 #. module: base
 #: selection:report.paperformat,format:0
@@ -10641,7 +11035,7 @@ msgstr "Lettura di Codici a Barre per la Consegna"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery
 msgid "Delivery Costs"
-msgstr "Costi di Consegna"
+msgstr "Costi di consegna"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_demo
@@ -11230,7 +11624,7 @@ msgstr "Server email"
 #: model:ir.module.category,name:base.module_category_mass_mailing
 #: model:ir.module.module,shortdesc:base.module_mass_mailing
 msgid "Email Marketing"
-msgstr ""
+msgstr "Marketing via email"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -11426,12 +11820,12 @@ msgstr "Eventi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event
 msgid "Events Organization"
-msgstr "Organizzazione Eventi"
+msgstr "Organizzazione eventi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_sale
 msgid "Events Sales"
-msgstr "Vendite Eventi"
+msgstr "Vendite eventi"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -11580,7 +11974,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_extended
 msgid "Extended Addresses"
-msgstr ""
+msgstr "Indirizzi estesi"
 
 #. module: base
 #: selection:ir.ui.view,mode:0
@@ -12049,7 +12443,7 @@ msgstr "File"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_datas
 msgid "File Content"
-msgstr "Contenuto File"
+msgstr "Contenuto file"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export_format
@@ -12061,7 +12455,7 @@ msgstr "Formato File"
 #: model:ir.model.fields,field_description:base.field_base_language_import_filename
 #: model:ir.model.fields,field_description:base.field_ir_attachment_datas_fname
 msgid "File Name"
-msgstr "Nome File"
+msgstr "Nome file"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_file_size
@@ -12480,7 +12874,7 @@ msgstr "Generico - Contabilità"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_form
 msgid "Generic Form Controller"
-msgstr ""
+msgstr "Controllore modulo generico"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import
@@ -12495,7 +12889,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_website_form
 #: model:ir.module.module,summary:base.module_website_form
 msgid "Generic controller for web forms"
-msgstr ""
+msgstr "Controllore generico per modulo web"
 
 #. module: base
 #: model:res.country,name:base.ge
@@ -13573,7 +13967,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_export
 msgid "Import / Export"
-msgstr "Importa / Exporta"
+msgstr "Importa / Esporta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_camt
@@ -14056,7 +14450,7 @@ msgstr "Irlanda"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_lock
 msgid "Irreversible Lock Date"
-msgstr ""
+msgstr "Data blocco irrevocabile"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_is_company
@@ -14134,7 +14528,7 @@ msgstr "Jersey"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_hr_recruitment
 msgid "Job Descriptions And Application Forms"
-msgstr "Descrizioni dei Lavori e Moduli di Candidatura"
+msgstr "Descrizioni dei lavori e moduli di candidatura"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_function
@@ -14215,6 +14609,11 @@ msgstr "Base di conoscenze per l'Helpdesk basato sul Forum di Odoo"
 #: model:ir.module.module,description:base.module_l10n_si
 msgid "Kontni načrt za gospodarske družbe"
 msgstr "Kontni načrt za gospodarske družbe"
+
+#. module: base
+#: model:res.country,name:base.xk
+msgid "Kosovo"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.kw
@@ -15006,7 +15405,7 @@ msgstr "Malta"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_sale
 msgid "Manage Events and Sell Tickets Online"
-msgstr "Gestire Eventi e Vendere Biglietti Online"
+msgstr "Gestire eventi e vendere biglietti online"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment
@@ -15251,7 +15650,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_membership
 msgid "Membership Management"
-msgstr "Gestione Appartenenze"
+msgstr "Gestione iscrizioni"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_note_pad
@@ -15292,7 +15691,7 @@ msgstr "Personalizzazione Menu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_mercury
 msgid "Mercury Payment Services"
-msgstr "Servizio pagamento Mercury "
+msgstr "Servizi di pagamento Mercury"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_message
@@ -15302,7 +15701,7 @@ msgstr "Messaggio"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
 msgid "Messaging and Social"
-msgstr "Messagi e Social"
+msgstr "Messaggistica e social"
 
 #. module: base
 #: code:addons/base/res/res_config.py:498
@@ -15727,6 +16126,11 @@ msgid "N ADMINISTRATIVE AND SUPPORT SERVICE ACTIVITIES"
 msgstr "N ATTIVITÀ DI SERVIZI AMMINISTRATIVI E DI SUPPORTO"
 
 #. module: base
+#: model:res.country,vat_label:base.gt
+msgid "NIT"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_name
 #: model:ir.model.fields,field_description:base.field_ir_actions_name
 #: model:ir.model.fields,field_description:base.field_ir_actions_name_271
@@ -15803,7 +16207,7 @@ msgstr "Nuova Caledonia"
 #: code:addons/base/module/wizard/base_export_language.py:18
 #, python-format
 msgid "New Language (Empty translation template)"
-msgstr "Nuova lingua (Template di traduzione vuoto)"
+msgstr "Nuova lingua (modello di traduzione vuoto)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_change_password_user_new_passwd
@@ -17186,115 +17590,6 @@ msgid ""
 "interaction history, profiles, and more.\n"
 "\n"
 msgstr ""
-"Punto di Vendita Odoo\n"
-"-----------------------------\n"
-"\n"
-"Il modulo <a href=\"https://www.odoo.com/page/point-of-sale\">Punto di Vendita</a> di Odoo\n"
-"offre un'interfaccia super clean che non richiede nessuna installazione e viene eseguita\n"
-"online o offline sui hardware moderni.\n"
-"\n"
-"La sua completa integrazione con l'inventario e la contabilità aziendale ti dà \n"
-"statistiche e consolidamenti in tempo reale tra tutti i negozi senza\n"
-"dover integrare diverse applicazioni.\n"
-"\n"
-"Lavora con l'hardware che hai già\n"
-"---------------------------------------\n"
-"\n"
-"### Nel tuo browser Web\n"
-"\n"
-"L'app Web Punto di Vendita di Odoo può essere eseguita su qualsiasi dispositivo in grado di visualizzare\n"
-"siti Web e che richiede poca o nessuna configurazione.\n"
-"\n"
-"### Touchscreen o Tastiera ?\n"
-"\n"
-"Il modulo Punto di Vendita funziona perfettamente su qualsiasi tipo di dispositivo touchscreen, che si tratti\n"
-"di un tablet multi touch come un iPad o di terminali touchscreen resistivi senza\n"
-"tastiera.\n"
-"\n"
-"### Bilancie e Stampanti\n"
-"\n"
-"I lettori di codici a barre e le stampanti sono supportati automaticamente e non richiedono nessuna\n"
-"installazione. Bilance, casse e altre periferiche possono essere usate con l'API\n"
-"proxy.\n"
-"\n"
-"Online e Offline\n"
-"------------------\n"
-"\n"
-"### Il modulo PdV di Odoo rimane affidabile, indipendentemente dalla qualità della connessione.\n"
-"\n"
-"Crea nuovi negozi con una semplice connessione Internet: **nessuna installazione, nessun\n"
-"hardware specifico richiesto**. Funziona con qualsiasi **iPad, Tablet PC, laptop** o\n"
-"le macchine PdV industriali.\n"
-"\n"
-"Anche se è necessario connettersi a Internet per avviare il modulo Punto di Vendita, esso\n"
-"continua a funzionare anche dopo una disconnessione completa.\n"
-"\n"
-"\n"
-"Un'interfaccia utente super clean\n"
-"----------------------------\n"
-"\n"
-"### Semplice e Bellissimo\n"
-"\n"
-"Di' addio a un software PdV obsoleto e brutto e goditi l'interfaccia Web di Odoo \n"
-"progettata per i rivenditori moderni.\n"
-"\n"
-"### Progettato per Aumentare la Produttività\n"
-"\n"
-"Che si tratti di un ristorante o di un negozio, è possibile attivare diversi ordini\n"
-"contemporaneamente per non far aspettare i clienti.\n"
-"\n"
-"### Ricerche ultrarapide\n"
-"\n"
-"Scansiona prodotti, sfoglia categorie gerarchiche o ottieni rapidamente informazioni\n"
-"sui prodotti grazie a un filtraggio ultraveloce di tutti i tuoi prodotti.\n"
-"\n"
-"Gestione Integrata dell'Inventario\n"
-"-------------------------------\n"
-"\n"
-"Consolida tutti i tuoi canali di vendita in tempo reale: negozi, ecommerce,\n"
-"team di vendita. Controlla l'inventario in tempo reale e ottieni previsioni accurate per la gestione degli\n"
-"approvvigionamenti.\n"
-"\n"
-"Un sistema completo di gestione del magazzino a portata di mano: \n"
-"ottieni informazioni sulla disponibilità dei prodotti, attiva richieste di approvvigionamento, ecc.\n"
-"\n"
-"Offri servizi di assistenza clienti in negozio\n"
-"----------------------------------\n"
-"\n"
-"Offri un'esperienza eccezionale agli acquirenti integrando il servizio clienti\n"
-"in negozio. Gestisci le riparazioni, segui le garanzie e i reclami dei clienti, pianifica\n"
-"gli ordini di consegna, ecc.\n"
-"\n"
-"Integrazione della Fatturazione e della Contabilità\n"
-"----------------------------------\n"
-"\n"
-"Crea le fatture dei clienti in pochi clic. Controlla le vendite e le liquidità in tempo\n"
-"reale e utilizza il potente strumento di reporting di Odoo per prendere decisioni più intelligenti e migliorare\n"
-"l'efficienza del tuo negozio.\n"
-"\n"
-"Non dovrai più integrare il software: tutte le operazioni di vendita e di inventario\n"
-"saranno automaticamente pubblicate nel tuo libro mastro.\n"
-"\n"
-"Dati Unificati Tra Tutti i Negozi\n"
-"------------------------------\n"
-"\n"
-"Applica automaticamente nuovi prodotti, strategie di prezzo e promozioni a\n"
-"negozi selezionati. Lavora su una base clienti unificata. Non è necessaria\n"
-"un'interfaccia complessa per pilotare una strategia globale tra tutti i tuoi negozi.\n"
-"\n"
-"Con Odoo come server principale, hai un sistema che si adatta perfettamente\n"
-"ai piccoli negozi e alle grandi multinazionali.\n"
-"\n"
-"Conosci i tuoi clienti - in negozio e fuori\n"
-"--------------------------------------\n"
-"\n"
-"I marchi leader comunicano con i loro clienti in tutti i loro canali\n"
-"per sviluppare un profilo cliente accurato e comunicare con gli acquirenti\n"
-"mentre prendono decisioni di acquisto, in negozio o online.\n"
-"\n"
-"Con Odoo, hai una visione del cliente a 360°, che include le vendite multicanale\n"
-"la cronologia delle interazioni, i profili, e altro ancora.\n"
-"\n"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -17987,17 +18282,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
 msgid "Online Event's Tickets"
-msgstr "Biglietti di Evento Online"
+msgstr "Biglietti per eventi online"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event
 msgid "Online Events"
-msgstr "Eventi Online"
+msgstr "Eventi online"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_hr_recruitment
 msgid "Online Jobs"
-msgstr "Lavori Online"
+msgstr "Lavori online"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_quote
@@ -18132,65 +18427,65 @@ msgid ""
 "Schedule, organize, promote or sell events online; conferences, webinars, trainings, etc.\n"
 "\n"
 msgstr ""
-"Sito di Offerte di Lavoro Open Source\n"
+"Bacheca open source di lavoro\n"
 "---------------------\n"
 "\n"
 "### Organizza le tue offerte di lavoro e le candidature\n"
 "\n"
-"Organizza il tuo sito di offerte di lavoro, promuovi le tue offerte di lavoro e traccia facilmente le candidature. Traccia ogni candidato e crea un database delle competenze e dei profili.\n"
+"Organizza la tua bacheca di offerte di lavoro, promuovi le tue offerte di lavoro e traccia facilmente le candidature. Traccia ogni candidato e crea un database delle competenze e dei profili.\n"
 "\n"
-"Crea Pagine per una Descrizione Attraente dei Lavori\n"
+"Crea pagine con una descrizione attraente dei lavori\n"
 "-----------------------------------\n"
 "\n"
 "### Elimina i vecchi editor WYSIWYG\n"
 "\n"
-"Presenta le tue offerte di lavoro in modo ordinato e professionale. L'approccio *\"modifica online\"* unico di Odoo rende la creazione di siti Web e di descrizioni di lavori sorprendentemente facile.\n"
+"Presenta le tue offerte di lavoro in modo ordinato e professionale. L'approccio *\"modifica online\"* unico di Odoo rende la creazione di siti web e di descrizioni dei lavori sorprendentemente facile.\n"
 "\n"
-"Trascina & Rilascia *'Componenti'* ben progettati per creare descrizioni di lavoro e offerte di lavoro attraenti, mettendo l'accento sulla qualità della tua azienda.\n"
+"Trascina & rilascia *'Componenti'* ben progettati per creare descrizioni e offerte di lavoro attraenti, mettendo l'accento sulla qualità della tua azienda.\n"
 "\n"
-"Pubblica le tue Offerte di Lavoro sui Migliori Siti\n"
+"Pubblica le tue offerte di lavoro sulle migliori bacheche\n"
 "---------------------------------\n"
 "\n"
 "### LinkedIn, Monster, Craigslist, Careerbuilder,...\n"
 "\n"
-"Connettiti automaticamente ai più famosi siti di offerte di lavoro; linkedIn, Monster, Craigslist, ... Ogni lavoro è automaticamente associato a un nuovo indirizzo e-mail per inoltrare le candidature al lavoro appropriato.\n"
+"Connettiti automaticamente ai più famosi siti di offerte di lavoro; LinkedIn, Monster, Craigslist, ... Ogni offerta è automaticamente associata a un nuovo indirizzo email per inoltrare le candidature alla posizione appropriata.\n"
 "\n"
-"Sia che i candidati ti contattino via e-mail o utilizzando un modulo online, tutti i dati vengono indicizzati automaticamente (CV, lettera motivazionale) e puoi rispondere con un semplice clic, riutilizzando i modelli di risposta.\n"
+"Sia che i candidati ti contattino via email o utilizzando un modulo online, tutti i dati vengono indicizzati automaticamente (CV, lettera motivazionale) e puoi rispondere con un semplice clic, riutilizzando i modelli di risposta.\n"
 "\n"
-"Personalizza il tuo Processo di Assunzione\n"
+"Personalizza il tuo processo di assunzione\n"
 "----------------------------------\n"
 "\n"
 "### Definisci le fasi e le persone che condurranno il colloquio\n"
 "\n"
-"Usa la vista Kanban e personalizza le fasi del tuo processo di assunzione: preselezione, primo colloquio, secondo colloquio, negoziazione,...\n"
+"Usa la vista kanban e personalizza le fasi del tuo processo di assunzione: preselezione, primo colloquio, secondo colloquio, negoziazione,...\n"
 "\n"
-"Beneficia di statistiche accurate sulla vostra pipeline di assunzione. Ricevi report per confrontare i rendimenti dei tuoi diversi investimenti sui siti di offerte di lavoro esterni.\n"
+"Beneficia di statistiche accurate sul percorso di assunzione. Ricevi resoconti per confrontare i rendimenti dei tuoi investimenti sulle bacheche di offerte di lavoro esterni.\n"
 "\n"
-"Semplifica il tuo Processo di Assunzione\n"
+"Semplifica il tuo processo di assunzione\n"
 "-----------------------------------\n"
 "\n"
 "### Indicizza i CV, traccia i candidati, cerca profili\n"
 "\n"
-"Traccia i candidati durante il processo di assunzione con l'elegante vista kanban. Risparmia tempo automatizzando alcune comunicazioni con i modelli di e-mail.\n"
+"Traccia i candidati durante il processo di assunzione con l'elegante vista kanban. Risparmia tempo automatizzando alcune comunicazioni con i modelli email.\n"
 "\n"
 "I documenti, come i CV e le lettere motivazionali, vengono automaticamente indicizzati. Ciò ti consente di trovare competenze specifiche e di creare un database di profili.\n"
 "\n"
-"Sondaggi Integrati\n"
+"Sondaggi integrati\n"
 "------------------\n"
 "\n"
 "### Definisci i tuoi sondaggi online o offline\n"
 "\n"
 "Crea il tuo modello di interviste seguendo le nostre buone pratiche. Utilizza lo strumento di creazione di sondaggi per adattare le domande al tuo processo. Chiedi al candidato di rispondere al sondaggio online, o all'intervistatore di utilizzarlo durante i colloqui.\n"
 "\n"
-"Integrazione Completa con altre App\n"
+"Integrazione completa con altre App\n"
 "---------------------------------\n"
 "\n"
-"### Ottieni gratuitamente centinaia di app Open Source\n"
+"### Ottieni gratuitamente centinaia di app open source\n"
 "\n"
 "\n"
 "### CMS\n"
 "\n"
-"Crea facilmente bellissimi siti Web senza nessuna conoscenza tecnica particolare.\n"
+"Crea facilmente bellissimi siti web senza nessuna conoscenza tecnica particolare.\n"
 "\n"
 "\n"
 "### Blog\n"
@@ -18198,7 +18493,7 @@ msgstr ""
 "Scrivi notizie, attira nuovi visitatori e fidelizza i tuoi clienti.\n"
 "\n"
 "\n"
-"### Eventi Online\n"
+"### Eventi online\n"
 "\n"
 "Pianifica, organizza, promuovi o vendi eventi online; conferenze, corsi di formazione, webinar, ecc.\n"
 
@@ -18465,80 +18760,80 @@ msgid ""
 "\n"
 "Create a great \"About us\" page by presenting your team efficiently.\n"
 msgstr ""
-"Organizza Eventi, Formazioni & Webinar\n"
+"Organizza eventi, formazioni e webinar\n"
 "-------------------------------------\n"
 "\n"
-"### Pianifica, Promuovi, Vendi, Organizza\n"
+"### Pianifica, promuovi, vendi, organizza\n"
 "\n"
-"Organizza, promuovi e vendi eventi online. Che tu organizzi riunioni, conferenze, formazioni o webinar, Odoo ti offre tutte le funzionalità necessarie per gestire i tuoi eventi.\n"
+"Organizza, promuovi e vendi eventi online. Che si organizzino riunioni, conferenze, formazioni o webinar, Odoo offre tutte le funzionalità necessarie per gestire gli eventi.\n"
 "\n"
-"Crea Pagine di Eventi Attraenti\n"
+"Crea pagine di eventi eccezionali\n"
 "--------------------------\n"
 "\n"
 "### Elimina i vecchi editor WYSIWYG\n"
 "\n"
-"Crea pagine di eventi attraenti trascinando e rilasciando *'Componenti'* ben progettati. Pubblica foto dell'evento, gli oratori, il calendario, ecc.\n"
+"Crea pagine di eventi eccezionali trascinando e rilasciando *'Componenti'* ben progettati. Pubblica foto dell'evento, gli oratori, il calendario, ecc.\n"
 "\n"
-"L'aproccio *\"modifica online\"* unico di Odoo rende la creazione di siti Web sorprendentemente facile.  \"Vuoi introdurre un oratore ? Vuoi cambiare il prezzo di un biglietto ? Aggiornare un banner ? Promuovere dei sponsor?\" Basta cliccare per cambiare.\n"
+"L'aproccio *\"modifica online\"* unico di Odoo rende la creazione di siti web sorprendentemente facile.  \"Vuoi introdurre un oratore ? Vuoi cambiare il prezzo di un biglietto ? Aggiornare un banner ? Promuovere degli sponsor?\" Basta fare clic e cambiare.\n"
 "\n"
-"Vendi Ticket Online\n"
+"Vendi biglietti Online\n"
 "-------------------\n"
 "\n"
 "### Automatizza il processo di iscrizione e di pagamento\n"
 "\n"
-"Incoraggia le iscrizioni al tuo evento con la funzionalità di creazione di biglietti multipli. Gli eventi possono essere gratuiti o a pagamento. I partecipanti possono pagare online con la carta di credito o con una fattura, a seconda della tua configurazione.\n"
+"Vendi le iscrizioni all'evento con la funzionalità di creazione di biglietti multipli. Gli eventi possono essere gratuiti o a pagamento. I partecipanti possono pagare online con la carta di credito o con fattura, a seconda della configurazione.\n"
 "\n"
-"Incrementa le tue vendite offrendo prezzi speciali, condizioni speciali per i membri o servizi aggiuntivi con più biglietti.\n"
+"Incrementa le vendite offrendo prezzi di prevendita, condizioni speciali per i soci o servizi aggiuntivi con biglietti multipli.\n"
 "\n"
 "Integrazione perfetta con Google Analytics\n"
 "------------------------------------\n"
 "\n"
-"### Controlla il tuo imbuto di vendita con Google Analytics\n"
+"### Controllare il canale di vendita con Google Analytics\n"
 "\n"
-"Fatti un'idea precisa del tuo imbuto di vendita. I sistemi di tracciamento Google Analytics di Odoo sono configurati per impostazione predefinita per tracciare tutti i tipi di eventi relativi ai carrelli, alle call-to-action, ecc.\n"
+"Ottenere un'idea precisa del canale di vendita. I sistemi di tracciamento Google Analytics di Odoo sono preconfigurati per tracciare tutti i tipi di eventi relativi ai carrelli vendita, alle «call-to-action», ecc.\n"
 "\n"
-"Poiché gli strumenti di marketing di Odoo (mailing di massa, campagne, ecc.) sono anche collegati a Google Analytics, avrai una visione completa della tua attività.\n"
+"Poiché gli strumenti di marketing di Odoo (mailing di massa, campagne, ecc.) sono collegati anche a Google Analytics, si avrà una visione completa dell'impresa.\n"
 "\n"
 "\n"
-"Promuovi Eventi in Modo Efficiente\n"
+"Promuovi eventi in modo efficiente\n"
 "--------------------------\n"
 "\n"
-"### Mailing di Massa & Social Media\n"
+"### Mailing di massa e social media\n"
 "\n"
-"Utilizza le funzionalità di segmentazione, di integrazione dei social network e di mailing di massa per promuovere i tuoi eventi al giusto pubblico. Imposta l'invio automatico di e-mail per inviare ai partecipanti i dettagli dell'ultimo minuto.\n"
+"Utilizza le funzionalità di segmentazione, di integrazione dei social network e di mailing di massa per promuovere i tuoi eventi al pubblico corretto. Imposta l'invio automatico di e-mail per inviare ai partecipanti i dettagli dell'ultimo minuto.\n"
 "\n"
-"Temi Adattati ai Designer\n"
+"Temi adattati ai designer\n"
 "------------------------\n"
 "\n"
 "### I designer amano lavorare su Odoo\n"
 "\n"
 "I temi sono bellissimi e facili da creare. Non bisogna essere un designer per creare nuove pagine, nuovi temi o nuovi componenti. Usiamo una struttura HTML pulita, un file [bootstrap](http://getbootstrap.com/) CSS e la nostra modularità ti consente di distribuire facilmente i tuoi temi.\n"
 "\n"
-"Con l'approccio sotto forma di componenti, il sito Web rimane elegante quando gli utenti finali iniziano a creare nuovi contenuti.\n"
+"Con l'approccio a moduli, il sito web rimane elegante quando gli utenti finali iniziano a creare nuovi contenuti.\n"
 "\n"
 "\n"
-"Rendi il tuo Evento Più Visibile\n"
+"Rendere gli eventi più visibili\n"
 "----------------------------\n"
 "\n"
 "### Strumenti SEO a portata di mano\n"
 "\n"
-"Gli strumenti SEO sono pronti per l'uso e non richiedono nessuna configurazione. Odoo propone parole chiave in base ai termini più ricercati su google, Google Analytics tiene traccia degli eventi relativi al tuo carrello e delle sitemap vengono create automaticamente.\n"
+"Gli strumenti SEO sono pronti per l'uso e non richiedono nessuna configurazione. Odoo propone parole chiave in base ai termini più ricercati su Google, Google Analytics tiene traccia degli eventi relativi ai carrelli e vengono create automaticamente le mappe del sito.\n"
 "\n"
-"Creiamo automaticamente contenuti strutturati per promuovere in modo efficace i tuoi eventi e i tuoi prodotti su Google.\n"
+"Si creano automaticamente contenuti strutturati per promuovere in modo efficace gli eventi e i prodotti su Google.\n"
 "\n"
 "\n"
-"Sfrutta i Social Media\n"
+"Sfruttare i social media\n"
 "---------------------\n"
 "\n"
-"### Ottimizzazione: dalle Pubblicità alle Conversioni\n"
+"### Ottimizzazione: dalle pubblicità alle conversioni\n"
 "\n"
-"Crea facilmente nuove landing page con la funzionalità di modifica online di Odoo. Invia le persone che vedono le tue diverse campagne di marketing su specifiche landing page per ottimizzare le conservsioni.\n"
+"Crea facilmente nuove pagine principali con la funzionalità di modifica online di Odoo. Reindirizza le persone che vedono le tue diverse campagne di marketing su specifiche pagine principali per ottimizzare le conversioni.\n"
 "\n"
 "\n"
 "E molto di più...\n"
 "----------------\n"
 "\n"
-"### Pianifica\n"
+"### Pianificare\n"
 "\n"
 "-   Calendario di eventi\n"
 "-   Pubblicare documenti relativi\n"
@@ -18547,25 +18842,25 @@ msgstr ""
 "-   Diversi luoghi e organizzatori\n"
 "-   Interfaccia mobile\n"
 "\n"
-"### Vendi\n"
+"### Vendere\n"
 "\n"
 "-   Vendite online o offline\n"
 "-   Fatturazione automatizzata\n"
 "-   Politiche di cancellazione\n"
-"-   Prezzi speciali per i membri\n"
-"-   Dashboard e reporting\n"
+"-   Prezzi speciali per i soci\n"
+"-   Cruscotto e reportistica\n"
 "\n"
-"### Organizza\n"
+"### Organizzare\n"
 "\n"
-"-   Pianificazione Avanzata\n"
-"-   Stampare dei Badge\n"
-"-   Automatizzare le e-mail di Follow-up\n"
+"-   Pianificazione avanzata\n"
+"-   Stampare i badge\n"
+"-   Automatizzare le e-mail di follow-up\n"
 "-   Capacità min/max\n"
 "-   Gestire le classi e le risorse\n"
 "-   Creare gruppi di partecipanti\n"
-"-   Automatizzare i Sondaggi di Soddisfazione\n"
+"-   Automatizzare i sondaggi di soddisfazione\n"
 "\n"
-"Integrazione Completa con altre App\n"
+"Integrazione completa con altre app\n"
 "---------------------------------\n"
 "\n"
 "### Ottieni gratuitamente centinaia di app Open Source\n"
@@ -18573,17 +18868,17 @@ msgstr ""
 "\n"
 "### eCommerce\n"
 "\n"
-"Promuovi i tuoi prodotti, vendili online e ottimizza l'esperienza di acquisto dei visitatori.\n"
+"Promuovere i prodotti, venderli online e ottimizzare l'esperienza di acquisto dei visitatori.\n"
 "\n"
 "\n"
 "### Blog\n"
 "\n"
-"Scrivi notizie, attira nuovi visitatori e fidelizza i tuoi clienti.\n"
+"Scrivere notizie, attirare nuovi visitatori e fidelizzare i clienti.\n"
 "\n"
 "\n"
-"### Il nostro Team\n"
+"### Il nostro team\n"
 "\n"
-"Crea una pagina attraente \"Chi siamo\" presentando il tuo team in modo efficiente.\n"
+"Creare una pagina attraente \"Chi siamo\" presentando il team in modo efficiente.\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat_orientation
@@ -18922,42 +19217,42 @@ msgstr "Modulo Base Acquirente di Pagamento"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_adyen
 msgid "Payment Acquirer: Adyen Implementation"
-msgstr ""
+msgstr "Sistema di pagamento: implementazione Adyen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_authorize
 msgid "Payment Acquirer: Authorize.net Implementation"
-msgstr ""
+msgstr "Sistema di pagamento: implementazione Authorize.net"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_buckaroo
 msgid "Payment Acquirer: Buckaroo Implementation"
-msgstr ""
+msgstr "Sistema di pagamento: implementazione Buckaroo"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_ogone
 msgid "Payment Acquirer: Ogone Implementation"
-msgstr ""
+msgstr "Sistema di pagamento: implementazione Ogone"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_paypal
 msgid "Payment Acquirer: Paypal Implementation"
-msgstr ""
+msgstr "Sistema di pagamento: implementazione Paypal"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_payumoney
 msgid "Payment Acquirer: PayuMoney Implementation"
-msgstr ""
+msgstr "Sistema di pagamento: implementazione PayuMoney"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_stripe
 msgid "Payment Acquirer: Stripe Implementation"
-msgstr ""
+msgstr "Sistema di pagamento: implementazione Stripe"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_transfer
 msgid "Payment Acquirer: Transfer Implementation"
-msgstr ""
+msgstr "Sistema di pagamento: implementazione bonifico"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports_followup
@@ -18990,7 +19285,7 @@ msgstr "Contabilità delle Retribuzioni"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payumoney
 msgid "PayuMoney Payment Acquirer"
-msgstr ""
+msgstr "Sistema di pagamento PayuMoney"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
@@ -19104,12 +19399,12 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_point_of_sale
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
 msgid "Point of Sale"
-msgstr "Punto Vendita"
+msgstr "Punto vendita"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_data_drinks
 msgid "Point of Sale Common Data Drinks"
-msgstr ""
+msgstr "Bevande comuni per il punto vendita"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -19522,7 +19817,7 @@ msgstr "Progetto, Helpdesk, Timesheet e Ordini di Vendita"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_timesheet
 msgid "Project, Tasks, Timesheet"
-msgstr "Progetto, Compiti, Timesheet"
+msgstr "Progetto, attività, foglio ore"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project
@@ -19591,12 +19886,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_membership
 msgid "Publish Associations, Groups and Memberships"
-msgstr "Pubblica le Associazioni, i Gruppi e le Adesioni"
+msgstr "Pubblica le associazioni, i gruppi e le iscrizioni"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event
 msgid "Publish Events and Manage Online Registrations on your Website"
-msgstr "Pubblica eventi e gestisci le iscrizioni online sul tuo sito Web"
+msgstr "Pubblicare eventi e gestire le iscrizioni online sul sito web"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_partner_assign
@@ -19679,7 +19974,7 @@ msgstr "QWeb"
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "QWeb views"
-msgstr ""
+msgstr "Viste qweb"
 
 #. module: base
 #: model:res.country,name:base.qa
@@ -19705,7 +20000,7 @@ msgstr "Gestione della Qualità con il Modulo MRP"
 #: model:ir.module.module,description:base.module_website_event_questions
 #: model:ir.module.module,shortdesc:base.module_website_event_questions
 msgid "Questions on Events"
-msgstr "Domande Relative agli Eventi"
+msgstr "Domande relative agli eventi"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_settings_dashboard
@@ -19734,6 +20029,8 @@ msgid ""
 "Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes"
 " inside the view definition"
 msgstr ""
+"Una vista qweb non può avere i gruppi definiti sul record. Utilizzare gli "
+"attributi 'groups' all'interno della definizione della vista"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_R
@@ -20116,7 +20413,7 @@ msgstr "Rivenditore"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_timesheet
 msgid "Review and approve employees time reports"
-msgstr "Esamina e approva i report di tempo dei dipendenti"
+msgstr "Esamina e approva i resoconti ore dei dipendenti"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat_margin_right
@@ -20358,7 +20655,7 @@ msgstr "Gestione vendite"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet
 msgid "Sales Timesheet"
-msgstr "Timesheet vendite"
+msgstr "Foglio ore per vendite"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid_sale
@@ -20427,7 +20724,7 @@ msgstr "Salva e Stampa"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_attachment
 msgid "Save as Attachment Prefix"
-msgstr "Nome allegato"
+msgstr "Salva come prefisso allegato"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_calendar
@@ -20442,7 +20739,7 @@ msgstr "Pianifica la manutenzione delle macchine e degli attrezzi."
 #. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_holidays
 msgid "Schedule timesheet when on leaves"
-msgstr "Pianifica i timesheet durante le ferie"
+msgstr "Pianifica il foglio ore durante i permessi"
 
 #. module: base
 #: selection:ir.actions.server,usage:0
@@ -20590,7 +20887,7 @@ msgstr "Vendi i Tuoi Prodotti Online"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet
 msgid "Sell based on timesheets"
-msgstr "Vendita basata sui timesheet"
+msgstr "Vendite basate sui fogli ore"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account
@@ -20709,12 +21006,12 @@ msgstr "Sequenza"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_code
 msgid "Sequence Code"
-msgstr ""
+msgstr "Codice sequenza"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_padding
 msgid "Sequence Size"
-msgstr ""
+msgstr "Dimensione sequenza"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_form
@@ -21121,7 +21418,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track
 msgid "Sponsors, Tracks, Agenda, Event News"
-msgstr "Sponsor, Traccia, Agenda, Notizie dell'Evento"
+msgstr "Sponsor, tracce, agenda, notizie dell'evento"
 
 #. module: base
 #: model:res.country,name:base.lk
@@ -21507,6 +21804,573 @@ msgstr "Finestra di Destinazione"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_cash_basis_base_account
 msgid "Tax Cash Basis Edit Base Account"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_tax_cash_basis
+msgid "Tax Cash Basis Entries at Payment Date"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_tax_cash_basis
+msgid ""
+"Tax Cash Basis Entries at Payment Date\n"
+"======================================\n"
+"\n"
+"Allow to create the Journal Entries for Taxes at date of payment.\n"
+"The following tests cases pretend to enlight you on what is expected of each\n"
+"one according to Mexican requirements.\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment before Invoice\n"
+"-------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in USD at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1160                1160    USD\n"
+"                Revenue                 1000       -1000    USD\n"
+"                Taxes to Collect         160        -160    USD\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                1450                1160    USD\n"
+"                Receivable              1450       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable           290                   0    USD\n"
+"                Gain Exchange rate       290           0    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1250                1000    USD\n"
+"                Tax Base Account        1250       -1000    USD\n"
+"            Taxes to Collect     200                 160    USD\n"
+"                Taxes to Paid            200        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 1250.00\n"
+"            - Paid to SAT MXN 200.00\n"
+"            - Have a difference of MXN 40.00 for Taxes to Collect that I would\n"
+"              later have to issue as a Loss in Exchange Rate Difference\n"
+"\n"
+"            Loss Exchange rate    40                   0    USD\n"
+"                Taxes to Collect          40           0    USD\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment after Invoice\n"
+"------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1450                1160    USD\n"
+"                Revenue                 1250       -1000    USD\n"
+"                Taxes to Collect         200        -160    USD\n"
+"\n"
+"        Payment issued today in USD at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                 928                1160    USD\n"
+"                Receivable               928       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Loss Exchange rate   522                   0    USD\n"
+"                Receivable               522           0    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                1000    USD\n"
+"                Tax Base Account         800       -1000    USD\n"
+"            Taxes to Collect     128                 160    USD\n"
+"                Taxes to Paid            128        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 800.00\n"
+"            - Paid to SAT MXN 128.00\n"
+"            - Have a difference of MXN -72.00 for Taxes to Collect that I would\n"
+"              later have to issue as a Gain in Exchange Rate Difference\n"
+"\n"
+"            Taxes to Collect      72                   0    USD\n"
+"                Gain Exchange rate        72           0    USD\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment same day than Invoice\n"
+"--------------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.8 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1450                1160    USD\n"
+"                Revenue                 1250       -1000    USD\n"
+"                Taxes to Collect         200        -160    USD\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1 MXN = 0.8 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                1450                1160    USD\n"
+"                Receivable              1450       -1160    USD\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1250                1000    USD\n"
+"                Tax Base Account        1250       -1000    USD\n"
+"            Taxes to Collect     200                 160    USD\n"
+"                Taxes to Paid            200        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 1250.00\n"
+"            - Paid to SAT MXN 200.00\n"
+"            - Have no difference for Taxes to Collect\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Payment Two Days Ago (USD)\n"
+"--------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in MXN at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1160                   -      -\n"
+"                Revenue                 1000           -      -\n"
+"                Taxes to Collect         160           -      -\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1 MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                1160                 928    USD\n"
+"                Receivable              1160        -928    USD\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1000                   0      -\n"
+"                Tax Base Account        1000           0      -\n"
+"            Taxes to Collect     160                   0      -\n"
+"                Taxes to Paid            160           0      -\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case):\n"
+"              * Tax Base Account MXN 1000.00\n"
+"            - Paid to SAT MXN 160.00\n"
+"            - Have no difference for Taxes to Collect\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (USD) Payment Today (MXN)\n"
+"-------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in USD at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1160                1160    USD\n"
+"                Revenue                 1000       -1000    USD\n"
+"                Taxes to Collect         160        -160    USD\n"
+"\n"
+"        Payment issued today in MXN at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                 928                   -      -\n"
+"                Receivable               928           -      -\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Loss Exchange rate   232                 232    USD\n"
+"                Receivable               232        -232    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                   0    USD\n"
+"                Tax Base Account         800           0    USD\n"
+"            Taxes to Collect     128                   0    USD  # (I'd expect the same value as in the invoice for amount_currency in tax: 160 USD) \n"
+"                Taxes to Paid            128           0    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 800.00\n"
+"            - Paid to SAT MXN 128.00\n"
+"            - Have a difference of MXN -32.00 for Taxes to Collect that I would\n"
+"              later have to issue as a Gain in Exchange Rate Difference\n"
+"\n"
+"            Taxes to Collect      32                   0    USD\n"
+"                Gain Exchange rate        32           0    USD\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Payment Today (MXN)\n"
+"-------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in MXN at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1160                   -      -\n"
+"                Revenue                 1000           -      -\n"
+"                Taxes to Collect         160           -      -\n"
+"\n"
+"        Payment issued today in MXN at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                1160                   -      -\n"
+"                Receivable              1160           -      -\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1000                   -      -\n"
+"                Tax Base Account        1000           -      -\n"
+"            Taxes to Collect     160                   -      -\n"
+"                Taxes to Paid            160           -      -\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 1000.00\n"
+"            - Paid to SAT MXN 160.00\n"
+"            - Have no difference for Taxes to Collect\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment before Invoice (Supplier)\n"
+"------------------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in USD at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1000                1000    USD\n"
+"            Unpaid Taxes         160                 160    USD\n"
+"\n"
+"                Payable                 1160       -1160    USD\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable             1450                1160    USD\n"
+"                Bank                    1450       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Loss Exchange rate   290                   0    USD\n"
+"                Payable                  290           0    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1250                1000    USD\n"
+"                Tax Base Account        1250       -1000    USD\n"
+"            Creditable Tax       200                 160    USD\n"
+"                Unpaid Taxes             200        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 1250.00\n"
+"            - Creditable Tax MXN 200.00\n"
+"            - Have a difference of MXN -40.00 for Unpaid Taxes that I would\n"
+"              later have to issue as a Loss in Exchange Rate Difference\n"
+"\n"
+"            Unpaid Taxes          40                   0    USD\n"
+"                Gain Exchange rate        40           0    USD\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment after Invoice (Supplier)\n"
+"-----------------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1250                1000    USD\n"
+"            Unpaid Taxes         200                 160    USD\n"
+"\n"
+"                Payable                 1450       -1160    USD\n"
+"\n"
+"        Payment issued today in USD at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable              928                1160    USD\n"
+"                Bank                     928       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Payable              522                   0    USD\n"
+"                Gain Exchange rate       522           0    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                1000    USD\n"
+"                Tax Base Account         800       -1000    USD\n"
+"            Creditable Tax       128                 160    USD\n"
+"                Unpaid Taxes             128        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 800.00\n"
+"            - Creditable Tax MXN 128.00\n"
+"            - Have a difference of MXN 72.00 for Unpaid Taxes that I would\n"
+"              later have to issue as a Loss in Exchange Rate Difference\n"
+"\n"
+"            Loss Exchange rate    72                   0    USD\n"
+"                Unpaid Taxes              72           0    USD\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment same day than Invoice (Supplier)\n"
+"-------------------------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.8 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1250                1000    USD\n"
+"            Unpaid Taxes         200                 160    USD\n"
+"\n"
+"                Payable                 1450       -1160    USD\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1 MXN = 0.8 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable             1450                1160    USD\n"
+"                Bank                    1450       -1160    USD\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1250                1000    USD\n"
+"                Tax Base Account        1250       -1000    USD\n"
+"            Creditable Tax       200                 160    USD\n"
+"                Unpaid Taxes             200        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 1250.00\n"
+"            - Creditable Tax MXN 200.00\n"
+"            - Have no difference for Unpaid Taxes\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Payment Two Days Ago (USD) (Supplier)\n"
+"-------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in MXN at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1000                   -      -\n"
+"            Unpaid Taxes         160                   -      -\n"
+"\n"
+"                Payable                 1160           -      -\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1 MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable             1160                 928    USD\n"
+"                Bank                    1160        -928    USD\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1000                   0      -\n"
+"                Tax Base Account        1000           0      -\n"
+"            Creditable Tax       160                   0      -\n"
+"                Unpaid Taxes             160           0      -\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 1000.00\n"
+"            - Creditable Tax MXN 160.00\n"
+"            - Have no difference for Unpaid Taxes\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (USD) Payment Today (MXN) (Supplier)\n"
+"------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in USD at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1000                1000    USD\n"
+"            Unpaid Taxes         160                 160    USD\n"
+"\n"
+"                Payable                 1160       -1160    USD\n"
+"\n"
+"        Payment issued today in MXN at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable              928                   -      -\n"
+"                Bank                     928           -      -\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Payable              232                 232    USD\n"
+"                Gain Exchange rate       522        -232    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                   0    USD\n"
+"                Tax Base Account         800           0    USD\n"
+"            Creditable Tax       128                   0    USD  # (I'd expect the same value as in the invoice for amount_currency in tax: 160 USD) \n"
+"                Unpaid Taxes             128           0    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 800.00\n"
+"            - Creditable Tax MXN 128.00\n"
+"            - Have a difference of MXN 32.00 for Unpaid Taxes that I would\n"
+"              later have to issue as a Loss in Exchange Rate Difference\n"
+"\n"
+"            Loss Exchange rate    32                   0    USD\n"
+"                Unpaid Taxes              32           0    USD\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Payment Today (MXN) (Supplier)\n"
+"------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in MXN at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1000                   -      -\n"
+"            Unpaid Taxes         160                   -      -\n"
+"\n"
+"                Payable                 1160           -      -\n"
+"\n"
+"        Payment issued today in MXN at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable             1160                   -      -\n"
+"                Bank                    1160           -      -\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1000                   -      -\n"
+"                Tax Base Account        1000           -      -\n"
+"            Creditable Tax       160                   -      -\n"
+"                Unpaid Taxes             160           -      -\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 1000.00\n"
+"            - Creditable Tax MXN 160.00\n"
+"            - Have no difference for Unpaid Taxes\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Credit Note Today (MXN) (Customer)\n"
+"----------------------------------------------------------------\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1450                1160    USD\n"
+"                Revenue                 1250       -1000    USD\n"
+"                Taxes to Collect         200        -160    USD\n"
+"\n"
+"        Credit Note issued today in USD at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Revenue              800                1000    USD\n"
+"            Taxes to Collect     128                 160    USD\n"
+"\n"
+"                Receivable               928       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Loss Exchange rate   522                   0    USD\n"
+"                Receivable               522           0    USD\n"
+"\n"
+"        And two Tax Cash Basis Entry are generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                1000    USD\n"
+"                Tax Base Account         800       -1000    USD\n"
+"            Taxes to Collect     128                 160    USD\n"
+"                Taxes to Paid            128        -160    USD\n"
+"\n"
+"            Tax Base Account     800                1000    USD\n"
+"                Tax Base Account         800       -1000    USD\n"
+"            Taxes to Paid        128                 160    USD\n"
+"                Taxes to Collect         128        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 800.00 and MXN -800.00\n"
+"            - Paid to SAT MXN 0.00\n"
+"            - Have a difference of MXN -72.00 for Taxes to Collect that I would\n"
+"              later have to issue as a Gain in Exchange Rate Difference\n"
+"\n"
+"            Taxes to Collect      72                   0    USD\n"
+"                Gain Exchange rate        72           0    USD\n"
+"\n"
+"Credits\n"
+"=======\n"
+"\n"
+"**Contributors**\n"
+"\n"
+"* Nhomar Hernandez <nhomar@vauxoo.com> (Planner/Auditor)\n"
+"* Luis Torres <luis_t@vauxoo.com> (Auditor)\n"
+"* Humberto Arocha <luis_t@vauxoo.com> (Planner/Developer)\n"
 msgstr ""
 
 #. module: base
@@ -22267,23 +23131,23 @@ msgstr "Convalida dei Timesheet e Vista Griglia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_holidays
 msgid "Timesheet when on Leaves"
-msgstr "Timesheet durante le Ferie"
+msgstr "Foglio ore durante i permessi"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_timesheet
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
 msgid "Timesheets"
-msgstr "Timesheet"
+msgstr "Fogli ore"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid
 msgid "Timesheets Validation"
-msgstr "Convalida dei Timesheet"
+msgstr "Conferma dei fogli ore"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_attendance
 msgid "Timesheets/attendances reporting"
-msgstr "Report sui Timesheet/sulle Presenze"
+msgstr "Rendicontazione presenze/fogli ore"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_tz
@@ -22396,7 +23260,7 @@ msgstr "Numero totale di record in questo modello"
 #. module: base
 #: model:ir.module.module,summary:base.module_point_of_sale
 msgid "Touchscreen Interface for Shops"
-msgstr "Interfaccia Touchscreen per Negozi"
+msgstr "Interfaccia touchscreen per negozi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_tour
@@ -22406,7 +23270,7 @@ msgstr "Tour"
 #. module: base
 #: model:ir.module.module,summary:base.module_event
 msgid "Trainings, Conferences, Meetings, Exhibitions, Registrations"
-msgstr "Formazioni, Conferenze, Riunioni, Esposizioni, Iscrizioni"
+msgstr "Formazione, conferenze, riunioni, esposizioni, iscrizioni"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_transfer
@@ -22579,6 +23443,9 @@ msgid ""
 "later is slower than the former but forbids any gap in the sequence (while "
 "they are possible in the former)."
 msgstr ""
+"Vengono fornite due implementazioni dell'oggetto sequenza: ordinaria e "
+"\"senza spazi\". La seconda è più lenta della prima ma impedisce di avere "
+"salti nella sequenza, possibili invece in quella ordinaria."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_type
@@ -22954,7 +23821,7 @@ msgstr "Usa '1' per si e '0' per no"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_use_date_range
 msgid "Use subsequences per date_range"
-msgstr ""
+msgstr "Usare sottosequenze per date_range"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_gamification
@@ -23388,7 +24255,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr ""
+msgstr "Visualizzazioni che ereditano da questa"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -23552,7 +24419,7 @@ msgstr "Helpdesk con Moduli sul Sito Web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_gengo
 msgid "Website Gengo Translator"
-msgstr "Sito Web Traduttore Gengo"
+msgstr "Sito web traduttore Gengo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_google_map
@@ -23572,7 +24439,7 @@ msgstr "Helpdesk con Livechat sul Sito Web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_links
 msgid "Website Link Tracker"
-msgstr "Tracciamento dei Link sul Sito Web"
+msgstr "Tracciamento dei link sul sito web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_livechat
@@ -23679,7 +24546,7 @@ msgstr "Settimane"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_scale
 msgid "Weighing Scale Hardware Driver"
-msgstr ""
+msgstr "Driver hardware bilancia"
 
 #. module: base
 #: model:res.country,name:base.eh
@@ -23712,6 +24579,8 @@ msgid ""
 "When subsequences per date range are used, you can prefix variables with 'range_'\n"
 "                                to use the beginning of the range instead of the current date, e.g. %(range_year)s instead of %(year)s."
 msgstr ""
+"Quando si usano sottosequenze per intervallo data, per usare l'inizio dell'intervallo al posto\n"
+"                                della data corrente basta aggiungere il prefisso \"range_\" alle variabili, es. %(range_year)s invece di %(year)s."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_copy

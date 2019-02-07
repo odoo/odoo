@@ -3,30 +3,33 @@
 # * base
 # 
 # Translators:
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Anatolij, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Rolandas <info@paninfo.lt>, 2017
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
-# Naglis Jonaitis, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
+# Edgaras Kriukonis <edgaras@focusate.eu>, 2017
 # Aleksandr Jadov <a.jadov@tata.lt>, 2017
-# Paulius Sladkevičius <paulius@versada.eu>, 2017
 # Zygi Mantus <zygimantus@gmail.com>, 2017
 # Arminas Grigonis <arminas@versada.lt>, 2017
-# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
+# Rolandas <info@paninfo.lt>, 2017
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# Anatolij, 2017
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
+# Martin Trigaux, 2017
 # Eimantas <eimantas@focusate.eu>, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Naglis Jonaitis, 2018
+# Paulius Sladkevičius <paulius@versada.eu>, 2018
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2018
+# Vytautas Stanaitis <vytautas@basas.lt>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:47+0000\n"
-"PO-Revision-Date: 2018-08-02 09:47+0000\n"
-"Last-Translator: Eimantas <eimantas@focusate.eu>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:05+0000\n"
+"PO-Revision-Date: 2017-09-20 10:13+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -169,6 +172,73 @@ msgid ""
 "11010101 Caja General\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Localization Module for Dominican Republic\n"
+"===========================================\n"
+"\n"
+"Catálogo de Cuentas e Impuestos para República Dominicana, Compatible para\n"
+"**Internacionalización** con **NIIF** y alineado a las normas y regulaciones\n"
+"de la Dirección General de Impuestos Internos (**DGII**).\n"
+"\n"
+"**Este módulo consiste de:**\n"
+"\n"
+"- Catálogo de Cuentas Estándar (alineado a DGII y NIIF)\n"
+"- Catálogo de Impuestos con la mayoría de Impuestos Preconfigurados\n"
+"        - ITBIS para compras y ventas\n"
+"        - Retenciones de ITBIS\n"
+"        - Retenciones de ISR\n"
+"        - Grupos de Impuestos y Retenciones:\n"
+"                - Telecomunicaiones\n"
+"                - Proveedores de Materiales de Construcción\n"
+"                - Personas Físicas Proveedoras de Servicios\n"
+"        - Otros impuestos\n"
+"- Secuencias Preconfiguradas para manejo de todos los NCF\n"
+"        - Facturas con Valor Fiscal (para Ventas)\n"
+"        - Facturas para Consumidores Finales\n"
+"        - Notas de Débito y Crédito\n"
+"        - Registro de Proveedores Informales\n"
+"        - Registro de Ingreso Único\n"
+"        - Registro de Gastos Menores\n"
+"        - Gubernamentales\n"
+"- Posiciones Fiscales para automatización de impuestos y retenciones\n"
+"        - Cambios de Impuestos a Exenciones (Ej. Ventas al Estado)\n"
+"        - Cambios de Impuestos a Retenciones (Ej. Compra Servicios al Exterior)\n"
+"        - Entre otros\n"
+"\n"
+"**Nota:**\n"
+"Esta localización, aunque posee las secuencias para NCF, las mismas no pueden\n"
+"ser utilizadas sin la instalación de módulos de terceros o desarrollo\n"
+"adicional.\n"
+"\n"
+"Estructura de Codificación del Catálogo de Cuentas:\n"
+"===================================================\n"
+"\n"
+"**Un dígito** representa la categoría/tipo de cuenta del del estado financiero.\n"
+"**1** - Activo        **4** - Cuentas de Ingresos y Ganancias\n"
+"**2** - Pasivo        **5** - Costos, Gastos y Pérdidas\n"
+"**3** - Capital       **6** - Cuentas Liquidadoras de Resultados\n"
+"\n"
+"**Dos dígitos** representan los rubros de agrupación:\n"
+"11- Activo Corriente\n"
+"21- Pasivo Corriente\n"
+"31- Capital Contable\n"
+"\n"
+"**Cuatro dígitos** se asignan a las cuentas de mayor: cuentas de primer orden\n"
+"1101- Efectivo y Equivalentes de Efectivo\n"
+"2101- Cuentas y Documentos por pagar\n"
+"3101- Capital Social\n"
+"\n"
+"**Seis dígitos** se asignan a las sub-cuentas: cuentas de segundo orden\n"
+"110101 - Caja\n"
+"210101 - Proveedores locales\n"
+"\n"
+"**Ocho dígitos** son para las cuentas de tercer orden (las visualizadas\n"
+"en Odoo):\n"
+"1101- Efectivo y Equivalentes\n"
+"110101- Caja\n"
+"11010101 Caja General\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp
@@ -824,6 +894,15 @@ msgid ""
 "    PayuMoney Payment Acquirer for India.\n"
 "\n"
 "    PayUmoney payment gateway supports only INR currency.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_mx_tax_cash_basis
+msgid ""
+"\n"
+"    Properly create the Journal Entries on Tax Cash basis when using foreign\n"
+"    currencies the Tax must be set at date of payment\n"
 "    "
 msgstr ""
 
@@ -1535,7 +1614,8 @@ msgid ""
 "Legal\n"
 "-----\n"
 "**The use of pos_blackbox_be sources is only certified on odoo.com SaaS platform\n"
-"for version 9.0.**\n"
+"for version 11.0.** Contact Odoo SA before installing pos_blackbox_be module.\n"
+"\n"
 "An obfuscated and certified version of the pos_blackbox_be may be provided on\n"
 "requests for on-premise installations.\n"
 "No modified version is certified and supported by Odoo SA.\n"
@@ -1747,7 +1827,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Kurti trumpas ir veikiančias nuorodas.\n"
+"Kurti trumpas ir sekamas nuorodas.\n"
 "=====================================================\n"
 "\n"
 "        "
@@ -1877,6 +1957,16 @@ msgid ""
 "Allow the user to generate the EDI document for Mexican invoicing.\n"
 "\n"
 "This module allows the creation of the EDI documents and the communication with the Mexican certification providers (PACs) to sign/cancel them.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_payment_bank
+msgid ""
+"\n"
+"EDI Mexican Localization\n"
+"========================\n"
+"Allow the user to select the bank account that was used the customer to paid the invoices.\n"
 "    "
 msgstr ""
 
@@ -2848,7 +2938,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Odoo formų redaktorius\n"
+"\"Odoo\" formų redaktorius\n"
 "====================\n"
 "\n"
 "Leidžia jums kurti web formas internetinėje svetainėje naudojant svetainių kūrimo įrankį.\n"
@@ -2933,7 +3023,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Odoo valdym skydelis\n"
+"\"Odoo\" valdymo skydelis\n"
 "==============\n"
 "* Greitas programų įdiegimas\n"
 "* Greitas vartotojų pridėjimas\n"
@@ -3534,7 +3624,7 @@ msgstr ""
 "Tikslas - turėti modulį, kuris valdytų visus produktų remontus.\n"
 "====================================================================\n"
 "\n"
-"Šis modelis apima šias temas:\n"
+"Šis modelis apima tokias temas:\n"
 "------------------------------------------------------\n"
 "    * Remontuojamų produktų pridėjimas/pašalinimas\n"
 "    * Įtaka atsargoms\n"
@@ -4275,7 +4365,7 @@ msgid ""
 "You can track your vendors, customers and other contacts.\n"
 msgstr ""
 "\n"
-"Šis modulis suteikia jums greitą jūsų kontaktų sąrašo peržiūrą, pasiekiamą iš jūsų svetainės.\n"
+"Šis modulis suteikia greitą jūsų kontaktų sąrašo peržiūrą, pasiekiamą iš jūsų svetainės.\n"
 "Galite sekti savo pardavėjus, klientus ir kitus kontaktus.\n"
 
 #. module: base
@@ -4293,7 +4383,7 @@ msgstr ""
 "Šis modulis padeda sukonfigūruoti sistemą įdiegiant naują duomenų bazę.\n"
 "================================================================================\n"
 "\n"
-"Parodo jums sąrašą programų, kurias galite įdiegti.\n"
+"Parodo sąrašą programų, kurias galite įdiegti.\n"
 "\n"
 "    "
 
@@ -5055,7 +5145,7 @@ msgstr "<code>data</code> (Python modulis)"
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>dateutil</code> (Python module)"
-msgstr "<code>data iki</code> (Python modulis)"
+msgstr "<code>dateutil</code> (Python modulis)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -5125,7 +5215,7 @@ msgstr "<strong><span>Dabartinis kursas: </span></strong>"
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Apps</strong>"
-msgstr "<strong>Aplikacijos</strong>"
+msgstr "<strong>Programos</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -5542,7 +5632,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_posbox_homepage
 msgid "A homepage for the PosBox"
-msgstr "PosBox pradžios tinklalapis"
+msgstr "PosBox pagrindinis puslapis"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_exceptions
@@ -5569,6 +5659,11 @@ msgstr "Modulis API testavimui."
 #: model:ir.module.module,description:base.module_test_uninstall
 msgid "A module to test the uninstall feature."
 msgstr "Modulis išdiegimo savybės testavimui."
+
+#. module: base
+#: model:ir.module.module,description:base.module_test_translation_import
+msgid "A module to test translation import."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_assetsbundle
@@ -6142,7 +6237,7 @@ msgstr "Papildomos ypatybės"
 #: model:ir.module.module,description:base.module_payment_adyen
 #: model:ir.module.module,shortdesc:base.module_payment_adyen
 msgid "Adyen Payment Acquirer"
-msgstr "Adyen mokėjimo gavėjas"
+msgstr "Adyen mokėjimo surinkėjas"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -6209,7 +6304,7 @@ msgstr "Leistinos įmonės"
 #. module: base
 #: model:ir.model,name:base.model_report_paperformat
 msgid "Allows customization of a report."
-msgstr "Leisti pertvarkyti ataskaitą."
+msgstr "Leidžia ataskaitos individualizavimą."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_delivery
@@ -6229,7 +6324,7 @@ msgstr "Leidžia naudoti nuolaidų kodus e-komercijos užsakymuose"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon
 msgid "Allows to use discount coupons in sales orders"
-msgstr "Suteikia galimybę naudoti nuolaidų kuponus pardavimo užsakymuose"
+msgstr "Leidžia pardavimo užsakymuose naudoti nuolaidų kuponus"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_account_voucher
@@ -6335,7 +6430,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_module_module_application
 #: model:ir.model.fields,field_description:base.field_res_groups_category_id
 msgid "Application"
-msgstr "Modulis"
+msgstr "Programa"
 
 #. module: base
 #: code:addons/base/res/res_users.py:767
@@ -6409,27 +6504,27 @@ msgstr "Įvertinimai"
 #: model:ir.ui.view,arch_db:base.module_tree
 #: model:ir.ui.view,arch_db:base.view_module_filter
 msgid "Apps"
-msgstr "Aplikacijos"
+msgstr "Programos"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export_modules
 msgid "Apps To Export"
-msgstr "Eksportuotinos aplikacijos"
+msgstr "Programos eksportavimui"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_upgrade_module_info
 msgid "Apps to Update"
-msgstr "Atnaujintinos aplikacijos"
+msgstr "Programos atnaujinimui"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Apps:"
-msgstr "Aplikacijos:"
+msgstr "Programos:"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_db
 msgid "Arch Blob"
-msgstr ""
+msgstr "Arch Blob"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_fs
@@ -6592,7 +6687,7 @@ msgstr "Autoriaus vardas"
 #: model:ir.module.module,description:base.module_payment_authorize
 #: model:ir.module.module,shortdesc:base.module_payment_authorize
 msgid "Authorize.Net Payment Acquirer"
-msgstr "Authorize.Net mokėjimo gavėjas"
+msgstr "Authorize.Net mokėjimo surinkėjas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_auto_search
@@ -6612,7 +6707,7 @@ msgstr "Automatinės veiksmo taisyklės "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation_hr_contract
 msgid "Automated Action based on Employee Contracts"
-msgstr "Automatizuotas veiksmas pagal darbuotojo kontraktus"
+msgstr "Automatizuotas veiksmas pagal darbuotojo sutartis"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_gengo
@@ -6769,6 +6864,16 @@ msgid "Bank account"
 msgstr "Banko sąskaita"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_mx_edi_payment_bank
+msgid "Bank account in the payments"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_payment_bank
+msgid "Bank account payment to Mexico"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_partner_bank_acc_type
 msgid "Bank account type, inferred from account number"
 msgstr "Blogas sąskaitos tipas, pagal sąskaitos numerį"
@@ -6776,7 +6881,7 @@ msgstr "Blogas sąskaitos tipas, pagal sąskaitos numerį"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_bank_ids
 msgid "Bank accounts related to this company"
-msgstr "Banko sąskaita, susieta su šia įmone"
+msgstr "Su šia įmone susietos banko sąskaitos"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_bank_form
@@ -6815,7 +6920,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes
 msgid "Barcodes"
-msgstr "Brūkšninis kodas"
+msgstr "Brūkšniniai kodai"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes
@@ -6985,7 +7090,7 @@ msgstr "Beninas"
 #. module: base
 #: model:res.country,name:base.bm
 msgid "Bermuda"
-msgstr "Bermuda"
+msgstr "Bermudai"
 
 #. module: base
 #: model:res.country,name:base.bt
@@ -7137,7 +7242,7 @@ msgstr "Brunėjus"
 #: model:ir.module.module,description:base.module_payment_buckaroo
 #: model:ir.module.module,shortdesc:base.module_payment_buckaroo
 msgid "Buckaroo Payment Acquirer"
-msgstr "Buckaroo mokėjimo gavėjas"
+msgstr "Buckaroo mokėjimo surinkėjas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_budget
@@ -7202,7 +7307,7 @@ msgstr ""
 #. module: base
 #: selection:base.language.export,format:0
 msgid "CSV File"
-msgstr "CSV byla"
+msgstr "CSV failas"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
@@ -7221,7 +7326,7 @@ msgstr "Kalendorius"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_calendar_sms
 msgid "Calendar SMS"
-msgstr "Kalendoriaus SMS"
+msgstr "SMS kalendoriui"
 
 #. module: base
 #: model:res.country,name:base.kh
@@ -7407,7 +7512,7 @@ msgid ""
 "Changing the type of a field is not yet supported. Please drop it and create"
 " it again!"
 msgstr ""
-"Lauko tipo keitimas dar nėra palaikomas. Palikite jį ir sukurkite naują."
+"Lauko tipo keitimas dar nėra palaikomas. Palikite jį ir sukurkite naują!"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -7505,6 +7610,9 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
+"Dukteriniai serverio veiksmai, kurie bus atlikti. Atkreipkite dėmesį, kad "
+"paskutinio grąžinimo grąžinta reikšmė bus naudojama kai bendroji grąžinimo "
+"reikšmė."
 
 #. module: base
 #: model:res.country,name:base.cl
@@ -7662,7 +7770,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad
 msgid "Collaborative Pads"
-msgstr "Apjungti teksto redaktoriai"
+msgstr "Kolektyviniai teksto redaktoriai"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa_direct_debit
@@ -7746,6 +7854,12 @@ msgstr "Komentarai"
 #: model:ir.model.fields,field_description:base.field_res_users_commercial_partner_id
 msgid "Commercial Entity"
 msgstr "Komercinis juridinis asmuo"
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_res_partner_commercial_partner_country_id
+#: model:ir.model.fields,field_description:base.field_res_users_commercial_partner_country_id
+msgid "Commercial Entity's Country"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_data_drinks
@@ -7919,7 +8033,7 @@ msgstr "Nustatymai"
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_installer
 msgid "Configuration Installer"
-msgstr "Konfigūracijos diegėjas"
+msgstr "Konfigūracijos diegimas"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_ir_actions_todo_form
@@ -7973,7 +8087,7 @@ msgstr ""
 #: code:addons/base/ir/ir_mail_server.py:174
 #, python-format
 msgid "Connection Test Succeeded! Everything seems properly set up!"
-msgstr "Ryšio testas pavyko! Viskas, atrodo, tinkamai nustatyta!"
+msgstr "Ryšio testas pavyko! Viskas atrodo nustatyta teisingai!"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint_name
@@ -8026,7 +8140,7 @@ msgstr "Kontakto forma"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_phone_validation
 msgid "Contact Form Number Validation"
-msgstr "Kontaktų formos numerio patvirtinimas"
+msgstr "Kontaktų formos numerio validacija"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -8136,9 +8250,7 @@ msgstr "Valstybės"
 #: model:ir.model.fields,field_description:base.field_res_bank_country
 #: model:ir.model.fields,field_description:base.field_res_company_country_id
 #: model:ir.model.fields,field_description:base.field_res_country_state_country_id
-#: model:ir.model.fields,field_description:base.field_res_partner_commercial_partner_country_id
 #: model:ir.model.fields,field_description:base.field_res_partner_country_id
-#: model:ir.model.fields,field_description:base.field_res_users_commercial_partner_country_id
 #: model:ir.model.fields,field_description:base.field_res_users_country_id
 #: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 #: model:ir.ui.view,arch_db:base.view_company_form
@@ -8208,7 +8320,7 @@ msgstr "Sukūrimo data"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm
 msgid "Create Leads From Contact Form"
-msgstr "Sukurti iniciatyvas iš kontakto formos"
+msgstr "Sukurti šaltuosius kontaktus iš kontakų formos"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
@@ -8464,7 +8576,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_phone_validation
 msgid "Crm Phone Numbers Validation"
-msgstr "CRM telefono numerių patvirtinimas"
+msgstr "CRM telefono numerių validacija"
 
 #. module: base
 #: model:res.country,name:base.hr
@@ -8679,8 +8791,8 @@ msgstr "D ELEKTROS, DUJŲ, VĖDINIMO IR ORO KONDICIONAVIMO TIEKIMAS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl
-msgid "DHL Shipping"
-msgstr "DHL gabenimas"
+msgid "DHL Express Shipping"
+msgstr ""
 
 #. module: base
 #: selection:report.paperformat,format:0
@@ -9276,7 +9388,7 @@ msgstr "Dominikos Respublika - apskaita"
 #. module: base
 #: selection:ir.actions.todo,state:0
 msgid "Done"
-msgstr "Atlikti"
+msgstr "Atlikta"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
@@ -9522,8 +9634,8 @@ msgid ""
 "Enter Python code here. Help about Python expression is available in the "
 "help tab of this document."
 msgstr ""
-"Įveskite Python kodą čia. Pagalba apie Python išraišką pasiekiama šio "
-"dokumento pagalbos kortelėje."
+"Čia įveskite Python kodą. Daugiau sužinoti apie Python išraiškas galite šio "
+"dokumento pagalbos skiltyje."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder
@@ -9578,7 +9690,7 @@ msgstr "Klaida! Jūs negalite kurti pasikartojančių įmonių."
 #, python-format
 msgid "Error ! You cannot select a format AND specific page width/height."
 msgstr ""
-"Klaida ! Negalite pasirinkti formato ir specifinių puslapio pločio/aukščio."
+"Klaida! Negalite pasirinkti formato ir specifinio puslapio pločio/aukščio."
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:497
@@ -11146,7 +11258,7 @@ msgstr "Padeda Jums valdyti savo darbuotojus."
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_expense
 msgid "Helps you manage your expenses."
-msgstr "Padeda Jums valdyti savo išlaidas."
+msgstr "Padeda jums valdyti savo išlaidas."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_warehouse_management
@@ -11154,13 +11266,13 @@ msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
 "receptions, etc."
 msgstr ""
-"Padeda Jums valdyti Jūsų atsargas ir pagrindines sandėlio operacijas: "
+"Padeda jums valdyti savo atsargas ir pagrindines sandėlio operacijas: "
 "pristatymo užsakymus, priėmimus ir pan."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_holidays
 msgid "Helps you manage your leaves."
-msgstr "Padeda jums valdyti išėjimus iš darbo."
+msgstr "Padeda jums valdyti laisvadienius."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_manufacturing
@@ -11276,7 +11388,7 @@ msgstr "Valandos"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_T
 msgid "Households"
-msgstr "Namų ūkis"
+msgstr "Namų ūkiai"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron_numbercall
@@ -11581,6 +11693,9 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"Jei šis vaizdas yra paveldėtas,\n"
+"* Jei teigiamas, vaizdas visada praplečia savo tėvinį vaizdą\n"
+"* Jei neigiamas, vaizdas nepraplečia savo tėvinio, bet tai gali būti įjungta"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country_state
@@ -11625,7 +11740,7 @@ msgid ""
 "related object's read access."
 msgstr ""
 "Jei turite grupių, šio meniu matomumas bus pagrįstas tomis grupėmis. Jei šis"
-" laukas yra tuščias, Odoo apskaičiuos matomumą pagal susijusių objektų "
+" laukas yra tuščias, \"Odoo\" apskaičiuos matomumą pagal susijusių objektų "
 "skaitymo prieigą."
 
 #. module: base
@@ -11662,7 +11777,7 @@ msgstr "Paveikslėlis"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "Impacted Apps"
-msgstr "Paveiktos aplikacijos"
+msgstr "Paveiktos programos"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall_model_ids
@@ -11732,12 +11847,12 @@ msgstr "Valiutos keitimo kursų importavimas iš interneto.\n"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_modules
 #: model:ir.model.fields,field_description:base.field_ir_model_modules
 msgid "In Apps"
-msgstr "Aplikacijose"
+msgstr "Programose"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap
 msgid "In-App Purchases"
-msgstr ""
+msgstr "Pirkimai programoje"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_search
@@ -12340,6 +12455,11 @@ msgid "Kontni načrt za gospodarske družbe"
 msgstr "Kontni načrt za gospodarske družbe"
 
 #. module: base
+#: model:res.country,name:base.xk
+msgid "Kosovo"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.kw
 msgid "Kuwait"
 msgstr "Kuveitas"
@@ -12725,17 +12845,17 @@ msgstr "Iniciatyvos, galimybės, užsiėmimai"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays
 msgid "Leave Management"
-msgstr "Atostogų valdymas"
+msgstr "Laisvadienių valdymas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays
 msgid "Leave allocations and leave requests"
-msgstr ""
+msgstr "Laisvadienių priskyrimai ir laisvadienių užklausos"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_holidays
 msgid "Leaves"
-msgstr "Atostogos"
+msgstr "Laisvadieniai"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_gantt
@@ -12790,7 +12910,7 @@ msgstr "Lesotas"
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_wishlist
 msgid "Let returning shoppers save products in a wishlist"
-msgstr ""
+msgstr "Leisti grįžtantiems pirkėjams išsaugoti produktus norų sąraše"
 
 #. module: base
 #: selection:report.paperformat,format:0
@@ -12886,7 +13006,7 @@ msgstr "Nuorodas naudojantis laukas"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_modules
 msgid "List of modules in which the field is defined"
-msgstr "Modulių sąrašas, kuriame yra apibrėžtas laukas"
+msgstr "Modulių, kuriuose apibrėžtas laukas, sąrašas"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_modules
@@ -12931,7 +13051,7 @@ msgstr "Krauti"
 #: model:ir.ui.menu,name:base.menu_view_base_language_install
 #: model:ir.ui.view,arch_db:base.view_base_language_install
 msgid "Load a Translation"
-msgstr "Įkrauti vertimą"
+msgstr "Įkelti vertimą"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang_code
@@ -13166,7 +13286,7 @@ msgid ""
 "assigned to specific groups in order to make them accessible to some users "
 "within the system."
 msgstr ""
-"Valdyti ir individualizuoti galimus įrašus, rodomus jūsų Odoo sistemos "
+"Valdyti ir individualizuoti galimus įrašus, rodomus jūsų \"Odoo\" sistemos "
 "meniu. Galite ištrinti įrašą paspausdami langelį kiekvienos eilutės "
 "pradžioje ir tada paspausdami atsiradusį mygtuką. Įrašai gali būti priskirti"
 " tam tikroms grupėms, kad jie būtų pasiekiami atitinkamiems vartotojams "
@@ -13445,7 +13565,7 @@ msgstr "Mikronezija"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_mimetype
 msgid "Mime Type"
-msgstr ""
+msgstr "MIME tipas"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_B
@@ -13822,6 +13942,11 @@ msgstr "Mianmaras"
 #: model:res.partner.industry,full_name:base.res_partner_industry_N
 msgid "N ADMINISTRATIVE AND SUPPORT SERVICE ACTIVITIES"
 msgstr "N ADMINISTRACINIŲ IR PARAMOS PASLAUGŲ VEIKLA"
+
+#. module: base
+#: model:res.country,vat_label:base.gt
+msgid "NIT"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_name
@@ -15288,7 +15413,7 @@ msgstr "Biuro reikmenys"
 #: model:ir.module.module,description:base.module_payment_ogone
 #: model:ir.module.module,shortdesc:base.module_payment_ogone
 msgid "Ogone Payment Acquirer"
-msgstr ""
+msgstr "Ogone mokėjimo surinkėjas"
 
 #. module: base
 #: model:res.country,name:base.om
@@ -15389,6 +15514,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Galioja tik jei šis rodinys paveldimas iš kito (inherit_id nėra False/Null).\n"
+"\n"
+"* Jei plėtinys (standartiškai), jei šis rodinys yra užklausiamas, tikrinamas artimiausias\n"
+"pirminis vaizdas (per inherit_id), tada taikomi visi rodiniai, paveldimi iš jo su šio \n"
+"rodinio modeliu\n"
+"* Jei pirminis, artimiausias pirminis rodinys yra pilna išsprendžiamas (net jei jis naudoja\n"
+"kitokį modelį nei šis), tada šio rodinio paveldėjimo taisyklės\n"
+"(<xpath/>) yra pritaikomos ir rezultatas yra panaudojamas kaip jis būtų šio rodinio\n"
+"tikroji arka.\n"
 
 #. module: base
 #: sql_constraint:res.currency.rate:0
@@ -15522,6 +15656,8 @@ msgid ""
 "Optional help text for the users with a description of the target view, such"
 " as its usage and purpose."
 msgstr ""
+"Papildomas pagalbinis tekstas vartotojams, turintis tikslinio rodinio aprašą"
+" su jo panaudojimu ir tikslu."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_src_model
@@ -15938,7 +16074,7 @@ msgstr "Tėvinė įmonė"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_parent_left
 msgid "Parent Left"
-msgstr ""
+msgstr "Tėvinis kairėje"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_parent_id
@@ -16034,53 +16170,53 @@ msgstr "Pardavimų mokėjimai"
 #: model:ir.module.category,name:base.module_category_payment_acquirer
 #: model:ir.module.module,shortdesc:base.module_payment
 msgid "Payment Acquirer"
-msgstr "Mokėjimo gavėjas"
+msgstr "Mokėjimo surinkėjas"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment
 #: model:ir.module.module,summary:base.module_payment
 msgid "Payment Acquirer Base Module"
-msgstr "Pirkėjo bazinis modulis"
+msgstr "Mokėjimų surinkėjo bazinis modulis"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_adyen
 msgid "Payment Acquirer: Adyen Implementation"
-msgstr "Mokėjimo gavėjas: Adyen diegimas"
+msgstr "Mokėjimo surinkėjas: Adyen diegimas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_authorize
 msgid "Payment Acquirer: Authorize.net Implementation"
-msgstr "Mokėjimo gavėjas: Authorize.net diegimas"
+msgstr "Mokėjimo surinkėjas: Authorize.net diegimas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_buckaroo
 msgid "Payment Acquirer: Buckaroo Implementation"
-msgstr "Mokėjimo gavėjas: Buckaroo diegimas"
+msgstr "Mokėjimo surinkėjas: Buckaroo diegimas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_ogone
 msgid "Payment Acquirer: Ogone Implementation"
-msgstr ""
+msgstr "Mokėjimo surinkėjas: Ogone diegimas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_paypal
 msgid "Payment Acquirer: Paypal Implementation"
-msgstr "Mokėjimo gavėjas: Paypal diegimas"
+msgstr "Mokėjimo surinkėjas: Paypal diegimas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_payumoney
 msgid "Payment Acquirer: PayuMoney Implementation"
-msgstr "Mokėjimo gavėjas: PayuMoney diegimas"
+msgstr "Mokėjimo surinkėjas: PayuMoney diegimas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_stripe
 msgid "Payment Acquirer: Stripe Implementation"
-msgstr "Mokėjimo gavėjas: Stripe diegimas"
+msgstr "Mokėjimo surinkėjas: Stripe diegimas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_transfer
 msgid "Payment Acquirer: Transfer Implementation"
-msgstr "Mokėjimo gavėjas: perkėlimo diegimas"
+msgstr "Mokėjimo surinkėjas: perkėlimo diegimas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports_followup
@@ -16097,7 +16233,7 @@ msgstr "Mokėjimas: svetainės integracija"
 #: model:ir.module.module,description:base.module_payment_paypal
 #: model:ir.module.module,shortdesc:base.module_payment_paypal
 msgid "Paypal Payment Acquirer"
-msgstr "Paypal mokėjimų gavėjas"
+msgstr "Paypal mokėjimų surinkėjas"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_payroll
@@ -16108,12 +16244,12 @@ msgstr "Darbo užmokestis"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account
 msgid "Payroll Accounting"
-msgstr "Paypal apskaita"
+msgstr "Algalapio apskaita"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payumoney
 msgid "PayuMoney Payment Acquirer"
-msgstr "PayuMoney mokėjimų gavėjas"
+msgstr "PayuMoney mokėjimų surinkėjas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
@@ -16276,8 +16412,8 @@ msgid ""
 "Portal members have specific access rights (such as record rules and restricted menus).\n"
 "                They usually do not belong to the usual Odoo groups."
 msgstr ""
-"Portalo naudotojai turi specifines prieigos teises (tokias kaip įrašų taisykles ir apribotus meniu).\n"
-"                Dažniausiai, jie nepriklauso įprastoms Odoo grupėms."
+"Portalo naudotojai turi specifines prieigos teises (tokias kaip įrašų taisyklės ar apriboti meniu).\n"
+"                Dažniausiai jie nepriklauso įprastoms \"Odoo\" grupėms."
 
 #. module: base
 #: selection:report.paperformat,orientation:0
@@ -16612,6 +16748,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record on "
 "used by the server action."
 msgstr ""
+"Pateikite lauką, naudojamą susieti naujai sukurtą įrašą su serverio veiksmo "
+"naudojamu įrašu."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_screen
@@ -16790,12 +16928,12 @@ msgstr "R MENAS, PRAMOGOS IR REKREACIJA"
 #. module: base
 #: model:res.country,vat_label:base.mx
 msgid "RFC"
-msgstr ""
+msgstr "RFC"
 
 #. module: base
 #: model:res.country,vat_label:base.do
 msgid "RNC"
-msgstr ""
+msgstr "RNC"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate_rate
@@ -17266,17 +17404,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sepa_direct_debit
 msgid "SEPA Direct Debit"
-msgstr ""
+msgstr "SEPA Tiesigoinis Debitas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sms
 msgid "SMS Text Messaging"
-msgstr ""
+msgstr "SMS Tekstiniai Pranešimai"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sms
 msgid "SMS gateway"
-msgstr ""
+msgstr "SMS vartai"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_port
@@ -17342,7 +17480,7 @@ msgstr "Sent Vinsentas ir Grenadinai"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_contract_salary
 msgid "Salary Package Configurator"
-msgstr ""
+msgstr "Užmokesčio paketo konfigūratorius"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -17352,7 +17490,7 @@ msgstr "Pardavimas"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_voucher
 msgid "Sale & Purchase Vouchers"
-msgstr "Pardavimų ir pirkimų kvitai"
+msgstr "Pardavimų ir pirkimų kuponai"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_coupon
@@ -17411,7 +17549,7 @@ msgstr "Pardavimų darbo laiko apskaitos žiniaraštis"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid_sale
 msgid "Sales Timesheet: Grid Support"
-msgstr ""
+msgstr "Partavimo Laiko Apskaita: Grotelių palaikymas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_mrp
@@ -17485,12 +17623,12 @@ msgstr "Planuoti susitikimus su klientais"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_maintenance
 msgid "Schedule and manage maintenance on machine and tools."
-msgstr "Planuoti ir tvarkyti mašinų ir įrankių aptarnavimą"
+msgstr "Planuoti ir valdyti mašinų ir įrankių priežiūrą."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_holidays
 msgid "Schedule timesheet when on leaves"
-msgstr "Pildyti darbo laiko apskaitos žiniaraštį atostogų metu"
+msgstr "Pildyti darbo laiko apskaitos žiniaraštį laisvadienių metu"
 
 #. module: base
 #: selection:ir.actions.server,usage:0
@@ -17623,7 +17761,7 @@ msgstr "Pasirinkimo nustatymai"
 #: model:ir.model.fields,field_description:base.field_res_partner_self
 #: model:ir.model.fields,field_description:base.field_res_users_self
 msgid "Self"
-msgstr ""
+msgstr "Savas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sale_timesheet
@@ -17763,7 +17901,7 @@ msgstr "Serbija"
 #. module: base
 #: selection:ir.logging,type:0
 msgid "Server"
-msgstr "Server"
+msgstr "Serveris"
 
 #. module: base
 #: selection:ir.actions.server,usage:0
@@ -17824,6 +17962,8 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
+"Vertės nustatymas padaro šią vertę pasiekiama duotojo modelio šoniniame "
+"meniu."
 
 #. module: base
 #: code:addons/base/res/res_users.py:567
@@ -17903,7 +18043,7 @@ msgstr "Siera Leonė"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sign
 msgid "Sign"
-msgstr ""
+msgstr "Ženklas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_signature
@@ -18000,7 +18140,8 @@ msgid ""
 " required."
 msgstr ""
 "Mažo dydžio kontakto paveikslėlis. Automatiškai pakeičiamas į 64x64px "
-"paveiksliuką. Naudokite šitą laukelį kai maža nuotrauka privaloma."
+"paveikslėlį, išsaugant kraštinių santykį. Naudokite šitą laukelį, kai "
+"reikalingas mažas paveikslėlis."
 
 #. module: base
 #: model:res.country,name:base.sb
@@ -18295,12 +18436,12 @@ msgstr "Gatvė 2"
 #: model:ir.module.module,description:base.module_payment_stripe
 #: model:ir.module.module,shortdesc:base.module_payment_stripe
 msgid "Stripe Payment Acquirer"
-msgstr ""
+msgstr "Stripe mokėjimo surinkėjas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_studio
 msgid "Studio"
-msgstr ""
+msgstr "Studio"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_request_link_search_view
@@ -18533,6 +18674,573 @@ msgid "Tax Cash Basis Edit Base Account"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_tax_cash_basis
+msgid "Tax Cash Basis Entries at Payment Date"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_tax_cash_basis
+msgid ""
+"Tax Cash Basis Entries at Payment Date\n"
+"======================================\n"
+"\n"
+"Allow to create the Journal Entries for Taxes at date of payment.\n"
+"The following tests cases pretend to enlight you on what is expected of each\n"
+"one according to Mexican requirements.\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment before Invoice\n"
+"-------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in USD at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1160                1160    USD\n"
+"                Revenue                 1000       -1000    USD\n"
+"                Taxes to Collect         160        -160    USD\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                1450                1160    USD\n"
+"                Receivable              1450       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable           290                   0    USD\n"
+"                Gain Exchange rate       290           0    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1250                1000    USD\n"
+"                Tax Base Account        1250       -1000    USD\n"
+"            Taxes to Collect     200                 160    USD\n"
+"                Taxes to Paid            200        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 1250.00\n"
+"            - Paid to SAT MXN 200.00\n"
+"            - Have a difference of MXN 40.00 for Taxes to Collect that I would\n"
+"              later have to issue as a Loss in Exchange Rate Difference\n"
+"\n"
+"            Loss Exchange rate    40                   0    USD\n"
+"                Taxes to Collect          40           0    USD\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment after Invoice\n"
+"------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1450                1160    USD\n"
+"                Revenue                 1250       -1000    USD\n"
+"                Taxes to Collect         200        -160    USD\n"
+"\n"
+"        Payment issued today in USD at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                 928                1160    USD\n"
+"                Receivable               928       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Loss Exchange rate   522                   0    USD\n"
+"                Receivable               522           0    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                1000    USD\n"
+"                Tax Base Account         800       -1000    USD\n"
+"            Taxes to Collect     128                 160    USD\n"
+"                Taxes to Paid            128        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 800.00\n"
+"            - Paid to SAT MXN 128.00\n"
+"            - Have a difference of MXN -72.00 for Taxes to Collect that I would\n"
+"              later have to issue as a Gain in Exchange Rate Difference\n"
+"\n"
+"            Taxes to Collect      72                   0    USD\n"
+"                Gain Exchange rate        72           0    USD\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment same day than Invoice\n"
+"--------------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.8 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1450                1160    USD\n"
+"                Revenue                 1250       -1000    USD\n"
+"                Taxes to Collect         200        -160    USD\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1 MXN = 0.8 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                1450                1160    USD\n"
+"                Receivable              1450       -1160    USD\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1250                1000    USD\n"
+"                Tax Base Account        1250       -1000    USD\n"
+"            Taxes to Collect     200                 160    USD\n"
+"                Taxes to Paid            200        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 1250.00\n"
+"            - Paid to SAT MXN 200.00\n"
+"            - Have no difference for Taxes to Collect\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Payment Two Days Ago (USD)\n"
+"--------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in MXN at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1160                   -      -\n"
+"                Revenue                 1000           -      -\n"
+"                Taxes to Collect         160           -      -\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1 MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                1160                 928    USD\n"
+"                Receivable              1160        -928    USD\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1000                   0      -\n"
+"                Tax Base Account        1000           0      -\n"
+"            Taxes to Collect     160                   0      -\n"
+"                Taxes to Paid            160           0      -\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case):\n"
+"              * Tax Base Account MXN 1000.00\n"
+"            - Paid to SAT MXN 160.00\n"
+"            - Have no difference for Taxes to Collect\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (USD) Payment Today (MXN)\n"
+"-------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in USD at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1160                1160    USD\n"
+"                Revenue                 1000       -1000    USD\n"
+"                Taxes to Collect         160        -160    USD\n"
+"\n"
+"        Payment issued today in MXN at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                 928                   -      -\n"
+"                Receivable               928           -      -\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Loss Exchange rate   232                 232    USD\n"
+"                Receivable               232        -232    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                   0    USD\n"
+"                Tax Base Account         800           0    USD\n"
+"            Taxes to Collect     128                   0    USD  # (I'd expect the same value as in the invoice for amount_currency in tax: 160 USD) \n"
+"                Taxes to Paid            128           0    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 800.00\n"
+"            - Paid to SAT MXN 128.00\n"
+"            - Have a difference of MXN -32.00 for Taxes to Collect that I would\n"
+"              later have to issue as a Gain in Exchange Rate Difference\n"
+"\n"
+"            Taxes to Collect      32                   0    USD\n"
+"                Gain Exchange rate        32           0    USD\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Payment Today (MXN)\n"
+"-------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in MXN at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1160                   -      -\n"
+"                Revenue                 1000           -      -\n"
+"                Taxes to Collect         160           -      -\n"
+"\n"
+"        Payment issued today in MXN at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                1160                   -      -\n"
+"                Receivable              1160           -      -\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1000                   -      -\n"
+"                Tax Base Account        1000           -      -\n"
+"            Taxes to Collect     160                   -      -\n"
+"                Taxes to Paid            160           -      -\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 1000.00\n"
+"            - Paid to SAT MXN 160.00\n"
+"            - Have no difference for Taxes to Collect\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment before Invoice (Supplier)\n"
+"------------------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in USD at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1000                1000    USD\n"
+"            Unpaid Taxes         160                 160    USD\n"
+"\n"
+"                Payable                 1160       -1160    USD\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable             1450                1160    USD\n"
+"                Bank                    1450       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Loss Exchange rate   290                   0    USD\n"
+"                Payable                  290           0    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1250                1000    USD\n"
+"                Tax Base Account        1250       -1000    USD\n"
+"            Creditable Tax       200                 160    USD\n"
+"                Unpaid Taxes             200        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 1250.00\n"
+"            - Creditable Tax MXN 200.00\n"
+"            - Have a difference of MXN -40.00 for Unpaid Taxes that I would\n"
+"              later have to issue as a Loss in Exchange Rate Difference\n"
+"\n"
+"            Unpaid Taxes          40                   0    USD\n"
+"                Gain Exchange rate        40           0    USD\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment after Invoice (Supplier)\n"
+"-----------------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1250                1000    USD\n"
+"            Unpaid Taxes         200                 160    USD\n"
+"\n"
+"                Payable                 1450       -1160    USD\n"
+"\n"
+"        Payment issued today in USD at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable              928                1160    USD\n"
+"                Bank                     928       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Payable              522                   0    USD\n"
+"                Gain Exchange rate       522           0    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                1000    USD\n"
+"                Tax Base Account         800       -1000    USD\n"
+"            Creditable Tax       128                 160    USD\n"
+"                Unpaid Taxes             128        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 800.00\n"
+"            - Creditable Tax MXN 128.00\n"
+"            - Have a difference of MXN 72.00 for Unpaid Taxes that I would\n"
+"              later have to issue as a Loss in Exchange Rate Difference\n"
+"\n"
+"            Loss Exchange rate    72                   0    USD\n"
+"                Unpaid Taxes              72           0    USD\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment same day than Invoice (Supplier)\n"
+"-------------------------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.8 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1250                1000    USD\n"
+"            Unpaid Taxes         200                 160    USD\n"
+"\n"
+"                Payable                 1450       -1160    USD\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1 MXN = 0.8 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable             1450                1160    USD\n"
+"                Bank                    1450       -1160    USD\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1250                1000    USD\n"
+"                Tax Base Account        1250       -1000    USD\n"
+"            Creditable Tax       200                 160    USD\n"
+"                Unpaid Taxes             200        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 1250.00\n"
+"            - Creditable Tax MXN 200.00\n"
+"            - Have no difference for Unpaid Taxes\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Payment Two Days Ago (USD) (Supplier)\n"
+"-------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in MXN at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1000                   -      -\n"
+"            Unpaid Taxes         160                   -      -\n"
+"\n"
+"                Payable                 1160           -      -\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1 MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable             1160                 928    USD\n"
+"                Bank                    1160        -928    USD\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1000                   0      -\n"
+"                Tax Base Account        1000           0      -\n"
+"            Creditable Tax       160                   0      -\n"
+"                Unpaid Taxes             160           0      -\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 1000.00\n"
+"            - Creditable Tax MXN 160.00\n"
+"            - Have no difference for Unpaid Taxes\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (USD) Payment Today (MXN) (Supplier)\n"
+"------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in USD at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1000                1000    USD\n"
+"            Unpaid Taxes         160                 160    USD\n"
+"\n"
+"                Payable                 1160       -1160    USD\n"
+"\n"
+"        Payment issued today in MXN at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable              928                   -      -\n"
+"                Bank                     928           -      -\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Payable              232                 232    USD\n"
+"                Gain Exchange rate       522        -232    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                   0    USD\n"
+"                Tax Base Account         800           0    USD\n"
+"            Creditable Tax       128                   0    USD  # (I'd expect the same value as in the invoice for amount_currency in tax: 160 USD) \n"
+"                Unpaid Taxes             128           0    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 800.00\n"
+"            - Creditable Tax MXN 128.00\n"
+"            - Have a difference of MXN 32.00 for Unpaid Taxes that I would\n"
+"              later have to issue as a Loss in Exchange Rate Difference\n"
+"\n"
+"            Loss Exchange rate    32                   0    USD\n"
+"                Unpaid Taxes              32           0    USD\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Payment Today (MXN) (Supplier)\n"
+"------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in MXN at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1000                   -      -\n"
+"            Unpaid Taxes         160                   -      -\n"
+"\n"
+"                Payable                 1160           -      -\n"
+"\n"
+"        Payment issued today in MXN at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable             1160                   -      -\n"
+"                Bank                    1160           -      -\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1000                   -      -\n"
+"                Tax Base Account        1000           -      -\n"
+"            Creditable Tax       160                   -      -\n"
+"                Unpaid Taxes             160           -      -\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 1000.00\n"
+"            - Creditable Tax MXN 160.00\n"
+"            - Have no difference for Unpaid Taxes\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Credit Note Today (MXN) (Customer)\n"
+"----------------------------------------------------------------\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1450                1160    USD\n"
+"                Revenue                 1250       -1000    USD\n"
+"                Taxes to Collect         200        -160    USD\n"
+"\n"
+"        Credit Note issued today in USD at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Revenue              800                1000    USD\n"
+"            Taxes to Collect     128                 160    USD\n"
+"\n"
+"                Receivable               928       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Loss Exchange rate   522                   0    USD\n"
+"                Receivable               522           0    USD\n"
+"\n"
+"        And two Tax Cash Basis Entry are generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                1000    USD\n"
+"                Tax Base Account         800       -1000    USD\n"
+"            Taxes to Collect     128                 160    USD\n"
+"                Taxes to Paid            128        -160    USD\n"
+"\n"
+"            Tax Base Account     800                1000    USD\n"
+"                Tax Base Account         800       -1000    USD\n"
+"            Taxes to Paid        128                 160    USD\n"
+"                Taxes to Collect         128        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 800.00 and MXN -800.00\n"
+"            - Paid to SAT MXN 0.00\n"
+"            - Have a difference of MXN -72.00 for Taxes to Collect that I would\n"
+"              later have to issue as a Gain in Exchange Rate Difference\n"
+"\n"
+"            Taxes to Collect      72                   0    USD\n"
+"                Gain Exchange rate        72           0    USD\n"
+"\n"
+"Credits\n"
+"=======\n"
+"\n"
+"**Contributors**\n"
+"\n"
+"* Nhomar Hernandez <nhomar@vauxoo.com> (Planner/Auditor)\n"
+"* Luis Torres <luis_t@vauxoo.com> (Auditor)\n"
+"* Humberto Arocha <luis_t@vauxoo.com> (Planner/Developer)\n"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_company_vat
 #: model:ir.model.fields,help:base.field_res_partner_vat
 #: model:ir.model.fields,help:base.field_res_users_vat
@@ -18571,7 +19279,7 @@ msgstr "Techniniai duomenys"
 #. module: base
 #: model:res.groups,name:base.group_no_one
 msgid "Technical Features"
-msgstr "Techninės galimybės"
+msgstr "Techninės funkcijos"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_name
@@ -18614,12 +19322,12 @@ msgstr "Testuoti ryšį"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_main_flows
 msgid "Test Main Flow"
-msgstr ""
+msgstr "Testuoti pagrindinę seką"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_performance
 msgid "Test Performance"
-msgstr ""
+msgstr "Testo našumas"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_access_rights
@@ -18828,7 +19536,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "The following apps will be uninstalled"
-msgstr "Bus įdiegtos šios aplikacijos"
+msgstr "Šios programos bus ištrintos"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -19005,7 +19713,7 @@ msgid ""
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
-"Pageidaujama operacija negali būti įvykdyta dėl apsaugos draudimų. Prašome susisiekti su jūsų sistemos administratoriumi.\n"
+"Pageidaujama operacija negali būti įvykdyta dėl saugos apribojimų. Prašome susisiekti su savo sistemos administratoriumi.\n"
 "\n"
 "(Dokumento tipas: %s, Operacija: %s)"
 
@@ -19186,7 +19894,7 @@ msgstr "Tūkstančių skyriklis"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk
 msgid "Ticketing, Support, Issues"
-msgstr ""
+msgstr "Įvykiai Pagalba, Problemos"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_livechat
@@ -19358,7 +20066,7 @@ msgstr "Mokymai, konferencijos, susitikimai, parodos, registracijos"
 #: model:ir.module.module,description:base.module_payment_transfer
 #: model:ir.module.module,shortdesc:base.module_payment_transfer
 msgid "Transfer Payment Acquirer"
-msgstr "Perkelti pirkėją"
+msgstr "Perkelti mokėjimo surinkėją"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_search
@@ -19550,6 +20258,13 @@ msgid ""
 "- 'Add Followers': add followers to a record (available in Discuss)\n"
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
+"Serverio veiksmo tipas. Galimos šios reikšmės:\n"
+"- \"Vykdyti Python kodą\": bus įvykdomas Python kodas\n"
+"- \"Kurti ar kopijuoti naują įrašą\": kuriamas naujas įrašas su naujomis reikšmėmis arba kopijuojamas egzistuojantis duomenų bazės įrašas\n"
+"- \"Rašyti įraše\": atnaujinamos įrašo reikšmės\n"
+"- \"Vykdyti kelis veiksmus\": nustatomas veiksmas, kuris iššaukia kelis kitus serverio veiksmus\n"
+"- \"Pridėti sekėjų\": prie įrašo pridedami sekėjai (pasiekiama Diskusijoje)\n"
+"- \"Siųsti laišką\": automatiškai siunčiamas laiškas (pasiekiama email_template)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint_type
@@ -19585,12 +20300,12 @@ msgstr "Jungtinės Karalystės apskaitos ataskaitos"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_delivery_ups
 msgid "UPS Bill My Account"
-msgstr ""
+msgstr "UPS Išrašytos sąskaitos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
 msgid "UPS Shipping"
-msgstr ""
+msgstr "UPS Pristatymas"
 
 #. module: base
 #: selection:ir.attachment,type:0
@@ -19602,12 +20317,12 @@ msgstr "URL"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_reports
 msgid "US - Accounting Reports"
-msgstr ""
+msgstr "US - Buhalterinės ataskaitos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_check_printing
 msgid "US Check Printing"
-msgstr ""
+msgstr "US Čekių spausdinimas"
 
 #. module: base
 #: model:res.country,name:base.um
@@ -19675,7 +20390,7 @@ msgid ""
 "Unable to upgrade module \"%s\" because an external dependency is not met: "
 "%s"
 msgstr ""
-"Nepavyksta atnaujinti modulio, \"%s\" nes neatitinka išorinės "
+"Nepavyksta atnaujinti modulio, \"%s\", nes jis neatitinka išorinės "
 "priklausomybės: %s"
 
 #. module: base
@@ -19727,7 +20442,7 @@ msgstr "Jungtinės Valstijos - apskaita"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_usps
 msgid "United States Postal Service (USPS) Shipping"
-msgstr ""
+msgstr "United States Postal Service (USPS) Pristatymas"
 
 #. module: base
 #: selection:ir.module.module.dependency,state:0
@@ -19839,6 +20554,8 @@ msgid ""
 "Update your company details and upload your logo to get a beautiful "
 "document."
 msgstr ""
+"Atnaujinkite kompanijos duomenis įkelkite savo logo norint gauti gražų "
+"dokumentą."
 
 #. module: base
 #: model:ir.actions.client,name:base.modules_updates_act_cl
@@ -19994,7 +20711,7 @@ msgstr "Vartotojo apibrėžti filtrai"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_user
 msgid "Username"
-msgstr "Naudotojo vardas"
+msgstr "Vartotojo vardas"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users
@@ -20106,12 +20823,12 @@ msgstr "Reikšmė '%s' atrankos lauke '%%(laukuose'"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_binary
 msgid "Value Binary"
-msgstr ""
+msgstr "Binarinė reikšmė"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_datetime
 msgid "Value Datetime"
-msgstr ""
+msgstr "Datos reikšmė"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_float
@@ -20121,7 +20838,7 @@ msgstr "Skaičiaus su kableliu reikšmė"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_integer
 msgid "Value Integer"
-msgstr ""
+msgstr "Skaičiaus reikšmė"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_fields_lines
@@ -20132,7 +20849,7 @@ msgstr "Reikšmės pakaitalai"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_reference
 msgid "Value Reference"
-msgstr ""
+msgstr "Nuorodos reikšmė"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_text
@@ -20169,7 +20886,7 @@ msgstr "Pardavėjas"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
 msgid "Vendor Bill: Release to Pay"
-msgstr ""
+msgstr "Tiekėjo sąskaita: Paleisti apmokėjimui"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
@@ -20385,7 +21102,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_web
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "Web"
-msgstr "Tinklalapis"
+msgstr "Svetainė"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_clearbit
@@ -20405,7 +21122,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_gantt
 msgid "Web Gantt"
-msgstr ""
+msgstr "Web Gantt"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_web_icon
@@ -20435,7 +21152,7 @@ msgstr "Tik tinklalapio vertimai"
 #: model:ir.model.fields,field_description:base.field_res_users_website
 #: model:ir.module.category,name:base.module_category_website
 msgid "Website"
-msgstr "Tinklalapis"
+msgstr "Svetainė"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website
@@ -20541,7 +21258,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock
 msgid "Website Sale Stock - Website Delivery Information"
-msgstr "Tinklalapio pardavimų sandėlis - tinklalapio pristatymo informacija"
+msgstr "Svetainės pardavimų atsargos - svetainės pristatymo informacija"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock_options
@@ -20691,7 +21408,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_sips
 msgid "Worldline SIPS"
-msgstr ""
+msgstr "Worldline SIPS"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access_perm_write
@@ -20711,6 +21428,8 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about pyhon expression is given in the help tab."
 msgstr ""
+"Parašykite Python kodą, kurį įvykdys veiksmas. Galimus naudoti kintamuosius "
+"ir daugiau informacijos apie Python galite rasti \"Pagalbos\" skiltyje."
 
 #. module: base
 #: model:res.country,name:base.ye
@@ -21029,7 +21748,7 @@ msgstr "dokumentacija"
 #: selection:base.language.install,state:0
 #: selection:base.module.update,state:0
 msgid "done"
-msgstr "atlikta"
+msgstr "Atlikta"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -21062,7 +21781,7 @@ msgstr "pvz. Pardavimų vadovas"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "e.g. Update order quantity"
-msgstr "pvz, atnaujinti užsakymo kiekį"
+msgstr "pvz., atnaujinti užsakymo kiekį"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form

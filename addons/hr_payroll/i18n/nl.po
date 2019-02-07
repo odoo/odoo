@@ -3,21 +3,22 @@
 # * hr_payroll
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Eric Geens <ericgeens@yahoo.com>, 2017
-# Cas Vissers <casvissers@brahoo.nl>, 2017
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 # Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2017
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Melroy van den Berg <webmaster1989@gmail.com>, 2018
+# Eric Geens <ericgeens@yahoo.com>, 2018
+# Cas Vissers <casvissers@brahoo.nl>, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
 # Cas Vissers <c.vissers@brahoo.nl>, 2018
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-27 15:42+0000\n"
-"PO-Revision-Date: 2018-06-27 15:42+0000\n"
-"Last-Translator: Cas Vissers <c.vissers@brahoo.nl>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:18+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -715,6 +716,12 @@ msgid "Get 1% of sales"
 msgstr "Krijg 1% van verkopen"
 
 #. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payslip.py:183
+#, python-format
+msgid "Global Leaves"
+msgstr "Algemene vakantie"
+
+#. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
 #: model:hr.salary.rule.category,name:hr_payroll.GROSS
 msgid "Gross"
@@ -1316,16 +1323,9 @@ msgstr "Salarisberekening"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree_view
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
 msgid "Salary Rule Categories"
 msgstr "Salarisregel categorieën"
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
-msgid "Salary Rule Categories Hierarchy"
-msgstr "Salarisregel categorie hiërarchie"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule_category

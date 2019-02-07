@@ -307,6 +307,7 @@ class PurchaseOrder(models.Model):
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
             'custom_layout': "purchase.mail_template_data_notification_email_purchase_order",
+            'purchase_mark_rfq_sent': True,
             'force_email': True
         })
         return {
@@ -552,7 +553,7 @@ class PurchaseOrderLine(models.Model):
             taxes = line.product_id.supplier_taxes_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
             line.taxes_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_id) if fpos else taxes
 
-    @api.depends('invoice_lines.invoice_id.state', 'invoice_lines.quantity')
+    @api.depends('invoice_lines.invoice_id.state', 'invoice_lines.quantity', 'invoice_lines.uom_id')
     def _compute_qty_invoiced(self):
         for line in self:
             qty = 0.0
@@ -1122,7 +1123,7 @@ class MailComposeMessage(models.TransientModel):
 
     @api.multi
     def mail_purchase_order_on_send(self):
-        if not self.filtered('subtype_id.internal'):
+        if self._context.get('purchase_mark_rfq_sent'):
             order = self.env['purchase.order'].browse(self._context['default_res_id'])
             if order.state == 'draft':
                 order.state = 'sent'
@@ -1130,6 +1131,7 @@ class MailComposeMessage(models.TransientModel):
     @api.multi
     def send_mail(self, auto_commit=False):
         if self._context.get('default_model') == 'purchase.order' and self._context.get('default_res_id'):
-            self = self.with_context(mail_post_autofollow=True)
+            order = self.env['purchase.order'].browse(self._context['default_res_id'])
+            self = self.with_context(mail_post_autofollow=True, lang=order.partner_id.lang)
             self.mail_purchase_order_on_send()
         return super(MailComposeMessage, self).send_mail(auto_commit=auto_commit)

@@ -33,7 +33,7 @@ from ${object.company_id.name}.
 % endif
     <br/><br/>
 
-% if object.reference_type=='bba' and object.reference:
+% if object.invoice_reference_type=='structured' and object.reference:
     <p>Please use the following communication for your payment : <b>${object.reference}</b></p>
 % endif
 

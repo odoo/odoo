@@ -211,7 +211,7 @@
                                 </strong>
                                 <div class='row'>
                                     <div class="col-md-2 col-sm-3 text-center oe_attachments" t-foreach='task.attachment_ids' t-as='attachment'>
-                                        <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.generate_access_token()}" target="_blank">
+                                        <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.sudo().generate_access_token()[0]}" target="_blank">
                                             <div class='oe_attachment_embedded o_image o_image_small' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/50x40"/>
                                             <div class='oe_attachment_name'><t t-esc='attachment.name' /></div>
                                         </a>

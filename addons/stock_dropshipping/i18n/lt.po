@@ -4,15 +4,16 @@
 # 
 # Translators:
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Silvija Butko <silvija.butko@gmail.com>, 2018
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Linas Versada <paulius.sladkevicius@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:24+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,12 +24,12 @@ msgstr ""
 #. module: stock_dropshipping
 #: model:stock.location.route,name:stock_dropshipping.route_drop_shipping
 msgid "Drop Shipping"
-msgstr "Tiesioginis perpardavimas"
+msgstr "Tiesioginis pristatymas"
 
 #. module: stock_dropshipping
 #: model:stock.picking.type,name:stock_dropshipping.picking_type_dropship
 msgid "Dropship"
-msgstr ""
+msgstr "Pristatyti tiesiogiai"
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_procurement_rule
@@ -36,9 +37,14 @@ msgid "Procurement Rule"
 msgstr "Planinio užsakymo taisyklė"
 
 #. module: stock_dropshipping
+#: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line_purchase_line_ids
+msgid "Purchase Line"
+msgstr ""
+
+#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Pardavimo užsakymo eilutė "
+msgstr "Pirkimo užsakymo eilutė "
 
 #. module: stock_dropshipping
 #: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line_sale_line_id
@@ -46,6 +52,11 @@ msgid "Sale Line"
 msgstr "Pardavimų eilutė"
 
 #. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Pardavimo užsakymo eilutė"
+
+#. module: stock_dropshipping
 #: model:procurement.rule,name:stock_dropshipping.procurement_rule_drop_shipping
 msgid "Vendor → Customer"
-msgstr ""
+msgstr "Tiekėjas →  Klientas"

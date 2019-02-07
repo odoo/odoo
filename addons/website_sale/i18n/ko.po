@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
 "Last-Translator: 최재호 <hwangtog@gmail.com>, 2018\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -1866,7 +1866,7 @@ msgid "Installs *e-Commerce Inventory*"
 msgstr "설치 * 전자 상거래 인벤토리 *"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:502
+#: code:addons/website_sale/controllers/main.py:518
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "이메일이 잘못되었습니다! 유효한 이메일 주소를 입력하세요."
@@ -1893,7 +1893,7 @@ msgid "Issue invoices to customers"
 msgstr "고객에게 청구서 발행"
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:146
+#: code:addons/website_sale/models/sale_order.py:157
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status"
 msgstr "초안 상태가 아닌 판매 주문을 수정하는 것은 금지되어 있습니다"
@@ -2043,11 +2043,6 @@ msgid "Manage promotion &amp; coupon programs"
 msgstr "프로모션 &amp; 쿠폰프로그램 관리"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.sale_order_view_form
-msgid "Mark as Paid"
-msgstr "결제완료로 표시"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_image_medium
 msgid "Medium-sized image"
 msgstr "중간 크기 이미지"
@@ -2124,7 +2119,7 @@ msgstr "네트워크"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:968
+#: code:addons/website_sale/controllers/main.py:988
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:32
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -2273,7 +2268,7 @@ msgid "Parent Category"
 msgstr "상위 카테고리"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:756
+#: code:addons/website_sale/controllers/main.py:774
 #: model:ir.ui.view,arch_db:website_sale.payment
 #, python-format
 msgid "Pay Now"
@@ -3029,7 +3024,7 @@ msgstr ""
 "Authorize.net 및 Ingenico와 같은 일부 결제는 자신의 결제 프로세서에서 결제 게이트웨이로 사용할 수 있습니다."
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:520
+#: code:addons/website_sale/controllers/main.py:536
 #, python-format
 msgid "Some required fields are empty."
 msgstr "일부 필수 입력란은 비어 있습니다."
@@ -3229,6 +3224,14 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_res_config_settings_automatic_invoice
+msgid ""
+"The invoice is generated automatically and available in the customer portal when the transaction is confirmed by the payment acquirer.\n"
+"The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment acquirer.\n"
+"This mode is advised if you issue the final invoice at the order and not after the delivery."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "The mode selected here applies as invoicing policy of any new product "
@@ -3236,7 +3239,7 @@ msgid ""
 msgstr "여기에서 선택한 모드는 새로 생성 된 상품의 청구서 발행 정책으로 적용되지만 이미 생성 된 상품에는 적용되지 않습니다."
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:247
+#: code:addons/website_sale/models/sale_order.py:258
 #, python-format
 msgid ""
 "The quote should be sent and the payment acquirer type should be manual or "

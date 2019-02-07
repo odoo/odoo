@@ -3,32 +3,33 @@
 # * account
 # 
 # Translators:
-# Hamed Mohammadi <hamed@dehongi.com>, 2017
-# arya sadeghy <aryasadeghy@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Hamid Darabi, 2017
 # Ali Alikhani <a.alikhani@gmail.com>, 2017
-# hamid hvbnet <hvbnet@yahoo.com>, 2017
-# Sahar Daraye <sahar.daraye.1369@gmail.com>, 2017
-# Sahand Hashemi <sahand.twastica@gmail.com>, 2017
-# mohammad rahmani <mohammadrahmani2o0@gmail.com>, 2017
 # Mohammad Ali Rooeintan <m.a.rooeintan@gmail.com>, 2017
-# Sepehr Khoshnood <sepehr.kho@gmail.com>, 2017
-# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2017
-# elaheh pourrezaie <elaheh.pourrezaie@hotmail.com>, 2017
 # hamid k <hamidk1010@yahoo.com>, 2017
-# Zahed Alfak <tamass4116@gmail.com>, 2017
+# elaheh pourrezaie <elaheh.pourrezaie@hotmail.com>, 2017
 # Sia Rezazadeh <siavash.rezazadeh@gmail.com>, 2017
 # Maziar Niaki <maziarmn@gmail.com>, 2017
-# mohammad azarbara <mohammadazarbara98@gmail.com>, 2017
+# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2017
+# Sahand Hashemi <sahand.twastica@gmail.com>, 2017
+# mohammad rahmani <mohammadrahmani2o0@gmail.com>, 2017
+# Sahar Daraye <sahar.daraye.1369@gmail.com>, 2017
+# hamid hvbnet <hvbnet@yahoo.com>, 2017
+# Zahed Alfak <tamass4116@gmail.com>, 2017
+# arya sadeghy <aryasadeghy@gmail.com>, 2017
+# Hamid Darabi, 2017
+# Sepehr Khoshnood <sepehr.kho@gmail.com>, 2017
+# Martin Trigaux, 2017
+# سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2017
 # Arash Sardari <arashss77@gmail.com>, 2018
+# Hamed Mohammadi <hamed@dehongi.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Arash Sardari <arashss77@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:13+0000\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,7 +96,7 @@ msgstr "${object.subject}"
 #: code:addons/account/models/account_bank_statement.py:462
 #, python-format
 msgid "%d transactions were automatically reconciled."
-msgstr "%d معاملات به صورت خودکار تطبیق داده شد . "
+msgstr "%d تراکنشها به صورت خودکار تطبیق داده شد . "
 
 #. module: account
 #: code:addons/account/models/account.py:809
@@ -435,6 +436,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Now"
 msgstr "<span class=\"fa fa-arrow-circle-o-down\"/>الان نصب کن "
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -864,7 +872,7 @@ msgstr "<strong>نمایش حساب<strong/>"
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Due Date:</strong>"
-msgstr "<strong>تاریخ انجام<strong/>"
+msgstr "<strong>تاریخ سررسید:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
@@ -1089,7 +1097,7 @@ msgstr "<strong>در Odoo سه سطح مختلف دسترسی به حقوق وج
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "<strong>There is nothing due with this customer.</strong>"
-msgstr "<strong>هیچ ارتباطی با این مشتری وجود ندارد.</strong>"
+msgstr "<strong>هیچ سررسیدی برای این مشتری وجود ندارد.</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
@@ -1452,7 +1460,7 @@ msgstr "برچسب حساب"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_tag_action
 msgid "Account Tags"
-msgstr "کلمات کلیدی حساب"
+msgstr "برچسبهای حساب"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_tax_form
@@ -1477,18 +1485,18 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_template_search
 #: model:ir.ui.view,arch_db:account.view_account_template_tree
 msgid "Account Template"
-msgstr "الگو حساب"
+msgstr "قالب حساب"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_valuation_account_id
 #: model:ir.model.fields,field_description:account.field_res_company_property_stock_valuation_account_id
 msgid "Account Template for Stock Valuation"
-msgstr "الگو حساب جهت ارزیابی انبار"
+msgstr "قالب حساب جهت ارزیابی انبار"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_template_form
 msgid "Account Templates"
-msgstr "الگوهای حساب"
+msgstr "قالبهای حساب"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -1531,7 +1539,7 @@ msgstr "انواع حساب مجاز"
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr "حساب غیر قابل قبول"
+msgstr "عدم تطبیق حساب"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_group_search
@@ -1561,7 +1569,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_src_id
 msgid "Account on Product"
-msgstr "حساب در محصول"
+msgstr "حساب بر محصول"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_tag_ids
@@ -1594,7 +1602,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_dest_id
 msgid "Account to Use Instead"
-msgstr "حسابی جایگزین"
+msgstr "حساب برای استفاده جایگزین"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_cash_basis_account
@@ -1771,7 +1779,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
-msgstr "تنظیمات پیشرفته"
+msgstr "گزینه‌های پیشرفته"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
@@ -1837,7 +1845,7 @@ msgstr "همه"
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "All Entries"
-msgstr "همه داده ها"
+msgstr "همه ورودی ها"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_all_partner_invoices
@@ -2042,14 +2050,14 @@ msgstr "مقدار به ارز"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Amount type"
-msgstr "نوع مبلغ"
+msgstr "نوع مقدار"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_payment.xml:68
 #, python-format
 msgid "Amount:"
-msgstr "مقدار"
+msgstr "مقدار:"
 
 #. module: account
 #: sql_constraint:account.fiscal.position.account:0
@@ -2823,7 +2831,7 @@ msgstr "کنترل نقد"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Cash Operations"
-msgstr "اپراتورهای صندوق"
+msgstr "عملیاتهای صندوق"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
@@ -2955,7 +2963,7 @@ msgstr "جدول حساب ها"
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_form
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_tree
 msgid "Chart of Accounts Template"
-msgstr "قالبت نمودار حسابها"
+msgstr "قالب نمودار حسابها"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_chart_template_form
@@ -3167,7 +3175,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_tag_color
 #: model:ir.model.fields,field_description:account.field_account_journal_color
 msgid "Color Index"
-msgstr "رنگ پس زمینه"
+msgstr "شاخص رنگ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_label_filter
@@ -3183,7 +3191,7 @@ msgstr "توضیح"
 #: model:ir.model.fields,field_description:account.field_account_invoice_commercial_partner_id
 #: model:ir.model.fields,help:account.field_account_invoice_report_commercial_partner_id
 msgid "Commercial Entity"
-msgstr "نهاد تجاری"
+msgstr "موسسه تجاری"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_common_menu
@@ -3193,7 +3201,7 @@ msgstr "گزارش عمومی"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "Communication"
-msgstr "رسانگرش"
+msgstr "ارتباطات"
 
 #. module: account
 #: model:ir.model,name:account.model_res_company
@@ -3814,11 +3822,19 @@ msgid "Currency as per company's country."
 msgstr "ارز به ازای هر کشور شرکت."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1609
-#: code:addons/account/models/account_move.py:1621
+#: code:addons/account/models/account_move.py:1663
+#: code:addons/account/models/account_move.py:1675
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr "اختلاف نرخ تبدیل ارز"
+
+#. module: account
+#: code:addons/account/models/account.py:451
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
+msgstr ""
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
@@ -4129,7 +4145,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_deprecated
 msgid "Deprecated"
-msgstr "منسوخ"
+msgstr "مستهلک شده"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_depreciation
@@ -4153,7 +4169,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_type_form
 #, python-format
 msgid "Description"
-msgstr "توصیف"
+msgstr "توضیحات"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_note
@@ -4408,7 +4424,7 @@ msgstr "صورتحساب پیشنویس"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "Due"
-msgstr "پرداختنی"
+msgstr "سررسید"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_residual
@@ -5611,7 +5627,7 @@ msgstr "دعوت کاربران"
 #: model:res.request.link,name:account.req_link_invoice
 #, python-format
 msgid "Invoice"
-msgstr "سیاهه"
+msgstr "فاکتور"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -6493,7 +6509,7 @@ msgstr "قفل کردن تاریخ برای غیر مشاوران"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Logo"
-msgstr "نشان"
+msgstr "لوگو"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:173
@@ -10525,6 +10541,7 @@ msgstr "گزارش تراز آزمایشی"
 #: model:ir.model.fields,field_description:account.field_account_account_user_type_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_journal_type
 #: model:ir.model.fields,field_description:account.field_account_financial_report_type
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_invoice_type
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_type
 #: model:ir.model.fields,field_description:account.field_account_invoice_type
 #: model:ir.model.fields,field_description:account.field_account_journal_type
@@ -11274,7 +11291,7 @@ msgid "You cannot put/take money in/out for a bank statement which is closed."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:253
+#: code:addons/account/models/account.py:261
 #, python-format
 msgid ""
 "You cannot remove/deactivate an account which is set on a customer or "
@@ -11282,13 +11299,21 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1330
+#: code:addons/account/models/account.py:249
+#, python-format
+msgid ""
+"You cannot set a currency on this account as it already has some journal "
+"entries having a different foreign currency."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:1368
 #, python-format
 msgid "You cannot use deprecated account."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:1250
+#: code:addons/account/models/account_move.py:1283
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -11297,7 +11322,7 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:74
-#: code:addons/account/models/account_invoice.py:777
+#: code:addons/account/models/account_invoice.py:780
 #, python-format
 msgid ""
 "You cannot validate an invoice with a negative total amount. You should "

@@ -3,25 +3,27 @@
 # * product
 # 
 # Translators:
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2017
-# Martin Trigaux, 2017
 # Daniel Forslund <daniel.forslund@gmail.com>, 2017
-# Martin Wilderoth <martin.wilderoth@linserv.se>, 2017
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2017
 # Kim Asplund <kim.asplund@gmail.com>, 2017
 # Zou Haojun <haojunzou84@gmail.com>, 2017
 # Robert Frykelius <robert.frykelius@linserv.se>, 2017
 # lynnliuying <lynn.liu1971@gmail.com>, 2017
 # Haojun Zou <apollo_zhj@msn.com>, 2017
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2017
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2017
 # Patrik Lermon <patrik.lermon@gmail.com>, 2017
+# Martin Trigaux, 2018
+# Kristoffer Grundström <hamnisdude@gmail.com>, 2018
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2018
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Patrik Lermon <patrik.lermon@gmail.com>, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:22+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2018\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +60,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:324
+#: code:addons/product/models/product_template.py:333
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopia)"
@@ -695,9 +697,7 @@ msgid "Computer SC234"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:50
 #: selection:product.template,type:0
-#, python-format
 msgid "Consumable"
 msgstr "Förbrukningsvara"
 
@@ -905,6 +905,11 @@ msgid "Description for Customers"
 msgstr ""
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Description for Internal"
+msgstr ""
+
+#. module: product
 #: model:product.product,website_description:product.product_product_11
 #: model:product.product,website_description:product.product_product_11b
 #: model:product.template,website_description:product.product_product_11_product_template
@@ -982,19 +987,19 @@ msgid "Ending valid for the pricelist item validation"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:53
+#: code:addons/product/models/product.py:56
 #, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Fel! Du kan inte skapa rekursiva kategorier"
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:101
+#: code:addons/product/models/product_attribute.py:102
 #, python-format
 msgid "Error ! You cannot use this attribute with the following value."
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:283
+#: code:addons/product/models/product.py:293
 #, python-format
 msgid ""
 "Error! It is not allowed to choose more than one value for a given "
@@ -1018,7 +1023,7 @@ msgstr ""
 "prislistesegment."
 
 #. module: product
-#: code:addons/product/models/product_template.py:274
+#: code:addons/product/models/product_template.py:283
 #, python-format
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
@@ -1405,6 +1410,16 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
 msgstr "Lager"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
+msgid "Is Product Variant"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
+msgid "Is a product variant"
+msgstr "Är en produktvariant"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2026,7 +2041,7 @@ msgid "Products Price Search"
 msgstr "Produktprissökning"
 
 #. module: product
-#: code:addons/product/models/product.py:448
+#: code:addons/product/models/product.py:464
 #, python-format
 msgid "Products: "
 msgstr "Produkter: "
@@ -2245,9 +2260,7 @@ msgid "Server"
 msgstr "Server"
 
 #. module: product
-#: code:addons/product/models/product_template.py:51
 #: selection:product.template,type:0
-#, python-format
 msgid "Service"
 msgstr "Tjänst"
 
@@ -2546,7 +2559,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:74
+#: code:addons/product/models/product_attribute.py:75
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
@@ -2690,6 +2703,11 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr "Summan av tillägg för alla attribut"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "This note is only for internal purposes."
+msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2907,7 +2925,7 @@ msgstr ""
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
 msgid "Vendor Pricelists"
-msgstr ""
+msgstr "Leverantörsprislistor"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3259,7 +3277,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form

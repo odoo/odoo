@@ -8,7 +8,6 @@
 # Martin Trigaux, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
 # Linas Versada <paulius.sladkevicius@gmail.com>, 2017
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 # Naglis Jonaitis, 2017
 # Rolandas <info@paninfo.lt>, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2018
@@ -31,7 +30,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:535
 #, python-format
 msgid "(%d more)"
-msgstr "(%d more)"
+msgstr "(%d daugiau)"
 
 #. module: base_import
 #. openerp-web
@@ -41,7 +40,7 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
 msgstr ""
-"Tik vienas stulpelis rastas faile, tai dažnai reiškia, kad failų skyriklis "
+"Faile rastas tik vienas stulpelis, tai dažnai reiškia, kad failų skyriklis "
 "yra neteisingas"
 
 #. module: base_import
@@ -142,7 +141,7 @@ msgstr "Dešimtainis skyriklis:"
 #: code:addons/base_import/static/src/xml/base_import.xml:71
 #, python-format
 msgid "Defer parent/child computation"
-msgstr "Atidėti tėvų/vaikų skaičiavimus"
+msgstr "Atidėti tėvinius/dukterinius skaičiavimus"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_display_name
@@ -194,7 +193,7 @@ msgstr "Klaida analizuojant datą [%s:L%d]: %s"
 #: code:addons/base_import/models/base_import.py:227
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
-msgstr "Klaidos langelis rastas skaitant XLS/XLSX failą: %s"
+msgstr "Klaidos langelis, surastas nuskaitant XLS/XLSX failą: %s"
 
 #. module: base_import
 #. openerp-web
@@ -229,7 +228,8 @@ msgstr "Failo tipas"
 #: model:ir.model.fields,help:base_import.field_base_import_import_file
 msgid "File to check and/or import, raw binary (not base64)"
 msgstr ""
-"Failas patikrinimui ir / arba importavimui, neapdorotas dvigubas (ne base64)"
+"Failas neapdorotų dvejetainių (ne base64) patikrinimui ir / arba "
+"importavimui"
 
 #. module: base_import
 #. openerp-web
@@ -295,9 +295,9 @@ msgid ""
 "                simpler especially when the file has many columns."
 msgstr ""
 "Jei faile bus pateikti\n"
-"                stulpelių pavadinimai, Odoo automatiškai bandys susieti juos\n"
-"                su atitinkamais laukais. Tai palengvina importavimą\n"
-"                ir ypatingai tada, kai failas susideda iš daug stulpelių."
+"                stulpelių pavadinimai, \"Odoo\" automatiškai bandys susieti juos\n"
+"                su atitinkamais laukais. Tai palengvina importavimą,\n"
+"ypatingai tada, kai failas susideda iš daug stulpelių."
 
 #. module: base_import
 #. openerp-web
@@ -322,10 +322,10 @@ msgid ""
 "                      parent / child relation occurs on every line, and lead"
 " to a slower import.                     Defering it can speed up import."
 msgstr ""
-"Jei modelyje naudojamos tėvų/vaikų sąsajos, skaičiavimai"
-"                      tėvų / vaikų sąsajoms atliekami kiekvienai eilutei, o "
-"tai sulėtina importavimą.                     Atidėjimas gali pagreitinti "
-"importavimo procesą."
+"Jei modelyje naudojamos tėvinės/dukterinės sąsajos, skaičiavimai"
+"                      tėvinėms/dukterinėms sąsajoms atliekami kiekvienai "
+"eilutei, o tai sulėtina importavimą.                     Atidėjimas gali "
+"pagreitinti importavimo procesą."
 
 #. module: base_import
 #. openerp-web
@@ -451,7 +451,7 @@ msgstr "Pasirinkimai..."
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_othervalue
 msgid "Other Variable"
-msgstr "Kiti kintamieji"
+msgstr "Kitas kintamasis"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_parent_id
@@ -498,7 +498,7 @@ msgstr "Skyriklis:"
 #: code:addons/base_import/static/src/xml/base_import.xml:72
 #, python-format
 msgid "Show fields of relation fields (advanced)"
-msgstr "Rodyti susijusius laukus (papildomai)"
+msgstr "Rodyti susijusius laukus (papildomas funkcionalumas)"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_somevalue
@@ -556,7 +556,7 @@ msgstr "Tūkstančių skyriklis:"
 #: code:addons/base_import/static/src/xml/base_import.xml:62
 #, python-format
 msgid "Track history during import"
-msgstr "Importuojant stebėkite istoriją"
+msgstr "Importuojant sekti istoriją"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:192
@@ -572,8 +572,8 @@ msgstr ""
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
-"Nepalaikomas failo formatas \"{}\", importas palaiko tik CSV, ODS, XLS ir "
-"XLSX"
+"Nepalaikomas failo formatas \"{}\", importavimas palaiko tik CSV, ODS, XLS "
+"ir XLSX"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_value
@@ -589,13 +589,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_value
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_value
 msgid "Value"
-msgstr "Vertė"
+msgstr "Reikšmė"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:534
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr "Turite konfigūruoti bent vieną lauką importavimui"
+msgstr "Turite sukonfigūruoti bent vieną lauką importavimui"
 
 #. module: base_import
 #. openerp-web

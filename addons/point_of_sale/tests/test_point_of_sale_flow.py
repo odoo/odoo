@@ -603,3 +603,123 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # I close the rescue session
         rescue_session.action_pos_session_closing_control()
         self.assertEqual(rescue_session.state, 'closed', "Rescue session was not properly closed")
+
+    def test_order_to_payment_currency(self):
+        """
+            In order to test the Point of Sale in module, I will do a full flow from the sale to the payment and invoicing.
+            I will use two products, one with price including a 10% tax, the other one with 5% tax excluded from the price.
+            The order will be in a different currency than the company currency.
+        """
+        # Make sure the company is in USD
+        self.env.cr.execute(
+            "UPDATE res_company SET currency_id = %s WHERE id = %s",
+            [self.env.ref('base.USD').id, self.env.user.company_id.id])
+
+        # Demo data are crappy, clean-up the rates
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': '2010-01-01',
+            'rate': 2.0,
+            'currency_id': self.env.ref('base.EUR').id,
+        })
+
+        # I click on create a new session button
+        self.pos_config.open_session_cb()
+
+        # I create a PoS order with 2 units of PCSC234 at 450 EUR (Tax Incl)
+        # and 3 units of PCSC349 at 300 EUR. (Tax Excl)
+        self.pos_order_pos0 = self.PosOrder.create({
+            'company_id': self.company_id,
+            'pricelist_id': self.partner1.property_product_pricelist.copy(default={'currency_id': self.env.ref('base.EUR').id}).id,
+            'partner_id': self.partner1.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product3.id,
+                'price_unit': 450,
+                'discount': 0.0,
+                'qty': 2.0,
+                'tax_ids': [(6, 0, self.product3.taxes_id.ids)],
+            }), (0, 0, {
+                'name': "OL/0002",
+                'product_id': self.product4.id,
+                'price_unit': 300,
+                'discount': 0.0,
+                'qty': 3.0,
+                'tax_ids': [(6, 0, self.product4.taxes_id.ids)],
+            })]
+        })
+
+        # I check that the total of the order is equal to 450*2 + 300*3*1.05
+        # and the tax of the order is equal to 900 -(450 * 2 / 1.1) +
+        # 300*0.05*3
+        self.assertLess(
+            abs(self.pos_order_pos0.amount_total - (450 * 2 + 300 * 3 * 1.05)),
+            0.01, 'The order has a wrong amount, tax included.')
+
+        self.assertLess(
+            abs(self.pos_order_pos0.amount_tax - (900 - (450 * 2 / 1.1) + 300 * 0.05 * 3)),
+            0.01, 'The order has a wrong tax amount.')
+
+        # I want to add a global discount of 5 percent using the wizard
+
+        self.pos_discount_0 = self.env['pos.discount'].create({'discount': 5.0})
+
+        context = {"active_model": "pos.order", "active_ids": [self.pos_order_pos0.id], "active_id": self.pos_order_pos0.id}
+
+        # I click the apply button to set the discount on all lines
+        self.pos_discount_0.with_context(context).apply_discount()
+
+        # I check that the total of the order is now equal to (450*2 +
+        # 300*3*1.05)*0.95
+        self.assertLess(
+            abs(self.pos_order_pos0.amount_total - (450 * 2 + 300 * 3 * 1.05) * 0.95),
+            0.01, 'The order has a wrong total including tax and discounts')
+
+        # I click on the "Make Payment" wizard to pay the PoS order with a
+        # partial amount of 100.0 EUR
+        context_make_payment = {"active_ids": [self.pos_order_pos0.id], "active_id": self.pos_order_pos0.id}
+        self.pos_make_payment_0 = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 100.0
+        })
+
+        # I click on the validate button to register the payment.
+        context_payment = {'active_id': self.pos_order_pos0.id}
+        self.pos_make_payment_0.with_context(context_payment).check()
+
+        # I check that the order is not marked as paid yet
+        self.assertEqual(self.pos_order_pos0.state, 'draft', 'Order should be in draft state.')
+
+        # On the second payment proposition, I check that it proposes me the
+        # remaining balance which is 1790.0 EUR
+        defs = self.pos_make_payment_0.with_context({'active_id': self.pos_order_pos0.id}).default_get(['amount'])
+
+        self.assertLess(
+            abs(defs['amount'] - ((450 * 2 + 300 * 3 * 1.05) * 0.95 - 100.0)), 0.01, "The remaining balance is incorrect.")
+
+        #'I pay the remaining balance.
+        context_make_payment = {
+            "active_ids": [self.pos_order_pos0.id], "active_id": self.pos_order_pos0.id}
+
+        self.pos_make_payment_1 = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': (450 * 2 + 300 * 3 * 1.05) * 0.95 - 100.0
+        })
+
+        # I click on the validate button to register the payment.
+        self.pos_make_payment_1.with_context(context_make_payment).check()
+
+        # I check that the order is marked as paid
+        self.assertEqual(self.pos_order_pos0.state, 'paid', 'Order should be in paid state.')
+
+        # I generate the journal entries
+        self.pos_order_pos0._create_account_move_line()
+
+        # I test that the generated journal entry is attached to the PoS order
+        self.assertTrue(self.pos_order_pos0.account_move, "Journal entry has not been attached to Pos order.")
+
+        # Check the amounts
+        debit_lines = self.pos_order_pos0.account_move.mapped('line_ids.debit')
+        credit_lines = self.pos_order_pos0.account_move.mapped('line_ids.credit')
+        amount_currency_lines = self.pos_order_pos0.account_move.mapped('line_ids.amount_currency')
+        self.assertEqual(set(debit_lines), {876.39, 0.0})
+        self.assertEqual(set(credit_lines), {0.0, 21.38, 427.5, 38.87, 388.64})
+        self.assertEqual(set(amount_currency_lines), {1752.75, -42.75, -855.0, -77.73, -777.27})

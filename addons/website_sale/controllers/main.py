@@ -330,7 +330,7 @@ class WebsiteSale(http.Controller):
         }
         return request.render("website_sale.product", values)
 
-    @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True)
+    @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True, sitemap=False)
     def pricelist_change(self, pl_id, **post):
         if (pl_id.selectable or pl_id == request.env.user.partner_id.property_product_pricelist) \
                 and request.website.is_pricelist_available(pl_id.id):
@@ -338,7 +338,7 @@ class WebsiteSale(http.Controller):
             request.website.sale_get_order(force_pricelist=pl_id.id)
         return request.redirect(request.httprequest.referrer or '/shop')
 
-    @http.route(['/shop/pricelist'], type='http', auth="public", website=True)
+    @http.route(['/shop/pricelist'], type='http', auth="public", website=True, sitemap=False)
     def pricelist(self, promo, **post):
         redirect = post.get('r', '/shop/cart')
         pricelist = request.env['product.pricelist'].sudo().search([('code', '=', promo)], limit=1)
@@ -356,6 +356,9 @@ class WebsiteSale(http.Controller):
         revive: Revival method when abandoned cart. Can be 'merge' or 'squash'
         """
         order = request.website.sale_get_order()
+        if order and order.state != 'draft':
+            request.session['sale_order_id'] = None
+            order = request.website.sale_get_order()
         values = {}
         if access_token:
             abandoned_order = request.env['sale.order'].sudo().search([('access_token', '=', access_token)], limit=1)
@@ -398,7 +401,11 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True, csrf=False)
     def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
-        request.website.sale_get_order(force_create=1)._cart_update(
+        sale_order = request.website.sale_get_order(force_create=True)
+        if sale_order.state != 'draft':
+            request.session['sale_order_id'] = None
+            sale_order = request.website.sale_get_order(force_create=True)
+        sale_order._cart_update(
             product_id=int(product_id),
             add_qty=add_qty,
             set_qty=set_qty,
@@ -532,7 +539,7 @@ class WebsiteSale(http.Controller):
             except ValidationError:
                 error["vat"] = 'error'
 
-        if [err for err in error.items() if err == 'missing']:
+        if [err for err in error.values() if err == 'missing']:
             error_message.append(_('Some required fields are empty.'))
 
         return error, error_message
@@ -568,6 +575,7 @@ class WebsiteSale(http.Controller):
 
         new_values['customer'] = True
         new_values['team_id'] = request.website.salesteam_id and request.website.salesteam_id.id
+        new_values['user_id'] = request.website.salesperson_id and request.website.salesperson_id.id
 
         lang = request.lang if request.lang in request.website.mapped('language_ids.code') else None
         if lang:
@@ -975,7 +983,7 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/get_unit_price'], type='json', auth="public", methods=['POST'], website=True)
     def get_unit_price(self, product_ids, add_qty, **kw):
-        products = request.env['product.product'].with_context({'quantity': add_qty}).browse(product_ids)
+        products = request.env['product.product'].with_context(quantity=add_qty).browse(product_ids)
         return {product.id: product.website_price / add_qty for product in products}
 
     # ------------------------------------------------------
@@ -1064,3 +1072,20 @@ class WebsiteSale(http.Controller):
             states=[(st.id, st.name, st.code) for st in country.get_website_sale_states(mode=mode)],
             phone_code=country.phone_code
         )
+
+    @http.route(['/shop/update_carrier'], type='json', auth='public', methods=['POST'], website=True, csrf=False)
+    def update_eshop_carrier(self, **post):
+        results = {}
+        if hasattr(self, '_update_website_sale_delivery'):
+            results.update(self._update_website_sale_delivery(**post))
+
+        if hasattr(self, '_update_website_sale_coupon'):
+            results.update(self._update_website_sale_coupon(**post))
+
+        return results
+
+    def _format_amount(self, amount, currency):
+        fmt = "%.{0}f".format(currency.decimal_places)
+        lang = request.env['res.lang']._lang_get(request.env.context.get('lang') or 'en_US')
+        return lang.format(fmt, currency.round(amount), grouping=True, monetary=True)\
+            .replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')

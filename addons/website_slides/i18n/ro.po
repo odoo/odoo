@@ -3,16 +3,17 @@
 # * website_slides
 # 
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2017
+# Martin Trigaux, 2017
 # Cozmin Candea <office@terrabit.ro>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Dorin Hongu <dhongu@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:28+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2018\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -228,6 +229,13 @@ msgid "<i class=\"fa fa-thumbs-up\"/> Likes"
 msgstr ""
 
 #. module: website_slides
+#: code:addons/website_slides/models/slides.py:105
+#, python-format
+msgid ""
+"<p>This channel is private and its content is restricted to some users.</p>"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
@@ -282,6 +290,46 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "<span class=\"text-muted\">Sort by:</span>"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"first\" title=\"First slide\">\n"
+"                                            <i class=\"fa fa-step-backward fa-2x\"/>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"fullscreen\" title=\"View fullscreen\">\n"
+"                                        <i class=\"fa fa-arrows-alt fa-2x\"/>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"last\" title=\"Last slide\" role=\"button\">\n"
+"                                            <i class=\"fa fa-step-forward fa-2x\"/>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"next\" title=\"Next slide\" role=\"button\">\n"
+"                                            <i class=\"fa fa-arrow-circle-right fa-2x\"/>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"previous\" title=\"Previous slide\" role=\"button\">\n"
+"                                            <i class=\"fa fa-arrow-circle-left fa-2x\"/>\n"
+"                                        </span>"
 msgstr ""
 
 #. module: website_slides
@@ -373,7 +421,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "Channel Settings"
-msgstr ""
+msgstr "Setări canal"
 
 #. module: website_slides
 #. openerp-web
@@ -546,7 +594,7 @@ msgstr "Document"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_document_id
 msgid "Document ID"
-msgstr ""
+msgstr "Document ID"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_url
@@ -1052,7 +1100,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides.xml:69
 #, python-format
 msgid "Save as Draft"
-msgstr ""
+msgstr "Salvează ca ciornă."
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -1399,7 +1447,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "is empty."
-msgstr ""
+msgstr "este gol."
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1410,7 +1458,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 #: model:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
 msgid "is private."
-msgstr ""
+msgstr "este privat."
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -1430,7 +1478,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "suggest_slide.name"
-msgstr ""
+msgstr "suggest_slide.name"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email

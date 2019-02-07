@@ -21,6 +21,7 @@ class TestAccountSupplierInvoice(AccountingTestCase):
             'account_id': invoice_account,
             'type': 'in_invoice',
         })
+        self.assertEquals(invoice.journal_id.type, 'purchase')
 
         self.env['account.invoice.line'].create({'product_id': self.env.ref('product.product_product_4').id,
             'quantity': 1.0,
@@ -76,6 +77,7 @@ class TestAccountSupplierInvoice(AccountingTestCase):
             'account_id': invoice_account,
             'type': 'in_invoice',
         })
+        self.assertEquals(invoice.journal_id.type, 'purchase')
 
         invoice_line = self.env['account.invoice.line'].create({'product_id': self.env.ref('product.product_product_4').id,
             'quantity': 5.0,

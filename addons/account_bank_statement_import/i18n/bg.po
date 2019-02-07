@@ -8,13 +8,15 @@
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
 # preslav <hackerz99999@gmail.com>, 2018
 # Maria Boyadjieva <marabo2000@gmail.com>, 2018
+# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:14+0000\n"
+"Last-Translator: Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2019\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,12 +75,12 @@ msgstr "Вече въведени пунктове"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_inbound
 msgid "At Least One Inbound"
-msgstr ""
+msgstr "Най-малко един входящ"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_outbound
 msgid "At Least One Outbound"
-msgstr ""
+msgstr "Най-малко един изходящ"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:78
@@ -115,7 +117,7 @@ msgstr "Ред на банков отчет"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_account_setup_bank_data_done
 msgid "Bank setup marked as done"
-msgstr ""
+msgstr "Настройката на банката е завършена"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
@@ -144,6 +146,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
 msgstr ""
+"Поставете отметка в това квадратче, ако не искате да споделяте същата "
+"последователност за фактури и кредитни бележки, направени от този дневник"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
@@ -200,12 +204,12 @@ msgstr "Създадено на"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
 msgid "Credit Note Entry Sequence"
-msgstr ""
+msgstr "Credit Note Entry Sequence"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_number_next
 msgid "Credit Notes: Next Number"
-msgstr ""
+msgstr "Кредитни бележки: Следващ брой"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_currency_id
@@ -220,7 +224,7 @@ msgstr "Дебитни методи"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr ""
+msgstr "Специализирана последователност от кредитни бележки"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
@@ -358,12 +362,12 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
 msgid "Kanban Dashboard"
-msgstr ""
+msgstr "Kanban Dashboard"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard_graph
 msgid "Kanban Dashboard Graph"
-msgstr ""
+msgstr "Kanban Dashboard Graph"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import___last_update
@@ -395,6 +399,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
+"Ръчно: Плаща Се в брой, чек или който и да е друг метод, извън Odoo.\n"
+"Електронно: Плащате автоматично чрез получател на плащания, като поискате транзакция на карта, запазена от клиента, когато купувате или се абонирате онлайн (плащане).\n"
+"Депозит на партида: Направете няколко клиентски проверки едновременно, като генерирате партиден депозит, който да подадете на банката си. Когато кодирате банковото извлечение в Odoo, се предлага да съгласувате транзакцията с партидния депозит. Активирайте тази опция от настройките."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
@@ -403,6 +410,9 @@ msgid ""
 "Check:Pay bill by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
 msgstr ""
+"Ръчно: Плащане на сметка в брой или по друг начин извън Odoo.\n"
+"Чек: Платете сметката с чек и я отпечатайте от Odoo.\n"
+"Кредитен превод по SEPA: Плащане на сметката от файл за кредитен превод на SEPA, който изпращате на банката си. Активирайте тази опция от настройките."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_number_next
@@ -457,6 +467,7 @@ msgstr "Последователност"
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_active
 msgid "Set active to false to hide the Journal without removing it."
 msgstr ""
+"Задайте активно на невярно, за да скриете дневника, без да я премахвате."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
@@ -471,7 +482,7 @@ msgstr "Покажете счетоводния регистър на табло
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_account_setup_bank_data_done
 msgid "Technical field used in the special view for the setup bar step."
-msgstr ""
+msgstr "Technical field used in the special view for the setup bar step."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -519,11 +530,12 @@ msgstr ""
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_number_next
 msgid "The next sequence number will be used for the next credit note."
 msgstr ""
+"Следващият пореден номер ще бъде използван за следващата кредитна записка."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_number_next
 msgid "The next sequence number will be used for the next invoice."
-msgstr ""
+msgstr "Следващият пореден номер ще се използва за следващата фактура."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
@@ -531,6 +543,8 @@ msgid ""
 "This field contains the information related to the numbering of the credit "
 "note entries of this journal."
 msgstr ""
+"Това поле съдържа информацията, свързана с номерирането на записите от "
+"кредитния рейтинг на този дневник."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id

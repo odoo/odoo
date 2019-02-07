@@ -46,7 +46,7 @@ class Planner(models.Model):
         return self.env['ir.ui.view'].browse(template_id).render(values=values)
 
     @api.model
-    def prepare_backend_url(self, action_xml_id, view_type='list', module_name=None):
+    def prepare_backend_url(self, action_xml_id, view_type=None, module_name=None):
         """ prepare the backend url to the given action, or to the given module view.
             :param action_xml_id : the xml id of the action to redirect to
             :param view_type : the view type to display when redirecting (form, kanban, list, ...)
@@ -59,8 +59,41 @@ class Planner(models.Model):
         action = self.env.ref(action_xml_id, False)
         if action:
             params['action'] = action.id
-            params['view_type'] = action.view_type or view_type
+            # The semantics of 'view_type', 'type', 'view_mode' and 'mode' are little bewildering in
+            # the different models : action (ir.actions.act_window); view (ir.ui.view);
+            # ActWindowsView (ir.actions.act_window.view); in this function and in the URL :
+            #
+            # - In the action model (ir.actions.act_window):
+            #   *   'view_type' was used to indicate if a list had hierarchy or not
+            #       ('form' = withtout hierarchy, 'tree' = with hierarchy). It could be interesting
+            #       to remove the 'view_type' field from this model as is not used anymore
+            #       (ir.actions.act_window).
+            #   *   'view_mode' is the list of allowed views in that action (form, tree, kanban, etc.).
+            #   *   'views' is a list of tuples with the view 'id' and the view 'type'.
+            #
+            # - In the view model (ir.ui.view):
+            #   *   'type' is the kind of view (form, tree, kanban, graph, etc.).
+            #   *   'mode' is use to indicate if its an extended view or not ('Base view' of 'Extension View').
+            #
+            # - In the ActWindowsView (ir.actions.act_window.view):
+            #   *   'view_mode' is the view 'type'.
+            #
+            # - In this function, 'view_type', is the view to display if exists in the action 'view_mode' list
+            #
+            # - In the URL, view_type, is the 'type' of the view to displya.
+            #
+            # This caused a confusion in this function.
+            #
+            # we changed the function to use the action view_mode field insted of action view_type field.
+
+            modes = [x if x != 'tree' else 'list' for x in action.view_mode.split(',')] #change 'tree' to 'list' for the JS code
+            if view_type and view_type in modes:
+                params['view_type'] = view_type
+            else:
+                params['view_type'] = modes[0]
         else:
+            # add the view_type for the 'ir.module.module' to preserve the behavior of this part of the function.
+            params['view_type'] = 'list'
             params['model'] = 'ir.module.module'
         # setting the module
         if module_name:

@@ -12,6 +12,7 @@ class TestStreetFields(TransactionCase):
         self.env.ref('base.be').write({'street_format': '%(street_name)s, %(street_number)s/%(street_number2)s'})
         self.env.ref('base.us').write({'street_format': '%(street_number)s/%(street_number2)s %(street_name)s'})
         self.env.ref('base.ch').write({'street_format': 'header %(street_name)s, %(street_number)s - %(street_number2)s trailer'})
+        self.env.ref('base.mx').write({'street_format': '%(street_name)s %(street_number)s/%(street_number2)s'})
 
     def create_and_assert(self, partner_name, country_id, street, street_name, street_number, street_number2):
         partner = self.Partner.create({'name': partner_name + '-1', 'street': street, 'country_id': country_id})
@@ -39,6 +40,7 @@ class TestStreetFields(TransactionCase):
         self.create_and_assert('Test00', self.env.ref('base.us').id, '40/2b Chaussee de Namur', 'Chaussee de Namur', '40', '2b')
         self.create_and_assert('Test01', self.env.ref('base.us').id, '40 Chaussee de Namur', 'Chaussee de Namur', '40', '')
         self.create_and_assert('Test02', self.env.ref('base.us').id, 'Chaussee de Namur', 'de Namur', 'Chaussee', '')
+        self.create_and_assert('Test03', self.env.ref('base.mx').id, 'Av. Miguel Hidalgo y Costilla 601', 'Av.', 'Miguel Hidalgo y Costilla 601', '')
 
     def test_01_header_trailer(self):
         self.create_and_assert('Test10', self.env.ref('base.ch').id, 'header Chaussee de Namur, 40 - 2b trailer', 'Chaussee de Namur', '40', '2b')

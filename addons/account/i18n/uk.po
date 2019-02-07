@@ -3,27 +3,28 @@
 # * account
 # 
 # Translators:
-# Анатолій Пономаренко <aponomarenko020@gmail.com>, 2017
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2017
-# Bohdan Lisnenko, 2017
-# ТАрас <tratatuta@i.ua>, 2017
+# Kateryna Onyshchenko <Katrona17@gmail.com>, 2017
+# Евгений Жердев <e.v.zherdev@gmail.com>, 2017
 # Martin Trigaux, 2017
 # Анатолій Пономаренко <Ponomarenkoa@minfin.gov.ua>, 2017
-# Kateryna Onyshchenko <Katrona17@gmail.com>, 2017
-# Zoriana Zaiats, 2017
-# Евгений Жердев <e.v.zherdev@gmail.com>, 2017
+# Анатолій Пономаренко <aponomarenko020@gmail.com>, 2017
+# ТАрас <tratatuta@i.ua>, 2017
 # Olha Koshelieva <olha.koshelieva@gmail.com>, 2017
 # Dmytro Kriesovich <dimscoffer@bigmir.net>, 2017
-# Артём Инжиянц <artem.inzhyyants@gmail.com>, 2017
+# Артём Инжиянц <artem.inzhyyants@gmail.com>, 2018
 # iraqez <vladimir.gumenyuk@gmail.com>, 2018
+# Zoriana Zaiats, 2018
+# Bohdan Lisnenko, 2018
 # Olga Lugova <trolka.olug@gmail.com>, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Olga Lugova <trolka.olug@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:13+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -431,6 +432,15 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Now"
 msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Встановити зараз"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -879,7 +889,7 @@ msgstr "<strong>Витрати</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.setup_financial_year_opening_form
 msgid "<strong>Fiscal Year End</strong>"
-msgstr "Кінець Фіскального (податкового) Року"
+msgstr "<strong>Кінець звітного періоду</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_tax
@@ -1555,7 +1565,7 @@ msgid ""
 msgstr ""
 "Тип рахунку має інформаційне призначення, для створення звітів, відповідно "
 "до законодавства конкретних країн і встановлення правил для закриття "
-"фінансового року та створення відкритих записів."
+"звітного періоду та створення відкритих записів."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_type_form
@@ -3935,11 +3945,21 @@ msgid "Currency as per company's country."
 msgstr "Валюта за країною компанії."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1609
-#: code:addons/account/models/account_move.py:1621
+#: code:addons/account/models/account_move.py:1663
+#: code:addons/account/models/account_move.py:1675
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr "Курсова різниця"
+
+#. module: account
+#: code:addons/account/models/account.py:451
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
+msgstr ""
+"Поле валюти слід встановлювати лише тоді, коли валюта журналу відрізняється "
+"від компанії. Залиште поле порожнім, щоби використовувати валюту компанії."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
@@ -3955,7 +3975,7 @@ msgstr "Короткострокові зобов’язання"
 #. module: account
 #: model:account.account.type,name:account.data_unaffected_earnings
 msgid "Current Year Earnings"
-msgstr "доходи поточного року"
+msgstr "Доходи поточного періоду"
 
 #. module: account
 #: selection:account.abstract.payment,partner_type:0
@@ -4936,7 +4956,7 @@ msgstr "Схеми оподаткування"
 #: code:addons/account/static/src/xml/account_dashboard_setup_bar.xml:17
 #, python-format
 msgid "Fiscal Year"
-msgstr "Фіскальний рік"
+msgstr "Звітний період"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op_fiscalyear_last_day
@@ -6024,7 +6044,7 @@ msgstr "Рахунки без оплати"
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
-msgstr "Виставлення рахунків"
+msgstr "Рахунки"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_is_unaffected_earnings_line
@@ -7695,7 +7715,7 @@ msgstr "Залишкові дебети"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue"
-msgstr "Прострочено"
+msgstr "Протерміновано"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_overdue_msg
@@ -8181,7 +8201,7 @@ msgstr "плюс банк"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Fixed Assets"
-msgstr "плюс Необоротні активи"
+msgstr "плюс Основні засоби"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -9740,7 +9760,7 @@ msgid ""
 "Taxes, fiscal positions, chart of accounts &amp; legal statements for your "
 "country"
 msgstr ""
-"Податки, схеми оподаткування, план рахунків та юридичні виписки вашої країни"
+"Податки, схеми оподаткування, план рахунків та офіційні звіти вашої країни"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_balance
@@ -11047,6 +11067,7 @@ msgstr "Оборотно-сальдова відомість"
 #: model:ir.model.fields,field_description:account.field_account_account_user_type_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_journal_type
 #: model:ir.model.fields,field_description:account.field_account_financial_report_type
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_invoice_type
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_type
 #: model:ir.model.fields,field_description:account.field_account_invoice_type
 #: model:ir.model.fields,field_description:account.field_account_journal_type
@@ -11882,7 +11903,7 @@ msgstr ""
 "Ви не можете переказати/ взяти гроші в/з банку для виписки, яка закрита."
 
 #. module: account
-#: code:addons/account/models/account.py:253
+#: code:addons/account/models/account.py:261
 #, python-format
 msgid ""
 "You cannot remove/deactivate an account which is set on a customer or "
@@ -11892,13 +11913,23 @@ msgstr ""
 "постачальника."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1330
+#: code:addons/account/models/account.py:249
+#, python-format
+msgid ""
+"You cannot set a currency on this account as it already has some journal "
+"entries having a different foreign currency."
+msgstr ""
+"Ви не можете встановити валюту на цьому обліковому записі, оскільки вона вже"
+" має деякі записи журналу, які мають іншу іноземну валюту."
+
+#. module: account
+#: code:addons/account/models/account_move.py:1368
 #, python-format
 msgid "You cannot use deprecated account."
 msgstr "Ви не можете використовувати застарілий рахунок"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1250
+#: code:addons/account/models/account_move.py:1283
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -11909,7 +11940,7 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:74
-#: code:addons/account/models/account_invoice.py:777
+#: code:addons/account/models/account_invoice.py:780
 #, python-format
 msgid ""
 "You cannot validate an invoice with a negative total amount. You should "

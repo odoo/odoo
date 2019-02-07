@@ -449,6 +449,8 @@ class Users(models.Model):
     @api.model
     def check_credentials(self, password):
         """ Override this method to plug additional authentication methods"""
+        if not password:
+            raise AccessDenied()
         user = self.sudo().search([('id', '=', self._uid), ('password', '=', password)])
         if not user:
             raise AccessDenied()
@@ -674,8 +676,26 @@ class GroupsImplied(models.Model):
         if values.get('users') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
             for group in self:
-                vals = {'users': list(pycompat.izip(repeat(4), group.with_context(active_test=False).users.ids))}
-                super(GroupsImplied, group.trans_implied_ids).write(vals)
+                self._cr.execute("""
+                    WITH RECURSIVE group_imply(gid, hid) AS (
+                        SELECT gid, hid
+                          FROM res_groups_implied_rel
+                         UNION
+                        SELECT i.gid, r.hid
+                          FROM res_groups_implied_rel r
+                          JOIN group_imply i ON (i.hid = r.gid)
+                    )
+                    INSERT INTO res_groups_users_rel (gid, uid)
+                         SELECT i.hid, r.uid
+                           FROM group_imply i, res_groups_users_rel r
+                          WHERE r.gid = i.gid
+                            AND i.gid = %(gid)s
+                         EXCEPT
+                         SELECT r.gid, r.uid
+                           FROM res_groups_users_rel r
+                           JOIN group_imply i ON (r.gid = i.hid)
+                          WHERE i.gid = %(gid)s
+                """, dict(gid=group.id))
         return res
 
 

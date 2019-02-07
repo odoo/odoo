@@ -4,15 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2017
-# gebri <gebri@inmail.sk>, 2018
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
+# gebri <gebri@inmail.sk>, 2018
+# Jan Prokop, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:15+0000\n"
+"Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,8 +25,15 @@ msgstr ""
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
-"<strong>Save</strong> this page and come back here to set up the feature."
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<strong>Save</strong> this page and come back here to set up the feature."
+msgstr "<strong>Ulož</strong> stránku a vráť sa na nastavenie tejto funkcie."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -45,12 +54,12 @@ msgstr "Povoliť používateľom importovať dáta zo súborov CSV/XLS/XLSX/ODS"
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings_group_multi_currency
 msgid "Allows to work in a multi currency environment"
-msgstr ""
+msgstr "Povoľuje vám prácu s viacerými finančnými menami"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_voip
 msgid "Asterisk (VoIP)"
-msgstr ""
+msgstr "Asterisk (VoIP)"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_drive
@@ -65,18 +74,20 @@ msgstr ""
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Business Documents"
-msgstr ""
+msgstr "Obchodný dokument"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
 "By default, new users get highest access rights for all installed apps."
 msgstr ""
+"Predvolené, že nový užívateľ dostane maximálne práva na všetky inštalované "
+"aplikácie."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Change Document Template"
-msgstr ""
+msgstr "Zmena šablóny dokumentu"
 
 #. module: base_setup
 #: code:addons/base_setup/models/res_config_settings.py:100
@@ -87,7 +98,7 @@ msgstr "Vyber Svoje Rozloženie Dokumentu"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Choose your document's header and footer layout"
-msgstr ""
+msgstr "Vyberte hlavičku a pätičku vášho dokumentu"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_pad
@@ -97,7 +108,7 @@ msgstr "Spolupracujúce PAD-y"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Common Contact Book"
-msgstr ""
+msgstr "Spoločný adresár"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -115,23 +126,25 @@ msgid ""
 "Configure company rules to automatically create SO/PO when one of your "
 "company sells/buys to another of your company."
 msgstr ""
+"Nakonfigurujte pravidlá spoločnosti pre automatické vytvorenie SO/PO, keď "
+"jedna vaša spoločnosť kupuje / predáva ďalšej vašej spoločnosti."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Create and attach Google Drive documents to any record"
-msgstr ""
+msgstr "Vytvoriť a priložiť Google dokumenty k akémukoľvek záznamu"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_custom_report_footer
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_report_footer
 msgid "Custom Report Footer"
-msgstr ""
+msgstr "Vlastné zápätie reportu"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_user_rights
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr ""
+msgstr "Predvolené prístupové práva"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_external_report_layout
@@ -147,12 +160,12 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_external_email_server
 msgid "External Email Servers"
-msgstr ""
+msgstr "Externé mailové servery"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Extract and analyze Odoo data from Google Spreadsheet"
-msgstr ""
+msgstr "Vyber a analyzuj Odoo dáta v Tabuľkách Google"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings_report_footer
@@ -173,7 +186,7 @@ msgstr "Všeobecné Nastavenia"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Gengo Translations"
-msgstr ""
+msgstr "Gengo preklady"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -193,12 +206,12 @@ msgstr "Google Tabuľka"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Import & Export"
-msgstr ""
+msgstr "Import & Export"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Integrations"
-msgstr ""
+msgstr "Integrácie"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -209,7 +222,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_auth_ldap
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "LDAP Authentication"
-msgstr ""
+msgstr "Overenie cez LDAP"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_inter_company_rules
@@ -224,7 +237,7 @@ msgstr "Spravovanie viacerých spoločností"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage multiple legal entities with separate accounting"
-msgstr ""
+msgstr "Spravujte viaceré právne subjekty s oddeleným účtovníctvom"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_group_multi_currency
@@ -239,7 +252,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "OAuth Authentication"
-msgstr ""
+msgstr "Autentifikácia OAuth"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_paperformat_id
@@ -249,17 +262,17 @@ msgstr "Formát papiera"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Preview Document"
-msgstr ""
+msgstr "Náhľad dokumentu"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Set custom access rights for new users"
-msgstr ""
+msgstr "Nastaviť vlastné prístupové práva pre nových užívateľov"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Set the paper format of printed documents"
-msgstr ""
+msgstr "Nastavte formát papiera pre tlačené dokumenty"
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
@@ -285,7 +298,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Synchronize your calendar with Google Calendar"
-msgstr ""
+msgstr "Synchronizuj svoj kalendár s Google Calendar"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -295,27 +308,27 @@ msgstr "Šablóna"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_base_gengo
 msgid "Translate Your Website with Gengo"
-msgstr ""
+msgstr "Preložte svoju webovú stránku s Gengo"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Translate your website with Gengo"
-msgstr ""
+msgstr "Preložte svoju webovú stránku s Gengo"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use LDAP credentials to log in"
-msgstr ""
+msgstr "Použite prihlásenie LDAP"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use external accounts to log in (Google, Facebook, etc.)"
-msgstr ""
+msgstr "Použite externý účet na prihlásenie (Google, Facebook apod.)"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_auth_oauth
 msgid "Use external authentication providers (OAuth)"
-msgstr ""
+msgstr "Použite externých poskytovateľov autentifikácie (OAuth)"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form

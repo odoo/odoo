@@ -51,6 +51,7 @@ class FleetVehicle(models.Model):
     fuel_type = fields.Selection([
         ('gasoline', 'Gasoline'),
         ('diesel', 'Diesel'),
+        ('lpg', 'LPG'),
         ('electric', 'Electric'),
         ('hybrid', 'Hybrid')
         ], 'Fuel Type', help='Fuel Used by the vehicle')

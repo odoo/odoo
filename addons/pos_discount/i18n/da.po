@@ -5,14 +5,14 @@
 # Translators:
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
 # Ejner Sønniksen <ejner@vkdata.dk>, 2017
-# Laerke Mathiasen <lhm@flexerp.dk>, 2017
+# lhmflexerp <lhm@flexerp.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:52+0000\n"
 "PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Laerke Mathiasen <lhm@flexerp.dk>, 2017\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +38,10 @@ msgid "Discount %"
 msgstr "Rabat %"
 
 #. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:14
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_pc
+#, python-format
 msgid "Discount Percentage"
 msgstr "Procentvis rabat"
 
@@ -49,6 +52,13 @@ msgid "Discount Product"
 msgstr "Giv rabat på et produkt"
 
 #. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:28
+#, python-format
+msgid "No discount product found"
+msgstr ""
+
+#. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_iface_discount
 msgid "Order Discounts"
 msgstr "Ordrerabatter"
@@ -57,6 +67,15 @@ msgstr "Ordrerabatter"
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_pc
 msgid "The default discount percentage"
 msgstr "Standard rabatprocent"
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:29
+#, python-format
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
+" Sold' and 'Available in Point of Sale'."
+msgstr ""
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_product_id

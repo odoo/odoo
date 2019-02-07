@@ -3,19 +3,20 @@
 # * resource
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # Rolandas <info@paninfo.lt>, 2017
+# Martin Trigaux, 2017
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Rolandas <info@paninfo.lt>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:23+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgstr "Aktyvus"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
 msgid "Closing Days"
-msgstr "Užvėrimo dienos"
+msgstr "Uždarymo dienos"
 
 #. module: resource
 #: model:ir.model,name:resource.model_res_company
@@ -84,7 +85,7 @@ msgstr "Savaitės diena"
 #: model:ir.model.fields,field_description:resource.field_res_company_resource_calendar_id
 #: model:ir.model.fields,field_description:resource.field_res_users_resource_calendar_id
 msgid "Default Working Hours"
-msgstr ""
+msgstr "Numatytosios darbo valandos"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_hr_employee_resource_calendar_id
@@ -94,7 +95,7 @@ msgstr ""
 #: model:ir.model.fields,help:resource.field_resource_resource_calendar_id
 #: model:ir.model.fields,help:resource.field_resource_test_resource_calendar_id
 msgid "Define the schedule of resource"
-msgstr "Nurodo resurso darbo grafiką"
+msgstr "Nurodykite išteklių grafiką"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_calendar_form
@@ -118,7 +119,7 @@ msgstr "Vaizduojamas pavadinimas"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_time_efficiency
 msgid "Efficiency Factor"
-msgstr "Našumo koeficientas"
+msgstr "Efektyvumo koeficientas"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_to
@@ -130,7 +131,8 @@ msgstr "Pabaigos data"
 #: code:addons/resource/models/resource.py:734
 #, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
-msgstr "Klaida! Išvykimo pradžios data turi būti senesnė negu pabaigos data."
+msgstr ""
+"Klaida! Laisvadienių pradžios data turi būti ankstesnė negu pabaigos data."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -141,19 +143,19 @@ msgstr "Penktadienis"
 #: code:addons/resource/models/resource.py:74
 #, python-format
 msgid "Friday Evening"
-msgstr ""
+msgstr "Penktadienio vakaras"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:73
 #, python-format
 msgid "Friday Morning"
-msgstr ""
+msgstr "Penktadienio rytas"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_global_leave_ids
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Global Leaves"
-msgstr ""
+msgstr "Bendri laisvadieniai"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -187,8 +189,8 @@ msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
 msgstr ""
-"Jeigu laukas tuščias, prastova taikoma visiems resursams. Kai resursas "
-"pasirinktas, atostogos/prastova taikoma tik šiam resursui."
+"Jeigu laukas tuščias, tai yra bendras įmonės laisvadienis. Kai išteklius "
+"pasirinktas, atostogos/laisvadienis taikomas tik šiam ištekliui."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_active
@@ -196,7 +198,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Nebenaudojami resursai gali būti paslėpti, vietoj to, kad būtų pašalinti."
+"Jei aktyvus laukas yra nustatytas kaip neigiamas, galėsite išteklių įrašus "
+"paslėpti nepašalindami jų."
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -236,18 +239,18 @@ msgstr "Paskutinį kartą atnaujinta"
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Leave Detail"
-msgstr "Išvykimo informacija"
+msgstr "Laisvadienių informacija"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Month"
-msgstr "Prastovos mėnuo"
+msgstr "Laisvadienių mėnuo"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leave_ids
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Leaves"
-msgstr "Atostogos"
+msgstr "Laisvadieniai"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -263,13 +266,13 @@ msgstr "Pirmadienis"
 #: code:addons/resource/models/resource.py:66
 #, python-format
 msgid "Monday Evening"
-msgstr ""
+msgstr "Pirmadienio vakaras"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:65
 #, python-format
 msgid "Monday Morning"
-msgstr ""
+msgstr "Pirmadienio rytas"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_name
@@ -303,39 +306,39 @@ msgstr "Susijusio vartotojo vardas resurso prieigai valdyti"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Resource"
-msgstr "Resursas"
+msgstr "Ištekliai"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Calendar"
-msgstr "Kalendoriaus resursas"
+msgstr "Išteklių kalendorius"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
 msgid "Resource Detail"
-msgstr "Resurso informacija"
+msgstr "Išteklių informacija"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
-msgstr "Resursų prastovos"
+msgstr "Išteklių laisvadieniai"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_mixin
 msgid "Resource Mixin"
-msgstr ""
+msgstr "Ištekliaus Mixin"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_resource_type
 msgid "Resource Type"
-msgstr "Resurso tipas"
+msgstr "Išteklių tipas"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_calendar_id
 msgid "Resource's Calendar"
-msgstr "Resurso kalendorius"
+msgstr "Išteklio kalendorius"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
@@ -344,12 +347,12 @@ msgstr "Resurso kalendorius"
 #: model:ir.ui.menu,name:resource.menu_resource_resource
 #: model:ir.ui.view,arch_db:resource.resource_resource_tree
 msgid "Resources"
-msgstr "Resursai"
+msgstr "Ištekliai"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Leaves"
-msgstr "Išvykimų resursai"
+msgstr "išteklių laisvadieniai"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -359,9 +362,9 @@ msgid ""
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
 msgstr ""
-"Resursai leidžia kurti ir valdyti resursus, naudojamus tam tikrose projekto "
-"fazėse. Taip pat galima nustatyti jų efektyvumo lygį ir apkrovas pagal "
-"savaitės darbo valandas."
+"Ištekliai leidžia kurti ir valdyti resursus, kurie būtų naudojami tam "
+"tikrose projekto stadijose. Taip pat galite nustatyti jų efektyvumo lygį ir "
+"darbo krūvį pagal jų savaitės darbo valandas."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -371,24 +374,24 @@ msgstr "Šeštadienis"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Search Resource"
-msgstr "Resurso paieška"
+msgstr "Ieškoti resursų"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Leaves"
-msgstr "Ieškoti darbo periodo prastovų"
+msgstr "Darbo laikotarpio laisvadienių paieška"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_search
 msgid "Search Working Time"
-msgstr "Darbo valandos paieška"
+msgstr "Darbo laiko paieška"
 
 #. module: resource
 #: code:addons/resource/models/res_company.py:18
 #: code:addons/resource/models/res_company.py:23
 #, python-format
 msgid "Standard 40 hours/week"
-msgstr ""
+msgstr "Standartinė 40 val. darbo savaitė"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_date_from
@@ -397,8 +400,12 @@ msgstr "Pradžios data"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance_hour_from
-msgid "Start and End time of working."
-msgstr "Darbo pradžia."
+msgid ""
+"Start and End time of working.\n"
+"A specific value of 24:00 is interpreted as 23:59:59.999999."
+msgstr ""
+"Darbo pradžios ir pabaigos laikas.\n"
+"Tiksli 24:00 laiko reikšmė laikoma 23:59:59.999999."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_from
@@ -408,7 +415,7 @@ msgstr "Pradžios data"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Leave by Month"
-msgstr "Prastovos pradžios data pagal mėnesį"
+msgstr "Laisvadienių data pagal mėnesį"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -418,13 +425,13 @@ msgstr "Sekmadienis"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_test
 msgid "Test Resource Model"
-msgstr ""
+msgstr "Testinis išteklių modelis"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:689
 #, python-format
 msgid "The efficiency factor cannot be equal to 0."
-msgstr ""
+msgstr "Efektyvumo faktorius negali būti 0."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
@@ -449,18 +456,18 @@ msgstr "Ketvirtadienis"
 #: code:addons/resource/models/resource.py:72
 #, python-format
 msgid "Thursday Evening"
-msgstr ""
+msgstr "Ketvirtadienio vakaras"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:71
 #, python-format
 msgid "Thursday Morning"
-msgstr ""
+msgstr "Ketvirtadienio rytas"
 
 #. module: resource
 #: sql_constraint:resource.resource:0
 msgid "Time efficiency must be strictly positive"
-msgstr ""
+msgstr "Laiko efektyvumas būtinai turi būti teigiamas"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_tz
@@ -470,9 +477,11 @@ msgstr "Laiko juosta"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves_tz
 msgid ""
-"Timezone used when encoding the leave. It is used to correctlylocalize leave"
-" hours when computing time intervals."
+"Timezone used when encoding the leave. It is used to correctly localize "
+"leave hours when computing time intervals."
 msgstr ""
+"Laiko juosta, naudojama, kai kuriamos atostogos. Jos naudojamos teisingai "
+"lokalizacijai, kai skaičiuojami laiko intervalai."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -483,13 +492,13 @@ msgstr "Antradienis"
 #: code:addons/resource/models/resource.py:68
 #, python-format
 msgid "Tuesday Evening"
-msgstr ""
+msgstr "Antradienio vakaras"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:67
 #, python-format
 msgid "Tuesday Morning"
-msgstr ""
+msgstr "Antradienio rytas"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -516,13 +525,13 @@ msgstr "Trečiadienis"
 #: code:addons/resource/models/resource.py:70
 #, python-format
 msgid "Wednesday Evening"
-msgstr ""
+msgstr "Trečiadienio vakaras"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:69
 #, python-format
 msgid "Wednesday Morning"
-msgstr ""
+msgstr "Trečiadienio rytas"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
@@ -532,7 +541,7 @@ msgstr "Darbo informacija"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Resources"
-msgstr ""
+msgstr "Darbo ištekliai"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_hour_from
@@ -559,12 +568,12 @@ msgstr "Darbo valandos"
 #: code:addons/resource/models/resource.py:60
 #, python-format
 msgid "Working Hours of %s"
-msgstr ""
+msgstr "%s darbo valandos"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Working Period"
-msgstr "Darbo periodas"
+msgstr "Darbo laikotarpis"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form

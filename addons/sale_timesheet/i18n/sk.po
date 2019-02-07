@@ -3,17 +3,19 @@
 # * sale_timesheet
 # 
 # Translators:
-# Martin Trigaux, 2017
-# gebri <gebri@inmail.sk>, 2018
+# Martin Trigaux, 2018
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
+# gebri <gebri@inmail.sk>, 2018
+# Jan Prokop, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018\n"
+"POT-Creation-Date: 2018-09-17 09:57+0000\n"
+"PO-Revision-Date: 2017-09-20 10:23+0000\n"
+"Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -235,7 +237,7 @@ msgstr "Objednané množstvá"
 #: code:addons/sale_timesheet/models/project.py:45
 #, python-format
 msgid "Overview"
-msgstr ""
+msgstr "Prehľad"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_template
@@ -314,7 +316,7 @@ msgstr "Objednávka predaja"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_sale_line_id
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order Item"
-msgstr ""
+msgstr "Položka objednávky"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
@@ -396,16 +398,11 @@ msgid "There is no timesheet for now."
 msgstr ""
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_order.py:237
+#: code:addons/sale_timesheet/models/sale_order.py:251
 #, python-format
 msgid ""
 "This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
 "id=%d>%s</a> (%s)"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
-msgid "Time and material"
 msgstr ""
 
 #. module: sale_timesheet
@@ -445,11 +442,12 @@ msgid "Timesheet activities associated to this sale"
 msgstr "Aktivity časového rozvrhu spojené s týmto predajom"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/controllers/main.py:101
-#: code:addons/sale_timesheet/controllers/main.py:130
+#: code:addons/sale_timesheet/controllers/main.py:104
+#: code:addons/sale_timesheet/controllers/main.py:133
 #: code:addons/sale_timesheet/models/account_invoice.py:26
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_invoice_timesheet_ids
 #: model:ir.ui.view,arch_db:sale_timesheet.account_invoice_view_form_inherit_sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 #, python-format
 msgid "Timesheets"

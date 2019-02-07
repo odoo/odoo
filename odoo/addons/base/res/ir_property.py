@@ -20,6 +20,18 @@ TYPE2FIELD = {
     'selection': 'value_text',
 }
 
+TYPE2CLEAN = {
+    'boolean': bool,
+    'integer': lambda val: val or False,
+    'float': lambda val: val or False,
+    'char': lambda val: val or False,
+    'text': lambda val: val or False,
+    'selection': lambda val: val or False,
+    'binary': lambda val: val or False,
+    'date': lambda val: val or False,
+    'datetime': lambda val: val or False,
+}
+
 
 class Property(models.Model):
     _name = 'ir.property'
@@ -51,9 +63,9 @@ class Property(models.Model):
 
     @api.multi
     def _update_values(self, values):
-        value = values.pop('value', None)
-        if not value:
+        if 'value' not in values:
             return values
+        value = values.pop('value')
 
         prop = None
         type_ = values.get('type')
@@ -69,7 +81,9 @@ class Property(models.Model):
             raise UserError(_('Invalid type'))
 
         if field == 'value_reference':
-            if isinstance(value, models.BaseModel):
+            if not value:
+                value = False
+            elif isinstance(value, models.BaseModel):
                 value = '%s,%d' % (value._name, value.id)
             elif isinstance(value, pycompat.integer_types):
                 field_id = values.get('fields_id')
@@ -147,28 +161,61 @@ class Property(models.Model):
         if not ids:
             return {}
 
-        domain = self._get_domain(name, model)
-        if domain is None:
+        field = self.env[model]._fields[name]
+        field_id = self.env['ir.model.fields']._get(model, name).id
+        company_id = (
+            self._context.get('force_company')
+            or self.env['res.company']._company_default_get(model, field_id).id
+        )
+
+        if field.type == 'many2one':
+            comodel = self.env[field.comodel_name]
+            model_pos = len(model) + 2
+            value_pos = len(comodel._name) + 2
+            # retrieve values: both p.res_id and p.value_reference are formatted
+            # as "<rec._name>,<rec.id>"; the purpose of the LEFT JOIN is to
+            # return the value id if it exists, NULL otherwise
+            query = """
+                SELECT substr(p.res_id, %s)::integer, r.id
+                FROM ir_property p
+                LEFT JOIN {} r ON substr(p.value_reference, %s)::integer=r.id
+                WHERE p.fields_id=%s
+                    AND (p.company_id=%s OR p.company_id IS NULL)
+                    AND (p.res_id IN %s OR p.res_id IS NULL)
+                ORDER BY p.company_id NULLS FIRST
+            """.format(comodel._table)
+            params = [model_pos, value_pos, field_id, company_id]
+            clean = comodel.browse
+
+        elif field.type in TYPE2FIELD:
+            model_pos = len(model) + 2
+            # retrieve values: p.res_id is formatted as "<rec._name>,<rec.id>"
+            query = """
+                SELECT substr(p.res_id, %s)::integer, p.{}
+                FROM ir_property p
+                WHERE p.fields_id=%s
+                    AND (p.company_id=%s OR p.company_id IS NULL)
+                    AND (p.res_id IN %s OR p.res_id IS NULL)
+                ORDER BY p.company_id NULLS FIRST
+            """.format(TYPE2FIELD[field.type])
+            params = [model_pos, field_id, company_id]
+            clean = TYPE2CLEAN[field.type]
+
+        else:
             return dict.fromkeys(ids, False)
 
-        # retrieve the values for the given ids and the default value, too
-        refs = {('%s,%s' % (model, id)): id for id in ids}
-        refs[False] = False
-        domain += [('res_id', 'in', list(refs))]
-
-        # note: order by 'company_id asc' will return non-null values first
-        props = self.search(domain, order='company_id asc')
+        # retrieve values
+        cr = self.env.cr
         result = {}
-        for prop in props:
-            # for a given res_id, take the first property only
-            id = refs.pop(prop.res_id, None)
-            if id is not None:
-                result[id] = prop.get_by_record()
+        refs = {"%s,%s" % (model, id) for id in ids}
+        for sub_refs in cr.split_for_in_conditions(refs):
+            cr.execute(query, params + [sub_refs])
+            result.update(cr.fetchall())
 
-        # set the default value to the ids that are not in result
-        default_value = result.pop(False, False)
+        # remove default value, add missing values, and format them
+        default = result.pop(None, None)
         for id in ids:
-            result.setdefault(id, default_value)
+            result[id] = clean(result.get(id, default))
 
         return result
 

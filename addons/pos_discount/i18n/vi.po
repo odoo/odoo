@@ -37,7 +37,10 @@ msgid "Discount %"
 msgstr "% Chiết khấu"
 
 #. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:14
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_pc
+#, python-format
 msgid "Discount Percentage"
 msgstr "Phần trăm Chiết khấu"
 
@@ -46,6 +49,13 @@ msgstr "Phần trăm Chiết khấu"
 #: model:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
 msgid "Discount Product"
 msgstr "Sản phẩm Chiết khấu"
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:28
+#, python-format
+msgid "No discount product found"
+msgstr ""
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_iface_discount
@@ -58,6 +68,15 @@ msgid "The default discount percentage"
 msgstr "Phần trăm chiết khấu mặc định"
 
 #. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:29
+#, python-format
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
+" Sold' and 'Available in Point of Sale'."
+msgstr ""
+
+#. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_product_id
 msgid "The product used to model the discount."
 msgstr "Sản phẩm được sử dụng để đại diện cho khoản chiết khấu."
@@ -65,4 +84,4 @@ msgstr "Sản phẩm được sử dụng để đại diện cho khoản chiế
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_pos_config
 msgid "pos.config"
-msgstr ""
+msgstr "pos.config"

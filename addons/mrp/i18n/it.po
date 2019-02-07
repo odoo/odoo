@@ -3,29 +3,33 @@
 # * mrp
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Cécile Collart <cco@odoo.com>, 2017
-# Paolo Valier, 2017
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
-# David Minneci <david@numeko.it>, 2018
 # maiolif <maiolif@mgftools.com>, 2018
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
+# David Minneci <david@numeko.it>, 2018
+# Cécile Collart <cco@odoo.com>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
-# Giovanni Casalini <casalini.g@gmail.com>, 2018
-# Andrea Piovesana <andrea.m.piovesana@gmail.com>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
+# Martin Trigaux, 2018
 # ginfriz <ginfriz84@hotmail.it>, 2018
+# Giovanni Casalini <casalini.g@gmail.com>, 2018
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
+# Paolo Valier, 2018
+# Andrea Piovesana <andrea.m.piovesana@gmail.com>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
+# mbo_odoo <mbo@odoo.com>, 2018
+# mymage <stefano.consolaro@mymage.it>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:19+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,7 +95,7 @@ msgid "19v,5.5 x 2.5 mm Pin Type Adapter (Power Cord Included)"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:293
+#: code:addons/mrp/models/mrp_bom.py:300
 #, python-format
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -100,6 +104,15 @@ msgid ""
 "                        Use this feature to store any files, like drawings or specifications.\n"
 "                    </p>"
 msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -117,7 +130,7 @@ msgstr "<span class=\"o_stat_text\">Perso</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">OEE</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">OEE</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -138,7 +151,7 @@ msgstr "<span class=\"o_stat_text\">Analisi<br/> del tempo</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Work Center Load</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Centro di produzione carico</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -148,7 +161,7 @@ msgstr "<span class=\"o_stat_text\">Ordini di Lavoro</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>Actions</span>"
-msgstr ""
+msgstr "<span>Azioni</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -158,7 +171,7 @@ msgstr "<span>Nuovo</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>PLAN ORDERS</span>"
-msgstr ""
+msgstr "<span>PIANIFICA ORDINI</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -173,7 +186,7 @@ msgstr "<span>Visualizza</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>WORK ORDERS</span>"
-msgstr ""
+msgstr "<span>ORDINI DI PRODUZIONE</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -181,21 +194,23 @@ msgid ""
 "<strong attrs=\"{'invisible': [('date_planned_finished', '=', False)]}\" class=\"mr8\">to</strong>\n"
 "                                    <strong class=\"oe_edit_only mr8\" attrs=\"{'invisible': [('date_planned_finished', '!=', False)]}\">to</strong>"
 msgstr ""
+"<strong attrs=\"{'invisible': [('date_planned_finished', '=', False)]}\" class=\"mr8\">a</strong>\n"
+"                                   <strong class=\"oe_edit_only mr8\" attrs=\"{'invisible': [('date_planned_finished', '!=', False)]}\">a</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "<strong class=\"mr8\">to</strong>"
-msgstr ""
+msgstr "<strong class=\"mr8\">a</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
 msgid "<strong>Effectiveness Category: </strong>"
-msgstr ""
+msgstr "<strong>Efficacia della categoria: </strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
 msgid "<strong>Is a Blocking Reason? </strong>"
-msgstr ""
+msgstr "<strong>E' un motivo di blocco? </strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -205,7 +220,7 @@ msgstr "<strong>Nome:</strong>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>No. Of Minutes</strong>"
-msgstr ""
+msgstr "<strong>No. di minuti</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -240,7 +255,7 @@ msgstr "<strong>Quantità</strong>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
 msgid "<strong>Reason: </strong>"
-msgstr ""
+msgstr "<strong>Ragione: </strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -263,7 +278,7 @@ msgid "<strong>WorkCenter</strong>"
 msgstr "<strong>Centro di Lavorazione</strong>"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:472
+#: code:addons/mrp/models/mrp_workorder.py:509
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled!"
 msgstr ""
@@ -295,7 +310,7 @@ msgstr "Attivo"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_active_move_line_ids
 msgid "Active Move Line"
-msgstr ""
+msgstr "Active Move Line"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
@@ -309,6 +324,9 @@ msgid ""
 "finished products as well. Without this option you only do: A + B = C. With "
 "the option: A + B = C + D."
 msgstr ""
+"Aggiungi sottoprodotti alla distinta dei materiali. Puo' anche essere usato "
+"per ottenere diversi prodotti finiti. Senwa questa opzione è possibile solo "
+"fare: A + B = C. Selezionando questa opzione: A + B = C + D."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -327,16 +345,19 @@ msgid ""
 "Lines with 0 quantities can be used as optional lines. \n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
 msgstr ""
+"Tutte le quantità devono essere superiori o uguali a 0.\n"
+"Linee con quantita' uguale a 0 possono essere usate come linee opzionali.\n"
+"Dovresti installare il modulo mrp_byproduct se vuoi gestire prodotti extra nelle BoM!"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_post_visible
 msgid "Allowed to Post Inventory"
-msgstr ""
+msgstr "Consenti di pubblicare l'inventario"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_unreserve_visible
 msgid "Allowed to Unreserve Inventory"
-msgstr ""
+msgstr "E' permesso annullare la riserva dell'inventario."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -368,7 +389,7 @@ msgid "Attachment URL"
 msgstr "URL Allegato"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:285
+#: code:addons/mrp/models/mrp_bom.py:292
 #, python-format
 msgid "Attachments"
 msgstr "Allegati"
@@ -565,6 +586,7 @@ msgstr "Dettagli distinta base"
 #, python-format
 msgid "BoM line product %s should not be same as BoM product."
 msgstr ""
+"Il prodotto finito %s non puo' essere contenuto nel BoM del prodotto stesso."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_bolt
@@ -575,7 +597,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings_module_mrp_byproduct
 msgid "By-Products"
-msgstr ""
+msgstr "Sottoprodotti"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:36
@@ -597,7 +619,7 @@ msgid "Cancelled"
 msgstr "Annullato"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:316
+#: code:addons/mrp/models/mrp_production.py:329
 #, python-format
 msgid "Cannot delete a manufacturing order not in cancel state"
 msgstr ""
@@ -628,7 +650,7 @@ msgstr "Cambia Quantità dei Prodotti"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_check_to_done
 msgid "Check Produced Qty"
-msgstr ""
+msgstr "Controlla quantita' prodotta"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -695,6 +717,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_production
+#: model:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid "Click to start a new work order."
 msgstr "Cliccare per iniziare un nuovo ordine di lavoro"
 
@@ -735,7 +758,7 @@ msgstr "Componenti"
 #. module: mrp
 #: selection:mrp.routing.workcenter,time_mode:0
 msgid "Compute based on real time"
-msgstr ""
+msgstr "Calcola in base al tempo reale"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
@@ -757,17 +780,17 @@ msgstr "Utilizzati"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_consume_line_ids
 msgid "Consumed Disassembly Lines"
-msgstr ""
+msgstr "Controlla linea di disassemblaggio"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_unbuild_id
 msgid "Consumed Disassembly Order"
-msgstr ""
+msgstr "Ordine di disassemblaggio consumato"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_consumed_less_than_planned
 msgid "Consumed Less Than Planned"
-msgstr ""
+msgstr "Consumato meno del previsto"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -782,7 +805,7 @@ msgstr "Consumato nell'Operazione"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Continue Production"
-msgstr ""
+msgstr "Continua produzione"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
@@ -797,7 +820,7 @@ msgstr "Crea Ordini di Lavoro"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_created_production_id
 msgid "Created Production Order"
-msgstr ""
+msgstr "Crea un ordine di produzione"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_create_uid
@@ -872,7 +895,7 @@ msgstr "Data"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_finished
 msgid "Deadline End"
-msgstr ""
+msgstr "Fine della scadenza"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_start
@@ -887,7 +910,7 @@ msgstr "Durata predefinita"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings_use_manufacturing_lead
 msgid "Default Manufacturing Lead Time"
-msgstr ""
+msgstr "Tempo di produzione preimpostato "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -909,12 +932,12 @@ msgstr "Descrizione"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_note
 msgid "Description of the Work Center."
-msgstr ""
+msgstr "Descrizione del centro di produzione."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Description of the work center..."
-msgstr ""
+msgstr "Descrizione del centro di produzione..."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_location_dest_id
@@ -924,7 +947,7 @@ msgstr "Location di Destinazione"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_unbuild_id
 msgid "Disassembly Order"
-msgstr ""
+msgstr "Disassemblaggio ordine"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_bom
@@ -968,7 +991,7 @@ msgstr "Completato"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line_done_wo
 msgid "Done for Work Order"
-msgstr ""
+msgstr "Ordini di lavoro completati"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -1084,13 +1107,13 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_finished_lots_exist
 msgid "Finished Lots Exist"
-msgstr ""
+msgstr "Lotti finiti esistenti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_finished_move_line_ids
 #: model:ir.ui.view,arch_db:mrp.view_finisehd_move_line
 msgid "Finished Product"
-msgstr ""
+msgstr "Prodotti finiti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_finished_ids
@@ -1106,12 +1129,12 @@ msgstr "Ubicazione prodotti finiti"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Fully Productive"
-msgstr ""
+msgstr "Completamente operativo"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 msgid "Future Activitie"
-msgstr ""
+msgstr "Attivita' future"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1126,7 +1149,7 @@ msgstr "Informazioni Generali"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document_priority
 msgid "Gives the sequence order when displaying a list of MRP documents."
-msgstr ""
+msgstr "Stabilisce l'ordine in cui visualizzare una lista di documenti MRP."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_sequence
@@ -1147,7 +1170,7 @@ msgstr "Fornisce l'ordine con cui i centri di lavoro vengono visualizzati."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_sequence
 msgid "Gives the sequence order when displaying."
-msgstr ""
+msgstr "Fornisce l'ordine di sequenza quando visualizzato."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
@@ -1178,17 +1201,17 @@ msgstr "HD su richiesta"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_has_attachments
 msgid "Has Attachments"
-msgstr ""
+msgstr "Allegati presenti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_produced
 msgid "Has Been Produced"
-msgstr ""
+msgstr "Produzione completata"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_has_moves
 msgid "Has Moves"
-msgstr ""
+msgstr "Ha movimenti"
 
 #. module: mrp
 #: selection:mrp.document,priority:0
@@ -1270,6 +1293,9 @@ msgid ""
 "                                    order for this product, the delivery order will contain the raw\n"
 "                                    materials, instead of the finished product."
 msgstr ""
+"Se il prodotto è un prodotto finito: quando si processa un ordine di vendita\n"
+"                                    per questo prodotto, l'ordine d iconsegna conterra' le materie prime,\n"
+"                                    invece del prodotto finito."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1279,6 +1305,10 @@ msgid ""
 "                                    the raw materials of that product will be added to the\n"
 "                                    manufacturing order of the final product."
 msgstr ""
+"Se il prodotto è un semi-lavorato: quando si processa un\n"
+"                                    ordine di produzione che contiene il prodotto come componente,\n"
+"                                    le materie prime del semi-lavorato  saranno aggiunte all' ordine \n"
+"                                    di produzione del prodotto finito."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -1299,10 +1329,10 @@ msgstr "Contenuto Indicizzato"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_line_lot_produced_qty
 msgid "Informative, not used in matching"
-msgstr ""
+msgstr "Informativo, non usato per abbinamenti"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:187
+#: code:addons/mrp/models/mrp_unbuild.py:210
 #, python-format
 msgid "Insufficient Quantity"
 msgstr "Quantità Insufficiente"
@@ -1318,13 +1348,15 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Inventory Moves"
-msgstr ""
+msgstr "Movimenti di magazzino"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_move_line_ids
 msgid ""
 "Inventory moves for which you must scan a lot number at this work order"
 msgstr ""
+"Movimenti d'inventario per i quali devi scannerizzare un lotto in questo "
+"centro di produzione"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_is_locked
@@ -1339,7 +1371,7 @@ msgstr "È un motivo di blocco"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
 msgid "Is a Blocking Reason?"
-msgstr ""
+msgstr "E' un motivo di blocco?"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_public
@@ -1349,7 +1381,7 @@ msgstr "È un documento pubblico"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_user_working
 msgid "Is the Current User Working"
-msgstr ""
+msgstr "L'user corrente sta lavorando"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:162
@@ -1364,11 +1396,15 @@ msgid ""
 "Set a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
 msgstr ""
+"Lasciare vuoto se si produce alla postazione dove si trovano le materie "
+"prime. Scegli una postazione se produci a una posizione fissa. Questa puo' "
+"essere una postazione di un partner se si fa un subappalto delle operazioni "
+"di manifattura."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter selection:mrp.bom,type:0
 msgid "Kit"
-msgstr ""
+msgstr "Kit"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_laptop_charger
@@ -1468,12 +1504,13 @@ msgid "Late Activities"
 msgstr "Attività in ritardo"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:432
+#: code:addons/mrp/models/mrp_production.py:445
 #, python-format
 msgid ""
 "Lines need to be deleted, but can not as you still have some quantities to "
 "consume in them. "
 msgstr ""
+"Linee da eliminare, ma impossibile se ci sono ancora quantita' da consumare."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_location_id
@@ -1496,10 +1533,10 @@ msgid "Lock"
 msgstr "Blocca"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_8239
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_8257
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
-msgstr ""
+msgstr "Motivi di perdita"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_lot_id
@@ -1521,7 +1558,7 @@ msgstr "Lotto/Numero Seriale"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_finisehd_move_line
 msgid "Lot/Serial number"
-msgstr ""
+msgstr "Lotti/ Numeri seriali"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_active_move_line_ids
@@ -1542,7 +1579,7 @@ msgstr "Manutenzione"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Work Order Operations"
-msgstr ""
+msgstr "Gestisci operazioni dell'ordine di produzione"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -1598,7 +1635,7 @@ msgstr "Tempo di Produzione"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manu_type_id
 msgid "Manufacturing Operation Type"
-msgstr ""
+msgstr "tipologia di operazione di produzione"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_mo_id
@@ -1642,7 +1679,7 @@ msgstr "Ordini attualmente in produzione"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are in confirmed state."
-msgstr ""
+msgstr "Ordini di produzione in stato confermato"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_ready_to_produce
@@ -1653,7 +1690,7 @@ msgstr "Prontezza di Produzione"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Manufacturing Reference"
-msgstr ""
+msgstr "Referenza di produzione"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -1662,6 +1699,9 @@ msgid ""
 "                of workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                The Work Centers are defined on the Routing's operations."
 msgstr ""
+"Le operazioni di produzione sono processate al centro di produzione. Un centro di produzione puo' essere composto\n"
+"                 da dipendenti e/o macchine, sono usati per calcolare i costi, pianificare, gestire la capacita', ...\n"
+"                I centri di produzione sono definiti sulle operazioni della rotta di produzione."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
@@ -1670,6 +1710,9 @@ msgid ""
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                The Work Centers are defined on the Routing's operations."
 msgstr ""
+"Le operazioni di produzione sono processate al centro di produzione. Un centro di produzione puo' essere composto\n"
+" da dipendenti e/o macchine, sono usati per calcolare i costi, pianificare, gestire la capacita', ...\n"
+" I centri di produzione sono definiti sulle operazioni della rotta di produzione."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
@@ -1699,7 +1742,7 @@ msgstr "Piano Generale di Produzione"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_availability
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_availability
 msgid "Materials Availability"
-msgstr ""
+msgstr "Disponibilita' dei materiali"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_message_message
@@ -1727,12 +1770,12 @@ msgstr "Mossa"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line_done_move
 msgid "Move Done"
-msgstr ""
+msgstr "Movimento completato"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Move forward deadline start dates by"
-msgstr ""
+msgstr "Anticipa la date delle scadenze di"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_move_raw_ids
@@ -1742,7 +1785,7 @@ msgstr "Movimenti"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_move_line_ids
 msgid "Moves to Track"
-msgstr ""
+msgstr "Muovi su un'altra traccia"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
@@ -1752,7 +1795,7 @@ msgstr "Centro di Lavoro"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.production_order_server_action
 msgid "Mrp: Plan Production Orders"
-msgstr ""
+msgstr "Mrp: piano di produzione degli ordini"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -1773,8 +1816,8 @@ msgstr "Nome"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:46
-#: code:addons/mrp/models/mrp_production.py:302
-#: code:addons/mrp/models/mrp_production.py:306
+#: code:addons/mrp/models/mrp_production.py:315
+#: code:addons/mrp/models/mrp_production.py:319
 #: code:addons/mrp/models/mrp_routing.py:18
 #: code:addons/mrp/models/mrp_routing.py:34
 #: code:addons/mrp/models/mrp_routing.py:35
@@ -1794,7 +1837,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_batch
 msgid "Next Operation"
-msgstr ""
+msgstr "Prossima operazione"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_next_work_order_id
@@ -1804,7 +1847,7 @@ msgstr "Prossimo Ordine di Lavoro"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "No Routing"
-msgstr ""
+msgstr "No rotte"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_routing_time
@@ -1829,6 +1872,8 @@ msgstr ""
 msgid ""
 "No workorder currently in progress. Click to mark work center as blocked."
 msgstr ""
+"Nessun ordine di produzione in corso. Cliccca per impostare il centro di "
+"produzione su bloccato."
 
 #. module: mrp
 #: selection:mrp.production,availability:0
@@ -1845,7 +1890,7 @@ msgstr "Normale"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_scrap_workorder_id
 msgid "Not to restrict or prefer quants, but informative."
-msgstr ""
+msgstr "Non è per limitare o impostare preferiti, ma informativo."
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1860,38 +1905,38 @@ msgstr "Note"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_late
 msgid "Number of Manufacturing Orders Late"
-msgstr ""
+msgstr "Numero di ordini di produzione in ritardo."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_waiting
 msgid "Number of Manufacturing Orders Waiting"
-msgstr ""
+msgstr "Numero di ordini di produzione in attesa."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_todo
 msgid "Number of Manufacturing Orders to Process"
-msgstr ""
+msgstr "Numero di ordini di produzione da processare"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_capacity
 msgid "Number of pieces that can be produced in parallel."
-msgstr ""
+msgstr "Numero di pezzi che possono essere prodotti in parallelo."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "OEE"
-msgstr ""
+msgstr "OEE"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_oee_target
 msgid "OEE Target"
-msgstr ""
+msgstr "Target OEE"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_oee_target
 msgid "OEE Target in percentage"
-msgstr ""
+msgstr "OEE Target in percentuale"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1903,7 +1948,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_oee
 msgid "Oee"
-msgstr ""
+msgstr "Oee"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_19
@@ -1914,12 +1959,12 @@ msgstr "HD su richiesta con capacità in base alle richieste"
 #. module: mrp
 #: selection:mrp.routing.workcenter,batch:0
 msgid "Once a minimum number of products is processed"
-msgstr ""
+msgstr "Quando un numero minimo di prodotti è processato"
 
 #. module: mrp
 #: selection:mrp.routing.workcenter,batch:0
 msgid "Once all products are processed"
-msgstr ""
+msgstr "Quando tutti i prodotti sono processati"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_name
@@ -1931,7 +1976,7 @@ msgstr "Operazione"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_operation_id
 msgid "Operation To Consume"
-msgstr ""
+msgstr "Operazioni da utilizzare"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_picking_type_id
@@ -1956,7 +2001,7 @@ msgstr "Operazioni"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_order_finished_lot_ids
 msgid "Order Finished Lot"
-msgstr ""
+msgstr "Ordina lotti completati"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_order_ids
@@ -1966,19 +2011,19 @@ msgstr "Ordini"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_qty_production
 msgid "Original Production Quantity"
-msgstr ""
+msgstr "Quantita' originale di produzione"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_oee
 #: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_productivity_report
 msgid "Overall Equipment Effectiveness"
-msgstr ""
+msgstr "Generale efficienza dell'equipaggiamento"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_oee
 msgid "Overall Equipment Effectiveness, based on the last month"
-msgstr ""
+msgstr "Generale efficienza dell'equipaggiamento basata sull'ultimo mese"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report
@@ -2043,7 +2088,7 @@ msgstr "Pianifica Ordini"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Plan manufacturing or purchase orders based on forecasts"
-msgstr ""
+msgstr "Pianifica ordine di produzione o acquisto in base alle previsioni"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -2064,23 +2109,25 @@ msgid "Planning"
 msgstr "Pianificazione"
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:147
+#: code:addons/mrp/wizard/mrp_product_produce.py:150
 #, python-format
 msgid "Please enter a lot or serial number for %s !"
-msgstr ""
+msgstr "Inserisci un lotto o numero seriale per %s !"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:288
+#: code:addons/mrp/models/mrp_workorder.py:304
 #, python-format
 msgid ""
 "Please set the quantity you are currently producing. It should be different "
 "from zero."
 msgstr ""
+"Scegli la quantita' che stai correntemente producendo . Deve essere diversa "
+"da 0."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Post Inventory"
-msgstr ""
+msgstr "Registra magazzino"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_priority
@@ -2098,7 +2145,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_produce_line_ids
 msgid "Processed Disassembly Lines"
-msgstr ""
+msgstr "Processa linee di disassemblaggio"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_procurement_group_id
@@ -2120,7 +2167,7 @@ msgstr "Produrre"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Produce residual products (A + B -&gt; C + D)"
-msgstr ""
+msgstr "Produci prodotti residuali (A + B -&gt; C + D)"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.production_message
@@ -2188,7 +2235,7 @@ msgstr "Variante Prodotto"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_produce_line_ids
 msgid "Product to Track"
-msgstr ""
+msgstr "Prodotto da tracciare"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_message_kanban
@@ -2211,7 +2258,7 @@ msgstr "Data Produzione"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_document
 msgid "Production Document"
-msgstr ""
+msgstr "Documento di produzione"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_production_location_id
@@ -2240,12 +2287,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_production_id
 msgid "Production Order for finished products"
-msgstr ""
+msgstr "Ordine di produzione per prodotti finiti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_raw_material_production_id
 msgid "Production Order for raw materials"
-msgstr ""
+msgstr "Ordine di produzione per materie prime"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -2266,17 +2313,17 @@ msgstr "Produzioni"
 #. module: mrp
 #: selection:mrp.workcenter.productivity.loss,loss_type:0
 msgid "Productive"
-msgstr ""
+msgstr "Produttivo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productive_time
 msgid "Productive Time"
-msgstr ""
+msgstr "Tempo di produzione"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_productive_time
 msgid "Productive hour(s) over the last month"
-msgstr ""
+msgstr "Ore di produzione nell'ultimo mese"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_loss_action
@@ -2311,7 +2358,7 @@ msgstr "Qualità"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Quality Losses"
-msgstr ""
+msgstr "Perdite di qualita'"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_product_qty
@@ -2330,7 +2377,7 @@ msgstr "Quantità"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line_lot_produced_qty
 msgid "Quantity Finished Product"
-msgstr ""
+msgstr "Quantita' di prodotti finiti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_qty_produced
@@ -2341,7 +2388,7 @@ msgstr "Quantità Prodotta"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_qty_remaining
 msgid "Quantity To Be Produced"
-msgstr ""
+msgstr "Quantita' da produrre"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_product_qty
@@ -2352,12 +2399,12 @@ msgstr "Quantità da Produrre"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_batch_size
 msgid "Quantity to Process"
-msgstr ""
+msgstr "Quantita' da processare"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Raw Material"
-msgstr ""
+msgstr "Materie prime"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_raw_ids
@@ -2403,15 +2450,17 @@ msgstr "Registrare la Produzione"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
 msgid "Record Production Line"
-msgstr ""
+msgstr "Record delle linee di produzione"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:159
+#: code:addons/mrp/models/mrp_bom.py:166
 #, python-format
 msgid ""
 "Recursion error!  A product with a Bill of Material should not have itself "
 "in its BoM or child BoMs!"
 msgstr ""
+"Errore ricorrente! Un prodotto con una bill of materials non puo' avere il prodotto stesso \n"
+"nella sua BoM o sub-Bom"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_code
@@ -2436,7 +2485,7 @@ msgstr "Documento che ha generato questo ordine di produzione."
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_ir_attachment_id
 msgid "Related attachment"
-msgstr ""
+msgstr "Allegato "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings_module_mrp_repair
@@ -2456,7 +2505,7 @@ msgstr "Report"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_serial
 msgid "Requires Serial"
-msgstr ""
+msgstr "Richiede numeri di serie"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2514,7 +2563,7 @@ msgstr "Routing"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_routing_line_ids
 msgid "Routing Lines"
-msgstr ""
+msgstr "Linee della rotta"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_name
@@ -2544,6 +2593,9 @@ msgid ""
 "                done to realize a Manufacturing Order. Each operation from\n"
 "                a Routing is done at a specific Work Center and has a specific duration."
 msgstr ""
+"Le rotte definiscono la serie di operazioni che devono essere eseguite\n"
+"              per realizzare un ordine di produzione. Ogni operazione della rotta \n"
+"              è fatta ad uno specifico centro di produzione e ha una specifica durata."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_bom
@@ -2584,8 +2636,8 @@ msgid "Scheduled Month"
 msgstr "Mese programmato"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:590
-#: code:addons/mrp/models/mrp_workorder.py:481
+#: code:addons/mrp/models/mrp_production.py:609
+#: code:addons/mrp/models/mrp_workorder.py:518
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_scrap_ids
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -2892,7 +2944,7 @@ msgid "Technical: used to figure out default serial number on work orders"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:254
+#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:261
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -2964,7 +3016,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:94
+#: code:addons/mrp/wizard/mrp_product_produce.py:95
 #, python-format
 msgid "The production order for '%s' has no quantity specified"
 msgstr ""
@@ -3048,7 +3100,7 @@ msgid "Time Tracking"
 msgstr "Tracciamento temporale"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:402
+#: code:addons/mrp/models/mrp_workorder.py:439
 #, python-format
 msgid "Time Tracking: "
 msgstr ""
@@ -3078,6 +3130,11 @@ msgstr ""
 msgid ""
 "Time in minutes. Is the time used in manual mode, or the first time supposed"
 " in real time when there are not any work orders yet."
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Time the currently logged user spent on this workorder."
 msgstr ""
 
 #. module: mrp
@@ -3374,8 +3431,8 @@ msgid "Warehouse"
 msgstr "Magazzino"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:254
-#: code:addons/mrp/wizard/mrp_product_produce.py:203
+#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:261
+#: code:addons/mrp/wizard/mrp_product_produce.py:204
 #, python-format
 msgid "Warning"
 msgstr "Avviso"
@@ -3567,7 +3624,7 @@ msgid "Work Sheet"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:567
+#: code:addons/mrp/models/mrp_production.py:586
 #, python-format
 msgid "Work order %s is still running"
 msgstr "Ordine di lavoro %s in corso"
@@ -3632,26 +3689,26 @@ msgstr ""
 "che è collegato al tuo file."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:521
+#: code:addons/mrp/models/mrp_production.py:540
 #, python-format
 msgid ""
 "You can not cancel production order, a work order is still in progress."
 msgstr "Ordine di produzione non eliminabile, ordine di lavoro in corso."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:240
+#: code:addons/mrp/models/mrp_workorder.py:244
 #, python-format
 msgid "You can not change the finished work order."
 msgstr "Ordine di lavoro completato non è modificabile."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:553
+#: code:addons/mrp/models/mrp_production.py:572
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:91
+#: code:addons/mrp/models/mrp_bom.py:98
 #, python-format
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
@@ -3661,13 +3718,13 @@ msgstr ""
 "Prima terminare o annullare questi."
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:202
+#: code:addons/mrp/wizard/mrp_product_produce.py:203
 #, python-format
 msgid "You can only process 1.0 %s for products with unique serial number."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:136
+#: code:addons/mrp/models/stock_move.py:143
 #, python-format
 msgid ""
 "You cannot cancel a manufacturing order if you have already consumed "
@@ -3676,7 +3733,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:202
+#: code:addons/mrp/models/stock_move.py:209
 #, python-format
 msgid ""
 "You cannot consume the same serial number twice. Please correct the serial "
@@ -3684,7 +3741,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:129
+#: code:addons/mrp/wizard/mrp_product_produce.py:130
 #, python-format
 msgid "You cannot produce the same serial number twice."
 msgstr ""
@@ -3696,9 +3753,9 @@ msgid "You cannot unbuild a undone manufacturing order."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/change_production_qty.py:46
+#: code:addons/mrp/wizard/change_production_qty.py:47
 #, python-format
-msgid "You have already processed %d. Please input a quantity higher than %d "
+msgid "You have already processed %s. Please input a quantity higher than %s "
 msgstr ""
 
 #. module: mrp
@@ -3709,7 +3766,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:392
+#: code:addons/mrp/models/mrp_workorder.py:429
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3718,7 +3775,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:388
+#: code:addons/mrp/models/mrp_workorder.py:425
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3727,7 +3784,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:446
+#: code:addons/mrp/models/mrp_workorder.py:483
 #, python-format
 msgid ""
 "You need to define at least one unactive productivity loss in the category "
@@ -3736,25 +3793,25 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:125
+#: code:addons/mrp/wizard/mrp_product_produce.py:126
 #, python-format
 msgid "You need to provide a lot for the finished product"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:314
+#: code:addons/mrp/models/mrp_workorder.py:330
 #, python-format
 msgid "You should provide a lot/serial number for a component"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:291
+#: code:addons/mrp/models/mrp_workorder.py:307
 #, python-format
 msgid "You should provide a lot/serial number for the final product"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:95
+#: code:addons/mrp/models/mrp_unbuild.py:99
 #, python-format
 msgid ""
 "You should specify a manufacturing order in order to find the correct "
@@ -3822,7 +3879,7 @@ msgstr "stock.scrap"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_traceability_report
 msgid "stock.traceability.report"
-msgstr ""
+msgstr "stock.traceability.report"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild

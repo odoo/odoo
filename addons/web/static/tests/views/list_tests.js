@@ -307,6 +307,99 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('ordered list, sort attribute in context', function (assert) {
+        assert.expect(1);
+        // Equivalent to saving a custom filter
+
+        this.data.foo.fields.foo.sortable = true;
+        this.data.foo.fields.date.sortable = true;
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="date"/>' +
+                '</tree>',
+        });
+
+        // Descending order on Foo
+        list.$('th.o_column_sortable:contains("Foo")').click();
+        list.$('th.o_column_sortable:contains("Foo")').click();
+
+        // Ascending order on Date
+        list.$('th.o_column_sortable:contains("Date")').click();
+
+        var listContext = list.getContext();
+        assert.deepEqual(listContext,
+            {
+                orderedBy: [{
+                    name: 'date',
+                    asc: true,
+                }, {
+                    name: 'foo',
+                    asc: false,
+                }]
+            }, 'the list should have the right orderedBy in context');
+        list.destroy();
+    });
+
+    QUnit.test('Loading a filter with a sort attribute', function (assert) {
+        assert.expect(2);
+
+        this.data.foo.fields.foo.sortable = true;
+        this.data.foo.fields.date.sortable = true;
+
+        var searchReads = 0;
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="date"/>' +
+                '</tree>',
+            context: {
+                orderedBy: [{
+                        name: 'date',
+                        asc: true,
+                    }, {
+                        name: 'foo',
+                        asc: false,
+                }]
+            },
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchReads === 0) {
+                        assert.strictEqual(args.sort, 'date ASC, foo DESC',
+                            'The sort attribute of the filter should be used by the initial search_read');
+                    } else if (searchReads === 1) {
+                        assert.strictEqual(args.sort, 'date DESC, foo ASC',
+                            'The sort attribute of the filter should be used by the next search_read');
+                    }
+                    searchReads += 1;
+                }
+                return this._super.apply(this,arguments);
+            },
+        });
+
+        // Simulate loading a filter
+        list.update({
+            context: {
+                orderedBy: [{
+                        name: 'date',
+                        asc: false,
+                    }, {
+                        name: 'foo',
+                        asc: true,
+                    }]
+                }
+            });
+
+        list.destroy()
+    });
+
     QUnit.test('many2one field rendering', function (assert) {
         assert.expect(1);
 
@@ -3025,10 +3118,10 @@ QUnit.module('Views', {
             foo: {
                 fields: {int_field: {string: "int_field", type: "integer", sortable: true}},
                 records: [
-                    {id: 1, int_field: 0},
-                    {id: 2, int_field: 1},
-                    {id: 3, int_field: 2},
-                    {id: 4, int_field: 3},
+                    {id: 1, int_field: 11},
+                    {id: 2, int_field: 12},
+                    {id: 3, int_field: 13},
+                    {id: 4, int_field: 14},
                 ]
             }
         };
@@ -3047,14 +3140,15 @@ QUnit.module('Views', {
                         assert.deepEqual(args, {
                             model: "foo",
                             ids: [4, 3],
-                            offset: 2,
+                            offset: 13,
                             field: "int_field",
                         });
                     }
                     if (moves === 1) {
                         assert.deepEqual(args, {
                             model: "foo",
-                            ids: [1, 4, 2, 3],
+                            ids: [4, 2],
+                            offset: 12,
                             field: "int_field",
                         });
                     }
@@ -3062,14 +3156,15 @@ QUnit.module('Views', {
                         assert.deepEqual(args, {
                             model: "foo",
                             ids: [2, 4],
-                            offset: 1,
+                            offset: 12,
                             field: "int_field",
                         });
                     }
                     if (moves === 3) {
                         assert.deepEqual(args, {
                             model: "foo",
-                            ids: [1, 4, 2, 3],
+                            ids: [4, 2],
+                            offset: 12,
                             field: "int_field",
                         });
                     }
@@ -3136,7 +3231,6 @@ QUnit.module('Views', {
                         "should write the right field as sequence");
                     assert.deepEqual(args.ids, [4, 2, 3],
                         "should write the sequence in correct order");
-                    return $.when();
                 }
                 return this._super.apply(this, arguments);
             },
@@ -3175,6 +3269,76 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list, handle widget locks and unlocks on sort', function (assert) {
+        assert.expect(6);
+
+        // we need another sortable field to lock/unlock the handle
+        this.data.foo.fields.amount.sortable = true;
+        // resequence makes sense on a sequence field, not on arbitrary fields
+        this.data.foo.records[0].int_field = 0;
+        this.data.foo.records[1].int_field = 1;
+        this.data.foo.records[2].int_field = 2;
+        this.data.foo.records[3].int_field = 3;
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top" default_order="int_field">' +
+                    '<field name="int_field" widget="handle"/>' +
+                    '<field name="amount" widget="float"/>' +
+                  '</tree>',
+        });
+
+        assert.strictEqual(list.$('tbody').text(), '1200.00500.00300.000.00',
+            "default should be sorted by int_field");
+
+        // Drag and drop the fourth line in second position
+        testUtils.dragAndDrop(
+            list.$('.ui-sortable-handle').eq(3),
+            list.$('tbody tr').first(),
+            {position: 'bottom'}
+        );
+
+        // Handle should be unlocked at this point
+        assert.strictEqual(list.$('tbody').text(), '1200.000.00500.00300.00',
+            "drag and drop should have succeeded, as the handle is unlocked");
+
+        // Sorting by a field different for int_field should lock the handle
+        list.$('.o_column_sortable').eq(1).click();
+
+        assert.strictEqual(list.$('tbody').text(), '0.00300.00500.001200.00',
+            "should have been sorted by amount");
+
+        // Drag and drop the fourth line in second position (not)
+        testUtils.dragAndDrop(
+            list.$('.ui-sortable-handle').eq(3),
+            list.$('tbody tr').first(),
+            {position: 'bottom'}
+        );
+
+        assert.strictEqual(list.$('tbody').text(), '0.00300.00500.001200.00',
+            "drag and drop should have failed as the handle is locked");
+
+        // Sorting by int_field should unlock the handle
+        list.$('.o_column_sortable').eq(0).click();
+
+        assert.strictEqual(list.$('tbody').text(), '1200.000.00500.00300.00',
+            "records should be ordered as per the previous resequence");
+
+        // Drag and drop the fourth line in second position
+        testUtils.dragAndDrop(
+            list.$('.ui-sortable-handle').eq(3),
+            list.$('tbody tr').first(),
+            {position: 'bottom'}
+        );
+
+        assert.strictEqual(list.$('tbody').text(), '1200.00300.000.00500.00',
+            "drag and drop should have worked as the handle is unlocked");
+
+        list.destroy();
+    });
+
     QUnit.test('editable list with handle widget with slow network', function (assert) {
         assert.expect(15);
 
@@ -3196,13 +3360,16 @@ QUnit.module('Views', {
                   '</tree>',
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/resequence') {
+                    var _super = this._super.bind(this);
                     assert.strictEqual(args.offset, 1,
                         "should write the sequence starting from the lowest current one");
                     assert.strictEqual(args.field, 'int_field',
                         "should write the right field as sequence");
                     assert.deepEqual(args.ids, [4, 2, 3],
                         "should write the sequence in correct order");
-                    return $.when(def);
+                    return $.when(def).then(function () {
+                        return _super(route, args);
+                    });
                 }
                 return this._super.apply(this, arguments);
             },

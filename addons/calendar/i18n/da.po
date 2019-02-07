@@ -3,22 +3,23 @@
 # * calendar
 # 
 # Translators:
-# Martin Trigaux, 2017
+# peso <peer.sommerlund@gmail.com>, 2017
 # Ejner Sønniksen <ejner@vkdata.dk>, 2017
+# Jesper Carstensen <jc@danodoo.dk>, 2017
+# Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2017
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
 # Morten Schou <ms@msteknik.dk>, 2017
-# peso <peer.sommerlund@gmail.com>, 2017
-# Sanne Kristensen <sanne@vkdata.dk>, 2017
-# Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2017
-# Jesper Carstensen <jc@danodoo.dk>, 2017
-# lhmflexerp <lhm@flexerp.dk>, 2017
+# Martin Trigaux, 2017
+# lhmflexerp <lhm@flexerp.dk>, 2018
+# Sanne Kristensen <sanne@vkdata.dk>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-06-06 08:01+0000\n"
-"PO-Revision-Date: 2018-06-06 08:01+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:16+0000\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2018\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -661,7 +662,7 @@ msgstr "Hele dagen, %s"
 #. module: calendar
 #: sql_constraint:calendar.contacts:0
 msgid "An user cannot have twice the same contact."
-msgstr ""
+msgstr "En bruger kan ikke have samme kontakt"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_is_attendee
@@ -726,14 +727,14 @@ msgstr "Kalender Invitation"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_calendar_event_id
 msgid "Calendar Meeting"
-msgstr ""
+msgstr "Kalendermøder"
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
 #: model:ir.cron,cron_name:calendar.ir_cron_scheduler_alarm
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
-msgstr ""
+msgstr "Kalender: Arrangements påmindelse"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1069,7 +1070,7 @@ msgstr "Inviter wizard"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_is_highlighted
 msgid "Is the Event Highlighted"
-msgstr ""
+msgstr "Er arrangementet fremhævet?"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1141,7 +1142,7 @@ msgstr "Møde"
 #: code:addons/calendar/models/calendar.py:937
 #, python-format
 msgid "Meeting '%s' starts '%s' and ends '%s'"
-msgstr ""
+msgstr "Mødet '%s' starter '%s' og slutter '%s'"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1287,7 +1288,7 @@ msgstr "Deltager"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_partner_id
 msgid "Partner-related data of the user"
-msgstr ""
+msgstr "Partner-relaterede data fra brugeren"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:1177
@@ -1526,6 +1527,9 @@ msgid ""
 "            other applications such as the employee leaves or the business\n"
 "            opportunities."
 msgstr ""
+"Kalenderen er delt mellem medarbejdere og er fuldt integreret med\n"
+"            andre programmer som medarbejderferie eller virksomhedens\n"
+"            salgsmuligheder."
 
 #. module: calendar
 #: selection:calendar.event,byday:0

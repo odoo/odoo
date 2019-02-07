@@ -3,17 +3,18 @@
 # * website_slides
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Michal Veselý <michal@veselyberanek.net>, 2018
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
-# trendspotter, 2018
+# Michal Veselý <michal@veselyberanek.net>, 2018
+# Martin Trigaux, 2018
+# trendspotter <j.podhorecky@volny.cz>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: trendspotter, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:28+0000\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,7 +75,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_views
 msgid "# of Website Views"
-msgstr ""
+msgstr "počet zobrazení webu"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_shared
@@ -99,6 +100,8 @@ msgid ""
 "<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
 "id=\"#slide_email\"><i class=\"fa fa-envelope\"/> Email</b>"
 msgstr ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_email\"><i class=\"fa fa-envelope\"/> Email</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
@@ -117,7 +120,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "<b>Share:</b>"
-msgstr ""
+msgstr "<b>Sdílet:</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -177,7 +180,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "<i class=\"fa fa-home\"/> Home"
-msgstr ""
+msgstr "<i class=\"fa fa-home\"/>Úvodní strana"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -194,7 +197,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-share-alt\"/> Share"
-msgstr ""
+msgstr "<i class=\"fa fa-share-alt\"/> Sdílet"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
@@ -209,6 +212,13 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-thumbs-up\"/> Likes"
+msgstr "<i class=\"fa fa-thumbs-up\"/> hodnocení"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slides.py:105
+#, python-format
+msgid ""
+"<p>This channel is private and its content is restricted to some users.</p>"
 msgstr ""
 
 #. module: website_slides
@@ -269,6 +279,46 @@ msgid "<span class=\"text-muted\">Sort by:</span>"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"first\" title=\"First slide\">\n"
+"                                            <i class=\"fa fa-step-backward fa-2x\"/>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"fullscreen\" title=\"View fullscreen\">\n"
+"                                        <i class=\"fa fa-arrows-alt fa-2x\"/>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"last\" title=\"Last slide\" role=\"button\">\n"
+"                                            <i class=\"fa fa-step-forward fa-2x\"/>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"next\" title=\"Next slide\" role=\"button\">\n"
+"                                            <i class=\"fa fa-arrow-circle-right fa-2x\"/>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"previous\" title=\"Previous slide\" role=\"button\">\n"
+"                                            <i class=\"fa fa-arrow-circle-left fa-2x\"/>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: website_slides
 #: sql_constraint:slide.tag:0
 msgid "A tag must be unique!"
 msgstr ""
@@ -298,7 +348,7 @@ msgstr "Archivováno"
 #. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Authenticated Users Only"
-msgstr ""
+msgstr "Pouze ověřené uživatele"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_5
@@ -308,7 +358,7 @@ msgstr ""
 #. module: website_slides
 #: model:slide.tag,name:website_slides.tag1
 msgid "CMS"
-msgstr ""
+msgstr "CMS"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see
@@ -388,7 +438,7 @@ msgstr "Kanály"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_10
 msgid "Company Culture"
-msgstr ""
+msgstr "Firemní kultura"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_datas
@@ -400,7 +450,7 @@ msgstr "Obsah"
 #: code:addons/website_slides/static/src/xml/website_slides.xml:20
 #, python-format
 msgid "Content Preview"
-msgstr ""
+msgstr "Náhled obsahu"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:255
@@ -584,7 +634,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_embed
 msgid "Embed in your website"
-msgstr ""
+msgstr "Vložte na své webové stránky"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_embed
@@ -630,7 +680,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_promote_strategy
 msgid "Featuring Policy"
-msgstr ""
+msgstr "Obsahuje zásady"
 
 #. module: website_slides
 #. openerp-web
@@ -681,6 +731,8 @@ msgid ""
 "Groups allowed to upload presentations in this channel. If void, every user "
 "can upload."
 msgstr ""
+"Skupiny mohou nahrát prezentace v tomto kanálu. V případě neplatnosti může "
+"každý uživatel nahrát."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_id
@@ -751,12 +803,12 @@ msgstr "Naposled upraveno"
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
 msgid "Latest Published"
-msgstr ""
+msgstr "Nejnovější publikování"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_8
 msgid "Learn more at https://www.odoo.com/page/sales"
-msgstr ""
+msgstr "Další informace naleznete na adrese https://www.odoo.com/page/sales"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_likes
@@ -789,13 +841,13 @@ msgstr "Mime-type"
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: selection:slide.channel,promote_strategy:0
 msgid "Most Viewed"
-msgstr ""
+msgstr "Nejsledovanější"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: selection:slide.channel,promote_strategy:0
 msgid "Most Voted"
-msgstr ""
+msgstr "Nejvíce hlasovali"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_name
@@ -845,19 +897,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
 msgid "Number of Documents"
-msgstr ""
+msgstr "Počet dokumentů"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_infographics
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_infographics
 msgid "Number of Infographics"
-msgstr ""
+msgstr "Počet infografik"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_presentations
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_presentations
 msgid "Number of Presentations"
-msgstr ""
+msgstr "Počet prezentací"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_videos
@@ -873,7 +925,7 @@ msgstr ""
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_1
 msgid "Odoo CRM"
-msgstr ""
+msgstr "Odoo CRM"
 
 #. module: website_slides
 #: model:slide.category,name:website_slides.category_2
@@ -904,7 +956,7 @@ msgstr ""
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_3
 msgid "Odoo Sign Demonstration"
-msgstr ""
+msgstr "Představení Odoo značky"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_9
@@ -931,7 +983,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "Please"
-msgstr ""
+msgstr "Prosím"
 
 #. module: website_slides
 #. openerp-web
@@ -957,7 +1009,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_slide_id
 #: selection:slide.slide,slide_type:0
 msgid "Presentation"
-msgstr ""
+msgstr "Prezentace"
 
 #. module: website_slides
 #: model:mail.message.subtype,description:website_slides.mt_channel_slide_published
@@ -970,7 +1022,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: model:website.menu,name:website_slides.website_menu_slides
 msgid "Presentations"
-msgstr ""
+msgstr "Prezentace"
 
 #. module: website_slides
 #: selection:slide.channel,visibility:0
@@ -990,17 +1042,17 @@ msgstr "Veřejný"
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_public
 msgid "Public Channel"
-msgstr ""
+msgstr "Veřejný kanál"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_date_published
 msgid "Publish Date"
-msgstr ""
+msgstr "Datum zveřejnění"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Published"
-msgstr ""
+msgstr "Publikováno"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_publish_template_id
@@ -1029,7 +1081,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides.xml:70
 #, python-format
 msgid "Save and Publish"
-msgstr ""
+msgstr "Uložit a zveřejnit"
 
 #. module: website_slides
 #. openerp-web
@@ -1119,7 +1171,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_tree
 msgid "Slides"
-msgstr ""
+msgstr "prezentace"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_category
@@ -1164,7 +1216,7 @@ msgstr "Štítky..."
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "The"
-msgstr ""
+msgstr " "
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide_slide_type
@@ -1188,7 +1240,7 @@ msgstr ""
 #: model:slide.channel,access_error_msg:website_slides.channel_private
 #: model:slide.channel,access_error_msg:website_slides.channel_public
 msgid "This channel is private and its content is restricted to some users."
-msgstr ""
+msgstr "Tento kanál je soukromý a jeho obsah je omezen na některé uživatele."
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:251
@@ -1201,7 +1253,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_thumb
 msgid "Thumbnail"
-msgstr ""
+msgstr "Náhled"
 
 #. module: website_slides
 #. openerp-web
@@ -1226,7 +1278,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_index_content
 msgid "Transcript"
-msgstr ""
+msgstr "Přepis"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_type
@@ -1254,7 +1306,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Unpublished"
-msgstr ""
+msgstr "Nepublikovaný"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
@@ -1296,12 +1348,12 @@ msgstr ""
 #. module: website_slides
 #: selection:slide.slide,slide_type:0
 msgid "Video"
-msgstr ""
+msgstr "Video"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Videos"
-msgstr ""
+msgstr "Videa"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1312,7 +1364,7 @@ msgstr "Zobrazení"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.related_slides
 msgid "Views ."
-msgstr ""
+msgstr "Zobrazení"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_visibility
@@ -1322,7 +1374,7 @@ msgstr "Viditelnost"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Waiting for validation"
-msgstr ""
+msgstr "Čeká na ověření"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_7

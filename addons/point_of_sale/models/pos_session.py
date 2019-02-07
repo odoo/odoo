@@ -38,7 +38,7 @@ class PosSession(models.Model):
                             paid=order.amount_paid,
                         ))
                 order.action_pos_order_done()
-            orders_to_reconcile = session.order_ids.filtered(lambda order: order.state in ['invoiced', 'done'] and order.partner_id)
+            orders_to_reconcile = session.order_ids._filtered_for_reconciliation()
             orders_to_reconcile.sudo()._reconcile_payments()
 
     config_id = fields.Many2one(

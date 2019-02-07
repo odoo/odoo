@@ -34,8 +34,8 @@ class SaleOrder(models.Model):
                 amount_untaxed += line.price_subtotal
                 amount_tax += line.price_tax
             order.update({
-                'amount_untaxed': order.pricelist_id.currency_id.round(amount_untaxed),
-                'amount_tax': order.pricelist_id.currency_id.round(amount_tax),
+                'amount_untaxed': amount_untaxed,
+                'amount_tax': amount_tax,
                 'amount_total': amount_untaxed + amount_tax,
             })
 
@@ -53,22 +53,31 @@ class SaleOrder(models.Model):
         for possible refunds created directly from existing invoices. This is necessary since such a
         refund is not directly linked to the SO.
         """
+        # Ignore the status of the deposit product
+        deposit_product_id = self.env['sale.advance.payment.inv']._default_product_id()
+        line_invoice_status_all = [(d['order_id'][0], d['invoice_status']) for d in self.env['sale.order.line'].read_group([('order_id', 'in', self.ids), ('product_id', '!=', deposit_product_id.id)], ['order_id', 'invoice_status'], ['order_id', 'invoice_status'], lazy=False)]
         for order in self:
             invoice_ids = order.order_line.mapped('invoice_lines').mapped('invoice_id').filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
             # Search for invoices which have been 'cancelled' (filter_refund = 'modify' in
             # 'account.invoice.refund')
             # use like as origin may contains multiple references (e.g. 'SO01, SO02')
-            refunds = invoice_ids.search([('origin', 'like', order.name), ('company_id', '=', order.company_id.id)]).filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
+            refunds = invoice_ids.search([('origin', 'like', order.name), ('company_id', '=', order.company_id.id), ('type', 'in', ('out_invoice', 'out_refund'))])
             invoice_ids |= refunds.filtered(lambda r: order.name in [origin.strip() for origin in r.origin.split(',')])
-            # Search for refunds as well
-            refund_ids = self.env['account.invoice'].browse()
-            if invoice_ids:
-                for inv in invoice_ids:
-                    refund_ids += refund_ids.search([('type', '=', 'out_refund'), ('origin', '=', inv.number), ('origin', '!=', False), ('journal_id', '=', inv.journal_id.id)])
 
-            # Ignore the status of the deposit product
-            deposit_product_id = self.env['sale.advance.payment.inv']._default_product_id()
-            line_invoice_status = [line.invoice_status for line in order.order_line if line.product_id != deposit_product_id]
+            # Search for refunds as well
+            domain_inv = expression.OR([
+                ['&', ('origin', '=', inv.number), ('journal_id', '=', inv.journal_id.id)]
+                for inv in invoice_ids if inv.number
+            ])
+            if domain_inv:
+                refund_ids = self.env['account.invoice'].search(expression.AND([
+                    ['&', ('type', '=', 'out_refund'), ('origin', '!=', False)], 
+                    domain_inv
+                ]))
+            else:
+                refund_ids = self.env['account.invoice'].browse()
+
+            line_invoice_status = [d[1] for d in line_invoice_status_all if d[0] == order.id]
 
             if order.state not in ('sale', 'done'):
                 invoice_status = 'no'
@@ -443,10 +452,11 @@ class SaleOrder(models.Model):
             raise UserError(_('There is no invoiceable line.'))
 
         for invoice in invoices.values():
+            invoice.compute_taxes()
             if not invoice.invoice_line_ids:
                 raise UserError(_('There is no invoiceable line.'))
             # If invoice is negative, do a refund invoice instead
-            if invoice.amount_untaxed < 0:
+            if invoice.amount_total < 0:
                 invoice.type = 'out_refund'
                 for line in invoice.invoice_line_ids:
                     line.quantity = -line.quantity
@@ -539,9 +549,10 @@ class SaleOrder(models.Model):
             self.force_quotation_send()
 
         # create an analytic account if at least an expense product
-        if any([expense_policy != 'no' for expense_policy in self.order_line.mapped('product_id.expense_policy')]):
-            if not self.analytic_account_id:
-                self._create_analytic_account()
+        for order in self:
+            if any([expense_policy not in [False, 'no'] for expense_policy in order.order_line.mapped('product_id.expense_policy')]):
+                if not order.analytic_account_id:
+                    order._create_analytic_account()
 
         return True
 
@@ -745,16 +756,25 @@ class SaleOrderLine(models.Model):
                  'invoice_lines.invoice_id.refund_invoice_ids.state',
                  'invoice_lines.invoice_id.refund_invoice_ids.amount_total')
     def _compute_invoice_amount(self):
+        refund_lines_product = self.env['account.invoice.line']
         for line in self:
             # Invoice lines referenced by this line
             invoice_lines = line.invoice_lines.filtered(lambda l: l.invoice_id.state in ('open', 'paid'))
             # Refund invoices linked to invoice_lines
             refund_invoices = invoice_lines.mapped('invoice_id.refund_invoice_ids').filtered(lambda inv: inv.state in ('open', 'paid'))
-            # Total invoiced amount
-            invoiced_amount_total = sum(invoice_lines.mapped('price_total'))
-            # Total refunded amount
-            refund_invoice_lines = refund_invoices.mapped('invoice_line_ids').filtered(lambda l: l.product_id == line.product_id)
-            refund_amount_total = sum(refund_invoice_lines.mapped('price_total'))
+            refund_invoice_lines = (refund_invoices.mapped('invoice_line_ids') - refund_lines_product).filtered(lambda l: l.product_id == line.product_id)
+            if refund_invoice_lines:
+                refund_lines_product |= refund_invoice_lines
+            # If the currency of the invoice differs from the sale order, we need to convert the values
+            if line.invoice_lines and line.invoice_lines[0].currency_id \
+                    and line.invoice_lines[0].currency_id != line.currency_id:
+                invoiced_amount_total = sum([inv_line.currency_id.with_context({'date': inv_line.invoice_id.date}).compute(inv_line.price_total, line.currency_id)
+                                             for inv_line in invoice_lines])
+                refund_amount_total = sum([inv_line.currency_id.with_context({'date': inv_line.invoice_id.date}).compute(inv_line.price_total, line.currency_id)
+                                           for inv_line in refund_invoice_lines])
+            else:
+                invoiced_amount_total = sum(invoice_lines.mapped('price_total'))
+                refund_amount_total = sum(refund_invoice_lines.mapped('price_total'))
             # Total of remaining amount to invoice on the sale ordered (and draft invoice included) to support upsell (when
             # delivered quantity is higher than ordered one). Draft invoice are ignored on purpose, the 'to invoice' should
             # come only from the SO lines.
@@ -846,7 +866,7 @@ class SaleOrderLine(models.Model):
             msg = _("Extra line with %s ") % (line.product_id.display_name,)
             line.order_id.message_post(body=msg)
             # create an analytic account if at least an expense product
-            if line.product_id.expense_policy != 'no' and not self.order_id.analytic_account_id:
+            if line.product_id.expense_policy not in [False, 'no'] and not self.order_id.analytic_account_id:
                 self.order_id._create_analytic_account()
         return line
 

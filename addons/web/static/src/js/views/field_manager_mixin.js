@@ -130,8 +130,10 @@ var FieldManagerMixin = {
         if ('offset' in data) {
             params.offset = data.offset;
         }
-        this.model.reload(data.id, params).then(function (db_id) {
-            data.on_success(self.model.get(db_id));
+        this.mutex.exec(function () {
+            return self.model.reload(data.id, params).then(function (db_id) {
+                data.on_success(self.model.get(db_id));
+            });
         });
     },
     /**

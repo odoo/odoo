@@ -10,6 +10,12 @@ ODOO_LOG_DIR=/var/log/odoo
 ODOO_LOG_FILE=$ODOO_LOG_DIR/odoo-server.log
 ODOO_USER="odoo"
 
+if [ -d /usr/lib/python3.7 ]; then
+    SITE_PACK_DIR37=/usr/lib/python3.7/site-packages
+    [[ ! -d ${SITE_PACK_DIR37} ]] && mkdir -p ${SITE_PACK_DIR37}
+    ln -s /usr/lib/python3.6/site-packages/odoo ${SITE_PACK_DIR37}/odoo
+fi
+
 if ! getent passwd | grep -q "^odoo:"; then
     groupadd $ODOO_GROUP
     adduser --system --no-create-home $ODOO_USER -g $ODOO_GROUP

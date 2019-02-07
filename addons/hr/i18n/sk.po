@@ -3,17 +3,19 @@
 # * hr
 # 
 # Translators:
-# Martin Trigaux, 2017
 # gebri <gebri@inmail.sk>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
+# Martin Trigaux, 2018
 # Matus Krnac <matus.krnac@gmail.com>, 2018
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
+# Jan Prokop, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Matus Krnac <matus.krnac@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,6 +67,13 @@ msgid "<i>You easily manage them</i>"
 msgstr "<i>Ľahko ich spravujete</i>"
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid ""
 "<span class=\"o_unfollow\">Unfollow</span>\n"
@@ -76,7 +85,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>Výkazy</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -260,7 +269,7 @@ msgstr "Spoločnost"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings_resource_calendar_id
 msgid "Company Working Hours"
-msgstr ""
+msgstr "Pracovné hodiny spoločnosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
@@ -435,7 +444,7 @@ msgstr "Štítky zamestnancov"
 msgid ""
 "Enter here the private address of the employee, not the one linked to your "
 "company."
-msgstr ""
+msgstr "Zadaj súkromnú adresu zamestnanca, nie firemnú"
 
 #. module: hr
 #: code:addons/hr/models/hr.py:310
@@ -726,7 +735,7 @@ msgstr "Spustite nové produkty, maketingové kampane a ponuky"
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Legal Cohabitant"
-msgstr ""
+msgstr "Právny spoločník"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -824,7 +833,7 @@ msgstr "Milé mať"
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Not Recruiting"
-msgstr ""
+msgstr "Nie náborom"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -935,12 +944,12 @@ msgstr "Pokiaľ možno s 1 rokom praxe"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
 msgid "Private Address"
-msgstr ""
+msgstr "Súkromná adresa"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Information"
-msgstr ""
+msgstr "Súkromná informácia"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1020,7 +1029,7 @@ msgstr "Mierka organizácie našich akcií po celom svete"
 msgid ""
 "Set default calendar used to compute time allocation for leaves, timesheets,"
 " ..."
-msgstr ""
+msgstr "Nastav predvolený kalendár pre výpočet odchodov, časových výkazov,..."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_state
@@ -1040,17 +1049,17 @@ msgstr "Nastavenia"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings_module_hr_org_chart
 msgid "Show Organizational Chart"
-msgstr ""
+msgstr "Ukázať organizačnú štruktúru"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form"
-msgstr ""
+msgstr "Ukázať organizačnú štruktúru na formulári zamestnanca"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form."
-msgstr ""
+msgstr "Ukázať organizačnú štruktúru na formulári zamestnanca."
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -1139,7 +1148,7 @@ msgstr "Tímový duch a dobrá komunikácia"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_is_address_home_a_company
 msgid "The employee adress has a company linked"
-msgstr ""
+msgstr "Adresa zamestnanca je priradená firme"
 
 #. module: hr
 #: sql_constraint:hr.job:0
@@ -1187,6 +1196,9 @@ msgid ""
 "                                            This private address is used in the expense report reimbursement document.\n"
 "                                            It should be different from the work address."
 msgstr ""
+"Použi domácu adresu zamestnanca.\n"
+" Táto súkromná adresa je použitá pre doklad o úhrade výkazu výdavkov.\n"
+" Mala by byť odlišná od firemnej adresy. "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -1201,7 +1213,7 @@ msgstr "Používatelia"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies :"
-msgstr ""
+msgstr "Voľné pracovné miesta:"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_visa_expire
@@ -1328,7 +1340,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
 msgid "Work Address"
-msgstr ""
+msgstr "Pracovná adresa"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
@@ -1338,7 +1350,7 @@ msgstr "Pracovný E-mail"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Information"
-msgstr ""
+msgstr "Pracovná informácia"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_location
@@ -1353,7 +1365,7 @@ msgstr "Pracovný mobil"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Organization"
-msgstr ""
+msgstr "Pracovná organizácia"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -1484,6 +1496,10 @@ msgid ""
 "small distributed development teams for specific projects. You will become a"
 " technical                 expert of the product."
 msgstr ""
+"Budete zodpovedný za vývoj a zlepšovanie aplikácií. Budete pracovať "
+"samostatne, rovnako ako koordinovať a dohliadať na malé distribuované "
+"vývojové tímy na konkrétne projekty. Stanete sa technickým expertom na "
+"výrobok."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -1493,6 +1509,10 @@ msgid ""
 "development teams for specific projects. You will become a technical expert "
 "of the product."
 msgstr ""
+"Budete zodpovedný za vývoj a zlepšovanie aplikácií. Budete pracovať "
+"samostatne, rovnako ako koordinovať a dohliadať na malé distribuované "
+"vývojové tímy na konkrétne projekty. Stanete sa technickým expertom na "
+"výrobok."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1556,7 +1576,7 @@ msgstr "Budete úzko spolupracovať so všetkými stážistami"
 #. module: hr
 #: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
 msgid "Your document has not been created"
-msgstr ""
+msgstr "Dokument sa nevytvoril"
 
 #. module: hr
 #: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
@@ -1579,7 +1599,7 @@ msgstr "napr. čiastočný úväzok"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
-msgstr ""
+msgstr "napr. vedúci predaja"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias_mixin

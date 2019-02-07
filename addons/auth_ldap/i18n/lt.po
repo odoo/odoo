@@ -3,10 +3,11 @@
 # * auth_ldap
 # 
 # Translators:
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# Anatolij, 2017
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# Anatolij, 2017
 # Martin Trigaux, 2017
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2018
@@ -30,7 +31,7 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
-"Automatiškai kurti vietines naudotojų paskyras naujiems naudotojams, "
+"Automatiškai kurti vietines vartotojų paskyras naujiems naudotojams, "
 "autentifikuojantiems per LDAP."
 
 #. module: auth_ldap
@@ -93,12 +94,12 @@ msgstr "LDAP serverio adresas"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server_port
 msgid "LDAP Server port"
-msgstr "LDAP serverio portas"
+msgstr "LDAP serverio prievadas"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_base
 msgid "LDAP base"
-msgstr "LDAP base"
+msgstr "LDAP bazė"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_binddn
@@ -148,8 +149,8 @@ msgid ""
 " attempts will fail."
 msgstr ""
 "Prašyti saugaus TLS/SSL šifravimo jungiantis prie LDAP serverio. Šiam "
-"pasirinkimui reikia serverio su aktyvuotu STARTTLS, kitaip žlugs visi "
-"bandymai autentifikuoti."
+"pasirinkimui reikia serverio su aktyvuotu STARTTLS, kitaip autentifikacijos "
+"bandymai nepavyks."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_sequence
@@ -164,7 +165,7 @@ msgstr "Serverio informacija"
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr "Nustatykite LDAP serverį"
+msgstr "Nustatykite savo LDAP serverį"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_user
@@ -187,7 +188,7 @@ msgid ""
 "Leave empty to connect anonymously."
 msgstr ""
 "Vartotojo paskyra LDAP serveryje, naudojama direktorijos užklausoms. "
-"Palikite tuščią jungtis anonimiškai."
+"Norėdami jungtis anonimiškai, palikite tuščią."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_tls
@@ -202,7 +203,7 @@ msgstr "Vartotojo informacija"
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_user
 msgid "User to copy when creating new users"
-msgstr "Kopijuoti vartotoją, kai kuriami nauji vartotojai"
+msgstr "Kopijuojamas vartotojas, kai kuriami nauji vartotojai"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_users

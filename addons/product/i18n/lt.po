@@ -3,26 +3,27 @@
 # * product
 # 
 # Translators:
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Arminas Grigonis <arminas@versada.lt>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# Silvija Butko <silvija.butko@gmail.com>, 2017
-# Anatolij, 2017
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
 # Rolandas <info@paninfo.lt>, 2017
+# Arminas Grigonis <arminas@versada.lt>, 2017
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# Anatolij, 2017
+# Martin Trigaux, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
 # Eimantas <eimantas@focusate.eu>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Eimantas <eimantas@focusate.eu>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:22+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,7 +60,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr "%s %% nuolaida ir %s priemoka"
 
 #. module: product
-#: code:addons/product/models/product_template.py:324
+#: code:addons/product/models/product_template.py:333
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
@@ -333,13 +334,13 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4c_product_template
 #: model:product.template,website_description:product.product_product_4d_product_template
 msgid "And because it’s so easy to use, it’s easy to love."
-msgstr ""
+msgstr "Todėl, kad jį taip lengva naudoti, taip lengva ir pamilti."
 
 #. module: product
 #: model:product.product,name:product.product_product_7
 #: model:product.template,name:product.product_product_7_product_template
 msgid "Apple In-Ear Headphones"
-msgstr "Apple In-Ear Headphones"
+msgstr "Apple ausinės"
 
 #. module: product
 #: model:product.product,name:product.product_product_9
@@ -744,9 +745,7 @@ msgid "Computer SC234"
 msgstr "Kompiuteris SC234"
 
 #. module: product
-#: code:addons/product/models/product_template.py:50
 #: selection:product.template,type:0
-#, python-format
 msgid "Consumable"
 msgstr "Vartojami produktai"
 
@@ -961,6 +960,11 @@ msgid "Description for Customers"
 msgstr "Aprašas klientams"
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Description for Internal"
+msgstr ""
+
+#. module: product
 #: model:product.product,website_description:product.product_product_11
 #: model:product.product,website_description:product.product_product_11b
 #: model:product.template,website_description:product.product_product_11_product_template
@@ -1043,19 +1047,19 @@ msgid "Ending valid for the pricelist item validation"
 msgstr "Pabaiga tinkama kainų sąrašo produkto patikrinimui"
 
 #. module: product
-#: code:addons/product/models/product.py:53
+#: code:addons/product/models/product.py:56
 #, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Klaida! Jūs negalite sukurti pasikartojančių kategorijų."
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:101
+#: code:addons/product/models/product_attribute.py:102
 #, python-format
 msgid "Error ! You cannot use this attribute with the following value."
 msgstr "Klaida! Negalite naudoti šio atributo su tokia reikšme."
 
 #. module: product
-#: code:addons/product/models/product.py:283
+#: code:addons/product/models/product.py:293
 #, python-format
 msgid ""
 "Error! It is not allowed to choose more than one value for a given "
@@ -1078,7 +1082,7 @@ msgstr ""
 "Klaida! Negalite priskirti Pagrindinio kainoraščio kaip Kito kainoraščio!"
 
 #. module: product
-#: code:addons/product/models/product_template.py:274
+#: code:addons/product/models/product_template.py:283
 #, python-format
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
@@ -1309,7 +1313,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Highly rated designs."
-msgstr ""
+msgstr "Gerai įvertinti dizainai."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
@@ -1488,6 +1492,16 @@ msgid "Inventory"
 msgstr "Inventorius"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
+msgid "Is Product Variant"
+msgstr "Yra produkto variantas"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
+msgid "Is a product variant"
+msgstr "Yra produkto variantas"
+
+#. module: product
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Keep it clean."
@@ -1503,7 +1517,7 @@ msgstr "Pagrandinės savybės"
 #: model:product.product,name:product.product_product_27
 #: model:product.template,name:product.product_product_27_product_template
 msgid "Laptop Customized"
-msgstr "Laptop Customized"
+msgstr "Pritaikyta nešiojamiesiems"
 
 #. module: product
 #: model:product.product,name:product.product_product_25
@@ -1581,6 +1595,9 @@ msgid ""
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
 msgstr ""
+"Pristatymo laikas dienomis, nuo pirkimo užsakymo patvirtinimo ir produktų "
+"gavimo į jūsų sandėlį. Planuoklio naudojamas automatiniams pirkimo užsakymų "
+"planavimo skaičiavimui."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_left
@@ -1701,13 +1718,13 @@ msgstr "Motherboard I9P57"
 #: model:product.product,name:product.product_product_10
 #: model:product.template,name:product.product_product_10_product_template
 msgid "Mouse, Optical"
-msgstr "Mouse, Optical"
+msgstr "Pelė, optinė"
 
 #. module: product
 #: model:product.product,name:product.product_product_12
 #: model:product.template,name:product.product_product_12_product_template
 msgid "Mouse, Wireless"
-msgstr "Mouse, Wireless"
+msgstr "Pelė, belaidė"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2111,7 +2128,7 @@ msgid "Products Price Search"
 msgstr "Produkto kainos paieška"
 
 #. module: product
-#: code:addons/product/models/product.py:448
+#: code:addons/product/models/product.py:464
 #, python-format
 msgid "Products: "
 msgstr "Produktai: "
@@ -2330,9 +2347,7 @@ msgid "Server"
 msgstr "Server"
 
 #. module: product
-#: code:addons/product/models/product_template.py:51
 #: selection:product.template,type:0
-#, python-format
 msgid "Service"
 msgstr "Paslauga"
 
@@ -2655,7 +2670,7 @@ msgid ""
 msgstr "Produktų kiekis šioje kategorijoje (neįtraukia subkategorijų)"
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:74
+#: code:addons/product/models/product_attribute.py:75
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
@@ -2813,6 +2828,11 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr "Visų atributų papildomų kainų suma"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "This note is only for internal purposes."
+msgstr "Pastaba yra naudojama tik vidiniams tikslams."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view

@@ -3,37 +3,38 @@
 # * account
 # 
 # Translators:
+# Melina Mäntylä <melina.mantyla@web-veistamo.fi>, 2017
+# Kari Lindgren <karisatu@gmail.com>, 2017
+# Mika Karvinen <karvinenm@gmail.com>, 2017
+# Jussi Lehto <jussi@gulfeo.com>, 2017
+# Timo Koukkari <ti.ko@netikka.fi>, 2017
+# MIka Pakkanen <mika.pakkanen@gmail.com>, 2017
+# Sanna Edelman <direct@generare.com>, 2017
+# Jan-Erik Finlander, 2017
+# artol <arto.leskinen@tek.fi>, 2017
+# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2017
+# Timo Soronen <tisonen@gmail.com>, 2017
+# Marko Happonen <marko.happonen@sprintit.fi>, 2017
+# Mikko Salmela <salmemik@gmail.com>, 2017
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2017
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2017
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2017
+# Martin Trigaux, 2017
+# Miku Laitinen <miku.laitinen@gmail.com>, 2017
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
 # Tommi Rintala <tommi.rintala@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2017
-# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2017
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2017
-# Svante Suominen <svante.suominen@web-veistamo.fi>, 2017
-# Miku Laitinen <miku.laitinen@gmail.com>, 2017
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017
-# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2017
-# MIka Pakkanen <mika.pakkanen@gmail.com>, 2017
-# Timo Soronen <tisonen@gmail.com>, 2017
-# Jussi Lehto <jussi@gulfeo.com>, 2017
-# Mika Karvinen <karvinenm@gmail.com>, 2017
-# Timo Koukkari <ti.ko@netikka.fi>, 2017
-# Melina Mäntylä <melina.mantyla@web-veistamo.fi>, 2017
-# artol <arto.leskinen@tek.fi>, 2017
-# Kari Lindgren <karisatu@gmail.com>, 2017
-# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2017
-# Mikko Salmela <salmemik@gmail.com>, 2017
-# Sanna Edelman <direct@generare.com>, 2017
-# Marko Happonen <marko.happonen@sprintit.fi>, 2017
-# Jan-Erik Finlander, 2017
 # Jukka Paulin <jukka.paulin@gmail.com>, 2017
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2019
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Jukka Paulin <jukka.paulin@gmail.com>, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:13+0000\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,7 +75,7 @@ msgstr "Tapahtumien määrä"
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "${(object.name or '').replace('/','-')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','-')}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -317,6 +318,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Now"
 msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Asenna"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -796,7 +804,7 @@ msgid ""
 "<strong>Or generate payment orders</strong><br/>\n"
 "                                        Create a Payment Order and select the bills you'd like to pay as Entry lines (only the validated bills will appear)."
 msgstr ""
-"<strong>Tai luo maksumääräykset</strong><br>/\n"
+"<strong>Tai luo maksumääräykset</strong><br/>\n"
 "Luo maksumääräys ja valitse laskut jotka haluaisit maksaa (vain validoidut laskut näkyvät luettelossa)."
 
 #. module: account
@@ -3430,7 +3438,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "Create and post move"
-msgstr ""
+msgstr "Luo ja kirjaa siirto"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:288
@@ -3730,11 +3738,19 @@ msgid "Currency as per company's country."
 msgstr "Yrityksen maavaluutta."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1609
-#: code:addons/account/models/account_move.py:1621
+#: code:addons/account/models/account_move.py:1663
+#: code:addons/account/models/account_move.py:1675
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr "Valuuttakurssivaihtoero"
+
+#. module: account
+#: code:addons/account/models/account.py:451
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
+msgstr ""
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
@@ -4265,7 +4281,7 @@ msgid ""
 "Document: Customer account statement<br/>\n"
 "                    Date:"
 msgstr ""
-"Dokumenttit: Asiakkaan tiliote<br>\n"
+"Dokumenttit: Asiakkaan tiliote<br/>\n"
 "Päiväys:"
 
 #. module: account
@@ -6597,7 +6613,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.setup_financial_year_opening_form
 #: model:ir.ui.view,arch_db:account.setup_view_company_form
 msgid "Mark as done"
-msgstr ""
+msgstr "Merkitse tehdyksi"
 
 #. module: account
 #: selection:account.payment,payment_difference_handling:0
@@ -7650,12 +7666,12 @@ msgstr ""
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_15days
 msgid "Payment terms: 15 Days"
-msgstr ""
+msgstr "Maksuehto: 15 päivää"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_net
 msgid "Payment terms: 30 Net Days"
-msgstr ""
+msgstr "Maksuehto: 30 päivää netto"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance
@@ -10526,6 +10542,7 @@ msgstr "Koetaseraportti"
 #: model:ir.model.fields,field_description:account.field_account_account_user_type_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_journal_type
 #: model:ir.model.fields,field_description:account.field_account_financial_report_type
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_invoice_type
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_type
 #: model:ir.model.fields,field_description:account.field_account_invoice_type
 #: model:ir.model.fields,field_description:account.field_account_journal_type
@@ -11305,7 +11322,7 @@ msgid "You cannot put/take money in/out for a bank statement which is closed."
 msgstr "Et voi tallettaa tai nostaa rahaa suljetulta tililtä."
 
 #. module: account
-#: code:addons/account/models/account.py:253
+#: code:addons/account/models/account.py:261
 #, python-format
 msgid ""
 "You cannot remove/deactivate an account which is set on a customer or "
@@ -11315,13 +11332,21 @@ msgstr ""
 "sitä ei-aktiiviseksi."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1330
+#: code:addons/account/models/account.py:249
+#, python-format
+msgid ""
+"You cannot set a currency on this account as it already has some journal "
+"entries having a different foreign currency."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:1368
 #, python-format
 msgid "You cannot use deprecated account."
 msgstr "Et voi käyttää käytöstä poistettua tiliä."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1250
+#: code:addons/account/models/account_move.py:1283
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -11332,7 +11357,7 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:74
-#: code:addons/account/models/account_invoice.py:777
+#: code:addons/account/models/account_invoice.py:780
 #, python-format
 msgid ""
 "You cannot validate an invoice with a negative total amount. You should "

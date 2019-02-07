@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2018
 # Otgonbayar.A <gobi.mn@gmail.com>, 2018
-# Erdenebold Ts <erdenebold10@gmail.com>, 2018
+# Ubuntu Erka <erdenebold10@gmail.com>, 2018
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
 msgid ""
 msgstr ""
@@ -39,7 +39,10 @@ msgid "Discount %"
 msgstr ""
 
 #. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:14
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_pc
+#, python-format
 msgid "Discount Percentage"
 msgstr "Хөнгөлөлтийн хувь"
 
@@ -50,6 +53,13 @@ msgid "Discount Product"
 msgstr "Барааны хөнгөлөлт"
 
 #. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:28
+#, python-format
+msgid "No discount product found"
+msgstr ""
+
+#. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_iface_discount
 msgid "Order Discounts"
 msgstr "Захиалгын хөнгөлөлт"
@@ -58,6 +68,15 @@ msgstr "Захиалгын хөнгөлөлт"
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_pc
 msgid "The default discount percentage"
 msgstr "Хөнгөлөлтийн хувийн анхны утга"
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:29
+#, python-format
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
+" Sold' and 'Available in Point of Sale'."
+msgstr ""
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_product_id

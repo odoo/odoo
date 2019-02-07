@@ -3,20 +3,21 @@
 # * hr_payroll
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
-# Jiří P., 2018
 # Chris <krystof.reklamy13@gmail.com>, 2018
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018
+# Martin Trigaux, 2018
 # Ladislav Tomm <tomm@helemik.cz>, 2018
+# trendspotter <j.podhorecky@volny.cz>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-27 15:42+0000\n"
-"PO-Revision-Date: 2018-06-27 15:42+0000\n"
-"Last-Translator: Ladislav Tomm <tomm@helemik.cz>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:18+0000\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +47,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Address</strong>"
-msgstr ""
+msgstr "<strong>Addresa</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -92,7 +93,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Email</strong>"
-msgstr ""
+msgstr "<strong>Email</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -104,7 +105,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Name</strong>"
-msgstr ""
+msgstr "<strong>Název</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -354,7 +355,7 @@ msgstr "Výpočtový list"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_select
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_select
 msgid "Condition Based on"
-msgstr ""
+msgstr "Stav založený na"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -478,7 +479,7 @@ msgstr "Datum do"
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.DED
 msgid "Deduction"
-msgstr ""
+msgstr "Dedukce"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_default_value
@@ -600,7 +601,7 @@ msgstr "Funkce zaměstnance"
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
 #: model:ir.ui.menu,name:hr_payroll.menu_department_tree
 msgid "Employee Payslips"
-msgstr ""
+msgstr "Zaměstnanecké výplatní pásky"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_contract_advantage_template
@@ -626,6 +627,7 @@ msgstr ""
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
 msgstr ""
+"Chyba! Nemůžete vytvořit rekurzivní hierarchii kategorie platových pravidel."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:176
@@ -657,7 +659,7 @@ msgstr ""
 #: code:addons/hr_payroll/report/report_contribution_register.py:34
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
-msgstr ""
+msgstr "Obsah formuláře chybí, tento přehled nelze vytisknout."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_fr_hr_payroll
@@ -688,6 +690,12 @@ msgstr ""
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_sales_commission
 msgid "Get 1% of sales"
+msgstr ""
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payslip.py:183
+#, python-format
+msgid "Global Leaves"
 msgstr ""
 
 #. module: hr_payroll
@@ -741,6 +749,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the salary "
 "rule without removing it."
 msgstr ""
+"Pokud je aktivní pole nastaveno na hodnotu false, umožní vám skrytí "
+"platového pravidla bez jeho odebrání."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_in_hr_payroll
@@ -750,7 +760,7 @@ msgstr "Indická mzda"
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_credit_note
 msgid "Indicates this payslip has a refund of another"
-msgstr ""
+msgstr "Označuje, že tato výplatní položka je vratkou jiné částky"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -891,7 +901,7 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Miscellaneous"
-msgstr "Smíšený"
+msgstr "Různé"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -920,7 +930,7 @@ msgstr ""
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_net
 msgid "Net Salary"
-msgstr ""
+msgstr "Čistá mzda"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:199
@@ -988,7 +998,7 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.actions.report,name:hr_payroll.payslip_details_report
 msgid "PaySlip Details"
-msgstr ""
+msgstr "detaily služby PaySlip"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
@@ -1209,12 +1219,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Quantity/rate"
-msgstr ""
+msgstr "Množství / míra"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Quarterly"
-msgstr ""
+msgstr "Čtvrtletní"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
@@ -1279,15 +1289,8 @@ msgstr "Výpočet mzdy"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree_view
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
 msgid "Salary Rule Categories"
-msgstr ""
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
-msgid "Salary Rule Categories Hierarchy"
 msgstr ""
 
 #. module: hr_payroll
@@ -1422,7 +1425,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_select
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_select
 msgid "The computation method for the rule amount."
-msgstr ""
+msgstr "Metoda výpočtu velikosti pravidla."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_contract_id

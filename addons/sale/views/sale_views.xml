@@ -67,6 +67,11 @@
         <menuitem id="prod_config_main" name="Products" parent="menu_sale_config" sequence="5"/>
         <menuitem id="menu_attribute_action" action="product.attribute_action" parent="prod_config_main" sequence="1" groups="product.group_product_variant" active="False"/>
         <menuitem action="product.variants_action" id="menu_variants_action" parent="sale.prod_config_main" sequence="2" groups="product.group_product_variant" active="False"/>
+        <menuitem id="menu_product_category_config_sale"
+                  action="product.product_category_action_form"
+                  parent="sale.prod_config_main"
+                  sequence="1"
+                  groups="base.group_no_one"/>
         <menuitem id="menu_products" action="product.product_normal_action_sell" parent="product_menu_catalog" groups="product.group_product_variant" sequence="2" active="False"/>
         <menuitem id="next_id_16" name="Units of Measure" parent="sale.prod_config_main" sequence="6" groups="product.group_uom" active="False"/>
         <menuitem action="product.product_uom_form_action" id="menu_product_uom_form_action" parent="sale.prod_config_main" sequence="7" groups="product.group_uom" active="False"/>
@@ -148,7 +153,7 @@
                 <tree string="Sales Orders" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Order Number"/>
-                    <field name="confirmation_date" string="Order Date"/>
+                    <field name="confirmation_date" string="Confirmation Date"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
                     <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
@@ -248,6 +253,8 @@
                                             <field name="invoice_status" invisible="1"/>
                                             <field name="qty_to_invoice" invisible="1"/>
                                             <field name="qty_delivered_updateable" invisible="1"/>
+                                            <field name="price_total" invisible="1"/>
+                                            <field name="price_tax" invisible="1"/>
                                             <field name="price_subtotal" invisible="1"/>
                                             <label for="product_uom_qty" string="Ordered Quantity"/>
                                             <div>
@@ -255,6 +262,7 @@
                                                     context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'uom_qty_change':True, 'company_id': parent.company_id}"
                                                     name="product_uom_qty" class="oe_inline"/>
                                                 <field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button"
+                                                    force_save="1"
                                                     attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"/>
                                             </div>
                                             <label for="qty_delivered" string="Delivered Quantity" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
@@ -312,6 +320,7 @@
                                         attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
                                     <field name="qty_to_invoice" invisible="1"/>
                                     <field name="product_uom"
+                                        force_save="1"
                                         attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"
                                         context="{'company_id': parent.company_id}"
                                         groups="product.group_uom" options='{"no_open": True}'/>
@@ -328,12 +337,15 @@
                                     <field name="invoice_status" invisible="1"/>
                                     <field name="customer_lead" invisible="1"/>
                                     <field name="currency_id" invisible="1"/>
+                                    <field name="price_tax" invisible="1"/>
                                 </tree>
                                 <kanban class="o_kanban_mobile">
                                     <field name="product_id"/>
                                     <field name="product_uom_qty"/>
                                     <field name="product_uom" groups="product.group_uom"/>
                                     <field name="price_subtotal"/>
+                                    <field name="price_tax" invisible="1"/>
+                                    <field name="price_total" invisible="1"/>
                                     <field name="price_unit"/>
                                     <templates>
                                         <t t-name="kanban-box">

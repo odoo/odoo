@@ -748,16 +748,6 @@ class Field(MetaField('DummyField', (object,), {})):
     # Conversion of values
     #
 
-    def cache_key(self, record):
-        """ Return the key to get/set the value of ``self`` on ``record`` in
-            cache, the full cache key being ``(self, record.id, key)``.
-        """
-        env = record.env
-        # IMPORTANT: odoo.api.Cache.get_records() depends on the fact that the
-        # result does not depend on record.id. If you ever make the following
-        # dependent on record.id, don't forget to fix the other method!
-        return env if self.context_dependent else (env.cr, env.uid)
-
     def null(self, record):
         """ Return the null value for this field in the record format. """
         return False
@@ -2019,6 +2009,26 @@ class Many2one(_Relational):
         return super(Many2one, self).convert_to_onchange(value, record, names)
 
 
+class _RelationalMultiUpdate(object):
+    """ A getter to update the value of an x2many field, without reading its
+        value until necessary.
+    """
+    __slots__ = ['record', 'field', 'value']
+
+    def __init__(self, record, field, value):
+        self.record = record
+        self.field = field
+        self.value = value
+
+    def __call__(self):
+        # determine the current field's value, and update it in cache only
+        record, field, value = self.record, self.field, self.value
+        cache = record.env.cache
+        cache.remove(record, field)
+        val = field.convert_to_cache(record[field.name] | value, record, validate=False)
+        cache.set(record, field, val)
+        return val
+
 
 class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
@@ -2030,21 +2040,16 @@ class _RelationalMulti(_Relational):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """
         cache = records.env.cache
         for record in records:
-            if cache.contains(record, self):
+            special = cache.get_special(record, self)
+            if isinstance(special, _RelationalMultiUpdate):
+                # include 'value' in the existing _RelationalMultiUpdate; this
+                # avoids reading the field's value (which may be large)
+                special.value |= value
+            elif cache.contains(record, self):
                 val = self.convert_to_cache(record[self.name] | value, record, validate=False)
                 cache.set(record, self, val)
             else:
-                cache.set_special(record, self, self._update_getter(record, value))
-
-    def _update_getter(self, record, value):
-        def getter():
-            # determine the current field's value, and update it in cache only
-            cache = record.env.cache
-            cache.remove(record, self)
-            val = self.convert_to_cache(record[self.name] | value, record, validate=False)
-            cache.set(record, self, val)
-            return val
-        return getter
+                cache.set_special(record, self, _RelationalMultiUpdate(record, self, value))
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: tuple(ids)
@@ -2363,6 +2368,8 @@ class Many2many(_RelationalMulti):
                     self.column2 = '%s_id' % comodel._table
             # check validity of table name
             check_pg_name(self.relation)
+        else:
+            self.relation = self.column1 = self.column2 = None
 
     def _setup_regular_full(self, model):
         super(Many2many, self)._setup_regular_full(model)

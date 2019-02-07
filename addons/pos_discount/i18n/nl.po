@@ -3,7 +3,7 @@
 # * pos_discount
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 msgid ""
@@ -38,7 +38,10 @@ msgid "Discount %"
 msgstr "Korting %"
 
 #. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:14
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_pc
+#, python-format
 msgid "Discount Percentage"
 msgstr "Kortingspercentage"
 
@@ -49,6 +52,13 @@ msgid "Discount Product"
 msgstr "Product korting"
 
 #. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:28
+#, python-format
+msgid "No discount product found"
+msgstr "Geen kortingsproduct gevonden"
+
+#. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_iface_discount
 msgid "Order Discounts"
 msgstr "Order kortingen"
@@ -57,6 +67,17 @@ msgstr "Order kortingen"
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_pc
 msgid "The default discount percentage"
 msgstr "Het standaard kortingspercentage"
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:29
+#, python-format
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
+" Sold' and 'Available in Point of Sale'."
+msgstr ""
+"Het kortingsproduct lijkt foutief geconfigureerd te zijn. Zorg ervoor dat "
+"het aangeduid is als 'Kan verkocht' worden en 'Beschikbaar in Kassa'."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_product_id

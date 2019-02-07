@@ -3,21 +3,24 @@
 # * website_slides
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Paolo Valier, 2017
 # Luigi Di Naro <gigidn@gmail.com>, 2018
 # David Minneci <david@numeko.it>, 2018
 # maiolif <maiolif@mgftools.com>, 2018
 # Cécile Collart <cco@odoo.com>, 2018
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
+# Martin Trigaux, 2018
+# Davide Corio <enlightx@gmail.com>, 2018
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
+# Paolo Valier, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:28+0000\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,6 +94,8 @@ msgid ""
 "(Un)archiving a channel automatically (un)archives its slides. Do you want "
 "to proceed?"
 msgstr ""
+"Ripristinare un canale dall'archivio ripristina anche tutte le sue diapositive.\n"
+"Sei sicuro di voler procedere?"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
@@ -228,6 +233,15 @@ msgid "<i class=\"fa fa-thumbs-up\"/> Likes"
 msgstr "<i class=\"fa fa-thumbs-up\"/> Likes"
 
 #. module: website_slides
+#: code:addons/website_slides/models/slides.py:105
+#, python-format
+msgid ""
+"<p>This channel is private and its content is restricted to some users.</p>"
+msgstr ""
+"<p>Questo canale è privato e il suo contenuto è limitato ad alcuni "
+"utenti.</p>"
+
+#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
@@ -297,6 +311,46 @@ msgid "<span class=\"text-muted\">Sort by:</span>"
 msgstr "Ordina per:</span>"
 
 #. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"first\" title=\"First slide\">\n"
+"                                            <i class=\"fa fa-step-backward fa-2x\"/>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"fullscreen\" title=\"View fullscreen\">\n"
+"                                        <i class=\"fa fa-arrows-alt fa-2x\"/>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"last\" title=\"Last slide\" role=\"button\">\n"
+"                                            <i class=\"fa fa-step-forward fa-2x\"/>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"next\" title=\"Next slide\" role=\"button\">\n"
+"                                            <i class=\"fa fa-arrow-circle-right fa-2x\"/>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"previous\" title=\"Previous slide\" role=\"button\">\n"
+"                                            <i class=\"fa fa-arrow-circle-left fa-2x\"/>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: website_slides
 #: sql_constraint:slide.tag:0
 msgid "A tag must be unique!"
 msgstr "Ogni tag deve essere unico"
@@ -326,17 +380,17 @@ msgstr "Archiviato"
 #. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Authenticated Users Only"
-msgstr ""
+msgstr "Solo Utenti Autentificati "
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_5
 msgid "Awesome Timesheet by Odoo"
-msgstr ""
+msgstr "Splendido timesheet di Odoo"
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.tag1
 msgid "CMS"
-msgstr ""
+msgstr "CMS"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see
@@ -380,7 +434,7 @@ msgstr "Canale"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_group_ids
 msgid "Channel Groups"
-msgstr "Canale dei grupi"
+msgstr "Gruppi abilitati"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -418,7 +472,7 @@ msgstr "Canali"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_10
 msgid "Company Culture"
-msgstr ""
+msgstr "Cultura dell'azienda"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_datas
@@ -439,6 +493,8 @@ msgid ""
 "Could not fetch data from url. Document or access right not available.\n"
 "Here is the received response: %s"
 msgstr ""
+"Non è possibile recuperare i dati dall'URL. Documenti o diritti di accesso non disponibili:\n"
+"Qui trovi la risposta ricevuta: %s"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:322
@@ -510,7 +566,7 @@ msgstr "Annulla"
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_6
 msgid "Discover how easy marketing your business can be with Odoo"
-msgstr ""
+msgstr "Scopri come promuovere facilmente il tuo business con Odoo"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_0
@@ -521,11 +577,16 @@ msgid ""
 "\n"
 "Discover Odoo MRP: https://www.odoo.com/page/manufacturing"
 msgstr ""
+"Scopri come integrare MRP, PLM, qualità e manutenzione in un'unica applicazione per ottimizzare l'efficienza delle tue operazioni di produzione. \n"
+"\n"
+"Per saperne di più sulle funzionalità: https://www.odoo.com/page/manufacturing-features\n"
+"\n"
+"Scopri Odoo MRP: https://www.odoo.com/page/manufacturing"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_1
 msgid "Discover the CRM sales people love https://www.odoo.com/page/crm"
-msgstr ""
+msgstr "Scopri il CRM che i commerciali amano: https://www.odoo.com/page/crm"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_2
@@ -534,6 +595,9 @@ msgid ""
 "\n"
 "Learn more at https://odoo.com"
 msgstr ""
+"Scopri la soluzione software di gestione aziendale all-in-one che si adatta a tutte le aziende e situazioni.\n"
+"\n"
+"Per saperne di più: https://odoo.com"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_dislikes
@@ -589,6 +653,10 @@ msgid ""
 "Chrome: http://bit.ly/2613LcY\n"
 "iOS: http://bit.ly/1ZUZsZD"
 msgstr ""
+"Scarica Awesome Timesheet di Odoo e scopri quanto sia facile rintracciare il tempo e gestire i dipendenti.!\n"
+"\n"
+"Chrome: http://bit.ly/2613LcY\n"
+"iOS: http://bit.ly/1ZUZsZD"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_download_security
@@ -692,7 +760,7 @@ msgstr "Google doc key"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Google Drive API Key"
-msgstr ""
+msgstr "Chiave API Google Drive"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_graph
@@ -715,8 +783,8 @@ msgid ""
 "Groups allowed to upload presentations in this channel. If void, every user "
 "can upload."
 msgstr ""
-"I grupi permettono di caricare presentazioni in questo canale. Ogni utente "
-"può caricare"
+"Gruppi abilitati a caricare presentazioni in questo canale. Se vuoto, tutti "
+"gli utenti sono abilitati."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_id
@@ -794,7 +862,7 @@ msgstr "Ultima pubblicazione"
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_8
 msgid "Learn more at https://www.odoo.com/page/sales"
-msgstr ""
+msgstr "Per saperne di più: https://www.odoo.com/page/sales"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_likes
@@ -906,12 +974,12 @@ msgstr "Numero di video "
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_2
 msgid "Odoo All-in-One Software Demonstration"
-msgstr ""
+msgstr "Dimostrazione del software all-in-one Odoo"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_1
 msgid "Odoo CRM"
-msgstr ""
+msgstr "Odoo CRM"
 
 #. module: website_slides
 #: model:slide.category,name:website_slides.category_2
@@ -922,27 +990,27 @@ msgstr "Odoo Days"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_7
 msgid "Odoo Inventory"
-msgstr ""
+msgstr "Odoo Inventario"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_0
 msgid "Odoo MRP"
-msgstr ""
+msgstr "Odoo MRP"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_6
 msgid "Odoo Marketing"
-msgstr ""
+msgstr "Odoo Marketing"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_8
 msgid "Odoo Sales"
-msgstr ""
+msgstr "Odoo Vendite"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_3
 msgid "Odoo Sign Demonstration"
-msgstr ""
+msgstr "Dimostrazione di Odoo Firma"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_9
@@ -1178,6 +1246,9 @@ msgid ""
 "\n"
 "Discover more at https://www.odoo.com/page/sign"
 msgstr ""
+"Smettila di stampare i documenti, firmarli e poi scannerizzarli. Passa alla firma elettronica con Odoo Firma\n"
+"\n"
+"Per saperne di più: https://www.odoo.com/page/sign"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_tag_form
@@ -1212,6 +1283,9 @@ msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
 msgstr ""
+"Il tipo di documento sarà definito automaticamente in base al suo URL e alle"
+" sue proprietà (es: altezza e larghezza per una presentazione o un "
+"documento)."
 
 #. module: website_slides
 #: sql_constraint:slide.slide:0
@@ -1376,6 +1450,9 @@ msgid ""
 "\n"
 "Discover Odoo Inventory: https://www.odoo.com/page/warehouse"
 msgstr ""
+"Software di gestione del magazzino per il 21o secolo.\n"
+"\n"
+"Scopri Odoo Inventorio: https://www.odoo.com/page/warehouse"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form

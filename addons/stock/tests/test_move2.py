@@ -252,6 +252,30 @@ class TestPickShip(TestStockCommon):
             "Downstream computation from original picking worked"
         )
 
+    def test_mto_moves_return_extra(self):
+        picking_pick, picking_client = self.create_pick_ship()
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 10.0)
+
+        picking_pick.action_assign()
+        picking_pick.move_lines[0].move_line_ids[0].qty_done = 10.0
+        picking_pick.action_done()
+        self.assertEqual(picking_pick.state, 'done')
+        self.assertEqual(picking_client.state, 'assigned')
+
+        # return more than we've done
+        stock_return_picking = self.env['stock.return.picking']\
+            .with_context(active_ids=picking_pick.ids, active_id=picking_pick.ids[0])\
+            .create({})
+        stock_return_picking.product_return_moves.quantity = 12.0 # Return 2 extra
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+
+        # Verify the extra move has been merged with the original move
+        self.assertAlmostEqual(return_pick.move_lines.product_uom_qty, 12.0)
+        self.assertAlmostEqual(return_pick.move_lines.quantity_done, 0.0)
+        self.assertAlmostEqual(return_pick.move_lines.reserved_availability, 10.0)
+
     def test_mto_resupply_cancel_ship(self):
         """ This test simulates a pick pack ship with a resupply route
         set. Pick and pack are validated, ship is cancelled. This test
@@ -776,6 +800,58 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(picking_client.state, 'waiting')
         picking_client.do_unreserve()
         self.assertEqual(picking_client.state, 'waiting')
+
+    def test_return_location(self):
+        """ In a pick ship scenario, send two items to the customer, then return one in the ship
+        location and one in a return location that is located in another warehouse.
+        """
+        pick_location = self.env['stock.location'].browse(self.stock_location)
+        pick_location.return_location = True
+
+        return_warehouse = self.env['stock.warehouse'].create({'name': 'return warehouse', 'code': 'rw'})
+        return_location = self.env['stock.location'].create({
+            'name': 'return internal',
+            'usage': 'internal',
+            'location_id': return_warehouse.view_location_id.id
+        })
+
+        self.env['stock.quant']._update_available_quantity(self.productA, pick_location, 10.0)
+        picking_pick, picking_client = self.create_pick_ship()
+
+        # send the items to the customer
+        picking_pick.action_assign()
+        picking_pick.move_lines[0].move_line_ids[0].qty_done = 10.0
+        picking_pick.action_done()
+        picking_client.move_lines[0].move_line_ids[0].qty_done = 10.0
+        picking_client.action_done()
+
+        # return half in the pick location
+        return1 = self.env['stock.return.picking']\
+            .with_context(active_ids=picking_pick.ids, active_id=picking_client.ids[0])\
+            .create({})
+        return1.product_return_moves.quantity = 5.0
+        return1.location_id = pick_location.id
+        return_to_pick_picking_action = return1.create_returns()
+
+        return_to_pick_picking = self.env['stock.picking'].browse(return_to_pick_picking_action['res_id'])
+        return_to_pick_picking.move_lines[0].move_line_ids[0].qty_done = 5.0
+        return_to_pick_picking.action_done()
+
+        # return the remainig products in the return warehouse
+        return2 = self.env['stock.return.picking']\
+            .with_context(active_ids=picking_pick.ids, active_id=picking_client.ids[0])\
+            .create({})
+        return2.product_return_moves.quantity = 5.0
+        return2.location_id = return_location.id
+        return_to_return_picking_action = return2.create_returns()
+
+        return_to_return_picking = self.env['stock.picking'].browse(return_to_return_picking_action['res_id'])
+        return_to_return_picking.move_lines[0].move_line_ids[0].qty_done = 5.0
+        return_to_return_picking.action_done()
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pick_location), 5.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, return_location), 5.0)
+        self.assertEqual(len(self.env['stock.quant'].search([('product_id', '=', self.productA.id)])), 2)
 
 
 class TestSinglePicking(TestStockCommon):

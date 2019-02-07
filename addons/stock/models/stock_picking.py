@@ -501,7 +501,7 @@ class Picking(models.Model):
         # As it is a create the format will be a list of (0, 0, dict)
         if vals.get('move_lines') and vals.get('location_id') and vals.get('location_dest_id'):
             for move in vals['move_lines']:
-                if len(move) == 3:
+                if len(move) == 3 and move[0] == 0:
                     move[2]['location_id'] = vals['location_id']
                     move[2]['location_dest_id'] = vals['location_dest_id']
         res = super(Picking, self).create(vals)
@@ -546,6 +546,10 @@ class Picking(models.Model):
     @api.one
     def action_assign_owner(self):
         self.move_line_ids.write({'owner_id': self.owner_id.id})
+
+    def action_assign_partner(self):
+        for picking in self:
+            picking.move_lines.write({'partner_id': picking.partner_id.id})
 
     @api.multi
     def do_print_picking(self):

@@ -28,7 +28,7 @@ class Event(models.Model):
 
     def _compute_is_participating(self):
         # we don't allow public user to see participating label
-        if self.env.user != self.env.ref('base.public_user'):
+        if not self.env.user._is_public():
             email = self.env.user.partner_id.email
             for event in self:
                 domain = ['&', '|', ('email', '=', email), ('partner_id', '=', self.env.user.partner_id.id), ('event_id', '=', event.id)]

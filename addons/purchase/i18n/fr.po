@@ -3,50 +3,52 @@
 # * purchase
 # 
 # Translators:
-# Lionel Sausin <ls@numerigraphe.com>, 2017
 # Fabrice Henrion, 2017
-# Clo <clo@odoo.com>, 2017
-# Martin Trigaux, 2017
 # Lamia Ishak <lamiaishak@hotmail.co.uk>, 2017
-# lap.odoo <lap@odoo.com>, 2017
 # Alexandre Fayolle <alexandre.fayolle@camptocamp.com>, 2017
-# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
-# Sylvain LE GAL <sylvain.legal@grap.coop>, 2017
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
-# Lucas Deliege <lud@odoo.com>, 2017
-# Florian Hatat, 2017
 # Simon CARRIER <carrier.sim@gmail.com>, 2017
-# Hubert TETARD <htetard@apik-conseils.com>, 2017
-# Nancy Bolognesi <nb@microcom.ca>, 2017
-# Xavier Belmere <Info@cartmeleon.com>, 2017
-# Melanie Bernard <mbe@odoo.com>, 2017
+# Shark McGnark <peculiarcheese@gmail.com>, 2017
+# zoe <yann.hoareau@migs.re>, 2017
+# Fred Gilson <fgi@odoo.com>, 2017
+# Sylvain LE GAL <sylvain.legal@grap.coop>, 2017
+# Leo Schmitt <inactive+lschmitt@transifex.com>, 2017
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2017
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
-# Fabien Pinckaers <fp@openerp.com>, 2017
-# zoe <yann.hoareau@migs.re>, 2017
-# Eloïse Stilmant <est@odoo.com>, 2017
-# Shark McGnark <peculiarcheese@gmail.com>, 2017
-# Fred Gilson <fgi@odoo.com>, 2017
-# Leo Schmitt <inactive+lschmitt@transifex.com>, 2017
-# Micky Jault <micky037@hotmail.fr>, 2017
 # Fabien Bourgeois <fabien@yaltik.com>, 2017
 # Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2017
 # matthieu gaillet <matthieu.gaillet@lebrass.be>, 2017
-# leemannd <denis.leemann@camptocamp.com>, 2017
+# Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2017
+# Denis Leemann <denis.leemann@camptocamp.com>, 2017
+# Laura Piraux <lap@odoo.com>, 2017
 # Loic <loic.richard2@gmail.com>, 2017
-# Lucas Deliege <lud@openerp.com>, 2017
+# Lucas Deliege <lud@odoo.com>, 2017
+# Melanie Bernard <mbe@odoo.com>, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2017
+# Micky Jault <micky037@hotmail.fr>, 2017
+# Eloïse Stilmant <est@odoo.com>, 2017
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2017
-# fr rev <e2ffr02@hotmail.com>, 2017
+# Hubert TETARD <htetard@apik-conseils.com>, 2017
+# Lionel Sausin <ls@numerigraphe.com>, 2017
+# Fabien Pinckaers <fp@openerp.com>, 2017
+# Nancy Bolognesi <nb@microcom.ca>, 2017
+# Lucas Deliege <lud@openerp.com>, 2017
+# Clo <clo@odoo.com>, 2017
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
+# f5f0a0dac17dde787a1d812a6989680e, 2017
 # fr rev <e2ffr04@hotmail.com>, 2017
+# Florian Hatat, 2017
 # fr trans <e2ftrans1@yahoo.com>, 2017
+# fr rev <e2ffr02@hotmail.com>, 2018
 # e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-27 14:51+0000\n"
-"PO-Revision-Date: 2018-04-27 14:51+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:22+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -157,7 +159,7 @@ msgstr ""
 "<p>Cordialement,</p>\n"
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:79
+#: code:addons/purchase/models/stock.py:98
 #, python-format
 msgid " Buy"
 msgstr " Acheter"
@@ -359,6 +361,14 @@ msgstr ""
 "            "
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
@@ -396,12 +406,12 @@ msgstr "<strong>Date prévue</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Order Date:</strong>"
-msgstr "<strong>Date de commande:</strong>"
+msgstr "<strong>Date de commande :</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Our Order Reference:</strong>"
-msgstr "<strong>Notre Référence de Commande</strong>"
+msgstr "<strong>Notre Référence de Commande :</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -423,7 +433,7 @@ msgstr "<strong>Quantité</strong>"
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Shipping address:</strong>"
-msgstr "<strong>Adresse de livraison:</strong>"
+msgstr "<strong>Adresse de livraison :</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -463,7 +473,7 @@ msgid "<strong>Your Order Reference:</strong>"
 msgstr "<strong>Votre référence de commande :</strong>"
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:83
+#: code:addons/purchase/models/stock.py:72
 #, python-format
 msgid ""
 "A sale order that generated this purchase order has been deleted. Check if "
@@ -593,7 +603,7 @@ msgid "Blocking Message"
 msgstr "Message Bloquant"
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:73
+#: code:addons/purchase/models/stock.py:92
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -636,7 +646,7 @@ msgstr ""
 "comparer les offres de plusieurs fournisseurs."
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:76
+#: code:addons/purchase/models/stock.py:95
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr "Impossible de trouver une route d'achat générique."
@@ -654,7 +664,7 @@ msgid "Cancelled"
 msgstr "Annulé"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:737
+#: code:addons/purchase/models/purchase.py:757
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr ""
@@ -906,7 +916,7 @@ msgid "Extended Filters"
 msgstr "Filtres étendus"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:577
+#: code:addons/purchase/models/purchase.py:590
 #, python-format
 msgid "Extra line with %s "
 msgstr "Ligne supplémentaire avec %s "
@@ -1632,6 +1642,11 @@ msgid "Purchases Orders"
 msgstr "Ordres d'achat"
 
 #. module: purchase
+#: model:ir.model,name:purchase.model_stock_location_path
+msgid "Pushed Flow"
+msgstr "Flux poussés"
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_dest_address_id
 msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
@@ -1970,7 +1985,7 @@ msgstr ""
 "fournisseurs disponibles, etc."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:649
+#: code:addons/purchase/models/purchase.py:662
 #, python-format
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
@@ -2002,7 +2017,7 @@ msgstr ""
 "des produits et des notes du fournisseur."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:878
+#: code:addons/purchase/models/purchase.py:898
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
@@ -2076,13 +2091,13 @@ msgid "This note will show up on purchase orders."
 msgstr "Cette note s'affichera sur les bons de commande."
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:203
+#: code:addons/purchase/models/account_invoice.py:218
 #, python-format
 msgid "This vendor bill has been created from: %s"
 msgstr "Cette facture fournisseur a été créée depuis : %s"
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:217
+#: code:addons/purchase/models/account_invoice.py:232
 #, python-format
 msgid "This vendor bill has been modified from: %s"
 msgstr "Cette facture fournisseur a été modifiée depuis : %s"
@@ -2140,7 +2155,7 @@ msgid "Transfer"
 msgstr "Transfert"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:362
+#: code:addons/purchase/models/purchase.py:363
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
@@ -2150,7 +2165,7 @@ msgstr ""
 "été effectuées. "
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:365
+#: code:addons/purchase/models/purchase.py:366
 #, python-format
 msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
@@ -2309,7 +2324,7 @@ msgstr "Avertissement"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:268
-#: code:addons/purchase/models/purchase.py:808
+#: code:addons/purchase/models/purchase.py:828
 #, python-format
 msgid "Warning for %s"
 msgstr "Avertissement pour %s"
@@ -2371,7 +2386,7 @@ msgstr ""
 "achetés auprès de sous-traitants."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:395
+#: code:addons/purchase/models/purchase.py:408
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "Vous devez définir une adresse pour ce tiers, %s."

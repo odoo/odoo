@@ -6,12 +6,13 @@
 # Martin Trigaux, 2018
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2018
 # Anica Milanova, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:15+0000\n"
 "Last-Translator: Anica Milanova, 2018\n"
 "Language-Team: Macedonian (https://www.transifex.com/odoo/teams/41243/mk/)\n"
 "MIME-Version: 1.0\n"
@@ -36,7 +37,18 @@ msgid "<span> ;  Long:  </span>"
 msgstr ""
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:18
+#: code:addons/base_geolocalize/models/res_partner.py:19
+#, python-format
+msgid ""
+"API key for GeoCoding (Places) required.\n"
+"\n"
+"                          Save this key in System Parameters with key: google.api_key_geocode, value: <your api key>\n"
+"                          Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information.\n"
+"                          "
+msgstr ""
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:28
 #, python-format
 msgid ""
 "Cannot contact geolocation servers. Please make sure that your Internet "

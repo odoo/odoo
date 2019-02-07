@@ -212,6 +212,14 @@ class StockMove(models.Model):
         """
         return self.location_id.usage == 'supplier' and self.location_dest_id.usage == 'customer'
 
+    def _is_dropshipped_returned(self):
+        """ Check if the move should be considered as a returned dropshipping move so that the cost
+        method will be able to apply the correct logic.
+
+        :return: True if the move is a returned dropshipping one else False
+        """
+        return self.location_id.usage == 'customer' and self.location_dest_id.usage == 'supplier'
+
     @api.model
     def _run_fifo(self, move, quantity=None):
         """ Value `move` according to the FIFO rule, meaning we consume the
@@ -260,7 +268,8 @@ class StockMove(models.Model):
 
         # Update the standard price with the price of the last used candidate, if any.
         if new_standard_price and move.product_id.cost_method == 'fifo':
-            move.product_id.sudo().standard_price = new_standard_price
+            move.product_id.sudo().with_context(force_company=move.company_id.id) \
+                .standard_price = new_standard_price
 
         # If there's still quantity to value but we're out of candidates, we fall in the
         # negative stock use case. We chose to value the out move at the price of the
@@ -323,7 +332,7 @@ class StockMove(models.Model):
                     'value': value if quantity is None else self.value + value,
                     'price_unit': value / valued_quantity,
                 })
-        elif self._is_dropshipped():
+        elif self._is_dropshipped() or self._is_dropshipped_returned():
             curr_rounding = self.company_id.currency_id.rounding
             if self.product_id.cost_method in ['fifo']:
                 price_unit = self._get_price_unit()
@@ -335,8 +344,8 @@ class StockMove(models.Model):
             # In move have a positive value, out move have a negative value, let's arbitrary say
             # dropship are positive.
             self.write({
-                'value': value,
-                'price_unit': price_unit,
+                'value': value if self._is_dropshipped() else -value,
+                'price_unit': price_unit if self._is_dropshipped() else -price_unit,
             })
 
     def _action_done(self):
@@ -359,7 +368,7 @@ class StockMove(models.Model):
             if company_src and company_dst and company_src.id != company_dst.id:
                 raise UserError(_("The move lines are not in a consistent states: they are doing an intercompany in a single step while they should go through the intercompany transit location."))
             move._run_valuation()
-        for move in res.filtered(lambda m: m.product_id.valuation == 'real_time' and (m._is_in() or m._is_out() or m._is_dropshipped())):
+        for move in res.filtered(lambda m: m.product_id.valuation == 'real_time' and (m._is_in() or m._is_out() or m._is_dropshipped() or m._is_dropshipped_returned())):
             move._account_entry_move()
         return res
 
@@ -372,17 +381,17 @@ class StockMove(models.Model):
             product_tot_qty_available = move.product_id.qty_available + tmpl_dict[move.product_id.id]
             rounding = move.product_id.uom_id.rounding
 
-            qty_done = 0.0
+            qty_done = move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id)
             if float_is_zero(product_tot_qty_available, precision_rounding=rounding):
                 new_std_price = move._get_price_unit()
-            elif float_is_zero(product_tot_qty_available + move.product_qty, precision_rounding=rounding):
+            elif float_is_zero(product_tot_qty_available + move.product_qty, precision_rounding=rounding) or \
+                    float_is_zero(product_tot_qty_available + qty_done, precision_rounding=rounding):
                 new_std_price = move._get_price_unit()
             else:
                 # Get the standard price
                 amount_unit = std_price_update.get((move.company_id.id, move.product_id.id)) or move.product_id.standard_price
-                qty_done = move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id)
                 qty = forced_qty or qty_done
-                new_std_price = ((amount_unit * product_tot_qty_available) + (move._get_price_unit() * qty)) / (product_tot_qty_available + qty_done)
+                new_std_price = ((amount_unit * product_tot_qty_available) + (move._get_price_unit() * qty)) / (product_tot_qty_available + qty)
 
             tmpl_dict[move.product_id.id] += qty_done
             # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
@@ -448,7 +457,7 @@ class StockMove(models.Model):
                 # force the amount in the context, but in the case it is 0 it'll create an entry
                 # for the entire cost of the move. This case happens when the candidates moves
                 # entirely compensate the problematic move.
-                if not corrected_value:
+                if move.company_id.currency_id.is_zero(corrected_value):
                     continue
 
                 if move._is_in():
@@ -498,9 +507,9 @@ class StockMove(models.Model):
         if not accounts_data.get('stock_journal', False):
             raise UserError(_('You don\'t have any stock journal defined on your product category, check if you have installed a chart of accounts'))
         if not acc_src:
-            raise UserError(_('Cannot find a stock input account for the product %s. You must define one on the product category, or on the location, before processing this operation.') % (self.product_id.name))
+            raise UserError(_('Cannot find a stock input account for the product %s. You must define one on the product category, or on the location, before processing this operation.') % (self.product_id.display_name))
         if not acc_dest:
-            raise UserError(_('Cannot find a stock output account for the product %s. You must define one on the product category, or on the location, before processing this operation.') % (self.product_id.name))
+            raise UserError(_('Cannot find a stock output account for the product %s. You must define one on the product category, or on the location, before processing this operation.') % (self.product_id.display_name))
         if not acc_valuation:
             raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
         journal_id = accounts_data['stock_journal'].id
@@ -529,7 +538,7 @@ class StockMove(models.Model):
 
         # check that all data is correct
         if self.company_id.currency_id.is_zero(debit_value):
-            raise UserError(_("The cost of %s is currently equal to 0. Change the cost or the configuration of your product to avoid an incorrect valuation.") % (self.product_id.name,))
+            raise UserError(_("The cost of %s is currently equal to 0. Change the cost or the configuration of your product to avoid an incorrect valuation.") % (self.product_id.display_name,))
         credit_value = debit_value
 
         partner_id = (self.picking_id.partner_id and self.env['res.partner']._find_accounting_partner(self.picking_id.partner_id).id) or False
@@ -642,10 +651,13 @@ class StockMove(models.Model):
             else:
                 self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_dest, journal_id)
 
-        if self.company_id.anglo_saxon_accounting and self._is_dropshipped():
+        if self.company_id.anglo_saxon_accounting:
             # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
-            self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_dest, journal_id)
+            if self._is_dropshipped():
+                self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_dest, journal_id)
+            elif self._is_dropshipped_returned():
+                self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_dest, acc_src, journal_id)
 
 
 class StockReturnPicking(models.TransientModel):

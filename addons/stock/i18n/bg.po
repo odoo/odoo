@@ -3,27 +3,28 @@
 # * stock
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Весел Карастоянов <vesel@abv.bg>, 2017
 # kirily <kiril@teracomp.eu>, 2017
 # B Dochev, 2017
 # Ivan Ivanov, 2017
 # aleksandar ivanov, 2018
-# Albena Mincheva <albena_vicheva@abv.bg>, 2018
 # Boris Stefanov <borkata@gmail.com>, 2018
 # Radina <radis.choice@gmail.com>, 2018
-# Kaloyan Naumov <kaloyan@lumnus.net>, 2018
 # Anton Vassilev, 2018
-# kalatchev, 2018
 # Vladimir Petrov <vladimir.petrov@gmail.com>, 2018
-# Maria Boyadjieva <marabo2000@gmail.com>, 2018
+# kalatchev, 2018
+# Albena Mincheva <albena_vicheva@abv.bg>, 2018
+# Kaloyan Naumov <kaloyan@lumnus.net>, 2018
+# Martin Trigaux, 2018
+# Весел Карастоянов <vesel@abv.bg>, 2018
+# Maria Boyadjieva <marabo2000@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:24+0000\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2019\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:230
+#: code:addons/stock/models/stock_move.py:340
 #, python-format
 msgid ""
 "\n"
@@ -44,7 +45,7 @@ msgstr ""
 "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:231
+#: code:addons/stock/models/stock_move.py:341
 #, python-format
 msgid ""
 "\n"
@@ -56,13 +57,13 @@ msgstr ""
 "Блокиране:%s"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:308
+#: code:addons/stock/models/stock_move.py:328
 #, python-format
 msgid " (%s reserved)"
 msgstr "(%s запазено)"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:311
+#: code:addons/stock/models/stock_move.py:331
 #, python-format
 msgid " (reserved)"
 msgstr "(запазено)"
@@ -84,7 +85,7 @@ msgid "#Products"
 msgstr "#Продукти"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:481
+#: code:addons/stock/models/stock_warehouse.py:486
 #, python-format
 msgid "%s: Supply Product from %s"
 msgstr "%s: Продукт за доставка от%s"
@@ -487,11 +488,6 @@ msgid "<strong>Date</strong>"
 msgstr "<strong>Дата</strong>"
 
 #. module: stock
-#: model:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Delivered Quantity</strong>"
-msgstr "<strong>Доставено количество</strong>"
-
-#. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "<strong>Enjoy your Inventory management with Odoo!</strong>"
 msgstr "<strong>Наслаждавайте се инвентаризацията!</strong>"
@@ -519,6 +515,10 @@ msgid ""
 "in the medium term because you restock with the exact amount that was "
 "ordered"
 msgstr ""
+"<strong>Направете поръчка:</strong> продуктът се придобива само при заявки "
+"за търсене, всеки път, когато се потвърждава поръчка за продажба. Това не "
+"променя запасите в средносрочен план, защото сте се презапасили с точното "
+"поръчано количество"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -528,6 +528,10 @@ msgid ""
 "Purchase Order is generated according the minimum stock rules in order to "
 "get the products required"
 msgstr ""
+"<strong>Създайте наличност:</strong> Вашите клиенти се снабдяват от "
+"наличните запаси. Ако количествата на склад са твърде ниски, за да "
+"удовлетворят поръчката, се създава поръчка за покупка съгласно правилата за "
+"минимални запаси, за да се получат необходимите продукти"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -563,6 +567,9 @@ msgid ""
 "<strong>No bill of materials defined for production:</strong> you need to "
 "create a BoM or indicate that the product can be purchased instead."
 msgstr ""
+"<strong>Няма фактура за покупка на материали, определена за "
+"производство:</strong> Трябва да създадете фактура за покупка на материали "
+"или да посочите, че продуктът може да бъде закупен вместо това."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -570,6 +577,8 @@ msgid ""
 "<strong>No quantity available in stock:</strong> you have to create a "
 "reordering rule and put it in the order, or manually procure it."
 msgstr ""
+"<strong>В склада липсват наличните количества:</strong> трябва да създадете "
+"правило за пренареждане и да го подредите или да го набавите механично."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -577,6 +586,8 @@ msgid ""
 "<strong>No supplier available for a purchase:</strong> you have to define a "
 "supplier in the Procurements tab of the product form."
 msgstr ""
+"<strong>Няма наличен доставчик за покупка:</strong> трябва да определите "
+"доставчик в раздела \"Доставки\" в продуктовата форма."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -585,17 +596,15 @@ msgid ""
 "location at the current time. This includes items that are already allocated"
 " to fulfilling production needs or sales orders"
 msgstr ""
+"<strong>Продукти под ръка</strong> са физически разположените понастоящем в "
+"склада. Това включва артикули, които са вече разпределени да задоволят "
+"производствените нужди или поръчките за продажба"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Order (Origin)</strong>"
 msgstr "<strong>Поръчка (произход)</strong>"
-
-#. module: stock
-#: model:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Ordered Quantity</strong>"
-msgstr "<strong>Поръчано количество</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -619,6 +628,7 @@ msgid "<strong>Qty: </strong>"
 msgstr "<strong>К-во:</strong>"
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Quantity</strong>"
 msgstr "<strong>Количество</strong>"
@@ -648,6 +658,9 @@ msgid ""
 "<strong>Stockable products</strong> are subject to the full inventory "
 "management system: minimum stock rules, automatic procurement, etc."
 msgstr ""
+"<strong>Продукти на склад</strong> са изцяло предмет на системата за "
+"управление на запасите: правилата за минимални запаси, автоматична доставка "
+"и др."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_head
@@ -677,7 +690,7 @@ msgstr ""
 "fa-list\"/> иконата."
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:115
+#: code:addons/stock/models/stock_inventory.py:122
 #, python-format
 msgid "A Pack"
 msgstr "Пакет"
@@ -693,7 +706,7 @@ msgid "A classic sales flow looks like the following:"
 msgstr "Класическият поток от продажби изглежда така:"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:86
+#: code:addons/stock/models/stock_move_line.py:93
 #, python-format
 msgid "A done move line should never have a reserved quantity."
 msgstr "Завършената линия на движение не трябва да има запазено количество"
@@ -710,7 +723,7 @@ msgstr ""
 "                        пространство и могат да изгубат стойността си)."
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:76
+#: code:addons/stock/models/stock_quant.py:80
 #, python-format
 msgid "A serial number should only be linked to a single product."
 msgstr "Сериен номер трябва да е свързан само с един продукт."
@@ -759,6 +772,14 @@ msgstr "Действие"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_active
 msgid "Active"
 msgstr "Активен"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid ""
+"Add an internal note that will be printed on the Picking Operations sheet"
+msgstr ""
+"Добавете вътрешна бележка, която ще бъде разпечатана върху графика с пикинг "
+"операциите"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_group_stock_adv_location
@@ -838,7 +859,7 @@ msgstr ""
 "изпратени веднага щом станат достъпни."
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:105
+#: code:addons/stock/models/stock_inventory.py:112
 #, python-format
 msgid "All products"
 msgstr "Всички продукти"
@@ -853,12 +874,6 @@ msgstr "Всички отказани стоки - движения"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_show_entire_packs
 msgid "Allow moving packs"
 msgstr "Разрешаване на преместването на пакетите"
-
-#. module: stock
-#: code:addons/stock/models/stock_quant.py:82
-#, python-format
-msgid "An incoming date cannot be set to an untracked product."
-msgstr "Входящата дата не може да бъде настроена на нетрадиционен продукт."
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_2
@@ -932,6 +947,18 @@ msgid "Assign Owner"
 msgstr "Назначи собственик"
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Assign Partner"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid ""
+"Assign the partner to the Operations. Use only if the partner is manually "
+"changed!"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Assigned Moves"
 msgstr "Назначи премествания"
@@ -995,12 +1022,6 @@ msgid "Back order <em>%s</em> <b>cancelled</b>."
 msgstr "Неизпълнена поръчка <em>%s</em> <b>отказана</b>."
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:790
-#, python-format
-msgid "Back order <em>%s</em> <b>created</b>."
-msgstr "Неизпълнена поръчка <em>%s</em> <b>създадена</b>."
-
-#. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation
 msgid "Backorder Confirmation"
 msgstr "Потрърждение на неизпълнена поръчка"
@@ -1054,6 +1075,8 @@ msgid ""
 "Before creating your products, here are a few concepts your should "
 "understand:"
 msgstr ""
+"Преди да създадете продуктите си, ето няколко концепции, които трябва да "
+"разберете:"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_4
@@ -1097,12 +1120,14 @@ msgid "By Unique Serial Number"
 msgstr "По уникален сериен номер"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:612
+#: code:addons/stock/models/stock_move.py:644
 #, python-format
 msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
 "Odoo will not automatically generate a back order."
 msgstr ""
+"Като промяте количество тук, приемате новото количество като пълно: Odoo "
+"няма да създаде автоматично върната поръчка."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1128,12 +1153,16 @@ msgstr ""
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
 msgstr ""
+"Като премахнете отметката от активното поле, можете да скриете локация, без "
+"да я изтривате."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_incoterms_active
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM you will not use."
 msgstr ""
+"Като премахнете отметката от активното поле, можете да скриете ИНКОТЕРМ, "
+"който няма да използвате."
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_CIP
@@ -1161,13 +1190,13 @@ msgid "Calendar View"
 msgstr "Календарен изглед"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:428
+#: code:addons/stock/models/stock_warehouse.py:432
 #, python-format
 msgid "Can't find any customer or supplier location."
 msgstr "Не може да се намери местоположение на клиент или доставчик."
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:476
+#: code:addons/stock/models/stock_warehouse.py:481
 #, python-format
 msgid "Can't find any generic Make To Order route."
 msgstr "Не може да се намери маршрут за генериране на поръчка."
@@ -1195,7 +1224,7 @@ msgid "Cancelled"
 msgstr "Отказанa"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:468
+#: code:addons/stock/models/stock_move.py:499
 #, python-format
 msgid "Cannot unreserve a done move"
 msgstr "Не може да се върне обратно направено движение"
@@ -1209,7 +1238,7 @@ msgstr "Категория Маршрути"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_move_dest_exists
 msgid "Chained Move Exists"
-msgstr ""
+msgstr "Съществува верижно движение"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_change_product_qty
@@ -1494,6 +1523,8 @@ msgid ""
 "Could not reserve all requested products. Please use the 'Mark as Todo' "
 "button to handle the reservation manually."
 msgstr ""
+"Не могат да се резервират всички заявени продукти. Моля, използвайте бутона "
+"\"Маркирайте като За извършване', за да обработвате резервацията механично."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking
@@ -1533,13 +1564,13 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Create Backorder"
-msgstr ""
+msgstr "Създайте върнати поръчки"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:715
+#: code:addons/stock/models/stock_picking.py:766
 #, python-format
 msgid "Create Backorder?"
-msgstr ""
+msgstr "Създайте неизпълнена поръчка?"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_tree_view
@@ -1554,7 +1585,7 @@ msgstr "Създайте нови сериен/партиден номера"
 #. module: stock
 #: selection:procurement.rule,procure_method:0
 msgid "Create Procurement"
-msgstr ""
+msgstr "Създайте доставка"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1564,12 +1595,12 @@ msgstr "Създаване на доставчици"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Create a Quotation"
-msgstr ""
+msgstr "Създайте оферта"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Create a RFQ"
-msgstr ""
+msgstr "Създайте заявка за оферта"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -1578,6 +1609,9 @@ msgid ""
 "                        products later.  Do not create a backorder if you will not\n"
 "                        supply the remaining products."
 msgstr ""
+"Създайте неизпълнена поръчка, ако очаквате да обработите останалите\n"
+"                        продукти по-късно. Не създавайте неизпълнена поръчка, ако няма да\n"
+"                        доставяте останалите продукти."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1685,20 +1719,20 @@ msgid "Creation Date, usually the time of the order"
 msgstr "Дата на създаване, обикновено времето на поръчката"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:433
+#: code:addons/stock/models/stock_warehouse.py:437
 #, python-format
 msgid "Cross-Dock"
-msgstr ""
+msgstr "Крос-докинг"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_crossdock_route_id
 msgid "Crossdock Route"
-msgstr ""
+msgstr "Крос-док маршрут"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast_cumulative_quantity
 msgid "Cumulative Quantity"
-msgstr ""
+msgstr "Кумулативно количество"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_destination_location_id
@@ -1729,7 +1763,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.location_open_quants
 #: model:ir.ui.view,arch_db:stock.view_location_form
 msgid "Current Stock"
-msgstr ""
+msgstr "Настояща наличност"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_qty_available
@@ -1786,37 +1820,37 @@ msgstr "ДАТА"
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DAF
 msgid "DELIVERED AT FRONTIER"
-msgstr ""
+msgstr "ПРЕДОСТАВЕНО НА ГРАНИЦАТА"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DAP
 msgid "DELIVERED AT PLACE"
-msgstr ""
+msgstr "ДОСТАВЕНО НА МЯСТО"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DAT
 msgid "DELIVERED AT TERMINAL"
-msgstr ""
+msgstr "ДОСТАВЕНО НА ТЕРМИНАЛ"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
-msgstr ""
+msgstr "ПЛАТЕН ДАНЪК ДОСТАВКА"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DDU
 msgid "DELIVERED DUTY UNPAID"
-msgstr ""
+msgstr "НЕПЛАТЕН ДАНЪК ДОСТАВКА"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DEQ
 msgid "DELIVERED EX QUAY"
-msgstr ""
+msgstr "ДОСТАВЕН EX QUAY"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DES
 msgid "DELIVERED EX SHIP"
-msgstr ""
+msgstr "ДОСТАВЕНО EX SHIP"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_delivery_dhl
@@ -1855,12 +1889,12 @@ msgstr "Дата на трансфера"
 #. module: stock
 #: selection:stock.warehouse.orderpoint,lead_type:0
 msgid "Day(s) to get the products"
-msgstr ""
+msgstr "Ден(дни) за получаване на продуктите"
 
 #. module: stock
 #: selection:stock.warehouse.orderpoint,lead_type:0
 msgid "Day(s) to purchase"
-msgstr ""
+msgstr "Ден(дни) за купуване"
 
 #. module: stock
 #: model:res.company,overdue_msg:stock.res_company_1
@@ -1874,26 +1908,34 @@ msgid ""
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
 msgstr ""
+"Уважаеми/а Господине/Госпожо,\n"
+"\n"
+"Записите ни сочат, че някои плащания по Вашата сметка са все още дължими. Моля, вижте подробностите по-долу.\n"
+"Ако сумата е вече платена, молим да пренебрегнете това известие. В противен случай, молим да ни преведете общата сума, посочена по-долу.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_default_location_dest_id
 msgid "Default Destination Location"
-msgstr ""
+msgstr "Стандартна локация на местоназначението"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_owner_id
 msgid "Default Owner"
-msgstr ""
+msgstr "Стандартен собственик"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_default_resupply_wh_id
 msgid "Default Resupply Warehouse"
-msgstr ""
+msgstr "Стандартен склад за презареждане"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_default_location_src_id
 msgid "Default Source Location"
-msgstr ""
+msgstr "Стандартна локация на източника"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot_product_uom_id
@@ -1905,22 +1947,22 @@ msgstr "По подразбиране мерни единици, използв�
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_reception_steps
 msgid "Default incoming route to follow"
-msgstr ""
+msgstr "Стандартен входящ маршрут за следване"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_delivery_steps
 msgid "Default outgoing route to follow"
-msgstr ""
+msgstr "Стандартен изходящ маршрут за следване"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
 msgid "Default: Take From Stock"
-msgstr ""
+msgstr "Стандартно: вземете от склада"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_route_ids
 msgid "Defaults routes through the warehouse"
-msgstr ""
+msgstr "Стандартни маршрути през склада"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1928,6 +1970,8 @@ msgid ""
 "Define routes within your warehouse according to business needs, such as "
 "Quality Control, After Sales Services or Supplier Returns"
 msgstr ""
+"Определете маршрути в рамките на склада си според бизнес нуждите, като "
+"качествен контрол, следпродажбени услуги или възнаграждения на доставчици"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_form
@@ -1954,6 +1998,10 @@ msgid ""
 "category level, and a fallback is made on the parent locations if none is "
 "set here."
 msgstr ""
+"Определя стандартния метод, използван за посочване на точната локация "
+"(рафт), където да се съхраняват продуктите. Този метод може да бъде приложен"
+" на ниво продуктова категория, а ако тук нищо не е настроено, в основните "
+"локации се извършва резервно действие."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_removal_strategy_id
@@ -1963,6 +2011,11 @@ msgid ""
 "method can be enforced at the product category level, and a fallback is made"
 " on the parent locations if none is set here."
 msgstr ""
+"Определя стандартния метод, използван за посочване на точната локация "
+"(рафт), от където да се вземат продуктите, коя партида и т.н. за тази "
+"локация. Този метод може да бъде приложен на ниво продуктова категория, а "
+"ако тук нищо не е настроено, в основните локации се извършва резервно "
+"действие."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_form
@@ -1976,7 +2029,7 @@ msgid "Delay (days)"
 msgstr "Закъснение (дни)"
 
 #. module: stock
-#: code:addons/stock/models/product.py:332
+#: code:addons/stock/models/product.py:334
 #, python-format
 msgid "Delivered Qty"
 msgstr "Доставно количество"
@@ -1987,7 +2040,7 @@ msgid "Deliveries"
 msgstr "Доставки"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:209
+#: code:addons/stock/models/stock_warehouse.py:213
 #: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
@@ -2002,12 +2055,12 @@ msgstr "Пакети за доставка"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_delivery_route_id
 msgid "Delivery Route"
-msgstr ""
+msgstr "Маршрут на доставка"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_delivery
 msgid "Delivery Slip"
-msgstr ""
+msgstr "Превоз на доставка"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group_move_type
@@ -2100,7 +2153,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_result_package_id
 #: model:ir.ui.view,arch_db:stock.view_move_line_form
 msgid "Destination Package"
-msgstr ""
+msgstr "Пакет за местоназначение"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
@@ -2110,10 +2163,10 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_route_ids
 msgid "Destination route"
-msgstr ""
+msgstr "Маршрут за местоназначение"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:446
+#: code:addons/stock/models/stock_move.py:468
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Detailed Operations"
@@ -2136,6 +2189,9 @@ msgid ""
 "whether it will need to 'take from the available stock' in its source "
 "location or needs to ignore its stock and create a procurement over there."
 msgstr ""
+"Определя метода на доставка на движението в склада, което ще се създаде: "
+"дали ще е необходимо да 'извади от наличния запас' в локацията на източника "
+"си или трябва да игнорира своя запас и да създаде доставка там."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -2191,6 +2247,8 @@ msgid ""
 "Do not hesitate to send us an email to describe your experience or to "
 "suggest improvements!"
 msgstr ""
+"Не се колебайте да ни изпратите имейл, за да опишете опита си или да "
+"предложите подобрения!"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_qty_done
@@ -2212,7 +2270,7 @@ msgstr "Извършени трансфери"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done_grouped
 msgid "Done Transfers by Date"
-msgstr ""
+msgstr "Извършени трансфери по дати"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2246,12 +2304,12 @@ msgstr "Проект на движения"
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_EXW
 msgid "EX WORKS"
-msgstr ""
+msgstr "EX WORKS"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Edit its details or add new ones"
-msgstr ""
+msgstr "Редактирайте данните му или добавете нови"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2296,10 +2354,10 @@ msgstr ""
 "локация или партнорско местоположение."
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:407
+#: code:addons/stock/models/stock_quant.py:453
 #, python-format
 msgid "Everything inside a package should be in the same location"
-msgstr ""
+msgstr "Всичко в даден пакет трябва да бъде в една и съща локация"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2309,7 +2367,7 @@ msgstr "Excel шаблон"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
 msgid "Exhausted Stock"
-msgstr ""
+msgstr "Изчерпана наличност"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_date_expected
@@ -2331,22 +2389,22 @@ msgstr "Въведи поясненителен текст тук"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_removal_method
 msgid "FIFO, LIFO..."
-msgstr ""
+msgstr "Първи вътре - първи вън; Последен вътре - последен вън"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_FAS
 msgid "FREE ALONGSIDE SHIP"
-msgstr ""
+msgstr "СВОБОДЕН ПРЕВОЗ НА РАЗПОЛОЖЕНИЕ"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_FCA
 msgid "FREE CARRIER"
-msgstr ""
+msgstr "СВОБОДЕН ПРЕВОЗВАЧ"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_FOB
 msgid "FREE ON BOARD"
-msgstr ""
+msgstr "БЕЗПЛАТНО НА БОРДА"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_delivery_fedex
@@ -2366,17 +2424,17 @@ msgstr "Фиксиран"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_putaway
 msgid "Fixed Locations Per Categories"
-msgstr ""
+msgstr "Fixed локации по категории"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway_fixed_location_ids
 msgid "Fixed Locations Per Product Category"
-msgstr ""
+msgstr "Fixed локации по продуктови категории"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_group_id
 msgid "Fixed Procurement Group"
-msgstr ""
+msgstr "Фиксерана група за доставки"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2390,7 +2448,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category_removal_strategy_id
 msgid "Force Removal Strategy"
-msgstr ""
+msgstr "Ускорете стратегия по отстраняване"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_virtual_available
@@ -2411,12 +2469,12 @@ msgstr ""
 "В противен случай това вклучва стоки, складирани в която и да е стокова локация от 'вътрешен' тип."
 
 #. module: stock
-#: code:addons/stock/models/product.py:327
+#: code:addons/stock/models/product.py:329
 #: model:ir.model.fields,field_description:stock.field_product_template_virtual_available
 #: model:ir.model.fields,field_description:stock.field_stock_move_availability
 #, python-format
 msgid "Forecasted Quantity"
-msgstr ""
+msgstr "Прогнозно количество"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_location_id
@@ -2446,34 +2504,34 @@ msgid "Future Activities"
 msgstr "Бъдещи дейности"
 
 #. module: stock
-#: code:addons/stock/models/product.py:330
+#: code:addons/stock/models/product.py:332
 #, python-format
 msgid "Future Deliveries"
 msgstr "Бъдещи доставки"
 
 #. module: stock
-#: code:addons/stock/models/product.py:335
+#: code:addons/stock/models/product.py:337
 #, python-format
 msgid "Future P&L"
-msgstr ""
+msgstr "Бъдещи печалби & загуби"
 
 #. module: stock
-#: code:addons/stock/models/product.py:345
+#: code:addons/stock/models/product.py:347
 #, python-format
 msgid "Future Productions"
 msgstr "Бъдещи продукции"
 
 #. module: stock
-#: code:addons/stock/models/product.py:340
+#: code:addons/stock/models/product.py:342
 #, python-format
 msgid "Future Qty"
 msgstr "Бъдещо количество"
 
 #. module: stock
-#: code:addons/stock/models/product.py:322
+#: code:addons/stock/models/product.py:324
 #, python-format
 msgid "Future Receipts"
-msgstr ""
+msgstr "Бъдещи касови бележки"
 
 #. module: stock
 #: model:stock.location,name:stock.location_gate_a
@@ -2506,6 +2564,8 @@ msgid ""
 "Give to the more specialized category, a higher priority to have them in top"
 " of the list."
 msgstr ""
+"За да ги включите в списъка, дайте на по-специализираната категория по-висок"
+" приоритет."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
@@ -2516,7 +2576,7 @@ msgstr "Общи"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_default_resupply_wh_id
 msgid "Goods will always be resupplied from this warehouse"
-msgstr ""
+msgstr "Стоките винаги ще се възстановяват от този склад"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
@@ -2552,9 +2612,14 @@ msgid "HDD SH-1"
 msgstr "HDD SH-1"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_has_move_lines
+msgid "Has Move Lines"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_line_exist
 msgid "Has Pack Operations"
-msgstr ""
+msgstr "Има операции по опаковане"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_packages
@@ -2564,6 +2629,11 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_scrap_move
 msgid "Has Scrap Moves"
+msgstr "Движения в скрап"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_has_tracking
+msgid "Has Tracking"
 msgstr ""
 
 #. module: stock
@@ -2577,11 +2647,13 @@ msgid ""
 "Help rental management, by generating automated return moves for rented "
 "products"
 msgstr ""
+"Подпомогнете управлението на отдаването под наем, като създадете "
+"автоматизирани обратни движения за наети продукти"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Here are some usual problems and their solutions:"
-msgstr ""
+msgstr "Ето някои обичайни проблеми и техните решения:"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_receipt_picking_move
@@ -2603,7 +2675,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "How to use Lot Tracking:"
-msgstr ""
+msgstr "Как да използвате проследяване на партида:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group_id
@@ -2628,7 +2700,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_id
-#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_6904
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_6916
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_id
@@ -2643,7 +2715,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:412
+#: code:addons/stock/models/stock_inventory.py:421
 #, python-format
 msgid "INV:"
 msgstr "ИНВ:"
@@ -2677,6 +2749,11 @@ msgid ""
 "ice cream shops, convenience stores, and milk bars, and in individual "
 "servings from small carts or vans at public events."
 msgstr ""
+"Сладоледът може да бъде масово произвеждан и по този начин е широко достъпен"
+" в развитите части на света. Той може да се купува в големи картонени кутии "
+"от супермаркети и магазини за хранителни стоки, в по-малки количества от "
+"магазини за сладолед, магазини и млечни барове, както и на индивидуални "
+"порции от малки колички или микробуси при публични събития."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -2684,6 +2761,8 @@ msgid ""
 "If a product is not at the right place, set the checked quantity to 0 and "
 "create a new line with correct location."
 msgstr ""
+"Ако продуктът не е на правилното място, настройте контролираното количество "
+"на 0 и създайте нов ред с правилно местоположение."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_picking_type_entire_packs
@@ -2692,6 +2771,9 @@ msgid ""
 "If checked, this shows the packs to be moved as a whole in the Operations "
 "tab all the time, even if there was no entire pack reserved."
 msgstr ""
+"Ако е отметнато, това показва пакетите, които ще се преместват като цяло в "
+"раздела \"Операции\" през цялото време, дори ако не е резервиран целият "
+"пакет."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_propagate
@@ -2699,6 +2781,8 @@ msgid ""
 "If checked, when the previous move is cancelled or split, the move generated"
 " by this move will too"
 msgstr ""
+"Ако е отметнато, когато предишното движение е отменено или разделено, "
+"създаденото от този ход движение също ще се извърши."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_propagate
@@ -2707,16 +2791,21 @@ msgid ""
 "next procurement) is cancelled or split, the move generated by this move "
 "will too"
 msgstr ""
+"Ако е отметнато, при отмяната или разделянето на предишното преместване на "
+"движението (създадено от следващата доставка), движението, създадено от това"
+" преместване, също ще"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_propagate
 msgid "If checked, when this move is cancelled, cancel the linked move too"
 msgstr ""
+"Ако е отметнато, когато това движение бъде отменено, прекратете и свързаните"
+" движения"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line_result_package_id
 msgid "If set, the operations are packed into this package"
-msgstr ""
+msgstr "Ако е настроено, операциите се пакетират в тази опаковка"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_active
@@ -2724,6 +2813,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
 msgstr ""
+"Ако активното поле е настроено на 'Грешно', това ще ви позволи да скриете "
+"поръчката без да я премахвате."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_active
@@ -2731,6 +2822,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the route "
 "without removing it."
 msgstr ""
+"Ако активното поле е настроено на 'Грешно', това ще Ви позволи да скриете "
+"маршрута, без да го премахвате."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -2743,7 +2836,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_filter
 msgid "If the route is global"
-msgstr ""
+msgstr "Ако маршрутът е глобален"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_show_reserved
@@ -2767,6 +2860,9 @@ msgid ""
 "If this is checked only, it will suppose you want to create new Lots/Serial "
 "Numbers, so you can provide them in a text field. "
 msgstr ""
+"Ако само това е отметнато, ще се предполага, че искате да създадете нови "
+"партидни/серийни номера, така че да можете да ги предоставите в текстово "
+"поле."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_use_existing_lots
@@ -2787,11 +2883,15 @@ msgid ""
 "If this shipment was split, then this field links to the shipment which "
 "contains the already processed part."
 msgstr ""
+"Ако тази пратка е разделена, това поле се свързва с пратката, съдържаща вече"
+" обработената част."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr ""
+"Ако не е отметнато, това ще ви позволи да скриете правилото, без да го "
+"премахнете."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2800,6 +2900,9 @@ msgid ""
 "                        API</strong> to load data automatically through\n"
 "                        scripts: take a look at our"
 msgstr ""
+"Ако сте разработчик <strong>, можете да използвате нашия\n"
+"                        API</strong>, за да заредите данните автоматично чрез\n"
+"                        скриптове: хвърлете поглед на нашия"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2809,6 +2912,10 @@ msgid ""
 "                        sometimes the system can remain blocked without generating a\n"
 "                        corresponding document, usually due to a configuration problem."
 msgstr ""
+"Ако сте конфигурирали автоматична доставка, Odoo автоматично създава\n"
+"                        заявки за доставки. Обикновено не е нужно да се тревожите за тях, но\n"
+"                        понякога системата може да оставе блокирана без да създава\n"
+"                        свързан документ, най-вероятно заради конфигурационен проблем."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_filter
@@ -2819,6 +2926,12 @@ msgid ""
 "the system won't propose anything.  You can also let the system propose for "
 "a single product / lot /... "
 msgstr ""
+"В случай че извършвате цялостна инвентаризация, можете да изберете 'Всички "
+"продукти' и тя ще попълни инвентара с текущия запас. Ако обработвате само "
+"няколко продукта (например отчитане на цикъл), можете да изберете "
+"\"Механичен избор на продукти\" и системата няма да предложи нищо. Можете "
+"също така да позволите на системата да предложи за един продукт /партида/ "
+"..."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2841,7 +2954,7 @@ msgid "Immediate Transfer"
 msgstr "Незабавен трансфер"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:678
+#: code:addons/stock/models/stock_picking.py:729
 #, python-format
 msgid "Immediate Transfer?"
 msgstr "Незабавен трансфер?"
@@ -2873,6 +2986,9 @@ msgid ""
 "                        Odoo will automatically propose a procurement to buy new products if you are\n"
 "                        running out of stock."
 msgstr ""
+"В Odoo, <strong>правилата за пренареждане</strong> се използват, за да попълнят продуктите Ви.\n"
+"                        Odoo автоматично ще предложи поръчка за закупуване на нови продукти, ако сте\n"
+"                        закъсали за наличност."
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -2891,6 +3007,9 @@ msgid ""
 "                        to exactly one piece.  In case of lots, you need to supply the quantity\n"
 "                        for each lot when you move that product."
 msgstr ""
+"В случай на уникални серийни номера, всеки сериен номер съответства\n"
+"                        на точно една бройка. В случай на партиди, трябва да предоставите количеството\n"
+"                        за всяка партида, когато преместите този продукт."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2904,7 +3023,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_exhausted
 msgid "Include Exhausted Products"
-msgstr ""
+msgstr "Включете изчерпани продукти"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_incoming_qty
@@ -2931,7 +3050,7 @@ msgstr "Входящи пратки"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_incoterms_code
 msgid "Incoterm Standard Code"
-msgstr ""
+msgstr "Стандартен код на Инкотерм"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_incoterms_tree
@@ -2950,12 +3069,15 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
 msgstr ""
+"Инкотермс представлява поредица от условия за продажба. Те се използват за "
+"разделяне на транзакционните разходи и отговорности между купувача и "
+"продавача и отразяват най-съвременните транспортни практики."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_uom_qty
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Initial Demand"
-msgstr ""
+msgstr "Първоначално търсене"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2975,7 +3097,7 @@ msgid "Input Location"
 msgstr "Входна локация"
 
 #. module: stock
-#: code:addons/stock/models/stock_scrap.py:131
+#: code:addons/stock/models/stock_scrap.py:135
 #, python-format
 msgid "Insufficient Quantity"
 msgstr "Недостатъчно количество"
@@ -2983,7 +3105,7 @@ msgstr "Недостатъчно количество"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_inter_wh
 msgid "Inter Company Transit"
-msgstr ""
+msgstr "Транзит на интеркомпания"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -3009,7 +3131,7 @@ msgid "Internal Reference"
 msgstr "Вътрешна референция"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:231
+#: code:addons/stock/models/stock_warehouse.py:235
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
@@ -3018,7 +3140,7 @@ msgstr "Вътрешни местоположения"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company_internal_transit_location_id
 msgid "Internal Transit Location"
-msgstr ""
+msgstr "Вътрешна транзитна локация"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_int_type_id
@@ -3031,24 +3153,26 @@ msgid ""
 "Internal reference number in case it differs from the manufacturer's "
 "lot/serial number"
 msgstr ""
+"Вътрешен референтен номер, в случай че се различава от партидния/серийния "
+"номер на производителя"
 
 #. module: stock
-#: code:addons/stock/models/product.py:240
+#: code:addons/stock/models/product.py:253
 #, python-format
 msgid "Invalid domain left operand %s"
-msgstr ""
+msgstr "Невалиден ляв операнд на домейна %s"
 
 #. module: stock
-#: code:addons/stock/models/product.py:242
+#: code:addons/stock/models/product.py:255
 #, python-format
 msgid "Invalid domain operator %s"
-msgstr ""
+msgstr "Невалиден оператор на домейн %s"
 
 #. module: stock
-#: code:addons/stock/models/product.py:244
+#: code:addons/stock/models/product.py:257
 #, python-format
 msgid "Invalid domain right operand %s"
-msgstr ""
+msgstr "Невалиден десен операнд на домейн %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_category_id
@@ -3063,7 +3187,7 @@ msgstr "Инвентар локация"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_lot_id
 msgid "Inventoried Lot/Serial Number"
-msgstr ""
+msgstr "Инвентаризиран партиден/сериен номер"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_partner_id
@@ -3073,7 +3197,7 @@ msgstr "Инвентар притежател"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_package_id
 msgid "Inventoried Pack"
-msgstr ""
+msgstr "Инвентаризиран пакет"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_product_id
@@ -3088,7 +3212,7 @@ msgstr "Инвентаризации"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Inventories Month"
-msgstr ""
+msgstr "Месец на инвенторизации"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.quantsact
@@ -3167,7 +3291,7 @@ msgstr "Продукт от инвентара"
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_name
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Inventory Reference"
-msgstr ""
+msgstr "Референция за инвентар"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_quantity_history
@@ -3259,14 +3383,14 @@ msgstr ""
 "вашият Odoo менажер."
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:254
+#: code:addons/stock/models/stock_quant.py:265
 #, python-format
 msgid ""
 "It is not possible to reserve more products of %s than you have in stock."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:256
+#: code:addons/stock/models/stock_quant.py:270
 #, python-format
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
@@ -3279,6 +3403,9 @@ msgid ""
 "                        exceptions. These are accessible from the Schedulers menu (you need the Stock\n"
 "                        Manager role to see it)."
 msgstr ""
+"Следователно е добра идея да проверите и да се опитате да разрешите тези изключения\n"
+"                        за доставки. Те са достъпни от менюто 'Графици' (трябва да влезете в ролята на мениджър\n"
+"                        склад, за да го видите)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3292,11 +3419,14 @@ msgstr ""
 msgid ""
 "It specifies attributes of packaging like type, quantity of packaging,etc."
 msgstr ""
+"То определя атрибутите на опаковката като вид, количество опаковка и т.н."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_move_type
 msgid "It specifies goods to be deliver partially or all at once"
 msgstr ""
+"Тя определя стоките, които трябва да бъдат доставени частично или всички "
+"наведнъж"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_body_print
@@ -3313,7 +3443,7 @@ msgstr ""
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_13
 msgid "Laptop Customized"
-msgstr ""
+msgstr "Персонализиран лаптоп"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_14
@@ -3469,6 +3599,7 @@ msgstr "Остави празно"
 #: model:ir.model.fields,help:stock.field_stock_location_route_company_id
 msgid "Leave this field empty if this route is shared between all companies"
 msgstr ""
+"Оставете това поле празно, ако този маршрут е споделен между всички компании"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_parent_left
@@ -3480,6 +3611,7 @@ msgstr "Ляв родител"
 #: model:ir.model.fields,help:stock.field_stock_quant_company_id
 msgid "Let this field empty if this location is shared between companies"
 msgstr ""
+"Оставете това поле празно, ако тази локация е споделена между компании"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3487,16 +3619,18 @@ msgid ""
 "Like with the sales flow, Odoo inventory management is\n"
 "                        fully integrated with the purchase app."
 msgstr ""
+"Както при процеса по продажби, управлението на инвентара в Odoo е\n"
+"                        изцяло интегрирано с прилжението за покупки."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_form
 msgid "Linked Moves"
-msgstr ""
+msgstr "Свързани движения"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "List view of lines"
-msgstr ""
+msgstr "Изглед със списък на редове"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
@@ -3506,10 +3640,9 @@ msgstr "Локализация"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Locate"
-msgstr ""
+msgstr "Локализирайте"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:12
 #: model:ir.model.fields,field_description:stock.field_product_product_location_id
 #: model:ir.model.fields,field_description:stock.field_product_template_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_location_id
@@ -3528,14 +3661,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
 #: model:ir.ui.view,arch_db:stock.view_move_search
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
-#, python-format
 msgid "Location"
 msgstr "Локация"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_location_barcode
 msgid "Location BarCode"
-msgstr ""
+msgstr "Баркод на локация"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_location_name
@@ -3562,7 +3694,7 @@ msgstr "Вид локация"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_location_dest_id
 msgid "Location where the system will stock the finished products."
-msgstr ""
+msgstr "Локацията, където системата ще складира готовите продукти."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -3578,7 +3710,7 @@ msgstr "Локации"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Lock"
-msgstr ""
+msgstr "Заключете"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_category_form_view_inherit
@@ -3588,17 +3720,15 @@ msgid "Logistics"
 msgstr "Логистика"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:13
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_lot_id
-#, python-format
 msgid "Lot"
 msgstr "Партида"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_lot_barcode
 msgid "Lot BarCode"
-msgstr ""
+msgstr "Баркод на партида"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
@@ -3623,7 +3753,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.report_lot_barcode
 #: model:ir.ui.view,arch_db:stock.report_package_barcode
 #: model:ir.ui.view,arch_db:stock.report_picking
-#: model:ir.ui.view,arch_db:stock.view_move_line_form
 #: model:res.request.link,name:stock.req_link_tracking
 msgid "Lot/Serial Number"
 msgstr "Портиден/сериен номер"
@@ -3631,7 +3760,7 @@ msgstr "Портиден/сериен номер"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_tree
 msgid "Lot/Serial Number Inventory"
-msgstr ""
+msgstr "Инвентар на партиден/сериен номер"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_production_lot
@@ -3659,25 +3788,25 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form_simple
 #: model:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Lots/Serial Numbers"
-msgstr ""
+msgstr "Партидни/серийни номера"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:541
+#: code:addons/stock/models/stock_warehouse.py:547
 #, python-format
 msgid "MTO"
-msgstr ""
+msgstr "Изработен по поръчка"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_mto_pull_id
 msgid "MTO rule"
-msgstr ""
+msgstr "Правило за изработка по поръчка"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:474
+#: code:addons/stock/models/stock_warehouse.py:479
 #: model:stock.location.route,name:stock.route_warehouse0_mto
 #, python-format
 msgid "Make To Order"
-msgstr ""
+msgstr "Направете по поръчка"
 
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
@@ -3691,12 +3820,12 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
 msgid "Manage Different Stock Owners"
-msgstr ""
+msgstr "Управлявайте различни собственици на складове"
 
 #. module: stock
 #: model:res.groups,name:stock.group_production_lot
 msgid "Manage Lots / Serial Numbers"
-msgstr ""
+msgstr "Управлявайте партидни/серийни номера"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
@@ -3711,22 +3840,22 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_lot
 msgid "Manage Packages"
-msgstr ""
+msgstr "Управлявайте опаковки"
 
 #. module: stock
 #: model:res.groups,name:stock.group_adv_location
 msgid "Manage Push and Pull inventory flows"
-msgstr ""
+msgstr "Управлявайте процесите по придвижване на инвентара "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Manage default locations per product"
-msgstr ""
+msgstr "Управлявайте стандартните локации по продукти"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Manage product manufacturing chains"
-msgstr ""
+msgstr "Управлявайте производствените вериги"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3736,7 +3865,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Manage several warehouses"
-msgstr ""
+msgstr "Управлявайте няколко склада"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3766,12 +3895,12 @@ msgstr "Производство"
 #. module: stock
 #: selection:stock.picking.type,code:0
 msgid "Manufacturing Operation"
-msgstr ""
+msgstr "Производствена операция"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Mark as Todo"
-msgstr ""
+msgstr "Отбележете като 'За извършване'"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
@@ -3799,6 +3928,8 @@ msgstr "Метод"
 msgid ""
 "Minimum Delta for Propagation of a Date Change on moves linked together"
 msgstr ""
+"Минимална делта за разпространение промяна в датата на движения, свързани "
+"заедно"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
@@ -3827,16 +3958,19 @@ msgid ""
 "                to your preconfigured logistics rules, but you can also record\n"
 "                manual stock movements."
 msgstr ""
+"Повечето операции се подготвят автоматично от Odoo според\n"
+"                предварително конфигурираните Ви логистични правила, но можете и да записвате\n"
+"                механично движения в склада."
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_5
 msgid "Mouse, Optical"
-msgstr ""
+msgstr "Мишка, оптична"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_11
 msgid "Mouse, Wireless"
-msgstr ""
+msgstr "Мишка, безжична"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_move_id
@@ -3851,7 +3985,7 @@ msgstr ""
 #. module: stock
 #: selection:procurement.rule,action:0
 msgid "Move From Another Location"
-msgstr ""
+msgstr "Движение от друга локация"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_move_line_ids
@@ -3873,7 +4007,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_procure_method
 msgid "Move Supply Method"
-msgstr ""
+msgstr "Преместете метод на доставка"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_date
@@ -3881,11 +4015,13 @@ msgid ""
 "Move date: scheduled date until move is done, then date of actual move "
 "processing"
 msgstr ""
+"Преместете дата: планирана дата, докато се извърши движението, а след това "
+"датата на действителното движение"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_origin_returned_move_id
 msgid "Move that created the return move"
-msgstr ""
+msgstr "Движението, създало движението за връщане"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_open
@@ -3936,19 +4072,19 @@ msgstr "Име"
 #: model:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Negative Stock"
-msgstr ""
+msgstr "Отрицателна наличност"
 
 #. module: stock
-#: code:addons/stock/models/stock_scrap.py:20
-#: code:addons/stock/models/stock_scrap.py:64
-#: code:addons/stock/models/stock_scrap.py:65 selection:stock.move,state:0
+#: code:addons/stock/models/stock_scrap.py:24
+#: code:addons/stock/models/stock_scrap.py:68
+#: code:addons/stock/models/stock_scrap.py:69 selection:stock.move,state:0
 #, python-format
 msgid "New"
 msgstr "Nieuw"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:173
-#: code:addons/stock/models/stock_picking.py:597
+#: code:addons/stock/models/stock_move_line.py:174
+#: code:addons/stock/models/stock_picking.py:639
 #, python-format
 msgid "New Move:"
 msgstr ""
@@ -3961,12 +4097,12 @@ msgstr "Ново Количество - ръчно въведено"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_form
 msgid "New Transfer"
-msgstr ""
+msgstr "Нов трансфер"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "No Backorder"
-msgstr ""
+msgstr "Няма неизпълнена поръчка"
 
 #. module: stock
 #: selection:res.partner,picking_warn:0
@@ -3982,33 +4118,35 @@ msgstr ""
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "No Tracking"
-msgstr ""
+msgstr "Без проследяване"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:389
+#: code:addons/stock/models/stock_move_line.py:408
 #, python-format
 msgid "No negative quantities allowed"
-msgstr ""
+msgstr "Не се допускат отрицателни количества"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "No operation made on this lot."
-msgstr ""
+msgstr "Няма извършена операция по тази партида"
 
 #. module: stock
-#: code:addons/stock/models/procurement.py:185
+#: code:addons/stock/models/procurement.py:184
 #, python-format
 msgid ""
 "No procurement rule found. Please verify the configuration of your routes"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:55
+#: code:addons/stock/wizard/stock_picking_return.py:58
 #, python-format
 msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
 "can be returned)!"
 msgstr ""
+"Няма продукти, които да се връщат (могат да се връщат единствено редовете в "
+"състояние 'Извършени' и все още невърнатите изцяло)!"
 
 #. module: stock
 #: code:addons/stock/models/procurement.py:67
@@ -4032,6 +4170,11 @@ msgid "Not urgent"
 msgstr "Не е спешно"
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Note"
+msgstr "Забележка"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_note
 #: model:ir.model.fields,field_description:stock.field_stock_picking_note
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -4039,15 +4182,15 @@ msgid "Notes"
 msgstr "Бележки"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:544
+#: code:addons/stock/models/stock_picking.py:587
 #, python-format
 msgid "Nothing to check the availability for."
-msgstr ""
+msgstr "Нищо за проверка наличността за."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Now, all your product quantities are correctly set."
-msgstr ""
+msgstr "Сега всичките Ви количества продукти са правилно настроени."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_delay
@@ -4066,7 +4209,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_delay
 msgid "Number of days needed to transfer the goods"
-msgstr ""
+msgstr "Брой дни, необходими за прехвърляне на стоките"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:75
@@ -4087,6 +4230,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Odoo has preconfigured <strong>one Warehouse</strong> for you."
 msgstr ""
+"Odoo има предварително конфигуриран <strong>един склад</strong> за Вас."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4095,6 +4239,9 @@ msgid ""
 "                        invoicing process. Everything is automated from the initial\n"
 "                        quotation to the delivery and the final invoice."
 msgstr ""
+"Управлението на инвентара в Odoo е напълно интегрирано с продажбите и\n"
+"                        процеса по фактуриране. Всичко е автоматизирано - от първоначалната\n"
+"                        оферта до доставката и финалната фактура."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4140,36 +4287,43 @@ msgid ""
 "customer. It would be great if you could send us a photo of your warehouse "
 "to"
 msgstr ""
+"След като вече работи напълно, дайте ни някакви отзиви: обичаме да се чуваме"
+" с клиентите си. Би било чудесно, ако ни изпратите снимка на склада си"
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:120
+#, python-format
+msgid "One Lot/Serial Number"
+msgstr "Един партиден/сериен номер"
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:118
+#, python-format
+msgid "One owner only"
+msgstr "Само един собственик"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:113
-#, python-format
-msgid "One Lot/Serial Number"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_inventory.py:111
-#, python-format
-msgid "One owner only"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_inventory.py:106
 #, python-format
 msgid "One product category"
 msgstr "Една продуктова категория"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:111
+#: code:addons/stock/models/stock_inventory.py:118
 #, python-format
 msgid "One product for a specific owner"
-msgstr ""
+msgstr "Един продукт за конкретен собственик"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:107
+#: code:addons/stock/models/stock_inventory.py:114
 #, python-format
 msgid "One product only"
 msgstr "Един продукт"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_quant_package_form
+msgid "Ongoing Package Creation: Content"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_name
@@ -4233,28 +4387,30 @@ msgid ""
 "Optional address where goods are to be delivered, specifically used for "
 "allotment"
 msgstr ""
+"Незадължителен адрес, където трябва да се доставят стоки, специално "
+"предназначен за разпределение"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_posx
 #: model:ir.model.fields,help:stock.field_stock_location_posy
 #: model:ir.model.fields,help:stock.field_stock_location_posz
 msgid "Optional localization details, for information purpose only"
-msgstr ""
+msgstr "Незадължителни данни за локализирането само с информационна цел"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_returned_move_ids
 msgid "Optional: all returned moves created from this move"
-msgstr ""
+msgstr "Незадължителен: всички върнати движения, създадени от това движение"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_move_dest_ids
 msgid "Optional: next stock move when chaining them"
-msgstr ""
+msgstr "Незадължителен: следващото движение в склада, когато ги промените"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_move_orig_ids
 msgid "Optional: previous stock move when chaining them"
-msgstr ""
+msgstr "Незадължителен: предишно движение в складаe при промяната им"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4291,7 +4447,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_origin_returned_move_id
 msgid "Origin return move"
-msgstr ""
+msgstr "Движение на първоначално връщане"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_original_location_id
@@ -4301,12 +4457,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_move_orig_ids
 msgid "Original Move"
-msgstr ""
+msgstr "Първоначално връщане"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_out_type_id
 msgid "Out Type"
-msgstr ""
+msgstr "Вид изход"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_outgoing_qty
@@ -4330,7 +4486,7 @@ msgstr "Изход"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_wh_output_stock_loc_id
 msgid "Output Location"
-msgstr ""
+msgstr "Локация на изход"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_overprocessed_transfer_overprocessed_product_name
@@ -4353,7 +4509,7 @@ msgstr "Собственик"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_restrict_partner_id
 msgid "Owner "
-msgstr ""
+msgstr "Собственик"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
@@ -4363,15 +4519,15 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_partner_id
 msgid "Owner of the location if not internal"
-msgstr ""
+msgstr "Собственик на локацията, ако не е вътрешна"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line_owner_id
 msgid "Owner of the quants"
-msgstr ""
+msgstr "Собственик на количествата"
 
 #. module: stock
-#: code:addons/stock/models/product.py:337
+#: code:addons/stock/models/product.py:339
 #, python-format
 msgid "P&L Qty"
 msgstr "К-во загуби и пачалби"
@@ -4381,16 +4537,16 @@ msgstr "К-во загуби и пачалби"
 #: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:6
 #, python-format
 msgid "PRINT"
-msgstr ""
+msgstr "ПРИНТИРАЙТЕ"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "PRODUCT"
-msgstr ""
+msgstr "ПРОДУКТ"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:216
+#: code:addons/stock/models/stock_warehouse.py:220
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_package_id
 #, python-format
 msgid "Pack"
@@ -4399,10 +4555,9 @@ msgstr "Пакет"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_pack_type_id
 msgid "Pack Type"
-msgstr ""
+msgstr "Вид опаковка"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:14
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_package_id
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -4411,19 +4566,18 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 #: model:ir.ui.view,arch_db:stock.view_quant_package_picking_tree
 #: model:ir.ui.view,arch_db:stock.view_quant_package_tree
-#, python-format
 msgid "Package"
 msgstr "Пакет"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
 msgid "Package BarCode"
-msgstr ""
+msgstr "Баркод на пакет"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode
 msgid "Package BarCode with Contents"
-msgstr ""
+msgstr "Баркод на пакет със съдържание"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_package_barcode
@@ -4433,13 +4587,13 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
 msgid "Package Name"
-msgstr ""
+msgstr "Име на пакет"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_name
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Reference"
-msgstr ""
+msgstr "Референция за пакет"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -4449,7 +4603,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Transfers"
-msgstr ""
+msgstr "Трансфери на пакети"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
@@ -4478,6 +4632,12 @@ msgid ""
 " A package can also be unpacked, allowing the disposal of its former content"
 " as single units again."
 msgstr ""
+"Пакетите обикновено се създават чрез пакетни операции, направени при "
+"трансфери, и могат да съдържат няколко различни продукта. След това можете "
+"да използвате повторно пакет, за да преместите цялото му съдържание някъде "
+"другаде или да го опаковате в друг по-голям пакет. Освен това пакетът може "
+"да бъде разопакован, което позволява предишното му съдържание да се "
+"изразходва наново като отделни единици."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -4487,7 +4647,7 @@ msgstr "Опаковане"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_wh_pack_stock_loc_id
 msgid "Packing Location"
-msgstr ""
+msgstr "Локация за пакетиране"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_line
@@ -4499,12 +4659,12 @@ msgstr "Операция за опаковане"
 #: model:stock.location,name:stock.location_pack_zone
 #, python-format
 msgid "Packing Zone"
-msgstr ""
+msgstr "Зона за опаковане"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Packs and Lots"
-msgstr ""
+msgstr "Опаковки и партиди"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
@@ -4526,7 +4686,7 @@ msgstr "Частичен"
 #. module: stock
 #: selection:stock.move,state:0
 msgid "Partially Available"
-msgstr ""
+msgstr "Частично наличен"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group_partner_id
@@ -4553,16 +4713,20 @@ msgid ""
 "            the general inventory or whenever you need it, to adapt the\n"
 "            current inventory level of a product."
 msgstr ""
+"Периодичните инвентаризации се прилагат с цел изчисляване броя на продуктите,\n"
+"            налични по локации. Можете да го използвате веднъж годишно, когато извършвате\n"
+"            основна инвентаризация или винаги когато Ви е нужно да адаптирате\n"
+"            настоящото инвентарно ниво на даден продукт."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Periodical Tasks"
-msgstr ""
+msgstr "Периодични задачи"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Physical Inventories by Month"
-msgstr ""
+msgstr "Физически инвентар по месеци"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations
@@ -4575,7 +4739,7 @@ msgid "Physical Packages"
 msgstr "Физически пакети"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:224
+#: code:addons/stock/models/stock_warehouse.py:228
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_pick_ids
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer_pick_ids
 #, python-format
@@ -4583,13 +4747,13 @@ msgid "Pick"
 msgstr "Pick"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:435
+#: code:addons/stock/models/stock_warehouse.py:439
 #, python-format
 msgid "Pick + Pack + Ship"
 msgstr "Pick + Pack + Ship"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:434
+#: code:addons/stock/models/stock_warehouse.py:438
 #, python-format
 msgid "Pick + Ship"
 msgstr "Pick + Ship"
@@ -4668,22 +4832,24 @@ msgid "Planner"
 msgstr "Планьор"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:649
+#: code:addons/stock/models/stock_picking.py:699
 #, python-format
 msgid "Please add some lines to move"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:823
+#: code:addons/stock/models/stock_picking.py:868
 #, python-format
 msgid "Please process some quantities to put in the pack first!"
 msgstr ""
+"Моля, обработвайте някои количества, които първо трябва да поставите в "
+"опаковката!"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:126
+#: code:addons/stock/wizard/stock_picking_return.py:130
 #, python-format
 msgid "Please specify at least one non-zero quantity."
-msgstr ""
+msgstr "Моля, посочете поне едно ненулево количество."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
@@ -4693,7 +4859,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_packaging
 msgid "Preferred Packaging"
-msgstr ""
+msgstr "Предпочитано опаковане"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_route_ids
@@ -4749,7 +4915,7 @@ msgstr "Снабдаване"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Procurement Exceptions"
-msgstr ""
+msgstr "Изключения в доставките"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_group_id
@@ -4781,12 +4947,12 @@ msgstr "Правило за поръчките"
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_tree
 msgid "Procurement Rules"
-msgstr ""
+msgstr "Правила за доставка"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.procurement_group_form_view
 msgid "Procurement group"
-msgstr ""
+msgstr "Група на доставка"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.ir_cron_scheduler_action_ir_actions_server
@@ -4806,7 +4972,7 @@ msgid "Produce Line"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:347
+#: code:addons/stock/models/product.py:349
 #, python-format
 msgid "Produced Qty"
 msgstr "Произведено к-во"
@@ -4839,7 +5005,7 @@ msgid "Product"
 msgstr "Продукт"
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:180
+#: code:addons/stock/models/stock_location.py:193
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_categ_ids
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -4856,17 +5022,17 @@ msgstr "Продуктови категории"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_product_code
 msgid "Product Code"
-msgstr ""
+msgstr "Продуктов код"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.search_product_lot_filter
 msgid "Product Lots"
-msgstr ""
+msgstr "Продуктови партиди"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.search_product_lot_filter
 msgid "Product Lots Filter"
-msgstr ""
+msgstr "Филтър на продуктови партиди"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_form_view
@@ -4911,6 +5077,7 @@ msgid "Product Types"
 msgstr "Продуктови типове"
 
 #. module: stock
+#: model:ir.model,name:stock.model_product_uom
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_product_uom
 msgid "Product Unit of Measure"
@@ -4932,7 +5099,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_has_tracking
 msgid "Product with Tracking"
-msgstr ""
+msgstr "Продукт с проследяване"
 
 #. module: stock
 #: model:stock.location,name:stock.location_production
@@ -4947,7 +5114,7 @@ msgid "Production Location"
 msgstr "Местонахождение на продукция"
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:170
+#: code:addons/stock/models/stock_location.py:183
 #: code:addons/stock/wizard/stock_quantity_history.py:29
 #: model:ir.actions.act_window,name:stock.act_product_location_open
 #: model:ir.actions.act_window,name:stock.product_template_action_product
@@ -4962,7 +5129,7 @@ msgid "Products"
 msgstr "Продукти"
 
 #. module: stock
-#: code:addons/stock/models/product.py:310
+#: code:addons/stock/models/product.py:312
 #, python-format
 msgid "Products: "
 msgstr "Продукти:"
@@ -4970,57 +5137,57 @@ msgstr "Продукти:"
 #. module: stock
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Propagate"
-msgstr ""
+msgstr "Размножете"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_propagate
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_propagate
 #: model:ir.model.fields,field_description:stock.field_stock_move_propagate
 msgid "Propagate cancel and split"
-msgstr ""
+msgstr "Разпространение отмяна и разделяне"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form
 msgid "Propagation Options"
-msgstr ""
+msgstr "Опции за размножаване"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_group_propagation_option
 msgid "Propagation of Procurement Group"
-msgstr ""
+msgstr "Размножаване група за доставка"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Purchase Flow"
-msgstr ""
+msgstr "Процес по купуване"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_push_rule_id
 msgid "Push Rule"
-msgstr ""
+msgstr "Правило за придвижване"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stolocpath
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_push_ids
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Push Rules"
-msgstr ""
+msgstr "Правила за придвижване"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_path
 msgid "Pushed Flow"
-msgstr ""
+msgstr "Лансиран поток"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat_putaway_id
 msgid "Put Away Method"
-msgstr ""
+msgstr "Метод 'Сложете настрана'"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_putaway
 #: model:ir.model.fields,field_description:stock.field_stock_location_putaway_strategy_id
 msgid "Put Away Strategy"
-msgstr ""
+msgstr "Стратегия 'Сложете настрана'"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -5035,23 +5202,23 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_putaway
 msgid "Putaway"
-msgstr ""
+msgstr "'Сложете настрана'"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "QUANTITY"
-msgstr ""
+msgstr "КОЛИЧЕСТВО"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_qty_multiple
 msgid "Qty Multiple"
-msgstr ""
+msgstr "Многократно количество"
 
 #. module: stock
 #: sql_constraint:stock.warehouse.orderpoint:0
 msgid "Qty Multiple must be greater than or equal to zero."
-msgstr ""
+msgstr "Многократното количество трябва да е по-голямо или равно на нула."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:98
@@ -5062,7 +5229,7 @@ msgstr "контрол по качеството"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_wh_qc_stock_loc_id
 msgid "Quality Control Location"
-msgstr ""
+msgstr "Локация на качествен контрол"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_quant_ids
@@ -5096,12 +5263,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_move_line_tree
 #: model:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
 msgid "Quantity Done"
-msgstr ""
+msgstr "Извършено количество"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "Quantity Multiple"
-msgstr ""
+msgstr "Многократно количество"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_qty_available
@@ -5115,29 +5282,30 @@ msgstr "Налично количество"
 #: model:ir.ui.view,arch_db:stock.view_move_line_form
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_form
 msgid "Quantity Reserved"
-msgstr ""
+msgstr "Резервно количество"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:80
 #, python-format
 msgid "Quantity cannot be negative."
-msgstr ""
+msgstr "Количеството не може да е отрицателно"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:611
+#: code:addons/stock/models/stock_move.py:643
 #, python-format
 msgid "Quantity decreased!"
-msgstr ""
+msgstr "Количеството намаля!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_availability
 msgid "Quantity in stock that can still be reserved for this move"
 msgstr ""
+"Количество на склад, което все още може да бъде резервно за това движение"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_qty
 msgid "Quantity in the default UoM of the product"
-msgstr ""
+msgstr "Количество в стандартната мерна единица на продукта"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_incoming_qty
@@ -5163,6 +5331,8 @@ msgid ""
 "Quantity of products in this quant, in the default unit of measure of the "
 "product"
 msgstr ""
+"Количество продукти в това количество, в стандартна мерна единица на "
+"продукта"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_reserved_quantity
@@ -5174,7 +5344,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_reserved_availability
 msgid "Quantity that has already been reserved for this move"
-msgstr ""
+msgstr "Количество, което вече е резервно за това движение"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.lot_open_quants
@@ -5185,7 +5355,7 @@ msgid "Quants"
 msgstr "Колко"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:70
+#: code:addons/stock/models/stock_quant.py:74
 #, python-format
 msgid "Quants cannot be created for consumables or services."
 msgstr ""
@@ -5193,7 +5363,7 @@ msgstr ""
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_12
 msgid "RAM SR5"
-msgstr ""
+msgstr "RAM SR5"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_rate_picking_backorders
@@ -5218,7 +5388,7 @@ msgstr "Готово"
 #: model:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Real Quantity"
-msgstr ""
+msgstr "Реално количество"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_product_qty
@@ -5228,41 +5398,41 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_reception_route_id
 msgid "Receipt Route"
-msgstr ""
+msgstr "Маршрут на касова бележка"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:432
+#: code:addons/stock/models/stock_warehouse.py:436
 #, python-format
 msgid "Receipt in 1 step"
-msgstr ""
+msgstr "Касова бележка в 1 стъпка"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:432
+#: code:addons/stock/models/stock_warehouse.py:436
 #, python-format
 msgid "Receipt in 2 steps"
-msgstr ""
+msgstr "Касова бележка в 2 стъпки"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:433
+#: code:addons/stock/models/stock_warehouse.py:437
 #, python-format
 msgid "Receipt in 3 steps"
-msgstr ""
+msgstr "Касова бележка в 3 стъпки"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:202
+#: code:addons/stock/models/stock_warehouse.py:206
 #: model:stock.picking.type,name:stock.chi_picking_type_in
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
-msgstr ""
+msgstr "Касови бележки"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods directly in stock (1 step)"
-msgstr ""
+msgstr "Получавайте стоки директно в склада (1 стъпка)"
 
 #. module: stock
-#: code:addons/stock/models/product.py:324
+#: code:addons/stock/models/product.py:326
 #, python-format
 msgid "Received Qty"
 msgstr "Получено к-во"
@@ -5270,7 +5440,7 @@ msgstr "Получено к-во"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_move_line_view_search
 msgid "Receptions"
-msgstr ""
+msgstr "Приемане"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group_name
@@ -5290,19 +5460,20 @@ msgstr "Означение"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_sequence_id
 msgid "Reference Sequence"
-msgstr ""
+msgstr "Референтна последователност"
 
 #. module: stock
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per company!"
-msgstr ""
+msgstr "Референцията трябва да е уникална за всяка компания!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_origin
 msgid "Reference of the document"
-msgstr ""
+msgstr "Референция за документ"
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.view_move_kandan
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Register lots, packs, location"
 msgstr ""
@@ -5315,19 +5486,19 @@ msgstr "Останали части от частично обработени �
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_removal
 msgid "Removal"
-msgstr ""
+msgstr "Отстраняване"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_removal
 #: model:ir.model.fields,field_description:stock.field_stock_location_removal_strategy_id
 msgid "Removal Strategy"
-msgstr ""
+msgstr "Стратегия за отстраняване"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:111
+#: code:addons/stock/models/stock_quant.py:109
 #, python-format
 msgid "Removal strategy %s not implemented."
-msgstr ""
+msgstr "Стратегията за отстраняване %s не е реализирана."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_reordering_max_qty
@@ -5358,7 +5529,7 @@ msgstr "Правила за Повторна Поръчка"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rules Search"
-msgstr ""
+msgstr "Потърсете правила за пренареждане"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
@@ -5397,7 +5568,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_tree
 msgid "Reserved"
-msgstr ""
+msgstr "Резервен"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_reserved_quantity
@@ -5415,7 +5586,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Resolve Procurement Exceptions"
-msgstr ""
+msgstr "Решете изключенията за доставки"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_responsible_id
@@ -5426,12 +5597,12 @@ msgstr "Отговорник"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_resupply_route_ids
 msgid "Resupply Routes"
-msgstr ""
+msgstr "Маршрути за попълване на стока "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_resupply_wh_ids
 msgid "Resupply Warehouses"
-msgstr ""
+msgstr "Снабдявайте складове"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_quantity_history
@@ -5447,7 +5618,7 @@ msgstr "Връщане"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_location_id
 msgid "Return Location"
-msgstr ""
+msgstr "Локация за връщане"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -5455,13 +5626,13 @@ msgid "Return Picking"
 msgstr "Връщане на бране"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:97
+#: code:addons/stock/wizard/stock_picking_return.py:101
 #, python-format
 msgid "Return of %s"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:147
+#: code:addons/stock/wizard/stock_picking_return.py:151
 #, python-format
 msgid "Returned Picking"
 msgstr "Върнат пикинг"
@@ -5487,13 +5658,13 @@ msgstr "Маршрут"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_name
 msgid "Route Name"
-msgstr ""
+msgstr "Име на маршрут"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_route_sequence
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_route_sequence
 msgid "Route Sequence"
-msgstr ""
+msgstr "Последователност на маршрут"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_routes_form
@@ -5512,7 +5683,7 @@ msgstr "Маршрути"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Routes Management"
-msgstr ""
+msgstr "Управление на маршрути"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_resupply_route_ids
@@ -5520,6 +5691,8 @@ msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
 msgstr ""
+"Маршрутите ще бъдат създадени за тези складове за снабдяване и можете да ги "
+"изберете по продукти и продуктови категории"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -5540,12 +5713,12 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
 msgid "Run Schedulers"
-msgstr ""
+msgstr "Пуснете планьори"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Sales Flow"
-msgstr ""
+msgstr "Продажбен процес"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -5560,7 +5733,7 @@ msgstr "Планирана дата"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_date_expected
 msgid "Scheduled date for the processing of this move"
-msgstr ""
+msgstr "Насрочена дата за обработката на това движение"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_scheduled_date
@@ -5573,7 +5746,7 @@ msgstr ""
 "дата за всички движения в склада."
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:836
+#: code:addons/stock/models/stock_picking.py:881
 #: model:ir.model.fields,field_description:stock.field_stock_move_scrap_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_scrap_id
 #: model:ir.ui.menu,name:stock.menu_stock_scrap
@@ -5593,7 +5766,7 @@ msgstr "Локация бракувани стоки"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_move_id
 msgid "Scrap Move"
-msgstr ""
+msgstr "Движение на брак"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_scrap
@@ -5633,20 +5806,20 @@ msgstr "Търси в инвентар редове"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_filter
 msgid "Search Procurement"
-msgstr ""
+msgstr "Потърсете доставка"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
 msgid "Search Scrap"
-msgstr ""
+msgstr "Потърсете скрап"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
 msgid "Search Stock Location Paths"
-msgstr ""
+msgstr "Потърсете пътища на складови локации"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:108
+#: code:addons/stock/models/stock_inventory.py:115
 #, python-format
 msgid "Select products manually"
 msgstr "Избрани продукти"
@@ -5654,7 +5827,7 @@ msgstr "Избрани продукти"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Select the places where this route can be selected"
-msgstr ""
+msgstr "Изберете местата, където може да бъде избран този маршрут"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_picking_warn
@@ -5685,31 +5858,31 @@ msgid "Sequence"
 msgstr "Последователност"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:685
+#: code:addons/stock/models/stock_warehouse.py:699
 #, python-format
 msgid "Sequence in"
-msgstr ""
+msgstr "Последователност в"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:689
+#: code:addons/stock/models/stock_warehouse.py:719
 #, python-format
 msgid "Sequence internal"
-msgstr ""
+msgstr "Вътрешна последователност"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:686
+#: code:addons/stock/models/stock_warehouse.py:704
 #, python-format
 msgid "Sequence out"
-msgstr ""
+msgstr "Изходяща последователност"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:687
+#: code:addons/stock/models/stock_warehouse.py:709
 #, python-format
 msgid "Sequence packing"
-msgstr ""
+msgstr "Последователност при пакетиране"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:688
+#: code:addons/stock/models/stock_warehouse.py:714
 #, python-format
 msgid "Sequence picking"
 msgstr "Последователност при пикинги"
@@ -5717,12 +5890,12 @@ msgstr "Последователност при пикинги"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_prodlot_name
 msgid "Serial Number Name"
-msgstr ""
+msgstr "Име на сериен номер"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_warehouse_id
 msgid "Served Warehouse"
-msgstr ""
+msgstr "Обслужен склад"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5740,6 +5913,8 @@ msgid ""
 "Set a specific removal strategy that will be used regardless of the source "
 "location for this product category"
 msgstr ""
+"Настройте конкретна стратегия за премахване, която ще се използва независимо"
+" от локацията на източника за тази категория продукти"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5770,6 +5945,8 @@ msgid ""
 "Set the products you want to track with lots or serial numbers by setting "
 "the Tracking field on the product form"
 msgstr ""
+"Настройте продуктите, които искате да проследявате, с партидни или серийни "
+"номера, като зададете полето за проследяване в продуктовата форма"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -5796,12 +5973,12 @@ msgstr "Настройки"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_components
 msgid "Shelf 1"
-msgstr ""
+msgstr "Рафт 1"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_14
 msgid "Shelf 2"
-msgstr ""
+msgstr "Рафт 2"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_posy
@@ -5809,15 +5986,15 @@ msgid "Shelves (Y)"
 msgstr "Лавици (Y)"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:434
+#: code:addons/stock/models/stock_warehouse.py:438
 #, python-format
 msgid "Ship Only"
-msgstr ""
+msgstr "Само превоз"
 
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Ship directly from stock (Ship only)"
-msgstr ""
+msgstr "Превоз директно от склад (само превоз)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5845,7 +6022,7 @@ msgstr "Кратко име"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_code
 msgid "Short name used to identify your warehouse"
-msgstr ""
+msgstr "Кратко име, използвано за идентифициране на склада Ви"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_check_availability
@@ -5894,11 +6071,13 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move_string_availability_info
 msgid "Show various information on stock availability for this move"
 msgstr ""
+"Покажете разнообразна информация относно складовата наличност за това "
+"движение"
 
 #. module: stock
 #: model:stock.location,name:stock.location_refrigerator_small
 msgid "Small Refrigerator"
-msgstr ""
+msgstr "Малък хладилник"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -5930,7 +6109,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_package_id
 #: model:ir.ui.view,arch_db:stock.view_move_line_form
 msgid "Source Package"
-msgstr ""
+msgstr "Пакет на източник"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
@@ -5940,7 +6119,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_location_src_id
 msgid "Source location is action=move"
-msgstr ""
+msgstr "Локацията на източника е действие=движение"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_lot_id
@@ -5948,27 +6127,35 @@ msgid ""
 "Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial"
 " Number."
 msgstr ""
+"Посочете партидния/серийния номер, за да съсредоточите инвентара си към "
+"определен партиден/сериен номер."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_partner_id
 msgid "Specify Owner to focus your inventory on a particular Owner."
 msgstr ""
+"Посочете собственик, за да съсредоточите инвентара си към конкретен "
+"собственик."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_package_id
 msgid "Specify Pack to focus your inventory on a particular Pack."
 msgstr ""
+"Посочете опаковка, за да съсредоточите инвентара си към конкретна опаковка."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_category_id
 msgid ""
 "Specify Product Category to focus your inventory on a particular Category."
 msgstr ""
+"Посочете продуктова категория, за да съсредоточите инвентара си към "
+"конкретна категория."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_product_id
 msgid "Specify Product to focus your inventory on a particular Product."
 msgstr ""
+"Посочете продукт, за да съсредоточите инвентара си към конкретен продукт."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -6000,7 +6187,7 @@ msgstr "Склад"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "Stock Inventory"
-msgstr ""
+msgstr "Инвентар в склада"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_inventory_line_tree
@@ -6011,14 +6198,14 @@ msgstr "Ред от наличност в склад"
 #: model:ir.actions.act_window,name:stock.action_stock_level_forecast_report_product
 #: model:ir.actions.act_window,name:stock.action_stock_level_forecast_report_template
 msgid "Stock Level Forecast"
-msgstr ""
+msgstr "Прогноза за складово ниво"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
 #: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_graph
 #: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_pivot
 msgid "Stock Level forecast"
-msgstr ""
+msgstr "Прогноза за складово ниво"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
@@ -6029,7 +6216,7 @@ msgstr "Място на склада"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_search
 msgid "Stock Locations"
-msgstr ""
+msgstr "Локации на складове"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
@@ -6067,12 +6254,12 @@ msgstr "Наличности"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_form_view
 msgid "Stock Operation"
-msgstr ""
+msgstr "Стокова операция"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_all
 msgid "Stock Operations"
-msgstr ""
+msgstr "Стокови операции"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn
@@ -6128,32 +6315,32 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_supplied_wh_id
 msgid "Supplied Warehouse"
-msgstr ""
+msgstr "Зареден склад"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Supply Chain"
-msgstr ""
+msgstr "Заретете верига"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_procure_method
 msgid "Supply Method"
-msgstr ""
+msgstr "Метод на снабдяване"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_supplier_wh_id
 msgid "Supplying Warehouse"
-msgstr ""
+msgstr "Снабдяващ склад"
 
 #. module: stock
 #: selection:procurement.rule,procure_method:0
 msgid "Take From Stock"
-msgstr ""
+msgstr "Вземете от склада"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Technical Information"
-msgstr ""
+msgstr "Техническа информация"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_warehouse_id
@@ -6161,6 +6348,8 @@ msgid ""
 "Technical field depicting the warehouse to consider for the route selection "
 "on the next procurement (if any)."
 msgstr ""
+"Техническо поле, изобразяващо склада, за да вземете предвид избора на "
+"маршрут при следващата доставка (ако има такава)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company_internal_transit_location_id
@@ -6168,6 +6357,8 @@ msgid ""
 "Technical field used for resupply routes between warehouses that belong to "
 "this company"
 msgstr ""
+"Техническо поле, използвано за маршрути за повторно снабдяване между "
+"складове, които принадлежат на тази компания"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_show_check_availability
@@ -6194,6 +6385,9 @@ msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
 msgstr ""
+"Техническото поле, изобразяващо ограничението върху собствеността на "
+"количествата, за да го вземете предвид, когато маркирате това движение като "
+"'извършено'"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_price_unit
@@ -6220,7 +6414,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_tmpl_id
 msgid "Technical: used in views"
-msgstr ""
+msgstr "Техническо: използвано в изгледи"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_stock_move_ids
@@ -6245,6 +6439,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "The RFQ becomes a Purchase Order and a Transfer Order is created"
 msgstr ""
+"Заявката за оферта се превръща в поръчка за покупка и се създава поръчка за "
+"трансфер"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_sale_delay
@@ -6259,7 +6455,7 @@ msgstr ""
 "си."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1065
+#: code:addons/stock/models/stock_picking.py:836
 #, python-format
 msgid ""
 "The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has"
@@ -6269,22 +6465,23 @@ msgstr ""
 #. module: stock
 #: sql_constraint:stock.location:0
 msgid "The barcode for a location must be unique per company !"
-msgstr ""
+msgstr "Баркодът на дадена локация трябва да е уникален за всяка компания!"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The code of the warehouse must be unique per company!"
-msgstr ""
+msgstr "Кодът на склада трябва да е уникален за всяка компания!"
 
 #. module: stock
 #: sql_constraint:stock.production.lot:0
 msgid "The combination of serial number and product must be unique !"
-msgstr ""
+msgstr "Комбинацията от сериен номер и продукт трябва да е уникална!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_company_id
 msgid "The company is automatically set from your user preferences."
 msgstr ""
+"Компанията се настройва автоматично от потребителските Ви предпочитания."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_date
@@ -6292,6 +6489,8 @@ msgid ""
 "The date that will be used for the stock level check of the products and the"
 " validation of the stock move related to this inventory."
 msgstr ""
+"Датата, която ще бъде използвана за проверка складовото ниво на продуктите и"
+" потвърждаването на движението в склада, свързано с тази инвентаризация."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:143
@@ -6299,7 +6498,7 @@ msgstr ""
 msgid ""
 "The default resupply warehouse should be different than the warehouse "
 "itself!"
-msgstr ""
+msgstr "Стандартният склад за снабдяване трябва да е различен от самия склад!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_pull_ids
@@ -6314,21 +6513,14 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model:ir.ui.view,arch_db:stock.product_category_form_view_inherit
-msgid ""
-"The following routes will apply to the products in this category taking into"
-" account parent categories:"
-msgstr ""
-
-#. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The name of the warehouse must be unique per company!"
-msgstr ""
+msgstr "Името на склада трябва да е уникално за всяка компания!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_location_dest_id
 msgid "The new location where the goods need to go"
-msgstr ""
+msgstr "Новата локация, където трябва да отиват стоките"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
@@ -6347,7 +6539,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package_id
 msgid "The package containing this quant"
-msgstr ""
+msgstr "Пакетът, съдържащ това количество"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_location_id
@@ -6355,6 +6547,8 @@ msgid ""
 "The parent location that includes this location. Example : The 'Dispatch "
 "Zone' is the 'Gate 1' parent location."
 msgstr ""
+"Основната локация, която включва тази локация. Например: 'Зона за изпращане'"
+" е основната локация 'Портал 1'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_qty_multiple
@@ -6362,11 +6556,13 @@ msgid ""
 "The procurement quantity will be rounded up to this multiple.  If it is 0, "
 "the exact quantity will be used."
 msgstr ""
+"Количеството на доставката ще бъде закръглено до това кратно число. Ако е 0,"
+" ще се използва точното количество."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_rule_id
 msgid "The procurement rule that created this stock move"
-msgstr ""
+msgstr "Правилото за доставка, което създаде това движение в склада"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -6376,6 +6572,17 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_push_rule_id
 msgid "The push rule that created this stock move"
+msgstr "Правилото за придвижване, което създаде това движение в склада"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:377
+#, python-format
+msgid ""
+"The quantity done for the product \"%s\" doesn't respect the rounding "
+"precision                                   defined on the unit of measure "
+"\"%s\". Please change the quantity done or the"
+"                                   rounding precision of your unit of "
+"measure."
 msgstr ""
 
 #. module: stock
@@ -6384,32 +6591,35 @@ msgid "The quotation becomes a Sales Order and a Transfer Order is created"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:266
+#: code:addons/stock/models/stock_move.py:283
 #: code:addons/stock/models/stock_move_line.py:80
 #, python-format
 msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `product_qty` field instead of the `product_uom_qty`."
 msgstr ""
+"Заявената операция не може да бъде обработена поради грешка при "
+"програмирането, настройваща полето `product_qty` вместо полето "
+"'product_uom_qty`."
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:144
-#: code:addons/stock/models/stock_inventory.py:146
-#: code:addons/stock/models/stock_inventory.py:148
-#: code:addons/stock/models/stock_inventory.py:150
+#: code:addons/stock/models/stock_inventory.py:151
+#: code:addons/stock/models/stock_inventory.py:153
+#: code:addons/stock/models/stock_inventory.py:155
+#: code:addons/stock/models/stock_inventory.py:157
 #, python-format
 msgid "The selected inventory options are not coherent."
-msgstr ""
+msgstr "Избраните варианти за инвентаризация не са съгласувани."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line_picking_id
 msgid "The stock operation where the packing has been made"
-msgstr ""
+msgstr "Складовата операция, в която е извършена опаковката"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_warehouse_id
 msgid "The warehouse this rule is for"
-msgstr ""
+msgstr "Складът, за който се отнася това правило"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_propagate_warehouse_id
@@ -6418,11 +6628,14 @@ msgid ""
 "different of the warehouse this rule is for (e.g for resupplying rules from "
 "another warehouse)"
 msgstr ""
+"Складът, който се разпростира според създаденото движение/доставка. Може да "
+"е различен от склада, за който се прилага това правило (напр. за правилата "
+"за повторно снабдяване от друг склад)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_theoretical_qty
 msgid "Theoretical Quantity"
-msgstr ""
+msgstr "Теоретично количество"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.quantsact
@@ -6439,11 +6652,14 @@ msgid ""
 "This field should be completed only if everything inside the package share "
 "the same product, otherwise it doesn't really makes sense."
 msgstr ""
+"Това поле трябва да бъде попълнено, само ако всичко в пакета споделя един и "
+"същ продукт, в противен случай няма смисъл."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_name
 msgid "This field will fill the packing origin and the name of its moves"
 msgstr ""
+"Това поле ще попълни произхода на опаковката и името на неговите движения"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6451,6 +6667,8 @@ msgid ""
 "This guide helps getting started with Odoo Inventory.\n"
 "                        Once you are done, you will benefit from:"
 msgstr ""
+"Това ръководство Ви помага да започнете с Odoo Inventory.\n"
+"                        Щом го направите, ще се възползвате от:"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6458,6 +6676,8 @@ msgid ""
 "This is quite complex to set up, so <strong>contact your Project "
 "Manager</strong> to address this."
 msgstr ""
+"Това е доста сложно да се настрои, така че <strong>се свържете с мениджъра "
+"си проект</strong>, за да разреши проблема."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_default_location_dest_id
@@ -6483,6 +6703,8 @@ msgid ""
 "This is the list of all the production lots you recorded. When\n"
 "            you select a lot, you can get the traceability of the products contained in lot."
 msgstr ""
+"Това е списъкът на всички производствени партиди, които сте записали. Когато\n"
+"            изберете партида, вече можете да проследявате продуктите, които се съдържат в партидата."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_picking_type_id
@@ -6492,7 +6714,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_owner_id
 msgid "This is the owner of the quant"
-msgstr ""
+msgstr "Това е собственикът на количеството"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_uom_qty
@@ -6513,7 +6735,7 @@ msgstr ""
 "внимание."
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:87
+#: code:addons/stock/models/stock_location.py:85
 #, python-format
 msgid ""
 "This location's usage cannot be changed to view as it contains products."
@@ -6526,6 +6748,9 @@ msgid ""
 "                operations on a specific product. You can filter on the product\n"
 "                to see all the past or future movements for the product."
 msgstr ""
+"С това меню можете да проследявате изцяло операциите по\n"
+"                инвентаризацията на определен продукт. Можете да филтрирате продукта,\n"
+"                за да видите всичките му минали и бъдещи движения."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
@@ -6563,7 +6788,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty_new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
-msgstr ""
+msgstr "Това количество е изразено в стандартната мерна единица на продукта."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_location_from_id
@@ -6571,11 +6796,13 @@ msgid ""
 "This rule can be applied when a move is confirmed that has this location as "
 "destination location"
 msgstr ""
+"Това правило може да се приложи, когато се потвърди движение, което има тази"
+" локация като локация на местоназначението"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "This shipment is a backorder of"
-msgstr ""
+msgstr "Тази пратка е неизпълнена поръчка за"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_property_stock_customer
@@ -6677,6 +6904,9 @@ msgid ""
 "                       Choose a lot in the list and click on <i>Traceability</i>i&gt;. You may also\n"
 "                       filter the Quantitative Valuation of a product with a certain lot."
 msgstr ""
+"За да проверите траекторията на дадена партида, я открийте обратно в<strong><i>Контрол на инвентара &gt; партидни/серийни номера</i></strong>.\n"
+"                       Изберете партида от списъка и натиснете на <i>Проследимост</i>i&gt;. Освен това можете\n"
+"                       да филтрирате количественото оценяване на даден продукт с определена партида."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6684,6 +6914,8 @@ msgid ""
 "To create them, click on <strong><span class=\"fa fa-refresh\"/> "
 "Reordering</strong> on"
 msgstr ""
+"За да ги създадете, натиснете на <strong><span class=\"fa fa-refresh\"/> "
+"Пренаредба</strong> на"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6714,21 +6946,19 @@ msgstr "Общо количество"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category_total_route_ids
 msgid "Total routes"
-msgstr ""
+msgstr "Общо маршрути"
 
 #. module: stock
-#: code:addons/stock/models/stock_production_lot.py:53
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
-#, python-format
 msgid "Traceability"
 msgstr "Проследяемост"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_body_print
 msgid "Traceability Report"
-msgstr ""
+msgstr "Отчет на проследяемост"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_module_product_expiry
@@ -6766,7 +6996,7 @@ msgstr "Трансфер"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_picking_partner_id
 msgid "Transfer Destination Address"
-msgstr ""
+msgstr "Прехвърлете адреса на местоназначението"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_picking_id
@@ -6783,12 +7013,12 @@ msgstr "Трансфери"
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Transit Location"
-msgstr ""
+msgstr "Транзитна локация"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Transit Locations"
-msgstr ""
+msgstr "Транзитни локации"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_picking_code
@@ -6811,7 +7041,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_inventory_line_prodlot_name
 #: model:ir.model.fields,help:stock.field_stock_production_lot_name
 msgid "Unique Lot/Serial Number"
-msgstr ""
+msgstr "Уникален партиден/сериен номер"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -6859,13 +7089,13 @@ msgstr "Мерни единици"
 #: model:ir.ui.menu,name:stock.product_uom_menu
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Units of Measures"
-msgstr ""
+msgstr "Мерни единици"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:321
+#: code:addons/stock/models/stock_quant.py:336
 #, python-format
 msgid "Unknown Pack"
-msgstr ""
+msgstr "Неизвестна опаковка"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6879,7 +7109,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Unload in input location then go to stock (2 steps)"
-msgstr ""
+msgstr "Разтоварете във входна локация, след което отидете в склад (2 стъпки)"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
@@ -6887,19 +7117,21 @@ msgid ""
 "Unload in input location, go through a quality control before being admitted"
 " in stock (3 steps)"
 msgstr ""
+"Разтоварете във входна локация, минете през качествен контрол преди да "
+"бъдете допуснати в склада (3 стъпки)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Unlock"
-msgstr ""
+msgstr "Отключете"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Unpack"
-msgstr ""
+msgstr "Разопаковайте"
 
 #. module: stock
-#: code:addons/stock/models/product.py:342
+#: code:addons/stock/models/product.py:344
 #, python-format
 msgid "Unplanned Qty"
 msgstr "Непланирано к-во"
@@ -6907,14 +7139,14 @@ msgstr "Непланирано к-во"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Unreserve"
-msgstr ""
+msgstr "Отрезервирайте"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "UoM"
-msgstr ""
+msgstr "Мерна единица"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
@@ -6925,20 +7157,20 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Up/Down Traceability"
-msgstr ""
+msgstr "Проследяемост отгоре надолу"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
 #: model:ir.ui.view,arch_db:stock.view_change_product_quantity
 msgid "Update Product Quantity"
-msgstr ""
+msgstr "Актуализирайте продуктово количество"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "Update Qty On Hand"
-msgstr ""
+msgstr "Актуализирайте количеството под ръка"
 
 #. module: stock
 #. openerp-web
@@ -6947,7 +7179,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.report_stock_inventory
 #, python-format
 msgid "Upstream Traceability"
-msgstr ""
+msgstr "Проследяемост отдолу нагоре "
 
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
@@ -6967,7 +7199,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_sequence
 msgid "Used to order the 'All Operations' kanban view"
-msgstr ""
+msgstr "Използва се, за да поръча канбан изглед 'Всички операции'"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_user
@@ -6993,7 +7225,7 @@ msgstr "Проверен"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_product_variant_count
 msgid "Variant Count"
-msgstr ""
+msgstr "Брой варианти"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_search
@@ -7031,7 +7263,7 @@ msgstr "Изглед"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_view_location_id
 msgid "View Location"
-msgstr ""
+msgstr "Прегледайте локация"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_virtual
@@ -7052,28 +7284,28 @@ msgstr "Чакащо"
 #. module: stock
 #: selection:stock.move,state:0
 msgid "Waiting Another Move"
-msgstr ""
+msgstr "Изчакване на друго движение"
 
 #. module: stock
 #: selection:stock.picking,state:0
 msgid "Waiting Another Operation"
-msgstr ""
+msgstr "Изчакване на друга операция"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: selection:stock.move,state:0
 msgid "Waiting Availability"
-msgstr ""
+msgstr "Изчакване за наличност"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Waiting Moves"
-msgstr ""
+msgstr "Изчакващи движения"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
 msgid "Waiting Transfers"
-msgstr ""
+msgstr "Изчакващи трансфери"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -7095,7 +7327,7 @@ msgstr "Склад"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Warehouse Configuration"
-msgstr ""
+msgstr "Конфигурация на склад"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
@@ -7105,18 +7337,18 @@ msgstr "Управление на складове"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_name
 msgid "Warehouse Name"
-msgstr ""
+msgstr "Име на склад"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_propagate_warehouse_id
 msgid "Warehouse to Propagate"
-msgstr ""
+msgstr "Склад за разпростиране"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:711
+#: code:addons/stock/models/stock_warehouse.py:744
 #, python-format
 msgid "Warehouse's Routes"
-msgstr ""
+msgstr "Складови маршрути "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
@@ -7128,7 +7360,8 @@ msgid "Warehouses"
 msgstr "Складове"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:110
+#: code:addons/stock/models/stock_move_line.py:134
+#: code:addons/stock/models/stock_move_line.py:146
 #: selection:res.partner,picking_warn:0
 #, python-format
 msgid "Warning"
@@ -7140,7 +7373,7 @@ msgid "Warning on the Picking"
 msgstr "Предупреждение при натоварването"
 
 #. module: stock
-#: code:addons/stock/models/product.py:303
+#: code:addons/stock/models/product.py:305
 #, python-format
 msgid "Warning!"
 msgstr "Предупреждение!"
@@ -7158,6 +7391,10 @@ msgid ""
 "                                        manager a CSV file containing all your\n"
 "                                        data."
 msgstr ""
+"Ние обработваме целия процес по въвеждане\n"
+"                                        за Вас: просто изпратете на Odoo мениджъра\n"
+"                                        проект CSV файл, съдържащ всичките Ви\n"
+"                                        данни."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7167,18 +7404,16 @@ msgid ""
 "                                        manager a CSV file containing all your\n"
 "                                        products."
 msgstr ""
+"Ние обработваме целия процес по въвеждане\n"
+"                                        за Вас: просто изпратете на Odoo мениджъра\n"
+"                                        проект CSV файл, съдържащ всичките Ви\n"
+"                                        продукти."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "We hope this guide helped you implement Odoo Inventory."
 msgstr ""
 "Надяваме се това упътване да ви е от помощ при създаването на Odoo инвентар"
-
-#. module: stock
-#: code:addons/stock/models/barcode.py:11
-#, python-format
-msgid "Weighted Product"
-msgstr "Претеглен продукт"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7203,6 +7438,10 @@ msgid ""
 " can be overridden by the routes on the Product/Product Categories or by the"
 " Preferred Routes on the Procurement"
 msgstr ""
+"Когато се избере склад за този маршрут, последният трябва да се разглежда "
+"като стандартен, когато продуктите преминават през този склад. Това "
+"поведение може да бъде преодоляно от маршрутите на продуктовите категории "
+"или от предпочитаните маршрути на доставката"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -7215,6 +7454,8 @@ msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
 "Product form.  It will take priority over the Warehouse route. "
 msgstr ""
+"Когато е отметнато, маршрутът ще бъде избираем в раздела 'Инвентар' на "
+"продуктовата форма. Тя ще има приоритет пред складовия маршрут."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_product_categ_selectable
@@ -7222,17 +7463,22 @@ msgid ""
 "When checked, the route will be selectable on the Product Category.  It will"
 " take priority over the Warehouse route. "
 msgstr ""
+"Когато е отметнато, маршрутът ще бъде избираем в продуктовата категория. Тя "
+"ще има приоритет пред складовия маршрут."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "When everything is set, click on <i>Start Inventory</i>"
 msgstr ""
+"Когато всичко е настроено, натиснете на <i>Започнете инвентаризация</i>"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_putaway_fixed_location_ids
 msgid ""
 "When the method is fixed, this location will be used to store the products"
 msgstr ""
+"Когато методът е фиксиран, тази локация ще се използва за съхраняване на "
+"продуктите"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_is_locked
@@ -7248,6 +7494,9 @@ msgid ""
 " Odoo generates a procurement to bring the forecasted quantity to the Max "
 "Quantity."
 msgstr ""
+"Когато виртуалната наличност спадне под минималното количество, определено "
+"за това поле, Odoo създава поръчка, за да доведе прогнозното количество до "
+"максималното количество."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_product_max_qty
@@ -7256,6 +7505,9 @@ msgid ""
 "procurement to bring the forecasted quantity to the Quantity specified as "
 "Max Quantity."
 msgstr ""
+"Когато виртуалната наличност спадне под минималното количество, Odoo създава"
+" доставка, за да доведе прогнозното количество до количеството, посочено "
+"като максимално такова."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
@@ -7270,6 +7522,8 @@ msgid ""
 "When you select a serial number (lot), the quantity is corrected with respect to\n"
 "                            the quantity of that serial number (lot) and not to the total quantity of the product."
 msgstr ""
+"Когато изберете сериен номер (партиден), количеството се коригира по отношение на\n"
+"                            количеството на този сериен (партиден) номер, а не на общото количество на продукта."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_additional
@@ -7288,13 +7542,22 @@ msgid "Wizard"
 msgstr "Помощник"
 
 #. module: stock
+#: code:addons/stock/models/stock_production_lot.py:45
+#, python-format
+msgid ""
+"You are not allowed to change the product linked to a serial or lot number "
+"if some stock moves have already been created with that number. This would "
+"lead to inconsistencies in your stock."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_production_lot.py:37
 #, python-format
 msgid "You are not allowed to create a lot for this picking type"
 msgstr "Не Ви е позволено да създадете партида за този вид пикинг"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:636
+#: code:addons/stock/models/stock_move.py:668
 #, python-format
 msgid ""
 "You are using a unit of measure smaller than the one you are using in order "
@@ -7327,11 +7590,17 @@ msgid ""
 " generate a procurement request to increase the stock up to the maximum "
 "quantity."
 msgstr ""
+"Можете да определите правилата за минимална наличност, така че Odoo "
+"автоматично да създава чернови производствени поръчки или заявки за оферти "
+"според нивото на тази наличност. След като виртуалния запас на даден продукт"
+" (= запас под ръка минус всички потвърдени поръчки и резервации) е под "
+"минималното количество, Odoo ще създаде заявка за доставка, за да увеличи "
+"запаса до максималното количество."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "You can delete lines to ignore some products."
-msgstr ""
+msgstr "Можете да изтриете редове, за да игнорирате някои продукти."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_form
@@ -7348,9 +7617,12 @@ msgid ""
 "You can either do it immediately or mark it as Todo for future processing. "
 "Use your scanner to validate the transferred quantity quicker."
 msgstr ""
+"Можете да го направите незабавно или да го маркирате като 'За извършване' за"
+" бъдеща обработка. Използвайте скенера си, за да потвърдите прехвърленото "
+"количество по-бързо."
 
 #. module: stock
-#: code:addons/stock/models/product.py:511
+#: code:addons/stock/models/product.py:522
 #, python-format
 msgid ""
 "You can not change the type of a product that is currently reserved on a "
@@ -7359,16 +7631,19 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:502
+#: code:addons/stock/models/product.py:513
 #, python-format
 msgid ""
 "You can not change the unit of measure of a product that has already been "
 "used in a done stock move. If you need to change the unit of measure, you "
 "may deactivate this product."
 msgstr ""
+"Не можете да променяте мерната единица на продукт, вече използван при "
+"извършено движение в склада. Ако трябва да промените мерна единица, можете "
+"да деактивирате този продукт."
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:338
+#: code:addons/stock/models/stock_move_line.py:339
 #, python-format
 msgid ""
 "You can not delete product moves if the picking is done. You can only "
@@ -7376,25 +7651,25 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:116
+#: code:addons/stock/models/stock_move_line.py:152
 #, python-format
 msgid "You can not enter negative quantities!"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:398
+#: code:addons/stock/models/stock_inventory.py:407
 #, python-format
 msgid "You can only adjust stockable products."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1073
+#: code:addons/stock/models/stock_move.py:1142
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Може да изтривате само движения в проект"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:126
+#: code:addons/stock/models/stock_move_line.py:145
 #, python-format
 msgid "You can only process 1.0 %s for products with unique serial number."
 msgstr ""
@@ -7403,21 +7678,45 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "You can review and edit the predefined units via the"
 msgstr ""
+"Можете да преглеждате и редактирате предварително определените единици чрез"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:936
+#: code:addons/stock/models/stock_move.py:1006
 #, python-format
 msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr ""
+"Не можете да отмените движение в склада, което е настроено като 'Извършено'."
 
 #. module: stock
-#: code:addons/stock/models/stock_scrap.py:71
+#: code:addons/stock/models/stock_location.py:96
 #, python-format
-msgid "You cannot delete a scrap which is done."
+msgid ""
+"You cannot change the location type or its use as a scrap location as there "
+"are products reserved in this location. Please unreserve the products first."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:386
+#: code:addons/stock/models/product.py:606
+#, python-format
+msgid ""
+"You cannot change the ratio of this unit of mesure as some products with "
+"this UoM have already been moved or are currently reserved."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_scrap.py:75
+#, python-format
+msgid "You cannot delete a scrap which is done."
+msgstr "Не можете да изтриете скрап, който е обработен."
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:104
+#, python-format
+msgid "You cannot delete a validated inventory adjustement."
+msgstr "Не можете да изтриете потвърдена ревизия."
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:394
 #, python-format
 msgid ""
 "You cannot have two inventory adjustements in state 'in Progress' with the "
@@ -7427,7 +7726,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:159
+#: code:addons/stock/models/stock_inventory.py:166
 #, python-format
 msgid ""
 "You cannot set a negative product quantity in an inventory line:\n"
@@ -7437,19 +7736,21 @@ msgstr ""
 "\t%s- qty: %s"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1101
+#: code:addons/stock/models/stock_move.py:1173
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr ""
+"Не можете да разделите движение на чернова. То трябва първо да бъде "
+"потвърдено."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1097
+#: code:addons/stock/models/stock_move.py:1169
 #, python-format
 msgid "You cannot split a move done"
-msgstr ""
+msgstr "Не можете да резделите извършено движение"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:88
+#: code:addons/stock/models/stock_quant.py:86
 #, python-format
 msgid ""
 "You cannot take products from or deliver products to a location of type "
@@ -7457,8 +7758,8 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:152
-#: code:addons/stock/models/stock_move_line.py:158
+#: code:addons/stock/models/stock_move_line.py:127
+#: code:addons/stock/models/stock_move_line.py:131
 #, python-format
 msgid ""
 "You cannot use the same serial number twice. Please correct the serial "
@@ -7466,17 +7767,11 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:672
+#: code:addons/stock/models/stock_picking.py:709
 #, python-format
 msgid ""
-"You cannot validate a transfer if you have not processed any quantity for "
-"%s."
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:656
-#, python-format
-msgid "You cannot validate a transfer if you have not processed any quantity."
+"You cannot validate a transfer if you have not processed any quantity. You "
+"should rather cancel the transfer."
 msgstr ""
 
 #. module: stock
@@ -7493,11 +7788,14 @@ msgstr ""
 #, python-format
 msgid "You have manually created product lines, please delete them to proceed"
 msgstr ""
+"Имате механично създадени продуктови редове, моля, изтрийте ги, за да "
+"продължите"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
 msgstr ""
+"Обработили сте по-малко продукти, отколкото са били необходими първоначално."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_overprocessed_transfer
@@ -7507,7 +7805,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:304
+#: code:addons/stock/models/product.py:306
 #, python-format
 msgid ""
 "You have products in stock that have no lot number.  You can assign serial "
@@ -7517,15 +7815,17 @@ msgstr ""
 "да им назначите серийни номера, като създадете инвентар.  "
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:795
+#: code:addons/stock/models/stock_warehouse.py:828
 #, python-format
 msgid ""
 "You have to select a product unit of measure in the same category than the "
 "default unit of measure of the product"
 msgstr ""
+"Трябва да изберете мерна единица на продукт в същата категория като "
+"стандартната мерна единица на продукта"
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:98
+#: code:addons/stock/models/stock_location.py:111
 #, python-format
 msgid "You have to set a name for this location."
 msgstr ""
@@ -7538,7 +7838,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:44
+#: code:addons/stock/wizard/stock_picking_return.py:46
 #, python-format
 msgid "You may only return Done pickings"
 msgstr "Можете да върнете единствено извършени пикинги"
@@ -7547,37 +7847,42 @@ msgstr "Можете да върнете единствено извършени
 #: code:addons/stock/models/stock_inventory.py:22
 #, python-format
 msgid "You must define a warehouse for the company: %s."
-msgstr ""
+msgstr "Трябва да определите склад за компанията: %s."
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:387
-#: code:addons/stock/models/stock_picking.py:670
+#: code:addons/stock/models/stock_move_line.py:406
+#: code:addons/stock/models/stock_picking.py:721
 #, python-format
 msgid "You need to supply a lot/serial number for %s."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1047
+#: code:addons/stock/models/stock_move.py:1126
 #, python-format
 msgid "You should not put the contents of a package in different locations."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:369
-#: code:addons/stock/models/product.py:504
+#: code:addons/stock/models/product.py:373
+#: code:addons/stock/models/product.py:515
 #, python-format
 msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
 msgstr ""
+"Все още имате някои активни правила за пренареждане за този продукт. Първо "
+"ги архивирайте или изтрийте."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:318
+#: code:addons/stock/models/stock_move.py:338
 #, python-format
 msgid ""
 "You try to move a product using a UoM that is not compatible with the UoM of"
 " the product moved. Please use an UoM in the same UoM category."
 msgstr ""
+"Опитвате се да преместите продукт с помощта на мерна единица, която не е "
+"съвместима с мерната единица на преместения продукт. Моля, използвайте мерна"
+" единица от същата категория мерни единица."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7587,7 +7892,7 @@ msgstr "Продукти"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Your Situation"
-msgstr ""
+msgstr "Вашата ситуация"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7597,7 +7902,7 @@ msgstr "Вашите доставчици"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Your Warehouse"
-msgstr ""
+msgstr "Вашият склад"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -7614,12 +7919,12 @@ msgstr "_Отказ"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "a stockable Product"
-msgstr ""
+msgstr "продукт, който може да се снабдява"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "and simply enter a minimum and maximum quantity."
-msgstr ""
+msgstr "и просто въведете минимално и максимално количество."
 
 #. module: stock
 #: model:ir.model,name:stock.model_barcode_rule
@@ -7634,7 +7939,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "configuration menu"
-msgstr ""
+msgstr "конфигурационно меню"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_form
@@ -7656,18 +7961,18 @@ msgstr "пример: Годишна ревизия"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form
 msgid "e.g. Buy"
-msgstr ""
+msgstr "напр. купете"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form_simple
 msgid "e.g. LOT/0001/20121"
-msgstr ""
+msgstr "напр. LOT/0001/20121"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "e.g. PO0032"
-msgstr ""
+msgstr "напр. PO0032"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7675,6 +7980,9 @@ msgid ""
 "either by manually updating the Done quantity on the product lines, or let "
 "Odoo do it automatically while validating"
 msgstr ""
+"или чрез механично актуализиране на готовото количество в продуктовите "
+"редове, или като позволите на Odoo да го направи автоматично в хода на "
+"процеса по потвърждаване"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7683,16 +7991,19 @@ msgid ""
 "them with the Odoo Barcode app, or let Odoo do it automatically while "
 "validating"
 msgstr ""
+"или чрез механично актуализиране на гоновото количество в продуктовите "
+"редове или като ги сканирате с приложението Odoo Barcode, или като позволите"
+" на Odoo да го направи автоматично в хода на процеса по потвърждаване"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "feedback@mail.odoo.com"
-msgstr ""
+msgstr "feedback@mail.odoo.com"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "for a customer and add products"
-msgstr ""
+msgstr "за клиент и добавете продукти"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7700,6 +8011,8 @@ msgid ""
 "for more\n"
 "                        information."
 msgstr ""
+"за повече\n"
+"                        информация."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7709,12 +8022,12 @@ msgstr "от Вашия доставчик с продуктите и заяве
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_3
 msgid "iPad Mini"
-msgstr ""
+msgstr "iPad Mini"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_6
 msgid "iPod"
-msgstr ""
+msgstr "iPod"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -7727,6 +8040,9 @@ msgid ""
 "is displayed on the transfer if your products supply chain is properly "
 "configured. Otherwise, <strong>Check the availability</strong> manually"
 msgstr ""
+"се показва при трансфера, ако веригата Ви за доставки на продукти е правилно"
+" конфигурирана. В противен случай, <strong>отметнете наличността</strong> "
+"механично"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -7739,6 +8055,8 @@ msgid ""
 "on the purchase order form or click on <i>Receive Products</i> to see the "
 "Transfer Order"
 msgstr ""
+"върху формата на поръчка за покупка или натиснете върху <i>Получете "
+"продукти</i>, за да видите поръчката за трансфер"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7748,7 +8066,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_forecast
 msgid "report.stock.forecast"
-msgstr ""
+msgstr "report.stock.forecast"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_config_settings
@@ -7758,7 +8076,7 @@ msgstr "res.config.settings"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_fixed_putaway_strat
 msgid "stock.fixed.putaway.strat"
-msgstr ""
+msgstr "stock.fixed.putaway.strat"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_overprocessed_transfer
@@ -7778,7 +8096,7 @@ msgstr "stock.scrap"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_traceability_report
 msgid "stock.traceability.report"
-msgstr ""
+msgstr "stock.traceability.report"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty
@@ -7793,34 +8111,34 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "the list of products"
-msgstr ""
+msgstr "списъкът с продукти"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "the list of vendors"
-msgstr ""
+msgstr "списъкът с доставчици"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "to mark the products as transferred to your stock location"
-msgstr ""
+msgstr "за да маркирате продуктите, прехвърлени към складовата Ви локация"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "via the"
-msgstr ""
+msgstr "чрез"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "when you receive the ordered products"
-msgstr ""
+msgstr "когато получавате поръчаните продукти"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "with the <i>Validate</i> button"
-msgstr ""
+msgstr "с бутона <i>Потвърдете</i> "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
-msgstr ""
+msgstr "⇒ Настройте количествата на 0"

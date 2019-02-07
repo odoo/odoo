@@ -142,8 +142,9 @@ class AccountChartTemplate(models.Model):
                 'bank_account_code_prefix': self.bank_account_code_prefix,
                 'cash_account_code_prefix': self.cash_account_code_prefix,
             })
-            wizard.onchange_chart_template_id()
-            wizard.execute()
+            if not wizard.existing_accounting(company):
+                wizard.onchange_chart_template_id()
+                wizard.execute()
 
     @api.multi
     def open_select_template_wizard(self):

@@ -59,7 +59,7 @@ Sidebar.include({
                     }
                     if (!already_there) {
                         self._addItems('other', [{
-                            callback: self._onGoogleDocItemClicked.bind(self, res.id, resID),
+                            callback: self._onGoogleDocItemClicked.bind(self, res.id),
                             classname: 'oe_share_gdoc',
                             config_id: res.id,
                             label: res.name,
@@ -81,8 +81,9 @@ Sidebar.include({
      * @param {integer} configID
      * @param {integer} resID
      */
-    _onGoogleDocItemClicked: function (configID, resID) {
+    _onGoogleDocItemClicked: function (configID) {
         var self = this;
+        var resID = this.env.activeIds[0];
         var domain = [['id', '=', configID]];
         var fields = ['google_drive_resource_id', 'google_drive_client_id'];
         this._rpc({

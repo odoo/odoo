@@ -8,7 +8,7 @@
 # JackTheHunter <Maximilian.N98@gmail.com>, 2017
 # darenkster <inactive+darenkster@transifex.com>, 2017
 # Ermin Trevisan <trevi@twanda.com>, 2017
-# Malte Jansen <work@maltejansen.de>, 2017
+# brokemeister <work@maltejansen.de>, 2017
 # e2f_de_t6 <e2f_de_t6@outlook.com>, 2017
 # DE R1 <e2fes1@hotmail.com>, 2017
 # DE T2 <e2f48d4s5vd1s2@outlook.com>, 2017
@@ -17,13 +17,14 @@
 # key six <mobile.umts@gmail.com>, 2018
 # e2f FFE <e2f_de_FFE@outlook.com>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
+# Jan Meyer, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
+"Last-Translator: Jan Meyer, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,19 +38,19 @@ msgid "&amp;times;"
 msgstr "&amp;times;"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:124
+#: code:addons/sale_payment/models/payment.py:134
 #, python-format
 msgid "<%s> transaction (%s) failed: <%s>"
 msgstr "<%s> Transaktion (%s) fehlgeschlagen: <%s>"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:131
+#: code:addons/sale_payment/models/payment.py:141
 #, python-format
 msgid "<%s> transaction (%s) invalid state: %s"
 msgstr "<%s>Transaktion (%s) ungültiger Status: %s"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:139
+#: code:addons/sale_payment/models/payment.py:149
 #, python-format
 msgid "<%s> transaction (%s) order confirmation failed: <%s>"
 msgstr "<%s> Transaktion (%s) Bestellbestätigung fehlgeschlagen: <%s>"
@@ -63,6 +64,15 @@ msgstr "<i class=\"fa fa-arrow-circle-right\"/> Jetzt bezahlen"
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "<i class=\"fa fa-check-circle\"/> Done"
 msgstr "<i class=\"fa fa-check-circle\"/> Fertig"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
+msgid ""
+"<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
+"to be able to use them."
+msgstr ""
+"Sie haben gespeicherte Kreditkarten Daten, Sie können diese zum Einloggen "
+"nutzen."
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -88,7 +98,7 @@ msgid "<strong>Transactions</strong>"
 msgstr "<strong>Transaktionen</strong>"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:54
+#: code:addons/sale_payment/models/payment.py:55
 #, python-format
 msgid "Amount Mismatch (%s)"
 msgstr "Betrag stimmt nicht überein (%s)"
@@ -119,7 +129,7 @@ msgid "Awaiting Payments"
 msgstr "Offene Rechnungen"
 
 #. module: sale_payment
-#: code:addons/sale_payment/controllers/payment.py:52
+#: code:addons/sale_payment/controllers/payment.py:50
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -149,13 +159,13 @@ msgid "Number of transactions to capture"
 msgstr "Anzahl zu erfassender Transaktionen"
 
 #. module: sale_payment
-#: code:addons/sale_payment/controllers/payment.py:49
+#: code:addons/sale_payment/controllers/payment.py:47
 #, python-format
 msgid "Pay"
 msgstr "Zahlen"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:200
+#: code:addons/sale_payment/models/payment.py:210
 #, python-format
 msgid "Pay Now"
 msgstr "Jetzt kaufen"
@@ -168,6 +178,11 @@ msgstr "Bezahlen mit"
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_acquirer_id
 msgid "Payment Acquirer"
+msgstr "Zahlungsanbieter"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.res_config_settings_view_form
+msgid "Payment Acquirers"
 msgstr "Zahlungsanbieter"
 
 #. module: sale_payment
@@ -211,7 +226,7 @@ msgid "Sales Order"
 msgstr "Verkaufsauftrag"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:55
+#: code:addons/sale_payment/models/payment.py:56
 #, python-format
 msgid ""
 "The sale order was not confirmed despite response from the acquirer (%s): SO"

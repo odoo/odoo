@@ -125,6 +125,7 @@ class ProductProduct(models.Model):
     image_medium = fields.Binary(
         "Medium-sized image", compute='_compute_images', inverse='_set_image_medium',
         help="Image of the product variant (Medium-sized image of product template if false).")
+    is_product_variant = fields.Boolean(compute='_compute_is_product_variant')
 
     standard_price = fields.Float(
         'Cost', company_dependent=True,
@@ -151,6 +152,10 @@ class ProductProduct(models.Model):
 
     def _get_invoice_policy(self):
         return False
+
+    def _compute_is_product_variant(self):
+        for product in self:
+            product.is_product_variant = True
 
     def _compute_product_price(self):
         prices = {}
@@ -378,6 +383,24 @@ class ProductProduct(models.Model):
         self.check_access_rule("read")
 
         result = []
+
+        # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
+        # Use `load=False` to not call `name_get` for the `product_tmpl_id`
+        self.sudo().read(['name', 'default_code', 'product_tmpl_id', 'attribute_value_ids', 'attribute_line_ids'], load=False)
+
+        product_template_ids = self.sudo().mapped('product_tmpl_id').ids
+
+        if partner_ids:
+            supplier_info = self.env['product.supplierinfo'].sudo().search([
+                ('product_tmpl_id', 'in', product_template_ids),
+                ('name', 'in', partner_ids),
+            ])
+            # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
+            # Use `load=False` to not call `name_get` for the `product_tmpl_id` and `product_id`
+            supplier_info.sudo().read(['product_tmpl_id', 'product_id', 'product_name', 'product_code'], load=False)
+            supplier_info_by_template = {}
+            for r in supplier_info:
+                supplier_info_by_template.setdefault(r.product_tmpl_id, []).append(r)
         for product in self.sudo():
             # display only the attributes with multiple possible values on the template
             variable_attributes = product.attribute_line_ids.filtered(lambda l: len(l.value_ids) > 1).mapped('attribute_id')
@@ -386,9 +409,10 @@ class ProductProduct(models.Model):
             name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
             if partner_ids:
-                sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and (x.product_id == product)]
+                product_supplier_info = supplier_info_by_template.get(product.product_tmpl_id, [])
+                sellers = [x for x in product_supplier_info if x.product_id and x.product_id == product]
                 if not sellers:
-                    sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and not x.product_id]
+                    sellers = [x for x in product_supplier_info if not x.product_id]
             if sellers:
                 for s in sellers:
                     seller_variant = s.product_name and (

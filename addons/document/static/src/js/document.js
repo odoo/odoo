@@ -50,10 +50,10 @@ Sidebar.include({
      * @override
      */
     updateEnv: function (env) {
-        if (this.hasAttachments) {
-            this.env = env;
-            this._updateAttachments().then(this._redraw.bind(this));
-        }
+        this.env = env;
+        var _super = _.bind(this._super, this, env);
+        var def = this.hasAttachments ? this._updateAttachments() : $.when();
+        def.then(_super);
     },
 
     //--------------------------------------------------------------------------

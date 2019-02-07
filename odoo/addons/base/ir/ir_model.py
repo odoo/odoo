@@ -366,6 +366,11 @@ class IrModelFields(models.Model):
             raise UserError(_("The Selection Options expression is not a valid Pythonic expression. "
                               "Please provide an expression in the [('key','Label'), ...] format."))
 
+    @api.constrains('domain')
+    def _check_domain(self):
+        for field in self:
+            safe_eval(field.domain or '[]')
+
     @api.constrains('name', 'state')
     def _check_name(self):
         for field in self:
@@ -746,6 +751,7 @@ class IrModelFields(models.Model):
             'index': bool(field.index),
             'store': bool(field.store),
             'copy': bool(field.copy),
+            'on_delete': getattr(field, 'ondelete', None),
             'related': ".".join(field.related) if field.related else None,
             'readonly': bool(field.readonly),
             'required': bool(field.required),

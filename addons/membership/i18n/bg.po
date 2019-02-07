@@ -140,7 +140,7 @@ msgstr "Check if the product is eligible for membership."
 #. module: membership
 #: model:ir.actions.act_window,help:membership.action_membership_members
 msgid "Click to add a new Member"
-msgstr ""
+msgstr "Натиснете, за да добаните нов член"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_company_id
@@ -180,7 +180,7 @@ msgstr "Създадено на"
 #: model:ir.model.fields,field_description:membership.field_report_membership_membership_state
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Current Membership State"
-msgstr ""
+msgstr "Състояние на настоящо членство"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_state
@@ -204,7 +204,7 @@ msgstr "Дата от която членството става активно.
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line_date
 msgid "Date on which member has joined the membership"
-msgstr ""
+msgstr "Дата, та която членът е получил членство"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_membership_cancel
@@ -230,7 +230,7 @@ msgstr "Име за показване"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_tot_earned
 msgid "Earned Amount"
-msgstr ""
+msgstr "Спечелена сума"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_date_to
@@ -240,33 +240,33 @@ msgstr "Крайна дата"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "End Membership Date"
-msgstr ""
+msgstr "Крайна дата на членство"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "End Month"
-msgstr ""
+msgstr "Краен месец"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_report_membership_date_to
 msgid "End membership date"
-msgstr ""
+msgstr "Дата на преустановяване на членство"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Ending Month Of Membership"
-msgstr ""
+msgstr "Изтичащ месец на членство"
 
 #. module: membership
 #: sql_constraint:product.template:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "Грешка! Крайната дата не може да бъде настроена преди началната дата."
 
 #. module: membership
 #: code:addons/membership/models/partner.py:159
 #, python-format
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Грешка! Не можете да създадете рекурсивни асоциирани членове."
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -290,7 +290,7 @@ msgstr "От"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "From Month"
-msgstr ""
+msgstr "От месец"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -330,19 +330,19 @@ msgstr "Ред от фактура"
 #: model:ir.actions.act_window,name:membership.action_membership_invoice_view
 #: model:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Invoice Membership"
-msgstr ""
+msgstr "Фактурирайте членство"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Invoiced Member"
-msgstr ""
+msgstr "Фактурирано членство"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Invoiced/Paid/Free"
-msgstr ""
+msgstr "Фактурирано/платено/безплатно"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_membership_state
@@ -375,11 +375,18 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
+"Посочва състоянието на членство.\n"
+"-Нечленуващ: Член, който не е кандидатствал за никакво членство..\n"
+"-Отменен член: член, който е преустановил членството си.\n"
+"-Стар член: член, чието членство е изтекло.\n"
+"-Чакащ член: член, кандидатствал за членство, на който му предстои изготвяне на фактура.\n"
+"Фактуриран член: член, чиято фактура е създадена.\n"
+"-Плащащ член: член, заплатил членската си такса."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date
 msgid "Join Date"
-msgstr ""
+msgstr "Дата на присъединяване"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice___last_update
@@ -421,7 +428,7 @@ msgstr "Членове"
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_report_membership_tree
 msgid "Members Analysis"
-msgstr ""
+msgstr "Анализ на членове"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_product_id
@@ -441,17 +448,17 @@ msgstr "Членство"
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_amount
 #: model:ir.model.fields,field_description:membership.field_res_users_membership_amount
 msgid "Membership Amount"
-msgstr ""
+msgstr "Размер на членство"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_membership
 msgid "Membership Analysis"
-msgstr ""
+msgstr "Анализ на членство"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 msgid "Membership Duration"
-msgstr ""
+msgstr "Продължителност на членство"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_product_product_membership_date_to
@@ -466,13 +473,13 @@ msgstr "Крайна Дата на Абонамента"
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 #: model:ir.ui.view,arch_db:membership.membership_products_tree
 msgid "Membership Fee"
-msgstr ""
+msgstr "Такса за членство"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_invoice
 #: model:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Membership Invoice"
-msgstr ""
+msgstr "Фактура за членство"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -484,13 +491,13 @@ msgstr "Контрагенти с членство"
 #: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Membership Product"
-msgstr ""
+msgstr "Продукт на членство"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_products
 #: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Membership Products"
-msgstr ""
+msgstr "Продукти на членство"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_product_product_membership_date_from
@@ -503,18 +510,18 @@ msgstr "Начална Дата на Абонамента"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Membership State"
-msgstr ""
+msgstr "Състояние на членство"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_state
 msgid "Membership Status"
-msgstr ""
+msgstr "Състояние на членство"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 #: model:ir.ui.view,arch_db:membership.membership_products_tree
 msgid "Membership products"
-msgstr ""
+msgstr "Продукти на членство"
 
 #. module: membership
 #: model:ir.actions.server,name:membership.ir_cron_update_membership_ir_actions_server
@@ -526,7 +533,7 @@ msgstr ""
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
 msgid "Memberships"
-msgstr ""
+msgstr "Членства"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -538,12 +545,12 @@ msgstr "Месец"
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Non Member"
-msgstr ""
+msgstr "Не-член"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "None/Canceled/Old/Waiting"
-msgstr ""
+msgstr "Не-член/отменен/стар/чакащ"
 
 #. module: membership
 #: model:ir.actions.act_window,help:membership.action_membership_members
@@ -559,14 +566,14 @@ msgstr ""
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Old Member"
-msgstr ""
+msgstr "Стар член"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Paid Member"
-msgstr ""
+msgstr "Платен член"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_partner
@@ -588,7 +595,7 @@ msgstr "Контрагентът е свободен член"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_tot_pending
 msgid "Pending Amount"
-msgstr ""
+msgstr "Висяща сума"
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_template
@@ -608,7 +615,7 @@ msgstr "Отчитане"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Revenue Done"
-msgstr ""
+msgstr "Приет приход"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_user_id
@@ -621,7 +628,7 @@ msgstr "Търговец"
 #: model:ir.model.fields,help:membership.field_res_partner_free_member
 #: model:ir.model.fields,help:membership.field_res_users_free_member
 msgid "Select if you want to give free membership."
-msgstr ""
+msgstr "Изберете, ако искате да дадете безплатно членство."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_start_date
@@ -636,7 +643,7 @@ msgstr "Стартиращ месец"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Starting Month Of Membership"
-msgstr ""
+msgstr "Начален месец на членство"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
@@ -652,17 +659,17 @@ msgstr "Цената, договорена от контрагента"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 msgid "This note will be displayed on quotations..."
-msgstr ""
+msgstr "Тази бележка ще се появява във фактурите"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display paid, old and total earned columns"
-msgstr ""
+msgstr "Чакащ член"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display waiting, invoiced and total pending columns"
-msgstr ""
+msgstr "Това ще покаже колони с чакащи, фактурирани и общо неуредени"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_to
@@ -679,7 +686,7 @@ msgstr "Доставчици"
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Waiting Member"
-msgstr ""
+msgstr "Чакащ член"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line

@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_customer
-#
+# 
 # Translators:
+# Bjorn Ingvarsson <boi@exigo.is>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-09-08 10:10+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Icelandic (http://www.transifex.com/odoo/odoo-9/language/"
-"is/)\n"
-"Language: is\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 10:25+0000\n"
+"Last-Translator: Bjorn Ingvarsson <boi@exigo.is>, 2018\n"
+"Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: is\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);\n"
 
 #. module: website_customer
@@ -29,9 +30,15 @@ msgid "Active"
 msgstr "Virkur"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:68
+#: code:addons/website_customer/controllers/main.py:80
 #, python-format
 msgid "All Countries"
+msgstr ""
+
+#. module: website_customer
+#: code:addons/website_customer/controllers/main.py:61
+#, python-format
+msgid "All Sectors of Activity"
 msgstr ""
 
 #. module: website_customer
@@ -42,7 +49,7 @@ msgstr ""
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_name
 msgid "Category Name"
-msgstr "Nafn flokks"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_classname
@@ -52,27 +59,32 @@ msgstr ""
 #. module: website_customer
 #: model:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid "Click to create a new partner tag."
-msgstr ""
+msgstr "Click to create a new partner tag."
+
+#. module: website_customer
+#: model:ir.model,name:website_customer.model_res_partner
+msgid "Contact"
+msgstr "Tengiliður"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_uid
 msgid "Created by"
-msgstr "Búið til af"
+msgstr "Stofnað af"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_date
 msgid "Created on"
-msgstr ""
+msgstr "Stofndagur"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nafn"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_id
 msgid "ID"
-msgstr "Auðkenni"
+msgstr "ID"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.implemented_by_block
@@ -82,24 +94,23 @@ msgstr ""
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Síðast breytt"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Síðast uppfært af"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Dags. síðustu uppfærlsu"
 
 #. module: website_customer
 #: model:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid ""
 "Manage the partner tags to better classify them on your website.\n"
-"                    You can add the filter by tag on your website in the "
-"\"Customize\" menu."
+"                    You can add the filter by tag on your website in the \"Customize\" menu."
 msgstr ""
 
 #. module: website_customer
@@ -113,11 +124,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_customer.index
 msgid "Our References"
 msgstr ""
-
-#. module: website_customer
-#: model:ir.model,name:website_customer.model_res_partner
-msgid "Partner"
-msgstr "Viðskipta aðili"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.view_partner_tag_form
@@ -134,16 +140,21 @@ msgstr ""
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_partner_ids
 msgid "Partners"
-msgstr "Viðskiptaaðilar"
+msgstr "Viðskiptavinir"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.references_block
 msgid "References"
-msgstr "Tilvísun"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_country_list
 msgid "References by Country"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.ui.view,arch_db:website_customer.opt_industry_list
+msgid "References by Sectors of Activity"
 msgstr ""
 
 #. module: website_customer
@@ -154,12 +165,17 @@ msgstr ""
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.index
 msgid "Search"
-msgstr "Leita"
+msgstr "Search"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.index
 msgid "Trusted by millions worldwide"
 msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_website_published
+msgid "Visible in Website"
+msgstr "Visible in Website"
 
 #. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
@@ -171,6 +187,7 @@ msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_users_website_tag_ids
 msgid "Website tags"
 msgstr ""
 

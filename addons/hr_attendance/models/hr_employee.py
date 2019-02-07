@@ -49,7 +49,9 @@ class HrEmployee(models.Model):
     @api.depends('attendance_ids')
     def _compute_last_attendance_id(self):
         for employee in self:
-            employee.last_attendance_id = employee.attendance_ids and employee.attendance_ids[0] or False
+            employee.last_attendance_id = self.env['hr.attendance'].search([
+                ('employee_id', '=', employee.id),
+            ], limit=1)
 
     @api.depends('last_attendance_id.check_in', 'last_attendance_id.check_out', 'last_attendance_id')
     def _compute_attendance_state(self):
@@ -89,6 +91,7 @@ class HrEmployee(models.Model):
         action_message = self.env.ref('hr_attendance.hr_attendance_action_greeting_message').read()[0]
         action_message['previous_attendance_change_date'] = self.last_attendance_id and (self.last_attendance_id.check_out or self.last_attendance_id.check_in) or False
         action_message['employee_name'] = self.name
+        action_message['barcode'] = self.barcode
         action_message['next_action'] = next_action
 
         if self.user_id:

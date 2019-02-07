@@ -6,13 +6,15 @@
 # Martin Trigaux, 2017
 # Paolo Valier, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:14+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,24 +32,24 @@ msgstr "&amp;times;"
 #, python-format
 msgid "<%s>  transaction (%s) invoice confirmation failed : <%s>"
 msgstr ""
-"Conferma della fattura della transazione <%s>  (%s) non riuscita : <%s>"
+"Conferma della fattura per la transazione <%s>  (%s) non riuscita : <%s>"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:45
 #, python-format
 msgid "<%s> transaction (%s) failed : <%s>"
-msgstr "<%s> transazione (%s) non riuscita : <%s>"
+msgstr "Transazione <%s> (%s) non ruscita : <%s>"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:52
 #, python-format
 msgid "<%s> transaction (%s) invalid state : %s"
-msgstr "<%s> transazione (%s) stato non valido: %s"
+msgstr "Stato della transazione <%s> (%s) non valido : %s"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Pay Now"
-msgstr "<i class=\"fa fa-arrow-circle-right\"/> Paga Ora"
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> Paga ora"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -56,7 +58,7 @@ msgid ""
 "Now</span>"
 msgstr ""
 "<i class=\"fa fa-arrow-circle-right\"/><span class=\"hidden-xs\"> Paga "
-"Adesso</span>"
+"ora</span>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -74,8 +76,8 @@ msgid ""
 "<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
 "to be able to use them."
 msgstr ""
-"<i class=\"fa fa-info\"/> Hai carte di credito registrate, puoi registrarti "
-"per usarle. "
+"<i class=\"fa fa-info\"/> Sono presenti carte di credito registrate, "
+"accedere per poterle utilizzare."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
@@ -84,7 +86,7 @@ msgid ""
 " fa-clock-o\"/> Waiting</span>"
 msgstr ""
 "<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
-" fa-clock-o\"/> In attesa</span>"
+" fa-clock-o\"/> Attendere...</span>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
@@ -93,7 +95,7 @@ msgid ""
 "fa-fw fa-check\"/> Done</span>"
 msgstr ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
-"fa-fw fa-check\"/> Finito</span>"
+"fa-fw fa-check\"/> Completato</span>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
@@ -104,7 +106,7 @@ msgstr "<strong>Transazioni</strong>"
 #: code:addons/account_payment/models/payment.py:80
 #, python-format
 msgid "Amount Mismatch (%s)"
-msgstr ""
+msgstr "Importo non corrispondente (%s)"
 
 #. module: account_payment
 #: code:addons/account_payment/controllers/payment.py:50
@@ -113,8 +115,8 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
-"Memorizzando le informazioni di pagamento sui nostri server, sarà possibile "
-"effettuare in automatico i pagamenti relativi agli abbonamenti."
+"Memorizzando le informazioni di pagamento nei nostri server, gli abbonamenti"
+" verranno pagati automaticamente."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
@@ -136,35 +138,35 @@ msgstr "Numero di transazioni di pagamento"
 #: code:addons/account_payment/controllers/payment.py:47
 #, python-format
 msgid "Pay & Confirm"
-msgstr "Paga & Conferma"
+msgstr "Paga e conferma"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:131
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 #, python-format
 msgid "Pay Now"
-msgstr "Paga Ora"
+msgstr "Pagare ora"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "Pay with"
-msgstr "Paga con"
+msgstr "Pagare con"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_acquirer_id
 msgid "Payment Acquirer"
-msgstr "Acquirente di pagamento"
+msgstr "Sistema di pagamento"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Transazione Pagamento"
+msgstr "Transazione di pagamento"
 
 #. module: account_payment
 #: code:addons/account_payment/models/account_invoice.py:28
 #, python-format
 msgid "Payment Transactions"
-msgstr "Transazioni di Pagamento"
+msgstr "Transazioni di pagamento"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -178,30 +180,27 @@ msgid ""
 "The invoice was not confirmed despite response from the acquirer (%s): "
 "invoice amount is %r but acquirer replied with %r."
 msgstr ""
-"La fattura non è stata confermata nonostante la risposta dell'acquirente "
-"(%s): l'importo della fattura è %r ma l'acquirente a risposto con %r."
+"La fattura non è stata confermata malgrado la risposta dal sistema (%s): "
+"l'importo fattura è %r ma il sistema ha risposto %r."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid ""
 "There was an error processing your payment: impossible to validate invoice."
 msgstr ""
-"Si è verificato un errore durante il trattamento del tuo pagamento: "
-"impossibile validare la fattura."
+"Errore durante l'elaborazione del pagamento: impossibile confermare la "
+"fattura."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice state."
 msgstr ""
-"Si è verificato un errore durante il trattamento del tuo pagamento: stato di"
-" fattura invalido."
+"Errore durante l'elaborazione del pagamento: stato fattura non valido."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
-msgstr ""
-"Si è verificato un errore durante il trattamento del tuo pagamento: fattura "
-"invalida."
+msgstr "Errore durante l'elaborazione del pagamento: fattura non valida."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -209,37 +208,35 @@ msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
 msgstr ""
-"Si è verificato un errore durante il trattamento del tuo pagamento: problema"
-" con la convalida del codice identificativo della carta di credito. "
+"Errore durante l'elaborazione del pagamento: problema di conferma ID della "
+"carta di credito."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid ""
 "There was an error processing your payment: transaction amount issue.<br/>"
 msgstr ""
-"Si è verificato un errore durante il trattamento del tuo pagamento: problema"
-" con l'importo della transazione.<br/>"
+"Errore durante l'elaborazione del pagamento: problema con l'importo della "
+"transazione.<br/>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
 msgstr ""
-"Si è verificato un errore durante il trattamento del tuo pagamento: "
-"transazione fallita.<br/>"
+"Errore durante l'elaborazione del pagamento: transazione non riuscita.<br/>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction issue.<br/>"
 msgstr ""
-"Si è verificato un errore durante il trattamento del tuo pagamento: problema"
-" di transazione"
+"Errore durante l'elaborazione del pagamento: problema con la "
+"transazione.<br/>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
 msgstr ""
-"Si è verificato un errore durante il trattamento del tuo pagamento: codice "
-"identificativo della carta di credito invalido."
+"Errore durante l'elaborazione del pagamento: ID carta di credito non valido."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_ids
@@ -250,4 +247,4 @@ msgstr "Transazioni"
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status
 msgid "Your payment has been authorized."
-msgstr "Il tuo pagamento è stato autorizzato."
+msgstr "Il pagamento è stato autorizzato."

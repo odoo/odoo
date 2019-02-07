@@ -36,7 +36,7 @@ class TestStockValuation(AccountingTestCase):
 
         # sell one unit of this product
         customer1 = self.env['res.partner'].create({'name': 'customer1'})
-        sale_order1 = self.env['sale.order'].create({
+        self.sale_order1 = self.env['sale.order'].create({
             'partner_id': customer1.id,
             'partner_invoice_id': customer1.id,
             'partner_shipping_id': customer1.id,
@@ -50,38 +50,38 @@ class TestStockValuation(AccountingTestCase):
             'pricelist_id': self.env.ref('product.list0').id,
             'picking_policy': 'direct',
         })
-        sale_order1.action_confirm()
+        self.sale_order1.action_confirm()
 
         # confirm the purchase order
-        purchase_order1 = self.env['purchase.order'].search([('group_id', '=', sale_order1.procurement_group_id.id)])
-        purchase_order1.button_confirm()
+        self.purchase_order1 = self.env['purchase.order'].search([('group_id', '=', self.sale_order1.procurement_group_id.id)])
+        self.purchase_order1.button_confirm()
 
         # validate the dropshipping picking
-        self.assertEqual(len(sale_order1.picking_ids), 1)
-        self.assertEqual(sale_order1.picking_ids.move_lines._is_dropshipped(), True)
-        wizard = sale_order1.picking_ids.button_validate()
+        self.assertEqual(len(self.sale_order1.picking_ids), 1)
+        self.assertEqual(self.sale_order1.picking_ids.move_lines._is_dropshipped(), True)
+        wizard = self.sale_order1.picking_ids.button_validate()
         immediate_transfer = self.env[wizard['res_model']].browse(wizard['res_id'])
         immediate_transfer.process()
-        self.assertEqual(sale_order1.picking_ids.state, 'done')
+        self.assertEqual(self.sale_order1.picking_ids.state, 'done')
 
         # create the vendor bill
-        vendor_bill1 = self.env['account.invoice'].create({
+        self.vendor_bill1 = self.env['account.invoice'].create({
             'partner_id': vendor1.id,
-            'purchase_id': purchase_order1.id,
+            'purchase_id': self.purchase_order1.id,
             'account_id': vendor1.property_account_payable_id.id,
             'type': 'in_invoice',
         })
-        vendor_bill1.purchase_order_change()
-        vendor_bill1.action_invoice_open()
+        self.vendor_bill1.purchase_order_change()
+        self.vendor_bill1.action_invoice_open()
 
         # create the customer invoice
-        customer_invoice1_id = sale_order1.action_invoice_create()
-        customer_invoice1 = self.env['account.invoice'].browse(customer_invoice1_id)
-        customer_invoice1.action_invoice_open()
+        self.customer_invoice1_id = self.sale_order1.action_invoice_create()
+        self.customer_invoice1 = self.env['account.invoice'].browse(self.customer_invoice1_id)
+        self.customer_invoice1.action_invoice_open()
 
-        all_amls = vendor_bill1.move_id.line_ids + customer_invoice1.move_id.line_ids
-        if sale_order1.picking_ids.move_lines.account_move_ids:
-            all_amls |= sale_order1.picking_ids.move_lines.account_move_ids.line_ids
+        all_amls = self.vendor_bill1.move_id.line_ids + self.customer_invoice1.move_id.line_ids
+        if self.sale_order1.picking_ids.move_lines.account_move_ids:
+            all_amls |= self.sale_order1.picking_ids.move_lines.account_move_ids.line_ids
         return all_amls
 
     def _check_results(self, expected_aml, expected_aml_count, all_amls):
@@ -267,3 +267,33 @@ class TestStockValuation(AccountingTestCase):
 
         self._check_results(expected_aml, 8, all_amls)
 
+    def test_dropship_standard_perpetual_anglosaxon_ordered_return(self):
+        self.env.user.company_id.anglo_saxon_accounting = True
+        self.product1.product_tmpl_id.cost_method = 'standard'
+        self.product1.product_tmpl_id.standard_price = 10
+        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.invoice_policy = 'order'
+
+        all_amls = self._dropship_product1()
+
+        # return what we've done
+        stock_return_picking = self.env['stock.return.picking']\
+            .with_context(active_ids=self.sale_order1.picking_ids.ids, active_id=self.sale_order1.picking_ids.ids[0])\
+            .create({})
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick.move_lines[0].move_line_ids[0].qty_done = 1.0
+        return_pick.do_transfer()
+        self.assertEqual(return_pick.move_lines._is_dropshipped_returned(), True)
+
+        all_amls_return = self.vendor_bill1.move_id.line_ids + self.customer_invoice1.move_id.line_ids
+        if self.sale_order1.picking_ids.mapped('move_lines.account_move_ids'):
+            all_amls_return |= self.sale_order1.picking_ids.mapped('move_lines.account_move_ids.line_ids')
+
+        # Two extra AML should have been created for the return
+        expected_aml = {
+            self.acc_stock_in:   (10.0, 0.0),
+            self.acc_stock_out:  (0.0, 10.0),
+        }
+
+        self._check_results(expected_aml, 2, all_amls_return - all_amls)

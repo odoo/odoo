@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
 "Last-Translator: Martin Trigaux, 2017\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -25,19 +25,19 @@ msgid "&amp;times;"
 msgstr "&amp;times;"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:124
+#: code:addons/sale_payment/models/payment.py:134
 #, python-format
 msgid "<%s> transaction (%s) failed: <%s>"
 msgstr " <%s>交易（%s）失敗：<%s>"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:131
+#: code:addons/sale_payment/models/payment.py:141
 #, python-format
 msgid "<%s> transaction (%s) invalid state: %s"
 msgstr "<%s>交易（%s）無效顯示：%s"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:139
+#: code:addons/sale_payment/models/payment.py:149
 #, python-format
 msgid "<%s> transaction (%s) order confirmation failed: <%s>"
 msgstr "<%s>事務（%s）訂單確認失敗：<%s>"
@@ -51,6 +51,13 @@ msgstr "<i class=\"fa fa-arrow-circle-right\"/> 現在付款"
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "<i class=\"fa fa-check-circle\"/> Done"
 msgstr "<i class=\"fa fa-check-circle\"/>完成"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
+msgid ""
+"<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
+"to be able to use them."
+msgstr "登記您的信用卡之後您就可以登錄後並使用"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -76,7 +83,7 @@ msgid "<strong>Transactions</strong>"
 msgstr "<strong>交易</strong>"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:54
+#: code:addons/sale_payment/models/payment.py:55
 #, python-format
 msgid "Amount Mismatch (%s)"
 msgstr "量不匹配 (%s)"
@@ -107,7 +114,7 @@ msgid "Awaiting Payments"
 msgstr "等待付款"
 
 #. module: sale_payment
-#: code:addons/sale_payment/controllers/payment.py:52
+#: code:addons/sale_payment/controllers/payment.py:50
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -135,13 +142,13 @@ msgid "Number of transactions to capture"
 msgstr "要捕獲的交易數"
 
 #. module: sale_payment
-#: code:addons/sale_payment/controllers/payment.py:49
+#: code:addons/sale_payment/controllers/payment.py:47
 #, python-format
 msgid "Pay"
 msgstr "付款"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:200
+#: code:addons/sale_payment/models/payment.py:210
 #, python-format
 msgid "Pay Now"
 msgstr "現在付款"
@@ -155,6 +162,11 @@ msgstr "支付以"
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_acquirer_id
 msgid "Payment Acquirer"
 msgstr "收單"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.res_config_settings_view_form
+msgid "Payment Acquirers"
+msgstr "支付方式"
 
 #. module: sale_payment
 #: model:ir.model,name:sale_payment.model_payment_transaction
@@ -197,7 +209,7 @@ msgid "Sales Order"
 msgstr "銷售訂單"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:55
+#: code:addons/sale_payment/models/payment.py:56
 #, python-format
 msgid ""
 "The sale order was not confirmed despite response from the acquirer (%s): SO"

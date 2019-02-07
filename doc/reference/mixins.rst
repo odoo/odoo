@@ -84,7 +84,7 @@ to manage followers on your record:
     
     :param str body: body of the message, usually raw HTML that will
         be sanitized
-    :param str message_type: see mail_message.type field
+    :param str message_type: see mail_message.message_type field
     :param str content_subtype: if plaintext: convert body into html
     :param int parent_id: handle reply to a previous message by adding the
         parent partners to the message in case of private discussion

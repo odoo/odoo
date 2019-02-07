@@ -3,18 +3,19 @@
 # * event
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
-# trendspotter, 2018
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018
+# Martin Trigaux, 2018
+# trendspotter <j.podhorecky@volny.cz>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:56+0000\n"
-"PO-Revision-Date: 2018-07-27 11:56+0000\n"
-"Last-Translator: Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -366,7 +367,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "${object.event_id.name}: ${object.get_date_range_str()}"
-msgstr ""
+msgstr "${object.event_id.name}: ${object.get_date_range_str()}"
 
 #. module: event
 #: code:addons/event/models/event.py:297
@@ -561,6 +562,8 @@ msgid ""
 "Are you sure you want to cancel this event? All the linked attendees will be"
 " cancelled as well."
 msgstr ""
+"Opravdu chcete tuto událost zrušit? Všichni propojení účastníci budou také "
+"zrušeni."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -667,7 +670,7 @@ msgstr ""
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Best regards,"
-msgstr ""
+msgstr "S pozdravem,"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -810,7 +813,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Confirmed events"
-msgstr ""
+msgstr "Potvrzené události"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -1009,7 +1012,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 #: model:ir.ui.view,arch_db:event.view_event_type_tree
 msgid "Event Category"
-msgstr ""
+msgstr "Kategorie události"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
@@ -1046,7 +1049,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_name
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Event Name"
-msgstr ""
+msgstr "Název události"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_calendar
@@ -1147,7 +1150,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Expected"
-msgstr ""
+msgstr "Očekávaný"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -1255,12 +1258,16 @@ msgid ""
 " status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
+"Pokud je událost vytvořena, její stav je \"Koncept\". Pokud je událost "
+"potvrzena pro konkrétní data, je stav nastaven na hodnotu \"Potvrzeno\". "
+"Pokud událost skončí, stav je nastaven na \"Hotovo\". Pokud je událost "
+"zrušena, je stav nastaven na \"Zrušeno\"."
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Immediately"
-msgstr ""
+msgstr "Ihned"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1495,12 +1502,12 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_expected
 msgid "Number of Expected Attendees"
-msgstr ""
+msgstr "Počet očekávaných účastníků"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_used
 msgid "Number of Participants"
-msgstr ""
+msgstr "Počet zúčastněných"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_partner_event_count
@@ -1922,7 +1929,7 @@ msgstr "Nepotvrzené"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
-msgstr ""
+msgstr "Nepotvrzené rezervace místa"
 
 #. module: event
 #: model:event.event,description:event.event_0

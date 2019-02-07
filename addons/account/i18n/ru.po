@@ -3,47 +3,51 @@
 # * account
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Viktor Pogrebniak <vp@aifil.ru>, 2017
-# Sergey Vilizhanin, 2017
-# Максим Дронь <dronmax@gmail.com>, 2017
 # Vladlen Bolshakov <vladlensb@gmail.com>, 2017
-# Артур Чеботарь <artcha.chebotar@gmail.com>, 2017
-# Artur Komishenko <Archi1792@gmail.com>, 2017
-# Mekan Bash <tmbashimov@gmail.com>, 2017
-# Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017
-# Collex100, 2017
-# Gennady Marchenko <gennadym@gmail.com>, 2017
-# sergeiruzkiicode <sergei.ruzki@icode.by>, 2017
-# Max Belyanin <maxbelyanin@gmail.com>, 2017
-# Denis Baranov <baranov@itlibertas.com>, 2017
-# Masha Koc <mariya.kos.ua@gmail.com>, 2017
 # Василий Коробатов <boxat@mail.ru>, 2017
-# Denis Trepalin <zekarious@gmail.com>, 2017
 # Andrey Samorukov <andrey.samorukov@me.com>, 2017
-# OstapYakovenko <Ostap.Yakovenko@gmail.com>, 2017
 # Leonid Froenchenko <lfroen@gmail.com>, 2017
-# Алексей Билькевич (belskiy) <mmmbrsk@gmail.com>, 2017
-# Evgeny <transingularity@gmail.com>, 2017
+# Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017
 # Алексей Кулагин <alekseik120988.kulagin@yandex.ru>, 2017
+# Алексей Билькевич (belskiy) <mmmbrsk@gmail.com>, 2017
 # Alex Puchkov <ap@alteco.co>, 2017
+# Denis Trepalin <zekarious@gmail.com>, 2017
+# Artur Komishenko <Archi1792@gmail.com>, 2017
 # Amaro Vita <vita.amaro@gmail.com>, 2017
+# Gennady Marchenko <gennadym@gmail.com>, 2017
+# Denis Baranov <baranov@itlibertas.com>, 2017
 # KingOPl Slav <87slava13@gmail.com>, 2017
+# OstapYakovenko <Ostap.Yakovenko@gmail.com>, 2017
 # Andrey Skabelin, 2017
 # Doc Doc <vladkk94@gmail.com>, 2017
+# Mekan Bash <tmbashimov@gmail.com>, 2017
+# Masha Koc <mariya.kos.ua@gmail.com>, 2017
+# Viktor Pogrebniak <vp@aifil.ru>, 2017
+# Collex100, 2017
+# Evgeny <transingularity@gmail.com>, 2017
+# Max Belyanin <maxbelyanin@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Артур Чеботарь <artcha.chebotar@gmail.com>, 2017
 # Артём Инжиянц <artem.inzhyyants@gmail.com>, 2017
 # Aidos Kakimzhanov <aidos.kakimzhan@gmail.com>, 2017
 # Dmitry sky <d.v.selitsky@gmail.com>, 2017
-# Yuriy Ney <k_wizard@mail.ru>, 2017
+# Sergey Vilizhanin, 2018
+# Максим Дронь <dronmax@gmail.com>, 2018
 # Yuriy Ney <kwizardn@gmail.com>, 2018
+# Yuriy Ney <k_wizard@mail.ru>, 2018
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
 # Илья Пономарев <horochiy92@gmail.com>, 2018
+# Yaroslav Panychev <walkmanyd@yandex.ru>, 2018
+# Дмитрий Ефременко <shiza867@gmail.com>, 2019
+# Sergo S, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Илья Пономарев <horochiy92@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:13+0000\n"
+"Last-Translator: Sergo S, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,6 +63,10 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"Статус \"Черновик\" используется в случае, когда пользователь шифрует новый или неподтвержденный Счет.\n"
+"Статус \"Открыт\" используется в случае, когда пользователь создает счет и затем генерируется номер счета. Данный статус остается действительным до того момента, когда пользователь оплачивает счет.\n"
+"Статус \"Оплачен\" устанавливается автоматически в случае, когда счет был оплачен. Синхронизация счета и записей в журнале гарантируется.\n"
+"Статус \"Отменен\" используется в случае, когда пользователь отменяет счет."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
@@ -96,6 +104,7 @@ msgstr "${object.company_id.name|safe} Счёт (№ ${object.number or 'n/a' })
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} Квитанция об оплате (Ref ${object.name or 'n/a' })"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_notification_email_account_invoice
@@ -327,6 +336,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Now"
 msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Установить сейчас"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -597,7 +613,7 @@ msgstr "<strong>2. Регистрация несогласованных пла�
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document_with_payments
 msgid "<strong>Amount Due</strong>"
-msgstr ""
+msgstr "<strong>Сумма задолженности</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3791,11 +3807,19 @@ msgid "Currency as per company's country."
 msgstr "Валюта, в стране компании."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1609
-#: code:addons/account/models/account_move.py:1621
+#: code:addons/account/models/account_move.py:1663
+#: code:addons/account/models/account_move.py:1675
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr "Курсовая разница валют"
+
+#. module: account
+#: code:addons/account/models/account.py:451
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
+msgstr ""
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
@@ -10819,6 +10843,7 @@ msgstr "Оборотно-сальдовая ведомость"
 #: model:ir.model.fields,field_description:account.field_account_account_user_type_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_journal_type
 #: model:ir.model.fields,field_description:account.field_account_financial_report_type
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_invoice_type
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_type
 #: model:ir.model.fields,field_description:account.field_account_invoice_type
 #: model:ir.model.fields,field_description:account.field_account_journal_type
@@ -11632,7 +11657,7 @@ msgstr ""
 "Вы не можете помещать/брать деньги в/из баланса банка, который закрыт."
 
 #. module: account
-#: code:addons/account/models/account.py:253
+#: code:addons/account/models/account.py:261
 #, python-format
 msgid ""
 "You cannot remove/deactivate an account which is set on a customer or "
@@ -11642,13 +11667,21 @@ msgstr ""
 " поставщике."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1330
+#: code:addons/account/models/account.py:249
+#, python-format
+msgid ""
+"You cannot set a currency on this account as it already has some journal "
+"entries having a different foreign currency."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:1368
 #, python-format
 msgid "You cannot use deprecated account."
 msgstr "Вы не можете использовать устаревший аккаунт."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1250
+#: code:addons/account/models/account_move.py:1283
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -11659,7 +11692,7 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:74
-#: code:addons/account/models/account_invoice.py:777
+#: code:addons/account/models/account_invoice.py:780
 #, python-format
 msgid ""
 "You cannot validate an invoice with a negative total amount. You should "
@@ -12057,7 +12090,7 @@ msgstr "чтобы установить баланс всех ваших сче�
 #: code:addons/account/static/src/xml/account_reconciliation.xml:53
 #, python-format
 msgid "transactions in"
-msgstr ""
+msgstr "Транзакции в"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts

@@ -624,6 +624,62 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
         });
 });
 
+QUnit.test('chatter: post a message disable the send button', function(assert) {
+    assert.expect(3);
+    var bus = new Bus();
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        session: {},
+        mockRPC: function (route, args) {
+            if (args.method === 'message_get_suggested_recipients') {
+                return $.when({2: []});
+            }
+            return this._super(route, args);
+        },
+        intercepts: {
+            get_messages: function (ev) {
+                ev.stopPropagation();
+                ev.data.callback($.when([]));
+            },
+            post_message: function (ev) {
+                ev.stopPropagation();
+                assert.ok(form.$('.o_composer_button_send').prop("disabled"),
+                    "Send button should be disabled when a message is being sent");
+                bus.trigger('new_message', {
+                    id: 0,
+                    model: ev.data.options.model,
+                    res_id: ev.data.options.res_id,
+                });
+            },
+            get_bus: function (ev) {
+                ev.stopPropagation();
+                ev.data.callback(bus);
+            },
+        },
+    });
+
+    form.$('.o_chatter_button_new_message').click();
+    assert.notOk(form.$('.o_composer_button_send').prop('disabled'),
+        "Send button should be enabled when posting a message");
+    form.$('.oe_chatter .o_composer_text_field:first()').val("My first message");
+    form.$('.oe_chatter .o_composer_button_send').click();
+    form.$('.o_chatter_button_new_message').click();
+    assert.notOk(form.$('.o_composer_button_send').prop('disabled'),
+        "Send button should be enabled when posting another message");
+    form.destroy();
+});
+
 QUnit.test('chatter: post a message and switch in edit mode', function (assert) {
     assert.expect(5);
 

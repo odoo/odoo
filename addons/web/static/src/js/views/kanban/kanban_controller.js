@@ -12,6 +12,7 @@ var Context = require('web.Context');
 var core = require('web.core');
 var Domain = require('web.Domain');
 var view_dialogs = require('web.view_dialogs');
+var viewUtils = require('web.viewUtils');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -35,6 +36,8 @@ var KanbanController = BasicController.extend({
     /**
      * @override
      * @param {Object} params
+     * @param {boolean} params.quickCreateEnabled set to false to disable the
+     *   quick create feature
      */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
@@ -43,6 +46,7 @@ var KanbanController = BasicController.extend({
         this.hasButtons = params.hasButtons;
 
         this.createColumnEnabled = this._isCreateColumnEnabled();
+        this.quickCreateEnabled = params.quickCreateEnabled;
     },
 
     //--------------------------------------------------------------------------
@@ -303,8 +307,8 @@ var KanbanController = BasicController.extend({
      */
     _onButtonNew: function () {
         var state = this.model.get(this.handle, {raw: true});
-        var hasColumns = state.groupedBy.length > 0 && state.data.length > 0;
-        if (hasColumns && this.on_create === 'quick_create') {
+        var quickCreateEnabled = this.quickCreateEnabled && viewUtils.isQuickCreateEnabled(state);
+        if (this.on_create === 'quick_create' && quickCreateEnabled && state.data.length) {
             // Activate the quick create in the first column
             this.renderer.addQuickCreate();
         } else if (this.on_create && this.on_create !== 'quick_create') {

@@ -171,6 +171,12 @@ function createAsyncView(params) {
         });
     }
 
+    if (params.interceptsPropagate) {
+        _.each(params.interceptsPropagate, function (cb, name) {
+            intercept(widget, name, cb, true);
+        });
+    }
+
     return view.getController(widget).then(function (view) {
         // override the view's 'destroy' so that it calls 'destroy' on the widget
         // instead, as the widget is the parent of the view and the mockServer.

@@ -126,13 +126,21 @@ exports.PosModel = Backbone.Model.extend({
                 progress: function(prog){
                     self.chrome.loading_progress(prog);
                 },
-            }).then(function(){
-                if(self.config.iface_scan_via_proxy){
-                    self.barcode_reader.connect_to_proxy();
-                }
-            }).always(function(){
-                done.resolve();
-            });
+            }).then(
+                function(){
+                        if(self.config.iface_scan_via_proxy){
+                            self.barcode_reader.connect_to_proxy();
+                        }
+                        done.resolve();
+                },
+                function(statusText, url){
+                        if (statusText == 'error' && window.location.protocol == 'https:') {
+                            var error = {message: 'TLSError', url: url};
+                            self.chrome.loading_error(error);
+                        } else {
+                            done.resolve();
+                        }
+                });
         return done;
     },
 
@@ -884,12 +892,20 @@ exports.PosModel = Backbone.Model.extend({
             transfer.pipe(function(order_server_id){
 
                 // generate the pdf and download it
-                self.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{
-                    active_ids:order_server_id,
-                }}).done(function () {
-                    invoiced.resolve();
-                    done.resolve();
-                });
+                if (order_server_id.length) {
+                    self.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{
+                        active_ids:order_server_id,
+                    }}).done(function () {
+                        invoiced.resolve();
+                        done.resolve();
+                    });
+                } else {
+                    // The order has been pushed separately in batch when
+                    // the connection came back.
+                    // The user has to go to the backend to print the invoice
+                    invoiced.reject({code:401, message:'Backend Invoice', data:{order: order}});
+                    done.reject();
+                }
             });
 
             return done;
@@ -1508,6 +1524,7 @@ exports.Orderline = Backbone.Model.extend({
     // when we add an new orderline we want to merge it with the last line to see reduce the number of items
     // in the orderline. This returns true if it makes sense to merge the two
     can_be_merged_with: function(orderline){
+        var price = parseFloat(round_di(this.price || 0, this.pos.dp['Product Price']).toFixed(this.pos.dp['Product Price']));
         if( this.get_product().id !== orderline.get_product().id){    //only orderline of the same product can be merged
             return false;
         }else if(!this.get_unit() || !this.get_unit().is_pos_groupable){
@@ -1516,7 +1533,8 @@ exports.Orderline = Backbone.Model.extend({
             return false;
         }else if(this.get_discount() > 0){             // we don't merge discounted orderlines
             return false;
-        }else if(this.price !== orderline.get_product().get_price(orderline.order.pricelist, this.get_quantity())){
+        }else if(!utils.float_is_zero(price - orderline.get_product().get_price(orderline.order.pricelist, this.get_quantity()),
+                    this.pos.currency.decimals)){
             return false;
         }else if(this.product.tracking == 'lot') {
             return false;

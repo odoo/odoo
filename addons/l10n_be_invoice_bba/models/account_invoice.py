@@ -181,4 +181,6 @@ class AccountInvoice(models.Model):
             default['reference_type'] = reference_type
             if reference_type == 'bba':
                 default['reference'] = self.generate_bbacomm(self.type, reference_type, self.partner_id.id, '')['value']['reference']
+        elif self.type in ['in_invoice']:
+            self.reference_type = 'none'
         return super(AccountInvoice, self).copy(default)

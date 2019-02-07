@@ -180,8 +180,10 @@ var DateTime = Field.extend({
     operators: [
         {value: "=", text: _lt("is equal to")},
         {value: "!=", text: _lt("is not equal to")},
-        {value: ">=", text: _lt("is after")},
-        {value: "<=", text: _lt("is before")},
+        {value: ">", text: _lt("is after")},
+        {value: "<", text: _lt("is before")},
+        {value: ">=", text: _lt("is after or equal")},
+        {value: "<=", text: _lt("is before or equal")},
         {value: "between", text: _lt("is between")},
         {value: "∃", text: _lt("is set")},
         {value: "∄", text: _lt("is not set")}

@@ -3,25 +3,27 @@
 # * product
 # 
 # Translators:
-# grazziano <gra.negocia@gmail.com>, 2017
-# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2017
-# Mateus Lopes <mateus1@gmail.com>, 2017
-# Martin Trigaux, 2017
-# danimaribeiro <danimaribeiro@gmail.com>, 2017
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
-# falexandresilva <falexandresilva@gmail.com>, 2017
-# Silmar <pinheirosilmar@gmail.com>, 2017
 # Marcos Abreu <marcoos.abreu@gmail.com>, 2017
 # Adriel Kotviski <kotviski@gmail.com>, 2017
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2017
+# falexandresilva <falexandresilva@gmail.com>, 2017
+# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2017
+# Mateus Lopes <mateus1@gmail.com>, 2017
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
+# danimaribeiro <danimaribeiro@gmail.com>, 2017
+# Silmar <pinheirosilmar@gmail.com>, 2018
+# Martin Trigaux, 2018
 # Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2018
+# grazziano <gra.negocia@gmail.com>, 2018
+# Gabriel Bortolotto Contesotto <gabrielbortolotto@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:22+0000\n"
+"Last-Translator: Gabriel Bortolotto Contesotto <gabrielbortolotto@gmail.com>, 2019\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +60,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr "%s %% desconto e %s sobretaxa"
 
 #. module: product
-#: code:addons/product/models/product_template.py:324
+#: code:addons/product/models/product_template.py:333
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copy)"
@@ -738,9 +740,7 @@ msgid "Computer SC234"
 msgstr "Computer SC234"
 
 #. module: product
-#: code:addons/product/models/product_template.py:50
 #: selection:product.template,type:0
-#, python-format
 msgid "Consumable"
 msgstr "Consumível"
 
@@ -953,6 +953,11 @@ msgid "Description for Customers"
 msgstr ""
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Description for Internal"
+msgstr ""
+
+#. module: product
 #: model:product.product,website_description:product.product_product_11
 #: model:product.product,website_description:product.product_product_11b
 #: model:product.template,website_description:product.product_product_11_product_template
@@ -1033,19 +1038,19 @@ msgid "Ending valid for the pricelist item validation"
 msgstr "Fim válido para a validação de item da lista de preço"
 
 #. module: product
-#: code:addons/product/models/product.py:53
+#: code:addons/product/models/product.py:56
 #, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Erro! Você não pode criar categorias recursivas."
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:101
+#: code:addons/product/models/product_attribute.py:102
 #, python-format
 msgid "Error ! You cannot use this attribute with the following value."
 msgstr "Erro! Você não pode usar esse atributo com o seguinte valor."
 
 #. module: product
-#: code:addons/product/models/product.py:283
+#: code:addons/product/models/product.py:293
 #, python-format
 msgid ""
 "Error! It is not allowed to choose more than one value for a given "
@@ -1071,7 +1076,7 @@ msgstr ""
 " Preços num item da lista de preços!"
 
 #. module: product
-#: code:addons/product/models/product_template.py:274
+#: code:addons/product/models/product_template.py:283
 #, python-format
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
@@ -1499,6 +1504,16 @@ msgstr "Número Internacional de Artigo, usado para identificação do produto."
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
 msgstr "Inventário"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
+msgid "Is Product Variant"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
+msgid "Is a product variant"
+msgstr "É uma variante de produto"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2132,7 +2147,7 @@ msgid "Products Price Search"
 msgstr "Procurar Preços de Produtos"
 
 #. module: product
-#: code:addons/product/models/product.py:448
+#: code:addons/product/models/product.py:464
 #, python-format
 msgid "Products: "
 msgstr "Produtos: "
@@ -2370,9 +2385,7 @@ msgid "Server"
 msgstr "Servidor"
 
 #. module: product
-#: code:addons/product/models/product_template.py:51
 #: selection:product.template,type:0
-#, python-format
 msgid "Service"
 msgstr "Serviço"
 
@@ -2721,7 +2734,7 @@ msgstr ""
 "crianças)"
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:74
+#: code:addons/product/models/product_attribute.py:75
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
@@ -2889,6 +2902,11 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr "Esta é a soma do valor extra de todos os atributos"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "This note is only for internal purposes."
+msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3248,7 +3266,7 @@ msgstr ""
 #: code:addons/product/wizard/product_price_list.py:26
 #, python-format
 msgid "You have to set a logo or a layout for your company."
-msgstr ""
+msgstr "Você precisa definir um logou ou layout para sua empresa"
 
 #. module: product
 #: code:addons/product/wizard/product_price_list.py:28

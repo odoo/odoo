@@ -196,6 +196,8 @@ class MailThread(models.AbstractModel):
     @api.multi
     def _get_message_needaction(self):
         res = dict((res_id, 0) for res_id in self.ids)
+        if not res:
+            return
 
         # search for unread messages, directly in SQL to improve performances
         self._cr.execute(""" SELECT msg.res_id FROM mail_message msg
@@ -1211,6 +1213,7 @@ class MailThread(models.AbstractModel):
                     # if a new thread is created, parent is irrelevant
                     message_dict.pop('parent_id', None)
                     thread = MessageModel.message_new(message_dict, custom_values)
+                    thread_id = thread.id
             else:
                 if thread_id:
                     raise ValueError("Posting a message without model should be with a null res_id, to create a private message.")
@@ -1225,7 +1228,8 @@ class MailThread(models.AbstractModel):
                 subtype = 'mail.mt_note'
                 if message_dict.get('parent_id'):
                     parent_message = self.env['mail.message'].sudo().browse(message_dict['parent_id'])
-                    partner_ids = [(4, parent_message.author_id.id)]
+                    if parent_message.author_id:
+                        partner_ids = [(4, parent_message.author_id.id)]
             else:
                 subtype = 'mail.mt_comment'
             new_msg = thread.message_post(subtype=subtype, partner_ids=partner_ids, **message_dict)
@@ -1792,7 +1796,7 @@ class MailThread(models.AbstractModel):
                 if False/0, mail.message model will also be set as False
             :param str body: body of the message, usually raw HTML that will
                 be sanitized
-            :param str type: see mail_message.type field
+            :param str type: see mail_message.message_type field
             :param str content_subtype:: if plaintext: convert body into html
             :param int parent_id: handle reply to a previous message by adding the
                 parent partners to the message in case of private discussion

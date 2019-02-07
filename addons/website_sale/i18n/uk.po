@@ -3,21 +3,22 @@
 # * website_sale
 # 
 # Translators:
-# Zoriana Zaiats, 2017
-# Bohdan Lisnenko, 2017
-# Martin Trigaux, 2017
-# ТАрас <tratatuta@i.ua>, 2017
-# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
 # Анатолій Пономаренко <aponomarenko020@gmail.com>, 2017
 # Yaroslav Molochko <onorua@gmail.com>, 2017
+# Martin Trigaux, 2017
+# ТАрас <tratatuta@i.ua>, 2017
 # LoganDowns <k0mna80@gmail.com>, 2018
+# Zoriana Zaiats, 2018
+# Bohdan Lisnenko, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: LoganDowns <k0mna80@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2017-09-20 10:27+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -910,12 +911,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid "Add to Cart"
-msgstr "Додати в кошик"
+msgstr "Додати"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Add to Cart button"
-msgstr "Додати в кошик кнопку"
+msgstr "Кнопка Додати в кошик"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1999,7 +2000,7 @@ msgid "Installs *e-Commerce Inventory*"
 msgstr "Встановлює *Склад електронної комерції*"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:502
+#: code:addons/website_sale/controllers/main.py:518
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr ""
@@ -2027,7 +2028,7 @@ msgid "Issue invoices to customers"
 msgstr "Виставлення рахунків клієнтам"
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:146
+#: code:addons/website_sale/models/sale_order.py:157
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status"
 msgstr ""
@@ -2183,11 +2184,6 @@ msgid "Manage promotion &amp; coupon programs"
 msgstr "Керування просуванням та купонними програмами"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.sale_order_view_form
-msgid "Mark as Paid"
-msgstr "Позначити як оплачено"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_image_medium
 msgid "Medium-sized image"
 msgstr "Зображення середньої величини"
@@ -2267,7 +2263,7 @@ msgstr "Мережа"
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:968
+#: code:addons/website_sale/controllers/main.py:988
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:32
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -2420,7 +2416,7 @@ msgid "Parent Category"
 msgstr "Батьківська категорія"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:756
+#: code:addons/website_sale/controllers/main.py:774
 #: model:ir.ui.view,arch_db:website_sale.payment
 #, python-format
 msgid "Pay Now"
@@ -2552,14 +2548,14 @@ msgstr "Ціновий список доступний для цієї елек�
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist
 msgid "Pricelist"
-msgstr "Прайс-лист"
+msgstr "Прайслист"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.website_product_pricelist3
 #: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Pricelists"
-msgstr "Прайс-листи"
+msgstr "Прайслисти"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3203,7 +3199,7 @@ msgstr ""
 "платіжні шлюзи з вашим власним процесором платежу."
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:520
+#: code:addons/website_sale/controllers/main.py:536
 #, python-format
 msgid "Some required fields are empty."
 msgstr "Деякі обов’язкові поля пусті."
@@ -3393,7 +3389,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_website_url
 msgid "The full URL to access the document through the website."
-msgstr "URL-адреса повністю, для доступу до документації через сайт"
+msgstr "Повна URL-адреса для доступу до документації через сайт"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
@@ -3415,6 +3411,17 @@ msgstr ""
 "вам подобається - з клавіатурою перед вашим iPad або на колінах."
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_res_config_settings_automatic_invoice
+msgid ""
+"The invoice is generated automatically and available in the customer portal when the transaction is confirmed by the payment acquirer.\n"
+"The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment acquirer.\n"
+"This mode is advised if you issue the final invoice at the order and not after the delivery."
+msgstr ""
+"Рахунок-фактура створюється автоматично і доступний на порталі клієнтів, коли операція підтверджена еквайєром платежу.\n"
+"Рахунок-фактура позначено як платний, а платіж зареєстрований у платіжному журналі, визначеному в налаштуваннях одержувача платежу.\n"
+"Цей режим рекомендується, якщо ви видаєте виставляєте рахунок-фактуру в замовленні, а не після доставки."
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "The mode selected here applies as invoicing policy of any new product "
@@ -3424,7 +3431,7 @@ msgstr ""
 "якого нового товару, але не існуючого."
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:247
+#: code:addons/website_sale/models/sale_order.py:258
 #, python-format
 msgid ""
 "The quote should be sent and the payment acquirer type should be manual or "
@@ -3838,7 +3845,7 @@ msgstr "код..."
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
 msgid "eCommerce"
-msgstr "електронна комерція"
+msgstr "Електронна комерція"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action

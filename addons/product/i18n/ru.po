@@ -3,32 +3,34 @@
 # * product
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Gennady Marchenko <gennadym@gmail.com>, 2017
-# Sergey Vilizhanin <sv@grimmette.ru>, 2017
-# Максим Дронь <dronmax@gmail.com>, 2017
-# Collex100, 2017
-# Viktor Pogrebniak <vp@aifil.ru>, 2017
-# Василий Коробатов <boxat@mail.ru>, 2017
+# nle_odoo, 2017
 # Артур Чеботарь <artcha.chebotar@gmail.com>, 2017
-# Denis Trepalin <zekarious@gmail.com>, 2017
 # Alex Puchkov <ap@alteco.co>, 2017
 # Dmitry sky <d.v.selitsky@gmail.com>, 2017
 # Evgeny <transingularity@gmail.com>, 2017
-# Denis Baranov <baranov@itlibertas.com>, 2017
+# Andrey Samorukov <andrey.samorukov@me.com>, 2017
 # Masha Koc <mariya.kos.ua@gmail.com>, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
-# Andrey Samorukov <andrey.samorukov@me.com>, 2017
-# Sergei Ruzki <sergei.ruzki@icode.by>, 2017
-# Yuriy Ney <k_wizard@mail.ru>, 2017
+# Viktor Pogrebniak <vp@aifil.ru>, 2017
+# Василий Коробатов <boxat@mail.ru>, 2017
+# Denis Trepalin <zekarious@gmail.com>, 2017
+# Sergey Vilizhanin, 2017
+# Collex100, 2017
+# Gennady Marchenko <gennadym@gmail.com>, 2017
+# Yuriy Ney <k_wizard@mail.ru>, 2018
+# Denis Baranov <baranov@itlibertas.com>, 2018
+# Максим Дронь <dronmax@gmail.com>, 2018
 # Yuriy Ney <kwizardn@gmail.com>, 2018
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
+# Martin Trigaux, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Yuriy Ney <kwizardn@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:22+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +67,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr "%s %% скидки и %s надбавки"
 
 #. module: product
-#: code:addons/product/models/product_template.py:324
+#: code:addons/product/models/product_template.py:333
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копия)"
@@ -758,9 +760,7 @@ msgid "Computer SC234"
 msgstr "Компьютер SC234"
 
 #. module: product
-#: code:addons/product/models/product_template.py:50
 #: selection:product.template,type:0
-#, python-format
 msgid "Consumable"
 msgstr "Потребляемый"
 
@@ -974,6 +974,11 @@ msgid "Description for Customers"
 msgstr "Описание для потребителей"
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Description for Internal"
+msgstr ""
+
+#. module: product
 #: model:product.product,website_description:product.product_product_11
 #: model:product.product,website_description:product.product_product_11b
 #: model:product.template,website_description:product.product_product_11_product_template
@@ -1056,20 +1061,20 @@ msgid "Ending valid for the pricelist item validation"
 msgstr "Конечное значение, действительное для проверки позиции прайслиста"
 
 #. module: product
-#: code:addons/product/models/product.py:53
+#: code:addons/product/models/product.py:56
 #, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Ошибка! Нельзя создавать рекурсивные категории."
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:101
+#: code:addons/product/models/product_attribute.py:102
 #, python-format
 msgid "Error ! You cannot use this attribute with the following value."
 msgstr ""
 "Ошибка ! Вы не можете использовать этот атрибут со следующим значением."
 
 #. module: product
-#: code:addons/product/models/product.py:283
+#: code:addons/product/models/product.py:293
 #, python-format
 msgid ""
 "Error! It is not allowed to choose more than one value for a given "
@@ -1093,7 +1098,7 @@ msgstr ""
 " пункте прайс-листа!"
 
 #. module: product
-#: code:addons/product/models/product_template.py:274
+#: code:addons/product/models/product_template.py:283
 #, python-format
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
@@ -1528,6 +1533,16 @@ msgstr "Международный  номер товара использует
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
 msgstr "Склад"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
+msgid "Is Product Variant"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
+msgid "Is a product variant"
+msgstr "Является вариантом продукта"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2162,7 +2177,7 @@ msgid "Products Price Search"
 msgstr "Поиск цены продуктов"
 
 #. module: product
-#: code:addons/product/models/product.py:448
+#: code:addons/product/models/product.py:464
 #, python-format
 msgid "Products: "
 msgstr "Продукты "
@@ -2400,9 +2415,7 @@ msgid "Server"
 msgstr "Сервер"
 
 #. module: product
-#: code:addons/product/models/product_template.py:51
 #: selection:product.template,type:0
-#, python-format
 msgid "Service"
 msgstr "Услуга"
 
@@ -2750,7 +2763,7 @@ msgstr ""
 "Количество продуктов этой категории (не учитывает подчиненные категории )"
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:74
+#: code:addons/product/models/product_attribute.py:75
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
@@ -2922,6 +2935,11 @@ msgstr "Это сумма дополнительной цены всех атр�
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "This note is only for internal purposes."
+msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note will show up on sales orders."
 msgstr "Эта запись будет отображаться в заказах покупателей."
 
@@ -3044,7 +3062,7 @@ msgid ""
 msgstr ""
 "Единицы измерения, относящиеся к одной и той же категории, могут\n"
 "             конвертироваться между собой. Например, в категории\n"
-"             <I>'Время'</ i>, у вас будут следующие единицы измерения:\n"
+"             <i>'Время'</i>, у вас будут следующие единицы измерения:\n"
 "             Часы, Дни."
 
 #. module: product

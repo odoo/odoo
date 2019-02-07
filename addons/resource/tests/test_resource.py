@@ -233,6 +233,15 @@ class ResourceWorkingHours(TestResourceCommon):
             compute_leaves=False)
         self.assertEqual(res, 40.0)
 
+    def test_calendar_working_hours_count(self):
+        calendar = self.env.ref('resource.resource_calendar_std_35h')
+        res = calendar.get_work_hours_count(
+            Datetime.from_string('2017-05-03 14:03:00'),  # Wednesday (8:00-12:00, 13:00-16:00)
+            Datetime.from_string('2017-05-04 11:03:00'),  # Thursday (8:00-12:00, 13:00-16:00)
+            resource_id=None,
+            compute_leaves=False)
+        self.assertEqual(res, 5.0)
+
     def test_calendar_working_hours_leaves(self):
         # new API: resource and leaves
         # res: 2 weeks -> 40 hours - (3+4) leave hours

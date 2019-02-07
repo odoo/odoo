@@ -22,8 +22,8 @@
                              <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                              <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                              <field name="internal_type" invisible="1" readonly="1"/>
-                             <label for="reconcile"/>
-                             <div>
+                             <label for="reconcile" attrs="{'invisible': [('internal_type','=','liquidity')]}"/>
+                             <div attrs="{'invisible': [('internal_type','=','liquidity')]}">
                                 <field name="reconcile"/>
                                 <button name="action_open_reconcile" class="oe_link" type="object" string=" -> Reconcile" attrs="{'invisible': [('reconcile', '=', False)]}"/>
                              </div>
@@ -398,8 +398,9 @@
                         </div>
                         <group>
                             <group>
-                                <field name="bank_acc_number"/>
-                                <field name="bank_id"/>
+                                <field name="bank_account_id"/>
+                                <field name="bank_acc_number" attrs="{'readonly': [('bank_account_id', '!=', False)]}"/>
+                                <field name="bank_id" attrs="{'readonly': [('bank_account_id', '!=', False)]}"/>
                             </group>
                             <group>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -854,7 +855,7 @@
                                     <field name="amount" class="oe_inline"/>
                                     <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}" />
                                 </div>
-                                <field name="journal_id" domain="[('company_id', '=', company_id)]" widget="selection"/>
+                                <field name="journal_id" domain="[('type', '!=', 'general'), ('company_id', '=', company_id)]" widget="selection"/>
                             </group>
                         </group>
                         <div class="oe_edit_only">
@@ -875,7 +876,7 @@
                                     <field name="second_amount" class="oe_inline"/>
                                     <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}" />
                                 </div>
-                                <field name="second_journal_id" string="Journal" domain="[('company_id', '=', company_id)]" widget="selection"/>
+                                <field name="second_journal_id" string="Journal" domain="[('type', '!=', 'general'), ('company_id', '=', company_id)]" widget="selection"/>
                             </group>
                         </group>
                     </sheet>
@@ -1426,10 +1427,11 @@
             <field name="name">account.move.form</field>
             <field name="model">account.move</field>
             <field name="arch" type="xml">
-                <form string="Account Entry">
+                <form string="Account Entry" duplicate="false">
                     <header>
                         <button name="post" states="draft" string="Post" type="object" class="oe_highlight" groups="account.group_account_invoice"/>
                         <button name="%(action_view_account_move_reversal)d" states="posted" string="Reverse Entry" type="action" groups="account.group_account_invoice"/>
+                        <button name="action_duplicate" string="Duplicate" type="object" groups="account.group_account_invoice"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>

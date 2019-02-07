@@ -19,7 +19,10 @@ class WebsiteSaleOptions(WebsiteSale):
         if lang:
             request.website = request.website.with_context(lang=lang)
 
-        order = request.website.sale_get_order(force_create=1)
+        order = request.website.sale_get_order(force_create=True)
+        if order.state != 'draft':
+            request.session['sale_order_id'] = None
+            order = request.website.sale_get_order(force_create=True)
         product = request.env['product.product'].browse(int(product_id))
 
         option_ids = product.optional_product_ids.mapped('product_variant_ids').ids

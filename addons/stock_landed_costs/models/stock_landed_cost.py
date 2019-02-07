@@ -107,9 +107,9 @@ class LandedCost(models.Model):
                 new_landed_cost_value = line.move_id.landed_cost_value + line.additional_landed_cost
                 line.move_id.write({
                     'landed_cost_value': new_landed_cost_value,
-                    'value': line.move_id.value + cost_to_add,
+                    'value': line.move_id.value + line.additional_landed_cost,
                     'remaining_value': line.move_id.remaining_value + cost_to_add,
-                    'price_unit': (line.move_id.value + cost_to_add) / line.move_id.product_qty,
+                    'price_unit': (line.move_id.value + line.additional_landed_cost) / line.move_id.product_qty,
                 })
                 # `remaining_qty` is negative if the move is out and delivered proudcts that were not
                 # in stock.
@@ -307,6 +307,9 @@ class AdjustmentLines(models.Model):
             return False
         accounts = self.product_id.product_tmpl_id.get_product_accounts()
         debit_account_id = accounts.get('stock_valuation') and accounts['stock_valuation'].id or False
+        # If the stock move is dropshipped move we need to get the cost account instead the stock valuation account
+        if self.move_id._is_dropshipped():
+            debit_account_id = accounts.get('expense') and accounts['expense'].id or False
         already_out_account_id = accounts['stock_output'].id
         credit_account_id = self.cost_line_id.account_id.id or cost_product.property_account_expense_id.id or cost_product.categ_id.property_account_expense_categ_id.id
 

@@ -3,32 +3,33 @@
 # * account
 # 
 # Translators:
-# Martin Trigaux, 2017
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
+# Aleksandr Jadov <a.jadov@tata.lt>, 2017
+# vaalds <vaalds@gmail.com>, 2017
 # Arminas Grigonis <arminas@versada.lt>, 2017
-# Silvija Butko <silvija.butko@gmail.com>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Naglis Jonaitis, 2017
-# Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
-# Rolandas <info@paninfo.lt>, 2017
+# Anatolij, 2017
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
-# vaalds <vaalds@gmail.com>, 2017
-# Aleksandr Jadov <a.jadov@tata.lt>, 2017
+# Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
 # Paulius Sladkevičius <paulius@versada.eu>, 2017
-# Eimantas <eimantas@focusate.eu>, 2017
-# Anatolij, 2017
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
+# Rolandas <info@paninfo.lt>, 2017
+# Martin Trigaux, 2017
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
 # Andrius Laukavičius <andrius@focusate.eu>, 2018
 # Edgaras Kriukonis <edgaras@focusate.eu>, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Naglis Jonaitis, 2018
+# Eimantas <eimantas@focusate.eu>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Edgaras Kriukonis <edgaras@focusate.eu>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:13+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +54,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_code_digits
 msgid "# of Digits"
-msgstr "# skaitmenų skaičius"
+msgstr "skaitmenų skaičius"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_code_digits
@@ -439,6 +440,15 @@ msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Now"
 msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Diegti dabar"
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<span class=\"fa\"/> Invite Your Users"
 msgstr "<span class=\"fa\"/> Pakvieskite savo vartotojus"
@@ -652,7 +662,7 @@ msgstr "<span> Nuo </span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
 msgid "<span> To </span>"
-msgstr "<span> Kam </span>"
+msgstr "<span> į </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1774,7 +1784,7 @@ msgstr "Pridėti"
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Add Credit Note"
-msgstr "Pridėti kliento grąžinimą"
+msgstr "Pridėti kreditinę sąskaitą"
 
 #. module: account
 #: selection:account.cash.rounding,strategy:0
@@ -1978,8 +1988,7 @@ msgstr ""
 msgid ""
 "All the account entries lines must be processed in order to close the "
 "statement."
-msgstr ""
-" Norint uždaryti pareiškimą, visi sąskaitos įrašai turi būti užpildyti,"
+msgstr "Norint uždaryti išrašą, visi sąskaitos įrašai turi būti apdoroti."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_update_posted
@@ -2744,7 +2753,7 @@ msgstr "Pagal šalį"
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_refund
 msgid "By Credit Note"
-msgstr "Pagal kliento grąžinimą"
+msgstr "Pagal kreditinę sąskaitą"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product
@@ -3868,7 +3877,7 @@ msgstr "Kreditinės sąskaitos data"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_id
 msgid "Credit Note Entry Sequence"
-msgstr "Kliento grąžinimo įrašų seka"
+msgstr "Kreditinių sąskaitų įrašų seka"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3893,7 +3902,7 @@ msgstr "Kredito suma"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
-msgstr "Kredituoti žurnalo įrašus, kurie yra sudengti su šiuo žurnalo įrašu."
+msgstr "Kredito žurnalo įrašai, kurie yra susieti su šiuo žurnalo įrašu."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -3944,11 +3953,22 @@ msgid "Currency as per company's country."
 msgstr "Įmonės šalies valiuta"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1609
-#: code:addons/account/models/account_move.py:1621
+#: code:addons/account/models/account_move.py:1663
+#: code:addons/account/models/account_move.py:1675
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr "Valiutos kursų skirtumas"
+
+#. module: account
+#: code:addons/account/models/account.py:451
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
+msgstr ""
+"Valiutos laukas turėtų būti nustatymas tik tuomet, kai žurnalo valiuta "
+"skiriasi nuo įmonės valiutos. Norėdami naudoti įmonės valiutą, palikite šį "
+"lauką tuščią."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
@@ -4194,7 +4214,7 @@ msgstr "Gruodis"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "Seka dedikuota klientų grąžinimams"
+msgstr "Dedikuota kreditinių sąskaitų seka"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_default_credit_account_id
@@ -4239,7 +4259,7 @@ msgstr "Numatytieji mokesčiai, naudojami vietinėms operacijoms"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Deferred Revenues Management"
-msgstr "Atidėtų pajamų vadovas"
+msgstr "Atidėtų pajamų valdymas"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7177,7 +7197,7 @@ msgstr "Grynasis"
 #. module: account
 #: selection:account.bank.statement,state:0
 msgid "New"
-msgstr "Nauja"
+msgstr "Naujas"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8367,7 +8387,7 @@ msgstr "Pelnas ir nuostolis"
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_profitloss_toreport0
 msgid "Profit (Loss) to report"
-msgstr "Nuostolis (išlaida) ataskaitai"
+msgstr "Pelnas (išlaida) ataskaitai"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_profit_account_id
@@ -9096,7 +9116,7 @@ msgstr "Kitas mokestis"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_access_token
 msgid "Security Token"
-msgstr "Apsaugos požymis"
+msgstr "Apsaugos prieigos raktas"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_type
@@ -9325,7 +9345,7 @@ msgstr "Rodyti įrašus skydelyje"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_sign
 msgid "Sign on Reports"
-msgstr "Ženklas ataskaitose"
+msgstr "Parašas ataskaitose"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9511,7 +9531,7 @@ msgstr "Išimti pinigus"
 #: model:ir.model.fields,field_description:account.field_account_tax_report_target_move
 #: model:ir.model.fields,field_description:account.field_accounting_report_target_move
 msgid "Target Moves"
-msgstr "Rodyti įrašus"
+msgstr "Tiksliniai perkėlimai"
 
 #. module: account
 #. openerp-web
@@ -10078,8 +10098,8 @@ msgid ""
 "The application scope of taxes in a group must be either the same as the "
 "group or \"None\"."
 msgstr ""
-"Aplikacijos mokesčių apimtis turi būti arba tokia pati kaip grupės, arba "
-"'Nieko'."
+"Mokesčių taikymo apimtis grupėje turi būti arba tokia pati, kaip grupės arba"
+" \"Nieko\"."
 
 #. module: account
 #: code:addons/account/models/account.py:452
@@ -11013,7 +11033,7 @@ msgstr "Pervesti į "
 #: code:addons/account/models/account_payment.py:357
 #, python-format
 msgid "Transfer account not defined on the company."
-msgstr "Tarpinė sąskaita nenustatyta šiai įmonei."
+msgstr "Perkėlimo sąskaita, nenustatyta šiai įmonei."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:618
@@ -11050,6 +11070,7 @@ msgstr "Bandomojo balanso ataskaita"
 #: model:ir.model.fields,field_description:account.field_account_account_user_type_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_journal_type
 #: model:ir.model.fields,field_description:account.field_account_financial_report_type
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_invoice_type
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_type
 #: model:ir.model.fields,field_description:account.field_account_invoice_type
 #: model:ir.model.fields,field_description:account.field_account_journal_type
@@ -11878,7 +11899,7 @@ msgstr ""
 "Negalite įdėti/išimti pinigų į/iš banko išrašo, kuris jau yra uždarytas."
 
 #. module: account
-#: code:addons/account/models/account.py:253
+#: code:addons/account/models/account.py:261
 #, python-format
 msgid ""
 "You cannot remove/deactivate an account which is set on a customer or "
@@ -11888,13 +11909,23 @@ msgstr ""
 "tiekėjui."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1330
+#: code:addons/account/models/account.py:249
+#, python-format
+msgid ""
+"You cannot set a currency on this account as it already has some journal "
+"entries having a different foreign currency."
+msgstr ""
+"Negalite šiai sąskaitai nustatyti valiutos, nes ji jau turi žurnalo įrašų su"
+" kita užsienio valiuta."
+
+#. module: account
+#: code:addons/account/models/account_move.py:1368
 #, python-format
 msgid "You cannot use deprecated account."
 msgstr "Negalite naudoti nebeaktualios sąskaitos."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1250
+#: code:addons/account/models/account_move.py:1283
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -11905,7 +11936,7 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:74
-#: code:addons/account/models/account_invoice.py:777
+#: code:addons/account/models/account_invoice.py:780
 #, python-format
 msgid ""
 "You cannot validate an invoice with a negative total amount. You should "

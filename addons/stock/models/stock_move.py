@@ -578,6 +578,7 @@ class StockMove(models.Model):
         moves_to_merge = []
         for candidate_moves in candidate_moves_list:
             # First step find move to merge.
+            candidate_moves = candidate_moves.with_context(prefetch_fields=False)
             for k, g in groupby(sorted(candidate_moves, key=self._prepare_merge_move_sort_method), key=itemgetter(*distinct_fields)):
                 moves = self.env['stock.move'].concat(*g).filtered(lambda m: m.state not in ('done', 'cancel', 'draft'))
                 # If we have multiple records we will merge then in a single one.
@@ -1021,7 +1022,7 @@ class StockMove(models.Model):
             if move.propagate:
                 # only cancel the next move if all my siblings are also cancelled
                 if all(state == 'cancel' for state in siblings_states):
-                    move.move_dest_ids._action_cancel()
+                    move.move_dest_ids.filtered(lambda m: m.state != 'done')._action_cancel()
             else:
                 if all(state in ('done', 'cancel') for state in siblings_states):
                     move.move_dest_ids.write({'procure_method': 'make_to_stock'})
@@ -1031,6 +1032,7 @@ class StockMove(models.Model):
 
     def _prepare_extra_move_vals(self, qty):
         vals = {
+            'origin_returned_move_id': self.origin_returned_move_id.id,
             'product_uom_qty': qty,
             'picking_id': self.picking_id.id,
             'price_unit': self.price_unit,
@@ -1086,8 +1088,7 @@ class StockMove(models.Model):
 
     def _action_done(self):
         self.filtered(lambda move: move.state == 'draft')._action_confirm()  # MRP allows scrapping draft moves
-
-        moves = self.filtered(lambda x: x.state not in ('done', 'cancel'))
+        moves = self.exists().filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_todo = self.env['stock.move']
 
         # Cancel moves where necessary ; we should do it before creating the extra moves because

@@ -4,35 +4,37 @@
 # 
 # Translators:
 # Lucas Deliege <lud@odoo.com>, 2017
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
-# Melanie Bernard <mbe@odoo.com>, 2017
-# Martin Trigaux, 2017
-# Eloïse Stilmant <est@odoo.com>, 2017
-# Leo Schmitt <inactive+lschmitt@transifex.com>, 2017
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Fabien Pinckaers <fp@openerp.com>, 2017
-# Lionel Sausin <ls@numerigraphe.com>, 2017
-# Xavier Belmere <Info@cartmeleon.com>, 2017
 # Alexandre Fayolle <alexandre.fayolle@camptocamp.com>, 2017
-# Xavier Symons <xsy@openerp.com>, 2017
 # Micky Jault <micky037@hotmail.fr>, 2017
 # Guilhaume Bordiau <github@guilhaume.fr>, 2017
+# Xavier Symons <xsy@openerp.com>, 2017
 # Lucas Deliege <lud@openerp.com>, 2017
 # Quentin THEURET <odoo@kerpeo.com>, 2017
-# fr rev <e2ffr02@hotmail.com>, 2017
+# Leo Schmitt <inactive+lschmitt@transifex.com>, 2017
+# Lionel Sausin <ls@numerigraphe.com>, 2017
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
+# Fabien Pinckaers <fp@openerp.com>, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2017
+# Melanie Bernard <mbe@odoo.com>, 2017
+# Eloïse Stilmant <est@odoo.com>, 2017
+# Martin Trigaux, 2017
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
 # fr rev <e2ffr04@hotmail.com>, 2017
 # Clo <clo@odoo.com>, 2017
-# fr trans <e2ftrans1@yahoo.com>, 2017
 # Florian Hatat, 2017
 # e2f <projects@e2f.com>, 2018
+# fr rev <e2ffr02@hotmail.com>, 2018
+# fr trans <e2ftrans1@yahoo.com>, 2018
+# Olivier ANDRE <frsw194@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-27 14:52+0000\n"
-"PO-Revision-Date: 2018-04-27 14:52+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:19+0000\n"
+"Last-Translator: Olivier ANDRE <frsw194@gmail.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,6 +99,20 @@ msgid ""
 "                <p>Thank you,</p>\n"
 "            </data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Dear ${object.partner_id.name}</p>\n"
+"                <p>\n"
+"                Voici votre ordre de réparation ${doc_name} <strong>${object.name}</strong>\n"
+"                % if object.origin:\n"
+"                (with reference: ${object.origin} )\n"
+"                % endif\n"
+"                % if object.invoice_method != 'none':\n"
+"                d'un montant de <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong>\n"
+"                % endif\n"
+"                </p>\n"
+"                <p>Vous pouvez répondre à ce message si vous avez une quelconque question.</p>\n"
+"                <p>Merci,</p>\n"
+"            </data>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -314,7 +330,7 @@ msgstr "Description"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_dest_id
 msgid "Dest. Location"
-msgstr "Emplacement de dest."
+msgstr "Emplacement de dest"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_display_name
@@ -642,7 +658,7 @@ msgstr "Article à réparer"
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_lot_id
 msgid "Products repaired are all belonging to this lot"
-msgstr "Les produits réparés appartiennent tous à ce lot. "
+msgstr "Les produits réparés appartiennent tous à ce lot"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_uom_qty
@@ -831,7 +847,7 @@ msgstr "Marquer comme brouillon"
 msgid "Show all records which has next action date is before today"
 msgstr ""
 "Montrez toutes les enregistrements pour lesquelles la date des prochaines "
-"actions est pour aujourd'hui ou avant. "
+"actions est pour aujourd'hui ou avant"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_id
@@ -997,7 +1013,7 @@ msgstr "Oui"
 msgid "You have to select a Partner Invoice Address in the repair form!"
 msgstr ""
 "Vous devez sélectionner un adresse de facturation de partenaire dans le "
-"formulaire de réparation. "
+"formulaire de réparation !"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:593

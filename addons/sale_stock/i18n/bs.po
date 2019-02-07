@@ -3,15 +3,16 @@
 # * sale_stock
 # 
 # Translators:
-# Boško Stojaković <bluesoft83@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
+# Boško Stojaković <bluesoft83@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:23+0000\n"
+"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2019\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,11 +21,18 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:170
+#: code:addons/sale_stock/models/sale_order.py:179
 #, python-format
 msgid ""
 "\n"
 "There are %s %s available accross all warehouses."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
 
 #. module: sale_stock
@@ -36,7 +44,7 @@ msgstr "<strong>Referenca kupca:</strong>"
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr ""
+msgstr "<strong>Incoterms:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -46,7 +54,7 @@ msgstr "Nakon-prodaje"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
-msgstr ""
+msgstr "Primjeni posebna pravila sa narudžbi (npr.: dropshiping, na narudžbu)"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -89,12 +97,12 @@ msgstr "Narudžba dostave"
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
-msgstr ""
+msgstr "Prikaži incoterms na prodajnim narudžbama i povezanim fakturama"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
-msgstr ""
+msgstr "Prikaži incoterms na narudžbama i fakturama."
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -116,6 +124,9 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
 msgstr ""
+"Incoterms prestavlja seriju prodajnih uslova. Koriste se za raspodjelu "
+"trokova prenosa i prava i obaveza između kupca i prodavca, te utiču na "
+"takozvani sate-of-the-art transportne prakse."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
@@ -153,6 +164,9 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
+"Margina greške za datume obećane prema kupcima. Proizvodi će biti zakazani "
+"za isporuku toliko dana ranije u odnosu na obećani datum, kako bi se "
+"izbjegla neočekivana kašnjenja u lancu snadbjevanja."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
@@ -170,7 +184,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "Pomjeri očekivane datum isporuke za "
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:174
@@ -181,7 +195,7 @@ msgstr "Nema dovoljno zalihe!"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_route_so_lines
 msgid "Order-Specific Routes"
-msgstr ""
+msgstr "Rute specifične za narudžbe"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:188
@@ -227,6 +241,10 @@ msgid ""
 "or/and frequent stock-outs. By default, the scheduler runs automatically "
 "every 24 hours."
 msgstr ""
+"Ručna rezervacija proizvoda na nalozima isporuke ili preporučeno pokretanjem"
+" plalnera kako bi se bolje upravljalo sa prioritetima u slučaju dužih "
+"vođenja kupca ili čestih isticanja zalihe. Po zadanom planer se pokreće "
+"automatski svaka 24 časa."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
@@ -236,12 +254,12 @@ msgstr "Ruta"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Routes for Sales Order Lines"
-msgstr ""
+msgstr "Rute za stavke prodajne narudžbe"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move_sale_line_id
 msgid "Sale Line"
-msgstr ""
+msgstr "Stavka narudžbe"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_id
@@ -281,7 +299,7 @@ msgstr "Sigurnosni dani prodaje"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Schedule deliveries earlier to avoid delays"
-msgstr ""
+msgstr "Zakažite isporuke ranije da izbjegnete kašnjenja isporuke"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_security_lead
@@ -291,7 +309,7 @@ msgstr "Sigurnostn dani vođenja"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_use_security_lead
 msgid "Security Lead Time for Sales"
-msgstr ""
+msgstr "Sugurnosno vrijeme isporuke za prodaje"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
@@ -306,12 +324,12 @@ msgstr ""
 #. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship all products at once"
-msgstr ""
+msgstr "Isporuči sve proizvode odjednom"
 
 #. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship products as soon as available, with back orders"
-msgstr ""
+msgstr "Isporuči proizvode čim budu dostupni, sa zakašnjelim narudžbama"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -346,6 +364,10 @@ msgid ""
 "available in sales orders, routes must have 'Sales Order Line' option "
 "checked in their setup form."
 msgstr ""
+"Ovo omogućava primjenu specifičnih ruta na stavkama prodajne narudžbe (npr.:"
+" dropshiping, stavi na narudžbu) u rijetkim scenarijima. Da bi bili dostupni"
+" na prodajnim narudžbama, rute moraju imati opciju 'Stavke prodajnih "
+"narudžbi' označene u formi postavki."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:273
@@ -374,12 +396,12 @@ msgstr "Upozorenje"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to reserve sold products"
-msgstr ""
+msgstr "Kada da se rezervišu prodani artikli"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
-msgstr ""
+msgstr "Kada da se započne otprema"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:189

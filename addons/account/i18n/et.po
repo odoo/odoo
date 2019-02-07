@@ -3,24 +3,25 @@
 # * account
 # 
 # Translators:
-# Marek Pontus, 2017
-# Egon Raamat <egon@avalah.ee>, 2017
-# Eneli Õigus <enelioigus@gmail.com>, 2017
+# Ahto Reinaru <ahto.reinaru@gmail.com>, 2017
+# Gert Valdek <gert@airobot.ee>, 2017
+# Wanradt Koell <wanradt@gmail.com>, 2017
+# Rivo Zängov <eraser@eraser.ee>, 2017
 # Martin Trigaux, 2017
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
-# Ahto Reinaru <ahto.reinaru@gmail.com>, 2017
-# Martin Aavastik <martin@avalah.ee>, 2017
-# Rivo Zängov <eraser@eraser.ee>, 2017
-# Wanradt Koell <wanradt@gmail.com>, 2017
-# Gert Valdek <gert@airobot.ee>, 2017
 # Hedi Hunt <Hedi.Hunt@gmail.com>, 2017
+# Egon Raamat <egon@avalah.ee>, 2018
+# Marek Pontus, 2018
+# Martin Aavastik <martin@avalah.ee>, 2018
+# Eneli Õigus <enelioigus@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Hedi Hunt <Hedi.Hunt@gmail.com>, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:13+0000\n"
+"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2018\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,14 +71,14 @@ msgstr "${(object.name or '').replace('/','-')}"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name} Arve(Num ${object.number or 'n/a'})"
+msgstr "${object.company_id.name} arve (number ${object.number or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} Maksekinnitus (Viide ${object.number or 'n/a'})"
+"${object.company_id.name} maksekinnitus (viide ${object.number or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_notification_email_account_invoice
@@ -428,6 +429,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Now"
 msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Paigalda nüüd"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1533,7 +1541,7 @@ msgstr "Konto kogusumma"
 #: model:ir.ui.view,arch_db:account.view_account_type_search
 #: model:ir.ui.view,arch_db:account.view_account_type_tree
 msgid "Account Type"
-msgstr "Konto liik"
+msgstr "Kontotüüp"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_user_type_id
@@ -1543,7 +1551,7 @@ msgid ""
 "legal reports, and set the rules to close a fiscal year and generate opening"
 " entries."
 msgstr ""
-"Konto liiki kasutatakse informatiivsena, et luua riigipõhiseid põhiaruandeid"
+"Konto tüüpi kasutatakse informatiivsena, et luua riigipõhiseid põhiaruandeid"
 " ja panna paika reeglid majandusaasta sulgemiseks ja algsaldode "
 "sisestamiseks."
 
@@ -1551,12 +1559,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_type_form
 #: model:ir.model.fields,field_description:account.field_account_financial_report_account_type_ids
 msgid "Account Types"
-msgstr "Kontoliigid"
+msgstr "Kontotüübid"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_type_control_ids
 msgid "Account Types Allowed"
-msgstr "Lubatud kontoliigid"
+msgstr "Lubatud kontotüübid"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
@@ -2132,7 +2140,7 @@ msgid ""
 "                Sheet and the Profit and Loss report use the category\n"
 "                (profit/loss or balance sheet)."
 msgstr ""
-"Konto liik määrab, kuidas kontot kasutatakse andmikes.\n"
+"Kontotüüp määrab, kuidas kontot kasutatakse andmikes.\n"
 "                Edasilükkamise meetod konto liigil määrab aasta sulgemise\n"
 "                protsessi. Näiteks bilansis ja kasumiaruandes kasutatakse \n"
 "                konto kategooriat (kasumiaruanne või bilanss)."
@@ -2513,7 +2521,7 @@ msgstr "Pangakannete sobitamise eelsäte"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_bank_data_done
 msgid "Bank Setup Marked As Done"
-msgstr "Panga seadistused, mis märgitud tehtuks"
+msgstr "Panga seadistused, mis märgitud lõpetatuks"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -2565,7 +2573,7 @@ msgstr "Panga sobitamine"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_account_setup_bank_data_done
 msgid "Bank setup marked as done"
-msgstr "Panga seadistused märgitud tehtuks"
+msgstr "Panga seadistused märgitud lõpetatuks"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_statement_line_id
@@ -3127,7 +3135,7 @@ msgstr "Vali raamatupidamise mall"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:131
 #, python-format
 msgid "Choose counterpart or Create Write-off"
-msgstr ""
+msgstr "Vali vastaspool või kanna summa mingile kontole"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_journal_form
@@ -3177,7 +3185,7 @@ msgstr "Kliki, et lisada sobitamise mudel."
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
 msgid "Click to define a new account type."
-msgstr "Kliki, et lisada uus konto tüüp."
+msgstr "Kliki, et lisada uus kontotüüp."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -3349,7 +3357,7 @@ msgstr "Ettevõtete andmed"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_company_data_done
 msgid "Company Setup Marked As Done"
-msgstr "Ettevõtte seadistused, mis on märgitud tehtuks"
+msgstr "Ettevõtte seadistused, mis on märgitud lõpetatuks"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_has_chart_of_accounts
@@ -3907,11 +3915,19 @@ msgid "Currency as per company's country."
 msgstr "Valuuta ettevõtte riigi järgi"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1609
-#: code:addons/account/models/account_move.py:1621
+#: code:addons/account/models/account_move.py:1663
+#: code:addons/account/models/account_move.py:1675
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr "Valuutakursi erinevus"
+
+#. module: account
+#: code:addons/account/models/account.py:451
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
+msgstr ""
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
@@ -4827,7 +4843,7 @@ msgstr "Finantsaruanded"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_fy_data_done
 msgid "Financial Year Setup Marked As Done"
-msgstr "Majandusaasta seadistus on märgitud tehtuks"
+msgstr "Majandusaasta seadistus on märgitud lõpetatuks"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_financial
@@ -4837,7 +4853,7 @@ msgstr "Finantsaruanne"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op_account_setup_fy_data_done
 msgid "Financial year setup marked as done"
-msgstr "Majandusaasta seadistus on märgitud tehtuks"
+msgstr "Majandusaasta seadistus on märgitud lõpetatuks"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5248,7 +5264,7 @@ msgstr "Peida kassapõhine võimalus"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "How do account types affect your reports?"
-msgstr "Kuidas kontoliigid mõjutavad aruandeid?"
+msgstr "Kuidas kontotüübid mõjutavad aruandeid?"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5894,8 +5910,8 @@ msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
 msgstr ""
-"Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
-"and 'draft' or ''}"
+"Arve_${(object.number or '').replace('/','_')}_${object.state == 'draft' and"
+" 'draft' or ''}"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -6558,7 +6574,7 @@ msgid ""
 msgstr ""
 "Viimane arvete ja maksete sobitamise aeg selle partneriga. See on määratud "
 "siis kui, ei ole mittesobitatud deebet- ja kreeditkandeid või kui vajutad "
-"\"Tehtud\" nuppu."
+"\"Lõpetatud\" nuppu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_last_time_entries_checked
@@ -6569,7 +6585,7 @@ msgid ""
 msgstr ""
 "Viimane arvete ja maksete sobitamise aeg selle partneriga. See on määratud "
 "siis kui, ei ole mittesobitatud deebet- ja kreeditkandeid või kui vajutad "
-"\"Tehtud\" nuppu."
+"\"lõpetatud\" nuppu."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -6835,7 +6851,7 @@ msgstr "Kasumlikkuse analüüs"
 #: model:ir.ui.view,arch_db:account.setup_financial_year_opening_form
 #: model:ir.ui.view,arch_db:account.setup_view_company_form
 msgid "Mark as done"
-msgstr "Märgi tehtuks"
+msgstr "Märgi lõpetatuks"
 
 #. module: account
 #: selection:account.payment,payment_difference_handling:0
@@ -10505,7 +10521,7 @@ msgid ""
 "This guide will help you get started with Odoo Accounting.\n"
 "                        Once you're done, you'll benefit from:"
 msgstr ""
-"See õpetus aitab tutvuda Odoo  raamatupidamisega.\n"
+"See õpetus aitab tutvuda Odoo raamatupidamisega.\n"
 "                          Kui see on tehtud, siis saate kasu:"
 
 #. module: account
@@ -10914,6 +10930,7 @@ msgstr "Proovibilansi raport"
 #: model:ir.model.fields,field_description:account.field_account_account_user_type_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_journal_type
 #: model:ir.model.fields,field_description:account.field_account_financial_report_type
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_invoice_type
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_type
 #: model:ir.model.fields,field_description:account.field_account_invoice_type
 #: model:ir.model.fields,field_description:account.field_account_journal_type
@@ -10979,7 +10996,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.setup_financial_year_opening_form
 #: model:ir.ui.view,arch_db:account.setup_view_company_form
 msgid "Unmark as done"
-msgstr "Tühista märgistus \"Tehtud\""
+msgstr "Tühista märgistus \"lõpetatud\""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
@@ -11734,7 +11751,7 @@ msgstr ""
 "Te ei saa lisada/võtta raha sisse/välja suletud pangakontole/pangakontolt."
 
 #. module: account
-#: code:addons/account/models/account.py:253
+#: code:addons/account/models/account.py:261
 #, python-format
 msgid ""
 "You cannot remove/deactivate an account which is set on a customer or "
@@ -11744,13 +11761,21 @@ msgstr ""
 "tarnijale."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1330
+#: code:addons/account/models/account.py:249
+#, python-format
+msgid ""
+"You cannot set a currency on this account as it already has some journal "
+"entries having a different foreign currency."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:1368
 #, python-format
 msgid "You cannot use deprecated account."
 msgstr "Te ei saa kasutada kasutuselt eemaldatud kontot."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1250
+#: code:addons/account/models/account_move.py:1283
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -11761,7 +11786,7 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:74
-#: code:addons/account/models/account_invoice.py:777
+#: code:addons/account/models/account_invoice.py:780
 #, python-format
 msgid ""
 "You cannot validate an invoice with a negative total amount. You should "
@@ -11775,7 +11800,8 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:158
 #, python-format
 msgid "You did not configure any reconcile model yet, you can do it"
-msgstr "Te ei seadistanud veel ühtegi ühendamise mudelit, te saate seda teha"
+msgstr ""
+"Te ei ole seadistanud veel ühtegi ühendamise mudelit, te saate seda teha"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form

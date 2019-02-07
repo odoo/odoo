@@ -27,11 +27,15 @@ msgid ""
 "%s does not ship to your address, please choose another one.\n"
 "(Error: %s)"
 msgstr ""
+"%skhông gửi đến địa chỉ của bạn, xin vui lòng chọn một địa chỉ khác.\n"
+" (Lỗi: %s)"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "<i class=\"fa fa-arrow-right\" aria-hidden=\"true\"/> Add delivery methods"
 msgstr ""
+"<i class=\"fa fa-arrow-right\" aria-hidden=\"true\"/> Thêm phương thức giao "
+"hàng"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
@@ -39,6 +43,8 @@ msgid ""
 "<span class=\"badge pull-right o_delivery_compute\">Select to compute "
 "delivery rate</span>"
 msgstr ""
+"<span class=\"badge pull-right o_delivery_compute\">Chọn để tính toán tỷ lệ "
+"giao hàng</span>"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
@@ -57,6 +63,9 @@ msgid ""
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
+"Mô tả Sản phẩm mà bạn muốn giao tiếp với khách hàng của mình. Mô tả này sẽ "
+"được sao chép vào mọi Đơn đặt hàng, Đơn hàng Giao hàng và Hóa đơn Khách hàng"
+" / Ghi chú Tín dụng"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_delivery_carrier
@@ -66,7 +75,7 @@ msgstr "Nhà Vận chuyển"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Choose a delivery method"
-msgstr ""
+msgstr "Chọn một phương thức giao hàng"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_res_country
@@ -107,22 +116,25 @@ msgstr "Mô tả cho Báo giá Trực tuyến"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "FedEx Delivery Methods"
-msgstr ""
+msgstr "Phương thức giao hàng FedEx"
 
 #. module: website_sale_delivery
+#. openerp-web
+#: code:addons/website_sale_delivery/static/src/js/website_sale_delivery.js:27
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
+#, python-format
 msgid "Free"
 msgstr "Miễn phí"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
 msgid "Has an order line set for delivery"
-msgstr ""
+msgstr "Có một đơn đặt hàng được đặt để giao hàng"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_has_delivery
 msgid "Has delivery"
-msgstr ""
+msgstr "Có giao hàng"
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:42
@@ -138,7 +150,7 @@ msgstr ""
 #: code:addons/website_sale_delivery/controllers/main.py:49
 #, python-format
 msgid "Ouch, you cannot choose this carrier!"
-msgstr ""
+msgstr "Rất tiếc, bạn không thể chọn nhà cung cấp dịch vụ này!"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
@@ -154,7 +166,7 @@ msgstr "Báo giá"
 #: code:addons/website_sale_delivery/controllers/main.py:41
 #, python-format
 msgid "Sorry, we are unable to ship your order"
-msgstr ""
+msgstr "Rất tiếc, chúng tôi không thể giao hàng cho bạn"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_amount_delivery
@@ -169,7 +181,7 @@ msgstr "Truy vết:"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "USPS Delivery Methods"
-msgstr ""
+msgstr "Phương thức giao hàng USPS"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
@@ -179,4 +191,4 @@ msgstr "Thấy được ở Website"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "bpost Delivery Methods"
-msgstr ""
+msgstr "Phương thức giao hàng bpost"

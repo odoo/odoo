@@ -232,18 +232,25 @@ class CommonTest(common.SavepointCase):
             'company_id': cls.env.user.company_id.id,
         })
 
+        def not_company_currency(currency):
+            cid = cls.env.ref('base.' + currency)
+            if cls.env.user.company_id.currency_id == cid:
+                # avoid constraint error. See https://git.io/fx1PG
+                return False
+            return cid.id
+
         cls.bank_journal_euro = cls.env['account.journal'].create({
             'name': 'Sale Journal - Test',
             'type': 'sale',
             'code': 'SJT',
-            'currency_id': cls.env.ref('base.EUR').id,
+            'currency_id': not_company_currency('EUR'),
         })
 
         cls.bank_journal_usd = cls.env['account.journal'].create({
             'name': 'Sale Journal - Test US',
             'type': 'sale',
             'code': 'SJTU',
-            'currency_id': cls.env.ref('base.USD').id,
+            'currency_id': not_company_currency('USD'),
         })
 
         cls.pricelist_eur = cls.env['product.pricelist'].create({

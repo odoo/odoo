@@ -120,7 +120,7 @@
                 <filter string="Today Activities" name="activities_today"
                         domain="[('date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        domain="[('date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                 <separator/>
                 <group expand="0" string="Group By">

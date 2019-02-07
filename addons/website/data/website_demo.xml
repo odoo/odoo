@@ -243,5 +243,293 @@ response = request.render("website.template_partner_comment", {
             <field name="website_id" ref="website2"/>
             <field name="page_id" ref="website2_contactus_page" />
         </record>
+
+        <!-- BS Debug Page -->
+        <!-- Showcase all (most?) BS components and utilities -->
+        <record id="bs_debug_page" model="website.page">
+            <field name="name">BS Debug</field>
+            <field name="url">/website/demo/bootstrap</field>
+            <field name="website_published">False</field>
+            <field name="type">qweb</field>
+            <field name="key">website.bs_debug_page_view</field>
+            <field name="arch" type="xml">
+                <t name="Debug" t-name="website.bs_debug_page_view">
+                    <t t-call="website.layout">
+                        <t t-set="odoo_theme_colors" t-value="[['alpha', 'Alpha'], ['beta', 'Beta'], ['gamma', 'Gamma'], ['delta', 'Delta'], ['epsilon', 'Epsilon']]"/>
+                        <t t-set="bs_basic_colors" t-value="[['primary', 'Primary'], ['default', 'Default']]"/>
+                        <t t-set="bs_state_colors" t-value="[['success', 'Success'], ['info', 'Info'], ['warning', 'Warning'], ['danger', 'Danger']]"/>
+                        <t t-set="bs_theme_colors" t-value="bs_basic_colors + bs_state_colors"/>
+                        <t t-set="bs_gray_colors" t-value="[['white', 'White'], ['gray-lighter', 'Gray Lighter'], ['gray-light', 'Gray Light'], ['gray', 'Gray'], ['gray-dark', 'Gray Dark'], ['gray-darker', 'Gray Darker'], ['black', 'Black']]"/>
+                        <div id="wrap" class="oe_structure">
+                            <section class="py-2">
+                                <div class="container">
+                                    <h1>Components</h1>
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <h2>Badge</h2>
+                                            <span class="badge mb4">This is a badge</span>
+
+                                            <h2 class="mt8">Label</h2>
+                                            <t t-foreach="bs_theme_colors" t-as="color">
+                                                <span t-attf-class="label mb4 label-#{color[0]}"><t t-esc="color[1]"/></span>
+                                            </t>
+                                            <h3 class="mt8 h5">Link</h3>
+                                            <t t-foreach="bs_theme_colors" t-as="color">
+                                                <a href="#" t-attf-class="label mb4 label-#{color[0]}"><t t-esc="color[1]"/></a>
+                                            </t>
+                                            <h3 class="mt8 h5">Autosizing</h3>
+                                            <div class="mt0 h3">
+                                                <t t-foreach="bs_theme_colors" t-as="color">
+                                                    <span t-attf-class="label mb4 label-#{color[0]}"><t t-esc="color[1]"/></span>
+                                                </t>
+                                            </div>
+
+                                            <h2 class="mt16">Button</h2>
+                                            <t t-foreach="odoo_theme_colors" t-as="color">
+                                                <button type="button" t-attf-class="btn mb4 btn-#{color[0]}"><t t-esc="color[1]"/></button>
+                                            </t>
+                                            <br/>
+                                            <t t-foreach="bs_theme_colors" t-as="color">
+                                                <button type="button" t-attf-class="btn mb4 btn-#{color[0]}"><t t-esc="color[1]"/></button>
+                                            </t>
+                                            <h3 class="mt8 h6">Extra Small</h3>
+                                            <t t-foreach="odoo_theme_colors" t-as="color">
+                                                <button type="button" t-attf-class="btn mb4 btn-xs btn-#{color[0]}"><t t-esc="color[1]"/></button>
+                                            </t>
+                                            <br/>
+                                            <t t-foreach="bs_theme_colors" t-as="color">
+                                                <button type="button" t-attf-class="btn mb4 btn-xs btn-#{color[0]}"><t t-esc="color[1]"/></button>
+                                            </t>
+                                            <h3 class="mt8 h5">Small</h3>
+                                            <t t-foreach="odoo_theme_colors" t-as="color">
+                                                <button type="button" t-attf-class="btn mb4 btn-sm btn-#{color[0]}"><t t-esc="color[1]"/></button>
+                                            </t>
+                                            <br/>
+                                            <t t-foreach="bs_theme_colors" t-as="color">
+                                                <button type="button" t-attf-class="btn mb4 btn-sm btn-#{color[0]}"><t t-esc="color[1]"/></button>
+                                            </t>
+                                            <h3 class="mt8 h5">Large</h3>
+                                            <t t-foreach="odoo_theme_colors" t-as="color">
+                                                <button type="button" t-attf-class="btn mb4 btn-lg btn-#{color[0]}"><t t-esc="color[1]"/></button>
+                                            </t>
+                                            <br/>
+                                            <t t-foreach="bs_theme_colors" t-as="color">
+                                                <button type="button" t-attf-class="btn mb4 btn-lg btn-#{color[0]}"><t t-esc="color[1]"/></button>
+                                            </t>
+
+                                            <h2 class="mt16">Dropdown</h2>
+                                            <div class="dropdown">
+                                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Toggle <span class="caret"/></button>
+                                                <ul class="dropdown-menu">
+                                                    <li class="dropdown-header">Header</li>
+                                                    <li><a href="#">Action</a></li>
+                                                    <li><a href="#">Something else here</a></li>
+                                                    <li class="divider"/>
+                                                    <li><a href="#">Separated link</a></li>
+                                                </ul>
+                                            </div>
+
+                                            <h2 class="mt16">Navbar</h2>
+                                            <nav class="navbar navbar-default">
+                                                <div class="navbar-header">
+                                                    <a class="navbar-brand" href="#">Navbar</a>
+                                                    <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                                        <span class="sr-only">Toggle navigation</span>
+                                                        <span class="icon-bar"></span>
+                                                        <span class="icon-bar"></span>
+                                                        <span class="icon-bar"></span>
+                                                    </button>
+                                                </div>
+
+                                                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                                    <ul class="nav navbar-nav">
+                                                        <li class="active">
+                                                            <a href="#">Home <span class="sr-only">(current)</span></a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Link</a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="disabled" href="#">Disabled</a>
+                                                        </li>
+                                                    </ul>
+                                                    <form class="navbar-form navbar-right">
+                                                        <input class="form-control" type="search" placeholder="Search" aria-label="Search"/>
+                                                        <button class="btn btn-success" type="submit">Search</button>
+                                                    </form>
+                                                </div>
+                                            </nav>
+
+                                            <h2 class="mt16">Form</h2>
+                                            <form>
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Email address</label>
+                                                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>
+                                                    <small id="emailHelp" class="help-block text-muted">We'll never share your email with anyone else.</small>
+                                                </div>
+                                            </form>
+
+                                            <h2 class="mt16">Pagination</h2>
+                                            <nav>
+                                                <ul class="pagination">
+                                                    <li class="disabled">
+                                                        <a href="#" tabindex="-1">Previous</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">1</a>
+                                                    </li>
+                                                    <li class="active">
+                                                        <a href="#">2 <span class="sr-only">(current)</span></a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">3</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">Next</a>
+                                                    </li>
+                                                </ul>
+                                            </nav>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <h2>Alert</h2>
+                                            <t t-foreach="bs_state_colors" t-as="color">
+                                                <div t-attf-class="alert alert-#{color[0]}">
+                                                    This is a "<t t-esc="color[1]"/>" alert with a <a href="#" class="alert-link">link</a>.
+                                                </div>
+                                            </t>
+
+                                            <h2 class="mt16">Breadcrumb</h2>
+                                            <nav aria-label="breadcrumb">
+                                                <ol class="breadcrumb">
+                                                    <li><a href="#">Home</a></li>
+                                                    <li><a href="#">Library</a></li>
+                                                    <li class="active" aria-current="page">Data</li>
+                                                </ol>
+                                            </nav>
+
+                                            <h2 class="mt16">Card</h2>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    Card Header
+                                                </div>
+                                                <div class="panel-body">
+                                                    Card Body
+                                                </div>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item">Item 1</li>
+                                                    <li class="list-group-item">Item 2</li>
+                                                </ul>
+                                                <div class="panel-footer">
+                                                    Card Footer
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <section class="py-2">
+                                <div class="container">
+                                    <h1>Utilities &amp; Typography</h1>
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <div>
+                                                <t t-foreach="odoo_theme_colors" t-as="color">
+                                                    <div t-attf-class="bg-#{color[0]}" style="display: inline-block; padding: 4px 12px;">
+                                                        <t t-esc="color[1]"/>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                            <div class="mt8">
+                                                <t t-foreach="bs_theme_colors" t-as="color">
+                                                    <div t-attf-class="bg-#{color[0]}" style="display: inline-block; padding: 4px 12px;">
+                                                        <t t-esc="color[1]"/>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                            <div class="mt8">
+                                                <t t-foreach="bs_gray_colors" t-as="color">
+                                                    <div t-attf-class="bg-#{color[0]}" style="display: inline-block; padding: 4px 12px;">
+                                                        <t t-esc="color[1]"/>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                            <div class="mt16">
+                                                <t t-foreach="odoo_theme_colors" t-as="color">
+                                                    <div t-attf-class="text-#{color[0]}" style="display: inline-block; padding: 4px 12px;">
+                                                        <t t-esc="color[1]"/>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                            <div class="mt8">
+                                                <t t-foreach="bs_theme_colors" t-as="color">
+                                                    <div t-attf-class="text-#{color[0]}" style="display: inline-block; padding: 4px 12px;">
+                                                        <t t-esc="color[1]"/>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                            <div class="mt8">
+                                                <t t-foreach="bs_gray_colors" t-as="color">
+                                                    <div t-attf-class="text-#{color[0]}" style="display: inline-block; padding: 4px 12px;">
+                                                        <t t-esc="color[1]"/>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <h1>Headings 1</h1>
+                                            <h2>Headings 2</h2>
+                                            <h3>Headings 3</h3>
+                                            <h4>Headings 4</h4>
+                                            <h5>Headings 5</h5>
+                                            <h6>Headings 6</h6>
+                                            <p>Paragraph with <strong>bold</strong>, <span class="text-muted">muted</span> and <em>italic</em> texts</p>
+                                            <p><a href="#">Link</a></p>
+                                            <p><button type="button" class="btn btn-link">Link button</button></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </t>
+                </t>
+            </field>
+        </record>
+
+        <!-- Snippet Debug Page -->
+        <!-- Showcase all snippets -->
+        <record id="snippets_debug_page" model="website.page">
+            <field name="name">Snippet Debug</field>
+            <field name="url">/website/demo/snippets</field>
+            <field name="website_published">False</field>
+            <field name="type">qweb</field>
+            <field name="key">website.snippets_debug_page_view</field>
+            <field name="arch" type="xml">
+                <t name="Debug" t-name="website.snippets_debug_page_view">
+                    <t t-call="website.layout">
+                        <style>
+                            #snippets_menu, #o_scroll > .o_panel > .o_panel_header {
+                                display: none !important;
+                            }
+                            [data-oe-type="snippet"]:not([data-module-id])::before {
+                                content: attr(name);
+                                display: block;
+                                padding: 16px;
+                                background-color: lightgray;
+                                color: black;
+                                font-size: 24px;
+                            }
+                            [data-oe-type="snippet"]:not([data-module-id])::after {
+                                content: "";
+                                display: table;
+                                clear: both;
+                            }
+                        </style>
+                        <div id="wrap" class="oe_structure">
+                            <t t-call="website.snippets"/>
+                        </div>
+                    </t>
+                </t>
+            </field>
+        </record>
     </data>
 </odoo>

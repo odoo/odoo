@@ -3,22 +3,23 @@
 # * gamification
 # 
 # Translators:
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Martin Trigaux, 2017
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
 # Arminas Grigonis <arminas@versada.lt>, 2017
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Rolandas <info@paninfo.lt>, 2017
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
+# Martin Trigaux, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Silvija Butko <silvija.butko@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -266,6 +267,242 @@ msgid ""
 "            \n"
 "\n"
 msgstr ""
+"\n"
+"                 \n"
+"% set record = ctx.get('record')\n"
+"% set company = record and record.company_id or user.company_id\n"
+"% set challenge_lines = ctx.get('challenge_lines', [])     \n"
+"<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"font-family: 'Helvetica'; background-color: #EEE; border-collapse: collapse;\">\n"
+"<tr>\n"
+"    <td valign=\"top\" align=\"center\">\n"
+"        <table cellspacing=\"0\" cellpadding=\"0\" width=\"600\" style=\"margin: 0 auto; width: 600px;\">\n"
+"            <tr><td>\n"
+"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
+"                    <tr>\n"
+"                        <td valign=\"middle\" align=\"left\" style=\"padding:30px 15px;\">\n"
+"                            <img width=\"90\" src=\"/logo.png?company=${user.company_id.id}\" style=\"width:80px;\"/>\n"
+"                        </td>\n"
+"                        % if object.visibility_mode == 'ranking':\n"
+"                            <td style=\"padding:15px;\">\n"
+"                                <p style=\"font-size:20px;color:#666666;\" align=\"right\">Lentelė</p>\n"
+"                            </td>\n"
+"                        % endif\n"
+"                    </tr>\n"
+"                </table>\n"
+"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" bgcolor=\"#fff\" style=\"background-color:#fff;\">\n"
+"                    <tr><td style=\"padding: 15px;\">\n"
+"                        % if object.visibility_mode == 'personal':\n"
+"                            <span style=\"color:#666666;font-size:13px;\">Čia yra jūsų iššūkio progresas <strong>${object.name}</strong>.</span>\n"
+"                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:20px;\">\n"
+"                                <tr>\n"
+"                                    <td align=\"center\">\n"
+"                                        <p style=\"font-size:27px;color:#666666;\">Asmeninis rezultatas</p>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:30px;color:#666666;\">\n"
+"                                <thead>\n"
+"                                    <tr style=\"color:#9A6C8E; font-size:12px;\">\n"
+"                                        <th align=\"left\" style=\"padding-bottom: 0px;width:40%;text-align:left;\">Tikslai</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"left\">Siekis</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Esamas</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Įvykdymas</th>\n"
+"                                    </tr>\n"
+"                                    <tr>\n"
+"                                        <td colspan=\"5\" style=\"height:1px;background-color:#9A6C8E;\"></td>\n"
+"                                    </tr>\n"
+"                                </thead>\n"
+"                                <tbody>\n"
+"                                % for line in challenge_lines:\n"
+"                                    <tr\n"
+"                                        % if line['completeness'] >= 100:\n"
+"                                            style=\"font-weight:bold;\"\n"
+"                                        % endif\n"
+"                                        >\n"
+"                                        <td style=\"padding: 20px 0;\" align=\"left\">\n"
+"                                            ${line['name']}\n"
+"                                            % if line['suffix'] or line['monetary']:\n"
+"                                                (${line['full_suffix']})\n"
+"                                            % endif\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;\" align=\"right\">${\"%.2f\" % line['target']}\n"
+"                                            % if line['suffix']:\n"
+"                                                ${line['suffix']}\n"
+"                                            % endif\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;\" align=\"right\">${\"%.2f\" % line['current']}\n"
+"                                            % if line['suffix']:\n"
+"                                                ${line['suffix']}\n"
+"                                            % endif\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;font-size:25px;color:#9A6C8E;\" align=\"right\"><strong>${line['completeness']| int}%</strong></td>\n"
+"                                    </tr>\n"
+"                                    <tr>\n"
+"                                        <td colspan=\"5\" style=\"height:1px;background-color:#e3e3e3;\"></td>\n"
+"                                    </tr>\n"
+"                                % endfor        \n"
+"                                </tbody>\n"
+"                            </table>                   \n"
+"                        % else: \n"
+"                            <span style=\"color:#A8A8A8;font-size:13px;\">\n"
+"                                Iššūkis: <strong>${object.name}</strong>.\n"
+"                            </span> \n"
+"                            % for line in challenge_lines:\n"
+"                                <!-- Header + Button table -->\n"
+"                                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"style=\"margin-top:35px;\">\n"
+"                                    <tr>\n"
+"                                        <td width=\"50%\">\n"
+"                                            <p style=\"font-size:22px;color:#666666;\">Geriausi tikslo siekėjai <strong>${line['name']}</strong></p>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                                <!-- Podium -->\n"
+"                                % if len(line['goals'])>2:\n"
+"                                    <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:10px;\">\n"
+"                                        <tr><td style=\"padding:0 30px;\">\n"
+"                                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"table-layout: fixed;\">\n"
+"                                                <tr>\n"
+"                                                    % set top_goals = [line['goals'][1], line['goals'][0], line['goals'][2]]\n"
+"                                                    % for goal in top_goals:\n"
+"                                                        <td align=\"center\" style=\"width:32%;\">\n"
+"                                                            % if loop.index == 1:\n"
+"                                                                % set extra_div = '<div style=\"height:40px;\"></div>'\n"
+"                                                                % set heightA = 95\n"
+"                                                                % set heightB = 75\n"
+"                                                                % set bgColor = '#b898b0'\n"
+"                                                                % set fontSize = 50\n"
+"                                                                % set podiumPosition = '2'\n"
+"                                                            % elif loop.index == 2:\n"
+"                                                                % set extra_div = ''\n"
+"                                                                % set heightA = 55\n"
+"                                                                % set heightB = 115\n"
+"                                                                % set bgColor = '#9A6C8E'\n"
+"                                                                % set fontSize = 85\n"
+"                                                                % set podiumPosition = '1'\n"
+"                                                            % elif loop.index == 3:\n"
+"                                                                % set extra_div = '<div style=\"height:60px;\"></div>'\n"
+"                                                                % set heightA = 115\n"
+"                                                                % set heightB = 55\n"
+"                                                                % set bgColor = '#c8afc1'\n"
+"                                                                % set fontSize = 35\n"
+"                                                                % set podiumPosition = '3'\n"
+"                                                            % endif\n"
+"                                                            <div style=\"margin:0 3px 0 3px;height:220px;\">\n"
+"                                                                <div style=\"height:${heightA}px;\">\n"
+"                                                                    ${extra_div | safe}   \n"
+"                                                                    <div style=\"height:55px;\">\n"
+"                                                                        % set path = object.env['res.users'].browse(goal['user_id']).partner_id.image_small\n"
+"                                                                        <img style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;\" src=\"data:image/jpeg;base64,${path}\" alt=\"${goal['name']}\"/>\n"
+"                                                                    </div> \n"
+"                                                                    <div align=\"center\" style =\"color:${bgColor};height:20px\">\n"
+"                                                                        ${goal['name']}\n"
+"                                                                    </div \n"
+"                                                                </div>\n"
+"                                                                <div style=\"background-color:${bgColor | safe};height:${heightB}px;\">\n"
+"                                                                    <strong><span style=\"color:#fff;font-size:${fontSize}px;\">${podiumPosition | safe}</span></strong>\n"
+"                                                                </div>\n"
+"                                                                <div style=\"height:30px;\">\n"
+"                                                                    <p style=\"color:#9A6C8E;font-size:20px;margin-top:10px;\">\n"
+"                                                                        ${\"%.2f\" % goal['current']}\n"
+"                                                                        % if line['suffix'] or line['monetary']:\n"
+"                                                                            ${line['full_suffix']}\n"
+"                                                                        % endif\n"
+"                                                                    </p>\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </td>\n"
+"                                                    % endfor\n"
+"                                                </tr>\n"
+"                                            </table>\n"
+"                                            </td>\n"
+"                                        </tr>\n"
+"                                    </table>\n"
+"                                % endif\n"
+"                                <!-- data table -->\n"
+"                                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-bottom:5px\">\n"
+"                                    <tr>\n"
+"                                        <td>\n"
+"                                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:30px;margin-bottom:5px;color:#666666;\">\n"
+"                                                <thead>\n"
+"                                                    <tr style=\"color:#9A6C8E; font-size:12px;\">\n"
+"                                                        <th style=\"width:15%;text-align:center;\">Reitingas</th>\n"
+"                                                        <th style=\"width:25%;text-align:left;\">Vardas</th>\n"
+"                                                        <th style=\"width:30%;text-align:right;\">Sėkmė \n"
+"                                                            % if line['suffix']:\n"
+"                                                                (${line['suffix']})\n"
+"                                                            % elif line['monetary']:\n"
+"                                                                (${company.currency_id.symbol})\n"
+"                                                            % endif\n"
+"                                                        </th>\n"
+"                                                        <th style=\"width:30%;text-align:right;\"\">Įvykdymas</th>\n"
+"                                                    </tr>\n"
+"                                                    <tr>\n"
+"                                                        <td colspan=\"5\" style=\"height:1px;background-color:#9A6C8E;\"></td>\n"
+"                                                    </tr>\n"
+"                                                </thead>\n"
+"                                                <tbody>\n"
+"                                                    % for goal in line['goals']:\n"
+"                                                        <tr>\n"
+"                                                            % set tdBgColor = '#fff'\n"
+"                                                            % set tdColor = 'gray'\n"
+"                                                            % set mutedColor = '#AAAAAA'\n"
+"                                                            % set tdPercentageColor = '#9A6C8E'\n"
+"                                                            <td width=\"15%\" align=\"center\" valign=\"middle\" style=\"background-color:${tdBgColor};padding :5px 0;font-size:20px;\">${goal['rank']+1}\n"
+"                                                            </td>\n"
+"                                                            <td width=\"25%\" align=\"left\" valign=\"middle\" style=\"background-color:${tdBgColor};padding :5px 0;font-size:13px;\">${goal['name']}</td>\n"
+"                                                            <td width=\"30%\" align=\"right\" style=\"background-color:${tdBgColor};padding:5px 0;line-height:1;\">${\"%.2f\" % goal['current']}<br/><span style=\"font-size:13px;color:${mutedColor};\">on ${\"%.2f\" % line['target']}</span>\n"
+"                                                            </td>\n"
+"                                                            <td width=\"30%\" style=\"color:${tdPercentageColor};background-color:${tdBgColor};padding-right:15px;font-size:22px;\" align=\"right\"><strong>${goal['completeness'] | int}%</strong></td>\n"
+"                                                        </tr>\n"
+"                                                        <tr>\n"
+"                                                            <td colspan=\"5\" style=\"height:1px;background-color:#DADADA;\"></td>\n"
+"                                                        </tr>\n"
+"                                                    % endfor\n"
+"                                                </tbody>\n"
+"                                            </table>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table> \n"
+"                            % endfor\n"
+"                        % endif\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"padding: 15px; color: #666666;margin-bottom: 5px;\">\n"
+"                    <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                            <table width=\"580\" border=\"0\" cellpadding=\"0\" style=\"min-width: 580px; font-size: 12px;\">\n"
+"                                <tr>\n"
+"                                    <td valign=\"middle\" align=\"left\" style=\"padding-top: 10px; padding-bottom: 10px;\">\n"
+"                                        ${company.name}<br/>\n"
+"                                        ${company.phone or ''}\n"
+"                                    </td>\n"
+"                                    <td valign=\"middle\" align=\"right\" style=\"padding-top: 10px; padding-bottom: 10px;\">\n"
+"                                        % if company.email:\n"
+"                                            <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: #666666;\">${company.email}</a><br/>\n"
+"                                        % endif\n"
+"                                        % if company.website:\n"
+"                                            <a href=\"${company.website}\" style=\"text-decoration:none; color: #666666;\">\n"
+"                                               ${company.website}\n"
+"                                            </a>\n"
+"                                        % endif\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr> \n"
+"                    <tr>\n"
+"                        <td align=\"center\">\n"
+"                            Sukurta <a target=\"_blank\" href=\"https://www.odoo.com\">\"Odoo\"</a>.\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"        </table>\n"
+"    </td>\n"
+"</tr>\n"
+"</table>\n"
+"            \n"
+"\n"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_goal_reminder
@@ -278,6 +515,13 @@ msgid ""
 "    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
 "            "
 msgstr ""
+"\n"
+"    <p>\n"
+"        <strong>Priminimas ${object.name}</strong>\n"
+"    </p>\n"
+"    \n"
+"    <p>Neatnaujinote savo progreso tikslui ${object.definition_id.name} (šiuo metu pasiekta ${object.completeness}%) bent ${object.remind_update_delay} dienų. Nepamirškite to atlikti.</p>\n"
+"            "
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:589
@@ -327,6 +571,38 @@ msgid ""
 "</div>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><div>\n"
+"    <p>Sveikiname ${object.user_id.name} !</p>\n"
+"    <p>Gavote ženklelį <strong>${object.badge_id.name}</strong> !</p>\n"
+"</div>\n"
+"<div>\n"
+"% if object.badge_id.description\n"
+"<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 600px; margin-top: 5px;\">\n"
+"<tbody><tr>\n"
+"    <td valign=\"center\">\n"
+"        <img src=\"/web/image/gamification.badge/${object.badge_id.id}/image/80x80\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"    </td>\n"
+"    <td valign=\"center\">\n"
+"        <cite>${object.badge_id.description}</cite>\n"
+"    </td>\n"
+"</tr></tbody>\n"
+"</table>\n"
+"% endif\n"
+"</div>\n"
+"<div>\n"
+"    <p>\n"
+"% if object.sender_id\n"
+"        Šį ženklelį suteikė <strong>${object.sender_id.name}</strong>.\n"
+"% endif\n"
+"    </p>\n"
+"    <p>\n"
+"% if object.comment\n"
+"        <em>${object.comment}</em>\n"
+"% endif\n"
+"    </p>\n"
+"</div>\n"
+"</data>"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:655
@@ -361,6 +637,21 @@ msgid ""
 msgstr ""
 "<br/>Specialūs apdovanojimai buvo išsiųsti geriausiems vartotojams. Šio "
 "iššūkio reitingas:"
+
+#. module: gamification
+#: model:ir.ui.view,arch_db:gamification.goal_kanban_view
+msgid "<i class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\"/>"
+msgstr ""
+
+#. module: gamification
+#: model:ir.ui.view,arch_db:gamification.goal_kanban_view
+msgid "<i class=\"o_green fa fa-check fa-3x\" title=\"Goal Reached\"/>"
+msgstr ""
+
+#. module: gamification
+#: model:ir.ui.view,arch_db:gamification.goal_kanban_view
+msgid "<i class=\"o_red fa fa-times fa-3x\" title=\"Goal Failed\"/>"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -469,7 +760,7 @@ msgstr "Patvirtinti vartotojai"
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
 msgid "Automatic: execute a specific Python code"
-msgstr ""
+msgstr "Automatinis: vykdyti tam tikrą Python kodą"
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
@@ -537,7 +828,7 @@ msgstr "Grupinis režimas"
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_idea
 msgid "Brilliant"
-msgstr ""
+msgstr "Nuostabu"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_kanban_view
@@ -720,7 +1011,7 @@ msgstr "Kūrėjas"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_current
 msgid "Current"
-msgstr "Naudojami"
+msgstr "Esamas"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_current
@@ -813,7 +1104,7 @@ msgstr "Rodomas kaip"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_distinctive_field
 msgid "Distinctive field for batch user"
-msgstr ""
+msgstr "Skiriamasis laukas grupiniam vartotojui"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_domain
@@ -822,6 +1113,10 @@ msgid ""
 "[('state', '=', 'done')]. The expression can contain reference to 'user' "
 "which is a browse record of the current user if not in batch mode."
 msgstr ""
+"Domenas įrašų filtravimui. Bendra taisyklė, ne priklausanti nuo vartotojo, "
+"pvz.,  [('state', '=', 'done')]. Išraiška gali turėti nuorodą į "
+"\"Vartotoją\", kuris yra esamo vartotojo naršymo įrašo nuoroda, jei nėra "
+"grupiniame režime."
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
@@ -861,7 +1156,7 @@ msgstr "Visi"
 #. module: gamification
 #: selection:gamification.goal.definition,display_mode:0
 msgid "Exclusive (done or not-done)"
-msgstr ""
+msgstr "Išskirtinis (atliktas arba neatliktas)"
 
 #. module: gamification
 #: selection:gamification.goal,state:0
@@ -871,12 +1166,12 @@ msgstr "Nepavyko"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_field_id
 msgid "Field to Sum"
-msgstr ""
+msgstr "Laukas sumavimui"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_domain
 msgid "Filter Domain"
-msgstr ""
+msgstr "Domeno filtras"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_first_id
@@ -1086,7 +1381,7 @@ msgstr "Kaip apskaičiuoti tikslą?"
 #. module: gamification
 #: selection:gamification.challenge,category:0
 msgid "Human Resources / Engagement"
-msgstr ""
+msgstr "Personalas / Įsitraukimas"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_id
@@ -1103,7 +1398,7 @@ msgstr "ID"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_res_id_field
 msgid "ID Field of user"
-msgstr ""
+msgstr "Vartotojo ID laukas"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_remaining_sending
@@ -1140,6 +1435,8 @@ msgid ""
 "In batch mode, this indicates which field distinct one user form the other, "
 "e.g. user_id, partner_id..."
 msgstr ""
+"Grupiniame režime, tai parodo, kuris laukas atskiria vieną vartotoją nuo "
+"kito, pvz., user_id, partner_id..."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_last_update
@@ -1148,6 +1445,9 @@ msgid ""
 "for a while (defined in challenge). Ignored in case of non-manual goal or "
 "goal not linked to a challenge."
 msgstr ""
+"Rankinio tikslo atveju, priminimai yra siunčiami, jei tikslas kurį laiką "
+"nebuvo atnaujintas (nustatyta iššūkyje). Ignoruojama ne rankinio tikslo "
+"atveju arba tada, kai tikslas nėra susietas su iššūkiu."
 
 #. module: gamification
 #: selection:gamification.goal,state:0
@@ -1239,12 +1539,12 @@ msgstr "Sarašas tikslų, kurie bus nusatatyti"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_user_ids
 msgid "List of users participating to the challenge"
-msgstr ""
+msgstr "Vartotojų, dalyvaujančių iššūkyje, sąrašas"
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_nbr_following
 msgid "Mail Group Following"
-msgstr ""
+msgstr "Pašto grupinis sekimas"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_model_id
@@ -1255,12 +1555,12 @@ msgstr "Modelis"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_monetary
 msgid "Monetary"
-msgstr ""
+msgstr "Piniginis"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_monetary
 msgid "Monetary Value"
-msgstr ""
+msgstr "Piniginė vertė"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -1316,12 +1616,12 @@ msgstr "Niekada nepriminti, jei vertė nenurodyta arba ji yra 0."
 #. module: gamification
 #: model:mail.template,subject:gamification.email_template_badge_received
 msgid "New badge ${object.badge_id.name} granted"
-msgstr ""
+msgstr "Suteiktas naujas ženklelis ${object.badge_id.name}"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_next_report_date
 msgid "Next Report Date"
-msgstr ""
+msgstr "Kitos ataskaitos data"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
@@ -1331,7 +1631,7 @@ msgstr "Nėra mėnesinio siuntimo limito"
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_problem_solver
 msgid "No one can solve challenges like you do."
-msgstr ""
+msgstr "Niekas negali taip išspręsti iššūkių, kaip jūs."
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -1342,7 +1642,7 @@ msgstr "Niekas, suteikiama per iššūkius"
 #: code:addons/gamification/models/challenge.py:667
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
-msgstr ""
+msgstr "Niekas nepasiekė specialiems ženkleliams keliamų sąlygų. "
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -1367,7 +1667,7 @@ msgstr "Vartotojų skaičius"
 #. module: gamification
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "On change"
-msgstr ""
+msgstr "Keičiant"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_rule_auth_badge_ids
@@ -1421,7 +1721,7 @@ msgstr "Problemų sprendėjas"
 #. module: gamification
 #: selection:gamification.goal.definition,display_mode:0
 msgid "Progressive (using numerical values)"
-msgstr ""
+msgstr "Progresinis (naudojantis skaitines reikšmes)"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_compute_code
@@ -1434,6 +1734,9 @@ msgid ""
 "Python code to be executed for each user. 'result' should contains the new "
 "current value. Evaluated user can be access through object.user_id."
 msgstr ""
+"Python kodas, vykdomas kiekvienam vartotojui. \"result\" turėtų turėti naują"
+" esamą reikšmę. Įvertintas vartotojas gali būti pasiekiamas per "
+"object.user_id."
 
 #. module: gamification
 #: selection:gamification.goal,state:0
@@ -1478,7 +1781,7 @@ msgstr "Leidžiamų siuntimų likutis"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_remind_update_delay
 msgid "Remind delay"
-msgstr ""
+msgstr "Priminimo delsimas"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1514,7 +1817,7 @@ msgstr "Atsakingas"
 #: code:addons/gamification/models/challenge.py:490
 #, python-format
 msgid "Retrieving progress for personal challenge without user information"
-msgstr ""
+msgstr "Asmeninio iššūkio progreso gavimas be vartotojo informacijos"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1534,7 +1837,7 @@ msgstr "Apdovanoti iškart pasiekus tikslą"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_challenge_ids
 msgid "Reward of Challenges"
-msgstr ""
+msgstr "Iššūkių atlygis"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_goal_definition_ids
@@ -1613,7 +1916,7 @@ msgstr "Sekos numeris rikiavimui"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Set the current value you have reached for this goal"
-msgstr ""
+msgstr "Nustatykite esamą reikšmę, kurią pasiekėte šiam iššūkiui"
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_admin1
@@ -1636,12 +1939,12 @@ msgstr "Nustatyti savo laiko juostą"
 #. module: gamification
 #: selection:gamification.challenge,category:0
 msgid "Settings / Gamification Tools"
-msgstr ""
+msgstr "Nustatymai / sužaidybinimo įrankiai"
 
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_configure
 msgid "Setup your Company"
-msgstr ""
+msgstr "Nustatyti savo įmonę"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1697,12 +2000,12 @@ msgstr "Siekiama reikšmė"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "Target: less than"
-msgstr ""
+msgstr "Tikslas: mažiau nei"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_action_id
 msgid "The action that will be called to update the goal value."
-msgstr ""
+msgstr "Veiksmas, į kurį bus kreipiamasi atnaujinti tikslo vertei."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:646
@@ -1715,12 +2018,12 @@ msgstr "Iššūkis %s baigtas."
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_full_suffix
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_suffix_3121
 msgid "The currency and suffix field"
-msgstr ""
+msgstr "Valiutos ir priesagos laukas"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_field_date_id
 msgid "The date to use for the time period evaluated"
-msgstr ""
+msgstr "Įvertintam laikotarpiui naudojama data"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_end_date
@@ -1748,11 +2051,14 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Domenas apraše %s atrodo neteisingas, patikrinkite jį.\n"
+"\n"
+"%s"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_field_id
 msgid "The field containing the value to evaluate"
-msgstr ""
+msgstr "Laukas, turintis reikšmę įvertinimui"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_res_id_field
@@ -1760,6 +2066,8 @@ msgid ""
 "The field name on the user profile (res.users) containing the value for "
 "res_id for action."
 msgstr ""
+"Lauko pavadinimas vartotojo profilyje (res.users), kuris turi veiksmo "
+"reikšmes res_id."
 
 #. module: gamification
 #: selection:gamification.goal.definition,condition:0
@@ -1769,12 +2077,12 @@ msgstr "Kuo aukštesnis, tuo geriau"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_owner_ids
 msgid "The list of instances of this badge granted to users"
-msgstr ""
+msgstr "Šio ženklelio išdavimo vartotojams atvejų sąrašas"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_unique_owner_ids
 msgid "The list of unique users having received this badge."
-msgstr ""
+msgstr "Unikalių vartotojų, gavusių šį ženklelį, sąrašas."
 
 #. module: gamification
 #: selection:gamification.goal.definition,condition:0
@@ -1797,6 +2105,9 @@ msgid ""
 "\n"
 "%s not found"
 msgstr ""
+"Modelio konfigūracija aprašui %s atrodo neteisinga, patikrinkite ją.\n"
+"\n"
+"%s nerasta"
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:107
@@ -1806,11 +2117,14 @@ msgid ""
 "\n"
 "%s not stored"
 msgstr ""
+"Modelio konfigūracija aprašui %s atrodo neteisinga, patikrinkite ją.\n"
+"\n"
+"%s nesaugoma"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_model_id
 msgid "The model object for the field to evaluate"
-msgstr ""
+msgstr "Modelio objektas lauko vertinimui"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_remind_update_delay
@@ -1888,6 +2202,9 @@ msgid ""
 "reference to 'user' which is a browse record of the current user, e.g. "
 "user.id, user.partner_id.id..."
 msgstr ""
+"Reikšmė, lyginama su skiriamuoju lauku. Išraiška gali turėti \"vartotojo\" "
+"nuorodą, kuri yra esamo vartotojo naršymo įrašas, pvz., user.id, "
+"user.partner_id.id..."
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goals_from_challenge_act
@@ -1929,7 +2246,7 @@ msgstr "Tikslas"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_to_update
 msgid "To update"
-msgstr ""
+msgstr "Atnaujinti"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_count
@@ -1968,7 +2285,7 @@ msgstr "Vartotojas"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_user_domain
 msgid "User domain"
-msgstr ""
+msgstr "Vartotojo domenas"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_user_ids
@@ -1978,7 +2295,7 @@ msgstr "Vartotojai"
 #. module: gamification
 #: selection:gamification.challenge,category:0
 msgid "Website / Forum"
-msgstr ""
+msgstr "Svetainė / forumas"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0

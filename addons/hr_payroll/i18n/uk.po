@@ -3,18 +3,19 @@
 # * hr_payroll
 # 
 # Translators:
-# Bohdan Lisnenko, 2017
-# Martin Trigaux, 2017
-# ТАрас <tratatuta@i.ua>, 2017
-# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
 # Zoriana Zaiats, 2017
+# ТАрас <tratatuta@i.ua>, 2017
+# Bohdan Lisnenko, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-27 15:42+0000\n"
-"PO-Revision-Date: 2018-06-27 15:42+0000\n"
-"Last-Translator: Zoriana Zaiats, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:18+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -710,6 +711,12 @@ msgid "Get 1% of sales"
 msgstr "Отримайте 1% від продажів"
 
 #. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payslip.py:183
+#, python-format
+msgid "Global Leaves"
+msgstr "Загальні відпустки"
+
+#. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
 #: model:hr.salary.rule.category,name:hr_payroll.GROSS
 msgid "Gross"
@@ -1311,16 +1318,9 @@ msgstr "Розрахунок зарплати"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree_view
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
 msgid "Salary Rule Categories"
 msgstr "Категорії правил розрахунку"
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
-msgid "Salary Rule Categories Hierarchy"
-msgstr "Ієрархія категорій правил розрахунку"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule_category

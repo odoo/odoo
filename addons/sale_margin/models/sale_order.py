@@ -60,10 +60,6 @@ class SaleOrderLine(models.Model):
         for line in self:
             currency = line.order_id.pricelist_id.currency_id
             price = line.purchase_price
-            if not price:
-                from_cur = line.env.user.company_id.currency_id.with_context(date=line.order_id.date_order)
-                price = from_cur.compute(line.product_id.standard_price, currency, round=False)
- 
             line.margin = currency.round(line.price_subtotal - (price * line.product_uom_qty))
 
 

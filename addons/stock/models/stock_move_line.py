@@ -21,7 +21,7 @@ class StockMoveLine(models.Model):
         help='The stock operation where the packing has been made')
     move_id = fields.Many2one(
         'stock.move', 'Stock Move',
-        help="Change to a better name")
+        help="Change to a better name", index=True)
     product_id = fields.Many2one('product.product', 'Product', ondelete="cascade")
     product_uom_id = fields.Many2one('product.uom', 'Unit of Measure', required=True)
     product_qty = fields.Float(
@@ -141,7 +141,7 @@ class StockMoveLine(models.Model):
         """
         res = {}
         if self.qty_done and self.product_id.tracking == 'serial':
-            if float_compare(self.qty_done, 1.0, precision_rounding=self.move_id.product_id.uom_id.rounding) != 0:
+            if float_compare(self.qty_done, 1.0, precision_rounding=self.product_id.uom_id.rounding) != 0:
                 message = _('You can only process 1.0 %s for products with unique serial number.') % self.product_id.uom_id.name
                 res['warning'] = {'title': _('Warning'), 'message': message}
         return res
@@ -185,6 +185,8 @@ class StockMoveLine(models.Model):
 
         ml = super(StockMoveLine, self).create(vals)
         if ml.state == 'done':
+            if 'qty_done' in vals:
+                ml.move_id.product_uom_qty = ml.move_id.quantity_done
             if ml.product_id.type == 'product':
                 Quant = self.env['stock.quant']
                 quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id,rounding_method='HALF-UP')
@@ -508,6 +510,8 @@ class StockMoveLine(models.Model):
                         candidate.product_uom_qty = 0.0
                     else:
                         candidate.unlink()
+                    if float_is_zero(quantity, precision_rounding=rounding):
+                        break
                 else:
                     # split this move line and assign the new part to our extra move
                     quantity_split = float_round(
@@ -515,8 +519,6 @@ class StockMoveLine(models.Model):
                         precision_rounding=self.product_uom_id.rounding,
                         rounding_method='UP')
                     candidate.product_uom_qty = self.product_id.uom_id._compute_quantity(quantity_split, candidate.product_uom_id, rounding_method='HALF-UP')
-                    quantity -= quantity_split
                     move_to_recompute_state |= candidate.move_id
-                if quantity == 0.0:
                     break
             move_to_recompute_state._recompute_state()

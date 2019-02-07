@@ -8,7 +8,7 @@
             <xpath expr="//field[@name='vat']" position="replace">
             </xpath>
             <xpath expr="//label[@for='street']" position="before">
-                <field name="vat" string="VAT" placeholder="e.g. BE0477472701"/>
+                <field name="vat" string="VAT" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}"/>
             </xpath>
         </field>
     </record>
@@ -21,7 +21,7 @@
             <xpath expr="//field[@name='vat']" position="replace">
             </xpath>
             <xpath expr="//label[@for='street']" position="before">
-                <field name="vat" string="VAT" placeholder="e.g. BE0477472701"/>
+                <field name="vat" string="VAT" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}"/>
             </xpath>
         </field>
     </record>
