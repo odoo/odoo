@@ -66,7 +66,9 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         }
 
         this.$('h1.statement_name').text(this._initialState.title || _t('No Title'));
-
+        if (this.model.context && this.model.context.args && this.model.context.args.search) {
+            this.$('.reconciliation_search_input').val(self.model.context.args.search);
+        }
         return $.when.apply($, defs);
     },
     /**
@@ -335,9 +337,11 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     update: function (state) {
         var self = this;
         // isValid
-        this.$('caption .o_buttons button.o_validate').toggleClass('d-none', !!state.balance.type);
-        this.$('caption .o_buttons button.o_reconcile').toggleClass('d-none', state.balance.type <= 0);
+        var to_check_checked = !!(state.reconciliation_proposition[0] && state.reconciliation_proposition[0].to_check);
+        this.$('caption .o_buttons button.o_validate').toggleClass('d-none', !!state.balance.type && !to_check_checked);
+        this.$('caption .o_buttons button.o_reconcile').toggleClass('d-none', state.balance.type <= 0 || to_check_checked);
         this.$('caption .o_buttons .o_no_valid').toggleClass('d-none', state.balance.type >= 0);
+        self.$('caption .o_buttons button.o_validate').toggleClass('text-warning', to_check_checked);
 
         // partner_id
         this._makePartnerRecord(state.st_line.partner_id, state.st_line.partner_name).then(function (recordID) {
@@ -545,6 +549,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         }, {
             type: 'char', //TODO is it a bug or a feature when type date exists ?
             name: 'date',
+        }, {
+            type: 'boolean',
+            name: 'to_check',
         }], {
             account_id: {string: _t("Account")},
             label: {string: _t("Label")},
@@ -580,6 +587,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.fields.date = new basic_fields.FieldDate(self,
                 'date', record, {mode: 'edit'});
 
+            self.fields.to_check = new basic_fields.FieldBoolean(self,
+                'to_check', record, {mode: 'edit'});
+
             var $create = $(qweb.render("reconciliation.line.create", {'state': state}));
             self.fields.account_id.appendTo($create.find('.create_account_id .o_td_field'))
                 .then(addRequiredStyle.bind(self, self.fields.account_id));
@@ -593,6 +603,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.fields.amount.appendTo($create.find('.create_amount .o_td_field'))
                 .then(addRequiredStyle.bind(self, self.fields.amount));
             self.fields.date.appendTo($create.find('.create_date .o_td_field'))
+            self.fields.to_check.appendTo($create.find('.create_to_check .o_td_field'))
             self.$('.create').append($create);
 
             function addRequiredStyle(widget) {
