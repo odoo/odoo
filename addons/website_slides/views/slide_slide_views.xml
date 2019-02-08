@@ -70,7 +70,7 @@
                                 <group>
                                     <field name="url" attrs="{'required': [('image', '=', False)]}"/>
                                     <field name="slide_type" readonly="1"/>
-                                    <field name="document_id" readonly="1"/>
+                                    <field name="document_id" readonly="1" attrs="{'invisible': [('document_id', '=', False)]}"/>
                                     <field name="mime_type" readonly="1"/>
                                     <field name="datas" readonly="1"/>
                                 </group>

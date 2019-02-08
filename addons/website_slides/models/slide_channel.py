@@ -91,6 +91,7 @@ class Channel(models.Model):
     nbr_documents = fields.Integer('Number of Documents', compute='_compute_slides_statistics', store=True)
     nbr_videos = fields.Integer('Number of Videos', compute='_compute_slides_statistics', store=True)
     nbr_infographics = fields.Integer('Number of Infographics', compute='_compute_slides_statistics', store=True)
+    nbr_webpages = fields.Integer("Number of Webpages", compute='_compute_slides_statistics', store=True)
     total_slides = fields.Integer('# Slides', compute='_compute_slides_statistics', store=True, oldname='total')
     total_views = fields.Integer('# Views', compute='_compute_slides_statistics', store=True)
     total_votes = fields.Integer('# Votes', compute='_compute_slides_statistics', store=True)
@@ -148,7 +149,7 @@ class Channel(models.Model):
                  'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views')
     def _compute_slides_statistics(self):
         result = dict.fromkeys(self.ids, dict(
-            nbr_presentations=0, nbr_documents=0, nbr_videos=0, nbr_infographics=0,
+            nbr_presentations=0, nbr_documents=0, nbr_videos=0, nbr_infographics=0, nbr_webpages=0,
             total_slides=0, total_views=0, total_votes=0, total_time=0))
         read_group_res = self.env['slide.slide'].read_group(
             [('is_published', '=', True), ('channel_id', 'in', self.ids)],
@@ -161,6 +162,7 @@ class Channel(models.Model):
             result[cid]['nbr_documents'] += res_group.get('slide_type', '') == 'document' and res_group['__count'] or 0
             result[cid]['nbr_videos'] += res_group.get('slide_type', '') == 'video' and res_group['__count'] or 0
             result[cid]['nbr_infographics'] += res_group.get('slide_type', '') == 'infographic' and res_group['__count'] or 0
+            result[cid]['nbr_webpages'] += res_group.get('slide_type', '') == 'webpage' and res_group['__count'] or 0
             result[cid]['total_slides'] += res_group['__count']
             result[cid]['total_views'] += res_group.get('total_views', 0)
             result[cid]['total_votes'] += res_group.get('likes', 0)
@@ -362,6 +364,7 @@ class Category(models.Model):
     nbr_documents = fields.Integer("Number of Documents", compute='_count_presentations', store=True)
     nbr_videos = fields.Integer("Number of Videos", compute='_count_presentations', store=True)
     nbr_infographics = fields.Integer("Number of Infographics", compute='_count_presentations', store=True)
+    nbr_webpages = fields.Integer("Number of Webpages", compute='_count_presentations', store=True)
     total_slides = fields.Integer(compute='_count_presentations', store=True, oldname='total')
 
     @api.depends('slide_ids.slide_type', 'slide_ids.is_published')
@@ -378,4 +381,5 @@ class Category(models.Model):
             record.nbr_documents = result[record.id].get('document', 0)
             record.nbr_videos = result[record.id].get('video', 0)
             record.nbr_infographics = result[record.id].get('infographic', 0)
-            record.total_slides = record.nbr_presentations + record.nbr_documents + record.nbr_videos + record.nbr_infographics
+            record.nbr_webpages = result[record.id].get('webpage', 0)
+            record.total_slides = record.nbr_presentations + record.nbr_documents + record.nbr_videos + record.nbr_infographics + record.nbr_webpages
