@@ -101,10 +101,6 @@ class Slide(models.Model):
         'channel_id', 'description', 'tag_ids', 'write_date', 'create_date',
         'website_published', 'website_url', 'website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
 
-    _sql_constraints = [
-        ('name_uniq', 'UNIQUE(channel_id, name)', 'The slide name must be unique within a channel')
-    ]
-
     # description
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)
