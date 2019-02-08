@@ -182,7 +182,7 @@ class Currency(models.Model):
     @api.model
     def _get_conversion_rate(self, from_currency, to_currency, company, date):
         currency_rates = (from_currency + to_currency)._get_rates(company, date)
-        res = currency_rates.get(to_currency.id) / currency_rates.get(from_currency.id)
+        res = currency_rates.get(to_currency.id) / (currency_rates.get(from_currency.id) or 1)
         return res
 
     def _convert(self, from_amount, to_currency, company, date, round=True):
