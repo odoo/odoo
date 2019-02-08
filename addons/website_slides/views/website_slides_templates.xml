@@ -513,6 +513,11 @@
                                         <i class="fa fa-bar-chart"></i> Statistics
                                     </a>
                                 </li>
+                                <li class="nav-item" t-if="slide.link_ids">
+                                    <a href="#external-links" aria-controls="external-links" class="nav-link" role="tab" data-toggle="tab">
+                                        <i class="fa fa-link"></i> External Links
+                                    </a>
+                                </li>
                             </ul>
                             <div class="tab-content" style="padding: 20px 5px 5px 5px; word-wrap: break-word;">
                                 <div role="tabpanel" t-att-class="not comments and 'tab-pane fade in show active' or 'tab-pane fade'" id="about">
@@ -627,6 +632,13 @@
                                             </ul>
                                         </div>
                                     </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade oe_slides_transcript" id="external-links" t-if="slide.link_ids">
+                                    <ul>
+                                        <t t-foreach="slide.link_ids" t-as="link">
+                                            <li><a t-att-href="link.link" target="_blank"><t t-esc="link.name"/></a></li>
+                                        </t>
+                                    </ul>
                                 </div>
                             </div>
                         </div>

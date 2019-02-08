@@ -31,6 +31,15 @@ class SlidePartnerRelation(models.Model):
     completed = fields.Boolean('Completed')
 
 
+class SlideLink(models.Model):
+    _name = 'slide.slide.link'
+    _description = "External URL for a particular slide"
+
+    slide_id = fields.Many2one('slide.slide', required=True)
+    name = fields.Char('Title', required=True)
+    link = fields.Char("External Link", required=True)
+
+
 class EmbeddedSlide(models.Model):
     """ Embedding in third party websites. Track view count, generate statistics. """
     _name = 'slide.embed'
@@ -130,6 +139,7 @@ class Slide(models.Model):
     datas = fields.Binary('Content', attachment=True)
     url = fields.Char('Document URL', help="Youtube or Google Document URL")
     document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
+    link_ids = fields.One2many('slide.slide.link', 'slide_id', string="External URL for this slide")
     mime_type = fields.Char('Mime-type')
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
