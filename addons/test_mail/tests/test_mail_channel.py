@@ -39,8 +39,6 @@ class TestChannelAccessRights(common.BaseFunctionalTest, common.MockEmails):
         self.group_public.sudo(self.user_public).read()
 
         # Read Pigs -> ko, restricted to employees
-        # Changed the except_orm to AccessError (Because here it's call check_access_rule
-        # which actually generate AccessError.)
         with self.assertRaises(AccessError):
             self.group_pigs.sudo(self.user_public).read()
 

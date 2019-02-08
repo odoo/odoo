@@ -219,8 +219,6 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_mail_message_access_read_crash(self):
-        # Changed the except_orm to AccessError(Because here it's call check_access_rule
-        # which actually generate AccessError.)
         with self.assertRaises(AccessError):
             self.message.sudo(self.user_employee).read()
 
