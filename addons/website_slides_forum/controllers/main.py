@@ -10,6 +10,17 @@ from odoo.addons.website_profile.controllers.main import WebsiteProfile
 
 
 class WebsiteSlidesForum(WebsiteProfile):
+    def _prepare_channel_values(self, **kwargs):
+        forum_type = kwargs.get('forum_type')
+        if forum_type:
+            if forum_type == 'forum':
+                forum = request.env['forum.forum'].create({
+                    'name': kwargs.get('name')
+                })
+                kwargs['forum_id'] = forum.id
+            kwargs['allow_comment'] = forum_type == 'comment'
+        return super(WebsiteSlidesForum, self)._prepare_channel_values(**kwargs)
+
     # Profile
     # ---------------------------------------------------
     @http.route(['/slides/<model("slide.channel"):channel>/user/<int:user_id>'], type='http', auth="public", website=True)

@@ -68,6 +68,9 @@ class WebsiteSlides(WebsiteProfile):
             'comments': slide.website_message_ids or [],
         }
 
+    def _prepare_channel_values(self, **kwargs):
+        return dict(**kwargs)
+
     # --------------------------------------------------
     # MAIN / SEARCH
     # --------------------------------------------------
@@ -196,12 +199,8 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/channel/add'], type='http', auth='user', methods=['POST'], website=True)
     def slide_channel_create(self, *args, **kw):
-        channel = request.env['slide.channel'].create({
-            'name': kw['name'],
-            'description': kw.get('description'),
-            'channel_type': kw.get('course_type', 'training'),
-            'responsible_id': request.env.user.id
-        })
+        values = self._prepare_channel_values(**kw)
+        channel = request.env['slide.channel'].create(values)
         #TODO JEM: voir avec sbu si faut garder les url /courses
         #if channel.channel_type == 'training':
         #    return werkzeug.utils.redirect("/courses/%s" % (slug(channel)))

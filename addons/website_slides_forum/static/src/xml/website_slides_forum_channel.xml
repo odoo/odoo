@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-extend="website.slide.channel.create">
+        <t t-jquery=".o_wslide_channel_type" t-operation="after">
+            <fieldset id="channel_create_forum" class="form-group">
+                <div class="row">
+                    <legend class="col-form-label col-sm-2">Communication</legend>
+                    <div class="col-sm-10">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="forum_type" id="channel_type3" value="nothing" checked="checked"/>
+                          <label class="form-check-label" for="forum_type3">
+                                No communication
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="forum_type" id="channel_type1" value="forum"/>
+                          <label class="form-check-label" for="forum_type1">
+                                Create a Forum
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="forum_type" id="channel_type2" value="comment"/>
+                          <label class="form-check-label" for="forum_type2">
+                                Allow comments
+                          </label>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </t>
+    </t>
+</templates>

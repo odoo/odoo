@@ -66,6 +66,7 @@ class Channel(models.Model):
         ('training', 'Training')
     ], string="Course type", default="documentation", required=True)
     category_ids = fields.One2many('slide.category', 'channel_id', string="Categories")
+    allow_comment = fields.Boolean('Allow comment', help="Allow comment on slides", default=False)
     # slides: promote, statistics
     slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides")
     slide_partner_ids = fields.One2many('slide.slide.partner', 'channel_id', string="Slide User Data", groups='website.group_website_publisher')

@@ -6,8 +6,9 @@
         <field name="inherit_id" ref="website_slides.view_slide_channel_form"/>
         <field name="arch" type="xml">
     		<xpath expr="//notebook" position="inside">
-                <page string="Forum">
+                <page string="Communication">
                     <group>
+                        <field name="allow_comment"/>
                         <field name="forum_id"/>
                     </group>
                 </page>
