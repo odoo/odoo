@@ -19,13 +19,13 @@ from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
 
 
-class SlideUsersRelation(models.Model):
-    _name = 'slide.users'
-    _description = 'Slide / Users decorated m2m'
-    _table = 'slide_users'
+class SlidePartnerRelation(models.Model):
+    _name = 'slide.slide.partner'
+    _description = 'Slide / Partner decorated m2m'
+    _table = 'slide_slide_partner'
 
     slide_id = fields.Many2one('slide.slide', index=True, required=True)
-    user_id = fields.Many2one('res.users', index=True, required=True)
+    partner_id = fields.Many2one('res.partner', index=True, required=True)
     vote = fields.Integer('Vote', default=0)
 
 
@@ -111,9 +111,9 @@ class Slide(models.Model):
     image_medium = fields.Binary('Medium', compute="_get_image", store=True, attachment=True)
     image_thumb = fields.Binary('Thumbnail', compute="_get_image", store=True, attachment=True)
     # subscribers
-    user_ids = fields.Many2many('res.users', 'slide_users', 'slide_id', 'user_id',
-                                string='Subscribers', groups='base.group_system')
-    slide_user_ids = fields.One2many('slide.users', 'slide_id', string='Subscribers information', groups='base.group_system')
+    partner_ids = fields.Many2many('res.partner', 'slide_slide_partner', 'slide_id', 'partner_id',
+                                   string='Subscribers', groups='base.group_website_publisher')
+    slide_partner_ids = fields.One2many('slide.slide.partner', 'slide_id', string='Subscribers information', groups='base.group_website_publisher')
     # content
     slide_type = fields.Selection([
         ('infographic', 'Infographic'),
@@ -156,21 +156,21 @@ class Slide(models.Model):
         for record in self:
             record.total_views = record.slide_views + record.embed_views
 
-    @api.depends('slide_user_ids.vote')
+    @api.depends('slide_partner_ids.vote')
     def _compute_user_info(self):
         slide_data = dict.fromkeys(self.ids, dict({'likes': 0, 'dislikes': 0, 'user_vote': False}))
-        slide_users = self.env['slide.users'].sudo().search([
+        slide_partners = self.env['slide.slide.partner'].sudo().search([
             ('slide_id', 'in', self.ids)
         ])
-        for slide_user in slide_users:
-            if slide_user.vote == 1:
-                slide_data[slide_user.slide_id.id]['likes'] += 1
-                if slide_user.user_id == self.env.user:
-                    slide_data[slide_user.slide_id.id]['user_vote'] = 1
-            elif slide_user.vote == -1:
-                slide_data[slide_user.slide_id.id]['dislikes'] += 1
-                if slide_user.user_id == self.env.user:
-                    slide_data[slide_user.slide_id.id]['user_vote'] = -1
+        for slide_partner in slide_partners:
+            if slide_partner.vote == 1:
+                slide_data[slide_partner.slide_id.id]['likes'] += 1
+                if slide_partner.partner_id == self.env.user.partner_id:
+                    slide_data[slide_partner.slide_id.id]['user_vote'] = 1
+            elif slide_partner.vote == -1:
+                slide_data[slide_partner.slide_id.id]['dislikes'] += 1
+                if slide_partner.partner-id == self.env.user.partner_id:
+                    slide_data[slide_partner.slide_id.id]['user_vote'] = -1
         for slide_sudo in self.sudo():
             slide_sudo.update(slide_data[slide_sudo.id])
 
@@ -340,24 +340,24 @@ class Slide(models.Model):
           :param upvote: if True, is a like; if False, is a dislike
         """
         self_sudo = self.sudo()
-        SlideUsersSudo = self.env['slide.users'].sudo()
-        slide_users = SlideUsersSudo.search([
+        SlidePartnerSudo = self.env['slide.slide.partner'].sudo()
+        slide_partners = SlidePartnerSudo.search([
             ('slide_id', 'in', self.ids),
-            ('user_id', '=', self.env.uid)
+            ('partner_id', '=', self.env.user.partner_id.id)
         ])
-        new_slides = self_sudo - slide_users.mapped('slide_id')
+        new_slides = self_sudo - slide_partners.mapped('slide_id')
 
-        for slide_user in slide_users:
+        for slide_partner in slide_partners:
             if upvote:
-                new_vote = 0 if slide_user.vote == -1 else 1
+                new_vote = 0 if slide_partner.vote == -1 else 1
             else:
-                new_vote = 0 if slide_user.vote == 1 else -1
-            slide_user.vote = new_vote
+                new_vote = 0 if slide_partner.vote == 1 else -1
+            slide_partner.vote = new_vote
 
         for new_slide in new_slides:
             new_vote = 1 if upvote else -1
             new_slide.write({
-                'slide_user_ids': [(0, 0, {'vote': new_vote, 'user_id': self.env.uid})]
+                'slide_partner_ids': [(0, 0, {'vote': new_vote, 'partner_id': self.env.user.partner_id.id})]
             })
 
     # --------------------------------------------------
