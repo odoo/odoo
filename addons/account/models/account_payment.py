@@ -800,7 +800,7 @@ class account_payment(models.Model):
             name = _('Transfer to %s') % self.destination_journal_id.name
         vals = {
             'name': name,
-            'account_id': self.payment_type in ('outbound','transfer') and self.journal_id.default_debit_account_id.id or self.journal_id.default_credit_account_id.id,
+            'account_id': self.payment_type in ('inbound','transfer') and self.journal_id.default_debit_account_id.id or self.journal_id.default_credit_account_id.id,
             'journal_id': self.journal_id.id,
             'currency_id': self.currency_id != self.company_id.currency_id and self.currency_id.id or False,
         }
