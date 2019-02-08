@@ -69,7 +69,7 @@ class Channel(models.Model):
         'res.partner', 'slide_channel_partner', 'channel_id', 'partner_id',
         string='Members', help="All members of the channel.")
     is_member = fields.Boolean(string='Is Member', compute='_compute_is_member')
-    channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='base.group_system')
+    channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='website.group_website_publisher')
     enroll_msg = fields.Html(
         'Enroll Message', help="Message explaining the enroll process",
         default=False, translate=html_translate, sanitize_attributes=False)
