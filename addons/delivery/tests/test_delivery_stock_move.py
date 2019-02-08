@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 
 @tagged('post_install', '-at_install')
@@ -38,12 +38,15 @@ class StockMoveInvoice(AccountingTestCase):
                 'product_uom': self.product_uom_kgm.id,
                 'price_unit': 750.00,
             })],
-            'carrier_id': self.normal_delivery.id
         })
 
         # I add delivery cost in Sales order
-        self.sale_prepaid.get_delivery_price()
-        self.sale_prepaid.set_delivery_line()
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': self.sale_prepaid.id,
+            'default_carrier_id': self.normal_delivery.id,
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
 
         # I confirm the SO.
         self.sale_prepaid.action_confirm()

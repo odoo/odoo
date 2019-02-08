@@ -540,16 +540,18 @@
                                     </templates>
                                 </kanban>
                             </field>
-                            <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
-                                <field name="amount_untaxed" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                                <field name="amount_tax" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
-                                    <label for="amount_total" />
-                                </div>
-                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                            <group name="note_group">
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                    <field name="amount_untaxed" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                    <field name="amount_tax" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                        <label for="amount_total" />
+                                    </div>
+                                    <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                                <field name="note" class="oe_inline" placeholder="Terms and conditions... (note: you can setup default ones in the Configuration menu)"/>
+                                <div class="oe_clear"/>
                             </group>
-                            <field name="note" class="oe_inline" placeholder="Terms and conditions... (note: you can setup default ones in the Configuration menu)"/>
-                            <div class="oe_clear"/>
                         </page>
                         <page string="Other Information" name="other_information">
                             <group>

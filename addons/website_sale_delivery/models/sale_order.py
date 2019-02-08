@@ -67,9 +67,15 @@ class SaleOrder(models.Model):
                 self.write({'carrier_id': carrier.id})
             self._remove_delivery_line()
             if carrier:
-                self.get_delivery_price()
-                if self.delivery_rating_success:
-                    self.set_delivery_line()
+                res = carrier.rate_shipment(self)
+                if res.get('success'):
+                    self.set_delivery_line(carrier, res['price'])
+                    self.delivery_rating_success = True
+                    self.delivery_message = res['warning_message']
+                else:
+                    self.set_delivery_line(carrier, 0.0)
+                    self.delivery_rating_success = False
+                    self.delivery_message = res['error_message']
 
         return bool(carrier)
 
