@@ -541,6 +541,7 @@
                     <field name="stage_id" options='{"group_by_tooltip": {"legend_priority": "Use of stars"}}'/>
                     <field name="user_id"/>
                     <field name="user_email"/>
+                    <field name="partner_id"/>
                     <field name="sequence"/>
                     <field name="date_deadline"/>
                     <field name="message_needaction_counter"/>
@@ -565,7 +566,8 @@
                                             <field name="project_id" invisible="context.get('default_project_id', False)"/>
                                             <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                             <span t-attf-class="#{red || ''}"><i><field name="date_deadline"/></i></span>
-                                            <t t-if="record.email_from.raw_value"><span><field name="email_from"/></span></t>
+                                            <t t-if="record.partner_id.value"><span><field name="partner_id"/></span></t>
+                                            <t t-else="record.email_from.raw_value"><span><field name="email_from"/></span></t>
                                         </small>
                                     </div>
                                     <div class="o_dropdown_kanban dropdown" groups="base.group_user">
