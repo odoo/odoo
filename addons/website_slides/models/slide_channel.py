@@ -14,10 +14,6 @@ class ChannelUsersRelation(models.Model):
     _table = 'slide_channel_partner'
 
     channel_id = fields.Many2one('slide.channel', index=True, required=True)
-    state = fields.Selection([
-        ('draft', 'Waiting confirmation'),
-        ('confirmed', 'Confirmed'),
-        ('canceled', 'Canceled')], default='draft', string='Member status')
     partner_id = fields.Many2one('res.partner', index=True, required=True)
 
 
@@ -74,14 +70,10 @@ class Channel(models.Model):
         ('public', 'Public'),
         ('invite', 'Invite')],
         default='public', required=True)
-    # members and access
     partner_ids = fields.Many2many(
         'res.partner', 'slide_channel_partner', 'channel_id', 'partner_id',
-        string='Members', help="All participants to the channel whatever their state.")
-    member_ids = fields.One2many(
-        comodel_name='res.partner', compute='_compute_member_ids', search='_search_member_ids',
-        string='Confirmed Members')
-    is_member = fields.Boolean(string='Is Member', compute='_compute_member_ids')
+        string='Members', help="All members of the channel.")
+    is_member = fields.Boolean(string='Is Member', compute='_compute_is_member')
     channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='base.group_system')
     enroll_msg = fields.Html(
         'Enroll Message', help="Message explaining the enroll process",
@@ -107,11 +99,10 @@ class Channel(models.Model):
                     limit=1, order=self._order_by_strategy[record.promote_strategy])
                 record.promoted_slide_id = slides and slides[0] or False
 
-    @api.depends('channel_partner_ids.partner_id', 'channel_partner_ids.state')
+    @api.depends('channel_partner_ids.partner_id')
     @api.model
-    def _compute_member_ids(self):
+    def _compute_is_member(self):
         channel_partners = self.env['slide.channel.partner'].sudo().search([
-            ('state', '=', 'confirmed'),
             ('channel_id', 'in', self.ids),
         ])
         result = dict()
@@ -120,14 +111,6 @@ class Channel(models.Model):
         for channel in self:
             channel.valid_channel_partner_ids = result.get(channel.id, False)
             channel.is_member = self.env.user.partner_id.id in channel.valid_channel_partner_ids if channel.valid_channel_partner_ids else False
-
-    @api.model
-    def _search_member_ids(self, operator, operand):
-        assert operator != "not in", "Do not search with 'not in'"
-        members = self.env['slide.channel.partner'].sudo().search([
-            ('state', '=', 'confirmed'),
-            ('partner_id', operator, operand)])
-        return [('id', 'in', [m.channel_id.id for m in members])]
 
     @api.depends('slide_ids.slide_type', 'slide_ids.website_published')
     def _count_presentations(self):
@@ -191,8 +174,7 @@ class Channel(models.Model):
         # Ensure creator is member of its channel it is easier for him to manage it
         if vals.get('visibility') == 'invite' and not vals.get('channel_partner_ids'):
             vals['channel_partner_ids'] = [(0, 0, {
-                'partner_id': self.env.user.partner_id.id,
-                'state': 'confirmed',
+                'partner_id': self.env.user.partner_id.id
             })]
         return super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals)
 

@@ -38,7 +38,7 @@
             <field name="model_id" ref="model_slide_slide"/>
             <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
             <field name="domain_force">['&amp;',
-    '|', ('is_preview', '=', True), ('channel_id.member_ids', '=', user.partner_id.id),
+    '|', ('is_preview', '=', True), ('channel_id.partner_ids', '=', user.partner_id.id),
     '&amp;', ('channel_id.website_published', '=', True), ('website_published', '=', True)]</field>
         </record>
 
