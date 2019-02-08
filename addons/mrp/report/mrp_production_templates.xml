@@ -25,11 +25,6 @@
                             <strong>Responsible:</strong><br/>
                             <span t-field="o.user_id"/>
                         </div>
-                        <div class="col-3">
-                            <strong>Scheduled Date:</strong><br/>
-                            <span t-field="o.date_planned_start"/>
-                            <span t-if="o.date_planned_finished"> - <span t-field="o.date_planned_finished"/></span>
-                        </div>
                     </div>
 
                     <div class="row mt32 mb32">
@@ -41,11 +36,6 @@
                             <strong>Quantity to Produce:</strong><br/>
                             <span t-field="o.product_qty"/>
                             <span t-field="o.product_uom_id.name" groups="uom.group_uom"/>
-                        </div>
-                        <div class="col-3">
-                            <strong>Printing date:</strong><br/>
-                            <span t-esc="time.strftime('%Y-%m-%d')"
-                                  t-options='{"widget": "date"}'/>
                         </div>
                     </div>
 
@@ -81,65 +71,33 @@
                     </h3>
 
                     <table class="table table-sm" t-if="o.move_raw_ids">
-                        <t t-set="has_location" t-value="any(o.move_raw_ids.filtered(lambda x: x.move_line_ids.filtered(lambda x: x.location_id.id)))" groups="stock.group_stock_multi_locations"/>
-                        <t t-set="has_serial_number" t-value="any(o.move_raw_ids.filtered(lambda x: x.move_line_ids.filtered(lambda x: x.lot_id or x.lot_name)))" groups="stock.group_production_lot"/>
                         <t t-set="has_product_barcode" t-value="any(o.move_raw_ids.filtered(lambda x: x.product_id.barcode))"/>
-                        <t t-set="has_product_available" t-value="any(o.move_raw_ids.filtered(lambda x: x.move_line_ids.filtered(lambda x: x.product_qty)))"/>
-                        <t t-if="o.state=='done'">
-                            <t t-set="has_product_available" t-value="any(o.move_raw_ids.filtered(lambda x: x.move_line_ids.filtered(lambda x: x.qty_done)))"/>
-                        </t>
                         <thead>
-                            <tr t-if="has_product_available">
+                            <tr>
                                 <th>Product</th>
-                                <th>Quantity</th>
-                                <th><span t-if="has_location">From</span></th>
-                                <th t-if="has_serial_number" width="15%">Lot/Serial barcode</th>
+                                <th t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">Quantity</th>
                                 <th t-if="has_product_barcode" width="15%" class="text-center">Barcode</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-if="has_product_available and o.move_raw_ids" >
-                                <t t-set="lines" t-value="o.move_raw_ids"/>
-                                <t t-foreach="lines" t-as="line">
-                                    <t t-set="move_lines" t-value="line.move_line_ids.filtered(lambda x: x.state != 'done' and x.product_qty)"/>
-                                    <t t-if="o.state == 'done'">
-                                        <t t-set="move_lines" t-value="line.move_line_ids.filtered(lambda x: x.state == 'done' and x.qty_done)"/>
-                                    </t>
-                                    <t t-foreach="move_lines" t-as="ml">
-                                        <tr>
-                                            <td>
-                                                <span t-field="line.product_id"/>
-                                            </td>
-                                            <td>
-                                                <span t-esc="ml.product_uom_qty" t-if="ml.state !='done'"/>
-                                                <span t-esc="ml.qty_done"  t-if="ml.state =='done'"/>
-                                                <span t-field="ml.product_uom_id" groups="uom.group_uom"/>
-                                            </td>
-                                            <td>
-                                                <span t-if="has_location">
-                                                    <span t-field="ml.location_id"/>
-                                                </span>
-                                            </td>
-                                            <td t-if="has_serial_number" width="15%">
-                                                <t t-if="has_serial_number and (ml.lot_id or ml.lot_name)">
-                                                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', ml.lot_id.name, 600, 100)" style="width:100%;height:35px" alt="Barcode"/>
-                                                </t>
-                                            </td>
-                                            <td t-if="has_product_barcode" width="15%" class="text-center">
-                                                <t t-if="line.product_id.barcode">
-                                                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', line.product_id.barcode, 600, 100)" style="width:100%;height:35px" alt="Barcode"/>
-                                                </t>
-                                            </td>
-                                        </tr>
-                                    </t>
-                                </t>
+                            <t t-if="o.move_raw_ids">
+                                <tr t-foreach="o.move_raw_ids" t-as="raw_line">
+                                    <td>
+                                        <span t-field="raw_line.product_id"/>
+                                    </td>
+                                    <td t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">
+                                        <span t-esc="raw_line.product_uom_qty"/>
+                                        <span t-field="raw_line.product_uom" groups="uom.group_uom"/>
+                                    </td>
+                                    <td t-if="has_product_barcode" width="15%" class="text-center">
+                                        <t t-if="raw_line.product_id.barcode">
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', raw_line.product_id.barcode, 600, 100)" style="width:100%;height:35px" alt="Barcode"/>
+                                        </t>
+                                    </td>
+                                </tr>
                             </t>
                         </tbody>
                     </table>
-                    <t t-set="has_product_reserved" t-value="o.move_raw_ids.filtered(lambda x: x.product_uom_qty != x.reserved_availability)"/>
-                    <p t-if="o.state !='done' and (not has_product_available or has_product_reserved)" class="fa fa-exclamation-triangle">
-                        All components could not be reserved. Click on the "Check Availability button" to try to reserve components.
-                    </p>
                     <div class="oe_structure"/>
                 </div>
             </t>
