@@ -77,13 +77,14 @@ class AuthorizeController(http.Controller):
             'id': token.id,
             'short_name': token.short_name,
             '3d_secure': False,
-            'verified': False,
+            'verified': True, #Authorize.net does a transaction type of Authorization Only
+                              #As Authorize.net already verify this card, we do not verify this card again.
         }
-
-        if verify_validity != False:
-            token.validate()
-            res['verified'] = token.verified
-
+        #token.validate() don't work with Authorize.net.
+        #Payments made via Authorize.net are settled and allowed to be refunded only on the next day.
+        #https://account.authorize.net/help/Miscellaneous/FAQ/Frequently_Asked_Questions.htm#Refund
+        #<quote>The original transaction that you wish to refund must have a status of Settled Successfully.
+        #You cannot issue refunds against unsettled, voided, declined or errored transactions.</quote>
         return res
 
     @http.route(['/payment/authorize/s2s/create'], type='http', auth='public')

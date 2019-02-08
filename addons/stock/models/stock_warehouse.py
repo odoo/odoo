@@ -467,6 +467,7 @@ class Warehouse(models.Model):
             'name': self._format_routename(route_type=route_type),
             'product_categ_selectable': True,
             'product_selectable': False,
+            'warehouse_selectable': True,
             'company_id': self.company_id.id,
             'sequence': 10,
         }
