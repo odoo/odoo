@@ -25,11 +25,6 @@ class Channel(models.Model):
     _description = 'Slide Channel'
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin', 'rating.mixin']
     _order = 'sequence, id'
-    _order_by_strategy = {
-        'most_viewed': 'total_views desc',
-        'most_voted': 'likes desc',
-        'latest': 'date_published desc',
-    }
 
     def _default_access_token(self):
         return str(uuid.uuid4())
@@ -96,7 +91,7 @@ class Channel(models.Model):
             elif record.promote_strategy:
                 slides = self.env['slide.slide'].search(
                     [('website_published', '=', True), ('channel_id', '=', record.id)],
-                    limit=1, order=self._order_by_strategy[record.promote_strategy])
+                    limit=1, order=self.env['slide.slide']._order_by_strategy[record.promote_strategy])
                 record.promoted_slide_id = slides and slides[0] or False
 
     @api.depends('channel_partner_ids.partner_id')
@@ -205,29 +200,29 @@ class Channel(models.Model):
     # Rating Mixin API
     # ---------------------------------------------------------
 
-    def action_add_member(self, targe_partner=False, **member_values):
-        if not targe_partner:
-            targe_partner = self.env.user.partner_id
+    def action_add_member(self, target_partner=False, **member_values):
+        if not target_partner:
+            target_partner = self.env.user.partner_id
         existing = self.env['slide.channel.partner'].sudo().search([
             ('channel_id', 'in', self.ids),
-            ('partner_id', '=', targe_partner.id)
+            ('partner_id', '=', target_partner.id)
         ])
-        to_join = (self - existing.mapped('channel_id'))._filter_add_member(targe_partner, **member_values)
+        to_join = (self - existing.mapped('channel_id'))._filter_add_member(target_partner, **member_values)
         if to_join:
             self.env['slide.channel.partner'].sudo().create([
-                dict(channel_id=channel.id, partner_id=targe_partner.id, **member_values)
+                dict(channel_id=channel.id, partner_id=target_partner.id, **member_values)
                 for channel in to_join
             ])
             return to_join
         return False
 
-    def _filter_add_member(self, targe_partner, **member_values):
+    def _filter_add_member(self, target_partner, **member_values):
         allowed = self.filtered(lambda channel: channel.visibility == 'public')
         on_invite = self.filtered(lambda channel: channel.visibility == 'invite')
         if on_invite:
             try:
                 on_invite.check_access_rights('write')
-                on_invite.check_access_rules('write')
+                on_invite.check_access_rule('write')
             except:
                 pass
             else:

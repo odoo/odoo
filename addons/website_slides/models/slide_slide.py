@@ -79,6 +79,11 @@ class Slide(models.Model):
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
     _description = 'Slides'
     _mail_post_access = 'read'
+    _order_by_strategy = {
+        'most_viewed': 'total_views desc',
+        'most_voted': 'likes desc',
+        'latest': 'date_published desc',
+    }
 
     _PROMOTIONAL_FIELDS = [
         '__last_update', 'name', 'image_thumb', 'image_medium', 'slide_type', 'total_views', 'category_id',
