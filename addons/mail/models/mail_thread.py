@@ -601,7 +601,7 @@ class MailThread(models.AbstractModel):
         and initial values, return a structure that is a tuple containing :
 
          - a set of updated column names
-         - a list of changes (initial value, new value, column name, column info) """
+         - a list of ORM (0, 0, values) commands to create 'mail.tracking.value' """
         self.ensure_one()
         changes = set()  # contains onchange tracked fields that changed
         tracking_value_ids = []
