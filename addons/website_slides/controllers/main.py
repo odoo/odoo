@@ -183,6 +183,23 @@ class WebsiteSlides(http.Controller):
 
         return request.render('website_slides.home', values)
 
+    @http.route(['/slides/channel/add'], type='http', auth='user', methods=['POST'], website=True)
+    def slide_channel_create(self, *args, **kw):
+        # `tag_ids` is a string representing a list of int with coma. i.e.: '2,5,7'
+        # We don't want to allow user to create tags and tag groups on the fly.
+        tag_ids = []
+        if kw.get('tag_ids'):
+            tag_ids = [int(item) for item in kw['tag_ids'].split(',')]
+
+        channel = request.env['slide.channel'].create({
+            'name': kw['name'],
+            'description': kw.get('description'),
+            'channel_type': kw.get('channel_type', 'documentation'),
+            'user_id': request.env.user.id,
+            'tag_ids': [(6, 0, tag_ids)],
+        })
+        return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
+
     # --------------------------------------------------
     # SLIDE.SLIDE CONTOLLERS
     # --------------------------------------------------
@@ -318,6 +335,14 @@ class WebsiteSlides(http.Controller):
             _logger.error(e)
             return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
         return {'url': "/slides/slide/%s" % (slide.id)}
+
+    @http.route(['/slides/channel/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
+    def slide_channel_tag_search_read(self, fields, domain):
+        can_create = request.env['slide.channel.tag'].check_access_rights('create', raise_exception=False)
+        return {
+            'read_results': request.env['slide.channel.tag'].search_read(domain, fields),
+            'can_create': can_create,
+        }
 
     @http.route(['/slides/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_tag_search_read(self, fields, domain):
