@@ -32,6 +32,9 @@ var StatementAction = AbstractAction.extend({
         load_more: '_onLoadMore',
         reload: 'reload',
     },
+    events: {
+        'change .reconciliation_search_input': '_onSearch',
+    },
     config: _.extend({}, AbstractAction.prototype.config, {
         // used to instantiate the model
         Model: ReconciliationModel.StatementModel,
@@ -40,7 +43,7 @@ var StatementAction = AbstractAction.extend({
         // used to instantiate each widget line
         LineRenderer: ReconciliationRenderer.LineRenderer,
         // used context params
-        params: ['statement_ids'],
+        params: ['statement_line_ids'],
         // number of statements/partners/accounts to display
         defaultDisplayQty: 10,
         // number of moves lines displayed in 'match' mode
@@ -66,12 +69,12 @@ var StatementAction = AbstractAction.extend({
         // Adding values from the context is necessary to put this information in the url via the action manager so that
         // you can retrieve it if the person shares his url or presses f5
         _.each(params.params, function (value, name) {
-            params.context[name] = name.indexOf('_ids') !== -1 ? _.map((value+'').split(), parseFloat) : value;
+            params.context[name] = name.indexOf('_ids') !== -1 ? _.map((value+'').split(','), parseFloat) : value;
         });
         params.params = {};
         _.each(this.config.params, function (name) {
             if (params.context[name]) {
-                params.params[name] = name.indexOf('_ids') !== -1 && _.isArray(params.context[name]) ? params.context[name].join() : params.context[name];
+                params.params[name] = params.context[name];
             }
         });
     },
@@ -248,6 +251,16 @@ var StatementAction = AbstractAction.extend({
                 });
             }
         });
+    },
+    
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSearch: function (ev) {
+        var self = this;
+        ev.stopPropagation();
+        this.reload();
     },
 
     _onActionPartialAmount: function(event) {

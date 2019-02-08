@@ -128,6 +128,24 @@ class AccountInvoice(models.Model):
         else:
             self.reconciled = False
 
+    @api.multi
+    def _get_domain_edition_mode_available(self):
+        self.ensure_one()
+        domain = self.env['account.move.line']._get_domain_for_edition_mode()
+        domain += ['|',('move_id.partner_id', '=?', self.partner_id.id),('move_id.partner_id', '=', False)]
+        if self.type in ('out_invoice', 'in_refund'):
+            domain.append(('balance', '=', -self.residual))
+        else:
+            domain.append(('balance', '=', self.residual))
+        return domain
+
+    @api.multi
+    def _get_edition_mode_available(self):
+        for r in self:
+            domain = r._get_domain_edition_mode_available()
+            domain2 = [('state', '=', 'open'),('residual', '=', r.residual),('type', '=', r.type)]
+            r.edition_mode_available = (0 < self.env['account.move.line'].search_count(domain) < 5) and self.env['account.invoice'].search_count(domain2) < 5 and r.state == 'open'
+
     @api.one
     def _get_outstanding_info_JSON(self):
         self.outstanding_credits_debits_widget = json.dumps(False)
@@ -364,6 +382,7 @@ class AccountInvoice(models.Model):
         related='partner_id.commercial_partner_id', store=True, readonly=True,
         help="The commercial entity that will be used on Journal Entries for this invoice")
 
+    edition_mode_available = fields.Boolean(compute='_get_edition_mode_available', groups='account.group_account_invoice')
     outstanding_credits_debits_widget = fields.Text(compute='_get_outstanding_info_JSON', groups="account.group_account_invoice")
     payments_widget = fields.Text(compute='_get_payment_info_JSON', groups="account.group_account_invoice")
     has_outstanding = fields.Boolean(compute='_get_outstanding_info_JSON', groups="account.group_account_invoice")
@@ -609,6 +628,22 @@ class AccountInvoice(models.Model):
             return self.env.ref('account.account_invoices').report_action(self)
         else:
             return self.env.ref('account.account_invoices_without_payment').report_action(self)
+    
+    @api.multi
+    def action_reconcile_to_check(self, params):
+        self.ensure_one()
+        domain = self._get_domain_edition_mode_available()
+        ids = self.env['account.move.line'].search(domain).mapped('statement_line_id').ids
+        action_context = {'show_mode_selector': False, 'company_ids': self.mapped('company_id').ids}
+        action_context.update({'edition_mode': True})
+        action_context.update({'statement_line_ids': ids})
+        action_context.update({'partner_id': self.partner_id.id})
+        action_context.update({'partner_name': self.partner_id.name})
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'bank_statement_reconciliation_view',
+            'context': action_context,
+        }
 
     @api.multi
     def action_invoice_sent(self):

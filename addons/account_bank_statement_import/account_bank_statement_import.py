@@ -48,7 +48,7 @@ class AccountBankStatementImport(models.TransientModel):
         # Prepare statement data to be used for bank statements creation
         stmts_vals = self._complete_stmts_vals(stmts_vals, journal, account_number)
         # Create the bank statements
-        statement_ids, notifications = self._create_bank_statements(stmts_vals)
+        statement_line_ids, notifications = self._create_bank_statements(stmts_vals)
         # Now that the import worked out, set it as the bank_statements_source of the journal
         if journal.bank_statements_source != 'file_import':
             # Use sudo() because only 'account.group_account_manager'
@@ -56,15 +56,13 @@ class AccountBankStatementImport(models.TransientModel):
             # must be able to import bank statement files
             journal.sudo().bank_statements_source = 'file_import'
         # Finally dispatch to reconciliation interface
-        action = self.env.ref('account.action_bank_reconcile_bank_statements')
         return {
-            'name': action.name,
-            'tag': action.tag,
-            'context': {
-                'statement_ids': statement_ids,
-                'notifications': notifications
-            },
             'type': 'ir.actions.client',
+            'tag': 'bank_statement_reconciliation_view',
+            'context': {'statement_line_ids': statement_line_ids,
+                        'company_ids': self.env.user.company_ids.ids,
+                        'notifications': notifications,
+            },
         }
 
     def _journal_creation_wizard(self, currency, account_number):
@@ -204,7 +202,7 @@ class AccountBankStatementImport(models.TransientModel):
         BankStatementLine = self.env['account.bank.statement.line']
 
         # Filter out already imported transactions and create statements
-        statement_ids = []
+        statement_line_ids = []
         ignored_statement_lines_import_ids = []
         for st_vals in stmts_vals:
             filtered_st_lines = []
@@ -223,8 +221,8 @@ class AccountBankStatementImport(models.TransientModel):
                 st_vals.pop('transactions', None)
                 # Create the statement
                 st_vals['line_ids'] = [[0, False, line] for line in filtered_st_lines]
-                statement_ids.append(BankStatement.create(st_vals).id)
-        if len(statement_ids) == 0:
+                statement_line_ids.extend(BankStatement.create(st_vals).line_ids.ids)
+        if len(statement_line_ids) == 0:
             raise UserError(_('You already have imported that file.'))
 
         # Prepare import feedback
@@ -240,4 +238,4 @@ class AccountBankStatementImport(models.TransientModel):
                     'ids': BankStatementLine.search([('unique_import_id', 'in', ignored_statement_lines_import_ids)]).ids
                 }
             }]
-        return statement_ids, notifications
+        return statement_line_ids, notifications

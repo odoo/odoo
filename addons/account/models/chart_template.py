@@ -986,6 +986,7 @@ class AccountReconcileModelTemplate(models.Model):
     ], string='Type', default='writeoff_button', required=True)
     auto_reconcile = fields.Boolean(string='Auto-validate',
         help='Validate the statement line automatically (reconciliation based on your rule).')
+    to_check = fields.Boolean(string='To Check', default=False, help='This matching rule is used when the user is not certain of all the informations of the counterpart.')
 
     # ===== Conditions =====
     match_journal_ids = fields.Many2many('account.journal', string='Journals',

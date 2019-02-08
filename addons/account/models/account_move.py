@@ -135,6 +135,7 @@ class AccountMove(models.Model):
     auto_reverse = fields.Boolean(string='Reverse Automatically', default=False, help='If this checkbox is ticked, this entry will be automatically reversed at the reversal date you defined.')
     reverse_date = fields.Date(string='Reversal Date', help='Date of the reverse accounting entry.')
     reverse_entry_id = fields.Many2one('account.move', String="Reverse entry", store=True, readonly=True)
+    to_check = fields.Boolean(string='To Check', default=False, help='If this checkbox is ticked, it means that the user was not sure of all the related informations at the time of the creation of the move and that the move needs to be checked again.')
     tax_type_domain = fields.Char(store=False, help='Technical field used to have a dynamic taxes domain on the form view.')
 
     @api.constrains('line_ids', 'journal_id', 'auto_reverse', 'reverse_date')
@@ -336,8 +337,14 @@ class AccountMove(models.Model):
 
     @api.multi
     def button_cancel(self):
+        AccountMoveLine = self.env['account.move.line']
+        excluded_move_ids = []
+
+        if self._context.get('edition_mode'):
+            excluded_move_ids = AccountMoveLine.search(AccountMoveLine._get_domain_for_edition_mode() + [('move_id', 'in', self.ids)]).mapped('move_id').ids
+
         for move in self:
-            if not move.journal_id.update_posted:
+            if not move.journal_id.update_posted and move.id not in excluded_move_ids:
                 raise UserError(_('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
             # We remove all the analytics entries for this journal
             move.mapped('line_ids.analytic_line_ids').unlink()
@@ -1382,6 +1389,14 @@ class AccountMoveLine(models.Model):
                 ids.append(aml.id)
         action['domain'] = [('id', 'in', ids)]
         return action
+
+    @api.model
+    def _get_domain_for_edition_mode(self):
+        return [
+            ('move_id.to_check', '=', True),
+            ('full_reconcile_id', '=', False),
+            ('statement_line_id', '!=', False),
+        ]
 
 
 class AccountPartialReconcile(models.Model):
