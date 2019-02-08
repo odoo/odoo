@@ -33,19 +33,10 @@ class TestAccess(common.SlidesCase):
         # if member -> can read
         membership = self.env['slide.channel.partner'].create({
             'channel_id': self.channel.id,
-            'state': 'confirmed',
             'partner_id': self.user_emp.partner_id.id,
         })
         self.channel.sudo(self.user_emp).read(['name'])
         self.slide.sudo(self.user_emp).read(['name'])
-
-        # unvalidated member -> cannot read
-        membership.write({
-            'state': 'draft',
-        })
-        self.channel.sudo(self.user_emp).read(['name'])
-        with self.assertRaises(AccessError):
-            self.slide.sudo(self.user_emp).read(['name'])
 
         # not member anymore -> cannot read
         membership.unlink()
@@ -98,7 +89,6 @@ class TestAccess(common.SlidesCase):
         # even members cannot see unpublished content
         self.env['slide.channel.partner'].create({
             'channel_id': self.channel.id,
-            'state': 'confirmed',
             'partner_id': self.user_emp.partner_id.id,
         })
         with self.assertRaises(AccessError):

@@ -259,7 +259,7 @@ class WebsiteSlides(http.Controller):
     def slide_channel_join(self, channel_id):
         if request.website.is_public_user():
             return {'error': 'public_user'}
-        joined = request.env['slide.channel'].browse(channel_id).action_add_member(state='confirmed')
+        joined = request.env['slide.channel'].browse(channel_id).action_add_member()
         if not joined:
             return {'error': 'join_done'}
         return joined.ids
