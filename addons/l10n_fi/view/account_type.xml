@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    
+        <record id="action_view_account_type_tree" model="ir.actions.act_window">
+            <field name="name">Account Types</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.account.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="account.view_account_type_search"/>
+        </record>
+        
+        <menuitem name="Account Types" id="menu_account_type" 
+            parent="account.account_account_menu"
+            sequence="40"
+            groups="base.group_no_one"
+            action="action_view_account_type_tree"/>
+
+        <record id="view_account_form_ext" model="ir.ui.view">
+            <field name="name">account.account.form</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_form" />
+            <field name="arch" type="xml">
+                <field name ="user_type_id" position="replace">
+                    <field name="user_type_id" options="{'no_create_edit': True, 'no_open': True}"/>
+                </field>
+            </field>
+        </record>
+        
+    </data>
+</openerp>
