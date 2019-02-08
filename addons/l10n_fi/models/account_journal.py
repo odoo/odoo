@@ -9,5 +9,9 @@ class AccountJournal(models.Model):
     invoice_reference_model = fields.Selection(selection_add=[
         ('fi', 'Finnish Standard Reference'),
         ('fi_rf', 'Finnish Creditor Reference (RF)'),
+<<<<<<< HEAD
     ], ondelete={'fi': lambda recs: recs.write({'invoice_reference_model': 'odoo'}),
                  'fi_rf': lambda recs: recs.write({'invoice_reference_model': 'odoo'})})
+=======
+    ])
+>>>>>>> a722e709668... temp
