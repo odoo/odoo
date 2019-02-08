@@ -69,7 +69,7 @@ WebClient.include({
                 var notificationID = self.call('notification', 'notify', {
                     Notification: CalendarNotification,
                     title: notif.title,
-                    text: notif.message,
+                    message: notif.message,
                     eventID: notif.event_id,
                 });
                 self.calendar_notif[notif.event_id] = notificationID;
