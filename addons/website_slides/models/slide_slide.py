@@ -83,6 +83,7 @@ class Slide(models.Model):
      - Document
      - Infographic
      - Video
+     - Webpage
 
     Slide has various statistics like view count, embed count, like, dislikes """
 
@@ -100,6 +101,10 @@ class Slide(models.Model):
         '__last_update', 'name', 'image_thumb', 'image_medium', 'slide_type', 'total_views', 'category_id',
         'channel_id', 'description', 'tag_ids', 'write_date', 'create_date',
         'website_published', 'website_url', 'website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
+
+    _sql_constraints = [
+        ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
+    ]
 
     # description
     name = fields.Char('Title', required=True, translate=True)
@@ -127,9 +132,10 @@ class Slide(models.Model):
         ('infographic', 'Infographic'),
         ('presentation', 'Presentation'),
         ('document', 'Document'),
+        ('webpage', 'Web Page'),
         ('video', 'Video')],
         string='Type', required=True,
-        default='document',
+        default='document', readonly=True,
         help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
     index_content = fields.Text('Transcript')
     datas = fields.Binary('Content', attachment=True)
@@ -137,6 +143,7 @@ class Slide(models.Model):
     document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
     link_ids = fields.One2many('slide.slide.link', 'slide_id', string="External URL for this slide")
     mime_type = fields.Char('Mime-type')
+    html_content = fields.Html("HTML Content", help="Custom HTML content for slides of type 'Web Page'.", translate=True)
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
     date_published = fields.Datetime('Publish Date')

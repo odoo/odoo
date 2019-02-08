@@ -114,10 +114,11 @@ class WebsiteSlides(http.Controller):
 
         if search:
             domain += [
-                '|', '|',
+                '|', '|', '|',
                 ('name', 'ilike', search),
                 ('description', 'ilike', search),
-                ('index_content', 'ilike', search)]
+                ('index_content', 'ilike', search),
+                ('html_content', 'ilike', search)]
             pager_args['search'] = search
         else:
             if category:

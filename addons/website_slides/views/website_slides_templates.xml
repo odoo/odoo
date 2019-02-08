@@ -182,6 +182,12 @@
                                 <span class="badge badge-pill" t-esc="header_object.nbr_infographics"/> Infographics
                             </a>
                         </li>
+                        <li t-if="header_object.nbr_webpages" class="nav-item">
+                            <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}/webpage"
+                                t-attf-class="nav-link#{slide_type == 'webpage' and ' active' or ''}">
+                                <span class="badge badge-pill" t-esc="header_object.nbr_webpages"/> Pages
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 <!-- Sort options -->
@@ -411,7 +417,10 @@
                         <div t-if="slide.slide_type == 'video' and slide.document_id" class="embed-responsive embed-responsive-16by9 embed-responsive-item mb8">
                             <t t-raw="slide.embed_code"/>
                         </div>
-                        <div class="row">
+                        <div t-if="slide.slide_type == 'webpage'" class="border border-light rounded">
+                            <div t-field="slide.html_content"/>
+                        </div>
+                        <div class="row mt-3">
                             <h4 t-field="slide.name" class="col-lg-6"/>
                             <div class="col-lg-6">
                                 <div clas="row">
