@@ -67,6 +67,7 @@ class Channel(models.Model):
         ('documentation', 'Documentation'), ('training', 'Training')],
         string="Course type", default="documentation", required=True)
     sequence = fields.Integer(default=10, help='Display order')
+    user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.uid)
     tag_ids = fields.Many2many(
         'slide.channel.tag', 'slide_channel_tag_rel', 'channel_id', 'tag_id',
         string='Tags', help='Used to categorize and filter displayed channels/courses')
