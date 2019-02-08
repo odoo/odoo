@@ -57,7 +57,7 @@ var LikeButton = Widget.extend({
                 self.$el.find('span.o_wslides_like_down span').text(data.dislikes);
             } else {
                 if (data.error === 'public_user') {
-                    self._popoverAlert(self.$el, _.str.sprintf(_t('Please <a href="/web?redirect=%s">login</a> to vote this slide'), (document.URL)));
+                    self._popoverAlert(self.$el, _.str.sprintf(_t('Please <a href="/web/login?redirect=%s">login</a> to vote this slide'), (document.URL)));
                 } else if (data.error === 'vote_done') {
                     self._popoverAlert(self.$el, _t('You have already voted for this slide'));
                 } else {

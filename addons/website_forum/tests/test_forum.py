@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from .common import KARMA, TestForumCommon
-from ..models.forum import KarmaError
+from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
 from odoo.exceptions import UserError, AccessError
 from odoo.tools import mute_logger
 from psycopg2 import IntegrityError

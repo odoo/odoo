@@ -707,9 +707,12 @@ class Field(MetaField('DummyField', (object,), {})):
         # add indirect dependencies from the dependencies found above
         seen = seen.union([self])
         for model, field, path in list(result):
-            # limitation: setting the inverse of an integer field F does not
-            # trigger the recomputation of fields that depend on F
-            if field.relational:
+            # Fields that depend on the inverse of a one2many do not explicitly
+            # depend on the one2many. This avoids useless recomputations when
+            # writing on the one2many without actually modifying it. Actual
+            # modifications do write on the inverse, and therefore trigger the
+            # expected recomputations.
+            if field.type in ('one2many', 'many2many'):
                 for inv_field in model._field_inverses[field]:
                     inv_model = model0.env[inv_field.model_name]
                     inv_path = None if path is None else path + [field.name]

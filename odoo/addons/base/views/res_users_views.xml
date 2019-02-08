@@ -342,7 +342,7 @@
                     </h1>
                     <button name="preference_change_password" type="object" string="Change password" class="oe_link"/>
                     <group name="preferences" col="4">
-                        <field name="lang" readonly="0"/>
+                        <field name="lang" readonly="0" placeholder="System (English)"/>
                         <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
                         <field name="tz_offset" invisible="1"/>
                         <field name="company_id" options="{'no_create': True}" readonly="0"

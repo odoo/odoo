@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <!--Ranks-->
+    <record id="rank_student" model="gamification.karma.rank">
+        <field name="name">Student</field>
+        <field name="description" type="html"><p>You begin to understand things ! Keep going!</p></field>
+        <field name="description_reach_next" type="html"><p>Keep going !</p></field>
+        <field name="karma_required">100</field>
+        <field name="image" type="base64" file="gamification/static/img/rank_student.png"/>
+    </record>
+
+    <record id="rank_bachelor" model="gamification.karma.rank">
+        <field name="name">Bachelor</field>
+        <field name="description" type="html"><p>Hey ! You're not so dumb after all !</p></field>
+        <field name="description_reach_next" type="html"><p>Keep going !</p></field>
+        <field name="karma_required">500</field>
+        <field name="image" type="base64" file="gamification/static/img/rank_bachelor.png"/>
+    </record>
+
+    <record id="rank_master" model="gamification.karma.rank">
+        <field name="name">Master</field>
+        <field name="description" type="html"><p>You're good ! Really Good !</p></field>
+        <field name="description_reach_next" type="html"><p>Keep going !</p></field>
+        <field name="karma_required">2000</field>
+        <field name="image" type="base64" file="gamification/static/img/rank_master.png"/>
+    </record>
+
+    <record id="rank_doctor" model="gamification.karma.rank">
+        <field name="name">Doctor</field>
+        <field name="description" type="html"><p>Ok, RESPECT !</p></field>
+        <field name="description_reach_next" type="html"><p>Keep going !</p></field>
+        <field name="karma_required">10000</field>
+        <field name="image" type="base64" file="gamification/static/img/rank_doctor.png"/>
+    </record>
+
+</data></odoo>

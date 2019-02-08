@@ -7,18 +7,13 @@ import re
 import uuid
 
 from datetime import datetime
-from werkzeug.exceptions import Forbidden
+from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import misc
 
 _logger = logging.getLogger(__name__)
-
-
-class KarmaError(Forbidden):
-    """ Karma-related error, used for forum and posts. """
-    pass
 
 
 class Forum(models.Model):
