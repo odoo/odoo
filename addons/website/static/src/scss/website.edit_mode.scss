@@ -6,17 +6,6 @@
 }
 
 .modal.o_theme_customize_modal {
-
-    &.o_theme_customize_loading {
-        pointer-events: none;
-
-        &::after {
-            content: "";
-            @include o-position-absolute(0, 0, 0, 0);
-            background-color: rgba(0, 0, 0, 0.2);
-        }
-    }
-
     .modal-dialog {
         @include o-position-absolute(0, 2%);
         width: 96%;
@@ -71,24 +60,39 @@
             + label {
                 @include o-position-absolute(0, 0, 0, 0);
                 width: auto;
-                background: transparent;
+                background: transparent !important;
             }
         }
 
         label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             width: 100%;
             min-height: 24px;
             margin: 0;
             padding: 8px;
             border: 2px solid transparent;
             background-color: $o-brand-lightsecondary;
+            text-align: center;
             font-size: 14px;
             line-height: 1;
             cursor: pointer;
 
+            &:hover::after {
+                content: "";
+                pointer-events: none;
+                @include o-position-absolute(0, 0, 0, 0);
+                background-color: rgba(0, 32, 64, 0.03);
+            }
+
             &.checked {
                 border-color: $o-brand-odoo;
                 color: $o-brand-odoo;
+            }
+
+            &.o_switch {
+                justify-content: flex-start;
             }
         }
 
@@ -103,57 +107,68 @@
             }
             $i: $i + 1;
         }
-    }
 
-    .o_theme_customize_color_previews {
-        h6, a {
-            font-size: 12px;
-            margin: 4px 0 0;
-        }
+        &.o_theme_customize_with_widget {
+            label {
+                justify-content: flex-start;
+                text-align: left;
 
-        .o_theme_customize_color {
-            > .o_color_preview {
-                position: relative;
-                display: inline-block;
-                width: 48px;
-                height: 27px;
-                border: 1px solid black;
-
-                &::before, &::after {
-                    content: "";
-                    @include o-position-absolute(0, 0, 0, 0);
-                }
-                &::before {
-                    background-image: url('/web_editor/static/src/img/transparent.png');
-                }
-                &::after {
-                    background-color: inherit;
+                &.checked {
+                    border-color: transparent;
+                    color: inherit;
                 }
             }
+        }
+    }
 
-            $palette: nth($o-color-palettes, $o-color-palette-number);
-            $-text-color: if(map-get($palette, 'text'), map-get($palette, 'text'), #212529); // BS default as fallback (TODO find real value)
-            $-h1-color: if(map-get($palette, 'h1'), map-get($palette, 'h1'), $-text-color);
-            $-h2-color: if(map-get($palette, 'h2'), map-get($palette, 'h2'), $-h1-color);
-            $-h3-color: if(map-get($palette, 'h3'), map-get($palette, 'h3'), $-h2-color);
-            $-h4-color: if(map-get($palette, 'h4'), map-get($palette, 'h4'), $-h3-color);
-            $-h5-color: if(map-get($palette, 'h5'), map-get($palette, 'h5'), $-h4-color);
-            $-h6-color: if(map-get($palette, 'h6'), map-get($palette, 'h6'), $-h5-color);
-            $-defaults: (
-                'body': white, // BS default as fallback (TODO find real value)
-                'text': $-text-color,
-                'h1': $-h1-color,
-                'h2': $-h2-color,
-                'h3': $-h3-color,
-                'h4': $-h4-color,
-                'h5': $-h5-color,
-                'h6': $-h6-color,
-            );
+    .o_theme_customize_color {
+        position: relative;
+        width: 30px;
+        height: 20px;
+        margin-left: auto;
+        border: 1px solid black;
 
-            @each $name, $value in map-merge($-defaults, o-map-omit($palette)) {
-                &.o_theme_customize_color_#{$name} > .o_color_preview {
-                    background-color: $value;
-                }
+        &::before, &::after {
+            content: "";
+            @include o-position-absolute(0, 0, 0, 0);
+        }
+        &::before {
+            background-image: url('/web_editor/static/src/img/transparent.png');
+        }
+        &::after {
+            background-color: inherit;
+        }
+    }
+
+    .o_theme_customize_input {
+        flex: 1 1 auto;
+        text-align: right;
+
+        .fa-edit {
+            visibility: hidden;
+            color: $o-brand-primary;
+        }
+    }
+    .o_theme_customize_option:hover .o_theme_customize_input .fa-edit {
+        visibility: visible;
+    }
+
+    .o_theme_customize_active_input {
+        @include o-position-absolute(0, 0, 0, 0);
+        width: auto;
+        padding: 3px;
+
+        > * {
+            height: 100% !important;
+
+            &.form-control {
+                background: white !important;
+            }
+
+            &.form-control, .btn {
+                padding: 2px 8px !important;
+                text-align: right !important;
+                font-size: $font-size-sm !important;
             }
         }
     }

@@ -4,6 +4,9 @@
 <template id="_assets_primary_variables" inherit_id="portal._assets_primary_variables">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/primary_variables.scss"/>
+
+        <!-- Those files will be automatically edited by users -->
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/user_values.scss"/>
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/user_color_palette.scss"/>
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/user_theme_color_palette.scss"/>
     </xpath>
@@ -297,7 +300,7 @@
     </div>
 </template>
 
-<template id="layout_logo_show" inherit_id="website.layout" customize_show="True" name="Show Logo">
+<template id="layout_logo_show" inherit_id="website.layout" name="Show Logo">
     <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
         <a href="/" class="navbar-brand logo">
             <span t-field="res_company.logo" t-options="{'widget': 'image'}" role="img" t-att-aria-label="'Logo of %s' % res_company.name" t-att-title="res_company.name" />
@@ -305,7 +308,7 @@
     </xpath>
 </template>
 
-<template id="affix_top_menu" inherit_id="website.layout" customize_show="True" name="Fixed Top Menu">
+<template id="affix_top_menu" inherit_id="website.layout" name="Fixed Top Menu">
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="#{'o_affix_enabled'}" separator=" "/>
     </xpath>
@@ -316,10 +319,6 @@
         <attribute name="t-attf-class" add="#{'o_no_autohide_menu'}" separator=" "/>
     </xpath>
 </template>
-
-<record id="portal.portal_show_sign_in" model="ir.ui.view">
-    <field name="customize_show" eval="True"/>
-</record>
 
 <!-- Features template -->
 <template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout" priority="20">
@@ -448,7 +447,7 @@
         -> string = tab's nav text
         -> title = tab's heading
 
-    Allowed tags in the <content/> elements:
+    In the <content/> elements:
 
     <opt>: Declares a new toggle option
         -> id (optional) = an ID to associate to the option
@@ -476,12 +475,61 @@
     <list>: Declares a subset of options showed as a list
         -> string = list's title
         -> data-col (optional, default 6) = bootstrap column size for the list
+
+    Other elements will be ignored and their children will be processed as if
+    that element was omitted, except that those children will be considered as
+    in a new set of option. That allows to wrap an option in a fake element to
+    indicate it is a standalone option for example.
+
+    Note: if an option is the only one of its group, a toggle element will be
+    rendered.
 -->
 <template id="theme_customize">
     <div>
         <!-- Color options -->
         <content id="theme_customize_content_colors" string="Colors" title="Choose the theme colors">
-            <opt data-widget="color_palette" data-col="12"/>
+            <list string="Main colors">
+                <opt data-widget="color" data-color-type="theme" data-color="primary" string="Primary"/>
+                <opt data-widget="color" data-color-type="theme" data-color="secondary" string="Secondary"/>
+                <opt data-widget="color" data-color-type="theme" data-color="alpha" string="Primary"/>
+                <opt data-widget="color" data-color-type="theme" data-color="beta" string="Secondary"/>
+                <opt data-widget="color" data-color-type="theme" data-color="gamma" string="Extra Color"/>
+                <opt data-widget="color" data-color-type="theme" data-color="delta" string="Extra Color"/>
+                <opt data-widget="color" data-color-type="theme" data-color="epsilon" string="Extra Color"/>
+            </list>
+            <list string="Status colors">
+                <opt data-widget="color" data-color-type="theme" data-color="success" string="Success"/>
+                <opt data-widget="color" data-color-type="theme" data-color="info" string="Info"/>
+                <opt data-widget="color" data-color-type="theme" data-color="warning" string="Warning"/>
+                <opt data-widget="color" data-color-type="theme" data-color="danger" string="Error"/>
+            </list>
+            <list string="Text colors">
+                <opt data-widget="color" data-color="text" string="Text"/>
+                <opt data-widget="color" data-color="h1" string="Headings 1"/>
+                <opt data-widget="color" data-color="h2" string="Headings 2"/>
+                <opt data-widget="color" data-color="h3" string="Headings 3"/>
+                <opt data-widget="color" data-color="h4" string="Headings 4"/>
+                <opt data-widget="color" data-color="h5" string="Headings 5"/>
+                <opt data-widget="color" data-color="h6" string="Headings 6"/>
+            </list>
+            <list string="Background colors">
+                <opt data-widget="color" data-color="body" string="Body"/>
+                <opt data-widget="color" data-color="menu" string="Menus"/>
+                <opt data-widget="color" data-color="footer" string="Footer"/>
+            </list>
+        </content>
+
+        <!-- Menu options -->
+        <content id="theme_customize_content_navbar" string="Nav Bar" title="Choose your nav bar">
+            <list string="Main Layout">
+                <checkbox><opt data-xmlid="website.affix_top_menu" data-reload="/"/></checkbox>
+                <checkbox><opt data-xmlid="portal.portal_show_sign_in" data-reload="/"/></checkbox>
+                <opt data-widget="input" data-unit="rem" data-value="header-font-size" string="Font Size"/>
+            </list>
+            <list string="Logo">
+                <checkbox><opt data-xmlid="website.layout_logo_show" data-reload="/"/></checkbox>
+                <opt data-widget="input" data-unit="rem" data-value="logo-height" string="Logo Height"/>
+            </list>
         </content>
 
         <!-- Layout Options -->
