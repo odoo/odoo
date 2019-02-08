@@ -652,6 +652,10 @@ var SnippetsMenu = Widget.extend({
             class: 'oe_drop_zone oe_insert',
         });
 
+        function isFullWidth($elem) {
+            return $elem.parent().width() === $elem.outerWidth(true);
+        }
+
         if ($selectorChildren) {
             $selectorChildren.each(function () {
                 var $zone = $(this);
@@ -669,7 +673,10 @@ var SnippetsMenu = Widget.extend({
                         display: 'inline-block',
                     });
                 } else if (float === 'left' || float === 'right') {
-                    $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().last().outerHeight()), 30));
+                    $drop.css('float', float);
+                    if (!isFullWidth($zone)) {
+                        $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().last().outerHeight()), 30));
+                    }
                 }
 
                 $drop = $drop.clone();
@@ -684,7 +691,10 @@ var SnippetsMenu = Widget.extend({
                         display: 'inline-block'
                     });
                 } else if (float === 'left' || float === 'right') {
-                    $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().first().outerHeight()), 30));
+                    $drop.css('float', float);
+                    if (!isFullWidth($zone)) {
+                        $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().first().outerHeight()), 30));
+                    }
                 }
                 if (test) {
                     $drop.css({'float': 'none', 'display': 'inline-block'});
@@ -705,14 +715,20 @@ var SnippetsMenu = Widget.extend({
                 if ($zone.prev('.oe_drop_zone:visible').length === 0) {
                     $drop = zone_template.clone();
                     if (float === 'left' || float === 'right') {
-                        $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.prev().outerHeight() || Infinity), 30));
+                        $drop.css('float', float);
+                        if (!isFullWidth($zone)) {
+                            $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.prev().outerHeight() || Infinity), 30));
+                        }
                     }
                     $zone.before($drop);
                 }
                 if ($zone.next('.oe_drop_zone:visible').length === 0) {
                     $drop = zone_template.clone();
                     if (float === 'left' || float === 'right') {
-                        $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.next().outerHeight() || Infinity), 30));
+                        $drop.css('float', float);
+                        if (!isFullWidth($zone)) {
+                            $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.next().outerHeight() || Infinity), 30));
+                        }
                     }
                     $zone.after($drop);
                 }
