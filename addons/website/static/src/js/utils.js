@@ -60,6 +60,24 @@ function autocompleteWithPages(self, $input) {
         },
     });
 }
+
+/**
+ * @param {jQuery} $element
+ */
+function onceAllImagesLoaded($element) {
+    var defs = _.map($element.find('img').addBack('img'), function (img) {
+        if (img.complete) {
+            return; // Already loaded
+        }
+        var def = $.Deferred();
+        $(img).one('load', function () {
+            def.resolve();
+        });
+        return def;
+    });
+    return $.when.apply($, defs);
+}
+
 /**
  * @deprecated
  * @todo create Dialog.prompt instead of this
@@ -168,6 +186,7 @@ function prompt(options, _qweb) {
 return {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
+    onceAllImagesLoaded: onceAllImagesLoaded,
     prompt: prompt,
 };
 });

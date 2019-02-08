@@ -3,14 +3,105 @@ odoo.define('website.theme', function (require) {
 
 var config = require('web.config');
 var core = require('web.core');
-var ColorpickerDialog = require('wysiwyg.widgets.ColorpickerDialog');
 var Dialog = require('web.Dialog');
+var Widget = require('web.Widget');
 var weWidgets = require('wysiwyg.widgets');
+var ColorpickerDialog = require('wysiwyg.widgets.ColorpickerDialog');
 var websiteNavbarData = require('website.navbar');
 
 var _t = core._t;
 
 var templateDef = null;
+
+var QuickEdit = Widget.extend({
+    xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
+    template: 'website.theme_customize_active_input',
+    events: {
+        'keydown input': '_onInputKeydown',
+        'click .btn-primary': '_onSaveClick',
+        'click .btn-secondary': '_onResetClick',
+    },
+
+    /**
+     * @constructor
+     */
+    init: function (parent, value, unit) {
+        this._super.apply(this, arguments);
+        this.value = value;
+        this.unit = unit;
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        this.$input = this.$('input');
+        this.$input.select();
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {string} [value]
+     */
+    _save: function (value) {
+        if (value === undefined) {
+            value = parseFloat(this.$input.val());
+            value = isNaN(value) ? 'null' : (value + this.unit);
+        }
+        this.trigger_up('QuickEdit:save', {
+            value: value,
+        });
+        this.destroy();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onInputKeydown: function (ev) {
+        var inputValue = this.$input.val();
+        var value = 0;
+        if (inputValue !== '') {
+            value = parseFloat(this.$input.val());
+            if (isNaN(value)) {
+                return;
+            }
+        }
+        switch (ev.which) {
+            case $.ui.keyCode.UP:
+                this.$input.val(value + 1);
+                break;
+            case $.ui.keyCode.DOWN:
+                this.$input.val(value - 1);
+                break;
+            case $.ui.keyCode.ENTER:
+                // Do not listen to change events, we want the user to be able
+                // to confirm in all cases.
+                this._save();
+                break;
+        }
+    },
+    /**
+     * @private
+     */
+    _onSaveClick: function () {
+        this._save();
+    },
+    /**
+     * @private
+     */
+    _onResetClick: function () {
+        this._save('null');
+    },
+});
 
 var ThemeCustomizeDialog = Dialog.extend({
     xmlDependencies: (Dialog.prototype.xmlDependencies || [])
@@ -18,10 +109,11 @@ var ThemeCustomizeDialog = Dialog.extend({
 
     template: 'website.theme_customize',
     events: {
-        'change [data-xmlid], [data-enable], [data-disable]': '_onChange',
-        'click .checked [data-xmlid], .checked [data-enable], .checked [data-disable]': '_onChange',
-        'click .o_theme_customize_color': '_onColorClick',
+        'change .o_theme_customize_option_input': '_onChange',
+        'click .checked .o_theme_customize_option_input[type="radio"]': '_onChange',
     },
+
+    CUSTOM_BODY_IMAGE_XML_ID: 'option_custom_body_image',
 
     /**
      * @constructor
@@ -58,29 +150,53 @@ var ThemeCustomizeDialog = Dialog.extend({
      */
     start: function () {
         var self = this;
-        this._generateDialogHTML();
+
+        this.PX_BY_REM = parseFloat($(document.documentElement).css('font-size'));
+
         this.$modal.addClass('o_theme_customize_modal');
 
+        this.style = window.getComputedStyle(document.documentElement);
+
+        var $tabs;
+        var loadDef = this._loadViews().then(function (data) {
+            self._generateDialogHTML(data);
+            $tabs = self.$('[data-toggle="tab"]');
+
+            // Hide the tab navigation if only one tab
+            if ($tabs.length <= 1) {
+                $tabs.closest('.nav').addClass('d-none');
+            }
+        });
+
         // Enable the first option tab or the given default tab
-        var $tabs = this.$('[data-toggle="tab"]');
         this.opened().then(function () {
             $tabs.eq(self.defaultTab).tab('show');
 
-            var $colorPreview = self.$('.o_theme_customize_color_previews:visible');
-            var $primary = $colorPreview.find('.o_theme_customize_color[data-color="primary"]');
-            var $alpha = $colorPreview.find('.o_theme_customize_color[data-color="alpha"]');
-            var $secondary = $colorPreview.find('.o_theme_customize_color[data-color="secondary"]');
-            var $beta = $colorPreview.find('.o_theme_customize_color[data-color="beta"]');
-            var sameAlphaPrimary = $primary.find('.o_color_preview').css('background-color') === $alpha.find('.o_color_preview').css('background-color');
-            var sameBetaSecondary = $secondary.find('.o_color_preview').css('background-color') === $beta.find('.o_color_preview').css('background-color');
+            // Hack to hide primary/secondary if they are equal to alpha/beta
+            // (this is the case with default values but not in some themes).
+            var $primary = self.$('.o_theme_customize_color[data-color="primary"]');
+            var $alpha = self.$('.o_theme_customize_color[data-color="alpha"]');
+            var $secondary = self.$('.o_theme_customize_color[data-color="secondary"]');
+            var $beta = self.$('.o_theme_customize_color[data-color="beta"]');
+
+            var sameAlphaPrimary = $primary.css('background-color') === $alpha.css('background-color');
+            var sameBetaSecondary = $secondary.css('background-color') === $beta.css('background-color');
+
             if (!sameAlphaPrimary) {
-                $alpha.find('.o_color_name').text(_t("Extra Color"));
-                $primary.removeClass('d-none').addClass('d-flex');
+                $alpha.prev().text(_t("Extra Color"));
             }
             if (!sameBetaSecondary) {
-                $beta.find('.o_color_name').text(_t("Extra Color"));
-                $secondary.removeClass('d-none').addClass('d-flex');
+                $beta.prev().text(_t("Extra Color"));
             }
+
+            $primary = $primary.closest('.o_theme_customize_option');
+            $alpha = $alpha.closest('.o_theme_customize_option');
+            $secondary = $secondary.closest('.o_theme_customize_option');
+            $beta = $beta.closest('.o_theme_customize_option');
+
+            $primary.toggleClass('d-none', sameAlphaPrimary);
+            $secondary.toggleClass('d-none', sameBetaSecondary);
+
             if (!sameAlphaPrimary && sameBetaSecondary) {
                 $beta.insertBefore($alpha);
             } else if (sameAlphaPrimary && !sameBetaSecondary) {
@@ -88,17 +204,7 @@ var ThemeCustomizeDialog = Dialog.extend({
             }
         });
 
-        // Hide the tab navigation if only one tab
-        if ($tabs.length <= 1) {
-            $tabs.closest('.nav').addClass('d-none');
-        }
-
-        this.$inputs = this.$('[data-xmlid], [data-enable], [data-disable]');
-
-        return $.when(
-            this._super.apply(this, arguments),
-            this._loadViews()
-        );
+        return $.when(this._super.apply(this, arguments), loadDef);
     },
 
     //--------------------------------------------------------------------------
@@ -108,7 +214,47 @@ var ThemeCustomizeDialog = Dialog.extend({
     /**
      * @private
      */
-    _generateDialogHTML: function () {
+    _chooseBodyCustomImage: function () {
+        var self = this;
+        var def = $.Deferred();
+        var $image = $('<img/>');
+        var editor = new weWidgets.MediaDialog(this, {
+            onlyImages: true,
+            firstFilters: ['background'],
+        }, $image[0]);
+
+        editor.on('save', this, function (media) { // TODO use scss customization instead (like for user colors)
+            var src = $(media).attr('src');
+            self._rpc({
+                model: 'ir.model.data',
+                method: 'get_object_reference',
+                args: ['website', this.CUSTOM_BODY_IMAGE_XML_ID],
+            }).then(function (data) {
+                return self._rpc({
+                    model: 'ir.ui.view',
+                    method: 'save',
+                    args: [
+                        data[1],
+                        '#wrapwrap { background-image: url("' + src + '"); }',
+                        '//style',
+                    ],
+                });
+            }).always(def.resolve.bind(def));
+        });
+        editor.on('cancel', this, function () {
+            def.resolve();
+        });
+
+        editor.open();
+
+        return def;
+    },
+    /**
+     * @private
+     * @param {Object} data - @see this._loadViews
+     */
+    _generateDialogHTML: function (data) {
+        var self = this;
         var $contents = this.$el.children('content');
         if ($contents.length === 0) {
             return;
@@ -148,8 +294,21 @@ var ThemeCustomizeDialog = Dialog.extend({
 
         this.$('[title]').tooltip();
 
+        this.$inputs = self.$('.o_theme_customize_option_input');
+        // Enable data-xmlid="" inputs if none of their neighbors were enabled
+        _.each(this.$inputs.filter('[data-xmlid=""]'), function (input) {
+            var $input = $(input);
+            var $neighbors = self.$inputs.filter('[name="' + $input.attr('name') + '"]').not($input);
+            if ($neighbors.length && !$neighbors.filter(':checked').length) {
+                $input.prop('checked', true);
+            }
+        });
+        this._setActive();
+        this._updateValues();
+
         function _processItems($items, $container) {
             var optionsName = _.uniqueId('option-');
+            var alone = ($items.length === 1);
 
             _.each($items, function (item) {
                 var $item = $(item);
@@ -159,37 +318,47 @@ var ThemeCustomizeDialog = Dialog.extend({
                     case 'OPT':
                         var widgetName = $item.data('widget');
 
-                        // Build the options template
-                        var $option = $(core.qweb.render('website.theme_customize_modal_option', {
-                            name: optionsName,
-                            id: $item.attr('id') || _.uniqueId('o_theme_customize_input_id_'),
+                        var xmlid = $item.data('xmlid');
 
-                            string: $item.attr('string'),
+                        var renderingOptions = _.extend({
+                            string: $item.attr('string') || data.names[xmlid.split(',')[0].trim()],
                             icon: $item.data('icon'),
                             font: $item.data('font'),
+                        }, $item.data());
 
-                            xmlid: $item.data('xmlid'),
-                            enable: $item.data('enable'),
-                            disable: $item.data('disable'),
-                            reload: $item.data('reload'),
-
+                        // Build the options template
+                        var $option = $(core.qweb.render('website.theme_customize_modal_option', _.extend({
+                            alone: alone,
+                            name: xmlid === undefined ? _.uniqueId('option-') : optionsName,
+                            id: $item.attr('id') || _.uniqueId('o_theme_customize_input_id_'),
+                            checked: xmlid === undefined || xmlid && (!_.difference(self._getXMLIDs($item), data.enabled).length),
                             widget: widgetName,
-                        }));
+                        }, renderingOptions)));
+                        $option.find('input')
+                            .addClass('o_theme_customize_option_input')
+                            .attr({
+                                'data-xmlid': xmlid,
+                                'data-enable': $item.data('enable'),
+                                'data-disable': $item.data('disable'),
+                                'data-reload': $item.data('reload'),
+                            });
 
                         if (widgetName) {
-                            var $widget = $(core.qweb.render('website.theme_customize_' + widgetName));
-                            $option.append($widget);
+                            var $widget = $(core.qweb.render('website.theme_customize_widget_' + widgetName, renderingOptions));
+                            $option.find('label').append($widget);
                         }
 
+                        var $final;
                         if ($container.hasClass('form-row')) {
-                            $col = $('<div/>', {
+                            $final = $('<div/>', {
                                 class: _.str.sprintf('col-%s', $item.data('col') || 6),
                             });
-                            $col.append($option);
-                            $container.append($col);
+                            $final.append($option);
                         } else {
-                            $container.append($option);
+                            $final = $option;
                         }
+                        $final.attr('data-depends', $item.data('depends'));
+                        $container.append($final);
                         break;
 
                     case 'LIST':
@@ -201,6 +370,10 @@ var ThemeCustomizeDialog = Dialog.extend({
                         $container.append($col);
                         _processItems($item.children(), $listContainer);
                         break;
+
+                    default:
+                        _processItems($item.children(), $container);
+                        break;
                 }
             });
         }
@@ -209,29 +382,11 @@ var ThemeCustomizeDialog = Dialog.extend({
      * @private
      */
     _loadViews: function () {
-        var self = this;
         return this._rpc({
             route: '/website/theme_customize_get',
             params: {
-                xml_ids: this._getXMLIDs(this.$inputs),
+                'xml_ids': this._getXMLIDs(this.$inputs || this.$('[data-xmlid]')),
             },
-        }).done(function (data) {
-            self.$inputs.prop('checked', false);
-            _.each(self.$inputs.filter('[data-xmlid]:not([data-xmlid=""])'), function (input) {
-                var $input = $(input);
-                if (!_.difference(self._getXMLIDs($input), data[0]).length) {
-                    $input.prop('checked', true);
-                }
-            });
-            _.each(self.$inputs.filter('[data-xmlid=""]'), function (input) {
-                var $input = $(input);
-                if (!self.$inputs.filter('[name="' + $input.attr('name') + '"]:checked').length) {
-                    $input.prop('checked', true);
-                }
-            });
-            self._setActive();
-        }).fail(function (d, error) {
-            Dialog.alert(this, error.data.message);
         });
     },
     /**
@@ -260,49 +415,112 @@ var ThemeCustomizeDialog = Dialog.extend({
     /**
      * @private
      */
-    _processChange: function ($inputs) {
+    _makeSCSSCusto: function (url, values) {
+        return this._rpc({
+            route: '/website/make_scss_custo',
+            params: {
+                'url': url,
+                'values': values,
+            },
+        });
+    },
+    /**
+     * @private
+     */
+    _pickColor: function (colorElement) {
         var self = this;
-        this.$modal.addClass('o_theme_customize_loading');
-
-        var bodyCustomImageXMLID = 'option_custom_body_image';
-        var $inputBodyCustomImage = $inputs.filter('[data-xmlid*="website.' + bodyCustomImageXMLID + '"]:checked');
-        if (!$inputBodyCustomImage.length) {
-            return $.when();
-        }
+        var $color = $(colorElement);
+        var colorName = $color.data('color');
+        var colorType = $color.data('colorType');
 
         var def = $.Deferred();
-        var $image = $('<img/>');
-        var editor = new weWidgets.MediaDialog(this, {
-            onlyImages: true,
-            firstFilters: ['background'],
-        }, $image[0]);
 
-        editor.on('save', this, function (media) { // TODO use scss customization instead (like for user colors)
-            var src = $(media).attr('src');
-            self._rpc({
-                model: 'ir.model.data',
-                method: 'get_object_reference',
-                args: ['website', bodyCustomImageXMLID],
-            }).then(function (data) {
-                return self._rpc({
-                    model: 'ir.ui.view',
-                    method: 'save',
-                    args: [
-                        data[1],
-                        '#wrapwrap { background-image: url("' + src + '"); }',
-                        '//style',
-                    ],
-                });
-            }).then(function () {
+        var colorpicker = new ColorpickerDialog(this, {
+            defaultColor: $color.css('background-color'),
+        });
+        var chosenColor = undefined;
+        colorpicker.on('colorpicker:saved', this, function (ev) {
+            ev.stopPropagation();
+            chosenColor = ev.data.cssColor;
+        });
+        colorpicker.on('closed', this, function (ev) {
+            if (chosenColor === undefined) {
                 def.resolve();
-            });
-        });
-        editor.on('cancel', this, function () {
-            def.resolve();
-        });
+                return;
+            }
 
-        editor.open();
+            var baseURL = '/website/static/src/scss/options/colors/';
+            var url = _.str.sprintf('%suser_%scolor_palette.scss', baseURL, (colorType ? (colorType + '_') : ''));
 
+            var colors = {};
+            colors[colorName] = chosenColor;
+            if (colorName === 'alpha') {
+                colors['beta'] = 'null';
+                colors['gamma'] = 'null';
+                colors['delta'] = 'null';
+                colors['epsilon'] = 'null';
+            }
+
+            self._makeSCSSCusto(url, colors).always(def.resolve.bind(def));
+        });
+        colorpicker.open();
+
+        return def;
+    },
+    /**
+     * @private
+     */
+    _processChange: function ($inputs) {
+        var self = this;
+        var defs = [];
+
+        var $options = $inputs.closest('.o_theme_customize_option');
+
+        // Handle body image changes
+        var $bodyImageInputs = $inputs.filter('[data-xmlid*="website.' + this.CUSTOM_BODY_IMAGE_XML_ID + '"]:checked');
+        defs = defs.concat(_.map($bodyImageInputs, function () {
+            return self._chooseBodyCustomImage();
+        }));
+
+        // Handle color changes
+        var $colors = $options.find('.o_theme_customize_color');
+        defs = defs.concat(_.map($colors, function (colorElement) {
+            return self._pickColor($(colorElement));
+        }));
+
+        // Handle input changes
+        var $inputsData = $options.find('.o_theme_customize_input');
+        defs = defs.concat(_.map($inputsData, function (inputData, i) {
+            return self._quickEdit($(inputData));
+        }));
+
+        return $.when.apply($, defs);
+    },
+    /**
+     * @private
+     */
+    _quickEdit: function ($inputData) {
+        var text = $inputData.text().trim();
+        var value = parseFloat(text) || '';
+        var unit = text.match(/([^\s\d]+)$/)[1];
+
+        var def = $.Deferred();
+        var qEdit = new QuickEdit(this, value, unit);
+        qEdit.on('QuickEdit:save', this, function (ev) {
+            ev.stopPropagation();
+
+            var value = ev.data.value;
+            // Convert back to rem if needed
+            if ($inputData.data('unit') === 'rem' && unit === 'px' && value !== 'null') {
+                value = parseFloat(value) / this.PX_BY_REM + 'rem';
+            }
+
+            var values = {};
+            values[$inputData.data('value')] = value;
+            this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values)
+                .always(def.resolve.bind(def));
+        });
+        qEdit.appendTo($inputData.closest('.o_theme_customize_option'));
         return def;
     },
     /**
@@ -312,11 +530,11 @@ var ThemeCustomizeDialog = Dialog.extend({
         var self = this;
 
         // Look at all options to see if they are enabled or disabled
-        var $enable = this.$inputs.filter('[data-xmlid]:checked');
+        var $enable = this.$inputs.filter(':checked');
 
         // Mark the labels as checked accordingly
         this.$('label').removeClass('checked');
-        $enable.closest('label').addClass('checked');
+        $enable.closest('label:not(.o_switch)').addClass('checked');
 
         // Mark the option sets as checked if all their option are checked/unchecked
         var $sets = this.$inputs.filter('[data-enable], [data-disable]').not('[data-xmlid]');
@@ -329,15 +547,21 @@ var ThemeCustomizeDialog = Dialog.extend({
             if (self._getInputs($set.data('disable')).filter(':checked').length) {
                 checked = false;
             }
-            $set.prop('checked', checked).closest('label').toggleClass('checked', checked);
+            $set.prop('checked', checked).closest('label:not(.o_switch)').toggleClass('checked', checked);
         });
 
         // Make the hidden sections visible if their dependencies are met
         _.each(this.$('[data-depends]'), function (hidden) {
             var $hidden = $(hidden);
             var depends = $hidden.data('depends');
-            var nbDependencies = depends ? depends.split(',').length : 0;
-            var enabled = self._getInputs(depends).filter(':checked').length === nbDependencies;
+            var dependencies = depends ? depends.split(/\s*,\s*/g) : [];
+            var enabled = _.all(dependencies, function (dep) {
+                var toBeChecked = (dep[0] !== '!');
+                if (!toBeChecked) {
+                    dep = dep.substr(1);
+                }
+                return self._getInputs(dep).is(':checked') === toBeChecked;
+            });
             $hidden.toggleClass('d-none', !enabled);
         });
     },
@@ -345,6 +569,11 @@ var ThemeCustomizeDialog = Dialog.extend({
      * @private
      */
     _updateStyle: function (enable, disable, reload) {
+        var self = this;
+
+        var $loading = $('<i/>', {class: 'fa fa-refresh fa-spin'});
+        this.$modal.find('.modal-title').append($loading);
+
         if (reload || config.debug === 'assets') {
             window.location.href = $.param.querystring('/website/theme_customize_reload', {
                 href: window.location.href,
@@ -355,18 +584,19 @@ var ThemeCustomizeDialog = Dialog.extend({
             return $.Deferred();
         }
 
-        var self = this;
         return this._rpc({
             route: '/website/theme_customize',
             params: {
-                enable: enable,
-                disable: disable,
-                get_bundle: true,
+                'enable': enable,
+                'disable': disable,
+                'get_bundle': true,
             },
         }).then(function (bundles) {
+            var $allLinks = $();
             var defs = _.map(bundles, function (bundleContent, bundleName) {
                 var linkSelector = 'link[href*="' + bundleName + '"]';
                 var $links = $(linkSelector);
+                $allLinks = $allLinks.add($links);
                 var $newLinks = $(bundleContent).filter(linkSelector);
 
                 var linksLoaded = $.Deferred();
@@ -382,14 +612,51 @@ var ThemeCustomizeDialog = Dialog.extend({
                     window.location.reload();
                 });
                 $links.last().after($newLinks);
-                return linksLoaded.then(function () {
-                    $links.remove();
-                });
+                return linksLoaded;
             });
+            return $.when.apply($, defs).always(function () {
+                $loading.remove();
+                $allLinks.remove();
+            });
+        }).then(function () {
+            // Some animations may depend on the variables that were
+            // customized, so we have to restart them.
+            self.trigger_up('animation_start_demand');
+        });
+    },
+    /**
+     * @private
+     */
+    _updateValues: function () {
+        var self = this;
+        // Put user values
+        _.each(this.$('.o_theme_customize_color'), function (el) {
+            var $el = $(el);
+            var value = self.style.getPropertyValue('--' + $el.data('color')).trim();
+            $el.css('background-color', value);
+        });
+        _.each(this.$('.o_theme_customize_input'), function (el) {
+            var $el = $(el);
+            var value = self.style.getPropertyValue('--' + $el.data('value')).trim();
 
-            return $.when.apply($, defs).then(function () {
-                self.$modal.removeClass('o_theme_customize_loading');
-            });
+            // Convert rem values to px values
+            if (_.str.endsWith(value, 'rem')) {
+                value = parseFloat(value) * self.PX_BY_REM + 'px';
+            }
+
+            var $span = $el.find('span');
+            $span.removeClass().text('');
+            switch (value) {
+                case '':
+                case 'false':
+                case 'true':
+                    // When null or a boolean value, shows an icon which tells
+                    // the user that there is no numeric/text value
+                    $span.addClass('fa fa-ban text-danger');
+                    break;
+                default:
+                    $span.text(value);
+            }
         });
     },
 
@@ -406,6 +673,11 @@ var ThemeCustomizeDialog = Dialog.extend({
 
         // Checkout the option that changed
         var $option = $(ev.currentTarget);
+        if ($option.is(':disabled')) {
+            return;
+        }
+        this.$inputs.prop('disabled', true);
+
         var $options = $option;
         var checked = $option.is(':checked');
 
@@ -437,91 +709,21 @@ var ThemeCustomizeDialog = Dialog.extend({
 
         // Update the style according to the whole set of options
         self._processChange($options).then(function () {
-            self._updateStyle(
+            return self._updateStyle(
                 self._getXMLIDs($enable),
                 self._getXMLIDs($disable),
                 $option.data('reload') && window.location.href.match(new RegExp($option.data('reload')))
             );
+        }).then(function () {
+            self._updateValues();
+            self.$inputs.prop('disabled', false);
         });
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onColorClick: function (ev) {
-        var self = this;
-        var $color = $(ev.currentTarget);
-        var colorName = $color.data('color');
-        var colorType = $color.data('colorType');
-
-        var colorpicker = new ColorpickerDialog(this, {
-            defaultColor: $color.find('.o_color_preview').css('background-color'),
-        });
-        colorpicker.on('colorpicker:saved', this, function (ev) {
-            ev.stopPropagation();
-
-            // TODO improve to be more efficient
-            self._rpc({
-                route: '/web_editor/get_assets_editor_resources',
-                params: {
-                    key: 'website.layout',
-                    get_views: false,
-                    get_scss: true,
-                    get_js: false,
-                    bundles: false,
-                    bundles_restriction: [],
-                    only_user_custom_files: false,
-                },
-            }).then(function (data) {
-                var files = data.scss[0][1];
-                var file = _.find(files, function (file) {
-                    var baseURL = '/website/static/src/scss/options/colors/';
-                    return file.url === _.str.sprintf('%suser_%scolor_palette.scss', baseURL, (colorType ? (colorType + '_') : ''));
-                });
-
-                var colors = {};
-                colors[colorName] = ev.data.cssColor;
-                if (colorName === 'alpha') {
-                    colors['beta'] = 'null';
-                    colors['gamma'] = 'null';
-                    colors['delta'] = 'null';
-                    colors['epsilon'] = 'null';
-                }
-
-                var updatedFileContent = file.arch;
-                _.each(colors, function (colorValue, colorName) {
-                    var pattern = _.str.sprintf("'%s': %%s,\n", colorName);
-                    var regex = new RegExp(_.str.sprintf(pattern, ".+"));
-                    var replacement = _.str.sprintf(pattern, colorValue);
-                    if (regex.test(updatedFileContent)) {
-                        updatedFileContent = updatedFileContent
-                            .replace(regex, replacement);
-                    } else {
-                        updatedFileContent = updatedFileContent
-                            .replace(/( *)(.*hook.*)/, _.str.sprintf('$1%s$1$2', replacement));
-                    }
-                });
-
-                return self._rpc({
-                    route: '/web_editor/save_scss_or_js',
-                    params: {
-                        url: file.url,
-                        bundle_xmlid: 'web.assets_common',
-                        content: updatedFileContent,
-                        file_type: 'scss',
-                    },
-                });
-            }).then(function () {
-                return self._updateStyle();
-            });
-        });
-        colorpicker.open();
     },
 });
 
 var ThemeCustomizeMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions || {}, {
-        customize_theme: '_openThemeCustomizeDialog',
+        'customize_theme': '_openThemeCustomizeDialog',
     }),
 
     /**

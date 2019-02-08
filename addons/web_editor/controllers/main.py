@@ -4,19 +4,17 @@ import base64
 import io
 import json
 import logging
-import os
 import re
 import time
-import uuid
 import werkzeug.wrappers
 from PIL import Image, ImageFont, ImageDraw
-from lxml import etree, html
+from lxml import etree
 
 from odoo.http import request
 from odoo import http, tools
-from odoo.modules.module import get_resource_path, get_module_path
 
 logger = logging.getLogger(__name__)
+
 
 class Web_Editor(http.Controller):
     #------------------------------------------------------
@@ -296,40 +294,57 @@ class Web_Editor(http.Controller):
             result['originalSrc'] = record.url
         return result
 
-    def _get_view_fields_to_read(self):
-        return ['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id']
-
-    ## The get_assets_editor_resources route is in charge of transmitting the resources the assets
-    ## editor needs to work.
-    ## @param key - the xml_id or id of the view the resources are related to
-    ## @param get_views - True if the views must be fetched (default to True)
-    ## @param get_scss - True if the style must be fetched (default to True)
-    ## @param get_js - True if the javascript must be fetched (default to True)
-    ## @param bundles - True if the bundles views must be fetched (default to False)
-    ## @param bundles_restriction - Names of the bundle in which to look for scss files (if empty, search in all of them)
-    ## @param only_user_custom_files - True if only user custom files are needed (default to True)
-    ## @returns a dictionary with views info in the views key and style info in the scss key
     @http.route("/web_editor/get_assets_editor_resources", type="json", auth="user", website=True)
     def get_assets_editor_resources(self, key, get_views=True, get_scss=True, get_js=True, bundles=False, bundles_restriction=[], only_user_custom_files=True):
+        """
+        Transmit the resources the assets editor needs to work.
+
+        Params:
+            key (str): the key of the view the resources are related to
+
+            get_views (bool, default=True):
+                True if the views must be fetched
+
+            get_scss (bool, default=True):
+                True if the style must be fetched
+
+            get_js (bool, default=True):
+                True if the javascript must be fetched
+
+            bundles (bool, default=False):
+                True if the bundles views must be fetched
+
+            bundles_restriction (list, default=[]):
+                Names of the bundles in which to look for scss files
+                (if empty, search in all of them)
+
+            only_user_custom_files (bool, default=True):
+                True if only user custom files must be fetched
+
+        Returns:
+            dict: views, scss, js
+        """
         # Related views must be fetched if the user wants the views and/or the style
         views = request.env["ir.ui.view"].get_related_views(key, bundles=bundles)
-        views = views.read(self._get_view_fields_to_read())
+        views = views.read(request.env['web_editor.assets'].get_view_fields_to_read())
 
-        js_files_data_by_bundle = []
         scss_files_data_by_bundle = []
+        js_files_data_by_bundle = []
 
-        if get_js:
-            js_files_data_by_bundle = self.load_resources('js', views, bundles_restriction, only_user_custom_files)
         if get_scss:
-            scss_files_data_by_bundle = self.load_resources('scss', views, bundles_restriction, only_user_custom_files)
+            scss_files_data_by_bundle = self._load_resources('scss', views, bundles_restriction, only_user_custom_files)
+        if get_js:
+            js_files_data_by_bundle = self._load_resources('js', views, bundles_restriction, only_user_custom_files)
 
-        return dict(
-            views=get_views and views or [],
-            scss=get_scss and scss_files_data_by_bundle or [],
-            js=get_js and js_files_data_by_bundle or [],
-        )
+        return {
+            'views': get_views and views or [],
+            'scss': get_scss and scss_files_data_by_bundle or [],
+            'js': get_js and js_files_data_by_bundle or [],
+        }
 
-    def load_resources(self, file_type, views, bundles_restriction, only_user_custom_files):
+    def _load_resources(self, file_type, views, bundles_restriction, only_user_custom_files):
+        AssetsUtils = request.env['web_editor.assets']
+
         files_data_by_bundle = []
         resources_type_info = {'t_call_assets_attribute': 't-js', 'mimetype': 'text/javascript'}
         if file_type == 'scss':
@@ -338,10 +353,6 @@ class Web_Editor(http.Controller):
         # Compile regex outside of the loop
         # This will used to exclude library scss files from the result
         excluded_url_matcher = re.compile("^(.+/lib/.+)|(.+import_bootstrap.+\.scss)$")
-
-        # Load already customized files attachments
-        custom_url = self._make_custom_scss_or_js_file_url("%%.%%", "%%")
-        custom_attachments = self.get_custom_attachment(custom_url, op='=like')
 
         # First check the t-call-assets used in the related views
         url_infos = dict()
@@ -363,7 +374,7 @@ class Web_Editor(http.Controller):
                         continue
 
                     # Check if the file is customized and get bundle/path info
-                    file_data = self._match_scss_or_js_file_url(url)
+                    file_data = AssetsUtils.get_asset_info(url)
                     if not file_data:
                         continue
 
@@ -375,13 +386,19 @@ class Web_Editor(http.Controller):
                             or file_type == 'scss' and not only_user_custom_files:
                         files_data.append(url)
 
-                # File data is returned sorted by bundle, with the bundles names and xmlids
+                # scss data is returned sorted by bundle, with the bundles
+                # names and xmlids
                 if len(files_data):
-                    files_data_by_bundle.append([dict(xmlid=asset_name, name=request.env.ref(asset_name).name), files_data])
+                    files_data_by_bundle.append([
+                        {'xmlid': asset_name, 'name': request.env.ref(asset_name).name},
+                        files_data
+                    ])
 
         # Filter bundles/files:
-        # - A file which appears in multiple bundles only appears in the first one (the first in the DOM)
-        # - Only keep bundles with files which appears in the asked bundles and only keep those files
+        # - A file which appears in multiple bundles only appears in the
+        #   first one (the first in the DOM)
+        # - Only keep bundles with files which appears in the asked bundles
+        #   and only keep those files
         for i in range(0, len(files_data_by_bundle)):
             bundle_1 = files_data_by_bundle[i]
             for j in range(0, len(files_data_by_bundle)):
@@ -393,7 +410,8 @@ class Web_Editor(http.Controller):
             bundle_1 = files_data_by_bundle[i]
             for j in range(i + 1, len(files_data_by_bundle)):
                 bundle_2 = files_data_by_bundle[j]
-                # In every bundle, keep only the files which were not found in previous bundles
+                # In every bundle, keep only the files which were not found
+                # in previous bundles
                 bundle_2[1] = [item_2 for item_2 in bundle_2[1] if item_2 not in bundle_1[1]]
 
         # Only keep bundles which still have files and that were requested
@@ -403,146 +421,57 @@ class Web_Editor(http.Controller):
         ]
 
         # Fetch the arch of each kept file, in each bundle
+        urls = []
+        for bundle_data in files_data_by_bundle:
+            urls += bundle_data[1]
+        custom_attachments = AssetsUtils.get_all_custom_attachments(urls)
+
         for bundle_data in files_data_by_bundle:
             for i in range(0, len(bundle_data[1])):
                 url = bundle_data[1][i]
                 url_info = url_infos[url]
 
-                content = None
-                if url_info["customized"]:
-                    # If the file is already customized, the content is found in the corresponding attachment
-                    content = base64.b64decode(custom_attachments.filtered(lambda a: a.url == url).datas)
-                else:
-                    # If the file is not yet customized, the content is found by reading the local scss file
-                    module = url_info["module"]
-                    module_path = get_module_path(module)
-                    module_resource_path = get_resource_path(module, url_info["resource_path"])
-                    if module_path and module_resource_path:
-                        module_path = os.path.join(os.path.normpath(module_path), '') # join ensures the path ends with '/'
-                        module_resource_path = os.path.normpath(module_resource_path)
-                        if module_resource_path.startswith(module_path):
-                            with open(module_resource_path, "rb") as f:
-                                content = f.read()
+                content = AssetsUtils.get_asset_content(url, url_info, custom_attachments)
 
-                bundle_data[1][i] = dict(
-                    url="/%s/%s" % (url_info["module"], url_info["resource_path"]),
-                    arch=content,
-                    customized=url_info["customized"],
-                )
+                bundle_data[1][i] = {
+                    'url': "/%s/%s" % (url_info["module"], url_info["resource_path"]),
+                    'arch': content,
+                    'customized': url_info["customized"],
+                }
+
         return files_data_by_bundle
 
-    def save_scss_or_js_view_hook(self):
-        return {}
+    @http.route("/web_editor/save_asset", type="json", auth="user", website=True)
+    def save_asset(self, url, bundle_xmlid, content, file_type):
+        """
+        Save a given modification of a scss/js file.
 
-    def save_scss_or_js_attachment_hook(self):
-        return {}
+        Params:
+            url (str):
+                the original url of the scss/js file which has to be modified
 
-    ## The save_scss_or_js route is in charge of saving a given modification of a scss/js file.
-    ## @param url - the original url of the scss/js file which has to be modified
-    ## @param bundle_xmlid - the xmlid of the bundle in which the scss/js file addition can be found
-    ## @param content - the new content of the scss/js file
-    ## @param file_type - scss or js
-    @http.route("/web_editor/save_scss_or_js", type="json", auth="user", website=True)
-    def save_scss_or_js(self, url, bundle_xmlid, content, file_type):
-        IrAttachment = request.env["ir.attachment"]
+            bundle_xmlid (str):
+                the xmlid of the bundle in which the scss/js file addition can
+                be found
 
-        custom_url = self._make_custom_scss_or_js_file_url(url, bundle_xmlid)
+            content (str): the new content of the scss/js file
 
-        # Check if the file to save had already been modified
-        custom_attachment = self.get_custom_attachment(custom_url)
-        datas = base64.b64encode((content or "\n").encode("utf-8"))
-        if custom_attachment:
-            # If it was already modified, simply override the corresponding attachment content
-            custom_attachment.write({"datas": datas})
-        else:
-            # If not, create a new attachment to copy the original scss/js file content, with its modifications
-            new_attach = {
-                'name': custom_url,
-                'type': "binary",
-                'mimetype': (file_type == 'js' and 'text/javascript' or 'text/scss'),
-                'datas': datas,
-                'datas_fname': url.split("/")[-1],
-                'url': custom_url,
-            }
-            new_attach.update(self.save_scss_or_js_attachment_hook())
-            IrAttachment.create(new_attach)
+            file_type (str): 'scss' or 'js'
+        """
+        request.env['web_editor.assets'].save_asset(url, bundle_xmlid, content, file_type)
 
-            # Create a view to extend the template which adds the original file to link the new modified version instead
-            IrUiView = request.env["ir.ui.view"]
-            file_type_info = {
-                'tag': 'link' if file_type == 'scss' else 'script',
-                'attribute': 'href' if file_type == 'scss' else 'src',
-            }
+    @http.route("/web_editor/reset_asset", type="json", auth="user", website=True)
+    def reset_asset(self, url, bundle_xmlid):
+        """
+        The reset_asset route is in charge of reverting all the changes that
+        were done to a scss/js file.
 
-            def views_linking_url(view):
-                """
-                Returns whether the view arch has some html link tag linked to the url.
+        Params:
+            url (str):
+                the original URL of the scss/js file to reset
 
-                (note: searching for the URL string is not enough as it could appear in a comment or an xpath expression.)
-                """
-                tree = etree.XML(view.arch)
-                return bool(tree.xpath("//%%(tag)s[@%%(attribute)s='%(url)s']" % {
-                    'url': url,
-                } % file_type_info))
-
-            view_to_xpath = IrUiView.get_related_views(bundle_xmlid, bundles=True).filtered(views_linking_url)
-
-            new_view = {
-                'name': custom_url,
-                'key': 'web_editor.%s_%s' % (file_type, str(uuid.uuid4())[:6]),
-                'mode': "extension",
-                'inherit_id': view_to_xpath.id,
-                'arch': """
-                    <data inherit_id="%(inherit_xml_id)s" name="%(name)s">
-                        <xpath expr="//%%(tag)s[@%%(attribute)s='%(url_to_replace)s']" position="attributes">
-                            <attribute name="%%(attribute)s">%(new_url)s</attribute>
-                        </xpath>
-                    </data>
-                """ % {
-                    'inherit_xml_id': view_to_xpath.xml_id,
-                    'name': custom_url,
-                    'url_to_replace': url,
-                    'new_url': custom_url,
-                } % file_type_info
-            }
-            new_view.update(self.save_scss_or_js_view_hook())
-            IrUiView.create(new_view)
-
-        request.env["ir.qweb"].clear_caches()
-
-    ## The reset_scss_or_js route is in charge of reverting all the changes that were done to a scss/js file.
-    ## @param url - the original URL of the scss file to reset
-    ## @param bundle_xmlid - the xmlid of the bundle in which the scss file addition can be found
-    @http.route("/web_editor/reset_scss_or_js", type="json", auth="user", website=True)
-    def reset_scss_or_js(self, url, bundle_xmlid):
-        custom_url = self._make_custom_scss_or_js_file_url(url, bundle_xmlid)
-
-        # Simply delete the attachement which contains the modified scss/js file and the xpath view which links it
-        self.get_custom_attachment(custom_url).unlink()
-        self.get_custom_view(custom_url).unlink()
-
-    def get_custom_attachment(self, custom_url, op='='):
-        assert op in ('=like', '='), 'Invalid operator'
-        IrAttachment = request.env["ir.attachment"]
-        return IrAttachment.search([("url", op, custom_url)])
-
-    def get_custom_view(self, custom_url, op='='):
-        assert op in ('=like', '='), 'Invalid operator'
-        IrUiView = request.env["ir.ui.view"]
-        return IrUiView.search([("name", op, custom_url)])
-
-    def _make_custom_scss_or_js_file_url(self, url, bundle):
-        parts = url.rsplit(".", 1)
-        return "%s.custom.%s.%s" % (parts[0], bundle, parts[1])
-
-    _match_file_url_regex = re.compile("^/(\w+)/(.+?)(\.custom\.(.+))?\.(\w+)$")
-    def _match_scss_or_js_file_url(self, url):
-        m = self._match_file_url_regex.match(url)
-        if not m:
-            return False
-        return {
-            'module': m.group(1),
-            'resource_path': "%s.%s" % (m.group(2), m.group(5)),
-            'customized': bool(m.group(3)),
-            'bundle': m.group(4) or False
-        }
+            bundle_xmlid (str):
+                the xmlid of the bundle in which the scss/js file addition can
+                be found
+        """
+        request.env['web_editor.assets'].reset_asset(url, bundle_xmlid)

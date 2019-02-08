@@ -22,9 +22,9 @@
     <!-- Custom checkbox (material-design-like toggle) -->
     <t t-name="website.components.switch">
         <label class="o_switch" t-att-for="id">
-            <input type="checkbox" t-att-id="id"/>
+            <input type="checkbox" t-att-id="id" t-att-checked="checked ? 'checked' : undefined"/>
             <span/>
-            <t t-if="label"><t t-esc="label"/></t>
+            <div t-if="label"><t t-esc="label"/></div>
         </label>
     </t>
 
@@ -37,54 +37,39 @@
         <div class="form-row justify-content-between o_options_container"/>
     </div>
     <t t-name="website.theme_customize_modal_option">
-        <div t-attf-class="o_theme_customize_option my-1 flex-grow-0 #{font ? 'o_theme_customize_option_font_' + font : ''}">
+        <div t-attf-class="o_theme_customize_option my-1 flex-grow-0 #{font ? 'o_theme_customize_option_font_' + font : ''} #{widget ? 'o_theme_customize_with_widget' : ''}">
             <img t-if="icon" t-att-src="icon"/>
-            <label t-attf-class="#{widget ? 'd-none' : 'd-flex'} align-items-center justify-content-center text-center">
-                <input t-att-id="id" t-att-name="name" type="radio" class="o_theme_customize_option_input" t-att-data-xmlid="xmlid" t-att-data-enable="enable" t-att-data-disable="disable" t-att-data-reload="reload"/>
-                <span><t t-esc="string"/></span>
+
+            <t t-set="label" t-value="font ? '' : string"/>
+            <t t-if="alone and !widget" t-call="website.components.switch"/>
+            <label t-else="">
+                <input t-att-id="id" t-att-name="name" type="radio" t-att-checked="checked ? 'checked' : undefined"/>
+                <span><t t-esc="label"/></span>
             </label>
         </div>
     </t>
-    <t t-name="website.theme_customize_color_palette">
-        <div class="o_theme_customize_color_previews">
-            <div>
-                <h6>Main colors</h6>
-                <t t-foreach="{'primary': _t('Primary'), 'secondary': _t('Secondary'), 'alpha': _t('Primary'), 'beta': _t('Secondary'), 'gamma': _t('Extra Color'), 'delta': _t('Extra Color'), 'epsilon': _t('Extra Color')}" t-as="color">
-                    <t t-call="website.theme_customize_color_palette_button">
-                        <t t-set="color_type" t-value="'theme'"/>
-                    </t>
-                </t>
-            </div>
-            <div>
-                <h6>Background colors</h6>
-                <t t-foreach="{'body': _t('Body'), 'menu': _t('Menus'), 'footer': _t('Footer')}" t-as="color">
-                    <t t-call="website.theme_customize_color_palette_button"/>
-                </t>
-            </div>
-            <div>
-                <h6>Text colors</h6>
-                <t t-foreach="{'text': _t('Text'), 'h1': _t('Headings 1'), 'h2': _t('Headings 2'), 'h3': _t('Headings 3'), 'h4': _t('Headings 4'), 'h5': _t('Headings 5'), 'h6': _t('Headings 6')}" t-as="color">
-                    <t t-call="website.theme_customize_color_palette_button"/>
-                </t>
-            </div>
-            <div>
-                <h6>State colors</h6>
-                <t t-foreach="{'success': _t('Success'), 'info': _t('Info'), 'warning': _t('Warning'), 'danger': _t('Error')}" t-as="color">
-                    <t t-call="website.theme_customize_color_palette_button">
-                        <t t-set="color_type" t-value="'theme'"/>
-                    </t>
-                </t>
-            </div>
+    <t t-name="website.theme_customize_widget_color">
+        <div t-attf-class="o_theme_customize_color o_theme_customize_color_#{color}"
+            t-att-data-color="color"
+            t-att-data-color-type="colorType"/>
+    </t>
+    <t t-name="website.theme_customize_widget_input">
+        <div t-attf-class="o_theme_customize_input o_theme_customize_input_#{value}"
+            t-att-data-value="value"
+            t-att-data-unit="unit">
+            <i class="fa fa-edit"/>
+            <span/>
         </div>
     </t>
-    <t t-name="website.theme_customize_color_palette_button">
-        <button type="button"
-            t-attf-class="btn btn-secondary #{color == 'primary' or color == 'secondary' ? 'd-none' : 'd-flex'} align-items-center w-100 mt-2 justify-content-between o_theme_customize_color o_theme_customize_color_#{color}"
-            t-att-data-color="color"
-            t-att-data-color-type="color_type">
-            <span class="o_color_name"><t t-esc="color_value"/></span>
-            <span t-attf-class="o_color_preview bg-#{color}"/>
-        </button>
+    <t t-name="website.theme_customize_active_input">
+        <div class="input-group input-group-sm align-items-center o_theme_customize_active_input">
+            <input type="text" class="form-control" t-att-value="widget.value"/>
+            <div class="input-group-append">
+                <div t-if="widget.unit" class="input-group-text"><t t-esc="widget.unit"/></div>
+                <button type="button" class="btn btn-primary fa fa-check" title="Save"/>
+                <button type="button" class="btn btn-secondary fa fa-undo" title="Reset"/>
+            </div>
+        </div>
     </t>
 
     <t t-extend="wysiwyg.widgets.link">

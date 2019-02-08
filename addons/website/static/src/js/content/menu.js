@@ -3,6 +3,7 @@ odoo.define('website.content.menu', function (require) {
 
 var dom = require('web.dom');
 var sAnimation = require('website.content.snippets.animation');
+var wUtils = require('website.utils');
 
 sAnimation.registry.affixMenu = sAnimation.Class.extend({
     selector: 'header.o_affix_enabled',
@@ -22,6 +23,11 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
         this.$headers = this.$target.add(this.$headerClone);
         this.$dropdowns = this.$headers.find('.dropdown');
         this.$navbarCollapses = this.$headers.find('.navbar-collapse');
+
+        this._adaptDefaultOffset();
+        wUtils.onceAllImagesLoaded(this.$headerClone).then(function () {
+            self._adaptDefaultOffset();
+        });
 
         // Handle events for the collapse menus
         _.each(this.$headerClone.find('[data-toggle="collapse"]'), function (el) {
@@ -47,6 +53,24 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
             $(window).off('.affixMenu');
         }
         this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _adaptDefaultOffset: function () {
+        var bottom = this.$target.offset().top + this._getHeaderHeight();
+        this.$headerClone.css('margin-top', Math.min(-200, -bottom) + 'px');
+    },
+    /**
+     * @private
+     */
+    _getHeaderHeight: function () {
+        return this.$headerClone.outerHeight();
     },
 
     //--------------------------------------------------------------------------
@@ -92,16 +116,7 @@ sAnimation.registry.autohideMenu = sAnimation.Class.extend({
         this.noAutohide = this.$el.closest('.o_no_autohide_menu').length;
         if (!this.noAutohide) {
             var $navbar = this.$el.closest('.navbar');
-            _.each($navbar.find('img'), function (img) {
-                if (img.complete) {
-                    return; // Already loaded
-                }
-                var def = $.Deferred();
-                defs.push(def);
-                $(img).one('load', function () {
-                    def.resolve();
-                });
-            });
+            defs.push(wUtils.onceAllImagesLoaded($navbar));
 
             // The previous code will make sure we wait for images to be fully
             // loaded before initializing the auto more menu. But in some cases,
