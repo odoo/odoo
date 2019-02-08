@@ -868,13 +868,15 @@ class StockMove(models.Model):
                             false_quants += [reserved_quant]
                         elif float_compare(lot_quantities.get(reserved_quant.lot_id.id, 0), 0, precision_rounding=rounding) > 0:
                             if float_compare(lot_quantities[reserved_quant.lot_id.id], reserved_quant.qty, precision_rounding=rounding) >= 0:
-                                lot_quantities[reserved_quant.lot_id.id] -= reserved_quant.qty
-                                quants_taken += [(reserved_quant, reserved_quant.qty)]
-                                qty_on_link -= reserved_quant.qty
+                                qty_taken = min(reserved_quant.qty, qty_on_link)
+                                lot_quantities[reserved_quant.lot_id.id] -= qty_taken
+                                quants_taken += [(reserved_quant, qty_taken)]
+                                qty_on_link -= qty_taken
                             else:
-                                quants_taken += [(reserved_quant, lot_quantities[reserved_quant.lot_id.id])]
-                                lot_quantities[reserved_quant.lot_id.id] = 0
-                                qty_on_link -= lot_quantities[reserved_quant.lot_id.id]
+                                qty_taken = min(qty_on_link, lot_quantities[reserved_quant.lot_id.id])
+                                quants_taken += [(reserved_quant, qty_taken)]
+                                lot_quantities[reserved_quant.lot_id.id] -= qty_taken
+                                qty_on_link -= qty_taken
                     lot_move_qty[move.id] = qty_on_link
 
                 remaining_move_qty[move.id] -= prout_move_qty[move]
