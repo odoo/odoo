@@ -46,7 +46,7 @@ class AuthSignupHome(Home):
                         ).send_mail(user_sudo.id, force_send=True)
                 return self.web_login(*args, **kw)
             except UserError as e:
-                qcontext['error'] = e.name or e.value
+                qcontext['error'] = e.args[0]
             except (SignupError, AssertionError) as e:
                 if request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))]):
                     qcontext["error"] = _("Another user is already registered using this email address.")
@@ -79,7 +79,7 @@ class AuthSignupHome(Home):
                     request.env['res.users'].sudo().reset_password(login)
                     qcontext['message'] = _("An email has been sent with credentials to reset your password")
             except UserError as e:
-                qcontext['error'] = e.name or e.value
+                qcontext['error'] = e.args[0]
             except SignupError:
                 qcontext['error'] = _("Could not reset your password")
                 _logger.exception('error when resetting password')

@@ -834,7 +834,7 @@ class Session(http.Controller):
             if request.env['res.users'].change_password(old_password, new_password):
                 return {'new_password':new_password}
         except UserError as e:
-            msg = e.name
+            msg = e.args[0]
         except AccessDenied as e:
             msg = e.args[0]
             if msg == AccessDenied().args[0]:

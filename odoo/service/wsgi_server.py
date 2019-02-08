@@ -67,7 +67,7 @@ def xmlrpc_handle_exception_int(e):
 
 def xmlrpc_handle_exception_string(e):
     if isinstance(e, odoo.exceptions.UserError):
-        fault = xmlrpclib.Fault('warning -- %s\n\n%s' % (e.name, e.value), '')
+        fault = xmlrpclib.Fault('warning -- %s' % e, '')
     elif isinstance(e, odoo.exceptions.RedirectWarning):
         fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
     elif isinstance(e, odoo.exceptions.MissingError):

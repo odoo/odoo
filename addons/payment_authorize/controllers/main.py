@@ -40,7 +40,7 @@ class AuthorizeController(http.Controller):
            return acquirer.s2s_process(kwargs).id
         except (ValidationError, UserError) as e:
            return {
-               'error': e.name,
+               'error': e.args[0],
            }
 
     @http.route(['/payment/authorize/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
@@ -70,7 +70,7 @@ class AuthorizeController(http.Controller):
             }
         except UserError as e:
             return {
-                'error': e.name,
+                'error': e.args[0],
             }
 
         if not token:
