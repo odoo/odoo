@@ -350,14 +350,16 @@ class Message(models.Model):
         message_to_tracking = dict()
         tracking_tree = dict.fromkeys(tracking_values.ids, False)
         for tracking in tracking_values:
-            message_to_tracking.setdefault(tracking.mail_message_id.id, list()).append(tracking.id)
-            tracking_tree[tracking.id] = {
-                'id': tracking.id,
-                'changed_field': tracking.field_desc,
-                'old_value': tracking.get_old_display_value()[0],
-                'new_value': tracking.get_new_display_value()[0],
-                'field_type': tracking.field_type,
-            }
+            groups = tracking.groups
+            if not groups or self.user_has_groups(groups):
+                message_to_tracking.setdefault(tracking.mail_message_id.id, list()).append(tracking.id)
+                tracking_tree[tracking.id] = {
+                    'id': tracking.id,
+                    'changed_field': tracking.field_desc,
+                    'old_value': tracking.get_old_display_value()[0],
+                    'new_value': tracking.get_new_display_value()[0],
+                    'field_type': tracking.field_type,
+                }
 
         # 4. Update message dictionaries
         for message_dict in messages:
