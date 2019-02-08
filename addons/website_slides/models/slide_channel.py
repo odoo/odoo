@@ -200,21 +200,23 @@ class Channel(models.Model):
     # Rating Mixin API
     # ---------------------------------------------------------
 
-    def action_add_member(self, target_partner=False, **member_values):
-        if not target_partner:
-            target_partner = self.env.user.partner_id
+    def action_add_member(self, **member_values):
+        new_cp = self._action_add_member(target_partner=self.env.user.partner_id, **member_values)
+        return bool(new_cp)
+
+    def _action_add_member(self, target_partner, **member_values):
         existing = self.env['slide.channel.partner'].sudo().search([
             ('channel_id', 'in', self.ids),
             ('partner_id', '=', target_partner.id)
         ])
         to_join = (self - existing.mapped('channel_id'))._filter_add_member(target_partner, **member_values)
         if to_join:
-            self.env['slide.channel.partner'].sudo().create([
+            slide_partners_sudo = self.env['slide.channel.partner'].sudo().create([
                 dict(channel_id=channel.id, partner_id=target_partner.id, **member_values)
                 for channel in to_join
             ])
-            return to_join
-        return False
+            return slide_partners_sudo
+        return self.env['slide.channel.partner'].sudo()
 
     def _filter_add_member(self, target_partner, **member_values):
         allowed = self.filtered(lambda channel: channel.visibility == 'public')
