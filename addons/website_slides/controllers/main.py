@@ -185,6 +185,19 @@ class WebsiteSlides(http.Controller):
 
         return request.render('website_slides.home', values)
 
+    @http.route(['/slides/channel/add'], type='http', auth='user', methods=['POST'], website=True)
+    def slide_channel_create(self, *args, **kw):
+        channel = request.env['slide.channel'].create({
+            'name': kw['name'],
+            'description': kw.get('description'),
+            'channel_type': kw.get('course_type', 'training'),
+            'responsible_id': request.env.user.id
+        })
+        #TODO JEM: voir avec sbu si faut garder les url /courses
+        #if channel.channel_type == 'training':
+        #    return werkzeug.utils.redirect("/courses/%s" % (slug(channel)))
+        return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
+
     # --------------------------------------------------
     # SLIDE.SLIDE CONTOLLERS
     # --------------------------------------------------

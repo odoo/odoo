@@ -34,6 +34,10 @@ class Channel(models.Model):
     active = fields.Boolean(default=True)
     description = fields.Html('Description', translate=html_translate, sanitize_attributes=False)
     sequence = fields.Integer(default=10, help='Display order')
+    channel_type = fields.Selection([
+        ('documentation', 'Documentation'),
+        ('training', 'Training')
+    ], string="Course type", default="documentation", required=True)
     category_ids = fields.One2many('slide.category', 'channel_id', string="Categories")
     # slides: promote, statistics
     slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides")
