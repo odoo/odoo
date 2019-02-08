@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.addons.sale_coupon.tests.common import TestSaleCouponCommon
+from odoo.tests import Form
 
 
 class TestSaleCouponProgramRules(TestSaleCouponCommon):
@@ -42,9 +43,13 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 1)
 
-        order.carrier_id = self.env['delivery.carrier'].search([])[1]
-        order.get_delivery_price()
-        order.set_delivery_line()
+        # I add delivery cost in Sales order
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': order.id,
+            'default_carrier_id': self.env['delivery.carrier'].search([])[1]
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
 
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2)
@@ -116,17 +121,27 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2, "We should get the 10% discount line since we bought 872.73$")
         order.carrier_id = self.env['delivery.carrier'].search([])[1]
-        order.get_delivery_price()
-        order.set_delivery_line()
+
+        # I add delivery cost in Sales order
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': order.id,
+            'default_carrier_id': self.env['delivery.carrier'].search([])[1]
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
 
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 3, "We should get the delivery line but not the free delivery since we are below 872.73$ with the 10% discount")
 
         p_minimum_threshold_free_delivery.sequence = 10
         (order.order_line - sol1).unlink()
-        order.carrier_id = self.env['delivery.carrier'].search([])[1]
-        order.get_delivery_price()
-        order.set_delivery_line()
+        # I add delivery cost in Sales order
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': order.id,
+            'default_carrier_id': self.env['delivery.carrier'].search([])[1]
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 4, "We should get both promotion line since the free delivery will be applied first and won't change the SO total")
 
@@ -167,9 +182,14 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         # it was wrongly done before.
         carrier = self.env.ref('delivery.delivery_carrier')
         carrier.product_id.taxes_id = tax_15pc_excl
-        order.carrier_id = carrier
-        order.get_delivery_price()
-        order.set_delivery_line()
+
+        # I add delivery cost in Sales order
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': order.id,
+            'default_carrier_id': carrier.id
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2)
         self.assertEqual(order.reward_amount, 0)
