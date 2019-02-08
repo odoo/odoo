@@ -258,6 +258,16 @@
                                   </div>
                                 </div>
                             </t>
+                            <t t-if="dashboard.number_to_check > 0">
+                                <div class="row">
+                                    <div class="col-7">
+                                        <a type="object" name="action_open_to_check"><t t-esc="dashboard.number_to_check"/> moves to check</a>
+                                    </div>
+                                    <div class="col-5 text-right">
+                                        <span><t t-esc="dashboard.to_check_balance"/></span>
+                                    </div>
+                                </div>
+                            </t>
                         </div>
                     </t>
                     <t t-name="JournalBodySalePurchase" id="account.JournalBodySalePurchase">

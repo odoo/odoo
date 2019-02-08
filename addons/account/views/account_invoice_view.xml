@@ -271,7 +271,11 @@
                 <div groups="account.group_account_invoice" class="alert alert-info" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('has_outstanding','=',False)]}">
                     You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> for this supplier. You can allocate them to mark this bill as paid.
                 </div>
+                <div groups="account.group_account_invoice" class="alert alert-info" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('edition_mode_available','=',False)]}">
+                    You have suspense account moves that match this invoice. <bold><button class="alert-link" type="object" name="action_reconcile_to_check" role="button" string="Check them" style="padding: 0;vertical-align: baseline;"/></bold> to mark this invoice as paid.
+                </div>
                 <field name="has_outstanding" invisible="1"/>
+                <field name="edition_mode_available" invisible="1"/>
                 <sheet string="Vendor Bill">
                     <div>
                         <span class="o_form_label" attrs="{'invisible': ['|',('state','!=','draft'), ('type','!=','in_invoice')]}">Draft Bill</span>
@@ -424,7 +428,11 @@
                 <div groups="account.group_account_invoice" class="alert alert-info" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('has_outstanding','=',False)]}">
                     You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding payments</a></bold> for this customer. You can allocate them to mark this invoice as paid.
                 </div>
+                <div groups="account.group_account_invoice" class="alert alert-info" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('edition_mode_available','=',False)]}">
+                    You have suspense account moves that match this invoice. <bold><button class="alert-link" type="object" name="action_reconcile_to_check" role="button" string="Check them" style="padding: 0;vertical-align: baseline;"/></bold> to mark this invoice as paid.
+                </div>
                 <field name="has_outstanding" invisible="1"/>
+                <field name="edition_mode_available" invisible="1"/>
                 <sheet string="Invoice">
                     <div class="oe_button_box" name="button_box">
                     </div>

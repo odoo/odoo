@@ -19,6 +19,10 @@
             <t t-else="">
                 <h1 class="statement_name" />
             </t>
+            <div class="o_filter_input_wrapper">
+                <span class="searchIcon"><i class="fa fa-search" role="img" aria-label="Search" title="Search"></i></span>
+                <input class="reconciliation_search_input o_filter_input" type="text" placeholder="Search..." />
+            </div>
             <h1 class="statement_name_edition" style="display: none;"/>
             <div class="progress progress-striped">
                 <div class="progress-text">
@@ -44,6 +48,7 @@
         <attribute name="class">o_manual_statement</attribute>
     </t>
     <t t-jquery=".o_view_noreconciliation p" t-operation="replace"></t>
+    <t t-jquery=".o_filter_input_wrapper" t-operation="replace"></t>
     <t t-jquery=".o_view_noreconciliation" t-operation="append">
         <p><b>Good Job!</b> There is nothing to reconcile.</p>
         <p>All invoices and payments have been matched, your accounts' balances are clean.</p>
@@ -214,6 +219,10 @@
             </tr>
             <tr class="create_date d-none">
                 <td class="o_td_label">Writeoff Date</td>
+                <td class="o_td_field"></td>
+            </tr>
+            <tr class="create_to_check"> <!--TODO d-none maybe see with avw-->
+                <td class="o_td_label">To Check</td>
                 <td class="o_td_field"></td>
             </tr>
         </tbody>
