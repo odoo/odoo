@@ -52,6 +52,12 @@ class MrpProduction(models.Model):
                 location = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
         return location and location.id or False
 
+    @api.model
+    def _get_default_user_id(self):
+        if self.env.context.get('default_user_id'):
+            return self.env.context['default_user_id']
+        return self._uid
+
     name = fields.Char(
         'Reference', copy=False, readonly=True, default=lambda x: _('New'))
     origin = fields.Char(
@@ -181,7 +187,7 @@ class MrpProduction(models.Model):
         compute='_compute_consumed_less_than_planned',
         help='Technical field used to see if we have to display a warning or not when confirming an order.')
 
-    user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self._uid)
+    user_id = fields.Many2one('res.users', 'Responsible', default=_get_default_user_id)
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get('mrp.production'),
