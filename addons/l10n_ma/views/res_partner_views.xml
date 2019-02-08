@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ma.res_partner_view_partner_form_inherit" model="ir.ui.view">
+        <field name="name">view.partner.form.inherit.l10n.ma</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="vat" position="after">
+                <field name="ice"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -23,5 +23,9 @@ Seddik au cours du troisième trimestre 2010.""",
         'data/account_data.xml',
         'data/account_tax_data.xml',
         'data/account_chart_template_data.xml',
+        'views/res_company_views.xml',
+        'views/res_partner_views.xml',
+        'reports/invoice_report.xml',
+        'reports/report_footer_layout.xml'
     ],
 }

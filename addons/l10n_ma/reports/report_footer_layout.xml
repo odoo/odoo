@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <xpath expr="//div[@class='text-center']//ul" position="inside">
+            <li t-if="company.ice" class="list-inline-item">
+                <label for="company.ice"/>
+                <span t-field="company.ice"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="external_layout_clean" inherit_id="web.external_layout_clean">
+        <xpath expr="//div[hasclass('footer','o_clean_footer')]//span[@class='company_address']" position="after">
+            <t t-if="company.ice">
+                <label for="company.ice"/>
+                <span t-field="company.ice"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[@class='text-center']//ul" position="inside">
+            <li t-if="company.ice" class="list-inline-item">
+                <label for="company.ice"/>
+                <span t-field="company.ice"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="external_layout_background" inherit_id="web.external_layout_background">
+        <xpath expr="//div[@class='text-center']//ul" position="inside">
+            <li t-if="company.ice" class="list-inline-item">
+                <label for="company.ice"/>
+                <span t-field="company.ice"/>
+            </li>
+        </xpath>
+    </template>
+
+</odoo>
