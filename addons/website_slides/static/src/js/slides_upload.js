@@ -53,17 +53,6 @@ var SlideDialog = Widget.extend({
 
     /**
      * @private
-     * @param {string} file_name
-     */
-    _checkUniqueSlide: function (fileName) {
-        return this._rpc({
-            model: 'slide.slide',
-            method: 'search_count',
-            args: [[['channel_id', '=', self.channelId], ['name', '=', fileName]]],
-        });
-    },
-    /**
-     * @private
      */
     _resetFile: function () {
         var control = this.$('#upload');
@@ -405,13 +394,7 @@ var SlideDialog = Widget.extend({
 
         var input = file.name;
         var inputVal = input.substr(0, input.lastIndexOf('.')) || input;
-        this._checkUniqueSlide(inputVal).then(function (exist) {
-            if (exist) {
-                var message = _t("Channel contains the given title, please change before Save or Publish.");
-                self._displayAlert(message);
-            }
-            self.$('#name').val(inputVal);
-        });
+        this.$('#name').val(inputVal);
     },
     /**
      * @private
