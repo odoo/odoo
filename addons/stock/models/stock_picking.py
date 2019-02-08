@@ -245,7 +245,8 @@ class Picking(models.Model):
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         required=True,
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        readonly=True,
+        states={'draft': [('readonly', False)]})
     picking_type_code = fields.Selection([
         ('incoming', 'Vendors'),
         ('outgoing', 'Customers'),
