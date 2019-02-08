@@ -21,7 +21,7 @@
             <field name="arch" type="xml">
                 <search string="Search Ranks">
                     <field name="name"/>
-                    <field name="karma_required"/>
+                    <field name="karma_min"/>
                     <field name="description"/>
                     <field name="user_ids"/>
                 </search>
@@ -34,7 +34,7 @@
             <field name="arch" type="xml">
                 <tree string="Ranks List">
                     <field name="name"/>
-                    <field name="karma_required"/>
+                    <field name="karma_min"/>
                     <field name="description"/>
                     <field name="user_ids"/>
                 </tree>
@@ -56,7 +56,7 @@
                             </h1>
                         </div>
                         <group>
-                            <field name="karma_required"/>
+                            <field name="karma_min"/>
                             <field name="description" placeholder="e.g. A Master Chief knows quite everything on the forum! You cannot beat him!"/>
                             <field name="create_date" invisible="1"/>
                         </group>
