@@ -395,12 +395,16 @@ class WebsiteSlides(WebsiteProfile):
     # ---------------------------------------------------
     def _prepare_open_slide_user(self, user):
         courses = request.env['slide.channel.partner'].sudo().search([('partner_id', '=', user.partner_id.id)]).channel_id
+        courses_completed = courses.filtered(lambda c: c.completed)
+        courses_ongoing = courses - courses_completed
 
         values = {
             'uid': request.env.user.id,
             'user': user,
             'main_object': user,
             'courses': courses,
+            'courses_completed': courses_completed,
+            'courses_ongoing': courses_ongoing,
             'count_courses': len(courses),
             'is_profile_page': True,
         }
