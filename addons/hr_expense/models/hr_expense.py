@@ -272,7 +272,7 @@ class HrExpense(models.Model):
             account_date = expense.sheet_id.accounting_date or expense.date or fields.Date.context_today(expense)
 
             company_currency = expense.company_id.currency_id
-            different_currency = expense.currency_id != company_currency
+            different_currency = expense.currency_id and expense.currency_id != company_currency
 
             move_line_values = []
             taxes = expense.tax_ids.with_context(round=True).compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id)
@@ -281,13 +281,17 @@ class HrExpense(models.Model):
             partner_id = expense.employee_id.address_home_id.commercial_partner_id.id
 
             # source move line
-            amount_currency = expense.total_amount if different_currency else False
+            amount = taxes['total_excluded']
+            amount_currency = False
+            if different_currency:
+                amount = expense.currency_id._convert(amount, company_currency, expense.company_id, account_date)
+                amount_currency = taxes['total_excluded']
             move_line_src = {
                 'name': move_line_name,
                 'quantity': expense.quantity or 1,
-                'debit': taxes['total_excluded'] > 0 and taxes['total_excluded'],
-                'credit': taxes['total_excluded'] < 0 and -taxes['total_excluded'],
-                'amount_currency': taxes['total_excluded'] > 0 and abs(amount_currency) or -abs(amount_currency),
+                'debit': amount if amount > 0 else 0,
+                'credit': -amount if amount < 0 else 0,
+                'amount_currency': amount_currency if different_currency else 0.0,
                 'account_id': account_src.id,
                 'product_id': expense.product_id.id,
                 'product_uom_id': expense.product_uom_id.id,
@@ -304,23 +308,25 @@ class HrExpense(models.Model):
 
             # taxes move lines
             for tax in taxes['taxes']:
-                price = expense.currency_id._convert(
-                    tax['amount'], company_currency, expense.company_id, account_date)
-                amount_currency = price if different_currency else False
+                amount = tax['amount']
+                amount_currency = False
+                if different_currency:
+                    amount = expense.currency_id._convert(amount, company_currency, expense.company_id, account_date)
+                    amount_currency = tax['amount']
                 move_line_tax_values = {
                     'name': tax['name'],
                     'quantity': 1,
-                    'debit': price > 0 and price,
-                    'credit': price < 0 and -price,
-                    'amount_currency': price > 0 and abs(amount_currency) or -abs(amount_currency),
+                    'debit': amount if amount > 0 else 0,
+                    'credit': -amount if amount < 0 else 0,
+                    'amount_currency': amount_currency if different_currency else 0.0,
                     'account_id': tax['account_id'] or move_line_src['account_id'],
                     'tax_line_id': tax['id'],
                     'expense_id': expense.id,
                     'partner_id': partner_id,
-                    'currency_id': expense.currency_id if different_currency else False,
+                    'currency_id': expense.currency_id.id if different_currency else False,
                 }
-                total_amount -= price
-                total_amount_currency -= move_line_tax_values['amount_currency'] or price
+                total_amount -= amount
+                total_amount_currency -= move_line_tax_values['amount_currency'] or amount
                 move_line_values.append(move_line_tax_values)
 
             # destination move line
@@ -330,7 +336,7 @@ class HrExpense(models.Model):
                 'credit': total_amount < 0 and -total_amount,
                 'account_id': account_dst,
                 'date_maturity': account_date,
-                'amount_currency': total_amount > 0 and abs(amount_currency) or -abs(amount_currency),
+                'amount_currency': total_amount_currency if different_currency else 0.0,
                 'currency_id': expense.currency_id.id if different_currency else False,
                 'expense_id': expense.id,
                 'partner_id': partner_id,
