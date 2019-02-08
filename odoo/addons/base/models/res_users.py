@@ -107,6 +107,11 @@ class Groups(models.Model):
         ('name_uniq', 'unique (category_id, name)', 'The name of the group must be unique within an application!')
     ]
 
+    @api.multi
+    @api.constrains('users')
+    def _check_one_user_type(self):
+        self.mapped('users')._check_one_user_type()
+
     @api.depends('category_id.name', 'name')
     def _compute_full_name(self):
         # Important: value must be stored in environment of group, not group1!
@@ -385,6 +390,13 @@ class Users(models.Model):
         action_open_website = self.env.ref('base.action_open_website', raise_if_not_found=False)
         if action_open_website and any(user.action_id.id == action_open_website.id for user in self):
             raise ValidationError(_('The "App Switcher" action cannot be selected as home action.'))
+
+    @api.multi
+    @api.constrains('groups_id')
+    def _check_one_user_type(self):
+        for user in self:
+            if len(user.groups_id.filtered(lambda x: x.category_id.xml_id == 'base.module_category_user_type')) > 1:
+                raise ValidationError(_('The user cannot have more than one user types.'))
 
     @api.multi
     def toggle_active(self):
@@ -901,7 +913,14 @@ class UsersImplied(models.Model):
             if 'groups_id' in values:
                 # complete 'groups_id' with implied groups
                 user = self.new(values)
-                gs = user.groups_id | user.groups_id.mapped('trans_implied_ids')
+                group_public = self.env.ref('base.group_public', raise_if_not_found=False)
+                group_portal = self.env.ref('base.group_portal', raise_if_not_found=False)
+                if group_public and group_public in user.groups_id:
+                    gs = self.env.ref('base.group_public') | self.env.ref('base.group_public').trans_implied_ids
+                elif group_portal and group_portal in user.groups_id:
+                    gs = self.env.ref('base.group_portal') | self.env.ref('base.group_portal').trans_implied_ids
+                else:
+                    gs = user.groups_id | user.groups_id.mapped('trans_implied_ids')
                 values['groups_id'] = type(self).groups_id.convert_to_write(gs, user.groups_id)
         return super(UsersImplied, self).create(vals_list)
 
@@ -913,9 +932,9 @@ class UsersImplied(models.Model):
             for user in self.with_context({}):
                 if not user.has_group('base.group_user'):
                     vals = {'groups_id': [(5, 0, 0)] + values['groups_id']}
-                else:
-                    gs = set(concat(g.trans_implied_ids for g in user.groups_id))
-                    vals = {'groups_id': [(4, g.id) for g in gs]}
+                    super(UsersImplied, user).write(vals)
+                gs = set(concat(g.trans_implied_ids for g in user.groups_id))
+                vals = {'groups_id': [(4, g.id) for g in gs]}
                 super(UsersImplied, user).write(vals)
         return res
 
@@ -1177,7 +1196,12 @@ class UsersView(models.Model):
                 values[f] = get_boolean_group(f) in gids
             elif is_selection_groups(f):
                 selected = [gid for gid in get_selection_groups(f) if gid in gids]
-                values[f] = selected and selected[-1] or False
+                # if 'Internal User' is in the group, this is the "User Type" group
+                # and we need to show 'Internal User' selected, not Public/Portal.
+                if self.env.ref('base.group_user').id in selected:
+                    values[f] = self.env.ref('base.group_user').id
+                else:
+                    values[f] = selected and selected[-1] or False
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):
