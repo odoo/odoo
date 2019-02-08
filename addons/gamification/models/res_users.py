@@ -58,7 +58,7 @@ class Users(models.Model):
         return True
 
     def _rank_changed(self):
-        if self.rank_id.karma_required > 0:
+        if self.rank_id.karma_min > 0:
             template = self.env.ref('gamification.mail_template_data_new_rank_reached', raise_if_not_found=False)
             if template:
                 template.send_mail(self.id, force_send=True, notif_layout='mail.mail_notification_light')
@@ -68,11 +68,11 @@ class Users(models.Model):
         The caller should filter the users on karma > 0 before calling this method
         to avoid looping on every single users
         """
-        ranks = [{'rank': rank, 'karma_required': rank.karma_required} for rank in
-                 self.env['gamification.karma.rank'].search([], order="karma_required DESC")]
+        ranks = [{'rank': rank, 'karma_min': rank.karma_min} for rank in
+                 self.env['gamification.karma.rank'].search([], order="karma_min DESC")]
         for user in self:
             for i in range(0, len(ranks)):
-                if user.karma >= ranks[i]['karma_required']:
+                if user.karma >= ranks[i]['karma_min']:
                     if user.rank_id != ranks[i]['rank']:
                         user.rank_id = ranks[i]['rank'].id
                         user.next_rank_id = ranks[i - 1]['rank'].id if i > 0 else False
