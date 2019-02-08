@@ -12,4 +12,5 @@ Elmeri Niemelä niemela.elmeri@gmail.com https://github.com/thecodebasesite/
 
 List of contributors:
 
+Elmeri Niemelä niemela.elmeri@gmail.com https://github.com/thecodebasesite/
 Ivan Avdouevski ivan.avdouevski@sprintit.fi https://github.com/sprintit
