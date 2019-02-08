@@ -231,11 +231,11 @@ class WebsiteSlides(http.Controller):
     def slide_like(self, slide_id, upvote):
         if request.website.is_public_user():
             return {'error': 'public_user'}
-        slide_users = request.env['slide.users'].sudo().search([
+        slide_partners = request.env['slide.slide.partner'].sudo().search([
             ('slide_id', '=', slide_id),
-            ('user_id', '=', request.env.uid)
+            ('partner_id', '=', request.env.user.partner_id.id)
         ])
-        if (upvote and slide_users.vote == 1) or (not upvote and slide_users.vote == -1):
+        if (upvote and slide_partners.vote == 1) or (not upvote and slide_partners.vote == -1):
             return {'error': 'vote_done'}
         slide = request.env['slide.slide'].browse(int(slide_id))
         if upvote:
