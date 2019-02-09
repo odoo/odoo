@@ -14,10 +14,6 @@ class ChannelUsersRelation(models.Model):
     _table = 'slide_channel_partner'
 
     channel_id = fields.Many2one('slide.channel', index=True, required=True)
-    state = fields.Selection([
-        ('draft', 'Waiting confirmation'),
-        ('confirmed', 'Confirmed'),
-        ('canceled', 'Canceled')], default='draft', string='Member status')
     partner_id = fields.Many2one('res.partner', index=True, required=True)
 
 
@@ -29,11 +25,6 @@ class Channel(models.Model):
     _description = 'Slide Channel'
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin', 'rating.mixin']
     _order = 'sequence, id'
-    _order_by_strategy = {
-        'most_viewed': 'total_views desc',
-        'most_voted': 'likes desc',
-        'latest': 'date_published desc',
-    }
 
     def _default_access_token(self):
         return str(uuid.uuid4())
@@ -74,15 +65,11 @@ class Channel(models.Model):
         ('public', 'Public'),
         ('invite', 'Invite')],
         default='public', required=True)
-    # members and access
     partner_ids = fields.Many2many(
         'res.partner', 'slide_channel_partner', 'channel_id', 'partner_id',
-        string='Members', help="All participants to the channel whatever their state.")
-    member_ids = fields.One2many(
-        comodel_name='res.partner', compute='_compute_member_ids', search='_search_member_ids',
-        string='Confirmed Members')
-    is_member = fields.Boolean(string='Is Member', compute='_compute_member_ids')
-    channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='base.group_system')
+        string='Members', help="All members of the channel.")
+    is_member = fields.Boolean(string='Is Member', compute='_compute_is_member')
+    channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='website.group_website_publisher')
     enroll_msg = fields.Html(
         'Enroll Message', help="Message explaining the enroll process",
         default=False, translate=html_translate, sanitize_attributes=False)
@@ -104,14 +91,13 @@ class Channel(models.Model):
             elif record.promote_strategy:
                 slides = self.env['slide.slide'].search(
                     [('website_published', '=', True), ('channel_id', '=', record.id)],
-                    limit=1, order=self._order_by_strategy[record.promote_strategy])
+                    limit=1, order=self.env['slide.slide']._order_by_strategy[record.promote_strategy])
                 record.promoted_slide_id = slides and slides[0] or False
 
-    @api.depends('channel_partner_ids.partner_id', 'channel_partner_ids.state')
+    @api.depends('channel_partner_ids.partner_id')
     @api.model
-    def _compute_member_ids(self):
+    def _compute_is_member(self):
         channel_partners = self.env['slide.channel.partner'].sudo().search([
-            ('state', '=', 'confirmed'),
             ('channel_id', 'in', self.ids),
         ])
         result = dict()
@@ -120,14 +106,6 @@ class Channel(models.Model):
         for channel in self:
             channel.valid_channel_partner_ids = result.get(channel.id, False)
             channel.is_member = self.env.user.partner_id.id in channel.valid_channel_partner_ids if channel.valid_channel_partner_ids else False
-
-    @api.model
-    def _search_member_ids(self, operator, operand):
-        assert operator != "not in", "Do not search with 'not in'"
-        members = self.env['slide.channel.partner'].sudo().search([
-            ('state', '=', 'confirmed'),
-            ('partner_id', operator, operand)])
-        return [('id', 'in', [m.channel_id.id for m in members])]
 
     @api.depends('slide_ids.slide_type', 'slide_ids.website_published')
     def _count_presentations(self):
@@ -191,8 +169,7 @@ class Channel(models.Model):
         # Ensure creator is member of its channel it is easier for him to manage it
         if vals.get('visibility') == 'invite' and not vals.get('channel_partner_ids'):
             vals['channel_partner_ids'] = [(0, 0, {
-                'partner_id': self.env.user.partner_id.id,
-                'state': 'confirmed',
+                'partner_id': self.env.user.partner_id.id
             })]
         return super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals)
 
@@ -223,29 +200,31 @@ class Channel(models.Model):
     # Rating Mixin API
     # ---------------------------------------------------------
 
-    def action_add_member(self, targe_partner=False, **member_values):
-        if not targe_partner:
-            targe_partner = self.env.user.partner_id
+    def action_add_member(self, **member_values):
+        new_cp = self._action_add_member(target_partner=self.env.user.partner_id, **member_values)
+        return bool(new_cp)
+
+    def _action_add_member(self, target_partner, **member_values):
         existing = self.env['slide.channel.partner'].sudo().search([
             ('channel_id', 'in', self.ids),
-            ('partner_id', '=', targe_partner.id)
+            ('partner_id', '=', target_partner.id)
         ])
-        to_join = (self - existing.mapped('channel_id'))._filter_add_member(targe_partner, **member_values)
+        to_join = (self - existing.mapped('channel_id'))._filter_add_member(target_partner, **member_values)
         if to_join:
-            self.env['slide.channel.partner'].sudo().create([
-                dict(channel_id=channel.id, partner_id=targe_partner.id, **member_values)
+            slide_partners_sudo = self.env['slide.channel.partner'].sudo().create([
+                dict(channel_id=channel.id, partner_id=target_partner.id, **member_values)
                 for channel in to_join
             ])
-            return to_join
-        return False
+            return slide_partners_sudo
+        return self.env['slide.channel.partner'].sudo()
 
-    def _filter_add_member(self, targe_partner, **member_values):
+    def _filter_add_member(self, target_partner, **member_values):
         allowed = self.filtered(lambda channel: channel.visibility == 'public')
         on_invite = self.filtered(lambda channel: channel.visibility == 'invite')
         if on_invite:
             try:
                 on_invite.check_access_rights('write')
-                on_invite.check_access_rules('write')
+                on_invite.check_access_rule('write')
             except:
                 pass
             else:

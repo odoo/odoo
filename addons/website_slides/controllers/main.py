@@ -231,11 +231,11 @@ class WebsiteSlides(http.Controller):
     def slide_like(self, slide_id, upvote):
         if request.website.is_public_user():
             return {'error': 'public_user'}
-        slide_users = request.env['slide.users'].sudo().search([
+        slide_partners = request.env['slide.slide.partner'].sudo().search([
             ('slide_id', '=', slide_id),
-            ('user_id', '=', request.env.uid)
+            ('partner_id', '=', request.env.user.partner_id.id)
         ])
-        if (upvote and slide_users.vote == 1) or (not upvote and slide_users.vote == -1):
+        if (upvote and slide_partners.vote == 1) or (not upvote and slide_partners.vote == -1):
             return {'error': 'vote_done'}
         slide = request.env['slide.slide'].browse(int(slide_id))
         if upvote:
@@ -259,10 +259,10 @@ class WebsiteSlides(http.Controller):
     def slide_channel_join(self, channel_id):
         if request.website.is_public_user():
             return {'error': 'public_user'}
-        joined = request.env['slide.channel'].browse(channel_id).action_add_member(state='confirmed')
-        if not joined:
+        success = request.env['slide.channel'].browse(channel_id).action_add_member()
+        if not success:
             return {'error': 'join_done'}
-        return joined.ids
+        return success
 
     @http.route(['/slides/dialog_preview'], type='json', auth='user', methods=['POST'], website=True)
     def dialog_preview(self, **data):

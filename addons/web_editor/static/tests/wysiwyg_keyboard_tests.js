@@ -1665,9 +1665,9 @@ var keyboardTestsEnter = [{
             key: 'a',
         }],
         test: {
-            content: "<div class=\"unbreakable\"><a class=\"btn\" href=\"#\">&#8203;a&#8203;</a><a class=\"btn\" href=\"#\">dom to edit</a></div>",
+            content: "<div class=\"unbreakable\"><a class=\"btn\" href=\"#\">Label</a><a class=\"btn\" href=\"#\">&#8203;adom to edit&#8203;</a></div>",
             // split button has no text so the placeholder text is selected then replaced by 'a'
-            start: "a:contents()[0]->2",
+            start: "a:eq(1):contents()[0]->2",
         },
     },
     {
@@ -1680,9 +1680,9 @@ var keyboardTestsEnter = [{
             key: 'a',
         }],
         test: {
-            content: "<div class=\"unbreakable\"><a class=\"btn\" href=\"#\">&#8203;a&#8203;</a><a class=\"btn\" href=\"#\">dom to edit</a></div>",
+            content: "<div class=\"unbreakable\"><a class=\"btn\" href=\"#\">Label</a><a class=\"btn\" href=\"#\">&#8203;adom to edit&#8203;</a></div>",
             // split button has no text so the placeholder text is selected then replaced by 'a'
-            start: "a:contents()[0]->2",
+            start: "a:eq(1):contents()[0]->2",
         },
     },
     {
@@ -1767,9 +1767,9 @@ var keyboardTestsEnter = [{
             key: 'a',
         }],
         test: {
-            content: "<div class=\"unbreakable\"><a class=\"btn\" href=\"#\">&#8203;a&#8203;</a><a class=\"btn\" href=\"#\">Label</a></div>",
+            content: "<div class=\"unbreakable\"><a class=\"btn\" href=\"#\">Label</a><a class=\"btn\" href=\"#\">&#8203;a&#8203;</a></div>",
             // Removing all text in a link replaces that text with "Label"
-            start: "a:contents()[0]->2",
+            start: "a:eq(1):contents()[0]->2",
         },
     },
     {
@@ -1781,9 +1781,8 @@ var keyboardTestsEnter = [{
             key: 'ENTER',
         }],
         test: {
-            content: "<div class=\"unbreakable\"><a class=\"btn\" href=\"#\">&#8203;Label&#8203;</a><a class=\"btn\" href=\"#\">ot to edit</a></div>",
-            start: "a:contents()[0]->1",
-            end: "a:contents()[0]->6",
+            content: "<div class=\"unbreakable\"><a class=\"btn\" href=\"#\">Label</a><a class=\"btn\" href=\"#\">&#8203;ot to edit&#8203;</a></div>",
+            start: "a:eq(1):contents()[0]->1",
         },
     },
 ];

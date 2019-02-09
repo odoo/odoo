@@ -15,14 +15,14 @@ class KarmaError(Forbidden):
 class KarmaRank(models.Model):
     _name = 'gamification.karma.rank'
     _description = 'Rank based on karma'
-    _order = 'karma_required'
+    _order = 'karma_min'
 
     name = fields.Text(string='Rank Name', translate=True, required=True)
     description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False,)
     description_reach_next = fields.Html(
         string='Motivation phrase', translate=html_translate, sanitize_attributes=False,
         help="Motivation phrase to reach next rank")
-    karma_required = fields.Integer(string='Required Karma', help='Minimum karma needed to reach this rank')
+    karma_min = fields.Integer(string='Required Karma', help='Minimum karma needed to reach this rank')
     user_ids = fields.One2many('res.users', 'rank_id', string='Users', help="Users having this rank")
     image = fields.Binary('Rank Icon')
     image_medium = fields.Binary(

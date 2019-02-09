@@ -554,12 +554,6 @@
             <field name="target">new</field>
         </record>
 
-        <record id="action_bank_reconcile_bank_statements" model="ir.actions.client">
-            <field name="name">Reconciliation on Bank Statements</field>
-            <field name="tag">bank_statement_reconciliation_view</field>
-            <field name="context">{'statement_ids': [active_id]}</field>
-        </record>
-
         <record id="view_bank_statement_tree" model="ir.ui.view">
             <field name="name">account.bank.statement.tree</field>
             <field name="model">account.bank.statement</field>
@@ -605,7 +599,7 @@
                 <form string="Bank Statement">
                 <header>
                     <field name="all_lines_reconciled" invisible="1" />
-                    <button name="%(action_bank_reconcile_bank_statements)d" string="Reconcile" type="action" class="oe_highlight" attrs="{'invisible':['|','|',('all_lines_reconciled','=',True),('line_ids','=',[]),('state', '!=', 'open')]}"/>
+                    <button name="action_bank_reconcile_bank_statements" string="Reconcile" type="object" class="oe_highlight" attrs="{'invisible':['|','|',('all_lines_reconciled','=',True),('line_ids','=',[]),('state', '!=', 'open')]}"/>
                     <button name="check_confirm_bank" string="Validate" type="object" class="oe_highlight" attrs="{'invisible':['|','|',('all_lines_reconciled','=',False),('line_ids','=',[]),('state', '!=', 'open')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="open,confirm"/>
                 </header>
@@ -836,6 +830,7 @@
                             </group>
                             <group>
                                 <field name="auto_reconcile" attrs="{'invisible': [('rule_type', '=', 'writeoff_button')]}"/>
+                                <field name="to_check" attrs="{'invisible': [('rule_type', '!=', 'writeoff_button')]}"/>
                             </group>
                         </group>
                         <group string="Conditions on Bank Statement Line">
@@ -1647,6 +1642,7 @@
                                 <field name="auto_reverse" attrs="{'readonly':[('reverse_entry_id', '!=', False)]}"/>
                                 <field name="reverse_date" attrs="{'invisible':[('auto_reverse', '=', False)], 'required':[('auto_reverse', '=', True)],'readonly':[('reverse_entry_id', '!=', False)]}"/>
                                 <field name="reverse_entry_id" attrs="{'invisible':True}"/>
+                                <field name="to_check"/>
                             </group>
                         </page>
                     </notebook>
@@ -1668,6 +1664,7 @@
                     <field name="date"/>
                     <filter string="Unposted" name="unposted" domain="[('state','=','draft')]" help="Unposted Journal Entries"/>
                     <filter string="Posted" name="posted" domain="[('state','=','posted')]" help="Posted Journal Entries"/>
+                    <filter string="To Check" name="to_check" domain="[('to_check', '=', True)]"/>
                     <separator/>
                     <filter string="Sales" name="sales" domain="[('journal_id.type','=','sale')]" context="{'default_journal_type': 'sale'}"/>
                     <filter string="Purchases" name="purchases" domain="[('journal_id.type','=','purchase')]" context="{'default_journal_type': 'purchase'}"/>
