@@ -371,13 +371,15 @@ class AccountMoveLine(models.Model):
     @api.depends('debit', 'credit', 'move_id.matched_percentage', 'move_id.journal_id')
     def _compute_cash_basis(self):
         for move_line in self:
+            move_line_data = {}
             if move_line.journal_id.type in ('sale', 'purchase'):
-                move_line.debit_cash_basis = move_line.debit * move_line.move_id.matched_percentage
-                move_line.credit_cash_basis = move_line.credit * move_line.move_id.matched_percentage
+                move_line_data['debit_cash_basis'] = move_line.debit * move_line.move_id.matched_percentage
+                move_line_data['credit_cash_basis'] = move_line.credit * move_line.move_id.matched_percentage
             else:
-                move_line.debit_cash_basis = move_line.debit
-                move_line.credit_cash_basis = move_line.credit
-            move_line.balance_cash_basis = move_line.debit_cash_basis - move_line.credit_cash_basis
+                move_line_data['debit_cash_basis'] = move_line.debit
+                move_line_data['credit_cash_basis'] = move_line.credit
+            move_line_data['balance_cash_basis'] = move_line.debit_cash_basis - move_line.credit_cash_basis
+            move_line.update(move_line_data)
 
     @api.depends('move_id.line_ids', 'move_id.line_ids.tax_line_id', 'move_id.line_ids.debit', 'move_id.line_ids.credit')
     def _compute_tax_base_amount(self):
