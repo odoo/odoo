@@ -4493,7 +4493,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             result as a list or a recordset (if ``func`` returns recordsets).
         """
         if self:
-            vals = [func(rec) for rec in self]
+            vals = [func(rec) for rec in self.with_context(prefetch_fields=False)]
             if isinstance(vals[0], BaseModel):
                 return vals[0].union(*vals)         # union of all recordsets
             return vals
