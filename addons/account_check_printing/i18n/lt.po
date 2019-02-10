@@ -34,7 +34,7 @@ msgstr ": Kvito numerio eiliškumas"
 #: code:addons/account_check_printing/models/account_payment.py:63
 #, python-format
 msgid "A check memo cannot exceed 60 characters."
-msgstr "Čekio pastaba negali viršyti 60 ženklų."
+msgstr "Kvito pastaba negali viršyti 60 ženklų."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_chart_template
@@ -52,6 +52,8 @@ msgid ""
 "Adjust the margins of generated checks to make it fit your printer's "
 "settings."
 msgstr ""
+"Nustatykite sugeneruotų čekių paraštes, kad jos tiktų prie jūsų spausdintuvo"
+" nustatymų."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
@@ -68,19 +70,19 @@ msgstr "Atšaukti"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid "Check Layout"
-msgstr ""
+msgstr "Kvito išdėstymas"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_left
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 msgid "Check Left Margin"
-msgstr ""
+msgstr "Kairė kvito paraštė"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_number
 #: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments__check_number
 msgid "Check Number"
-msgstr "Čekio numeris"
+msgstr "Kvito numeris"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
@@ -95,7 +97,7 @@ msgstr "Kvito spausdinimo mokėjimo būdas pasirinktas"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 msgid "Check Right Margin"
-msgstr ""
+msgstr "Dešinė kvito paraštė"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_sequence_id
@@ -106,7 +108,7 @@ msgstr "Kvito eiliškumas"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_top
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_top
 msgid "Check Top Margin"
-msgstr ""
+msgstr "Viršutinė kvito paraštė"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -123,7 +125,7 @@ msgstr "Kvitas spausdinimui"
 #. module: account_check_printing
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
 msgid "Checks"
-msgstr "Čekiai"
+msgstr "Kvitai"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_payment_check_printing_search
@@ -133,7 +135,7 @@ msgstr "Kvitai spausdinimui"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
 msgid "Checks numbering sequence."
-msgstr "Čekių numeravimo eiliškumas."
+msgstr "Kvitų numeravimo eiliškumas."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:97
@@ -154,7 +156,7 @@ msgstr "Įmonės"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__country_code
 msgid "Company Country code"
-msgstr ""
+msgstr "Įmonės šalies kodas"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
@@ -222,7 +224,7 @@ msgstr "Rankinis numeravimas"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
 msgid "Multi-Pages Check Stub"
-msgstr ""
+msgstr "Kelių puslapių kvito šaknelė"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_next_number
@@ -242,8 +244,8 @@ msgid ""
 " are not already numbered, you can manage the numbering in the journal "
 "configuration page."
 msgstr ""
-"Čekio numeris, atitinkantis šį mokėjimą. Jei jūsų iš anksto atspausdinti "
-"čekiai nėra sunumeruoti, galite tvarkyti numeraciją žurnalo konfigūracijos "
+"Kvito numeris, atitinkantis šį mokėjimą. Jei jūsų iš anksto atspausdinti "
+"kvitai nėra sunumeruoti, galite tvarkyti numeraciją žurnalo konfigūracijos "
 "puslapyje."
 
 #. module: account_check_printing
@@ -289,7 +291,7 @@ msgstr "Spausdinti kvitus"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_date_label
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_date_label
 msgid "Print Date Label"
-msgstr ""
+msgstr "Spausdinti datos etiketę"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:94
@@ -307,7 +309,7 @@ msgstr "Užregistruoti mokėjimus"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
 msgid "Right Margin"
-msgstr ""
+msgstr "Dešinė paraštė"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
@@ -316,6 +318,8 @@ msgid ""
 "Select the format corresponding to the check paper you will be printing your checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
+"Pasirinkite formatą, atitinkantį popierių, ant kurio spausdinsite savo kvitus.\n"
+"Norėdami išjungti šią funkciją, pasirinkite \"nieko\"."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
@@ -368,6 +372,8 @@ msgid ""
 "This option allows you to print check details (stub) on multiple pages if "
 "they don't fit on a single page."
 msgstr ""
+"Šis pasirinkimas leidžia jums spausdinti čekio informaciją (šaknelę) "
+"keliuose puslapiuose, jei ji netelpa viename."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -376,6 +382,8 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA. "
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"Šis pasirinkimas leidžia jums ant kvito spausdinti datą, kaip CPA. Išjunkite"
+" jį, jei jūsų iš anksto atspausdintuose kvituose jau yra data."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -395,18 +403,20 @@ msgid ""
 "You have to choose a check layout. For this, go in Apps, search for 'Checks "
 "layout' and install one."
 msgstr ""
+"Turite pasirinkti čekio išdėstymą. Eikite į programas, suraskite \"Čekių "
+"išdėstymą\" ir jį įdiekite."
 
 #. module: account_check_printing
 #: selection:res.company,account_check_printing_layout:0
 msgid "check in middle"
-msgstr ""
+msgstr "čekis viduryje"
 
 #. module: account_check_printing
 #: selection:res.company,account_check_printing_layout:0
 msgid "check on bottom"
-msgstr ""
+msgstr "čekis apačioje"
 
 #. module: account_check_printing
 #: selection:res.company,account_check_printing_layout:0
 msgid "check on top"
-msgstr ""
+msgstr "čekis viršuje"

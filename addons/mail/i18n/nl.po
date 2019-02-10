@@ -163,9 +163,9 @@ msgid ""
 msgstr ""
 "<br><br>\n"
 "Type <b>@gebruikersnaam</b> om iemand te noemen en zijn aandacht te vragen.<br>\n"
-"             Type <b>#kanaal</b> om een kanaal te noemen.<br>\n"
-"             Type <b>/opdracht</b> om een opdracht uit te voeren.<br>\n"
-"             Type <b>:snelkoppeling</b> om standaardantwoorden in uw bericht in te voegen.<br>"
+"Type <b>#kanaal</b> om een kanaal te noemen.<br>\n"
+"Type <b>/opdracht</b> om een opdracht uit te voeren.<br>\n"
+"Type <b>:snelkoppeling</b> om standaardantwoorden in uw bericht in te voegen.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:722
@@ -220,7 +220,7 @@ msgid ""
 "groups=\"base.group_user\"/>"
 msgstr ""
 "<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"Deze "
-"e-mail staat op de blacklist voor bulkmalingen\" aria-label=\"Blacklisted\" "
+"e-mail staat op de blacklist voor bulkmailing\" aria-label=\"Op blacklist\" "
 "attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
 "groups=\"base.group_user\"/>"
 
@@ -290,7 +290,7 @@ msgid ""
 "                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
-"                                <strong>E-mail bulkailing</strong> op\n"
+"                                <strong>E-mail bulkmailing</strong> op\n"
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">de geselecteerde records</span>\n"
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">de huidige zoekfilter</span>.\n"
 "                            </span>\n"
@@ -374,7 +374,7 @@ msgid ""
 "note. Followers won't receive any email notification."
 msgstr ""
 "<strong>Interne communicatie</strong>: door te antwoorden wordt een interne "
-"notitie geplaatst. Volgers ontvangen geen e-mailmelding."
+"notitie aangemaakt. Volgers ontvangen hiervan geen e-mailmelding."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -462,7 +462,7 @@ msgstr "Vereist actie"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__state
 msgid "Action To Do"
-msgstr "Actie te doen"
+msgstr "Uit te voeren actie"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_act_window_view
@@ -3255,7 +3255,7 @@ msgid ""
 msgstr ""
 "Middelgrote foto van de groep. Deze wordt automatisch aangepast naar een "
 "128x128px afbeelding, met behoud van verhouding. Gebruik dit veld in "
-"formulier- of in sommige kanban weergaves."
+"formulier- of in sommige kanban weergaven."
 
 #. module: mail
 #: selection:mail.activity.type,category:0
@@ -5755,7 +5755,7 @@ msgstr "Video"
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 #, python-format
 msgid "View"
-msgstr "Weergave"
+msgstr "Bekijk"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:745
@@ -6130,7 +6130,7 @@ msgid ""
 "    is used to collect replies and should not be used to directly contact"
 msgstr ""
 "kan niet worden verwerkt. Dit adres\n"
-"     wordt gebruikt om antwoorden te verzamelen en mag niet worden gebruikt om rechtstreeks contact op te nemen"
+"wordt gebruikt om antwoorden te verzamelen en mag niet worden gebruikt om rechtstreeks contact op te nemen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
@@ -6265,7 +6265,7 @@ msgstr "nu"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "on"
-msgstr "op"
+msgstr "voor"
 
 #. module: mail
 #. openerp-web
@@ -6329,7 +6329,7 @@ msgstr "antwoord op ontbrekend document (%s,%s)"
 #, python-format
 msgid "reply to missing document (%s,%s), fall back on new document creation"
 msgstr ""
-"reactie op missend document  (%s,%s), val terug op een nieuw document "
+"reactie op ontbrekend document  (%s,%s), val terug op een nieuw document "
 "aanmaken"
 
 #. module: mail
@@ -6386,7 +6386,7 @@ msgstr "dit document"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "to close for"
-msgstr "te sluiten voor"
+msgstr "uit te voeren voor"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1074
