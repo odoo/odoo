@@ -339,6 +339,8 @@ msgid ""
 "<span class=\"o_form_label\">Default Taxes</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">デフォルト税</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1451,7 +1453,7 @@ msgstr "現金基準での税計上ができるようにする"
 #. module: account
 #: model:res.groups,name:account.group_fiscal_year
 msgid "Allow to define fiscal years of more or less than a year"
-msgstr ""
+msgstr "1年より長い/短い会計年度の定義を許可"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2090,7 +2092,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__account_bank_reconciliation_start
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_bank_reconciliation_start
 msgid "Bank Reconciliation Threshold"
-msgstr ""
+msgstr "銀行消込開始日"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -3161,7 +3163,7 @@ msgstr "新しい銀行口座を作成する"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_out_refund
 msgid "Create a credit note"
-msgstr ""
+msgstr "クレジットノートを作成"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_tree1
@@ -3222,7 +3224,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_in_refund
 msgid "Create a vendor credit note"
-msgstr ""
+msgstr "仕入先クレジットノートを作成"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -3415,13 +3417,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund
 #, python-format
 msgid "Credit Note"
-msgstr "返金通知"
+msgstr "クレジットノート"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:487
 #, python-format
 msgid "Credit Note - %s"
-msgstr ""
+msgstr "クレジットノート - %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3449,7 +3451,7 @@ msgstr "クレジットノート"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence_number_next
 msgid "Credit Notes: Next Number"
-msgstr ""
+msgstr "クレジットノート: 次の番号"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__credit_account_id
@@ -3793,7 +3795,7 @@ msgstr "デフォルト販売税"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default Sending Options"
-msgstr ""
+msgstr "デフォルト送信オプション"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__tax_ids
@@ -3821,12 +3823,12 @@ msgstr "ローカル取引に適用されるデフォルト税"
 #. module: account
 #: model:ir.model.fields,help:account.field_product_template__supplier_taxes_id
 msgid "Default taxes used when buying the product."
-msgstr ""
+msgstr "プロダクト購買時に適用されるデフォルト税"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_template__taxes_id
 msgid "Default taxes used when selling the product."
-msgstr ""
+msgstr "プロダクト販売時に適用されるデフォルト税"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5156,7 +5158,7 @@ msgstr "銀行取引明細書をQIFでインポート"
 #: selection:account.invoice,state:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "In Payment"
-msgstr ""
+msgstr "支払中"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:345
@@ -6324,7 +6326,7 @@ msgstr "メーリングリスト"
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_payment__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "主な添付"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__currency_id
@@ -10792,7 +10794,7 @@ msgstr "為替レートを自動更新"
 #: code:addons/account/static/src/xml/bills_tree_upload_views.xml:5
 #, python-format
 msgid "Upload"
-msgstr ""
+msgstr "アップロード"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_import_wizard_form_view

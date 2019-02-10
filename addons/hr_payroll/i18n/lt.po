@@ -56,7 +56,7 @@ msgstr ""
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Payroll Rules</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Algalapio taisyklės</span>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
@@ -65,6 +65,9 @@ msgid ""
 " selected employee(s) based on the dates and credit note specified on "
 "Payslips Run.</span>"
 msgstr ""
+"<span colspan=\"4\" nolabel=\"1\">Šis vedlys sugeneruos algalapius visiems "
+"pasirinktiems darbuotojams pagal datas ir algalapių veikime nurodytas "
+"kreditines sąskaitas.</span>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -153,6 +156,9 @@ msgid ""
 "            payment of the employees. It can be the social security, the\n"
 "            state or anyone that collect or inject money on payslips."
 msgstr ""
+"Įmokų registras yra trečioji šalis, įtraukta į atlyginimo\n"
+"mokėjimą darbuotojams. Tai gali būti socialinis draudimas,\n"
+"valstybė ar bet kas, kad surenka ar įdeda pinigus į algalapius."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_account_accountant
@@ -179,7 +185,7 @@ msgstr "Aktyvus"
 #. module: hr_payroll
 #: model_terms:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid "Add a new contribution register"
-msgstr ""
+msgstr "Pridėti naują įmokų registrą"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -262,7 +268,7 @@ msgstr "Belgiškas algalapis"
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Bi-monthly"
-msgstr "Kas du mėnesius"
+msgstr "Du kartus per mėnesį"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -1050,7 +1056,7 @@ msgstr "Algalapių suvestinės"
 #. module: hr_payroll
 #: model:ir.actions.report,name:hr_payroll.payslip_details_report
 msgid "PaySlip Details"
-msgstr "Detalus algalapis"
+msgstr "Algalapio duomenys"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
@@ -1082,7 +1088,7 @@ msgstr "Algalapis"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
 msgid "Payroll Contribution Register Report"
-msgstr ""
+msgstr "Algalapio įmokų registro ataskaita"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -1109,7 +1115,7 @@ msgstr "Algalapis"
 #: code:addons/hr_payroll/models/hr_payslip.py:82
 #, python-format
 msgid "Payslip 'Date From' must be earlier 'Date To'."
-msgstr ""
+msgstr "Algalapio \"Data nuo\" turi būti ankstesnė nei \"Data iki\":"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
@@ -1128,12 +1134,12 @@ msgstr "Atlyginimo apskaičiavimo duomenys"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_employee__payslip_count
 msgid "Payslip Count"
-msgstr ""
+msgstr "Algalapių skaičius"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
 msgid "Payslip Details Report"
-msgstr ""
+msgstr "Algalapių informacijos ataskaita"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
@@ -1168,7 +1174,7 @@ msgstr "Algalapio eilutės pagal įmokų registrą"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
 msgid "Payslip Lines by Contribution Registers"
-msgstr ""
+msgstr "Algalapio eilutės pagal įmokų registrus"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__name
@@ -1349,7 +1355,7 @@ msgstr "Atlyginimo skaičiavimas"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule
 msgid "Salary Rule"
-msgstr ""
+msgstr "Atlyginimo taisyklė"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
@@ -1409,7 +1415,7 @@ msgstr "Atlyginimo struktūros"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract__schedule_pay
 msgid "Scheduled Pay"
-msgstr "Suplanuotas mokėjiams"
+msgstr "Suplanuotas mokėjimas"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
@@ -1603,13 +1609,13 @@ msgstr ""
 #: code:addons/hr_payroll/models/hr_salary_rule.py:217
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
-msgstr "Neteisingas python kodas, nurodytas atlyginimo taisyklei %s (%s)."
+msgstr "Neteisingas Python kodas, nurodytas atlyginimo taisyklei %s (%s)."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:240
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
-msgstr "Neteisinga python sąlyga, nurodyta atlyginimo taisyklei %s (%s)."
+msgstr "Neteisinga Python sąlyga, nurodyta atlyginimo taisyklei %s (%s)."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:204
@@ -1627,7 +1633,7 @@ msgstr "Atlyginimo taisyklėje apibrėžta neteisinga intervalo sąlyga %s (%s).
 #: code:addons/hr_payroll/models/hr_salary_rule.py:36
 #, python-format
 msgid "You cannot create a recursive salary structure."
-msgstr ""
+msgstr "Negalite sukurti pasikartojančios atlyginimo struktūros."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:127

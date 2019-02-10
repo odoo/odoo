@@ -98,12 +98,12 @@ msgstr "Automatiniai veiksmai"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_line_test
 msgid "Automated Rule Line Test"
-msgstr ""
+msgstr "Automatizuotos taisyklės eilutės testas"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_lead_test
 msgid "Automated Rule Test"
-msgstr ""
+msgstr "Automatizuotos taisyklės testas"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
@@ -190,6 +190,8 @@ msgid ""
 "Check this box if this contact is a customer. It can be selected in sales "
 "orders."
 msgstr ""
+"Pažymėkite, jei šis kontaktas yra klientas. Jie gali būti pasirinkti "
+"pardavimo užsakymuose."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
@@ -203,7 +205,7 @@ msgid ""
 "returned action value will be used as global return value."
 msgstr ""
 "Dukteriniai serverio veiksmai, kurie bus atlikti. Atkreipkite dėmesį, kad "
-"paskutinio grąžinimo grąžinta reikšmė bus naudojama kai bendroji grąžinimo "
+"paskutinio grąžinimo grąžinta reikšmė bus naudojama kaip bendroji grąžinimo "
 "reikšmė."
 
 #. module: base_automation
@@ -215,13 +217,13 @@ msgstr "Uždaryta"
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
 msgstr ""
-"Kableliu atskirtas sąrašas laukų pavadinimų, kurie iššaukia pakeitimų "
+"Kableliu atskirtas laukų pavadinimų sąrašas, kurie iššaukia pakeitimų "
 "vykdymą."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_id
 msgid "Create/Write Target Model"
-msgstr "Kurti / Parašyti tikslinį modelį"
+msgstr "Kurti / Rašyti tikslinį modelį"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -256,7 +258,7 @@ msgid ""
 msgstr ""
 "Atidėti po iššaukimo datos.\n"
 "Galite įrašyti neigiamą skaičių, jei reikia atidėjimo\n"
-"po iššaukimo datos, pvz., 15 min. prieš susitikimą \n"
+"prieš iššaukimo datą, pvz., 15 min. prieš susitikimą \n"
 "siunčiamas priminimas."
 
 #. module: base_automation
@@ -272,7 +274,7 @@ msgstr "Uždelsimo tipas"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_demo
 msgid "Demo"
-msgstr ""
+msgstr "Demo"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -382,7 +384,7 @@ msgstr "Eilutė"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__link_field_id
 msgid "Link using field"
-msgstr "Nuorodas naudojantis laukas"
+msgstr "Nuoroda, naudojanti lauką"
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -441,7 +443,7 @@ msgstr "Pastaba"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_fields
 msgid "On Change Fields Trigger"
-msgstr "Pakeitimų laukuose iššaukimas"
+msgstr "Iššaukus laukų pakeitimą"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -550,7 +552,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
-msgstr ""
+msgstr "Nustatyti naują automatinė automatizaciją"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__state
@@ -579,6 +581,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
+"\"%(trigger_value)s\" %(trigger_label)s gali būti naudojama tik su "
+"\"%(state_value)s\" veiksmo tipu"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -640,6 +644,12 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Naudokite automatizuotus veiksmus automatiniam veiksmų\n"
+"suaktyvinimui įvairiuose ekranuose. Pavyzdžiui: konkretaus\n"
+"vartotojo sukurtas šaltasis kontaktas gali būti automatiškai\n"
+"nustatytas konkrečiai pardavimų komandai arba galimybė,\n"
+"kuri yra laukiančioje būsenoje, gali automatiškai suaktyvinti\n"
+"priminimo laišką praėjus 14 dienų."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__user_id
@@ -686,7 +696,7 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
-"Kai sąlyga turėtų būti iššaukiama.\n"
+"Kada sąlyga turėtų būti iššaukiama.\n"
 "Jei yra, ji bus patikrinama planuoklio. Jei nėra, ji bus patikrinama sukūrimo ir atnaujinimo metu."
 
 #. module: base_automation
@@ -700,3 +710,5 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
 msgstr ""
+"Parašykite Python kodą, kurį vykdys veiksmas. Galima naudoti kintamuosius; "
+"pagalbą apie naudojamas Python išraiškas gali rasti pagalbos skiltyje."

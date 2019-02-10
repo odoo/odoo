@@ -37,6 +37,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Запишіть табелі\n"
+"                </p><p>\n"
+"                    Ви можете зареєструвати та відстежувати ваші робочі години за проектом кожного\n"
+"                    дня. Кожна година, витрачена на проект, стане вартістю та може бути виставлена у рахунку\n"
+"                    клієнтам, якщо потрібно.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__billable_type
@@ -44,6 +53,8 @@ msgid ""
 "* At Project Rate: All timesheets on the project will be billed at the same rate\n"
 "* At Employee Rate: Timesheets will be billed at a rate defined at employee level"
 msgstr ""
+"* За проектною ставкою: всі розрахунки за проектом будуть виставлятися за тією ж ставкою\n"
+"* За ставками працівників: графік розрахунків буде виставлятися на рівні, визначеному на рівні працівників"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -53,7 +64,7 @@ msgstr "<b>Всього</b>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Time Billing</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Виставлення рахунку по часу</span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet
@@ -67,6 +78,8 @@ msgid ""
 "A billable project should be linked to a Sales Order Item having a Service "
 "product."
 msgstr ""
+"Проект, що підлягає оплаті, повинен бути пов'язаний з товаром, який має "
+"товар як послугу."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:55
@@ -75,6 +88,8 @@ msgid ""
 "A billable project should be linked to a Sales Order Item that does not come"
 " from an expense or a vendor bill."
 msgstr ""
+"Проект, що підлягає оплаті, повинен бути пов'язаний з товаром, який не "
+"походить з витрат або рахунку постачальника."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
@@ -94,7 +109,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
 msgid "Amount to invoice"
-msgstr ""
+msgstr "Сума до виставлення в рахунку"
 
 #. module: sale_timesheet
 #: sql_constraint:project.create.sale.order.line:0
@@ -103,6 +118,8 @@ msgid ""
 "An employee cannot be selected more than once in the mapping. Please remove "
 "duplicate(s) and try again."
 msgstr ""
+"Працівника не можна вибрати більше одного разу у відображенні. Видаліть "
+"дублікати та повторіть спробу."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__analytic_account_id
@@ -132,7 +149,7 @@ msgstr "Призначити"
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.project_task_action_multi_assign_so_line
 msgid "Assign Sale Order Item"
-msgstr ""
+msgstr "Призначити елемент замовлення на продаж"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task_assign_sale
@@ -578,7 +595,7 @@ msgstr "Основні етапи (вручну встановити кільк�
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
 msgid "My Project"
-msgstr ""
+msgstr "Мій проект"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:249
@@ -601,7 +618,7 @@ msgstr ""
 #: code:addons/sale_timesheet/controllers/main.py:208
 #, python-format
 msgid "No Sales Order"
-msgstr ""
+msgstr "Немає замовлень на продаж"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:170
@@ -609,7 +626,7 @@ msgstr ""
 #: code:addons/sale_timesheet/controllers/main.py:190
 #, python-format
 msgid "No Sales Order Line"
-msgstr ""
+msgstr "Немає рядка замовлення на продаж"
 
 #. module: sale_timesheet
 #: selection:account.analytic.line,timesheet_invoice_type:0
@@ -666,12 +683,12 @@ msgstr "По замовленій кількості"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_cost
 msgid "Other Cost"
-msgstr ""
+msgstr "Інша вартість"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Other costs"
-msgstr ""
+msgstr "Інші вартості"
 
 #. module: sale_timesheet
 #. openerp-web
@@ -694,7 +711,7 @@ msgstr "Шаблон товару"
 #. module: sale_timesheet
 #: model:ir.filters,name:sale_timesheet.ir_filter_project_profitability_report_manager_and_product
 msgid "Product by Customer"
-msgstr ""
+msgstr "Товар за клієнтом"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__product_id
