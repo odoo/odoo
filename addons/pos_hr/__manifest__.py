@@ -20,6 +20,6 @@
         'views/pos_order_report_view.xml',
     ],
     'installable': True,
-    'auto-install': True,
+    'auto_install': True,
     'qweb': ['static/src/xml/pos.xml'],
 }
