@@ -706,6 +706,7 @@ var FieldX2Many = AbstractField.extend({
      * @override
      */
     init: function (parent, name, record, options) {
+        var self = this;
         this._super.apply(this, arguments);
         this.operations = [];
         this.isReadonly = this.mode === 'readonly';
@@ -721,6 +722,18 @@ var FieldX2Many = AbstractField.extend({
                                             JSON.parse(arch.attrs.delete) :
                                             true;
             this.editable = arch.attrs.editable;
+            /* 
+            Set columnInvisibleFields which have not been set before.
+            This is the case for O2M fields where the tree view is not embedded in the form view.
+            */
+            if (typeof this.attrs.columnInvisibleFields === "undefined") {
+                this.attrs.columnInvisibleFields = {};
+                _.each(arch.children, function (child) {
+                    if (child.attrs && child.attrs.modifiers && child.attrs.modifiers.column_invisible) {
+                        self.attrs.columnInvisibleFields[child.attrs.name] = child.attrs.modifiers.column_invisible;
+                    };
+                });
+            };            
         }
         if (this.attrs.columnInvisibleFields) {
             this._processColumnInvisibleFields();
