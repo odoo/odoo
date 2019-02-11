@@ -381,7 +381,7 @@
         <div class="col-xl-3 col-lg-4 col-md-6 col-12 mt16 mb16" t-foreach="slides" t-as="slide">
             <div class="card card-body">
                 <a t-attf-href="/slides/slide/#{slug(slide)}">
-                    <img t-attf-src="/web/image/slide.slide/#{slide.id}/image_thumb" class="img-fluid img-thumbnail oe_slides_grid_thumbnail" alt="slide.name"/>
+                    <img t-attf-src="/web/image/slide.slide/#{slide.id}/image_medium" class="img-fluid img-thumbnail oe_slides_grid_thumbnail" alt="slide.name"/>
                 </a>
                 <span t-if="not slide.website_published" class="badge badge-danger" style="position: absolute;right: 20px;top: 7px;">Unpublished</span>
 
@@ -708,7 +708,7 @@
 <template id="related_slides" name="Related Slide">
     <li class="media mt-3">
         <a t-attf-href="/slides/slide/#{slug(slide)}" class="mr-3">
-            <img class="oe_slides_apart_small" t-attf-src="/web/image/slide.slide/#{slide.id}/image_thumb" alt="slide.name"/>
+            <img class="oe_slides_apart_small" t-attf-src="/web/image/slide.slide/#{slide.id}/image_small" alt="slide.name"/>
         </a>
         <div class="media-body">
             <a t-attf-href="/slides/slide/#{slug(slide)}"><h6 t-esc="slide.name" class="mb-1"/></a>

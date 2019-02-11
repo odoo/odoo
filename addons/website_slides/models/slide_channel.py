@@ -73,19 +73,18 @@ class Channel(models.Model):
         string='Tags', help='Used to categorize and filter displayed channels/courses')
     category_ids = fields.One2many('slide.category', 'channel_id', string="Categories")
     image = fields.Binary("Image", attachment=True)
+    image_large = fields.Binary("Large image", attachment=True)
     image_medium = fields.Binary("Medium image", attachment=True)
     image_small = fields.Binary("Small image", attachment=True)
     # slides: promote, statistics
     slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides")
+    slide_last_update = fields.Date('Last Update', compute='_compute_slide_last_update', store=True)
     slide_partner_ids = fields.One2many('slide.slide.partner', 'channel_id', string="Slide User Data", groups='website.group_website_publisher')
     promote_strategy = fields.Selection([
-        ('none', 'No Featured Presentation'),
         ('latest', 'Latest Published'),
         ('most_voted', 'Most Voted'),
-        ('most_viewed', 'Most Viewed'),
-        ('custom', 'Featured Presentation')],
-        string="Featuring Policy", default='most_voted', required=True)
-
+        ('most_viewed', 'Most Viewed')],
+        string="Featuring Policy", default='latest', required=True)
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     nbr_presentations = fields.Integer('Number of Presentations', compute='_compute_slides_statistics', store=True)
     nbr_documents = fields.Integer('Number of Documents', compute='_compute_slides_statistics', store=True)
@@ -129,6 +128,11 @@ class Channel(models.Model):
     completion = fields.Integer('Completion', compute='_compute_user_statistics')
     can_upload = fields.Boolean('Can Upload', compute='_compute_access')
     can_publish = fields.Boolean('Can Publish', compute='_compute_access')
+
+    @api.depends('slide_ids.is_published')
+    def _compute_slide_last_update(self):
+        for record in self:
+            record.slide_last_update = fields.Date.today()
 
     @api.depends('channel_partner_ids.channel_id')
     def _compute_members_count(self):
@@ -201,10 +205,6 @@ class Channel(models.Model):
             if channel.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
 
-    @api.onchange('visibility')
-    def change_visibility(self):
-        pass
-
     @api.multi
     def action_redirect_to_members(self):
         action = self.env.ref('website_slides.slide_channel_partner_action').read()[0]
@@ -269,13 +269,13 @@ class Channel(models.Model):
                 'partner_id': self.env.user.partner_id.id
             })]
         if 'image' in vals:
-            tools.image_resize_images(vals)
+            tools.image_resize_images(vals, return_large=True)
         return super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals)
 
     @api.multi
     def write(self, vals):
         if 'image' in vals:
-            tools.image_resize_images(vals)
+            tools.image_resize_images(vals, return_large=True)
         res = super(Channel, self).write(vals)
         if 'active' in vals:
             # archiving/unarchiving a channel does it on its slides, too
