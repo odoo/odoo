@@ -417,3 +417,214 @@ class TestBoM(TestMrpCommon):
                 self.assertEqual(float_compare(component_line['total'], crumble_cost, precision_digits=2), 0)
         # total price = 15.51 + crumble_cost + operation_cost(10 + 1.67 = 11.67) = 27.18 + crumble_cost
         self.assertEqual(float_compare(report_values['lines']['total'], 27.18 + crumble_cost, precision_digits=2), 0, 'Product Bom Price is not correct')
+
+    def test_bom_report_variant(self):
+        """ Test a sub BoM process with multiple variants.
+        BOM 1:
+        product template = car
+        quantity = 5 units
+        - red paint 50l -> red car (product.product)
+        - blue paint 50l -> blue car
+        - red dashboard with gps -> red car with GPS
+        - red dashboard w/h gps -> red w/h GPS
+        - blue dashboard with gps -> blue car with GPS
+        - blue dashboard w/h gps -> blue w/h GPS
+
+        BOM 2:
+        product_tmpl = dashboard
+        quantity = 2
+        - red paint 1l -> red dashboard (product.product)
+        - blue paint 1l -> blue dashboard
+        - gps -> dashboard with gps
+
+        Check the Price for a Blue Car with GPS -> 910$:
+        10l of blue paint -> 200$
+        1 blue dashboard GPS -> 710$:
+            - 0.5l of blue paint -> 10$
+            - GPS -> 700$
+
+        Check the price for a red car -> 10.5l of red paint -> 210$
+        """
+        # Create a product template car with attributes gps(yes, no), color(red, blue)
+        self.car = self.env['product.template'].create({
+            'name': 'Car',
+        })
+        self.gps_attribute = self.env['product.attribute'].create({'name': 'GPS', 'sequence': 1})
+        self.gps_yes = self.env['product.attribute.value'].create({
+            'name': 'Yes',
+            'attribute_id': self.gps_attribute.id,
+            'sequence': 1,
+        })
+        self.gps_no = self.env['product.attribute.value'].create({
+            'name': 'No',
+            'attribute_id': self.gps_attribute.id,
+            'sequence': 2,
+        })
+
+        self.car_gps_attribute_lines = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.car.id,
+            'attribute_id': self.gps_attribute.id,
+            'value_ids': [(6, 0, [self.gps_yes.id, self.gps_no.id])],
+        })
+
+        self.color_attribute = self.env['product.attribute'].create({'name': 'Color', 'sequence': 1})
+        self.color_red = self.env['product.attribute.value'].create({
+            'name': 'Red',
+            'attribute_id': self.color_attribute.id,
+            'sequence': 1,
+        })
+        self.color_blue = self.env['product.attribute.value'].create({
+            'name': 'Blue',
+            'attribute_id': self.color_attribute.id,
+            'sequence': 2,
+        })
+
+        self.car_color_attribute_lines = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.car.id,
+            'attribute_id': self.color_attribute.id,
+            'value_ids': [(6, 0, [self.color_red.id, self.color_blue.id])],
+        })
+
+        self.car.create_variant_ids()
+
+        # Blue and red paint
+        uom_litre = self.env.ref('uom.product_uom_litre')
+        self.paint = self.env['product.template'].create({
+            'name': 'Paint',
+            'uom_id': uom_litre.id,
+            'uom_po_id': uom_litre.id
+        })
+        self.paint_color_attribute_lines = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.paint.id,
+            'attribute_id': self.color_attribute.id,
+            'value_ids': [(6, 0, [self.color_red.id, self.color_blue.id])],
+        })
+
+        self.paint.create_variant_ids()
+        self.paint.product_variant_ids.write({'standard_price': 20})
+
+        self.dashboard = self.env['product.template'].create({
+            'name': 'Dashboard',
+            'standard_price': 1000,
+        })
+
+        self.dashboard_gps_attribute_lines = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.dashboard.id,
+            'attribute_id': self.gps_attribute.id,
+            'value_ids': [(6, 0, [self.gps_yes.id, self.gps_no.id])],
+        })
+        self.dashboard_color_attribute_lines = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.dashboard.id,
+            'attribute_id': self.color_attribute.id,
+            'value_ids': [(6, 0, [self.color_red.id, self.color_blue.id])],
+        })
+
+        self.dashboard.create_variant_ids()
+
+        self.gps = self.env['product.product'].create({
+            'name': 'GPS',
+            'standard_price': 700,
+        })
+
+        bom_form_car = Form(self.env['mrp.bom'])
+        bom_form_car.product_tmpl_id = self.car
+        bom_form_car.product_qty = 5
+        with bom_form_car.bom_line_ids.new() as line:
+            line.product_id = self.env['product.product'].search([('product_tmpl_id', '=', self.paint.id), ('attribute_value_ids', '=', self.color_red.id)])
+            line.product_uom_id = uom_litre
+            line.product_qty = 50
+        with bom_form_car.bom_line_ids.new() as line:
+            line.product_id = self.env['product.product'].search([('product_tmpl_id', '=', self.paint.id), ('attribute_value_ids', '=', self.color_blue.id)])
+            line.product_uom_id = uom_litre
+            line.product_qty = 50
+        with bom_form_car.bom_line_ids.new() as line:
+            line.product_id = self.env['product.product'].search([('product_tmpl_id', '=', self.dashboard.id), ('attribute_value_ids', '=', self.gps_yes.id), ('attribute_value_ids', '=', self.color_red.id)])
+            line.product_qty = 5
+        with bom_form_car.bom_line_ids.new() as line:
+            line.product_id = self.env['product.product'].search([('product_tmpl_id', '=', self.dashboard.id), ('attribute_value_ids', '=', self.gps_yes.id), ('attribute_value_ids', '=', self.color_blue.id)])
+            line.product_qty = 5
+        with bom_form_car.bom_line_ids.new() as line:
+            line.product_id = self.env['product.product'].search([('product_tmpl_id', '=', self.dashboard.id), ('attribute_value_ids', '=', self.gps_no.id), ('attribute_value_ids', '=', self.color_red.id)])
+            line.product_qty = 5
+        with bom_form_car.bom_line_ids.new() as line:
+            line.product_id = self.env['product.product'].search([('product_tmpl_id', '=', self.dashboard.id), ('attribute_value_ids', '=', self.gps_no.id), ('attribute_value_ids', '=', self.color_blue.id)])
+            line.product_qty = 5
+        bom_car = bom_form_car.save()
+
+        for attribute in self.gps_attribute.value_ids | self.color_attribute.value_ids:
+            bom_car.bom_line_ids.filtered(lambda l: attribute in l.product_id.attribute_value_ids).write({'attribute_value_ids': [(4, attribute.id)]})
+
+        bom_dashboard = Form(self.env['mrp.bom'])
+        bom_dashboard.product_tmpl_id = self.dashboard
+        bom_dashboard.product_qty = 2
+        with bom_dashboard.bom_line_ids.new() as line:
+            line.product_id = self.env['product.product'].search([('product_tmpl_id', '=', self.paint.id), ('attribute_value_ids', '=', self.color_red.id)])
+            line.product_uom_id = uom_litre
+            line.product_qty = 1
+        with bom_dashboard.bom_line_ids.new() as line:
+            line.product_id = self.env['product.product'].search([('product_tmpl_id', '=', self.paint.id), ('attribute_value_ids', '=', self.color_blue.id)])
+            line.product_uom_id = uom_litre
+            line.product_qty = 1
+        with bom_dashboard.bom_line_ids.new() as line:
+            line.product_id = self.gps
+            line.product_qty = 2
+        bom_dashboard = bom_dashboard.save()
+
+        for attribute in self.color_attribute.value_ids:
+            bom_dashboard.bom_line_ids.filtered(lambda l: attribute in l.product_id.attribute_value_ids).write({'attribute_value_ids': [(4, attribute.id)]})
+        bom_dashboard.bom_line_ids.filtered(lambda l: l.product_id == self.gps).write({'attribute_value_ids': [(4, self.gps_yes.id)]})
+
+        blue_car_with_gps = self.env['product.product'].search([
+            ('product_tmpl_id', '=', self.car.id),
+            ('attribute_value_ids', '=', self.gps_yes.id),
+            ('attribute_value_ids', '=', self.color_blue.id)
+        ])
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_car.id, searchQty=1, searchVariant=blue_car_with_gps.id)
+        # Two lines. blue dashboard with gps and blue paint.
+        self.assertEqual(len(report_values['lines']['components']), 2)
+
+        # 10l of blue paint
+        blue_paint = self.env['product.product'].search([
+            ('product_tmpl_id', '=', self.paint.id),
+            ('attribute_value_ids', '=', self.color_blue.id)
+        ])
+        self.assertEqual(blue_paint.id, report_values['lines']['components'][0]['prod_id'])
+        self.assertEqual(report_values['lines']['components'][0]['prod_qty'], 10)
+        # 1 blue dashboard with GPS
+        blue_dashboard_gps = self.env['product.product'].search([
+            ('product_tmpl_id', '=', self.dashboard.id),
+            ('attribute_value_ids', '=', self.gps_yes.id),
+            ('attribute_value_ids', '=', self.color_blue.id)
+        ])
+        self.assertEqual(blue_dashboard_gps.id, report_values['lines']['components'][1]['prod_id'])
+        self.assertEqual(report_values['lines']['components'][1]['prod_qty'], 1)
+        component = report_values['lines']['components'][1]
+        report_values_dashboad = self.env['report.mrp.report_bom_structure']._get_bom(
+            component['child_bom'], component['prod_id'], component['prod_qty'],
+            component['line_id'], component['level'] + 1)
+
+        self.assertEqual(len(report_values_dashboad['components']), 2)
+        self.assertEqual(blue_paint.id, report_values_dashboad['components'][0]['prod_id'])
+        self.assertEqual(self.gps.id, report_values_dashboad['components'][1]['prod_id'])
+
+        # 0.5l of paint at price of 20$/litre -> 10$
+        self.assertEqual(report_values_dashboad['components'][0]['total'], 10)
+        # GPS 700$
+        self.assertEqual(report_values_dashboad['components'][1]['total'], 700)
+
+        # Dashboard blue with GPS should have a BoM cost of 710$
+        self.assertEqual(report_values['lines']['components'][1]['total'], 710)
+        # 10l of paint at price of 20$/litre -> 200$
+        self.assertEqual(report_values['lines']['components'][0]['total'], 200)
+
+        # Total cost of blue car with GPS: 10 + 700 + 200 = 910
+        self.assertEqual(report_values['lines']['total'], 910)
+
+        red_car_without_gps = self.env['product.product'].search([
+            ('product_tmpl_id', '=', self.car.id),
+            ('attribute_value_ids', '=', self.gps_no.id),
+            ('attribute_value_ids', '=', self.color_red.id)
+        ])
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_car.id, searchQty=1, searchVariant=red_car_without_gps.id)
+        # Same math than before but without GPS
+        self.assertEqual(report_values['lines']['total'], 210)

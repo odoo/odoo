@@ -72,9 +72,7 @@ class Event(models.Model):
             (_('Register'), '/event/%s/register' % slug(self), False),
         ]
 
-    @api.multi
-    def write(self, vals):
-        res = super(Event, self).write(vals)
+    def _toggle_create_website_menus(self, vals):
         for event in self:
             if 'website_menu' in vals:
                 if event.menu_id and not event.website_menu:
@@ -85,6 +83,17 @@ class Event(models.Model):
                         event.menu_id = root_menu
                     for sequence, (name, url, xml_id) in enumerate(event._get_menu_entries()):
                         event._create_menu(sequence, name, url, xml_id)
+
+    @api.model
+    def create(self, vals):
+        res = super(Event, self).create(vals)
+        res._toggle_create_website_menus(vals)
+        return res
+
+    @api.multi
+    def write(self, vals):
+        res = super(Event, self).write(vals)
+        self._toggle_create_website_menus(vals)
         return res
 
     def _create_menu(self, sequence, name, url, xml_id):
