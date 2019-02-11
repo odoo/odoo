@@ -46,7 +46,11 @@
                                 <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                             </button>
                         </div>
-                        <field name="image" widget="image" class="oe_avatar" options='{"preview_image": "image_thumb"}' attrs="{'required': [('slide_type', 'not in', ('document'))], 'readonly': [('slide_type', 'in', ('document', 'presentation', 'video'))]}"/>
+                        <field name="image" widget="image" class="oe_avatar" options='{"preview_image": "image_large"}'
+                            attrs="{
+                                'required': [('slide_type', 'not in', ('document'))],
+                                'readonly': [('slide_type', 'in', ('document', 'presentation', 'video'))]}"
+                        />
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name" string="Name"/>
