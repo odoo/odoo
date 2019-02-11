@@ -25,6 +25,10 @@ class IrModuleModule(models.Model):
         ('website.menu', 'theme.website.menu'),
         ('ir.attachment', 'theme.ir.attachment'),
     ])
+    _theme_translated_fields = {
+        'theme.ir.ui.view': [('theme.ir.ui.view,arch', 'ir.ui.view,arch_db')],
+        'theme.website.menu': [('theme.website.menu,name', 'website.menu,name')],
+    }
 
     image_ids = fields.One2many('ir.attachment', 'res_id',
                                 domain=[('res_model', '=', _name), ('mimetype', '=like', 'image/%')],
@@ -162,8 +166,10 @@ class IrModuleModule(models.Model):
                         if 'active' in rec_data:
                             rec_data.pop('active')
                         find.update(rec_data)
+                        self._post_copy(rec, find)
                 else:
-                    self.env[model_name].create(rec_data)
+                    new_rec = self.env[model_name].create(rec_data)
+                    self._post_copy(rec, new_rec)
 
                 remaining -= rec
 
@@ -173,6 +179,20 @@ class IrModuleModule(models.Model):
             raise MissingError(error)
 
         self._theme_cleanup(model_name, website)
+
+    @api.multi
+    def _post_copy(self, old_rec, new_rec):
+        self.ensure_one()
+        translated_fields = self._theme_translated_fields.get(old_rec._name, [])
+        for (src_field, dst_field) in translated_fields:
+            self._cr.execute("""INSERT INTO ir_translation (lang, src, name, res_id, state, value, type, module)
+                                SELECT t.lang, t.src, %s, %s, t.state, t.value, t.type, t.module
+                                FROM ir_translation t
+                                WHERE name = %s
+                                  AND res_id = %s
+                                ON CONFLICT DO NOTHING""",
+                             (dst_field, new_rec.id, src_field, old_rec.id))
+
 
     @api.multi
     def _theme_load(self, website):

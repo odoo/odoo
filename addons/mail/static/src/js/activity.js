@@ -29,11 +29,15 @@ function _readActivities(self, ids) {
     if (!ids.length) {
         return $.when([]);
     }
+    var context = self.getSession().user_context;
+    if (self.record && !_.isEmpty(self.record.getContext())) {
+        context = self.record.getContext();
+    }
     return self._rpc({
         model: 'mail.activity',
         method: 'activity_format',
         args: [ids],
-        context: (self.record && self.record.getContext()) || self.getSession().user_context,
+        context: context,
     }).then(function (activities) {
         // convert create_date and date_deadline to moments
         _.each(activities, function (activity) {

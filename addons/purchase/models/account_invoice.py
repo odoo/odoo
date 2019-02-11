@@ -146,6 +146,8 @@ class AccountInvoice(models.Model):
                 self.journal_id = default_journal_id
             if self.env.context.get('default_currency_id'):
                 self.currency_id = self.env.context['default_currency_id']
+            if self.partner_id.property_purchase_currency_id:
+                self.currency_id = self.partner_id.property_purchase_currency_id
         return res
 
     @api.model

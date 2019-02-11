@@ -3,6 +3,7 @@
 
 import logging
 from odoo import api, fields, models
+from odoo.tools.translate import xml_translate
 from odoo.modules.module import get_resource_from_path
 
 _logger = logging.getLogger(__name__)
@@ -23,7 +24,7 @@ class ThemeView(models.Model):
     priority = fields.Integer(default=16, required=True)
     mode = fields.Selection([('primary', "Base view"), ('extension', "Extension View")])
     active = fields.Boolean(default=True)
-    arch = fields.Text()
+    arch = fields.Text(translate=xml_translate)
     arch_fs = fields.Char(default=compute_arch_fs)
     inherit_id = fields.Reference(selection=[('ir.ui.view', 'ir.ui.view'), ('theme.ir.ui.view', 'theme.ir.ui.view')])
     copy_ids = fields.One2many('ir.ui.view', 'theme_template_id', 'Views using a copy of me', copy=False, readonly=True)
@@ -90,7 +91,7 @@ class ThemeMenu(models.Model):
     _name = 'theme.website.menu'
     _description = 'Website Theme Menu'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     url = fields.Char(default='')
     page_id = fields.Many2one('theme.website.page', ondelete='cascade')
     new_window = fields.Boolean('New Window')
