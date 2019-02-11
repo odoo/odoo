@@ -21,11 +21,17 @@ FILETYPE_BASE64_MAGICWORD = {
     b'P': 'svg+xml',
 }
 
+IMAGE_BIG_SIZE = (1024, 1024)
+IMAGE_LARGE_SIZE = (256, 256)
+IMAGE_MEDIUM_SIZE = (128, 128)
+IMAGE_SMALL_SIZE = (64, 64)
+
+
 # ----------------------------------------
 # Image resizing
 # ----------------------------------------
 
-def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', filetype=None, avoid_if_small=False, upper_limit=False):
+def image_resize_image(base64_source, size=IMAGE_BIG_SIZE, encoding='base64', filetype=None, avoid_if_small=False, preserve_aspect_ratio=False, upper_limit=False):
     """ Function to resize an image. The image will be resized to the given
         size, while keeping the aspect ratios, and holes in the image will be
         filled with transparent background. The image will not be stretched if
@@ -96,13 +102,14 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
         return base64_source
 
     if image.size != size:
-        image = image_resize_and_sharpen(image, size, upper_limit=upper_limit)
+        image = image_resize_and_sharpen(image, size, preserve_aspect_ratio=preserve_aspect_ratio, upper_limit=upper_limit)
     if image.mode not in ["1", "L", "P", "RGB", "RGBA"] or (filetype == 'JPEG' and image.mode == 'RGBA'):
         image = image.convert("RGB")
 
     background_stream = io.BytesIO()
     image.save(background_stream, filetype)
     return codecs.encode(background_stream.getvalue(), encoding)
+
 
 def image_resize_and_sharpen(image, size, preserve_aspect_ratio=False, factor=2.0, upper_limit=False):
     """
@@ -133,6 +140,7 @@ def image_resize_and_sharpen(image, size, preserve_aspect_ratio=False, factor=2.
         image = image.convert(origin_mode)
     return image
 
+
 def image_save_for_web(image, fp=None, format=None):
     """
         Save image optimized for web usage.
@@ -161,30 +169,43 @@ def image_save_for_web(image, fp=None, format=None):
         image.save(img, **opt)
         return img.getvalue()
 
-def image_resize_image_big(base64_source, size=(1024, 1024), encoding='base64', filetype=None, avoid_if_small=True):
+
+def image_resize_image_big(base64_source, encoding='base64', filetype=None, avoid_if_small=True, preserve_aspect_ratio=False, upper_limit=False):
     """ Wrapper on image_resize_image, to resize images larger than the standard
         'big' image size: 1024x1024px.
-        :param size, encoding, filetype, avoid_if_small: refer to image_resize_image
+        Refer to image_resize_image for the parameters.
     """
-    return image_resize_image(base64_source, size, encoding, filetype, avoid_if_small)
+    return image_resize_image(base64_source, IMAGE_BIG_SIZE, encoding, filetype, avoid_if_small, preserve_aspect_ratio, upper_limit)
 
-def image_resize_image_medium(base64_source, size=(128, 128), encoding='base64', filetype=None, avoid_if_small=False):
+
+def image_resize_image_large(base64_source, encoding='base64', filetype=None, avoid_if_small=True, preserve_aspect_ratio=False, upper_limit=False):
+    """ Wrapper on image_resize_image, to resize to the standard 'large'
+        image size: 256x256.
+        Refer to image_resize_image for the parameters.
+    """
+    return image_resize_image(base64_source, IMAGE_LARGE_SIZE, encoding, filetype, avoid_if_small, preserve_aspect_ratio, upper_limit)
+
+
+def image_resize_image_medium(base64_source, encoding='base64', filetype=None, avoid_if_small=False, preserve_aspect_ratio=False, upper_limit=False):
     """ Wrapper on image_resize_image, to resize to the standard 'medium'
-        image size: 180x180.
-        :param size, encoding, filetype, avoid_if_small: refer to image_resize_image
+        image size: 128x128.
+        Refer to image_resize_image for the parameters.
     """
-    return image_resize_image(base64_source, size, encoding, filetype, avoid_if_small)
+    return image_resize_image(base64_source, IMAGE_MEDIUM_SIZE, encoding, filetype, avoid_if_small, preserve_aspect_ratio, upper_limit)
 
-def image_resize_image_small(base64_source, size=(64, 64), encoding='base64', filetype=None, avoid_if_small=False):
+
+def image_resize_image_small(base64_source, encoding='base64', filetype=None, avoid_if_small=False, preserve_aspect_ratio=False, upper_limit=False):
     """ Wrapper on image_resize_image, to resize to the standard 'small' image
-        size: 50x50.
-        :param size, encoding, filetype, avoid_if_small: refer to image_resize_image
+        size: 64x64.
+        Refer to image_resize_image for the parameters.
     """
-    return image_resize_image(base64_source, size, encoding, filetype, avoid_if_small)
+    return image_resize_image(base64_source, IMAGE_SMALL_SIZE, encoding, filetype, avoid_if_small, preserve_aspect_ratio, upper_limit)
+
 
 # ----------------------------------------
 # Crop Image
 # ----------------------------------------
+
 def crop_image(data, type='top', ratio=None, size=None, image_format=None):
     """ Used for cropping image and create thumbnail
         :param data: base64 data of image.
@@ -234,6 +255,7 @@ def crop_image(data, type='top', ratio=None, size=None, image_format=None):
         thumbnail.save(output_stream, image_format)
     return base64.b64encode(output_stream.getvalue())
 
+
 # ----------------------------------------
 # Colors
 # ---------------------------------------
@@ -257,65 +279,87 @@ def image_colorize(original, randomize=True, color=(255, 255, 255)):
     image.save(buffer, 'PNG')
     return buffer.getvalue()
 
+
 # ----------------------------------------
 # Misc image tools
 # ---------------------------------------
 
-def image_get_resized_images(base64_source, return_big=False, return_medium=True, return_small=True,
-    big_name='image', medium_name='image_medium', small_name='image_small',
-    avoid_resize_big=True, avoid_resize_medium=False, avoid_resize_small=False, sizes={}):
+def is_image_size_above(base64_source, encoding='base64', size=IMAGE_BIG_SIZE):
+    """Return whether or not the size of the given image `base64_source` is
+    above the provided `size` (tuple: width, height).
+    """
+    if not base64_source:
+        return False
+    if isinstance(base64_source, str):
+        base64_source = base64_source.encode('ascii')
+    if base64_source[:1] == b'P':
+        # False for SVG
+        return False
+    image_stream = io.BytesIO(codecs.decode(base64_source, encoding))
+    image = Image.open(image_stream)
+    width, height = image.size
+    return width > size[0] or height > size[1]
+
+
+def image_get_resized_images(base64_source,
+        big_name='image', large_name='image_large', medium_name='image_medium', small_name='image_small',
+        avoid_resize_big=True, avoid_resize_large=True, avoid_resize_medium=True, avoid_resize_small=True,
+        preserve_aspect_ratio=False, upper_limit=False):
     """ Standard tool function that returns a dictionary containing the
-        big, medium and small versions of the source image. This function
-        is meant to be used for the methods of functional fields for
-        models using images.
+        big, medium, large and small versions of the source image.
 
-        Default parameters are given to be used for the getter of functional
-        image fields,  for example with res.users or res.partner. It returns
-        only image_medium and image_small values, to update those fields.
-
-        :param base64_source: base64-encoded version of the source
-            image; if False, all returned values will be False
-        :param return_{..}: if set, computes and return the related resizing
-            of the image
         :param {..}_name: key of the resized image in the return dictionary;
-            'image', 'image_medium' and 'image_small' by default.
-        :param avoid_resize_[..]: see avoid_if_small parameter
+            'image', 'image_large', 'image_medium' and 'image_small' by default.
+            Set a key to False to not include it.
+
+        Refer to image_resize_image for the other parameters.
+
         :return return_dict: dictionary with resized images, depending on
             previous parameters.
     """
     return_dict = dict()
-    size_big = sizes.get(big_name, (1024, 1024))
-    size_medium = sizes.get(medium_name, (128, 128))
-    size_small = sizes.get(small_name, (64, 64))
     if isinstance(base64_source, str):
         base64_source = base64_source.encode('ascii')
-    if return_big:
-        return_dict[big_name] = image_resize_image_big(base64_source, avoid_if_small=avoid_resize_big, size=size_big)
-    if return_medium:
-        return_dict[medium_name] = image_resize_image_medium(base64_source, avoid_if_small=avoid_resize_medium, size=size_medium)
-    if return_small:
-        return_dict[small_name] = image_resize_image_small(base64_source, avoid_if_small=avoid_resize_small, size=size_small)
+    if big_name:
+        return_dict[big_name] = image_resize_image_big(base64_source, avoid_if_small=avoid_resize_big, preserve_aspect_ratio=preserve_aspect_ratio, upper_limit=upper_limit)
+    if large_name:
+        return_dict[large_name] = image_resize_image_large(base64_source, avoid_if_small=avoid_resize_large, preserve_aspect_ratio=preserve_aspect_ratio, upper_limit=upper_limit)
+    if medium_name:
+        return_dict[medium_name] = image_resize_image_medium(base64_source, avoid_if_small=avoid_resize_medium, preserve_aspect_ratio=preserve_aspect_ratio, upper_limit=upper_limit)
+    if small_name:
+        return_dict[small_name] = image_resize_image_small(base64_source, avoid_if_small=avoid_resize_small, preserve_aspect_ratio=preserve_aspect_ratio, upper_limit=upper_limit)
     return return_dict
 
-def image_resize_images(vals, big_name='image', medium_name='image_medium', small_name='image_small', sizes={}):
+
+def image_resize_images(vals,
+        return_big=True, return_large=False, return_medium=True, return_small=True,
+        big_name='image', large_name='image_large', medium_name='image_medium', small_name='image_small',
+        preserve_aspect_ratio=False, upper_limit=False):
     """ Update ``vals`` with image fields resized as expected. """
-    if vals.get(big_name):
-        vals.update(image_get_resized_images(vals[big_name],
-                        return_big=True, return_medium=True, return_small=True,
-                        big_name=big_name, medium_name=medium_name, small_name=small_name,
-                        avoid_resize_big=True, avoid_resize_medium=False, avoid_resize_small=False, sizes=sizes))
-    elif vals.get(medium_name):
-        vals.update(image_get_resized_images(vals[medium_name],
-                        return_big=True, return_medium=True, return_small=True,
-                        big_name=big_name, medium_name=medium_name, small_name=small_name,
-                        avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=False, sizes=sizes))
-    elif vals.get(small_name):
-        vals.update(image_get_resized_images(vals[small_name],
-                        return_big=True, return_medium=True, return_small=True,
-                        big_name=big_name, medium_name=medium_name, small_name=small_name,
-                        avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=True, sizes=sizes))
-    elif big_name in vals or medium_name in vals or small_name in vals:
-        vals[big_name] = vals[medium_name] = vals[small_name] = False
+    big_image = vals.get(big_name)
+    large_image = vals.get(large_name)
+    medium_image = vals.get(medium_name)
+    small_image = vals.get(small_name)
+
+    biggest_image = big_image or large_image or medium_image or small_image
+
+    if biggest_image:
+        vals.update(image_get_resized_images(biggest_image,
+            big_name=return_big and big_name, large_name=return_large and large_name, medium_name=return_medium and medium_name, small_name=return_small and small_name,
+            avoid_resize_big=True, avoid_resize_large=True,
+            avoid_resize_medium=(not big_image and not large_image),
+            avoid_resize_small=(not big_image and not large_image and not medium_image),
+            preserve_aspect_ratio=preserve_aspect_ratio, upper_limit=upper_limit))
+    elif any(f in vals for f in [big_name, large_name, medium_name, small_name]):
+        if return_big:
+            vals[big_name] = False
+        if return_large:
+            vals[large_name] = False
+        if return_medium:
+            vals[medium_name] = False
+        if return_small:
+            vals[small_name] = False
+
 
 def limited_image_resize(content, width=None, height=None, crop=False, upper_limit=False, avoid_if_small=False):
     """
@@ -340,6 +384,7 @@ def limited_image_resize(content, width=None, height=None, crop=False, upper_lim
                     avoid_if_small=avoid_if_small)
     return content
 
+
 def image_data_uri(base64_source):
     """This returns data URL scheme according RFC 2397
     (https://tools.ietf.org/html/rfc2397) for all kind of supported images
@@ -349,6 +394,7 @@ def image_data_uri(base64_source):
         FILETYPE_BASE64_MAGICWORD.get(base64_source[:1], 'png'),
         base64_source.decode(),
     )
+
 
 if __name__=="__main__":
     import sys

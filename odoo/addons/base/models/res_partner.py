@@ -525,7 +525,9 @@ class Partner(models.Model):
                     if len(companies) > 1 or company not in companies:
                         raise UserError(
                             ("The selected company is not compatible with the companies of the related user(s)"))
-        tools.image_resize_images(vals, sizes={'image': (1024, None)})
+        # no padding on the big image, because it's used as website logo
+        tools.image_resize_images(vals, return_big=False)
+        tools.image_resize_images(vals, return_medium=False, return_small=False, preserve_aspect_ratio=True)
 
         result = True
         # To write in SUPERUSER on field is_company and avoid access rights problems.
@@ -550,7 +552,9 @@ class Partner(models.Model):
             # cannot be easily performed if default images are in the way
             if not vals.get('image'):
                 vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
-            tools.image_resize_images(vals, sizes={'image': (1024, None)})
+            # no padding on the big image, because it's used as website logo
+            tools.image_resize_images(vals, return_big=False)
+            tools.image_resize_images(vals, return_medium=False, return_small=False, preserve_aspect_ratio=True)
         partners = super(Partner, self).create(vals_list)
         for partner, vals in zip(partners, vals_list):
             partner._fields_sync(vals)

@@ -1052,8 +1052,8 @@ class Binary(http.Controller):
             content = base64.b64encode(self.placeholder(image='placeholder.png'))
             headers = self.force_contenttype(headers, contenttype='image/png')
             if not (width or height):
-                suffix = field.split('_')[-1]
-                if suffix in ('small', 'medium', 'big'):
+                suffix = 'big' if field == 'image' else field.split('_')[-1]
+                if suffix in ('small', 'medium', 'large', 'big'):
                     content = getattr(odoo.tools, 'image_resize_image_%s' % suffix)(content)
 
 
