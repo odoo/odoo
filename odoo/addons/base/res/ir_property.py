@@ -5,7 +5,7 @@ from operator import itemgetter
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import pycompat
+from odoo.tools import pycompat, ormcache
 
 TYPE2FIELD = {
     'char': 'value_text',
@@ -131,12 +131,20 @@ class Property(models.Model):
         return False
 
     def _get_domain(self, prop_name, model):
-        self._cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", (prop_name, model))
-        res = self._cr.fetchone()
+        res = self._get_field(prop_name, model)
         if not res:
             return None
         company_id = self._context.get('force_company') or self.env['res.company']._company_default_get(model, res[0]).id
         return [('fields_id', '=', res[0]), ('company_id', 'in', [company_id, False])]
+
+    @ormcache('prop_name', 'model')
+    def _get_field(self, prop_name, model):
+        self._cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", (prop_name, model))
+        return self._cr.fetchone()
+
+    @ormcache('prop_name', 'model')
+    def _get_default(self, prop_name, model):
+        return self.get(prop_name, model)
 
     @api.model
     def get_multi(self, name, model, ids):
@@ -214,11 +222,10 @@ class Property(models.Model):
             if domain is None:
                 raise Exception()
             # retrieve the default value for the field
-            default_value = clean(self.get(name, model))
+            default_value = clean(self._get_default(name, model))
 
         # retrieve the properties corresponding to the given record ids
-        self._cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", (name, model))
-        field_id = self._cr.fetchone()[0]
+        field_id = self._get_field(name, model)[0]
         company_id = self.env.context.get('force_company') or self.env['res.company']._company_default_get(model, field_id).id
         refs = {('%s,%s' % (model, id)): id for id in values}
         props = self.search([
