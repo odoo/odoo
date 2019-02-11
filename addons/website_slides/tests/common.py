@@ -51,6 +51,7 @@ class SlidesCase(common.SavepointCase):
             'channel_id': self.channel.id,
             'slide_type': 'presentation',
             'website_published': True,
+            'completion_time': 2.0,
         })
 
     @contextmanager

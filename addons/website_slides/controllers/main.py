@@ -148,6 +148,7 @@ class WebsiteSlides(http.Controller):
             'tag': tag,
             'slide_type': slide_type,
             'sorting': sorting,
+            'search': search,
             'user': user,
             'pager': pager,
             'is_public_user': request.website.is_public_user(),
@@ -164,9 +165,6 @@ class WebsiteSlides(http.Controller):
                 'last_message': html2plaintext(last_message_data.get('body', '')),
                 'last_rating_value': last_message_data.get('rating_value'),
             })
-        if search:
-            values['search'] = search
-            return request.render('website_slides.slides_search', values)
 
         # Display uncategorized slides
         if not slide_type and not category:
@@ -176,7 +174,7 @@ class WebsiteSlides(http.Controller):
                 category_datas.append({
                     'id': category_id,
                     'name': name,
-                    'total': category['category_id_count'],
+                    'total_slides': category['category_id_count'],
                     'slides': Slide.search(category['__domain'], limit=4, offset=0, order=order)
                 })
             values.update({
@@ -220,11 +218,6 @@ class WebsiteSlides(http.Controller):
         elif not request.session.uid and slide.download_security == 'user':
             return request.redirect('/web/login?redirect=/slides/slide/%s' % (slide.id))
         return request.render("website.403")
-
-    @http.route('''/slides/slide/<model("slide.slide"):slide>/promote''', type='http', auth='user', website=True)
-    def slide_set_promoted(self, slide, **kwargs):
-        slide.channel_id.promoted_slide_id = slide.id
-        return request.redirect("/slides/%s" % slide.channel_id.id)
 
     # JSONRPC
     @http.route('/slides/slide/like', type='json', auth="user", website=True)

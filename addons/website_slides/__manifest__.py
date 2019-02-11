@@ -29,6 +29,7 @@ Share and Publish Videos, Presentations and Documents'
         'views/website_slides_embed_templates.xml',
         'views/slide_slide_views.xml',
         'views/slide_channel_views.xml',
+        'views/slide_channel_tag_views.xml',
         'views/website_slides_menu_views.xml',
         'data/website_slides_ir_data.xml',
         'data/mail_data.xml',
