@@ -56,7 +56,7 @@ QUnit.module('Views', {
     QUnit.module('KanbanView Mobile');
 
     QUnit.test('mobile grouped rendering', function (assert) {
-        assert.expect(11);
+        assert.expect(13);
 
         var kanban = createView({
             View: KanbanView,
@@ -110,10 +110,16 @@ QUnit.module('Views', {
         }).get();
         assert.deepEqual(column_ids, tab_ids, "all columns data-id should match mobile tabs data-id");
 
+        // kanban tabs with tab with lower width then available with have justify-content-around class
+        assert.containsN(kanban, '.o_kanban_mobile_tabs.justify-content-around', 1,
+            "should have justify-content-around class");
+        assert.hasClass(kanban.$('.o_kanban_mobile_tabs'), 'justify-content-around',
+            "the mobile tabs have the class 'justify-content-around'");
+
         kanban.destroy();
     });
     QUnit.test('mobile grouped with undefined column', function (assert) {
-        assert.expect(3);
+        assert.expect(5);
 
         var kanban = createView({
             View: KanbanView,
@@ -141,10 +147,16 @@ QUnit.module('Views', {
         }).get();
         assert.deepEqual(column_ids, tab_ids, "all columns data-id should match mobile tabs data-id");
 
+        // kanban tabs with tab with lower width then available with have justify-content-around class
+        assert.containsN(kanban, '.o_kanban_mobile_tabs.justify-content-around', 1,
+            "should have justify-content-around class");
+        assert.hasClass(kanban.$('.o_kanban_mobile_tabs'), 'justify-content-around',
+            "the mobile tabs have the class 'justify-content-around'");
+
         kanban.destroy();
     });
     QUnit.test('mobile grouped on many2one rendering', function (assert) {
-        assert.expect(3);
+        assert.expect(5);
 
         var kanban = createView({
             View: KanbanView,
@@ -171,6 +183,12 @@ QUnit.module('Views', {
             return $(this).data('id');
         }).get();
         assert.deepEqual(column_ids, tab_ids, "all columns data-id should match mobile tabs data-id");
+
+        // kanban tabs with tab with lower width then available with have justify-content-around class
+        assert.containsN(kanban, '.o_kanban_mobile_tabs.justify-content-around', 1,
+            "should have justify-content-around class");
+        assert.hasClass(kanban.$('.o_kanban_mobile_tabs'), 'justify-content-around',
+            "the mobile tabs have the class 'justify-content-around'");
 
         kanban.destroy();
     });

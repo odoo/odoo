@@ -5,15 +5,16 @@
         overflow: hidden;
 
         .o_kanban_mobile_tabs {
+            display:flex;
+            width: 100%;
             height: $o-kanban-mobile-tabs-height;
             position: relative;
+            overflow-x: auto;
             background-color: #5E5E5E;
 
             .o_kanban_mobile_tab {
-                @include o-position-absolute($left: 100%);
-                transform: translateX(-50%);
                 height: $o-kanban-mobile-tabs-height;
-                padding: 10px;
+                padding: 10px 20px;
                 font-size: 14px;
                 color: white;
 
@@ -23,6 +24,7 @@
                 }
                 .o_column_title {
                     white-space: nowrap;
+                    text-transform: uppercase;
                 }
             }
         }
