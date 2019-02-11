@@ -114,10 +114,50 @@ KanbanRenderer.include({
         this.$el.swipe({
             excludedElements: ".o_kanban_mobile_tabs",
             swipeLeft: function () {
-                self._moveToGroup(self.activeColumnIndex + 1, self.ANIMATE);
+                var moveToIndex = self.activeColumnIndex + 1;
+                if (moveToIndex < self.widgets.length) {
+                    self._moveToGroup(moveToIndex, self.ANIMATE);
+                }
             },
             swipeRight: function () {
-                self._moveToGroup(self.activeColumnIndex - 1, self.ANIMATE);
+                var moveToIndex = self.activeColumnIndex - 1;
+                if (moveToIndex > -1) {
+                    self._moveToGroup(moveToIndex, self.ANIMATE);
+                }
+            }
+        });
+    },
+    /**
+     * Update the kanban layout
+     * @private
+     * @param {boolean} [animate=false] set to true to animate
+     */
+    _layoutUpdate : function (animate) {
+        var self = this;
+        var moveToIndex = this.activeColumnIndex;
+        // update the columns and tabs positions (optionally with an animation)
+        var updateFunc = animate ? 'animate' : 'css';
+        this.$('.o_kanban_mobile_tab, .o_kanban_group').removeClass('o_current');
+        _.each(self.widgets, function (column, index) {
+            var columnID = column.id || column.db_id;
+            var $column = self.$('.o_kanban_group[data-id="' + columnID + '"]');
+            var $tab = self.$('.o_kanban_mobile_tab[data-id="' + columnID + '"]');
+            if (index === moveToIndex - 1) {
+                $column[updateFunc]({left: '-100%'});
+                $tab[updateFunc]({left: '0%'});
+            } else if (index === moveToIndex + 1) {
+                $column[updateFunc]({left: '100%'});
+                $tab[updateFunc]({left: '100%'});
+            } else if (index === moveToIndex) {
+                $column[updateFunc]({left: '0%'});
+                $tab[updateFunc]({left: '50%'});
+                $tab.add($column).addClass('o_current');
+            } else if (index < moveToIndex) {
+                $column.css({left: '-100%'});
+                $tab[updateFunc]({left: '-100%'});
+            } else if (index > moveToIndex) {
+                $column.css({left: '100%'});
+                $tab[updateFunc]({left: '200%'});
             }
         });
     },
@@ -133,6 +173,7 @@ KanbanRenderer.include({
     _moveToGroup: function (moveToIndex, animate) {
         var self = this;
         if (moveToIndex < 0 || moveToIndex >= this.widgets.length) {
+            this._layoutUpdate(animate);
             return $.when();
         }
         var def = $.Deferred();
@@ -141,31 +182,7 @@ KanbanRenderer.include({
         this.trigger_up('kanban_load_records', {
             columnID: column.db_id,
             onSuccess: function () {
-                // update the columns and tabs positions (optionally with an animation)
-                var updateFunc = animate ? 'animate' : 'css';
-                self.$('.o_kanban_mobile_tab, .o_kanban_group').removeClass('o_current');
-                _.each(self.widgets, function (column, index) {
-                    var columnID = column.id || column.db_id;
-                    var $column = self.$('.o_kanban_group[data-id="' + columnID + '"]');
-                    var $tab = self.$('.o_kanban_mobile_tab[data-id="' + columnID + '"]');
-                    if (index === moveToIndex - 1) {
-                        $column[updateFunc]({left: '-100%'});
-                        $tab[updateFunc]({left: '0%'});
-                    } else if (index === moveToIndex + 1) {
-                        $column[updateFunc]({left: '100%'});
-                        $tab[updateFunc]({left: '100%'});
-                    } else if (index === moveToIndex) {
-                        $column[updateFunc]({left: '0%'});
-                        $tab[updateFunc]({left: '50%'});
-                        $tab.add($column).addClass('o_current');
-                    } else if (index < moveToIndex) {
-                        $column.css({left: '-100%'});
-                        $tab[updateFunc]({left: '-100%'});
-                    } else if (index > moveToIndex) {
-                        $column.css({left: '100%'});
-                        $tab[updateFunc]({left: '200%'});
-                    }
-                });
+                self._layoutUpdate(animate);
                 def.resolve();
             },
         });
