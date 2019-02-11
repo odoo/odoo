@@ -160,7 +160,7 @@ class configmanager(object):
                          dest='test_enable',
                          help="Enable unit tests.")
         group.add_option("--test-tags", dest="test_tags",
-                         help="Comma separated list of tags to filter which tests to excute. Enable unit tests if set.")
+                         help="Comma separated list of tags to filter which tests to execute. Enable unit tests if set.")
 
         parser.add_option_group(group)
 
