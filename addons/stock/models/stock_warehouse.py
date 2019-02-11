@@ -439,12 +439,39 @@ class Warehouse(models.Model):
         def_values = self.default_get(['reception_steps', 'delivery_steps'])
         reception_steps = vals.get('reception_steps', def_values['reception_steps'])
         delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
+        code = vals.get('code') or self.code
+        code = code.replace(' ', '').upper()
         sub_locations = {
-            'lot_stock_id': {'name': _('Stock'), 'active': True, 'usage': 'internal'},
-            'wh_input_stock_loc_id': {'name': _('Input'), 'active': reception_steps != 'one_step', 'usage': 'internal'},
-            'wh_qc_stock_loc_id': {'name': _('Quality Control'), 'active': reception_steps == 'three_steps', 'usage': 'internal'},
-            'wh_output_stock_loc_id': {'name': _('Output'), 'active': delivery_steps != 'ship_only', 'usage': 'internal'},
-            'wh_pack_stock_loc_id': {'name': _('Packing Zone'), 'active': delivery_steps == 'pick_pack_ship', 'usage': 'internal'},
+            'lot_stock_id': {
+                'name': _('Stock'),
+                'active': True,
+                'usage': 'internal',
+                'barcode': code + '-STOCK'
+            },
+            'wh_input_stock_loc_id': {
+                'name': _('Input'),
+                'active': reception_steps != 'one_step',
+                'usage': 'internal',
+                'barcode': code + '-INPUT'
+            },
+            'wh_qc_stock_loc_id': {
+                'name': _('Quality Control'),
+                'active': reception_steps == 'three_steps',
+                'usage': 'internal',
+                'barcode': code + '-QUALITY'
+            },
+            'wh_output_stock_loc_id': {
+                'name': _('Output'),
+                'active': delivery_steps != 'ship_only',
+                'usage': 'internal',
+                'barcode': code + '-OUTPUT'
+            },
+            'wh_pack_stock_loc_id': {
+                'name': _('Packing Zone'),
+                'active': delivery_steps == 'pick_pack_ship',
+                'usage': 'internal',
+                'barcode': code + '-PACKING'
+            },
         }
         return sub_locations
 
