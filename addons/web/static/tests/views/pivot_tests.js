@@ -1379,7 +1379,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('rendering of pivot view with comparison', function (assert) {
-        assert.expect(91);
+        assert.expect(92);
 
         this.data.partner.records[0].date = '2016-12-15';
         this.data.partner.records[1].date = '2016-12-17';
@@ -1416,6 +1416,17 @@ QUnit.module('Views', {
                   '</pivot>',
                 'partner,false,search': '<search></search>',
             },
+            intercepts: {
+                create_filter: function (ev) {
+                    var data = ev.data;
+                    assert.deepEqual(data.filter.context.timeRangeMenuData, {
+                        timeRange: ["&",["date",">=","2016-12-01"],["date","<","2017-01-01"]],
+                        timeRangeDescription: 'This Month',
+                        comparisonTimeRange: ["&",["date",">=","2016-11-01"],["date","<","2016-12-01"]],
+                        comparisonTimeRangeDescription: 'Previous Period',
+                    });
+                }
+            }
         });
 
         actionManager.doAction({
@@ -1486,6 +1497,12 @@ QUnit.module('Views', {
             "1", "2", "-50%"
         ];
         checkCellValues(results);
+
+        $('.o_search_options button:contains("Favorites")').click();
+        var $favorites = $('.dropdown-menu.o_favorites_menu');
+        $favorites.find('a.o_save_search').click();
+        $favorites.find('.o_input').val('Fav').trigger('input');
+        $favorites.find('button').click();
 
         unpatchDate();
         actionManager.destroy();
