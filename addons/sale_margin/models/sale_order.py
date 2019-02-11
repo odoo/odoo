@@ -60,8 +60,8 @@ class SaleOrderLine(models.Model):
         for line in self:
             currency = line.order_id.pricelist_id.currency_id
             price = line.purchase_price
-            line.margin = currency.round(line.price_subtotal - (price * line.product_uom_qty))
-
+            margin = line.price_subtotal - (price * line.product_uom_qty)
+            line.margin = currency.round(margin) if currency else margin
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
