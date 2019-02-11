@@ -7,6 +7,7 @@ import uuid
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools.translate import html_translate
+from odoo.exceptions import UserError
 from odoo.osv import expression
 
 
@@ -204,6 +205,31 @@ class Channel(models.Model):
             action['context'] = {'default_channel_id': self.id}
 
         return action
+
+    @api.multi
+    def action_channel_invite(self):
+        self.ensure_one()
+
+        if self.visibility != 'invite':
+            raise UserError(_("You cannot send invitations for channels that are not set as 'invite'."))
+
+        template = self.env.ref('website_slides.mail_template_slide_channel_invite', raise_if_not_found=False)
+
+        local_context = dict(
+            self.env.context,
+            default_channel_id=self.id,
+            default_use_template=bool(template),
+            default_template_id=template and template.id or False,
+            notif_layout='mail.mail_notification_light',
+        )
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'slide.channel.invite',
+            'target': 'new',
+            'context': local_context,
+        }
 
     # ---------------------------------------------------------
     # ORM Overrides
