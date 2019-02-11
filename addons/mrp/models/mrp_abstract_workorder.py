@@ -245,6 +245,32 @@ class MrpAbstractWorkorder(models.AbstractModel):
                 float_round(self.qty_producing, precision_rounding=rounding)
             )
 
+        by_product_moves = self.production_id.move_finished_ids.filtered(lambda m: m.product_id != self.product_id and m.state not in ('done', 'cancel'))
+        for by_product_move in by_product_moves:
+            rounding = by_product_move.product_uom.rounding
+            quantity = float_round(self.qty_producing * by_product_move.unit_factor, precision_rounding=rounding)
+            values = {
+                'move_id': by_product_move.id,
+                'product_id': by_product_move.product_id.id,
+                'production_id': self.production_id.id,
+                'product_uom_id': by_product_move.product_uom.id,
+                'location_id': by_product_move.location_id.id,
+                'location_dest_id': by_product_move.location_dest_id.id,
+            }
+            if by_product_move.product_id.tracking == 'lot':
+                values.update({
+                    'product_uom_qty': quantity,
+                    'qty_done': quantity,
+                })
+                self.env['stock.move.line'].create(values)
+            else:
+                values.update({
+                    'product_uom_qty': 1.0,
+                    'qty_done': 1.0,
+                })
+                for i in range(0, int(quantity)):
+                    self.env['stock.move.line'].create(values)
+
     def _update_raw_moves(self):
         """ Once the production is done. Modify the workorder lines into
         stock move line with the registered lot and quantity done.
