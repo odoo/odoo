@@ -24,8 +24,8 @@
 # efraimbiffi <eab@odoo.com>, 2018
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
 # Martin Trigaux, 2018
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2019\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -858,7 +858,7 @@ msgstr ""
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
-"Una posizione fiscale può essere definita una sola volta sulla stessa "
+"Una posizione fiscale può essere definita una sola volta per la stessa "
 "imposta."
 
 #. module: account
@@ -967,7 +967,7 @@ msgstr "Nome del titolare del conto"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_send
 msgid "Account Invoice Send"
-msgstr ""
+msgstr "Fattura conto inviata"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__journal_id
@@ -1280,12 +1280,12 @@ msgstr "Mappatura conti"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Accounts Mapping Template of Fiscal Position"
-msgstr "Modello di mappatura conti della posizione fiscale"
+msgstr "Modello di mappatura conti per la posizione fiscale"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Mapping of Fiscal Position"
-msgstr "Mappatura conti della posizione fiscale"
+msgstr "Mappatura conti per la posizione fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_needaction
@@ -1764,7 +1764,8 @@ msgstr "Importo:"
 msgid ""
 "An account fiscal position could be defined only one time on same accounts."
 msgstr ""
-"Una posizione fiscale può essere definita una sola volta sullo stesso conto."
+"Una posizione fiscale può essere definita una sola volta per lo stesso "
+"conto."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -1823,7 +1824,7 @@ msgstr "Conto analitico"
 #: model:ir.ui.menu,name:account.account_analytic_group_menu
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Analytic Account Groups"
-msgstr "Gruppi Conti Analitici"
+msgstr "Gruppi di conto analitico"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_analytic_accounting
@@ -2137,7 +2138,7 @@ msgstr "ACQ"
 #. module: account
 #: selection:res.partner,trust:0
 msgid "Bad Debtor"
-msgstr "Credito insoluto"
+msgstr "Cattivo pagatore"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2669,7 +2670,7 @@ msgstr "Cassa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
 msgid "Cash Basis"
-msgstr "Regime di cassa"
+msgstr "Criterio di cassa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_cash_basis_journal_id
@@ -3350,13 +3351,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__country_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__country_id
 msgid "Country"
-msgstr "Paese"
+msgstr "Nazione"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__country_group_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__country_group_id
 msgid "Country Group"
-msgstr "Gruppo Paese"
+msgstr "Gruppo nazione"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4813,21 +4814,21 @@ msgstr "Livelli di verifica"
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_follower_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__message_follower_ids
 msgid "Followers"
-msgstr "Followers"
+msgstr "Follower"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_channel_ids
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_channel_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Followers (Canali)"
+msgstr "Follower (canali)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_partner_ids
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_partner_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Followers (Partner)"
+msgstr "Follower (partner)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__inbound_payment_method_ids
@@ -5938,7 +5939,7 @@ msgstr "È tra"
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_is_follower
 #: model:ir.model.fields,field_description:account.field_account_payment__message_is_follower
 msgid "Is Follower"
-msgstr "È Follower"
+msgstr "È un follower"
 
 #. module: account
 #: selection:account.reconcile.model,match_amount:0
@@ -5960,12 +5961,12 @@ msgstr "E' Stampata"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__is_second_tax_price_included
 msgid "Is Second Tax Included in Price"
-msgstr "E' la Seconda Tassa Inclusa nel Prezzo"
+msgstr "È una seconda imposta inclusa nel prezzo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__is_tax_price_included
 msgid "Is Tax Included in Price"
-msgstr "E' la Tassa Inclusa nel Prezzo"
+msgstr "È una imposta inclusa nel prezzo"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__is_rounding_line
@@ -6254,12 +6255,12 @@ msgstr "Lasciare vuoto per nessun controllo"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__date_invoice
 msgid "Keep empty to use the current date"
-msgstr "Usare la data attuale se vuoto"
+msgstr "Lasciare vuoto per usare la data corrente"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__date
 msgid "Keep empty to use the invoice date."
-msgstr "Usare la data fattura se vuoto"
+msgstr "Lasciare vuoto per usare la data fattura."
 
 #. module: account
 #: selection:account.abstract.payment,payment_difference_handling:0
@@ -6273,8 +6274,8 @@ msgstr "Tenere aperto"
 msgid ""
 "Keep this field empty to use the default value from the product category."
 msgstr ""
-"Lasciare vuoto questo campo per utilizzare il valore di default della "
-"categoria di prodotto"
+"Lasciare vuoto questo campo per usare il valore predefinito della categoria "
+"prodotto."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_template__property_account_expense_id
@@ -6734,10 +6735,10 @@ msgid ""
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
 msgstr ""
 "Pagamento manuale: puoi essere pagato in contanti, con assegni o con qualsiasi altro metodo esterno a Odoo.\n"
-"Pagamento elettronico: Puoi essere pagato automaticamente tramite un metodo di pagamento che richiede una transazione su una carta registrata dal cliente al momento dell'acquisto o della registrazione online (gettone di pagamento).\n"
+"Pagamento elettronico: puoi essere pagato automaticamente tramite un metodo di pagamento che richiede una transazione su una carta registrata dal cliente al momento dell'acquisto o della registrazione online (gettone di pagamento).\n"
 "Assegno: paga la fattura con un assegno e stampalo da Odoo.\n"
 "Deposito Raggruppato: Incassa più assegni clienti contemporaneamente generando un deposito raggruppato da inviare alla tua banca. Quando inserisci l'estratto conto in Odoo, puoi riconciliare la transazione e il deposito raggruppato. Per attivare il deposito raggruppato, il modulo account_batch_deposit (conto-deposito-raggruppato) deve essere installato. \n"
-"Bonifico SEPA: paga la fattura inviando un file di Bonifico SEPA alla tua banca. Per attivare il bonifico SEPA, il modulo account_sepa (conto-sepa) deve essere installato. "
+"Bonifico SEPA: paga la fattura inviando un file di bonifico SEPA alla tua banca. Per attivare il bonifico SEPA, il modulo account_sepa (conto-sepa) deve essere installato. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_ids
@@ -7816,7 +7817,7 @@ msgstr "Differenza di pagamento"
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_difference_handling
 #: model:ir.model.fields,field_description:account.field_account_register_payments__payment_difference_handling
 msgid "Payment Difference Handling"
-msgstr ""
+msgstr "Gestione differenza di pagamento"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment__journal_id
@@ -9715,7 +9716,7 @@ msgstr "Registrazione per cassa di"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_cash_basis_journal_id
 msgid "Tax Cash Basis Journal"
-msgstr "Registro imposte regime di cassa"
+msgstr "Registro imposte criterio di cassa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__amount_type
@@ -9759,7 +9760,7 @@ msgstr "Gruppo imposta"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__force_tax_included
 #, python-format
 msgid "Tax Included in Price"
-msgstr ""
+msgstr "Imposta inclusa nel prezzo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__tax_line_ids
@@ -9776,12 +9777,12 @@ msgstr "Mappatura imposta"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Tax Mapping Template of Fiscal Position"
-msgstr ""
+msgstr "Modello di mappatura imposta per la posizione fiscale"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr ""
+msgstr "Mappatura imposta per la posizione fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name
@@ -10006,7 +10007,7 @@ msgstr "Campo tecnico usato a fini di usabilita'"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__matched_percentage
 msgid "Technical field used in cash basis method"
-msgstr "Campo tecnico usato nel regime di cassa"
+msgstr "Campo tecnico usato nel criterio di cassa"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__second_tax_amount_type
@@ -10014,6 +10015,8 @@ msgid ""
 "Technical field used inside the view to make the force_second_tax_included "
 "field invisible if the tax is a group."
 msgstr ""
+"Campo tecnico usato nella vista per rendere invisibile il campo "
+"force_second_tax_included se l'imposta è un gruppo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__is_second_tax_price_included
@@ -10021,6 +10024,8 @@ msgid ""
 "Technical field used inside the view to make the force_second_tax_included "
 "field readonly if the tax is already price included."
 msgstr ""
+"Campo tecnico usato nella vista per impostare in sola lettura il campo "
+"force_second_tax_included se l'imposta è già inclusa nel prezzo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__tax_amount_type
@@ -10028,6 +10033,8 @@ msgid ""
 "Technical field used inside the view to make the force_tax_included field "
 "invisible if the tax is a group."
 msgstr ""
+"Campo tecnico usato nella vista per rendere invisibile il campo "
+"force_tax_included se l'imposta è un gruppo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__is_tax_price_included
@@ -10035,6 +10042,8 @@ msgid ""
 "Technical field used inside the view to make the force_tax_included field "
 "readonly if the tax is already price included."
 msgstr ""
+"Campo tecnico usato nella vista per impostare in sola lettura il campo "
+"force_tax_included se l'imposta è già inclusa nel prezzo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment__payment_method_code
@@ -10059,6 +10068,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__tax_type_domain
 msgid "Technical field used to have a dynamic taxes domain on the form view."
 msgstr ""
+"Campo tecnico usato per avere un dominio imposte dinamico nella vista "
+"modulo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment__hide_payment_method
@@ -10088,6 +10099,8 @@ msgid ""
 "Technical field used to know if the tax_ids field has been modified in the "
 "UI."
 msgstr ""
+"Campo tecnico usato per rilevare modifiche al campo tax_ids nell'interfaccia"
+" utente."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment__show_partner_bank_account
@@ -10097,6 +10110,8 @@ msgid ""
 "Technical field used to know whether the field `partner_bank_account_id` "
 "needs to be displayed or not in the payments form views"
 msgstr ""
+"Campo tecnico usato per rilevare se il campo \"partner_bank_account_id\" "
+"deve essere visualizzato nelle viste modulo dei pagamenti"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_exigible
@@ -10177,6 +10192,8 @@ msgid ""
 "The 'Internal Group' is used to filter accounts based on the internal group "
 "set on the account type."
 msgstr ""
+"Il \"Gruppo interno\" è usato per filtrare i conti in base al gruppo interno"
+" impostato nel tipo conto."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__internal_type
@@ -11153,7 +11170,7 @@ msgstr "Totale residuo"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__user_currency_price_total
 msgid "Total Without Tax in Currency"
-msgstr ""
+msgstr "Totale imposte escluse in valuta"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__price_subtotal_signed
@@ -11431,7 +11448,7 @@ msgstr "Usare contabilità anglosassone"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_exigibility
 msgid "Use Cash Basis"
-msgstr "Rilevare per cassa"
+msgstr "Usare criterio di cassa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa_direct_debit
@@ -11462,6 +11479,8 @@ msgstr "Utilizzo di pagamenti raggruppati"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use budgets to compare actual with expected revenues and costs"
 msgstr ""
+"Utilizza i budget per confrontare le entrate e i costi previsti con quelli "
+"effettivi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12109,6 +12128,8 @@ msgstr ""
 msgid ""
 "You cannot perform this action on an account that contains journal items."
 msgstr ""
+"Impossibile eseguire questa azione su un conto che contiene movimenti "
+"contabili."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:36
@@ -12122,6 +12143,7 @@ msgstr ""
 #, python-format
 msgid "You cannot remove the bank account from the journal once set."
 msgstr ""
+"Impossibile rimuovere il conto bancario dal registro una volta impostato."
 
 #. module: account
 #: code:addons/account/models/account.py:332
