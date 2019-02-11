@@ -97,7 +97,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.assertTrue(self.sale_order.invoice_status == 'to invoice')
 
         # create invoice: only 'invoice on order' products are invoiced
-        inv_id = self.sale_order.action_invoice_create()
+        inv_id = self.sale_order._create_invoices()
         invoice = Invoice.browse(inv_id)
         self.assertEqual(len(invoice.invoice_line_ids), 2, 'Sale: invoice is missing lines')
         self.assertEqual(invoice.amount_total, sum([2 * p.list_price if p.invoice_policy == 'order' else 0 for p in self.product_map.values()]), 'Sale: invoice total amount is wrong')
@@ -110,7 +110,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         for line in self.sale_order.order_line:
             line.qty_delivered = 2 if line.product_id.expense_policy == 'no' else 0
         self.assertTrue(self.sale_order.invoice_status == 'to invoice', 'Sale: SO status after delivery should be "to invoice"')
-        inv_id = self.sale_order.action_invoice_create()
+        inv_id = self.sale_order._create_invoices()
         invoice2 = Invoice.browse(inv_id)
         self.assertEqual(len(invoice2.invoice_line_ids), 2, 'Sale: second invoice is missing lines')
         self.assertEqual(invoice2.amount_total, sum([2 * p.list_price if p.invoice_policy == 'delivery' else 0 for p in self.product_map.values()]), 'Sale: second invoice total amount is wrong')
@@ -124,7 +124,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         # upsell and invoice
         self.sol_serv_order.write({'product_uom_qty': 10})
 
-        inv_id = self.sale_order.action_invoice_create()
+        inv_id = self.sale_order._create_invoices()
         invoice3 = Invoice.browse(inv_id)
         self.assertEqual(len(invoice3.invoice_line_ids), 1, 'Sale: third invoice is missing lines')
         self.assertEqual(invoice3.amount_total, 8 * self.product_map['serv_order'].list_price, 'Sale: second invoice total amount is wrong')
