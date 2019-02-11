@@ -139,8 +139,22 @@
         </record>
 
         <!-- account.tax.template -->
-        <record id="attn_VAT-OUT-21-S" model="account.tax.template">
+        <record id="attn_VAT-OUT-21-L" model="account.tax.template">
             <field name="sequence">10</field>
+            <field name="description">TVA 21%</field>
+            <field name="name">21%</field>
+            <field name="refund_account_id" ref="a451054"/>
+            <field name="account_id" ref="a451054"/>
+            <field name="price_include" eval="0"/>
+            <field name="amount">21</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_03'), ref('tax_tag_49'), ref('tax_tag_54'), ref('tax_tag_64')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21"/>
+        </record>
+        <record id="attn_VAT-OUT-21-S" model="account.tax.template">
+            <field name="sequence">11</field>
             <field name="description">TVA 21%</field>
             <field name="name">21% S.</field>
             <field name="refund_account_id" ref="a451054"/>
@@ -150,20 +164,6 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
             <field name="active" eval="False"/>
-            <field name="chart_template_id" ref="l10nbe_chart_template"/>
-            <field name="tag_ids" eval="[(6,0,[ref('tax_tag_03'), ref('tax_tag_49'), ref('tax_tag_54'), ref('tax_tag_64')])]"/>
-            <field name="tax_group_id" ref="tax_group_tva_21"/>
-        </record>
-        <record id="attn_VAT-OUT-21-L" model="account.tax.template">
-            <field name="sequence">11</field>
-            <field name="description">TVA 21%</field>
-            <field name="name">21%</field>
-            <field name="refund_account_id" ref="a451054"/>
-            <field name="account_id" ref="a451054"/>
-            <field name="price_include" eval="0"/>
-            <field name="amount">21</field>
-            <field name="amount_type">percent</field>
-            <field name="type_tax_use">sale</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_03'), ref('tax_tag_49'), ref('tax_tag_54'), ref('tax_tag_64')])]"/>
             <field name="tax_group_id" ref="tax_group_tva_21"/>
@@ -384,7 +384,7 @@
             <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
          <record id="attn_TVA-21-inclus-dans-prix" model="account.tax.template">
-            <field name="sequence">12</field>
+            <field name="sequence">150</field>
             <field name="description">TVA 21% TTC</field>
             <field name="name">21% S. TTC</field>
             <field name="refund_account_id" ref="a411059"/>
