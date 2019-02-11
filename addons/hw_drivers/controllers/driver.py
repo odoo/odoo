@@ -345,6 +345,8 @@ class Manager(Thread):
         devices = {}
         updated_devices = {}
         self.send_alldevices()
+        # Update Time
+        subprocess.call(["ntpdate", "pool.ntp.org"])
         cpt = 0
         while 1:
             updated_devices = self.usb_loop()

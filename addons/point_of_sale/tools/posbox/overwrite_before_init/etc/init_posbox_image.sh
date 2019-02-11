@@ -34,6 +34,7 @@ PKGS_TO_INSTALL="
     vim \
     mc \
     mg \
+    ntpdate \
     screen \
     iw \
     hostapd \
