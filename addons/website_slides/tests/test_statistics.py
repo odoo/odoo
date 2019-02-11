@@ -51,8 +51,35 @@ class TestStatistics(common.SlidesCase):
             'visibility': 'invite',
         })
         channel_publisher._action_add_member(self.user_emp.partner_id)
+        channel_emp = self.channel.sudo(self.user_emp)
 
         slides_emp = (self.slide | self.slide_2).sudo(self.user_emp)
-        slides_emp.action_view()
-        channel_emp = self.channel.sudo(self.user_emp)
-        self.assertEqual(channel_emp.completion, math.ceil(100.0 * len(slides_emp) / len(channel_publisher.slide_ids)))
+        slides_emp.action_set_viewed()
+        self.assertEqual(channel_emp.completion, 0)
+
+        slides_emp.action_set_completed()
+        channel_emp.invalidate_cache()
+        self.assertEqual(
+            channel_emp.completion,
+            math.ceil(100.0 * len(slides_emp) / len(channel_publisher.slide_ids)))
+        self.assertFalse(channel_emp.completed)
+
+        self.slide_3.sudo(self.user_emp).action_set_completed()
+        self.assertEqual(channel_emp.completion, 100)
+        self.assertTrue(channel_emp.completed)
+
+    @mute_logger('odoo.models')
+    def test_channel_user_statistics_complete_check_member(self):
+        (self.slide | self.slide_2).write({'is_preview': True})
+        slides_emp = (self.slide | self.slide_2).sudo(self.user_emp)
+        slides_emp.read(['name'])
+        with self.assertRaises(UserError):
+            slides_emp.action_set_completed()
+
+    @mute_logger('odoo.models')
+    def test_channel_user_statistics_view_check_member(self):
+        (self.slide | self.slide_2).write({'is_preview': True})
+        slides_emp = (self.slide | self.slide_2).sudo(self.user_emp)
+        slides_emp.read(['name'])
+        with self.assertRaises(UserError):
+            slides_emp.action_set_viewed()
