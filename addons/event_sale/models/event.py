@@ -190,6 +190,9 @@ class EventRegistration(models.Model):
     # TDE FIXME: maybe add an onchange on sale_order_id + origin
     sale_order_id = fields.Many2one('sale.order', string='Source Sales Order', ondelete='cascade')
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line', ondelete='cascade')
+    campaign_id = fields.Many2one('utm.campaign', 'Campaign', related="sale_order_id.campaign_id", store=True)
+    source_id = fields.Many2one('utm.source', 'Source', related="sale_order_id.source_id", store=True)
+    medium_id = fields.Many2one('utm.medium', 'Medium', related="sale_order_id.medium_id", store=True)
 
     @api.onchange('event_id')
     def _onchange_event_id(self):

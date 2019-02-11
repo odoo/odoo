@@ -45,6 +45,11 @@
                         <field name="origin" attrs="{'invisible': [('sale_order_id', '!=', False)]}"/>
                         <field name="sale_order_line_id" readonly="1" attrs="{'invisible': [('sale_order_id', '=', False)]}"/>
                     </group>
+                    <group string="Marketing" name="utm_link" groups="base.group_no_one">
+                        <field name="campaign_id"/>
+                        <field name="medium_id"/>
+                        <field name="source_id"/>
+                    </group>
                 </group>
             </field>
         </record>

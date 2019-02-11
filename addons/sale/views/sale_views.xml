@@ -570,6 +570,11 @@
                                     </group>
                                     <group name="utm_link" colspan="2"/>
                                 </group>
+                                <group string="Marketing" name="utm_link" groups="base.group_no_one">
+                                    <field name="campaign_id"/>
+                                    <field name="medium_id"/>
+                                    <field name="source_id"/>
+                                </group>
                             </group>
                         </page>
                         <page groups="base.group_no_one" string="Customer Signature" name="customer_signature" attrs="{'invisible': [('require_signature', '=', False), ('signed_by', '=', False), ('signature', '=', False), ('signed_on', '=', False)]}">
@@ -1048,6 +1053,13 @@
                    </xpath>
                     <xpath expr="//field[@name='discount']" position="attributes">
                         <attribute name="groups">sale.group_discount_per_so_line</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='partner_bank_id']/.." position="after">
+                        <group string="Marketing" name="utm_link" groups="base.group_no_one">
+                            <field name="campaign_id"/>
+                            <field name="medium_id"/>
+                            <field name="source_id"/>
+                        </group>
                     </xpath>
                 </data>
             </field>
