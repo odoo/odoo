@@ -374,7 +374,7 @@ class PurchaseOrder(models.Model):
                 seller = line.product_id._select_seller(
                     partner_id=line.partner_id,
                     quantity=line.product_qty,
-                    date=line.order_id.date_order and line.order_id.date_order[:10],
+                    date=line.order_id.date_order and line.order_id.date_order.date(),
                     uom_id=line.product_uom)
                 if seller:
                     supplierinfo['product_name'] = seller.product_name
