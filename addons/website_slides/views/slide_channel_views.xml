@@ -49,6 +49,13 @@
                 <form string="Channels">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
+                            <button name="action_redirect_to_members"
+                                type="object"
+                                icon="fa-users"
+                                class="oe_stat_button"
+                                groups="website.group_website_publisher">
+                                <field name="members_count" string="Attendees" widget="statinfo"/>
+                            </button>
                             <button class="oe_stat_button" name="website_publish_button"
                                     type="object" icon="fa-globe">
                                 <field name="is_published" widget="website_button"/>
