@@ -443,10 +443,6 @@ var MailManager =  AbstractService.extend({
             channel = this._makeChannel(data, options);
             if (channel.getType() === 'dm_chat') {
                 this._pinnedDmPartners.push(channel.getDirectPartnerID());
-                this.call('bus_service', 'updateOption',
-                    'bus_presence_partner_ids',
-                    this._pinnedDmPartners
-                );
             }
             this._threads.push(channel);
             if (data.last_message) {
@@ -1041,10 +1037,6 @@ var MailManager =  AbstractService.extend({
             var index = this._pinnedDmPartners.indexOf(channel.getDirectPartnerID());
             if (index > -1) {
                 this._pinnedDmPartners.splice(index, 1);
-                this.call('bus_service', 'updateOption',
-                    'bus_presence_partner_ids',
-                    this._pinnedDmPartners
-                );
             }
         }
         this._threads = _.without(this._threads, channel);

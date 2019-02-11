@@ -66,6 +66,16 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         this._customerEmailData.push(data);
     },
     /**
+     * @override
+     * @return {string|undefined}
+     */
+    getAuthorImStatus: function () {
+        if (!this.hasAuthor()) {
+            return undefined;
+        }
+        return this.call('mail_service', 'getImStatus', { partnerID: this.getAuthorID() });
+    },
+    /**
      * Get the name of the author of this message
      * If there are no author, return "".
      *

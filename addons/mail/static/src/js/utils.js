@@ -91,6 +91,14 @@ function timeFromNow(date) {
     return date.fromNow();
 }
 
+function o_clearTimeout(id) {
+    return clearTimeout(id);
+}
+
+function o_setTimeout(func, delay) {
+    return setTimeout(func, delay);
+}
+
 return {
     addLink: addLink,
     getTextToHTML: getTextToHTML,
@@ -100,6 +108,8 @@ return {
     parseEmail: parseEmail,
     stripHTML: stripHTML,
     timeFromNow: timeFromNow,
+    clearTimeout: o_clearTimeout,
+    setTimeout: o_setTimeout,
 };
 
 });

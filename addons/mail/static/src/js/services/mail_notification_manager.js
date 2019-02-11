@@ -494,22 +494,6 @@ MailManager.include({
         });
     },
     /**
-     * On receiving an update on user status (e.g. becoming 'online', 'offline',
-     * 'idle', etc.).
-     *
-     * @private
-     * @param {Object} data partner infos
-     * @param {integer} data.id partner ID
-     * @param {string} data.im_status partner new 'im status' (e.g. 'online')
-     */
-    _handlePresenceNotification: function (data) {
-        var dmChat = this.getDMChatFromPartnerID(data.id);
-        if (dmChat) {
-            dmChat.setStatus(data.im_status);
-            this._mailBus.trigger('update_dm_presence', dmChat);
-        }
-    },
-    /**
      * @override
      * @private
      */
@@ -569,8 +553,6 @@ MailManager.include({
                 });
             } else if (model === 'res.partner') {
                 self._handlePartnerNotification(notif[1]);
-            } else if (model === 'bus.presence') {
-                self._handlePresenceNotification(notif[1]);
             }
         });
     },

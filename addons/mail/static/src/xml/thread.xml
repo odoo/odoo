@@ -258,12 +258,18 @@
         <div t-att-class="'o_thread_message ' + (message.getID() === options.selectedMessageID ? 'o_thread_selected_message ' : ' ') + (message.isDiscussion() or message.isNotification() ? ' o_mail_discussion ' : ' o_mail_not_discussion ')" t-att-data-message-id="message.getID()">
             <div t-if="options.displayAvatars" class="o_thread_message_sidebar">
                 <t t-if="message.hasAuthor()">
-                    <img t-if="displayAuthorMessages[message.getID()]"
-                        alt=""
-                        t-att-src="message.getAvatarSource()"
-                        data-oe-model="res.partner"
-                        t-att-data-oe-id="message.shouldRedirectToAuthor() ? message.getAuthorID() : ''"
-                        t-attf-class="o_thread_message_avatar rounded-circle #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}"/>
+                    <div t-if="displayAuthorMessages[message.getID()]" class="o_thread_message_sidebar_image">
+                        <img
+                            alt=""
+                            t-att-src="message.getAvatarSource()"
+                            data-oe-model="res.partner"
+                            t-att-data-oe-id="message.shouldRedirectToAuthor() ? message.getAuthorID() : ''"
+                            t-attf-class="o_thread_message_avatar rounded-circle #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}"/>
+                        <t t-call="mail.UserStatus">
+                            <t t-set="status" t-value="message.getAuthorImStatus()"/>
+                            <t t-set="partnerID" t-value="message.getAuthorID()"/>
+                        </t>
+                    </div>
                 </t>
                 <t t-else="">
                     <img t-if="displayAuthorMessages[message.getID()]"

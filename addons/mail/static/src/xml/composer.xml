@@ -71,6 +71,10 @@
     </t>
     <t t-name="mail.MentionSuggestions.Partner" t-extend="mail.MentionSuggestions">
         <t t-jquery=".o_mention_proposition" t-operation="append">
+            <t t-call="mail.UserStatus">
+                <t t-set="status" t-value="suggestion.im_status"/>
+                <t t-set="partnerID" t-value="suggestion.id"/>
+            </t>
             <span class="o_mention_name"><t t-esc="suggestion.name"/></span>
             <t t-if="suggestion.email">
                 <span class="o_mention_info">(<t t-esc="suggestion.email"/>)</span>

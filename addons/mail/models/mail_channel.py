@@ -540,21 +540,47 @@ class Channel(models.Model):
                 notifications.append([channel.uuid, dict(message_values)])
         return notifications
 
+    @api.model
+    def partner_info(self, all_partners, direct_partners):
+        """
+        Return the information needed by channel to display channel members
+            :param all_partners: list of res.parner():
+            :param direct_partners: list of res.parner():
+            :returns: a list of {'id', 'name', 'email'} for each partner and adds {im_status, out_of_office_message} for direct_partners.
+            :rtype : list(dict)
+        """
+        partner_infos = {partner['id']: partner for partner in all_partners.sudo().read(['id', 'name', 'email'])}
+        # add im _status and out_of_office_message for direct_partners
+        direct_partners_im_status = {partner['id']: partner for partner in direct_partners.sudo().read(['im_status'])}
+        partner_infos.update(direct_partners_im_status)
+        for user in self.env['res.users'].search([('partner_id', 'in', direct_partners.ids), ('out_of_office_message', '!=', False)]):
+            partner_infos[user.partner_id.id]['out_of_office_message'] = user.out_of_office_message
+        return partner_infos
+
     @api.multi
-    def channel_info(self, extra_info = False):
+    def channel_info(self, extra_info=False):
         """ Get the informations header for the current channels
             :returns a list of channels values
             :rtype : list(dict)
         """
+        if not self:
+            return []
         channel_infos = []
-
         # all relations partner_channel on those channels
         all_partner_channel = self.env['mail.channel.partner'].search([('channel_id', 'in', self.ids)])
 
         # all partner infos on those channels
-        partner_infos = all_partner_channel.mapped('partner_id').read(['id', 'name', 'email'])
+        channel_dict = {channel.id: channel for channel in self}
+        all_partners = all_partner_channel.mapped('partner_id')
+        direct_channel_partners = all_partner_channel.filtered(lambda pc: channel_dict[pc.channel_id.id].channel_type == 'chat')
+        direct_partners = direct_channel_partners.mapped('partner_id')
+        partner_infos = self.partner_info(all_partners, direct_partners)
 
-        # for each channel, build the information header and include the logged partner information
+        # add last message preview (only used in mobile)
+        addPreview = self._context.get('isMobile', False)
+        if addPreview:
+            channel_previews = {channel_preview['id']: channel_preview for channel_preview in self.channel_fetch_preview()}
+
         for channel in self:
             info = {
                 'id': channel.id,
@@ -572,42 +598,39 @@ class Channel(models.Model):
             }
             if extra_info:
                 info['info'] = extra_info
-            # add the partner for 'direct mesage' channel
-            if channel.channel_type == 'chat':
-                info['direct_partner'] = (channel.sudo()
-                                          .with_context(active_test=False)
-                                          .channel_partner_ids
-                                          .filtered(lambda p: p.id != self.env.user.partner_id.id)
-                                          .read(['id', 'name', 'im_status']))
 
             # add last message preview (only used in mobile)
-            if self._context.get('isMobile', False):
-                last_message = channel.channel_fetch_preview()
-                if last_message:
-                    info['last_message'] = last_message[0].get('last_message')
+            if addPreview:
+                if channel in channel_previews:
+                    info['last_message'] = channel_previews[channel]
 
             # listeners of the channel
             channel_partners = all_partner_channel.filtered(lambda pc: channel.id == pc.channel_id.id)
 
             # find the channel partner state, if logged user
-            partner_channel = self.env['mail.channel.partner']
             if self.env.user and self.env.user.partner_id:
-                partner_channel = channel_partners.filtered(lambda pc: pc.partner_id.id == self.env.user.partner_id.id)
+                # add the partner for 'direct mesage' channel
+                if channel.channel_type == 'chat':
+                    # direct_partner should be removed from channel info since we can find it from members and channel_type
+                    # we keep it know to avoid change tests and javascript
+                    direct_partner = direct_channel_partners.filtered(lambda pc: pc.partner_id.id != self.env.user.partner_id.id)
+                    info['direct_partner'] = [partner_infos[direct_partner[0].partner_id.id]]
                 # add needaction and unread counter, since the user is logged
                 info['message_needaction_counter'] = channel.message_needaction_counter
                 info['message_unread_counter'] = channel.message_unread_counter
 
-            # add user session state, if available and if user is logged
-            if len(partner_channel.ids):
-                partner_channel = partner_channel[0]
-                info['state'] = partner_channel.fold_state or 'open'
-                info['is_minimized'] = partner_channel.is_minimized
-                info['seen_message_id'] = partner_channel.seen_message_id.id
-                info['custom_channel_name'] = partner_channel.custom_channel_name
+                # add user session state, if available and if user is logged
+                partner_channel = channel_partners.filtered(lambda pc: pc.partner_id.id == self.env.user.partner_id.id)
+                if partner_channel:
+                    partner_channel = partner_channel[0]
+                    info['state'] = partner_channel.fold_state or 'open'
+                    info['is_minimized'] = partner_channel.is_minimized
+                    info['seen_message_id'] = partner_channel.seen_message_id.id
+                    info['custom_channel_name'] = partner_channel.custom_channel_name
 
             # add members infos
             partner_ids = channel_partners.mapped('partner_id').ids
-            info['members'] = [partner_info for partner_info in partner_infos if partner_info['id'] in partner_ids]
+            info['members'] = [partner_infos[partner] for partner in partner_ids]
             info['seen_partners_info'] = [{
                 'partner_id': cp.partner_id.id,
                 'fetched_message_id': cp.fetched_message_id.id,
@@ -925,6 +948,8 @@ class Channel(models.Model):
     @api.multi
     def channel_fetch_preview(self):
         """ Return the last message of the given channels """
+        if not self:
+            return []
         self._cr.execute("""
             SELECT mail_channel_id AS id, MAX(mail_message_id) AS message_id
             FROM mail_message_mail_channel_rel
