@@ -15,7 +15,7 @@ class FleetVehicle(models.Model):
 
     def _get_default_state(self):
         state = self.env.ref('fleet.fleet_vehicle_state_registered', raise_if_not_found=False)
-        return state and state.id or False
+        return state if state and state.id else False
 
     name = fields.Char(compute="_compute_vehicle_name", store=True)
     active = fields.Boolean('Active', default=True, track_visibility="onchange")
