@@ -201,7 +201,8 @@ KanbanRenderer.include({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             if (self.state.groupedBy.length) {
-                return self._moveToGroup(self.activeColumnIndex);
+                // force first column for kanban view, because the groupedBy can be changed
+                return self._moveToGroup(0);
             }
         });
     },
