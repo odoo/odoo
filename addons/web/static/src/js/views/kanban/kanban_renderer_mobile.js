@@ -104,10 +104,88 @@ KanbanRenderer.include({
     //--------------------------------------------------------------------------
 
     /**
+     * Update the columns positions
+     *
+     * @private
+     * @param {boolean} [animate=false] set to true to animate
+     */
+    _computeColumnPosition: function (animate) {
+        if (this.widgets.length) {
+            var self = this;
+            var moveToIndex = this.activeColumnIndex;
+            var updateFunc = animate ? 'animate' : 'css';
+            _.each(this.widgets, function (column, index) {
+                var columnID = column.id || column.db_id;
+                var $column = self.$('.o_kanban_group[data-id="' + columnID + '"]');
+                if (index === moveToIndex - 1) {
+                    $column[updateFunc]({left: '-100%'});
+                } else if (index === moveToIndex + 1) {
+                    $column[updateFunc]({left: '100%'});
+                } else if (index === moveToIndex) {
+                    $column[updateFunc]({left: '0%'});
+                } else if (index < moveToIndex) {
+                    $column.css({left: '-100%'});
+                } else if (index > moveToIndex) {
+                    $column.css({left: '100%'});
+                }
+            });
+        }
+    },
+
+    /**
+     * Define the o_current class to the current selected kanban (column & tab)
+     *
+     *  @private
+     */
+    _computeCurrentColumn: function () {
+        if (this.widgets.length) {
+            var column = this.widgets[this.activeColumnIndex];
+            if (!column) {
+                return;
+            }
+            var columnID = column.id || column.db_id;
+            this.$('.o_kanban_mobile_tab.o_current, .o_kanban_group.o_current')
+                .removeClass('o_current');
+            this.$('.o_kanban_group[data-id="' + columnID + '"], ' +
+                   '.o_kanban_mobile_tab[data-id="' + columnID + '"]')
+                .addClass('o_current');
+        }
+    },
+
+    /**
+     * Update the tabs positions
+     *
+     * @private
+     * @param {boolean} [animate=false] set to true to animate
+     */
+    _computeTabPosition: function (animate) {
+        if (this.widgets.length) {
+            var self = this;
+            var moveToIndex = this.activeColumnIndex;
+            // update the columns and tabs positions (optionally with an animation)
+            var updateFunc = animate ? 'animate' : 'css';
+            _.each(this.widgets, function (column, index) {
+                var columnID = column.id || column.db_id;
+                var $tab = self.$('.o_kanban_mobile_tab[data-id="' + columnID + '"]');
+                if (index === moveToIndex - 1) {
+                    $tab[updateFunc]({left: '0%'});
+                } else if (index === moveToIndex + 1) {
+                    $tab[updateFunc]({left: '100%'});
+                } else if (index === moveToIndex) {
+                    $tab[updateFunc]({left: '50%'});
+                } else if (index < moveToIndex) {
+                    $tab[updateFunc]({left: '-100%'});
+                } else if (index > moveToIndex) {
+                    $tab[updateFunc]({left: '200%'});
+                }
+            });
+        }
+    },
+
+    /**
      * Enables swipe event on the current column
      *
      * @private
-     * @param {KanbanColumn} column
      */
     _enableSwipe: function () {
         var self = this;
@@ -127,40 +205,19 @@ KanbanRenderer.include({
             }
         });
     },
+
     /**
      * Update the kanban layout
+     *
      * @private
      * @param {boolean} [animate=false] set to true to animate
      */
     _layoutUpdate : function (animate) {
-        var self = this;
-        var moveToIndex = this.activeColumnIndex;
-        // update the columns and tabs positions (optionally with an animation)
-        var updateFunc = animate ? 'animate' : 'css';
-        this.$('.o_kanban_mobile_tab, .o_kanban_group').removeClass('o_current');
-        _.each(self.widgets, function (column, index) {
-            var columnID = column.id || column.db_id;
-            var $column = self.$('.o_kanban_group[data-id="' + columnID + '"]');
-            var $tab = self.$('.o_kanban_mobile_tab[data-id="' + columnID + '"]');
-            if (index === moveToIndex - 1) {
-                $column[updateFunc]({left: '-100%'});
-                $tab[updateFunc]({left: '0%'});
-            } else if (index === moveToIndex + 1) {
-                $column[updateFunc]({left: '100%'});
-                $tab[updateFunc]({left: '100%'});
-            } else if (index === moveToIndex) {
-                $column[updateFunc]({left: '0%'});
-                $tab[updateFunc]({left: '50%'});
-                $tab.add($column).addClass('o_current');
-            } else if (index < moveToIndex) {
-                $column.css({left: '-100%'});
-                $tab[updateFunc]({left: '-100%'});
-            } else if (index > moveToIndex) {
-                $column.css({left: '100%'});
-                $tab[updateFunc]({left: '200%'});
-            }
-        });
+        this._computeCurrentColumn();
+        this._computeTabPosition(animate);
+        this._computeColumnPosition(animate);
     },
+
     /**
      * Moves to the given kanban column
      *
@@ -188,6 +245,7 @@ KanbanRenderer.include({
         });
         return def;
     },
+
     /**
      * @override
      * @private
@@ -210,6 +268,7 @@ KanbanRenderer.include({
         })).prependTo(fragment);
         return result;
     },
+
     /**
      * @override
      * @private
