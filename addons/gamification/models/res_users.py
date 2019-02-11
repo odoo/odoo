@@ -74,8 +74,10 @@ class Users(models.Model):
             old_rank = user.rank_id
             for i in range(0, len(ranks)):
                 if user.karma >= ranks[i]['karma_min']:
-                    user.rank_id = ranks[i]['rank'].id
-                    user.next_rank_id = ranks[i - 1]['rank'].id if i > 0 else False
+                    user.write({
+                        'rank_id': ranks[i]['rank'].id,
+                        'next_rank_id': ranks[i - 1]['rank'].id if i > 0 else False
+                    })
                     break
             if old_rank != user.rank_id:
                 user._rank_changed()
