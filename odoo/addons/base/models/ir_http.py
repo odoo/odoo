@@ -277,7 +277,8 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _binary_ir_attachment_redirect_content(cls, record, default_mimetype='application/octet-stream'):
         # mainly used for theme images attachemnts
-        status = content = filename = mimetype = filehash = None
+        status = content = filename = filehash = None
+        mimetype = getattr(record, 'mimetype', False)
         if record.type == 'url' and record.url:
             # if url in in the form /somehint server locally
             url_match = re.match("^/(\w+)/(.+)$", record.url)

@@ -142,6 +142,7 @@ var SearchBar = Widget.extend({
         var self = this;
         this._setupAutoCompletionWidgets();
         this.autoComplete = new AutoComplete(this, {
+            $input: this.$('input'),
             source: this._getAutoCompleteSources.bind(this),
             select: this._onAutoCompleteSelected.bind(this),
             get_search_string: function () {

@@ -29,6 +29,7 @@ class HrLeave(models.Model):
                 'date_start': start,
                 'date_stop': end,
                 'benefit_type_id': benefit_type.id,
+                'display_warning': not bool(benefit_type),
                 'employee_id': leave.employee_id.id,
                 'leave_id': leave.id,
                 'state': 'confirmed',
