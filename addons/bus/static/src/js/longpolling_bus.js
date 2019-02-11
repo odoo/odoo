@@ -37,7 +37,6 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
 
         // bus presence
         this._lastPresenceTime = new Date().getTime();
-        this._lastPartnersPresenceCheck = this._lastPresenceTime;
         $(window).on("focus." + this._id, this._onFocusChange.bind(this, {focus: true}));
         $(window).on("blur." + this._id, this._onFocusChange.bind(this, {focus: false}));
         $(window).on("unload." + this._id, this._onFocusChange.bind(this, {focus: false}));
@@ -177,11 +176,6 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
         var options = _.extend({}, this._options, {
             bus_inactivity: now - this._getLastPresence(),
         });
-        if (this._lastPartnersPresenceCheck + this.PARTNERS_PRESENCE_CHECK_PERIOD > now) {
-            options = _.omit(options, 'bus_presence_partner_ids');
-        } else {
-            this._lastPartnersPresenceCheck = now;
-        }
         var data = {channels: this._channels, last: this._lastNotificationID, options: options};
         // The backend has a maximum cycle time of 50 seconds so give +10 seconds
         this._pollRpc = this._rpc({route: this.POLL_ROUTE, params: data}, {shadow : true, timeout: 60000});

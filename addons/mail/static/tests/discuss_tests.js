@@ -61,6 +61,18 @@ QUnit.module('Discuss', {
                     },
                 },
             },
+            'res.partner': {
+                fields: {
+                    im_status: {
+                        string: "status",
+                        type: 'char',
+                    },
+                },
+                records: [{
+                    id: 1,
+                    im_status: 'online',
+                }]
+            },
         };
         this.services = mailTestUtils.getMailServices();
     },

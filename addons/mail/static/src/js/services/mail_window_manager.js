@@ -334,8 +334,8 @@ MailManager.include({
             .on('new_channel', this, this._onNewChannel)
             .on('is_thread_bottom_visible', this, this._onIsThreadBottomVisible)
             .on('unsubscribe_from_channel', this, this._onUnsubscribeFromChannel)
-            .on('update_thread_unread_counter', this, this._onUpdateThreadUnreadCounter)
-            .on('update_dm_presence', this, this._onUpdateDmPresence);
+            .on('updated_im_status', this, this._onUpdatedImStatus)
+            .on('update_thread_unread_counter', this, this._onUpdateThreadUnreadCounter);
 
         core.bus.on('resize', this, _.debounce(this._repositionThreadWindows.bind(this), 100));
     },
@@ -664,6 +664,28 @@ MailManager.include({
         this._closeThreadWindow(channelID);
     },
     /**
+     * Called when there is a change of the im status of the partner.
+     * The header of the thread window should be updated accordingly,
+     * in order to display the correct new im status of this users.
+     *
+     * @private
+     * @param {integer} partnerID
+     */
+    _onUpdatedImStatus: function (partnerIDs) {
+        var self = this;
+        _.each(partnerIDs, function (partnerID) {
+            var thread = self.getDMChatFromPartnerID(partnerID);
+            if (! thread) {
+                return;
+            }
+            var threadWindow = self._getThreadWindow(thread.getID());
+            if (!threadWindow) {
+                return;
+            }
+            threadWindow.renderHeader();
+        });
+    },
+    /**
      * Called when a thread has its unread counter that has changed.
      * The unread counter on the thread windows should be updated.
      *
@@ -689,21 +711,6 @@ MailManager.include({
                 this._renderHiddenThreadWindowsDropdown().html());
             this._repositionHiddenWindowsDropdown();
         }
-    },
-    /**
-     * Called when there is a change of the im status of the user linked to
-     * DMs. The header of the thread window should be updated accordingly,
-     * in order to display the correct new im status of this users.
-     *
-     * @private
-     * @param {mail.model.Thread} thread
-     */
-    _onUpdateDmPresence: function (thread) {
-        _.each(this._threadWindows, function (threadWindow) {
-            if (thread.getID() === threadWindow.getID()) {
-                threadWindow.renderHeader();
-            }
-        });
     },
     /**
      * Called when a message has been updated.

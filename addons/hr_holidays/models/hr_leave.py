@@ -9,7 +9,7 @@ import math
 from datetime import datetime
 from pytz import timezone, UTC
 
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from odoo.addons.resource.models.resource import float_to_time, HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_compare
@@ -128,6 +128,7 @@ class HolidaysRequest(models.Model):
         'hr.department', string='Department', readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    out_of_office_message = fields.Char(string='Out of Office Message')
     # duration
     date_from = fields.Datetime(
         'Start Date', readonly=True, index=True, copy=False, required=True,
@@ -249,6 +250,13 @@ class HolidaysRequest(models.Model):
         ('date_check2', "CHECK ((date_from <= date_to))", "The start date must be anterior to the end date."),
         ('duration_check', "CHECK ( number_of_days >= 0 )", "If you want to change the number of days you should use the 'period' mode"),
     ]
+
+    @api.model_cr_context
+    def _auto_init(self):
+        res = super(HolidaysRequest, self)._auto_init()
+        tools.create_index(self._cr, 'hr_leave_date_to_date_from_index',
+                           self._table, ['date_to', 'date_from'])
+        return res
 
     @api.onchange('holiday_status_id')
     def _onchange_holiday_status_id(self):
