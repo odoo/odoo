@@ -45,6 +45,7 @@ KanbanRenderer.include({
             $column.scrollLeft(this._scrollPosition.left);
             $column.scrollTop(this._scrollPosition.top);
         }
+        this._computeTabPosition();
         this._super.apply(this, arguments);
     },
     /**
@@ -135,7 +136,7 @@ KanbanRenderer.include({
     /**
      * Define the o_current class to the current selected kanban (column & tab)
      *
-     *  @private
+     * @private
      */
     _computeCurrentColumn: function () {
         if (this.widgets.length) {
@@ -156,29 +157,52 @@ KanbanRenderer.include({
      * Update the tabs positions
      *
      * @private
-     * @param {boolean} [animate=false] set to true to animate
      */
-    _computeTabPosition: function (animate) {
+    _computeTabPosition: function () {
+        this._computeTabJustification();
+        this._computeTabScrollPosition();
+    },
+
+    /**
+     * Update the tabs positions
+     *
+     * @private
+     */
+    _computeTabScrollPosition: function () {
+        if (this.widgets.length) {
+            var lastItemIndex = this.widgets.length - 1;
+            var moveToIndex = this.activeColumnIndex;
+            var scrollToLeft = 0;
+            for (var i = 0; i < moveToIndex; i++) {
+                var columnWidth = this._getTabWidth(this.widgets[i]);
+                // apply
+                if (moveToIndex !== lastItemIndex && i === moveToIndex - 1) {
+                    var partialWidth = 0.75;
+                    scrollToLeft += columnWidth * partialWidth;
+                } else {
+                    scrollToLeft += columnWidth;
+                }
+            }
+            // Apply the scroll x on the tabs
+            this.$('.o_kanban_mobile_tabs').scrollLeft(scrollToLeft);
+        }
+    },
+
+    /**
+     * Compute the justify content of the kanban tab headers
+     *
+     * @private
+     */
+    _computeTabJustification: function () {
         if (this.widgets.length) {
             var self = this;
-            var moveToIndex = this.activeColumnIndex;
-            // update the columns and tabs positions (optionally with an animation)
-            var updateFunc = animate ? 'animate' : 'css';
-            _.each(this.widgets, function (column, index) {
-                var columnID = column.id || column.db_id;
-                var $tab = self.$('.o_kanban_mobile_tab[data-id="' + columnID + '"]');
-                if (index === moveToIndex - 1) {
-                    $tab[updateFunc]({left: '0%'});
-                } else if (index === moveToIndex + 1) {
-                    $tab[updateFunc]({left: '100%'});
-                } else if (index === moveToIndex) {
-                    $tab[updateFunc]({left: '50%'});
-                } else if (index < moveToIndex) {
-                    $tab[updateFunc]({left: '-100%'});
-                } else if (index > moveToIndex) {
-                    $tab[updateFunc]({left: '200%'});
-                }
-            });
+            // Use to compute the sum of the width of all tab
+            var widthChilds = this.widgets.reduce(function (total, column) {
+                return total + self._getTabWidth(column);
+            }, 0);
+            // Apply a space around between child if the parent length is higher then the sum of the child width
+            var $tabs = this.$('.o_kanban_mobile_tabs');
+            $tabs.toggleClass('justify-content-around', $tabs.outerWidth() >= widthChilds);
         }
     },
 
@@ -207,6 +231,18 @@ KanbanRenderer.include({
     },
 
     /**
+     * Retrieve the outerWidth of a given widget column
+     *
+     * @param {KanbanColumn} column
+     * @returns {integer} outerWidth of the found column
+     * @private
+     */
+    _getTabWidth : function (column) {
+        var columnID = column.id || column.db_id;
+        return this.$('.o_kanban_mobile_tab[data-id="' + columnID + '"]').outerWidth();
+    },
+
+    /**
      * Update the kanban layout
      *
      * @private
@@ -214,7 +250,7 @@ KanbanRenderer.include({
      */
     _layoutUpdate : function (animate) {
         this._computeCurrentColumn();
-        this._computeTabPosition(animate);
+        this._computeTabPosition();
         this._computeColumnPosition(animate);
     },
 
