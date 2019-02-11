@@ -19,6 +19,7 @@ class ChannelUsersRelation(models.Model):
     completed = fields.Boolean('Is Completed', help='Channel validated, even if slides / lessons are added once done.')
     completion = fields.Integer('Completion', compute='_compute_completion', store=True)
     partner_id = fields.Many2one('res.partner', index=True, required=True)
+    partner_email = fields.Char(related='partner_id.email', readonly=True)
 
     @api.depends('channel_id.slide_partner_ids.partner_id', 'channel_id.slide_partner_ids.completed', 'channel_id.total_slides', 'partner_id')
     def _compute_completion(self):
@@ -107,7 +108,8 @@ class Channel(models.Model):
         default='public', required=True)
     partner_ids = fields.Many2many(
         'res.partner', 'slide_channel_partner', 'channel_id', 'partner_id',
-        string='Members', help="All members of the channel.")
+        string='Members', help="All members of the channel.", context={'active_test': False})
+    members_count = fields.Integer('Attendees count', compute='_compute_members_count', groups="website.group_website_publisher")
     is_member = fields.Boolean(string='Is Member', compute='_compute_is_member')
     channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='website.group_website_publisher')
     enroll_msg = fields.Html(
@@ -121,6 +123,11 @@ class Channel(models.Model):
     completion = fields.Integer('Completion', compute='_compute_user_statistics')
     can_upload = fields.Boolean('Can Upload', compute='_compute_access')
     can_publish = fields.Boolean('Can Publish', compute='_compute_access')
+
+    @api.depends('partner_ids')
+    def _compute_members_count(self):
+        for channel in self:
+            channel.members_count = len(channel.partner_ids)
 
     @api.depends('channel_partner_ids.partner_id')
     @api.model
@@ -187,6 +194,16 @@ class Channel(models.Model):
     @api.onchange('visibility')
     def change_visibility(self):
         pass
+
+    @api.multi
+    def action_redirect_to_members(self):
+        action = self.env.ref('website_slides.slide_channel_partner_action').read()[0]
+        action['view_mode'] = 'tree'
+        action['domain'] = [('channel_id', 'in', self.ids)]
+        if len(self) == 1:
+            action['context'] = {'default_channel_id': self.id}
+
+        return action
 
     # ---------------------------------------------------------
     # ORM Overrides
