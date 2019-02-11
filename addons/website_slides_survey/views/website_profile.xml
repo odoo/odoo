@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_frontend" inherit_id="website.assets_frontend">
+            <xpath expr="link[last()]" position="after">
+                <link rel="stylesheet" type="text/scss" href="/website_slides_survey/static/src/scss/website_profile.scss"/>
+            </xpath>
+        </template>
+
+        <template id="user_detail_content" inherit_id="website_profile.user_detail_content">
+            <xpath expr="//div[@id='profile_about_badge']" position="before">
+                <t t-if="channel">
+                    <div class="mb32">
+                        <h4><i class="fa fa-trophy"/> Certifications</h4>
+                        <t t-call="website_slides_survey.display_certificate"/>
+                    </div>
+                </t>
+            </xpath>
+        </template>
+
+         <template id="display_certificate">
+            <t t-if="certificates">
+                <div class="row">
+                    <div class="col-lg-6 o_wprofile_slides_card" t-foreach="certificates" t-as="certificate">
+                        <div class="card-body o_wprofile_slides_certif_card_body o_wprofile_bb_grey">
+                            <div class="row">
+                                <div class="o_wprofile_slides_certif_img">
+                                    <img class="o_img_small mb-3" t-attf-src="/web/image/survey.user_input/#{certificate.id}/image_small"/>
+                                </div>
+                                <div class="col-10 o_wprofile_slides_title">
+                                    <b t-field="certificate.survey_id.title"/>
+                                </div>
+                                <div class="float-right" t-if="user.id == uid">
+                                    <div class="row o_wprofile_slides_certif_score">
+                                        <span>Score : <b t-field="certificate.quizz_score"/>%</span>
+                                    </div>
+                                    <div class="row o_wprofile_slides_certif_actions">
+                                        <a href=""><i class="fa fa-download"/></a>
+                                        <a href=""><i class="fa fa-share-alt"/></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <b>No certifications yet!</b>
+            </t>
+         </template>
+    </data>
+</odoo>
