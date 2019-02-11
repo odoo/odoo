@@ -64,7 +64,7 @@ class test_ir_http_mimetype(common.TransactionCase):
             'type': 'binary',
         })
 
-        resized = odoo.tools.image_get_resized_images(prop.value_binary, return_big=True, avoid_resize_medium=True)['image_small']
+        resized = odoo.tools.image_resize_image_small(prop.value_binary)
         # Simul computed field which resize and that is not attachement=True (E.G. on product)
         prop.write({'value_binary': resized})
         status, headers, content = self.env['ir.http'].binary_content(
