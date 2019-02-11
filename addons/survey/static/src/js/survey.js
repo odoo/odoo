@@ -135,7 +135,7 @@ if(!the_form.length) {
             var date_fields = $form.find('div.date > input.form-control');
             for (var i=0; i < date_fields.length; i++) {
                 var el = date_fields[i];
-                var moment_date = moment(el.value);
+                var moment_date = el.value !== '' ? field_utils.parse.date(el.value) : '';
                 if (moment_date) {
                     moment_date.toJSON = function () {
                         if ($(el).closest('.input-group.date').data('questiontype') === 'datetime') {

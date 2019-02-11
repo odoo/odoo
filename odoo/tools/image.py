@@ -321,11 +321,11 @@ def limited_image_resize(content, width=None, height=None, crop=False, upper_lim
     """
     :param content: bytes (should be an image)
     """
-    if content:
+    if content and (width or height):
         signatures = [b'\xFF\xD8\xFF', b'\x89PNG\r\n\x1A\n']
         decoded_content = base64.b64decode(content)
         is_image = any(decoded_content.startswith(signature) for signature in signatures)
-        if (width or height) and is_image:
+        if is_image:
             height = int(height or 0)
             width = int(width or 0)
             if crop:

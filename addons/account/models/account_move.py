@@ -841,6 +841,7 @@ class AccountMoveLine(models.Model):
         to_create = []
         cash_basis = debit_moves and debit_moves[0].account_id.internal_type in ('receivable', 'payable') or False
         cash_basis_percentage_before_rec = {}
+        dc_vals ={}
         while (debit_moves and credit_moves):
             debit_move = debit_moves[0]
             credit_move = credit_moves[0]
@@ -848,6 +849,7 @@ class AccountMoveLine(models.Model):
             # We need those temporary value otherwise the computation might be wrong below
             temp_amount_residual = min(debit_move.amount_residual, -credit_move.amount_residual)
             temp_amount_residual_currency = min(debit_move.amount_residual_currency, -credit_move.amount_residual_currency)
+            dc_vals[(debit_move.id, credit_move.id)] = (debit_move, credit_move, temp_amount_residual_currency)
             amount_reconcile = min(debit_move[field], -credit_move[field])
 
             #Remove from recordset the one(s) that will be totally reconciled
@@ -885,11 +887,21 @@ class AccountMoveLine(models.Model):
                 'currency_id': currency,
             })
 
+        cash_basis_subjected = []
         part_rec = self.env['account.partial.reconcile']
         with self.env.norecompute():
             for partial_rec_dict in to_create:
-                new_rec = self.env['account.partial.reconcile'].create(partial_rec_dict)
-                part_rec += new_rec
+                debit_move, credit_move, amount_residual_currency = dc_vals[partial_rec_dict['debit_move_id'], partial_rec_dict['credit_move_id']]
+                # /!\ NOTE: Exchange rate differences shouldn't create cash basis entries
+                # i. e: we don't really receive/give money in a customer/provider fashion
+                # Since those are not subjected to cash basis computation we process them first
+                if not amount_residual_currency and debit_move.currency_id and credit_move.currency_id:
+                    part_rec.create(partial_rec_dict)
+                else:
+                    cash_basis_subjected.append(partial_rec_dict)
+
+            for after_rec_dict in cash_basis_subjected:
+                new_rec = part_rec.create(after_rec_dict)
                 if cash_basis:
                     new_rec.create_tax_cash_basis_entry(cash_basis_percentage_before_rec)
         self.recompute()
@@ -1143,7 +1155,10 @@ class AccountMoveLine(models.Model):
             self._update_check()
         #when we set the expected payment date, log a note on the invoice_id related (if any)
         if vals.get('expected_pay_date') and self.invoice_id:
-            msg = _('New expected payment date: ') + fields.Date.to_string(vals['expected_pay_date']) + '.\n' + vals.get('internal_note', '')
+            str_expected_pay_date = vals['expected_pay_date']
+            if isinstance(str_expected_pay_date, date):
+                str_expected_pay_date = fields.Date.to_string(str_expected_pay_date)
+            msg = _('New expected payment date: ') + str_expected_pay_date + '.\n' + vals.get('internal_note', '')
             self.invoice_id.message_post(body=msg) #TODO: check it is an internal note (not a regular email)!
         #when making a reconciliation on an existing liquidity journal item, mark the payment as reconciled
         for record in self:

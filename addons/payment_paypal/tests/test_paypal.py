@@ -53,7 +53,7 @@ class PaypalForm(PaypalCommon):
         form_values = {
             'cmd': '_xclick',
             'business': 'tde+paypal-facilitator@odoo.com',
-            'item_name': 'YourCompany: test_ref0',
+            'item_name': '%s: test_ref0' % (self.paypal.company_id.name),
             'item_number': 'test_ref0',
             'first_name': 'Norbert',
             'last_name': 'Buyer',
