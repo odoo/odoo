@@ -463,15 +463,18 @@ class MrpProduction(models.Model):
         self.is_locked = not self.is_locked
         return True
 
-    def _generate_finished_moves(self):
-        move = self.env['stock.move'].create({
+    def _get_finished_move_value(self, product_id, product_uom_qty, product_uom, operation_id=False, subproduct_id=False):
+        return {
+            'product_id': product_id,
+            'product_uom_qty': product_uom_qty,
+            'product_uom': product_uom,
+            'operation_id': operation_id,
+            'subproduct_id': subproduct_id,
+            'unit_factor': product_uom_qty / self.product_qty,
             'name': self.name,
             'date': self.date_planned_start,
             'date_expected': self.date_planned_start,
             'picking_type_id': self.picking_type_id.id,
-            'product_id': self.product_id.id,
-            'product_uom': self.product_uom_id.id,
-            'product_uom_qty': self.product_qty,
             'location_id': self.product_id.property_stock_production.id,
             'location_dest_id': self.location_dest_id.id,
             'company_id': self.company_id.id,
@@ -481,11 +484,19 @@ class MrpProduction(models.Model):
             'group_id': self.procurement_group_id.id,
             'propagate': self.propagate,
             'move_dest_ids': [(4, x.id) for x in self.move_dest_ids],
-        })
-        for production in self.filtered(lambda production: production.bom_id):
-            for sub_product in production.bom_id.sub_products:
-                production._create_byproduct_move(sub_product)
-        return move
+        }
+
+    def _generate_finished_moves(self):
+        moves_values = [self._get_finished_move_value(self.product_id.id, self.product_qty, self.product_uom_id.id)]
+        for sub_product in self.bom_id.sub_products:
+            product_uom_factor = self.product_uom_id._compute_quantity(self.product_qty, self.bom_id.product_uom_id)
+            qty = sub_product.product_qty * (product_uom_factor / self.bom_id.product_qty)
+            move_values = self._get_finished_move_value(sub_product.product_id.id,
+                qty, sub_product.product_uom_id.id, sub_product.operation_id.id,
+                sub_product.id)
+            moves_values.append(move_values)
+        moves = self.env['stock.move'].create(moves_values)
+        return moves
 
     def _get_moves_raw_values(self):
         moves = []
@@ -565,33 +576,6 @@ class MrpProduction(models.Model):
             move_values = self._get_move_raw_values(bom_line, line_data)
             move = self.env['stock.move'].create(move_values)
             return move, 0, quantity
-
-    def _create_byproduct_move(self, sub_product):
-        Move = self.env['stock.move']
-        for production in self:
-            source = production.product_id.property_stock_production.id
-            product_uom_factor = production.product_uom_id._compute_quantity(production.product_qty - production.qty_produced, production.bom_id.product_uom_id)
-            qty1 = sub_product.product_qty
-            qty1 *= product_uom_factor / production.bom_id.product_qty
-            data = {
-                'name': 'PROD:%s' % production.name,
-                'date': production.date_planned_start,
-                'product_id': sub_product.product_id.id,
-                'product_uom_qty': qty1,
-                'product_uom': sub_product.product_uom_id.id,
-                'location_id': source,
-                'location_dest_id': production.location_dest_id.id,
-                'operation_id': sub_product.operation_id.id,
-                'production_id': production.id,
-                'warehouse_id': production.location_dest_id.get_warehouse().id,
-                'origin': production.name,
-                'unit_factor': qty1 / (production.product_qty - production.qty_produced),
-                'propagate': self.propagate,
-                'group_id': self.move_dest_ids and self.move_dest_ids.mapped('group_id')[0].id or self.procurement_group_id.id,
-                'subproduct_id': sub_product.id
-            }
-            move = Move.create(data)
-            move._action_confirm()
 
     def _get_ready_to_produce_state(self):
         """ returns 'assigned' if enough components are reserved in order to complete

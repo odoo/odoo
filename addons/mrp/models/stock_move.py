@@ -73,7 +73,7 @@ class StockMove(models.Model):
     subproduct_id = fields.Many2one(
         'mrp.subproduct', 'Subproduct',
         help="Subproduct line that generated the move in a manufacturing order")
-    unit_factor = fields.Float('Unit Factor')
+    unit_factor = fields.Float('Unit Factor', default=1)
     is_done = fields.Boolean(
         'Done', compute='_compute_is_done',
         store=True,
