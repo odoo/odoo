@@ -1447,3 +1447,150 @@ actual arch.
                 view._check_xml()
             except Exception as e:
                 self.raise_view_error("Can't validate view:\n%s" % e, view.id)
+
+    def _fix_faulty_views(self, delete=False):
+        """ Use the _get_faulty_views and take appropriate actions to fix the issue """
+        for view in self:
+            view_id = view.id # allow to use even if view is deleted
+            faulty_views = view._get_faulty_views(view,self.env['ir.ui.view'])
+            if faulty_views:
+                self._cr.execute('SAVEPOINT end_validation')
+                faulty_views._clean_properly(delete)
+                self._cr.execute("select count(id) from ir_ui_view where id = %s", (view_id,))
+                cnt = self.env.cr.fetchone()[0]
+                if cnt == 0 or view._is_valid():
+                    _logger.info("View %s can be fixed by disabling/deleting following views: %s" % (view_id,faulty_views))
+                    self._cr.execute('RELEASE end_validation')
+                else:
+                    self._cr.execute('ROLLBACK TO end_validation')
+                    self._cr.execute('RELEASE end_validation')
+                    _logger.warning("Issue occurs: The proposition made to fix the view %s (disable/delete %s) is not recommended" % (view,faulty_views))
+                    # should not happend
+
+    def _get_faulty_views(self,parent_view, disabled_views):
+        """ Returns the faulty views
+            To determine the faulty views, we travel the tree recursively.
+            Disable all children, then enable one by one. If there is an issue.
+            The activated node or at least one of its children are faulty.
+            Disable faulty node and continue recursion.
+            This function is never called from odoo code but allows to be called from a server action.
+            Please don't remove
+    params:
+        parent_view - ir.ui.view - Parent view used by recusion to keep the top parent view
+        disabled_views - ir.ui.view - Disabled views
+    usage:
+        view1._get_faulty_views(view1, self.env['ir.ui.view'])
+        """
+        self.ensure_one()
+        if parent_view==self:
+            if self._is_valid():
+                return disabled_views
+            self._cr.execute('SAVEPOINT test_fix_views')
+            temp_disabled_views=self._deactivate_lvl1_children()
+            if self._is_valid():
+                if self._has_active_children() or len(temp_disabled_views)>1:
+                    for child_view in (temp_disabled_views):
+                        v =child_view._get_faulty_views(self,disabled_views)
+                        for vv in v:
+                            if vv not in disabled_views: # ir.ui.view(1,2) not in ir.ui.view(1,3,4)
+                                disabled_views+=vv       # This loop avoid duplicates ir.ui.view(1,1,2,3,4)
+                else:
+                    self.active=False
+                    disabled_views+=self
+            else:
+                self.active=False
+                disabled_views+=self
+            self._cr.execute('ROLLBACK TO test_fix_views')
+            self._cr.execute('RELEASE test_fix_views')
+            return disabled_views
+        else:
+            assert parent_view._is_valid()
+            self.active=True
+            if parent_view._is_valid():
+                return disabled_views
+            if self._has_active_children():
+                temp_disabled_views=self._deactivate_lvl1_children()
+                if parent_view._is_valid():
+                    # problem is in one of the children
+                    for child_view in (temp_disabled_views):
+                        v =child_view._get_faulty_views(parent_view,disabled_views)
+                        for vv in v:
+                            if vv not in disabled_views:
+                                disabled_views+=vv
+                    return disabled_views
+                else:
+                    self.active=False
+                    disabled_views+=self
+                    return disabled_views
+            else:
+                self.active=False
+                disabled_views+=self
+                return disabled_views
+
+    def _deactivate_lvl1_children(self):
+        """deactivate and return views that has been deactivated taking care of view priority"""
+        temp_disabled_views= self._get_lvl1_children()
+        for v in temp_disabled_views:
+            v.active=False
+        return temp_disabled_views
+    
+    def _get_lvl1_children(self):
+        """return lvl1 children for the given view pay attention to order"""
+        return self.inherit_children_ids
+
+    def _has_active_children(self):
+        return len(self._get_lvl1_children())
+
+    def _is_valid(self):
+        try:
+            self._check_xml() # _check_xml includes inherits 
+            return True
+        except Exception as e:
+            # NOTE: e contains the reason why the view is invalid
+            return False
+
+    def _clean_properly(self, delete=False):
+        # list of standard module in odoo
+        module_list=["base","test_inherits","test_inherit","test_limits","test_exceptions","test_uninstall","test_translation_import","test_main_flows","test_read_group","test_documentation_examples","test_new_api","test_assetsbundle","test_access_rights","test_impex","test_testing_utilities","test_pylint","test_convert","test_mimetypes","test_inherits_depends","test_converter","test_performance","account","account_3way_match","account_accountant","account_analytic_default","account_asset","account_bank_statement_import","account_bank_statement_import_camt","account_bank_statement_import_csv","account_bank_statement_import_ofx","account_bank_statement_import_qif","account_batch_payment","account_budget","account_cancel","account_check_printing","account_deferred_revenue","account_facturx","account_intrastat","account_invoice_extract","account_lock","account_online_sync","account_payment","account_plaid","account_predictive_bills","account_reports","account_reports_followup","account_sepa","account_sepa_direct_debit","account_tax_python","account_taxcloud","account_test","account_voucher","account_yodlee","analytic","analytic_enterprise","association","auth_ldap","auth_oauth","auth_password_policy","auth_password_policy_signup","auth_signup","barcodes","barcodes_mobile","base_address_city","base_address_extended","base_automation","base_automation_hr_contract","base_gengo","base_geolocalize","base_iban","base_import","base_import_module","base_setup","base_sparse_field","base_vat","board","bus","calendar","calendar_sms","contacts","crm","crm_enterprise","crm_livechat","crm_phone_validation","crm_project","crm_reveal","currency_rate_live","decimal_precision","delivery","delivery_barcode","delivery_bpost","delivery_dhl","delivery_easypost","delivery_fedex","delivery_hs_code","delivery_ups","delivery_usps","digest","document","documents","documents_account","documents_product","documents_project","documents_sign","event","event_barcode","event_barcode_mobile","event_enterprise","event_sale","fetchmail","fleet","gamification","gamification_sale_crm","google_account","google_calendar","google_drive","google_spreadsheet","helpdesk","helpdesk_sale_timesheet","helpdesk_timesheet","hr","hr_appraisal","hr_attendance","hr_contract","hr_contract_salary","hr_expense","hr_expense_check","hr_gamification","hr_holidays","hr_holidays_gantt","hr_maintenance","hr_org_chart","hr_payroll","hr_payroll_account","hr_recruitment","hr_recruitment_survey","hr_timesheet","hr_timesheet_attendance","http_routing","hw_blackbox_be","hw_drivers","hw_escpos","hw_posbox_homepage","hw_posbox_upgrade","hw_proxy","hw_scale","hw_scanner","hw_screen","iap","im_livechat","im_livechat_mail_bot","im_support","inter_company_rules","iot","l10n_ae","l10n_ar","l10n_ar_reports","l10n_at","l10n_at_reports","l10n_au","l10n_au_aba","l10n_au_reports","l10n_be","l10n_be_coda","l10n_be_hr_payroll","l10n_be_hr_payroll_account","l10n_be_hr_payroll_fleet","l10n_be_intrastat","l10n_be_intrastat_2019","l10n_be_invoice_bba","l10n_be_reports","l10n_bo","l10n_bo_reports","l10n_br","l10n_br_reports","l10n_ca","l10n_ca_check_printing","l10n_ch","l10n_ch_reports","l10n_cl","l10n_cl_reports","l10n_cn","l10n_cn_city","l10n_cn_small_business","l10n_cn_standard","l10n_co","l10n_co_edi","l10n_co_reports","l10n_cr","l10n_de","l10n_de_reports","l10n_de_skr03","l10n_de_skr04","l10n_do","l10n_do_reports","l10n_ec","l10n_es","l10n_es_real_estates","l10n_es_reports","l10n_et","l10n_et_reports","l10n_eu_service","l10n_fr","l10n_fr_certification","l10n_fr_fec","l10n_fr_hr_payroll","l10n_fr_pos_cert","l10n_fr_reports","l10n_fr_sale_closing","l10n_generic_coa","l10n_gr","l10n_gr_reports","l10n_gt","l10n_hk","l10n_hn","l10n_hr","l10n_hr_reports","l10n_hu","l10n_hu_reports","l10n_in","l10n_in_hr_payroll","l10n_in_purchase","l10n_in_reports","l10n_in_sale","l10n_in_schedule6","l10n_in_stock","l10n_it","l10n_jp","l10n_jp_reports","l10n_lu","l10n_lu_reports","l10n_ma","l10n_ma_reports","l10n_multilang","l10n_mx","l10n_mx_edi","l10n_mx_edi_customs","l10n_mx_edi_external_trade","l10n_mx_edi_landing","l10n_mx_edi_payment","l10n_mx_edi_payment_bank","l10n_mx_reports","l10n_mx_tax_cash_basis","l10n_nl","l10n_nl_intrastat","l10n_nl_reports","l10n_no","l10n_no_reports","l10n_nz","l10n_pa","l10n_pe","l10n_pl","l10n_pl_reports","l10n_pt","l10n_ro","l10n_ro_reports","l10n_sa","l10n_sg","l10n_sg_reports","l10n_si","l10n_si_reports","l10n_syscohada","l10n_th","l10n_th_reports","l10n_tr","l10n_uk","l10n_uk_reports","l10n_us","l10n_us_check_printing","l10n_us_reports","l10n_uy","l10n_uy_reports","l10n_ve","l10n_vn","l10n_vn_reports","link_tracker","lunch","mail","mail_bot","mail_enterprise","mail_github","maintenance","marketing_automation","mass_mailing","mass_mailing_crm","mass_mailing_event","mass_mailing_event_track","mass_mailing_sale","mass_mailing_themes","membership","mrp","mrp_account","mrp_bom_cost","mrp_byproduct","mrp_maintenance","mrp_mps","mrp_plm","mrp_workorder","mrp_zebra","note","note_pad","ocn_client","pad","pad_project","partner_autocomplete","partner_autocomplete_address_extended","payment","payment_adyen","payment_authorize","payment_buckaroo","payment_ogone","payment_paypal","payment_payumoney","payment_sips","payment_stripe","payment_transfer","phone_validation","point_of_sale","portal","pos_blackbox_be","pos_cache","pos_discount","pos_iot","pos_loyalty","pos_mercury","pos_reprint","pos_restaurant","pos_restaurant_iot","pos_sale","procurement_jit","product","product_email_template","product_expiry","product_margin","project","project_enterprise","project_forecast","project_timesheet_forecast","project_timesheet_forecast_sale","project_timesheet_holidays","project_timesheet_synchro","purchase","purchase_mrp","purchase_mrp_workorder_quality","purchase_requisition","purchase_stock","quality","quality_control","quality_iot","quality_mrp","quality_mrp_iot","quality_mrp_workorder","rating","repair","resource","sale","sale_account_taxcloud","sale_coupon","sale_coupon_delivery","sale_crm","sale_ebay","sale_enterprise","sale_expense","sale_intrastat","sale_management","sale_margin","sale_mrp","sale_purchase","sale_quotation_builder","sale_stock","sale_subscription","sale_subscription_asset","sale_subscription_dashboard","sale_timesheet","sales_team","sign","sms","snailmail","snailmail_account","snailmail_account_reports_followup","social_media","stock","stock_account","stock_account_enterprise","stock_barcode","stock_barcode_mobile","stock_dropshipping","stock_enterprise","stock_intrastat","stock_landed_costs","stock_picking_batch","stock_zebra","studio_customization","survey","survey_crm","test_mail","test_marketing_automation","test_mass_mailing","theme_anelusia","theme_anelusia_sale","theme_artists","theme_artists_sale","theme_avantgarde","theme_avantgarde_blog","theme_beauty","theme_beauty_sale","theme_bewise","theme_bistro","theme_bookstore","theme_bookstore_sale","theme_bootswatch","theme_clean","theme_common","theme_default","theme_enark","theme_graphene","theme_graphene_blog","theme_kea","theme_kea_sale","theme_kiddo","theme_kiddo_sale","theme_loftspace","theme_loftspace_sale","theme_monglia","theme_monglia_sale","theme_nano","theme_notes","theme_notes_sale","theme_odoo_experts","theme_odoo_experts_sale","theme_orchid","theme_orchid_sale","theme_real_estate","theme_real_estate_sale","theme_treehouse","theme_vehicle","theme_vehicle_sale","theme_yes","theme_yes_sale","theme_zap","timesheet_grid","timesheet_grid_sale","transifex","uom","utm","voip","voip_onsip","web","web_cohort","web_dashboard","web_diagram","web_editor","web_enterprise","web_gantt","web_grid","web_kanban_gauge","web_mobile","web_settings_dashboard","web_studio","web_tour","web_unsplash","website","website_animate","website_blog","website_calendar","website_crm","website_crm_partner_assign","website_crm_phone_validation","website_crm_score","website_customer","website_delivery_ups","website_enterprise","website_event","website_event_questions","website_event_sale","website_event_track","website_form","website_form_editor","website_form_project","website_forum","website_gengo","website_google_map","website_helpdesk","website_helpdesk_form","website_helpdesk_forum","website_helpdesk_livechat","website_helpdesk_slides","website_hr","website_hr_recruitment","website_links","website_livechat","website_mail","website_mail_channel","website_mass_mailing","website_membership","website_partner","website_payment","website_rating","website_sale","website_sale_account_taxcloud","website_sale_comparison","website_sale_coupon","website_sale_dashboard","website_sale_delivery","website_sale_digital","website_sale_link_tracker","website_sale_management","website_sale_stock","website_sale_taxcloud_delivery","website_sale_wishlist","website_slides","website_studio","website_survey","website_theme_install","website_twitter","website_twitter_wall"]
+        for view in self:
+            module=""
+            is_studio=False
+            has_xml_id=False
+            query_cnt = """SELECT count(*) cnt
+            FROM ir_ui_view v
+            JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
+            WHERE v.id=%s"""
+            self._cr.execute(query_cnt, (view.id,))
+            if self._cr.fetchone()[0]>0:
+                query = """SELECT md.module, coalesce(studio,false) studio
+                            FROM ir_ui_view v
+                            JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
+                            WHERE v.id=%s"""
+                self._cr.execute(query, (view.id,))
+                module, is_studio = self._cr.fetchone()
+                has_xml_id=True
+            if module not in (module_list):
+                # Not supported Customisation.
+                # If deactivated, if the view is set to active in the customer xml, this can lead to issue.
+                # To avoid those issue, just delete then view.
+                if delete:
+                    view.with_context(_force_unlink=True).unlink()
+                else:
+                    view.active=False
+            else:
+                if is_studio and module in module_list:
+                    # Presume this is a supported studio customization.
+                    # As supported, shouldn't be deactivated or removed.
+                    _logger.warning("Studio view %s generates issue" %(self)) 
+                if not is_studio and module in module_list:
+                    # Presume this is a normal odoo view.
+                    # Can be deactivated
+                    view.active=False
+                if module not in module_list:
+                    # Not supported Customisation.
+                    # If deactivated, if the view is set to active in the customer xml, this can lead to issue.
+                    # To avoid those issue, just delete then view.
+                    if delete:
+                        view.with_context(_force_unlink=True).unlink()
+                    else:
+                        view.active=False

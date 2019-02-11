@@ -9,7 +9,7 @@ from psycopg2 import IntegrityError
 
 from odoo.osv.orm import modifiers_tests
 from odoo.exceptions import ValidationError
-from odoo.tests import common
+from odoo.tests import common, tagged
 from odoo.tools import mute_logger
 
 
@@ -2030,3 +2030,254 @@ class TestQWebRender(ViewCase):
         content3 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id]).render('base.dummy_primary_ext')
 
         self.assertNotEqual(content1, content3)
+
+@tagged('post_install', '-at_install')
+class TestFixFaultyViewsComplex(common.TransactionCase):
+    """ Test _fix_faulty_views()
+    """
+
+    def setUp(self):
+        super(TestFixFaultyViewsComplex, self).setUp()
+        self.View = self.env['ir.ui.view']
+        """ Create a complex case to fix (links are inherits)
+                
+                                                         +---view1111
+                        +----- view11---------view111----+
+                        |                                +---view1112
+                        |
+            view1 ---------+----- view12---------view121
+                        |
+                        |                +-----view131
+                        +----- view13----+
+                                         +-----view132
+
+        """
+        self.view1 = self.env['ir.ui.view'].create({
+            'name': "bob",
+            'model': 'ir.ui.view',
+            'arch': """
+                <form string="Base title">
+                    <field name="name"/>
+                </form>
+            """
+        })
+        self.view11 = self.env['ir.ui.view'].create({
+            'name': "bob",
+            'model': 'ir.ui.view',
+            'inherit_id': self.view1.id,
+            'arch': """ <data>
+                            <xpath expr="//field[@name='name']" position="after">
+                                <field name="id" string="coucou"/>
+                            </xpath>
+                        </data>"""
+        })
+        self.view12 = self.env['ir.ui.view'].create({
+            'name': "bob",
+            'model': 'ir.ui.view',
+            'inherit_id': self.view1.id,
+            'arch': """ <data>
+                            <xpath expr="//field[@name='name']" position="after">
+                                <field name="id" string="coucou"/>
+                            </xpath>
+                        </data>"""
+        })
+        self.view13 = self.env['ir.ui.view'].create({
+            'name': "bob",
+            'model': 'ir.ui.view',
+            'inherit_id': self.view1.id,
+            'arch': """ <data>
+                            <xpath expr="//field[@name='name']" position="after">
+                                <field name="id" string="coucou"/>
+                            </xpath>
+                        </data>"""
+        })
+        self.view111 = self.env['ir.ui.view'].create({
+            'name': "bob",
+            'model': 'ir.ui.view',
+            'inherit_id': self.view11.id,
+            'arch': """ <data>
+                            <xpath expr="//field[@name='name']" position="after">
+                                <field name="id" string="coucou"/>
+                            </xpath>
+                        </data>"""
+        })
+        self.view121 = self.env['ir.ui.view'].create({
+            'name': "bob",
+            'model': 'ir.ui.view',
+            'inherit_id': self.view12.id,
+            'arch': """ <data>
+                            <xpath expr="//field[@name='name']" position="after">
+                                <field name="id" string="coucou"/>
+                            </xpath>
+                        </data>"""
+        })
+        self.view131 = self.env['ir.ui.view'].create({
+            'name': "bob",
+            'model': 'ir.ui.view',
+            'inherit_id': self.view13.id,
+            'arch': """ <data>
+                            <xpath expr="//field[@name='name']" position="after">
+                                <field name="id" string="coucou"/>
+                            </xpath>
+                        </data>"""
+        })
+        self.view132 = self.env['ir.ui.view'].create({
+            'name': "bob",
+            'model': 'ir.ui.view',
+            'inherit_id': self.view13.id,
+            'arch': """ <data>
+                            <xpath expr="//field[@name='name']" position="after">
+                                <field name="id" string="coucou"/>
+                            </xpath>
+                        </data>"""
+        })
+        self.view1111 = self.env['ir.ui.view'].create({
+            'name': "bob",
+            'model': 'ir.ui.view',
+            'inherit_id': self.view111.id,
+            'arch': """ <data>
+                            <xpath expr="//field[@name='name']" position="after">
+                                <field name="id" string="coucou"/>
+                            </xpath>
+                        </data>"""
+        })
+        self.view1112 = self.env['ir.ui.view'].create({
+            'name': "bob",
+            'model': 'ir.ui.view',
+            'inherit_id': self.view111.id,
+            'arch': """ <data>
+                            <xpath expr="//field[@name='name']" position="after">
+                                <field name="id" string="coucou"/>
+                            </xpath>
+                        </data>"""
+        })
+
+    def test_sanity_check(self):
+        faulty_views = self.view1._get_faulty_views(
+            self.view1, self.env['ir.ui.view'])
+        assert len(faulty_views) <= 0
+
+    def test_fix_view_test1(self):
+        # invalidate view1111 only
+
+        # check all is ok
+        faulty_views = self.view1._get_faulty_views(
+            self.view1, self.env['ir.ui.view'])
+        assert len(faulty_views) <= 0
+        # detect the issue
+        self.cr.execute("""update ir_ui_view set arch_db=
+        '<data>
+            <xpath expr="//field[@name="name"]" position="after">
+                <field name="XXXX_non_existing_field_XXXX" string="coucou"/>
+            </xpath>
+        </data>'
+         where id=%s""" % (self.view1111.id))
+        self.env['ir.ui.view'].invalidate_cache()
+        # can only creates valid views, can update it with wrong values in sql but good values stay in the cache
+        # detect the issue
+        faulty_views = self.view1._get_faulty_views(
+            self.view1, self.env['ir.ui.view'])
+        self.assertEqual(self.view1111, faulty_views)
+        # solve the issue (with deactivation)
+        self.view1._fix_faulty_views()
+        active_views = [self.view1, self.view11, self.view12, self.view111,
+                        self.view121, self.view1112, self.view13, self.view131, self.view132]
+        deactivated_views = [self.view1111]
+        assert all(item.active for item in active_views)
+        assert all(not item.active for item in deactivated_views)
+        # solve the issue (with delete)
+        self.view1111.active = True
+        self.view1._fix_faulty_views(delete=True)
+        self.env.cr.execute(
+            "select count(id) from ir_ui_view where id = %s", (self.view1111.id,))
+        cnt = self.env.cr.fetchone()[0]
+        assert cnt == 0
+
+    def test_fix_view_test2(self):
+        # invalidate view1111 and view131
+
+        # check all is ok
+        faulty_views = self.view1._get_faulty_views(
+            self.view1, self.env['ir.ui.view'])
+        assert len(faulty_views) <= 0
+        # detect the issue
+        self.cr.execute("""update ir_ui_view set arch_db=
+        '<data>
+            <xpath expr="//field[@name="name"]" position="after">
+                <field name="XXXX_non_existing_field_XXXX" string="coucou"/>
+            </xpath>
+        </data>'
+         where id=%s""" % (self.view1111.id))
+        self.cr.execute("""update ir_ui_view set arch_db=
+        '<data>
+            <xpath expr="//field[@name="name"]" position="after">
+                <field name="XXXX_non_existing_field_XXXX" string="coucou"/>
+            </xpath>
+        </data>'
+         where id=%s""" % (self.view131.id))
+        self.env['ir.ui.view'].invalidate_cache()
+        # can only creates valid views, can update it with wrong values in sql but good values stay in the cache
+        # detect the issue
+        faulty_views = self.view1._get_faulty_views(
+            self.view1, self.env['ir.ui.view'])
+        self.assertEqual(self.view1111+self.view131, faulty_views)
+        # solve the issue (with deactivation)
+        self.view1._fix_faulty_views()
+        active_views = [self.view1, self.view11, self.view12, self.view111,
+                        self.view121, self.view1112, self.view13, self.view132]
+        deactivated_views = [self.view1111, self.view131]
+        assert all(item.active for item in active_views)
+        assert all(not item.active for item in deactivated_views)
+        # solve the issue (with delete)
+        self.view1111.active = True
+        self.view131.active = True
+        self.view1._fix_faulty_views(delete=True)
+        self.env.cr.execute(
+            "select count(id) from ir_ui_view where id = %s or id = %s", (self.view1111.id, self.view131.id,))
+        cnt = self.env.cr.fetchone()[0]
+        assert cnt == 0
+
+    def test_fix_view_test3(self):
+        # invalidate view1111 and view13
+
+        # check all is ok
+        faulty_views = self.view1._get_faulty_views(
+            self.view1, self.env['ir.ui.view'])
+        assert len(faulty_views) <= 0
+        # detect the issue
+        self.cr.execute("""update ir_ui_view set arch_db=
+        '<data>
+            <xpath expr="//field[@name="name"]" position="after">
+                <field name="XXXX_non_existing_field_XXXX" string="coucou"/>
+            </xpath>
+        </data>'
+         where id=%s""" % (self.view1111.id))
+        self.cr.execute("""update ir_ui_view set arch_db=
+        '<data>
+            <xpath expr="//field[@name="name"]" position="after">
+                <field name="XXXX_non_existing_field_XXXX" string="coucou"/>
+            </xpath>
+        </data>'
+         where id=%s""" % (self.view13.id))
+        self.env['ir.ui.view'].invalidate_cache()
+        # can only creates valid views, can update it with wrong values in sql but good values stay in the cache
+        # detect the issue
+        faulty_views = self.view1._get_faulty_views(
+            self.view1, self.env['ir.ui.view'])
+        self.assertEqual(self.view1111+self.view13, faulty_views)
+        # solve the issue (with deactivation)
+        self.view1._fix_faulty_views()
+        active_views = [self.view1, self.view11, self.view12,
+                        self.view111, self.view121, self.view1112]
+        deactivated_views = [self.view1111,
+                             self.view13, self.view131, self.view132]
+        assert all(item.active for item in active_views)
+        assert all(not item.active for item in deactivated_views)
+        # solve the issue (with delete)
+        self.view1111.active = True
+        self.view131.active = True
+        self.view1._fix_faulty_views(delete=True)
+        self.env.cr.execute(
+            "select count(id) from ir_ui_view where id = %s or id = %s", (self.view1111.id, self.view131.id,))
+        cnt = self.env.cr.fetchone()[0]
+        assert cnt == 0
