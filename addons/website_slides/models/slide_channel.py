@@ -7,6 +7,7 @@ import uuid
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools.translate import html_translate
+from odoo.exceptions import UserError
 from odoo.osv import expression
 
 
@@ -19,6 +20,7 @@ class ChannelUsersRelation(models.Model):
     completed = fields.Boolean('Is Completed', help='Channel validated, even if slides / lessons are added once done.')
     completion = fields.Integer('Completion', compute='_compute_completion', store=True)
     partner_id = fields.Many2one('res.partner', index=True, required=True)
+    partner_email = fields.Char(related='partner_id.email', readonly=True)
 
     @api.depends('channel_id.slide_partner_ids.partner_id', 'channel_id.slide_partner_ids.completed', 'channel_id.total_slides', 'partner_id')
     def _compute_completion(self):
@@ -107,7 +109,8 @@ class Channel(models.Model):
         default='public', required=True)
     partner_ids = fields.Many2many(
         'res.partner', 'slide_channel_partner', 'channel_id', 'partner_id',
-        string='Members', help="All members of the channel.")
+        string='Members', help="All members of the channel.", context={'active_test': False})
+    members_count = fields.Integer('Attendees count', compute='_compute_members_count', groups="website.group_website_publisher")
     is_member = fields.Boolean(string='Is Member', compute='_compute_is_member')
     channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='website.group_website_publisher')
     enroll_msg = fields.Html(
@@ -121,6 +124,11 @@ class Channel(models.Model):
     completion = fields.Integer('Completion', compute='_compute_user_statistics')
     can_upload = fields.Boolean('Can Upload', compute='_compute_access')
     can_publish = fields.Boolean('Can Publish', compute='_compute_access')
+
+    @api.depends('partner_ids')
+    def _compute_members_count(self):
+        for channel in self:
+            channel.members_count = len(channel.partner_ids)
 
     @api.depends('channel_partner_ids.partner_id')
     @api.model
@@ -188,6 +196,41 @@ class Channel(models.Model):
     def change_visibility(self):
         pass
 
+    @api.multi
+    def action_redirect_to_members(self):
+        action = self.env.ref('website_slides.slide_channel_partner_action').read()[0]
+        action['view_mode'] = 'tree'
+        action['domain'] = [('channel_id', 'in', self.ids)]
+        if len(self) == 1:
+            action['context'] = {'default_channel_id': self.id}
+
+        return action
+
+    @api.multi
+    def action_channel_invite(self):
+        self.ensure_one()
+
+        if self.visibility != 'invite':
+            raise UserError(_("You cannot send invitations for channels that are not set as 'invite'."))
+
+        template = self.env.ref('website_slides.mail_template_slide_channel_invite', raise_if_not_found=False)
+
+        local_context = dict(
+            self.env.context,
+            default_channel_id=self.id,
+            default_use_template=bool(template),
+            default_template_id=template and template.id or False,
+            notif_layout='mail.mail_notification_light',
+        )
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'slide.channel.invite',
+            'target': 'new',
+            'context': local_context,
+        }
+
     # ---------------------------------------------------------
     # ORM Overrides
     # ---------------------------------------------------------
@@ -250,10 +293,18 @@ class Channel(models.Model):
     # ---------------------------------------------------------
 
     def action_add_member(self, **member_values):
-        new_cp = self._action_add_member(target_partner=self.env.user.partner_id, **member_values)
-        return bool(new_cp)
+        """ Adds the logged in user in the channel members.
+        (see '_action_add_member' for more info)
 
-    def _action_add_member(self, target_partner, **member_values):
+        Returns True if added successfully, False otherwise."""
+        return bool(self._action_add_member(target_partner=self.env.user.partner_id, **member_values))
+
+    def _action_add_member(self, target_partner=False, **member_values):
+        """ Add the target_partner as a member of the channel (to its slide.channel.partner).
+        This will make the content (slides) of the channel available to that partner.
+
+        Returns the added 'slide.channel.partner's (! as sudo !)
+        """
         existing = self.env['slide.channel.partner'].sudo().search([
             ('channel_id', 'in', self.ids),
             ('partner_id', '=', target_partner.id)
