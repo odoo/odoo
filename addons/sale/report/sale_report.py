@@ -49,6 +49,9 @@ class SaleReport(models.Model):
 
     discount = fields.Float('Discount %', readonly=True)
     discount_amount = fields.Float('Discount Amount', readonly=True)
+    campaign_id = fields.Many2one('utm.campaign', 'Campaign')
+    medium_id = fields.Many2one('utm.medium', 'Medium')
+    source_id = fields.Many2one('utm.source', 'Source')
 
     order_id = fields.Many2one('sale.order', 'Order #', readonly=True)
 
@@ -75,6 +78,9 @@ class SaleReport(models.Model):
             s.partner_id as partner_id,
             s.user_id as user_id,
             s.company_id as company_id,
+            s.campaign_id as campaign_id,
+            s.medium_id as medium_id,
+            s.source_id as source_id,
             extract(epoch from avg(date_trunc('day',s.date_order)-date_trunc('day',s.create_date)))/(24*60*60)::decimal(16,2) as delay,
             t.categ_id as categ_id,
             s.pricelist_id as pricelist_id,
@@ -118,6 +124,9 @@ class SaleReport(models.Model):
             s.user_id,
             s.state,
             s.company_id,
+            s.campaign_id,
+            s.medium_id,
+            s.source_id,
             s.pricelist_id,
             s.analytic_account_id,
             s.team_id,
