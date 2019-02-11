@@ -76,7 +76,7 @@ class TestStockValuation(AccountingTestCase):
         self.vendor_bill1.action_invoice_open()
 
         # create the customer invoice
-        self.customer_invoice1_id = self.sale_order1.action_invoice_create()
+        self.customer_invoice1_id = self.sale_order1._create_invoices()
         self.customer_invoice1 = self.env['account.invoice'].browse(self.customer_invoice1_id)
         self.customer_invoice1.action_invoice_open()
 
