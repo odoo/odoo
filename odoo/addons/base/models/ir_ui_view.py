@@ -1447,3 +1447,109 @@ actual arch.
                 view._check_xml()
             except Exception as e:
                 self.raise_view_error("Can't validate view:\n%s" % e, view.id)
+
+    def fix_faulty_views(self, delete=False):
+        """ Use the get_faulty_views and take appropriate actions
+            using disable_if_possible
+            This function is never called but offers the possibility to be called from a server action
+            Please don't remove
+        """
+        for view in self:
+            if not self.view_is_valid(view):
+                faulty_views = self.get_faulty_views(view,view,self.env['ir.ui.view'])
+                # Final validation
+                self._cr.execute('SAVEPOINT end_validation')
+                faulty_views.clean_properly(delete)
+                if self.view_is_valid(view):
+                    self._cr.execute('RELEASE end_validation')
+                else:
+                    self._cr.execute('ROLLBACK TO end_validation')
+                    _logger.error("issue occurs")
+
+    def get_faulty_views(self,parent_view,view, disabled_views):
+        """ Returns the faulty views
+            To determine the faulty views, we travel the tree recursively.
+            Disable all children, then enable one by one. If there is an issue.
+            The activated node or at least of its children are faulty.
+            Disable faulty node and continue recursion.
+            This function is never called from odoo code but allow to be called from a server action.
+            Please don't remove
+        """
+        if parent_view == view:
+            self._cr.execute('SAVEPOINT test_fix_views')
+            temp_disabled_views= self.deactivate_lvl1_children(view)
+            if self.view_is_valid(parent_view):
+                if self.has_active_children(view) or len(temp_disabled_views)>1 :
+                    for child_view in (temp_disabled_views):
+                        v =self.get_faulty_views(parent_view,child_view,disabled_views)
+                        for vv in v:
+                            if vv not in disabled_views:
+                                disabled_views+=vv
+                else:
+                    view.active=False
+                    disabled_views+=view #this is the faulty view 
+            else:
+                view.active=False
+                disabled_views+=view
+            self._cr.execute('ROLLBACK TO test_fix_views')
+            return disabled_views
+        else:
+            assert self.view_is_valid(parent_view)
+            view.active=True
+            if self.view_is_valid(parent_view):
+                return disabled_views
+            else:
+                if self.has_active_children(view):
+                    temp_disabled_views= self.deactivate_lvl1_children(view)
+                    if self.view_is_valid(parent_view):
+                        # problem is in one of the children
+                        for child_view in (temp_disabled_views):
+                            v =self.get_faulty_views(parent_view,child_view,disabled_views)
+                            for vv in v:
+                                if vv not in disabled_views:
+                                    disabled_views+=vv
+                        return disabled_views
+                    else:
+                        view.active=False
+                        disabled_views+=view
+                        return disabled_views
+                else:
+                    view.active=False
+                    disabled_views+=view
+                    return disabled_views
+
+    def deactivate_lvl1_children(self, view):
+        """ deactivate and return views that has been deactivated taking care of view priority 
+        NOTE: Do not use self due to recursivity"""
+        temp_disabled_views= self.get_lvl1_children(view)
+        for v in temp_disabled_views:
+            v.active=False
+        return temp_disabled_views
+    
+    def get_lvl1_children(self,view):
+        """return lvl1 children for the given view pay attention to order"""
+        print("get_lvl1_children %s"%(view))
+        child_views = sorted(view.inherit_children_ids, key=lambda a: a.priority) 
+        print("get lvl1_children returns %s"%(child_views))
+        return child_views
+
+    def has_active_children(self, view):
+        active_children_count = len(self.get_lvl1_children(view))
+        print("get has_active_children returns %s"%(active_children_count))
+        return active_children_count
+
+    def view_is_valid(self,view):
+        try:
+            view._check_xml() # _check_xml includes inherits 
+            return True
+        except Exception as e:
+            # NOTE: e contains the reason why the view is invalid
+            return False
+
+    def clean_properly(self, delete):
+        if delete:
+            for v in self:
+                v.unlink()
+        else:
+            for v in self:
+                v.active=False
