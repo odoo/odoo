@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_course" model="product.product">
+            <field name="name">Furniture creation course</field>
+            <field name="standard_price">100.0</field>
+            <field name="list_price">100.0</field>
+            <field name="type">service</field>
+            <field name="website_published" eval="True"/>
+            <field name="image" type="base64" file="website_sale_slides/data/demo-thumbnails/product_course.png"/>
+        </record>
+
+        <record id="channel_on_payment" model="slide.channel">
+            <field name="name">Furniture creation</field>
+            <field name="promote_strategy">most_viewed</field>
+            <field name="website_published" eval="True"/>
+            <field name="description">All you need to know about furniture creation.</field>
+            <field name="visibility">payment</field>
+            <field name="product_id" ref="product_course"/>
+        </record>
+
+        <record id="slide_find_wood" model="slide.slide">
+            <field name="name">How to find quality wood.</field>
+            <field name="url">https://www.youtube.com/watch?v=5WMqwTnZ-qs</field>
+            <field name="document_id">5WMqwTnZ-qs</field>
+            <field name="slide_type">video</field>
+            <field name="channel_id" ref="channel_on_payment"/>
+            <field name="website_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+            <field name="image" type="base64" file="website_sale_slides/data/demo-thumbnails/5WMqwTnZ-qs.png"/>
+            <field name="description">Learn of to identify quality wood in order to create solid furnitures.</field>
+        </record>
+
+        <record id="slide_create_furniture" model="slide.slide">
+            <field name="name">How to create your own piece of furniture.</field>
+            <field name="url">https://www.youtube.com/watch?v=ptjeDDoURL8</field>
+            <field name="document_id">ptjeDDoURL8</field>
+            <field name="slide_type">video</field>
+            <field name="channel_id" ref="channel_on_payment"/>
+            <field name="website_published" eval="True"/>
+            <field name="is_preview" eval="True"/>
+            <field name="image" type="base64" file="website_sale_slides/data/demo-thumbnails/ptjeDDoURL8.png"/>
+            <field name="description">From a piece of wood to a fully functional furniture, step by step.</field>
+        </record>
+    </data>
+</odoo>

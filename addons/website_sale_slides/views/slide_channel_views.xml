@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="slide_channel_view_form" model="ir.ui.view">
+            <field name="name">slide.channel.view.form.inherit.sale</field>
+            <field name="model">slide.channel</field>
+            <field name="inherit_id" ref="website_slides.view_slide_channel_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='visibility']" position="after">
+                    <field name="product_id"
+                        attrs="{'invisible': [('visibility', '!=', 'payment')], 'required': [('visibility', '=', 'payment')]}" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

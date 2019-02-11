@@ -250,10 +250,18 @@ class Channel(models.Model):
     # ---------------------------------------------------------
 
     def action_add_member(self, **member_values):
-        new_cp = self._action_add_member(target_partner=self.env.user.partner_id, **member_values)
-        return bool(new_cp)
+        """ Adds the logged in user in the channel members.
+        (see '_action_add_member' for more info)
 
-    def _action_add_member(self, target_partner, **member_values):
+        Returns True if added successfully, False otherwise."""
+        return bool(self._action_add_member(target_partner=self.env.user.partner_id, **member_values))
+
+    def _action_add_member(self, target_partner=False, **member_values):
+        """ Add the target_partner as a member of the channel (to its slide.channel.partner).
+        This will make the content (slides) of the channel available to that partner.
+
+        Returns the added 'slide.channel.partner's (! as sudo !)
+        """
         existing = self.env['slide.channel.partner'].sudo().search([
             ('channel_id', 'in', self.ids),
             ('partner_id', '=', target_partner.id)
