@@ -115,15 +115,19 @@ class WebsiteSlides(WebsiteProfile):
 
         # fetch 'latests achievements' for non logged people
         if request.env.user._is_public():
-            achievements = request.env['gamification.badge.user'].sudo().search([], limit=5)
+            achievements = request.env['gamification.badge.user'].sudo().search([('badge_id.is_published', '=', True)], limit=5)
             challenges = None
             challenges_done = None
         else:
             achievements = None
-            challenges = request.env['gamification.challenge'].sudo().search([('category', '=', 'slides')], order='id asc', limit=5)
+            challenges = request.env['gamification.challenge'].sudo().search([
+                ('category', '=', 'slides'),
+                ('reward_id.is_published', '=', True)
+            ], order='id asc', limit=5)
             challenges_done = request.env['gamification.badge.user'].sudo().search([
                 ('challenge_id', 'in', challenges.ids),
-                ('user_id', '=', request.env.user.id)
+                ('user_id', '=', request.env.user.id),
+                ('badge_id.is_published', '=', True)
             ]).mapped('challenge_id')
 
         # fetch 'heroes of the week' for non logged people
@@ -325,8 +329,8 @@ class WebsiteSlides(WebsiteProfile):
         if not slide.channel_id.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
 
-        values = self._get_slide_detail(slide)
         self._set_viewed_slide(slide)
+        values = self._get_slide_detail(slide)
         # allow rating and comments
         if slide.channel_id.allow_comment:
             values.update({
@@ -422,9 +426,7 @@ class WebsiteSlides(WebsiteProfile):
             if (file_size / 1024.0 / 1024.0) > 25:
                 return {'error': _('File is too big. File size cannot exceed 25MB')}
 
-        values = dict((fname, post[fname]) for fname in [
-            'name', 'url', 'tag_ids', 'slide_type', 'channel_id',
-            'mime_type', 'datas', 'description', 'image', 'index_content', 'website_published'] if post.get(fname))
+        values = dict((fname, post[fname]) for fname in self._get_valid_slide_post_values() if post.get(fname))
 
         if post.get('category_id'):
             if post['category_id'][0] == 0:
@@ -464,6 +466,10 @@ class WebsiteSlides(WebsiteProfile):
         if slide.slide_type == 'webpage':
             redirect_url += "?enable_editor=1"
         return {'url': redirect_url}
+
+    def _get_valid_slide_post_values(self):
+        return ['name', 'url', 'tag_ids', 'slide_type', 'channel_id',
+            'mime_type', 'datas', 'description', 'image', 'index_content', 'website_published']
 
     @http.route(['/slides/channel/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_channel_tag_search_read(self, fields, domain):
