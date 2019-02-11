@@ -35,7 +35,19 @@ class ChangeProductionQty(models.TransientModel):
             production_move = production._generate_finished_moves()
             production_move = production.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel') and production.product_id.id == x.product_id.id)
             production_move.write({'product_uom_qty': qty})
-        return {production_move: (qty, old_qty)}
+        modification = {production_move: (qty, old_qty)}
+        for sub_product_line in production.bom_id.sub_products:
+            move = production.move_finished_ids.filtered(lambda x: x.subproduct_id == sub_product_line and x.state not in ('done', 'cancel'))
+            if move:
+                product_uom_factor = production.product_uom_id._compute_quantity(production.product_qty - production.qty_produced, production.bom_id.product_uom_id)
+                qty1 = sub_product_line.product_qty
+                qty1 *= product_uom_factor / production.bom_id.product_qty
+                modification[move[0]] = (qty1, move[0].product_uom_qty)
+                move[0].write({'product_uom_qty': qty1})
+            else:
+                move = production._create_byproduct_move(sub_product_line)
+                modification[move] = (move.product_uom_qty, 0)
+        return modification
 
     @api.multi
     def change_prod_qty(self):
