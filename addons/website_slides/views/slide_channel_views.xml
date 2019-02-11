@@ -47,6 +47,9 @@
             <field name="model">slide.channel</field>
             <field name="arch" type="xml">
                 <form string="Channels">
+                    <header>
+                        <button name="action_channel_invite" string="Invite" type="object" class="oe_highlight"  attrs="{'invisible': [('visibility', '!=', 'invite')]}"/>
+                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_redirect_to_members"
