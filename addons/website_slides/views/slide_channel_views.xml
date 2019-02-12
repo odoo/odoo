@@ -79,6 +79,7 @@
                                     context="{'default_channel_id': active_id}"
                                     domain="[('channel_id','=', active_id)]"/>
                                 <field name="tag_ids" widget="many2many_tags" placeholder="Tags"/>
+                                <field name="user_id"/>
                             </group>
                         </group>
                         <notebook colspan="4">
@@ -88,7 +89,7 @@
                             <page string="Options">
                                 <group>
                                     <group>
-                                        <field name="channel_type"/>
+                                        <field name="channel_type" widget="radio"/>
                                         <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                         <field name="promote_strategy" widget="radio"/>
                                     </group>

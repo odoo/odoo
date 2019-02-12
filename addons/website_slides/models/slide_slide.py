@@ -31,6 +31,15 @@ class SlidePartnerRelation(models.Model):
     completed = fields.Boolean('Completed')
 
 
+class SlideLink(models.Model):
+    _name = 'slide.slide.link'
+    _description = "External URL for a particular slide"
+
+    slide_id = fields.Many2one('slide.slide', required=True)
+    name = fields.Char('Title', required=True)
+    link = fields.Char("External Link", required=True)
+
+
 class EmbeddedSlide(models.Model):
     """ Embedding in third party websites. Track view count, generate statistics. """
     _name = 'slide.embed'
@@ -74,6 +83,7 @@ class Slide(models.Model):
      - Document
      - Infographic
      - Video
+     - Webpage
 
     Slide has various statistics like view count, embed count, like, dislikes """
 
@@ -93,7 +103,7 @@ class Slide(models.Model):
         'website_published', 'website_url', 'website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
 
     _sql_constraints = [
-        ('name_uniq', 'UNIQUE(channel_id, name)', 'The slide name must be unique within a channel')
+        ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
     ]
 
     # description
@@ -122,15 +132,18 @@ class Slide(models.Model):
         ('infographic', 'Infographic'),
         ('presentation', 'Presentation'),
         ('document', 'Document'),
+        ('webpage', 'Web Page'),
         ('video', 'Video')],
         string='Type', required=True,
-        default='document',
+        default='document', readonly=True,
         help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
     index_content = fields.Text('Transcript')
     datas = fields.Binary('Content', attachment=True)
     url = fields.Char('Document URL', help="Youtube or Google Document URL")
     document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
+    link_ids = fields.One2many('slide.slide.link', 'slide_id', string="External URL for this slide")
     mime_type = fields.Char('Mime-type')
+    html_content = fields.Html("HTML Content", help="Custom HTML content for slides of type 'Web Page'.", translate=True)
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
     date_published = fields.Datetime('Publish Date')

@@ -1,50 +1,51 @@
-odoo.define('website_slides.upload', function (require) {
+odoo.define('website_slides.upload_modal', function (require) {
 'use strict';
 
 var sAnimations = require('website.content.snippets.animation');
 var core = require('web.core');
-var Widget = require('web.Widget');
+var Dialog = require('web.Dialog');
 
+var QWeb = core.qweb;
 var _t = core._t;
 
-var SlideDialog = Widget.extend({
-    template: 'website.slide.upload',
-    events: {
-        'hidden.bs.modal': 'destroy',
-        'click button.save': '_save',
-        'click button[data-dismiss="modal"]': '_cancel',
-        'change input#upload': '_slideUpload',
-        'change input#url': '_slideUrl',
-        'click .list-group-item': function (ev) {
-            this.$('.list-group-item').removeClass('active');
-            $(ev.target).closest('li').addClass('active');
-        }
-    },
 
+var SlideUploadDialog = Dialog.extend({
+    template: 'website.slide.upload.modal',
+    events: _.extend({}, Dialog.prototype.events, {
+        'click .o_wslides_select_type': '_onClickSlideTypeIcon',
+        'change input#upload': '_onChangeSlideUpload',
+        'change input#url': '_onChangeSlideUrl',
+    }),
     /**
      * @override
-     * @param {Object} el
-     * @param {Object} data holding channelId and optionally upload and publish control parameters
+     * @param {Object} parent
+     * @param {Object} options holding channelId and optionally upload and publish control parameters
      */
-    init: function (el, data) {
-        this._super(el, data);
-        this.channelId = parseInt(data.channelId, 10);
-        this.canUpload = data.canUpload === 'True';
-        this.canPublish = data.canPublish === 'True';
-        console.log(this.channelId, this.canUpload, this.canPublish);
-        this.file = {};
-        this.index_content = '';
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        this.$el.modal({
-            backdrop: 'static'
+    init: function (parent, options) {
+        options = _.defaults(options || {}, {
+            title: _t("Upload a document"),
+            size: 'medium',
         });
-        this._setCategoryId();
-        this._setTagIds();
-        return this._super.apply(this, arguments);
+        this._super(parent, options);
+        this._setup();
+
+        this.channelID = parseInt(options.channelId, 10);
+        this.canUpload = options.canUpload === 'True';
+        this.canPublish = options.canPublish === 'True';
+
+        this.set('state', '_select');
+        this.on('change:state', this, this._onChangeType);
+        this.set('can_submit_form', false);
+        this.on('change:can_submit_form', this, this._onChangeCanSubmitForm);
+
+        this.file = {};
+        this.isValidUrl = true;
+    },
+    start: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self._resetModalButton();
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -53,32 +54,167 @@ var SlideDialog = Widget.extend({
 
     /**
      * @private
-     * @param {string} file_name
+     * @param {string} message
      */
-    _checkUniqueSlide: function (fileName) {
+    _alertDisplay: function (message) {
+        this._alertRemove();
+        $('<div/>', {
+            "class": 'alert alert-warning',
+            role: 'alert'
+        }).text(message).insertBefore(this.$('form'));
+    },
+    _alertRemove: function () {
+        this.$('.alert-warning').remove();
+    },
+    /**
+     * Category and tags management from select2
+     *
+     * @private
+     */
+    _bindSelect2Dropdown: function () {
+        var self = this;
+        this.$('#category_id').select2(this._select2Wrapper(_t('Category'), false,
+            function () {
+                return self._rpc({
+                    route: '/slides/category/search_read',
+                    params: {
+                        fields: ['name'],
+                        domain: [['channel_id', '=', self.channelID]],
+                    }
+                });
+            })
+        );
+        this.$('#tag_ids').select2(this._select2Wrapper(_t('Tags'), true, function () {
+            return self._rpc({
+                route: '/slides/tag/search_read',
+                params: {
+                    fields: ['name'],
+                    domain: [],
+                }
+            });
+        }));
+    },
+    _fetchUrlPreview: function (url) {
         return this._rpc({
-            model: 'slide.slide',
-            method: 'search_count',
-            args: [[['channel_id', '=', self.channelId], ['name', '=', fileName]]],
+            route: '/slides/prepare_preview/',
+            params: {
+                'url': url,
+                'channel_id': this.channelID
+            },
         });
+    },
+    _formSetFieldValue: function (fieldId, value) {
+        this.$('form').find('#'+fieldId).val(value);
+    },
+    _formGetFieldValue: function (fieldId) {
+        return this.$('#'+fieldId).val();
+    },
+    _formValidate: function () {
+        var form = this.$("form");
+        form.addClass('was-validated');
+        return form[0].checkValidity() && this.isValidUrl;
+    },
+    /**
+     * Extract values to submit from form, force the slide_type according to
+     * filled values.
+     *
+     * @private
+     */
+    _formValidateGetValues: function (forcePublished) {
+        var canvas = this.$('#data_canvas')[0];
+        var values = _.extend({
+            'channel_id': this.channelID,
+            'name': this._formGetFieldValue('name'),
+            'url': this._formGetFieldValue('url'),
+            'description': this._formGetFieldValue('description'),
+            'index_content': this._formGetFieldValue('index_content'),
+            'website_published': forcePublished,
+        }, this._getSelect2DropdownValues()); // add tags and category
+
+        // default slide_type (for webpage for instance)
+        if (_.contains(this.slide_type_data), this.get('state')) {
+            values['slide_type'] = this.get('state');
+        }
+
+        if (this.file.type === 'application/pdf') {
+            _.extend(values, {
+                'image': canvas.toDataURL().split(',')[1],
+                'slide_type': canvas.height > canvas.width ? 'document' : 'presentation',
+                'mime_type': this.file.type,
+                'datas': this.file.data
+            });
+        } else if (/^image\/.*/.test(this.file.type)) {
+            _.extend(values, {
+                'slide_type': 'infographic',
+                'mime_type': this.file.type === 'image/svg+xml' ? 'image/png' : this.file.type,
+                'datas': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data
+            });
+        }
+        return values;
     },
     /**
      * @private
      */
-    _resetFile: function () {
+    _fileReset: function () {
         var control = this.$('#upload');
         control.replaceWith(control = control.clone(true));
         this.file.name = false;
     },
-    /**
-     * @private
-     * @param {string} message
-     */
-    _displayAlert: function (message) {
-        this.$('.alert-warning').remove();
-        $('<div class="alert alert-warning" role="alert">' + message + '</div>').insertBefore(this.$('form'));
-    },
 
+    _getModalButtons: function () {
+        var btnList = [];
+        var state = this.get('state');
+        if (state === '_select') {
+            btnList.push({text: _t("Cancel"), classes: 'o_w_slide_cancel', close: true});
+        } else if (state !== '_upload') { // no button when uploading
+            if (this.canUpload) {
+                if (this.canPublish) {
+                    btnList.push({text: _t("Save as Draft"), classes: 'o_w_slide_upload', click: this._onClickFormSubmit.bind(this)});
+                    btnList.push({text: _t("Publish"), classes: 'btn-primary o_w_slide_upload o_w_slide_upload_published', click: this._onClickFormSubmit.bind(this)});
+                } else {
+                    btnList.push({text: _t("Save as Draft"), classes: 'btn-primary o_w_slide_upload', click: this._onClickFormSubmit.bind(this)});
+                }
+            }
+            btnList.push({text: _t("Go Back"), classes: 'o_w_slide_go_back', click: this._onClickGoBack.bind(this)});
+        }
+        return btnList;
+    },
+    /**
+     * Get value for category_id and tag_ids (ORM cmd) to send to server
+     *
+     * @private
+     */
+    _getSelect2DropdownValues: function (){
+        var result = {};
+        // tags
+        var tagValues = [];
+        _.each(this.$('#tag_ids').select2('data'), function (val) {
+            if (val.create) {
+                tagValues.push([0, 0, {'name': val.text}]);
+            } else {
+                tagValues.push([4, val.id]);
+            }
+        });
+        if (tagValues) {
+            result['tag_ids'] = tagValues;
+        }
+        // category
+        var categoryValue = this.$('#category_id').select2('data');
+        if (categoryValue && categoryValue.create) {
+            result['category_id'] = [0, {'name': categoryValue.text}];
+        } else if (categoryValue) {
+            result['category_id'] =  [categoryValue.id];
+        }
+        return result;
+    },
+    /**
+     * Reset the footer buttons, according to current state of modal
+     *
+     * @private
+     */
+    _resetModalButton: function () {
+        this.set_buttons(this._getModalButtons());
+    },
     /**
      * Wrapper for select2 load data from server at once and store it.
      *
@@ -114,7 +250,7 @@ var SlideDialog = Widget.extend({
                             id: _.uniqueId('tag_'),
                             create: true,
                             tag: term,
-                            text: _.str.sprintf(_t("Create new tag '%s'"), term),
+                            text: _.str.sprintf(_t("Create new %s '%s'"), tag, term),
                         };
                     } else {
                         return undefined;
@@ -147,64 +283,28 @@ var SlideDialog = Widget.extend({
         };
     },
     /**
-     * Category management from select2
+     * Init the data relative to the support slide type to upload
      *
      * @private
      */
-    _setCategoryId: function () {
-        var self = this;
-        $('#category_id').select2(this._select2Wrapper(_t('Category'), false,
-            function () {
-                return self._rpc({
-                    route: '/slides/category/search_read',
-                    params: {
-                        fields: ['name'],
-                        domain: [['channel_id', '=', self.channelId]],
-                    }
-                });
-            }));
-    },
-    /**
-     * @private
-     */
-    _getCategoryId: function () {
-        var value = $('#category_id').select2('data');
-        if (value && value.create) {
-            return [0, {'name': value.text}];
-        }
-        return [value ? value.id : null];
-    },
-    /**
-     * Tags management from select2
-     *
-     * @private
-     */
-    _setTagIds: function () {
-        var self = this;
-        $('#tag_ids').select2(this._select2Wrapper(_t('Tags'), true, function () {
-            return self._rpc({
-                route: '/slides/tag/search_read',
-                params: {
-                    fields: ['name'],
-                    domain: [],
-                }
-            });
-        }));
-    },
-    /**
-     * @private
-     */
-    _getTagIds: function () {
-        var res = [];
-        _.each($('#tag_ids').select2('data'),
-            function (val) {
-                if (val.create) {
-                    res.push([0, 0, {'name': val.text}]);
-                } else {
-                    res.push([4, val.id]);
-                }
-            });
-        return res;
+    _setup: function () {
+        this.slide_type_data = {
+            presentation: {
+                icon: 'fa-file-pdf-o',
+                label: _t('Presentation (PDF)'),
+                template: 'website.slide.upload.modal.presentation',
+            },
+            webpage: {
+                icon: 'fa-file-text',
+                label: _t('Web Page'),
+                template: 'website.slide.upload.modal.webpage',
+            },
+            video: {
+                icon: 'fa-video-camera',
+                label: _t('Video'),
+                template: 'website.slide.upload.modal.video',
+            },
+        };
     },
     /**
      * @private
@@ -219,99 +319,35 @@ var SlideDialog = Widget.extend({
         canvas.getContext('2d').drawImage(img, 0, 0);
         return canvas.toDataURL('image/png').split(',')[1];
     },
-    /**
-     * Values and save
-     *
-     * @private
-     */
-    _getValue: function () {
-        var canvas = this.$('#data_canvas')[0],
-            values = {
-                'channel_id': this.channelId || '',
-                'name': this.$('#name').val(),
-                'url': this.$('#url').val(),
-                'description': this.$('#description').val(),
-                'tag_ids': this._getTagIds(),
-                'category_id': this._getCategoryId()
-            };
-        if (this.file.type === 'application/pdf') {
-            _.extend(values, {
-                'image': canvas.toDataURL().split(',')[1],
-                'index_content': this.index_content,
-                'slide_type': canvas.height > canvas.width ? 'document' : 'presentation',
-                'mime_type': this.file.type,
-                'datas': this.file.data
-            });
-        }
-        if (/^image\/.*/.test(this.file.type)) {
-            _.extend(values, {
-                'slide_type': 'infographic',
-                'mime_type': this.file.type === 'image/svg+xml' ? 'image/png' : this.file.type,
-                'datas': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data
-            });
-        }
-        return values;
-    },
-    /**
-     * @private
-     */
-    _validate: function () {
-        this.$('.form-group').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
-        if (!this.$('#name').val()) {
-            this.$('#name').closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
-            return false;
-        }
-        var url = this.$('#url').val() ? this.is_valid_url : false;
-        if (!(this.file.name || url)) {
-            this.$('#url').closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
-            return false;
-        }
-        return true;
-    },
-
     //--------------------------------------------------------------------------
-    // Handlers
+    // Handler
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     * @param {Object} ev
-     */
-    _save: function (ev) {
-        var self = this;
-        if (this._validate()) {
-            var values = this._getValue();
-            if ($(ev.target).data('published')) {
-                values.website_published = true;
-            }
-            this.$('.oe_slides_upload_loading').show();
-            this.$('.modal-footer, .modal-body').hide();
-            this._rpc({
-                route: '/slides/add_slide',
-                params: values,
-            }).then(function (data) {
-                if (data.error) {
-                    self._displayAlert(data.error);
-                    self.$('.oe_slides_upload_loading').hide();
-                    self.$('.modal-footer, .modal-body').show();
+    _onChangeType: function () {
+        var currentType = this.get('state');
+        var tmpl;
+        if (currentType === '_select') {
+            tmpl = 'website.slide.upload.modal.select';
+        } else if (currentType === '_upload') {
+            tmpl = 'website.slide.upload.modal.uploading';
+        } else {
+            tmpl = this.slide_type_data[currentType]['template'];
+        }
+        this.$('.o_w_slide_upload_modal_container').empty();
+        this.$('.o_w_slide_upload_modal_container').append(QWeb.render(tmpl, {widget: this}));
 
-                } else {
-                    window.location = data.url;
-                }
-            });
+        this._resetModalButton();
+    },
+    _onChangeCanSubmitForm: function (ev) {
+        if (this.get('can_submit_form')) {
+            this.$('.o_w_slide_upload').button('reset');
+        } else {
+            this.$('.o_w_slide_upload').button('loading');
         }
     },
-    /**
-     * @override
-     */
-    _cancel: function () {
-        this.trigger('cancel');
-    },
-    /**
-     * @override
-     * @param {Object} ev
-     */
-    _slideUpload: function (ev) {
+    _onChangeSlideUpload: function (ev) {
+        this._alertRemove();
+
         var self = this;
         var file = ev.target.files[0];
         var isImage = /^image\/.*/.test(file.type);
@@ -319,16 +355,15 @@ var SlideDialog = Widget.extend({
         this.file.name = file.name;
         this.file.type = file.type;
         if (!(isImage || this.file.type === 'application/pdf')) {
-            this._displayAlert(_t("Invalid file type. Please select pdf or image file"));
-            this._resetFile();
+            this._alertDisplay(_t("Invalid file type. Please select pdf or image file"));
+            this._fileReset();
             return;
         }
         if (file.size / 1024 / 1024 > 25) {
-            this._displayAlert(_t("File is too big. File size cannot exceed 25MB"));
-            this._resetFile();
+            this._alertDisplay(_t("File is too big. File size cannot exceed 25MB"));
+            this._fileReset();
             return;
         }
-        this.$('.alert-warning').remove();
         var BinaryReader = new FileReader();
         // file read as DataURL
         BinaryReader.readAsDataURL(file);
@@ -343,15 +378,15 @@ var SlideDialog = Widget.extend({
 
         if (file.type === 'application/pdf') {
             var ArrayReader = new FileReader();
-            this.$('.save').button('loading');
+            this.set('can_submit_form', false);
             // file read as ArrayBuffer for PDFJS get_Document API
             ArrayReader.readAsArrayBuffer(file);
             ArrayReader.onload = function (evt) {
                 var buffer = evt.target.result;
                 var passwordNeeded = function () {
-                    self._displayAlert(_t("You can not upload password protected file."));
-                    self._resetFile();
-                    self.$('.save').button('reset');
+                    self._alertDisplay(_t("You can not upload password protected file."));
+                    self._fileReset();
+                    self.set('can_submit_form', true);
                 };
                 PDFJS.getDocument(new Uint8Array(buffer), null, passwordNeeded).then(function getPdf(pdf) {
                     pdf.getPage(1).then(function getFirstPage(page) {
@@ -369,10 +404,9 @@ var SlideDialog = Widget.extend({
                             var imageData = self.$('#data_canvas')[0].toDataURL();
                             self.$('#slide-image').attr('src', imageData);
                             if (loaded) {
-                                self.$('.save').button('reset');
+                                self.set('can_submit_form', true);
                             }
                             loaded = true;
-
                         });
                     });
                     var maxPages = pdf.pdfInfo.numPages;
@@ -389,10 +423,12 @@ var SlideDialog = Widget.extend({
                                 });
                                 // page_content may contain null characters
                                 pageContent = pageContent.replace(/\0/g, '');
-                                self.index_content = self.index_content + pageNumber + '. ' + pageContent + '\n';
+                                var indexContent = self._formGetFieldValue('index_content') + pageNumber + '. ' + pageContent + '\n';
+                                self._formSetFieldValue('index_content', indexContent);
+
                                 if (maxPages === pageNumber) {
                                     if (loaded) {
-                                        self.$('.save').button('reset');
+                                        self.set('can_submit_form', false);
                                     }
                                     loaded = true;
                                 }
@@ -405,48 +441,65 @@ var SlideDialog = Widget.extend({
 
         var input = file.name;
         var inputVal = input.substr(0, input.lastIndexOf('.')) || input;
-        this._checkUniqueSlide(inputVal).then(function (exist) {
-            if (exist) {
-                var message = _t("Channel contains the given title, please change before Save or Publish.");
-                self._displayAlert(message);
-            }
-            self.$('#name').val(inputVal);
-        });
+        this._formSetFieldValue('name', inputVal);
     },
-    /**
-     * @private
-     * @param {Object} ev
-     */
-    _slideUrl: function (ev) {
-        var self = this,
-            value = {
-                'url': $(ev.target).val(),
-                'channel_id': self.channelId
-            };
-        this.$('.alert-warning').remove();
-        this.is_valid_url = false;
-        this.$('.save').button('loading');
-        this._rpc({
-            route: '/slides/dialog_preview/',
-            params: value,
-        }).then(function (data) {
-            self.$('.save').button('reset');
+    _onChangeSlideUrl: function (ev) {
+        var self = this;
+        var url = $(ev.target).val();
+
+        this._alertRemove();
+        this.isValidUrl = false;
+        this.set('can_submit_form', false);
+        this._fetchUrlPreview(url).then(function (data) {
+            this.set('can_submit_form', true);
             if (data.error) {
-                self._displayAlert(data.error);
+                self._alertDisplay(data.error);
             } else {
                 self.$('#slide-image').attr('src', data.url_src);
-                self.$('#name').val(data.title);
-                self.$('#description').val(data.description);
-                self.is_valid_url = true;
+                self._formSetFieldValue('name', data.title);
+                self._formSetFieldValue('description', data.description);
+
+                self.isValidUrl = true;
             }
         });
     },
+    _onClickGoBack: function (ev) {
+        this.set('state', '_select');
+        this.isValidUrl = true;
+    },
+    _onClickFormSubmit: function (ev) {
+        var self = this;
+        var $btn = $(ev.currentTarget);
+        if (this._formValidate()) {
+            var values = this._formValidateGetValues($btn.hasClass('o_w_slide_upload_published')); // get info before changing state
+            var oldType = this.get('state');
+            this.set('state', '_upload');
+            return this._rpc({
+                route: '/slides/add_slide',
+                params: values,
+            }).then(function (data) {
+                if (data.error) {
+                    self.set('state', oldType);
+                    self._alertDisplay(data.error);
+                } else {
+                    window.location = data.url;
+                }
+            });
+        }
+    },
+    _onClickSlideTypeIcon: function (ev) {
+        var $elem = this.$(ev.currentTarget);
+        var slideType = $elem.data('slideType');
+        this.set('state', slideType);
 
+        this._bindSelect2Dropdown();  // rebind select2 at each modal body rendering
+    },
 });
+
 
 sAnimations.registry.websiteSlidesUpload = sAnimations.Class.extend({
     selector: '.oe_slide_js_upload',
-    xmlDependencies: ['/website_slides/static/src/xml/website_slides.xml'],
+    xmlDependencies: ['/website_slides/static/src/xml/website_slides_upload.xml'],
     read_events: {
         'click': '_onUploadClick',
     },
@@ -468,7 +521,9 @@ sAnimations.registry.websiteSlidesUpload = sAnimations.Class.extend({
 
     _openDialog: function ($element) {
         var data = $element.data();
-        new SlideDialog(this, data).appendTo(document.body);
+        var dialog = new SlideUploadDialog(this, data)
+        dialog.appendTo(document.body);
+        return dialog.open();
     },
 
     //--------------------------------------------------------------------------
@@ -483,4 +538,7 @@ sAnimations.registry.websiteSlidesUpload = sAnimations.Class.extend({
         this._openDialog($(ev.currentTarget));
     },
 });
+
+return SlideUploadDialog;
+
 });
