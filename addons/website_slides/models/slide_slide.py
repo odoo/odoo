@@ -165,7 +165,7 @@ class Slide(models.Model):
                 record.image_thumb = image.crop_image(record.image, type='top', ratio=(4, 3), size=(200, 200))
             else:
                 record.image_medium = False
-                record.iamge_thumb = False
+                record.image_thumb = False
 
     @api.depends('slide_views', 'embed_views')
     def _compute_total(self):
@@ -185,7 +185,7 @@ class Slide(models.Model):
                     slide_data[slide_partner.slide_id.id]['user_vote'] = 1
             elif slide_partner.vote == -1:
                 slide_data[slide_partner.slide_id.id]['dislikes'] += 1
-                if slide_partner.partner-id == self.env.user.partner_id:
+                if slide_partner.partner_id == self.env.user.partner_id:
                     slide_data[slide_partner.slide_id.id]['user_vote'] = -1
         for slide_sudo in self.sudo():
             slide_sudo.update(slide_data[slide_sudo.id])
