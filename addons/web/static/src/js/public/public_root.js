@@ -30,10 +30,10 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
         'click .js_disable_on_click': '_onDisableOnClick',
     }),
     custom_events: _.extend({}, publicWidget.RootWidget.prototype.custom_events || {}, {
-        'animation_start_demand': '_onAnimationStartDemand',
-        'animation_stop_demand': '_onAnimationStopDemand',
         'context_get': '_onContextGet',
         'main_object_request': '_onMainObjectRequest',
+        'widgets_start_request': '_onWidgetsStartRequest',
+        'widgets_stop_request': '_onWidgetsStopRequest',
     }),
 
     /**
@@ -42,7 +42,7 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
     init: function () {
         this._super.apply(this, arguments);
         ServiceProviderMixin.init.call(this);
-        this.animations = [];
+        this.publicWidgets = [];
     },
     /**
      * @override
@@ -59,10 +59,10 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
      * @override
      */
     start: function () {
-        var defs = [this._super.apply(this, arguments)];
-
-        // Animations
-        defs.push(this._startAnimations());
+        var defs = [
+            this._super.apply(this, arguments),
+            this._startWidgets()
+        ];
 
         // Display image thumbnail
         this.$(".o_image[data-mimetype^='image']").each(function () {
@@ -161,12 +161,12 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
      *
      * @private
      * @param {jQuery} [$from]
-     *        only initialize the animations whose `selector` matches the
+     *        only initialize the public widgets whose `selector` matches the
      *        element or one of its descendant (default to the wrapwrap element)
      * @param {Object} [options]
      * @returns {Deferred}
      */
-    _startAnimations: function ($from, options) {
+    _startWidgets: function ($from, options) {
         var self = this;
 
         if ($from === undefined) {
@@ -182,16 +182,16 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
             options = {};
         }
 
-        this._stopAnimations($from);
+        this._stopWidgets($from);
 
-        var defs = _.map(this._getPublicWidgetsRegistry(options), function (WebsiteWidget) {
-            var selector = WebsiteWidget.prototype.selector || '';
+        var defs = _.map(this._getPublicWidgetsRegistry(options), function (PublicWidget) {
+            var selector = PublicWidget.prototype.selector || '';
             var $target = $from.find(selector).addBack(selector);
 
             var defs = _.map($target, function (el) {
-                var animation = new WebsiteWidget(self, options);
-                self.animations.push(animation);
-                return animation.attachTo($(el));
+                var widget = new PublicWidget(self, options);
+                self.publicWidgets.push(widget);
+                return widget.attachTo($(el));
             });
             return $.when.apply($, defs);
         });
@@ -203,48 +203,26 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
      *
      * @private
      * @param {jQuery} [$from]
-     *        only stop the animations linked to the given element(s) or one of
-     *        its descendants
+     *        only stop the public widgets linked to the given element(s) or one
+     *        of its descendants
      */
-    _stopAnimations: function ($from) {
-        var removedAnimations = _.map(this.animations, function (animation) {
+    _stopWidgets: function ($from) {
+        var removedWidgets = _.map(this.publicWidgets, function (widget) {
             if (!$from
-                || $from.filter(animation.el).length
-                || $from.find(animation.el).length) {
-                animation.destroy();
-                return animation;
+                || $from.filter(widget.el).length
+                || $from.find(widget.el).length) {
+                widget.destroy();
+                return widget;
             }
             return null;
         });
-        this.animations = _.difference(this.animations, removedAnimations);
+        this.publicWidgets = _.difference(this.publicWidgets, removedWidgets);
     },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * Called when the root is notified that the animations have to be
-     * (re)started.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onAnimationStartDemand: function (ev) {
-        this._startAnimations(ev.data.$target, ev.data.options)
-            .done(ev.data.onSuccess)
-            .fail(ev.data.onFailure);
-    },
-    /**
-     * Called when the root is notified that the animations have to be
-     * stopped.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onAnimationStopDemand: function (ev) {
-        this._stopAnimations(ev.data.$target);
-    },
     /**
      * Called when someone asked for the global public context.
      *
@@ -271,6 +249,28 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
             model: m[1],
             id: m[2] | 0,
         });
+    },
+    /**
+     * Called when the root is notified that the public widgets have to be
+     * (re)started.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onWidgetsStartRequest: function (ev) {
+        this._startWidgets(ev.data.$target, ev.data.options)
+            .done(ev.data.onSuccess)
+            .fail(ev.data.onFailure);
+    },
+    /**
+     * Called when the root is notified that the public widgets have to be
+     * stopped.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onWidgetsStopRequest: function (ev) {
+        this._stopWidgets(ev.data.$target);
     },
     /**
      * @todo review

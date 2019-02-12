@@ -400,7 +400,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(ProductConfigurat
                 $carousel.carousel(0);
                 this._startZoom();
                 // fix issue with carousel height
-                this.trigger_up('animation_start_demand', {$target: $carousel});
+                this.trigger_up('widgets_start_request', {$target: $carousel});
             }
         }
         else { // compatibility 12.0

@@ -2,7 +2,7 @@ odoo.define('web.public.widget', function (require) {
 'use strict';
 
 /**
- * Provides a way to start JS code for snippets' initialization and animations.
+ * Provides a way to start JS code for public contents.
  */
 
 var Class = require('web.Class');
@@ -175,10 +175,10 @@ var RootWidgetRegistry = Class.extend(mixins.EventDispatcherMixin, {
 var PublicWidget = Widget.extend({
     /**
      * The selector attribute, if defined, allows to automatically create an
-     * instance of this animation on page load for each DOM element which
-     * matches this selector. The `Animation.$target` element will then be that
-     * particular DOM element. This should be the main way of instantiating
-     * `Animation` elements.
+     * instance of this widget on page load for each DOM element which
+     * matches this selector. The `PublicWidget.$target` element will then be
+     * that particular DOM element. This should be the main way of instantiating
+     * `PublicWidget` elements.
      *
      * @todo do not make this part of the Widget but rather an info to give when
      * registering the widget.
@@ -218,11 +218,10 @@ var PublicWidget = Widget.extend({
         this.options = options || {};
     },
     /**
-     * Destroys the animation and basically restores the target to the state it
+     * Destroys the widget and basically restores the target to the state it
      * was before the start method was called (unlike standard widget, the
-     * associated $el DOM is not removed).
-     *
-     * Also stops animation effects and destroys them if any.
+     * associated $el DOM is not removed, if this was instantiated thanks to the
+     * selector property).
      */
     destroy: function () {
         if (this.selector) {
@@ -330,17 +329,16 @@ var PublicWidget = Widget.extend({
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 /**
- * The registry object contains the list of available animations.
+ * The registry object contains the list of widgets that should be instantiated
+ * thanks to their selector property if any.
  */
 var registry = {};
 
 /**
  * This is a fix for apple device (<= IPhone 4, IPad 2)
  * Standard bootstrap requires data-toggle='collapse' element to be <a/> tags.
- * Unfortunatly one snippet uses a <div/> tag instead. The fix forces an empty
+ * Unfortunatly some layouts use a <div/> tag instead. The fix forces an empty
  * click handler on these div, which allows standard bootstrap to work.
- *
- * This should be removed in a future odoo snippets refactoring.
  */
 registry._fixAppleCollapse = PublicWidget.extend({
     selector: 'div[data-toggle="collapse"]',

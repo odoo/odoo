@@ -16,13 +16,13 @@ options.Class.include({
     //--------------------------------------------------------------------------
 
     /**
-     * Refreshes all animations related to the given element.
+     * Refreshes all public widgets related to the given element.
      *
      * @private
      * @param {jQuery} [$el=this.$target]
      */
-    _refreshAnimations: function ($el) {
-        this.trigger_up('animation_start_demand', {
+    _refreshPublicWidgets: function ($el) {
+        this.trigger_up('widgets_start_request', {
             editableMode: true,
             $target: $el || this.$target,
         });
@@ -246,7 +246,7 @@ options.registry.carousel = options.Class.extend({
                 }
             });
             _.defer(function () {
-                self._refreshAnimations();
+                self._refreshPublicWidgets();
                 self.$target.carousel(index > 0 ? --index : cycle);
             });
         }
@@ -544,7 +544,7 @@ options.registry.parallax = options.Class.extend({
     start: function () {
         var self = this;
         this.$target.on('snippet-option-change snippet-option-preview', function () {
-            self._refreshAnimations();
+            self._refreshPublicWidgets();
         });
         return this._super.apply(this, arguments);
     },
@@ -561,13 +561,13 @@ options.registry.parallax = options.Class.extend({
         // there may have been changes in the page that influenced the parallax
         // rendering (new snippets, ...).
         // TODO make this automatic.
-        this._refreshAnimations();
+        this._refreshPublicWidgets();
     },
     /**
      * @override
      */
     onMove: function () {
-        this._refreshAnimations();
+        this._refreshPublicWidgets();
     },
 
     //--------------------------------------------------------------------------
@@ -581,7 +581,7 @@ options.registry.parallax = options.Class.extend({
      */
     scroll: function (previewMode, value) {
         this.$target.attr('data-scroll-background-ratio', value);
-        this._refreshAnimations();
+        this._refreshPublicWidgets();
     },
 
     //--------------------------------------------------------------------------
@@ -674,7 +674,7 @@ var FacebookPageDialog = weWidgets.Dialog.extend({
      * @param {boolean} toggle
      */
     _toggleWarning: function (toggle) {
-        this.trigger_up('animation_stop_demand', {
+        this.trigger_up('widgets_stop_request', {
             $target: this.$previewPage,
         });
         this.$('.facebook_page_warning').toggleClass('d-none', toggle);
@@ -704,8 +704,7 @@ var FacebookPageDialog = weWidgets.Dialog.extend({
 });
 options.registry.facebookPage = options.Class.extend({
     /**
-     * Initializes the required facebook page data to create the animation
-     * iframe.
+     * Initializes the required facebook page data to create the iframe.
      *
      * @override
      */
@@ -789,7 +788,7 @@ options.registry.facebookPage = options.Class.extend({
             $el.attr('data-' + key, value);
             $el.data(key, value);
         });
-        self._refreshAnimations($el);
+        self._refreshPublicWidgets($el);
     },
 });
 
@@ -825,7 +824,7 @@ options.registry.ul = options.Class.extend({
     toggleClass: function () {
         this._super.apply(this, arguments);
 
-        this.trigger_up('animation_stop_demand', {
+        this.trigger_up('widgets_stop_request', {
             $target: this.$target,
         });
 
@@ -846,7 +845,7 @@ options.registry.ul = options.Class.extend({
             .prepend('<a href="#" class="o_ul_toggle_next fa" />');
         $li.removeClass('o_open').next().addClass('o_close');
         this.$target.find('li').removeClass('o_open');
-        this._refreshAnimations();
+        this._refreshPublicWidgets();
     },
 });
 
@@ -1188,7 +1187,7 @@ options.registry.gallery = options.Class.extend({
         // Apply layout animation
         this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
         this.$('li.fa').off('click');
-        this._refreshAnimations();
+        this._refreshPublicWidgets();
     },
     /**
      * Allows to change the style of the individual images.
