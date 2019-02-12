@@ -36,7 +36,7 @@ class WebsiteSlides(http.Controller):
                 yield {'loc': loc}
 
     def _set_viewed_slide(self, slide):
-        if request.env.user._is_public() or slide.is_preview:
+        if request.env.user._is_public() or slide.is_preview or not slide.channel_id.is_member:
             viewed_slides = request.session.setdefault('viewed_slides', list())
             if slide.id not in viewed_slides:
                 slide.sudo().public_views += 1
