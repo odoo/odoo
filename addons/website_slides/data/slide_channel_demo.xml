@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="0">
+
+    <record id="website_slides.channel_public" model="slide.channel">
+        <field name="name">Basics of Gardening</field>
+        <field name="channel_type">training</field>
+        <field name="promote_strategy">latest</field>
+        <field name="tag_ids" eval="[(5, 0),
+                                     (4, ref('website_slides.slide_channel_tag_level_basic')),
+                                     (4, ref('website_slides.slide_channel_tag_role_gardener')),
+                                     (4, ref('website_slides.slide_channel_tag_other_0'))]"/>
+        <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_gardening.jpg"/>
+        <field name="description" type="html">
+<div>Learn the basics of gardening !</div></field>
+    </record>
+    <record id="slide_category_demo_0_0" model="slide.category">
+        <field name="name">Requirements</field>
+        <field name="channel_id" ref="website_slides.channel_public"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="slide_category_demo_0_1" model="slide.category">
+        <field name="name">Tools</field>
+        <field name="channel_id" ref="website_slides.channel_public"/>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="slide_channel_demo_1_gard1" model="slide.channel">
+        <field name="name">Taking care of Trees</field>
+        <field name="channel_type">training</field>
+        <field name="tag_ids" eval="[(5, 0),
+                                     (4, ref('website_slides.slide_channel_tag_level_intermediate')),
+                                     (4, ref('website_slides.slide_channel_tag_role_gardener'))]"/>
+        <field name="promote_strategy">latest</field>
+        <field name="website_published" eval="True"/>
+        <field name="visibility">public</field>
+        <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_gardening_2.jpg"/>
+        <field name="description" type="html">
+<div>In this training you will learn how to take care of trees: when to plant, potted trees, ...</div></field>
+    </record>
+    <record id="slide_category_demo_1_0" model="slide.category">
+        <field name="name">Interesting Facts</field>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="slide_category_demo_1_1" model="slide.category">
+        <field name="name">Methods</field>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="slide_channel_demo_2_gard2" model="slide.channel">
+        <field name="name">Trees, Wood and Gardens</field>
+        <field name="channel_type">documentation</field>
+        <field name="tag_ids" eval="[(5, 0),
+                                     (4, ref('website_slides.slide_channel_tag_level_intermediate')),
+                                     (4, ref('website_slides.slide_channel_tag_role_gardener')),
+                                     (4, ref('website_slides.slide_channel_tag_role_carpenter')),
+                                     (4, ref('website_slides.slide_channel_tag_other_2'))]"/>
+        <field name="promote_strategy">most_viewed</field>
+        <field name="website_published" eval="True"/>
+        <field name="visibility">public</field>
+        <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_flowers.jpg"/>
+        <field name="description" type="html">
+<div>A lot of nice documentation: trees, wood, gardens. After that you will know everything.</div></field>
+    </record>
+    <record id="slide_category_demo_2_0" model="slide.category">
+        <field name="name">Trees</field>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="slide_category_demo_2_1" model="slide.category">
+        <field name="name">Wood</field>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="slide_channel_demo_3_furn0" model="slide.channel">
+        <field name="name">Choose your wood !</field>
+        <field name="channel_type">training</field>
+        <field name="tag_ids" eval="[(5, 0),
+                                     (4, ref('website_slides.slide_channel_tag_level_intermediate')),
+                                     (4, ref('website_slides.slide_channel_tag_role_gardener')),
+                                     (4, ref('website_slides.slide_channel_tag_role_carpenter')),
+                                     (4, ref('website_slides.slide_channel_tag_role_furniture')),
+                                     (4, ref('website_slides.slide_channel_tag_other_1'))]"/>
+        <field name="promote_strategy">latest</field>
+        <field name="website_published" eval="True"/>
+        <field name="visibility">public</field>
+        <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_flowers.jpg"/>
+        <field name="description" type="html">
+<div>Knowing which kind of wood to use depending on your application is important. In this course you
+will learn the basics of wood characteristics.</div></field>
+    </record>
+    <record id="slide_category_demo_3_0" model="slide.category">
+        <field name="name">Introduction</field>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_3_furn0"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="slide_channel_demo_4_furn1" model="slide.channel">
+        <field name="name">Furniture Technical Specifications</field>
+        <field name="channel_type">documentation</field>
+        <field name="tag_ids" eval="[(5, 0),
+                                     (4, ref('website_slides.slide_channel_tag_level_intermediate')),
+                                     (4, ref('website_slides.slide_channel_tag_role_furniture'))]"/>
+        <field name="promote_strategy">most_voted</field>
+        <field name="website_published" eval="True"/>
+        <field name="visibility">invite</field>
+        <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_furniture.jpg"/>
+        <field name="description" type="html">
+<div>We're also Santa Claus! Belligerent and numerous. I am the man with no name,
+    Zapp Brannigan! </div></field>
+    </record>
+    <record id="slide_category_demo_4_0" model="slide.category">
+        <field name="name">Introduction</field>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_4_furn1"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="slide_channel_demo_5_furn2" model="slide.channel">
+        <field name="name">Basics of Furniture Creation</field>
+        <field name="channel_type">training</field>
+        <field name="tag_ids" eval="[(5, 0),
+                                     (4, ref('website_slides.slide_channel_tag_level_basic')),
+                                     (4, ref('website_slides.slide_channel_tag_role_furniture')),
+                                     (4, ref('website_slides.slide_channel_tag_other_1'))]"/>
+        <field name="channel_type">training</field>
+        <field name="promote_strategy">latest</field>
+        <field name="website_published" eval="True"/>
+        <field name="visibility">invite</field>
+        <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_furniture.jpg"/>
+        <field name="description" type="html"><div>All you need to know about furniture creation.</div></field>
+    </record>
+    <record id="slide_category_demo_5_0" model="slide.category">
+        <field name="name">Introduction</field>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_5_furn2"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="slide_tag_demo_0" model="slide.tag">
+        <field name="name">Tag0</field>
+    </record>
+    <record id="slide_tag_demo_1" model="slide.tag">
+        <field name="name">Tag1</field>
+    </record>
+    <record id="slide_tag_demo_2" model="slide.tag">
+        <field name="name">Tag2</field>
+    </record>
+
+    <record id="slide_tag_demo_tools" model="slide.tag">
+        <field name="name">Tools</field>
+    </record>
+    <record id="slide_tag_demo_colorfull" model="slide.tag">
+        <field name="name">Colorfull</field>
+    </record>
+    <record id="slide_tag_demo_howto" model="slide.tag">
+        <field name="name">HowTo</field>
+    </record>
+
+</data></odoo>
