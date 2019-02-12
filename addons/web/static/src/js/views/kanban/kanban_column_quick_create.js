@@ -213,7 +213,7 @@ var ColumnQuickCreate = Widget.extend({
      */
     _onWindowClicked: function (event) {
         // ignore clicks if the quick create is not in the dom
-        if (!document.contains(this.el)) {
+        if (!document.contains(this.el) || this.isMobile) {
             return;
         }
 

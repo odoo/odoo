@@ -188,6 +188,7 @@ KanbanRenderer.include({
             // reset quick create positions
             if (this.createColumnEnabled) {
                 $quickCreateTab.removeClass("o_current");
+                $quickCreateColumn.removeClass("o_current");
                 $quickCreateColumn[updateFunc]({left: '100%'});
                 $quickCreateTab[updateFunc]({left: moveToIndex < self.widgets.length - 1 ? '200%' : "100%"});
             }
@@ -196,21 +197,25 @@ KanbanRenderer.include({
             this.trigger_up('kanban_load_records', {
                 columnID: column.db_id,
                 onSuccess: function () {
-                    self.$('.o_kanban_mobile_tab').removeClass('o_current');
+                    self.$('.o_kanban_mobile_tab, .o_kanban_group').removeClass('o_current');
                     setStyleLeft();
                     def.resolve();
                 },
             });
         } else {
             if (this.createColumnEnabled) {
-                this.$('.o_kanban_mobile_tab').removeClass('o_current');
+                this.$('.o_kanban_mobile_tab, .o_kanban_group').removeClass('o_current');
                 if (self.widgets.length) {
                     setStyleLeft();
                 }
                 $quickCreateTab[updateFunc]({"left": "50%"});
                 $quickCreateColumn[updateFunc]({left: '0%'});
                 $quickCreateTab.addClass("o_current");
-                this.quickCreate.toggleFold();
+                if (this.quickCreate.folded) {
+                    this.quickCreate.toggleFold();
+                } else {
+                    this.quickCreate.$input.focus();
+                }
             }
             def.resolve();
         }
