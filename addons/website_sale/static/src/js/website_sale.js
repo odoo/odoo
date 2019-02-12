@@ -1,13 +1,13 @@
 odoo.define('website_sale.cart', function (require) {
 'use strict';
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 var core = require('web.core');
 var _t = core._t;
 
 var timeout;
 
-sAnimations.registry.websiteSaleCartLink = sAnimations.Class.extend({
+publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
     selector: '#top_menu a[href$="/shop/cart"]',
     events: {
         'mouseenter': '_onMouseEnter',
@@ -80,9 +80,9 @@ sAnimations.registry.websiteSaleCartLink = sAnimations.Class.extend({
 odoo.define('website_sale.website_sale_category', function (require) {
 'use strict';
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimations.registry.websiteSaleCategory = sAnimations.Class.extend({
+publicWidget.registry.websiteSaleCategory = publicWidget.Widget.extend({
     selector: '#o_shop_collapse_category',
     events: {
         'click .fa-chevron-right': '_onOpenClick',
@@ -118,13 +118,13 @@ sAnimations.registry.websiteSaleCategory = sAnimations.Class.extend({
 odoo.define('website_sale.website_sale', function (require) {
 'use strict';
 
-var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
 var core = require('web.core');
 var config = require('web.config');
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
+var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
 require("website.content.zoomodoo");
 
-sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorMixin, {
+publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(ProductConfiguratorMixin, {
     selector: '.oe_website_sale',
     events: _.extend({}, ProductConfiguratorMixin.events || {}, {
         'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
@@ -596,8 +596,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
     },
 });
 
-
-sAnimations.registry.websiteSaleCart = sAnimations.Class.extend({
+publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
     selector: '.oe_website_sale .oe_cart',
     events: {
         'click .js_change_shipping': '_onClickChangeShipping',

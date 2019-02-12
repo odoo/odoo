@@ -2,13 +2,12 @@ odoo.define('website_slides.slides_join_channel', function (require) {
 'use strict';
 
 var core = require('web.core');
-var Widget = require('web.Widget');
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 require('website_slides.slides');
 
 var _t = core._t;
 
-var JoinChannelButton = Widget.extend({
+var JoinChannelButton = publicWidget.Widget.extend({
     events: {
         'click .o_wslides_join_channel_link': '_onClickJoin',
     },
@@ -65,7 +64,7 @@ var JoinChannelButton = Widget.extend({
     },
 });
 
-sAnimations.registry.websiteSlidesJoinChannel = sAnimations.Class.extend({
+publicWidget.registry.websiteSlidesJoinChannel = publicWidget.Widget.extend({
     selector: '#wrapwrap',
 
     /**

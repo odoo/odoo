@@ -3,13 +3,13 @@ odoo.define('website_forum.website_forum', function (require) {
 
 var core = require('web.core');
 var Wysiwyg = require('web_editor.wysiwyg.root');
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 var session = require('web.session');
 var qweb = core.qweb;
 
 var _t = core._t;
 
-sAnimations.registry.websiteForum = sAnimations.Class.extend({
+publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     selector: '.website_forum',
     xmlDependencies: ['/website_forum/static/src/xml/website_forum_share_templates.xml'],
     events: {
@@ -503,7 +503,7 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
     },
 });
 
-sAnimations.registry.websiteForumSpam = sAnimations.Class.extend({
+publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
     selector: '.o_wforum_moderation_queue',
     xmlDependencies: ['/website_forum/static/src/xml/website_forum_share_templates.xml'],
     events: {

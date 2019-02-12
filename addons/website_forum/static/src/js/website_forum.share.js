@@ -2,14 +2,14 @@ odoo.define('website_forum.share', function (require) {
 'use strict';
 
 var core = require('web.core');
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
 var qweb = core.qweb;
 
 // FIXME There is no reason to inherit from socialShare here
-var ForumShare = sAnimations.registry.socialShare.extend({
+var ForumShare = publicWidget.registry.socialShare.extend({
     selector: '',
-    xmlDependencies: sAnimations.registry.socialShare.prototype.xmlDependencies
+    xmlDependencies: publicWidget.registry.socialShare.prototype.xmlDependencies
         .concat(['/website_forum/static/src/xml/website_forum_share_templates.xml']),
     events: {},
 
@@ -69,7 +69,7 @@ var ForumShare = sAnimations.registry.socialShare.extend({
     },
 });
 
-sAnimations.registry.websiteForumShare = sAnimations.Class.extend({
+publicWidget.registry.websiteForumShare = publicWidget.Widget.extend({
     selector: '.website_forum',
     events: {
         'click :not(.karma_required).oe_social_share_call': '_onShareCallClick',
