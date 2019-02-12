@@ -387,22 +387,8 @@ var Channel = SearchableThread.extend(ChannelSeenMixin, ThreadTypingMixin, {
      */
     _markAsRead: function () {
         var superDef = this._super.apply(this, arguments);
-        var seenDef = this._throttleNotifySeen();
+        var seenDef = this._notifySeen();
         return $.when(superDef, seenDef);
-    },
-    /**
-     * @override {mail.model.ThreadSeenMixin}
-     * @private
-     * @returns {$.Promise}
-     */
-    _notifyFetched: function () {
-        return this._rpc({
-            model: 'mail.channel',
-            method: 'channel_fetched',
-            args: [[this._id]],
-        }, {
-            shadow: true
-        });
     },
     /**
      * @override {mail.model.ThreadTypingMixin}
@@ -418,25 +404,6 @@ var Channel = SearchableThread.extend(ChannelSeenMixin, ThreadTypingMixin, {
             args: [this.getID()],
             kwargs: { is_typing: params.typing },
         }, { shadow: true });
-    },
-    /**
-     * @override {mail.model.ThreadSeenMixin}
-     * @private
-     * @returns {$.Promise<integer>} resolved with ID of last seen message
-     */
-    _notifySeen: function () {
-        var self = this;
-        this._cancelThrottledNotifyFetched();
-        return this._rpc({
-            model: 'mail.channel',
-            method: 'channel_seen',
-            args: [[this._id]],
-        }, {
-            shadow: true
-        }).then(function (lastSeenMessageID) {
-            self._lastSeenMessageID = lastSeenMessageID;
-            return lastSeenMessageID;
-        });
     },
     /**
      * Prepare and send a message to the server on this channel.
