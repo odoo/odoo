@@ -3,7 +3,7 @@
 
 import logging
 
-from odoo import fields, models, _
+from odoo import fields, models, _, api
 from odoo.exceptions import UserError
 from odoo.fields import Datetime
 
@@ -16,16 +16,18 @@ class ResCompany(models.Model):
     hr_presence_state = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-        ('to_define', 'To Define')], default='to_define', groups='hr.group_hr_manager')
+        ('to_define', 'To Define')], default='to_define')
+    last_activity = fields.Date(compute="_compute_last_activity")
 
+    def _compute_last_activity(self):
+        employees = self.filtered(lambda e: e.user_id)
+        presences = self.env['bus.presence'].search([('user_id', 'in', employees.mapped('user_id.id'))])
 
-    def _action_open_presence_view(self):
-        # Compute the presence/absence for the employees on the same
-        # company than the HR/manager. Then opens the kanban view
-        # of the employees with an undefined presence/absence
+        for presence in presences:
+            presence.user_id.employee_ids.last_activity = presence.last_presence.date()
 
-        _logger.info("Employees presence checked by: %s" % self.env.user.name)
-
+    @api.model
+    def _check_presence(self):
         company = self.env.user.company_id
         if not company.hr_presence_last_compute_date or \
                 company.hr_presence_last_compute_date.day != Datetime.now().day:
@@ -84,6 +86,16 @@ class ResCompany(models.Model):
             employees = employees - email_employees
 
         company.hr_presence_last_compute_date = Datetime.now()
+
+    @api.model
+    def _action_open_presence_view(self):
+        # Compute the presence/absence for the employees on the same
+        # company than the HR/manager. Then opens the kanban view
+        # of the employees with an undefined presence/absence
+
+        _logger.info("Employees presence checked by: %s" % self.env.user.name)
+
+        self._check_presence()
 
         return {
             "type": "ir.actions.act_window",

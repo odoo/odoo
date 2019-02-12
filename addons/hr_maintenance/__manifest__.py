@@ -11,6 +11,7 @@
     'data': [
         'security/equipment.xml',
         'views/maintenance_views.xml',
+        'views/hr_views.xml',
     ],
     'demo': [],
     'installable': True,

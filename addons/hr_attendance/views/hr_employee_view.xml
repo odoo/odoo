@@ -7,7 +7,7 @@
         <field name="priority">10</field>
         <field name="groups_id" eval="[(4,ref('hr_attendance.group_hr_attendance_user'))]"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='toggle_active']" position="before">
+            <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="attendance_state" invisible="1"/>
                 <button name="%(hr_attendance_action_employee)d"
                     class="oe_stat_button"
@@ -19,8 +19,62 @@
                     </div>
                 </button>
             </xpath>
-            <xpath expr="//group[@name='identification_group']" position="inside">
-                <field name="manual_attendance" attrs="{'invisible': [('user_id', '=', False)]}"/>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(hr_attendance_action)d"
+                        class="oe_stat_button"
+                        icon="fa-calendar"
+                        type="action"
+                        context="{'search_default_employee_id': active_id, 'search_default_check_in_filter': '1'}"
+                        groups="base.group_user"
+                        help="Worked hours last month">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="hours_last_month"/> Hours
+                        </span>
+                        <span class="o_stat_text">
+                            Last Month
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_user_view_form" model="ir.ui.view">
+        <field name="name">hr.user.preferences.view.form.attendance.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="attendance_state" invisible="1"/>
+                <button name="%(hr_attendance_action_my_attendances)d"
+                    class="oe_stat_button"
+                    type="action" attrs="{'invisible': [('attendance_state', '=', False)]}">
+                    <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon oe_hr_attendance_status_green" attrs="{'invisible': [('attendance_state', '=', 'checked_out')]}" aria-label="Available" title="Available"/>
+                    <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon oe_hr_attendance_status_red" attrs="{'invisible': [('attendance_state', '=', 'checked_in')]}" aria-label="Not available" title="Not available"/>
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Attendance</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="employee_ids" invisible="1"/>
+                <button name="%(hr_attendance_action)d"
+                        class="oe_stat_button"
+                        icon="fa-calendar"
+                        type="action"
+                        context="{'search_default_employee_id': employee_ids, 'search_default_check_in_filter': '1'}"
+                        groups="base.group_user"
+                        help="Worked hours last month">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="hours_last_month"/> Hours
+                        </span>
+                        <span class="o_stat_text">
+                            Last Month
+                        </span>
+                    </div>
+                </button>
             </xpath>
         </field>
     </record>

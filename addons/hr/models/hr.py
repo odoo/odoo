@@ -6,7 +6,7 @@ import base64
 import logging
 from werkzeug import url_encode
 
-from odoo import api, fields, models
+from odoo import api, fields, models, SUPERUSER_ID
 from odoo import tools, _
 from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
@@ -110,61 +110,63 @@ class Employee(models.Model):
 
     # resource and user
     # required on the resource, make sure required="True" set in the view
-    name = fields.Char(related='resource_id.name', store=True, oldname='name_related', readonly=False)
+    name = fields.Char(related='resource_id.name', store=True, oldname='name_related', readonly=False, tracking=True)
     user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id', store=True, readonly=False)
+    user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
     # private partner
     address_home_id = fields.Many2one(
         'res.partner', 'Private Address', help='Enter here the private address of the employee, not the one linked to your company.',
-        groups="hr.group_hr_user")
+        groups="hr.group_hr_user", tracking=True)
     is_address_home_a_company = fields.Boolean(
         'The employee adress has a company linked',
         compute='_compute_is_address_home_a_company',
     )
     country_id = fields.Many2one(
-        'res.country', 'Nationality (Country)', groups="hr.group_hr_user")
+        'res.country', 'Nationality (Country)', groups="hr.group_hr_user", tracking=True)
     gender = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
         ('other', 'Other')
-    ], groups="hr.group_hr_user", default="male")
+    ], groups="hr.group_hr_user", default="male", tracking=True)
     marital = fields.Selection([
         ('single', 'Single'),
         ('married', 'Married'),
         ('cohabitant', 'Legal Cohabitant'),
         ('widower', 'Widower'),
         ('divorced', 'Divorced')
-    ], string='Marital Status', groups="hr.group_hr_user", default='single')
-    spouse_complete_name = fields.Char(string="Spouse Complete Name", groups="hr.group_hr_user")
-    spouse_birthdate = fields.Date(string="Spouse Birthdate", groups="hr.group_hr_user")
-    children = fields.Integer(string='Number of Children', groups="hr.group_hr_user")
-    place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user")
-    country_of_birth = fields.Many2one('res.country', string="Country of Birth", groups="hr.group_hr_user")
-    birthday = fields.Date('Date of Birth', groups="hr.group_hr_user")
-    ssnid = fields.Char('SSN No', help='Social Security Number', groups="hr.group_hr_user")
-    sinid = fields.Char('SIN No', help='Social Insurance Number', groups="hr.group_hr_user")
-    identification_id = fields.Char(string='Identification No', groups="hr.group_hr_user")
-    passport_id = fields.Char('Passport No', groups="hr.group_hr_user")
+    ], string='Marital Status', groups="hr.group_hr_user", default='single', tracking=True)
+    spouse_complete_name = fields.Char(string="Spouse Complete Name", groups="hr.group_hr_user", tracking=True)
+    spouse_birthdate = fields.Date(string="Spouse Birthdate", groups="hr.group_hr_user", tracking=True)
+    children = fields.Integer(string='Number of Children', groups="hr.group_hr_user", tracking=True)
+    place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user", tracking=True)
+    country_of_birth = fields.Many2one('res.country', string="Country of Birth", groups="hr.group_hr_user", tracking=True)
+    birthday = fields.Date('Date of Birth', groups="hr.group_hr_user", tracking=True)
+    ssnid = fields.Char('SSN No', help='Social Security Number', groups="hr.group_hr_user", tracking=True)
+    sinid = fields.Char('SIN No', help='Social Insurance Number', groups="hr.group_hr_user", tracking=True)
+    identification_id = fields.Char(string='Identification No', groups="hr.group_hr_user", tracking=True)
+    passport_id = fields.Char('Passport No', groups="hr.group_hr_user", tracking=True)
     bank_account_id = fields.Many2one(
         'res.partner.bank', 'Bank Account Number',
         domain="[('partner_id', '=', address_home_id)]",
         groups="hr.group_hr_user",
+        tracking=True,
         help='Employee bank salary account')
-    permit_no = fields.Char('Work Permit No', groups="hr.group_hr_user")
-    visa_no = fields.Char('Visa No', groups="hr.group_hr_user")
-    visa_expire = fields.Date('Visa Expire Date', groups="hr.group_hr_user")
-    additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user")
+    permit_no = fields.Char('Work Permit No', groups="hr.group_hr_user", tracking=True)
+    visa_no = fields.Char('Visa No', groups="hr.group_hr_user", tracking=True)
+    visa_expire = fields.Date('Visa Expire Date', groups="hr.group_hr_user", tracking=True)
+    additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
     certificate = fields.Selection([
         ('bachelor', 'Bachelor'),
         ('master', 'Master'),
         ('other', 'Other'),
-    ], 'Certificate Level', default='master', groups="hr.group_hr_user")
-    study_field = fields.Char("Field of Study", placeholder='Computer Science', groups="hr.group_hr_user")
-    study_school = fields.Char("School", groups="hr.group_hr_user")
-    emergency_contact = fields.Char("Emergency Contact", groups="hr.group_hr_user")
-    emergency_phone = fields.Char("Emergency Phone", groups="hr.group_hr_user")
-    km_home_work = fields.Integer(string="Km home-work", groups="hr.group_hr_user")
-    google_drive_link = fields.Char(string="Employee Documents", groups="hr.group_hr_user")
+    ], 'Certificate Level', default='master', groups="hr.group_hr_user", tracking=True)
+    study_field = fields.Char("Field of Study", placeholder='Computer Science', groups="hr.group_hr_user", tracking=True)
+    study_school = fields.Char("School", groups="hr.group_hr_user", tracking=True)
+    emergency_contact = fields.Char("Emergency Contact", groups="hr.group_hr_user", tracking=True)
+    emergency_phone = fields.Char("Emergency Phone", groups="hr.group_hr_user", tracking=True)
+    km_home_work = fields.Integer(string="Km home-work", groups="hr.group_hr_user", tracking=True)
+    google_drive_link = fields.Char(string="Employee Documents", groups="hr.group_hr_user", tracking=True)
     job_title = fields.Char("Job Title")
 
     # image: all image fields are base64 encoded and PIL-supported
@@ -186,6 +188,7 @@ class Employee(models.Model):
         'res.partner', 'Work Address')
     work_phone = fields.Char('Work Phone')
     mobile_phone = fields.Char('Work Mobile')
+    phone = fields.Char(related='address_home_id.phone', related_sudo=False, string="Private Phone", groups="hr.group_hr_user")
     work_email = fields.Char('Work Email')
     work_location = fields.Char('Work Location')
     # employee in company
@@ -210,7 +213,10 @@ class Employee(models.Model):
     ], string="Departure Reason")
     departure_description = fields.Text(string="Additional Information")
 
-    _sql_constraints = [('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee.")]
+    _sql_constraints = [
+        ('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee."),
+        ('user_uniq', 'unique (user_id, company_id)', "A user cannot be linked to multiple employees in the same company.")
+    ]
 
     @api.constrains('pin')
     def _verify_pin(self):
@@ -340,6 +346,27 @@ class Employee(models.Model):
             'label': _('Import Template for Employees'),
             'template': '/hr/static/xls/hr_employee.xls'
         }]
+
+    def _post_author(self):
+        """
+        When a user updates his own employee's data, all operations are performed
+        by super user. However, tracking messages should not be posted as OdooBot
+        but as the actual user.
+        This method is used in the overrides of `_message_log` and `message_post`
+        to post messages as the correct user.
+        """
+        real_user = self.env.context.get('binary_field_real_user')
+        if self.env.user.id == SUPERUSER_ID and real_user:
+            self = self.sudo(real_user)
+        return self
+
+    def _message_log(self, body='', subject=False, message_type='notification', **kwargs):
+        return super(Employee, self._post_author()).message_post(body=body, subject=subject, message_type=message_type, **kwargs)
+
+    @api.multi
+    @api.returns('mail.message', lambda value: value.id)
+    def message_post(self, **kwargs):
+        return super(Employee, self._post_author()).message_post(**kwargs)
 
 
 class Department(models.Model):

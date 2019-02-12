@@ -30,6 +30,7 @@
         'views/hr_templates.xml',
         'views/res_config_settings_views.xml',
         'views/mail_channel_views.xml',
+        'views/res_users.xml',
         'data/hr_data.xml',
         'report/hr_employee_badge.xml'
     ],
@@ -39,5 +40,5 @@
     'installable': True,
     'application': True,
     'auto_install': False,
-    'qweb': [],
+    'qweb': ['static/src/xml/hr_templates.xml'],
 }
