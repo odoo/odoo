@@ -11,7 +11,7 @@ from odoo.tools import mute_logger
 @tagged('security')
 class TestAccess(common.SlidesCase):
 
-    @mute_logger('odoo.models')
+    @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_access_channel_invite(self):
         """ Invite channels don't give visibility if not member """
         self.channel.write({'visibility': 'invite'})
@@ -44,7 +44,7 @@ class TestAccess(common.SlidesCase):
         with self.assertRaises(AccessError):
             self.slide.sudo(self.user_emp).read(['name'])
 
-    @mute_logger('odoo.models')
+    @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_access_channel_public(self):
         """ Public channels don't give visibility if not member """
         self.channel.write({'visibility': 'public'})
@@ -63,7 +63,7 @@ class TestAccess(common.SlidesCase):
         with self.assertRaises(AccessError):
             self.slide.sudo(self.user_public).read(['name'])
 
-    @mute_logger('odoo.models')
+    @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_access_channel_publish(self):
         """ Unpublished channels and their content are visible only to website people """
         self.channel.write({'website_published': False, 'visibility': 'public'})
@@ -111,7 +111,7 @@ class TestAccess(common.SlidesCase):
         with self.assertRaises(AccessError):
             self.slide.sudo(self.user_public).read(['name'])
 
-    @mute_logger('odoo.models')
+    @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_access_slide_preview(self):
         """ Slides with preview flag are always visible even to non members if published """
         self.channel.write({'visibility': 'invite'})

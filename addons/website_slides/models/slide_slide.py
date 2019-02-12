@@ -153,8 +153,8 @@ class Slide(models.Model):
     embed_code = fields.Text('Embed Code', readonly=True, compute='_get_embed_code')
     # views
     embedcount_ids = fields.One2many('slide.embed', 'slide_id', string="Embed Count")
-    slide_views = fields.Integer('# of Website Views')
-    embed_views = fields.Integer('# of Embedded Views')
+    slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
+    public_views = fields.Integer('# of Public Views')
     total_views = fields.Integer("Total # Views", default="0", compute='_compute_total', store=True)
 
     @api.depends('image')
@@ -167,10 +167,10 @@ class Slide(models.Model):
                 record.image_medium = False
                 record.image_thumb = False
 
-    @api.depends('slide_views', 'embed_views')
+    @api.depends('slide_views', 'public_views')
     def _compute_total(self):
         for record in self:
-            record.total_views = record.slide_views + record.embed_views
+            record.total_views = record.slide_views + record.public_views
 
     @api.depends('slide_partner_ids.vote')
     def _compute_user_info(self):
@@ -189,6 +189,18 @@ class Slide(models.Model):
                     slide_data[slide_partner.slide_id.id]['user_vote'] = -1
         for slide_sudo in self.sudo():
             slide_sudo.update(slide_data[slide_sudo.id])
+
+    @api.depends('slide_partner_ids.slide_id')
+    def _compute_slide_views(self):
+        # TODO awa: tried compute_sudo, for some reason it doesn't work in here...
+        read_group_res = self.env['slide.slide.partner'].sudo().read_group(
+            [('slide_id', 'in', self.ids)],
+            ['slide_id'],
+            groupby=['slide_id']
+        )
+        mapped_data = dict((res['slide_id'][0], res['slide_id_count']) for res in read_group_res)
+        for slide in self:
+            slide.slide_views = mapped_data.get(slide.id, 0)
 
     def _get_embed_code(self):
         base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -378,7 +390,7 @@ class Slide(models.Model):
         if not all(slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide as viewed if you are not among its members.'))
 
-        return self._action_set_viewed(self.env.user.partner_id)
+        return bool(self._action_set_viewed(self.env.user.partner_id))
 
     def _action_set_viewed(self, target_partner):
         self_sudo = self.sudo()
@@ -389,13 +401,11 @@ class Slide(models.Model):
         ])
 
         new_slides = self_sudo - existing_sudo.mapped('slide_id')
-        SlidePartnerSudo.create([{
+        return SlidePartnerSudo.create([{
             'slide_id': new_slide.id,
             'channel_id': new_slide.channel_id.id,
             'partner_id': target_partner.id,
             'vote': 0} for new_slide in new_slides])
-
-        return True
 
     def action_set_completed(self):
         if not all(slide.channel_id.is_member for slide in self):

@@ -35,16 +35,16 @@ class WebsiteSlides(http.Controller):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
-    def _set_viewed_slide(self, slide, view_mode):
-        slide_key = '%s_%s' % (view_mode, request.session.sid)
-        viewed_slides = request.session.setdefault(slide_key, list())
-        if slide.id not in viewed_slides:
-            if view_mode == 'slide':
-                slide.sudo().slide_views += 1
-            elif view_mode == 'embed':
-                slide.sudo().embed_views += 1
-            viewed_slides.append(slide.id)
-            request.session[slide_key] = viewed_slides
+    def _set_viewed_slide(self, slide):
+        if request.env.user._is_public() or slide.is_preview:
+            viewed_slides = request.session.setdefault('viewed_slides', list())
+            if slide.id not in viewed_slides:
+                slide.sudo().public_views += 1
+                viewed_slides.append(slide.id)
+                request.session['viewed_slides'] = viewed_slides
+        else:
+            slide.action_set_viewed()
+
         return True
 
     def _get_slide_detail(self, slide):
@@ -211,7 +211,7 @@ class WebsiteSlides(http.Controller):
             raise werkzeug.exceptions.NotFound()
 
         values = self._get_slide_detail(slide)
-        self._set_viewed_slide(slide, 'slide')
+        self._set_viewed_slide(slide)
         return request.render('website_slides.slide_detail_view', values)
 
     @http.route('''/slides/slide/<model("slide.slide"):slide>/pdf_content''',
@@ -387,7 +387,7 @@ class WebsiteSlides(http.Controller):
             values = self._get_slide_detail(slide)
             values['page'] = page
             values['is_embedded'] = is_embedded
-            self._set_viewed_slide(slide, 'embed')
+            self._set_viewed_slide(slide)
             return request.render('website_slides.embed_slide', values)
         except AccessError: # TODO : please, make it clean one day, or find another secure way to detect
                             # if the slide can be embedded, and properly display the error message.
