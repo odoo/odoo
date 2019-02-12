@@ -1,9 +1,9 @@
 odoo.define('website_event_track.website_event_track', function (require) {
 'use strict';
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimations.registry.websiteEventTrack = sAnimations.Class.extend({
+publicWidget.registry.websiteEventTrack = publicWidget.Widget.extend({
     selector: '.o_website_event',
     events: {
         'input #event_track_search': '_onEventTrackSearchInput',

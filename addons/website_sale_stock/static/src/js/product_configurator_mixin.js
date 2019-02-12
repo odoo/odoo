@@ -2,7 +2,7 @@ odoo.define('website_sale_stock.ProductConfiguratorMixin', function (require) {
 'use strict';
 
 var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 var ajax = require('web.ajax');
 var core = require('web.core');
 var QWeb = core.qweb;
@@ -75,7 +75,7 @@ ProductConfiguratorMixin._onChangeCombinationStock = function (ev, $parent, comb
     });
 };
 
-sAnimations.registry.WebsiteSale.include({
+publicWidget.registry.WebsiteSale.include({
     /**
      * Adds the stock checking to the regular _onChangeCombination method
      * @override

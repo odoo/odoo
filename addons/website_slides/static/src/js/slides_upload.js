@@ -1,13 +1,12 @@
 odoo.define('website_slides.upload_modal', function (require) {
 'use strict';
 
-var sAnimations = require('website.content.snippets.animation');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var publicWidget = require('web.public.widget');
 
 var QWeb = core.qweb;
 var _t = core._t;
-
 
 var SlideUploadDialog = Dialog.extend({
     template: 'website.slide.upload.modal',
@@ -16,6 +15,7 @@ var SlideUploadDialog = Dialog.extend({
         'change input#upload': '_onChangeSlideUpload',
         'change input#url': '_onChangeSlideUrl',
     }),
+
     /**
      * @override
      * @param {Object} parent
@@ -559,8 +559,7 @@ var SlideUploadDialog = Dialog.extend({
     },
 });
 
-
-sAnimations.registry.websiteSlidesUpload = sAnimations.Class.extend({
+publicWidget.registry.websiteSlidesUpload = publicWidget.Widget.extend({
     selector: '.oe_slide_js_upload',
     xmlDependencies: ['/website_slides/static/src/xml/website_slides_upload.xml'],
     events: {
@@ -602,7 +601,7 @@ sAnimations.registry.websiteSlidesUpload = sAnimations.Class.extend({
 
 return {
     SlideUploadDialog: SlideUploadDialog,
-    websiteSlidesUpload: sAnimations.registry.websiteSlidesUpload
+    websiteSlidesUpload: publicWidget.registry.websiteSlidesUpload
 };
 
 });

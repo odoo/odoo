@@ -1,11 +1,10 @@
 odoo.define('website_slides.slides_share', function (require) {
 'use strict';
 
-var Widget = require('web.Widget');
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 require('website_slides.slides');
 
-var ShareMail = Widget.extend({
+var ShareMail = publicWidget.Widget.extend({
     events: {
         'click button': '_sendMail',
     },
@@ -39,7 +38,7 @@ var ShareMail = Widget.extend({
     },
 });
 
-sAnimations.registry.websiteSlidesShare = sAnimations.Class.extend({
+publicWidget.registry.websiteSlidesShare = publicWidget.Widget.extend({
     selector: '#wrapwrap',
     events: {
         'click a.o_slides_social_share': '_onSlidesSocialShare',

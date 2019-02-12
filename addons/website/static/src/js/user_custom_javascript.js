@@ -10,9 +10,9 @@ odoo.define('website.user_custom_code', function (require) {
 'use strict';
 
 var Dialog = require('web.Dialog');
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimations.registry.HelloWorldPopup = sAnimations.Class.extend({
+publicWidget.registry.HelloWorldPopup = publicWidget.Widget.extend({
     selector: '#wrapwrap',
 
     start: function () {

@@ -1,9 +1,9 @@
 odoo.define('website_mail_channel', function (require) {
 'use strict';
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimations.registry.websiteMailChannel = sAnimations.Class.extend({
+publicWidget.registry.websiteMailChannel = publicWidget.Widget.extend({
     selector: '#wrapwrap',
     events: {
         'click .o_mg_link_hide': '_onHideLinkClick',

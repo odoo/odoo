@@ -3,7 +3,7 @@ odoo.define('website_event.website_event', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
 var _t = core._t;
 
@@ -56,7 +56,7 @@ var EventRegistrationForm = Widget.extend({
     },
 });
 
-sAnimations.registry.EventRegistrationFormInstance = sAnimations.Class.extend({
+publicWidget.registry.EventRegistrationFormInstance = publicWidget.Widget.extend({
     selector: '#registration_form',
 
     /**

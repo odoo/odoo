@@ -2,11 +2,11 @@ odoo.define('website_links.code_editor', function (require) {
 'use strict';
 
 var core = require('web.core');
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
 var _t = core._t;
 
-sAnimations.registry.websiteLinksCodeEditor = sAnimations.Class.extend({
+publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
     selector: '#wrapwrap:has(.o_website_links_edit_code)',
     events: {
         'click .o_website_links_edit_code': '_onEditCodeClick',

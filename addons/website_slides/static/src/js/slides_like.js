@@ -2,14 +2,12 @@ odoo.define('website_slides.slides_like', function (require) {
 'use strict';
 
 var core = require('web.core');
-var Widget = require('web.Widget');
-var localStorage = require('web.local_storage');
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 require('website_slides.slides');
 
 var _t = core._t;
 
-var LikeButton = Widget.extend({
+var LikeButton = publicWidget.Widget.extend({
     events: {
         'click .o_wslides_like_up': '_onClickUp',
         'click .o_wslides_like_down': '_onClickDown',
@@ -78,7 +76,7 @@ var LikeButton = Widget.extend({
     },
 });
 
-sAnimations.registry.websiteSlidesLike = sAnimations.Class.extend({
+publicWidget.registry.websiteSlidesLike = publicWidget.Widget.extend({
     selector: '#wrapwrap',
 
     /**

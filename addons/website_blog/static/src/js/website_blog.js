@@ -1,9 +1,9 @@
 odoo.define('website_blog.website_blog', function (require) {
 'use strict';
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimations.registry.websiteBlog = sAnimations.Class.extend({
+publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     selector: '.website_blog',
     events: {
         'click .cover_footer': '_onNextBlogClick',
