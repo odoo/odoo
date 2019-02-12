@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="0">
+
+    <record id="slide_channel_1_partner_admin" model="slide.channel.partner">
+    	<field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+    	<field name="partner_id" ref="base.partner_admin"/>
+    </record>
+    <record id="slide_slide_1_0_partner_admin" model="slide.slide.partner">
+    	<field name="slide_id" ref="website_slides.slide_slide_demo_1_0"/>
+    	<field name="partner_id" ref="base.partner_admin"/>
+    	<field name="completed" eval="True"/>
+    </record>
+    <record id="slide_slide_1_1_partner_admin" model="slide.slide.partner">
+    	<field name="slide_id" ref="website_slides.slide_slide_demo_1_1"/>
+    	<field name="partner_id" ref="base.partner_admin"/>
+    	<field name="completed" eval="True"/>
+    </record>
+
+    <record id="message_channel_1_root" model="mail.message">
+        <field name="model">slide.channel</field>
+        <field name="res_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="author_id" ref="base.partner_root"/>
+        <field name="body" type="html"><div>Very good course.</div></field>
+    </record>
+    <record id="rating_channel_1_root" model="rating.rating">
+        <field name="res_model_id" ref="website_slides.model_slide_channel"/>
+        <field name="res_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="partner_id" ref="base.partner_root"/>
+        <field name="consumed" eval="True"/>
+        <field name="rating">4</field>
+        <field name="message_id" ref="website_slides.message_channel_1_root"/>
+    </record>
+    <record id="message_channel_1_demo" model="mail.message">
+        <field name="model">slide.channel</field>
+        <field name="res_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="author_id" ref="base.partner_demo"/>
+        <field name="body" type="html"><div>Interesting !</div></field>
+    </record>
+    <record id="rating_channel_1_demo" model="rating.rating">
+        <field name="res_model_id" ref="website_slides.model_slide_channel"/>
+        <field name="res_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="partner_id" ref="base.partner_demo"/>
+        <field name="consumed" eval="True"/>
+        <field name="rating">4</field>
+        <field name="message_id" ref="website_slides.message_channel_1_demo"/>
+    </record>
+    <record id="message_channel_1_portal" model="mail.message">
+        <field name="model">slide.channel</field>
+        <field name="res_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="author_id" ref="base.partner_demo_portal"/>
+        <field name="body" type="html"><div>Missing examples.</div></field>
+    </record>
+    <record id="rating_channel_1_portal" model="rating.rating">
+        <field name="res_model_id" ref="website_slides.model_slide_channel"/>
+        <field name="res_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+        <field name="consumed" eval="True"/>
+        <field name="rating">3</field>
+        <field name="message_id" ref="website_slides.message_channel_1_demo"/>
+    </record>
+
+</data></odoo>
