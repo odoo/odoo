@@ -42,6 +42,23 @@ def sitemap_qs2dom(qs, route, field='name'):
     return dom
 
 
+def get_request_website():
+    """ Return the website set on `request` if called in a frontend context
+    (website=True on route).
+    This method can typically be used to check if we are in the frontend.
+
+    This method is easy to mock during python tests to simulate frontend
+    context, rather than mocking every method accessing request.website.
+
+    Don't import directly the method or it won't be mocked during tests, do:
+    ```
+    from odoo.addons.website.models import ir_http
+    my_var = ir_http.get_request_website()
+    ```
+    """
+    return request and getattr(request, 'website', False) or False
+
+
 class Http(models.AbstractModel):
     _inherit = 'ir.http'
 
