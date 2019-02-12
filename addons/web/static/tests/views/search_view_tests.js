@@ -663,10 +663,10 @@ QUnit.module('Search View', {
                     console.log(ev.data);
                     assert.equal(
                         ev.data.filter.domain,
-                        "['&', " +
-                        "('date_field', '>=', (context_today() + relativedelta()).strftime('%Y-%m-%d')), " +
-                        "('date_field', '<', (context_today() + relativedelta(days = 1)).strftime('%Y-%m-%d'))"+
-                        "]");
+                        `["&", ` +
+                        `("date_field", ">=", (context_today() + relativedelta()).strftime("%Y-%m-%d")), ` +
+                        `("date_field", "<", (context_today() + relativedelta(days = 1)).strftime("%Y-%m-%d"))`+
+                        `]`);
                 },
             },
         });
@@ -757,7 +757,7 @@ QUnit.module('Search View', {
             data: this.data,
             intercepts: {
                 create_filter: function (ev) {
-                    assert.ok(ev.data.filter.domain === "[['foo', 'ilike', 'a']]");
+                    assert.ok(ev.data.filter.domain === `[["foo", "ilike", "a"]]`);
                 },
             },
         });

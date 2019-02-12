@@ -1,7 +1,9 @@
 odoo.define('web.search_filters_menu_tests', function (require) {
 "use strict";
 
+var Domain = require('web.Domain');
 var FiltersMenu = require('web.FiltersMenu');
+var pyUtils = require('web.py_utils');
 var testUtils = require('web.test_utils');
 
 function createFiltersMenu(filters, fields, params) {
@@ -168,6 +170,75 @@ QUnit.module('FiltersMenu', {
         filterMenu.$('.o_menu_item li[data-option_id="this_quarter"] a').click();
         assert.ok(filterMenu.$('.o_menu_item li[data-option_id="this_quarter"] .dropdown-item').hasClass('selected'),
             "menu item should be selected");
+
+        filterMenu.destroy();
+    });
+
+    // DO NOT FORWARD PORT! THANK YOU.
+    QUnit.test('commit search with an extended proposition with field char does not cause a crash', function (assert) {
+        assert.expect(6);
+
+        this.fields = {many2one_field: {string: "Trululu", type: "many2one", relation: 'partner', selectable: true, searchable: true}};
+
+        var expectedDomains = [
+            [['many2one_field','ilike', `a`]],
+            [['many2one_field','ilike', `"a"`]],
+            [['many2one_field','ilike', `'a'`]],
+            [['many2one_field','ilike', `'`]],
+            [['many2one_field','ilike', `"`]],
+            [['many2one_field','ilike', `\\`]],
+        ];
+
+        var filterMenu = createFiltersMenu([], this.fields, {
+            intercepts: {
+                new_filters: function (ev) {
+                    var filter = ev.data[0].filter;
+                    Domain.prototype.stringToArray(filter.attrs.domain);
+                    // this step combine a tokenization/parsing followed by a string formatting
+                    var domain = pyUtils.assembleDomains([filter.attrs.domain]);
+                    domain = Domain.prototype.stringToArray(domain);
+                    assert.deepEqual(domain, expectedDomains.shift());
+                },
+            }
+        });
+
+        // open menu dropdown and custom filter submenu, select trululu field and enter string `a`, then click apply
+        testUtils.dom.click(filterMenu.$('span.fa-filter'));
+        testUtils.dom.click(filterMenu.$('.o_add_custom_filter'));
+        testUtils.fields.editSelect(filterMenu.$('.o_filter_condition select.o_input.o_searchview_extended_prop_field'), 'many2one_field');
+        testUtils.fields.editInput(filterMenu.$('.o_filter_condition .o_searchview_extended_prop_value input'), `a`);
+        testUtils.dom.click(filterMenu.$('.o_apply_filter'));
+
+
+        // open custom filter submenu, select trululu field and enter string `"a"`, then click apply
+        testUtils.dom.click(filterMenu.$('.o_add_custom_filter'));
+        testUtils.fields.editSelect(filterMenu.$('.o_filter_condition select.o_input.o_searchview_extended_prop_field'), 'many2one_field');
+        testUtils.fields.editInput(filterMenu.$('.o_filter_condition .o_searchview_extended_prop_value input'), `"a"`);
+        testUtils.dom.click(filterMenu.$('.o_apply_filter'));
+
+        // open custom filter submenu, select trululu field and enter string `'a'`, then click apply
+        testUtils.dom.click(filterMenu.$('.o_add_custom_filter'));
+        testUtils.fields.editSelect(filterMenu.$('.o_filter_condition select.o_input.o_searchview_extended_prop_field'), 'many2one_field');
+        testUtils.fields.editInput(filterMenu.$('.o_filter_condition .o_searchview_extended_prop_value input'), `'a'`);
+        testUtils.dom.click(filterMenu.$('.o_apply_filter'));
+
+        // open custom filter submenu, select trululu field and enter string `'`, then click apply
+        testUtils.dom.click(filterMenu.$('.o_add_custom_filter'));
+        testUtils.fields.editSelect(filterMenu.$('.o_filter_condition select.o_input.o_searchview_extended_prop_field'), 'many2one_field');
+        testUtils.fields.editInput(filterMenu.$('.o_filter_condition .o_searchview_extended_prop_value input'), `'`);
+        testUtils.dom.click(filterMenu.$('.o_apply_filter'));
+
+        // open custom filter submenu, select trululu field and enter string `"`, then click apply
+        testUtils.dom.click(filterMenu.$('.o_add_custom_filter'));
+        testUtils.fields.editSelect(filterMenu.$('.o_filter_condition select.o_input.o_searchview_extended_prop_field'), 'many2one_field');
+        testUtils.fields.editInput(filterMenu.$('.o_filter_condition .o_searchview_extended_prop_value input'), `"`);
+        testUtils.dom.click(filterMenu.$('.o_apply_filter'));
+
+        // open custom filter submenu, select trululu field and enter string `\`, then click apply
+        testUtils.dom.click(filterMenu.$('.o_add_custom_filter'));
+        testUtils.fields.editSelect(filterMenu.$('.o_filter_condition select.o_input.o_searchview_extended_prop_field'), 'many2one_field');
+        testUtils.fields.editInput(filterMenu.$('.o_filter_condition .o_searchview_extended_prop_value input'), `\\`);
+        testUtils.dom.click(filterMenu.$('.o_apply_filter'));
 
         filterMenu.destroy();
     });
