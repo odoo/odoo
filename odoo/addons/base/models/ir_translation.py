@@ -207,7 +207,6 @@ class IrTranslation(models.Model):
                          inverse='_inverse_source', search='_search_source')
     value = fields.Text(string='Translation Value')
     module = fields.Char(index=True, help="Module this term belongs to")
-    translation_id = fields.Many2one('translationn.model')
 
     state = fields.Selection([('to_translate', 'To Translate'),
                               ('inprogress', 'Translation in Progress'),
@@ -228,17 +227,6 @@ class IrTranslation(models.Model):
     def _get_languages(self):
         langs = self.env['res.lang'].search([('translatable', '=', True)])
         return [(lang.code, lang.name) for lang in langs]
-
-    # @api.model
-    # def default_get(self, fields):
-    #     rec = super(IrTranslation, self).default_get(fields)
-    #     print("-----------------", rec)
-    #     active_rec = self._context.get('params')
-    #     active_ids = active_rec['id']
-    #     if active_ids:
-    #         active_records = self.env[active_rec['model']].browse(active_ids).name
-    #         rec.update({'data': active_records})
-    #     return rec
 
     @api.depends('type', 'name', 'res_id')
     def _compute_source(self):
@@ -656,7 +644,7 @@ class IrTranslation(models.Model):
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, module, state)
                         SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(module)s, 'to_translate'
                         FROM res_lang l
-                        WHERE l.active AND l.translatable AND l.code != 'en_US' AND NOT EXISTS (
+                        WHERE l.active AND l.translatable AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
                         );
@@ -766,20 +754,11 @@ class IrTranslation(models.Model):
             'flags': {'search_view': True, 'action_buttons': True},
             'domain': domain,
         }
-        action.update({
-                'name': _('Translate Field'),
-                'res_model': 'translationn.model',
-                'view_id': self.env.ref('base.view_translation_field_form').id,
-                'target': 'new',
-                'domain': domain + [('lang', '!=', self._context.get('lang'))],
-                'view_mode': 'form',
-                })
         if field:
             fld = record._fields[field]
             if not fld.related:
                 action['context'] = {
                     'search_default_name': "%s,%s" % (fld.model_name, fld.name),
-                    'default_value': record.name,
                 }
             else:
                 rec = record
@@ -787,9 +766,21 @@ class IrTranslation(models.Model):
                     while fld.related:
                         rec, fld = fld.traverse_related(rec)
                     if rec:
-                        action['context'] = {'search_default_name': "%s,%s" % (fld.model_name, fld.name)}
+                        action['context'] = {'search_default_name': "%s,%s" % (fld.model_name, fld.name),}
                 except AccessError:
                     pass
+
+            action.update({
+                'name': _('Translate Field'),
+                'res_model': 'translation.field.wizard',
+                'view_id': self.env.ref('base.view_translation_field_wizard').id,
+                'target': 'new',
+                'view_mode': 'form',
+            })
+            domain += [('lang', '!=', self._context.get('lang')), '|', ('name', '=', "%s,%s" % (fld.model_name, fld.name)),
+                    ('name', 'ilike', "%s,%s" % (fld.model_name, fld.name))]
+            # need to pass prepared domain in action context as we want to use it in default_get of translation wizard
+            action['context'].update({'translation_domain': domain})
 
         return action
 

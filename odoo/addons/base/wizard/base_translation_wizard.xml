@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-     <record id="view_translation_field_form" model="ir.ui.view">
-        <field name="model">translationn.model</field>
+     <record id="view_translation_field_wizard" model="ir.ui.view">
+        <field name="name">translation.field.wizard</field>
+        <field name="model">translation.field.wizard</field>
         <field name="arch" type="xml">
-            <form string="Translations" editable="top" create="false">
+            <form string="Translations">
                 <sheet>
-                    <group>   
-                        <field name="trans_ids">
-                            <tree string="Translations" editable="top">
-                                <field name="lang"/>
-                                <field name="value"/>
-                                <field name="source" invisible='True'/>
-                            </tree>
-                        </field>
-                    </group>
+                    <field name="translation_ids" nolabel="1">
+                        <tree string="Translations" editable="top" create="false" delete="false">
+                            <field name="lang" readonly="1"/>
+                            <field name="value"/>
+                            <field name="source" invisible="1"/>
+                            <field name="ir_translation_id" invisible="1"/>
+                        </tree>
+                    </field>
                 </sheet>
                 <footer>
                     <button string="Confirm" class="btn btn-primary" type="object" name="translation_confirm" />
