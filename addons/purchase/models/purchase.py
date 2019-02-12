@@ -638,7 +638,7 @@ class PurchaseOrderLine(models.Model):
         self.price_unit = price_unit
 
     @api.multi
-    @api.depends('product_uom', 'product_qty', 'product_id.uom_id')
+    @api.depends('product_uom', 'product_qty', 'product_id.product_tmpl_id.uom_id')
     def _compute_product_uom_qty(self):
         for line in self:
             if line.product_id.uom_id != line.product_uom:
