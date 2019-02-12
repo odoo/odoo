@@ -680,6 +680,7 @@ class Task(models.Model):
         # force some parent values, if needed
         if 'parent_id' in vals and vals['parent_id']:
             vals.update(self._subtask_values_from_parent(vals['parent_id']))
+            context.pop('default_parent_id', None)
         # for default stage
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
