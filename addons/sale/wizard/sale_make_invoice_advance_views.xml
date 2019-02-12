@@ -14,8 +14,11 @@
                         <field name="advance_payment_method" class="oe_inline" widget="radio"
                             attrs="{'invisible': [('count','&gt;',1)]}"/>
                         <field name="has_down_payments" invisible="1" />
-                        <field name="deduct_down_payments"
-                            attrs="{'invisible': ['|', ('has_down_payments', '=', False), ('advance_payment_method', '!=', 'delivered')]}" />
+                        <label for="deduct_down_payments" string="" attrs="{'invisible': ['|', ('has_down_payments', '=', False), ('advance_payment_method', '!=', 'delivered')]}"/>
+                        <div attrs="{'invisible': ['|', ('has_down_payments', '=', False), ('advance_payment_method', '!=', 'delivered')]}">
+                            <field name="deduct_down_payments" nolabel="1"/>
+                            <label for="deduct_down_payments"/>
+                        </div>
                         <field name="product_id"
                             context="{'search_default_services': 1, 'default_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline"
                             invisible="1"/>
