@@ -71,13 +71,14 @@ class Users(models.Model):
         ranks = [{'rank': rank, 'karma_min': rank.karma_min} for rank in
                  self.env['gamification.karma.rank'].search([], order="karma_min DESC")]
         for user in self:
+            old_rank = user.rank_id
             for i in range(0, len(ranks)):
                 if user.karma >= ranks[i]['karma_min']:
-                    if user.rank_id != ranks[i]['rank']:
-                        user.rank_id = ranks[i]['rank'].id
-                        user.next_rank_id = ranks[i - 1]['rank'].id if i > 0 else False
-                        user._rank_changed()
+                    user.rank_id = ranks[i]['rank'].id
+                    user.next_rank_id = ranks[i - 1]['rank'].id if i > 0 else False
                     break
+            if old_rank != user.rank_id:
+                user._rank_changed()
 
     def get_gamification_redirection_data(self):
         """
