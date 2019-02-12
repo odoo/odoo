@@ -124,8 +124,8 @@ class MailMail(models.Model):
                    ('scheduled_date', '=', False)]
         if 'filters' in self._context:
             filters.extend(self._context['filters'])
-        # TODO: make limit configurable
-        filtered_ids = self.search(filters, limit=10000).ids
+
+        filtered_ids = self.search(filters, limit=self.env['res.company']._company_default_get().email_queue_limit).ids
         if not ids:
             ids = filtered_ids
         else:

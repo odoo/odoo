@@ -16,6 +16,9 @@ class ResConfigSettings(models.TransientModel):
     fail_counter = fields.Integer('Fail Mail', readonly=True)
     alias_domain = fields.Char('Alias Domain', help="If you have setup a catch-all email domain redirected to "
                                "the Odoo server, enter the domain name here.", config_parameter='mail.catchall.domain')
+    email_queue_limit = fields.Integer(related='company_id.email_queue_limit', string='E-mail batch limit',
+                                       help='The maximum amount of e-mails being sent by the queue manager.',
+                                       readonly=False)
 
     @api.model
     def get_values(self):

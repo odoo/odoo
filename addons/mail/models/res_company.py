@@ -9,6 +9,7 @@ class Company(models.Model):
     _inherit = 'res.company'
 
     catchall = fields.Char(string="Catchall Email", compute="_compute_catchall")
+    email_queue_limit = fields.Integer('E-mail batch limit', default=10000)
 
     @api.multi
     def _compute_catchall(self):
