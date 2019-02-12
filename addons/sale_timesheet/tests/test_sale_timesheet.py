@@ -225,6 +225,12 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         self.assertEqual(timesheet1.timesheet_invoice_type, 'billable_time', "Timesheets linked to SO line with delivered product shoulbe be billable time")
         self.assertFalse(timesheet1.timesheet_invoice_id, "The timesheet1 should not be linked to the invoice yet")
 
+        task_serv1.exclude_from_sale_order = True
+        self.assertFalse(timesheet1.so_line)
+
+        task_serv1.exclude_from_sale_order = False
+        self.assertTrue(timesheet1.so_line)
+
         # invoice SO
         invoice_id1 = sale_order._create_invoices()
         invoice1 = self.env['account.invoice'].browse(invoice_id1)
@@ -246,6 +252,14 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         self.assertEqual(sale_order.invoice_status, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
         self.assertEqual(timesheet2.timesheet_invoice_type, 'billable_time', "Timesheets linked to SO line with delivered product shoulbe be billable time")
         self.assertFalse(timesheet2.timesheet_invoice_id, "The timesheet2 should not be linked to the invoice yet")
+
+        task_serv1.exclude_from_sale_order = True
+        self.assertTrue(timesheet1.so_line)
+        self.assertFalse(timesheet2.so_line)
+
+        task_serv1.exclude_from_sale_order = False
+        self.assertTrue(timesheet1.so_line)
+        self.assertTrue(timesheet2.so_line)
 
         # create a second invoice
         invoice_id2 = sale_order._create_invoices()[0]

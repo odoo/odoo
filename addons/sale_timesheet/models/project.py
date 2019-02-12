@@ -125,6 +125,14 @@ class Project(models.Model):
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
+    exclude_from_sale_order = fields.Boolean(
+        string='Exclude from Sale Order',
+        help=(
+            'Checking this would exclude any timesheet entries logged towards'
+            ' this task from Sale Order'
+        ),
+    )
+
     @api.model
     def _get_default_partner(self):
         partner = False
@@ -171,14 +179,15 @@ class ProjectTask(models.Model):
                 task.sale_order_id = False
 
     @api.multi
-    @api.depends('project_id.billable_type', 'sale_line_id')
+    @api.depends('project_id.billable_type', 'sale_line_id', 'exclude_from_sale_order')
     def _compute_billable_type(self):
         for task in self:
             billable_type = 'no'
-            if task.project_id.billable_type == 'employee_rate':
-                billable_type = task.project_id.billable_type
-            elif (task.project_id.billable_type in ['task_rate', 'no'] and task.sale_line_id):  # create a task in global project (non billable)
-                billable_type = 'task_rate'
+            if not task.exclude_from_sale_order:
+                if task.project_id.billable_type == 'employee_rate':
+                    billable_type = task.project_id.billable_type
+                elif (task.project_id.billable_type in ['task_rate', 'no'] and task.sale_line_id):  # create a task in global project (non billable)
+                    billable_type = 'task_rate'
             task.billable_type = billable_type
 
     @api.depends('project_id.sale_line_employee_ids')
@@ -224,7 +233,16 @@ class ProjectTask(models.Model):
             project_dest = self.env['project.project'].browse(values['project_id'])
             if project_dest.billable_type == 'employee_rate':
                 values['sale_line_id'] = False
-        return super(ProjectTask, self).write(values)
+        res = super(ProjectTask, self).write(values)
+        if 'exclude_from_sale_order' in values:
+            # If tasks changed their exclude_from_sale_order, update all AALs
+            # that have not been invoiced yet
+            timesheets = self.timesheet_ids.filtered(
+                lambda line: not line.timesheet_invoice_id
+            )
+            for timesheet in timesheets:
+                timesheet._onchange_task_id_employee_id()
+        return res
 
     @api.multi
     def unlink(self):
