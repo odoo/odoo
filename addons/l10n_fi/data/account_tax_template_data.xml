@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sales_vat_ic_services" model="account.tax.template">
+        <field name="sequence">140</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="description">ALV 0 % ostaja verovelvollinen, palvelut</field>
+        <field name="name">ALV 0 %, palveluiden yhteisömyynti</field>
+        <field name="amount_type">fixed</field>
+        <field name="amount">0</field>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_code_sales_ic_services_tag')])]"/>
+        <field name="type_tax_use">sale</field>
+    </record>
+    <record id="sales_vat_ic_goods" model="account.tax.template">
+        <field name="sequence">130</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="description">ALV 0 % ostaja verovelvollinen, tavarat</field>
+        <field name="name">ALV 0 %, tavaroiden yhteisömyynti</field>
+        <field name="amount_type">fixed</field>
+        <field name="amount">0</field>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_code_sales_ic_goods_tag')])]"/>
+        <field name="type_tax_use">sale</field>
+    </record>
+    <record id="purchase_vat_ic_services_10_deduct" model="account.tax.template">
+        <field name="sequence">222</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 10 %, palvelut - vähentävä</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">10.0</field>
+        <field name="account_id" ref="a291151"/>
+        <field name="refund_account_id" ref="a291151"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_code_pay_deduct_tag'),ref('tax_code_deductible_tag')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat_ic_services_10_carry" model="account.tax.template">
+        <field name="sequence">121</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 10 %, palvelut - suorittava</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10.0</field>
+        <field name="account_id" ref="a291146"/>
+        <field name="refund_account_id" ref="a291146"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tax_code_pay_deduct_tag'),ref('tax_code_purchase_ic_services_tag'),ref('tax_code_taxes_purchase_ic_services_tag')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat_ic_services_10" model="account.tax.template">
+        <field name="sequence">120</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="description">ALV 10 % ostaja verovelvollinen, palvelut</field>
+        <field name="name">Osto ALV 10% ostaja verovelvollinen, palvelut</field>
+        <field name="amount_type">group</field>
+        <field name="amount">1</field>
+        <field name="children_tax_ids"
+               eval="[(6,0,[ref('purchase_vat_ic_services_10_carry'),ref('purchase_vat_ic_services_10_deduct')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat_ic_services_14_deduct" model="account.tax.template">
+        <field name="sequence">212</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 14 %, palvelut - vähentävä</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">14.0</field>
+        <field name="account_id" ref="a291151"/>
+        <field name="refund_account_id" ref="a291151"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_code_pay_deduct_tag'),ref('tax_code_deductible_tag')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat_ic_services_14_carry" model="account.tax.template">
+        <field name="sequence">111</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 14 %, palvelut - suorittava</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-14.0</field>
+        <field name="account_id" ref="a291146"/>
+        <field name="refund_account_id" ref="a291146"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tax_code_pay_deduct_tag'),ref('tax_code_purchase_ic_services_tag'),ref('tax_code_taxes_purchase_ic_services_tag')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat_ic_services_14" model="account.tax.template">
+        <field name="sequence">110</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="description">ALV 14 % ostaja verovelvollinen, palvelut</field>
+        <field name="name">Osto ALV 14 % ostaja verovelvollinen, palvelut</field>
+        <field name="amount_type">group</field>
+        <field name="amount">1</field>
+        <field name="children_tax_ids"
+               eval="[(6,0,[ref('purchase_vat_ic_services_14_deduct'),ref('purchase_vat_ic_services_14_carry')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat_ic_services_24_deduct" model="account.tax.template">
+        <field name="sequence">202</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 24 %, palvelut - vähentävä</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">24.0</field>
+        <field name="account_id" ref="a291151"/>
+        <field name="refund_account_id" ref="a291151"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_code_pay_deduct_tag'),ref('tax_code_deductible_tag')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat_ic_services_24_carry" model="account.tax.template">
+        <field name="sequence">101</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 24 %, palvelut - suorittava</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-24.0</field>
+        <field name="account_id" ref="a291146"/>
+        <field name="refund_account_id" ref="a291146"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tax_code_pay_deduct_tag'),ref('tax_code_purchase_ic_services_tag'),ref('tax_code_taxes_purchase_ic_services_tag')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat_ic_services_24" model="account.tax.template">
+        <field name="sequence">100</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="description">ALV 24 % ostaja verovelvollinen, palvelut</field>
+        <field name="name">Osto ALV 24 % ostaja verovelvollinen, palvelut</field>
+        <field name="amount_type">group</field>
+        <field name="amount">1</field>
+        <field name="children_tax_ids"
+               eval="[(6,0,[ref('purchase_vat_ic_services_24_carry'),ref('purchase_vat_ic_services_24_deduct')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat_ic_goods_10_deduct" model="account.tax.template">
+        <field name="sequence">192</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 10 %, tavarat - vähentävä</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">10.0</field>
+        <field name="account_id" ref="a291151"/>
+        <field name="refund_account_id" ref="a291151"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_code_pay_deduct_tag'),ref('tax_code_deductible_tag')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat_ic_goods_10_carry" model="account.tax.template">
+        <field name="sequence">91</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 10 %, tavarat - suorittava</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10.0</field>
+        <field name="account_id" ref="a291145"/>
+        <field name="refund_account_id" ref="a291145"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tax_code_pay_deduct_tag'),ref('tax_code_purchase_ic_goods_tag'),ref('tax_code_taxes_purchase_ic_goods_tag')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat_ic_goods_10" model="account.tax.template">
+        <field name="sequence">90</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="description">ALV 10 % ostaja verovelvollinen, tavarat</field>
+        <field name="name">Osto ALV 10 % ostaja verovelvollinen, tavarat</field>
+        <field name="amount_type">group</field>
+        <field name="amount">1</field>
+        <field name="children_tax_ids"
+               eval="[(6,0,[ref('purchase_vat_ic_goods_10_deduct'),ref('purchase_vat_ic_goods_10_carry')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat_ic_goods_14_deduct" model="account.tax.template">
+        <field name="sequence">182</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 14 %, tavarat - vähentävä</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">14.0</field>
+        <field name="account_id" ref="a291151"/>
+        <field name="refund_account_id" ref="a291151"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_code_pay_deduct_tag'),ref('tax_code_deductible_tag')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat_ic_goods_14_carry" model="account.tax.template">
+        <field name="sequence">81</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 14 %, tavarat - suorittava</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-14.0</field>
+        <field name="account_id" ref="a291145"/>
+        <field name="refund_account_id" ref="a291145"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tax_code_pay_deduct_tag'),ref('tax_code_purchase_ic_goods_tag'),ref('tax_code_taxes_purchase_ic_goods_tag')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat_ic_goods_14" model="account.tax.template">
+        <field name="sequence">80</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="description">ALV 14 % ostaja verovelvollinen, tavarat</field>
+        <field name="name">Osto ALV 14 % ostaja verovelvollinen, tavarat</field>
+        <field name="amount_type">group</field>
+        <field name="amount">1</field>
+        <field name="children_tax_ids"
+               eval="[(6,0,[ref('purchase_vat_ic_goods_14_carry'),ref('purchase_vat_ic_goods_14_deduct')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat_ic_goods_24_deduct" model="account.tax.template">
+        <field name="sequence">172</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 24 %, tavarat - vähentävä</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">24.0</field>
+        <field name="account_id" ref="a291151"/>
+        <field name="refund_account_id" ref="a291151"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_code_pay_deduct_tag'),ref('tax_code_deductible_tag')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat_ic_goods_24_carry" model="account.tax.template">
+        <field name="sequence">71</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 24 %, tavarat - suorittava</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-24.0</field>
+        <field name="account_id" ref="a291145"/>
+        <field name="refund_account_id" ref="a291145"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tax_code_pay_deduct_tag'),ref('tax_code_purchase_ic_goods_tag'),ref('tax_code_taxes_purchase_ic_goods_tag')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat_ic_goods_24" model="account.tax.template">
+        <field name="sequence">70</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="description">ALV 24 % ostaja verovelvollinen, tavarat</field>
+        <field name="name">Osto ALV 24 % ostaja verovelvollinen, tavarat</field>
+        <field name="amount_type">group</field>
+        <field name="amount">1</field>
+        <field name="children_tax_ids"
+               eval="[(6,0,[ref('purchase_vat_ic_goods_24_carry'),ref('purchase_vat_ic_goods_24_deduct')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+
+
+    <!-- Domestic taxes -->
+    <record id="purchase_vat10_goods" model="account.tax.template">
+        <field name="sequence">60</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">Osto ALV 10 %, tavarat</field>
+        <field name="description">ALV 10 %, tavarat</field>
+        <field name="amount">10.0</field>
+        <field name="amount_type">percent</field>
+        <field name="account_id" ref="a1762"/>
+        <field name="refund_account_id" ref="a1762"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tax_code_deductible_tag'),ref('tax_code_pay_deduct_tag'),ref('tax_tag_goods')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat10_services" model="account.tax.template">
+        <field name="sequence">61</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">Osto ALV 10 %, palvelut</field>
+        <field name="description">ALV 10 %, palvelut</field>
+        <field name="amount">10.0</field>
+        <field name="amount_type">percent</field>
+        <field name="account_id" ref="a1762"/>
+        <field name="refund_account_id" ref="a1762"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tax_code_deductible_tag'),ref('tax_code_pay_deduct_tag'),ref('tax_tag_services')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+
+    <record id="purchase_vat14_goods" model="account.tax.template">
+        <field name="sequence">50</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">Osto ALV 14 %, tavarat</field>
+        <field name="description">ALV 14 %, tavarat</field>
+        <field name="amount">14.0</field>
+        <field name="amount_type">percent</field>
+        <field name="account_id" ref="a1762"/>
+        <field name="refund_account_id" ref="a1762"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tax_code_deductible_tag'),ref('tax_code_pay_deduct_tag'),ref('tax_tag_goods')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat14_services" model="account.tax.template">
+        <field name="sequence">51</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">Osto ALV 14 %, palvelut</field>
+        <field name="description">ALV 14 %, palvelut</field>
+        <field name="amount">14.0</field>
+        <field name="amount_type">percent</field>
+        <field name="account_id" ref="a1762"/>
+        <field name="refund_account_id" ref="a1762"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tax_code_deductible_tag'),ref('tax_code_pay_deduct_tag'),ref('tax_tag_services')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+
+    <record id="purchase_vat24_goods" model="account.tax.template">
+        <field name="sequence">40</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">Osto ALV 24 %, tavarat</field>
+        <field name="description">ALV 24 %, tavarat</field>
+        <field name="amount">24.0</field>
+        <field name="amount_type">percent</field>
+        <field name="account_id" ref="a1762"/>
+        <field name="refund_account_id" ref="a1762"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tax_code_deductible_tag'),ref('tax_code_pay_deduct_tag'),ref('tax_tag_goods')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+    <record id="purchase_vat24_services" model="account.tax.template">
+        <field name="sequence">41</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">Osto ALV 24 %, palvelut</field>
+        <field name="description">ALV 24 %, palvelut</field>
+        <field name="amount">24.0</field>
+        <field name="amount_type">percent</field>
+        <field name="account_id" ref="a1762"/>
+        <field name="refund_account_id" ref="a1762"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tax_code_deductible_tag'),ref('tax_code_pay_deduct_tag'),ref('tax_tag_services')])]"/>
+        <field name="type_tax_use">purchase</field>
+    </record>
+
+    <record id="sales_vat_non_ic" model="account.tax.template">
+        <field name="sequence">34</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 0 %</field>
+        <field name="amount_type">fixed</field>
+        <field name="amount">0</field>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_code_vat0_tag')])]"/>
+        <field name="type_tax_use">sale</field>
+    </record>
+
+    <record id="sales_vat10_goods" model="account.tax.template">
+        <field name="sequence">30</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 10 %, tavarat</field>
+        <field name="description">ALV 10 %</field>
+        <field name="amount">10.0</field>
+        <field name="amount_type">percent</field>
+        <field name="account_id" ref="a291143"/>
+        <field name="refund_account_id" ref="a291143"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tax_code_pay_deduct_tag'),ref('tax_code_taxes_sale_10_tag'),ref('tax_tag_goods')])]"/>
+        <field name="type_tax_use">sale</field>
+    </record>
+    <record id="sales_vat10_services" model="account.tax.template">
+        <field name="sequence">31</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 10 %, palvelut</field>
+        <field name="description">ALV 10 %</field>
+        <field name="amount">10.0</field>
+        <field name="amount_type">percent</field>
+        <field name="account_id" ref="a291143"/>
+        <field name="refund_account_id" ref="a291143"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tax_code_pay_deduct_tag'),ref('tax_code_taxes_sale_10_tag'),ref('tax_tag_services')])]"/>
+        <field name="type_tax_use">sale</field>
+    </record>
+
+    <record id="sales_vat14_goods" model="account.tax.template">
+        <field name="sequence">20</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 14 %, tavarat</field>
+        <field name="description">ALV 14 %</field>
+        <field name="amount">14.0</field>
+        <field name="amount_type">percent</field>
+        <field name="account_id" ref="a291142"/>
+        <field name="refund_account_id" ref="a291142"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tax_code_pay_deduct_tag'),ref('tax_code_taxes_sale_14_tag'),ref('tax_tag_goods')])]"/>
+        <field name="type_tax_use">sale</field>
+    </record>
+    <record id="sales_vat14_services" model="account.tax.template">
+        <field name="sequence">21</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 14 %, palvelut</field>
+        <field name="description">ALV 14 %</field>
+        <field name="amount">14.0</field>
+        <field name="amount_type">percent</field>
+        <field name="account_id" ref="a291142"/>
+        <field name="refund_account_id" ref="a291142"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tax_code_pay_deduct_tag'),ref('tax_code_taxes_sale_14_tag'),ref('tax_tag_services')])]"/>
+        <field name="type_tax_use">sale</field>
+    </record>
+
+    <record id="sales_vat24_goods" model="account.tax.template">
+        <field name="sequence">10</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 24 %, tavarat</field>
+        <field name="description">ALV 24 %</field>
+        <field name="amount">24.0</field>
+        <field name="amount_type">percent</field>
+        <field name="account_id" ref="a291141"/>
+        <field name="refund_account_id" ref="a291141"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tax_code_pay_deduct_tag'),ref('tax_code_taxes_sale_24_tag'),ref('tax_tag_goods')])]"/>
+        <field name="type_tax_use">sale</field>
+    </record>
+    <record id="sales_vat24_services" model="account.tax.template">
+        <field name="sequence">11</field>
+        <field name="chart_template_id" ref="chart_template_fi_rapko"/>
+        <field name="name">ALV 24 %, palvelut</field>
+        <field name="description">ALV 24 %</field>
+        <field name="amount">24.0</field>
+        <field name="amount_type">percent</field>
+        <field name="account_id" ref="a291141"/>
+        <field name="refund_account_id" ref="a291141"/>
+        <field name="tag_ids"
+               eval="[(6,0,[ref('tax_code_pay_deduct_tag'),ref('tax_code_taxes_sale_24_tag'),ref('tax_tag_services')])]"/>
+        <field name="type_tax_use">sale</field>
+    </record>
+
+</odoo>

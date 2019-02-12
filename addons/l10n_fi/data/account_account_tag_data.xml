@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Root -->
+    <record model="account.account.tag" id="tax_code_root_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">Company</field>
+    </record>
+
+    <!-- Sales and Purchase Base -->
+    <record model="account.account.tag" id="tax_code_base_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">Verojen perusteet</field>
+    </record>
+
+    <!-- Sales Base -->
+    <record model="account.account.tag" id="tax_code_sales_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">Myynti</field>
+    </record>
+
+    <!-- Purchase Base -->
+    <record model="account.account.tag" id="tax_code_purchase_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">Ostot yhteensä</field>
+    </record>
+
+    <!-- Goods and services -->
+    <record model="account.account.tag" id="tax_tag_goods">
+        <field name="applicability">taxes</field>
+        <field name="name">Tavarat</field>
+    </record>
+    <record model="account.account.tag" id="tax_tag_services">
+        <field name="applicability">taxes</field>
+        <field name="name">Palvelut</field>
+    </record>
+
+
+    <!--=== ON REPORT ===-->
+
+    <!-- Payable / deductible -->
+    <record model="account.account.tag" id="tax_code_pay_deduct_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">308: Maksettava vero / Palautukseen oikeuttava vero (-)
+        </field>
+    </record>
+
+    <!-- Payable Taxes -->
+    <record model="account.account.tag" id="tax_code_taxes_sale_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">Myynnin verot</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_taxes_sale_24_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">301: 24 %:n vero</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_taxes_sale_14_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">302: 14 %:n vero</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_taxes_sale_10_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">303: 10 %:n vero</field>
+    </record>
+
+    <!-- Deductible Taxes -->
+    <record model="account.account.tag" id="tax_code_taxes_purchase_ic_goods_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">305: Vero tavaraostoista muista EU-maista</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_taxes_purchase_ic_services_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">306: Vero palveluostoista muista EU-maista</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_taxes_purchase_constr_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">318: Vero rakentamispalvelun ostoista (käännetty verovelvollisuus)
+        </field>
+    </record>
+    <record model="account.account.tag" id="tax_code_deductible_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">307: Kohdekuukauden vähennettävä vero
+        </field>
+    </record>
+
+
+    <!-- Intra-Community and Other Bases -->
+    <record model="account.account.tag" id="tax_code_vat0_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">309: 0-verokannan alainen liikevaihto</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_sales_ic_goods_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">311: Tavaroiden myynnit muihin EU-maihin</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_sales_ic_services_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">312: Palveluiden myynnit muihin EU-maihin</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_purchase_ic_goods_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">313: Tavaraostot muista EU-maista</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_purchase_ic_services_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">314: Palveluostot muista EU-maista</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_constr_sales_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">319: Rakentamispalveluiden myynnit (käännetty verovelvollisuus)
+        </field>
+    </record>
+    <record model="account.account.tag" id="tax_code_constr_purchase_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">320: Rakentamispalvelun ostot</field>
+    </record>
+
+
+    <!--=== OFF REPORT ===-->
+
+
+    <record model="account.account.tag" id="tax_code_base_sales_24_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">301.2: Myynti ALV 24 %</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_base_sales_14_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">302.2: Myynti ALV 14 %</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_base_sales_10_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">303.2: Myynti ALV 10 %</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_base_sales_0_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">309.1: Myynti ALV 0 %</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_base_sales_non_ic_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">309.2: Myynti ei-yhteisö 0 %</field>
+    </record>
+
+
+    <record model="account.account.tag" id="tax_code_base_purchase_24_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">307.10: Ostot ALV 24 %</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_base_purchase_14_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">307.11: Ostot ALV 14 %</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_base_purchase_10_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">307.12: Ostot ALV 10 %</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_base_purchase_0_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">Ostot ALV 0 %</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_base_purchase_non_ic_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">Ostot ei-yhteisö 0 %</field>
+    </record>
+
+    <!-- Detailed Tax Codes -->
+    <record model="account.account.tag" id="tax_code_taxes_sale_rev_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">301.10: Käännetty verovelvollisuus</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_deductible_24_rev_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">307.27: Käännetty verovelvollisuus 24 % osto
+        </field>
+    </record>
+    <record model="account.account.tag" id="tax_code_deductible_constr_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">307.28: Käänteinen vero, rakentamispalvelut, osto
+        </field>
+    </record>
+    <record model="account.account.tag" id="tax_code_deductible_24_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">307.2: Ostojen verot ALV 24 %</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_deductible_14_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">307.21: Ostojen verot ALV 14 %</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_deductible_10_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">307.22: Ostojen verot ALV 10 %</field>
+    </record>
+    <record model="account.account.tag" id="tax_code_deductible_ic_tag">
+        <field name="applicability">taxes</field>
+        <field name="name">307.23: Ostojen verot yhteisö</field>
+    </record>
+
+</odoo>
