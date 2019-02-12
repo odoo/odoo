@@ -225,6 +225,12 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         self.assertEqual(timesheet1.timesheet_invoice_type, 'billable_time', "Timesheets linked to SO line with delivered product shoulbe be billable time")
         self.assertFalse(timesheet1.timesheet_invoice_id, "The timesheet1 should not be linked to the invoice yet")
 
+        timesheet1.exclude_from_sale_order = True
+        self.assertFalse(timesheet1.so_line)
+
+        timesheet1.exclude_from_sale_order = False
+        self.assertTrue(timesheet1.so_line)
+
         # invoice SO
         invoice_id1 = sale_order._create_invoices()
         invoice1 = self.env['account.invoice'].browse(invoice_id1)

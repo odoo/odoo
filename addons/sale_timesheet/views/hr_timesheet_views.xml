@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="timesheet_view_tree_user" model="ir.ui.view">
+        <field name="name">account.analytic.line.tree.user</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.timesheet_view_tree_user"/>
+        <field name="arch" type="xml">
+            <field name="task_id" position="after">
+                <field name="exclude_from_sale_order"/>
+            </field>
+        </field>
+    </record>
+
     <record id="timesheet_view_search" model="ir.ui.view">
             <field name="name">account.analytic.line.search</field>
             <field name="model">account.analytic.line</field>
@@ -9,9 +20,11 @@
                 <xpath expr="//filter[@name='month']" position="before">
                     <field name="timesheet_invoice_type"/>
                     <field name="timesheet_invoice_id"/>
+                    <field name="exclude_from_sale_order"/>
                     <filter name="billable_time" string="Billable Hours" domain="[('timesheet_invoice_type', '=', 'billable_time')]"/>
                     <filter name="billable_fixed" string="Fixed Price Projects" domain="[('timesheet_invoice_type', '=', 'billable_fixed')]"/>
                     <filter name="non_billable" string="Non Billable Hours" domain="[('timesheet_invoice_type', '=', 'non_billable')]"/>
+                    <filter name="excluded_from_sale_order" string="Excluded From Sale Order" domain="[('exclude_from_sale_order', '=', True)]"/>
                     <separator/>
                 </xpath>
             </field>

@@ -370,10 +370,10 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
         self.assertEqual(float_compare(project_so_1_stat['amount_untaxed_invoiced'], self.so_line_deliver_project.price_unit * project_so_1_timesheet_sold_unit, precision_rounding=rounding), 0, "The invoiced amount of the project from SO1 should only include timesheet linked to task")
         self.assertTrue(float_is_zero(project_so_1_stat['amount_untaxed_to_invoice'], precision_rounding=rounding), "The amount to invoice of the project from SO1 should be 0.0")
         self.assertEqual(float_compare(project_so_1_stat['timesheet_unit_amount'], project_so_1_timesheet_sold_unit + timesheet1.unit_amount, precision_rounding=rounding), 0, "The timesheet unit amount of the project from SO1 should include all timesheet in project")
-        self.assertEqual(float_compare(project_so_1_stat['timesheet_cost'], project_so_1_timesheet_cost, precision_rounding=rounding), 0, "The timesheet cost of the project from SO1 should include all timesheet")
-        self.assertEqual(float_compare(project_so_1_stat['expense_amount_untaxed_to_invoice'], -1 * expense1.amount, precision_rounding=rounding), 0, "The expense cost to reinvoice of the project from SO1 should be 0.0")
-        self.assertTrue(float_is_zero(project_so_1_stat['expense_amount_untaxed_invoiced'], precision_rounding=rounding), "The expense invoiced amount of the project from SO1 should be 0.0")
-        self.assertEqual(float_compare(project_so_1_stat['expense_cost'], expense1.amount, precision_rounding=rounding), 0, "The expense cost of the project from SO1 should be 0.0")
+        self.assertAlmostEqual(project_so_1_stat['timesheet_cost'], project_so_1_timesheet_cost, delta=rounding, msg="The timesheet cost of the project from SO1 should include all timesheet")
+        self.assertAlmostEqual(project_so_1_stat['expense_amount_untaxed_to_invoice'], -1 * expense1.amount, delta=rounding, msg="The expense cost to reinvoice of the project from SO1 should not be 0.0")
+        self.assertAlmostEqual(project_so_1_stat['expense_amount_untaxed_invoiced'], 0, delta=rounding, msg="The expense invoiced amount of the project from SO1 should be 0.0")
+        self.assertAlmostEqual(project_so_1_stat['expense_cost'], expense1.amount, delta=rounding, msg="The expense cost of the project from SO1 should not be 0.0")
 
         # order project is not impacted by the expenses
         project_so_2_stat = self.env['project.profitability.report'].read_group([('project_id', 'in', project_so_2.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced'], ['project_id'])[0]

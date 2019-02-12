@@ -100,6 +100,7 @@
                 </xpath>
                 <xpath expr="//field[@name='timesheet_ids']/tree" position="inside">
                     <field name="timesheet_invoice_id" invisible="1"/>
+                    <field name="exclude_from_sale_order"/>
                     <field name="so_line" readonly="1" attrs="{'column_invisible': ['|', ('parent.is_project_map_empty', '=', True), ('parent.billable_type', '!=', 'employee_rate')]}"/>
                 </xpath>
             </field>
