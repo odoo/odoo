@@ -47,9 +47,9 @@ tour.register('shop_variant_wishlist', {
                         }]]
                     }],
                 })
-            }).then(function() {
+            }).then(function () {
                 window.location.href = '/web/session/logout';
-            })
+            });
         },
     },
     {
@@ -142,21 +142,16 @@ tour.register('shop_variant_wishlist', {
                     model: 'product.product',
                     method: 'write',
                     args: [product_ids[0], {active: false}],
-                })
+                });
+            })
+            .then(function () {
+                window.location.href = '/web/session/logout';
             });
-        }
-    },
-    {
-        content: "logout",
-        extra_trigger: '.js_sale',
-        trigger: '.js_sale',
-        run: function() {
-            window.location.href = '/web/session/logout';
         },
     },
     {
         content: "Search product 'Bottle'",
-        extra_trigger: '#wrapwrap',
+        extra_trigger: '#top_menu li a:contains("Sign in")',
         trigger: '#wrapwrap',
         run: function() {
             window.location.href = '/shop?search=Bottle';
@@ -219,20 +214,15 @@ tour.register('shop_variant_wishlist', {
                     method: 'write',
                     args: [product_ids, {active: false}],
                 })
+            })
+            .then(function () {
+                window.location.href = '/web/session/logout';
             });
         }
     },
     {
-        content: "logout",
-        extra_trigger: '.js_sale',
-        trigger: '.js_sale',
-        run: function() {
-            window.location.href = '/web/session/logout';
-        },
-    },
-    {
         content: "Search product 'Bottle'",
-        extra_trigger: '#top_menu',
+        extra_trigger: '#top_menu li a:contains("Sign in")',
         trigger: '#wrapwrap',
         run: function() {
             window.location.href = '/shop?search=Bottle';
