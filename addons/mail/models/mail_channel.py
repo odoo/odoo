@@ -552,7 +552,10 @@ class Channel(models.Model):
         partner_infos = {partner['id']: partner for partner in all_partners.sudo().read(['id', 'name', 'email'])}
         # add im _status and out_of_office_message for direct_partners
         direct_partners_im_status = {partner['id']: partner for partner in direct_partners.sudo().read(['im_status'])}
-        partner_infos.update(direct_partners_im_status)
+
+        for i in direct_partners_im_status.keys():
+            partner_infos[i].update(direct_partners_im_status[i])
+
         for user in self.env['res.users'].search([('partner_id', 'in', direct_partners.ids), ('out_of_office_message', '!=', False)]):
             partner_infos[user.partner_id.id]['out_of_office_message'] = user.out_of_office_message
         return partner_infos
