@@ -5,7 +5,7 @@ from collections import defaultdict
 from datetime import timedelta
 from pytz import utc
 
-from odoo import api, fields, models
+from odoo import api, fields, models, exceptions, _
 from odoo.tools import float_utils
 
 # This will generate 16th of days
@@ -42,6 +42,14 @@ class ResourceMixin(models.AbstractModel):
             resource = self.env['resource.resource'].create(resource_vals)
             values['resource_id'] = resource.id
         return super(ResourceMixin, self).create(values)
+
+    def write(self, vals):
+        if vals.get('tz') is False:
+            raise exceptions.ValidationError(
+                _('The timezone cannot be unset for model: %s (%s), ids: %s')
+                % (self._description, self._name, self.ids)
+            )
+        return super(ResourceMixin, self).write(vals)
 
     @api.multi
     def copy_data(self, default=None):
