@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="hr_resume_data_row">
+
+    <tr class="o_data_row" t-att-data-id="id">
+        <td class="o_data_cell o_list_number o_handle_cell">
+            <span class="o_row_handle fa fa-arrows o_field_widget ui-sortable-handle" t-att-data-sequence="id"/>
+        </td>
+        <td class="o_data_cell container">
+            <div class="o_resume_line row" t-att-data-id="id">
+                <div class="o_resume_line_dates col-lg-3">
+                    <div class="row">
+                        <span class="col-6 col-lg-8"><t t-esc="data.date_start"/>-</span>
+                        <span class="col-6 col-lg-6"><t t-esc="data.date_end"/></span>
+                    </div>
+                </div>
+                <div class="o_resume_line_desc col-lg-9">
+                    <h3><t t-esc="data.name"/></h3>
+                    <t t-esc="data.description"/>
+                </div>
+            </div>
+        </td>
+    </tr>
+</t>
+
+<t t-name="hr_trash_button">
+    <td class="o_list_record_remove" style="text-align: right;">
+        <button class="fa fa-trash-o"
+            name="delete"
+            arial-label="Delete row"/>
+    </td>
+</t>
+
+<t t-name="hr_resume_group_row">
+    <tr class="o_resume_group_header">
+        <th colspan="100%"><div class="o_horizontal_separator"><t t-esc="display_name"/></div></th>
+    </tr>
+</t>
+
+<t t-name="group_add_item">
+    <div class="o_field_x2many_list_row_add">
+            <a href="#"
+                role="button"
+                class="btn btn-secondary o-kanban-button-new "
+                t-attf-data-context="{{ context }}">ADD</a>
+    </div>
+</t>
+
+
+</templates>
