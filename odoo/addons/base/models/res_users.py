@@ -543,9 +543,8 @@ class Users(models.Model):
         }
 
     @api.model
-    @api.returns('ir.actions.act_window', lambda record: record.id)
     def action_get(self):
-        return self.sudo().env.ref('base.action_res_users_my')
+        return self.sudo().env.ref('base.action_res_users_my').read()[0]
 
     def check_super(self, passwd):
         return check_super(passwd)

@@ -148,4 +148,36 @@
                 </xpath>
             </field>
         </record>
+
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">hr.user.preferences.view.form.l10n.be.payroll.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vehicle']" position="after">
+                    <field name="resident_bool" eval="False"/>
+                </xpath>
+                <xpath expr="//field[@name='marital']" position="after">
+                    <field name="spouse_fiscal_status" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])], 'required': [('marital', 'in', ['married', 'cohabitant'])]}" colspan="1" help="if spouse has professionnel income or not"/>
+                    <field name="disabled_spouse_bool" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" colspan="1"/>
+                </xpath>
+                <xpath expr="//field[@name='gender']" position="after">
+                    <field name="disabled"/>
+                </xpath>
+                <xpath expr="//field[@name='children']" position="after">
+                    <field name="disabled_children_bool"/>
+                    <field name="disabled_children_number" attrs="{'invisible':[('disabled_children_bool','!=',True)]}" colspan="1" help="number of dependent children declared as disabled"/>
+                    <field name="dependent_children" invisible="1"/>
+                    <field name="other_dependent_people" groups="hr.group_hr_user"/>
+                    <field name="other_senior_dependent" attrs="{'invisible':[('other_dependent_people','!=',True)]}"/>
+                    <field name="other_disabled_senior_dependent" attrs="{'invisible':[('other_dependent_people','!=',True)]}"/>
+                    <field name="other_juniors_dependent" attrs="{'invisible':[('other_dependent_people','!=',True)]}"/>
+                    <field name="other_disabled_juniors_dependent" attrs="{'invisible':[('other_dependent_people','!=',True)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='spouse_fiscal_status']" position="after">
+                    <field name="spouse_net_revenue" attrs="{'invisible': ['|', ('marital', 'not in', ['married', 'cohabitant']), ('spouse_fiscal_status', '!=', 'with income')]}"/>
+                    <field name="spouse_other_net_revenue" attrs="{'invisible': ['|', ('marital', 'not in', ['married', 'cohabitant']), ('spouse_fiscal_status', '!=', 'with income')]}"/>
+                </xpath>
+        </field>
+    </record>
 </odoo>
