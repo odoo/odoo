@@ -70,7 +70,7 @@
                                 <group>
                                     <field name="url" attrs="{'required': [('image', '=', False)]}"/>
                                     <field name="slide_type" readonly="1"/>
-                                    <field name="document_id" readonly="1"/>
+                                    <field name="document_id" readonly="1" attrs="{'invisible': [('document_id', '=', False)]}"/>
                                     <field name="mime_type" readonly="1"/>
                                     <field name="datas" readonly="1"/>
                                 </group>
@@ -91,6 +91,16 @@
                                 </group>
                                 <label for="index_content"/>
                                 <field name="index_content"/>
+                            </page>
+                            <page string="External Links">
+                                <group>
+                                    <field name="link_ids" widget="one2many" nolabel="1">
+                                         <tree editable="top">
+                                            <field name="name"/>
+                                            <field name="link" widget="url"/>
+                                        </tree>
+                                    </field>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>

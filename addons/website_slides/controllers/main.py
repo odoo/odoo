@@ -114,10 +114,11 @@ class WebsiteSlides(http.Controller):
 
         if search:
             domain += [
-                '|', '|',
+                '|', '|', '|',
                 ('name', 'ilike', search),
                 ('description', 'ilike', search),
-                ('index_content', 'ilike', search)]
+                ('index_content', 'ilike', search),
+                ('html_content', 'ilike', search)]
             pager_args['search'] = search
         else:
             if category:
@@ -182,6 +183,23 @@ class WebsiteSlides(http.Controller):
             })
 
         return request.render('website_slides.home', values)
+
+    @http.route(['/slides/channel/add'], type='http', auth='user', methods=['POST'], website=True)
+    def slide_channel_create(self, *args, **kw):
+        # `tag_ids` is a string representing a list of int with coma. i.e.: '2,5,7'
+        # We don't want to allow user to create tags and tag groups on the fly.
+        tag_ids = []
+        if kw.get('tag_ids'):
+            tag_ids = [int(item) for item in kw['tag_ids'].split(',')]
+
+        channel = request.env['slide.channel'].create({
+            'name': kw['name'],
+            'description': kw.get('description'),
+            'channel_type': kw.get('channel_type', 'documentation'),
+            'user_id': request.env.user.id,
+            'tag_ids': [(6, 0, tag_ids)],
+        })
+        return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
 
     # --------------------------------------------------
     # SLIDE.SLIDE CONTOLLERS
@@ -257,8 +275,8 @@ class WebsiteSlides(http.Controller):
             return {'error': 'join_done'}
         return success
 
-    @http.route(['/slides/dialog_preview'], type='json', auth='user', methods=['POST'], website=True)
-    def dialog_preview(self, **data):
+    @http.route(['/slides/prepare_preview'], type='json', auth='user', methods=['POST'], website=True)
+    def prepare_preview(self, **data):
         Slide = request.env['slide.slide']
         document_type, document_id = Slide._find_document_data_from_url(data['url'])
         preview = {}
@@ -279,13 +297,14 @@ class WebsiteSlides(http.Controller):
     def create_slide(self, *args, **post):
         # check the size only when we upload a file.
         if post.get('datas'):
-            file_size = len(post['datas']) * 3 / 4 # base64
+            file_size = len(post['datas']) * 3 / 4  # base64
             if (file_size / 1024.0 / 1024.0) > 25:
                 return {'error': _('File is too big. File size cannot exceed 25MB')}
 
         values = dict((fname, post[fname]) for fname in [
             'name', 'url', 'tag_ids', 'slide_type', 'channel_id',
             'mime_type', 'datas', 'description', 'image', 'index_content', 'website_published'] if post.get(fname))
+
         if post.get('category_id'):
             if post['category_id'][0] == 0:
                 values['category_id'] = request.env['slide.category'].create({
@@ -317,7 +336,19 @@ class WebsiteSlides(http.Controller):
         except Exception as e:
             _logger.error(e)
             return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
-        return {'url': "/slides/slide/%s" % (slide.id)}
+
+        redirect_url = "/slides/slide/%s" % (slide.id)
+        if slide.slide_type == 'webpage':
+            redirect_url += "?enable_editor=1"
+        return {'url': redirect_url}
+
+    @http.route(['/slides/channel/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
+    def slide_channel_tag_search_read(self, fields, domain):
+        can_create = request.env['slide.channel.tag'].check_access_rights('create', raise_exception=False)
+        return {
+            'read_results': request.env['slide.channel.tag'].search_read(domain, fields),
+            'can_create': can_create,
+        }
 
     @http.route(['/slides/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_tag_search_read(self, fields, domain):
