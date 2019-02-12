@@ -85,7 +85,9 @@
                             <field name="invoice_type" invisible="1"/>
                             <field name="company_id" invisible="1"/>
                             <field name="product_id"
-                                 context="{'partner_id': partner_id}"/>
+                                 context="{'partner_id': partner_id}"
+                                 widget="many2one_barcode"
+                            />
                             <label for="quantity"/>
                             <div>
                                 <field name="quantity" class="oe_inline"/>

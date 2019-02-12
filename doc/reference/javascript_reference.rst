@@ -2005,6 +2005,17 @@ Relational fields
 
     - Supported field types: *many2one*
 
+- many2one_barcode (FieldMany2OneBarcode)
+    Widget for many2one fields allows to open the camera from a mobile device (Android/iOS) to scan a barcode.
+
+    Specialization of many2one field where the user is allowed to use the native camera to scan a barcode.
+    Then it uses name_search to search this value.
+
+    If this widget is set and user is not using the mobile application,
+    it will fallback to regular many2one (FieldMany2One)
+
+    - Supported field types: *many2one*
+
 - kanban.many2one (KanbanFieldMany2One)
     Default widget for many2one fields (in kanban view). We need to disable all
     edition in kanban views.
