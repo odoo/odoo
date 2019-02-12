@@ -40,10 +40,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
         return False
 
     advance_payment_method = fields.Selection([
-        ('delivered', 'Standard invoice'),
+        ('delivered', 'Regular invoice'),
         ('percentage', 'Down payment (percentage)'),
         ('fixed', 'Down payment (fixed amount)')
-        ], string='What do you want to invoice?', default='delivered', required=True,
+        ], string='Create Invoice', default='delivered', required=True,
         help="A standard invoice is issued with all the order lines ready for invoicing, \
         according to their invoicing policy (based on ordered or delivered quantity).")
     deduct_down_payments = fields.Boolean('Deduct down payments', default=True)
