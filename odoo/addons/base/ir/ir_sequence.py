@@ -269,7 +269,7 @@ class IrSequence(models.Model):
         if not seq_ids:
             _logger.debug("No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company." % sequence_code)
             return False
-        return seq_ids[0]
+        return seq_ids[0].id
 
     @api.model
     def next_by_code(self, sequence_code):
@@ -289,7 +289,7 @@ class IrSequence(models.Model):
         if not force_company:
             force_company = self.env.user.company_id.id
         seq_id = self.seq_by_code(sequence_code, force_company)
-        return seq_id and seq_id._next()
+        return seq_id and self.browse(seq_id)._next()
 
     @api.model
     def get_id(self, sequence_code_or_id, code_or_id='id'):
