@@ -11,5 +11,5 @@ Signed,
 Cyril Vinh-Tung contact@invitu.com https://github.com/invitu
 
 List of contributors:
-Cyril Vinh-Tung contact@invitu.com https://github.com/invitu
-
+Cyril Vinh-Tung cyril@invitu.com https://github.com/cvinh
+Tymofii Glukhov tima@invitu.com https://github.com/tglukhov
