@@ -3,6 +3,7 @@
     <t t-name="mrp.button">
         <button type="button" class="btn btn-primary o_mrp_bom_print">print</button>
         <button type="button" class="btn btn-primary ml8 o_mrp_bom_print_unfolded">print unfolded</button>
+        <button type="button" class="btn btn-primary ml8 o_mrp_bom_print_xlsx">export (xlsx)</button>
     </t>
 
     <form class="form-inline" t-name="mrp.report_bom_search">
@@ -27,7 +28,7 @@
         </div>
         <div t-attf-class="form-group #{is_variant_applied ? 'col-lg-4' : 'col-lg-8'}">
             <label>Report:</label>
-            <select class="o_input o_mrp_bom_report_type">
+            <select class="o_input bom_report">
                 <option t-att-data-type="'all'">BoM Structure &amp; Cost</option>
                 <option t-att-data-type="'bom_structure'">BoM Structure</option>
                 <option t-att-data-type="'bom_cost'">BoM Cost</option>
