@@ -619,9 +619,9 @@ var ThemeCustomizeDialog = Dialog.extend({
                 $allLinks.remove();
             });
         }).then(function () {
-            // Some animations may depend on the variables that were
+            // Some public widgets may depend on the variables that were
             // customized, so we have to restart them.
-            self.trigger_up('animation_start_demand');
+            self.trigger_up('widgets_start_request');
         });
     },
     /**

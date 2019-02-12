@@ -19,7 +19,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
         'shown.bs.modal': '_onModalShown',
     }),
     custom_events: _.extend({}, publicRootData.PublicRoot.prototype.custom_events || {}, {
-        'ready_to_clean_for_save': '_onAnimationStopDemand',
+        'ready_to_clean_for_save': '_onWidgetsStopRequest',
     }),
 
     /**
@@ -90,7 +90,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
     /**
      * @override
      */
-    _onAnimationStartDemand: function (ev) {
+    _onWidgetsStartRequest: function (ev) {
         ev.data.options = _.clone(ev.data.options || {});
         ev.data.options.editableMode = ev.data.editableMode;
         this._super.apply(this, arguments);

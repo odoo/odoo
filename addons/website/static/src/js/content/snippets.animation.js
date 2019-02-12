@@ -48,13 +48,13 @@ publicWidget.Widget.include({
     disabledInEditableMode: true,
     /**
      * Acts as @see Widget.events except that the events are only binded if the
-     * Animation instance is instanciated in edit mode. The property is not
+     * Widget instance is instanciated in edit mode. The property is not
      * considered if @see disabledInEditableMode is false.
      */
     edit_events: null,
     /**
      * Acts as @see Widget.events except that the events are only binded if the
-     * Animation instance is instanciated in readonly mode. The property only
+     * Widget instance is instanciated in readonly mode. The property only
      * makes sense if @see disabledInEditableMode is false, you should simply
      * use @see Widget.events otherwise.
      */
@@ -779,7 +779,7 @@ registry.gallery = publicWidget.Widget.extend({
         $modal.appendTo(document.body);
 
         $modal.one('shown.bs.modal', function () {
-            self.trigger_up('animation_start_demand', {
+            self.trigger_up('widgets_start_request', {
                 editableMode: false,
                 $target: $modal.find('.modal-body.o_slideshow'),
             });
