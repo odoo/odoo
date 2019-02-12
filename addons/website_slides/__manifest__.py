@@ -35,6 +35,7 @@ Share and Publish Videos, Presentations and Documents'
         'views/website_slides_menu_views.xml',
         'views/website_slides_templates_profile.xml',
         'data/website_slides_ir_data.xml',
+        'data/gamification_data.xml',
         'data/mail_data.xml',
         'data/slide_data.xml',
         'data/website_data.xml',
