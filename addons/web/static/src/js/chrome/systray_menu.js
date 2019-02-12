@@ -3,6 +3,7 @@ odoo.define('web.SystrayMenu', function (require) {
 
 var dom = require('web.dom');
 var Widget = require('web.Widget');
+var core = require('web.core');
 
 /**
  * The SystrayMenu is the class that manage the list of icons in the top right
@@ -17,6 +18,8 @@ var SystrayMenu = Widget.extend({
         this._super(parent);
         this.items = [];
         this.widgets = [];
+
+        core.bus.on('web_client_ready', this, () => this.on_attach_callback() );
     },
     /**
      * Instanciate the items and add them into a temporary fragmenet
@@ -49,6 +52,13 @@ var SystrayMenu = Widget.extend({
                 dom.prepend(self.$el, widget.$el);
             });
         });
+    },
+    on_attach_callback: function () {
+        for (const widget of this.widgets) {
+            if (widget.on_attach_callback) {
+                widget.on_attach_callback();
+            }
+        }
     },
 });
 

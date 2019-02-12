@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div
+        class="o_Message"
+        owl="1"
+        t-att-data-message-local-id="props.messageLocalId"
+        t-att-class="{
+            'o-clicked': state.isClicked,
+            'o-discussion': storeProps.message.is_discussion or
+                storeProps.message.is_notification,
+            'o-mobile': storeProps.isMobile,
+            'o-not-discussion': !(storeProps.message.is_discussion or
+                storeProps.message.is_notification),
+            'o-notification': storeProps.message.message_type === 'notification',
+            'o-selected': props.isSelected,
+            'o-squashed': props.isSquashed,
+            'o-starred': isStarred,
+        }"
+        t-name="mail.component.Message"
+        t-on-click="_onClick">
+        <div
+            class="o_Message_sidebar"
+            t-att-class="{
+                'o-message-squashed': props.isSquashed,
+            }">
+            <t t-if="!props.isSquashed">
+                <div
+                    class="
+                        o_Message_authorAvatarContainer
+                        o_Message_sidebarItem">
+                    <img
+                        alt=""
+                        class="
+                            o_Message_authorAvatar
+                            rounded-circle"
+                        t-att-class="{
+                            o_Message_authorRedirect: hasAuthorRedirect,
+                            o_redirect: hasAuthorRedirect,
+                        }"
+                        t-att-src="avatar"
+                        t-att-title="hasAuthorRedirect ? 'Open chat' : ''"
+                        t-on-click="_onClickAuthor"/>
+                    <PartnerImStatusIcon
+                        class="o_Message_partnerImStatusIcon"
+                        partnerLocalId="storeProps.author.localId"
+                        t-att-class="{
+                            'o-message-not-discussion': !(
+                                storeProps.message.is_discussion or
+                                storeProps.message.is_notification),
+                            'o-message-selected': props.isSelected,
+                            'o_Message_partnerImStatusIcon-mobile': storeProps.isMobile,
+                        }"
+                        t-if="storeProps.author.im_status"/>
+                </div>
+            </t>
+            <t t-else="">
+                <div
+                    class="
+                        o_Message_date
+                        o_Message_sidebarItem
+                        o-message-squashed"
+                    t-att-class="{
+                        'o-message-selected': props.isSelected,
+                    }">
+                    <t t-esc="shortTime"/>
+                </div>
+                <div
+                    class="
+                        o_Message_commands
+                        o_Message_sidebarCommands
+                        o_Message_sidebarItem
+                        o-message-squashed"
+                    t-att-class="{
+                        'o-message-selected': props.isSelected,
+                        'o-mobile': storeProps.isMobile,
+                    }">
+                    <div
+                        class="
+                            fa
+                            o_Message_command
+                            o_Message_commandStar"
+                        t-att-class="{
+                            'fa-star': isStarred,
+                            'fa-star-o': !isStarred,
+                            'o-message-selected': props.isSelected,
+                            'o-message-starred': isStarred,
+                            'o-mobile': storeProps.isMobile,
+                        }"
+                        t-if="storeProps.message.message_type !== 'notification'"
+                        t-on-click.stop="_onClickStar"/>
+                </div>
+            </t>
+        </div>
+        <div class="o_Message_core">
+            <div
+                class="o_Message_header"
+                t-if="!props.isSquashed">
+                <div
+                    class="o_Message_authorName"
+                    t-att-class="{
+                        o_Message_authorRedirect: hasAuthorRedirect,
+                        o_redirect: hasAuthorRedirect,
+                    }"
+                    t-att-title="hasAuthorRedirect ? 'Open chat' : ''"
+                    t-on-click="_onClickAuthor">
+                    <t t-esc="displayedAuthorName"/>
+                </div>
+                <div
+                    class="
+                        o_Message_date
+                        o_Message_headerDate"
+                    t-att-class="{
+                        'o-message-selected': props.isSelected,
+                    }"
+                    t-att-title="datetime">
+                    - <t t-esc="timeElapsed"/>
+                </div>
+                <div
+                    class="o_Message_originThread"
+                    t-att-class="{
+                        'o-message-selected': props.isSelected,
+                    }"
+                    t-if="hasDifferentOriginThread">
+                    <t t-if="storeProps.originThread._model === 'mail.channel'">
+                        (from <a
+                                class="o_Message_originThreadLink"
+                                href="#"
+                                t-on-click="_onClickOriginThread">#<t t-esc="storeProps.originThread.name"/></a>)
+                    </t>
+                    <t t-else="">
+                        on <a
+                            class="o_Message_originThreadLink"
+                            href="#"
+                            t-on-click="_onClickOriginThread"><t t-esc="storeProps.originThread.name"/></a>
+                    </t>
+                </div>
+                <div
+                    class="
+                        o_Message_commands
+                        o_Message_headerCommands"
+                    t-att-class="{
+                        'o-mobile': storeProps.isMobile,
+                    }">
+                    <span
+                        aria-label="Mark as Todo"
+                        class="
+                            fa
+                            o_Message_command
+                            o_Message_commandStar
+                            o_Message_headerCommand"
+                        t-att-class="{
+                            'fa-star': isStarred,
+                            'fa-star-o': !isStarred,
+                            'o-message-selected': props.isSelected,
+                            'o-message-starred': isStarred,
+                            'o-mobile': storeProps.isMobile,
+                        }"
+                        title="Mark as Todo"
+                        t-if="
+                            (
+                                storeProps.message.message_type !== 'notification' and
+                                storeProps.originThread and
+                                storeProps.originThread._model === 'mail.channel'
+                            ) or
+                            !storeProps.message.isTransient"
+                        t-on-click="_onClickStar"/>
+                    <span
+                        aria-label="Reply"
+                        class="
+                            fa
+                            fa-reply
+                            o_Message_command
+                            o_Message_commandReply
+                            o_Message_headerCommand"
+                        title="Reply"
+                        t-att-class="{
+                            'o-message-selected': props.isSelected,
+                            'o-mobile': storeProps.isMobile,
+                        }"
+                        t-if="props.hasReplyIcon"
+                        t-on-click.stop="_onClickReply"/>
+                    <span
+                        aria-label="Mark as Read"
+                        class="
+                            fa
+                            fa-check
+                            o_Message_command
+                            o_Message_commandMarkAsRead
+                            o_Message_headerCommand"
+                        title="Mark as Read"
+                        t-att-class="{
+                            'o-message-selected': props.isSelected,
+                            'o-mobile': storeProps.isMobile,
+                        }"
+                        t-if="props.hasMarkAsReadIcon"
+                        t-on-click="_onClickMarkAsRead"/>
+                </div>
+            </div>
+            <div
+                class="o_Message_content"
+                t-ref="content">
+                <t t-raw="env.store.getters.messagePrettyBody(props.messageLocalId)"/>
+                <ul
+                    class="o_Message_trackingValues"
+                    t-if="trackingValues.length > 0">
+                    <t t-foreach="trackingValues" t-as="value">
+                        <li t-key="value.id">
+                            <t t-esc="value.changed_field"/>:
+                            <t t-if="value.old_value">
+                                <span> <t t-esc="value.old_value || ((value.field_type !== 'boolean') and '')"/> </span>
+                                <span
+                                    aria-label="Changed"
+                                    class="
+                                        fa
+                                        fa-long-arrow-right"
+                                    role="img"
+                                    title="Changed"
+                                    t-if="value.old_value !== value.new_value"/>
+                            </t>
+                            <span t-if="value.old_value !== value.new_value">
+                                <t t-esc="value.new_value || ((value.field_type !== 'boolean') and '')"/>
+                            </span>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+            <div
+                class="o_Message_footer"
+                t-if="
+                    storeProps.attachmentLocalIds and
+                    storeProps.attachmentLocalIds.length > 0">
+                <AttachmentList
+                    areAttachmentsDownloadable="true"
+                    areAttachmentsEditable="true"
+                    attachmentLocalIds="storeProps.message.attachmentLocalIds"
+                    attachmentsImageSizeForBasicLayout="'medium'"
+                    attachmentsLayout="'card'"
+                    class="o_Message_attachmentList"/>
+            </div>
+        </div>
+    </div>
+
+</templates>

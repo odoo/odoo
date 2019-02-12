@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div
+        class="o_AttachmentViewer"
+        owl="1"
+        tabindex="0"
+        t-att-data-dialog-id="props.dialogId"
+        t-name="mail.component.AttachmentViewer"
+        t-on-click="_onClick"
+        t-on-keydown="_onKeydown">
+        <div
+            class="o_AttachmentViewer_header"
+            t-on-click="_onClickHeader">
+            <div
+                class="
+                    o_AttachmentViewer_headerItem
+                    o_AttachmentViewer_icon"
+                t-if="env.store.getters.attachmentFileType(props.info.attachmentLocalId)"
+                t-key="'icon'">
+                <i
+                    aria-label="Image"
+                    class="
+                        fa
+                        fa-picture-o"
+                    role="img"
+                    title="Image"
+                    t-if="env.store.getters.attachmentFileType(props.info.attachmentLocalId) === 'image'"/>
+                <i
+                    aria-label="PDF file"
+                    class="
+                        fa
+                        fa-file-text"
+                    role="img"
+                    title="PDF file"
+                    t-if="env.store.getters.attachmentFileType(props.info.attachmentLocalId) === 'application/pdf'"/>
+                <i
+                    aria-label="Text file"
+                    class="
+                        fa
+                        fa-file-text"
+                    role="img"
+                    title="Text file"
+                    t-if="env.store.getters.isAttachmentTextFile(props.info.attachmentLocalId)"/>
+                <i
+                    aria-label="Video"
+                    class="
+                        fa
+                        fa-video-camera"
+                    role="img"
+                    title="Video"
+                    t-if="env.store.getters.attachmentFileType(props.info.attachmentLocalId) === 'video'"/>
+            </div>
+            <div
+                class="
+                    o_AttachmentViewer_headerItem
+                    o_AttachmentViewer_name">
+                <t t-esc="env.store.getters.attachmentDisplayName(props.info.attachmentLocalId)"/>
+            </div>
+            <div
+                class="
+                    o_AttachmentViewer_buttonDownload
+                    o_AttachmentViewer_headerItem
+                    o_AttachmentViewer_headerItemButton"
+                role="button"
+                title="Download"
+                t-on-click.stop="_onClickDownload">
+                <i
+                    aria-label="Download"
+                    class="
+                        fa
+                        fa-download
+                        fa-fw"
+                    role="img"/>
+            </div>
+            <div class="o-autogrow"/>
+            <div
+                aria-label="Close"
+                class="
+                    o_AttachmentViewer_headerItem
+                    o_AttachmentViewer_headerItemButton
+                    o_AttachmentViewer_headerItemButtonClose"
+                role="button"
+                title="Close (Esc)"
+                t-on-click="_onClickClose">
+                <i
+                    aria-label="Close"
+                    class="
+                        fa
+                        fa-fw
+                        fa-times"
+                    role="img"/>
+            </div>
+        </div>
+        <div
+            class="o_AttachmentViewer_main"
+            t-att-class="{
+                o_with_img: env.store.getters.attachmentFileType(props.info.attachmentLocalId) === 'image',
+            }"
+            t-on-mousemove="_onMousemoveView">
+            <div
+                class="o_AttachmentViewer_zoomer"
+                t-if="env.store.getters.attachmentFileType(props.info.attachmentLocalId) === 'image'"
+                t-ref="zoomer">
+                <div
+                    class="o_AttachmentViewer_loading"
+                    t-if="state.imageLoading">
+                    <i
+                        aria-label="Loading"
+                        class="
+                            fa
+                            fa-3x
+                            fa-circle-o-notch
+                            fa-fw
+                            fa-spin"
+                        role="img"
+                        title="Loading"/>
+                </div>
+                <img
+                    alt="Viewer"
+                    class="
+                        o_AttachmentViewer_view
+                        o_AttachmentViewer_viewImage"
+                    draggable="false"
+                    t-att-src="env.store.getters.attachmentDefaultSource(props.info.attachmentLocalId)"
+                    t-att-style="imageStyle"
+                    t-on-click="_onClickImage"
+                    t-on-mousedown="_onMousedownImage"
+                    t-on-wheel.stop="_onWheelImage"
+                    t-key="props.info.attachmentLocalId"
+                    t-ref="image"/>
+            </div>
+            <iframe
+                class="
+                    o_AttachmentViewer_view
+                    o_AttachmentViewer_viewIframe
+                    o_AttachmentViewer_viewPdf"
+                t-att-src="env.store.getters.attachmentDefaultSource(props.info.attachmentLocalId)"
+                t-if="env.store.getters.attachmentFileType(props.info.attachmentLocalId) === 'application/pdf'"
+                t-key="props.info.attachmentLocalId"/>
+            <iframe
+                class="
+                    o_AttachmentViewer_view
+                    o_AttachmentViewer_viewIframe
+                    o_text"
+                t-att-src="env.store.getters.attachmentDefaultSource(props.info.attachmentLocalId)"
+                t-if="env.store.getters.isAttachmentTextFile(props.info.attachmentLocalId)"
+                t-key="props.info.attachmentLocalId"/>
+            <iframe
+                allow="autoplay; encrypted-media"
+                class="
+                    o_AttachmentViewer_view
+                    o_AttachmentViewer_viewIframe
+                    o_AttachmentViewer_youtube"
+                height="315"
+                t-att-src="env.store.getters.attachmentDefaultSource(props.info.attachmentLocalId)"
+                t-if="env.store.getters.attachmentFileType(props.info.attachmentLocalId) === 'youtu'"
+                t-key="props.info.attachmentLocalId"
+                width="560"/>
+            <video
+                class="
+                    o_AttachmentViewer_view
+                    o_AttachmentViewer_viewVideo"
+                controls="controls"
+                t-if="env.store.getters.attachmentFileType(props.info.attachmentLocalId) === 'video'"
+                t-key="props.info.attachmentLocalId"
+                t-on-click="_onClickVideo">
+                <source
+                    t-att-data-type="props.attachment.mimetype"
+                    t-att-src="env.store.getters.attachmentDefaultSource(props.info.attachmentLocalId)"/>
+            </video>
+        </div>
+        <div
+            class="o_AttachmentViewer_toolbar"
+            role="toolbar"
+            t-if="env.store.getters.attachmentFileType(props.info.attachmentLocalId) === 'image'"
+            t-key="'toolbar'">
+            <div
+                class="o_AttachmentViewer_toolbarButton"
+                role="button"
+                title="Zoom In (+)"
+                t-on-click.stop="_onClickZoomIn">
+                <i
+                    aria-label="Zoom In"
+                    class="
+                        fa
+                        fa-fw
+                        fa-plus"
+                    role="img"/>
+            </div>
+            <div
+                class="o_AttachmentViewer_toolbarButton"
+                role="button"
+                title="Reset Zoom (0)"
+                t-att-class="{
+                    o_disabled: state.scale === 1,
+                }"
+                t-on-click.stop="_onClickZoomReset">
+                <i
+                    aria-label="Reset Zoom"
+                    class="
+                        fa
+                        fa-fw
+                        fa-search"
+                    role="img"/>
+            </div>
+            <div
+                class="o_AttachmentViewer_toolbarButton"
+                role="button"
+                title="Zoom Out (-)"
+                t-att-class="{
+                    o_disabled: state.scale === MIN_SCALE,
+                }"
+                t-on-click.stop="_onClickZoomOut">
+                <i
+                    aria-label="Zoom Out"
+                    class="
+                        fa
+                        fa-fw
+                        fa-minus"
+                    role="img"/>
+            </div>
+            <div
+                class="o_AttachmentViewer_toolbarButton"
+                role="button"
+                title="Rotate (r)"
+                t-on-click.stop="_onClickRotate">
+                <i
+                    aria-label="Rotate"
+                    class="
+                        fa
+                        fa-fw
+                        fa-repeat"
+                    role="img"/>
+            </div>
+            <div
+                class="o_AttachmentViewer_toolbarButton"
+                role="button"
+                title="Print"
+                t-on-click.stop="_onClickPrint">
+                <i
+                    aria-label="Print"
+                    class="
+                        fa
+                        fa-fw
+                        fa-print"
+                    role="img"/>
+            </div>
+            <div
+                class="
+                    o_AttachmentViewer_buttonDownload
+                    o_AttachmentViewer_toolbarButton"
+                role="button"
+                title="Download"
+                t-on-click.stop="_onClickDownload">
+                <i
+                    aria-label="Download"
+                    class="
+                        fa
+                        fa-download
+                        fa-fw"
+                    role="img"/>
+            </div>
+        </div>
+        <t t-if="props.info.attachmentLocalIds.length > 1">
+            <div
+                class="
+                    o_AttachmentViewer_buttonNavigation
+                    o_AttachmentViewer_buttonNavigationPrevious"
+                role="button"
+                title="Previous (Left-Arrow)"
+                t-key="'previous'"
+                t-on-click.stop="_onClickPrevious">
+                <span
+                    aria-label="Previous"
+                    class="
+                        fa
+                        fa-chevron-left"
+                    role="img"/>
+            </div>
+            <div
+                class="
+                    o_AttachmentViewer_buttonNavigation
+                    o_AttachmentViewer_buttonNavigationNext"
+                role="button"
+                title="Next (Right-Arrow)"
+                t-key="'next'"
+                t-on-click.stop="_onClickNext">
+                <span
+                    aria-label="Next"
+                    class="
+                        fa
+                        fa-chevron-right"
+                    role="img"/>
+            </div>
+        </t>
+    </div>
+
+</templates>

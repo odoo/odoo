@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div
+        class="o_Thread"
+        owl="1"
+        t-att-data-id="id"
+        t-att-data-thread-local-id="props.threadLocalId"
+        t-name="mail.component.Thread">
+        <div
+            class="o_Thread_loading"
+            t-if="
+                !storeProps.threadCache or
+                (
+                    storeProps.threadCache and
+                    (
+                        storeProps.threadCache.isLoading or
+                        !storeProps.threadCache.isLoaded
+                    )
+                )">
+            <span><i
+                aria-label="Loading..."
+                class="
+                    fa
+                    fa-spinner
+                    fa-spin
+                    o_Thread_loadingIcon"
+                role="img"
+                title="Loading..."/>Loading...</span>
+        </div>
+        <MessageList
+            class="o_Thread_messageList"
+            domain="props.domain"
+            hasSquashCloseMessages="props.hasSquashCloseMessages"
+            haveMessagesAuthorRedirect="props.haveMessagesAuthorRedirect"
+            haveMessagesMarkAsReadIcon="props.haveMessagesMarkAsReadIcon"
+            haveMessagesReplyIcon="props.haveMessagesReplyIcon"
+            order="props.order"
+            selectedMessageLocalId="props.selectedMessageLocalId"
+            threadCacheLocalId="storeProps.threadCacheLocalId"
+            threadLocalId="props.threadLocalId"
+            t-else=""
+            t-on-o-message-list-mounted.stop="_onMessageListMounted"
+            t-ref="messageList"/>
+        <Composer
+            attachmentsLayout="props.composerAttachmentLayout"
+            class="o_Thread_composer"
+            hasCurrentPartnerAvatar="props.hasComposerCurrentPartnerAvatar"
+            hasSendButton="props.hasComposerSendButton"
+            haveAttachmentsLabelForCardLayout="props.haveComposerAttachmentsLabelForCardLayout"
+            id="id + '_composer'"
+            initialAttachmentLocalIds="props.composerInitialAttachmentLocalIds"
+            initialTextInputHtmlContent="props.composerInitialTextInputHtmlContent"
+            isFocusOnMount="!storeProps.isMobile"
+            threadCacheLocalId="storeProps.threadCacheLocalId"
+            threadLocalId="props.threadLocalId"
+            t-if="props.hasComposer"
+            t-ref="composer"/>
+    </div>
+
+</templates>

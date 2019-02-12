@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div
+        class="o_Discuss"
+        owl="1"
+        t-att-class="{
+            'o-adding-item': state.isAddingChannel or state.isAddingChat,
+            'o-mobile': storeProps.isMobile,
+        }"
+        t-att-data-id="id"
+        t-name="mail.component.Discuss">
+        <Sidebar
+            activeThreadLocalId="storeProps.activeThreadLocalId"
+            addItemChannelInputPlaceholder="addItemChannelInputPlaceholder"
+            addItemChatInputPlaceholder="addItemChatInputPlaceholder"
+            class="o_Discuss_sidebar"
+            isAddingChannel="state.isAddingChannel"
+            isAddingChat="state.isAddingChat"
+            onAddChannelAutocompleteSelect="_onAddChannelAutocompleteSelect"
+            onAddChannelAutocompleteSource="_onAddChannelAutocompleteSource"
+            onAddChatAutocompleteSelect="_onAddChatAutocompleteSelect"
+            onAddChatAutocompleteSource="_onAddChatAutocompleteSource"
+            t-if="!storeProps.isMobile"
+            t-on-o-discuss-adding-channel.stop="_onSidebarAddingChannel"
+            t-on-o-discuss-adding-chat.stop="_onSidebarAddingChat"
+            t-on-o-discuss-cancel-adding-item.stop="_onSidebarCancelAddingItem"
+            t-on-o-select-thread="_onSelectThread"
+            t-ref="sidebar"/>
+        <t t-if="storeProps.isMobile" t-call="mail.component.DiscussContent"/>
+        <div
+            class="o_Discuss_content"
+            t-else="">
+            <t t-call="mail.component.DiscussContent"/>
+        </div>
+    </div>
+
+    <t
+        owl="1"
+        t-name="mail.component.DiscussContent">
+        <MobileMailboxSelection
+            activeThreadLocalId="storeProps.activeThreadLocalId"
+            class="o_Discuss_mobileMailboxSelection"
+            t-if="
+                storeProps.isMobile and
+                storeProps.activeMobileNavbarTabId === 'mailbox'"
+            t-on-o-select-thread="_onSelectThread"/>
+        <div
+            class="o_Discuss_mobileAddItemHeader"
+            t-if="storeProps.isMobile and
+                (
+                    state.isAddingChannel or
+                    state.isAddingChat
+                )">
+            <AutocompleteInput
+                class="o_Discuss_mobileAddItemHeaderInput"
+                isFocusOnMount="true"
+                isHtml="state.isAddingChannel"
+                placeholder="state.isAddingChannel
+                    ? addChannelInputPlaceholder
+                    : addChatInputPlaceholder"
+                select="_onMobileAddItemHeaderInputSelect"
+                source="_onMobileAddItemHeaderInputSource"
+                t-on-o-hide.stop="_onHideMobileAddItemHeader"/>
+        </div>
+        <Thread
+            areComposerAttachmentsEditable="true"
+            class="o_Discuss_thread"
+            composerAttachmentLayout="'card'"
+            composerInitialAttachmentLocalIds="
+                storeProps.storedThreadComposers[storeProps.activeThreadLocalId] and
+                storeProps.storedThreadComposers[storeProps.activeThreadLocalId].attachmentLocalIds"
+            composerInitialTextInputHtmlContent="
+                storeProps.storedThreadComposers[storeProps.activeThreadLocalId] and
+                storeProps.storedThreadComposers[storeProps.activeThreadLocalId].textInputHtmlContent"
+            domain="storeProps.domain"
+            hasComposer="storeProps.activeThread._model !== 'mail.box'"
+            hasComposerCurrentPartnerAvatar="!storeProps.isMobile"
+            hasSquashCloseMessages="storeProps.activeThread._model !== 'mail.box'"
+            haveComposerAttachmentsLabelForCardLayout="true"
+            haveMessagesAuthorRedirect="storeProps.activeThread.channel_type !== 'chat'"
+            haveMessagesMarkAsReadIcon="storeProps.activeThread.localId === 'mail.box_inbox'"
+            haveMessagesReplyIcon="storeProps.activeThread.localId === 'mail.box_inbox'"
+            messageListInitialScrollTop="
+                state.threadCachesStoredScrollTop[storeProps.activeThreadCacheLocalId] and
+                state.threadCachesStoredScrollTop[storeProps.activeThreadCacheLocalId].value"
+            selectedMessageLocalId="state.replyingToMessageMessageLocalId"
+            threadLocalId="storeProps.activeThreadLocalId"
+            t-att-class="{
+                'o-mobile': storeProps.isMobile,
+            }"
+            t-if="
+                (
+                    storeProps.isMobile and
+                    storeProps.activeMobileNavbarTabId === 'mailbox' and
+                    storeProps.activeThreadLocalId and
+                    storeProps.activeThread._model === 'mail.box'
+                ) or
+                (
+                    !storeProps.isMobile and
+                    storeProps.activeThreadLocalId
+                )"
+            t-key="storeProps.activeThreadLocalId + (storeProps.isMobile ? '_mobile' : '')"
+            t-on-o-redirect="_onRedirect"
+            t-on-o-rendered="_onThreadRendered"
+            t-on-o-reply-message.stop="_onReplyMessage"
+            t-ref="thread"/>
+        <div
+            class="o_Discuss_noThread"
+            t-if="
+                !storeProps.activeThreadLocalId and
+                (
+                    !storeProps.isMobile or
+                    storeProps.activeMobileNavbarTabId === 'mailbox'
+                )">
+            No conversation selected.
+        </div>
+        <ThreadPreviewList
+            class="o_Discuss_threadPreviewList"
+            filter="storeProps.activeMobileNavbarTabId"
+            targetThreadLocalId="storeProps.targetThreadLocalId"
+            t-if="
+                storeProps.isMobile and
+                storeProps.activeMobileNavbarTabId !== 'mailbox'"
+            t-key="storeProps.activeMobileNavbarTabId"
+            t-on-o-select-thread="_onSelectThread"
+            t-ref="threadPreviewList"/>
+        <MobileNavbar
+            activeTabId="storeProps.activeMobileNavbarTabId"
+            class="o_Discuss_mobileNavbar"
+            tabs="mobileNavbarTabs"
+            t-if="
+                storeProps.isMobile and
+                !state.isReplyingToMessage"
+            t-on-o-select-mobile-messaging-navbar-tab.stop="_onSelectMobileNavbarTab"/>
+        <Composer
+            class="o_Discuss_replyingToMessageComposer"
+            focusCounter="state.replyingToMessageCounter"
+            hasCurrentPartnerAvatar="!storeProps.isMobile"
+            hasDiscardButton="true"
+            hasThreadName="true"
+            id="id + '_replyingToMessageComposer'"
+            isDiscardOnClickAway="true"
+            isFocusOnMount="true"
+            threadLocalId="state.replyingToMessageThreadLocalId"
+            t-if="state.isReplyingToMessage"
+            t-key="'replyingToMessageComposer' + (storeProps.isMobile ? '_mobile' : '')"
+            t-on-o-discarded.stop="_onReplyingToMessageComposerDiscarded"
+            t-on-o-message-posted="_onReplyingToMessageMessagePosted"
+            t-ref="replyingToMessageComposer"/>
+    </t>
+
+    <!--
+        @param {string} searchVal
+    -->
+    <strong
+        owl="1"
+        t-name="mail.component.Discuss.AutocompleteChannelPrivateItem">Create <em><span
+            class="
+                fa
+                fa-lock"/><t t-esc="searchVal"/></em></strong>
+
+    <!--
+        @param {string} searchVal
+    -->
+    <strong
+        owl="1"
+        t-name="mail.component.Discuss.AutocompleteChannelPublicItem">Create <em><span
+            class="
+                fa
+                fa-hashtag"/><t t-esc="searchVal"/></em></strong>
+
+</templates>

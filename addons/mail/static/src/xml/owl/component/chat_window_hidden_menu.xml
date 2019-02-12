@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div
+        class="
+            dropup
+            o_ChatWindowHiddenMenu"
+        owl="1"
+        t-att-data-id="id"
+        t-name="mail.component.ChatWindowHiddenMenu">
+        <div
+            class="
+                dropdown-toggle
+                o_ChatWindowHiddenMenu_dropdownToggle"
+            t-att-class="{
+                show: state.isOpen,
+            }"
+            t-on-click.stop="_onClickToggle">
+            <div
+                class="
+                    fa
+                    fa-comments-o
+                    o_ChatWindowHiddenMenu_dropdownToggleIcon
+                    o_ChatWindowHiddenMenu_dropdownToggleItem"/>
+            <div
+                class="
+                    o_ChatWindowHiddenMenu_dropdownToggleItem
+                    o_ChatWindowHiddenMenu_windowCounter">
+                <t t-esc="props.chatWindowLocalIds.length"/>
+            </div>
+        </div>
+        <ul
+            class="
+                dropdown-menu
+                dropdown-menu-right
+                o_ChatWindowHiddenMenu_list"
+            role="menu"
+            t-att-class="{
+                show: state.isOpen,
+            }"
+            t-ref="list">
+            <t
+                t-as="chatWindowLocalId"
+                t-foreach="props.chatWindowLocalIds">
+                <li
+                    class="o_ChatWindowHiddenMenu_listItem"
+                    role="menuitem"
+                    t-key="'li_' + chatWindowLocalId">
+                    <ChatWindowHeader
+                        chatWindowLocalId="chatWindowLocalId"
+                        class="o_ChatWindowHiddenMenu_chatWindowHeader"
+                        t-key="'chatWindowHeader_' + chatWindowLocalId"
+                        t-on-o-clicked="_onClickedChatWindow"
+                        t-on-o-close="_onCloseChatWindow"/>
+                </li>
+            </t>
+        </ul>
+        <div
+            class="
+                badge
+                badge-pill
+                o_ChatWindowHiddenMenu_unreadCounter"
+            t-if="unreadCounter > 0"
+            t-key="'unreadCounter'">
+            <t t-esc="unreadCounter"/>
+        </div>
+    </div>
+
+</templates>

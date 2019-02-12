@@ -31,7 +31,7 @@ QUnit.config.autostart = false;
 /**
  * A test timeout of 1 min, before an async test is considered failed.
  */
-QUnit.config.testTimeout = 1 * 60 * 1000;
+// QUnit.config.testTimeout = 1 * 60 * 1000;
 
 /**
  * Hide passed tests by default in the QUnit page

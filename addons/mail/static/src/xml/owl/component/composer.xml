@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div
+        class="o_Composer"
+        owl="1"
+        t-att-class="{
+            'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
+            'o-has-footer': hasFooter,
+            'o-has-header': hasHeader,
+        }"
+        t-att-data-id="props.id"
+        t-att-data-local-id="localId"
+        t-name="mail.component.Composer">
+        <DropZone
+            class="o_Composer_dropZone"
+            t-if="state.hasDropZone"
+            t-on-o-dropzone-files-dropped.stop="_onDropZoneFilesDropped"
+            t-on-o-dropzone-outside-drop.prevent.stop="_onDropZoneOutsideDrop"/>
+        <input
+            class="o_Composer_fileInput"
+            multiple="true"
+            type="file"
+            t-key="'fileInput'"
+            t-on-change="_onChangeAttachment"
+            t-ref="fileInput"/>
+        <div
+            class="o_Composer_coreHeader"
+            t-if="hasHeader">
+            <span
+                class="o_Composer_threadName"
+                t-if="
+                    props.hasThreadName and
+                    storeProps.thread">
+                on: <b><t t-esc="env.store.getters.threadName(props.threadLocalId)"/></b>
+            </span>
+            <t t-if="
+                props.hasFollowers and
+                !props.isLog">
+                <!-- Text for followers -->
+                <small class="o_Composer_followers">
+                    <b class="text-muted">To: </b>
+                    <em class="text-muted">Followers of </em>
+                    <b>
+                        <t t-if="storeProps.thread">
+                            &#32;&quot;<t t-esc="storeProps.thread.name"/>&quot;
+                        </t>
+                        <t t-else="">
+                            this document
+                        </t>
+                    </b>
+                </small>
+                <!-- List of followers -->
+                <div
+                    class="o_Composer_suggestedPartners"
+                    t-if="storeProps.fullSuggestedRecipients.length">
+                    <div
+                        t-attf-title="Add as recipient and follower (reason: {{ recipient.reason }})"
+                        t-as="recipient"
+                        t-foreach="state.hasAllSuggestedRecipients
+                            ? storeprops.fullSuggestedRecipients
+                            : storeProps.fullSuggestedRecipients.slice(0, 2)"
+                        t-key="recipient.partner.id">
+                        <div
+                            class="custom-control custom-checkbox">
+                            <input
+                                class="custom-control-input"
+                                type="checkbox"
+                                t-att-checked="recipient.checked"
+                                t-attf-id="_suggested_partners_{{ recipient_index }}"/>
+                            <label
+                                class="custom-control-label"
+                                t-attf-for="_suggested_partners_{{ recipient_index }}">
+                                <t t-esc="recipient.partner.name"/><t t-if="recipient.partner.email"> (<t t-esc="recipient.partner.email"/>)</t>
+                            </label>
+                        </div>
+                    </div>
+                    <t t-if="storeProps.fullSuggestedRecipients.length > 3">
+                        <a
+                            href="#"
+                            t-if="state.hasAllSuggestedRecipients"
+                            t-on-click="_onShowLessSuggestedRecipients">
+                            Show <t t-esc="storeProps.fullSuggestedRecipients.length - 3"/> less
+                        </a>
+                        <a
+                            href="#"
+                            t-else=""
+                            t-on-click="_onShowMoreSuggestedRecipients">
+                            Show <t t-esc="storeProps.fullSuggestedRecipients.length - 3"/> more
+                        </a>
+                    </t>
+                </div>
+            </t>
+        </div>
+        <div
+            class="o_Composer_sidebarMain"
+            t-if="props.hasCurrentPartnerAvatar">
+            <img
+                alt=""
+                class="
+                    o_Composer_currentPartnerAvatar
+                    rounded-circle"
+                t-att-src="currentPartnerAvatar"/>
+        </div>
+        <div
+            class="o_Composer_coreMain">
+            <TextInput
+                class="o_Composer_textInput"
+                initialHtmlContent="props.initialTextInputHtmlContent"
+                t-att-class="{
+                    'o_Composer_textInput-mobile': storeProps.isMobile,
+                }"
+                t-on-o-discard.stop="_onDiscardInput"
+                t-on-o-input-composer-text-input="_onInputTextInput"
+                t-on-o-keydown-enter.stop="_onTextInputKeydownEnter"
+                t-on-paste="_onPasteTextInput"
+                t-ref="textInput"/>
+            <div
+                class="o_Composer_buttons"
+                t-att-class="{
+                    'o-mobile': storeProps.isMobile,
+                }">
+                <div
+                    class="o_Composer_toolButtons"
+                    t-att-class="{
+                        'o-composer-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
+                    }">
+                    <div class="o_Composer_toolButtonSeparator"/>
+                    <EmojisButton
+                        class="
+                            o_Composer_button
+                            o_Composer_buttonEmojis
+                            o_Composer_toolButton"
+                        t-att-class="{
+                            'o-mobile': storeProps.isMobile,
+                        }"
+                        t-on-o-emoji-selection.stop="_onEmojiSelection"
+                        t-ref="emojisButton"/>
+                    <button
+                        aria-label="Add attachment"
+                        class="
+                            btn
+                            btn-secondary
+                            fa
+                            fa-paperclip
+                            o_Composer_button
+                            o_Composer_buttonAttachment
+                            o_Composer_toolButton"
+                        title="Add attachment"
+                        type="button"
+                        t-att-class="{
+                            'o-mobile': storeProps.isMobile,
+                        }"
+                        t-on-click="_onClickAddAttachment"/>
+                    <button
+                        aria-label="Full composer"
+                        class="
+                            btn
+                            btn-secondary
+                            fa
+                            fa-expand
+                            o_Composer_button
+                            o_Composer_buttonFullComposer
+                            o_Composer_toolButton"
+                        title="Full composer"
+                        type="button"
+                        t-att-class="{
+                            'o-mobile': storeProps.isMobile,
+                        }"
+                        t-if="props.isExpandable"
+                        t-on-click="_onClickFullComposer"/>
+                </div>
+                <button
+                    class="
+                        btn
+                        btn-primary
+                        o_Composer_actionButton
+                        o_Composer_button
+                        o_Composer_buttonSend"
+                    type="button"
+                    t-att-class="{
+                        'fa': storeProps.isMobile,
+                        'fa-paper-plane-o': storeProps.isMobile,
+                    }"
+                    t-att-disabled="
+                        (
+                            !state.hasTextInputContent and
+                            storeProps.attachmentLocalIds.length === 0
+                        ) ? 'disabled' : ''"
+                    t-if="
+                        props.hasSendButton and
+                        props.areButtonsInline"
+                    t-on-click="_onClickSend">
+                    <t t-if="!storeProps.isMobile"><t t-if="props.isLog">Log</t><t t-else="">Send</t></t>
+                </button>
+                <button
+                    class="
+                        btn
+                        btn-secondary
+                        o_Composer_actionButton
+                        o_Composer_button
+                        o_Composer_buttonDiscard"
+                    type="button"
+                    t-if="
+                        !storeProps.isMobile and
+                        props.hasDiscardButton and
+                        props.areButtonsInline"
+                    t-on-click="_onClickDiscard">
+                    Discard
+                </button>
+            </div>
+        </div>
+        <div
+            class="o_Composer_coreFooter"
+            t-if="hasFooter">
+            <AttachmentList
+                areAttachmentsEditable="true"
+                attachmentLocalIds="storeProps.attachmentLocalIds"
+                attachmentsLayout="props.attachmentsLayout"
+                class="o_Composer_attachmentList"
+                haveAttachmentsLabelForCardLayout="props.haveAttachmentsLabelForCardLayout"
+                t-if="storeProps.attachmentLocalIds.length > 0"/>
+        </div>
+    </div>
+
+</templates>

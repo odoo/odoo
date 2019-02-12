@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div
+        class="o_ChatWindow"
+        owl="1"
+        tabindex="0"
+        t-att-class="{
+            'o-focused': state.focused,
+            'o-folded': isFolded(),
+            'o-fullscreen': props.isFullscreen,
+            'o-mobile': storeProps.isMobile,
+            'o-new-message': props.chatWindowLocalId === 'new_message',
+        }"
+        t-att-data-chat-window-local-id="props.chatWindowLocalId"
+        t-att-data-id="id"
+        t-att-data-thread-local-id="storeProps.thread ? storeProps.thread.localId : ''"
+        t-name="mail.component.ChatWindow"
+        t-on-click.stop="_onClick"
+        t-on-keydown="_onKeydown">
+        <Header
+            chatWindowLocalId="props.chatWindowLocalId"
+            class="o_ChatWindow_header"
+            hasCloseAsBackButton="props.hasCloseAsBackButton"
+            hasShiftLeft="props.hasShiftLeft"
+            hasShiftRight="props.hasShiftRight"
+            isExpandable="props.isExpandable"
+            t-on-o-clicked.stop="_onClickedHeader"/>
+        <Thread
+            areComposerAttachmentsEditable="true"
+            class="o_ChatWindow_thread"
+            composerAttachmentLayout="'card'"
+            composerInitialAttachmentLocalIds="props.composerInitialAttachmentLocalIds"
+            composerInitialTextInputHtmlContent="props.composerInitialTextInputHtmlContent"
+            domain="[]"
+            hasComposer="storeProps.thread._model !== 'mail.box'"
+            hasComposerCurrentPartnerAvatar="false"
+            hasComposerSendButton="storeProps.isMobile"
+            hasSquashCloseMessages="storeProps.thread._model !== 'mail.box'"
+            haveComposerAttachmentsLabelForCardLayout="false"
+            haveMessagesAuthorRedirect="storeProps.thread.channel_type !== 'chat'"
+            messageListInitialScrollTop="props.threadInitialScrollTop"
+            threadLocalId="props.chatWindowLocalId"
+            t-if="storeProps.thread"
+            t-on-focusin.stop="_onFocusinThread"
+            t-ref="thread"/>
+        <div
+            class="o_ChatWindow_newMessageForm"
+            t-else=""
+            t-key="'newMessageContainer'">
+            <span class="o_ChatWindow_newMessageFormLabel">
+                To:
+            </span>
+            <AutocompleteInput
+                class="o_ChatWindow_newMessageFormInput"
+                isHtml="true"
+                placeholder="newMessageFormInputPlaceholder"
+                select="_onAutocompleteSelect"
+                source="_onAutocompleteSource"
+                t-ref="input"/>
+        </div>
+    </div>
+
+</templates>

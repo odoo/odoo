@@ -551,7 +551,8 @@ MailManager.include({
      */
     _listenOnBuses: function () {
         this._super.apply(this, arguments);
-        this.call('bus_service', 'onNotification', this, this._onNotification);
+        // disable notification handling to prevent side-effect with messaging store
+        // this.call('bus_service', 'onNotification', this, this._onNotification);
     },
     /**
      * Update the message notification status of message based on update_message

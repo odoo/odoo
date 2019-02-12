@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!--
+        @param {string} status
+    -->
+    <span t-name="mail.widget.UserStatus">
+        <i
+            aria-label="User is online"
+            class="
+                fa
+                fa-circle
+                o_mail_user_status
+                o_user_online
+            "
+            role="img"
+            title="Online"
+            t-if="status == 'online'"/>
+        <i
+            aria-label="User is idle"
+            class="
+                fa
+                fa-circle
+                o_mail_user_status
+                o_user_idle
+            "
+            role="img"
+            title="Idle"
+            t-if="status == 'away'"/>
+        <i
+            aria-label="User is offline"
+            class="
+                fa
+                fa-circle-o
+                o_mail_user_status
+            "
+            role="img"
+            title="Offline"
+            t-if="status == 'offline'"/>
+        <i
+            aria-label="User is a bot"
+            class="
+                fa
+                fa-heart
+                o_mail_user_status
+                o_user_online
+            "
+            role="img"
+            title="Bot"
+            t-if="status == 'bot'"/>
+    </span>
+
+</templates>

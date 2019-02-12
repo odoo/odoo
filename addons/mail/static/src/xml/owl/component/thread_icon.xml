@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div
+        class="o_ThreadIcon"
+        owl="1"
+        t-name="mail.component.ThreadIcon">
+        <t t-if="storeProps.thread.channel_type === 'channel'">
+            <div
+                class="
+                    fa
+                    fa-lock
+                    o_ThreadIcon_channelPrivate"
+                title="Private channel"
+                t-if="storeProps.thread.public === 'private'"/>
+            <div
+                class="
+                    fa
+                    fa-hashtag
+                    o_ThreadIcon_channelPublic"
+                title="Public channel"
+                t-else=""/>
+        </t>
+        <t t-elif="storeProps.thread.channel_type === 'chat'">
+            <div
+                class="
+                    fa
+                    fa-circle
+                    o_ThreadIcon_online"
+                title="Online"
+                t-if="storeProps.directPartner.im_status === 'online'"/>
+            <div
+                class="
+                    fa
+                    fa-circle-o
+                    o_ThreadIcon_offline"
+                title="Offline"
+                t-elif="storeProps.directPartner.im_status === 'offline'"/>
+            <div
+                class="
+                    fa
+                    fa-circle
+                    o_ThreadIcon_away"
+                title="Away"
+                t-elif="storeProps.directPartner.im_status === 'away'"/>
+            <div
+                class="o_ThreadIcon_typing"
+                title="Is typing..."
+                t-elif="storeProps.thread.typingMemberLocalIds.includes(storeProps.thread.directPartnerLocalId)">
+                <span class="o_ThreadIcon_typingDot"/>
+                <span class="o_ThreadIcon_typingDot"/>
+                <span class="o_ThreadIcon_typingDot"/>
+            </div>
+            <div
+                class="
+                    fa
+                    fa-heart
+                    o_ThreadIcon_online"
+                title="Bot"
+                t-elif="storeProps.directPartner.im_status === 'bot'"/>
+            <div
+                class="
+                    fa
+                    fa-question-circle"
+                title="No IM status available"
+                t-else=""/>
+        </t>
+        <t t-elif="storeProps.thread._model === 'mail.box'">
+            <div
+                class="
+                    fa
+                    fa-inbox
+                    o_ThreadIcon_mailboxInbox"
+                t-if="storeProps.thread.localId === 'mail.box_inbox'"/>
+            <div
+                class="
+                    fa
+                    fa-star-o
+                    o_ThreadIcon_mailboxStarred"
+                t-elif="storeProps.thread.localId === 'mail.box_starred'"/>
+            <div
+                class="
+                    fa
+                    fa-history
+                    o_ThreadIcon_mailboxHistory"
+                t-elif="storeProps.thread.localId === 'mail.box_history'"/>
+            <div
+                class="
+                    fa
+                    fa-envelope
+                    o_ThreadIcon_mailboxModeration"
+                t-elif="storeProps.thread.localId === 'mail.box_moderation'"/>
+        </t>
+    </div>
+
+</templates>

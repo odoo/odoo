@@ -8,6 +8,8 @@ var QWeb = require('web.QWeb');
 var Registry = require('web.Registry');
 var translation = require('web.translation');
 
+// owl.QWeb.dev = true;
+
 /**
  * Whether the client is currently in "debug" mode
  *
@@ -25,9 +27,9 @@ _.each('resize,scroll'.split(','), function (evtype) {
         bus.trigger(evtype, ev);
     });
 });
-
 return {
     qweb: new QWeb(config.isDebug()),
+    qwebOwl: new owl.QWeb(),
 
     // core classes and functions
     Class: Class,

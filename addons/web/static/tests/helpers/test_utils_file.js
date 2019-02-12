@@ -11,7 +11,6 @@ odoo.define('web.test_utils_file', function () {
  * testUtils file.
  */
 
-
 //------------------------------------------------------------------------------
 // Private functions
 //------------------------------------------------------------------------------
@@ -28,9 +27,6 @@ function _createFakeDataTransfer(files) {
         dropEffect: 'all',
         effectAllowed: 'all',
         files,
-        getData: function () {
-            return file;
-        },
         items: [],
         types: ['Files'],
     };
