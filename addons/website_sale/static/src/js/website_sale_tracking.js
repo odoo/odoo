@@ -1,8 +1,8 @@
 odoo.define('website_sale.tracking', function (require) {
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimations.registry.websiteSaleTracking = sAnimations.Class.extend({
+publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
     events: {
         'click form[action="/shop/cart/update"] a.a-submit': '_onAddProductIntoCart',
@@ -110,5 +110,4 @@ sAnimations.registry.websiteSaleTracking = sAnimations.Class.extend({
         this._vpv('/stats/ecom/order_payment/' + method);
     },
 });
-
 });

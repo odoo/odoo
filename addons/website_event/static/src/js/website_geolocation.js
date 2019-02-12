@@ -1,9 +1,9 @@
 odoo.define('website_event.geolocation', function (require) {
 'use strict';
 
-var sAnimation = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimation.registry.visitor = sAnimation.Class.extend({
+publicWidget.registry.visitor = publicWidget.Widget.extend({
     selector: ".oe_country_events, .country_events",
 
     /**

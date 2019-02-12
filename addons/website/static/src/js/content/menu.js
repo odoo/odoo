@@ -2,10 +2,10 @@ odoo.define('website.content.menu', function (require) {
 'use strict';
 
 var dom = require('web.dom');
-var sAnimation = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 var wUtils = require('website.utils');
 
-sAnimation.registry.affixMenu = sAnimation.Class.extend({
+publicWidget.registry.affixMenu = publicWidget.Widget.extend({
     selector: 'header.o_affix_enabled',
 
     /**
@@ -101,7 +101,7 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
  * Note: this works well with the affixMenu... by chance (autohideMenu is called
  * after alphabetically).
  */
-sAnimation.registry.autohideMenu = sAnimation.Class.extend({
+publicWidget.registry.autohideMenu = publicWidget.Widget.extend({
     selector: 'header #top_menu',
 
     /**
@@ -151,7 +151,7 @@ sAnimation.registry.autohideMenu = sAnimation.Class.extend({
  *
  * @todo check bootstrap v4: maybe handled automatically now ?
  */
-sAnimation.registry.menuDirection = sAnimation.Class.extend({
+publicWidget.registry.menuDirection = publicWidget.Widget.extend({
     selector: 'header .navbar .nav',
     events: {
         'show.bs.dropdown': '_onDropdownShow',

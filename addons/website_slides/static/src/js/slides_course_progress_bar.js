@@ -1,9 +1,9 @@
 odoo.define('website_slides.progress.bar', function (require) {
+    'use strict';
 
-    var sAnimations = require('website.content.snippets.animation');
-    var Widget = require('web.Widget');
+    var publicWidget = require('web.public.widget');
 
-    var ProgressBar = Widget.extend({
+    var ProgressBar = publicWidget.Widget.extend({
 
         /**
          * @override
@@ -30,7 +30,7 @@ odoo.define('website_slides.progress.bar', function (require) {
         },
     });
 
-    sAnimations.registry.websiteSlidesProgressBar = sAnimations.Class.extend({
+    publicWidget.registry.websiteSlidesProgressBar = publicWidget.Widget.extend({
         selector: '.oe_slide_js_progress_bar',
         /**
          * @override
@@ -44,4 +44,4 @@ odoo.define('website_slides.progress.bar', function (require) {
     });
 
     return ProgressBar;
-    });
+});

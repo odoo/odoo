@@ -1,9 +1,9 @@
-odoo.define('website_sale.validate', function(require) {
+odoo.define('website_sale.validate', function (require) {
 'use strict';
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimations.registry.websiteSaleValidate = sAnimations.Class.extend({
+publicWidget.registry.websiteSaleValidate = publicWidget.Widget.extend({
     selector: 'div.oe_website_sale_tx_status[data-order-id]',
 
     /**

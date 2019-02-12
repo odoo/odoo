@@ -1,9 +1,9 @@
 odoo.define('website_mail.follow', function (require) {
 'use strict';
 
-var sAnimation = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimation.registry.follow = sAnimation.Class.extend({
+publicWidget.registry.follow = publicWidget.Widget.extend({
     selector: '.js_follow',
     disabledInEditableMode: false,
 

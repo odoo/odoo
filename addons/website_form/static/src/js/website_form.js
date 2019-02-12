@@ -4,12 +4,12 @@ odoo.define('website_form.animation', function (require) {
     var core = require('web.core');
     var time = require('web.time');
     var ajax = require('web.ajax');
-    var sAnimation = require('website.content.snippets.animation');
+    var publicWidget = require('web.public.widget');
 
     var _t = core._t;
     var qweb = core.qweb;
 
-    sAnimation.registry.form_builder_send = sAnimation.Class.extend({
+    publicWidget.registry.form_builder_send = publicWidget.Widget.extend({
         selector: '.s_website_form',
 
         willStart: function () {
