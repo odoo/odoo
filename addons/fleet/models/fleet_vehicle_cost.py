@@ -138,7 +138,7 @@ class FleetVehicleLogContract(models.Model):
     odometer = fields.Float(string='Odometer at creation', 
         help='Odometer measure of the vehicle at the moment of the contract creation')
 
-    @api.depends('vehicle_id', 'cost_subtype_id', 'date')
+    @api.depends('cost_id.vehicle_id', 'cost_id.cost_subtype_id', 'cost_id.date')
     def _compute_contract_name(self):
         for record in self:
             name = record.vehicle_id.name
