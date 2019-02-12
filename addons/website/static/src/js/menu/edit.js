@@ -92,7 +92,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         if (this.editModeEnable) {
             return;
         }
-        this.trigger_up('animation_stop_demand', {
+        this.trigger_up('widgets_stop_request', {
             $target: this._targetForEdition(),
         });
         var $welcomeMessageParent = null;
@@ -112,7 +112,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 .not('[data-editor-message]')
                 .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
             var def = $.Deferred();
-            self.trigger_up('animation_start_demand', {
+            self.trigger_up('widgets_start_request', {
                 editableMode: true,
                 onSuccess: def.resolve.bind(def),
                 onFailure: def.reject.bind(def),
@@ -154,77 +154,77 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
 
     /**
      * Called when content will be destroyed in the page. Notifies the
-     * WebsiteRoot that is should stop the animations.
+     * WebsiteRoot that is should stop the public widgets.
      *
      * @private
      * @param {OdooEvent} ev
      */
     _onContentWillBeDestroyed: function (ev) {
-        this.trigger_up('animation_stop_demand', {
+        this.trigger_up('widgets_stop_request', {
             $target: ev.data.$target,
         });
     },
     /**
      * Called when content was recreated in the page. Notifies the
-     * WebsiteRoot that is should start the animations.
+     * WebsiteRoot that is should start the public widgets.
      *
      * @private
      * @param {OdooEvent} ev
      */
     _onContentWasRecreated: function (ev) {
-        this.trigger_up('animation_start_demand', {
+        this.trigger_up('widgets_start_request', {
             editableMode: true,
             $target: ev.data.$target,
         });
     },
     /**
      * Called when edition will stop. Notifies the
-     * WebsiteRoot that is should stop the animations.
+     * WebsiteRoot that is should stop the public widgets.
      *
      * @private
      * @param {OdooEvent} ev
      */
     _onEditionWillStop: function (ev) {
         this.$editorMessageElements.removeAttr('data-editor-message');
-        this.trigger_up('animation_stop_demand', {
+        this.trigger_up('widgets_stop_request', {
             $target: this._targetForEdition(),
         });
     },
     /**
      * Called when edition was stopped. Notifies the
-     * WebsiteRoot that is should start the animations.
+     * WebsiteRoot that is should start the public widgets.
      *
      * @private
      * @param {OdooEvent} ev
      */
     _onEditionWasStopped: function (ev) {
-        this.trigger_up('animation_start_demand', {
+        this.trigger_up('widgets_start_request', {
             $target: this._targetForEdition(),
         });
         this.editModeEnable = false;
     },
     /**
      * Called when a snippet is cloned in the page. Notifies the WebsiteRoot
-     * that is should start the animations for this snippet.
+     * that is should start the public widgets for this snippet.
      *
      * @private
      * @param {OdooEvent} ev
      */
     _onSnippetCloned: function (ev) {
-        this.trigger_up('animation_start_demand', {
+        this.trigger_up('widgets_start_request', {
             editableMode: true,
             $target: ev.data.$target,
         });
     },
     /**
      * Called when a snippet is dropped in the page. Notifies the WebsiteRoot
-     * that is should start the animations for this snippet.
+     * that is should start the public widgets for this snippet.
      *
      * @private
      * @param {OdooEvent} ev
      */
     _onSnippetDropped: function (ev) {
-        this.trigger_up('animation_start_demand', {
+        this.trigger_up('widgets_start_request', {
             editableMode: true,
             $target: ev.data.$target,
         });
