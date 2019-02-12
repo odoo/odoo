@@ -13,6 +13,12 @@
                         <field name="count" invisible="[('count','=',1)]" readonly="True"/>
                         <field name="advance_payment_method" class="oe_inline" widget="radio"
                             attrs="{'invisible': [('count','&gt;',1)]}"/>
+                        <field name="has_down_payments" invisible="1" />
+                        <label for="deduct_down_payments" string="" attrs="{'invisible': ['|', ('has_down_payments', '=', False), ('advance_payment_method', '!=', 'delivered')]}"/>
+                        <div attrs="{'invisible': ['|', ('has_down_payments', '=', False), ('advance_payment_method', '!=', 'delivered')]}">
+                            <field name="deduct_down_payments" nolabel="1"/>
+                            <label for="deduct_down_payments"/>
+                        </div>
                         <field name="product_id"
                             context="{'search_default_services': 1, 'default_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline"
                             invisible="1"/>
@@ -30,10 +36,9 @@
                             attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}"/>
                     </group>
                     <footer>
-                        <button name="create_invoices" string="Create and View Invoices" type="object"
+                        <button name="create_invoices" string="Create and View Invoice" type="object"
                             context="{'open_invoices': True}" class="btn-primary"/>
-                        <button name="create_invoices" string="Create Invoices" type="object"
-                            class="btn-primary"/>
+                        <button name="create_invoices" string="Create Invoice" type="object"/>
                         <button string="Cancel" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form>

@@ -19,7 +19,7 @@ return Widget.extend({
     //      to obtain the current search string.
     init: function (parent, options) {
         this._super(parent);
-        this.$input = parent.$el;
+        this.$input = options.$input;
         this.source = options.source;
         this.select = options.select;
         this.get_search_string = options.get_search_string;
@@ -90,14 +90,24 @@ return Widget.extend({
                     ev.preventDefault();
                     break;
                 case $.ui.keyCode.RIGHT:
+                    if(self.$input[0].selectionStart < self.search_string.length) {
+                        ev.stopPropagation();
+                        return;
+                    }
                     self.searching = false;
                     var current = self.current_result;
                     if (current && current.expand && !current.expanded) {
                         self.expand();
                         self.searching = true;
+                        ev.stopPropagation();
                     }
                     ev.preventDefault();
                     break;
+                case $.ui.keyCode.LEFT:
+                     if(self.$input[0].selectionStart > 0) {
+                        ev.stopPropagation();
+                     }
+                     break;
                 case $.ui.keyCode.ESCAPE:
                     self.close();
                     self.searching = false;

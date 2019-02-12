@@ -154,6 +154,7 @@
                     <span t-if="displayStatus">
                         <t t-call="mail.UserStatus">
                             <t t-set="status" t-value="channel.getStatus()"/>
+                            <t t-set="partnerID" t-value="channel.getDirectPartnerID()"/>
                         </t>
                     </span>
                     <span t-if="displayHash" class="o_mail_hash">#</span>
@@ -176,11 +177,14 @@
 
     <!--
         @param {string} status
+        @param {integer|undefined} [partnerID]
     -->
     <t t-name="mail.UserStatus">
-        <i t-if="status == 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online" role="img" aria-label="User is online"/>
-        <i t-if="status == 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle" role="img" aria-label="User is idle"/>
-        <i t-if="status == 'offline'" class="o_mail_user_status fa fa-circle-o" title="Offline" role="img" aria-label="User is offline"/>
+        <span t-att-class="partnerID ? 'o_updatable_im_status' : ''" t-att-data-partner-id="partnerID">
+            <i t-if="status == 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online" role="img" aria-label="User is online"/>
+            <i t-if="status == 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle" role="img" aria-label="User is idle"/>
+            <i t-if="status == 'offline'" class="o_mail_user_status fa fa-circle" title="Offline" role="img" aria-label="User is offline"/>
+        </span>
     </t>
 
     <!--
@@ -300,8 +304,9 @@
              t-att-data-preview-id="preview.id" t-att-data-document-id="preview.documentID" t-att-data-document-model="preview.documentModel" t-att-data-unread-counter="preview.unreadCounter" t-att-data-message-ids="preview.messageIDs">
             <div t-attf-class="o_mail_preview_image #{preview.documentModel ? 'o_mail_preview_app' : ''}">
                 <img class="o_mail_preview_image" t-att-src="preview.imageSRC" alt="Preview"/>
-                <i t-if="preview.status === 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online" role="img" aria-label="User is online"/>
-                <i t-if="preview.status === 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle" role="img" aria-label="User is idle"/>
+                <t t-call="mail.UserStatus">
+                    <t t-set="status" t-value="preview.status"/>
+                </t>
             </div>
             <div class="o_preview_info">
                 <div class="o_preview_title">

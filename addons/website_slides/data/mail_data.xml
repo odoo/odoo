@@ -60,5 +60,29 @@
             <field name="default" eval="True"/>
             <field name="description">Presentation Published</field>
         </record>
+
+        <!-- Slide channel invite feature -->
+        <record id="mail_template_slide_channel_invite" model="mail.template">
+            <field name="name">Channel: Invite by email</field>
+            <field name="model_id" ref="model_slide_channel_partner" />
+            <field name="subject">You have been invited to join ${object.channel_id.name}</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; font-size: 13px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear ${object.partner_id.name or 'participant'}<br/><br/>
+        You have been invited to join a new course: ${object.channel_id.name}.
+        <div style="margin: 16px 0px 16px 0px;">
+            <a href="${(object.channel_id.website_url) | safe}"
+                style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                Click here to start the course.
+            </a>
+        </div>
+        Enjoy this exclusive content !
+    </p>
+</div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="False"/>
+        </record>
     </data>
 </odoo>

@@ -14,7 +14,7 @@ from werkzeug import urls
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools import image
-from odoo.exceptions import Warning
+from odoo.exceptions import Warning, UserError
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
 
@@ -25,8 +25,10 @@ class SlidePartnerRelation(models.Model):
     _table = 'slide_slide_partner'
 
     slide_id = fields.Many2one('slide.slide', index=True, required=True)
+    channel_id = fields.Many2one('slide.channel', string="Channel", related="slide_id.channel_id", store=True, index=True)
     partner_id = fields.Many2one('res.partner', index=True, required=True)
     vote = fields.Integer('Vote', default=0)
+    completed = fields.Boolean('Completed')
 
 
 class EmbeddedSlide(models.Model):
@@ -106,7 +108,8 @@ class Slide(models.Model):
         [('none', 'No One'), ('user', 'Authenticated Users Only'), ('public', 'Everyone')],
         string='Download Security',
         required=True, default='user')
-    is_preview = fields.Boolean('Previewable', default=False)  # TDE FIXME: clean name + help
+    is_preview = fields.Boolean('Always visible', default=False)
+    completion_time = fields.Float('# Hours', default=1, digits=(10, 4))
     image = fields.Binary('Image', attachment=True)
     image_medium = fields.Binary('Medium', compute="_get_image", store=True, attachment=True)
     image_thumb = fields.Binary('Thumbnail', compute="_get_image", store=True, attachment=True)
@@ -256,9 +259,7 @@ class Slide(models.Model):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.items():
                 values.setdefault(key, value)
-        if values.get('channel_id'):
-            custom_channels = self.env['slide.channel'].search([('custom_slide_id', '=', self.id), ('id', '!=', values.get('channel_id'))])
-            custom_channels.write({'custom_slide_id': False})
+
         res = super(Slide, self).write(values)
         if values.get('website_published'):
             self.date_published = datetime.datetime.now()
@@ -359,6 +360,54 @@ class Slide(models.Model):
             new_slide.write({
                 'slide_partner_ids': [(0, 0, {'vote': new_vote, 'partner_id': self.env.user.partner_id.id})]
             })
+
+    def action_set_viewed(self):
+        if not all(slide.channel_id.is_member for slide in self):
+            raise UserError(_('You cannot mark a slide as viewed if you are not among its members.'))
+
+        return self._action_set_viewed(self.env.user.partner_id)
+
+    def _action_set_viewed(self, target_partner):
+        self_sudo = self.sudo()
+        SlidePartnerSudo = self.env['slide.slide.partner'].sudo()
+        existing_sudo = SlidePartnerSudo.search([
+            ('slide_id', 'in', self.ids),
+            ('partner_id', '=', target_partner.id)
+        ])
+
+        new_slides = self_sudo - existing_sudo.mapped('slide_id')
+        SlidePartnerSudo.create([{
+            'slide_id': new_slide.id,
+            'channel_id': new_slide.channel_id.id,
+            'partner_id': target_partner.id,
+            'vote': 0} for new_slide in new_slides])
+
+        return True
+
+    def action_set_completed(self):
+        if not all(slide.channel_id.is_member for slide in self):
+            raise UserError(_('You cannot mark a slide as completed if you are not among its members.'))
+
+        return self._action_set_completed(self.env.user.partner_id)
+
+    def _action_set_completed(self, target_partner):
+        self_sudo = self.sudo()
+        SlidePartnerSudo = self.env['slide.slide.partner'].sudo()
+        existing_sudo = SlidePartnerSudo.search([
+            ('slide_id', 'in', self.ids),
+            ('partner_id', '=', target_partner.id)
+        ])
+        existing_sudo.write({'completed': True})
+
+        new_slides = self_sudo - existing_sudo.mapped('slide_id')
+        SlidePartnerSudo.create([{
+            'slide_id': new_slide.id,
+            'channel_id': new_slide.channel_id.id,
+            'partner_id': target_partner.id,
+            'vote': 0,
+            'completed': True} for new_slide in new_slides])
+
+        return True
 
     # --------------------------------------------------
     # Parsing methods

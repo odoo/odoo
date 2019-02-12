@@ -26,6 +26,7 @@ class MailTestStandard(models.Model):
     email_from = fields.Char()
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True)
     umbrella_id = fields.Many2one('mail.test', tracking=True)
+    company_id = fields.Many2one('res.company')
 
 
 class MailTestActivity(models.Model):

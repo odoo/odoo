@@ -92,7 +92,6 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
 
         # Let's do an invoice with refunds
         payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
-            'advance_payment_method': 'all',
             'deposit_account_id': self.account_income.id
         })
         payment.create_invoices()

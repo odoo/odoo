@@ -47,8 +47,18 @@
             <field name="model">slide.channel</field>
             <field name="arch" type="xml">
                 <form string="Channels">
+                    <header>
+                        <button name="action_channel_invite" string="Invite" type="object" class="oe_highlight"  attrs="{'invisible': [('visibility', '!=', 'invite')]}"/>
+                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
+                            <button name="action_redirect_to_members"
+                                type="object"
+                                icon="fa-users"
+                                class="oe_stat_button"
+                                groups="website.group_website_publisher">
+                                <field name="members_count" string="Attendees" widget="statinfo"/>
+                            </button>
                             <button class="oe_stat_button" name="website_publish_button"
                                     type="object" icon="fa-globe">
                                 <field name="is_published" widget="website_button"/>
@@ -57,41 +67,56 @@
                                 <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                             </button>
                         </div>
+                        <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium'}"/>
                         <div class="oe_title">
-                            <div class="oe_edit_only">
-                                <label for="name" string="Name"/>
-                            </div>
-                            <h1>
-                                <field name="name" default_focus="1" placeholder="Name"/>
-                            </h1>
+                            <label for="name" class="oe_edit_only" string="Name"/>
+                            <h1><field name="name" default_focus="1" placeholder="Name"/></h1>
                         </div>
-                        <field name="category_ids" widget="many2many_tags" placeholder="Categories" context="{'default_channel_id': active_id}"
-                            domain="[('channel_id','=', active_id)]"/>
+                        <group>
+                            <group>
+                                <field name="visibility" string="Enroll" widget="radio"/>
+                                <field name="category_ids" widget="many2many_tags" placeholder="Categories"
+                                    context="{'default_channel_id': active_id}"
+                                    domain="[('channel_id','=', active_id)]"/>
+                                <field name="tag_ids" widget="many2many_tags" placeholder="Tags"/>
+                            </group>
+                        </group>
                         <notebook colspan="4">
-                            <page string="General">
+                            <page string="Description">
+                                <field name="description" colspan="4" nolabel="1"/>
+                            </page>
+                            <page string="Options">
                                 <group>
                                     <group>
+                                        <field name="channel_type"/>
                                         <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                         <field name="promote_strategy" widget="radio"/>
-                                        <field name="custom_slide_id" class="oe_edit_only" attrs="{'invisible': [('promote_strategy', '!=', 'custom')]}" domain="[('channel_id','=',id), ('website_published','=',True)]"/>
-                                        <field name="promoted_slide_id" attrs="{'invisible': [('promote_strategy', '!=', 'custom')]}"/>
                                     </group>
                                     <group>
+                                        <field name="upload_group_ids" widget="many2many_tags"/>
                                         <field name="publish_template_id" domain="[('model','=','slide.slide')]"/>
                                         <field name="share_template_id" domain="[('model','=','slide.slide')]"/>
                                     </group>
                                 </group>
-                                <label for="description"/>
-                                <field name="description" colspan="4" nolabel="1"/>
-                            </page>
-                            <page string="Security">
-                                <group>
-                                    <field name="upload_group_ids" widget="many2many_tags"/>
-                                    <field name="visibility" string="Channel visibility" widget="radio"/>
-                                </group>
                                 <group colspan="4">
-                                        <label for="enroll_msg"/>
-                                        <field name="enroll_msg" colspan="4" nolabel="1"/>
+                                    <label for="enroll_msg"/>
+                                    <field name="enroll_msg" colspan="4" nolabel="1"/>
+                                </group>
+                            </page>
+                            <page string="Statistics" groups="base.group_no_one">
+                                <group>
+                                    <group>
+                                        <field name="nbr_presentations"/>
+                                        <field name="nbr_documents"/>
+                                        <field name="nbr_videos"/>
+                                        <field name="nbr_infographics"/>
+                                        <field name="total_slides"/>
+                                    </group>
+                                    <group>
+                                        <field name="total_views"/>
+                                        <field name="total_votes"/>
+                                        <field name="total_time"/>
+                                    </group>
                                 </group>
                             </page>
                         </notebook>

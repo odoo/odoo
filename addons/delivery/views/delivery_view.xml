@@ -84,6 +84,7 @@
                                 <field name="integration_level" widget="radio" attrs="{'invisible': ['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"/>
                             </group>
                             <group name="delivery_details">
+                                <field name="invoice_policy" widget="radio" attrs="{'invisible': [('delivery_type', 'in', ('fixed', 'base_on_rule'))]}"/>
                                 <label for="margin" string="Margin on Rate"/>
                                 <div>
                                     <field name="margin" class="oe_inline"/>%
@@ -291,27 +292,50 @@
             <field name="arch" type="xml">
                 <data>
                   <xpath expr="//field[@name='payment_term_id']" position="after">
-                      <field name="id" invisible="1"/>
-                      <field name="available_carrier_ids" invisible="1"/>
-                      <label for="carrier_id"/>
                       <div name='carrier_selection'>
-                          <div>
-                            <field name="carrier_id" domain="[('id', 'in', available_carrier_ids)]" context="{'order_id': id}" class="oe_inline" options="{'no_create': True, 'no_open': True}" attrs="{'readonly':[('state','not in',('draft','sent'))]}"/> <i class="fa fa-check text-success" role="img" aria-label="Rating OK" title="Rating OK" attrs="{'invisible':['|','|',('carrier_id','=',False),('state','not in',('draft','sent')),('delivery_rating_success','=',False)]}"></i>
-                          </div>
-                          <div>
-                            <field name='delivery_price' widget='monetary' class="oe_inline" options="{'currency_field': 'currency_id'}" nolabel="1" attrs="{'invisible': [('carrier_id','=', False)]}" force_save="1"/>
-                            <button name="get_delivery_price" type="object" class="oe_inline oe_link" attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"><i class="fa fa-arrow-right"/> Get rate</button>
-                            <button name="set_delivery_line" type="object" class="oe_inline oe_link" attrs="{'invisible':['|','|',('carrier_id','=',False),('state','not in',('draft','sent')),('delivery_rating_success','=',False)]}"><i class="fa fa-arrow-right"/> Add to order</button>
-                            <field name='delivery_rating_success' invisible="1" force_save="1"/>
-                          </div>
-                          <div class="alert alert-info" role="status" attrs="{'invisible': ['|',('carrier_id','=', False),('delivery_message','=',False)]}">
+                          <div class="alert alert-info" role="status" attrs="{'invisible': [('delivery_message','=',False)]}">
                             <field name='delivery_message' force_save="1"/>
                           </div>
                       </div>
                   </xpath>
-                  <xpath expr="//field[@name='product_uom_qty']" position="after">
-                      <field name="product_qty" invisible="1"/>
-                  </xpath>
+                    <xpath expr="//field[@name='partner_id']" position='after'>
+                        <field name="delivery_set" invisible="1"/>
+                        <field name="recompute_delivery_price" invisible="1"/>
+                    </xpath>
+                    <xpath expr="//group[@name='note_group']" position="before">
+                        <div class="oe_left" style="margin-left: 10px">
+                            <button
+                                string="Add a shipping method"
+                                name="action_open_delivery_wizard"
+                                type="object"
+                                attrs="{'invisible': ['|', '|', ('order_line', '=', []), ('delivery_set', '=', True), ('state', 'not in', ('draft', 'sent'))]}"
+                            />
+                            <button
+                                string="Recompute shipping cost"
+                                name="recompute_delivery_cost"
+                                type="object"
+                                class="text-warning btn-secondary"
+                                attrs="{'invisible': ['|', '|', ('recompute_delivery_price', '=', False), ('delivery_set', '=', False), ('state', 'not in', ('draft', 'sent'))]}"
+                            />
+                            <button
+                                string="Recompute shipping cost"
+                                name="recompute_delivery_cost"
+                                type="object"
+                                attrs="{'invisible': ['|', '|', ('recompute_delivery_price', '=', True), ('delivery_set', '=', False), ('state', 'not in', ('draft', 'sent'))]}"
+                            />
+                        </div>
+                    </xpath>
+                    <xpath expr="//field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
+                        <field name="recompute_delivery_price" invisible="1"/>
+                        <field name="is_delivery" invisible="1"/>
+                    </xpath>
+                    <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="before">
+                        <field name="recompute_delivery_price" invisible="1"/>
+                        <field name="is_delivery" invisible="1"/>
+                    </xpath>
+                    <xpath expr="//field[@name='order_line']/tree" position="attributes">
+                        <attribute name="decoration-warning">recompute_delivery_price and is_delivery</attribute>
+                    </xpath>
                 </data>
             </field>
         </record>

@@ -17,17 +17,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
         return len(self._context.get('active_ids', []))
 
     @api.model
-    def _get_advance_payment_method(self):
-        if self._count() == 1:
-            sale_obj = self.env['sale.order']
-            order = sale_obj.browse(self._context.get('active_ids'))[0]
-            if order.order_line.filtered(lambda dp: dp.is_downpayment) and order.invoice_ids.filtered(lambda invoice: invoice.state != 'cancel') or order.order_line.filtered(lambda l: l.qty_to_invoice < 0):
-                return 'all'
-            else:
-                return 'delivered'
-        return 'all'
-
-    @api.model
     def _default_product_id(self):
         product_id = self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id')
         return self.env['product.product'].browse(int(product_id))
@@ -40,12 +29,25 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _default_deposit_taxes_id(self):
         return self._default_product_id().taxes_id
 
+    @api.model
+    def _default_has_down_payment(self):
+        if self._context.get('active_model') == 'sale.order' and self._context.get('active_id', False):
+            sale_order = self.env['sale.order'].browse(self._context.get('active_id'))
+            return sale_order.order_line.filtered(
+                lambda sale_order_line: sale_order_line.is_downpayment
+            )
+
+        return False
+
     advance_payment_method = fields.Selection([
-        ('delivered', 'Invoiceable lines'),
-        ('all', 'Invoiceable lines (deduct down payments)'),
+        ('delivered', 'Regular invoice'),
         ('percentage', 'Down payment (percentage)'),
         ('fixed', 'Down payment (fixed amount)')
-        ], string='What do you want to invoice?', default=_get_advance_payment_method, required=True)
+        ], string='Create Invoice', default='delivered', required=True,
+        help="A standard invoice is issued with all the order lines ready for invoicing, \
+        according to their invoicing policy (based on ordered or delivered quantity).")
+    deduct_down_payments = fields.Boolean('Deduct down payments', default=True)
+    has_down_payments = fields.Boolean('Has down payments', default=_default_has_down_payment, readonly=True)
     product_id = fields.Many2one('product.product', string='Down Payment Product', domain=[('type', '=', 'service')],
         default=_default_product_id)
     count = fields.Integer(default=_count, string='Order Count')
@@ -132,9 +134,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         sale_orders = self.env['sale.order'].browse(self._context.get('active_ids', []))
 
         if self.advance_payment_method == 'delivered':
-            sale_orders.action_invoice_create()
-        elif self.advance_payment_method == 'all':
-            sale_orders.action_invoice_create(final=True)
+            sale_orders._create_invoices(final=self.deduct_down_payments)
         else:
             # Create deposit product if necessary
             if not self.product_id:

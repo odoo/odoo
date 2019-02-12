@@ -14,9 +14,6 @@ class SaleOrder(models.Model):
         compute='_compute_amount_delivery', digits=0,
         string='Delivery Amount',
         help="The amount without tax.", store=True, tracking=True)
-    has_delivery = fields.Boolean(
-        compute='_compute_has_delivery', string='Has delivery',
-        help="Has an order line set for delivery", store=True)
 
     @api.one
     def _compute_website_order_line(self):
@@ -30,11 +27,6 @@ class SaleOrder(models.Model):
                 order.amount_delivery = sum(order.order_line.filtered('is_delivery').mapped('price_subtotal'))
             else:
                 order.amount_delivery = sum(order.order_line.filtered('is_delivery').mapped('price_total'))
-
-    @api.depends('order_line.is_delivery')
-    def _compute_has_delivery(self):
-        for order in self:
-            order.has_delivery = any(order.order_line.filtered('is_delivery'))
 
     def _check_carrier_quotation(self, force_carrier_id=None):
         self.ensure_one()
@@ -67,9 +59,15 @@ class SaleOrder(models.Model):
                 self.write({'carrier_id': carrier.id})
             self._remove_delivery_line()
             if carrier:
-                self.get_delivery_price()
-                if self.delivery_rating_success:
-                    self.set_delivery_line()
+                res = carrier.rate_shipment(self)
+                if res.get('success'):
+                    self.set_delivery_line(carrier, res['price'])
+                    self.delivery_rating_success = True
+                    self.delivery_message = res['warning_message']
+                else:
+                    self.set_delivery_line(carrier, 0.0)
+                    self.delivery_rating_success = False
+                    self.delivery_message = res['error_message']
 
         return bool(carrier)
 

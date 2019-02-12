@@ -418,7 +418,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Default Incoterm</span>"
-msgstr "Standaard Incoterm"
+msgstr "<span class=\"o_form_label\">Standaard incoterm</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1603,9 +1603,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allows to tag analytic entries and to manage analytic distributions"
-msgstr ""
-"Sta analytische entrie tagging toe en het beheer van analytische "
-"verrichtingen"
+msgstr "Sta kostenplaats labels toe en het beheer van kostenplaatsverdelingen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3937,8 +3935,8 @@ msgid ""
 "greater than the last day of a month, this number will instead select the "
 "last day of this month."
 msgstr ""
-"Dag van de maand waarop de factuur moet vervallen. Wanneer 0 of negatie, zal"
-" de waarde worden genegeerd, en wordt er geen specifieke dag ingesteld. "
+"Dag van de maand waarop de factuur moet vervallen. Wanneer 0 of negatief, "
+"zal de waarde worden genegeerd, en wordt er geen specifieke dag ingesteld. "
 "Wanneer groter dan de laatste dag in een maand, zal dit nummer de laatste "
 "dag van de maand selecteren."
 
@@ -4228,8 +4226,8 @@ msgid ""
 "Disable this option to use a simplified versions of vendor bills, where "
 "products are hidden."
 msgstr ""
-"Deactiveer deze optie om een vereenvoudigde versie van leveranciers rekening"
-" te gebruiken, verbergen producten."
+"Deactiveer deze optie om een vereenvoudigde versie van leveranciers "
+"rekeningen te gebruiken waarbij de producten verborgen zijn."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4499,7 +4497,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_is_email
 msgid "Email by default"
-msgstr "E-mails als standaard"
+msgstr "Standaard e-mailen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -5787,7 +5785,7 @@ msgstr "Factuur icoon"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Invoice Layout"
-msgstr "Factuur indeling"
+msgstr "Factuurlayout"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_line
@@ -8173,7 +8171,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
-msgstr "Gebruik A.U.B. de volgende communicatie voor U betaling :"
+msgstr "Gebruik A.U.B. de volgende communicatie voor uw betaling :"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__access_url
@@ -8368,8 +8366,8 @@ msgid ""
 "Programmation Error: Can't call _get_invoice_matching_query() for different "
 "rules than 'invoice_matching'"
 msgstr ""
-"Programmatie Error: kan niet aangeroepen worden "
-"_get_invoice_matching_query() voor een andere regel dan 'invoice_matching'"
+"Programmeerfout: _get_invoice_matching_query() kan niet aangeroepen worden  "
+"voor een andere regel dan 'invoice_matching'"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:505
@@ -8726,7 +8724,9 @@ msgstr "Vervangende belasting"
 msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
-msgstr "Antwoord e-mail adres."
+msgstr ""
+"Antwoord e-mail adres. Stel het reply_to adres in om het automatisch "
+"aanmaken van threads te omzeilen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to
@@ -8810,7 +8810,7 @@ msgstr "Beperk relaties tot"
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__match_same_currency
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
-msgstr "Beperk tot voorstellen met dezelfde valuta als de verrichtings regel."
+msgstr "Beperk tot voorstellen met dezelfde valuta als de verrichtingsregel."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
@@ -8977,7 +8977,7 @@ msgstr "Gelijke valuta mathcing"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
 msgid "Sample Invoice"
-msgstr "Voorbeeld Factuur"
+msgstr "Voorbeeld factuur"
 
 #. module: account
 #: code:addons/account/models/company.py:485
@@ -9463,7 +9463,7 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
-"Klein formaat afbeelding van dit Contact. Afbeelding is automatisch "
+"Klein formaat afbeelding van dit contact. Afbeelding is automatisch "
 "geschaald naar een 64x64 afbeelding met behoud van de verhoudingen. Gebruik "
 "dit veld overal waar een kleine afbeelding vereist is."
 
@@ -10820,8 +10820,8 @@ msgid ""
 "The sum of total residual amount propositions matches the statement line "
 "amount."
 msgstr ""
-"De som van de voorgestelde totale restwaarde matches het totale bedrag van "
-"de verrichting."
+"De som van de voorgestelde totale restwaarde komt overeen met het totale "
+"bedrag van de verrichting."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
@@ -11892,8 +11892,8 @@ msgid ""
 "We cannot find a chart of accounts for this company, you should configure it. \n"
 "Please go to Account Configuration and select or install a fiscal localization."
 msgstr ""
-"We kunnen geen grootboekschema vinden voor dit bedrij. U dient deze in te stellen\n"
-"Ga naar instellingen van de boekhouding en selecteer of installeer een lokalisatie."
+"We kunnen geen grootboekschema vinden voor dit bedrijf. U dient deze in te stellen.\n"
+"Ga naar de instellingen van de boekhouding en selecteer of installeer een lokalisatie."
 
 #. module: account
 #: code:addons/account/models/company.py:480
@@ -11902,8 +11902,8 @@ msgid ""
 "We cannot find any journal for this company. You should create one.\n"
 "Please go to Configuration > Journals."
 msgstr ""
-"We kunnen geen joernaal vinden van dit bedrijf. U zal er een kunnen creeren.\n"
-"ga naar instellingen > Joernaals aub."
+"We kunnen geen dagboek vinden voor dit bedrijf. U zou er een moeten aanmaken.\n"
+"Ga naar Configuratie > Dagboeken alsjeblieft."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__website_message_ids
@@ -12007,7 +12007,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_invoice_line__partner_id
 msgid "You can find a contact by its Name, TIN, Email or Internal Reference."
 msgstr ""
-"U kunt een klant, een contactpersoon, vinden op naam, TIN, E-mail of interne"
+"U kunt een klant, een contactpersoon, vinden op naam, BTW, E-mail of interne"
 " referentie."
 
 #. module: account
@@ -12049,9 +12049,9 @@ msgid ""
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr ""
-"U kunt geen algemene communicatie plaatsen die getoond zal worden op de "
+"U kunt geen standaard communicatie plaatsen die getoond zal worden op de "
 "klanten factuur, eens gevallideerd, om de klant bij te staan als verwijzing "
-"naar dat bijzonder factuur bij uitvoering betaling."
+"naar dat bijzonder factuur bij het uitvoeren van de betaling."
 
 #. module: account
 #: code:addons/account/models/account_move.py:361
@@ -12216,7 +12216,7 @@ msgstr "U kunt geen regels van debiteuren en crediteuren combineren."
 #: code:addons/account/models/account_move.py:124
 #, python-format
 msgid "You cannot modify a journal entry linked to a posted payment."
-msgstr "U kunt geen joernaalpost wijziging van een reeds toegekende betaling."
+msgstr "U kunt geen journaalpost wijzigen van een reeds toegekende betaling."
 
 #. module: account
 #: code:addons/account/models/account_move.py:322
@@ -12260,7 +12260,7 @@ msgstr ""
 #, python-format
 msgid "You cannot remove the bank account from the journal once set."
 msgstr ""
-"U kunt de bankrekening niet verwijderen als deze reeds in het journaal werd "
+"U kunt de bankrekening niet verwijderen als deze reeds in het dagboek werd "
 "opgenomen."
 
 #. module: account
@@ -12491,13 +12491,6 @@ msgstr "voor de leverancier. U kan deze toewijzen om te markeren als betaald."
 #, python-format
 msgid "have been reconciled automatically."
 msgstr "Werden automatisch gereconsilleerd."
-
-#. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:44
-#, python-format
-msgid "o_manual_statement"
-msgstr "o_manual_statement"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
