@@ -10,9 +10,10 @@
             <field name="image" type="base64" file="website_sale_slides/data/demo-thumbnails/product_course.png"/>
         </record>
 
-        <record id="channel_on_payment" model="slide.channel">
+        <record id="slide_channel_demo_6_furn3_payment" model="slide.channel">
             <field name="name">Furniture creation</field>
             <field name="promote_strategy">most_viewed</field>
+            <field name="channel_type">training</field>
             <field name="website_published" eval="True"/>
             <field name="description">All you need to know about furniture creation.</field>
             <field name="visibility">payment</field>
@@ -24,7 +25,7 @@
             <field name="url">https://www.youtube.com/watch?v=5WMqwTnZ-qs</field>
             <field name="document_id">5WMqwTnZ-qs</field>
             <field name="slide_type">video</field>
-            <field name="channel_id" ref="channel_on_payment"/>
+            <field name="channel_id" ref="slide_channel_demo_6_furn3_payment"/>
             <field name="website_published" eval="True"/>
             <field name="is_preview" eval="True"/>
             <field name="image" type="base64" file="website_sale_slides/data/demo-thumbnails/5WMqwTnZ-qs.png"/>
@@ -36,7 +37,7 @@
             <field name="url">https://www.youtube.com/watch?v=ptjeDDoURL8</field>
             <field name="document_id">ptjeDDoURL8</field>
             <field name="slide_type">video</field>
-            <field name="channel_id" ref="channel_on_payment"/>
+            <field name="channel_id" ref="slide_channel_demo_6_furn3_payment"/>
             <field name="website_published" eval="True"/>
             <field name="is_preview" eval="True"/>
             <field name="image" type="base64" file="website_sale_slides/data/demo-thumbnails/ptjeDDoURL8.png"/>
