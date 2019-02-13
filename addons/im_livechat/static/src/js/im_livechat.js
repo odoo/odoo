@@ -190,15 +190,11 @@ var LivechatButton = Widget.extend({
      * @private
      */
     _loadQWebTemplate: function () {
-        var xml_files = ['/mail/static/src/xml/abstract_thread_window.xml',
-                         '/mail/static/src/xml/thread.xml',
-                         '/im_livechat/static/src/xml/im_livechat.xml'];
-        var defs = _.map(xml_files, function (tmpl) {
-            return session.rpc('/web/proxy/load', { path: tmpl }).then(function (xml) {
-                QWeb.add_template(xml);
+        return session.rpc('/im_livechat/load_templates').then(function (templates) {
+            _.each(templates, function (template) {
+                QWeb.add_template(template);
             });
         });
-        return $.when.apply($, defs);
     },
     /**
      * @private
