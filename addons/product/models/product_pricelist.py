@@ -491,3 +491,11 @@ class PricelistItem(models.Model):
                 'price_min_margin': 0.0,
                 'price_max_margin': 0.0,
             })
+
+    @api.multi
+    def write(self, values):
+        res = super(PricelistItem, self).write(values)
+        # When the pricelist changes we need the product.template price
+        # to be invalided and recomputed.
+        self.invalidate_cache()
+        return res

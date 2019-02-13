@@ -80,8 +80,13 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
 
     def test_01_is_combination_possible_archived(self):
         """The goal is to test the possibility of archived combinations.
+
         This test could not be put into product module because there was no
-        field which had product_id as required and without cascade on delete.
+        model which had product_id as required and without cascade on delete.
+        Here we have the sales order line in this situation.
+
+        This is a necessary condition for `create_variant_ids` to archive
+        instead of delete the variants.
         """
         def do_test(self):
             computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
@@ -110,6 +115,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
 
             variant2.active = False
             # CASE: 1 not archived, 2 archived
+            # Test invalidate_cache on product.product write
             self.assertTrue(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_8 + computer_hdd_1))
             self.assertFalse(self.computer._is_combination_possible(computer_ssd_256 + computer_ram_8 + computer_hdd_2))
             # CASE: both archived combination (without no_variant)
@@ -261,6 +267,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
         self.assertEqual(res['list_price'], 2222 * currency_ratio)
 
         # CASE: dynamic combination, no variant existing
+        # Test invalidate_cache on product.template create_variant_ids
         self._add_keyboard_attribute()
         self.computer.create_variant_ids()
         combination += self._get_product_template_attribute_value(self.keyboard_excluded)
@@ -272,8 +279,8 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
         self.assertEqual(res['list_price'], (2222 - 5) * currency_ratio)
 
         # CASE: pricelist set value to 0, no variant
+        # Test invalidate_cache on product.pricelist write
         pricelist_item.percent_price = 100
-        self.computer.invalidate_cache()  # need o2m to be refetched
         res = self.computer._get_combination_info(combination, add_qty=2, pricelist=pricelist)
         self.assertEqual(res['product_template_id'], self.computer.id)
         self.assertEqual(res['product_id'], False)
@@ -346,7 +353,6 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
         self.hdd_attribute.create_variant = 'dynamic'
         self._add_hdd_attribute_line()
         self.computer.create_variant_ids()
-        self.computer.invalidate_cache()
 
         computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
         computer_ram_8 = self._get_product_template_attribute_value(self.ram_8)

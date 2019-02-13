@@ -1762,6 +1762,9 @@ class TestSinglePicking(TestStockCommon):
 class TestStockUOM(TestStockCommon):
     def setUp(self):
         super(TestStockUOM, self).setUp()
+        self.setUpCache()
+
+    def setUpCache(self):
         dp = self.env.ref('product.decimal_product_uom')
         dp.digits = 7
 
@@ -1796,6 +1799,10 @@ class TestStockUOM(TestStockCommon):
             'uom_po_id': T_LBS.id,
             'tracking': 'lot',
         })
+
+        # creating a variant invalidates the cache
+        self.setUpCache()
+
         picking_in = self.env['stock.picking'].create({
             'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
