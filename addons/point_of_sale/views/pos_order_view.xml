@@ -162,7 +162,6 @@
         <field name="name">Orders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.order</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" eval="False"/>
         <field name="domain">[]</field>
@@ -249,7 +248,6 @@
         <field name="name">Sale line</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.order.line</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="view_pos_order_line"/>
     </record>
@@ -258,7 +256,6 @@
         <field name="name">Sale line</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.order.line</field>
-        <field name="view_type">form</field>
         <field name="view_mode">form,tree</field>
         <field name="view_id" ref="view_pos_order_line_form"/>
     </record>
@@ -267,7 +264,6 @@
         <field name="name">Sale line</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.order.line</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="view_pos_order_line"/>
         <field name="domain">[('create_date', '&gt;=', time.strftime('%Y-%m-%d 00:00:00')),('create_date', '&lt;=', time.strftime('%Y-%m-%d 23:59:59'))]</field>
@@ -290,7 +286,6 @@
         <field name="name">All sales lines</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.order.line</field>
-        <field name="view_type">form</field>
         <field name="view_id" ref="view_pos_order_tree_all_sales_lines" />
     </record>
 

@@ -139,27 +139,34 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         context.update(context1)
         env = env(context=context)
         if action['type'] in ['ir.actions.act_window', 'ir.actions.submenu']:
-            for key in ('res_id', 'res_model', 'view_type', 'view_mode',
+            for key in ('res_id', 'res_model', 'view_mode',
                         'limit', 'search_view', 'search_view_id'):
                 datas[key] = action.get(key, datas.get(key, None))
 
             view_id = False
+            view_type = None
             if action.get('views', []):
                 if isinstance(action['views'],list):
-                    view_id = action['views'][0][0]
-                    datas['view_mode']= action['views'][0][1]
+                    view_id, view_type = action['views'][0]
+                    datas['view_mode']= view_type
                 else:
                     if action.get('view_id', False):
                         view_id = action['view_id'][0]
             elif action.get('view_id', False):
                 view_id = action['view_id'][0]
 
+            if view_type is None:
+                if view_id:
+                    view_type = env['ir.ui.view'].browse(view_id).type
+                else:
+                    view_type = action['view_mode'].split(',')[0]
+
             assert datas['res_model'], "Cannot use the view without a model"
             # Here, we have a view that we need to emulate
             log_test("will emulate a %s view: %s#%s",
-                        action['view_type'], datas['res_model'], view_id or '?')
+                        view_type, datas['res_model'], view_id or '?')
 
-            view_res = env[datas['res_model']].fields_view_get(view_id, action['view_type'])
+            view_res = env[datas['res_model']].fields_view_get(view_id, view_type=view_type)
             assert view_res and view_res.get('arch'), "Did not return any arch for the view"
             view_data = {}
             if view_res.get('fields'):

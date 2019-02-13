@@ -435,7 +435,6 @@ QUnit.test('activity view: search more to schedule an activity for a record of a
                     target: "new",
                     type: "ir.actions.act_window",
                     view_mode: "form",
-                    view_type: "form",
                     views: [[false, "form"]],
                 };
                 assert.deepEqual(ev.data.action, expectedAction,

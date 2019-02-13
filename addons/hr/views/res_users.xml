@@ -160,7 +160,6 @@
         <record id="res_users_action_my" model="ir.actions.act_window">
             <field name="name">Change my Preferences</field>
             <field name="res_model">res.users</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="hr.res_users_view_form_profile"/>
         </record>
@@ -168,7 +167,6 @@
         <record id="hr_employee_action_from_user" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="domain">[('user_id', '=', active_id)]</field>
         </record>

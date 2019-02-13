@@ -241,7 +241,6 @@ class MrpUnbuild(models.Model):
         else:
             return {
                 'name': _('Insufficient Quantity'),
-                'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'stock.warn.insufficient.qty.unbuild',
                 'view_id': self.env.ref('mrp.stock_warn_insufficient_qty_unbuild_form_view').id,

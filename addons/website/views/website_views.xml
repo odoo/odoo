@@ -76,7 +76,6 @@
         <record id="action_website_list" model="ir.actions.act_window">
             <field name="name">Websites</field>
             <field name="res_model">website</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_website_tree"/>
             <field name="target">current</field>
@@ -123,7 +122,6 @@
         <record id="action_website_redirect_list" model="ir.actions.act_window">
             <field name="name">Website Redirects</field>
             <field name="res_model">website.redirect</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="website_redirect_tree_view"/>
             <field name="target">current</field>
@@ -178,7 +176,6 @@
         <record id="action_website_pages_list" model="ir.actions.act_window">
             <field name="name">Website Pages</field>
             <field name="res_model">website.page</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="website_pages_tree_view"/>
             <field name="target">current</field>
@@ -257,7 +254,6 @@
         <record id="action_website_menu" model="ir.actions.act_window">
             <field name="name">Website Menu</field>
             <field name="res_model">website.menu</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_my_websites':1}</field>
             <field name="view_id" ref="menu_tree"/>

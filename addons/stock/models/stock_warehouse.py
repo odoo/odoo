@@ -918,7 +918,6 @@ class Warehouse(models.Model):
             'type': 'ir.actions.act_window',
             'view_id': False,
             'view_mode': 'tree,form',
-            'view_type': 'form',
             'limit': 20
         }
 

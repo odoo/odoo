@@ -161,7 +161,6 @@ class ReturnPicking(models.TransientModel):
         })
         return {
             'name': _('Returned Picking'),
-            'view_type': 'form',
             'view_mode': 'form,tree,calendar',
             'res_model': 'stock.picking',
             'res_id': new_picking_id,

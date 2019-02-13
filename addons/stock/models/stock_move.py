@@ -454,7 +454,6 @@ class StockMove(models.Model):
         return {
             'name': _('Detailed Operations'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'stock.move',
             'views': [(view.id, 'form')],
