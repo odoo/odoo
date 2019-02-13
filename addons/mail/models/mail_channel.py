@@ -739,7 +739,11 @@ class Channel(models.Model):
                 'last_message_id': last_message_id,
                 'partner_id': self.env.user.partner_id.id,
             }
-            self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', self.id), data]])
+            if self.channel_type == 'chat':
+                self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', self.id), data]])
+            else:
+                data['channel_id'] = self.id
+                self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), data)
             return last_message_id
 
     @api.multi

@@ -1,7 +1,6 @@
 odoo.define('mail.model.Channel', function (require) {
 "use strict";
 
-var ChannelSeenMixin = require('mail.model.ChannelSeenMixin');
 var SearchableThread = require('mail.model.SearchableThread');
 var ThreadTypingMixin = require('mail.model.ThreadTypingMixin');
 var mailUtils = require('mail.utils');
@@ -17,7 +16,7 @@ var time = require('web.time');
  * Any piece of code in JS that make use of channels must ideally interact with
  * such objects, instead of direct data from the server.
  */
-var Channel = SearchableThread.extend(ChannelSeenMixin, ThreadTypingMixin, {
+var Channel = SearchableThread.extend(ThreadTypingMixin, {
     /**
      * @override
      * @param {Object} params
@@ -50,7 +49,6 @@ var Channel = SearchableThread.extend(ChannelSeenMixin, ThreadTypingMixin, {
     init: function (params) {
         var self = this;
         this._super.apply(this, arguments);
-        ChannelSeenMixin.init.apply(this, arguments);
         ThreadTypingMixin.init.apply(this, arguments);
 
         var data = params.data;
@@ -404,6 +402,21 @@ var Channel = SearchableThread.extend(ChannelSeenMixin, ThreadTypingMixin, {
             args: [this.getID()],
             kwargs: { is_typing: params.typing },
         }, { shadow: true });
+    },
+    /**
+     * @private
+     * @returns {$.Promise<integer>} resolved with ID of last seen message
+     */
+    _notifySeen: function () {
+        var self = this;
+        return this._rpc({
+            model: 'mail.channel',
+            method: 'channel_seen',
+            args: [[this._id]],
+        }, { shadow: true }).then(function (lastSeenMessageID) {
+            self._lastSeenMessageID = lastSeenMessageID;
+            return lastSeenMessageID;
+        });
     },
     /**
      * Prepare and send a message to the server on this channel.
