@@ -237,7 +237,7 @@ var PivotModel = AbstractModel.extend({
                             [
                                 this.data.timeRangeDescription.toString(),
                                 this.data.comparisonTimeRangeDescription.toString(),
-                                'Variation'
+                                _t('Variation')
                             ],
                             makeMeasure
                         )
