@@ -22,11 +22,8 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     or `null` if the server to contact is the origin server.
     @param {Dict} options A dictionary that can contain the following options:
 
-        * "override_session": Default to false. If true, the current session object will
-          not try to re-use a previously created session id stored in a cookie.
-        * "session_id": Default to null. If specified, the specified session_id will be used
-          by this session object. Specifying this option automatically implies that the option
-          "override_session" is set to true.
+        * "modules"
+        * "use_cors"
      */
     init: function (parent, origin, options) {
         mixins.EventDispatcherMixin.init.call(this);
@@ -34,8 +31,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         options = options || {};
         this.module_list = (options.modules && options.modules.slice()) || (window.odoo._modules && window.odoo._modules.slice()) || [];
         this.server = null;
-        this.session_id = options.session_id || null;
-        this.override_session = options.override_session || !!options.session_id || false;
         this.avoid_recursion = false;
         this.use_cors = options.use_cors || false;
         this.setup(origin);
@@ -61,7 +56,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             this.origin = origin;
         this.prefix = this.origin;
         this.server = this.origin; // keep chs happy
-        this.origin_server = this.origin === window_origin;
         options = options || {};
         if ('use_cors' in options) {
             this.use_cors = options.use_cors;
@@ -139,7 +133,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             if (!result.uid) {
                 return $.Deferred().reject();
             }
-            delete result.session_id;
             _.extend(self, result);
         });
     },
@@ -276,9 +269,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         return this.currencies[currency_id];
     },
     get_file: function (options) {
-        if (this.override_session){
-            options.data.session_id = this.session_id;
-        }
         options.session = this;
         return ajax.get_file(options);
     },
@@ -290,27 +280,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      */
     session_reload: function () {
         var result = _.extend({}, window.odoo.session_info);
-        delete result.session_id;
         _.extend(this, result);
-        return $.when();
-    },
-    check_session_id: function () {
-        var self = this;
-        if (this.avoid_recursion)
-            return $.when();
-        if (this.session_id)
-            return $.when(); // we already have the session id
-        if (!this.use_cors && (this.override_session || ! this.origin_server)) {
-            // If we don't use the origin server we consider we should always create a new session.
-            // Even if some browsers could support cookies when using jsonp that behavior is
-            // not consistent and the browser creators are tending to removing that feature.
-            this.avoid_recursion = true;
-            return this.rpc("/gen_session_id", {}).then(function (result) {
-                self.session_id = result;
-            }).always(function () {
-                self.avoid_recursion = false;
-            });
-        }
         return $.when();
     },
     /**
@@ -333,57 +303,19 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             options.headers["X-Debug-Mode"] = $.deparam($.param.querystring()).debug;
         }
 
-        var deferred = self.check_session_id();
-        var aborted = false;
-        var xhrDef;
-        deferred.abort = function () {
-            if (xhrDef) {
-                xhrDef.abort();
-            } else {
-                aborted = true;
-            }
-        };
+        // TODO: remove
+        if (! _.isString(url)) {
+            _.extend(options, url);
+            url = url.url;
+        }
+        if (self.use_cors) {
+            url = self.url(url, null);
+        }
 
-        var promise = deferred.then(function () {
-            if (aborted) {
-                var def = $.Deferred().reject({message: "XmlHttpRequestError abort"}, $.Event('abort'));
-                def.abort = function () {};
-                return def;
-            }
-            // TODO: remove
-            if (! _.isString(url)) {
-                _.extend(options, url);
-                url = url.url;
-            }
-            var fct;
-            if (self.origin_server) {
-                fct = ajax.jsonRpc;
-                if (self.override_session) {
-                    options.headers["X-Openerp-Session-Id"] = self.session_id || '';
-                }
-            } else if (self.use_cors) {
-                fct = ajax.jsonRpc;
-                url = self.url(url, null);
-                options.session_id = self.session_id || '';
-                if (self.override_session) {
-                    options.headers["X-Openerp-Session-Id"] = self.session_id || '';
-                }
-            } else {
-                fct = ajax.jsonpRpc;
-                url = self.url(url, null);
-                options.session_id = self.session_id || '';
-            }
-            xhrDef = fct(url, "call", params, options);
-            return xhrDef;
-        });
-
-        promise.abort = deferred.abort;
-        return promise;
+        return ajax.jsonRpc(url, "call", params, options);
     },
     url: function (path, params) {
         params = _.extend(params || {});
-        if (this.override_session || (! this.origin_server))
-            params.session_id = this.session_id;
         var qs = $.param(params);
         if (qs.length > 0)
             qs = "?" + qs;
