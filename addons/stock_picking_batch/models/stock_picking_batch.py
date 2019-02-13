@@ -91,7 +91,6 @@ class StockPickingBatch(models.Model):
             return {
                 'name': _('Immediate Transfer?'),
                 'type': 'ir.actions.act_window',
-                'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'stock.immediate.transfer',
                 'views': [(view.id, 'form')],

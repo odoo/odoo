@@ -100,7 +100,6 @@
         <record id="action_account_form" model="ir.actions.act_window">
             <field name="name">Chart of Accounts</field>
             <field name="res_model">account.account</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_account_search"/>
             <field name="view_id" ref="view_account_list"/>
@@ -342,7 +341,6 @@ action = model.setting_init_bank_account_action()
         <record id="action_account_journal_form" model="ir.actions.act_window">
             <field name="name">Journals</field>
             <field name="res_model">account.journal</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_ids" eval="[(5, 0, 0),
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('view_account_journal_tree')}),
@@ -406,7 +404,6 @@ action = model.setting_init_bank_account_action()
         <record id="account_tag_action" model="ir.actions.act_window">
             <field name="name">Account Tags</field>
             <field name="res_model">account.account.tag</field>
-            <field name="view_type">form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Add a new tag
@@ -441,7 +438,6 @@ action = model.setting_init_bank_account_action()
         <record id="action_view_account_bnk_stmt_cashbox" model="ir.actions.act_window">
             <field name="name">Cash Control</field>
             <field name="res_model">account.bank.statement.cashbox</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_account_bnk_stmt_cashbox"/>
             <field name="target">new</field>
@@ -467,7 +463,6 @@ action = model.setting_init_bank_account_action()
         <record id="action_view_account_bnk_stmt_check" model="ir.actions.act_window">
             <field name="name">Check Closing Balance</field>
             <field name="res_model">account.bank.statement.closebalance</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_account_bnk_stmt_check"/>
             <field name="target">new</field>
@@ -604,7 +599,6 @@ action = model.setting_init_bank_account_action()
         <record id="action_bank_statement_tree" model="ir.actions.act_window">
             <field name="name">Bank Statements</field>
             <field name="res_model">account.bank.statement</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,pivot,graph</field>
             <field name="domain">[('journal_id.type', '=', 'bank')]</field>
             <field name="context">{'journal_type':'bank'}</field>
@@ -691,7 +685,6 @@ action = model.setting_init_bank_account_action()
         <record id="action_bank_statement_line" model="ir.actions.act_window">
             <field name="name">Bank Statement Lines</field>
             <field name="res_model">account.bank.statement.line</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
             <field name="context">{}</field>
@@ -709,7 +702,6 @@ action = model.setting_init_bank_account_action()
         <record id="action_bank_statement_draft_tree" model="ir.actions.act_window">
             <field name="name">Draft statements</field>
             <field name="res_model">account.bank.statement</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','draft')]</field>
             <field name="filter" eval="True"/>
@@ -896,7 +888,6 @@ action = model.setting_init_bank_account_action()
         <record id="action_account_reconcile_model" model="ir.actions.act_window">
             <field name="name">Reconciliation Models</field>
             <field name="res_model">account.reconcile.model</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_reconcile_model_search"/>
             <field name="help" type="html">
@@ -960,7 +951,6 @@ action = model.setting_init_bank_account_action()
         <record id="action_account_type_form" model="ir.actions.act_window">
             <field name="name">Account Types</field>
             <field name="res_model">account.account.type</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_type_search"/>
             <field name="help" type="html">
@@ -1145,7 +1135,6 @@ action = model.setting_init_bank_account_action()
         <record id="action_tax_form" model="ir.actions.act_window">
             <field name="name">Taxes</field>
             <field name="res_model">account.tax</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="domain" eval="False"/> <!-- Force empty -->
             <field name="context">{'search_default_sale': True, 'search_default_purchase': True, 'search_default_active': True,'active_test': False}</field>
@@ -1175,7 +1164,6 @@ action = model.setting_init_bank_account_action()
         <record id="action_tax_group" model="ir.actions.act_window">
             <field name="name">Tax Groups</field>
             <field name="res_model">account.tax.group</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree</field>
             <field name="domain" eval="False"/> <!-- Force empty -->
             <field name="view_id" ref="view_tax_group_tree"/>
@@ -1322,7 +1310,6 @@ action = model.setting_init_bank_account_action()
         <record id="action_payment_term_form" model="ir.actions.act_window">
             <field name="name">Payment Terms</field>
             <field name="res_model">account.payment.term</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_payment_term_search"/>
         </record>
@@ -1381,7 +1368,6 @@ action = model.setting_init_bank_account_action()
         <record id="action_account_template_form" model="ir.actions.act_window">
             <field name="name">Account Templates</field>
             <field name="res_model">account.account.template</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_template_search"/>
         </record>
@@ -1450,7 +1436,6 @@ action = model.setting_init_bank_account_action()
         <record id="action_account_chart_template_form" model="ir.actions.act_window">
             <field name="name">Chart of Accounts Templates</field>
             <field name="res_model">account.chart.template</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
@@ -1538,7 +1523,6 @@ action = model.setting_init_bank_account_action()
         <record id="action_account_tax_template_form" model="ir.actions.act_window">
             <field name="name">Tax Templates</field>
             <field name="res_model">account.tax.template</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_tax_template_search"/>
         </record>
@@ -1600,7 +1584,6 @@ action = model.setting_init_bank_account_action()
         <record id="action_account_fiscal_position_template_form" model="ir.actions.act_window">
             <field name="name">Fiscal Position</field>
             <field name="res_model">account.fiscal.position.template</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_position_template_search"/>
             <field name="help" type="html">
@@ -1637,7 +1620,6 @@ action = model.setting_init_bank_account_action()
             <field name="name">Cash Registers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.bank.statement</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,pivot,graph</field>
             <field name="view_id" ref="view_bank_statement_tree"/>
             <field name="search_view_id" ref="view_bank_statement_search"/>
@@ -1680,7 +1662,6 @@ action = model.setting_init_bank_account_action()
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="product_product_view_tree"/>
         </record>
 
@@ -1689,7 +1670,6 @@ action = model.setting_init_bank_account_action()
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_mode">kanban,tree,form,activity</field>
-            <field name="view_type">form</field>
             <field name="context">{'search_default_filter_to_sell': 1}</field>
             <field name="view_id" ref="product_product_view_tree"/>
             <field name="help" type="html">
@@ -1704,7 +1684,6 @@ action = model.setting_init_bank_account_action()
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_mode">kanban,tree,form,activity</field>
-            <field name="view_type">form</field>
             <field name="context">{'search_default_filter_to_purchase': 1}</field>
             <field name="view_id" ref="product_product_view_tree"/>
             <field name="help" type="html">
@@ -1772,7 +1751,6 @@ action = model.setting_init_bank_account_action()
         <record id="action_account_group_tree" model="ir.actions.act_window">
             <field name="name">Account Groups</field>
             <field name="res_model">account.group</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_group_search"/>
             <field name="help" type="html">

@@ -162,7 +162,6 @@
         <record model="ir.actions.act_window" id="action_review_voucher_list">
             <field name="name">Vouchers Entries</field>
             <field name="res_model">account.voucher</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="view_voucher_tree"/>
             <field name="domain">[('state','=','posted')]</field>
@@ -296,7 +295,6 @@
         <record id="action_sale_receipt" model="ir.actions.act_window">
             <field name="name">Receipts</field>
             <field name="res_model">account.voucher</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban</field>
             <field name="domain">[('journal_id.type','=','sale'), ('voucher_type','=','sale')]</field>
             <field name="context">{'default_voucher_type': 'sale', 'voucher_type': 'sale'}</field>
@@ -414,7 +412,6 @@
         <record id="action_purchase_receipt" model="ir.actions.act_window">
             <field name="name">Receipts</field>
             <field name="res_model">account.voucher</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban</field>
             <field name="domain">[('journal_id.type','=','purchase'), ('voucher_type','=','purchase')]</field>
             <field name="context">{'default_voucher_type': 'purchase', 'voucher_type': 'purchase'}</field>

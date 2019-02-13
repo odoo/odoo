@@ -21,7 +21,6 @@
     <record id="stock_picking_to_batch_action" model="ir.actions.act_window">
         <field name="name">Add to Batch</field>
         <field name="res_model">stock.picking.to.batch</field>
-        <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="stock_picking_to_batch_form"/>
         <field name="target">new</field>
@@ -32,7 +31,7 @@
         res_model="stock.picking.to.batch"
         binding_model="stock.picking"
         binding_views="list"
-        view_mode="form" target="new" view_type="form"
+        view_mode="form" target="new"
     />
 
 </odoo>

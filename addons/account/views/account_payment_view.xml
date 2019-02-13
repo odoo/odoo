@@ -230,7 +230,6 @@
         <record id="action_account_payments" model="ir.actions.act_window">
             <field name="name">Payments</field>
             <field name="res_model">account.payment</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,graph</field>
             <field name="context">{'default_payment_type': 'inbound', 'default_partner_type': 'customer', 'search_default_inbound_filter': 1}</field>
             <field name="domain">[]</field>
@@ -247,7 +246,6 @@
         <record id="action_account_payments_payable" model="ir.actions.act_window">
             <field name="name">Payments</field>
             <field name="res_model">account.payment</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,graph</field>
             <field name="context">{'default_payment_type': 'outbound', 'default_partner_type': 'supplier', 'search_default_outbound_filter': 1}</field>
             <field name="domain">[]</field>
@@ -264,7 +262,6 @@
         <record id="action_account_payments_transfer" model="ir.actions.act_window">
             <field name="name">Internal Transfers</field>
             <field name="res_model">account.payment</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,graph</field>
             <field name="context">{'default_payment_type': 'transfer', 'search_default_transfers_filter': 1}</field>
             <field name="domain">[]</field>

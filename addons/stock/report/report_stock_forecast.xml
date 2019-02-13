@@ -47,7 +47,6 @@
     <record id="action_stock_level_forecast_report_template" model="ir.actions.act_window">
         <field name="name">Stock Level Forecast</field>
         <field name="res_model">report.stock.forecast</field>
-        <field name="view_type">form</field>
         <field name="view_mode">pivot</field>
         <field name="search_view_id" ref="view_stock_level_forecast_filter"/>
         <field name="context">{'search_default_product_tmpl_id': active_id, 'search_default_inventory_by_week':1}</field>
@@ -57,7 +56,6 @@
     <record id="action_stock_level_forecast_report_product" model="ir.actions.act_window">
         <field name="name">Stock Level Forecast</field>
         <field name="res_model">report.stock.forecast</field>
-        <field name="view_type">form</field>
         <field name="view_mode">pivot</field>
         <field name="search_view_id" ref="view_stock_level_forecast_filter"/>
         <field name="context">{'search_default_product_id': active_id, 'search_default_inventory_by_week':1}</field>
@@ -67,7 +65,6 @@
     <record id="action_stock_level_forecast_report_all_product" model="ir.actions.act_window">
         <field name="name">Forecasted Inventory</field>
         <field name="res_model">report.stock.forecast</field>
-        <field name="view_type">form</field>
         <field name="view_mode">pivot</field>
         <field name="search_view_id" ref="view_stock_level_forecast_filter"/>
         <field name="domain">[('product_id.stock_move_ids.state', 'not in', ('draft', 'done', 'cancel'))]</field>

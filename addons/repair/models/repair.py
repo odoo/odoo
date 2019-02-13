@@ -210,7 +210,6 @@ class Repair(models.Model):
         else:
             return {
                 'name': _('Insufficient Quantity'),
-                'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'stock.warn.insufficient.qty.repair',
                 'view_id': self.env.ref('repair.stock_warn_insufficient_qty_repair_form_view').id,
@@ -263,7 +262,6 @@ class Repair(models.Model):
         }
         return {
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
             'target': 'new',

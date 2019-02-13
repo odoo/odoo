@@ -99,7 +99,6 @@ class SaleCoupon(models.Model):
         return {
             'name': _('Compose Email'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
             'views': [(compose_form.id, 'form')],

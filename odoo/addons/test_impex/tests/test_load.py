@@ -19,7 +19,6 @@ def moreaction(**kwargs):
         type='ir.actions.act_window',
         target='new',
         view_mode='tree,form',
-        view_type='form',
         views=[(False, 'tree'), (False, 'form')],
         help=u"See all possible values")
 

@@ -40,7 +40,6 @@
             <field name="name">Actions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.actions.actions</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="action_view_tree"/>
             <field name="search_view_id" ref="action_view_search"/>
         </record>
@@ -129,7 +128,6 @@
             <field name="name">Reports</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.actions.report</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="act_report_xml_view_tree"/>
             <field name="search_view_id" ref="act_report_xml_search_view"/>
         </record>
@@ -144,7 +142,6 @@
                 <tree string="Open Window">
                     <field name="name"/>
                     <field name="res_model"/>
-                    <field name="view_type"/>
                     <field name="view_id"/>
                     <field name="domain"/>
                     <field name="context"/>
@@ -218,10 +215,6 @@
             <field name="arch" type="xml">
                 <search string="Open a Window">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('res_model','ilike',self)]" string="Action"/>
-                    <field name="view_type"/>
-                    <group expand="0" string="Group By" colspan="4">
-                        <filter string="View Type" name="view_type" domain="[]" context="{'group_by':'view_type'}"/>
-                    </group>
                 </search>
             </field>
         </record>
@@ -229,7 +222,6 @@
             <field name="name">Window Actions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="search_view_id" ref="view_window_action_search"/>
         </record>
         <record id="ir_action_window_view1" model="ir.actions.act_window.view">
@@ -387,7 +379,6 @@ env['res.partner'].create({'name': partner_name})
             <field name="name">Server Actions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.actions.server</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_server_action_tree"/>
             <field name="search_view_id" ref="view_server_action_search"/>
@@ -451,7 +442,6 @@ env['res.partner'].create({'name': partner_name})
             <field name="name">Configuration Wizards</field>
             <field name="res_model">ir.actions.todo</field>
             <field name="view_id" ref="ir_actions_todo_tree"/>
-            <field name="view_type">form</field>
             <field name="help">The configuration wizards are used to help you configure a new instance of Odoo. They are launched during the installation of new modules, but you can choose to restart some wizards manually from this menu.</field>
         </record>
         <menuitem id="menu_ir_actions_todo_form" action="act_ir_actions_todo_form" parent="base.next_id_6"/>

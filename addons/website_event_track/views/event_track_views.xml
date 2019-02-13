@@ -201,7 +201,6 @@
         <record model="ir.actions.act_window" id="action_event_track_from_event">
             <field name="res_model">event.track</field>
             <field name="name">Event Tracks</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form,calendar,graph,activity</field>
             <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'group_by': 'stage_id'}</field>
             <field name="help" type="html">
@@ -430,7 +429,6 @@
         <record id="event_track_stage_action" model="ir.actions.act_window">
             <field name="name">Track Stages</field>
             <field name="res_model">event.track.stage</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="event_track_stage_view_tree"/>
             <field name="help" type="html">

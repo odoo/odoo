@@ -183,8 +183,6 @@ class IrActionsActWindow(models.Model):
     target = fields.Selection([('current', 'Current Window'), ('new', 'New Window'), ('inline', 'Inline Edit'), ('fullscreen', 'Full Screen'), ('main', 'Main action of Current Window')], default="current", string='Target Window')
     view_mode = fields.Char(required=True, default='tree,form',
                             help="Comma-separated list of allowed view modes, such as 'form', 'tree', 'calendar', etc. (Default: tree,form)")
-    view_type = fields.Selection([('tree', 'Tree'), ('form', 'Form')], default="form", string='View Type', required=True,
-                                 help="View type: Tree type to use for the tree view, set to 'tree' for a hierarchical tree view, or 'form' for a regular list view")
     usage = fields.Char(string='Action Usage',
                         help="Used to filter menu and home actions from the user form.")
     view_ids = fields.One2many('ir.actions.act_window.view', 'act_window_id', string='No of Views')

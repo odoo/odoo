@@ -41,7 +41,6 @@
         <record id="account_analytic_tag_action" model="ir.actions.act_window">
             <field name="name">Analytic Tags</field>
             <field name="res_model">account.analytic.tag</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -82,7 +81,6 @@
         <record id="account_analytic_group_action" model="ir.actions.act_window">
             <field name="name">Analytic Account Groups</field>
             <field name="res_model">account.analytic.group</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -118,7 +116,6 @@
             <field name="res_model">account.analytic.line</field>
             <field name="view_mode">tree,form,graph,pivot</field>
             <field name="view_id" ref="view_account_analytic_line_tree"/>
-            <field name="view_type">form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
                 No activity yet on this account
@@ -244,7 +241,6 @@
         <record id="action_analytic_account_form" model="ir.actions.act_window">
             <field name="name">Chart of Analytic Accounts</field>
             <field name="res_model">account.analytic.account</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_account_analytic_account_search"/>
             <field name="context">{'search_default_active':1}</field>
@@ -262,7 +258,6 @@
             <field name="res_model">account.analytic.account</field>
             <field name="search_view_id" ref="view_account_analytic_account_search"/>
             <field name="context">{'search_default_active':1}</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -380,7 +375,6 @@
             <field name="res_model">account.analytic.line</field>
             <field name="view_mode">tree,kanban,form,graph,pivot</field>
             <field name="view_id" ref="view_account_analytic_line_tree"/>
-            <field name="view_type">form</field>
             <field name="search_view_id" ref="analytic.view_account_analytic_line_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">

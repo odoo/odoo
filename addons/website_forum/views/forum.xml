@@ -122,7 +122,6 @@
         <record id="action_forum_forum" model="ir.actions.act_window">
             <field name="name">Forums</field>
             <field name="res_model">forum.forum</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
@@ -239,7 +238,6 @@
         <record id="action_forum_post" model="ir.actions.act_window">
             <field name="name">Forum Posts</field>
             <field name="res_model">forum.post</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="view_id" ref="view_forum_post_list"/>
             <field name="search_view_id" ref="view_forum_post_search"/>
@@ -287,7 +285,6 @@
         <record id="forum_tag_action" model="ir.actions.act_window">
             <field name="name">Tags</field>
             <field name="res_model">forum.tag</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

@@ -45,8 +45,7 @@
                 name="Meetings"
                 res_model="calendar.event"
                 view_mode="tree,form,calendar"
-                context="{'default_duration': 4.0, 'default_opportunity_id': active_id}"
-                view_type="form"/>
+                context="{'default_duration': 4.0, 'default_opportunity_id': active_id}"/>
 
         <record id="crm_case_form_view_leads" model="ir.ui.view">
         <field name="name">crm.lead.form.lead</field>
@@ -318,7 +317,6 @@
         <record id="create_opportunity_simplified" model="ir.actions.act_window">
             <field name="name">Create an Opportunity</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_create_opportunity_simplified"/>
             <field name="target">new</field>
@@ -1170,7 +1168,6 @@ for rec in records:
         <record id="crm_lead_tag_action" model="ir.actions.act_window">
             <field name="name">Tags</field>
             <field name="res_model">crm.lead.tag</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="crm_lead_tag_tree"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -1192,7 +1189,6 @@ for rec in records:
         <record id="crm_lost_reason_action" model="ir.actions.act_window">
             <field name="name">Lost Reasons</field>
             <field name="res_model">crm.lost.reason</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

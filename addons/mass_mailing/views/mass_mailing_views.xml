@@ -237,7 +237,6 @@
         <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts">
             <field name="name">Mailing List Contacts</field>
             <field name="res_model">mail.mass_mailing.contact</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,graph,pivot</field>
             <field name="context">{'search_default_valid_recipient': 1}</field>
             <field name="help" type="html">
@@ -252,7 +251,6 @@
         <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts_from_list">
             <field name="name">Recipients</field>
             <field name="res_model">mail.mass_mailing.contact</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('list_ids', 'in', [active_id])]</field>
             <field name="context">{'search_default_valid_recipients': 1, 'default_list_ids': [active_id]}</field>
@@ -359,7 +357,6 @@
         <record id="open_create_mass_mailing_list" model="ir.actions.act_window">
             <field name="name">Create a Mass Mailing List</field>
             <field name="res_model">mail.mass_mailing.list</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_mail_mass_mailing_list_form_simplified"/>
             <field name="target">new</field>
@@ -421,7 +418,6 @@
         <record model="ir.actions.act_window" id="action_view_mass_mailing_lists">
             <field name="name">Mailing Lists</field>
             <field name="res_model">mail.mass_mailing.list</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -768,7 +764,6 @@
         <record id="action_view_mass_mailings" model="ir.actions.act_window">
             <field name="name">Mailings</field>
             <field name="res_model">mail.mass_mailing</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form,graph</field>
             <field name="context">{
                     'search_default_assigned_to_me': 1,
@@ -787,7 +782,6 @@
         <record id="action_view_mass_mailings_from_campaign" model="ir.actions.act_window">
             <field name="name">Mailings</field>
             <field name="res_model">mail.mass_mailing</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{
                 'search_default_assigned_to_me': 1,
@@ -809,7 +803,6 @@
         <record id="action_create_mass_mailings_from_campaign" model="ir.actions.act_window">
             <field name="name">Mailings</field>
             <field name="res_model">mail.mass_mailing</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form,kanban,tree</field>
             <field name="context">{
                 'search_default_assigned_to_me': 1,
@@ -831,7 +824,6 @@
         <record id="action_create_ab_mass_mailings_from_campaign" model="ir.actions.act_window">
             <field name="name">Mailings</field>
             <field name="res_model">mail.mass_mailing</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form,kanban,tree</field>
             <field name="context">{
                 'search_default_assigned_to_me': 1,
@@ -879,7 +871,6 @@
         <record id="action_view_mass_mailing_stages" model="ir.actions.act_window">
             <field name="name">Mailing Stages</field>
             <field name="res_model">mail.mass_mailing.stage</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -910,7 +901,6 @@
         <record id="mass_mailing_tag_action" model="ir.actions.act_window">
             <field name="name">Campaign Tags</field>
             <field name="res_model">mail.mass_mailing.tag</field>
-            <field name="view_type">form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Add a new tag
@@ -1095,7 +1085,6 @@
         <record id="action_view_mass_mailing_campaigns" model="ir.actions.act_window">
             <field name="name">Mailing Campaigns</field>
             <field name="res_model">mail.mass_mailing.campaign</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

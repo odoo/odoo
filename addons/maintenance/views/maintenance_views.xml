@@ -738,7 +738,6 @@
         <field name="name">Stages</field>
         <field name="res_model">maintenance.stage</field>
         <field name="view_mode">tree,kanban,form</field>
-        <field name="view_type">form</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Add a new stage in the maintenance request
@@ -944,7 +943,6 @@
     <record id="maintenance_team_action_settings" model="ir.actions.act_window">
         <field name="name">Teams</field>
         <field name="res_model">maintenance.team</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="search_view_id" ref="maintenance_team_view_search"/>
         <field name="view_ids" eval="[(5, 0, 0),
@@ -961,7 +959,6 @@
         <field name="name">Maintenance Teams</field>
         <field name="res_model">maintenance.team</field>
         <field name="view_mode">kanban,form</field>
-        <field name="view_type">form</field>
         <field name="view_id" ref="maintenance_team_kanban"/>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">

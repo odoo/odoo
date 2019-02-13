@@ -3,7 +3,6 @@
     <record id="action_invoices_ecommerce" model="ir.actions.act_window">
         <field name="name">Invoices</field>
         <field name="res_model">account.invoice</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('team_id.website_ids', '!=', False)]</field>
         <field name="view_id" ref="account.invoice_tree"/>
@@ -15,7 +14,6 @@
         <field name="name">Pricelists</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.pricelist</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('website_id', '!=', False)]</field>
         <field name="search_view_id" ref="product.product_pricelist_view_search" />

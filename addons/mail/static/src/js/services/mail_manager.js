@@ -1036,7 +1036,6 @@ var MailManager =  AbstractService.extend({
     _redirectToDocument: function (resModel, resID, viewID) {
         this.do_action({
             type: 'ir.actions.act_window',
-            view_type: 'form',
             view_mode: 'form',
             res_model: resModel,
             views: [[viewID || false, 'form']],

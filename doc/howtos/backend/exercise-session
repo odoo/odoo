@@ -22,7 +22,7 @@ Index: addons/openacademy/views/openacademy.xml
 ===================================================================
 --- addons.orig/openacademy/views/openacademy.xml
 +++ addons/openacademy/views/openacademy.xml
-@@ -65,4 +65,33 @@
+@@ -64,4 +64,32 @@
               action="openacademy.course_list_action"
               It is not required when it is the same module -->
  
@@ -47,7 +47,6 @@ Index: addons/openacademy/views/openacademy.xml
 +        <record model="ir.actions.act_window" id="session_list_action">
 +            <field name="name">Sessions</field>
 +            <field name="res_model">openacademy.session</field>
-+            <field name="view_type">form</field>
 +            <field name="view_mode">tree,form</field>
 +        </record>
 +

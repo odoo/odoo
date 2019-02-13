@@ -312,7 +312,6 @@ var StatementAction = AbstractAction.extend({
                 res_id: result,
                 views: [[false, 'form']],
                 type: 'ir.actions.act_window',
-                view_type: 'form',
                 view_mode: 'form',
             });
         });

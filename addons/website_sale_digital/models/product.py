@@ -25,7 +25,6 @@ class ProductTemplate(models.Model):
             'res_model': 'ir.attachment',
             'type': 'ir.actions.act_window',
             'view_mode': 'kanban,form',
-            'view_type': 'form',
             'context': "{'default_res_model': '%s','default_res_id': %d, 'default_product_downloadable': True}" % (self._name, self.id),
             'help': """
                 <p class="o_view_nocontent_smiling_face">Add attachments for this digital product</p>
@@ -58,7 +57,6 @@ class Product(models.Model):
             'res_model': 'ir.attachment',
             'type': 'ir.actions.act_window',
             'view_mode': 'kanban,form',
-            'view_type': 'form',
             'context': "{'default_res_model': '%s','default_res_id': %d, 'default_product_downloadable': True}" % (self._name, self.id),
             'help': """
                 <p class="o_view_nocontent_smiling_face">Add attachments for this digital product</p>

@@ -198,7 +198,6 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             domain: [['id', 'in', ids]],
             views: [[false, 'list'], [false, 'form']],
             type: 'ir.actions.act_window',
-            view_type: "list",
             view_mode: "list"
         });
     },
@@ -218,7 +217,6 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             views: [[false, 'list'], [false, 'form']],
             type: 'ir.actions.act_window',
             context: {search_default_journal_id: journalId},
-            view_type: 'list',
             view_mode: 'form',
         });
     },
@@ -688,7 +686,6 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             type: 'ir.actions.act_window',
             res_model: 'account.reconcile.model',
             views: [[false, 'list'], [false, 'form']],
-            view_type: "list",
             view_mode: "list",
             target: 'current'
         },

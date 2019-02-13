@@ -26,7 +26,6 @@ class MakeInvoice(models.TransientModel):
         return {
             'domain': [('id', 'in', list(new_invoice.values()))],
             'name': 'Invoices',
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'view_id': False,

@@ -1522,7 +1522,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return {
             'type': 'ir.actions.act_window',
             'res_model': self._name,
-            'view_type': 'form',
             'view_mode': 'form',
             'views': [(view_id, 'form')],
             'target': 'current',

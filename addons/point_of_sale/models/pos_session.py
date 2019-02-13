@@ -336,7 +336,6 @@ class PosSession(models.Model):
 
         action = {
             'name': _('Cash Control'),
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.bank.statement.cashbox',
             'view_id': self.env.ref('account.view_account_bnk_stmt_cashbox').id,

@@ -152,7 +152,6 @@
         <record id="action_blog_post" model="ir.actions.act_window">
             <field name="name">Blog Posts</field>
             <field name="res_model">blog.post</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban</field>
             <field name="view_id" ref="view_blog_post_list"/>
             <field name="search_view_id" ref="view_blog_post_search"/>
@@ -176,7 +175,6 @@
         <record id="action_blog_blog" model="ir.actions.act_window">
             <field name="name">Blogs</field>
             <field name="res_model">blog.blog</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
@@ -212,7 +210,6 @@
         <record id="action_tags" model="ir.actions.act_window">
             <field name="name">Blog Tags</field>
             <field name="res_model">blog.tag</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="blog_tag_tree"/>
         </record>
@@ -244,7 +241,6 @@
         <record id="action_tag_category" model="ir.actions.act_window">
             <field name="name">Tag Category</field>
             <field name="res_model">blog.tag.category</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="blog_tag_category_tree"/>
         </record>

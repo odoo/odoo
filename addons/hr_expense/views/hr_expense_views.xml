@@ -367,7 +367,6 @@
         <record id="hr_expense_product" model="ir.actions.act_window">
             <field name="name">Expense Products</field>
             <field name="res_model">product.product</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="context">{"default_can_be_expensed": 1, 'default_type': 'service'}</field>
@@ -403,7 +402,6 @@
         <record id="action_approved_expense" model="ir.actions.act_window">
             <field name="name">Employee Expenses</field>
             <field name="res_model">hr.expense</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="view_id" ref="view_expenses_tree"/>
             <field name="domain">[]</field>
@@ -420,7 +418,6 @@
         <record id="action_unsubmitted_expense" model="ir.actions.act_window">
             <field name="name">Unreported Expenses</field>
             <field name="res_model">hr.expense</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="view_id" ref="view_expenses_tree"/>
             <field name="domain">[]</field>
@@ -437,7 +434,6 @@
         <record id="hr_expense_action" model="ir.actions.act_window">
             <field name="name">Expenses Analysis</field>
             <field name="res_model">hr.expense</field>
-            <field name="view_type">form</field>
             <field name="view_mode">graph,pivot</field>
             <field name="context">{
                 'search_default_approved': 1,
@@ -761,7 +757,6 @@
         <record id="action_request_approve_expense_sheet" model="ir.actions.act_window">
             <field name="name">Reports to Approve</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="context">{'search_default_submitted': 1}</field>
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
@@ -778,7 +773,6 @@
         <record id="action_request_to_post_expense_sheet" model="ir.actions.act_window">
             <field name="name">Reports to Post</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="context">{'search_default_to_post': 1}</field>
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
@@ -795,7 +789,6 @@
         <record id="action_request_to_pay_expense_sheet" model="ir.actions.act_window">
             <field name="name">Reports to Pay</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="context">{'search_default_approved': 1}</field>
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
@@ -812,7 +805,6 @@
         <record id="action_hr_expense_sheet_department_to_approve" model="ir.actions.act_window">
             <field name="name">Expense Reports to Approve</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
             <field name="context">{
@@ -826,7 +818,6 @@
         <record id="action_hr_expense_sheet_department_filtered" model="ir.actions.act_window">
             <field name="name">Expense Reports Analysis</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_type">form</field>
             <field name="view_mode">graph,pivot</field>
             <field name="context">{
                 'search_default_department_id': [active_id],

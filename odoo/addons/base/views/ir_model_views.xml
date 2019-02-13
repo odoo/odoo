@@ -224,7 +224,6 @@
         <record id="action_model_model" model="ir.actions.act_window">
             <field name="name">Models</field>
             <field name="res_model">ir.model</field>
-            <field name="view_type">form</field>
             <field name="context">{}</field>
             <field name="view_id" ref="view_model_tree"/>
         </record>
@@ -383,7 +382,6 @@
         <record id="action_model_fields" model="ir.actions.act_window">
             <field name="name">Fields</field>
             <field name="res_model">ir.model.fields</field>
-            <field name="view_type">form</field>
             <field name="context">{}</field>
             <field name="view_id" ref="view_model_fields_tree"/>
         </record>
@@ -449,7 +447,6 @@
         <record id="action_model_data" model="ir.actions.act_window">
             <field name="name">External Identifiers</field>
             <field name="res_model">ir.model.data</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="view_model_data_list"/>
         </record>
         <menuitem id="next_id_5" name="Sequences &amp; Identifiers" parent="base.menu_custom" sequence="21" groups="base.group_no_one"/>
@@ -489,7 +486,6 @@
         <record id="action_model_constraint" model="ir.actions.act_window">
             <field name="name">Model Constraints</field>
             <field name="res_model">ir.model.constraint</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="view_model_constraint_list"/>
         </record>
         <menuitem action="action_model_constraint" id="ir_model_constraint_menu" parent="base.next_id_9"
@@ -526,7 +522,6 @@
         <record id="action_model_relation" model="ir.actions.act_window">
             <field name="name">ManyToMany Relations</field>
             <field name="res_model">ir.model.relation</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="view_model_relation_list"/>
         </record>
         <menuitem action="action_model_relation" id="ir_model_relation_menu" parent="base.next_id_9"
@@ -615,7 +610,6 @@
         <record id="ir_access_act" model="ir.actions.act_window">
             <field name="name">Access Rights</field>
             <field name="res_model">ir.model.access</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="ir_access_view_tree_edition"/>
             <field name="search_view_id" ref="ir_access_view_search"/>
         </record>

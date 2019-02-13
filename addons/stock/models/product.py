@@ -560,7 +560,6 @@ class ProductTemplate(models.Model):
             'name': _('Putaway Rules'),
             'type': 'ir.actions.act_window',
             'res_model': 'stock.putaway.rule',
-            'view_type': 'list',
             'view_mode': 'list',
             'domain': domain,
         }

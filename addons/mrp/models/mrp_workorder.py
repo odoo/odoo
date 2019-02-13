@@ -551,7 +551,6 @@ class MrpWorkorder(models.Model):
         self.ensure_one()
         return {
             'name': _('Scrap'),
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'stock.scrap',
             'view_id': self.env.ref('stock.stock_scrap_form_view2').id,

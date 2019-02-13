@@ -752,7 +752,6 @@ class Picking(models.Model):
             return {
                 'name': _('Immediate Transfer?'),
                 'type': 'ir.actions.act_window',
-                'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'stock.immediate.transfer',
                 'views': [(view.id, 'form')],
@@ -767,7 +766,6 @@ class Picking(models.Model):
             wiz = self.env['stock.overprocessed.transfer'].create({'picking_id': self.id})
             return {
                 'type': 'ir.actions.act_window',
-                'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'stock.overprocessed.transfer',
                 'views': [(view.id, 'form')],
@@ -789,7 +787,6 @@ class Picking(models.Model):
         return {
             'name': _('Create Backorder?'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'stock.backorder.confirmation',
             'views': [(view.id, 'form')],
@@ -1039,7 +1036,6 @@ class Picking(models.Model):
             })
             return {
                 'name': _('Choose destination location'),
-                'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'stock.package.destination',
                 'view_id': view_id,
@@ -1107,7 +1103,6 @@ class Picking(models.Model):
                 products |= move.product_id
         return {
             'name': _('Scrap'),
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'stock.scrap',
             'view_id': view.id,

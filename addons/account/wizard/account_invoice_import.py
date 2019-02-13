@@ -44,7 +44,6 @@ class ImportInvoiceImportWizard(models.TransientModel):
         action_vals = {
             'name': _('Generated Documents'),
             'domain': [('id', 'in', invoices.ids)],
-            'view_type': 'form',
             'res_model': 'account.invoice',
             'views': [[tree_view, "tree"], [form_view, "form"]],
             'type': 'ir.actions.act_window',

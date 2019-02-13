@@ -111,7 +111,6 @@ class MailController(http.Controller):
             return cls._redirect_to_messaging()
 
         url_params = {
-            'view_type': record_action['view_type'],
             'model': model,
             'id': res_id,
             'active_id': res_id,

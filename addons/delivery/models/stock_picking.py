@@ -163,7 +163,6 @@ class StockPicking(models.Model):
         )
         return {
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
             'view_id': compose_form_id,

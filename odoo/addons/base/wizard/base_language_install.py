@@ -37,7 +37,6 @@ class BaseLanguageInstall(models.TransientModel):
         self.state = 'done'
         return {
             'name': _('Language Pack'),
-            'view_type': 'form',
             'view_mode': 'form',
             'view_id': False,
             'res_model': 'base.language.install',

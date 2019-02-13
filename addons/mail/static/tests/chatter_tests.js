@@ -1835,7 +1835,6 @@ QUnit.test('form activity widget: edit next activity', async function (assert) {
                     target: "new",
                     type: "ir.actions.act_window",
                     view_mode: "form",
-                    view_type: "form",
                     views: [
                       [
                         false,

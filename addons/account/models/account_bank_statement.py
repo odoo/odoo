@@ -210,7 +210,6 @@ class AccountBankStatement(models.Model):
             context['active_id'] = self.id
             return {
                 'name': _('Cash Control'),
-                'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'account.bank.statement.cashbox',
                 'view_id': self.env.ref('account.view_account_bnk_stmt_cashbox').id,
@@ -258,7 +257,6 @@ class AccountBankStatement(models.Model):
         context['journal_id'] = self.journal_id.id
         return {
             'name': _('Journal Entries'),
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.move',
             'view_id': False,

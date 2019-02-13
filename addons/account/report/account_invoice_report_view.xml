@@ -100,7 +100,6 @@
     <record id="action_account_invoice_report_all_supp" model="ir.actions.act_window">
         <field name="name">Invoices Analysis</field>
         <field name="res_model">account.invoice.report</field>
-        <field name="view_type">form</field>
         <field name="view_mode">graph,pivot</field>
         <field name="context">{'search_default_current':1, 'search_default_supplier':1, 'group_by':[], 'group_by_no_leaf':1, 'search_default_year': 1}</field>
         <field name="search_view_id" ref="view_account_invoice_report_search"/>
@@ -109,7 +108,6 @@
     <record id="action_account_invoice_report_all" model="ir.actions.act_window">
         <field name="name">Invoices Analysis</field>
         <field name="res_model">account.invoice.report</field>
-        <field name="view_type">form</field>
         <field name="view_mode">graph,pivot</field>
         <field name="context">{'search_default_current':1, 'search_default_customer':1, 'group_by':[], 'group_by_no_leaf':1, 'search_default_year': 1}</field>
         <field name="search_view_id" ref="view_account_invoice_report_search"/>

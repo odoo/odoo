@@ -382,7 +382,6 @@
             <field name="name">Stock Moves</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_move_search"/>
             <field name="context">{'search_default_done': 1, 'search_default_groupby_location_id': 1}</field>
@@ -553,7 +552,6 @@
             <field name="name">Incoming  Products</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="domain" eval="[('picking_id.picking_type_id.code','=','incoming'), ('location_id.usage','!=','internal'), ('location_dest_id.usage', '=', 'internal')]"/>
             <field name="view_ids" eval="[(5, 0, 0),

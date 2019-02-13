@@ -387,7 +387,6 @@ class Channel(models.Model):
         )
         return {
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'slide.channel.invite',
             'target': 'new',

@@ -1001,7 +1001,6 @@ class Lead(models.Model):
         tree_view = self.env.ref('crm.crm_case_tree_view_oppor')
         return {
             'name': _('Opportunity'),
-            'view_type': 'form',
             'view_mode': 'tree, form',
             'res_model': 'crm.lead',
             'domain': [('type', '=', 'opportunity')],
@@ -1026,7 +1025,6 @@ class Lead(models.Model):
         tree_view = self.env.ref('crm.crm_case_tree_view_leads')
         return {
             'name': _('Lead'),
-            'view_type': 'form',
             'view_mode': 'tree, form',
             'res_model': 'crm.lead',
             'domain': [('type', '=', 'lead')],

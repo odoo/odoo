@@ -923,7 +923,6 @@ var ActionManager = Widget.extend({
     _onRedirect: function (ev) {
         this.do_action({
             type:'ir.actions.act_window',
-            view_type: 'form',
             view_mode: 'form',
             res_model: ev.data.res_model,
             views: [[false, 'form']],

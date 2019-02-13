@@ -221,7 +221,6 @@ var BasicActivity = AbstractField.extend({
             name: _t("Schedule Activity"),
             res_model: 'mail.activity',
             view_mode: 'form',
-            view_type: 'form',
             views: [[false, 'form']],
             target: 'new',
             context: {

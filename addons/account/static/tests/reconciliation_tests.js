@@ -1108,7 +1108,7 @@ QUnit.module('account', {
 
         testUtils.mock.intercept(clientAction, 'do_action', function (event) {
             assert.strictEqual(JSON.stringify(event.data.action),
-                '{"type":"ir.actions.act_window","res_model":"account.reconcile.model","views":[[false,"list"],[false,"form"]],"view_type":"list","view_mode":"list","target":"current"}',
+                '{"type":"ir.actions.act_window","res_model":"account.reconcile.model","views":[[false,"list"],[false,"form"]],"view_mode":"list","target":"current"}',
                 "should open the reconcile model list view");
         });
         await testUtils.dom.click(widget.$('.create .reconcile_model_edit'),{allowInvisible:true});

@@ -33,7 +33,6 @@ from odoo.http import request
 _logger = logging.getLogger(__name__)
 
 ACTION_DICT = {
-    'view_type': 'form',
     'view_mode': 'form',
     'res_model': 'base.module.upgrade',
     'target': 'new',

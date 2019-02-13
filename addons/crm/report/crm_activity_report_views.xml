@@ -76,7 +76,6 @@
        <record id="crm_activity_report_action" model="ir.actions.act_window">
            <field name="name">Pipeline Activities</field>
            <field name="res_model">crm.activity.report</field>
-           <field name="view_type">form</field>
            <field name="view_mode">graph,pivot,tree</field>
            <field name="context">{
                 'search_default_activities_my': 1,
@@ -100,7 +99,6 @@
        <record id="crm_activity_report_action_team" model="ir.actions.act_window">
            <field name="name">Pipeline Activities</field>
            <field name="res_model">crm.activity.report</field>
-           <field name="view_type">form</field>
            <field name="view_mode">graph,pivot,tree</field>
            <field name="context">{'search_default_team_id': active_id}</field>
            <field name="domain">[]</field>

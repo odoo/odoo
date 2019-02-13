@@ -277,7 +277,6 @@ var PivotController = AbstractController.extend({
             name: this.title,
             res_model: this.modelName,
             views: this.views,
-            view_type: 'list',
             view_mode: 'list',
             target: 'current',
             context: context,
