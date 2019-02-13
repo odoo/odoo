@@ -44,7 +44,13 @@ class ProductAttribute(models.Model):
             if products:
                 message = ', '.join(products.mapped('name'))
                 raise UserError(_('You are trying to change the type of an attribute value still referenced on at least one product template: %s') % message)
-        return super(ProductAttribute, self).write(vals)
+        invalidate_cache = 'sequence' in vals and any(record.sequence != vals['sequence'] for record in self)
+        res = super(ProductAttribute, self).write(vals)
+        if invalidate_cache:
+            # prefetched o2m have to be resequenced
+            # (eg. product.template: attribute_line_ids)
+            self.invalidate_cache()
+        return res
 
     @api.multi
     def _get_related_product_templates(self):
@@ -77,6 +83,16 @@ class ProductAttributeValue(models.Model):
     @api.multi
     def _variant_name(self, variable_attributes):
         return ", ".join([v.name for v in self if v.attribute_id in variable_attributes])
+
+    @api.multi
+    def write(self, values):
+        invalidate_cache = 'sequence' in values and any(record.sequence != values['sequence'] for record in self)
+        res = super(ProductAttributeValue, self).write(values)
+        if invalidate_cache:
+            # prefetched o2m have to be resequenced
+            # (eg. product.template.attribute.line: value_ids)
+            self.invalidate_cache()
+        return res
 
     @api.multi
     def unlink(self):

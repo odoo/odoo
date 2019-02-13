@@ -542,6 +542,10 @@ class ProductTemplate(models.Model):
                         # This is the case from existing stock reordering rules.
                         variant.write({'active': False})
 
+        # prefetched o2m have to be reloaded (because of active_test)
+        # (eg. product.template: product_variant_ids)
+        # We can't rely on existing invalidate_cache because of the savepoint.
+        self.invalidate_cache()
         return True
 
     def has_dynamic_attributes(self):
@@ -845,21 +849,30 @@ class ProductTemplate(models.Model):
         self.ensure_one()
 
         filtered_combination = combination._without_no_variant_attributes()
+        attribute_values = filtered_combination.mapped('product_attribute_value_id')
+        return self.env['product.product'].browse(self._get_variant_id_for_combination(attribute_values))
 
+    @api.multi
+    @tools.ormcache('self', 'attribute_values')
+    def _get_variant_id_for_combination(self, attribute_values):
+        """See `_get_variant_for_combination`. This method returns an ID
+        so it can be cached."""
+        self.ensure_one()
         # If there are a lot of variants on this template, it is much faster to
         # build a query than using the existing o2m.
         domain = [('product_tmpl_id', '=', self.id)]
-        for ptav in filtered_combination:
-            domain = expression.AND([[('attribute_value_ids.id', '=', ptav.product_attribute_value_id.id)], domain])
-        res = self.env['product.product'].search(domain)
+        for pav in attribute_values:
+            domain = expression.AND([[('attribute_value_ids', 'in', pav.id)], domain])
+
+        res = self.env['product.product'].with_context(active_test=False).search(domain)
 
         # The domain above is checking for the `product.attribute.value`, but we
         # need to make sure it's the same `product.template.attribute.value`.
         # Also there should theorically be only 0 or 1 but an existing database
         # might not be consistent so we need to make sure to take max 1.
         return res.filtered(
-            lambda v: v.product_template_attribute_value_ids == filtered_combination
-        )[:1]
+            lambda v: v.attribute_value_ids == attribute_values
+        )[:1].id
 
     @api.multi
     def _get_first_possible_combination(self, parent_combination=None, necessary_values=None):
