@@ -39,7 +39,7 @@ var DateWidget = Widget.extend({
                 next: 'fa fa-chevron-right',
                 today: 'fa fa-calendar-check-o',
                 clear: 'fa fa-delete',
-                close: 'fa fa-times'
+                close: 'fa fa-check'
             },
             calendarWeeks: true,
             buttons: {
