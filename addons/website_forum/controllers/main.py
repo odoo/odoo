@@ -560,7 +560,6 @@ class WebsiteForum(WebsiteProfile):
         values .update({
             'users': users,
             'main_object': forum,
-            'notifications': self._get_badge_granted_messages(),
             'pager': pager,
         })
 

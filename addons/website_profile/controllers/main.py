@@ -59,7 +59,6 @@ class WebsiteProfile(http.Controller):
         values.update({
             'email_required': kwargs.get('email_required'),
             'countries': countries,
-            'notifications': self._get_badge_granted_messages(),
             'url_param': kwargs.get('url_param'),
         })
         return request.render("website_profile.user_profile_edit_main", values)
@@ -108,13 +107,6 @@ class WebsiteProfile(http.Controller):
 
     # Badges
     # ---------------------------------------------------
-    def _get_badge_granted_messages(self):
-        badge_subtype = request.env.ref('gamification.mt_badge_granted', raise_if_not_found=False)
-        msg = request.env['mail.message']
-        if badge_subtype:
-            msg = msg.search([('subtype_id', '=', badge_subtype.id), ('needaction', '=', True)])
-        return msg
-
     def _prepare_badges_domain(self, **kwargs):
         """
         Hook for other modules to restrict the badges showed on profile page, depending of the context
