@@ -15,6 +15,7 @@ var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
 
 var createView = testUtils.createView;
+var createActionManager = testUtils.createActionManager;
 
 QUnit.module('Views', {
     beforeEach: function () {
@@ -3215,6 +3216,39 @@ QUnit.module('Views', {
         assert.ok(!list.$buttons.find('.o_list_button_save').is(':visible'),
             "should not have a visible save button");
         list.destroy();
+    });
+
+    QUnit.test('Editable listview, pressing ESC set focus on searchview', function (assert) {
+        assert.expect(1);
+
+        this.actions = [{
+            id: 1,
+            name: 'Partners Action 1',
+            res_model: 'foo',
+            type: 'ir.actions.act_window',
+            views: [[false, 'list']],
+        }
+        ];
+
+        var actionmanager = createActionManager({
+            actions: this.actions,
+            data: this.data,
+            archs: {
+                'foo,false,list': '<tree editable="bottom"><field name="foo"/></tree>',
+                'foo,false,search': '<search></search>',
+            },
+        });
+
+        actionmanager.doAction(1);
+
+        testUtils.dom.click($('.o_list_button_add'));
+        // press 'ESC'
+        actionmanager.$('tr.o_selected_row .o_field_widget').trigger($.Event('keydown', {
+            which: $.ui.keyCode.ESCAPE,
+            keyCode: $.ui.keyCode.ESCAPE,
+        }));
+        assert.strictEqual(document.activeElement, $('.o_searchview_input')[0],
+            "focus should be set on searchview input");
     });
 
     QUnit.test('field with password attribute', function (assert) {
