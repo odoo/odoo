@@ -283,8 +283,7 @@ class ProductTemplate(models.Model):
     def _is_add_to_cart_possible(self, parent_combination=None):
         """
         It's possible to add to cart (potentially after configuration) if
-        there is at least one possible combination, or if there is no
-        `product.template.attribute.line` at all.
+        there is at least one possible combination.
 
         :param parent_combination: the combination from which `self` is an
             optional or accessory product.
@@ -295,9 +294,9 @@ class ProductTemplate(models.Model):
         """
         self.ensure_one()
         if not self.active:
+            # for performance: avoid calling `_get_possible_combinations`
             return False
-        combination = self._get_first_possible_combination(parent_combination)
-        return True if combination else self._is_combination_possible(combination, parent_combination)
+        return next(self._get_possible_combinations(parent_combination), False) is not False
 
     @api.multi
     def _get_current_company_fallback(self, **kwargs):

@@ -321,8 +321,26 @@ class TestProductAttributeValueConfig(TestProductAttributeValueSetup):
         computer_hdd_4 = self._get_product_template_attribute_value(self.hdd_4)
         self._add_exclude(computer_ram_16, computer_hdd_1)
 
-        # ram_8 is allowed with the other attributes
-        self.assertEqual(self.computer._get_first_possible_combination(), computer_ssd_256 + computer_ram_8 + computer_hdd_1)
+        # Basic case: test all iterations of generator
+        gen = self.computer._get_possible_combinations()
+        self.assertEqual(next(gen), computer_ssd_256 + computer_ram_8 + computer_hdd_1)
+        self.assertEqual(next(gen), computer_ssd_256 + computer_ram_8 + computer_hdd_2)
+        self.assertEqual(next(gen), computer_ssd_256 + computer_ram_8 + computer_hdd_4)
+        self.assertEqual(next(gen), computer_ssd_256 + computer_ram_16 + computer_hdd_2)
+        self.assertEqual(next(gen), computer_ssd_256 + computer_ram_16 + computer_hdd_4)
+        self.assertEqual(next(gen), computer_ssd_256 + computer_ram_32 + computer_hdd_1)
+        self.assertEqual(next(gen), computer_ssd_256 + computer_ram_32 + computer_hdd_2)
+        self.assertEqual(next(gen), computer_ssd_256 + computer_ram_32 + computer_hdd_4)
+        self.assertEqual(next(gen), computer_ssd_512 + computer_ram_8 + computer_hdd_1)
+        self.assertEqual(next(gen), computer_ssd_512 + computer_ram_8 + computer_hdd_2)
+        self.assertEqual(next(gen), computer_ssd_512 + computer_ram_8 + computer_hdd_4)
+        self.assertEqual(next(gen), computer_ssd_512 + computer_ram_16 + computer_hdd_2)
+        self.assertEqual(next(gen), computer_ssd_512 + computer_ram_16 + computer_hdd_4)
+        self.assertEqual(next(gen), computer_ssd_512 + computer_ram_32 + computer_hdd_1)
+        self.assertEqual(next(gen), computer_ssd_512 + computer_ram_32 + computer_hdd_2)
+        self.assertEqual(next(gen), computer_ssd_512 + computer_ram_32 + computer_hdd_4)
+        with self.assertRaises(StopIteration):
+            next(gen)
 
         # Below invalidate cache between every test to force reload the
         # o2m attribute_line_ids to order it by the new sequence
@@ -357,26 +375,37 @@ class TestProductAttributeValueConfig(TestProductAttributeValueSetup):
         self._add_exclude(computer_ram_32, computer_ssd_256)
         self.assertEqual(self.computer._get_first_possible_combination(), computer_ssd_512 + computer_ram_32 + computer_hdd_4)
 
-        # No possible combination
+        # No possible combination (test helper and iterator)
         self._add_exclude(computer_ram_32, computer_hdd_4)
         self.assertEqual(self.computer._get_first_possible_combination(), self.env['product.template.attribute.value'])
+        gen = self.computer._get_possible_combinations()
+        with self.assertRaises(StopIteration):
+            next(gen)
 
-    def test_get_closest_possible_combination(self):
+    def test_get_closest_possible_combinations(self):
         computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
+        computer_ssd_512 = self._get_product_template_attribute_value(self.ssd_512)
         computer_ram_8 = self._get_product_template_attribute_value(self.ram_8)
         computer_ram_16 = self._get_product_template_attribute_value(self.ram_16)
+        computer_ram_32 = self._get_product_template_attribute_value(self.ram_32)
         computer_hdd_1 = self._get_product_template_attribute_value(self.hdd_1)
         computer_hdd_2 = self._get_product_template_attribute_value(self.hdd_2)
         computer_hdd_4 = self._get_product_template_attribute_value(self.hdd_4)
         self._add_exclude(computer_ram_16, computer_hdd_1)
 
-        # CASE nothing special
-        self.assertEqual(self.computer._get_closest_possible_combination(None),
-            computer_ssd_256 + computer_ram_8 + computer_hdd_1)
+        # CASE nothing special (test 2 iterations)
+        gen = self.computer._get_closest_possible_combinations(None)
+        self.assertEqual(next(gen), computer_ssd_256 + computer_ram_8 + computer_hdd_1)
+        self.assertEqual(next(gen), computer_ssd_256 + computer_ram_8 + computer_hdd_2)
 
-        # CASE contains computer_hdd_1
-        self.assertEqual(self.computer._get_closest_possible_combination(computer_hdd_1),
-            computer_ssd_256 + computer_ram_8 + computer_hdd_1)
+        # CASE contains computer_hdd_1 (test all iterations)
+        gen = self.computer._get_closest_possible_combinations(computer_hdd_1)
+        self.assertEqual(next(gen), computer_ssd_256 + computer_ram_8 + computer_hdd_1)
+        self.assertEqual(next(gen), computer_ssd_256 + computer_ram_32 + computer_hdd_1)
+        self.assertEqual(next(gen), computer_ssd_512 + computer_ram_8 + computer_hdd_1)
+        self.assertEqual(next(gen), computer_ssd_512 + computer_ram_32 + computer_hdd_1)
+        with self.assertRaises(StopIteration):
+            next(gen)
 
         # CASE contains computer_hdd_2
         self.assertEqual(self.computer._get_closest_possible_combination(computer_hdd_2),
