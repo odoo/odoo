@@ -2,12 +2,10 @@ odoo.define('website_crm.tour', function(require) {
     'use strict';
 
     var tour = require('web_tour.tour');
-    var base = require('web_editor.base');
 
     tour.register('website_crm_tour', {
         test: true,
         url: '/contactus',
-        wait_for: base.ready(),
     }, [{
         content: "Complete name",
         trigger: "input[name=contact_name]",

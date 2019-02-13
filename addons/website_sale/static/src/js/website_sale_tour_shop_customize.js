@@ -2,12 +2,10 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
     'use strict';
 
     var tour = require("web_tour.tour");
-    var base = require("web_editor.base");
 
     tour.register('shop_customize', {
         test: true,
         url: '/shop',
-        wait_for: base.ready()
     },
         [
             {

@@ -2,13 +2,11 @@ odoo.define('website_sale.tour_shop_deleted_archived_variants', function (requir
 'use strict';
 
 var tour = require('web_tour.tour');
-var base = require('web_editor.base');
 
 // This tour relies on a data created from the python test.
 tour.register('tour_shop_deleted_archived_variants', {
     test: true,
     url: '/shop?search=Test Product',
-    wait_for: base.ready(),
 },
 [
     {

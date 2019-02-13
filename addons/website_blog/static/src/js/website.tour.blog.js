@@ -3,13 +3,11 @@ odoo.define("website_blog.tour", function (require) {
 
     var core = require("web.core");
     var tour = require("web_tour.tour");
-    var base = require("web_editor.base");
 
     var _t = core._t;
 
     tour.register("blog", {
         url: "/",
-        wait_for: base.ready(),
     }, [tour.STEPS.WEBSITE_NEW_PAGE, {
         trigger: "a[data-action=new_blog_post]",
         content: _t("Select this menu item to create a new blog post."),

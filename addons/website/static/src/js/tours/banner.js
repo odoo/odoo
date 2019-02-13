@@ -3,13 +3,11 @@ odoo.define("website.tour.banner", function (require) {
 
 var core = require("web.core");
 var tour = require("web_tour.tour");
-var base = require("web_editor.base");
 
 var _t = core._t;
 
 tour.register("banner", {
     url: "/",
-    wait_for: base.ready(),
 }, [{
     trigger: "a[data-action=edit]",
     content: _t("<b>Click Edit</b> to start designing your homepage."),
@@ -88,12 +86,10 @@ odoo.define("website.tour.contact", function (require) {
 
 var core = require("web.core");
 var tour = require("web_tour.tour");
-var base = require("web_editor.base");
 var _t = core._t;
 
 tour.register("contact", {
     url: "/page/contactus",
-    wait_for: base.ready(),
 }, [{
     trigger: "li#customize-menu",
     content: _t("<b>Install a contact form</b> to improve this page."),

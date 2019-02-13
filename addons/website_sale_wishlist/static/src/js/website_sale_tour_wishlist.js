@@ -2,12 +2,10 @@ odoo.define('website_sale_wishlist.tour', function (require) {
 'use strict';
 
 var tour = require("web_tour.tour");
-var base = require("web_editor.base");
 
 tour.register('shop_wishlist', {
     test: true,
     url: '/shop',
-    wait_for: base.ready(),
 },
     [
         {
