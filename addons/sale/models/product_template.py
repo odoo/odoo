@@ -215,6 +215,8 @@ class ProductTemplate(models.Model):
                 discount applied (price < list_price), else False
         """
         self.ensure_one()
+        # get the name before the change of context to benefit from prefetch
+        display_name = self.name
 
         quantity = self.env.context.get('quantity', add_qty)
         context = dict(self.env.context, quantity=quantity, pricelist=pricelist.id if pricelist else False)
@@ -254,8 +256,6 @@ class ProductTemplate(models.Model):
             product_template = product_template.with_context(current_attributes_price_extra=[v.price_extra or 0.0 for v in combination])
             list_price = product_template.price_compute('list_price')[product_template.id]
             price = product_template.price if pricelist else list_price
-
-        display_name = product_template.name
 
         filtered_combination = combination._without_no_variant_attributes()
         if filtered_combination:

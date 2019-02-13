@@ -648,6 +648,10 @@ class ProductProduct(models.Model):
             We must make sure that all attributes are used to take into account the case where
             attributes would be added to the template.
 
+            This method does not check if the combination is possible, it just
+            checks if it has valid attributes and values. A possible combination
+            is always valid, but a valid combination is not always possible.
+
             :param valid_attributes: a recordset of product.attribute
             :param valid_values: a recordset of product.attribute.value
             :return: True if the attibutes and values are correct, False instead

@@ -204,8 +204,8 @@ class TestProductAttributeValueConfig(TestProductAttributeValueSetup):
         self.assertEqual(len(variant), 0)
 
         # also test _has_valid_attributes (case ok):
-        valid_value_ids = self.computer._get_valid_product_attribute_values()._without_no_variant_attributes()
-        valid_attribute_ids = self.computer._get_valid_product_attributes()._without_no_variant_attributes()
+        valid_value_ids = self.computer.valid_product_attribute_value_wnva_ids
+        valid_attribute_ids = self.computer.valid_product_attribute_wnva_ids
         self.assertTrue(ok_variant._has_valid_attributes(valid_attribute_ids, valid_value_ids))
 
         # also test _has_valid_attributes (case not ok):
