@@ -42,6 +42,7 @@ class SlidesCase(common.SavepointCase):
 
         self.channel = self.env['slide.channel'].sudo(self.user_publisher).create({
             'name': 'Test Channel',
+            'channel_type': 'documentation',
             'promote_strategy': 'most_voted',
             'visibility': 'public',
             'website_published': True,

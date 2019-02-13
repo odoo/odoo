@@ -182,11 +182,12 @@ class Channel(models.Model):
         for record in self:
             record.completed, record.completion = mapped_data.get(record.id, (False, 0))
 
-    @api.one
-    @api.depends('visibility', 'partner_ids', 'upload_group_ids')
+    @api.depends('channel_type', 'partner_ids', 'upload_group_ids')
     def _compute_access(self):
-        self.can_upload = not self.env.user.share and (not self.upload_group_ids or bool(self.upload_group_ids & self.env.user.groups_id))
-        self.can_publish = self.can_upload and self.env.user.has_group('website.group_website_publisher')
+        for record in self:
+            is_doc = record.channel_type == 'documentation'
+            record.can_upload = not self.env.user.share and (not record.upload_group_ids or bool(record.upload_group_ids & self.env.user.groups_id))
+            record.can_publish = record.can_upload and self.env.user.has_group('website.group_website_publisher') and (is_doc or record.user_id == self.env.user)
 
     @api.multi
     @api.depends('name')
