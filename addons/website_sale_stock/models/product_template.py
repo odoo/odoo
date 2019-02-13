@@ -22,6 +22,9 @@ class ProductTemplate(models.Model):
             combination=combination, product_id=product_id, add_qty=add_qty, pricelist=pricelist,
             parent_combination=reference_product, only_template=only_template)
 
+        if not self.env.context.get('website_sale_stock_get_quantity'):
+            return combination_info
+
         if combination_info['product_id']:
             product = self.env['product.product'].sudo().browse(combination_info['product_id'])
             combination_info.update({
