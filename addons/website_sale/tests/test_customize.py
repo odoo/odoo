@@ -167,9 +167,10 @@ class TestUi(odoo.tests.HttpCase):
 
         product_template.create_variant_ids()
 
-        # archive first and delete second
+        # archive first combination (first variant)
         product_template.product_variant_ids[0].active = False
-        product_template.product_variant_ids[1].unlink()
+        # delete second combination (which is now first variant since cache has been cleared)
+        product_template.product_variant_ids[0].unlink()
 
         self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('tour_shop_deleted_archived_variants')", "odoo.__DEBUG__.services['web_tour.tour'].tours.tour_shop_deleted_archived_variants.ready", login="portal")
 
