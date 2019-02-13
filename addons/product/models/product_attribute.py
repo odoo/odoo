@@ -246,9 +246,9 @@ class ProductTemplateAttributeExclusion(models.Model):
     _description = 'Product Template Attribute Exclusion'
 
     product_template_attribute_value_id = fields.Many2one(
-        'product.template.attribute.value', string="Attribute Value", ondelete='cascade')
+        'product.template.attribute.value', string="Attribute Value", ondelete='cascade', index=True)
     product_tmpl_id = fields.Many2one(
-        'product.template', string='Product Template', ondelete='cascade', required=True)
+        'product.template', string='Product Template', ondelete='cascade', required=True, index=True)
     value_ids = fields.Many2many(
         'product.template.attribute.value', relation="product_attr_exclusion_value_ids_rel",
         string='Attribute Values', domain="[('product_tmpl_id', '=', product_tmpl_id)]")
