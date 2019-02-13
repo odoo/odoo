@@ -5257,7 +5257,11 @@ Fields:
         """ If ``field`` must be recomputed on some record in ``self``, return the
             corresponding records that must be recomputed.
         """
-        return self.env.check_todo(field, self)
+        env = self.env
+        todo = env.check_todo(field, self)
+        if todo:
+            missing = set(env.cache.get_missing_ids(todo.with_env(env), field))
+            return todo.browse(missing, todo._prefetch)
 
     def _recompute_todo(self, field):
         """ Mark ``field`` to be recomputed. """
