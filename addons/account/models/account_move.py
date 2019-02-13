@@ -1800,6 +1800,7 @@ class AccountPartialReconcile(models.Model):
                 # recorded before the period lock date as the tax statement for this period is
                 # probably already sent to the estate.
                 newly_created_move.write({'date': move_date})
+                newly_created_move.mapped('line_ids.full_reconcile_id.exchange_move_id').write({'date': move_date})
             # post move
             newly_created_move.post()
 
