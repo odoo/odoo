@@ -136,8 +136,8 @@ class ProductTemplateAttributeLine(models.Model):
         for product_template_attribute_line in self:
             product_template_attribute_line.product_template_value_ids = self.env['product.template.attribute.value'].search([
                 ('product_tmpl_id', 'in', product_template_attribute_line.product_tmpl_id.ids),
-                ('product_attribute_value_id.attribute_id', 'in', product_template_attribute_line.value_ids.mapped('attribute_id').ids)]
-            ).sorted(lambda product_product_attribute: product_product_attribute.sequence)
+                ('product_attribute_value_id', 'in', product_template_attribute_line.value_ids.ids)]
+            )
 
     @api.multi
     def unlink(self):
