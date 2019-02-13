@@ -644,7 +644,7 @@ class IrTranslation(models.Model):
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, module, state)
                         SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(module)s, 'to_translate'
                         FROM res_lang l
-                        WHERE l.active AND l.translatable AND NOT EXISTS (
+                        WHERE l.active AND l.translatable AND l.code != 'en_US' AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
                         );
@@ -778,10 +778,6 @@ class IrTranslation(models.Model):
                 'view_mode': 'form',
                 'context': {'model': model, 'id': id, 'field': field}
             })
-            # domain += [('lang', '!=', self._context.get('lang')), '|', ('name', '=', "%s,%s" % (fld.model_name, fld.name)),
-            #         ('name', 'ilike', "%s,%s" % (fld.model_name, fld.name))]
-            # # need to pass prepared domain in action context as we want to use it in default_get of translation wizard
-            # action['context'].update({'translation_domain': domain})
 
         return action
 

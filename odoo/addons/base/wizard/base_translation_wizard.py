@@ -13,13 +13,12 @@ class TranslationWizard(models.TransientModel):
         res = super(TranslationWizard, self).default_get(fields_list)
         IrTranslation = self.env['ir.translation']
 
-        main_lang = 'en_US'
-
         model = self.env.context['model']
-        domain_id = self.env.context['id']
+        recordID = self.env.context['id']
         field = self.env.context['field']
-        record = self.env[model].with_context(lang=main_lang).browse(domain_id)
-        domain = ['&', ('res_id', '=', domain_id), ('name', '=like', model + ',%')]
+        record = self.env[model].with_context(lang='en_US').browse(recordID)
+        domain = ['&', '&', ('res_id', '=', recordID), ('name', '=like', model + ',%'),
+                    ('lang', '!=', self.env.context.get('lang'))]
 
         def make_domain(fld, rec):
             name = "%s,%s" % (fld.model_name, fld.name)
@@ -40,26 +39,23 @@ class TranslationWizard(models.TransientModel):
                         domain = ['|'] + domain + make_domain(fld, rec)
                 except AccessError:
                     continue
-            assert fld.translate and rec._name == fld.model_name
-            IrTranslation.insert_missing(fld, rec)
 
         if field:
             fld = record._fields[field]
             if not fld.related:
-                res['context'] = {
-                    'search_default_name': "%s,%s" % (fld.model_name, fld.name),
-                }
+                domain += ['|', ('name', '=',  "%s,%s" % (fld.model_name, fld.name)),
+                            ('name', 'ilike', "%s,%s" % (fld.model_name, fld.name))]
             else:
                 rec = record
                 try:
                     while fld.related:
                         rec, fld = fld.traverse_related(rec)
                     if rec:
-                        rec['context'] = {'search_default_name': "%s,%s" % (fld.model_name, fld.name), }
+                        domain += ['|', ('name', '=',  "%s,%s" % (fld.model_name, fld.name)),
+                            ('name', 'ilike', "%s,%s" % (fld.model_name, fld.name))]
                 except AccessError:
                     pass
 
-        domain += [('lang', '!=', self._context.get('lang')), '|', ('name', '=', "%s,%s" % (fld.model_name, fld.name)), ('name', 'ilike', "%s,%s" % (fld.model_name, fld.name))]
         irTranslations = IrTranslation.search(domain)
         res['translation_ids'] = [[0, False, {
             'source': line.source,
