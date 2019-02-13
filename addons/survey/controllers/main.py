@@ -12,7 +12,7 @@ from math import ceil
 from odoo import fields, http, _
 from odoo.addons.base.models.ir_ui_view import keep_query
 from odoo.exceptions import UserError
-from odoo.http import request
+from odoo.http import request, content_disposition
 from odoo.tools import ustr
 
 _logger = logging.getLogger(__name__)
@@ -500,6 +500,37 @@ class Survey(http.Controller):
         #     filter_display_data: [{'labels': ['a', 'b'], question_text} ...  ]
         #     filter_finish: boolean => only finished surveys or not
         #
+
+    @http.route(['/survey/<int:survey_id>/get_certification'], type='http', auth='user', methods=['POST'], website=True)
+    def survey_get_certification(self, survey_id, **kwargs):
+        """ The certification document can be downloaded as long as the user has succeeded the certification """
+        survey = request.env['survey.survey'].sudo().search([
+            ('id', '=', survey_id),
+            ('certificate', '=', True)
+        ])
+
+        if not survey:
+            # no certification found
+            return werkzeug.utils.redirect("/")
+
+        succeeded_attempt = request.env['survey.user_input'].sudo().search([
+            ('partner_id', '=', request.env.user.partner_id.id),
+            ('survey_id', '=', survey_id),
+            ('quizz_passed', '=', True)
+        ], limit=1)
+
+        if not succeeded_attempt:
+            raise UserError(_("The user has not succeeded the certification"))
+
+        report_sudo = request.env.ref('survey.certification_report').sudo()
+
+        report = report_sudo.render_qweb_pdf([succeeded_attempt.id], data={'report_type': 'pdf'})[0]
+        reporthttpheaders = [
+            ('Content-Type', 'application/pdf'),
+            ('Content-Length', len(report)),
+        ]
+        reporthttpheaders.append(('Content-Disposition', content_disposition('Certification.pdf')))
+        return request.make_response(report, headers=reporthttpheaders)
 
     def _prepare_result_dict(self, survey, current_filters=None):
         """Returns dictionary having values for rendering template"""
