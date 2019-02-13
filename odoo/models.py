@@ -4380,7 +4380,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         an exception otherwise.
         """
         try:
-            # unpack to ensure there is only one value is faster than len for big lists
+            # unpack to ensure there is only one value is faster than len when true and
+            # has a significant impact as this check is largely called
             _id, = self._ids
             return self
         except ValueError:
