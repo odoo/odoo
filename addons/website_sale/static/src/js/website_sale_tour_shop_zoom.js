@@ -2,7 +2,6 @@ odoo.define('website_sale.tour_shop_zoom', function (require) {
 'use strict';
 
 var tour = require('web_tour.tour');
-var base = require('web_editor.base');
 
 var imageSelector = '#o-carousel-product .carousel-item.active img';
 var imageName = "A Colorful Image";
@@ -12,7 +11,6 @@ var nameGreen = "Forest Green";
 tour.register('shop_zoom', {
     test: true,
     url: '/shop?search=' + imageName,
-    wait_for: base.ready(),
 },
 [
     {

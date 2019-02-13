@@ -2,13 +2,11 @@ odoo.define('sale.tour_sale_signature', function (require) {
 'use strict';
 
 var tour = require('web_tour.tour');
-var base = require('web_editor.base');
 
 // This tour relies on data created on the Python test.
 tour.register('sale_signature', {
     test: true,
     url: '/my/quotes',
-    wait_for: base.ready(),
 },
 [
     {

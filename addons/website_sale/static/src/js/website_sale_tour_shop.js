@@ -4,7 +4,7 @@ odoo.define("website_sale.tour_shop", function (require) {
     var core = require("web.core");
     var _t = core._t;
 
-    // return the steps, used for backend and frontend (because web_editor.base is only in the website)
+    // return the steps, used for backend and frontend
 
     return [{
         trigger: "#new-content-menu > a",

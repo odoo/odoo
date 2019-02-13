@@ -1,13 +1,11 @@
 odoo.define('website_hr_recruitment.tour', function(require) {
     'use strict';
 
-    var base = require('web_editor.base');
     var tour = require("web_tour.tour");
 
     tour.register('website_hr_recruitment_tour', {
         test: true,
         url: '/jobs/apply/3',
-        wait_for: base.ready(),
     }, [{
         content: "Complete name",
         trigger: "input[name=partner_name]",
