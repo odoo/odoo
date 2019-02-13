@@ -42,21 +42,27 @@
     -->
     <t t-name="website.slide.upload.modal.common">
         <div class="form-group row">
-            <label for="name" class="col-form-label col-md-2">Title</label>
-            <div class="col-md-10">
+            <label for="name" class="col-form-label col-md-3">Title</label>
+            <div class="col-md-9">
                 <input id="name" name="name" placeholder="Title" class="form-control" required="required"/>
             </div>
         </div>
         <div class="form-group row">
-            <label for="category_id" class="col-form-label col-md-2">Category</label>
-            <div class="controls col-md-10">
+            <label for="category_id" class="col-form-label col-md-3">Category</label>
+            <div class="controls col-md-9">
                 <input class="form-control" id="category_id"/>
             </div>
         </div>
         <div class="form-group row">
-            <label for="tag_ids" class="col-form-label col-md-2">Tags</label>
-            <div class="controls col-md-10">
+            <label for="tag_ids" class="col-form-label col-md-3">Tags</label>
+            <div class="controls col-md-9">
                 <input id="tag_ids" name="tag_ids" type="hidden"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="is_preview" class="col-form-label col-md-3">Always visible</label>
+            <div class="controls col-md-9 mt8">
+                <input id="is_preview" name="is_preview" type="checkbox"/>
             </div>
         </div>
     </t>

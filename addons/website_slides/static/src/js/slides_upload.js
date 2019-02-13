@@ -128,6 +128,7 @@ var SlideUploadDialog = Dialog.extend({
             'url': this._formGetFieldValue('url'),
             'description': this._formGetFieldValue('description'),
             'index_content': this._formGetFieldValue('index_content'),
+            'is_preview': this.$('#is_preview').is(':checked'),
             'website_published': forcePublished,
         }, this._getSelect2DropdownValues()); // add tags and category
 

@@ -313,6 +313,8 @@ class WebsiteSlides(http.Controller):
             else:
                 values['category_id'] = post['category_id'][0]
 
+        values['is_preview'] = post.get('is_preview') == 'true'
+
         # handle exception during creation of slide and sent error notification to the client
         # otherwise client slide create dialog box continue processing even server fail to create a slide
         try:
