@@ -57,7 +57,8 @@ var FieldTextHtmlSimple = widget.extend({
         this.$translate.remove();
         this.$translate = $();
         // Triggers a mouseup to refresh the editor toolbar
-        this.$content.trigger('mouseup');
+        var mouseupEvent = $.Event('mouseup', {'setStyleInfoFromEditable': true});
+        this.$content.trigger(mouseupEvent);
         return def;
     },
     initialize_content: function () {
