@@ -48,6 +48,35 @@ class ProjectCreateSalesOrder(models.TransientModel):
             self.price_unit = 0.0
 
     def action_create_sale_order(self):
+        self._validate_input()
+
+        # create SO
+        sale_order = self.env['sale.order'].create({
+            'project_id': self.project_id.id,
+            'partner_id': self.partner_id.id,
+            'analytic_account_id': self.project_id.analytic_account_id.id,
+            'client_order_ref': self.project_id.name,
+            'company_id': self.project_id.company_id.id,
+        })
+        sale_order.onchange_partner_id()
+        sale_order.onchange_partner_shipping_id()
+
+        self._make_billable(sale_order)
+
+        # confirm SO
+        sale_order.action_confirm()
+
+        view_form_id = self.env.ref('sale.view_order_form').id
+        action = self.env.ref('sale.action_orders').read()[0]
+        action.update({
+            'views': [(view_form_id, 'form')],
+            'view_mode': 'form',
+            'name': sale_order.name,
+            'res_id': sale_order.id,
+        })
+        return action
+
+    def _validate_input(self):
         # if project linked to SO line or at least on tasks with SO line, then we consider project as billable.
         if self.project_id.sale_line_id:
             raise UserError(_("The project is already linked to a sales order item."))
@@ -69,35 +98,12 @@ class ProjectCreateSalesOrder(models.TransientModel):
         if timesheet_with_so_line:
             raise UserError(_('The sales order cannot be created because some timesheets of this project are already linked to another sales order.'))
 
-        # create SO
-        sale_order = self.env['sale.order'].create({
-            'project_id': self.project_id.id,
-            'partner_id': self.partner_id.id,
-            'analytic_account_id': self.project_id.analytic_account_id.id,
-            'client_order_ref': self.project_id.name,
-            'company_id': self.project_id.company_id.id,
-        })
-        sale_order.onchange_partner_id()
-        sale_order.onchange_partner_shipping_id()
-
+    def _make_billable(self, sale_order):
         # create the sale lines, the map (optional), and assign existing timesheet to sale lines
         if self.billable_type == 'project_rate':
             self._make_billable_at_project_rate(sale_order)
         else:
             self._make_billable_at_employee_rate(sale_order)
-
-        # confirm SO
-        sale_order.action_confirm()
-
-        view_form_id = self.env.ref('sale.view_order_form').id
-        action = self.env.ref('sale.action_orders').read()[0]
-        action.update({
-            'views': [(view_form_id, 'form')],
-            'view_mode': 'form',
-            'name': sale_order.name,
-            'res_id': sale_order.id,
-        })
-        return action
 
     def _make_billable_at_project_rate(self, sale_order):
         # trying to simulate the SO line created a task, according to the product configuration
