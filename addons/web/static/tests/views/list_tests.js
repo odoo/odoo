@@ -3251,6 +3251,26 @@ QUnit.module('Views', {
             "focus should be set on searchview input");
     });
 
+    QUnit.test('Editable listview, press Enter should open edit mode', function (assert) {
+        assert.expect(1);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/></tree>',
+        });
+
+        testUtils.dom.click(list.$('.o_data_row:first .o_list_record_selector input'));  // select first record
+
+        list.$('.o_data_row:first .o_list_record_selector')
+            .trigger({type: "keydown", which: $.ui.keyCode.ENTER})
+
+        assert.strictEqual(list.$('tr.o_data_row:first .o_data_cell input').length, 1,
+            "should open in edit mode");
+        list.destroy();
+    });
+
     QUnit.test('field with password attribute', function (assert) {
         assert.expect(2);
 
