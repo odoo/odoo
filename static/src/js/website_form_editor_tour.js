@@ -1,14 +1,11 @@
 odoo.define('website_form_editor.tour', function(require) {
     'use strict';
 
-    var ajax = require('web.ajax');
-    var base = require('web_editor.base');
     var rpc = require('web.rpc');
     var tour = require("web_tour.tour");
 
     tour.register("website_form_editor_tour", {
         test: true,
-        wait_for: base.ready()
     }, [
         // Drop a form builder snippet and configure it
         {
@@ -511,7 +508,6 @@ odoo.define('website_form_editor.tour', function(require) {
 
     tour.register("website_form_editor_tour_submit", {
         test: true,
-        wait_for: base.ready()
     },[
         {
             content:  "Try to send empty form",
@@ -604,7 +600,6 @@ odoo.define('website_form_editor.tour', function(require) {
 
     tour.register("website_form_editor_tour_results", {
         test: true,
-        wait_for: base.ready()
     }, [
         {
             content: "Check mail.mail records have been created",
