@@ -1,13 +1,14 @@
 odoo.define('mail.model.DMChat', function (require) {
 "use strict";
 
+var ChannelSeenMixin = require('mail.model.ChannelSeenMixin');
 var TwoUserChannel = require('mail.model.TwoUserChannel');
 
 /**
  * Any piece of code in JS that make use of DMs must ideally interact with
  * such objects, instead of direct data from the server.
  */
-var DMChat = TwoUserChannel.extend({
+var DMChat = TwoUserChannel.extend(ChannelSeenMixin, {
     /**
      * @override
      * @param {Object} params
@@ -21,6 +22,7 @@ var DMChat = TwoUserChannel.extend({
      */
     init: function (params) {
         this._super.apply(this, arguments);
+        ChannelSeenMixin.init.apply(this, arguments);
 
         var data = params.data;
 

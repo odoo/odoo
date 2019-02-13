@@ -80,10 +80,11 @@ QUnit.test('2 members: 1 myself message not received initially', function (asser
     assert.expect(2);
     var done = assert.async();
 
-    var general = {
+    var dmChat = {
         id: 1,
-        channel_type: "channel",
-        name: "general",
+        channel_type: "chat",
+        direct_partner: [{ id: 2, name: 'Someone', im_status: '' }],
+        name: 'DM',
         members: [{
             id: 2,
             name: "Someone",
@@ -106,12 +107,12 @@ QUnit.test('2 members: 1 myself message not received initially', function (asser
 
     this.data.initMessaging = {
         channel_slots: {
-            channel_channel: [general],
+            channel_direct_message: [dmChat],
         },
     };
     this.data['mail.channel'] = {
         fields: {},
-        records: [general],
+        records: [dmChat],
     };
     this.data['mail.message'].records = [{
         author_id: [3, "Me"],
@@ -130,10 +131,10 @@ QUnit.test('2 members: 1 myself message not received initially', function (asser
         services: this.services,
         session: { partner_id: 3 },
     }).then(function (discuss) {
-        // click on general
-        var $general = discuss.$('.o_mail_discuss_sidebar')
+        // click on DM chat
+        var $dmChat = discuss.$('.o_mail_discuss_sidebar')
                         .find('.o_mail_discuss_item[data-thread-id=1]');
-        testUtils.dom.click($general);
+        testUtils.dom.click($dmChat);
 
         assert.isVisible(discuss.$('.o_thread_message[data-message-id=100]'));
         assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
@@ -147,10 +148,11 @@ QUnit.test('2 members: 1 myself message received by everyone initially', functio
     assert.expect(4);
     var done = assert.async();
 
-    var general = {
+    var dmChat = {
         id: 1,
-        channel_type: "channel",
-        name: "general",
+        channel_type: "chat",
+        direct_partner: [{ id: 2, name: 'Someone', im_status: '' }],
+        name: 'DM',
         members: [{
             id: 2,
             name: "Someone",
@@ -173,12 +175,12 @@ QUnit.test('2 members: 1 myself message received by everyone initially', functio
 
     this.data.initMessaging = {
         channel_slots: {
-            channel_channel: [general],
+            channel_direct_message: [dmChat],
         },
     };
     this.data['mail.channel'] = {
         fields: {},
-        records: [general],
+        records: [dmChat],
     };
     this.data['mail.message'].records = [{
         author_id: [3, "Me"],
@@ -197,10 +199,10 @@ QUnit.test('2 members: 1 myself message received by everyone initially', functio
         services: this.services,
         session: { partner_id: 3 },
     }).then(function (discuss) {
-        // click on general
-        var $general = discuss.$('.o_mail_discuss_sidebar')
+        // click on DM chat
+        var $dmChat = discuss.$('.o_mail_discuss_sidebar')
                         .find('.o_mail_discuss_item[data-thread-id=1]');
-        testUtils.dom.click($general);
+        testUtils.dom.click($dmChat);
         var $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
         assert.isVisible($seenIcon, "should display seen icon on message");
         assert.containsOnce($seenIcon, '.fa-check', "should display a single check");
@@ -219,10 +221,11 @@ QUnit.test('2 members: 1 myself message seen by everyone initially', function (a
     assert.expect(4);
     var done = assert.async();
 
-    var general = {
+    var dmChat = {
         id: 1,
-        channel_type: "channel",
-        name: "general",
+        channel_type: "chat",
+        direct_partner: [{ id: 2, name: 'Someone', im_status: '' }],
+        name: 'DM',
         members: [{
             id: 2,
             name: "Someone",
@@ -245,12 +248,12 @@ QUnit.test('2 members: 1 myself message seen by everyone initially', function (a
 
     this.data.initMessaging = {
         channel_slots: {
-            channel_channel: [general],
+            channel_direct_message: [dmChat],
         },
     };
     this.data['mail.channel'] = {
         fields: {},
-        records: [general],
+        records: [dmChat],
     };
     this.data['mail.message'].records = [{
         author_id: [3, "Me"],
@@ -269,10 +272,10 @@ QUnit.test('2 members: 1 myself message seen by everyone initially', function (a
         services: this.services,
         session: { partner_id: 3 },
     }).then(function (discuss) {
-        // click on general
-        var $general = discuss.$('.o_mail_discuss_sidebar')
+        // click on DM chat
+        var $dmChat = discuss.$('.o_mail_discuss_sidebar')
                         .find('.o_mail_discuss_item[data-thread-id=1]');
-        testUtils.dom.click($general);
+        testUtils.dom.click($dmChat);
         var $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
         assert.isVisible($seenIcon, "should display seen icon on message");
         assert.containsN($seenIcon, '.fa-check', 2, "should display 2 checks");
@@ -292,10 +295,11 @@ QUnit.test('2 members: 1 myself message received by everyone (initially not rece
     var done = assert.async();
 
     var self = this;
-    var general = {
+    var dmChat = {
         id: 1,
-        channel_type: "channel",
-        name: "general",
+        channel_type: "chat",
+        direct_partner: [{ id: 2, name: 'Someone', im_status: '' }],
+        name: 'DM',
         members: [{
             id: 2,
             name: "Someone",
@@ -318,12 +322,12 @@ QUnit.test('2 members: 1 myself message received by everyone (initially not rece
 
     this.data.initMessaging = {
         channel_slots: {
-            channel_channel: [general],
+            channel_direct_message: [dmChat],
         },
     };
     this.data['mail.channel'] = {
         fields: {},
-        records: [general],
+        records: [dmChat],
     };
     this.data['mail.message'].records = [{
         author_id: [3, "Me"],
@@ -342,10 +346,10 @@ QUnit.test('2 members: 1 myself message received by everyone (initially not rece
         services: this.services,
         session: { partner_id: 3 },
     }).then(function (discuss) {
-        // click on general
-        var $general = discuss.$('.o_mail_discuss_sidebar')
+        // click on DM chat
+        var $dmChat = discuss.$('.o_mail_discuss_sidebar')
                         .find('.o_mail_discuss_item[data-thread-id=1]');
-        testUtils.dom.click($general);
+        testUtils.dom.click($dmChat);
 
         assert.isVisible(discuss.$('.o_thread_message[data-message-id=100]'));
         assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
@@ -377,10 +381,11 @@ QUnit.test('2 members: 1 myself message seen by everyone (initially not received
     var done = assert.async();
 
     var self = this;
-    var general = {
+    var dmChat = {
         id: 1,
-        channel_type: "channel",
-        name: "general",
+        channel_type: "chat",
+        direct_partner: [{ id: 2, name: 'Someone', im_status: '' }],
+        name: 'DM',
         members: [{
             id: 2,
             name: "Someone",
@@ -403,12 +408,12 @@ QUnit.test('2 members: 1 myself message seen by everyone (initially not received
 
     this.data.initMessaging = {
         channel_slots: {
-            channel_channel: [general],
+            channel_direct_message: [dmChat],
         },
     };
     this.data['mail.channel'] = {
         fields: {},
-        records: [general],
+        records: [dmChat],
     };
     this.data['mail.message'].records = [{
         author_id: [3, "Me"],
@@ -427,10 +432,10 @@ QUnit.test('2 members: 1 myself message seen by everyone (initially not received
         services: this.services,
         session: { partner_id: 3 },
     }).then(function (discuss) {
-        // click on general
-        var $general = discuss.$('.o_mail_discuss_sidebar')
+        // click on DM chat
+        var $dmChat = discuss.$('.o_mail_discuss_sidebar')
                         .find('.o_mail_discuss_item[data-thread-id=1]');
-        testUtils.dom.click($general);
+        testUtils.dom.click($dmChat);
 
         assert.isVisible(discuss.$('.o_thread_message[data-message-id=100]'));
         assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
@@ -462,10 +467,11 @@ QUnit.test('2 members: 1 other message seen by me (initially not received)', fun
     var done = assert.async();
 
     var self = this;
-    var general = {
+    var dmChat = {
         id: 1,
-        channel_type: "channel",
-        name: "general",
+        channel_type: "chat",
+        direct_partner: [{ id: 2, name: 'Someone', im_status: '' }],
+        name: 'DM',
         members: [{
             id: 2,
             name: "Someone",
@@ -488,12 +494,12 @@ QUnit.test('2 members: 1 other message seen by me (initially not received)', fun
 
     this.data.initMessaging = {
         channel_slots: {
-            channel_channel: [general],
+            channel_direct_message: [dmChat],
         },
     };
     this.data['mail.channel'] = {
         fields: {},
-        records: [general],
+        records: [dmChat],
     };
     this.data['mail.message'].records = [{
         author_id: [2, "Other"],
@@ -512,10 +518,10 @@ QUnit.test('2 members: 1 other message seen by me (initially not received)', fun
         services: this.services,
         session: { partner_id: 3 },
     }).then(function (discuss) {
-        // click on general
-        var $general = discuss.$('.o_mail_discuss_sidebar')
+        // click on DM chat
+        var $dmChat = discuss.$('.o_mail_discuss_sidebar')
                         .find('.o_mail_discuss_item[data-thread-id=1]');
-        testUtils.dom.click($general);
+        testUtils.dom.click($dmChat);
 
         assert.isVisible(discuss.$('.o_thread_message[data-message-id=100]'));
         assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
@@ -535,7 +541,11 @@ QUnit.test('2 members: 1 other message seen by me (initially not received)', fun
     });
 });
 
-QUnit.test('3 members: 1 myself message received by some initially', function (assert) {
+QUnit.skip('3 members: 1 myself message received by some initially', function (assert) {
+    // IMPORTANT: This test make sense if this feature is on multi user channels,
+    // which was the case in case at some point. It has been disabled for
+    // performance reasons. We are unsure if this will come back in the future,
+    // so we keep to tests in 'skip' mode in the mean time.
     assert.expect(4);
     var done = assert.async();
 
@@ -624,7 +634,12 @@ QUnit.test('3 members: 1 myself message received by some initially', function (a
     });
 });
 
-QUnit.test('several members: 1 myself message seen by everyone (initially not received)', function (assert) {
+QUnit.skip('several members: 1 myself message seen by everyone (initially not received)', function (assert) {
+    // IMPORTANT: This test make sense if this feature is on multi user channels,
+    // which was the case in case at some point. It has been disabled for
+    // performance reasons. We are unsure if this will come back in the future,
+    // so we keep to tests in 'skip' mode in the mean time.
+
     // seen icon and content should change for my messages based on other users
     // actions (received and/or seen the message)
     assert.expect(26);
@@ -826,7 +841,12 @@ QUnit.test('several members: 1 myself message seen by everyone (initially not re
     });
 });
 
-QUnit.test('several members: other message seen by everyone (initially not received)', function (assert) {
+QUnit.skip('several members: other message seen by everyone (initially not received)', function (assert) {
+    // IMPORTANT: This test make sense if this feature is on multi user channels,
+    // which was the case in case at some point. It has been disabled for
+    // performance reasons. We are unsure if this will come back in the future,
+    // so we keep to tests in 'skip' mode in the mean time.
+
     // seen icon should never be visible for message of others
     assert.expect(9);
     var done = assert.async();
@@ -989,7 +1009,11 @@ QUnit.test('several members: other message seen by everyone (initially not recei
     });
 });
 
-QUnit.test('several members: only show seen icons from last message seen by everyone', function (assert) {
+QUnit.skip('several members: only show seen icons from last message seen by everyone', function (assert) {
+    // IMPORTANT: This test make sense if this feature is on multi user channels,
+    // which was the case in case at some point. It has been disabled for
+    // performance reasons. We are unsure if this will come back in the future,
+    // so we keep to tests in 'skip' mode in the mean time.
     assert.expect(12);
     var done = assert.async();
 
