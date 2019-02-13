@@ -1068,15 +1068,6 @@ class Field(MetaField('DummyField', (object,), {})):
                 if recs:
                     # recompute the value (only in cache)
                     self.compute_value(recs)
-                    # HACK: if result is in the wrong cache, copy values
-                    if recs.env != env:
-                        computed = record._field_computed[self]
-                        for source, target in zip(recs, recs.with_env(env)):
-                            try:
-                                values = {f.name: source[f.name] for f in computed}
-                                target._cache.update(target._convert_to_cache(values, validate=False))
-                            except MissingError as exc:
-                                target._cache.set_failed(target._fields, exc)
                     # the result is saved to database by BaseModel.recompute()
                     return
 
