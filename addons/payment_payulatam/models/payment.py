@@ -18,10 +18,10 @@ _logger = logging.getLogger(__name__)
 class PaymentAcquirerPayulatam(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('payulatam', 'PayUlatam')])
-    payulatam_merchant_id = fields.Char(string="PayUlatam Merchant ID", required_if_provider='payulatam', groups='base.group_user')
-    payulatam_account_id = fields.Char(string="PayUlatam Account ID", required_if_provider='payulatam', groups='base.group_user')
-    payulatam_api_key = fields.Char(string="PayUlatam API Key", required_if_provider='payulatam', groups='base.group_user')
+    provider = fields.Selection(selection_add=[('payulatam', 'PayU Latam')])
+    payulatam_merchant_id = fields.Char(string="PayU Latam Merchant ID", required_if_provider='payulatam', groups='base.group_user')
+    payulatam_account_id = fields.Char(string="PayU Latam Account ID", required_if_provider='payulatam', groups='base.group_user')
+    payulatam_api_key = fields.Char(string="PayU Latam API Key", required_if_provider='payulatam', groups='base.group_user')
 
     def _get_payulatam_urls(self, environment):
         """ PayUlatam URLs"""
@@ -80,21 +80,21 @@ class PaymentTransactionPayulatam(models.Model):
         transaction record. """
         reference, txnid, sign = data.get('referenceCode'), data.get('transactionId'), data.get('signature')
         if not reference or not txnid or not sign:
-            raise ValidationError(_('PayUlatam: received data with missing reference (%s) or transaction id (%s) or sign (%s)') % (reference, txnid, sign))
+            raise ValidationError(_('PayU Latam: received data with missing reference (%s) or transaction id (%s) or sign (%s)') % (reference, txnid, sign))
 
         transaction = self.search([('reference', '=', reference)])
 
         if not transaction:
-            error_msg = (_('PayUlatam: received data for reference %s; no order found') % (reference))
+            error_msg = (_('PayU Latam: received data for reference %s; no order found') % (reference))
             raise ValidationError(error_msg)
         elif len(transaction) > 1:
-            error_msg = (_('PayUlatam: received data for reference %s; multiple orders found') % (reference))
+            error_msg = (_('PayU Latam: received data for reference %s; multiple orders found') % (reference))
             raise ValidationError(error_msg)
 
         # verify shasign
         sign_check = transaction.acquirer_id._payulatam_generate_sign('out', data)
         if sign_check.upper() != sign.upper():
-            raise ValidationError(('PayUlatam: invalid sign, received %s, computed %s, for data %s') % (sign, sign_check, data))
+            raise ValidationError(('PayU Latam: invalid sign, received %s, computed %s, for data %s') % (sign, sign_check, data))
         return transaction
 
     @api.multi
@@ -120,24 +120,24 @@ class PaymentTransactionPayulatam(models.Model):
         }
 
         if status == 'APPROVED':
-            _logger.info('Validated PayUlatam payment for tx %s: set as done' % (self.reference))
+            _logger.info('Validated PayU Latam payment for tx %s: set as done' % (self.reference))
             res.update(state='done', date=fields.Datetime.now())
             self._set_transaction_done()
             self.write(res)
             self.execute_callback()
             return True
         elif status == 'PENDING':
-            _logger.info('Received notification for PayUlatam payment %s: set as pending' % (self.reference))
+            _logger.info('Received notification for PayU Latam payment %s: set as pending' % (self.reference))
             res.update(state='pending')
             self._set_transaction_pending()
             return self.write(res)
         elif status in ['EXPIRED', 'DECLINED']:
-            _logger.info('Received notification for PayUlatam payment %s: set as Cancel' % (self.reference))
+            _logger.info('Received notification for PayU Latam payment %s: set as Cancel' % (self.reference))
             res.update(state='cancel')
             self._set_transaction_cancel()
             return self.write(res)
         else:
-            error = 'Received unrecognized status for PayUlatam payment %s: %s, set as error' % (self.reference, status)
+            error = 'Received unrecognized status for PayU Latam payment %s: %s, set as error' % (self.reference, status)
             _logger.info(error)
             res.update(state='cancel', state_message=error)
             self._set_transaction_cancel()
