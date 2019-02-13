@@ -121,3 +121,36 @@ class TestAccess(common.SlidesCase):
         self.slide.sudo(self.user_emp).read(['name'])
         self.slide.sudo(self.user_portal).read(['name'])
         self.slide.sudo(self.user_public).read(['name'])
+
+    @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
+    def test_channel_features(self):
+        channel_publisher = self.channel.sudo(self.user_publisher)
+        self.assertEqual(channel_publisher.user_id, self.user_publisher)
+        self.assertTrue(channel_publisher.can_upload)
+        self.assertTrue(channel_publisher.can_publish)
+
+        # test upload group limitation
+        channel_publisher.write({'upload_group_ids': [(4, self.ref('base.group_system'))]})
+        self.assertFalse(channel_publisher.can_upload)
+        self.assertFalse(channel_publisher.can_publish)
+        channel_publisher.write({'upload_group_ids': [(5, 0)]})
+        self.assertTrue(channel_publisher.can_upload)
+        self.assertTrue(channel_publisher.can_publish)
+
+        # share people cannot upload / publish even without limitations
+        channel_portal = self.channel.sudo(self.user_portal)
+        self.assertFalse(channel_portal.can_upload)
+        self.assertFalse(channel_portal.can_publish)
+
+        # standard people can upload if groups are ok but not publish
+        channel_emp = self.channel.sudo(self.user_emp)
+        self.assertTrue(channel_emp.can_upload)
+        self.assertFalse(channel_emp.can_publish)
+
+        # test training type limitation (responsible only publish)
+        channel_publisher.write({'channel_type': 'training', 'user_id': self.user_emp.id})
+        self.assertTrue(channel_publisher.can_upload)
+        self.assertFalse(channel_publisher.can_publish)
+        # standard people should not be responsible as they still cannot publish
+        self.assertTrue(channel_emp.can_upload)
+        self.assertFalse(channel_emp.can_publish)
