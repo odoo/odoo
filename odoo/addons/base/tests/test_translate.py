@@ -319,7 +319,7 @@ class TestTranslation(TransactionCase):
                 self.env['ir.translation'].create({
                     'type': 'model',
                     'name': 'res.partner.category,name',
-                    'module':'base',
+                    'module': 'base',
                     'lang': 'fr_FR',
                     'res_id': padawans.id,
                     'value': 'Apprentis',
@@ -327,10 +327,16 @@ class TestTranslation(TransactionCase):
                 })
         self.env['ir.translation'].translate_fields('res.partner.category', padawans.id, 'name')
         translations = self.env['ir.translation'].search([
-            ('res_id', '=', padawans.id), ('name', '=', 'res.partner.category,name')
+            ('res_id', '=', padawans.id), ('name', '=', 'res.partner.category,name'), ('lang', '=', 'fr_FR')
         ])
         self.assertEqual(len(translations), 1, "Translations were not duplicated after `translate_fields` call")
         self.assertEqual(translations.value, "Apprenti", "The first translation must stay")
+        translations = self.env['ir.translation'].search([
+            ('res_id', '=', padawans.id), ('name', '=', 'res.partner.category,name')
+        ])
+        self.assertEqual(len(translations), 2, "Translations should not consist the main language translations")
+        languages = [translation.lang for translation in translations]
+        self.assertEqual(languages, ['fr_FR', 'en_US'], "Translations should consist the en_US language translations")
 
 
 class TestXMLTranslation(TransactionCase):
