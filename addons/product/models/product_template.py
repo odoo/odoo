@@ -589,6 +589,13 @@ class ProductTemplate(models.Model):
         For dynamic attributes, it will only return the variants that have been
         created already. For no_variant attributes, it will return an empty
         recordset because the variants themselves are not a full combination.
+        If there are a lot of variants, this method might be slow. Even if there
+        aren't too many variants, for performance reasons, do not call this
+        method in a loop over the product templates.
+
+        Therefore this method has a very restricted reasonable use case and you
+        should strongly consider doing things differently if you consider using
+        this method.
 
         :param parent_combination: combination from which `self` is an
             optional or accessory product.
@@ -830,22 +837,29 @@ class ProductTemplate(models.Model):
 
     @api.multi
     def _get_first_possible_combination(self, parent_combination=None, necessary_values=None):
-        """
-        Iterate the attributes and values in order and stop at the first
-        combination of values that is possible.
+        """See `_get_possible_combinations` (one iteration).
 
-        When encountering an impossible combination, try to change the
-        value of latest attributes first.
-
-        Ignore attributes that have no values.
-
-        Note this method return the same result (empty recordset) if no
+        This method return the same result (empty recordset) if no
         combination is possible at all which would be considered a negative
         result, or if there are no attribute lines on the template in which
         case the "empty combination" is actually a possible combination.
         Therefore the result of this method when empty should be tested
         with `_is_combination_possible` if it's important to know if the
         resulting empty combination is actually possible or not.
+        """
+        return next(self._get_possible_combinations(parent_combination, necessary_values), self.env['product.template.attribute.value'])
+
+    @api.multi
+    def _get_possible_combinations(self, parent_combination=None, necessary_values=None):
+        """Generator returning combinations that are possible, following the
+        sequence of attributes and values.
+
+        See `_is_combination_possible` for what is a possible combination.
+
+        When encountering an impossible combination, try to change the value
+        of attributes by starting with the further regarding their sequences.
+
+        Ignore attributes that have no values.
 
         :param parent_combination: combination from which `self` is an
             optional or accessory product.
@@ -854,63 +868,81 @@ class ProductTemplate(models.Model):
         :param necessary_values: values that must be in the returned combination
         :type necessary_values: recordset of `product.template.attribute.value`
 
-        :return: the first possible combination found, or empty if none possible
-        :rtype: recordset of `product.template.attribute.value`
+        :return: the possible combinations
+        :rtype: generator of recordset of `product.template.attribute.value`
         """
         self.ensure_one()
 
         if not self.active:
-            return self.env['product.template.attribute.value']
+            return _("The product template is archived so no combination is possible.")
 
-        attribute_lines = self._get_valid_product_template_attribute_lines()
+        ptal_stack = [self._get_valid_product_template_attribute_lines()]
+        combination_stack = [self.env['product.template.attribute.value']]
 
-        def iterate_attribute_lines(attribute_lines, combination):
-            """
-            :param attribute_lines: recordset of product.template.attribute.line
-                that are still to iterate
-            :param combination: recordset of product.template.attribute.value
-                that have to be tested for possibility
+        # keep going while we have attribute lines to test
+        while len(ptal_stack):
+            attribute_lines = ptal_stack.pop()
+            combination = combination_stack.pop()
 
-            :return: the first possible combination found, or empty
-            :rtype: recordset of `product.template.attribute.value`
-            """
             if not attribute_lines:
-                if self._is_combination_possible(combination, parent_combination):
-                    return combination
-                else:
-                    return self.env['product.template.attribute.value']
-            for cur in attribute_lines[0].product_template_value_ids:
-                res = iterate_attribute_lines(attribute_lines[1:], combination + cur)
-                if res and all(v in res for v in (necessary_values or [])):
-                    return res
-            return self.env['product.template.attribute.value']
+                # full combination, if it's possible return it, otherwise skip it
+                if self._is_combination_possible(combination, parent_combination) and all(v in combination for v in (necessary_values or [])):
+                    yield(combination)
+            else:
+                # we have remaining attribute lines to consider
+                for ptav in reversed(attribute_lines[0].product_template_value_ids):
+                    ptal_stack.append(attribute_lines[1:])
+                    combination_stack.append(combination + ptav)
 
-        return iterate_attribute_lines(attribute_lines, self.env['product.template.attribute.value'])
+        return _("There are no remaining possible combination.")
 
     @api.multi
     def _get_closest_possible_combination(self, combination):
-        """Get the first possible combination that is the closest to the given
-        combination.
+        """See `_get_closest_possible_combinations` (one iteration).
+
+        This method return the same result (empty recordset) if no
+        combination is possible at all which would be considered a negative
+        result, or if there are no attribute lines on the template in which
+        case the "empty combination" is actually a possible combination.
+        Therefore the result of this method when empty should be tested
+        with `_is_combination_possible` if it's important to know if the
+        resulting empty combination is actually possible or not.
+        """
+        return next(self._get_closest_possible_combinations(combination), self.env['product.template.attribute.value'])
+
+    @api.multi
+    def _get_closest_possible_combinations(self, combination):
+        """Generator returning the possible combinations that are the closest to
+        the given combination.
 
         If the given combination is incomplete, try to complete it.
 
         If the given combination is invalid, try to remove values from it before
         completing it.
 
-        See `_get_first_possible_combination` note about empty result.
-
         :param combination: the values to include if they are possible
         :type combination: recordset `product.template.attribute.value`
 
-        :return: the first possible combination that is including as much
+        :return: the possible combinations that are including as much
             elements as possible from the given combination.
-        :rtype: recordset of product.template.attribute.value
+        :rtype: generator of recordset of product.template.attribute.value
         """
         while True:
-            result = self._get_first_possible_combination(necessary_values=combination)
-            if result or not combination:
-                return result
-            combination = combination[:-1]
+            res = self._get_possible_combinations(necessary_values=combination)
+            try:
+                # If there is at least one result for the given combination
+                # we consider that combination set, and we yield all the
+                # possible combinations for it.
+                yield(next(res))
+                for cur in res:
+                    yield(cur)
+                return _("There are no remaining closest combination.")
+            except StopIteration:
+                # There are no results for the given combination, we try to
+                # progressively remove values from it.
+                if not combination:
+                    return _("There are no possible combination.")
+                combination = combination[:-1]
 
     @api.multi
     def _get_current_company(self, **kwargs):
