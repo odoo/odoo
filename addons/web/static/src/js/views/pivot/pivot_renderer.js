@@ -6,6 +6,7 @@ var core = require('web.core');
 var field_utils = require('web.field_utils');
 
 var QWeb = core.qweb;
+var _t = core._t;
 
 var PivotRenderer = AbstractRenderer.extend({
     tagName: 'table',
@@ -171,7 +172,7 @@ var PivotRenderer = AbstractRenderer.extend({
             $thead.append($row);
         }
         if (this.compare) {
-            var colLabels = [this.timeRangeDescription, this.comparisonTimeRangeDescription, 'Variation'];
+            var colLabels = [this.timeRangeDescription, this.comparisonTimeRangeDescription, _t('Variation')];
             var dataTypes = ['data', 'comparisonData', 'variation'];
             $row = $('<tr>');
             for (i = 0; i < 3 * nbrCols; i++) {
