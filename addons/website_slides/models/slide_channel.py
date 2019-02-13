@@ -112,7 +112,7 @@ class Channel(models.Model):
     partner_ids = fields.Many2many(
         'res.partner', 'slide_channel_partner', 'channel_id', 'partner_id',
         string='Members', help="All members of the channel.", context={'active_test': False})
-    members_count = fields.Integer('Attendees count', compute='_compute_members_count', compute_sudo=True)
+    members_count = fields.Integer('Attendees count', compute='_compute_members_count')
     is_member = fields.Boolean(string='Is Member', compute='_compute_is_member')
     channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='website.group_website_publisher')
     enroll_msg = fields.Html(
@@ -127,9 +127,9 @@ class Channel(models.Model):
     can_upload = fields.Boolean('Can Upload', compute='_compute_access')
     can_publish = fields.Boolean('Can Publish', compute='_compute_access')
 
-    @api.depends('partner_ids')
+    @api.depends('channel_partner_ids.channel_id')
     def _compute_members_count(self):
-        read_group_res = self.env['slide.channel.partner'].read_group([('channel_id', 'in', self.ids)], [], 'channel_id')
+        read_group_res = self.env['slide.channel.partner'].sudo().read_group([('channel_id', 'in', self.ids)], [], 'channel_id')
         data = dict((res['channel_id'][0], res['channel_id_count']) for res in read_group_res)
         for channel in self:
             channel.members_count = data.get(channel.id, 0)
