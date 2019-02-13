@@ -776,11 +776,12 @@ class IrTranslation(models.Model):
                 'view_id': self.env.ref('base.view_translation_field_wizard').id,
                 'target': 'new',
                 'view_mode': 'form',
+                'context': {'model': model, 'id': id, 'field': field}
             })
-            domain += [('lang', '!=', self._context.get('lang')), '|', ('name', '=', "%s,%s" % (fld.model_name, fld.name)),
-                    ('name', 'ilike', "%s,%s" % (fld.model_name, fld.name))]
-            # need to pass prepared domain in action context as we want to use it in default_get of translation wizard
-            action['context'].update({'translation_domain': domain})
+            # domain += [('lang', '!=', self._context.get('lang')), '|', ('name', '=', "%s,%s" % (fld.model_name, fld.name)),
+            #         ('name', 'ilike', "%s,%s" % (fld.model_name, fld.name))]
+            # # need to pass prepared domain in action context as we want to use it in default_get of translation wizard
+            # action['context'].update({'translation_domain': domain})
 
         return action
 

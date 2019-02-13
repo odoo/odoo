@@ -1,4 +1,5 @@
 from odoo import api, models, fields
+from odoo.exceptions import AccessError
 
 
 class TranslationWizard(models.TransientModel):
@@ -11,7 +12,54 @@ class TranslationWizard(models.TransientModel):
     def default_get(self, fields_list):
         res = super(TranslationWizard, self).default_get(fields_list)
         IrTranslation = self.env['ir.translation']
-        domain = self.env.context.get('translation_domain') or []
+
+        main_lang = 'en_US'
+
+        model = self.env.context['model']
+        domain_id = self.env.context['id']
+        field = self.env.context['field']
+        record = self.env[model].with_context(lang=main_lang).browse(domain_id)
+        domain = ['&', ('res_id', '=', domain_id), ('name', '=like', model + ',%')]
+
+        def make_domain(fld, rec):
+            name = "%s,%s" % (fld.model_name, fld.name)
+            return ['&', ('res_id', '=', rec.id), ('name', '=', name)]
+
+        # insert missing translations, and extend domain for related fields
+        for name, fld in record._fields.items():
+            if not fld.translate:
+                continue
+
+            rec = record
+            if fld.related:
+                try:
+                    # traverse related fields up to their data source
+                    while fld.related:
+                        rec, fld = fld.traverse_related(rec)
+                    if rec:
+                        domain = ['|'] + domain + make_domain(fld, rec)
+                except AccessError:
+                    continue
+            assert fld.translate and rec._name == fld.model_name
+            IrTranslation.insert_missing(fld, rec)
+
+        if field:
+            fld = record._fields[field]
+            if not fld.related:
+                res['context'] = {
+                    'search_default_name': "%s,%s" % (fld.model_name, fld.name),
+                }
+            else:
+                rec = record
+                try:
+                    while fld.related:
+                        rec, fld = fld.traverse_related(rec)
+                    if rec:
+                        rec['context'] = {'search_default_name': "%s,%s" % (fld.model_name, fld.name), }
+                except AccessError:
+                    pass
+
+        domain += [('lang', '!=', self._context.get('lang')), '|', ('name', '=', "%s,%s" % (fld.model_name, fld.name)), ('name', 'ilike', "%s,%s" % (fld.model_name, fld.name))]
         irTranslations = IrTranslation.search(domain)
         res['translation_ids'] = [[0, False, {
             'source': line.source,
@@ -24,6 +72,7 @@ class TranslationWizard(models.TransientModel):
     @api.multi
     def translation_confirm(self):
         return True
+
 
 class TranslationWizardSub(models.TransientModel):
     _name = 'translation.wizard.sub'
