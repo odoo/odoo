@@ -131,7 +131,7 @@ class PayUlatamForm(PayUlatamCommon):
         # check
         self.assertEqual(tx.state, 'pending', 'Payulatam: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.state_message, 'PENDING', 'Payulatam: wrong state message after receiving a valid pending notification')
-        self.assertEqual(tx.acquirer_reference, 'b232989a-4aa8-42d1-bace-153236eee791', 'PayUlatam: wrong txn_id after receiving a valid pending notification')
+        self.assertEqual(tx.acquirer_reference, 'b232989a-4aa8-42d1-bace-153236eee791', 'PayU Latam: wrong txn_id after receiving a valid pending notification')
 
         # update transaction
         tx.write({
