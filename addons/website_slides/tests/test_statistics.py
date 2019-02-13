@@ -43,6 +43,13 @@ class TestStatistics(common.SlidesCase):
         self.assertEqual(channel_publisher.nbr_videos, len(channel_publisher.slide_ids.filtered(lambda s: s.slide_type == 'video')))
         # slide statistics computation
         self.assertEqual(float_compare(channel_publisher.total_time, sum(s.completion_time for s in channel_publisher.slide_ids), 3), 0)
+        # members computation
+        self.assertEqual(channel_publisher.members_count, 1)
+        channel_publisher.action_add_member()
+        self.assertEqual(channel_publisher.members_count, 1)
+        channel_publisher._action_add_member(self.user_emp.partner_id)
+        self.assertEqual(channel_publisher.members_count, 2)
+        self.assertEqual(channel_publisher.partner_ids, self.user_publisher.partner_id | self.user_emp.partner_id)
 
     @mute_logger('odoo.models')
     def test_channel_user_statistics(self):
