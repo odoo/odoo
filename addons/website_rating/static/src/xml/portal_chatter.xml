@@ -44,8 +44,17 @@
         It can alse be used to modify a message
     -->
     <t t-name="website_rating.PopupComposer">
-        <div>
-            <button t-if="widget.options['display_composer']" type="button" class="btn btn-primary" data-toggle="modal" data-target="#ratingpopupcomposer">
+        <div class="row align-items-center">
+            <div class="col">
+                <t t-call="website_rating.rating_stars_static">
+                    <t t-set="val" t-value="widget.rating_avg || 0"/>
+                    <t t-set="inline_mode" t-value="true"/>
+                </t>
+                <t t-if="widget.rating_total">
+                   <small class="font-weight-bold">(<t t-esc="widget.rating_total"/> ratings)</small>
+                </t>
+            </div>
+            <button t-if="widget.options['display_composer']" type="button" class="btn btn-primary col" data-toggle="modal" data-target="#ratingpopupcomposer">
                 <t t-if="widget.options['display_composer']">
                     <t t-if="widget.options['default_message_id']">
                         Modify your review
@@ -55,15 +64,6 @@
                     </t>
                 </t>
             </button>
-            <div>
-                <t t-call="website_rating.rating_stars_static">
-                    <t t-set="val" t-value="widget.rating_avg || 0"/>
-                    <t t-set="inline_mode" t-value="true"/>
-                </t>
-                <t t-if="widget.rating_total">
-                   <t t-esc="widget.rating_avg"/> (<t t-esc="widget.rating_total"/>)
-                </t>
-            </div>
         </div>
 
         <div t-if="widget.options['display_composer']" class="modal fade" id="ratingpopupcomposer" tabindex="-1" role="dialog" aria-labelledby="ratingpopupcomposerlabel" aria-hidden="true">
