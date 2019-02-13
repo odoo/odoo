@@ -2511,8 +2511,8 @@ exports.Order = Backbone.Model.extend({
             return sum + orderLine.get_tax();
         }), 0), this.pos.currency.rounding);
     },
-    get_total_paid: function() {
-        return round_pr(this.paymentlines.reduce((function(sum, paymentLine) {
+    get_total_paid: function(paymentlines = this.paymentlines) {
+        return round_pr(paymentlines.reduce((function(sum, paymentLine) {
             return sum + paymentLine.get_amount();
         }), 0), this.pos.currency.rounding);
     },

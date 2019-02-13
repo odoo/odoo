@@ -32,7 +32,6 @@
         'views/point_of_sale.xml',
         'data/point_of_sale_data.xml',
         'views/pos_order_report_view.xml',
-        'views/account_statement_view.xml',
         'views/account_statement_report.xml',
         'views/res_config_settings_views.xml',
         'views/digest_views.xml',
