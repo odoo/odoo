@@ -279,7 +279,11 @@ class ProductProduct(models.Model):
         if isinstance(value, pycompat.text_type):
             value = value.encode('ascii')
         image = tools.image_resize_image_big(value)
-        if self.product_tmpl_id.image:
+
+        # This is needed because when there is only one variant, the user
+        # doesn't know there is a difference between template and variant, he
+        # expects both images to be the same.
+        if self.product_tmpl_id.image and self.product_variant_count > 1:
             self.image_variant = image
         else:
             self.product_tmpl_id.image = image

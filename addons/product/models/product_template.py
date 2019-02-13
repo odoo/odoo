@@ -875,6 +875,14 @@ class ProductTemplate(models.Model):
         )[:1].id
 
     @api.multi
+    @tools.ormcache('self')
+    def _get_first_possible_variant_id(self):
+        """See `_create_first_product_variant`. This method returns an ID
+        so it can be cached."""
+        self.ensure_one()
+        return self._create_first_product_variant().id
+
+    @api.multi
     def _get_first_possible_combination(self, parent_combination=None, necessary_values=None):
         """See `_get_possible_combinations` (one iteration).
 

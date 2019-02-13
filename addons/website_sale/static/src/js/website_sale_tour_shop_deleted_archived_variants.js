@@ -12,8 +12,8 @@ tour.register('tour_shop_deleted_archived_variants', {
 },
 [
     {
-        content: "check price on /shop (3rd variant)",
-        trigger: '.oe_product_cart .oe_currency_value:contains("31.00")',
+        content: "check price on /shop (template price)",
+        trigger: '.oe_product_cart .oe_currency_value:contains("1.00")',
     },
     {
         content: "select Test Product 2",
