@@ -118,6 +118,25 @@ class ProductTemplate(models.Model):
 
     is_product_variant = fields.Boolean(string='Is a product variant', compute='_compute_is_product_variant')
     attribute_line_ids = fields.One2many('product.template.attribute.line', 'product_tmpl_id', 'Product Attributes')
+
+    valid_product_template_attribute_line_ids = fields.Many2many('product.template.attribute.line',
+        compute="_compute_valid_attributes", string='Valid Product Attribute Lines', help="Technical compute")
+    valid_product_attribute_value_ids = fields.Many2many('product.attribute.value',
+        compute="_compute_valid_attributes", string='Valid Product Attribute Values', help="Technical compute")
+    valid_product_attribute_ids = fields.Many2many('product.attribute',
+        compute="_compute_valid_attributes", string='Valid Product Attributes', help="Technical compute")
+    # wnva = without no_variant attributes
+    valid_product_template_attribute_line_wnva_ids = fields.Many2many('product.template.attribute.line',
+        compute="_compute_valid_attributes", string='Valid Product Attribute Lines Without No Variant Attributes', help="Technical compute")
+    valid_product_attribute_value_wnva_ids = fields.Many2many('product.attribute.value',
+        compute="_compute_valid_attributes", string='Valid Product Attribute Values Without No Variant Attributes', help="Technical compute")
+    valid_product_attribute_wnva_ids = fields.Many2many('product.attribute',
+        compute="_compute_valid_attributes", string='Valid Product Attributes Without No Variant Attributes', help="Technical compute")
+    valid_archived_variant_ids = fields.Many2many('product.product',
+        compute="_compute_valid_attributes", string='Valid Archived Variants', help="Technical compute")
+    valid_existing_variant_ids = fields.Many2many('product.product',
+        compute="_compute_valid_existing_variant_ids", string='Valid Existing Variants', help="Technical compute")
+
     product_variant_ids = fields.One2many('product.product', 'product_tmpl_id', 'Products', required=True)
     # performance: product_variant_id provides prefetching on the first product variant only
     product_variant_id = fields.Many2one('product.product', 'Product', compute='_compute_product_variant_id')
@@ -464,7 +483,7 @@ class ProductTemplate(models.Model):
                 # Iterator containing all possible `product.attribute.value` combination
                 # The iterator is used to avoid MemoryError in case of a huge number of combination.
                 all_variants = itertools.product(*(
-                    line.value_ids.ids for line in tmpl_id._get_valid_product_template_attribute_lines()._without_no_variant_attributes()
+                    line.value_ids.ids for line in tmpl_id.valid_product_template_attribute_line_wnva_ids
                 ))
                 # Set containing existing `product.attribute.value` combination
                 existing_variants = {
@@ -490,8 +509,8 @@ class ProductTemplate(models.Model):
             #   should be activated
             # - if the product does not have valid attributes or attribute values, it should be
             #   deleted
-            valid_value_ids = tmpl_id._get_valid_product_attribute_values()._without_no_variant_attributes()
-            valid_attribute_ids = tmpl_id._get_valid_product_attributes()._without_no_variant_attributes()
+            valid_value_ids = tmpl_id.valid_product_attribute_value_wnva_ids
+            valid_attribute_ids = tmpl_id.valid_product_attribute_wnva_ids
             for product_id in tmpl_id.product_variant_ids:
                 if product_id._has_valid_attributes(valid_attribute_ids, valid_value_ids):
                     if not product_id.active:
@@ -536,7 +555,7 @@ class ProductTemplate(models.Model):
         return any(a.create_variant == 'dynamic' for a in self._get_valid_product_attributes())
 
     @api.multi
-    def _get_valid_product_template_attribute_lines(self):
+    def _compute_valid_attributes(self):
         """A product template attribute line is considered valid if it has at
         least one possible value.
 
@@ -545,42 +564,68 @@ class ProductTemplate(models.Model):
         value to input), indeed single value attributes can be used to filter
         products among others based on that attribute/value.
 
-        This method is necessary because it was previously possible to save a
-        line without any value on it, so the database might not be consistent in
-        that regard.
+        A product attribute value is considered valid for a template if it is
+        defined on a product template attribute line.
 
-        :return: all the valid product template attribute lines of this template
-        :rtype: recordset `product.template.attribute.line`
+        A product attribute is considered valid for a template if it
+        has at least one possible value set on the template.
+
+        For what is considered an archived variant, see `_has_valid_attributes`.
         """
+        archived_variants = self.env['product.product'].search([('product_tmpl_id', 'in', self.ids), ('active', '=', False)])
+
+        # prefetch
+        self.mapped('attribute_line_ids.value_ids.id')
+        self.mapped('attribute_line_ids.attribute_id.create_variant')
+
+        for record in self:
+            record.valid_product_template_attribute_line_ids = record.attribute_line_ids.filtered(lambda ptal: ptal.value_ids)
+            record.valid_product_template_attribute_line_wnva_ids = record.valid_product_template_attribute_line_ids._without_no_variant_attributes()
+
+            record.valid_product_attribute_value_ids = record.valid_product_template_attribute_line_ids.mapped('value_ids')
+            record.valid_product_attribute_value_wnva_ids = record.valid_product_template_attribute_line_wnva_ids.mapped('value_ids')
+
+            record.valid_product_attribute_ids = record.valid_product_template_attribute_line_ids.mapped('attribute_id')
+            record.valid_product_attribute_wnva_ids = record.valid_product_template_attribute_line_wnva_ids.mapped('attribute_id')
+
+            valid_value_ids = record.valid_product_attribute_value_wnva_ids
+            valid_attribute_ids = record.valid_product_attribute_wnva_ids
+
+            record.valid_archived_variant_ids = archived_variants.filtered(
+                lambda v: v.product_tmpl_id == record and v._has_valid_attributes(valid_attribute_ids, valid_value_ids)
+            )
+
+    @api.multi
+    def _compute_valid_existing_variant_ids(self):
+        """This compute is done outside of `_compute_valid_attributes` because
+        it is often not needed, and it can be very bad on performance."""
+        existing_variants = self.env['product.product'].search([('product_tmpl_id', 'in', self.ids), ('active', '=', True)])
+        for record in self:
+
+            valid_value_ids = record.valid_product_attribute_value_wnva_ids
+            valid_attribute_ids = record.valid_product_attribute_wnva_ids
+
+            record.valid_existing_variant_ids = existing_variants.filtered(
+                lambda v: v.product_tmpl_id == record and v._has_valid_attributes(valid_attribute_ids, valid_value_ids)
+            )
+
+    @api.multi
+    def _get_valid_product_template_attribute_lines(self):
+        """deprecated, use `valid_product_template_attribute_line_ids`"""
         self.ensure_one()
-        return self.attribute_line_ids.filtered(lambda ptal: ptal.value_ids)
+        return self.valid_product_template_attribute_line_ids
 
     @api.multi
     def _get_valid_product_attributes(self):
-        """A product attribute is considered valid for a template if it
-        has at least one possible value set on the template.
-
-        See `_get_valid_product_template_attribute_lines`.
-
-        :return: all the valid product attributes of this template
-        :rtype: recordset `product.attribute`
-        """
+        """deprecated, use `valid_product_attribute_ids`"""
         self.ensure_one()
-        product_attributes = self.env['product.attribute']
-        for ptal in self._get_valid_product_template_attribute_lines():
-            product_attributes |= ptal.attribute_id
-        return product_attributes
+        return self.valid_product_attribute_ids
 
     @api.multi
     def _get_valid_product_attribute_values(self):
-        """A product attribute value is considered valid for a template if it is
-        defined on a product template attribute line.
-
-        :return: all the valid product attribute values of this template
-        :rtype: recordset `product.attribute.value`
-        """
+        """deprecated, use `valid_product_attribute_value_ids`"""
         self.ensure_one()
-        return self._get_valid_product_template_attribute_lines().mapped('value_ids')
+        return self.valid_product_attribute_value_ids
 
     @api.multi
     def _get_possible_variants(self, parent_combination=None):
@@ -695,19 +740,8 @@ class ProductTemplate(models.Model):
 
         Array, each element is an array with ids of an archived combination.
         """
-        valid_value_ids = self._get_valid_product_attribute_values()._without_no_variant_attributes()
-        valid_attribute_ids = self._get_valid_product_attributes()._without_no_variant_attributes()
-
-        # Search only among those having the right set of attributes.
-        domain = [('product_tmpl_id', '=', self.id), ('active', '=', False)]
-        for pa in valid_attribute_ids:
-            domain = expression.AND([[('attribute_value_ids.attribute_id.id', '=', pa.id)], domain])
-        archived_variants = self.env['product.product'].search(domain)
-
-        archived_variants = archived_variants.filtered(lambda v: v._has_valid_attributes(valid_attribute_ids, valid_value_ids))
-
         return [archived_variant.product_template_attribute_value_ids.ids
-            for archived_variant in archived_variants]
+            for archived_variant in self.valid_archived_variant_ids]
 
     @api.multi
     def _get_existing_combinations(self):
@@ -719,19 +753,8 @@ class ProductTemplate(models.Model):
 
         Array, each element is an array with ids of an existing combination.
         """
-        valid_value_ids = self._get_valid_product_attribute_values()._without_no_variant_attributes()
-        valid_attribute_ids = self._get_valid_product_attributes()._without_no_variant_attributes()
-
-        # Search only among those having the right set of attributes.
-        domain = [('product_tmpl_id', '=', self.id), ('active', '=', True)]
-        for pa in valid_attribute_ids:
-            domain = expression.AND([[('attribute_value_ids.attribute_id.id', '=', pa.id)], domain])
-        existing_variants = self.env['product.product'].search(domain)
-
-        existing_variants = existing_variants.filtered(lambda v: v._has_valid_attributes(valid_attribute_ids, valid_value_ids))
-
         return [variant.product_template_attribute_value_ids.ids
-            for variant in existing_variants]
+            for variant in self.valid_existing_variant_ids]
 
     @api.multi
     def _get_no_variant_product_template_attribute_values(self):
@@ -767,17 +790,20 @@ class ProductTemplate(models.Model):
         """
         self.ensure_one()
 
-        if len(combination) != len(self._get_valid_product_template_attribute_lines()):
+        if len(combination) != len(self.valid_product_template_attribute_line_ids):
             # number of attribute values passed is different than the
             # configuration of attributes on the template
             return False
 
-        if self._get_valid_product_attributes() != combination.mapped('attribute_id'):
+        if self.valid_product_attribute_ids != combination.mapped('attribute_id'):
             # combination has different attributes than the ones configured on the template
             return False
 
-        variant = self._get_variant_for_combination(combination)
-        if not self.has_dynamic_attributes() and not variant:
+        if self.valid_product_attribute_value_ids < combination.mapped('product_attribute_value_id'):
+            # combination has different values than the ones configured on the template
+            return False
+
+        if not self.has_dynamic_attributes() and not self._get_variant_for_combination(combination):
             # the variant has been deleted
             return False
 
