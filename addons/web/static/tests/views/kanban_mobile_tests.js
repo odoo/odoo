@@ -164,7 +164,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('mobile quick create column view rendering', function (assert) {
-        assert.expect(10);
+        assert.expect(13);
 
         var kanban = createView({
             View: KanbanView,
@@ -185,7 +185,9 @@ QUnit.module('Views', {
             "should have column quick create tab and should be displayed as last tab");
         assert.hasClass(kanban.$('.o_kanban_mobile_tab:first'), 'o_current',
             "should have first tab as active tab with class 'o_current'");
-        assert.strictEqual(kanban.$('.o_kanban_group:first').position().left, 0,
+        assert.hasClass(kanban.$('.o_kanban_group:first'), 'o_current',
+            "should have first group as active group with class 'o_current'");
+        assert.hasClass(kanban.$('.o_kanban_group:first'), 'o_current',
             "should have first column as active column with left 0");
 
         // quick create record in first column(tab)
@@ -206,6 +208,8 @@ QUnit.module('Views', {
             "kanban quick create should be unfolded by default")
         assert.isVisible(kanban.$('.o_column_quick_create input'),
             "the quick create column input should be visible");
+        assert.containsNone(kanban, '.o_kanban_examples', "Should not have See Examples link in mobile");
+        assert.containsNone(kanban, '.o_discard_msg', "Should not have Esc to Discard in mobile kanban");
         kanban.$('.o_column_quick_create input').val('msh');
         testUtils.dom.click(kanban.$('.o_column_quick_create button.o_kanban_add'));
 

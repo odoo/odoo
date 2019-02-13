@@ -57,7 +57,7 @@
                     </span>
                 </div>
                 <span t-if="!widget.isMobile" class="o_discard_msg text-muted float-right">Esc to discard</span>
-                <t t-if="widget.examples">
+                <t t-if="widget.examples &amp;&amp; !widget.isMobile">
                     <button type="button" class="btn btn-link o_kanban_examples">See examples</button>
                 </t>
             </div>

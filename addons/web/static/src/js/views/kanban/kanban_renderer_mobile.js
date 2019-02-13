@@ -222,6 +222,10 @@ KanbanRenderer.include({
         return def;
     },
     /**
+     * override to avoid display of example background
+     */
+    _renderExampleBackground: function () {},
+    /**
      * @override
      * @private
      */
