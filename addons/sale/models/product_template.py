@@ -166,7 +166,7 @@ class ProductTemplate(models.Model):
         return res
 
     @api.multi
-    def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False):
+    def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):
         """ Return info about a given combination.
 
         Note: this method does not take into account whether the combination is
@@ -190,6 +190,9 @@ class ProductTemplate(models.Model):
         :param parent_combination: if no combination and no product_id are
             given, it will try to find the first possible combination, taking
             into account parent_combination (if set) for the exclusion rules.
+
+        :param only_template: boolean, if set to True, get the info for the
+            template only: ignore combination and don't try to find variant
 
         :return: dict with product/combination info:
 
@@ -219,10 +222,12 @@ class ProductTemplate(models.Model):
 
         combination = combination or product_template.env['product.template.attribute.value']
 
-        if not product_id and not combination:
+        if not product_id and not combination and not only_template:
             combination = product_template._get_first_possible_combination(parent_combination)
 
-        if product_id and not combination:
+        if only_template:
+            product = product_template.env['product.product']
+        elif product_id and not combination:
             product = product_template.env['product.product'].browse(product_id)
         else:
             product = product_template._get_variant_for_combination(combination)

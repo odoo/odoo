@@ -6,13 +6,18 @@ import odoo.tests
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
 
-    def test_01_admin_shop_customize_tour(self):
+    def setUp(self):
+        super(TestUi, self).setUp()
         # create a template
         product_template = self.env['product.template'].create({
             'name': 'Test Product',
             'website_published': True,
             'list_price': 750,
         })
+
+        tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 10})
+        product_template.taxes_id = tax
+
         product_attribute = self.env.ref('product.product_attribute_1')
         product_attribute_value_1 = self.env.ref('product.product_attribute_value_1')
         product_attribute_value_2 = self.env.ref('product.product_attribute_value_2')
@@ -36,6 +41,7 @@ class TestUi(odoo.tests.HttpCase):
 
         product_template.create_variant_ids()
 
+    def test_01_admin_shop_customize_tour(self):
         self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('shop_customize')", "odoo.__DEBUG__.services['web_tour.tour'].tours.shop_customize.ready", login="admin")
 
     def test_02_admin_shop_custom_attribute_value_tour(self):
@@ -140,7 +146,7 @@ class TestUi(odoo.tests.HttpCase):
 
         # create the template
         product_template = self.env['product.template'].create({
-            'name': 'Test Product',
+            'name': 'Test Product 2',
             'website_published': True,
         })
 
@@ -188,7 +194,7 @@ class TestUi(odoo.tests.HttpCase):
 
         # create the template
         product_template = self.env['product.template'].create({
-            'name': 'Test Product',
+            'name': 'Test Product 3',
             'website_published': True,
         })
 
@@ -205,3 +211,6 @@ class TestUi(odoo.tests.HttpCase):
         product_template.create_variant_ids()
 
         self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('tour_shop_no_variant_attribute')", "odoo.__DEBUG__.services['web_tour.tour'].tours.tour_shop_no_variant_attribute.ready", login="demo")
+
+    def test_06_admin_list_view_b2c(self):
+        self.browser_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('shop_list_view_b2c')", "odoo.__DEBUG__.services['web_tour.tour'].tours.shop_list_view_b2c.ready", login="admin")
