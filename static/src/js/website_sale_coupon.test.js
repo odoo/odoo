@@ -3,13 +3,11 @@ odoo.define('website_sale_coupon.test', function (require) {
 
 require("website_sale.tour");
 var tour = require("web_tour.tour");
-var base = require("web_editor.base");
 var ajax = require('web.ajax');
 
 tour.register('shop_sale_coupon', {
     test: true,
     url: '/shop?search=Large%20Cabinet',
-    wait_for: base.ready()
 },
     [
         {
