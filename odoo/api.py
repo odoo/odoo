@@ -292,11 +292,7 @@ def split_context(method, args, kwargs):
     """ Extract the context from a pair of positional and keyword arguments.
         Return a triple ``context, args, kwargs``.
     """
-    pos = len(getargspec(method).args) - 1
-    if pos < len(args):
-        return args[pos], args[:pos], kwargs
-    else:
-        return kwargs.pop('context', None), args, kwargs
+    return kwargs.pop('context', None), args, kwargs
 
 
 def model(method):
