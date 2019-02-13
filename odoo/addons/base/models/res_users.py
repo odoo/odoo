@@ -726,7 +726,6 @@ class Users(models.Model):
         self.ensure_one()
         return {
             'name': _('Groups'),
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'res.groups',
             'type': 'ir.actions.act_window',
@@ -739,7 +738,6 @@ class Users(models.Model):
         self.ensure_one()
         return {
             'name': _('Access Rights'),
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'ir.model.access',
             'type': 'ir.actions.act_window',
@@ -752,7 +750,6 @@ class Users(models.Model):
         self.ensure_one()
         return {
             'name': _('Record Rules'),
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'ir.rule',
             'type': 'ir.actions.act_window',

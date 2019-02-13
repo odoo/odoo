@@ -429,7 +429,6 @@ class MailActivity(models.Model):
         return {
             'name': _('Schedule an Activity'),
             'context': ctx,
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mail.activity',
             'views': [(False, 'form')],

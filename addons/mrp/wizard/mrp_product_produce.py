@@ -78,7 +78,6 @@ class MrpProductProduce(models.TransientModel):
         return {
             'name': _('Produce'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mrp.product.produce',
             'res_id': self.id,

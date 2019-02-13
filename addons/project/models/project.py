@@ -111,7 +111,6 @@ class Project(models.Model):
             'type': 'ir.actions.act_window',
             'view_id': False,
             'view_mode': 'kanban,tree,form',
-            'view_type': 'form',
             'help': _('''<p class="o_view_nocontent_smiling_face">
                         Documents are attached to the tasks of your project.</p><p>
                         Send messages or log internal notes with attachments to link
@@ -935,7 +934,6 @@ class Task(models.Model):
     def action_open_parent_task(self):
         return {
             'name': _('Parent Task'),
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'project.task',
             'res_id': self.parent_id.id,

@@ -23,7 +23,6 @@ class BaseModuleUpdate(models.TransientModel):
         res = {
             'domain': str([]),
             'name': 'Modules',
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'ir.module.module',
             'view_id': False,

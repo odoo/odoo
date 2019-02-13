@@ -306,7 +306,6 @@ Best Regards,'''))
                 'res_model': 'account.setup.bank.manual.config',
                 'target': 'new',
                 'view_mode': 'form',
-                'view_type': 'form',
                 'views': [[view_id, 'form']],
         }
 

@@ -743,7 +743,6 @@ class MassMailing(models.Model):
             context['form_view_initial_mode'] = 'edit'
             return {
                 'type': 'ir.actions.act_window',
-                'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'mail.mass_mailing',
                 'res_id': mass_mailing_copy.id,

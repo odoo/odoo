@@ -730,7 +730,6 @@ class AccountInvoice(models.Model):
         return {
             'name': _('Send Invoice'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.invoice.send',
             'views': [(compose_form.id, 'form')],

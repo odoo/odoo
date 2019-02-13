@@ -391,7 +391,6 @@ class account_payment(models.Model):
         return {
             'name': _('Register Payment'),
             'res_model': len(active_ids) == 1 and 'account.payment' or 'account.payment.register',
-            'view_type': 'form',
             'view_mode': 'form',
             'view_id': len(active_ids) != 1 and self.env.ref('account.view_account_payment_form_multi').id or self.env.ref('account.view_account_payment_invoice_form').id,
             'context': self.env.context,
@@ -403,7 +402,6 @@ class account_payment(models.Model):
     def button_journal_entries(self):
         return {
             'name': _('Journal Items'),
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.move.line',
             'view_id': False,
@@ -419,7 +417,6 @@ class account_payment(models.Model):
             views = [(self.env.ref('account.invoice_tree').id, 'tree'), (self.env.ref('account.invoice_form').id, 'form')]
         return {
             'name': _('Paid Invoices'),
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'view_id': False,
@@ -788,7 +785,6 @@ class payment_register(models.TransientModel):
         action_vals = {
             'name': _('Payments'),
             'domain': [('id', 'in', payments.ids), ('state', '=', 'posted')],
-            'view_type': 'form',
             'res_model': 'account.payment',
             'view_id': False,
             'type': 'ir.actions.act_window',

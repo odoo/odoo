@@ -247,7 +247,6 @@ QUnit.module('Views', {
                         target: 'current',
                         type: 'ir.actions.act_window',
                         view_mode: 'list',
-                        view_type: 'list',
                         views: [[false, 'list'], [2, 'form']],
                     }, "should trigger do_action with the correct args");
                 },

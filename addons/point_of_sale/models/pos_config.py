@@ -457,7 +457,6 @@ class PosConfig(models.Model):
     def _open_session(self, session_id):
         return {
             'name': _('Session'),
-            'view_type': 'form',
             'view_mode': 'form,tree',
             'res_model': 'pos.session',
             'res_id': session_id,

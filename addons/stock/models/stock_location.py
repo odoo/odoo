@@ -210,7 +210,6 @@ class Route(models.Model):
     def view_product_ids(self):
         return {
             'name': _('Products'),
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'product.template',
             'type': 'ir.actions.act_window',
@@ -220,7 +219,6 @@ class Route(models.Model):
     def view_categ_ids(self):
         return {
             'name': _('Product Categories'),
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'product.category',
             'type': 'ir.actions.act_window',

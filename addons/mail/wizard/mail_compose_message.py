@@ -20,7 +20,6 @@ def _reopen(self, res_id, model, context=None):
     context = dict(context or {}, default_model=model)
     return {'type': 'ir.actions.act_window',
             'view_mode': 'form',
-            'view_type': 'form',
             'res_id': res_id,
             'res_model': self._name,
             'target': 'new',

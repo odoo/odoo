@@ -282,7 +282,6 @@
         <record id="open_create_project" model="ir.actions.act_window">
             <field name="name">Create a Project</field>
             <field name="res_model">project.project</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="project_project_view_form_simplified"/>
             <field name="target">new</field>
@@ -384,7 +383,6 @@
         <record id="open_view_project_all" model="ir.actions.act_window">
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
-            <field name="view_type">form</field>
             <field name="domain">[]</field>
             <field name="view_mode">kanban,form</field>
             <field name="view_id" ref="view_project_kanban"/>
@@ -402,7 +400,6 @@
         <record id="open_view_project_all_config" model="ir.actions.act_window">
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
-            <field name="view_type">form</field>
             <field name="domain">[]</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_ids" eval="[(5, 0, 0),
@@ -518,8 +515,7 @@
             name="Share"
             res_model="portal.share"
             binding_model="project.task"
-            binding_views="form"
-            view_type="form"
+            view_mode="form"
             target="new"
         />
 
@@ -747,7 +743,6 @@
         <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
             <field name="name">Overpassed Tasks</field>
             <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
             <field name="domain">[('date_deadline','&lt;',time.strftime('%Y-%m-%d'))]</field>
             <field name="filter" eval="True"/>
@@ -758,7 +753,6 @@
         <record id="dblc_proj" model="ir.actions.act_window">
             <field name="res_model">project.task</field>
             <field name="name">Project's tasks</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
             <field name="domain">[('project_id', '=', active_id)]</field>
             <field name="context">{'project_id':active_id}</field>
@@ -872,7 +866,6 @@
         <record id="open_task_type_form" model="ir.actions.act_window">
             <field name="name">Stages</field>
             <field name="res_model">project.task.type</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="task_type_tree"/>
             <field name="help" type="html">
@@ -897,7 +890,7 @@
         <!-- User Form -->
         <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}"
                     id="act_res_users_2_project_task_opened" name="Assigned Tasks"
-                    res_model="project.task" view_mode="tree,form,calendar,graph" view_type="form"
+                    res_model="project.task" view_mode="tree,form,calendar,graph"
                     binding_model="res.users" binding_views="form"/>
 
         <!-- Tags -->
@@ -928,7 +921,6 @@
         <record id="project_tags_action" model="ir.actions.act_window">
             <field name="name">Tags</field>
             <field name="res_model">project.tags</field>
-            <field name="view_type">form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new tag

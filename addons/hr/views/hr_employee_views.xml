@@ -257,7 +257,6 @@
         <record id="open_view_employee_list_my" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form,activity</field>
             <field name="domain">[]</field>
             <field name="context">{}</field>
@@ -277,7 +276,6 @@
         <record id="open_view_employee_tree" model="ir.actions.act_window">
             <field name="name">Employees Structure</field>
             <field name="res_model">hr.employee</field>
-            <field name="view_type">tree</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_employee_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
@@ -287,7 +285,6 @@
         <record id="open_view_employee_list" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>
@@ -318,7 +315,6 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.employee</field>
             <field name="domain">['|', ('id','in',active_ids), ('parent_id', 'in', active_ids)]</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_partner_tree2"/>
             <field name="binding_model_id" ref="hr.model_hr_employee"/>
@@ -338,7 +334,6 @@
         <record id="act_employee_from_department" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,form,tree</field>
             <field name="search_view_id" ref="view_employee_filter"/>
             <field name="context">{

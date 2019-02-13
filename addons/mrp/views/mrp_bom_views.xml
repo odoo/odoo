@@ -175,7 +175,6 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="domain">[]</field> <!-- force empty -->
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_mrp_bom_filter"/>
             <field name="help" type="html">
@@ -222,7 +221,6 @@
             <field name="context">{'default_product_tmpl_id': active_id, 'search_default_product_tmpl_id': active_id}</field>
             <field name="name">Bill of Materials</field>
             <field name="res_model">mrp.bom</field>
-            <field name="view_type">form</field>
         </record>
 
         <record id="product_open_bom" model="ir.actions.act_window">
@@ -230,7 +228,6 @@
             <field name="name">Bill of Materials</field>
             <field name="res_model">mrp.bom</field>
             <field name="domain">[]</field> <!-- Force empty -->
-            <field name="view_type">form</field>
         </record>
     </data>
 </odoo>

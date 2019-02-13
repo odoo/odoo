@@ -71,7 +71,6 @@ class Project(models.Model):
             'res_model': 'account.analytic.line',
             'view_id': False,
             'view_mode': 'tree,form',
-            'view_type': 'form',
             'help': _("""
                 <p class="o_view_nocontent_smiling_face">
                     Record timesheets

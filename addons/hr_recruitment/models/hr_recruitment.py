@@ -340,7 +340,6 @@ class Applicant(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Applications'),
             'res_model': self._name,
-            'view_type': 'kanban',
             'view_mode': 'kanban,tree,form,pivot,graph,calendar,activity',
             'domain': [('email_from', 'in', self.mapped('email_from'))],
         }

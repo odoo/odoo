@@ -354,7 +354,6 @@ class account_journal(models.Model):
         return {
             'name': _('Create invoice/bill'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': model,
             'view_id': view_id,
@@ -368,7 +367,6 @@ class account_journal(models.Model):
         return {
             'name': _('Create cash statement'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.bank.statement',
             'context': ctx,

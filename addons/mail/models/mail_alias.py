@@ -159,7 +159,6 @@ class Alias(models.Model):
         if not self.alias_model_id or not self.alias_force_thread_id:
             return False
         return {
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': self.alias_model_id.model,
             'res_id': self.alias_force_thread_id,
@@ -171,7 +170,6 @@ class Alias(models.Model):
         if not self.alias_parent_model_id or not self.alias_parent_thread_id:
             return False
         return {
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': self.alias_parent_model_id.model,
             'res_id': self.alias_parent_thread_id,

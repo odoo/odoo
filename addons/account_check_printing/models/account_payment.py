@@ -83,7 +83,6 @@ class AccountPayment(models.Model):
                 'name': _('Print Pre-numbered Checks'),
                 'type': 'ir.actions.act_window',
                 'res_model': 'print.prenumbered.checks',
-                'view_type': 'form',
                 'view_mode': 'form',
                 'target': 'new',
                 'context': {

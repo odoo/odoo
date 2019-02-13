@@ -730,7 +730,6 @@ class PosOrder(models.Model):
 
         return {
             'name': _('Customer Invoice'),
-            'view_type': 'form',
             'view_mode': 'form',
             'view_id': self.env.ref('account.invoice_form').id,
             'res_model': 'account.invoice',
@@ -1034,7 +1033,6 @@ class PosOrder(models.Model):
 
         return {
             'name': _('Return Products'),
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'pos.order',
             'res_id': PosOrder.ids[0],
