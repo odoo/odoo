@@ -250,7 +250,7 @@ class Http(models.AbstractModel):
             obj = self.env[model].browse(int(id))
         if obj and 'website_published' in obj._fields:
             if self.env[obj._name].sudo().search([('id', '=', obj.id), ('website_published', '=', True)]):
-                self.sudo()
+                self = self.sudo()
         return super(Http, self).binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
