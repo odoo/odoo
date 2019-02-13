@@ -22,6 +22,7 @@ class ProductionLot(models.Model):
         related='product_id.uom_id', store=True, readonly=False)
     quant_ids = fields.One2many('stock.quant', 'lot_id', 'Quants', readonly=True)
     product_qty = fields.Float('Quantity', compute='_product_qty')
+    note = fields.Html(string='Description')
 
     _sql_constraints = [
         ('name_ref_uniq', 'unique (name, product_id)', 'The combination of serial number and product must be unique !'),
