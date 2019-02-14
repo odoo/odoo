@@ -2,7 +2,7 @@ odoo.define("sale_stock.tour", function (require) {
     "use strict";
 
     var tour = require('web_tour.tour');
-    require('sale.tour');
+    require('sale.product_configurator_tour');
 
     var quotation_product_selected_step_index = _.findIndex(tour.tours.sale_product_configurator_tour.steps, function (step) {
         return (step.id === "quotation_product_selected");
