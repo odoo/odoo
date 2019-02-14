@@ -61,6 +61,9 @@ class PaymentAcquirer(models.Model):
     _description = 'Payment Acquirer'
     _order = 'module_state, state, sequence, name'
 
+    def _valid_field_parameter(self, field, name):
+        return name == 'required_if_provider' or super()._valid_field_parameter(field, name)
+
     def _get_default_view_template_id(self):
         return self.env.ref('payment.default_acquirer_button', raise_if_not_found=False)
 

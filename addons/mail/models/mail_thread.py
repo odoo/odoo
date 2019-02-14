@@ -112,6 +112,10 @@ class MailThread(models.AbstractModel):
     message_attachment_count = fields.Integer('Attachment Count', compute='_compute_message_attachment_count', groups="base.group_user")
     message_main_attachment_id = fields.Many2one(string="Main Attachment", comodel_name='ir.attachment', index=True, copy=False)
 
+    def _valid_field_parameter(self, field, name):
+        # allow tracking on models inheriting from 'mail.thread'
+        return name == 'tracking' or super()._valid_field_parameter(field, name)
+
     @api.depends('message_follower_ids')
     def _get_followers(self):
         for thread in self:
