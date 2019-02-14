@@ -23,6 +23,7 @@
 
     <rng:define name="value">
         <rng:element name="value">
+            <rng:optional><rng:attribute name="name" /></rng:optional>
             <rng:optional><rng:attribute name="model" /></rng:optional>
             <rng:choice>
                 <rng:attribute name="search" />
