@@ -26,7 +26,7 @@
                                 options='{"terminology": "archive"}'/>
                         </button>
                     </div>
-                    <field name="image_medium" widget="image" class="oe_avatar"/>
+                    <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium'}"/>
                     <div class="oe_title">
                         <label class="oe_edit_only" for="name" string="Product Name"/>
                         <h1><field name="name" placeholder="Product Name"/></h1>
@@ -275,7 +275,7 @@
                             </button>
                         </div>
                         <field name="id" invisible="1"/>
-                        <field name="image_medium" widget="image" class="oe_avatar"/>
+                        <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium'}"/>
                         <div class="oe_title">
                             <label class="oe_edit_only" for="name" string="Product Name"/>
                             <h1><field name="name" readonly="1" placeholder="e.g. Odoo Enterprise Subscription"/></h1>

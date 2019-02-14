@@ -209,6 +209,24 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         }
         return ProductConfiguratorMixin.getSelectedVariantValues.apply(this, arguments);
     },
+    /**
+     * Write the properties of the form elements in the DOM to prevent the
+     * current selection from being lost when activating the web editor.
+     *
+     * @override
+     */
+    onChangeVariant: function (ev) {
+        var $component = $(ev.currentTarget).closest('.js_product');
+        $component.find('input').each(function () {
+            var $el = $(this);
+            $el.attr('checked', $el.is(':checked'));
+        });
+        $component.find('select option').each(function () {
+            var $el = $(this);
+            $el.attr('selected', $el.is(':selected'));
+        });
+        return ProductConfiguratorMixin.onChangeVariant.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -345,21 +363,12 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         // Do not activate image zoom for mobile devices, since it might prevent users from scrolling the page
         if (!config.device.isMobile) {
             var autoZoom = $('.ecom-zoomable').data('ecom-zoom-auto') || false,
-            factorZoom = parseFloat($('.ecom-zoomable').data('ecom-zoom-factor')) || 1.5,
             attach = '#o-carousel-product';
             _.each($('.ecom-zoomable img[data-zoom]'), function (el) {
                 onImageLoaded(el, function () {
                     var $img = $(el);
-                    if (!_.str.endsWith(el.src, el.dataset.zoomImage) || // if zoom-img != img
-                        el.naturalWidth >= $(attach).width() * factorZoom || el.naturalHeight >= $(attach).height() * factorZoom) {
-                        $img.zoomOdoo({event: autoZoom ? 'mouseenter' : 'click', attach: attach});
-                        $img.attr('data-zoom', 1); // add cursor (if previously removed)
-                    } else {
-                        $img.removeAttr('data-zoom'); // remove cursor
-                        // remove zooming but keep the attribute because
-                        // it can potentially be set back
-                        $img.attr('data-zoom-image', '');
-                    }
+                    $img.zoomOdoo({event: autoZoom ? 'mouseenter' : 'click', attach: attach});
+                    $img.attr('data-zoom', 1);
                 });
             });
         }

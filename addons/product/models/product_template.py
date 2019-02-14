@@ -12,7 +12,7 @@ from odoo.osv import expression
 
 class ProductTemplate(models.Model):
     _name = "product.template"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
     _description = "Product Template"
     _order = "name"
 
@@ -133,20 +133,6 @@ class ProductTemplate(models.Model):
         inverse='_set_default_code', store=True)
 
     item_ids = fields.One2many('product.pricelist.item', 'product_tmpl_id', 'Pricelist Items')
-
-    # image: all image fields are base64 encoded and PIL-supported
-    image = fields.Binary(
-        "Image", help="This field holds the image used as image for the product, limited to 1024x1024px.")
-    image_medium = fields.Binary(
-        "Medium-sized image",
-        help="Medium-sized image of the product. It is automatically "
-             "resized as a 128x128px image, with aspect ratio preserved, "
-             "only when the image exceeds one of those sizes. Use this field in form views or some kanban views.")
-    image_small = fields.Binary(
-        "Small-sized image",
-        help="Small-sized image of the product. It is automatically "
-             "resized as a 64x64px image, with aspect ratio preserved. "
-             "Use this field anywhere a small image is required.")
 
     @api.depends('product_variant_ids')
     def _compute_product_variant_id(self):
@@ -328,9 +314,6 @@ class ProductTemplate(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
-        # TDE FIXME: context brol
-        for vals in vals_list:
-            tools.image_resize_images(vals)
         templates = super(ProductTemplate, self).create(vals_list)
         if "create_product_product" not in self._context:
             templates.with_context(create_from_tmpl=True).create_variant_ids()
@@ -355,7 +338,6 @@ class ProductTemplate(models.Model):
 
     @api.multi
     def write(self, vals):
-        tools.image_resize_images(vals)
         res = super(ProductTemplate, self).write(vals)
         if 'attribute_line_ids' in vals or vals.get('active'):
             self.create_variant_ids()

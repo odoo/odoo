@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import api, fields, models, tools, _
 from odoo.addons import decimal_precision as dp
 from odoo.tools.translate import html_translate
@@ -124,7 +125,8 @@ class ProductTemplate(models.Model):
     public_categ_ids = fields.Many2many('product.public.category', string='Website Product Category',
                                         help="The product will be available in each mentioned e-commerce category. Go to"
                                         "Shop > Customize and enable 'E-commerce categories' to view all e-commerce categories.")
-    product_image_ids = fields.One2many('product.image', 'product_tmpl_id', string='Images')
+
+    product_template_image_ids = fields.One2many('product.image', 'product_tmpl_id', string="Extra Product Images", copy=True)
 
     # website_price deprecated, directly use _get_combination_info instead
     website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
@@ -346,11 +348,27 @@ class ProductTemplate(models.Model):
         domain = super(ProductTemplate, self)._rating_domain()
         return expression.AND([domain, [('website_published', '=', True)]])
 
+    @api.multi
+    def _get_images(self):
+        """Return a list of records implementing `image.mixin` to
+        display on the carousel on the website for this template.
+
+        This returns a list and not a recordset because the records might be
+        from different models (template and image).
+
+        It contains in this order: the main image of the template and the
+        Template Extra Images.
+        """
+        self.ensure_one()
+        return [self] + list(self.product_template_image_ids)
+
 
 class Product(models.Model):
     _inherit = "product.product"
 
     website_id = fields.Many2one(related='product_tmpl_id.website_id', readonly=False)
+
+    product_variant_image_ids = fields.One2many('product.image', 'product_variant_id', string="Extra Variant Images")
 
     # website_price deprecated, directly use _get_combination_info instead
     website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
@@ -371,11 +389,27 @@ class Product(models.Model):
         self.ensure_one()
         return self.product_tmpl_id.website_publish_button()
 
+    @api.multi
+    def _get_images(self):
+        """Return a list of records implementing `image.mixin` to
+        display on the carousel on the website for this variant.
 
-class ProductImage(models.Model):
-    _name = 'product.image'
-    _description = 'Product Image'
+        This returns a list and not a recordset because the records might be
+        from different models (template, variant and image).
 
-    name = fields.Char('Name')
-    image = fields.Binary('Image', attachment=True)
-    product_tmpl_id = fields.Many2one('product.template', 'Related Product', copy=True)
+        It contains in this order: the main image of the variant (if set), the
+        Variant Extra Images, and the Template Extra Images.
+        """
+        self.ensure_one()
+        variant_images = list(self.product_variant_image_ids)
+        if self.image_raw_original:
+            # if the main variant image is set, display it first
+            variant_images = [self] + variant_images
+        else:
+            # If the main variant image is empty, it will fallback to template
+            # image, in this case insert it after the other variant images, so
+            # that all variant images are first and all template images last.
+            variant_images = variant_images + [self]
+        # [1:] to remove the main image from the template, we only display
+        # the template extra images here
+        return variant_images + self.product_tmpl_id._get_images()[1:]

@@ -1114,9 +1114,6 @@ class SaleOrderLine(models.Model):
     # because the result might be different then.
     product_no_variant_attribute_value_ids = fields.Many2many('product.template.attribute.value', string='Product attribute values that do not create variants')
 
-    # Non-stored related field to allow portal user to see the image of the product he has ordered
-    product_image = fields.Binary('Product Image', related="product_id.image", store=False, readonly=False)
-
     qty_delivered_method = fields.Selection([
         ('manual', 'Manual'),
         ('analytic', 'Analytic From Expenses')
