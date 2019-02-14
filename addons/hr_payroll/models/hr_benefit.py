@@ -178,6 +178,8 @@ class HrBenefit(models.Model):
             return [(start, end) for start, end in days if start != end]
 
         new_benefits = self.env['hr.benefit']
+        benefits_to_unlink = self.env['hr.benefit']
+
         for benefit in self:
             if benefit.date_start.date() == benefit.date_stop.date():
                 new_benefits |= benefit
@@ -190,7 +192,7 @@ class HrBenefit(models.Model):
                     'benefit_type_id': benefit.benefit_type_id.id,
                 }
                 benefit_state = benefit.state
-                benefit.unlink()
+                benefits_to_unlink |= benefit
                 for start, stop in _split_range_by_day(benefit_start, benefit_stop):
                     values['date_start'] = start.astimezone(pytz.utc)
                     values['date_stop'] = stop.astimezone(pytz.utc)
@@ -199,6 +201,7 @@ class HrBenefit(models.Model):
                     new_benefit.state = benefit_state
                     new_benefits |= new_benefit
 
+        benefits_to_unlink.unlink()
         return new_benefits
 
     @api.multi
