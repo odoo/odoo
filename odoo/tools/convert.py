@@ -177,32 +177,24 @@ def _eval_xml(self, node, env):
                 return tuple(res)
             return res
     elif node.tag == "function":
+        model = env[node.get('model')]
+        method_name = node.get('name')
+        # determine arguments
+        args = []
+        kwargs = {}
         a_eval = node.get('eval')
         if a_eval:
             self.idref['ref'] = self.id_get
-            # ensure the args are a list (sometimes folks eval a tuple which
-            # is inconvenient when trying to concatenate w/ a list)
             args = list(safe_eval(a_eval, self.idref))
-        else:
-            args = [
-                r for r in (_eval_xml(self, n, env) for n in node)
-                if r is not None
-            ]
-
-        model = env[node.get('model')]
-        method_name = node.get('name')
-        method = getattr(model, method_name)
-
-        # this mess is necessary to merge @context and a possible positional
-        # context parameter, as <function> works on the old API so ids and
-        # context are just args
-        ids, args = [], list(args)
-        if getattr(method, '_api', None) not in ('model', 'model_create'):
-            ids, args = args[:1], args[1:]
-        context, args, kwargs = api.split_context(method, args, {})
-        kwargs['context'] = {**env.context, **(context or {})}
-
-        return odoo.api.call_kw(model, method_name, ids + args, kwargs)
+        for child in node:
+            if child.tag == 'value' and child.get('name'):
+                kwargs[child.get('name')] = _eval_xml(self, child, env)
+            else:
+                args.append(_eval_xml(self, child, env))
+        # merge current context with context in kwargs
+        kwargs['context'] = {**env.context, **kwargs.get('context', {})}
+        # invoke method
+        return odoo.api.call_kw(model, method_name, args, kwargs)
     elif node.tag == "test":
         return node.text
 

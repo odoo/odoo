@@ -368,8 +368,8 @@ Andrew</p>]]></field>
 
         <!-- Call Function to Cancel the leads (set as Dead) -->
         <function model="crm.lead" name="action_set_lost"
-            eval="[ref('crm_case_7'), ref('crm_case_9'), ref('crm_case_11'), ref('crm_case_12')],
-                  {'install_mode': True}"/>
+            eval="[[ref('crm_case_7'), ref('crm_case_9'), ref('crm_case_11'), ref('crm_case_12')]]"
+            context="{'install_mode': True}"/>
 
         <!-- Demo Opportunities -->
         <record id="crm_case_13" model="crm.lead">
@@ -1161,13 +1161,13 @@ Andrew</p>]]></field>
 
         <!-- Call Function to set dome opportunities as Lost -->
         <function model="crm.lead" name="action_set_lost"
-            eval="[ref('crm_case_28')],
-                  {'install_mode': True}"/>
+            eval="[[ref('crm_case_28')]]"
+            context="{'install_mode': True}"/>
 
         <!-- Call Function to set some opportunities as Won -->
         <function model="crm.lead" name="action_set_won"
-            eval="[ref('crm_case_20'), ref('crm_case_23'), ref('crm_case_27')],
-                  {'install_mode': True}"/>
+            eval="[[ref('crm_case_20'), ref('crm_case_23'), ref('crm_case_27')]]"
+            context="{'install_mode': True}"/>
 
         <!-- Activities -->
         <record id="activity_1" model="mail.activity">
