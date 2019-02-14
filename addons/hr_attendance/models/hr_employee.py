@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields, api, exceptions, _, SUPERUSER_ID
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 
 class HrEmployee(models.Model):
@@ -10,23 +12,19 @@ class HrEmployee(models.Model):
     attendance_ids = fields.One2many('hr.attendance', 'employee_id', help='list of attendances for the employee')
     last_attendance_id = fields.Many2one('hr.attendance', compute='_compute_last_attendance_id', store=True)
     attendance_state = fields.Selection(string="Attendance Status", compute='_compute_attendance_state', selection=[('checked_out', "Checked out"), ('checked_in', "Checked in")])
-    manual_attendance = fields.Boolean(string='Manual Attendance', compute='_compute_manual_attendance', inverse='_inverse_manual_attendance',
-                                       help='The employee will have access to the "My Attendances" menu to check in and out from his session')
+    hours_last_month = fields.Float(compute='_compute_hours_last_month')
 
-    @api.multi
-    def _compute_manual_attendance(self):
+    def _compute_hours_last_month(self):
         for employee in self:
-            employee.manual_attendance = employee.user_id.has_group('hr_attendance.group_hr_attendance') if employee.user_id else False
-
-    @api.multi
-    def _inverse_manual_attendance(self):
-        manual_attendance_group = self.env.ref('hr_attendance.group_hr_attendance')
-        for employee in self:
-            if employee.user_id:
-                if employee.manual_attendance:
-                    manual_attendance_group.users = [(4, employee.user_id.id, 0)]
-                else:
-                    manual_attendance_group.users = [(3, employee.user_id.id, 0)]
+            now = datetime.now()
+            start = now + relativedelta(months=-1, day=1)
+            end = now + relativedelta(days=-1, day=1)
+            attendances = self.env['hr.attendance'].search([
+                ('employee_id', '=', employee.id),
+                ('check_in', '>=', start),
+                ('check_out', '<=', end),
+            ])
+            employee.hours_last_month = sum(attendances.mapped('worked_hours'))
 
     @api.depends('attendance_ids')
     def _compute_last_attendance_id(self):

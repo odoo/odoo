@@ -32,7 +32,7 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='active_group']" position="before">
+            <xpath expr="//page[@name='hr_settings']" position="inside">
                 <group string="Timesheets" name="timesheet" groups="hr_timesheet.group_timesheet_manager">
                     <label for="timesheet_cost"/>
                     <div>
@@ -41,7 +41,7 @@
                     </div>
                 </group>
             </xpath>
-            <xpath expr="//button[@name='toggle_active']" position="before">
+            <xpath expr="//div[@name='button_box']" position="inside">
                 <button class="oe_stat_button" type="action" name="%(timesheet_action_from_employee)d" icon="fa-calendar">
                     <div class="o_stat_info">
                         <span class="o_stat_text">Timesheets</span>

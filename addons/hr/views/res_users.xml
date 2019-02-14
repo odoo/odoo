@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Inherit the preference view to remove title, image and footer -->
+        <!-- This view is meant to be included in the employee profile view -->
+        <!-- It ensures that if the 'normal' Preferences view is changed, it's
+            also reflected in the employee's profile -->
+        <record id="res_users_view_form_simple_modif" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.simplified.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <footer position="replace"/>
+                <h1 position="replace"/>
+                <xpath expr="//field[@name='image']" position="replace"/>
+            </field>
+        </record>
+
+        <record id="res_users_view_form_profile" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="res_users_view_form_simple_modif"/>
+            <field name="arch" type="xml">
+                <form position="replace">
+                <form>
+                    <header></header> <!-- Used by other modules to add buttons -->
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                        </div>
+                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image":"image_medium"}'/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="Employee's Name" required="True"/>
+                            </h1>
+                            <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags" groups="hr.group_hr_user"/>
+                        </div>
+                        <h2>
+                            <field name="job_title"/>
+                        </h2>
+                        <group>
+                            <group>
+                                <field name="mobile_phone" widget="phone"/>
+                                <field name="work_phone" widget="phone"/>
+                                <field name="work_email" widget="email"/>
+                            </group>
+                            <group>
+                                <field name="department_id"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="public" string="Work Information">
+                                <div id="o_work_employee_container"> <!-- These two div are used to position org_chart -->
+                                    <div id="o_work_employee_main">
+                                        <group string="Location">
+                                            <field name="address_id"
+                                                context="{'show_address': 1}"
+                                                options='{"always_reload": True, "highlight_first_line": True}'/>
+                                            <field name="work_location"/>
+                                        </group>
+                                        <group name="managers" string="Managers">
+                                            <field name="parent_id"/>
+                                            <field name="coach_id"/>
+                                        </group>
+                                    </div>
+                                </div>
+                            </page>
+                            <page name="personal_information" string="Private Information">
+                                <group>
+                                    <group string="Contact Information">
+                                        <field name="employee_ids" invisible="1"/>
+                                        <field name="address_home_id"
+                                            context="{
+                                                'show_address': 1,
+                                                'default_employee_ids': employee_ids,
+                                                'default_type': 'private',
+                                                'form_view_ref': 'base.res_partner_view_form_private'}"
+                                            options='{"always_reload": True, "highlight_first_line": True}'/>
+                                        <field name="is_address_home_a_company" invisible="1"/>
+                                        <div class="text-warning"
+                                            attrs="{'invisible': [('is_address_home_a_company','=', False)]}">
+                                            Use here the home address of the employee.
+                                            This private address is used in the expense report reimbursement document.
+                                            It should be different from the work address.
+                                        </div>
+                                        <field name="km_home_work"/>
+                                        <field name="phone"/>
+                                        <field name="employee_bank_account_id"/>
+                                    </group>
+                                    <group string="Citizenship">
+                                        <field name="employee_country_id" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="identification_id"/>
+                                        <field name="passport_id"/>
+                                        <field name="gender"/>
+                                        <field name="birthday"/>
+                                        <field name="place_of_birth"/>
+                                        <field name="country_of_birth"/>
+                                    </group>
+                                    <group string="Marital Status">
+                                        <field name="marital"/>
+                                        <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}"/>
+                                        <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}"/>
+                                    </group>
+                                    <group string="Dependant">
+                                        <field name="children"/>
+                                    </group>
+                                    <group string="Emergency">
+                                        <field name="emergency_contact"/>
+                                        <field name="emergency_phone"/>
+                                    </group>
+                                    <group string="Work Permit" name="work_permit">
+                                        <field name="visa_no"/>
+                                        <field name="permit_no"/>
+                                        <field name="visa_expire"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <field name="google_drive_link" widget="url"/>
+                                </group>
+                            </page>
+                            <page name="preferences" string="Preferences">
+                                <div>$0</div>
+                            </page>
+                             <page name="hr_settings" string="HR Settings">
+                                <group>
+                                    <group string='Status' name="active_group">
+                                    </group>
+                                    <group string="Login Information" name="identification_group">
+                                        <field name="pin"/>
+                                        <field name="barcode"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+                </form>
+            </field>
+        </record>
+
+        <record id="res_users_action_my" model="ir.actions.act_window">
+            <field name="name">Change my Preferences</field>
+            <field name="res_model">res.users</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr.res_users_view_form_profile"/>
+        </record>
+    </data>
+</odoo>

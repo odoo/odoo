@@ -19,6 +19,7 @@ class Users(models.Model):
             set(
                 self.SELF_WRITEABLE_FIELDS +
                 ['country_id', 'city', 'website', 'website_description', 'website_published']))
+        type(self).SELF_READABLE_FIELDS = type(self).SELF_READABLE_FIELDS + ['karma']
         return init_res
 
     create_date = fields.Datetime('Create Date', readonly=True, index=True)

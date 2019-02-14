@@ -63,10 +63,14 @@ class Department(models.Model):
 class Employee(models.Model):
     _inherit = "hr.employee"
 
+    def _group_hr_user_domain(self):
+        group = self.env.ref('hr_holidays.group_hr_holidays_team_leader', raise_if_not_found=False)
+        return [('groups_id', 'in', group.ids)] if group else []
+
     leave_manager_id = fields.Many2one(
         'res.users', string='Time Off Responsible',
-        domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_team_leader').id)],
-        help="User responsible of time off approval. Should be Team Leader or Department Manager.")
+        domain=_group_hr_user_domain,
+        help="User responsible of leaves approval. Should be Team Leader or Department Manager.")
     remaining_leaves = fields.Float(
         compute='_compute_remaining_leaves', string='Remaining Paid Time Off',
         help='Total number of paid time off allocated to this employee, change this value to create allocation/time off request. '
@@ -84,8 +88,10 @@ class Employee(models.Model):
     leave_date_from = fields.Date('From Date', compute='_compute_leave_status')
     leave_date_to = fields.Date('To Date', compute='_compute_leave_status')
     leaves_count = fields.Float('Number of Time Off', compute='_compute_remaining_leaves')
+    allocation_count = fields.Float('Total number of days allocated.', compute='_compute_allocation_count')
+    allocation_used_count = fields.Float('Total number of days off used', compute='_compute_total_allocation_used')
     show_leaves = fields.Boolean('Able to see Remaining Time Off', compute='_compute_show_leaves')
-    is_absent_totay = fields.Boolean('Absent Today', compute='_compute_absent_employee', search='_search_absent_employee')
+    is_absent = fields.Boolean('Absent Today', compute='_compute_leave_status', search='_search_absent_employee')
 
     def _get_remaining_leaves(self):
         """ Helper to compute the remaining leaves for the current employees
@@ -122,6 +128,22 @@ class Employee(models.Model):
             employee.remaining_leaves = value
 
     @api.multi
+    def _compute_allocation_count(self):
+        for employee in self:
+            allocations = self.env['hr.leave.allocation'].search([
+                ('employee_id', '=', employee.id),
+                ('state', '=', 'validate'),
+                '|',
+                    ('date_to', '=', False),
+                    ('date_to', '>=', datetime.date.today()),
+            ])
+            employee.allocation_count = sum(allocations.mapped('number_of_days'))
+
+    def _compute_total_allocation_used(self):
+        for employee in self:
+            employee.allocation_used_count = employee.allocation_count - employee.remaining_leaves
+
+    @api.multi
     def _compute_leave_status(self):
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule
         holidays = self.env['hr.leave'].sudo().search([
@@ -143,6 +165,15 @@ class Employee(models.Model):
             employee.leave_date_to = leave_data.get(employee.id, {}).get('leave_date_to')
             employee.current_leave_state = leave_data.get(employee.id, {}).get('current_leave_state')
             employee.current_leave_id = leave_data.get(employee.id, {}).get('current_leave_id')
+            employee.is_absent = leave_data and leave_data.get(employee.id, {}).get('current_leave_state') not in ['cancel', 'refuse', 'draft']
+
+    @api.onchange('parent_id')
+    def _onchange_parent_id(self):
+        super(Employee, self)._onchange_parent_id()
+        previous_manager = self._origin.parent_id.user_id
+        manager = self.parent_id.user_id
+        if manager and manager.has_group('hr.group_hr_user') and (self.leave_manager_id == previous_manager or not self.leave_manager_id):
+            self.leave_manager_id = manager
 
     @api.multi
     def _compute_show_leaves(self):
@@ -154,33 +185,12 @@ class Employee(models.Model):
                 employee.show_leaves = False
 
     @api.multi
-    def _compute_absent_employee(self):
-        today_date = datetime.datetime.utcnow().date()
-        today_start = fields.Datetime.to_string(today_date)  # get the midnight of the current utc day
-        today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
-        data = self.env['hr.leave'].read_group([
-            ('employee_id', 'in', self.ids),
-            ('state', 'not in', ['cancel', 'refuse']),
-            ('date_from', '<=', today_end),
-            ('date_to', '>=', today_start)
-        ], ['employee_id'], ['employee_id'])
-        result = dict.fromkeys(self.ids, False)
-        for item in data:
-            if item['employee_id_count'] >= 1:
-                result[item['employee_id'][0]] = True
-        for employee in self:
-            employee.is_absent_totay = result[employee.id]
-
-    @api.multi
     def _search_absent_employee(self, operator, value):
-        today_date = datetime.datetime.utcnow().date()
-        today_start = fields.Datetime.to_string(today_date)  # get the midnight of the current utc day
-        today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
         holidays = self.env['hr.leave'].sudo().search([
             ('employee_id', '!=', False),
             ('state', 'not in', ['cancel', 'refuse']),
-            ('date_from', '<=', today_end),
-            ('date_to', '>=', today_start)
+            ('date_from', '<=', datetime.datetime.utcnow()),
+            ('date_to', '>=', datetime.datetime.utcnow())
         ])
         return [('id', 'in', holidays.mapped('employee_id').ids)]
 
