@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import pytz
 import itertools
+import pytz
+
 from psycopg2 import IntegrityError
 from dateutil.relativedelta import relativedelta
-from odoo import api, fields, models, exceptions, _
-from odoo.tools import mute_logger
-from odoo.exceptions import UserError, ValidationError
+
+from odoo import api, fields, models, _
 from odoo.addons.resource.models.resource import Intervals
+from odoo.exceptions import ValidationError
+from odoo.tools import mute_logger
+
 
 class HrBenefit(models.Model):
     _name = 'hr.benefit'
@@ -46,7 +49,7 @@ class HrBenefit(models.Model):
     @api.depends('date_stop', 'date_start')
     def _compute_duration(self):
         for benefit in self:
-             if benefit.date_start and benefit.date_stop:
+            if benefit.date_start and benefit.date_stop:
                 dt = benefit.date_stop - benefit.date_start
                 benefit.duration = dt.days * 24 + dt.seconds / 3600 # Number of hours
 
@@ -139,7 +142,7 @@ class HrBenefit(models.Model):
     def action_leave(self):
         leave = self.leave_id
         return {
-            'type':'ir.actions.act_window',
+            'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
             'res_id': leave.id,
@@ -211,7 +214,6 @@ class HrBenefit(models.Model):
 
         for benefit in self:
             if not benefit.leave_id:
-                tz = pytz.timezone(benefit.employee_id.tz)
                 self.env['resource.calendar.leaves'].create({
                     'name': benefit.name,
                     'date_from': benefit.date_start,
@@ -241,8 +243,8 @@ class HrBenefit(models.Model):
                 'dayofweek': str(start.weekday()),
                 'date_from': start.date(),
                 'date_to': end.date(),
-                'hour_from':start.hour + start.minute/60,
-                'hour_to': end.hour + end.minute/60,
+                'hour_from': start.hour + start.minute / 60,
+                'hour_to': end.hour + end.minute / 60,
                 'calendar_id': benefit.employee_id.resource_calendar_id.id,
                 'day_period': 'morning' if end.hour <= 12 else 'afternoon',
                 'resource_id': benefit.employee_id.resource_id.id,
@@ -259,6 +261,7 @@ class HrBenefit(models.Model):
             return True
         return False
 
+
 class HrBenefitType(models.Model):
     _name = 'hr.benefit.type'
     _description = 'hr.benefit.type'
@@ -267,7 +270,7 @@ class HrBenefitType(models.Model):
     code = fields.Char()
     color = fields.Integer(default=1) # Will be used with the new calendar/kanban view
     sequence = fields.Integer(default=25)
-    active = fields.Boolean('Active', default=True,
-                            help="If the active field is set to false, it will allow you to hide the benefit type without removing it.")
+    active = fields.Boolean(
+        'Active', default=True,
+        help="If the active field is set to false, it will allow you to hide the benefit type without removing it.")
     is_leave = fields.Boolean(default=False, string="Leave")
-
