@@ -571,13 +571,15 @@ class WebsiteSlides(WebsiteProfile):
         return channels
 
     def _prepare_user_slides_profile(self, user):
-        courses = request.env['slide.channel.partner'].sudo().search([('partner_id', '=', user.partner_id.id)]).mapped('channel_id')
+        courses = request.env['slide.channel.partner'].sudo().search([('partner_id', '=', user.partner_id.id)])
+        courses_completed = courses.filtered(lambda c: c.completed)
+        courses_ongoing = courses - courses_completed
         values = {
             'uid': request.env.user.id,
             'user': user,
             'main_object': user,
-            'courses': courses,
-            'count_courses': len(courses),
+            'courses_completed': courses_completed,
+            'courses_ongoing': courses_ongoing,
             'is_profile_page': True,
             'badge_category': 'slides',
         }
