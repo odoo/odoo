@@ -45,6 +45,7 @@ KanbanRenderer.include({
             $column.scrollLeft(this._scrollPosition.left);
             $column.scrollTop(this._scrollPosition.top);
         }
+        this._computeTabPosition();
         this._super.apply(this, arguments);
     },
     /**
@@ -104,23 +105,155 @@ KanbanRenderer.include({
     //--------------------------------------------------------------------------
 
     /**
+     * Update the columns positions
+     *
+     * @private
+     * @param {boolean} [animate=false] set to true to animate
+     */
+    _computeColumnPosition: function (animate) {
+        if (this.widgets.length) {
+            var self = this;
+            var moveToIndex = this.activeColumnIndex;
+            var updateFunc = animate ? 'animate' : 'css';
+            _.each(this.widgets, function (column, index) {
+                var columnID = column.id || column.db_id;
+                var $column = self.$('.o_kanban_group[data-id="' + columnID + '"]');
+                if (index === moveToIndex - 1) {
+                    $column[updateFunc]({left: '-100%'});
+                } else if (index === moveToIndex + 1) {
+                    $column[updateFunc]({left: '100%'});
+                } else if (index === moveToIndex) {
+                    $column[updateFunc]({left: '0%'});
+                } else if (index < moveToIndex) {
+                    $column.css({left: '-100%'});
+                } else if (index > moveToIndex) {
+                    $column.css({left: '100%'});
+                }
+            });
+        }
+    },
+
+    /**
+     * Define the o_current class to the current selected kanban (column & tab)
+     *
+     * @private
+     */
+    _computeCurrentColumn: function () {
+        if (this.widgets.length) {
+            var column = this.widgets[this.activeColumnIndex];
+            if (!column) {
+                return;
+            }
+            var columnID = column.id || column.db_id;
+            this.$('.o_kanban_mobile_tab.o_current, .o_kanban_group.o_current')
+                .removeClass('o_current');
+            this.$('.o_kanban_group[data-id="' + columnID + '"], ' +
+                   '.o_kanban_mobile_tab[data-id="' + columnID + '"]')
+                .addClass('o_current');
+        }
+    },
+
+    /**
+     * Update the tabs positions
+     *
+     * @private
+     */
+    _computeTabPosition: function () {
+        this._computeTabJustification();
+        this._computeTabScrollPosition();
+    },
+
+    /**
+     * Update the tabs positions
+     *
+     * @private
+     */
+    _computeTabScrollPosition: function () {
+        if (this.widgets.length) {
+            var lastItemIndex = this.widgets.length - 1;
+            var moveToIndex = this.activeColumnIndex;
+            var scrollToLeft = 0;
+            for (var i = 0; i < moveToIndex; i++) {
+                var columnWidth = this._getTabWidth(this.widgets[i]);
+                // apply
+                if (moveToIndex !== lastItemIndex && i === moveToIndex - 1) {
+                    var partialWidth = 0.75;
+                    scrollToLeft += columnWidth * partialWidth;
+                } else {
+                    scrollToLeft += columnWidth;
+                }
+            }
+            // Apply the scroll x on the tabs
+            this.$('.o_kanban_mobile_tabs').scrollLeft(scrollToLeft);
+        }
+    },
+
+    /**
+     * Compute the justify content of the kanban tab headers
+     *
+     * @private
+     */
+    _computeTabJustification: function () {
+        if (this.widgets.length) {
+            var self = this;
+            // Use to compute the sum of the width of all tab
+            var widthChilds = this.widgets.reduce(function (total, column) {
+                return total + self._getTabWidth(column);
+            }, 0);
+            // Apply a space around between child if the parent length is higher then the sum of the child width
+            var $tabs = this.$('.o_kanban_mobile_tabs');
+            $tabs.toggleClass('justify-content-around', $tabs.outerWidth() >= widthChilds);
+        }
+    },
+
+    /**
      * Enables swipe event on the current column
      *
      * @private
-     * @param {KanbanColumn} column
      */
     _enableSwipe: function () {
         var self = this;
         this.$el.swipe({
             excludedElements: ".o_kanban_mobile_tabs",
             swipeLeft: function () {
-                self._moveToGroup(self.activeColumnIndex + 1, self.ANIMATE);
+                var moveToIndex = self.activeColumnIndex + 1;
+                if (moveToIndex < self.widgets.length) {
+                    self._moveToGroup(moveToIndex, self.ANIMATE);
+                }
             },
             swipeRight: function () {
-                self._moveToGroup(self.activeColumnIndex - 1, self.ANIMATE);
+                var moveToIndex = self.activeColumnIndex - 1;
+                if (moveToIndex > -1) {
+                    self._moveToGroup(moveToIndex, self.ANIMATE);
+                }
             }
         });
     },
+
+    /**
+     * Retrieve the outerWidth of a given widget column
+     *
+     * @param {KanbanColumn} column
+     * @returns {integer} outerWidth of the found column
+     * @private
+     */
+    _getTabWidth : function (column) {
+        var columnID = column.id || column.db_id;
+        return this.$('.o_kanban_mobile_tab[data-id="' + columnID + '"]').outerWidth();
+    },
+
+    /**
+     * Update the kanban layout
+     *
+     * @private
+     * @param {boolean} [animate=false] set to true to animate
+     */
+    _layoutUpdate : function (animate) {
+        this._computeCurrentColumn();
+        this._computeTabPosition();
+        this._computeColumnPosition(animate);
+    },
+
     /**
      * Moves to the given kanban column
      *
@@ -133,6 +266,7 @@ KanbanRenderer.include({
     _moveToGroup: function (moveToIndex, animate) {
         var self = this;
         if (moveToIndex < 0 || moveToIndex >= this.widgets.length) {
+            this._layoutUpdate(animate);
             return $.when();
         }
         var def = $.Deferred();
@@ -141,36 +275,13 @@ KanbanRenderer.include({
         this.trigger_up('kanban_load_records', {
             columnID: column.db_id,
             onSuccess: function () {
-                // update the columns and tabs positions (optionally with an animation)
-                var updateFunc = animate ? 'animate' : 'css';
-                self.$('.o_kanban_mobile_tab, .o_kanban_group').removeClass('o_current');
-                _.each(self.widgets, function (column, index) {
-                    var columnID = column.id || column.db_id;
-                    var $column = self.$('.o_kanban_group[data-id="' + columnID + '"]');
-                    var $tab = self.$('.o_kanban_mobile_tab[data-id="' + columnID + '"]');
-                    if (index === moveToIndex - 1) {
-                        $column[updateFunc]({left: '-100%'});
-                        $tab[updateFunc]({left: '0%'});
-                    } else if (index === moveToIndex + 1) {
-                        $column[updateFunc]({left: '100%'});
-                        $tab[updateFunc]({left: '100%'});
-                    } else if (index === moveToIndex) {
-                        $column[updateFunc]({left: '0%'});
-                        $tab[updateFunc]({left: '50%'});
-                        $tab.add($column).addClass('o_current');
-                    } else if (index < moveToIndex) {
-                        $column.css({left: '-100%'});
-                        $tab[updateFunc]({left: '-100%'});
-                    } else if (index > moveToIndex) {
-                        $column.css({left: '100%'});
-                        $tab[updateFunc]({left: '200%'});
-                    }
-                });
+                self._layoutUpdate(animate);
                 def.resolve();
             },
         });
         return def;
     },
+
     /**
      * @override
      * @private
@@ -193,6 +304,7 @@ KanbanRenderer.include({
         })).prependTo(fragment);
         return result;
     },
+
     /**
      * @override
      * @private
@@ -201,7 +313,8 @@ KanbanRenderer.include({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             if (self.state.groupedBy.length) {
-                return self._moveToGroup(self.activeColumnIndex);
+                // force first column for kanban view, because the groupedBy can be changed
+                return self._moveToGroup(0);
             }
         });
     },
