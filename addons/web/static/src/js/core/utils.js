@@ -112,7 +112,17 @@ var utils = {
         var d2 = Math.pow(10, decimals);
         var val = _t('kMGTPE');
         var symbol = '';
-        for (var i = val.length - 1 ; i > 0 ; i--) {
+        var numberMagnitude = number.toExponential().split('e')[1];
+        // the case numberMagnitude >= 21 corresponds to a number
+        // better expressed in the scientific format.
+        if (numberMagnitude >= 21) {
+            // we do not use number.toExponential(decimals) because we want to
+            // avoid the possible useless O decimals: 1e.+24 prefered to 1.0e+24
+            number = Math.round(number * Math.pow(10, decimals - numberMagnitude)) / d2;
+            // formatterCallback seems useless here.
+            return number + 'e' + numberMagnitude;
+        }
+        for (var i = val.length; i > 0 ; i--) {
             var s = Math.pow(10, i * 3);
             if (s <= number / Math.pow(10, minDigits - 1)) {
                 number = Math.round(number * d2 / s) / d2;
