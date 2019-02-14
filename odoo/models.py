@@ -3102,10 +3102,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         protected_fields = [self._fields[n] for n in new_vals]
         with self.env.protecting(protected_fields, self):
             # write old-style fields with (low-level) method _write
-            if old_vals:
+            if old_vals or new_vals:
+                # if log_access is enabled, this updates 'write_date' and
+                # 'write_uid' and check access rules, even when old_vals is
+                # empty
                 self._write(old_vals)
 
             if new_vals:
+                self.check_field_access_rights('write', list(new_vals))
+
                 self.modified(set(new_vals) - set(old_vals))
 
                 # put the values of fields into cache, and inverse them
