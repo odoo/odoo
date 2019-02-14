@@ -428,7 +428,6 @@ class AccountReconciliation(models.AbstractModel):
             '|', ('move_id.name', 'ilike', search_str),
             '|', ('move_id.ref', 'ilike', search_str),
             '|', ('date_maturity', 'like', search_str),
-            '|', ('payment_id.check_number', '=', search_str),
             '&', ('name', '!=', '/'), ('name', 'ilike', search_str)
         ]
         if search_str[0] in ['-', '+']:
