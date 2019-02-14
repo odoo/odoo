@@ -2,46 +2,77 @@
 <odoo>
     <data>
         <record id="product_course" model="product.product">
-            <field name="name">Furniture creation course</field>
+            <field name="name">High-Level DIY Furniture</field>
             <field name="standard_price">100.0</field>
             <field name="list_price">100.0</field>
             <field name="type">service</field>
             <field name="website_published" eval="True"/>
-            <field name="image" type="base64" file="website_sale_slides/data/demo-thumbnails/product_course.png"/>
+            <field name="image" type="base64" file="website_sale_slides/static/img/product_course.png"/>
         </record>
 
         <record id="slide_channel_demo_6_furn3_payment" model="slide.channel">
-            <field name="name">Furniture creation</field>
+            <field name="name">High-Level DIY Furniture</field>
             <field name="promote_strategy">most_viewed</field>
             <field name="channel_type">training</field>
-            <field name="website_published" eval="True"/>
-            <field name="description">All you need to know about furniture creation.</field>
             <field name="visibility">payment</field>
             <field name="product_id" ref="product_course"/>
+            <field name="tag_ids" eval="[(5, 0),
+                                     (4, ref('website_slides.slide_channel_tag_level_advanced')),
+                                     (4, ref('website_slides.slide_channel_tag_role_carpenter')),
+                                     (4, ref('website_slides.slide_channel_tag_role_furniture')),
+                                     (4, ref('website_slides.slide_channel_tag_other_2'))]"/>
+            <field name="website_published" eval="True"/>
+            <field name="image" type="base64" file="website_sale_slides/static/img/channel_demo_diy.jpg"/>
+            <field name="description" type="html"><div>All you need to know about furniture creation.</div></field>
+        </record>
+        <record id="slide_category_demo_6_0" model="slide.category">
+            <field name="name">Tools and Methods</field>
+            <field name="channel_id" ref="website_sale_slides.slide_channel_demo_6_furn3_payment"/>
+            <field name="sequence">10</field>
+        </record>
+        <record id="slide_category_demo_6_1" model="slide.category">
+            <field name="name">Hand on !</field>
+            <field name="channel_id" ref="website_sale_slides.slide_channel_demo_6_furn3_payment"/>
+            <field name="sequence">20</field>
         </record>
 
-        <record id="slide_find_wood" model="slide.slide">
-            <field name="name">How to find quality wood.</field>
+        <record id="slide_slide_demo_6_0" model="slide.slide">
+            <field name="name">Unforgettable Tools</field>
+            <field name="datas" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
+            <field name="image" type="base64" file="website_slides/static/src/img/channel-training-default.jpg"/>
+            <field name="slide_type">presentation</field>
+            <field name="channel_id" ref="slide_channel_demo_6_furn3_payment"/>
+            <field name="category_id" ref="website_sale_slides.slide_category_demo_6_0"/>
+            <field name="website_published" eval="True"/>
+            <field name="is_preview" eval="False"/>
+            <field name="public_views">10</field>
+            <field name="description" type="html"><div>Tools you will need to complete this course.</div></field>
+        </record>
+        <record id="slide_slide_demo_6_1" model="slide.slide">
+            <field name="name">How to find quality wood</field>
             <field name="url">https://www.youtube.com/watch?v=5WMqwTnZ-qs</field>
             <field name="document_id">5WMqwTnZ-qs</field>
             <field name="slide_type">video</field>
             <field name="channel_id" ref="slide_channel_demo_6_furn3_payment"/>
+            <field name="category_id" ref="website_sale_slides.slide_category_demo_6_1"/>
             <field name="website_published" eval="True"/>
-            <field name="is_preview" eval="True"/>
-            <field name="image" type="base64" file="website_sale_slides/data/demo-thumbnails/5WMqwTnZ-qs.png"/>
-            <field name="description">Learn of to identify quality wood in order to create solid furnitures.</field>
+            <field name="is_preview" eval="False"/>
+            <field name="public_views">5</field>
+            <field name="image" type="base64" file="website_sale_slides/static/img/5WMqwTnZ-qs.png"/>
+            <field name="description" type="html"><div>Learn of to identify quality wood in order to create solid furnitures.</div></field>
         </record>
-
-        <record id="slide_create_furniture" model="slide.slide">
-            <field name="name">How to create your own piece of furniture.</field>
+        <record id="slide_slide_demo_6_2" model="slide.slide">
+            <field name="name">How to create your own piece of furniture</field>
             <field name="url">https://www.youtube.com/watch?v=ptjeDDoURL8</field>
             <field name="document_id">ptjeDDoURL8</field>
             <field name="slide_type">video</field>
             <field name="channel_id" ref="slide_channel_demo_6_furn3_payment"/>
+            <field name="category_id" ref="website_sale_slides.slide_category_demo_6_1"/>
             <field name="website_published" eval="True"/>
-            <field name="is_preview" eval="True"/>
-            <field name="image" type="base64" file="website_sale_slides/data/demo-thumbnails/ptjeDDoURL8.png"/>
-            <field name="description">From a piece of wood to a fully functional furniture, step by step.</field>
+            <field name="is_preview" eval="False"/>
+            <field name="public_views">0</field>
+            <field name="image" type="base64" file="website_sale_slides/static/img/ptjeDDoURL8.png"/>
+            <field name="description" type="html"><div>From a piece of wood to a fully functional furniture, step by step.</div></field>
         </record>
     </data>
 </odoo>
