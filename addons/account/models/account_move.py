@@ -232,16 +232,18 @@ class AccountMove(models.Model):
     @api.multi
     def _reverse_move(self, date=None, journal_id=None):
         self.ensure_one()
-        reversed_move = self.copy(default={
-            'date': date,
-            'journal_id': journal_id.id if journal_id else self.journal_id.id,
-            'ref': _('reversal of: ') + self.name})
-        for acm_line in reversed_move.line_ids.with_context(check_move_validity=False):
-            acm_line.write({
-                'debit': acm_line.credit,
-                'credit': acm_line.debit,
-                'amount_currency': -acm_line.amount_currency
-            })
+        with self.env.norecompute():
+            reversed_move = self.copy(default={
+                'date': date,
+                'journal_id': journal_id.id if journal_id else self.journal_id.id,
+                'ref': _('reversal of: ') + self.name})
+            for acm_line in reversed_move.line_ids.with_context(check_move_validity=False):
+                acm_line.write({
+                    'debit': acm_line.credit,
+                    'credit': acm_line.debit,
+                    'amount_currency': -acm_line.amount_currency
+                })
+        self.recompute()
         return reversed_move
 
     @api.multi
@@ -1747,7 +1749,6 @@ class AccountPartialReconcile(models.Model):
                                 'move_id': newly_created_move.id,
                                 'partner_id': line.partner_id.id,
                             })
-
                             # Group by cash basis account and tax
                             self.env['account.move.line'].with_context(check_move_validity=False).create({
                                 'name': line.name,
