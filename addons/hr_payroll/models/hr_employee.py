@@ -38,7 +38,7 @@ class HrEmployee(models.Model):
             global_leaves = employee.resource_calendar_id.global_leave_ids
             for calendar_leave in emp_leaves | global_leaves:
                 hr_leave = calendar_leave.holiday_id
-                hr_leave.copy_to_benefits()
+                hr_leave._copy_to_benefits()
 
             new_benefits = self.env['hr.benefit']
             for contract in employee._get_contracts(date_start, date_stop):
@@ -52,7 +52,7 @@ class HrEmployee(models.Model):
                 # Attendances
                 for interval in attendances:
                     benefit_type_id = interval[2].mapped('benefit_type_id')[:1] or self.env.ref('hr_payroll.benefit_type_attendance')
-                    new_benefits |= self.env['hr.benefit'].safe_duplicate_create({
+                    new_benefits |= self.env['hr.benefit']._safe_duplicate_create({
                         'name': "%s: %s" % (benefit_type_id.name, employee.name),
                         'date_start': interval[0].astimezone(pytz.utc),
                         'date_stop': interval[1].astimezone(pytz.utc),
@@ -61,4 +61,4 @@ class HrEmployee(models.Model):
                         'state': 'confirmed',
                     })
 
-            new_benefits.compute_conflicts_leaves_to_approve()
+            new_benefits._compute_conflicts_leaves_to_approve()

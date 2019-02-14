@@ -73,7 +73,7 @@ class TestBenefit(TestPayslipBase):
             'date_stop': end,
         })
 
-        benefits = benefit.split_by_day()
+        benefits = benefit._split_by_day()
         self.assertEqual(len(benefits), 3, "Benefit should be split in three")
         self.assertEqual(pytz.utc.localize(benefits[0].date_start), self.tz.localize(datetime.strptime('2015-11-01 09:00:00', '%Y-%m-%d %H:%M:%S')))
         self.assertEqual(pytz.utc.localize(benefits[0].date_stop), self.tz.localize(datetime.strptime('2015-11-01 23:59:59', '%Y-%m-%d %H:%M:%S')))
@@ -94,7 +94,7 @@ class TestBenefit(TestPayslipBase):
             'date_start': start,
             'date_stop': end,
         })
-        benefits = benefit.split_by_day()
+        benefits = benefit._split_by_day()
         self.assertEqual(len(benefits), 3, "Benefit should be split in three")
         self.assertEqual(pytz.utc.localize(benefits[0].date_start), self.tz.localize(datetime.strptime('2013-11-01 00:00:00', '%Y-%m-%d %H:%M:%S')))
         self.assertEqual(pytz.utc.localize(benefits[0].date_stop), self.tz.localize(datetime.strptime('2013-11-01 23:59:59', '%Y-%m-%d %H:%M:%S')))
@@ -307,7 +307,7 @@ class TestBenefit(TestPayslipBase):
 
     def test_time_normal_benefit(self):
         # Normal attendances (global to all employees)
-        data = self.richard_emp.get_benefit_days_data(self.env.ref('hr_payroll.benefit_type_attendance'), self.start, self.end)
+        data = self.richard_emp._get_benefit_days_data(self.env.ref('hr_payroll.benefit_type_attendance'), self.start, self.end)
         self.assertEqual(data['hours'], 168.0)
 
     def test_time_extra_benefit(self):
@@ -321,7 +321,7 @@ class TestBenefit(TestPayslipBase):
             'date_stop': end,
         })
         benef.action_validate(benef.ids)
-        data = self.richard_emp.get_benefit_days_data(self.benefit_type, self.start, self.end)
+        data = self.richard_emp._get_benefit_days_data(self.benefit_type, self.start, self.end)
         self.assertEqual(data['hours'], 7.0)
 
     def test_time_week_leave_benefit(self):
@@ -336,7 +336,7 @@ class TestBenefit(TestPayslipBase):
             'date_stop': end,
         })
         leave_benef.action_validate(leave_benef.ids)
-        data = self.richard_emp.get_benefit_days_data(self.benefit_type_leave, self.start, self.end)
+        data = self.richard_emp._get_benefit_days_data(self.benefit_type_leave, self.start, self.end)
         self.assertEqual(data['hours'], 5.0, "It should equal the number of hours richard should have worked")
 
     def test_time_weekend_leave_benefit(self):
@@ -351,7 +351,7 @@ class TestBenefit(TestPayslipBase):
             'date_stop': end,
         })
         leave_benef.action_validate(leave_benef.ids)
-        data = self.richard_emp.get_benefit_days_data(self.benefit_type_leave, self.start, self.end)
+        data = self.richard_emp._get_benefit_days_data(self.benefit_type_leave, self.start, self.end)
         self.assertEqual(data['hours'], 0.0, "It should equal the number of hours richard should have worked")
 
     def test_payslip_generation_with_leave(self):
