@@ -1068,7 +1068,8 @@ class IrModelFields(models.Model):
         }
         if field_data['ttype'] in ('char', 'text', 'html'):
             attrs['translate'] = bool(field_data['translate'])
-            attrs['size'] = field_data['size'] or None
+            if field_data['ttype'] == 'char':
+                attrs['size'] = field_data['size'] or None
         elif field_data['ttype'] in ('selection', 'reference'):
             attrs['selection'] = self.env['ir.model.fields.selection']._get_selection_data(field_data['id'])
         elif field_data['ttype'] == 'many2one':

@@ -29,9 +29,6 @@ from odoo.exceptions import CacheMiss
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 
-RENAMED_ATTRS = [('select', 'index'), ('digits_compute', 'digits')]
-DEPRECATED_ATTRS = [("oldname", "use an upgrade script instead.")]
-
 IR_MODELS = (
     'ir.model', 'ir.model.data', 'ir.model.fields', 'ir.model.fields.selection',
     'ir.model.relation', 'ir.model.constraint', 'ir.module.module',
@@ -345,18 +342,21 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def _setup_attrs(self, model, name):
         """ Initialize the field parameter attributes. """
+        # validate extra arguments
+        for key in self.args:
+            # TODO: improve filter as there are attributes on the class which
+            #       are not valid on the field, probably
+            if not (hasattr(self, key) or model._valid_field_parameter(self, key)):
+                _logger.warning(
+                    "Field %s.%s: unknown parameter %r, if this is an actual"
+                    " parameter you may want to override the method"
+                    " _valid_field_parameter on the relevant model in order to"
+                    " allow it",
+                    model._name, name, key
+                )
+
         attrs = self._get_attrs(model, name)
         self.__dict__.update(attrs)
-
-        # check for renamed attributes (conversion errors)
-        for key1, key2 in RENAMED_ATTRS:
-            if key1 in attrs:
-                _logger.warning("Field %s: parameter %r is no longer supported; use %r instead.",
-                                self, key1, key2)
-        for key, msg in DEPRECATED_ATTRS:
-            if key in attrs:
-                _logger.warning("Field %s: parameter %r is not longer supported; %s",
-                                self, key, msg)
 
         # prefetch only stored, column, non-manual and non-deprecated fields
         if not (self.store and self.column_type) or self.manual or self.deprecated:
@@ -466,7 +466,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 setattr(self, attr, getattr(field, prop))
 
         for attr, value in field.__dict__.items():
-            if not hasattr(self, attr):
+            if not hasattr(self, attr) and model._valid_field_parameter(self, attr):
                 setattr(self, attr, value)
 
         # special cases of inherited fields
@@ -2135,6 +2135,12 @@ class Selection(Field):
         # selection must be computed on related field
         field = self.related_field
         self.selection = lambda model: field._description_selection(model.env)
+
+    def _get_attrs(self, model, name):
+        attrs = super(Selection, self)._get_attrs(model, name)
+        # arguments 'selection' and 'selection_add' are processed below
+        attrs.pop('selection_add', None)
+        return attrs
 
     def _setup_attrs(self, model, name):
         super(Selection, self)._setup_attrs(model, name)
