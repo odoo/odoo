@@ -25,8 +25,8 @@ var SearchPanel = Widget.extend({
     /**
      * @override
      * @param {Object} params
-     * @param {Object} [params.defaultCategoryValues={}] the category value to
-     *   activate by default, for each category
+     * @param {Object} [params.defaultValues={}] the value(s) to activate by
+     *   default, for each filter and category
      * @param {Object} params.fields
      * @param {string} params.model
      * @param {Object} params.sections
@@ -42,7 +42,7 @@ var SearchPanel = Widget.extend({
             return section.type === 'filter';
         });
 
-        this.defaultCategoryValues = params.defaultCategoryValues || {};
+        this.defaultValues = params.defaultValues || {};
         this.fields = params.fields;
         this.model = params.model;
         this.searchDomain = params.searchDomain;
@@ -53,7 +53,7 @@ var SearchPanel = Widget.extend({
     willStart: function () {
         var self = this;
         var loadProm = this._fetchCategories().then(function () {
-            return self._fetchFilters();
+            return self._fetchFilters().then(self._applyDefaultFilterValues.bind(self));
         });
         return $.when(loadProm, this._super.apply(this, arguments));
     },
@@ -101,6 +101,27 @@ var SearchPanel = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Set active values for each filter (coming from context). This needs to be
+     * done only once, at widget startup.
+     *
+     * @private
+     */
+    _applyDefaultFilterValues: function () {
+        var self = this;
+        Object.keys(this.filters).forEach(function (filterId) {
+            var filter = self.filters[filterId];
+            var defaultValues = self.defaultValues[filter.fieldName] || [];
+            defaultValues.forEach(function (value) {
+                if (filter.values[value]) {
+                    filter.values[value].checked = true;
+                }
+            });
+            Object.keys(filter.groups || []).forEach(function (groupId) {
+                self._updateFilterGroupState(filter.groups[groupId]);
+            });
+        });
+    },
+    /**
      * @private
      * @param {string} categoryId
      * @param {Object[]} values
@@ -131,7 +152,7 @@ var SearchPanel = Widget.extend({
         // set active value
         var validValues = _.pluck(category.values, 'id').concat([false]);
         // set active value from context
-        var value = this.defaultCategoryValues[category.fieldName];
+        var value = this.defaultValues[category.fieldName];
         // if not set in context, or set to an unknown value, set active value
         // from localStorage
         if (!_.contains(validValues, value)) {
@@ -360,6 +381,22 @@ var SearchPanel = Widget.extend({
         return [];
     },
     /**
+     * Compute the current searchPanel domain based on categories and filters,
+     * and notify environment of the domain change.
+     *
+     * Note that this assumes that the environment will update the searchPanel.
+     * This is done as such to ensure the coordination between the reloading of
+     * the searchPanel and the reloading of the data.
+     *
+     * @private
+     */
+    _notifyDomainUpdated: function () {
+        this.needReload = true;
+        this.trigger_up('search_panel_domain_updated', {
+            domain: this.getDomain(),
+        });
+    },
+    /**
      * @private
      */
     _render: function () {
@@ -418,20 +455,23 @@ var SearchPanel = Widget.extend({
         return $filter;
     },
     /**
-     * Compute the current searchPanel domain based on categories and filters,
-     * and notify environment of the domain change.
-     *
-     * Note that this assumes that the environment will update the searchPanel.
-     * This is done as such to ensure the coordination between the reloading of
-     * the searchPanel and the reloading of the data.
+     * Updates the state property of a given filter's group according to the
+     * checked property of its values.
      *
      * @private
+     * @param {Object} group
      */
-    _notifyDomainUpdated: function () {
-        this.needReload = true;
-        this.trigger_up('search_panel_domain_updated', {
-            domain: this.getDomain(),
+    _updateFilterGroupState: function (group) {
+        var valuePartition = _.partition(Object.keys(group.values), function (valueId) {
+            return group.values[valueId].checked;
         });
+        if (valuePartition[0].length && valuePartition[1].length) {
+            group.state = 'indeterminate';
+        } else if (valuePartition[0].length) {
+            group.state = 'checked';
+        } else {
+            group.state = 'unchecked';
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -481,16 +521,7 @@ var SearchPanel = Widget.extend({
         value.checked = !value.checked;
         var group = filter.groups && filter.groups[value.group_id];
         if (group) {
-            var valuePartition = _.partition(Object.keys(group.values), function (valueId) {
-                return group.values[valueId].checked;
-            });
-            if (valuePartition[0].length && valuePartition[1].length) {
-                group.state = 'indeterminate';
-            } else if (valuePartition[0].length) {
-                group.state = 'checked';
-            } else {
-                group.state = 'unchecked';
-            }
+            this._updateFilterGroupState(group);
         }
         this._notifyDomainUpdated();
     },
