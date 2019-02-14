@@ -97,6 +97,9 @@ class Channel(models.Model):
     total_votes = fields.Integer('# Votes', compute='_compute_slides_statistics', store=True)
     total_time = fields.Float('# Hours', compute='_compute_slides_statistics', digits=(10, 4), store=True)
     # configuration
+    allow_comment = fields.Boolean("Allow comment on Content", default=False, help="When checked, the options will allow member to add comment on content:\n"
+             "  * Documentation channel: allow to like content and post comments\n"
+             "  * Training channel: allow to post comments and reviews\n")
     publish_template_id = fields.Many2one(
         'mail.template', string='Published Template',
         help="Email template to send slide publication through email",
