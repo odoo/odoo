@@ -1457,7 +1457,6 @@ class SaleOrderLine(models.Model):
             result = {'warning': warning}
             if product.sale_line_warn == 'block':
                 self.product_id = False
-                return result
 
         name = self.get_sale_order_line_multiline_description_sale(product)
 
