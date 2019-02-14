@@ -169,17 +169,18 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
          * @private
          */
         _onNewAllocation: function () {
+            var self = this;
             this.do_action({
                 type: 'ir.actions.act_window',
                 res_model: 'hr.leave.allocation',
                 view_type: 'form',
                 views: [[false,'form']],
                 target: 'new',
-            }), {
+            }, {
                 on_close: function () {
                     self.reload();
                 }
-            };
+            });
         },
     });
     var TimeOffCalendarView = CalendarView.extend({
