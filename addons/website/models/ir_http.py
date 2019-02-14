@@ -225,7 +225,7 @@ class Http(models.AbstractModel):
                 cls._auth_method_public()
 
             with registry(request.env.cr.dbname).cursor() as cr:
-                env = api.Environment(cr, SUPERUSER_ID, request.env.context)
+                env = api.Environment(cr, request.uid, request.env.context)
                 if code == 500:
                     logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
                     View = env["ir.ui.view"]
