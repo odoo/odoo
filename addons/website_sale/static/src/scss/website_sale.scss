@@ -433,14 +433,6 @@ div#payment_method {
 .oe_website_sale .row .row .col-lg-12 {
     float: none;
 }
-/* product detail */
-
-.product_detail_img {
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    max-height: 500px;
-}
 
 .oe_website_sale input.js_quantity {
     min-width: 48px;
@@ -615,46 +607,36 @@ a.no-decoration {
         opacity: 0.2;
     }
 
-    .carousel-inner div.item, .carousel-control-prev, .carousel-control-next {
+    .carousel-outer {
         height: 400px;
-    }
-    .carousel-inner div.item img {
-        max-height: 100%;
+        max-height: 90vh;
     }
 
-    .carousel-control-prev, carousel-control-next {
-        background-image: none !important;
+    .carousel-control-prev, .carousel-control-next {
+        opacity: 0.5;
+        cursor: pointer;
+        &:focus {
+            opacity: 0.65;
+        }
+        &:hover {
+            opacity: 0.8;
+        }
+        > span {
+            background: rgba(0, 0, 0, 0.8);
+        }
     }
 
     .carousel-indicators {
-        background-color: transparent;
-        margin: 10px 0 0;
-        overflow-y: hidden;
-        position: static;
-        text-align: left;
-        white-space: nowrap;
-        width: 100%;
-        height: 100px !important;
-        text-align: center;
-        list-style-position: inside;
-
         li {
-            background-color: transparent !important;
-            border-radius: 0;
-            display: inline-block;
-            margin: 0 !important;
-            width: 54px !important;
-            height: 54px !important;
-            border: 0 !important;
-            box-shadow: none !important;
+            width: 64px;
+            height: 64px;
+            text-indent: unset;
+            border: 1px solid gray('600');
+            opacity: 0.5;
 
-            img {
-                display: block;
-                opacity: 0.5;
-            }
-
-            &.active img {
+            &.active {
                 opacity: 1;
+                border: 1px solid theme-color('primary');
             }
         }
     }

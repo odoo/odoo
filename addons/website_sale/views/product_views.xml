@@ -102,44 +102,24 @@
                             <field name="website_style_ids" widget="many2many_tags" groups="base.group_no_one"/>
                         </group>
                     </group>
-                    <group name="extra_images" string="Extra Images">
-                        <field name="product_image_ids" class="o_website_sale_image_list" context="{'default_name': name, 'default_product_tmpl_id': active_id}" nolabel="1">
-                            <kanban string="Product Images" class="o_attachments_previews">
-                                <field name="id"/>
-                                <field name="name"/>
-                                <field name="image"/>
-                                <templates>
-                                    <t t-name="kanban-box">
-                                        <div class="o_attachment oe_kanban_global_click o_website_sale_image_card">
-                                            <div class="o_attachment_wrap">
-                                                <div class="o_image_box">
-                                                    <div class="o_attachment_image" t-attf-style="background-image:url({{kanban_image('product.image', 'image', record.id.raw_value)}});"/>
-                                                    <div t-attf-class="o_image_overlay" t-att-title="record.name.value"/>
-                                                    <div class="o_website_sale_image_card_title" t-att-title="record.name.value">
-                                                        <field name="name"/>
-                                                    </div>
-                                                </div>
-
-                                                <t t-set="size" t-value="[record.image.value][0]"/>
-                                                <t t-set="size_status" t-value="'normal'" t-if="size.indexOf('Bytes') !== -1 or ( size.indexOf('Kb') !== -1 and size[2]=='.')"/>
-                                                <t t-set="size_status" t-value="'warning'" t-elif="( size.indexOf('Kb') !== -1 and size[3]=='.')"/>
-                                                <t t-set="size_status" t-value="'danger'"  t-else=""/>
-                                                <t t-set="message" t-value="'Acceptable file size'" t-if="size_status == 'normal'"></t>
-                                                <t t-set="message" t-value="'Huge file size. The image should be optimized/reduced.'" t-elif="size_status == 'warning'"></t>
-                                                <t t-set="message" t-value="'Optimization required! Reduce the image size or increase your compression settings.'" t-else=""></t>
-
-                                                <span t-attf-class="o_website_sale_image_card_size badge badge-#{size_status}" t-att-title="message">
-                                                    <t t-esc="record.image.value"/>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </t>
-                                </templates>
-                            </kanban>
-                        </field>
+                    <group name="product_template_images" string="Extra Product Images">
+                        <field name="product_template_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" options="{'create_text':'Add an Image'}" nolabel="1"/>
                     </group>
                 </page>
             </xpath>
+        </field>
+    </record>
+
+    <record id="product_product_view_form_easy_inherit_website_sale" model="ir.ui.view">
+        <field name="name">product.product.view.form.easy.inherit.website_sale</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="arch" type="xml">
+            <sheet position="inside">
+                <group name="product_variant_images" string="Extra Variant Images">
+                    <field name="product_variant_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" options="{'create_text':'Add an Image'}" nolabel="1"/>
+                </group>
+            </sheet>
         </field>
     </record>
 
@@ -216,24 +196,67 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_product_image_form">
-        <field name="name">product.image.form</field>
+    <!-- This view should only be used from the product o2m because the required field product_tmpl_id has to be automatically set. -->
+    <record id="view_product_image_form" model="ir.ui.view">
+        <field name="name">product.image.view.form</field>
         <field name="model">product.image</field>
         <field name="arch" type="xml">
             <form string="Product Images">
                 <div class="row o_website_sale_image_modal">
                     <div class="col-md-6 col-xl-5">
-                        <div class="oe_title">
-                            <label class="small text-muted" for="name" string="Image Name"/>
-                            <h2><field name="name" placeholder="Image Name" required="True"/></h2>
-                            <field name="product_tmpl_id" invisible="1"/>
-                        </div>
+                        <label for="name" string="Image Name"/>
+                        <h2><field name="name" placeholder="Image Name"/></h2>
+                        <!-- Unfortunately for now we can't drag and drop kanban o2m, so we have to let the user input the sequence manually.  -->
+                        <label for="sequence" string="Sequence"/><br/>
+                        <field name="sequence"/>
                     </div>
                     <div class="col-md-6 col-xl-7 text-center o_website_sale_image_modal_container">
-                        <field name="image" widget="image"/>
+                        <field name="image_original" widget="image"/>
                     </div>
                 </div>
             </form>
+        </field>
+    </record>
+    <record id="product_image_view_kanban" model="ir.ui.view">
+        <field name="name">product.image.view.kanban</field>
+        <field name="model">product.image</field>
+        <field name="arch" type="xml">
+            <kanban string="Product Images" default_order="sequence">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="image_original"/>
+                <field name="sequence"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="card oe_kanban_global_click p-0">
+                            <div class="o_squared_image">
+                                <img class="card-img-top" t-att-src="kanban_image('product.image', 'image_original', record.id.value)" t-att-alt="record.name.value"/>
+                            </div>
+                            <div class="card-body p-0">
+                                <h4 class="card-title p-2 m-0 bg-200">
+                                    <small><field name="name"/></small>
+                                </h4>
+                            </div>
+                            <!-- below 100 Kb: good -->
+                            <t t-if="record.image_original.raw_value.length &lt; 100*1000">
+                                <t t-set="size_status" t-value="'badge-success'"/>
+                                <t t-set="message">Acceptable file size</t>
+                            </t>
+                            <!-- below 1000 Kb: decent -->
+                            <t t-elif="record.image_original.raw_value.length &lt; 1000*1000">
+                                <t t-set="size_status" t-value="'badge-warning'" />
+                                <t t-set="message">Huge file size. The image should be optimized/reduced.</t>
+                            </t>
+                            <!-- above 1000 Kb: bad -->
+                            <t t-else="1">
+                                <t t-set="size_status" t-value="'badge-danger'"/>
+                                <t t-set="message">Optimization required! Reduce the image size or increase your compression settings.</t>
+                            </t>
+                            <span t-attf-class="badge #{size_status} o_product_image_size" t-esc="record.image_original.value" t-att-title="message"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
