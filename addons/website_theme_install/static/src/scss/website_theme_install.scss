@@ -25,24 +25,8 @@
         background: none;
         border: none;
 
-        .o_browser_bar:after {
-            content: "•••";
-            display: inline-block;
-            padding-left: 10px;
-            color: darken($o-theme-kanban-gray, 10%);
-            font: 12px/20px Courier, monospace;
-            letter-spacing: -1px;
-        }
-
-        &.o_theme_installed .o_theme_preview_top {
-            border: 3px solid $o-brand-primary;
-
-            .fa {
-                color: $o-brand-primary;
-            }
-        }
-
         .o_theme_preview_top {
+            position: relative;
             border: 1px solid darken($o-theme-kanban-gray, 20%);
             border-radius: 2px;
             transform-origin: center bottom;
@@ -72,7 +56,7 @@
         }
 
         .o_button_area {
-            @include o-position-absolute(20px, -1px, -1px, -1px);
+            @include o-position-absolute(0, 0, 0, 0);
             transition: opacity 100ms ease 0s;
             display: flex;
             flex-flow: column nowrap;
@@ -103,6 +87,10 @@
                 visibility: visible;
                 transition: opacity 0.2s ease 0.1s;
             }
+        }
+
+        &.o_theme_installed .o_theme_preview_top {
+            border: 3px solid $o-brand-primary;
         }
     }
 
