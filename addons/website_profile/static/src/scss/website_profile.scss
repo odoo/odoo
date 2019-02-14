@@ -31,37 +31,38 @@ $bronze: #eea91e;
     }
 }
 
+.o_wprofile_navtabs_container {
+    .o_wprofile_nav_tabs {
+        border-bottom: 0px;
+    }
+    .o_wprofile_navlink {
+        color: white;
+        border-radius: 0px;
+        height: 48px;
+        font-weight: bold;
+        padding-top: 12px;
+        border-left: 2px solid #875A7B;
+        text-align: center;
+        width: 120px;
+        &:hover {
+            border: 0px;
+            border-radius: 0px;
+            background-color: #875A7B;
+        }
+    }
+    .o_wprofile_navlink.active {
+        color: #212529;
+        background-color: #f2f2f2;
+        border: 0px;
+    }
+}
+
 .o_wprofile_content {
     margin: auto;
     background-color: #f2f2f2 !important;
     .o_wprofile_content_container{
         position: relative;
         top: -80px;
-        .o_wprofile_navtabs_container {
-            .o_wprofile_nav_tabs {
-                border-bottom: 0px;
-            }
-            .o_wprofile_navlink {
-                color: white;
-                border-radius: 0px;
-                height: 48px;
-                font-weight: bold;
-                padding-top: 12px;
-                border-left: 2px solid #875A7B;
-                text-align: center;
-                width: 120px;
-                &:hover {
-                    border: 0px;
-                    border-radius: 0px;
-                    background-color: #875A7B;
-                }
-            }
-            .o_wprofile_navlink.active {
-                color: #212529;
-                background-color: #f2f2f2;
-                border: 0px;
-            }
-        }
         .o_wprofile_detail {
             .o_wprofile_content_abstract {
                 top: 1px;
