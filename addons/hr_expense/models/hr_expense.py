@@ -57,6 +57,7 @@ class HrExpense(models.Model):
     total_amount = fields.Monetary("Total", compute='_compute_amount', store=True, currency_field='currency_id', digits=dp.get_precision('Account'))
     total_amount_company = fields.Monetary("Total (Company Currency)", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id', digits=dp.get_precision('Account'))
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company)
+    unit_id = fields.Many2one('res.partner', string="Operating Unit", ondelete="restrict", states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.user._get_default_unit())
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='sheet_id.currency_id', store=True, readonly=False)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, oldname='analytic_account')
@@ -117,6 +118,10 @@ class HrExpense(models.Model):
         attachment = dict((data['res_id'], data['res_id_count']) for data in attachment_data)
         for expense in self:
             expense.attachment_number = attachment.get(expense.id, 0)
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        self.unit_id = self.company_id.partner_id
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -184,7 +189,6 @@ class HrExpense(models.Model):
             raise UserError(_("You cannot report twice the same line!"))
         if len(self.mapped('employee_id')) != 1:
             raise UserError(_("You cannot report expenses for different employees in the same report."))
-
         todo = self.filtered(lambda x: x.payment_mode=='own_account') or self.filtered(lambda x: x.payment_mode=='company_account')
         return {
             'name': _('New Expense Report'),
@@ -222,6 +226,7 @@ class HrExpense(models.Model):
         move_values = {
             'journal_id': journal.id,
             'company_id': self.env.company.id,
+            'unit_id': self.unit_id.id,
             'date': account_date,
             'ref': self.sheet_id.name,
             # force the name to the default value, to avoid an eventual 'default_name' in the context
@@ -396,6 +401,7 @@ class HrExpense(models.Model):
                     'partner_id': expense.employee_id.address_home_id.commercial_partner_id.id,
                     'partner_type': 'supplier',
                     'journal_id': journal.id,
+                    'unit_id': expense.unit_id.id,
                     'payment_date': expense.date,
                     'state': 'reconciled',
                     'currency_id': expense.currency_id.id if different_currency else journal_currency.id,
@@ -606,6 +612,7 @@ class HrExpenseSheet(models.Model):
     user_id = fields.Many2one('res.users', 'Manager', readonly=True, copy=False, states={'draft': [('readonly', False)]}, tracking=True, oldname='responsible_id')
     total_amount = fields.Monetary('Total Amount', currency_field='currency_id', compute='_compute_amount', store=True, digits=dp.get_precision('Account'))
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company)
+    unit_id = fields.Many2one('res.partner', string="Operating Unit", readonly=True, ondelete="restrict", states={'draft': [('readonly', False)]}, default=lambda self: self.env.user._get_default_unit())
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     attachment_number = fields.Integer(compute='_compute_attachment_number', string='Number of Attachments')
     journal_id = fields.Many2one('account.journal', string='Expense Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=_default_journal_id, help="The journal used when the expense is done.")
@@ -636,6 +643,10 @@ class HrExpenseSheet(models.Model):
         is_expense_user = self.user_has_groups('hr_expense.group_hr_expense_team_approver')
         for sheet in self:
             sheet.can_reset = is_expense_user if is_expense_user else sheet.employee_id.user_id == self.env.user
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        self.unit_id = self.env.context.get('default_unit_id') or self.company_id.partner_id
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):

@@ -22,6 +22,14 @@ class Employee(models.Model):
         domain=_group_hr_expense_user_domain,
         help="User responsible of expense approval. Should be Expense approver.")
 
+    unit_id = fields.Many2one('res.partner', string="Operating Unit", ondelete="restrict",
+                              default=lambda self: self.env.user._get_default_unit())
+
+    def _sync_user(self, user):
+        vals = super(Employee, self)._sync_user(user)
+        vals['unit_id'] = user.unit_id.id
+        return vals
+
     @api.onchange('parent_id')
     def _onchange_parent_id(self):
         super(Employee, self)._onchange_parent_id()
