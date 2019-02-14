@@ -57,8 +57,8 @@
                                 <field name="use_existing_lots" groups="stock.group_production_lot"/>
                             </group>
                             <group string="Locations" groups="stock.group_stock_multi_locations">
-                                <field name="default_location_src_id" attrs="{'required': [('code', '=', 'internal')]}"/>
-                                <field name="default_location_dest_id" attrs="{'required': [('code', 'in', ('internal', 'incoming'))]}"/>
+                                <field name="default_location_src_id" attrs="{'required': [('code', '=', 'internal')]}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                                <field name="default_location_dest_id" attrs="{'required': [('code', 'in', ('internal', 'incoming'))]}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
                             </group>
                         </group>
                     </sheet>
@@ -245,8 +245,8 @@
                             <button name="action_assign_partner" string="Assign Partner" type="object" help="Assign the partner to the Operations. Use only if the partner is manually changed!"
                                     attrs="{'invisible': ['|', '|', ('move_line_exist', '=', False), ('state', 'not in', ('draft', 'assigned', 'confirmed')), ('picking_type_code', '=', 'internal')]}"
                                     class="oe_link oe_edit_only"/>
-                            <field name="location_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
-                            <field name="location_dest_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>
+                            <field name="location_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                            <field name="location_dest_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
                             <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
                         </group>
                         <group>
