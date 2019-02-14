@@ -137,6 +137,8 @@ class configmanager(object):
         group.add_option("--proxy-mode", dest="proxy_mode", action="store_true", my_default=False,
                          help="Activate reverse proxy WSGI wrappers (headers rewriting) "
                               "Only enable this when running behind a trusted web proxy!")
+        group.add_option("--proxy-trusted-x-for", dest="proxy_trusted_x_for", type="int", my_default=1,
+                         help="When using --proxy-mode, indicate how many proxies exist between Odoo and the public network, to know which value to trust in the X-Forwarded-For header")
         # HTTP: hidden backwards-compatibility for "*xmlrpc*" options
         hidden = optparse.SUPPRESS_HELP
         group.add_option("--xmlrpc-interface", dest="http_interface", help=hidden)
@@ -429,7 +431,7 @@ class configmanager(object):
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
             'dev_mode', 'shell_interface', 'smtp_ssl', 'load_language',
             'stop_after_init', 'without_demo', 'http_enable', 'syslog',
-            'list_db', 'proxy_mode',
+            'list_db', 'proxy_mode', 'proxy_trusted_x_for',
             'test_file', 'test_tags',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
