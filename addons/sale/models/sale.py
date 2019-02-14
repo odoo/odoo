@@ -1084,7 +1084,6 @@ class SaleOrderLine(models.Model):
             result = {'warning': warning}
             if product.sale_line_warn == 'block':
                 self.product_id = False
-                return result
 
         name = product.name_get()[0][1]
         if product.description_sale:
