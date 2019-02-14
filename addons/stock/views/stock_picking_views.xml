@@ -55,8 +55,8 @@
                                 <field name="use_existing_lots" groups="stock.group_production_lot"/>
                             </group>
                             <group string="Locations" groups="stock.group_stock_multi_locations">
-                                <field name="default_location_src_id" attrs="{'required': [('code', '=', 'internal')]}"/>
-                                <field name="default_location_dest_id" attrs="{'required': [('code', 'in', ('internal', 'incoming'))]}"/>
+                                <field name="default_location_src_id" attrs="{'required': [('code', '=', 'internal')]}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                                <field name="default_location_dest_id" attrs="{'required': [('code', 'in', ('internal', 'incoming'))]}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
                             </group>
                         </group>
                     </sheet>
@@ -229,8 +229,8 @@
                     <group>
                         <group>
                             <field name="partner_id" attrs="{'invisible': [('picking_type_code', '=', 'internal')]}"/>
-                            <field name="location_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>
-                            <field name="location_dest_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
+                            <field name="location_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                            <field name="location_dest_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
                             <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
                         </group>
                         <group>
