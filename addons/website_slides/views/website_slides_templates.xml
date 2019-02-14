@@ -473,7 +473,7 @@
                                     </div>
                                 </div>
                                 <!-- LikeButton widget -->
-                                <div class="text-muted mt4">
+                                <div t-if="slide.channel_id.channel_type == 'documentation' and slide.channel_id.allow_comment" class="text-muted mt4">
                                     <div class="float-right mb16 text-right o_wslides_like">
                                         <span
                                             class="o_wslides_like_up"
@@ -507,7 +507,7 @@
                                         <i class="fa fa-share-alt"></i> Share
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                <li t-if="slide.channel_id.allow_comment" class="nav-item">
                                     <a href="#discuss" aria-controls="discuss" t-attf-class="nav-link#{comments and ' active' or ''}" role="tab" data-toggle="tab">
                                         <i class="fa fa-comments-o"></i> Comments
                                     </a>
@@ -550,9 +550,12 @@
                                         The social sharing module will be unlocked when a moderator will allow your publication.
                                     </h4>
                                 </div>
-                                <div role="tabpanel" t-att-class="comments and 'tab-pane fade in show active' or 'tab-pane fade'" id="discuss">
+                                <div t-if="slide.channel_id.allow_comment" role="tabpanel" t-att-class="comments and 'tab-pane fade in show active' or 'tab-pane fade'" id="discuss">
                                     <t t-call="portal.message_thread">
                                         <t t-set="object" t-value="slide"/>
+                                        <t t-set="hash" t-value="message_post_hash"/>
+                                        <t t-set="pid" t-value="message_post_pid"/>
+                                        <t t-set="display_rating" t-value="slide.channel_id.channel_type == 'training'"/>
                                     </t>
                                 </div>
                                 <div role="tabpanel" class="tab-pane fade oe_slides_transcript" id="transcript">

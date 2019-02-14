@@ -6,8 +6,8 @@ from PIL import Image
 import base64
 import datetime
 import io
-import json
 import re
+import uuid
 
 from werkzeug import urls
 
@@ -88,7 +88,7 @@ class Slide(models.Model):
     Slide has various statistics like view count, embed count, like, dislikes """
 
     _name = 'slide.slide'
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin', 'rating.mixin']
     _description = 'Slides'
     _mail_post_access = 'read'
     _order_by_strategy = {
@@ -106,6 +106,9 @@ class Slide(models.Model):
         ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
     ]
 
+    def _default_access_token(self):
+        return str(uuid.uuid4())
+
     # description
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)
@@ -118,6 +121,7 @@ class Slide(models.Model):
         [('none', 'No One'), ('user', 'Authenticated Users Only'), ('public', 'Everyone')],
         string='Download Security',
         required=True, default='user')
+    access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     is_preview = fields.Boolean('Always visible', default=False)
     completion_time = fields.Float('# Hours', default=1, digits=(10, 4))
     image = fields.Binary('Image', attachment=True)
@@ -250,6 +254,10 @@ class Slide(models.Model):
                     url = '%s/slides/slide/%s' % (base_url, slug(slide))
                 slide.website_url = url
 
+    # ---------------------------------------------------------
+    # ORM Overrides
+    # ---------------------------------------------------------
+
     @api.model
     def create(self, values):
         # Do not publish slide if user has not publisher rights
@@ -305,6 +313,10 @@ class Slide(models.Model):
             }
         return super(Slide, self).get_access_action(access_uid)
 
+    # ---------------------------------------------------------
+    # Business Methods
+    # ---------------------------------------------------------
+
     @api.multi
     def _notify_get_groups(self, message, groups):
         """ Add access button to everyone if the document is active. """
@@ -343,6 +355,15 @@ class Slide(models.Model):
                 notif_layout='mail.mail_notification_light',
             )
         return True
+
+    def _generate_signed_token(self, partner_id):
+        """ Lazy generate the acces_token and return it signed by the given partner_id
+            :rtype tuple (string, int)
+            :return (signed_token, partner_id)
+        """
+        if not self.access_token:
+            self.write({'access_token': self._default_access_token()})
+        return self._sign_token(partner_id)
 
     @api.one
     def send_share_email(self, email):
