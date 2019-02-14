@@ -209,30 +209,36 @@ class HrBenefit(models.Model):
         """
             Duplicate data to keep the complexity in benefit and not mess up payroll, etc.
         """
+        attendance_type = self.env.ref('hr_payroll.benefit_type_attendance')
         attendance_benefits = self.filtered(lambda b:
             not b.benefit_type_id.is_leave and
             # Normal benefit are global to all employees -> avoid duplicating it
-            not b.benefit_type_id == self.env.ref('hr_payroll.benefit_type_attendance'))
+            not b.benefit_type_id == attendance_type)
         leave_benefits = self.filtered(lambda b: b.benefit_type_id.is_leave)
 
+        benefits_to_duplicate = self.env['hr.benefit']
         for benefit in attendance_benefits:
             benefit = benefit._split_by_day()
-            benefit._duplicate_to_calendar_attendance()
+            benefits_to_duplicate |= benefit
+
+        benefits_to_duplicate._duplicate_to_calendar_attendance()
         leave_benefits._duplicate_to_calendar_leave()
 
     @api.multi
     def _duplicate_to_calendar_leave(self):
-
+        vals_list = []
         for benefit in self:
             if not benefit.leave_id:
-                self.env['resource.calendar.leaves'].create({
+                vals_list += [{
                     'name': benefit.name,
                     'date_from': benefit.date_start,
                     'date_to': benefit.date_stop,
                     'calendar_id': benefit.employee_id.resource_calendar_id.id,
                     'resource_id': benefit.employee_id.resource_id.id,
                     'benefit_type_id': benefit.benefit_type_id.id,
-                })
+                }]
+        if vals_list:
+            self.env['resource.calendar.leaves'].create(vals_list)
 
     @api.multi
     def _duplicate_to_calendar_attendance(self):
@@ -246,10 +252,11 @@ class HrBenefit(models.Model):
         if any(data[0].date() != data[1].date() for data in mapped_data.values()):
             raise ValidationError(_("You can't validate a benefit that covers several days."))
 
+        vals_list = []
         for benefit in self:
             start, end = mapped_data.get(benefit)
 
-            self.env['resource.calendar.attendance'].create({
+            vals_list += [{
                 'name': benefit.name,
                 'dayofweek': str(start.weekday()),
                 'date_from': start.date(),
@@ -260,7 +267,8 @@ class HrBenefit(models.Model):
                 'day_period': 'morning' if end.hour <= 12 else 'afternoon',
                 'resource_id': benefit.employee_id.resource_id.id,
                 'benefit_type_id': benefit.benefit_type_id.id,
-            })
+            }]
+        self.env['resource.calendar.attendance'].create(vals_list)
 
     @api.model
     def action_validate(self, ids):
