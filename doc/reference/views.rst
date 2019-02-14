@@ -1267,56 +1267,91 @@ take the following attributes:
 ``date_start`` (required)
   name of the field providing the start datetime of the event for each
   record.
-``date_stop``
+``date_stop`` (required)
   name of the field providing the end duration of the event for each
-  record. Can be replaced by ``date_delay``. One (and only one) of
-  ``date_stop`` and ``date_delay`` must be provided.
+  record.
+``color``
+  name of the field used to color the pills according to its value
+``decoration-{$name}``
+    allow changing the style of a row's text based on the corresponding
+    record's attributes.
 
-  If the field is ``False`` for a record, it's assumed to be a "point event"
-  and the end date will be set to the start date
-``date_delay``
-  name of the field providing the duration of the event
-``duration_unit``
-  one of ``minute``, ``hour`` (default), ``day``, ``week``, ``month``, ``year``
+    Values are Python expressions. For each record, the expression is evaluated
+    with the record's attributes as context values and if ``true``, the
+    corresponding style is applied to the row. Other context values are
+    ``uid`` (the id of the current user) and ``current_date`` (the current date
+    as a string of the form ``yyyy-MM-dd``).
 
+    ``{$name}`` can be any `bootstrap contextual color
+    <https://getbootstrap.com/docs/3.3/components/#available-variations>`_ (``danger``,
+    ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 ``default_group_by``
   name of a field to group tasks by
-``type``
-  ``gantt`` classic gantt view (default)
-
-  ``consolidate`` values of the first children are consolidated in the gantt's task
-
-  ``planning`` children are displayed in the gantt's task
-``consolidation``
-  field name to display consolidation value in record cell
-``consolidation_max``
-  dictionary with the "group by" field as key and the maximum consolidation
-  value that can be reached before displaying the cell in red
-  (e.g. ``{"user_id": 100}``)
-``consolidation_exclude``
-  name of the field that describe if the task has to be excluded
-  from the consolidation
-  if set to true it displays a striped zone in the consolidation line
-
-  .. warning::
-      The dictionnary definition must use double-quotes, ``{'user_id': 100}`` is
-      not a valid value
 ``create``, ``edit``
     allows *dis*\ abling the corresponding action in the view by setting the
-    corresponding attribute to ``false``
-``string``
-  string to display next to the consolidation value, if not specified, the label
-  of the consolidation field will be used
-``fold_last_level``
-  If a value is set, the last grouping level is folded
-``round_dnd_dates``
-  enables rounding the task's start and end dates to the nearest scale marks
-``drag_resize``
-  resizing of the tasks, default is ``true``
-
+    corresponding attribute to ``false``. If ``create`` is enabled, a "+" button
+    will be displayed while hovering each time slot to create a new record in
+    that slot, and if ``edit`` is enabled, a "magnifying glass" button will be
+    displayed to plan records into that time slot.
 ``progress``
   name of a field providing the completion percentage for the record's event,
   between 0 and 100
+``string``
+  title of the gantt view
+``precision``
+  JSON object specifying snapping precisions for the pills in each scale.
+
+  * Possible values for scale ``day`` are (default: ``hour``):
+
+    ``hour``: records times snap to full hours (ex: 7:12 becomes 8:00)
+
+    ``hour:half``: records times snap to half hours (ex: 7:12 becomes 7:30)
+
+    ``hour:quarter``: records times snap to half hours (ex: 7:12 becomes 7:15)
+
+  * Possible values for scale ``week`` are (default: ``day:half``):
+
+    ``day``: records times snap to full days (ex: 7:28 AM becomes 11:59:59 PM)
+
+    ``day:half``: records times snap to half hours (ex: 7:28 AM becomes 12:00 PM)
+
+  * Possible values for scale ``month`` are (default: ``day:half``):
+
+    ``day``: records times snap to full days (ex: 7:28 AM becomes 11:59:59 PM)
+
+    ``day:half``: records times snap to half hours (ex: 7:28 AM becomes 12:00 PM)
+
+  * Scale ``year`` always snap to full day.
+  Example of precision attribute: ``{"day": "hour:quarter", "week": "day:half", "month": "day"}``
+``total_row``
+  boolean to control whether the row containing the total count of records should
+  be displayed. (default: ``false``)
+``collapse_first_level``
+  boolean to control whether it is possible to collapse each row if grouped by
+  one field. (default: ``false``, the collapse starts when grouping by two fields)
+``display_unavailability``
+  boolean to mark the dates returned by the ``gantt_unavailability`` function of
+  the model as available inside the gantt view. Records can still be scheduled
+  in them, but their unavailability is visually displayed. (default: ``false``)
+``default_scale``
+  default scale when rendering the view. Possible values are (default: ``month``):
+
+  * ``day``
+  * ``week``
+  * ``month``
+  * ``year``
+
+``templates``
+  defines the :ref:`reference/qweb` template ``gantt-popover`` which is used
+  when the user hovers over one of the records in the gantt view.
+
+  The gantt view uses mostly-standard :ref:`javascript qweb
+  <reference/qweb/javascript>` and provides the following context variables:
+
+  ``widget``
+    the current :js:class:`GanttRow`, can be used to fetch some
+    meta-information. The ``getColor`` method to convert in a color integer is
+    also available directly in the template context without using ``widget``.
 
 .. _reference/views/diagram:
 
