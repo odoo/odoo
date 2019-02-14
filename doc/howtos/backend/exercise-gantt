@@ -15,9 +15,9 @@ diff --git a/openacademy/models.py b/openacademy/models.py
      @api.depends('seats', 'attendee_ids')
      def _taken_seats(self):
          for r in self:
-@@ -110,6 +113,15 @@ class Session(models.Model):
-             end_date = fields.Datetime.from_string(r.end_date)
-             r.duration = (end_date - start_date).days + 1
+@@ -107,6 +110,15 @@ class Session(models.Model):
+             # so add one day to get 5 days instead
+             r.duration = (r.end_date - r.start_date).days + 1
  
 +    @api.depends('duration')
 +    def _get_hours(self):

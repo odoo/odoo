@@ -15,7 +15,7 @@ diff --git a/openacademy/models.py b/openacademy/models.py
      @api.depends('seats', 'attendee_ids')
      def _taken_seats(self):
          for r in self:
-@@ -122,6 +125,11 @@ class Session(models.Model):
+@@ -119,6 +122,11 @@ class Session(models.Model):
          for r in self:
              r.duration = r.hours / 24
  
