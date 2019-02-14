@@ -37,7 +37,7 @@ class HrBenefit(models.Model):
     leave_id = fields.Many2one('hr.leave', string='Leave')
 
     _sql_constraints = [
-        ('_unique', 'unique (employee_id, date_start, date_stop, benefit_type_id)', "Benefit already exists for this attendence"),
+        ('_unique', 'unique (date_start, date_stop, employee_id, benefit_type_id)', "Benefit already exists for this attendance"),
         ('_benefit_has_end', 'check (date_stop IS NOT NULL OR duration <> 0)', 'Benefit must end. Please define an end date or a duration.'),
         ('_benefit_start_before_end', 'check (date_stop is null OR (date_stop > date_start))', 'Starting time should be before end time.')
     ]
@@ -46,12 +46,16 @@ class HrBenefit(models.Model):
     def _onchange_duration(self):
         self._inverse_duration()
 
+    def _get_duration(self, date_start, date_stop):
+        if not date_start or not date_stop:
+            return 0
+        dt = date_stop - date_start
+        return dt.days * 24 + dt.seconds / 3600 # Number of hours
+
     @api.depends('date_stop', 'date_start')
     def _compute_duration(self):
         for benefit in self:
-            if benefit.date_start and benefit.date_stop:
-                dt = benefit.date_stop - benefit.date_start
-                benefit.duration = dt.days * 24 + dt.seconds / 3600 # Number of hours
+            benefit.duration = benefit._get_duration(benefit.date_start, benefit.date_stop)
 
     def _inverse_duration(self):
         for benefit in self:
@@ -98,7 +102,6 @@ class HrBenefit(models.Model):
 
     @api.multi
     def _compute_conflicts_leaves_to_approve(self):
-
         if not self:
             return False
 
@@ -123,21 +126,30 @@ class HrBenefit(models.Model):
             })
         return bool(conflicts)
 
-    def _safe_duplicate_create(self, vals):
+    def _safe_duplicate_create(self, vals_list, date_start, date_stop):
         """
-        Create benefit but silently abord if it already exists in the database (according to the _unique constraints).
-        @return: new record if it didn't exist, empty recordset otherwise.
+        Create benefits between date_start and date_stop according to vals_list.
+        Skip the values in vals_list if a benefit already exists for the given
+        date_start, date_stop, employee_id, benefit_type_id
+        :return: new record id if it didn't exist.
         """
-        try:
-            with mute_logger('odoo.sql_db'), self.env.cr.savepoint():
-                # Any database call will be run inside a postgresql savepoint which is
-                # rolledback if an exception occurs allowing to make subsequent calls in the transaction.
-                # (Otherwise InternalError is raised by any subsequent database operations)
-                return self.create(vals)
-        except IntegrityError as err:
-            if 'hr_benefit__unique' not in err.pgerror:
-                raise err
-            return self.env['hr.benefit']
+        # The search_read should be fast as date_start and date_stop are indexed from the
+        # unique sql constraint
+        month_recs = self.search_read([('date_start', '>=', date_start), ('date_stop', '<=', date_stop)],
+                                      ['employee_id', 'date_start', 'date_stop', 'benefit_type_id'])
+        existing_entries = {(
+            r['date_start'],
+            r['date_stop'],
+            r['employee_id'][0],
+            r['benefit_type_id'][0] if r['benefit_type_id'] else False,
+        ) for r in month_recs}
+        new_vals = [v for v in vals_list if (v['date_start'].replace(tzinfo=None), v['date_stop'].replace(tzinfo=None), v['employee_id'], v['benefit_type_id']) not in existing_entries]
+        # Remove duplicates from vals_list, shouldn't be necessary from saas-12.2
+        unique_new_vals = set()
+        for values in new_vals:
+            unique_new_vals.add(tuple(values.items()))
+        new_vals = [dict(values) for values in unique_new_vals]
+        return self.create(new_vals)
 
     def action_leave(self):
         leave = self.leave_id
