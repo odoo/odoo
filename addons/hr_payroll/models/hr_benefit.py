@@ -20,8 +20,7 @@ class HrBenefit(models.Model):
 
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
-    employee_id = fields.Many2one('hr.employee', required=True,
-        domain=lambda self: [('contract_ids.state', 'in', ('open', 'pending')), ('company_id', '=', self.env.user.company_id.id)])
+    employee_id = fields.Many2one('hr.employee', required=True, domain=[('contract_ids.state', 'in', ('open', 'pending'))])
     date_start = fields.Datetime(required=True, string='Start')
     date_stop = fields.Datetime(string='End')
     duration = fields.Float(compute='_compute_duration', inverse='_inverse_duration', store=True, string="Hours")
@@ -76,20 +75,17 @@ class HrBenefit(models.Model):
             return False
         undefined_type = self.filtered(lambda b: not b.benefit_type_id)
         undefined_type.write({'display_warning': True})
-        conflict = self._compute_schedule_conflicts()
+        conflict = self._mark_conflicting_benefits(min(self.mapped('date_start')), max(self.mapped('date_stop')))
         conflict_with_leaves = self._compute_conflicts_leaves_to_approve()
         return undefined_type or conflict or conflict_with_leaves
 
-    @api.multi
-    def _compute_schedule_conflicts(self):
+    @api.model
+    def _mark_conflicting_benefits(self, start, stop):
         conflict = False
-        date_start_benefits = min(self.mapped('date_start'))
-        date_stop_benefits = max(self.mapped('date_stop'))
         domain = [
-            ('date_start', '<', date_stop_benefits),
-            ('date_stop', '>', date_start_benefits),
+            ('date_start', '<', stop),
+            ('date_stop', '>', start),
         ]
-
         benefs = self.search(domain)
         benefits_by_employee = itertools.groupby(benefs, lambda b: b.employee_id)
         for employee, benefs in benefits_by_employee:
