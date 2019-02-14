@@ -21,9 +21,6 @@
                         <t t-set="image_url" t-value="has_image ? 'web/image/' + record.image_ids.raw_value[0] : record.icon.value"/>
 
                         <div class="o_theme_preview_top bg-white mb4">
-                            <div class="o_browser_bar">
-                                <i states="installed" t-if="record.is_installed_on_current_website.raw_value" class="text-center ml4 img-circle fa fa-check-circle" role="img" aria-label="Installed" title="Installed"/>
-                            </div>
                             <div t-attf-class="bg-gray-lighter #{has_screenshot? 'o_theme_screenshot' : (has_image ? 'o_theme_cover' : 'o_theme_logo')}" t-attf-style="background-image: url(#{image_url});"/>
                             <div t-if="record.is_installed_on_current_website.raw_value" class="o_button_area">
                                 <button type="object" name="button_refresh_theme" class="btn btn-primary">Update theme</button>
@@ -35,6 +32,10 @@
                                 <hr t-if="record.url.value"/>
                                 <a role="button" t-if="record.url.value" class="btn btn-secondary" t-att-href="record.url.value" target="_blank">Live Preview</a>
                             </div>
+                            <i states="installed" t-if="record.is_installed_on_current_website.raw_value"
+                                class="fa fa-check position-absolute p-1 m-2 rounded-circle bg-primary shadow"
+                                style="top: 0; right: 0;"
+                                role="img" aria-label="Installed" title="Installed"/>
                         </div>
                         <div class="o_theme_preview_bottom clearfix">
                             <h5 t-if="record.display_name.value" class="text-uppercase float-left">
