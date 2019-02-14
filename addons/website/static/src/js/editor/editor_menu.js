@@ -136,12 +136,14 @@ var EditorMenu = Widget.extend({
         return $wrapwrap.find('[data-oe-model]')
             .not('.o_not_editable')
             .filter(function () {
-                return !$(this).closest('.o_not_editable').length;
+                var $parent = $(this).closest('.o_editable, .o_not_editable');
+                return !$parent.length || $parent.hasClass('o_editable');
             })
             .not('link, script')
             .not('[data-oe-readonly]')
             .not('img[data-oe-field="arch"], br[data-oe-field="arch"], input[data-oe-field="arch"]')
             .not('.oe_snippet_editor')
+            .not('hr, br, input, textarea')
             .add('.o_editable');
     },
 

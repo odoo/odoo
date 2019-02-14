@@ -199,7 +199,6 @@ var WysiwygMultizone = Wysiwyg.extend({
             self.$('[data-oe-readonly]').addClass('o_not_editable').attr('contenteditable', false);
             self.$('.oe_structure').attr('contenteditable', false).addClass('o_fake_not_editable');
             self.$('[data-oe-field][data-oe-type="image"]').attr('contenteditable', false).addClass('o_fake_not_editable');
-            self.$('[data-oe-field]:not([contenteditable])').attr('contenteditable', true).addClass('o_fake_editable');
         });
     },
     /**
