@@ -14,10 +14,10 @@ class HrLeave(models.Model):
     _inherit = 'hr.leave'
 
     @api.multi
-    def copy_to_benefits(self):
+    def _copy_to_benefits(self):
         for leave in self:
             benefit_type = leave.holiday_status_id.benefit_type_id
-            self.env['hr.benefit'].safe_duplicate_create({
+            self.env['hr.benefit']._safe_duplicate_create({
                 'name': "%s%s" % (benefit_type.name + ": " if benefit_type else "", leave.employee_id.name),
                 'date_start': leave.date_from,
                 'date_stop': leave.date_to,
@@ -32,7 +32,7 @@ class HrLeave(models.Model):
     def _cancel_benefit_conflict(self):
         benefits = self.env['hr.benefit'].search([('leave_id', 'in', self.ids)])
         if benefits:
-            self.copy_to_benefits()
+            self._copy_to_benefits()
 
             # create new benefits where the leave does not cover the full benefit
             benefits_intervals = Intervals(intervals=[(b.date_start, b.date_stop, b) for b in benefits])
@@ -48,7 +48,7 @@ class HrLeave(models.Model):
                 benefit_start = interval[0] + relativedelta(seconds=1) if leave.date_to == interval[0] else interval[0]
                 benefit_stop = interval[1] - relativedelta(seconds=1) if leave.date_from == interval[1] else interval[1]
 
-                self.env['hr.benefit'].safe_duplicate_create({
+                self.env['hr.benefit']._safe_duplicate_create({
                     'name': "%s: %s" % (benefit_type.name, employee.name),
                     'date_start': benefit_start,
                     'date_stop': benefit_stop,

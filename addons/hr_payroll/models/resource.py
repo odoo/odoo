@@ -42,7 +42,7 @@ class ResourceCalendarLeave(models.Model):
 class ResourceMixin(models.AbstractModel):
     _inherit = "resource.mixin"
 
-    def get_benefit_days_data(self, benefit_type, from_datetime, to_datetime, calendar=None):
+    def _get_benefit_days_data(self, benefit_type, from_datetime, to_datetime, calendar=None):
         """
             By default the resource calendar is used, but it can be
             changed using the `calendar` argument.
