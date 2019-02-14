@@ -1211,16 +1211,17 @@ class AccountMoveLine(models.Model):
         """ Undo a reconciliation """
         if not self:
             return True
-        rec_move_ids = self.env['account.partial.reconcile']
-        for account_move_line in self:
-            for invoice in account_move_line.payment_id.invoice_ids:
-                if invoice.id == self.env.context.get('invoice_id') and account_move_line in invoice.payment_move_line_ids:
-                    account_move_line.payment_id.write({'invoice_ids': [(3, invoice.id, None)]})
-            rec_move_ids += account_move_line.matched_debit_ids
-            rec_move_ids += account_move_line.matched_credit_ids
+        rec_move_ids = self.env['account.partial.reconcile'].search([
+            '|', ('credit_move_id', 'in', self.ids),
+            ('debit_move_id', 'in', self.ids),
+        ])
         if self.env.context.get('invoice_id'):
-            current_invoice = self.env['account.invoice'].browse(self.env.context['invoice_id'])
-            aml_to_keep = current_invoice.move_id.line_ids | current_invoice.move_id.line_ids.mapped('full_reconcile_id.exchange_move_id.line_ids')
+            invoice = self.env['account.invoice'].browse(self.env.context['invoice_id'])
+            for account_move_line in self & invoice.payment_move_line_ids:
+                if invoice in account_move_line.payment_id.invoice_ids:
+                    account_move_line.payment_id.write({
+                        'invoice_ids': [(3, invoice.id, None)]})
+            aml_to_keep = invoice.move_id.line_ids | invoice.move_id.line_ids.mapped('full_reconcile_id.exchange_move_id.line_ids')
             rec_move_ids = rec_move_ids.filtered(
                 lambda r: (r.debit_move_id + r.credit_move_id) & aml_to_keep
             )
