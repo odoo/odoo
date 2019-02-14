@@ -46,7 +46,7 @@
                                 <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                             </button>
                         </div>
-                        <field name="image" widget="image" class="oe_avatar" options='{"preview_image": "image_thumb"}' readonly="1"/>
+                        <field name="image" widget="image" class="oe_avatar" options='{"preview_image": "image_thumb"}' attrs="{'required': [('slide_type', 'not in', ('document'))], 'readonly': [('slide_type', 'in', ('document', 'presentation', 'video'))]}"/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name" string="Name"/>
@@ -68,8 +68,8 @@
                             </page>
                             <page string="Document">
                                 <group>
-                                    <field name="url" attrs="{'required': [('image', '=', False)]}"/>
                                     <field name="slide_type" readonly="1"/>
+                                    <field name="url" attrs="{'required': [('slide_type', 'in', ('document', 'video'))], 'readonly': [('slide_type', 'in', ('document', 'video'))]}"/>
                                     <field name="document_id" readonly="1" attrs="{'invisible': [('document_id', '=', False)]}"/>
                                     <field name="mime_type" readonly="1"/>
                                     <field name="datas" readonly="1"/>
