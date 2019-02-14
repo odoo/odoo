@@ -239,6 +239,7 @@
                                    attrs="{'invisible': [('pay_now', '!=', 'pay_now')], 'required': [('pay_now', '=', 'pay_now')]}"/>
                             <field name="account_id" options="{'no_create': True}" groups="account.group_account_user"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="unit_id" domain="[('company_unit_id', '=', company_id)]" options="{'no_create': True, 'no_open': True}" groups="account.group_multi_operating_unit" required="1"/>
                         </group>
                         <group>
                             <field name="journal_id"
@@ -357,6 +358,7 @@
                                    attrs="{'invisible': [('pay_now', '!=', 'pay_now')], 'required': [('pay_now', '=', 'pay_now')]}"/>
                             <field name="account_id" options="{'no_create': True}" groups="account.group_account_user"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="unit_id" domain="[('company_unit_id', '=', company_id)]" options="{'no_create': True, 'no_open': True}" groups="account.group_multi_operating_unit" required="1"/>
                             <field name="reference"/>
                         </group>
                         <group>

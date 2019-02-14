@@ -60,6 +60,8 @@ class AccountVoucher(models.Model):
     company_id = fields.Many2one('res.company', 'Company',
         store=True, readonly=True, states={'draft': [('readonly', False)]},
         related='journal_id.company_id', default=lambda self: self._get_company())
+    unit_id = fields.Many2one('res.partner', string="Operating Unit", ondelete="restrict",
+        default = lambda self: self.env.user._get_default_unit())
     state = fields.Selection([
         ('draft', 'Draft'),
         ('cancel', 'Cancelled'),
@@ -256,6 +258,7 @@ class AccountVoucher(models.Model):
             'payment_date': self.date,
             'journal_id': self.payment_journal_id.id,
             'company_id': self.company_id.id,
+            'unit_id': self.unit_id.id,
             'communication': self.name,
         }
 
