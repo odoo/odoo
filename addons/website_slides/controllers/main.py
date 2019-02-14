@@ -192,20 +192,24 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/channel/add'], type='http', auth='user', methods=['POST'], website=True)
     def slide_channel_create(self, *args, **kw):
+        channel = request.env['slide.channel'].create(self._slide_channel_prepare_values(**kw))
+        return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
+
+    def _slide_channel_prepare_values(self, **kw):
         # `tag_ids` is a string representing a list of int with coma. i.e.: '2,5,7'
         # We don't want to allow user to create tags and tag groups on the fly.
         tag_ids = []
         if kw.get('tag_ids'):
             tag_ids = [int(item) for item in kw['tag_ids'].split(',')]
 
-        channel = request.env['slide.channel'].create({
+        return {
             'name': kw['name'],
             'description': kw.get('description'),
             'channel_type': kw.get('channel_type', 'documentation'),
             'user_id': request.env.user.id,
             'tag_ids': [(6, 0, tag_ids)],
-        })
-        return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
+            'allow_comment': bool(kw.get('allow_comment')),
+        }
 
     # --------------------------------------------------
     # SLIDE.SLIDE CONTOLLERS
@@ -218,6 +222,12 @@ class WebsiteSlides(WebsiteProfile):
 
         values = self._get_slide_detail(slide)
         self._set_viewed_slide(slide)
+        # allow rating and comments
+        if slide.channel_id.allow_comment:
+            values.update({
+                'message_post_hash': slide._generate_signed_token(request.env.user.partner_id.id),
+                'message_post_pid': request.env.user.partner_id.id,
+            })
         return request.render('website_slides.slide_detail_view', values)
 
     @http.route('''/slides/slide/<model("slide.slide"):slide>/pdf_content''',
