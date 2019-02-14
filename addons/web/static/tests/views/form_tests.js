@@ -4228,6 +4228,48 @@ QUnit.module('Views', {
     });
 
 
+    QUnit.test('shift+tab should set focus on last activate widget', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet><group>' +
+                        '<field name="product_id"/>' +
+                        '<field name="foo"/>' +
+                    '</group></sheet>' +
+                '</form>',
+            archs: {
+                'product,false,form': '<form>' +
+                        '<sheet>' +
+                            '<group>' +
+                                '<field name="name"/>' +
+                            '</group>' +
+                        '</sheet>' +
+                    '</form>',
+            },
+            res_id: 2,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(document.activeElement, form.$('.o_field_widget[name="product_id"] input')[0],
+            "product_id should be focused");
+
+        form.$('.o_field_widget[name="product_id"] input').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
+            "foo should be focused");
+
+        form.$('input[name="foo"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        // simulate shift+tab on active element
+        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
+
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
+            "foo(last active element) should be focused");
+        form.destroy();
+    });
+
     QUnit.test('skip invisible fields when navigating with TAB', function (assert) {
         assert.expect(1);
 
