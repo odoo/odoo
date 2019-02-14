@@ -353,6 +353,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         pass
 
+    def _valid_field_parameter(self, field, name):
+        """ Return whether the given parameter name is valid for the field. """
+        return name == 'related_sudo'
+
     @api.model
     def _add_field(self, name, field):
         """ Add the given ``field`` under the given ``name`` in the class """
