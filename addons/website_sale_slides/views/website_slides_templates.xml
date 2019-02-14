@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<odoo><data>
+
+<template id='course_main' inherit_id="website_slides.course_main">
+    <!-- Channel main template: override button to join channel -->
+    <xpath expr="//div[hasclass('o_wslides_join_channel')]" position="inside">
+        <t t-if="not channel.is_member and channel.visibility == 'payment'">
+            <t t-if="channel.product_id.website_published">
+                <h4>
+                    <!-- original discounted price, if any -->
+                    <span t-att-class="'text-danger oe_default_price %s' % ('' if product_info['has_discounted_price'] else 'd-none')"
+                        style="text-decoration: line-through; white-space: nowrap;"
+                        t-esc="product_info['list_price']"
+                        t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
+                        <!-- real price -->
+                    <b class="oe_price" style="white-space: nowrap;"
+                        t-esc="product_info['price']"
+                        t-options="{'widget': 'monetary', 'display_currency': product_info['currency_id']}"/>
+                    <span itemprop="price" style="display:none;" t-esc="product_info['price']"/>
+                    <span itemprop="priceCurrency" style="display:none;" t-esc="product_info['currency_id'].name"/>
+                </h4>
+                <a role="button" class="col-10 btn btn-primary" t-att-href="channel.product_id.website_url">
+                    <span class="cta-title text_small_caps">Buy Course</span>
+                </a>
+            </t>
+            <t t-else="">
+                <a role="button" class="col-10 btn btn-light" href="#">
+                    <span class="cta-title text_small_caps">Course Not Buyable</span>
+                </a>
+            </t>
+        </t>
+    </xpath>
+</template>
+
+</data></odoo>
