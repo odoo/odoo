@@ -6,7 +6,6 @@ from PIL import Image
 import base64
 import datetime
 import io
-import json
 import re
 
 from werkzeug import urls
@@ -121,6 +120,7 @@ class Slide(models.Model):
     is_preview = fields.Boolean('Always visible', default=False)
     completion_time = fields.Float('# Hours', default=1, digits=(10, 4))
     image = fields.Binary('Image', attachment=True)
+    # TODO DBE : review image medium and small - using standard image calls (see web/image/.. route)
     image_medium = fields.Binary('Medium', compute="_get_image", store=True, attachment=True)
     image_thumb = fields.Binary('Thumbnail', compute="_get_image", store=True, attachment=True)
     # subscribers

@@ -8,11 +8,12 @@
     'summary': 'Access the website profile of the users',
     'description': """Allows to acces the website profile of the users and see their statistics (karma, badges, etc..)""",
     'depends': [
-        'website',
+        'website_partner',
         'gamification'
     ],
     'data': [
         'views/gamification_badge_views.xml',
+        'views/website_profile.xml',
         'security/ir.model.access.csv',
     ],
     'auto_install': False,
