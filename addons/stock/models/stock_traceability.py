@@ -108,8 +108,7 @@ class MrpStockReport(models.TransientModel):
                     ('lot_id', '=', context.get('active_id')),
                     ('location_dest_id.usage', '!=', 'internal'),
                     ('state', '=', 'done'),
-                    ('move_id.returned_move_ids', '=', False),
-                ])
+                ]).filtered(lambda s: not s.move_id.returned_move_ids)
                 res += self._lines(line_id, model_id=model_id, model='stock.move.line', level=level, parent_quant=parent_quant,
                                   stream=stream, obj_ids=move_ids)
                 quant_ids = self.env['stock.quant'].search([
