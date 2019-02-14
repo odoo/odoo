@@ -35,22 +35,9 @@ class HrBenefit(models.Model):
 
     _sql_constraints = [
         ('_unique', 'unique (employee_id, date_start, date_stop, benefit_type_id)', "Benefit already exists for this attendence"),
+        ('_benefit_has_end', 'check (date_stop IS NOT NULL OR duration <> 0)', 'Benefit must end. Please define an end date or a duration.'),
+        ('_benefit_start_before_end', 'check (date_stop is null OR (date_stop > date_start))', 'Starting time should be before end time.')
     ]
-
-    @api.constrains('date_stop', 'duration')
-    def _check_validity_benefit_ends(self):
-        """ verifies if benefit has an end. """
-        for benefit in self:
-            if not (benefit.date_stop or benefit.duration):
-                    raise exceptions.ValidationError(_('Benefit must end. Please define an end date or a duration.'))
-
-    @api.constrains('date_start', 'date_stop')
-    def _check_validity_start_before_end(self):
-        """ verifies if benefit has an end. """
-        for benefit in self:
-            if benefit.date_stop < benefit.date_start:
-                    raise exceptions.ValidationError(_('Starting time should be before end time.'))
-
 
     @api.onchange('duration')
     def _onchange_duration(self):
