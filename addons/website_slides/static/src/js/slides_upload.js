@@ -144,6 +144,11 @@ var SlideUploadDialog = Dialog.extend({
                 'mime_type': this.file.type,
                 'datas': this.file.data
             });
+        } else if (values['slide_type'] === 'webpage') {
+            _.extend(values, {
+                'mime_type': 'text/html',
+                'image': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data,
+            });
         } else if (/^image\/.*/.test(this.file.type)) {
             _.extend(values, {
                 'slide_type': 'infographic',
@@ -347,9 +352,12 @@ var SlideUploadDialog = Dialog.extend({
         }
     },
     _onChangeSlideUpload: function (ev) {
+        var self = this;
         this._alertRemove();
 
-        var self = this;
+        var $input = $(ev.currentTarget);
+        var preventOnchange = $input.data('preventOnchange');
+
         var file = ev.target.files[0];
         var isImage = /^image\/.*/.test(file.type);
         var loaded = false;
@@ -440,9 +448,11 @@ var SlideUploadDialog = Dialog.extend({
             };
         }
 
-        var input = file.name;
-        var inputVal = input.substr(0, input.lastIndexOf('.')) || input;
-        this._formSetFieldValue('name', inputVal);
+        if (!preventOnchange) {
+            var input = file.name;
+            var inputVal = input.substr(0, input.lastIndexOf('.')) || input;
+            this._formSetFieldValue('name', inputVal);
+        }
     },
     _onChangeSlideUrl: function (ev) {
         var self = this;
