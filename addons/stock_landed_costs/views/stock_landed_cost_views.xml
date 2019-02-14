@@ -31,6 +31,8 @@
                                 <field name="picking_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('state', '=', 'done'), ('picking_type_code', '!=', 'internal')]"/>
                             </group>
                             <group>
+                                <field name="company_id" readonly="1"/>
+                                <field name="unit_id" domain="[('company_unit_id','=',company_id)]" options="{'no_create': True, 'no_open': True}" groups="account.group_multi_operating_unit"/>
                                 <field name="account_journal_id"/>
                                 <field name="account_move_id"/>
                             </group>
