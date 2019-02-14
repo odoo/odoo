@@ -143,16 +143,16 @@ var KanbanView = BasicView.extend({
      */
     _createSearchPanel: function (parent) {
         var self = this;
-        var defaultCategoryValues = {};
+        var defaultValues = {};
         Object.keys(this.loadParams.context).forEach(function (key) {
             var match = /^searchpanel_default_(.*)$/.exec(key);
             if (match) {
-                defaultCategoryValues[match[1]] = self.loadParams.context[key];
+                defaultValues[match[1]] = self.loadParams.context[key];
             }
         });
         var controlPanelDomain = this.loadParams.domain;
         var searchPanel = new this.config.SearchPanel(parent, {
-            defaultCategoryValues: defaultCategoryValues,
+            defaultValues: defaultValues,
             fields: this.fields,
             model: this.loadParams.modelName,
             searchDomain: controlPanelDomain,

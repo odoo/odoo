@@ -1443,6 +1443,121 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
+
+    QUnit.test('specify active filter values in context', function (assert) {
+        assert.expect(4);
+
+        var expectedDomain = [
+            ['company_id', 'in', [5]],
+            ['state', 'in', ['abc', 'ghi']],
+        ];
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            services: this.services,
+            arch: '<kanban>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="foo"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                    '<searchpanel>' +
+                        '<field select="multi" name="company_id"/>' +
+                        '<field select="multi" name="state"/>' +
+                    '</searchpanel>' +
+                '</kanban>',
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.deepEqual(args.domain, expectedDomain);
+                }
+                return this._super.apply(this, arguments);
+            },
+            context: {
+                searchpanel_default_company_id: [5],
+                searchpanel_default_state: ['abc', 'ghi'],
+            },
+        });
+
+        assert.containsN(kanban, '.o_search_panel_filter_value input:checked', 3);
+
+        // manually untick a default value
+        expectedDomain = [['state', 'in', ['abc', 'ghi']]];
+        testUtils.dom.click(kanban.$('.o_search_panel_filter:first .o_search_panel_filter_value:nth(1) input'));
+
+        assert.containsN(kanban, '.o_search_panel_filter_value input:checked', 2);
+
+        kanban.destroy();
+    });
+
+    QUnit.test('retrieved filter value from context does not exist', function (assert) {
+        assert.expect(1);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            services: this.services,
+            arch: '<kanban>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="foo"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                    '<searchpanel>' +
+                        '<field select="multi" name="company_id"/>' +
+                    '</searchpanel>' +
+                '</kanban>',
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.deepEqual(args.domain, [["company_id", "in", [3]]]);
+                }
+                return this._super.apply(this, arguments);
+            },
+            context: {
+                searchpanel_default_company_id: [1, 3],
+            },
+        });
+
+        kanban.destroy();
+    });
+
+    QUnit.test('filter with groupby and default values in context', function (assert) {
+        assert.expect(2);
+
+        this.data.company.records.push({id: 11, name: 'camptocamp', category_id: 7});
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            services: this.services,
+            arch: '<kanban>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="foo"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                    '<searchpanel>' +
+                        '<field select="multi" name="company_id" groupby="category_id"/>' +
+                    '</searchpanel>' +
+                '</kanban>',
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.deepEqual(args.domain, [['company_id', 'in', [5]]]);
+                }
+                return this._super.apply(this, arguments);
+            },
+            context: {
+                searchpanel_default_company_id: [5],
+            },
+        });
+
+        var secondGroupCheckbox = kanban.$('.o_search_panel_filter_group:nth(1) > div > input').get(0);
+        assert.strictEqual(secondGroupCheckbox.indeterminate, true);
+
+        kanban.destroy();
+    });
 });
 
 });
