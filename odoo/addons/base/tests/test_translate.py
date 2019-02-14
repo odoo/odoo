@@ -325,18 +325,22 @@ class TestTranslation(TransactionCase):
                     'value': 'Apprentis',
                     'state': 'translated',
                 })
+        # insert_missing will add entry for en_US also so add language domain while searching,
+        # for fr_FR there should be only one record
         self.env['ir.translation'].translate_fields('res.partner.category', padawans.id, 'name')
         translations = self.env['ir.translation'].search([
             ('res_id', '=', padawans.id), ('name', '=', 'res.partner.category,name'), ('lang', '=', 'fr_FR')
         ])
         self.assertEqual(len(translations), 1, "Translations were not duplicated after `translate_fields` call")
         self.assertEqual(translations.value, "Apprenti", "The first translation must stay")
+
+        # check there are two records one for fr_FR added above and one en_US added by insert_missing
         translations = self.env['ir.translation'].search([
             ('res_id', '=', padawans.id), ('name', '=', 'res.partner.category,name')
         ])
         self.assertEqual(len(translations), 2, "Translations should not consist the main language translations")
         languages = [translation.lang for translation in translations]
-        self.assertEqual(languages, ['fr_FR', 'en_US'], "Translations should consist the en_US language translations")
+        self.assertItemsEqual(languages, ['fr_FR', 'en_US'], "Translations should consist the en_US language translations")
 
 
 class TestXMLTranslation(TransactionCase):

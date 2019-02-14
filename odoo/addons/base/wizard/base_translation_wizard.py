@@ -6,17 +6,30 @@ class TranslationWizard(models.TransientModel):
     _name = 'translation.field.wizard'
     _description = "Translation Field Wizard"
 
-    translation_ids = fields.One2many('translation.wizard.sub', 'translation_wizard_id', string="Translations")
+    translation_lines = fields.One2many('translation.lines', 'translation_wizard_id', string="Translations")
 
     @api.model
     def default_get(self, fields_list):
         res = super(TranslationWizard, self).default_get(fields_list)
         IrTranslation = self.env['ir.translation']
 
+        domain = self._prepare_domain()
+        translations = IrTranslation.search(domain)
+        res['translation_lines'] = [[0, False, {
+            'value': line.value or line.source,
+            'lang': line.lang,
+            'ir_translation_id': line.id,
+        }] for line in translations]
+        return res
+
+    def _prepare_domain(self):
+        """ Prepares domain to find records from ir.translation for given field in context
+        """
         model = self.env.context['model']
         recordID = self.env.context['id']
         field = self.env.context['field']
         record = self.env[model].with_context(lang='en_US').browse(recordID)
+
         domain = ['&', '&', ('res_id', '=', recordID), ('name', '=like', model + ',%'),
                     ('lang', '!=', self.env.context.get('lang'))]
 
@@ -24,7 +37,7 @@ class TranslationWizard(models.TransientModel):
             name = "%s,%s" % (fld.model_name, fld.name)
             return ['&', ('res_id', '=', rec.id), ('name', '=', name)]
 
-        # insert missing translations, and extend domain for related fields
+        # extend domain for related fields
         for name, fld in record._fields.items():
             if not fld.translate:
                 continue
@@ -55,28 +68,19 @@ class TranslationWizard(models.TransientModel):
                             ('name', 'ilike', "%s,%s" % (fld.model_name, fld.name))]
                 except AccessError:
                     pass
-
-        irTranslations = IrTranslation.search(domain)
-        res['translation_ids'] = [[0, False, {
-            'source': line.source,
-            'value': line.value or line.source,
-            'lang': line.lang,
-            'ir_translation_id': line.id,
-        }] for line in irTranslations]
-        return res
+        return domain
 
     @api.multi
-    def translation_confirm(self):
+    def button_dummy(self):
         return True
 
 
-class TranslationWizardSub(models.TransientModel):
-    _name = 'translation.wizard.sub'
-    _description = "Translation Sub Model"
+class TranslationLines(models.TransientModel):
+    _name = 'translation.lines'
+    _description = "Translation Lines"
 
     translation_wizard_id = fields.Many2one('translation.field.wizard')
     ir_translation_id = fields.Many2one('ir.translation', 'Translation')
-    source = fields.Text(string='Source term')
     value = fields.Text(related="ir_translation_id.value", string='Translation Value', store=True, readonly=False)
     lang = fields.Selection(selection='_get_languages', string='Language', validate=False)
 

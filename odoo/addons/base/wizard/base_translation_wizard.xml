@@ -5,16 +5,15 @@
         <field name="model">translation.field.wizard</field>
         <field name="arch" type="xml">
             <form string="Translations">
-                <field name="translation_ids" nolabel="1">
+                <field name="translation_lines" nolabel="1">
                     <tree string="Translations" editable="top" create="false" delete="false">
                         <field name="lang" readonly="1"/>
                         <field name="value"/>
-                        <field name="source" invisible="1"/>
                         <field name="ir_translation_id" invisible="1"/>
                     </tree>
                 </field>
                 <footer>
-                    <button string="Confirm" class="btn btn-primary" type="object" name="translation_confirm" />
+                    <button string="Confirm" class="btn btn-primary" type="object" name="button_dummy" />
                     <button string="Cancel" class="btn-secondary" special="cancel" />
                 </footer>
             </form>
