@@ -64,13 +64,13 @@ class HrBenefit(models.Model):
         return super(HrBenefit, self).write(vals)
 
     @api.multi
-    def check_if_error(self):
+    def _check_if_error(self):
         if not self:
             return False
         undefined_type = self.filtered(lambda b: not b.benefit_type_id)
         undefined_type.write({'display_warning': True})
         conflict = self._compute_schedule_conflicts()
-        conflict_with_leaves = self.compute_conflicts_leaves_to_approve()
+        conflict_with_leaves = self._compute_conflicts_leaves_to_approve()
         return undefined_type or conflict or conflict_with_leaves
 
     @api.multi
@@ -94,7 +94,7 @@ class HrBenefit(models.Model):
         return conflict
 
     @api.multi
-    def compute_conflicts_leaves_to_approve(self):
+    def _compute_conflicts_leaves_to_approve(self):
 
         if not self:
             return False
@@ -120,7 +120,7 @@ class HrBenefit(models.Model):
             })
         return bool(conflicts)
 
-    def safe_duplicate_create(self, vals):
+    def _safe_duplicate_create(self, vals):
         """
         Create benefit but silently abord if it already exists in the database (according to the _unique constraints).
         @return: new record if it didn't exist, empty recordset otherwise.
@@ -147,7 +147,7 @@ class HrBenefit(models.Model):
             'views': [[False, 'form']],
         }
 
-    def split_by_day(self):
+    def _split_by_day(self):
         """
         Split the benefit by days and unlink the original benefit.
         @return recordset
@@ -202,7 +202,7 @@ class HrBenefit(models.Model):
         leave_benefits = self.filtered(lambda b: b.benefit_type_id.is_leave)
 
         for benefit in attendance_benefits:
-            benefit = benefit.split_by_day()
+            benefit = benefit._split_by_day()
             benefit._duplicate_to_calendar_attendance()
         leave_benefits._duplicate_to_calendar_leave()
 
@@ -253,7 +253,7 @@ class HrBenefit(models.Model):
     def action_validate(self, ids):
         benefits = self.env['hr.benefit'].search([('id', 'in', ids), ('state', '!=', 'validated')])
         benefits.write({'display_warning': False})
-        if not benefits.check_if_error():
+        if not benefits._check_if_error():
             benefits.write({'state': 'validated'})
             benefits._duplicate_to_calendar()
             return True
