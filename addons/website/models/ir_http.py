@@ -208,6 +208,10 @@ class Http(models.AbstractModel):
 
             if isinstance(exception, QWebException):
                 values.update(qweb_exception=exception)
+
+                # retro compatibility to remove in 12.2
+                exception.qweb = dict(message=exception.message, expression=exception.html)
+
                 if type(exception.error) == odoo.exceptions.AccessError:
                     code = 403
 
