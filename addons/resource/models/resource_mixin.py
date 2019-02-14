@@ -122,7 +122,7 @@ class ResourceMixin(models.AbstractModel):
 
         return self._get_days_data(intervals, day_total)
 
-    def get_leave_days_data(self, from_datetime, to_datetime, calendar=None, domain=None):
+    def _get_leave_days_data(self, from_datetime, to_datetime, calendar=None, domain=None):
         """
             By default the resource calendar is used, but it can be
             changed using the `calendar` argument.
