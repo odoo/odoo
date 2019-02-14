@@ -868,6 +868,12 @@ class Partner(models.Model):
     def _get_country_name(self):
         return self.country_id.name or ''
 
+    @api.multi
+    def get_base_url(self):
+        """Get the base URL for the current partner."""
+        self.ensure_one()
+        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+
 
 class ResPartnerIndustry(models.Model):
     _description = 'Industry'
