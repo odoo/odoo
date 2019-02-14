@@ -451,6 +451,10 @@ return AbstractRenderer.extend({
         // of the tiny margins.
         if (ticksLabels.length > 3) {
             $svgContainer.find('svg .nv-x g.nv-axisMaxMin-x > text').hide();
+        } else {
+            // Since the graph is on full container have first and last label in the container
+            $svgContainer.find('svg .nv-x g.nv-axisMin-x > text').css({'text-anchor': 'start'});
+            $svgContainer.find('svg .nv-x g.nv-axisMax-x > text').css({'text-anchor': 'end'});
         }
 
         return chart;
