@@ -5,12 +5,8 @@
         <field name="model">slide.channel</field>
         <field name="inherit_id" ref="website_slides.view_slide_channel_form"/>
         <field name="arch" type="xml">
-    		<xpath expr="//notebook" position="inside">
-                <page string="Forum">
-                    <group>
-                        <field name="forum_id"/>
-                    </group>
-                </page>
+            <xpath expr="//field[@name='allow_comment']" position="after">
+                <field name="forum_id"/>
     		</xpath>
         </field>
     </record>

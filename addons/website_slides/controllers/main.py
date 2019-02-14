@@ -96,6 +96,9 @@ class WebsiteSlides(WebsiteProfile):
             domain = expression.AND([domain, [('nbr_%ss' % slide_type, '>', 0)]])
         return domain
 
+    def _prepare_channel_values(self, **kwargs):
+        return dict(**kwargs)
+
     # --------------------------------------------------
     # MAIN / SEARCH
     # --------------------------------------------------

@@ -90,7 +90,6 @@
                                 <group>
                                     <group>
                                         <field name="channel_type" widget="radio"/>
-                                        <field name="allow_comment"/>
                                         <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                         <field name="promote_strategy" widget="radio"/>
                                     </group>
@@ -103,6 +102,11 @@
                                 <group colspan="4">
                                     <label for="enroll_msg"/>
                                     <field name="enroll_msg" colspan="4" nolabel="1"/>
+                                </group>
+                            </page>
+                            <page string="Communication">
+                                <group>
+                                    <field name="allow_comment"/>
                                 </group>
                             </page>
                             <page string="Statistics" groups="base.group_no_one">
