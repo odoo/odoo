@@ -83,7 +83,7 @@ class ProductProduct(models.Model):
     _name = "product.product"
     _description = "Product"
     _inherits = {'product.template': 'product_tmpl_id'}
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
     _order = 'default_code, name, id'
 
     # price: total price, context dependent (partner, pricelist, quantity)
@@ -118,20 +118,6 @@ class ProductProduct(models.Model):
         'product.attribute.value', string='Attribute Values', ondelete='restrict')
     product_template_attribute_value_ids = fields.Many2many(
         'product.template.attribute.value', string='Template Attribute Values', compute="_compute_product_template_attribute_value_ids")
-    # image: all image fields are base64 encoded and PIL-supported
-    image_variant = fields.Binary(
-        "Variant Image",
-        help="This field holds the image used as image for the product variant, limited to 1024x1024px.")
-    image = fields.Binary(
-        "Big-sized image", compute='_compute_images', inverse='_set_image',
-        help="Image of the product variant (Big-sized image of product template if false). It is automatically "
-             "resized as a 1024x1024px image, with aspect ratio preserved.")
-    image_small = fields.Binary(
-        "Small-sized image", compute='_compute_images', inverse='_set_image_small',
-        help="Image of the product variant (Small-sized image of product template if false).")
-    image_medium = fields.Binary(
-        "Medium-sized image", compute='_compute_images', inverse='_set_image_medium',
-        help="Image of the product variant (Medium-sized image of product template if false).")
     is_product_variant = fields.Boolean(compute='_compute_is_product_variant')
 
     standard_price = fields.Float(
@@ -241,47 +227,6 @@ class ProductProduct(models.Model):
         else:
             self.partner_ref = self.display_name
 
-    @api.one
-    @api.depends('image_variant', 'product_tmpl_id.image')
-    def _compute_images(self):
-        if self._context.get('bin_size'):
-            self.image_medium = self.image_variant
-            self.image_small = self.image_variant
-            self.image = self.image_variant
-        else:
-            resized_images = tools.image_get_resized_images(self.image_variant, return_big=True, avoid_resize_medium=True)
-            self.image_medium = resized_images['image_medium']
-            self.image_small = resized_images['image_small']
-            self.image = resized_images['image']
-        if not self.image_medium:
-            self.image_medium = self.product_tmpl_id.image_medium
-        if not self.image_small:
-            self.image_small = self.product_tmpl_id.image_small
-        if not self.image:
-            self.image = self.product_tmpl_id.image
-
-    @api.one
-    def _set_image(self):
-        self._set_image_value(self.image)
-
-    @api.one
-    def _set_image_medium(self):
-        self._set_image_value(self.image_medium)
-
-    @api.one
-    def _set_image_small(self):
-        self._set_image_value(self.image_small)
-
-    @api.one
-    def _set_image_value(self, value):
-        if isinstance(value, str):
-            value = value.encode('ascii')
-        image = tools.image_resize_image_big(value)
-        if self.product_tmpl_id.image:
-            self.image_variant = image
-        else:
-            self.product_tmpl_id.image = image
-
     @api.depends('product_tmpl_id', 'attribute_value_ids')
     def _compute_product_template_attribute_value_ids(self):
         # Fetch and pre-map the values first for performance. It assumes there
@@ -305,6 +250,26 @@ class ProductProduct(models.Model):
                     _logger.warning("A matching product.template.attribute.value was not found for the product.attribute.value #%s on the template #%s" % (pav.id, product.product_tmpl_id.id))
                 else:
                     product.product_template_attribute_value_ids += values_per_template[product.product_tmpl_id.id][pav.id]
+
+    @api.multi
+    def _get_image_fallback_record(self):
+        """Override to get the image from the template if no image is set on the
+        variant."""
+        return self.product_tmpl_id
+
+    @api.multi
+    def _force_write_image_on_fallback(self):
+        """Override to always write on the template if there is only one
+        variant.
+
+        This is needed because when there is only one variant, the user doesn't
+        know there is a difference between template and variant, he expects both
+        images to be the same.
+        """
+        return self.env['product.product'].search_count([
+            ('product_tmpl_id', '=', self.product_tmpl_id.id),
+            ('active', '=', True),
+        ]) <= 1
 
     @api.one
     def _get_pricelist_items(self):
