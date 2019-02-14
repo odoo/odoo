@@ -14,7 +14,6 @@ Ask questions, get answers, no distractions
     'depends': [
         'auth_signup',
         'website_mail',
-        'website_partner',
         'website_profile',
     ],
     'data': [
@@ -22,6 +21,7 @@ Ask questions, get answers, no distractions
         'views/forum.xml',
         'views/res_users_views.xml',
         'views/website_forum.xml',
+        'views/website_forum_profile.xml',
         'views/ir_qweb.xml',
         'security/ir.model.access.csv',
         'data/badges_question.xml',
