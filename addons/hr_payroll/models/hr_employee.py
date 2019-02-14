@@ -22,10 +22,9 @@ class HrEmployee(models.Model):
 
     @api.multi
     def generate_benefit(self, date_start, date_stop):
-
         date_start = date_start.replace(tzinfo=pytz.utc)
         date_stop = date_stop.replace(tzinfo=pytz.utc)
-
+        attendance_type = self.env.ref('hr_payroll.benefit_type_attendance')
         vals_list = []
         leaves = self.env['hr.leave']
 
@@ -53,7 +52,7 @@ class HrEmployee(models.Model):
                 attendances = calendar._work_intervals(date_start_benefits, date_stop_benefits, resource=resource)
                 # Attendances
                 for interval in attendances:
-                    benefit_type_id = interval[2].mapped('benefit_type_id')[:1] or self.env.ref('hr_payroll.benefit_type_attendance')
+                    benefit_type_id = interval[2].mapped('benefit_type_id')[:1] or attendance_type
                     vals_list += [{
                         'name': "%s: %s" % (benefit_type_id.name, employee.name),
                         'date_start': interval[0].astimezone(pytz.utc),
