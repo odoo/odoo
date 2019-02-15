@@ -126,6 +126,8 @@ class Slide(models.Model):
     partner_ids = fields.Many2many('res.partner', 'slide_slide_partner', 'slide_id', 'partner_id',
                                    string='Subscribers', groups='base.group_website_publisher')
     slide_partner_ids = fields.One2many('slide.slide.partner', 'slide_id', string='Subscribers information', groups='base.group_website_publisher')
+    user_membership_id = fields.Many2one('slide.slide.partner', string="Subscriber information", compute='_compute_user_membership_id',
+        help="Subscriber information for the current logged in user")
     # content
     slide_type = fields.Selection([
         ('infographic', 'Infographic'),
@@ -190,6 +192,19 @@ class Slide(models.Model):
         mapped_data = dict((res['slide_id'][0], res['slide_id_count']) for res in read_group_res)
         for slide in self:
             slide.slide_views = mapped_data.get(slide.id, 0)
+
+    @api.depends('slide_partner_ids.partner_id')
+    def _compute_user_membership_id(self):
+        slide_partners = self.env['slide.slide.partner'].sudo().search([
+            ('slide_id', 'in', self.ids),
+            ('partner_id', '=', self.env.user.partner_id.id),
+        ])
+
+        for record in self:
+            record.user_membership_id = next(
+                (slide_partner for slide_partner in slide_partners if slide_partner.slide_id == record),
+                self.env['slide.slide.partner']
+            )
 
     def _get_embed_code(self):
         base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')

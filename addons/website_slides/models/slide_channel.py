@@ -157,9 +157,7 @@ class Channel(models.Model):
     @api.depends('slide_ids.slide_type', 'slide_ids.is_published',
                  'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views')
     def _compute_slides_statistics(self):
-        result = dict.fromkeys(self.ids, dict(
-            nbr_presentations=0, nbr_documents=0, nbr_videos=0, nbr_infographics=0, nbr_webpages=0,
-            total_slides=0, total_views=0, total_votes=0, total_time=0))
+        result = dict((cid, dict(total_slides=0, total_views=0, total_votes=0, total_time=0)) for cid in self.ids)
         read_group_res = self.env['slide.slide'].read_group(
             [('is_published', '=', True), ('channel_id', 'in', self.ids)],
             ['channel_id', 'slide_type', 'likes', 'dislikes', 'total_views', 'completion_time'],
@@ -167,18 +165,30 @@ class Channel(models.Model):
             lazy=False)
         for res_group in read_group_res:
             cid = res_group['channel_id'][0]
-            result[cid]['nbr_presentations'] += res_group.get('slide_type', '') == 'presentation' and res_group['__count'] or 0
-            result[cid]['nbr_documents'] += res_group.get('slide_type', '') == 'document' and res_group['__count'] or 0
-            result[cid]['nbr_videos'] += res_group.get('slide_type', '') == 'video' and res_group['__count'] or 0
-            result[cid]['nbr_infographics'] += res_group.get('slide_type', '') == 'infographic' and res_group['__count'] or 0
-            result[cid]['nbr_webpages'] += res_group.get('slide_type', '') == 'webpage' and res_group['__count'] or 0
             result[cid]['total_slides'] += res_group['__count']
             result[cid]['total_views'] += res_group.get('total_views', 0)
             result[cid]['total_votes'] += res_group.get('likes', 0)
             result[cid]['total_votes'] -= res_group.get('dislikes', 0)
             result[cid]['total_time'] += res_group.get('completion_time', 0)
+
+        type_stats = self._compute_slides_statistics_type(read_group_res)
+        for cid, cdata in type_stats.items():
+            result[cid].update(cdata)
+
         for record in self:
             record.update(result[record.id])
+
+    def _compute_slides_statistics_type(self, read_group_res):
+        """ Can be overridden to compute stats on added slide_types """
+        result = dict((cid, dict(nbr_presentations=0, nbr_documents=0, nbr_videos=0, nbr_infographics=0, nbr_webpages=0)) for cid in self.ids)
+        for res_group in read_group_res:
+            cid = res_group['channel_id'][0]
+            result[cid]['nbr_presentations'] += res_group.get('slide_type', '') == 'presentation' and res_group['__count'] or 0
+            result[cid]['nbr_documents'] += res_group.get('slide_type', '') == 'document' and res_group['__count'] or 0
+            result[cid]['nbr_videos'] += res_group.get('slide_type', '') == 'video' and res_group['__count'] or 0
+            result[cid]['nbr_infographics'] += res_group.get('slide_type', '') == 'infographic' and res_group['__count'] or 0
+            result[cid]['nbr_webpages'] += res_group.get('slide_type', '') == 'webpage' and res_group['__count'] or 0
+        return result
 
     @api.depends('slide_partner_ids')
     def _compute_user_statistics(self):
@@ -382,10 +392,25 @@ class Category(models.Model):
             lazy=False)
         for res_group in res:
             result[res_group['category_id'][0]][res_group['slide_type']] = result[res_group['category_id'][0]].get(res_group['slide_type'], 0) + res_group['__count']
+
         for record in self:
-            record.nbr_presentations = result[record.id].get('presentation', 0)
-            record.nbr_documents = result[record.id].get('document', 0)
-            record.nbr_videos = result[record.id].get('video', 0)
-            record.nbr_infographics = result[record.id].get('infographic', 0)
-            record.nbr_webpages = result[record.id].get('webpage', 0)
-            record.total_slides = record.nbr_presentations + record.nbr_documents + record.nbr_videos + record.nbr_infographics + record.nbr_webpages
+            record.update(self._extract_count_presentations_type(result, record.id))
+
+    def _extract_count_presentations_type(self, result, record_id):
+        """ Can be overridden to compute stats on added slide_types """
+        statistics = {
+            'nbr_presentations': result[record_id].get('presentation', 0),
+            'nbr_documents': result[record_id].get('document', 0),
+            'nbr_videos': result[record_id].get('video', 0),
+            'nbr_infographics': result[record_id].get('infographic', 0),
+            'nbr_webpages': result[record_id].get('webpage', 0),
+            'total_slides': 0
+        }
+
+        statistics['total_slides'] += statistics['nbr_presentations']
+        statistics['total_slides'] += statistics['nbr_documents']
+        statistics['total_slides'] += statistics['nbr_videos']
+        statistics['total_slides'] += statistics['nbr_infographics']
+        statistics['total_slides'] += statistics['nbr_webpages']
+
+        return statistics

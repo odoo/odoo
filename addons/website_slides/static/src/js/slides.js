@@ -33,6 +33,9 @@ sAnimations.registry.websiteSlides = sAnimations.Class.extend({
         return $.when.apply($, defs);
     },
 });
+
+return sAnimations.registry.websiteSlides;
+
 });
 
 //==============================================================================
@@ -120,4 +123,5 @@ sAnimations.registry.websiteSlidesEmbed = sAnimations.Class.extend({
         new SlideSocialEmbed(this, maxPage).attachTo($('.oe_slide_js_embed_code_widget'));
     },
 });
+
 });
