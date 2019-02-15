@@ -96,6 +96,8 @@ class Field(MetaField('DummyField', (object,), {})):
 
     :param str help: the tooltip of the field seen by users
 
+    :param invisible: whether the field is invisible (boolean, by default ``False``)
+
     :param bool readonly: whether the field is readonly (default: ``False``)
 
         This only has an impact on the UI. Any field assignation in code will work
@@ -230,6 +232,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     string = None                       # field label
     help = None                         # field tooltip
+    invisible = False             # whether the field is invisible
     readonly = False                    # whether the field is readonly
     required = False                    # whether the field is required
     states = None                       # set readonly and required depending on state
