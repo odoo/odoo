@@ -319,6 +319,16 @@ class WebsiteSlides(WebsiteProfile):
             'allow_comment': bool(kw.get('allow_comment')),
         }
 
+    @http.route(['/slides/channel/read'], type='json', auth="user", website=True)
+    def slide_channel_read(self, channel_id):
+        try:
+            channel_data = request.env['slide.channel'].search([('id', '=', int(channel_id))]).read(['name', 'allow_comment', 'channel_type', 'tag_ids'])
+        except:
+            return {'error': 'generic'}
+        if not channel_data:
+            return {'error': 'channel_notfound'}
+        return channel_data[0]
+
     # --------------------------------------------------
     # SLIDE.SLIDE CONTOLLERS
     # --------------------------------------------------

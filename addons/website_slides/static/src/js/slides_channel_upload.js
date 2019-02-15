@@ -9,10 +9,9 @@ var _t = core._t;
 
 var ChannelCreateDialog = Dialog.extend({
     template: 'website.slide.channel.create',
+
     /**
      * @override
-     * @param {Object} parent
-     * @param {Object} options
      */
     init: function (parent, options) {
         options = _.defaults(options || {}, {
@@ -28,10 +27,31 @@ var ChannelCreateDialog = Dialog.extend({
             },]
         });
         this._super(parent, options);
+        this.channelData = _.defaults(options.channelData || {}, {
+            channelId: 1,
+        });
     },
+
+    /**
+     *
+     * @override
+     */
+    willStart: function () {
+        var fetchDone = this._fetchChannelData();
+        return $.when(
+            this._super.apply(this, arguments),
+            fetchDone
+        );
+    },
+
+    /**
+     *
+     * @override
+     */
     start: function () {
         var self = this;
-        return this._super.apply(this, arguments).then(function () {
+        var defSuper = this._super.apply(this, arguments);
+        return $.when(defSuper).then(function () {
             var $input = self.$('#tag_ids');
             $input.select2({
                 width: '100%',
@@ -71,8 +91,46 @@ var ChannelCreateDialog = Dialog.extend({
             });
         });
     },
-    _onClickFormSubmit: function (ev) {
-        var $form = this.$("#slide_channel_add_form");
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    _fetchChannelData: function () {
+        var self = this;
+        var fetchDone = new $.Deferred();
+        console.log('checking fetch channel data for ', this.channelData.channelId);
+        if (this.channelData.channelId) {
+            fetchDone = self._rpc({
+                route: '/slides/channel/read',
+                params: {
+                    channel_id: self.channelData.channelId,
+                }
+            }).then(function (data) {
+                console.log('received', data);
+                if (data && ! data.error) {
+                    console.log('success');
+                    self.channelData = _.extend(self.channelData, data);
+                    console.log(self.channelData);
+                }
+            });
+        } else {
+            fetchDone.resolve();
+        }
+        return fetchDone;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     *
+     * @private
+     * @param {event} event
+     */
+    _onClickFormSubmit: function (event) {
+        var $form = this.$('#slide_channel_add_form');
         $form.submit();
     },
 });

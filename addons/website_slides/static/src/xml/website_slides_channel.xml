@@ -7,6 +7,7 @@
             <form action="/slides/channel/add" method="POST" id="slide_channel_add_form">
                 <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
                 <div class="form-group row">
+                    <div class="col-12">CACA<t t-esc="widget.channelData.name"/></div>
                     <label for="title" class="col-sm-2 col-form-label">Title</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" name="name" id="title" placeholder="Title"/>

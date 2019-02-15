@@ -547,7 +547,7 @@ sAnimations.registry.websiteSlidesUpload = sAnimations.Class.extend({
 
     _openDialog: function ($element) {
         var data = $element.data();
-        var dialog = new SlideUploadDialog(this, data)
+        var dialog = new SlideUploadDialog(this, data);
         dialog.appendTo(document.body);
         return dialog.open();
     },
