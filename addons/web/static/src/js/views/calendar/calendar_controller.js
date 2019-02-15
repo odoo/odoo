@@ -300,7 +300,8 @@ var CalendarController = AbstractController.extend({
                 model: self.modelName,
                 method: 'get_formview_id',
                 //The event can be called by a view that can have another context than the default one.
-                args: [[id], event.context || self.context],
+                args: [[id]],
+                context: event.context || self.context,
             }).then(function (viewId) {
                 self.do_action({
                     type:'ir.actions.act_window',

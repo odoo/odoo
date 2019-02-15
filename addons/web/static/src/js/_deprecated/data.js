@@ -835,13 +835,13 @@ var Model = Class.extend({
     },
     call_button: function (method, args) {
         pyUtils.ensure_evaluated(args, {});
+        // context should be the last argument
+        var context = (args || []).length > 0 ? args.pop() : {};
         return session.rpc('/web/dataset/call_button', {
             model: this.name,
             method: method,
-            // Should not be necessary anymore. Integrate remote in this?
-            domain_id: null,
-            context_id: args.length - 1,
-            args: args || []
+            args: args || [],
+            kwargs: {context: context},
         });
     },
 });

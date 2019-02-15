@@ -3901,7 +3901,8 @@ var BasicModel = AbstractModel.extend({
         return self._rpc({
                 model: record.model,
                 method: 'onchange',
-                args: [idList, currentData, fields, onchangeSpec, context],
+                args: [idList, currentData, fields, onchangeSpec],
+                context: context,
             })
             .then(function (result) {
                 if (!record._changes) {

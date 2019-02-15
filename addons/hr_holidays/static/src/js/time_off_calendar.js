@@ -117,7 +117,7 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
             return this._rpc({
                 model: 'hr.leave.type',
                 method: 'get_days_all_request',
-                args: [this.context],
+                context: this.context,
             })
             .then(function (leaves) {
                 $('#counter_leaves').children().remove();

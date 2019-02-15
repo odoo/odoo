@@ -2615,7 +2615,8 @@ QUnit.module('ActionManager', {
                 assert.step(args.method || route);
                 if (route === '/web/dataset/call_button') {
                     assert.deepEqual(args, {
-                        args: [[1], {some_key: 2}],
+                        args: [[1]],
+                        kwargs: {context: {some_key: 2}},
                         method: 'object',
                         model: 'partner',
                     }, "should call route with correct arguments");
