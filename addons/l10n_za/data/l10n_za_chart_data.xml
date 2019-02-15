@@ -90,7 +90,7 @@
         </record>
 
         
-        <record id="l10n_za" model="account.chart.template">
+        <record id="default_chart_template" model="account.chart.template">
             <field name="name">South African Tax and Account Chart Template (by Paradigm Digital)</field>
             <field name="bank_account_code_prefix">1200</field>
             <field name="cash_account_code_prefix">1250</field>
@@ -100,47 +100,47 @@
         </record>
 
         <record id="transfer_account" model="account.account.template">
-            <field name="chart_template_id" ref="l10n_za"/>
+            <field name="chart_template_id" ref="default_chart_template"/>
         </record>
 
         <record id="110010"  model="account.account.template">
-            <field name="chart_template_id" ref="l10n_za"/>
+            <field name="chart_template_id" ref="default_chart_template"/>
         </record>
 
         <record id="220010"  model="account.account.template">
-            <field name="chart_template_id" ref="l10n_za"/>
+            <field name="chart_template_id" ref="default_chart_template"/>
         </record>
 
         <record id="600010"  model="account.account.template">
-            <field name="chart_template_id" ref="l10n_za"/>
+            <field name="chart_template_id" ref="default_chart_template"/>
         </record>
 
         <record id="500010"  model="account.account.template">
-            <field name="chart_template_id" ref="l10n_za"/>
+            <field name="chart_template_id" ref="default_chart_template"/>
         </record>
 
         <record id="200010"  model="account.account.template">
-            <field name="chart_template_id" ref="l10n_za"/>
+            <field name="chart_template_id" ref="default_chart_template"/>
         </record>
 
         <record id="100050"  model="account.account.template">
-            <field name="chart_template_id" ref="l10n_za"/>
+            <field name="chart_template_id" ref="default_chart_template"/>
         </record>
 
         <record id="100020"  model="account.account.template">
-            <field name="chart_template_id" ref="l10n_za"/>
+            <field name="chart_template_id" ref="default_chart_template"/>
         </record>
 
         <record id="610440"  model="account.account.template">
-            <field name="chart_template_id" ref="l10n_za"/>
+            <field name="chart_template_id" ref="default_chart_template"/>
         </record>
 
         <record id="200060"  model="account.account.template">
-            <field name="chart_template_id" ref="l10n_za"/>
+            <field name="chart_template_id" ref="default_chart_template"/>
         </record>
 
         <record id="100060"  model="account.account.template">
-            <field name="chart_template_id" ref="l10n_za"/>
+            <field name="chart_template_id" ref="default_chart_template"/>
         </record>
 
         <record id="ST1" model="account.tax.template">
@@ -154,7 +154,7 @@
             <field name="refund_account_id" ref="200060"/>
             <field name="tag_ids" eval="[ref('l10n_za.tag_ST1')]"/>
             <field name="tax_group_id" ref="tax_group_1"/>
-            <field name="chart_template_id" ref="l10n_za"/>    
+            <field name="chart_template_id" ref="default_chart_template"/>    
         </record>
 
         <record id="PT15" model="account.tax.template">
@@ -168,11 +168,10 @@
             <field name="refund_account_id" ref="100060"/>
             <field name="tag_ids" eval="[ref('l10n_za.tag_PT15')]"/>
             <field name="tax_group_id" ref="tax_group_1"/> 
-            <field name="chart_template_id" ref="l10n_za"/>   
+            <field name="chart_template_id" ref="default_chart_template"/>   
         </record>
 
-        <record id="l10n_za" model="account.chart.template">
-            
+        <record id="default_chart_template" model="account.chart.template">
             <field name="property_account_receivable_id" ref="110010"/>
             <field name="property_account_payable_id" ref="220010"/>
             <field name="property_account_expense_categ_id" ref="600010"/>

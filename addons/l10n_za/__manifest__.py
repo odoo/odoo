@@ -3,17 +3,16 @@
 # Copyright (C) 2017 Paradigm Digital (<http://www.paradigmdigital.co.za>).
 
 {
-    'name': 'South Africa ZA - Accounting',
+    'name': 'South Africa - Accounting',
     'version': '1.0',
     'category': 'Localization',
     'description': """
 This is the latest basic South African localisation necessary to run Odoo in ZA:
 ================================================================================
     - a generic chart of accounts
-    - SARS VAT Ready Structure
-    - other adaptations""",
+    - SARS VAT Ready Structure""",
     'author': 'Paradigm Digital',
-    'website': 'http://www.paradigmdigital.co.za',
+    'website': 'https://www.paradigmdigital.co.za',
     'depends': ['account', 
                 'base_vat'
     ],
@@ -26,8 +25,4 @@ This is the latest basic South African localisation necessary to run Odoo in ZA:
         'data/account_chart_template.yml',
         
     ],
-    'demo' : [
-        # 'demo/demo.xml'
-    ],
-    'installable': True,
 }
