@@ -807,6 +807,7 @@ class PosOrder(models.Model):
                 picking_vals = {
                     'origin': order.name,
                     'partner_id': address.get('delivery', False),
+                    'user_id': False,
                     'date_done': order.date_order,
                     'picking_type_id': picking_type.id,
                     'company_id': order.company_id.id,

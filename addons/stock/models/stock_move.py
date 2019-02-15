@@ -735,6 +735,7 @@ class StockMove(models.Model):
         return {
             'origin': origin,
             'company_id': self.mapped('company_id').id,
+            'user_id': False,
             'move_type': self.mapped('group_id').move_type or 'direct',
             'partner_id': partner,
             'picking_type_id': self.mapped('picking_type_id').id,

@@ -52,6 +52,7 @@
         'wizard/product_replenish_views.xml',
         'wizard/stock_track_confirmation_views.xml',
         'wizard/stock_package_destination_views.xml',
+        'wizard/stock_picking_responsible.xml',
 
         'views/res_partner_views.xml',
         'views/product_strategy_views.xml',

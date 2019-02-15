@@ -265,6 +265,10 @@ class Picking(models.Model):
         default=lambda self: self.env['res.company']._company_default_get('stock.picking'),
         index=True, required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+    user_id = fields.Many2one(
+        'res.users', 'Responsible', tracking=True,
+        domain=lambda self: [('groups_id', 'in', self.env.ref('stock.group_stock_user').id)],
+        default=lambda self: self.env.user)
 
     move_line_ids = fields.One2many('stock.move.line', 'picking_id', 'Operations')
     move_line_ids_without_package = fields.One2many('stock.move.line', 'picking_id', 'Operations without package', domain=['|',('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
