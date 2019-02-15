@@ -48,9 +48,9 @@ var sortButtonAppended = false;
  */
 QUnit.done(function(result) {
     if (!result.failed) {
-        console.log('ok');
+        console.log('test successful');
     } else {
-        console.log('error');
+        console.error('test failed');
     }
 
     if (!sortButtonAppended) {
