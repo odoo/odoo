@@ -88,27 +88,28 @@ class StatusController(http.Controller):
             req['result']['session_id'] = req['session_id']
             return req['result']
 
-    @http.route('/hw_drivers/box/connect', type='json', auth='none', cors='*', csrf=False)
+    @http.route('/hw_drivers/box/connect', type='http', auth='none', cors='*', csrf=False, save_session=False)
     def connect_box(self, token):
-        server = ""  # read from file
-        try:
-            f = open('/home/pi/odoo-remote-server.conf', 'r')
-            for line in f:
-                server += line
-            f.close()
-            server = server.split('\n')[0]
-        except:
-            server = ''
-        if server:
-            return 'This IoTBox has already been connected'
-        else:
-            iotname = ''
-            token = token.split('|')[1]
-            url = token.split('|')[0]
-            reboot = 'noreboot'
-            subprocess.call([home() + '/odoo/addons/point_of_sale/tools/posbox/configuration/connect_to_server.sh', url, iotname, token, reboot])
-            send_iot_box_device(False)
-            return 'IoTBox connected'
+        """
+        This route is called when we want that a IoT Box will be connected to a Odoo DB
+        token is a base 64 encoded string and have 2 argument separate by |
+        1 - url of odoo DB
+        2 - token. This token will be compared to the token of Odoo. He have 1 hour lifetime
+        """
+        server = get_odoo_server_url()
+        image = get_resource_path('hw_drivers', 'static/img', 'False.jpg')
+        if server == '':
+            token = b64decode(token).decode('utf-8')
+            url, token = token.split('|')
+            try:
+                subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/connect_to_server.sh'), url, '', token, 'noreboot'])
+                m.send_alldevices()
+                image = get_resource_path('hw_drivers', 'static/img', 'True.jpg')
+            except subprocess.CalledProcessError as e:
+                _logger.error('A error encountered : %s ' % e.output)
+        if os.path.isfile(image):
+            with open(image, 'rb') as f:
+                return f.read()
 
 #----------------------------------------------------------
 # Drivers
