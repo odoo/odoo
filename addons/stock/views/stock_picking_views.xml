@@ -330,6 +330,7 @@
                                     <field name="picking_type_code" invisible="1"/>
                                     <field name="move_type" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
                                     <field name="priority" widget="priority"/>
+                                    <field name="user_id"/>
                                     <field name="group_id" groups="base.group_no_one"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 </group>
@@ -355,6 +356,9 @@
             <field name="arch" type="xml">
                 <search string="Picking Lists">
                     <field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
+                    <filter name="my_transfers" string="My Transfers" domain="[('user_id','=',uid)]"/>
+                    <filter name="unassigned_transfers" string="Unassigned Transfers" domain="[('user_id','=',False)]"/>
+                    <separator/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Moves"/>
                     <filter name="waiting" string="Waiting" domain="[('state','in', ('confirmed', 'waiting'))]" help="Waiting Moves"/>
                     <filter name="available" string="Ready" domain="[('state','in',('assigned', 'partially_available'))]" help="Assigned Moves"/>
@@ -388,6 +392,21 @@
                         <filter name="picking_type" string="Operation Type" domain="[]" context="{'group_by':'picking_type_id'}"/>
                     </group>
                 </search>
+            </field>
+        </record>
+
+        <!--
+            'Assign a Responsible' in action dropdown
+        -->
+        <record id="action_assign_a_responsible" model="ir.actions.server">
+            <field name="name">Assign a Responsible</field>
+            <field name="model_id" ref="model_stock_picking"/>
+            <field name="binding_model_id" ref="stock.model_stock_picking"/>
+            <field name="state">code</field>
+            <field name="code">
+action_values = env.ref('stock.stock_assign_responsible_action').read()[0]
+action_values.update({'context': env.context})
+action = action_values
             </field>
         </record>
 
