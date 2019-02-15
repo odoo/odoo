@@ -1287,6 +1287,16 @@ take the following attributes:
     ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 ``default_group_by``
   name of a field to group tasks by
+``consolidation``
+  field name to display consolidation value in record cell
+``consolidation_max``
+  dictionnary with the "group by" field as key and the maximum consolidation
+  value that can be reached before displaying the cell in red
+  (e.g. ``{"user_id": 100}``)
+``consolidation_exclude``
+  name of the field that describes if the task has to be excluded
+  from the consolidation
+  if set to true it displays a striped zone in the consolidation line
 ``create``, ``edit``
     allows *dis*\ abling the corresponding action in the view by setting the
     corresponding attribute to ``false``. If ``create`` is enabled, a "+" button
