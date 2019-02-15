@@ -189,3 +189,45 @@ class WebsiteProfile(http.Controller):
             'badges': badges,
         })
         return request.render("website_profile.badge_main", values)
+
+    # All Users Page
+    # ---------------------------------------------------
+    def _prepare_all_users_values(self, user, position):
+        return {
+            'position': position,
+            'id': user.id,
+            'name': user.name,
+            'rank': user.rank_id.name,
+            'karma': user.karma,
+            'badge_count': len(user.badge_ids),
+        }
+
+    @http.route(['/profile/users',
+                 '/profile/users/page/<int:page>'], type='http', auth="public", website=True)
+    def view_all_users_page(self, page=1, **searches):
+        User = request.env['res.users']
+        dom = [('karma', '>', 1), ('website_published', '=', True)]
+
+        # Get the Top 3 users
+        top3_users = User.sudo().search(dom, limit=3, order='karma DESC')
+        top3_user_values = [self._prepare_all_users_values(user, position+1) for position, user in enumerate(top3_users)]
+
+        # Get the other users
+        if top3_users:
+           dom += [('id', 'not in', top3_users.ids)]
+        step = 30
+        user_count = User.sudo().search_count(dom)
+        pager = request.website.pager(url="/profile/users", total=user_count, page=page, step=step, scope=step)
+
+        if searches.get('user'):
+            dom += [('name', 'ilike', searches.get('user'))]
+
+        users = User.sudo().search(dom, limit=step, offset=pager['offset'], order='karma DESC')
+
+        user_values = [self._prepare_all_users_values(user, position + 4 + ((page-1) * step)) for position, user in enumerate(users)]
+        values = {
+            'top3_users': top3_user_values,
+            'users': user_values,
+            'pager': pager
+        }
+        return request.render("website_profile.users_page_main", values)
