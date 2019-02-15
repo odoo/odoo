@@ -20,6 +20,9 @@ if (!config.device.isMobile) {
 }
 
 KanbanRenderer.include({
+    custom_events: _.extend({}, KanbanRenderer.prototype.custom_events || {}, {
+        cancel_column_quick_create: '_onCancelColumnQuickCreate',
+    }),
     events: _.extend({}, KanbanRenderer.prototype.events, {
         'click .o_kanban_mobile_tab': '_onMobileTabClicked',
     }),
@@ -73,6 +76,7 @@ KanbanRenderer.include({
 
     /**
      * Displays the quick create record in the active column
+     * override to open quick create record in first column if active tab is Add Column
      *
      * @returns {Deferred}
      */
@@ -89,13 +93,13 @@ KanbanRenderer.include({
         }
     },
     /**
-     * Overrides to call _moveToGroup forcefully so that last created column is displayed
-     * after new column created, to do that pass widgets.length-1 as activeColumnIndex
+     * Overrides to call _moveToGroup forcefully to show Add Column tab again
+     * after new column created, to do that pass widgets.length(i.e. index of new column) as activeColumnIndex
      *
      * @override
      */
     quickCreateToggleFold: function () {
-        this._moveToGroup(this.widgets.length-1, this.ANIMATE);
+        this._moveToGroup(this.widgets.length, this.ANIMATE);
     },
     /**
      * Overrides to restore the left property and the scrollTop on the updated
@@ -270,6 +274,16 @@ KanbanRenderer.include({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Cancel column quick create and move to previous column
+     */
+    _onCancelColumnQuickCreate: function (ev) {
+        // Do not move to previous column if user press Create button(i.e. quick create record)
+        // move to first column, check addQuickCreate
+        if (!ev.data.$event || (!ev.data.$event || !$(ev.data.$event.target).is('.o-kanban-button-new'))) {
+            this._moveToGroup(this.widgets.length-1, this.ANIMATE);
+        }
+    },
     /**
      * @private
      * @param {MouseEvent} event

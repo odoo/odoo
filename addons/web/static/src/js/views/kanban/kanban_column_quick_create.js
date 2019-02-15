@@ -101,7 +101,10 @@ var ColumnQuickCreate = Widget.extend({
      *
      * @private
      */
-    _cancel: function () {
+    _cancel: function (event) {
+        if (this.isMobile && !this.folded) {
+            this.trigger_up('cancel_column_quick_create', {$event: event});
+        }
         if (!this.folded) {
             this.folded = true;
             this.$input.val('');
@@ -213,7 +216,7 @@ var ColumnQuickCreate = Widget.extend({
      */
     _onWindowClicked: function (event) {
         // ignore clicks if the quick create is not in the dom
-        if (!document.contains(this.el) || this.isMobile) {
+        if (!document.contains(this.el)) {
             return;
         }
 
@@ -227,7 +230,7 @@ var ColumnQuickCreate = Widget.extend({
             return;
         }
 
-        this._cancel();
+        this._cancel(event);
     },
 });
 

@@ -1,12 +1,21 @@
 odoo.define('web.kanban_mobile_tests', function (require) {
 "use strict";
 
+var core = require('web.core');
+var KanbanRenderer = require('web.KanbanRenderer');
 var KanbanView = require('web.KanbanView');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
 
 QUnit.module('Views', {
+    before: function () {
+        this._initialKanbanRendererAnimate = KanbanRenderer.prototype.ANIMATE;
+        KanbanRenderer.prototype.ANIMATE = false;
+    },
+    after: function () {
+        KanbanRenderer.prototype.ANIMATE = this._initialKanbanRendererAnimate;
+    },
     beforeEach: function () {
         this.data = {
             partner: {
@@ -164,7 +173,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('mobile quick create column view rendering', function (assert) {
-        assert.expect(13);
+        assert.expect(14);
 
         var kanban = createView({
             View: KanbanView,
@@ -215,8 +224,13 @@ QUnit.module('Views', {
 
         assert.strictEqual(kanban.$('.o_kanban_group:last span:contains(msh)').length, 1,
             "the last column(tab) should be the newly created one");
+        assert.strictEqual(kanban.$('.o_kanban_mobile_tab.o_current > span').text(), 'Add column',
+            "Add column tab should be active after new column created");
+
+        testUtils.dom.click(kanban.$('.o_column_quick_create button.o_kanban_add'));
         assert.strictEqual(kanban.$('.o_kanban_mobile_tab.o_current > span').text(), 'msh',
-            "newly created column tab should be active tab after new column created");
+            "clicking on window should move to previous column");
+
         kanban.destroy();
     });
 
