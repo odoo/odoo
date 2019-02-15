@@ -38,7 +38,7 @@
                     </field>
                     <field name="standard_price" position="replace">
                         <field name="standard_price"
-                            attrs="{'readonly':[('valuation','=','real_time')]}"
+                            attrs="{'readonly':[('valuation','=','real_time'), ('cost_method', '!=', 'fifo')]}"
                             widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"
                             class="float-left oe_inline"/>
                         <div name="update_cost_price">
@@ -66,7 +66,7 @@
                         <label for="standard_price"/>
                         <div name="standard_price_div" class="row ml-0">
                             <field name="standard_price"
-                                attrs="{'readonly':[('valuation','=','real_time')]}"
+                                attrs="{'readonly':[('valuation','=','real_time'), ('cost_method', '!=', 'fifo')]}"
                                 widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" class="float-left"/>
                             <div name="update_cost_price">
                                 <button string="Update Cost" type="action"
