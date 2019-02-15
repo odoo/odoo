@@ -3957,9 +3957,9 @@ QUnit.module('Views', {
                 '</form>',
             mockRPC: function (route, args) {
                 if (args.method === 'onchange') {
-                    assert.strictEqual(args.args[4].test, 1,
+                    assert.strictEqual(args.kwargs.context.test, 1,
                         "the context of the field triggering the onchange should be given");
-                    assert.strictEqual(args.args[4].int_ctx, undefined,
+                    assert.strictEqual(args.kwargs.context.int_ctx, undefined,
                         "the context of other fields should not be given");
                 }
                 return this._super.apply(this, arguments);
@@ -5782,7 +5782,7 @@ QUnit.module('Views', {
                 if (route === '/web/dataset/call_kw/product/get_formview_id') {
                     return Promise.resolve(false);
                 } else if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
-                    assert.deepEqual(args.args, ["product",37,"name",{}], 'should call "call_button" route');
+                    assert.deepEqual(args.args, ["product",37,"name"], 'should call "call_button" route');
                     nbTranslateCalls++;
                     return Promise.resolve();
                 }

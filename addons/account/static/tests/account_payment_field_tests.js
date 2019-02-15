@@ -26,7 +26,7 @@ QUnit.module('account', {
     QUnit.module('Reconciliation');
 
     QUnit.test('Reconciliation form field', async function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         var form = await createView({
             View: FormView,
@@ -39,7 +39,8 @@ QUnit.module('account', {
             res_id: 1,
             mockRPC: function (route, args) {
                 if (args.method === 'remove_move_reconcile') {
-                    assert.deepEqual(args.args, [22,{"invoice_id":1}], "should call remove_move_reconcile {warning: required focus}");
+                    assert.deepEqual(args.args, [22], "should call remove_move_reconcile {warning: required focus}");
+                    assert.deepEqual(args.kwargs, {context: {"invoice_id": 1}}, "should call remove_move_reconcile {warning: required focus}");
                     return Promise.resolve();
                 }
                 if (args.method === 'assign_outstanding_credit') {

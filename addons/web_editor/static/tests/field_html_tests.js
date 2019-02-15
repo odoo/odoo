@@ -804,7 +804,7 @@ QUnit.test('save immediately before iframe is rendered in edit mode', async func
                 res_id: 1,
                 mockRPC: function (route, args) {
                     if (route === '/web/dataset/call_button' && args.method === 'translate_fields') {
-                        assert.deepEqual(args.args, ['note.note', 1, 'body', {}], "should call 'call_button' route");
+                        assert.deepEqual(args.args, ['note.note', 1, 'body'], "should call 'call_button' route");
                         return Promise.resolve();
                     }
                     return this._super.apply(this, arguments);
@@ -840,7 +840,7 @@ QUnit.test('save immediately before iframe is rendered in edit mode', async func
                 res_id: 1,
                 mockRPC: function (route, args) {
                     if (route === '/web/dataset/call_button' && args.method === 'translate_fields') {
-                        assert.deepEqual(args.args, ['note.note', 1, 'body', {}], "should call 'call_button' route");
+                        assert.deepEqual(args.args, ['note.note', 1, 'body'], "should call 'call_button' route");
                         return Promise.resolve();
                     }
                     return this._super.apply(this, arguments);
