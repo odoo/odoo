@@ -273,7 +273,7 @@
                                 <div class="col-8">
                                     <div class="row">
                                         <h3 class="col-6" t-att-title="slide_promoted.name">
-                                            <t t-if="slide_promoted.is_preview or channel.is_member">
+                                            <t t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher">
                                                 <a t-attf-href="/slides/slide/#{slug(slide_promoted)}" class="font-weight-bold text-muted" t-field="slide_promoted.name"/>
                                             </t>
                                             <t t-else="">
@@ -324,7 +324,7 @@
                     t-att-alt="channel.name"/>
                 <div class="card-body">
                     <h5 class="card-title" t-att-title="slide.name">
-                        <t t-if="slide.is_preview or channel.is_member">
+                        <t t-if="slide.is_preview or channel.is_member or is_slides_publisher">
                             <a t-attf-href="/slides/slide/#{slug(slide)}" t-esc="slide.name"/>
                         </t>
                         <t t-else="">
