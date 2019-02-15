@@ -213,26 +213,6 @@ var ChannelSeenMixin = {
     },
 
     //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @returns {$.Promise<integer>} resolved with ID of last seen message
-     */
-    _notifySeen: function () {
-        var self = this;
-        return this._rpc({
-            model: 'mail.channel',
-            method: 'channel_seen',
-            args: [[this._id]],
-        }, { shadow: true }).then(function (lastSeenMessageID) {
-            self._lastSeenMessageID = lastSeenMessageID;
-            return lastSeenMessageID;
-        });
-    },
-
-    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
