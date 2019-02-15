@@ -1,0 +1,37 @@
+Return-Path: <pp@odoo.com>
+Date: Tue, 05 Feb 2019 09:56:21 -0500
+Subject: This message has body with NUL bytes
+Message-ID: <{message_id}@odoo.com>
+From: Peter Parker <pp@odoo.com>
+To: thread@example.com
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="--_a3ccd57a.acfd.46ca.a919.8f0ec1497a17@odoo.com"
+
+----_a3ccd57a.acfd.46ca.a919.8f0ec1497a17@odoo.com
+Content-Type: multipart/alternative; boundary="--_93c46628.01cc.4559.97f0.c642ffa20fb6@odoo.com"
+
+----_93c46628.01cc.4559.97f0.c642ffa20fb6@odoo.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+
+V2l0aCBhIAAgYnl0ZQ==
+
+----_93c46628.01cc.4559.97f0.c642ffa20fb6@odoo.com
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: base64
+
+PHA+V2l0aCBhIAAgYnl0ZTwvcD4=
+
+----_93c46628.01cc.4559.97f0.c642ffa20fb6@odoo.com--
+
+----_a3ccd57a.acfd.46ca.a919.8f0ec1497a17@odoo.com
+Content-Type: ;
+ name="with-nul-bytes"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="with-nul-bytes";
+ size=13
+
+V2l0aCBhIAAgYnl0ZQ==
+
+----_a3ccd57a.acfd.46ca.a919.8f0ec1497a17@odoo.com--

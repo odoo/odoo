@@ -1,0 +1,11 @@
+<odoo>
+  <data noupdate="1">
+    <record model="mail.alias" id="new-thread-alias">
+      <field name="alias_name">thread</field>
+      <field name="alias_model_id"
+             ref="test_fetchmail.model_test_fetchmail_thread"/>
+      <field name="alias_domain">example.com</field>
+      <field name="alias_contact">everyone</field>
+    </record>
+  </data>
+</odoo>
