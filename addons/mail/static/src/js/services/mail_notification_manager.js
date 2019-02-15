@@ -80,7 +80,9 @@ MailManager.include({
         if (!channel) {
             return;
         }
-        channel.updateSeenPartnersInfo(data);
+        if (channel.hasSeenFeature()) {
+            channel.updateSeenPartnersInfo(data);
+        }
     },
     /**
      * Called when a new or updated message is received on a channel
@@ -126,7 +128,9 @@ MailManager.include({
         if (!channel) {
             return;
         }
-        channel.updateSeenPartnersInfo(data);
+        if (channel.hasSeenFeature()) {
+            channel.updateSeenPartnersInfo(data);
+        }
         if (session.partner_id !== data.partner_id) {
             return;
         }
@@ -234,6 +238,27 @@ MailManager.include({
                 detached: channelData.is_minimized,
             });
         }
+    },
+    /**
+     * Called when receiving a multi_user_channel seen notification. Only
+     * the current user is notified. This must be handled as if this is a
+     * channel seen notification.
+     *
+     * Note that this is a 'res.partner' notification because only the current
+     * user is notified on channel seen. This is a consequence from disabling
+     * the seen feature on multi_user_channel, because we still need to get
+     * the last seen message ID in order to display the "New Messages" separator
+     * in Discuss.
+     *
+     * @private
+     * @param {Object} data
+     * @param {integer} data.channel_id
+     * @param {string} data.info 'channel_seen'
+     * @param {integer} data.last_message_id
+     * @param {integer} data.partner_id
+     */
+    _handlePartnerChannnelSeenNotification: function (data) {
+        this._handleChannelSeenNotification(data.channel_id, data);
     },
     /**
      * Add or remove failure when receiving a failure update message
@@ -387,6 +412,8 @@ MailManager.include({
             this._handlePartnerMailFailureNotification(data);
         } else if (data.type === 'user_connection') {
             this._handlePartnerUserConnectionNotification(data);
+        } else if (data.info === 'channel_seen') {
+            this._handlePartnerChannnelSeenNotification(data);
         } else {
             this._handlePartnerChannelNotification(data);
         }

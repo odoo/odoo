@@ -586,10 +586,18 @@ QUnit.test('grouped preview for needaction messages linked to same document', fu
     messagingMenu.destroy();
 });
 
-QUnit.test("messaging menu widget: channel seen notification", function ( assert ) {
+QUnit.test("messaging menu widget: channel seen notification", function (assert) {
     assert.expect(4);
 
-    this.data.initMessaging.channel_slots.channel_channel[0].message_unread_counter = 1;
+    this.data.initMessaging.channel_slots = {
+        channel_direct_message: [{
+            id: 1,
+            channel_type: "chat",
+            direct_partner: [{ id: 2, name: 'Someone', im_status: '' }],
+            name: 'DM',
+            message_unread_counter: 1,
+        }],
+    };
 
     var messagingMenu = new MessagingMenu();
     testUtils.mock.addMockEnvironment(messagingMenu, {
@@ -605,7 +613,7 @@ QUnit.test("messaging menu widget: channel seen notification", function ( assert
         "should have correct messaging menu counter (1 unread message in channel)");
     assert.strictEqual(messagingMenu.$('.o_preview_counter').text().replace(/\s/g, ''),
         '(1)',
-        "should display 1 unread message on general channel preview");
+        "should display 1 unread message on DM channel preview");
 
     // Simulate received channel seen notification
     var message = {
@@ -621,7 +629,7 @@ QUnit.test("messaging menu widget: channel seen notification", function ( assert
     assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '0',
         "should no longer have a messaging menu counter (no unread message in channel)");
     assert.strictEqual(messagingMenu.$('.o_preview_counter').text().replace(/\s/g, ''), '',
-        "should no longer display unread message on general channel preview");
+        "should no longer display unread message on DM channel preview");
 
     messagingMenu.destroy();
 });

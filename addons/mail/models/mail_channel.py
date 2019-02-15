@@ -730,7 +730,11 @@ class Channel(models.Model):
         self.ensure_one()
         if self.channel_message_ids.ids:
             last_message_id = self.channel_message_ids.ids[0] # zero is the index of the last message
-            self.env['mail.channel.partner'].search([('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]).write({
+            channel_partner = self.env['mail.channel.partner'].search([('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)])
+            if channel_partner.seen_message_id.id == last_message_id:
+                # last message seen by user is already up-to-date
+                return
+            channel_partner.write({
                 'seen_message_id': last_message_id,
                 'fetched_message_id': last_message_id,
             })
@@ -739,7 +743,11 @@ class Channel(models.Model):
                 'last_message_id': last_message_id,
                 'partner_id': self.env.user.partner_id.id,
             }
-            self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', self.id), data]])
+            if self.channel_type == 'chat':
+                self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', self.id), data]])
+            else:
+                data['channel_id'] = self.id
+                self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), data)
             return last_message_id
 
     @api.multi
@@ -750,8 +758,14 @@ class Channel(models.Model):
         for channel in self:
             if not channel.channel_message_ids.ids:
                 return
+            if channel.channel_type != 'chat':
+                return
             last_message_id = channel.channel_message_ids.ids[0] # zero is the index of the last message
-            self.env['mail.channel.partner'].search([('channel_id', '=', channel.id), ('partner_id', '=', self.env.user.partner_id.id)]).write({
+            channel_partner = self.env['mail.channel.partner'].search([('channel_id', '=', channel.id), ('partner_id', '=', self.env.user.partner_id.id)])
+            if channel_partner.fetched_message_id.id == last_message_id:
+                # last message fetched by user is already up-to-date
+                return
+            channel_partner.write({
                 'fetched_message_id': last_message_id,
             })
             data = {
