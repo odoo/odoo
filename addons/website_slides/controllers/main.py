@@ -6,7 +6,7 @@ import itertools
 import logging
 import werkzeug
 
-from odoo import http, _
+from odoo import http, modules, tools, _
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.osv import expression
@@ -14,7 +14,6 @@ from odoo.osv import expression
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.tools import html2plaintext
 
 _logger = logging.getLogger(__name__)
 
@@ -267,7 +266,7 @@ class WebsiteSlides(WebsiteProfile):
                 'message_post_hash': channel._sign_token(request.env.user.partner_id.id),
                 'message_post_pid': request.env.user.partner_id.id,
                 'last_message_id': last_message_data.get('id'),
-                'last_message': html2plaintext(last_message_data.get('body', '')),
+                'last_message': tools.html2plaintext(last_message_data.get('body', '')),
                 'last_rating_value': last_message_data.get('rating_value'),
             })
 
@@ -361,6 +360,36 @@ class WebsiteSlides(WebsiteProfile):
         elif not request.session.uid and slide.download_security == 'user':
             return request.redirect('/web/login?redirect=/slides/slide/%s' % (slide.id))
         return request.render("website.403")
+
+    @http.route('/slides/slide/<int:slide_id>/get_image', type='http', auth="public", website=True, sitemap=False)
+    def slide_get_image(self, slide_id, field='image_medium', width=0, height=0, crop=False, avoid_if_small=False, upper_limit=False):
+        # Protect infographics by limiting access to 256px (large) images
+        if field not in ('image_small', 'image_medium', 'image_large'):
+            return werkzeug.exceptions.Forbidden()
+
+        slide = request.env['slide.slide'].sudo().browse(slide_id).exists()
+        if not slide:
+            raise werkzeug.exceptions.NotFound()
+
+        status, headers, content = request.env['ir.http'].sudo().binary_content(
+            model='slide.slide', id=slide.id, field=field,
+            default_mimetype='image/png')
+        if status == 301:
+            return request.env['ir.http']._response_by_status(status, headers, content)
+        if status == 304:
+            return werkzeug.wrappers.Response(status=304)
+
+        if not content:
+            content = self._get_default_avatar(field, headers, width, height)
+
+        content = tools.limited_image_resize(
+            content, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
+
+        image_base64 = base64.b64decode(content)
+        headers.append(('Content-Length', len(image_base64)))
+        response = request.make_response(image_base64, headers)
+        response.status_code = status
+        return response
 
     # JSONRPC
     @http.route('/slides/slide/like', type='json', auth="user", website=True)
