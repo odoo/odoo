@@ -157,7 +157,7 @@ class Channel(models.Model):
     @api.depends('slide_ids.slide_type', 'slide_ids.is_published',
                  'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views')
     def _compute_slides_statistics(self):
-        result = dict.fromkeys(self.ids, dict(total_slides=0, total_views=0, total_votes=0, total_time=0))
+        result = dict((cid, dict(total_slides=0, total_views=0, total_votes=0, total_time=0)) for cid in self.ids)
         read_group_res = self.env['slide.slide'].read_group(
             [('is_published', '=', True), ('channel_id', 'in', self.ids)],
             ['channel_id', 'slide_type', 'likes', 'dislikes', 'total_views', 'completion_time'],
@@ -180,7 +180,7 @@ class Channel(models.Model):
 
     def _compute_slides_statistics_type(self, read_group_res):
         """ Can be overridden to compute stats on added slide_types """
-        result = dict.fromkeys(self.ids, dict(nbr_presentations=0, nbr_documents=0, nbr_videos=0, nbr_infographics=0, nbr_webpages=0))
+        result = dict((cid, dict(nbr_presentations=0, nbr_documents=0, nbr_videos=0, nbr_infographics=0, nbr_webpages=0)) for cid in self.ids)
         for res_group in read_group_res:
             cid = res_group['channel_id'][0]
             result[cid]['nbr_presentations'] += res_group.get('slide_type', '') == 'presentation' and res_group['__count'] or 0
