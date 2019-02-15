@@ -7,11 +7,6 @@ from odoo import models
 class Assets(models.AbstractModel):
     _inherit = 'web_editor.assets'
 
-    def get_view_fields_to_read(self):
-        res = super(Assets, self).get_view_fields_to_read()
-        res.append('website_id')
-        return res
-
     def _get_custom_attachment(self, custom_url, op='='):
         """
         See web_editor.Assets._get_custom_attachment

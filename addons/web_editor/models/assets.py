@@ -18,9 +18,6 @@ class Assets(models.AbstractModel):
     _name = 'web_editor.assets'
     _description = 'Assets Utils'
 
-    def get_view_fields_to_read(self):
-        return ['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id']
-
     def get_all_custom_attachments(self, urls):
         """
         Fetch all the ir.attachment records related to given URLs.
