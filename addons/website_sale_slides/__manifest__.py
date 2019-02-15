@@ -13,5 +13,6 @@
     'data': [
         'data/website_sale_slides_demo.xml',
         'views/slide_channel_views.xml',
+        'views/website_slides_templates.xml',
     ]
 }

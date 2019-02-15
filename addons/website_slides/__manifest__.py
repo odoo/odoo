@@ -25,6 +25,7 @@ Share and Publish Videos, Presentations and Documents'
     'data': [
         'views/assets.xml',
         'views/res_config_settings_views.xml',
+        'views/website_slides_templates_homepage.xml',
         'views/website_slides_templates.xml',
         'views/website_slides_embed_templates.xml',
         'views/slide_slide_views.xml',
@@ -34,7 +35,8 @@ Share and Publish Videos, Presentations and Documents'
         'views/slide_channel_invite_views.xml',
         'views/website_slides_menu_views.xml',
         'views/website_slides_templates_profile.xml',
-        'data/website_slides_ir_data.xml',
+        'data/ir_data.xml',
+        'data/gamification_data.xml',
         'data/mail_data.xml',
         'data/slide_data.xml',
         'data/website_data.xml',
@@ -42,7 +44,10 @@ Share and Publish Videos, Presentations and Documents'
         'security/website_slides_security.xml'
     ],
     'demo': [
-        'data/website_slides_demo.xml'
+        'data/slide_channel_tag_demo.xml',
+        'data/slide_channel_demo.xml',
+        'data/slide_slide_demo.xml',
+        'data/slide_user_demo.xml',
     ],
     'installable': True,
     'application': True,

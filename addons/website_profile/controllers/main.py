@@ -2,18 +2,34 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import werkzeug
 import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
 
-from odoo import http
+from odoo import http, modules, tools
 from odoo.http import request
 from odoo.osv import expression
+from odoo.tools import limited_image_resize
 
 
 class WebsiteProfile(http.Controller):
+
     # Profile
     # ---------------------------------------------------
+
+    def _check_avatar_access(self, user_id, **post):
+        """ Base condition to see user avatar independently form access rights
+        is to see published users having karma, meaning they participated to
+        frontend applications like forum or elearning. """
+        try:
+            user = request.env['res.users'].sudo().browse(user_id).exists()
+        except:
+            return False
+        if user:
+            return user.website_published and user.karma > 0
+        return False
+
     def _check_user_profile_access(self, user_id):
         user_sudo = request.env['res.users'].sudo().browse(user_id)
         if user_sudo.karma == 0 or not user_sudo.website_published or \
@@ -40,6 +56,47 @@ class WebsiteProfile(http.Controller):
             'is_profile_page': True,
             'edit_button_url_param': '',
         }
+
+    @http.route([
+        '/profile/avatar/<int:user_id>',
+    ], type='http', auth="public", website=True, sitemap=False)
+    def get_user_profile_avatar(self, user_id=0, width=0, height=0, crop=False, avoid_if_small=False, upper_limit=False, **post):
+        can_sudo = self._check_avatar_access(user_id, **post)
+        fname = post.get('field', 'image_medium')
+        if can_sudo:
+            status, headers, content = request.env['ir.http'].sudo().binary_content(
+                model='res.users', id=user_id, field=fname,
+                default_mimetype='image/png')
+        else:
+            status, headers, content = request.env['ir.http'].binary_content(
+                model='res.users', id=user_id, field=fname,
+                default_mimetype='image/png')
+        if status == 301:
+            return request.env['ir.http']._response_by_status(status, headers, content)
+        if status == 304:
+            return werkzeug.wrappers.Response(status=304)
+
+        if not content:
+            img_path = modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
+            with open(img_path, 'rb') as f:
+                image = f.read()
+            content = base64.b64encode(image)
+            dictheaders = dict(headers) if headers else {}
+            dictheaders['Content-Type'] = 'image/png'
+            headers = list(dictheaders.items())
+            if not (width or height):
+                suffix = fname.split('_')[-1]
+                if suffix in ('small', 'medium', 'big'):
+                    content = getattr(tools, 'image_resize_image_%s' % suffix)(content)
+
+        content = limited_image_resize(
+            content, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
+
+        image_base64 = base64.b64decode(content)
+        headers.append(('Content-Length', len(image_base64)))
+        response = request.make_response(image_base64, headers)
+        response.status_code = status
+        return response
 
     @http.route(['/profile/user/<int:user_id>'], type='http', auth="public", website=True)
     def view_user_profile(self, user_id, **post):
