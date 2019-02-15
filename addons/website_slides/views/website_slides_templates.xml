@@ -268,7 +268,9 @@
                             </div>
                             <div class="row" t-if="slide_promoted">
                                 <div class="col-4">
-                                    <img class="img img-fluid" t-att-src="'/web/image/slide.slide/%s/image' % slide_promoted.id"/>
+                                    <img class="img img-fluid" style=""
+                                        t-att-src="'/slides/slide/%s/get_image?field=image_large' % slide_promoted.id"
+                                        t-att-alt="slide_promoted.name"/>
                                 </div>
                                 <div class="col-8">
                                     <div class="row">
@@ -318,10 +320,9 @@
     <div class="row o_wslides_row mt8">
         <div class="col-lg-3 col-md-6 col-12" t-foreach="slides" t-as="slide">
             <div class="card o_wslides_lesson_card">
-                <img class="card-img-top img-fuild"
-                    style="max-height: 160px;"
-                    t-att-src="'/web/image/slide.slide/%s/image_large' % slide.id if slide.image else '/website_slides/static/src/img/channel-default.jpg'"
-                    t-att-alt="channel.name"/>
+                <img class="card-img-top img-fuild" style="max-height: 160px;"
+                    t-att-src="'/slides/slide/%s/get_image?field=image_large' % slide.id"
+                    t-att-alt="slide.name"/>
                 <div class="card-body">
                     <h5 class="card-title" t-att-title="slide.name">
                         <t t-if="slide.is_preview or channel.is_member or is_slides_publisher">

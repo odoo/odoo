@@ -312,7 +312,6 @@
         <div class="col-2">
             <t t-call="website_slides.slides_misc_user_image">
                 <t t-set="user" t-value="achievement.user_id"/>
-                <t t-set="record" t-value="channels_popular[:1]"/>
             </t>
         </div>
         <div class="col">
@@ -353,9 +352,7 @@
             <span class="font-weight-bold text-muted o_wslides_home_circled" t-esc="counter"/>
         </div>
         <div class="col-2">
-            <t t-call="website_slides.slides_misc_user_image">
-                <t t-set="record" t-value="channels_popular[:1]"/>
-            </t>
+            <t t-call="website_slides.slides_misc_user_image"/>
         </div>
         <div class="col">
             <span class="font-weight-bold" t-esc="user.name"/>
@@ -370,9 +367,7 @@
     <div class="o_wslides_home_aside">
         <div class="row mt16 o_wslides_home_aside_title align-items-center">
             <div class="col">
-                <t t-call="website_slides.slides_misc_user_image">
-                    <t t-set="record" t-value="channels_popular[:1]"/>
-                </t>
+                <t t-call="website_slides.slides_misc_user_image"/>
                 <a t-att-href="'/slides'" class="float-right">Edit</a>
                 <h4 t-esc="user.name" class="font-weight-bold"/>
                 <hr/>
@@ -407,10 +402,10 @@
     </div>
 </template>
 
-<template id='slides_misc_user_image' name="Float Time">
+<template id='slides_misc_user_image' name="User Avatar">
     <img t-att-class="img_class if img_class else 'rounded-circle float-left'"
         t-att-style="img_style if img_style else 'max-height: 32px;'"
-        t-att-src="'/profile/avatar/%s?field=image_medium%s' % (user.id, '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"
+        t-att-src="'/profile/avatar/%s?field=image_medium' % user.id"
         t-att-alt="user.name"/>
 </template>
 
