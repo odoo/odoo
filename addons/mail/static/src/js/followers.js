@@ -248,8 +248,10 @@ var Followers = AbstractField.extend({
     _unfollow: function (ids) {
         var self = this;
         return new Promise(function (resolve, reject) {
-            var text = _t("Warning! \n If you remove a follower, he won't be notified of any email or discussion on this document.\n Do you really want to remove this follower ?");
+            var follower = _.find(self.followers, { res_id: ids.partner_ids ? ids.partner_ids[0] : ids.channel_ids[0] });
+            var text = _.str.sprintf(_t("If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove %s?"), follower.name);
             Dialog.confirm(this, text, {
+                title: _t("Warning"),
                 confirm_callback: function () {
                     var args = [
                         [self.res_id],
