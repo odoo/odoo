@@ -40,5 +40,17 @@
         <t t-else="">
             <b>No certifications yet!</b>
         </t>
-     </template>
+    </template>
+
+    <template id="top3_user_card" inherit_id="website_profile.top3_user_card">
+        <xpath expr="//div[@id='top3_user_badge_count']" position="after">
+           <div class="col" style="border-left: 1px solid lightgrey"><span><span t-esc="user['certification_count']"/> Certifications</span></div>
+        </xpath>
+    </template>
+
+    <template id="all_user_card" inherit_id="website_profile.all_user_card">
+        <xpath expr="//div[@id='all_user_badge_count']" position="after">
+           <div class="col"><span><span t-esc="user['certification_count']"/> Certifications</span></div>
+        </xpath>
+    </template>
 </data></odoo>

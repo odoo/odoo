@@ -13,13 +13,13 @@
         <xpath expr="//tr[@id='profile_abstract_info_company']" position="after">
             <t t-if="forum and (up_votes or down_votes)">
                 <tr id="profile_abstract_info_company">
-                    <th style="width: 30%"><b class="text-muted">Votes</b></th>
+                    <th style="width: 30%"><span class="font-weight-bold text-muted">Votes</span></th>
                     <th style="width: 70%">
                         <span>
                             <i class="fa fa-thumbs-up text-success" role="img" aria-label="Positive votes" title="Positive votes"/>
-                            <b t-esc="up_votes"/>
+                            <span class="font-weight-bold" t-esc="up_votes"/>
                             <i class="fa fa-thumbs-down text-danger ml-3" role="img" aria-label="Negative votes" title="Negative votes"/>
-                            <b t-esc="down_votes"/>
+                            <span class="font-weight-bold" t-esc="down_votes"/>
                         </span>
                     </th>
                 </tr>
@@ -52,7 +52,7 @@
                             </div>
                         </t>
                         <t t-else="">
-                            <b>No question posted yet.</b>
+                            <span class="font-weight-bold">No question posted yet.</span>
                         </t>
                     </div>
                     <t t-if="favourite">
@@ -81,7 +81,7 @@
                             </div>
                         </t>
                         <t t-else="">
-                            <b>No answer posted yet.</b>
+                            <span class="font-weight-bold">No answer posted yet.</span>
                         </t>
                     </div>
                 </div>
@@ -122,7 +122,7 @@
             </div>
         </t>
         <t t-else="">
-            <b>No activities yet!</b>
+            <span class="font-weight-bold">No activities yet!</span>
         </t>
     </template>
 
@@ -139,7 +139,7 @@
             </t>
         </div>
         <div class="mb16" t-if="not vote_post">
-            <b>No vote given by you yet!</b>
+            <span class="font-weight-bold">No vote given by you yet!</span>
         </div>
     </template>
 </data></odoo>

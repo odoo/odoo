@@ -57,6 +57,15 @@ class WebsiteSlides(WebsiteSlides):
         })
         return values
 
+    # All Users Page
+    # ---------------------------------------------------
+    def _prepare_all_users_values(self, user, position):
+        result = super(WebsiteSlides, self)._prepare_all_users_values(user, position)
+        result.update({
+            'certification_count': len(self._get_user_certificates(user))
+        })
+        return result
+
     def _get_user_certificates(self, user):
         domain = [
             ('partner_id', '=', user.partner_id.id),
