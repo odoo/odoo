@@ -288,7 +288,7 @@ class Slide(models.Model):
 
     @api.multi
     def write(self, values):
-        if values.get('website_published') and any(not slide.channel_id.can_publish for slide in self):
+        if 'website_published' in values and any(not slide.channel_id.can_publish for slide in self):
             values.pop('website_published')
 
         if values.get('url') and values['url'] != self.url:
