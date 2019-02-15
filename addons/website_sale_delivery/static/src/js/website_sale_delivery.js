@@ -1,10 +1,12 @@
-'use strict';
 odoo.define('website_sale_delivery.checkout', function (require) {
+    'use strict';
 
     require('web.dom_ready');
     var ajax = require('web.ajax');
     var core = require('web.core');
     var _t = core._t;
+    var concurrency = require('web.concurrency');
+    var dp = new concurrency.DropPrevious();
 
     /* Handle interactive carrier choice + cart update */
     var $pay_button = $('#o_payment_form_pay');
@@ -51,7 +53,7 @@ odoo.define('website_sale_delivery.checkout', function (require) {
         $pay_button.prop('disabled', true);
         var carrier_id = $(ev.currentTarget).val();
         var values = {'carrier_id': carrier_id};
-        ajax.jsonRpc('/shop/update_carrier', 'call', values)
+        dp.add(ajax.jsonRpc('/shop/update_carrier', 'call', values))
           .then(_onCarrierUpdateAnswer);
     };
 
