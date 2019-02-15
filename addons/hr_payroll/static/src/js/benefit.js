@@ -25,9 +25,9 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
         },
 
         _renderBenefitButton: function (text, event_class) {
-            this.$buttons.find('.o_calendar_button_month').after(
-                $('<button class="btn btn-primary btn-benefit ' + event_class + '" type="button">'+ _t(text) +'</button>')
-            );
+            var $button = $('<button class="btn btn-primary btn-benefit" type="button" />');
+            $button.text(text).addClass(event_class);
+            this.$buttons.find('.o_calendar_button_month').after($button);
         },
 
         _renderBenefitButtons: function () {
@@ -41,13 +41,13 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
             var is_validated = this._checkValidation(this.events);
             this.$buttons.find('.btn-benefit').remove();
             if (this.events.length === 0) {
-                this._renderBenefitButton("Generate Benefits", 'btn-benefit-generate');
+                this._renderBenefitButton(_t("Generate Benefits"), 'btn-benefit-generate');
             }
             if (is_validated && this.events.length !== 0) {
-                this._renderBenefitButton("Generate Payslips", 'btn-payslip-generate');
+                this._renderBenefitButton(_t("Generate Payslips"), 'btn-payslip-generate');
             }
             else if (!is_validated) {
-                this._renderBenefitButton("Validate Benefits", 'btn-benefit-validate');
+                this._renderBenefitButton(_t("Validate Benefits"), 'btn-benefit-validate');
             }
         },
 
