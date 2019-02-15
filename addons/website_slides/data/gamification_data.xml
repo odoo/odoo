@@ -138,14 +138,14 @@
         <field name="description">Get a certification</field>
         <field name="computation_mode">count</field>
         <field name="display_mode">boolean</field>
-        <field name="model_id" eval="ref('website_slides.model_slide_channel_partner')"/>
+        <field name="model_id" eval="ref('website_slides.model_slide_slide_partner')"/>
         <field name="condition">higher</field>
         <field name="domain">[
             ('completed', '=', True),
             (0, '=', 1)
         ]</field>
         <field name="batch_mode">True</field>
-        <field name="batch_distinctive_field" eval="ref('website_slides.field_slide_channel_partner__partner_id')"/>
+        <field name="batch_distinctive_field" eval="ref('website_slides.field_slide_slide_partner__partner_id')"/>
         <field name="batch_user_expression">user.partner_id.id</field>
     </record>
     <record id="badge_data_certification_challenge" model="gamification.challenge">

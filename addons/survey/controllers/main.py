@@ -12,7 +12,7 @@ from math import ceil
 from odoo import fields, http, _
 from odoo.addons.base.models.ir_ui_view import keep_query
 from odoo.exceptions import UserError
-from odoo.http import request
+from odoo.http import request, content_disposition
 from odoo.tools import ustr
 
 _logger = logging.getLogger(__name__)
@@ -136,7 +136,7 @@ class Survey(http.Controller):
         elif error_key == 'answer_deadline' and answer_sudo.token:
             return request.render("survey.survey_expired", {'survey': survey_sudo})
         elif error_key == 'answer_done' and answer_sudo.token:
-            return request.render("survey.sfinished", {'survey': survey_sudo, 'token': answer_sudo.token, 'answer': answer_sudo})
+            return request.render("survey.sfinished", self._prepare_survey_finished_values(survey_sudo, answer_sudo, token=answer_sudo.token))
 
         return werkzeug.utils.redirect("/")
 
@@ -165,13 +165,22 @@ class Survey(http.Controller):
             return werkzeug.utils.redirect("/")
 
         try:
-            retry_answer_sudo = survey_sudo._create_answer(user=request.env.user, partner=answer_sudo.partner_id, email=answer_sudo.email, invite_token=answer_sudo.invite_token, **{
-                'input_type': answer_sudo.input_type,
-                'deadline': answer_sudo.deadline,
-            })
+            retry_answer_sudo = survey_sudo._create_answer(
+                user=request.env.user,
+                partner=answer_sudo.partner_id,
+                email=answer_sudo.email,
+                invite_token=answer_sudo.invite_token,
+                **self._prepare_retry_additional_values(answer_sudo)
+            )
         except:
             return werkzeug.utils.redirect("/")
         return request.redirect('/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=retry_answer_sudo.token)))
+
+    def _prepare_retry_additional_values(self, answer):
+        return {
+            'input_type': answer.input_type,
+            'deadline': answer.deadline,
+        }
 
     @http.route('/survey/start/<string:survey_token>', type='http', auth='public', website=True)
     def survey_start(self, survey_token, answer_token=None, email=False, **post):
@@ -256,8 +265,7 @@ class Survey(http.Controller):
                 data.update({'last': True})
             return request.render('survey.survey', data)
         elif answer_sudo.state == 'done':  # Display success message
-            return request.render('survey.sfinished', {'survey': survey_sudo,
-                                                       'answer': answer_sudo})
+            return request.render('survey.sfinished', self._prepare_survey_finished_values(survey_sudo, answer_sudo))
         elif answer_sudo.state == 'skip':
             flag = (True if prev and prev == 'prev' else False)
             page_or_question_id, last = survey_sudo.next_page_or_question(answer_sudo, answer_sudo.last_displayed_page_id.id, go_back=flag)
@@ -501,6 +509,37 @@ class Survey(http.Controller):
         #     filter_finish: boolean => only finished surveys or not
         #
 
+    @http.route(['/survey/<int:survey_id>/get_certification'], type='http', auth='user', methods=['POST'], website=True)
+    def survey_get_certification(self, survey_id, **kwargs):
+        """ The certification document can be downloaded as long as the user has succeeded the certification """
+        survey = request.env['survey.survey'].sudo().search([
+            ('id', '=', survey_id),
+            ('certificate', '=', True)
+        ])
+
+        if not survey:
+            # no certification found
+            return werkzeug.utils.redirect("/")
+
+        succeeded_attempt = request.env['survey.user_input'].sudo().search([
+            ('partner_id', '=', request.env.user.partner_id.id),
+            ('survey_id', '=', survey_id),
+            ('quizz_passed', '=', True)
+        ], limit=1)
+
+        if not succeeded_attempt:
+            raise UserError(_("The user has not succeeded the certification"))
+
+        report_sudo = request.env.ref('survey.certification_report').sudo()
+
+        report = report_sudo.render_qweb_pdf([succeeded_attempt.id], data={'report_type': 'pdf'})[0]
+        reporthttpheaders = [
+            ('Content-Type', 'application/pdf'),
+            ('Content-Length', len(report)),
+        ]
+        reporthttpheaders.append(('Content-Disposition', content_disposition('Certification.pdf')))
+        return request.make_response(report, headers=reporthttpheaders)
+
     def _prepare_result_dict(self, survey, current_filters=None):
         """Returns dictionary having values for rendering template"""
         current_filters = current_filters if current_filters else []
@@ -596,3 +635,9 @@ class Survey(http.Controller):
             'success_rate': round((quizz_passed_count / total_quizz_passed) * 100, 1) if total_quizz_passed > 0 else 0,
             'graph_data': graph_data
         }
+
+    def _prepare_survey_finished_values(self, survey, answer, token=False):
+        values = {'survey': survey, 'answer': answer}
+        if token:
+            values['token'] = token
+        return values

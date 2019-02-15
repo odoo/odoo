@@ -145,6 +145,11 @@ class SurveyUserInput(models.Model):
             if user_input.survey_id.certificate and user_input.quizz_passed and user_input.survey_id.certification_mail_template_id:
                 user_input.survey_id.certification_mail_template_id.send_mail(user_input.id, notif_layout="mail.mail_notification_light")
 
+    @api.multi
+    def _get_survey_url(self):
+        self.ensure_one()
+        return '/survey/start/%s?answer_token=%s' % (self.survey_id.access_token, self.token)
+
 
 class SurveyUserInputLine(models.Model):
     _name = 'survey.user_input_line'
