@@ -244,6 +244,7 @@ class WebsiteSlides(WebsiteProfile):
             'user': request.env.user,
             'pager': pager,
             'is_public_user': request.website.is_public_user(),
+            'is_slides_publisher': request.env.user.has_group('website.group_website_publisher'),
         }
         if not request.env.user._is_public():
             last_message_values = request.env['mail.message'].search([
