@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Lead Generation',
+    'name': 'Lead Generation From Website Visits',
     'summary': 'Create Leads/Opportunities from your website\'s traffic',
     'category': 'CRM',
     'depends': ['iap', 'crm', 'website_form', 'crm_iap_lead'],
