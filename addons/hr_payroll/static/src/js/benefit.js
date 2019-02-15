@@ -3,8 +3,9 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
 
     var core = require('web.core');
     var CalendarController = require("web.CalendarController");
-
+    var time = require('web.time');
     var _t = core._t;
+
     CalendarController.include({
 
         update: function () {
@@ -24,7 +25,6 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
                 .on('click', function (e) {
                     e.preventDefault();
                     e.stopImmediatePropagation();
-                    var date_fmt = 'YYYY-MM-DD HH:mm:ss';
                     var options = {
                         on_close: function () {
                             self.reload();
@@ -38,8 +38,8 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
                         views: [[false,'form']],
                         target: 'new',
                         context: {
-                            'start_benefits': date_from.format(date_fmt),
-                            'stop_benefits':date_to.format(date_fmt),
+                            'start_benefits': time.datetime_to_str(date_from),
+                            'stop_benefits': time.datetime_to_str(date_to),
                         },
                     }, options);
                 })
@@ -51,8 +51,8 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
                 return;
             }
 
-            var firstDay = this.model.data.target_date.clone().startOf('month');
-            var lastDay = this.model.data.target_date.clone().endOf('month');
+            var firstDay = this.model.data.target_date.clone().startOf('month').toDate();
+            var lastDay = this.model.data.target_date.clone().endOf('month').toDate();
             var events = this._checkDataInRange(firstDay, lastDay, this.model.data.data);
             var is_validated = this._checkValidation(events);
             this.$buttons.find('.btn-benefit').remove();
@@ -75,12 +75,11 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
                     .on('click', function (e) {
                         e.preventDefault();
                         e.stopImmediatePropagation();
-                        var date_fmt = 'YYYY-MM-DD';
                         self.do_action('hr_payroll.action_hr_payslip_by_employees', {
                             additional_context: {
                                 default_employee_ids: employee_ids || [],
-                                default_date_start: firstDay.format(date_fmt),
-                                default_date_end: lastDay.format(date_fmt),
+                                default_date_start: time.date_to_str(firstDay),
+                                default_date_end: time.date_to_str(lastDay),
                             },
                         });
                     })
