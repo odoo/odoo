@@ -498,7 +498,10 @@ class IrActionsServer(models.Model):
 
         if action.link_field_id:
             record = self.env[action.model_id.model].browse(self._context.get('active_id'))
-            record.write({action.link_field_id.name: res.id})
+            if action.link_field_id.ttype in ['one2many', 'many2many']:
+                record.write({action.link_field_id.name: [(4, res.id)]})
+            else:
+                record.write({action.link_field_id.name: res.id})
 
     @api.model
     def _get_eval_context(self, action=None):
