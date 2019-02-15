@@ -142,6 +142,11 @@
                                 </li>
                             </t>
                         </ul>
+                        <!-- karma / profile -->
+                        <a t-if="not is_public_user" t-att-href="'/profile/user/%s' % user.id" class="font-weight-bold mr-3">
+                            <i class="fa fa-diamond"/> <t t-esc="user_id.karma"/>
+                        </a>
+                        <!-- search box -->
                         <form method="GET" class="form-inline justify-content-center">
                             <div class="input-group">
                                 <input type="search" name="search" class="form-control"
@@ -366,15 +371,18 @@
 <template id='slides_home_user_profile_small' name="User Profile">
     <div class="o_wslides_home_aside">
         <div class="row mt16 o_wslides_home_aside_title align-items-center">
-            <div class="col">
+            <div class="col-12">
                 <t t-call="website_slides.slides_misc_user_image"/>
-                <a t-att-href="'/slides'" class="float-right">Edit</a>
+                <a t-att-href="'/profile/user/%s' % user.id" class="float-right">Edit</a>
                 <h4 t-esc="user.name" class="font-weight-bold"/>
                 <hr/>
             </div>
-        </div>
-        <div class="row mt8">
-            <p class="col">INSERT DBE TEMPLATE HERE</p>
+            <div class="col-12 mt8">
+                <span class="font-weight-bold text-muted">Current rank:</span>
+                <a href="/profile/ranks" class="float-right" t-field="user.rank_id"/>
+                <t t-call="website_profile.profile_next_rank_card"/>
+                <div t-field="user.next_rank_id.description_motivational"/>
+            </div>
         </div>
     </div>
 </template>
