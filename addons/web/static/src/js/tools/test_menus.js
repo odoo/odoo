@@ -70,11 +70,11 @@
         return testDef.then(function() {
             console.log("Successfully tested ", testedApps.length, " apps");
             console.log("Successfully tested ", testedMenus.length - testedApps.length, " menus");
-            console.log("ok");
+            console.log("test successful");
         }).always(function() {
             console.log("Test took ", (performance.now() - startTime)/1000, " seconds");
         }).fail(function () {
-            console.error("Error !");
+            console.error("test failed");
         });
     }
 
