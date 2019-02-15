@@ -163,7 +163,7 @@
                                 t-attf-class="nav-link #{sorting == 'create_date desc' and 'active' or ''}">Newest</a>
                         </li>
                         <li class="nav-item">
-                            <a t-attf-href="/forum/#{ slug(forum) }/users"
+                            <a t-attf-href="/profile/users"
                                 t-attf-class="nav-link #{searches.get('users') and 'active' or ''}">People</a>
                         </li>
                         <li class="nav-item">
@@ -1156,51 +1156,6 @@
                     </t>
                 </div>
             </div>
-        </div>
-    </t>
-</template>
-
-<template id="users">
-    <t t-call="website_forum.header">
-        <div class="row mb-3">
-            <div class="col-sm-12 col-md-5">
-                <form class="input-group" role="form" method="GET">
-                    <input type="text" t-att-value="request.params.get('user')" name="user" class="search-query form-control oe_search_box" placeholder="Search..."/>
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary oe_search_button" aria-label="Search" title="Search"><i class="fa fa-search"></i></button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div class="row">
-            <div t-foreach="users" t-as="u" class="col-xl-4 col-md-6 col-sm-12 mb-4">
-                <div class="card o_card_people h-100">
-                    <div class="card-body">
-                        <img class="o_wforum_people_photo_container float-left mr-3" t-attf-src="/web/image/res.users/#{u.id}/image_medium"/>
-                        <b><i class="text-secondary mr-1 fa fa-diamond"/><t t-esc="u.karma"/></b>
-                        <h4 class="font-weight-bold o_card_people_name"><a t-attf-href="/profile/user/#{u.id}?forum_id=#{forum.id}" t-field="u.name"/></h4>
-                        <t t-if="u.country_id">
-                            <span t-field="u.country_id.image" t-options='{"widget": "image", "class": "country_flag_people"}'/>
-                        </t>
-                    </div>
-                    <div class="card-body text-muted">
-                        <b> Badges:
-                            <span class="float-right text-dark">
-                                <i class="fa fa-trophy badge-gold" role="img" aria-label="Gold badge" title="Gold badge"/>
-                                <span t-esc="u.gold_badge" class=""/>
-                                <i class="fa fa-trophy badge-silver ml16" role="img" aria-label="Silver badge" title="Silver badge"/>
-                                <span t-esc="u.silver_badge" class="" />
-                                <i class="fa fa-trophy badge-bronze ml16" role="img" aria-label="Bronze badge" title="Bronze badge"/>
-                                <span t-esc="u.bronze_badge" class="" />
-                            </span>
-                        </b>
-                        <t t-raw="0"/>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="float-left">
-            <t t-call="website.pager"/>
         </div>
     </t>
 </template>
