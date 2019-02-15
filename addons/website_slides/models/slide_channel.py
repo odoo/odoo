@@ -136,7 +136,7 @@ class Channel(models.Model):
 
     @api.depends('channel_partner_ids.channel_id')
     def _compute_members_count(self):
-        read_group_res = self.env['slide.channel.partner'].sudo().read_group([('channel_id', 'in', self.ids)], [], 'channel_id')
+        read_group_res = self.env['slide.channel.partner'].sudo().read_group([('channel_id', 'in', self.ids)], ['channel_id'], 'channel_id')
         data = dict((res['channel_id'][0], res['channel_id_count']) for res in read_group_res)
         for channel in self:
             channel.members_count = data.get(channel.id, 0)
@@ -154,7 +154,7 @@ class Channel(models.Model):
             channel.valid_channel_partner_ids = result.get(channel.id, False)
             channel.is_member = self.env.user.partner_id.id in channel.valid_channel_partner_ids if channel.valid_channel_partner_ids else False
 
-    @api.depends('slide_ids.slide_type', 'slide_ids.is_published',
+    @api.depends('slide_ids.slide_type', 'slide_ids.is_published', 'slide_ids.completion_time',
                  'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views')
     def _compute_slides_statistics(self):
         result = dict((cid, dict(total_slides=0, total_views=0, total_votes=0, total_time=0)) for cid in self.ids)
