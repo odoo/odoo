@@ -181,6 +181,7 @@
                                         <th><span class="float-right" t-field="user.rank_id"/></th>
                                     </tr></tbody></table>
                                     <t t-call="website_profile.profile_next_rank_card"></t>
+                                    <hr/>
                                 </div>
                             </div>
                         </t>
@@ -299,7 +300,7 @@
                     Ranks &amp; Badges
                 </h1>
                 <p>
-                    Do not stop learning with Odoo. Collects points on the forum or the eLearning platform. Those points will make you reach new ranks.
+                    Do not stop learning with <t t-esc="user.company_id.name"/>. Collects points on the forum or the eLearning platform. Those points will make you reach new ranks.
                 </p>
                 <p>
                     <b>How do I earn badges?</b> When you finish a course, reach milestones, you're awarded badges.

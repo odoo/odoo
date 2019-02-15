@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo><data>
+<odoo><data noupdate="1">
     <!-- Set demo karma for test tour as demo user-->
     <record id="base.user_demo" model="res.users">
         <field name="karma">20</field>
@@ -12,7 +12,11 @@
     <record id="rank_student" model="gamification.karma.rank">
         <field name="name">Student</field>
         <field name="description" type="html"><p>You begin to understand things ! Keep going!</p></field>
-        <field name="description_reach_next" type="html"><p>Keep going !</p></field>
+        <field name="description_motivational" type="html">
+<div class="media align-items-center">
+    <div class="media-body">Reach the next rank and gain a very nice mug !</div>
+    <img class="ml-3 img img-fluid" style="max-height: 72px;" src="/gamification/static/img/rank_misc_mug.jpg"/>
+</div></field>
         <field name="karma_min">100</field>
         <field name="image" type="base64" file="gamification/static/img/rank_student_badge.svg"/>
     </record>
@@ -20,7 +24,11 @@
     <record id="rank_bachelor" model="gamification.karma.rank">
         <field name="name">Bachelor</field>
         <field name="description" type="html"><p>Hey ! You're not so dumb after all !</p></field>
-        <field name="description_reach_next" type="html"><p>Keep going !</p></field>
+        <field name="description_motivational" type="html">
+<div class="media align-items-center">
+    <div class="media-body">Reach the next rank and gain a very magic wand !</div>
+    <img class="ml-3 img img-fluid" style="max-height: 72px;" src="/gamification/static/img/rank_misc_wand.jpg"/>
+</div></field>
         <field name="karma_min">500</field>
         <field name="image" type="base64" file="gamification/static/img/rank_bachelor_badge.svg"/>
     </record>
@@ -28,7 +36,11 @@
     <record id="rank_master" model="gamification.karma.rank">
         <field name="name">Master</field>
         <field name="description" type="html"><p>You're good ! Really Good !</p></field>
-        <field name="description_reach_next" type="html"><p>Keep going !</p></field>
+        <field name="description_motivational" type="html">
+<div class="media align-items-center">
+    <div class="media-body">Reach the next rank and gain a very nice hat !</div>
+    <img class="ml-3 img img-fluid" style="max-height: 72px;" src="/gamification/static/img/rank_misc_hat.jpg"/>
+</div></field>
         <field name="karma_min">2000</field>
         <field name="image" type="base64" file="gamification/static/img/rank_master_badge.svg"/>
     </record>
@@ -36,7 +48,11 @@
     <record id="rank_doctor" model="gamification.karma.rank">
         <field name="name">Doctor</field>
         <field name="description" type="html"><p>Ok, RESPECT !</p></field>
-        <field name="description_reach_next" type="html"><p>Keep going !</p></field>
+        <field name="description_motivational" type="html">
+<div class="media align-items-center">
+    <div class="media-body">Reach the next rank and gain a week-end with a unicorn !</div>
+    <img class="ml-3 img img-fluid" style="max-height: 72px;" src="/gamification/static/img/rank_misc_unicorn.jpg"/>
+</div></field>
         <field name="karma_min">10000</field>
         <field name="image" type="base64" file="gamification/static/img/rank_doctor_badge.svg"/>
     </record>

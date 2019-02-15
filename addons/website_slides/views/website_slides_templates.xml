@@ -52,15 +52,11 @@
                         </li>
                     </ol>
                 </nav>
-                <div class="col-4 d-flex flex-row">
-                    <!-- karma -->
-<!--                     <ul class="navbar-nav ml-auto float-right pt-2">
-                        <li class="nav-item">
-                            <a t-attf-href="/profile/user/#{user.id}?channel_id=#{channel.id}" t-attf-class="text-dark font-weight-bold nav-link}">
-                                <i class="fa fa-diamond text-secondary" /> <t t-esc="user_id.karma"/>
-                            </a>
-                        </li>
-                    </ul> -->
+                <div class="col-6 d-flex flex-row align-items-center">
+                    <!-- karma / profile -->
+                    <a t-if="not is_public_user" t-att-href="'/profile/user/%s?channel_id=%s' % (user.id, channel.id)" class="font-weight-bold mr-3">
+                        <i class="fa fa-diamond" /> <t t-esc="user_id.karma"/>
+                    </a>
                     <!-- search -->
                     <form t-attf-action="/slides/#{slug(channel)}" role="search" method="get">
                         <div class="input-group">
@@ -73,7 +69,7 @@
                         </div>
                     </form>
                     <!-- sort / filter -->
-                    <small class="dropdown float-right ml-2">
+                    <small class="dropdown float-right ml-3">
                         <h6 class="m-0">
                             <button class="btn btn-primary dropdown-toggle" type="button" id="slidesChannelDropdownSort"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -268,7 +264,9 @@
                             </div>
                             <div class="row" t-if="slide_promoted">
                                 <div class="col-4">
-                                    <img class="img img-fluid" t-att-src="'/web/image/slide.slide/%s/image' % slide_promoted.id"/>
+                                    <img class="img img-fluid" style=""
+                                        t-att-src="'/slides/slide/%s/get_image?field=image_large' % slide_promoted.id"
+                                        t-att-alt="slide_promoted.name"/>
                                 </div>
                                 <div class="col-8">
                                     <div class="row">
@@ -318,10 +316,9 @@
     <div class="row o_wslides_row mt8">
         <div class="col-lg-3 col-md-6 col-12" t-foreach="slides" t-as="slide">
             <div class="card o_wslides_lesson_card">
-                <img class="card-img-top img-fuild"
-                    style="max-height: 160px;"
-                    t-att-src="'/web/image/slide.slide/%s/image_large' % slide.id if slide.image else '/website_slides/static/src/img/channel-default.jpg'"
-                    t-att-alt="channel.name"/>
+                <img class="card-img-top img-fuild" style="max-height: 160px;"
+                    t-att-src="'/slides/slide/%s/get_image?field=image_large' % slide.id"
+                    t-att-alt="slide.name"/>
                 <div class="card-body">
                     <h5 class="card-title" t-att-title="slide.name">
                         <t t-if="slide.is_preview or channel.is_member or is_slides_publisher">

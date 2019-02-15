@@ -10,7 +10,6 @@ import werkzeug.wrappers
 from odoo import http, modules, tools
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools import limited_image_resize
 
 
 class WebsiteProfile(http.Controller):
@@ -29,6 +28,20 @@ class WebsiteProfile(http.Controller):
         if user:
             return user.website_published and user.karma > 0
         return False
+
+    def _get_default_avatar(self, field, headers, width, height):
+        img_path = modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
+        with open(img_path, 'rb') as f:
+            image = f.read()
+        content = base64.b64encode(image)
+        dictheaders = dict(headers) if headers else {}
+        dictheaders['Content-Type'] = 'image/png'
+        headers = list(dictheaders.items())
+        if not (width or height):
+            suffix = field.split('_')[-1] if '_' in field else 'large'
+            if suffix in ('small', 'medium', 'large', 'big'):
+                content = getattr(tools, 'image_resize_image_%s' % suffix)(content)
+        return content
 
     def _check_user_profile_access(self, user_id):
         user_sudo = request.env['res.users'].sudo().browse(user_id)
@@ -60,16 +73,18 @@ class WebsiteProfile(http.Controller):
     @http.route([
         '/profile/avatar/<int:user_id>',
     ], type='http', auth="public", website=True, sitemap=False)
-    def get_user_profile_avatar(self, user_id=0, width=0, height=0, crop=False, avoid_if_small=False, upper_limit=False, **post):
+    def get_user_profile_avatar(self, user_id, field='image_large', width=0, height=0, crop=False, avoid_if_small=False, upper_limit=False, **post):
+        if field not in ('image_small', 'image_medium', 'image_large'):
+            return werkzeug.exceptions.Forbidden()
+
         can_sudo = self._check_avatar_access(user_id, **post)
-        fname = post.get('field', 'image_medium')
         if can_sudo:
             status, headers, content = request.env['ir.http'].sudo().binary_content(
-                model='res.users', id=user_id, field=fname,
+                model='res.users', id=user_id, field=field,
                 default_mimetype='image/png')
         else:
             status, headers, content = request.env['ir.http'].binary_content(
-                model='res.users', id=user_id, field=fname,
+                model='res.users', id=user_id, field=field,
                 default_mimetype='image/png')
         if status == 301:
             return request.env['ir.http']._response_by_status(status, headers, content)
@@ -77,19 +92,9 @@ class WebsiteProfile(http.Controller):
             return werkzeug.wrappers.Response(status=304)
 
         if not content:
-            img_path = modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
-            with open(img_path, 'rb') as f:
-                image = f.read()
-            content = base64.b64encode(image)
-            dictheaders = dict(headers) if headers else {}
-            dictheaders['Content-Type'] = 'image/png'
-            headers = list(dictheaders.items())
-            if not (width or height):
-                suffix = fname.split('_')[-1]
-                if suffix in ('small', 'medium', 'big'):
-                    content = getattr(tools, 'image_resize_image_%s' % suffix)(content)
+            content = self._get_default_avatar(field, headers, width, height)
 
-        content = limited_image_resize(
+        content = tools.limited_image_resize(
             content, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
 
         image_base64 = base64.b64decode(content)
@@ -159,6 +164,7 @@ class WebsiteProfile(http.Controller):
         ranks = ranks.sorted(key=lambda b: b.karma_min)
         values = {
             'ranks': ranks,
+            'user': request.env.user,
         }
         return request.render("website_profile.rank_main", values)
 

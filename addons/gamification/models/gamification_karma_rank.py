@@ -19,9 +19,9 @@ class KarmaRank(models.Model):
 
     name = fields.Text(string='Rank Name', translate=True, required=True)
     description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False,)
-    description_reach_next = fields.Html(
-        string='Motivation phrase', translate=html_translate, sanitize_attributes=False,
-        help="Motivation phrase to reach next rank")
+    description_motivational = fields.Html(
+        string='Motivational', translate=html_translate, sanitize_attributes=False,
+        help="Motivational phrase to reach this rank")
     karma_min = fields.Integer(string='Required Karma', help='Minimum karma needed to reach this rank')
     user_ids = fields.One2many('res.users', 'rank_id', string='Users', help="Users having this rank")
     image = fields.Binary('Rank Icon')
