@@ -15,6 +15,8 @@ odoo.define('website_rating.thread', function(require) {
     var PortalComposer = require('portal.chatter').PortalComposer;
     var PortalChatter = require('portal.chatter').PortalChatter;
 
+    var STAR_RATING_RATIO = 2;  // conversion factor from the star (1-5) to the db rating range (1-10)
+
     /**
      * PortalComposer
      *
@@ -71,7 +73,7 @@ odoo.define('website_rating.thread', function(require) {
          */
         _onClickStar: function(e){
             this.user_click = true;
-            this.$input.val(this.get("star_value"));
+            this.$input.val(this.get("star_value") * STAR_RATING_RATIO);
         },
         /**
          * @private
@@ -145,13 +147,14 @@ odoo.define('website_rating.thread', function(require) {
                 // rating card
                 if(result['rating_stats']){
                     var rating_data = {
-                        'avg': Math.round(result['rating_stats']['avg'] * 100) / 100,
+                        'avg': Math.round(result['rating_stats']['avg'] / STAR_RATING_RATIO * 100) / 100,
                         'percent': [],
                     };
                     _.each(_.keys(result['rating_stats']['percent']), function(rating){
-                        if(0 < rating && rating <= 5){
+
+                        if (rating % 2 == 0) { // is even number
                             rating_data['percent'].push({
-                                'num': rating,
+                                'num': rating / STAR_RATING_RATIO,
                                 'percent': result['rating_stats']['percent'][rating],
                             });
                         }
@@ -176,7 +179,7 @@ odoo.define('website_rating.thread', function(require) {
             var messages = this._super.apply(this, arguments);
             if(this.options['display_rating']){
                 _.each(messages, function(m){
-                    m['rating_value'] = self.round_to_half(m['rating_value']);
+                    m['rating_value'] = self.round_to_half(m['rating_value'] / STAR_RATING_RATIO);
                 });
             }
             return messages;
@@ -285,7 +288,7 @@ odoo.define('website_rating.thread', function(require) {
 
         init: function(parent, options){
             this._super.apply(this, arguments);
-            this.rating_avg = Math.round(options['ratingAvg'] * 100) / 100 || 0.0;
+            this.rating_avg = Math.round(options['ratingAvg'] / STAR_RATING_RATIO * 100) / 100 || 0.0;
             this.rating_total = options['ratingTotal'] || 0.0;
 
             this.options = _.defaults({}, options, {
