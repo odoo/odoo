@@ -3,14 +3,16 @@
 # * portal
 # 
 # Translators:
+# Abu Zafar <azmikbal@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 12.0-20190207\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 06:39+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Bengali (http://www.transifex.com/odoo/odoo-9/language/bn/)\n"
+"POT-Creation-Date: 2019-02-16 00:01+0000\n"
+"PO-Revision-Date: 2019-02-16 00:04+0000\n"
+"Last-Translator: Abu Zafar <azmikbal@gmail.com>, 2019\n"
+"Language-Team: Bengali (https://www.transifex.com/mediajockey/teams/96265/bn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,248 +20,872 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_sidebar.js:43
+#, python-format
+msgid "%d days overdue"
+msgstr "%dদিন বিলম্বিত"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_show_sign_in
+msgid "<b>Sign in</b>"
+msgstr "<b>সাইন ইন</b>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
+msgid "<i class=\"fa fa-arrow-right\"/> Back to edit mode"
+msgstr "<i class=\"fa fa-arrow-right\"/>সম্পাদনা মোডে ফিরে যান "
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.record_pager
+msgid ""
+"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.record_pager
+msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_layout
+msgid "<i class=\"fa fa-pencil\"/> Edit"
+msgstr "<i class=\"fa fa-pencil\"/>সম্পাদন"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
+msgid "<span class=\"small mr-1 navbar-text\">Filter By:</span>"
+msgstr "<span class=\"small mr-1 navbar-text\">দ্বারা ফিল্টার:</span>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
+msgid "<span class=\"small mr-1 navbar-text\">Group By:</span>"
+msgstr "<span class=\"small mr-1 navbar-text\">গ্রুপ দ্বারা:</span>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
+msgid "<span class=\"small mr-1 navbar-text\">Sort By:</span>"
+msgstr "<span class=\"small mr-1 navbar-text\">ক্রমানুসার:</span>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_share_template
+msgid "<strong>Open </strong>"
+msgstr "<strong>খুলুন</strong>"
+
+#. module: portal
 #: model:mail.template,body_html:portal.mail_template_data_portal_welcome
 msgid ""
-"\n"
-"            \t<p>\n"
-"                    Dear ${object.user_id.name or ''},\n"
-"                </p>\n"
-"                <p>\n"
-"                    You have been given access to ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
-"                </p>\n"
-"                <p>\n"
-"                    Your login account data is:\n"
-"                </p>\n"
-"                <ul>\n"
-"                    <li>Username: ${object.user_id.login or ''}</li>\n"
-"                </ul>\n"
-"                <ul>\n"
-"                    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
-"                </ul>\n"
-"                <ul>\n"
-"                \t<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
-"                </ul>\n"
-"                <p>\n"
-"                \tYou can set or change your password via the following url:\n"
-"                </p>\n"
-"                <ul>\n"
-"                    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
-"                </ul>\n"
-"                <p>\n"
-"                \t${object.wizard_id.welcome_message or ''}\n"
-"                </p>\n"
-"                <p>---<br />\n"
-"                    Odoo - Open Source Business Applications<br />\n"
-"                    http://www.odoo.com<br />\n"
-"                </p>\n"
-"            \n"
+"<table style=\"border-collapse:collapse;padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td align=\"center\">\n"
+"<table style=\"border-collapse:collapse;padding: 16px; background-color: white; color: #454748; border-collapse:separate;\" width=\"590\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td style=\"min-width: 590px;\" align=\"center\">\n"
+"            <table style=\"border-collapse:collapse;min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\" width=\"590\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\n"
+"                <tbody><tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Your Account</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.user_id.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/web/image/1524/MediaJockey1.png?access_token=a8d0838c-af35-4436-ac10-9be204bf1ff1\" style=\"border-style:none;vertical-align:middle;padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${object.user_id.company_id.name}\" class=\"\" data-original-title=\"\" title=\"\" aria-describedby=\"tooltip660738\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr style=\"border-style:solid none none none;margin:1rem 0 1rem 0;border-top-width:1px;border-top-color:rgba(0, 0, 0, 0.1);border-image-width:1;border-image-source:none;border-image-slice:100%;border-image-repeat:stretch;border-image-outset:0;border-left-width:0px;border-left-color:currentcolor;border-bottom-width:0px;border-bottom-color:currentcolor;border-right-width:0px;border-right-color:currentcolor;overflow-y:visible;overflow-x:visible;height:0px;box-sizing:content-box;background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\" width=\"100%\">\n"
+"                </td></tr>\n"
+"            </tbody></table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td style=\"min-width: 590px;\" align=\"center\">\n"
+"            <table style=\"border-collapse:collapse;min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\" width=\"590\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\n"
+"                <tbody><tr><td style=\"font-size: 13px;\" valign=\"top\">\n"
+"                    <div style=\"font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">\n"
+"                        Dear ${object.user_id.name or ''},<br> <br>\n"
+"                        You have been given access to ${object.user_id.company_id.name}'s portal.<br>\n"
+"                        Your login account data is:\n"
+"                        <ul style=\"margin:0px 0 1rem 0;\">\n"
+"                            <li>Username: ${object.user_id.login or ''}</li>\n"
+"                            <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\" style=\"text-decoration:none;background-color:transparent;color:rgb(124, 123, 173);\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"                            <li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"                        </ul>\n"
+"                        You can set or change your password via the following url:\n"
+"                        <ul style=\"margin:0px 0 1rem 0;\">\n"
+"                            <li><a href=\"${object.user_id.signup_url}\" style=\"text-decoration:none;background-color:transparent;color:rgb(124, 123, 173);\">${object.user_id.signup_url}</a></li>\n"
+"                        </ul>\n"
+"                        ${object.wizard_id.welcome_message or ''}\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr style=\"border-style:solid none none none;margin:1rem 0 1rem 0;border-top-width:1px;border-top-color:rgba(0, 0, 0, 0.1);border-image-width:1;border-image-source:none;border-image-slice:100%;border-image-repeat:stretch;border-image-outset:0;border-left-width:0px;border-left-color:currentcolor;border-bottom-width:0px;border-bottom-color:currentcolor;border-right-width:0px;border-right-color:currentcolor;overflow-y:visible;overflow-x:visible;height:0px;box-sizing:content-box;background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\" width=\"100%\">\n"
+"                </td></tr>\n"
+"            </tbody></table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td style=\"min-width: 590px;\" align=\"center\">\n"
+"            <table style=\"border-collapse:collapse;min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\" width=\"590\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\n"
+"                <tbody><tr><td valign=\"middle\" align=\"left\">\n"
+"                    ${object.user_id.company_id.name}\n"
+"                </td></tr>\n"
+"                <tr><td style=\"opacity: 0.7;\" valign=\"middle\" align=\"left\">\n"
+"                    ${object.user_id.company_id.phone}\n"
+"                    % if object.user_id.company_id.email\n"
+"                        | <a href=\"'mailto:%s' % ${object.user_id.company_id.email}\" style=\"text-decoration:none;background-color:transparent;color:rgb(124, 123, 173); color: #454748;\">${object.user_id.company_id.email}</a>\n"
+"                    % endif\n"
+"                    % if object.user_id.company_id.website\n"
+"                        | <a href=\"'%s' % ${object.user_id.company_id.website}\" style=\"text-decoration:none;background-color:transparent;color:rgb(124, 123, 173); color: #454748;\">\n"
+"                        ${object.user_id.company_id.website}\n"
+"                    </a>\n"
+"                    % endif\n"
+"                </td></tr>\n"
+"            </tbody></table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td style=\"min-width: 590px;\" align=\"center\">\n"
+"    <table style=\"border-collapse:collapse;min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\" width=\"590\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\n"
+"      <tbody><tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"text-decoration:none;background-color:transparent;color: #875A7B;\">Odoo &amp; Media Jockey</a>\n"
+"      </td></tr>\n"
+"    </tbody></table>\n"
+"</td></tr>\n"
+"</tbody></table>\n"
 "            "
 msgstr ""
+"<table style=\"border-collapse:collapse;padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tbody><tr><td align=\"center\">\n"
+"<table style=\"border-collapse:collapse;padding: 16px; background-color: white; color: #454748; border-collapse:separate;\" width=\"590\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\n"
+"<tbody>\n"
+"    <!-- হেডার -->\n"
+"    <tr>\n"
+"        <td style=\"min-width: 590px;\" align=\"center\">\n"
+"            <table style=\"border-collapse:collapse;min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\" width=\"590\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\n"
+"                <tbody><tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">আপনার অ্যাকাউন্ট</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.user_id.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/web/image/1524/MediaJockey1.png?access_token=a8d0838c-af35-4436-ac10-9be204bf1ff1\" style=\"border-style:none;vertical-align:middle;padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${object.user_id.company_id.name}\" class=\"\" data-original-title=\"\" title=\"\" aria-describedby=\"tooltip660738\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr style=\"border-style:solid none none none;margin:1rem 0 1rem 0;border-top-width:1px;border-top-color:rgba(0, 0, 0, 0.1);border-image-width:1;border-image-source:none;border-image-slice:100%;border-image-repeat:stretch;border-image-outset:0;border-left-width:0px;border-left-color:currentcolor;border-bottom-width:0px;border-bottom-color:currentcolor;border-right-width:0px;border-right-color:currentcolor;overflow-y:visible;overflow-x:visible;height:0px;box-sizing:content-box;background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\" width=\"100%\">\n"
+"                </td></tr>\n"
+"            </tbody></table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- বিষয়বস্তু -->\n"
+"    <tr>\n"
+"        <td style=\"min-width: 590px;\" align=\"center\">\n"
+"            <table style=\"border-collapse:collapse;min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\" width=\"590\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\n"
+"                <tbody><tr><td style=\"font-size: 13px;\" valign=\"top\">\n"
+"                    <div style=\"font-size:13px;font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;\">\n"
+"                        প্রিয় ${object.user_id.name or ''},<br> <br>\n"
+"                        আপনাকে  প্রবেশাধিকার দেওয়া হয়েছে ${object.user_id.company_id.name}'s পোর্টাল.<br>\n"
+"                       আপনার লগইন অ্যাকাউন্টের তথ্য হল:\n"
+"                        <ul style=\"margin:0px 0 1rem 0;\">\n"
+"                            <li>ব্যবহারকারীর নাম: ${object.user_id.login or ''}</li>\n"
+"                            <li>পোর্টাল:<a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\" style=\"text-decoration:none;background-color:transparent;color:rgb(124, 123, 173);\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"                            <li>ডেটাবেস:${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"                        </ul>\n"
+"                        আপনি নিম্নলিখিত ইউআরএল মাধ্যমে আপনার পাসওয়ার্ড সেট বা পরিবর্তন করতে পারেন:\n"
+"                        <ul style=\"margin:0px 0 1rem 0;\">\n"
+"                            <li><a href=\"${object.user_id.signup_url}\" style=\"text-decoration:none;background-color:transparent;color:rgb(124, 123, 173);\">${object.user_id.signup_url}</a></li>\n"
+"                        </ul>\n"
+"                        ${object.wizard_id.welcome_message or ''}\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr style=\"border-style:solid none none none;margin:1rem 0 1rem 0;border-top-width:1px;border-top-color:rgba(0, 0, 0, 0.1);border-image-width:1;border-image-source:none;border-image-slice:100%;border-image-repeat:stretch;border-image-outset:0;border-left-width:0px;border-left-color:currentcolor;border-bottom-width:0px;border-bottom-color:currentcolor;border-right-width:0px;border-right-color:currentcolor;overflow-y:visible;overflow-x:visible;height:0px;box-sizing:content-box;background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\" width=\"100%\">\n"
+"                </td></tr>\n"
+"            </tbody></table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- পাদলেখ -->\n"
+"    <tr>\n"
+"        <td style=\"min-width: 590px;\" align=\"center\">\n"
+"            <table style=\"border-collapse:collapse;min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\" width=\"590\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\n"
+"                <tbody><tr><td valign=\"middle\" align=\"left\">\n"
+"                    ${object.user_id.company_id.name}\n"
+"                </td></tr>\n"
+"                <tr><td style=\"opacity: 0.7;\" valign=\"middle\" align=\"left\">\n"
+"                    ${object.user_id.company_id.phone}\n"
+"                    % if object.user_id.company_id.email\n"
+"                        | <a href=\"'mailto:%s' % ${object.user_id.company_id.email}\" style=\"text-decoration:none;background-color:transparent;color:rgb(124, 123, 173); color: #454748;\">${object.user_id.company_id.email}</a>\n"
+"                    % endif\n"
+"                    % if object.user_id.company_id.website\n"
+"                        | <a href=\"'%s' % ${object.user_id.company_id.website}\" style=\"text-decoration:none;background-color:transparent;color:rgb(124, 123, 173); color: #454748;\">\n"
+"                        ${object.user_id.company_id.website}\n"
+"                    </a>\n"
+"                    % endif\n"
+"                </td></tr>\n"
+"            </tbody></table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- দ্বারা চালিত -->\n"
+"<tr><td style=\"min-width: 590px;\" align=\"center\">\n"
+"    <table style=\"border-collapse:collapse;min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\" width=\"590\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\n"
+"      <tbody><tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        দ্বারা চালিত <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"text-decoration:none;background-color:transparent;color: #875A7B;\">ওডু & amp; মিডিয়া জকি</a>\n"
+"      </td></tr>\n"
+"    </tbody></table>\n"
+"</td></tr>\n"
+"</tbody></table>\n"
+"            "
 
 #. module: portal
-#: model:ir.model,name:portal.model_res_groups
-msgid "Access Groups"
-msgstr ""
+#: model:ir.model.fields,field_description:portal.field_portal_mixin__access_warning
+#: model:ir.model.fields,field_description:portal.field_portal_share__access_warning
+msgid "Access warning"
+msgstr "অ্যাক্সেস সতর্কতা"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_after_sales
-msgid "After Sale Services"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
+msgid "Add a note"
+msgstr "একটি নোট যোগ করো"
 
 #. module: portal
-#: model:ir.ui.view,arch_db:portal.wizard_view
+#: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
+msgid "Add contacts to share the document..."
+msgstr "দস্তাবেজ ভাগ করতে পরিচিতি যুক্ত করুন ..."
+
+#. module: portal
+#: model:ir.model.fields,help:portal.field_portal_share__note
+msgid "Add extra content to display in the email"
+msgstr "ইমেইল প্রদর্শন অতিরিক্ত কন্টেন্ট যোগ করুন"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Apply"
-msgstr ""
+msgstr "প্রয়োগ"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Billing"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:portal.portal_archive_groups
+msgid "Archives"
+msgstr "নথিপত্র"
 
 #. module: portal
-#: model:ir.ui.view,arch_db:portal.wizard_view
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:26
+#, python-format
+msgid "Avatar"
+msgstr "অবতার"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Cancel"
 msgstr "বাতিল"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_partner_id
+#: code:addons/portal/controllers/portal.py:220
+#, python-format
+msgid ""
+"Changing VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+"একবার আপনার অ্যাকাউন্টের জন্য ডকুমেন্ট(গুলি) জারি করা হলে VAT নম্বর পরিবর্তন"
+" করা অনুমোদিত নয়। এই অপারেশন জন্য সরাসরি আমাদের সাথে যোগাযোগ করুন।"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "City"
+msgstr "শহর"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_signature.xml:12
+#, python-format
+msgid "Clear"
+msgstr "সাফ"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_signature.xml:27
+#, python-format
+msgid "Click here to see your document."
+msgstr "আপনার নথি দেখতে এখানে ক্লিক করুন।"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
+#: model_terms:ir.ui.view,arch_db:portal.portal_layout
+msgid "Close"
+msgstr "বদ্ধ"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Company Name"
+msgstr "কোমপানির নাম"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid ""
+"Confirm\n"
+"                                <span class=\"fa fa-long-arrow-right\"/>"
+msgstr ""
+"নিশ্চিত করা\n"
+"<span class=\"fa fa-long-arrow-right\"/>"
+
+#. module: portal
+#: model:ir.model,name:portal.model_res_partner
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__partner_id
 msgid "Contact"
 msgstr "যোগাযোগ"
 
 #. module: portal
-#: model:ir.ui.view,arch_db:portal.wizard_user_tree_view
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Contacts"
-msgstr "পরিচিতদের তালিকা"
+msgstr "পরিচিতিগুলি"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_create_uid
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_create_uid
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Country"
+msgstr "দেশ"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Country..."
+msgstr "দেশ ..."
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_share__create_uid
+#: model:ir.model.fields,field_description:portal.field_portal_wizard__create_uid
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "দ্বারা নির্মিত"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_create_date
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_create_date
+#: model:ir.model.fields,field_description:portal.field_portal_share__create_date
+#: model:ir.model.fields,field_description:portal.field_portal_wizard__create_date
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__create_date
 msgid "Created on"
-msgstr ""
+msgstr "নির্মিত"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_display_name
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_display_name
+#: model:ir.model.fields,help:portal.field_portal_mixin__access_url
+msgid "Customer Portal URL"
+msgstr "গ্রাহক পোর্টাল ইউআরএল"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_share_template
+msgid "Dear"
+msgstr "প্রিয়"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_mixin__display_name
+#: model:ir.model.fields,field_description:portal.field_portal_share__display_name
+#: model:ir.model.fields,field_description:portal.field_portal_wizard__display_name
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "প্রদর্শন নাম"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_signature.xml:14
+#, python-format
+msgid "Draw your signature"
+msgstr "আপনার স্বাক্ষর আঁকা"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_sidebar.js:41
+#, python-format
+msgid "Due in %d days"
+msgstr "পরিশোধনীয়%dদিন"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_sidebar.js:39
+#, python-format
+msgid "Due today"
+msgstr "আজ বাকি"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Email"
-msgstr "ই-মেইল"
+msgstr "ইমেইল"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_id
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_id
-msgid "ID"
-msgstr ""
-
-#. module: portal
-#: model:ir.model.fields,help:portal.field_res_groups_is_portal
-msgid "If checked, this group is usable as a portal."
-msgstr ""
-
-#. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_in_portal
-msgid "In Portal"
-msgstr ""
-
-#. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_welcome_message
-msgid "Invitation Message"
-msgstr ""
-
-#. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_wizard___last_update
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_user___last_update
-msgid "Last Modified on"
-msgstr ""
-
-#. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_write_uid
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_write_uid
-msgid "Last Updated by"
-msgstr ""
-
-#. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_write_date
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_write_date
-msgid "Last Updated on"
-msgstr ""
-
-#. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_user_id
-msgid "Login User"
-msgstr ""
-
-#. module: portal
-#: model:ir.ui.view,arch_db:portal.group_search_view
-msgid "Non-Portal Groups"
-msgstr ""
-
-#. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
-#: model:ir.model.fields,field_description:portal.field_res_groups_is_portal
-#: model:ir.ui.menu,name:portal.portal_menu
-msgid "Portal"
-msgstr ""
+#: model:ir.model,name:portal.model_mail_thread
+msgid "Email Thread"
+msgstr "ইমেইল থ্রেড"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 #: model:ir.model,name:portal.model_portal_wizard
-#: model:ir.ui.view,arch_db:portal.wizard_view
-msgid "Portal Access Management"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
+msgid "Grant Portal Access"
+msgstr "গ্রান্ট পোর্টাল অ্যাক্সেস"
 
 #. module: portal
-#: model:ir.ui.view,arch_db:portal.group_search_view
-msgid "Portal Groups"
+#: model:ir.model,name:portal.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP রাউটিং"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
+msgid "Home"
+msgstr "বাড়ি"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_mixin__id
+#: model:ir.model.fields,field_description:portal.field_portal_share__id
+#: model:ir.model.fields,field_description:portal.field_portal_wizard__id
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__id
+msgid "ID"
+msgstr "আইডি"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__in_portal
+msgid "In Portal"
+msgstr "পোর্টাল"
+
+#. module: portal
+#: code:addons/portal/controllers/portal.py:201
+#, python-format
+msgid "Invalid Email! Please enter a valid email address."
+msgstr "অবৈধ ইমেইল! একটি বৈধ ইমেইল ঠিকানা লিখুন।"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
+msgid "Invitation Message"
+msgstr "আমন্ত্রণ বার্তা"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_mixin____last_update
+#: model:ir.model.fields,field_description:portal.field_portal_share____last_update
+#: model:ir.model.fields,field_description:portal.field_portal_wizard____last_update
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user____last_update
+msgid "Last Modified on"
+msgstr "সর্বশেষ সংশোধিত"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
+#: model:ir.model.fields,field_description:portal.field_portal_wizard__write_uid
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_uid
+msgid "Last Updated by"
+msgstr "দ্বারা সর্বশেষ আপডেট"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_share__write_date
+#: model:ir.model.fields,field_description:portal.field_portal_wizard__write_date
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_date
+msgid "Last Updated on"
+msgstr "সর্বশেষ আপডেট"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:21
+#, python-format
+msgid "Leave a comment"
+msgstr "মতামত দিন"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_share__share_link
+msgid "Link"
+msgstr "লিংক"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
+msgid "Login User"
+msgstr "লগইন ব্যবহারকারী"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.frontend_layout
+msgid "Logout"
+msgstr "প্রস্থান"
+
+#. module: portal
+#: model:ir.model,name:portal.model_mail_message
+msgid "Message"
+msgstr "বার্তা"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.my_account_link
+msgid "My Account"
+msgstr "আমার অ্যাকাউন্ট"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:92
+#: model_terms:ir.ui.view,arch_db:portal.pager
+#, python-format
+msgid "Next"
+msgstr "পরবর্তী"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_share__note
+msgid "Note"
+msgstr "বিঃদ্রঃ"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.frontend_layout
+msgid "Odoo"
+msgstr "ওডু"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
+msgid "Odoo Logo"
+msgstr "ওডু লোগো"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:39
+#, python-format
+msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
+"ওহো! কিছু ভুল হয়েছে. পৃষ্ঠা পুনরায় লোড করার চেষ্টা করুন এবং লগ ইন করুন।"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Phone"
+msgstr "ফোন"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
+msgid "Portal Access URL"
+msgstr "পোর্টাল অ্যাক্সেস URL"
+
+#. module: portal
+#: model:ir.model,name:portal.model_portal_mixin
+msgid "Portal Mixin"
+msgstr "পোর্টাল মিক্সিন"
+
+#. module: portal
+#: model:ir.model,name:portal.model_portal_share
+msgid "Portal Sharing"
+msgstr "পোর্টাল শেয়ারিং"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
 msgid "Portal User Config"
-msgstr ""
+msgstr "পোর্টাল ব্যবহারকারী কনফিগারেশন"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_projects
-msgid "Projects"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:portal.frontend_layout
+#: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
+msgid "Powered by"
+msgstr "দ্বারা চালিত"
 
 #. module: portal
-#: model:ir.ui.view,arch_db:portal.wizard_view
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid "Prev"
+msgstr "পূর্ববর্তী"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:84
+#, python-format
+msgid "Previous"
+msgstr "আগে"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_chatter.js:116
+#, python-format
+msgid "Published on %s"
+msgstr "প্রকাশিত%s"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
+msgid "Recipients"
+msgstr "প্রাপক"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_share__res_id
+msgid "Related Document ID"
+msgstr "সম্পর্কিত ডকুমেন্ট আইডি"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_share__res_model
+msgid "Related Document Model"
+msgstr "সম্পর্কিত ডকুমেন্ট মডেল"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
+msgid "Search"
+msgstr "অনুসন্ধান"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_mixin__access_token
+msgid "Security Token"
+msgstr "নিরাপত্তা পাস"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
+"নীচের তালিকাটিতে পোর্টালের সাথে কোন যোগাযোগ থাকা উচিত তা নির্বাচন করুন।\n"
+"প্রতিটি নির্বাচিত যোগাযোগের ইমেল ঠিকানা বৈধ এবং অনন্য হতে হবে।\n"
+"প্রয়োজন হলে, আপনি তালিকাতে সরাসরি কোনও যোগাযোগের ইমেল ঠিকানা ঠিক করতে পারেন।"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:114
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:42
+#: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
+#, python-format
+msgid "Send"
+msgstr "পাঠান"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:100
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr ""
+msgstr "বেশ কয়েকটি পরিচিতি একই ইমেইল আছে:"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:111
+#: model:ir.actions.act_window,name:portal.portal_share_action
+#: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
+msgid "Share Document"
+msgstr "শেয়ার ডকুমেন্ট"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:97
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr ""
+msgstr "কিছু পরিচিতি একটি বৈধ ইমেইল নেই:"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:117
+#: code:addons/portal/wizard/portal_wizard.py:103
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
-msgstr ""
+msgstr "কিছু পরিচিতি বিদ্যমান পোর্টাল ব্যবহারকারী হিসাবে একই ইমেল আছে:"
 
 #. module: portal
-#: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
-msgid "The portal that users can be added in or removed from."
-msgstr ""
+#: code:addons/portal/controllers/portal.py:224
+#, python-format
+msgid "Some required fields are empty."
+msgstr "কিছু প্রয়োজনীয় ক্ষেত্র খালি।"
 
 #. module: portal
-#: model:ir.ui.view,arch_db:portal.wizard_view
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "State / Province"
+msgstr "রাজ্য / প্রদেশ"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Street"
+msgstr "রাস্তা"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_signature.xml:25
+#, python-format
+msgid "Thank You !"
+msgstr "ধন্যবাদ !"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:12
+#, python-format
+msgid "There are no comments for now."
+msgstr "এখন জন্য কোন মন্তব্য নেই।"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
+msgid "This is a preview of the customer portal."
+msgstr "এটি গ্রাহক পোর্টাল একটি পূর্বরূপ।"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
+"এই টেক্সট নতুন পোর্টাল ব্যবহারকারীদের পাঠানো ইমেল অন্তর্ভুক্ত করা হয়।"
 
 #. module: portal
-#: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
+#: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
 msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
+"এই টেক্সটটি পোর্টাল নতুন ব্যবহারকারীদের পাঠানো ইমেল অন্তর্ভুক্ত করা হয়।"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:120
+#: code:addons/portal/wizard/portal_wizard.py:106
 #, python-format
 msgid ""
 "To resolve this error, you can: \n"
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
 msgstr ""
+"এই ত্রুটি সমাধানের জন্য, আপনি করতে পারেন:\n"
+"- প্রাসঙ্গিক যোগাযোগের ইমেল সংশোধন করুন\n"
+"- অনন্য ইমেইলের সাথে যোগাযোগের জন্য গ্রান্ট অ্যাক্সেস"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
+#: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
+msgid "Toggle filters"
+msgstr "ফিল্টার টগল করুন"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard__user_ids
 msgid "Users"
-msgstr "ব্যবহারকারীগণ"
+msgstr "ব্যবহারকারীরা"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_wizard_id
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "VAT Number"
+msgstr "ভ্যাট নম্বর"
+
+#. module: portal
+#: code:addons/portal/models/portal_mixin.py:83
+#, python-format
+msgid "View %s"
+msgstr "দৃশ্য%s"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_mail_blacklist__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_mail_channel__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_mail_thread__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
+msgid "Website Messages"
+msgstr "ওয়েবসাইট বার্তা"
+
+#. module: portal
+#: model:ir.model.fields,help:portal.field_mail_blacklist__website_message_ids
+#: model:ir.model.fields,help:portal.field_mail_channel__website_message_ids
+#: model:ir.model.fields,help:portal.field_mail_thread__website_message_ids
+#: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
+#: model:ir.model.fields,help:portal.field_res_users__website_message_ids
+msgid "Website communication history"
+msgstr "ওয়েবসাইট যোগাযোগ ইতিহাস"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
 msgid "Wizard"
-msgstr ""
+msgstr "উইজার্ড"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:179
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:31
+#, python-format
+msgid "Write a message..."
+msgstr "একটা বার্তা লিখুন..."
+
+#. module: portal
+#: code:addons/portal/wizard/portal_share.py:59
+#: code:addons/portal/wizard/portal_share.py:71
+#, python-format
+msgid "You are invited to access %s"
+msgstr "আপনি প্রবেশ করতে আমন্ত্রিত%s"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_share_template
+msgid "You have been invited to access the following document:"
+msgstr ""
+"নিম্নলিখিত দস্তাবেজটি অ্যাক্সেস করার জন্য আপনাকে আমন্ত্রণ জানানো হয়েছে:"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:22
+#, python-format
+msgid "You must be"
+msgstr "তুমি অবশ্যই"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:175
 #, python-format
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
+"ইমেল পাঠানোর জন্য আপনার ব্যবহারকারী পছন্দগুলিতে আপনার একটি ইমেল ঠিকানা থাকতে"
+" হবে।"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Your Contact Details"
+msgstr "আপনার যোগাযোগের বিবরণ"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
+#: model_terms:ir.ui.view,arch_db:portal.portal_layout
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Your Details"
+msgstr "তোমার বৃত্তান্ত"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
+msgid "Your Documents"
+msgstr "আপনার ডকুমেন্টস"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_signature.xml:6
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+#, python-format
+msgid "Your Name"
+msgstr "তোমার নাম"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
-msgid "Your Odoo account at ${user.company_id.name|safe}"
-msgstr ""
+msgid "Your account at ${object.user_id.company_id.name}"
+msgstr "আপনার অ্যাকাউন্ট ${object.user_id.company_id.name}"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_contact
+msgid "Your contact"
+msgstr "তোমার যোগাযোগ"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "Zip / Postal Code"
+msgstr "জিপ / পোস্টাল কোড"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:56
+#, python-format
+msgid "avatar"
+msgstr "অবতার"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:9
+#, python-format
+msgid "comment"
+msgstr "মন্তব্য"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:10
+#, python-format
+msgid "comments"
+msgstr "মন্তব্য"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:22
+#, python-format
+msgid "logged in"
+msgstr "লগ ইন"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
+msgid "odoo"
+msgstr "ওডু "
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid "select..."
+msgstr "নির্বাচন করুন ..."
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/xml/portal_chatter.xml:22
+#, python-format
+msgid "to post a comment."
+msgstr "একটি মন্তব্য পোস্ট করুন।"
