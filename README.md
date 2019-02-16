@@ -37,4 +37,4 @@ To fetch odoo merge pull requests refs use this command:
 
     $ ./odoo.py setup_git_review
 
-Odoo Bangali Contributed By <a herf="http://mediajockey.org">Media Jockey</a> And <a herf="https://github.com/MjAbuz/>Abu Zafar</a>
+Odoo Bangali Contributed By <a herf="http://mediajockey.org/">Media Jockey</a> And <a herf="https://github.com/MjAbuz/">Abu Zafar</a>
