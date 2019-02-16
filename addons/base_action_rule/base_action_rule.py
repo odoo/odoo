@@ -175,13 +175,18 @@ class base_action_rule(osv.osv):
     @openerp.api.multi
     def _process(self, records):
         """ Process action ``self`` on the ``records`` that have not been done yet. """
-        # filter out the records on which self has already been done, then mark
-        # remaining records as done (to avoid recursive processing)
+        # filter out the records on which self has already been done
         action_done = self._context['__action_done']
-        records -= action_done.setdefault(self, records.browse())
+        records_done = action_done.get(self, records.browse())
+        records -= records_done
         if not records:
             return
-        action_done[self] |= records
+
+        # mark the remaining records as done (to avoid recursive processing)
+        action_done = dict(action_done)
+        action_done[self] = records_done + records
+        self = self.with_context(__action_done=action_done)
+        records = records.with_context(__action_done=action_done)
 
         # modify records
         values = {}
@@ -194,7 +199,11 @@ class base_action_rule(osv.osv):
 
         # subscribe followers
         if self.act_followers and hasattr(records, 'message_subscribe'):
-            records.message_subscribe(self.act_followers.ids)
+            followers = self.env['mail.followers'].sudo().search([
+            ('res_model', '=', records._name), ('res_id', 'in', records.ids),
+            ('partner_id', 'in', self.act_followers.ids)])
+            if not len(followers) == len(self.act_followers):
+                records.message_subscribe(self.act_followers.ids)
 
         # execute server actions
         if self.server_action_ids:
@@ -274,7 +283,7 @@ class base_action_rule(osv.osv):
 
                 # check conditions, and execute actions on the records that satisfy them
                 for action in actions:
-                    action._process(action._filter_post(pre[action]))
+                    action._process(action._filter_post(records))
 
                 # call original method
                 return unlink.origin(self, **kwargs)
@@ -348,7 +357,7 @@ class base_action_rule(osv.osv):
 
     def _update_registry(self, cr, uid, context=None):
         """ Update the registry after a modification on action rules. """
-        if self.pool.ready:
+        if self.pool.ready and not context.get('import_file', False):
             # for the sake of simplicity, simply force the registry to reload
             cr.commit()
             openerp.api.Environment.reset()

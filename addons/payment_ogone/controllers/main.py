@@ -50,7 +50,7 @@ class OgoneController(http.Controller):
         payment = request.registry.get('payment.transaction')
         try:
             tx = payment._ogone_form_get_tx_from_data(cr, uid, kwargs, context=context)
-            payment._ogone_s2s_validate(tx)
+            payment._ogone_s2s_validate_tree(tx, kwargs)
         except ValidationError:
             return 'ko'
 

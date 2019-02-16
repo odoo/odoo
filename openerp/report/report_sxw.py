@@ -223,7 +223,7 @@ class rml_parse(object):
             return date.strftime(date_format.encode('utf-8'))
 
         res = self.lang_dict['lang_obj'].format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
-        if currency_obj:
+        if currency_obj and currency_obj.symbol:
             if currency_obj.position == 'after':
                 res = u'%s\N{NO-BREAK SPACE}%s' % (res, currency_obj.symbol)
             elif currency_obj and currency_obj.position == 'before':

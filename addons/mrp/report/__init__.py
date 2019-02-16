@@ -3,3 +3,4 @@
 
 import bom_structure
 import mrp_report
+import bom_cost

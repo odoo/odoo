@@ -36,7 +36,7 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', token_
         optional keywords arguments:
         :param string token: access token if the object's model uses some kind of public access
                              using tokens (usually a uuid4) to bypass access rules
-        :param string token_field: name of the field that contains the token on the object (defaults to 'token')
+        :param string token_field: name of the field that contains the token on the object (deprecated, use _mail_post_token_field)
         :param string sha_in: sha1 hash of the string composed of res_model, res_id and the dabase secret in ir.config_parameter
                                if you wish to allow public users to write on the object with some security but you don't want
                                to add a token field on the object, the sha-sign prevents public users from writing to any other
@@ -49,7 +49,7 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', token_
     """
     res = request.env[res_model].browse(res_id)
     author_id = request.env.user.partner_id.id
-    if token and res and token == getattr(res.sudo(), token_field, None):
+    if token and res and token == getattr(res.sudo(), res._mail_post_token_field, None):
         res = res.sudo()
         if request.env.user == request.env['ir.model.data'].xmlid_to_object('base.public_user'):
             author_id = (res.partner_id and res.partner_id.id) if hasattr(res, 'partner_id') else author_id
@@ -65,6 +65,8 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', token_
             res = res.sudo()
         else:
             raise NotFound()
+    kw.pop('csrf_token', None)
+    kw.pop('attachment_ids', None)
     return res.with_context({'mail_create_nosubscribe': nosubscribe}).message_post(body=message,
                                                                                    message_type=kw.pop('message_type', False) or "comment",
                                                                                    subtype=kw.pop('subtype', False) or "mt_comment",

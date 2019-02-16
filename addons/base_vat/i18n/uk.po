@@ -3,31 +3,32 @@
 # * base_vat
 # 
 # Translators:
+# Bohdan Lisnenko, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-12-19 20:23+0000\n"
-"Last-Translator: Bogdan\n"
+"PO-Revision-Date: 2018-10-23 13:20+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr "Companies"
+msgstr "Компанії"
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_company_vat_check_vies
 msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
-msgstr ""
+msgstr "Якщо буде перевірено, кількість ПДВ партнерів будуть повністю перевірені на підставі служби VIES ЄС, а не через перевірку простої форми (контрольної суми)."
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:111
@@ -46,7 +47,7 @@ msgstr "Партнер"
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
-msgstr ""
+msgstr "Номер VAT [%s] для партнерів [%s] не видається дійсним. \nПримітка: очікуваний формат є%s"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:127
@@ -54,14 +55,14 @@ msgstr ""
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
-msgstr ""
+msgstr "Номер VAT [%s] для партнера [%s] або не виконали перевірку перевірки ПДВ VIES або не дотримувалися очікуваного формату %s."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
 msgid "VIES VAT Check"
-msgstr ""
+msgstr "Перевірка VIES VAT"
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "e.g. BE0477472701"
-msgstr ""
+msgstr "e.g. BE0477472701"

@@ -3,26 +3,27 @@
 # * membership
 # 
 # Translators:
-# Bogdan, 2015
+# Bohdan Lisnenko, 2015
+# Yaroslav Molochko <onorua@gmail.com>, 2016
 # Zoriana Zaiats, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-03-17 22:11+0000\n"
-"Last-Translator: Bogdan\n"
+"PO-Revision-Date: 2018-11-23 15:34+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_num_invoiced
 msgid "# Invoiced"
-msgstr ""
+msgstr "# Включено в рахунок"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_num_paid
@@ -39,12 +40,12 @@ msgstr "# В черзі"
 msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
-msgstr ""
+msgstr "Член, з яким ви хочете пов'язувати ваше членство. Він буде розглядати стан членства асоційованого члена."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
 msgid "Account Invoice line"
-msgstr ""
+msgstr "Рядок підрахунку рахунка-фактури"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
@@ -71,7 +72,7 @@ msgstr "Кількість для членства"
 #: model:ir.model.fields,field_description:membership.field_res_partner_associate_member
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Associate Member"
-msgstr ""
+msgstr "Доданий член"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -119,7 +120,7 @@ msgstr "Категорія"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_product_template_membership
 msgid "Check if the product is eligible for membership."
-msgstr ""
+msgstr "Перевірте, чи товар підходить для членства."
 
 #. module: membership
 #: model:ir.actions.act_window,help:membership.action_membership_members
@@ -193,12 +194,12 @@ msgstr "Дата, до якої членство залишається акти
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_display_name
 #: model:ir.model.fields,field_description:membership.field_report_membership_display_name
 msgid "Display Name"
-msgstr "Показати ім'я"
+msgstr "Назва для відображення"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_tot_earned
 msgid "Earned Amount"
-msgstr ""
+msgstr "Зароблена сума"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_date_to
@@ -251,7 +252,7 @@ msgstr "Прогноз"
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Free Member"
-msgstr ""
+msgstr "Вільний учасник"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_from
@@ -261,13 +262,13 @@ msgstr "Від"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "From Month"
-msgstr ""
+msgstr "З місяця"
 
 #. module: membership
 #: model:product.product,name:membership.membership_0
 #: model:product.template,name:membership.membership_0_product_template
 msgid "Gold Membership"
-msgstr ""
+msgstr "Золоте членство"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -307,19 +308,19 @@ msgstr "Рядок рахунку"
 #: model:ir.actions.act_window,name:membership.action_membership_invoice_view
 #: model:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Invoice Membership"
-msgstr ""
+msgstr "Рахунок членства"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Invoiced Member"
-msgstr ""
+msgstr "Член з рахунком-фактурою"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Invoiced/Paid/Free"
-msgstr ""
+msgstr "Отримав рахунок-фактуру/Оплачений/Безкоштовний"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_membership_state
@@ -331,7 +332,7 @@ msgid ""
 "-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
-msgstr ""
+msgstr "Це вказує на стан членства.\n-Не учасник: Учасник, який не підтвердив жодного членства.\n-Скасований учасник: Учасник, який скасував своє членство.\n-Старий учасник: Учасник, чиє членство закінчилося.\n-Учасник, який очікує: Учасник, який підтвердив своє членство і чий рахунок буде створюватися.\n-Рахунок-фактура учасника: Учасник, чий рахунок було створено.\n-Учасник, що сплачує:Учасник, який сплатив рахунок за членство."
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line_state
@@ -377,7 +378,7 @@ msgstr "Учасник"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_member_price
 msgid "Member Price"
-msgstr ""
+msgstr "Ціна учасника"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
@@ -406,23 +407,23 @@ msgstr "Членство"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_amount
 msgid "Membership Amount"
-msgstr ""
+msgstr "Сума членства"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_membership
 msgid "Membership Analysis"
-msgstr ""
+msgstr "Аналіз членства"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 msgid "Membership Duration"
-msgstr ""
+msgstr "Тривалість членства"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_product_template_membership_date_to
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_stop
 msgid "Membership End Date"
-msgstr ""
+msgstr "Кінцева дата членства"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_member_price
@@ -435,25 +436,25 @@ msgstr "Оплата членства"
 #: model:ir.model,name:membership.model_membership_invoice
 #: model:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Membership Invoice"
-msgstr ""
+msgstr "Рахунок-фактура членства"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Membership Partners"
-msgstr ""
+msgstr "Партнери членства"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_membership_id
 #: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Membership Product"
-msgstr ""
+msgstr "Товар членства"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_products
 #: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Membership Products"
-msgstr ""
+msgstr "Товари членства"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_product_template_membership_date_from
@@ -475,7 +476,7 @@ msgstr "Статус членства"
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 #: model:ir.ui.view,arch_db:membership.membership_products_tree
 msgid "Membership products"
-msgstr ""
+msgstr "Товари членства"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
@@ -497,7 +498,7 @@ msgstr "Не учасник"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "None/Canceled/Old/Waiting"
-msgstr ""
+msgstr "Немає/Скасований/Старий/Очікує"
 
 #. module: membership
 #: model:ir.actions.act_window,help:membership.action_membership_members
@@ -530,18 +531,18 @@ msgstr "Партнер"
 #: code:addons/membership/membership.py:351
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
-msgstr ""
+msgstr "У партнера немає адреси, щоби виставити рахунок."
 
 #. module: membership
 #: code:addons/membership/membership.py:349
 #, python-format
 msgid "Partner is a free Member."
-msgstr ""
+msgstr "Партнер - вільний учасник."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_tot_pending
 msgid "Pending Amount"
-msgstr ""
+msgstr "Очікувана сума"
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_template
@@ -561,7 +562,7 @@ msgstr "Звіти"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Revenue Done"
-msgstr ""
+msgstr "Дохід заверешено"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_user_id
@@ -573,7 +574,7 @@ msgstr "Продавець"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_free_member
 msgid "Select if you want to give free membership."
-msgstr ""
+msgstr "Оберіть, якщо хочете надати безкоштовне члентсво."
 
 #. module: membership
 #: model:product.product,name:membership.membership_1
@@ -594,7 +595,7 @@ msgstr "Місяць початку"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Starting Month Of Membership"
-msgstr ""
+msgstr "Початковий місяць членства"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
@@ -604,22 +605,22 @@ msgstr "Податки"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_membership_amount
 msgid "The price negotiated by the partner"
-msgstr ""
+msgstr "Ціна, узгоджена партнером"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 msgid "This note will be displayed on quotations..."
-msgstr ""
+msgstr "Це не буде відображатися у комерційних пропозиціях..."
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display paid, old and total earned columns"
-msgstr ""
+msgstr "У ньому відображатимуться сплачені, старі та загальні зароблені стовпці"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display waiting, invoiced and total pending columns"
-msgstr ""
+msgstr "Будуть відображатися стовпці очікування, рахунки-фактури та очікувана сума"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_to
@@ -636,9 +637,9 @@ msgstr "Постачальники"
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Waiting Member"
-msgstr ""
+msgstr "Учасник в учікування"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "membership.membership_line"
-msgstr ""
+msgstr "membership.membership_line"

@@ -120,12 +120,15 @@ var QWeb2 = {
                 }
                 return r.join('');
             } else {
+                // avoid XMLSerializer with text node for IE
+                if (node.nodeType == 3) {
+                    return node.data;
+                }
                 if (typeof XMLSerializer !== 'undefined') {
                     return (new XMLSerializer()).serializeToString(node);
                 } else {
                     switch(node.nodeType) {
                     case 1: return node.outerHTML;
-                    case 3: return node.data;
                     case 4: return '<![CDATA[' + node.data + ']]>';
                     case 8: return '<!-- ' + node.data + '-->';
                     }
@@ -144,14 +147,15 @@ var QWeb2 = {
         foreach: function(context, enu, as, old_dict, callback) {
             if (enu != null) {
                 var index, jlen, cur;
-                var size, new_dict = this.extend({}, old_dict);
+                var new_dict = this.extend({}, old_dict);
                 new_dict[as + "_all"] = enu;
                 var as_value = as + "_value",
                     as_index = as + "_index",
                     as_first = as + "_first",
                     as_last = as + "_last",
                     as_parity = as + "_parity";
-                if (size = enu.length) {
+                if (enu instanceof Array) {
+                    var size = enu.length;
                     new_dict[as + "_size"] = size;
                     for (index = 0, jlen = enu.length; index < jlen; index++) {
                         cur = enu[index];

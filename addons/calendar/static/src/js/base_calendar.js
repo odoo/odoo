@@ -116,6 +116,9 @@ widgets.SidebarFilter.include({
     },
     initialize_m2o: function() {
         var self = this;
+        if (!this.view.useContacts) {
+            return;
+        }
         this.dfm = new form_common.DefaultFieldManager(self);
         this.dfm.extend_field_desc({
             partner_id: {
@@ -133,8 +136,11 @@ widgets.SidebarFilter.include({
             },
         });
         this.ir_model_m2o.appendTo(this.$el);
-        this.ir_model_m2o.on('change:value', self, function() { 
-            self.add_filter();
+        this.ir_model_m2o.on('change:value', self, function() {
+            // once selected, we reset the value to false.
+            if (self.ir_model_m2o.get_value()) {
+                self.add_filter();
+            }
         });
     },
     add_filter: function() {
@@ -145,12 +151,12 @@ widgets.SidebarFilter.include({
         .filter([["id", "=",this.view.dataset.context.uid]])
         .first()
         .done(function(result){
-            $.map(self.ir_model_m2o.display_value, function(element,index) {
-                if (result.partner_id[0] != index){
-                    self.ds_message = new data.DataSetSearch(self, 'calendar.contacts');
-                    defs.push(self.ds_message.call("create", [{'partner_id': index}]));
-                }
-            });
+            var partner_id = self.ir_model_m2o.get_value();
+            // don't duplicate [Me] filter for current user
+            if (result.partner_id[0] != partner_id){
+                self.ds_message = new data.DataSetSearch(self, 'calendar.contacts');
+                defs.push(self.ds_message.call("create", [{'partner_id': partner_id}]));
+            }
         }));
         return $.when.apply(null, defs).then(function() {
             return reload_favorite_list(self);
@@ -210,7 +216,7 @@ WebClient.include({
     get_next_notif: function() {
         var self = this;
 
-        this.rpc("/calendar/notify")
+        this.rpc("/calendar/notify", {}, {shadow: true})
         .done(function(result) {
             _.each(result, function(res) {
                 setTimeout(function() {

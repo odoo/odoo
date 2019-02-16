@@ -191,7 +191,7 @@ class EmbeddedSlide(models.Model):
     _description = 'Embedded Slides View Counter'
     _rec_name = 'slide_id'
 
-    slide_id = fields.Many2one('slide.slide', string="Presentation", required=True, select=1)
+    slide_id = fields.Many2one('slide.slide', string="Presentation", required=True, index=True)
     url = fields.Char('Third Party Website URL', required=True)
     count_views = fields.Integer('# Views', default=1)
 
@@ -322,14 +322,14 @@ class Slide(models.Model):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         for record in self:
             if record.datas and (not record.document_id or record.slide_type in ['document', 'presentation']):
-                record.embed_code = '<iframe src="%s/slides/embed/%s?page=1" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (base_url, record.id, 315, 420)
+                record.embed_code = '<iframe src="%s/slides/embed/%s?page=1" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (base_url, record.id, 315, 420)
             elif record.slide_type == 'video' and record.document_id:
                 if not record.mime_type:
                     # embed youtube video
                     record.embed_code = '<iframe src="//www.youtube.com/embed/%s?theme=light" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
                 else:
                     # embed google doc video
-                    record.embed_code = '<embed src="https://video.google.com/get_player?ps=docs&partnerid=30&docid=%s" type="application/x-shockwave-flash"></embed>' % (record.document_id)
+                    record.embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
             else:
                 record.embed_code = False
 
@@ -341,7 +341,14 @@ class Slide(models.Model):
         #link_tracker is not in dependencies, so use it to shorten url only if installed.
         if self.env.registry.get('link.tracker'):
             LinkTracker = self.env['link.tracker']
-            res.update({(slide.id, LinkTracker.sudo().create({'url': '%s/slides/slide/%s' % (base_url, slug(slide))}).short_url) for slide in self})
+            res.update({
+                (slide.id,
+                 LinkTracker.sudo().create({
+                     'url': '%s/slides/slide/%s' % (base_url, slug(slide)),
+                     'title': slide.name,
+                 }).short_url)
+                for slide in self
+            })
         else:
             res.update({(slide.id, '%s/slides/slide/%s' % (base_url, slug(slide))) for slide in self})
         return res
@@ -355,7 +362,7 @@ class Slide(models.Model):
             values['image'] = values['datas']
         if values.get('website_published') and not values.get('date_published'):
             values['date_published'] = datetime.datetime.now()
-        if values.get('url'):
+        if values.get('url') and not values.get('document_id'):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.iteritems():
                 values.setdefault(key, value)
@@ -369,10 +376,13 @@ class Slide(models.Model):
 
     @api.multi
     def write(self, values):
-        if values.get('url'):
+        if values.get('url') and values['url'] != self.url:
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.iteritems():
                 values.setdefault(key, value)
+        if values.get('channel_id'):
+            custom_channels = self.env['slide.channel'].search([('custom_slide_id', '=', self.id), ('id', '!=', values.get('channel_id'))])
+            custom_channels.write({'custom_slide_id': False})
         res = super(Slide, self).write(values)
         if values.get('website_published'):
             self.date_published = datetime.datetime.now()
@@ -421,14 +431,14 @@ class Slide(models.Model):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         for slide in self.filtered(lambda slide: slide.website_published):
             publish_template = slide.channel_id.publish_template_id
-            html_body = publish_template.with_context({'base_url': base_url}).render_template(publish_template.body_html, 'slide.slide', slide.id)
+            html_body = publish_template.with_context(base_url=base_url).render_template(publish_template.body_html, 'slide.slide', slide.id)
             slide.channel_id.message_post(body=html_body, subtype='website_slides.mt_channel_slide_published')
         return True
 
     @api.one
     def send_share_email(self, email):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        return self.channel_id.share_template_id.with_context({'email': email, 'base_url': base_url}).send_mail(self.id)
+        return self.channel_id.share_template_id.with_context(email=email, base_url=base_url).send_mail(self.id)
 
     # --------------------------------------------------
     # Parsing methods
@@ -500,6 +510,7 @@ class Slide(models.Model):
                 'name': snippet['title'],
                 'image': self._fetch_data(snippet['thumbnails']['high']['url'], {}, 'image')['values'],
                 'description': snippet['description'],
+                'mime_type': False,
             })
         return {'values': values}
 

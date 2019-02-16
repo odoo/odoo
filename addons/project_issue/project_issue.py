@@ -36,7 +36,10 @@ class project_issue(osv.Model):
         """ Gives default stage_id """
         if context is None:
             context = {}
-        return self.stage_find(cr, uid, [], context.get('default_project_id'), [('fold', '=', False)], context=context)
+        default_project_id = context.get('default_project_id')
+        if not default_project_id:
+            return False
+        return self.stage_find(cr, uid, [], default_project_id, [('fold', '=', False)], context=context)
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         if context is None:
@@ -120,11 +123,18 @@ class project_issue(osv.Model):
         return res
 
     def on_change_project(self, cr, uid, ids, project_id, context=None):
+        values = {}
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
             if project and project.partner_id:
-                return {'value': {'partner_id': project.partner_id.id, 'email_from': project.partner_id.email}}
-        return {}
+                values['partner_id'] = project.partner_id.id
+                values['email_from'] = project.partner_id.email
+            values['stage_id'] = self.stage_find(cr, uid, [], project_id, [('fold', '=', False)], context=context)
+        else:
+            values['partner_id'] = False
+            values['email_from'] = False
+            values['stage_id'] = False
+        return {'value': values}
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
@@ -450,7 +460,7 @@ class project(osv.Model):
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         Issue = self.pool['project.issue']
         return {
-            project_id: Issue.search_count(cr,uid, [('project_id', '=', project_id), ('stage_id.fold', '=', False)], context=context)
+            project_id: Issue.search_count(cr,uid, [('project_id', '=', project_id), '|', ('stage_id.fold', '=', False), ('stage_id', '=', False)], context=context)
             for project_id in ids
         }
 
@@ -546,9 +556,10 @@ class project_project(osv.Model):
 class res_partner(osv.osv):
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         Issue = self.pool['project.issue']
+        partners = {id: self.search(cr, uid, [('id', 'child_of', ids)]) for id in ids}
         return {
-            partner_id: Issue.search_count(cr,uid, [('partner_id', '=', partner_id)])
-            for partner_id in ids
+            partner_id: Issue.search_count(cr, uid, [('partner_id', 'in', partners[partner_id])])
+            for partner_id in partners.keys()
         }
 
     """ Inherits partner and adds Issue information in the partner form """

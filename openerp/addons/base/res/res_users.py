@@ -2,11 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
 import logging
+import hmac
 from functools import partial
 from itertools import repeat
 
 from lxml import etree
 from lxml.builder import E
+from hashlib import sha256
 
 import openerp
 from openerp import api
@@ -378,6 +380,8 @@ class res_users(osv.osv):
             for id in ids:
                 if id in self.__uid_cache[db]:
                     del self.__uid_cache[db][id]
+        if any(key in values for key in self._get_session_token_fields(cr, uid)):
+            self._invalidate_session_cache(cr, uid)
         self.context_get.clear_cache(self)
         self.has_group.clear_cache(self)
         return res
@@ -501,6 +505,7 @@ class res_users(osv.osv):
         if not passwd:
             # empty passwords disallowed for obvious security reasons
             raise openerp.exceptions.AccessDenied()
+        db = self.pool.db_name
         if self.__uid_cache.setdefault(db, {}).get(uid) == passwd:
             return
         cr = self.pool.cursor()
@@ -510,6 +515,35 @@ class res_users(osv.osv):
         finally:
             cr.close()
 
+    @api.model
+    def _get_session_token_fields(self):
+        return {'id', 'login', 'password', 'active'}
+
+    @tools.ormcache('sid')
+    def _compute_session_token(self, sid):
+        """ Compute a session token given a session id and a user id """
+        # retrieve the fields used to generate the session token
+        session_fields = ', '.join(sorted(self._get_session_token_fields()))
+        self.env.cr.execute("""SELECT %s, (SELECT value FROM ir_config_parameter WHERE key='database.secret')
+                        FROM res_users
+                        WHERE id=%%s""" % (session_fields), (self.id,))
+        if self.env.cr.rowcount != 1:
+            self._invalidate_session_cache()
+            return False
+        data_fields = self.env.cr.fetchone()
+        # generate hmac key
+        key = (u'%s' % (data_fields,)).encode('utf-8')
+        # hmac the session id
+        data = sid.encode('utf-8')
+        h = hmac.new(key, data, sha256)
+        # keep in the cache the token
+        return h.hexdigest()
+
+    @api.model
+    def _invalidate_session_cache(self):
+        """ Clear the session cache """
+        self._compute_session_token.clear_cache(self)
+
     def change_password(self, cr, uid, old_passwd, new_passwd, context=None):
         """Change current user password. Old password must be provided explicitly
         to prevent hijacking an existing user session, or for cases where the cleartext
@@ -517,7 +551,7 @@ class res_users(osv.osv):
 
         :return: True
         :raise: openerp.exceptions.AccessDenied when old password is wrong
-        :raise: except_osv when new password is not set or empty
+        :raise: openerp.exceptions.UserError when new password is not set or empty
         """
         self.check(cr.dbname, uid, old_passwd)
         if new_passwd:
@@ -801,7 +835,7 @@ class groups_view(osv.osv):
             xml = E.field(E.group(*(xml1), col="2"), E.group(*(xml2), col="4"), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
             xml_content = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding="utf-8")
-            view.with_context(context, lang=None).write({'arch': xml_content})
+            view.with_context(context, lang=None).write({'arch': xml_content, 'arch_fs': False})
         return True
 
     def get_application_groups(self, cr, uid, domain=None, context=None):

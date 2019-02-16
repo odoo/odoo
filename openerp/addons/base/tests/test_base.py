@@ -124,7 +124,6 @@ class test_base(common.TransactionCase):
         self.assertEquals(p1.type, 'contact', 'Default type must be "contact", not the copied parent type')
         ironshield.refresh()
         self.assertEqual(ironshield.street, p1.street, 'Address fields should be copied to company')
-        self.assertTrue(ironshield.is_company, 'Company flag should be turned on after first contact creation')
 
     def test_40_res_partner_address_getc(self):
         """ Test address_get address resolution mechanism: it should first go down through descendants,

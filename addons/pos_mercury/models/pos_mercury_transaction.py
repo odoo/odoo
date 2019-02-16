@@ -15,7 +15,7 @@ class MercuryTransaction(models.Model):
     _name = 'pos_mercury.mercury_transaction'
 
     def _get_pos_session(self):
-        pos_session = self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', self.env.uid)])
+        pos_session = self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', self.env.uid)], limit=1)
         if not pos_session:
             raise UserError("No POS session")
 
@@ -32,6 +32,7 @@ class MercuryTransaction(models.Model):
             raise UserError("No Mercury configuration associated with the journal.")
 
     def _setup_request(self, data):
+        # todo: in master make the client include the pos.session id and use that
         pos_session = self._get_pos_session()
 
         config = pos_session.config_id
@@ -59,7 +60,11 @@ class MercuryTransaction(models.Model):
             'SOAPAction': 'http://www.mercurypay.com/CreditTransaction',
         }
 
-        r = urllib2.Request('https://w1.mercurypay.com/ws/ws.asmx', data=xml_transaction, headers=headers)
+        url = 'https://w1.mercurypay.com/ws/ws.asmx'
+        if self.env['ir.config_parameter'].sudo().get_param('pos_mercury.enable_test_env'):
+            url = 'https://w1.mercurycert.net/ws/ws.asmx'
+
+        r = urllib2.Request(url, data=xml_transaction, headers=headers)
         try:
             u = urllib2.urlopen(r, timeout=65)
             response = werkzeug.utils.unescape(u.read())

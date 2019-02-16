@@ -2,6 +2,7 @@
 
 from openerp.tests import common
 from datetime import datetime
+from openerp.exceptions import UserError
 
 
 class TestSaleMrpFlow(common.TransactionCase):
@@ -356,7 +357,8 @@ class TestSaleMrpFlow(common.TransactionCase):
         self.assertTrue(self.so.picking_ids, 'Sale MRP: no picking created for "invoice on delivery" stockable products')
 
         # invoice in on delivery, nothing should be invoiced
-        self.so.action_invoice_create()
+        with self.assertRaises(UserError):
+            self.so.action_invoice_create()
         self.assertEqual(self.so.invoice_status, 'no', 'Sale MRP: so invoice_status should be "nothing to invoice" after invoicing')
 
         # deliver partially (1 of each instead of 5), check the so's invoice_status and delivered quantities

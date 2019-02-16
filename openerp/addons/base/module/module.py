@@ -166,6 +166,7 @@ class module(osv.osv):
                     'doctitle_xform': False,
                     'output_encoding': 'unicode',
                     'xml_declaration': False,
+                    'file_insertion_enabled': False,
                 }
                 output = publish_string(source=module.description or '', settings_overrides=overrides, writer=MyWriter())
                 res[module.id] = html_sanitize(output)
@@ -499,6 +500,7 @@ class module(osv.osv):
                                                               known_dep_ids, exclude_states, context))
         return list(known_dep_ids)
 
+    @api.returns('self')
     def upstream_dependencies(self, cr, uid, ids, known_dep_ids=None,
                                 exclude_states=['installed', 'uninstallable', 'to remove'],
                                 context=None):
@@ -561,7 +563,7 @@ class module(osv.osv):
         return dict(ACTION_DICT, name=_('Uninstall'))
 
     def button_uninstall_cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'installed'})
+        self.write(cr, uid, ids, {'state': 'installed'}, context=context)
         return True
 
     def button_immediate_upgrade(self, cr, uid, ids, context=None):
@@ -604,7 +606,7 @@ class module(osv.osv):
         return dict(ACTION_DICT, name=_('Apply Schedule Upgrade'))
 
     def button_upgrade_cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'installed'})
+        self.write(cr, uid, ids, {'state': 'installed'}, context=context)
         return True
 
     @staticmethod
@@ -686,6 +688,15 @@ class module(osv.osv):
         if not self.pool['res.users'].has_group(cr, uid, 'base.group_system'):
             raise openerp.exceptions.AccessDenied()
 
+        # One-click install is opt-in - cfr Issue #15225
+        ad_dir = openerp.tools.config.addons_data_dir
+        if not os.access(ad_dir, os.W_OK):
+            msg = (_("Automatic install of downloaded Apps is currently disabled.") + "\n\n" +
+                   _("To enable it, make sure this directory exists and is writable on the server:") +
+                   "\n%s" % ad_dir)
+            _logger.warning(msg)
+            raise openerp.exceptions.AccessError(msg)
+
         apps_server = urlparse.urlparse(self.get_apps_server(cr, uid, context=context))
 
         OPENERP = openerp.release.product_name.lower()
@@ -751,7 +762,7 @@ class module(osv.osv):
             to_install_ids = self.search(cr, uid, [('name', 'in', urls.keys()), ('state', '=', 'uninstalled')], context=context)
             post_install_action = self.button_immediate_install(cr, uid, to_install_ids, context=context)
 
-            if already_installed:
+            if already_installed or to_install_ids:
                 # in this case, force server restart to reload python code...
                 cr.commit()
                 openerp.service.server.restart()

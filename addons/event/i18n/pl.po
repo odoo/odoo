@@ -3,20 +3,22 @@
 # * event
 # 
 # Translators:
+# zbik2607 <darek@krokus.com.pl>, 2016
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2016-02-20 10:37+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2018-03-10 03:16+0000\n"
+"Last-Translator: Tomasz Leppich <t.leppich@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_report_event_registration_cancel_state
@@ -36,7 +38,7 @@ msgstr " # Liczba rejestracji w fazie projektu"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "(stats)"
-msgstr ""
+msgstr "(statystyki)"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -52,8 +54,8 @@ msgstr "5 intensywnych dni"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid ""
-"<em>(Chamber Works reserves the right to cancel, re-name or re-"
-"locate<br/>the event or change the dates on which it is held.)</em>"
+"<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the"
+" event or change the dates on which it is held.)</em>"
 msgstr ""
 
 #. module: event
@@ -61,7 +63,7 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-clock-o\"/>\n"
 "                                        <b>To</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\"/>\n                                        <b>Do</b>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -69,7 +71,7 @@ msgstr ""
 #: model:event.event,description:event.event_3
 msgid ""
 "<i>You will be able to create dynamic page interacting with the ORM.</i>"
-msgstr ""
+msgstr "<i>Będziesz w stanie utworzyć dynamiczną stronę działającą z ORM.</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -92,7 +94,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "<i>to</i>"
-msgstr ""
+msgstr "<i>do</i>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -143,7 +145,7 @@ msgstr "<p>Dzień dobry ${object.name},</p>\n<p>Dziękuemy za twój udział w wy
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<small>John Doe, CEO</small>"
-msgstr ""
+msgstr "<small>John Doe, CEO</small>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -151,7 +153,7 @@ msgid ""
 "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
 "                                                to \n"
 "                                            </span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n                                                do \n                                            </span>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -196,7 +198,7 @@ msgstr "<strong>Nasze cena zawiera:</strong>"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "<strong>Program:</strong>"
-msgstr ""
+msgstr "<strong>Program:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -226,7 +228,7 @@ msgstr "Aktywne"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Advanced JQuery"
-msgstr ""
+msgstr "zaawansowane JQuery"
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -266,7 +268,7 @@ msgstr "Zastosuj"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Archived"
-msgstr "Zarchiwizowane"
+msgstr "Archiwalne"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -682,7 +684,7 @@ msgstr "Projekt"
 msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
-msgstr ""
+msgstr "Podczas tej konferencji nasz zespół przedstawi szczegółowy przegląd naszych aplikacji biznesowych. Poznasz wszystkie zalety płynące z ich korzystania."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
@@ -1042,19 +1044,19 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_website_event_track
 msgid "Install the module website_event_track"
-msgstr ""
+msgstr "Install the module website_event_track"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_website_event_questions
 msgid "Install the website_event_questions module"
-msgstr ""
+msgstr "Install the website_event_questions module"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Integrated Help"
-msgstr ""
+msgstr "Zintegrowana pomoc"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_nbr
@@ -1066,7 +1068,7 @@ msgstr "Interwał"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Introduction to JQuery"
-msgstr ""
+msgstr "Wprowadzenie do JQuery"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1233,12 +1235,6 @@ msgid "Messages"
 msgstr "Wiadomosći"
 
 #. module: event
-#: model:ir.model.fields,help:event.field_event_event_message_ids
-#: model:ir.model.fields,help:event.field_event_registration_message_ids
-msgid "Messages and communication history"
-msgstr "Wiadomości i historia komunikacji"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_min
 msgid "Minimum Attendees"
 msgstr "Minimum uczestników"
@@ -1340,14 +1336,14 @@ msgstr "Liczba nieprzeczytanych wiadomości"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Odoo Official Website"
-msgstr ""
+msgstr "Oficjalna strona Odoo"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Odoo Web Client"
-msgstr ""
+msgstr "Odoo Web Client"
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -1706,7 +1702,7 @@ msgstr "Aby dowiedzieć się więcej odwiedź"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_track
 msgid "Tracks and Agenda"
-msgstr ""
+msgstr "Program i detale"
 
 #. module: event
 #: model:event.type,name:event.event_type_4
@@ -1736,7 +1732,7 @@ msgstr "Niepotwierdzone rezerwacje miejsc"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Underscore"
-msgstr ""
+msgstr "Podkreśl"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1800,7 +1796,7 @@ msgstr "Użytkownik"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Variables &amp; Operators"
-msgstr ""
+msgstr "Variables &amp; Operators"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1813,16 +1809,6 @@ msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
 msgstr "Uwaga: to wydarzenie nie osiągnęło swojej ustalonej minimalnej liczby rejestracji. Czy na pewno chcesz potwierdzić?"
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_event_website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event_website_message_ids
-msgid "Website communication history"
-msgstr ""
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1889,7 +1875,7 @@ msgstr "Twoja subskrypcja ${object.event_id.name}"
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
-msgstr ""
+msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1906,7 +1892,7 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_event_confirm
 msgid "event.confirm"
-msgstr ""
+msgstr "event.confirm"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail

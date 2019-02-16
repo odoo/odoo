@@ -3,13 +3,15 @@
 # * survey
 # 
 # Translators:
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2015-11-09 12:37+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2018-02-18 05:17+0000\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +49,7 @@ msgstr "%s（コピー）"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
@@ -74,12 +76,12 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_choice
 msgid "<i class=\"fa fa-bar-chart-o\"/> Pie Chart"
-msgstr ""
+msgstr "<i class=\"fa fa-bar-chart-o\"/> パイチャート"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-check-square-o fa-lg\"/> answer"
-msgstr ""
+msgstr "<i class=\"fa fa-check-square-o fa-lg\"/> 回答"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -212,12 +214,12 @@ msgstr ""
 #. module: survey
 #: constraint:survey.user_input_line:0
 msgid "A question cannot be unanswered and skipped"
-msgstr ""
+msgstr "この質問は必須回答です。"
 
 #. module: survey
 #: sql_constraint:survey.user_input:0
 msgid "A token must be unique!"
-msgstr ""
+msgstr "トークンは固有でなければなりません！"
 
 #. module: survey
 #: model:survey.page,title:survey.feedback_1
@@ -227,12 +229,12 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "必要なアクション"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_active_domain
 msgid "Active domain"
-msgstr ""
+msgstr "有効なドメイン"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -299,7 +301,7 @@ msgstr "回答"
 msgid ""
 "Answers do not go in the original document discussion thread. This has an "
 "impact on the generated message-id."
-msgstr ""
+msgstr "回答はオリジナルのドキュメントディスカッションスレッドには含まれません。 これは、生成されたメッセージIDに影響します。"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -326,12 +328,12 @@ msgstr "メッセージの作成者。設定されない場合、email_fromは�
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_author_avatar
 msgid "Author's avatar"
-msgstr ""
+msgstr "作成者のアバター"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_body
 msgid "Automatically sanitized HTML contents"
-msgstr ""
+msgstr "自動サニタイズ済HTML内容"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.back
@@ -341,7 +343,7 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_4
 msgid "CRM"
-msgstr ""
+msgstr "CRM"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -373,7 +375,7 @@ msgstr ""
 #: code:addons/survey/wizard/survey_email_compose_message.py:34
 #, python-format
 msgid "Click here to start survey"
-msgstr ""
+msgstr "クリックして調査を開始する"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_email_compose_message.py:92
@@ -384,7 +386,7 @@ msgstr ""
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_form
 msgid "Click to add a survey."
-msgstr ""
+msgstr "クリックして調査を追加する"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
@@ -401,7 +403,7 @@ msgstr "閉じた"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_color
 msgid "Color Index"
-msgstr "カラーインデックス"
+msgstr "カラーインデクス"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_comments
@@ -439,7 +441,7 @@ msgstr "Eメール作成"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_composition_mode
 msgid "Composition mode"
-msgstr ""
+msgstr "合成モード"
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_surveys_configuration
@@ -509,7 +511,7 @@ msgstr "作成日"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_starred
 msgid "Current user has a starred notification linked to this message"
-msgstr ""
+msgstr "現在のユーザーには、このメッセージにリンクされているスター付き通知があります"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_date
@@ -525,7 +527,7 @@ msgstr "日付と時間"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_value_date
 msgid "Date answer"
-msgstr ""
+msgstr "回答日"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input_deadline
@@ -535,7 +537,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "記録上の最後のメッセージが投稿された日"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_deadline
@@ -579,7 +581,7 @@ msgstr "デザイン"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
 msgid "Design Survey"
-msgstr ""
+msgstr "調査設計"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_form
@@ -642,7 +644,7 @@ msgstr "Eメール"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
 msgid "Edit Pages and Questions"
-msgstr ""
+msgstr "ページと質問事項を編集"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_kanban
@@ -665,12 +667,12 @@ msgstr "Eメールテンプレート"
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
-msgstr ""
+msgstr "送信者の電子メールアドレス。 このフィールドは、一致するパートナーが見つからない場合に設定され、チャタリング内のauthor_idフィールドを置き換えます。"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_mail_compose_message
 msgid "Email composition wizard for Survey"
-msgstr ""
+msgstr "調査用Eメール作成ウィザード"
 
 #. module: survey
 #: model:survey.page,title:survey.feedback_2
@@ -696,17 +698,17 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_starred_partner_ids
 msgid "Favorited By"
-msgstr ""
+msgstr "気に入った人"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_3
 msgid "Financial Management"
-msgstr ""
+msgstr "財務管理"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage_fold
 msgid "Folded in kanban view"
-msgstr ""
+msgstr "かんばんで折れた"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_message_follower_ids
@@ -716,27 +718,27 @@ msgstr "フォロワー"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "フォロワー (チャネル)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "フォロワー (取引先)"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Format"
-msgstr ""
+msgstr "フォーマット"
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
 msgid "Free Text"
-msgstr ""
+msgstr "自由記入欄"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_value_free_text
 msgid "Free Text answer"
-msgstr ""
+msgstr "自由記入回答"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_email_from
@@ -831,12 +833,12 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_users_can_go_back
@@ -900,7 +902,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "フォロー中"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_designed
@@ -951,7 +953,7 @@ msgstr "ラベル"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "最終メッセージ日"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label___last_update
@@ -992,7 +994,7 @@ msgstr "最終更新日"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_last_displayed_page_id
 msgid "Last displayed page"
-msgstr ""
+msgstr "最後に表示したページ"
 
 #. module: survey
 #: selection:survey.user_input,type:0
@@ -1064,7 +1066,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_length_max
 msgid "Maximum Text Length"
-msgstr ""
+msgstr "最大文字数"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_max_float_value
@@ -1074,7 +1076,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_record_name
 msgid "Message Record Name"
-msgstr ""
+msgstr "メッセージレコード名"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_message_type
@@ -1111,12 +1113,12 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_length_min
 msgid "Minimum Text Length"
-msgstr ""
+msgstr "最大文字数"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_min_float_value
 msgid "Minimum value"
-msgstr ""
+msgstr "最低数"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1126,12 +1128,12 @@ msgstr ""
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple choice: multiple answers allowed"
-msgstr ""
+msgstr "複数の選択肢（複数回答）"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple choice: only one answer"
-msgstr ""
+msgstr "複数の選択肢（回答は１つのみ）"
 
 #. module: survey
 #: selection:survey.question,matrix_subtype:0
@@ -1146,14 +1148,14 @@ msgstr "名称"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_record_name
 msgid "Name get of the related document."
-msgstr ""
+msgstr "関連するドキュメントの名前を取得します。"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_needaction
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_needaction_partner_ids
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_needaction
 msgid "Need Action"
-msgstr ""
+msgstr "要アクション"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
@@ -1163,12 +1165,12 @@ msgstr "新規"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
 msgid "Next page"
-msgstr ""
+msgstr "次のページ"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_no_auto_thread
 msgid "No threading for answers"
-msgstr ""
+msgstr "返信をスレッドに追加しない"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_4
@@ -1178,12 +1180,12 @@ msgstr ""
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_selected_survey_user_input
 msgid "Nobody has replied to your survey yet."
-msgstr ""
+msgstr "回答者はまだ居ません"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_user_input
 msgid "Nobody has replied to your surveys yet."
-msgstr ""
+msgstr "回答者はまだ居ません"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.notopen
@@ -1193,7 +1195,7 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.nopages
 msgid "Not ready"
-msgstr ""
+msgstr "準備中"
 
 #. module: survey
 #: selection:survey.user_input,state:0
@@ -1203,12 +1205,12 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_notify
 msgid "Notify followers"
-msgstr ""
+msgstr "フォロワーに通知"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_notify
 msgid "Notify followers of the document (mass post only)"
-msgstr ""
+msgstr "フォロワーに文書を通知する（一括投稿のみ）"
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
@@ -1218,33 +1220,33 @@ msgstr "番号"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "アクションの数"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_column_nb
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Number of columns"
-msgstr ""
+msgstr "カラムの数"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_tot_comp_survey
 msgid "Number of completed surveys"
-msgstr ""
+msgstr "完了済の調査数"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "アクションを必要とするメッセージの数"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_tot_sent_survey
 msgid "Number of sent surveys"
-msgstr ""
+msgstr "送信済みの調査数"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_tot_start_survey
 msgid "Number of started surveys"
-msgstr ""
+msgstr "開始済みの調査数"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_message_unread_counter
@@ -1341,7 +1343,7 @@ msgstr "取引先"
 #: model:ir.actions.act_window,name:survey.action_partner_survey_mail
 #: model:ir.actions.act_window,name:survey.action_partner_survey_mail_crm
 msgid "Partner Survey Mailing"
-msgstr ""
+msgstr "取引先調査メール"
 
 #. module: survey
 #: model:survey.stage,name:survey.stage_permanent
@@ -1433,12 +1435,12 @@ msgstr "質問"
 #: model:ir.model.fields,field_description:survey.field_survey_question_question
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Question Name"
-msgstr ""
+msgstr "質問名"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Question name"
-msgstr ""
+msgstr "質問名"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_page_question
@@ -1462,24 +1464,24 @@ msgstr ""
 #. module: survey
 #: selection:survey.question,display_mode:0
 msgid "Radio Buttons"
-msgstr ""
+msgstr "ラジオボタン"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_res_id
 msgid "Related Document ID"
-msgstr "関連する文書ID"
+msgstr "関連ドキュメントID"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_model
 msgid "Related Document Model"
-msgstr "関連する文書モデル"
+msgstr "関連ドキュメントモデル"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_reply_to
 msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
-msgstr ""
+msgstr "返信メールアドレス。 reply_toを設定すると、自動スレッド作成がバイパスされます。"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_reply_to
@@ -1653,7 +1655,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_skipped
 #: model:ir.ui.view,arch_db:survey.result
 msgid "Skipped"
-msgstr ""
+msgstr "無効回答"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_author_avatar
@@ -1661,7 +1663,7 @@ msgid ""
 "Small-sized image of this contact. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr ""
+msgstr "連絡先用の縮小されたイメージ。それは自動的に保存され、アスペクト比で、64x64pxで画像とサイズを変更します。小さな画像を必要とするどこでも、このフィールドを使用しています。"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
@@ -1730,7 +1732,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_value
 msgid "Suggested value"
-msgstr ""
+msgstr "推奨される回答"
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
@@ -1817,7 +1819,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_page_id
 msgid "Survey page"
-msgstr ""
+msgstr "調査ページ名"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form
@@ -1865,7 +1867,7 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
 msgid "Thank you!"
-msgstr ""
+msgstr "回答にご協力頂き、誠に有難う御座います！"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_3
@@ -2080,7 +2082,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_tracking_value_ids
 msgid "Tracking values"
-msgstr ""
+msgstr "値追跡"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_message_type
@@ -2091,17 +2093,17 @@ msgstr "タイプ"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_type
 msgid "Type of Question"
-msgstr ""
+msgstr "質問形式"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Type of answers"
-msgstr ""
+msgstr "回答形式"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_labels_ids
 msgid "Types of answers"
-msgstr ""
+msgstr "回答形式"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_message_unread
@@ -2116,7 +2118,7 @@ msgstr "未読メッセージカウンター"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_use_active_domain
 msgid "Use active domain"
-msgstr ""
+msgstr "有効なドメインを使用"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_template_id
@@ -2134,13 +2136,13 @@ msgstr ""
 #. module: survey
 #: model:survey.survey,title:survey.feedback_form
 msgid "User Feedback Form"
-msgstr ""
+msgstr "ユーザフィードバックフォーム"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_user_input_id
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
 msgid "User Input"
-msgstr ""
+msgstr "ユーザー回答"
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_survey_response_line_form
@@ -2199,7 +2201,7 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_choice
 msgid "Vote"
-msgstr ""
+msgstr "投票"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_7
@@ -2237,7 +2239,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_is_log
 msgid "Whether the message is an internal note (comment mode only)"
-msgstr ""
+msgstr "メッセージが内部ノートであるかどうか(コメントモードのみ)"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_2
@@ -2318,7 +2320,7 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
 msgid "on"
-msgstr ""
+msgstr "on"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished

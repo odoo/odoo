@@ -23,7 +23,8 @@ class TestReconciliation(AccountingTestCase):
         self.currency_swiss_id = self.env.ref("base.CHF").id
         self.currency_usd_id = self.env.ref("base.USD").id
         self.currency_euro_id = self.env.ref("base.EUR").id
-        self.env.ref('base.main_company').write({'currency_id': self.currency_euro_id})
+        company = self.env.ref('base.main_company')
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.currency_euro_id, company.id])
         self.account_rcv = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_receivable').id)], limit=1)
         self.account_rsa = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_payable').id)], limit=1)
         self.product = self.env.ref("product.product_product_4")
@@ -244,7 +245,7 @@ class TestReconciliation(AccountingTestCase):
         self.check_results(bank_stmt.move_line_ids, {
             self.account_euro.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 0, 'currency_id': False},
             self.account_rcv.id: {'debit': 0.0, 'credit': 32.7, 'amount_currency': -41.97, 'currency_id': self.currency_usd_id, 'currency_diff': 0, 'amount_currency_diff': -8.03},
-            self.diff_income_account.id: {'debit': 0.0, 'credit': 7.3, 'amount_currency': 0, 'currency_id': False},
+            self.diff_income_account.id: {'debit': 0.0, 'credit': 7.3, 'amount_currency': -9.37, 'currency_id': self.currency_usd_id},
         })
 
         # The invoice should be paid, as the payments totally cover its total
@@ -262,9 +263,9 @@ class TestReconciliation(AccountingTestCase):
         # will lead to an exchange loss, that should be handled correctly within the journal items.
         cr, uid = self.cr, self.uid
         # We update the currency rate of the currency USD in order to force the gain/loss exchanges in next steps
-        self.res_currency_rate_model.create(cr, uid, {
+        rateUSDbis_id = self.registry("ir.model.data").get_object_reference(self.cr, self.uid, "base", "rateUSDbis")[1]
+        self.res_currency_rate_model.write(cr, uid, rateUSDbis_id, {
             'name': time.strftime('%Y-%m-%d') + ' 00:00:00',
-            'currency_id': self.currency_usd_id,
             'rate': 0.033,
         })
         # We create a customer invoice of 2.00 USD
@@ -348,3 +349,133 @@ class TestReconciliation(AccountingTestCase):
                 counterpart_exchange_loss_line = line
         #  We should be able to find a move line of 0.01 EUR on the Foreign Exchange Loss account
         self.assertTrue(counterpart_exchange_loss_line, 'There should be one move line of 0.01 EUR on account "Foreign Exchange Loss"')
+
+    def test_manual_reconcile_wizard_opw678153(self):
+
+        def create_move(name, amount, amount_currency, currency_id):
+            debit_line_vals = {
+                'name': name,
+                'debit': amount > 0 and amount or 0.0,
+                'credit': amount < 0 and -amount or 0.0,
+                'account_id': self.account_rcv.id,
+                'amount_currency': amount_currency,
+                'currency_id': currency_id,
+            }
+            credit_line_vals = debit_line_vals.copy()
+            credit_line_vals['debit'] = debit_line_vals['credit']
+            credit_line_vals['credit'] = debit_line_vals['debit']
+            credit_line_vals['account_id'] = self.account_rsa.id
+            credit_line_vals['amount_currency'] = -debit_line_vals['amount_currency']
+            vals = {
+                'journal_id': self.bank_journal_euro.id,
+                'line_ids': [(0,0, debit_line_vals), (0, 0, credit_line_vals)]
+            }
+            return self.env['account.move'].create(vals).id
+        move_list_vals = [
+            ('1', -1.83, 0, self.currency_swiss_id),
+            ('2', 728.35, 795.05, self.currency_swiss_id),
+            ('3', -4.46, 0, self.currency_swiss_id),
+            ('4', 0.32, 0, self.currency_swiss_id),
+            ('5', 14.72, 16.20, self.currency_swiss_id),
+            ('6', -737.10, -811.25, self.currency_swiss_id),
+        ]
+        move_ids = []
+        for name, amount, amount_currency, currency_id in move_list_vals:
+            move_ids.append(create_move(name, amount, amount_currency, currency_id))
+        aml_recs = self.env['account.move.line'].search([('move_id', 'in', move_ids), ('account_id', '=', self.account_rcv.id)])
+        wizard = self.env['account.move.line.reconcile'].with_context(active_ids=[x.id for x in aml_recs]).create({})
+        wizard.trans_rec_reconcile_full()
+        for aml in aml_recs:
+            self.assertTrue(aml.reconciled, 'The journal item should be totally reconciled')
+            self.assertEquals(aml.amount_residual, 0, 'The journal item should be totally reconciled')
+            self.assertEquals(aml.amount_residual_currency, 0, 'The journal item should be totally reconciled')
+
+        move_list_vals = [
+            ('2', 728.35, 795.05, self.currency_swiss_id),
+            ('3', -4.46, 0, False),
+            ('4', 0.32, 0, False),
+            ('5', 14.72, 16.20, self.currency_swiss_id),
+            ('6', -737.10, -811.25, self.currency_swiss_id),
+        ]
+        move_ids = []
+        for name, amount, amount_currency, currency_id in move_list_vals:
+            move_ids.append(create_move(name, amount, amount_currency, currency_id))
+        aml_recs = self.env['account.move.line'].search([('move_id', 'in', move_ids), ('account_id', '=', self.account_rcv.id)])
+        wizard = self.env['account.move.line.reconcile.writeoff'].with_context(active_ids=[x.id for x in aml_recs]).create({'journal_id': self.bank_journal_usd.id, 'writeoff_acc_id': self.account_rsa.id})
+        wizard.trans_rec_reconcile()
+        for aml in aml_recs:
+            self.assertTrue(aml.reconciled, 'The journal item should be totally reconciled')
+            self.assertEquals(aml.amount_residual, 0, 'The journal item should be totally reconciled')
+            self.assertEquals(aml.amount_residual_currency, 0, 'The journal item should be totally reconciled')
+
+    def test_reconcile_bank_statement_with_payment_and_writeoff(self):
+        # Use case:
+        # Company is in EUR, create a bill for 80 USD and register payment of 80 USD.
+        # create a bank statement in USD bank journal with a bank statement line of 85 USD
+        # Reconcile bank statement with payment and put the remaining 5 USD in bank fees or another account.
+
+        invoice = self.create_invoice(type='out_invoice', invoice_amount=80, currency_id=self.currency_usd_id)
+        # register payment on invoice
+        payment = self.env['account.payment'].create({'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait_id,
+            'amount': 80,
+            'currency_id': self.currency_usd_id,
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'journal_id': self.bank_journal_usd.id,
+            })
+        payment.post()
+        payment_move_line = False
+        bank_move_line = False
+        for l in payment.move_line_ids:
+            if l.account_id.id == self.account_rcv.id:
+                payment_move_line = l
+            else:
+                bank_move_line = l
+        invoice.register_payment(payment_move_line)
+
+        # create bank statement
+        bank_stmt = self.acc_bank_stmt_model.create({
+            'journal_id': self.bank_journal_usd.id,
+            'date': time.strftime('%Y') + '-07-15',
+        })
+
+        bank_stmt_line = self.acc_bank_stmt_line_model.create({'name': 'payment',
+            'statement_id': bank_stmt.id,
+            'partner_id': self.partner_agrolait_id,
+            'amount': 85,
+            'date': time.strftime('%Y') + '-07-15',})
+
+        #reconcile the statement with invoice and put remaining in another account
+        bank_stmt_line.process_reconciliation(payment_aml_rec= bank_move_line, new_aml_dicts=[{
+            'account_id': self.diff_income_account.id,
+            'debit': 0,
+            'credit': 5,
+            'name': 'bank fees',
+            }])
+
+        # Check that move lines associated to bank_statement are correct
+        bank_stmt_aml = self.env['account.move.line'].search([('statement_id', '=', bank_stmt.id)])
+        bank_stmt_aml |= bank_stmt_aml.mapped('move_id').mapped('line_ids')
+        self.assertEquals(len(bank_stmt_aml), 4, "The bank statement should have 4 moves lines")
+        lines = {
+            self.account_usd.id: [
+                {'debit': 3.27, 'credit': 0.0, 'amount_currency': 5, 'currency_id': self.currency_usd_id},
+                {'debit': 52.33, 'credit': 0, 'amount_currency': 80, 'currency_id': self.currency_usd_id}
+                ],
+            self.diff_income_account.id: {'debit': 0.0, 'credit': 3.27, 'amount_currency': -5, 'currency_id': self.currency_usd_id},
+            self.account_rcv.id: {'debit': 0.0, 'credit': 52.33, 'amount_currency': -80, 'currency_id': self.currency_usd_id},
+        }
+        for aml in bank_stmt_aml:
+            line = lines[aml.account_id.id]
+            if type(line) == list:
+                # find correct line inside the list
+                if line[0]['debit'] == round(aml.debit, 2):
+                    line = line[0]
+                else:
+                    line = line[1]
+            self.assertEquals(round(aml.debit, 2), line['debit'])
+            self.assertEquals(round(aml.credit, 2), line['credit'])
+            self.assertEquals(round(aml.amount_currency, 2), line['amount_currency'])
+            self.assertEquals(aml.currency_id.id, line['currency_id'])

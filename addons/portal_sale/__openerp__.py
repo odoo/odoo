@@ -5,7 +5,7 @@
 {
     'name': 'Portal Sale',
     'version': '0.1',
-    'category': 'Tools',
+    'category': 'Sales',
     'complexity': 'easy',
     'description': """
 This module adds a Sales menu to your portal as soon as sale and portal are installed.

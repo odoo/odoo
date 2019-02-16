@@ -3,19 +3,20 @@
 # * google_drive
 # 
 # Translators:
+# Aleksandr Jadov <a.jadov@tata.lt>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-11-09 10:10+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2018-11-11 16:20+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
@@ -26,7 +27,7 @@ msgid ""
 "                                - If you select \"Share with all users\", link of google document in \"More\" options will appear for all users in opportunities of Sales Department.<br/>\n"
 "                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
 "                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
-msgstr ""
+msgstr "<b>Norėdami sukurti naują filtrą: </b><br/>\n- Eikite į \"Odoo\" dokumentą, kurį norite filtruoti. Pavyzdžiui, eikite į galimybes ir ieškokite pardavimų skyriaus. <br/>\n- Šiame paieškos lange, pasirinkite \"Išsaugoti esamą filtrą\", įveskite pavadinimą (pvz., \"Pardavimų skyrius\")<br/>\n- Jei pasirinksite \"Dalintis su visais vartotojais\", visiems vartotojams prie \"Daugiau\" pasirinkimo pasirodys \"Google\" dokumento nuoroda<br/>\n- Jei nepasirinksite \"Dalintis su visais vartotojais\", vartotojams dokumento nuoroda nepasirodys<br/>\n- Jei filtras nenurodytas,  visiems vartotojams visose galimybės prie \"Daugiau\" pasirinkimo pasirodys \"Google\" dokumento nuoroda."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_active
@@ -37,24 +38,24 @@ msgstr "Aktyvus"
 #: code:addons/google_drive/google_drive.py:34
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern"
-msgstr ""
+msgstr "Bent vienas raktas nebuvo rastas jūsų \"Google Drive\" pavadinime"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_authorization_code
 msgid "Authorization Code"
-msgstr ""
+msgstr "Autorizavimo kodas"
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_google_drive_config_name_template
 msgid ""
 "Choose how the new google drive will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
-msgstr ""
+msgstr "Pasirinkite, kaip naujasis \"Google Drive\" bus pavadintas \"Google\" pusėje. Pvz., gdoc_%(field_name)s"
 
 #. module: google_drive
 #: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
 msgid "Click to add a new template."
-msgstr ""
+msgstr "Pridėti naują šabloną."
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration
@@ -75,7 +76,7 @@ msgstr "Sukurta"
 #: code:addons/google_drive/google_drive.py:141
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
-msgstr ""
+msgstr "Sukurti \"Google Drive\" galima tik po vieną."
 
 #. module: google_drive
 #: model:ir.filters,name:google_drive.filter_partner
@@ -113,24 +114,24 @@ msgstr "Google Drive"
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_tree
 msgid "Google Drive Configuration"
-msgstr ""
+msgstr "\"Google Drive\" konfigūracija"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name_template
 msgid "Google Drive Name Pattern"
-msgstr ""
+msgstr "\"Google Drive\" pavadinimo struktūra"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:55
 #: code:addons/google_drive/google_drive.py:75
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
-msgstr ""
+msgstr "\"Google drive\" dar nenustatytas. Susisiekite su savo administratoriumi."
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_google_drive_config
 msgid "Google Drive templates config"
-msgstr ""
+msgstr "\"Google Drive\" šablonų nustat."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_id
@@ -160,7 +161,7 @@ msgid ""
 "spreadsheet to control the quality of your product or review the delivery "
 "checklist for each order in a foreign country, ... Its very easy to manage "
 "them, link them to Odoo and use them to collaborate with your employees."
-msgstr ""
+msgstr "Susiekite savo \"Google drive\" šablonus su bet kuriuo \"Odoo\" įrašu. Jei turite konkretų dokumentą, kurį norite, kad užpildytų kolega, pvz., naudoti lentelę produkto kokybės kontrolei ar peržiūrėti pristatymą kiekvienam užsakymui užsienio šalims, juos valdyti labai lengva. Susiekite juos per \"Odoo\" ir naudokite bendradarbiavimui su kolegomis."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
@@ -178,12 +179,12 @@ msgstr ""
 #: code:addons/google_drive/google_drive.py:173
 #, python-format
 msgid "Please enter a valid Google Document URL."
-msgstr ""
+msgstr "Įveskite galiojančią \"Google\" dokumento nuorodą."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_resource_id
 msgid "Resource Id"
-msgstr ""
+msgstr "Ištekliaus ID"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:72
@@ -191,7 +192,7 @@ msgstr ""
 msgid ""
 "Something went wrong during the token generation. Please request again an "
 "authorization code ."
-msgstr ""
+msgstr "Įvyko klaida generuojant prieigos raktą. Dar kartą išsiųskite patvirtinimo kodo užklausą."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name
@@ -201,7 +202,7 @@ msgstr "Šablono pavadinimas"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_template_url
 msgid "Template URL"
-msgstr ""
+msgstr "Šablono nuoroda"
 
 #. module: google_drive
 #: model:ir.actions.act_window,name:google_drive.action_google_drive_users_config
@@ -213,12 +214,12 @@ msgstr "Šablonai"
 #: code:addons/google_drive/google_drive.py:90
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
-msgstr ""
+msgstr "Nepavyko rasti \"Google\" šablono. Gali būti, kad jis ištrintas."
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_base_config_settings_google_drive_uri
 msgid "The URL to generate the authorization code from Google"
-msgstr ""
+msgstr "URL, naudojamas gauti patvirtinimo kodą iš \"Google\""
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
@@ -227,7 +228,7 @@ msgid ""
 "                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Agrolait_SO0001_Sales'."
-msgstr ""
+msgstr "Prisegto dokumento pavadinimas gali naudoti kintančius arba fiksuotus duomenis. Norint atskirti dokumentus\n\"Google Drive\", naudokite fiksuotus žodžius ir laukelius. Pavyzdžiui, pavyzdyje viršuje jūs įarašėte  \"Agrolait_%(name)s_Sales\" į \"Google Drive\" pavadinimo laukelį, todėl dokumentas \"Google Drive\" ir \"Odoo\" prisegtuke bus pavadintas\n\"Agrolait_SO0001_Sales\"."
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:117
@@ -235,12 +236,12 @@ msgstr ""
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
-msgstr ""
+msgstr "Leidimas \"skaitytojas\" visiems \"su nuoroda\" nebuvo įrašytas dokumente."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_uri
 msgid "URI"
-msgstr ""
+msgstr "URI"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:52
@@ -248,20 +249,20 @@ msgstr ""
 msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "
 "generate and configure it ."
-msgstr ""
+msgstr "Nenustatėte \"Patvirtinimo kodo\", sugeneruoto \"Google\". Sugeneruokite jį ir nustatykite."
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration
 msgid "and paste it here"
-msgstr ""
+msgstr "ir įterpkitę čia"
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_base_config_settings
 msgid "base.config.settings"
-msgstr ""
+msgstr "base.config.settings"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
-msgstr ""
+msgstr "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"

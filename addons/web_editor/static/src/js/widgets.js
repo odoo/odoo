@@ -4,6 +4,7 @@ odoo.define('web_editor.widget', function (require) {
 var core = require('web.core');
 var ajax = require('web.ajax');
 var Widget = require('web.Widget');
+var utils = require('web.utils');
 var base = require('web_editor.base');
 var rte = require('web_editor.rte');
 
@@ -38,6 +39,10 @@ var Dialog = Widget.extend({
     },
     close: function () {
         this.$el.modal('hide');
+    },
+    destroy: function () {
+        this._super();
+        $("body:has('> .modal:visible')").addClass('modal-open');
     },
     stop_escape: function(event) {
         if($(".modal.in").length>0 && event.which == 27){
@@ -295,7 +300,9 @@ var ImageDialog = Widget.extend({
             self.display_attachments();
         });
         this.fetch_existing().then(function () {
-            self.set_image(_.find(self.records, function (record) { return record.url === o.url;}) || o);
+            if (o.url) {
+                self.set_image(_.find(self.records, function (record) { return record.url === o.url;}) || o);
+            }
         });
         return res;
     },
@@ -319,8 +326,7 @@ var ImageDialog = Widget.extend({
 
         var img = this.images[0];
         if (!img) {
-            var id = this.$(".existing-attachments [data-src]:first").data('id');
-            img = _.find(this.images, function (img) { return img.id === id;});
+            return this.media;
         }
 
         if (!img.is_document) {
@@ -543,16 +549,12 @@ var getCssSelectors = function(filter) {
     var sheets = document.styleSheets;
     for(var i = 0; i < sheets.length; i++) {
         var rules;
-        if (sheets[i].rules) {
-            rules = sheets[i].rules;
-        } else {
-            //try...catch because Firefox not able to enumerate document.styleSheets[].cssRules[] for cross-domain stylesheets.
-            try {
-                rules = sheets[i].cssRules;
-            } catch(e) {
-                console.warn("Can't read the css rules of: " + sheets[i].href, e);
-                continue;
-            }
+        // try...catch because browser may not able to enumerate rules for cross-domain stylesheets
+        try {
+            rules = sheets[i].rules || sheets[i].cssRules;
+        } catch(e) {
+            console.warn("Can't read the css rules of: " + sheets[i].href, e);
+            continue;
         }
         if (rules) {
             for(var r = 0; r < rules.length; r++) {
@@ -567,6 +569,7 @@ var getCssSelectors = function(filter) {
                             if (!data) {
                                 data = [match[1], rules[r].cssText.replace(/(^.*\{\s*)|(\s*\}\s*$)/g, ''), clean, [clean]];
                             } else {
+                                data[0] += (", " + match[1]);
                                 data[3].push(clean);
                             }
                         }
@@ -780,7 +783,9 @@ var fontIconsDialog = Widget.extend({
 });
 
 
-function createVideoNode(url) {
+function createVideoNode(url, options) {
+    options = options || {};
+
     // video url patterns(youtube, instagram, vimeo, dailymotion, youku)
     var ytRegExp = /^(?:(?:https?:)?\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
     var ytMatch = url.match(ytRegExp);
@@ -832,6 +837,14 @@ function createVideoNode(url) {
         .attr('src', '//player.youku.com/embed/' + youkuMatch[1]);
     } else {
       // this is not a known video link. Now what, Cat? Now what?
+          $video = $('<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen>')
+            .attr('width', '640')
+            .attr('height', '360')
+            .attr('src', url);
+    }
+
+    if (options.autoplay) {
+        $video.attr("src", $video.attr("src") + "?autoplay=1");
     }
 
     $video.attr('frameborder', 0);
@@ -848,6 +861,7 @@ var VideoDialog = Widget.extend({
     events : _.extend({}, Dialog.prototype.events, {
         'click input#urlvideo ~ button': 'get_video',
         'click input#embedvideo ~ button': 'get_embed_video',
+        'change input#autoplay': 'get_video',
         'change input#urlvideo': 'change_input',
         'keyup input#urlvideo': 'change_input',
         'change input#embedvideo': 'change_input',
@@ -866,6 +880,7 @@ var VideoDialog = Widget.extend({
         if ($media.hasClass("media_iframe_video")) {
             var src = $media.data('src');
             this.$("input#urlvideo").val(src);
+            this.$("input#autoplay").prop("checked", (src || "").indexOf("autoplay") >= 0);
             this.get_video();
         }
         return this._super();
@@ -890,7 +905,7 @@ var VideoDialog = Widget.extend({
     },
     get_video: function (event) {
         if (event) event.preventDefault();
-        var $video = createVideoNode(this.$("input#urlvideo").val());
+        var $video = createVideoNode(this.$("input#urlvideo").val(), {autoplay: this.$("input#autoplay").is(":checked")});
         this.$iframe.replaceWith($video);
         this.$iframe = $video;
         return false;
@@ -1009,6 +1024,8 @@ var LinkDialog = Dialog.extend({
                     if (dom.ancestor(nodes[i], dom.isImg)) {
                         this.data.images.push(dom.ancestor(nodes[i], dom.isImg));
                         text += '[IMG]';
+                    } else if (!is_link && nodes[i].nodeType === 1) {
+                        // just use text nodes from listBetween
                     } else if (!is_link && i===0) {
                         text += nodes[i].textContent.slice(so, Infinity);
                     } else if (!is_link && i===nodes.length-1) {
@@ -1035,6 +1052,7 @@ var LinkDialog = Dialog.extend({
         if (!$e.length) {
             $e = this.$('input.url-source:first');
         }
+        $e.closest('.form-group').removeClass('has-error');
         var val = $e.val();
         var label = this.$('#link-text').val() || val;
 
@@ -1055,19 +1073,24 @@ var LinkDialog = Dialog.extend({
         var size = this.$("input[name='link-style-size']:checked").val() || '';
         var classes = (this.data.className || "") + (style && style.length ? " btn " : "") + style + " " + size;
         var isNewWindow = this.$('input.window-new').prop('checked');
-
-        if ($e.hasClass('email-address') && $e.val().indexOf("@") !== -1) {
-            self.get_data_buy_mail(def, $e, isNewWindow, label, classes);
+        if ($e.hasClass('email-address') && (_.str.startsWith(val, 'mailto:') || (val.indexOf("@") !== -1 && !_.str.startsWith(val, 'http') && !_.str.startsWith(val, 'www')))) {
+            self.get_data_buy_mail(def, $e, isNewWindow, label, classes, test);
         } else {
-            self.get_data_buy_url(def, $e, isNewWindow, label, classes);
+            self.get_data_buy_url(def, $e, isNewWindow, label, classes, test);
         }
         return def;
     },
-    get_data_buy_mail: function (def, $e, isNewWindow, label, classes) {
+    get_data_buy_mail: function (def, $e, isNewWindow, label, classes, test) {
         var val = $e.val();
-        def.resolve(val.indexOf("mailto:") === 0 ? val : 'mailto:' + val, isNewWindow, label, classes);
+        if (utils.is_email(val, true)) {
+            def.resolve(val.indexOf("mailto:") === 0 ? val : 'mailto:' + val, isNewWindow, label, classes);
+        } else {
+            $e.closest('.form-group').addClass('has-error');
+            $e.focus();
+            def.reject();
+        }
     },
-    get_data_buy_url: function (def, $e, isNewWindow, label, classes) {
+    get_data_buy_url: function (def, $e, isNewWindow, label, classes, test) {
         def.resolve($e.val(), isNewWindow, label, classes);
     },
     save: function () {

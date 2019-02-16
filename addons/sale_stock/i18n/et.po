@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2016-03-12 20:21+0000\n"
-"Last-Translator: Arma Gedonsky <armagedonsky@hot.ee>\n"
+"PO-Revision-Date: 2018-09-26 14:27+0000\n"
+"Last-Translator: Helen Sulaoja <helen@avalah.ee>\n"
 "Language-Team: Estonian (http://www.transifex.com/odoo/odoo-9/language/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr ""
+msgstr "<strong>Rahvusvahelised tarnetingimused:</strong>"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
@@ -57,12 +57,12 @@ msgstr ""
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "Saada kõik tooted üh korraga"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "Saada iga toode kohe, kui see on saadaval"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -82,7 +82,7 @@ msgstr ""
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr ""
+msgstr "Võimalda marsruudid müügitellimuse ridadel"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
@@ -96,19 +96,19 @@ msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
-msgstr ""
+msgstr "Rahvusvahelised tarnetingimused on müügi tingimused. Neid kasutatakse transaktsiooni kulude ja vastutuse jagamiseks ostja ja müüja vahel ning näitab, et ettevõtted rakendavad kõrgetasemelist transpordi praktikaid."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
+msgstr "Rahvusvahelised kaubanduslikud tingimused on rahvusvaheliste tehingutega seotud eelnevalt määratletud ärimõisted."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr ""
+msgstr "Lao marsruudi"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_invoice
@@ -126,7 +126,7 @@ msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
 " date, to cope with unexpected delays in the supply chain."
-msgstr ""
+msgstr "Kliendile lubatud kuupäevade ja kauba oodatava kuupäevade vahe. Tooted planeeritakse hankimiseks nende päevade arvu võrra varem kui kliendile lubatud kuupäev, et adresseerida võimalike viivitusi tarneahelas."
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
@@ -142,7 +142,7 @@ msgstr ""
 #: code:addons/sale_stock/sale_stock.py:141
 #, python-format
 msgid "Not enough inventory!"
-msgstr ""
+msgstr "Pole piisavalt laoseisu!"
 
 #. module: sale_stock
 #: code:addons/sale_stock/res_config.py:42
@@ -159,7 +159,7 @@ msgstr ""
 #: code:addons/sale_stock/sale_stock.py:152
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr ""
+msgstr "Tellitud kogused vähenesid!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
@@ -189,7 +189,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
 msgid "Route"
-msgstr ""
+msgstr "Marsruut"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
@@ -224,7 +224,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
 msgid "Selectable on Sales Order Line"
-msgstr ""
+msgstr "Valitav müügitellimuse real"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_picking_policy:0
@@ -245,7 +245,7 @@ msgstr "Saatmine"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Shipping Information"
-msgstr ""
+msgstr "Kohaletoimetamise informatsioon"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
@@ -278,7 +278,7 @@ msgstr "Ladu"
 #: code:addons/sale_stock/sale_stock.py:193
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Hoiatus"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:153
@@ -286,7 +286,7 @@ msgstr ""
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
-msgstr ""
+msgstr "Sa vähendada tellitud kogust! Ära unusta käsitsi uuendada saatmistellimust vajadusel."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:142

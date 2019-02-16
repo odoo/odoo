@@ -3,20 +3,23 @@
 # * hr
 # 
 # Translators:
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2015
+# zbik2607 <darek@krokus.com.pl>, 2016
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2015-2016
+# Mariusz, 2016
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 10:41+0000\n"
-"PO-Revision-Date: 2016-02-20 10:36+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2018-03-10 05:58+0000\n"
+"Last-Translator: Tomasz Leppich <t.leppich@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: hr
 #: code:addons/hr/hr.py:119
@@ -33,7 +36,7 @@ msgstr "%s (kopia)"
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "<i>Work in a fun atmosphere</i>"
-msgstr ""
+msgstr "<i>Praca w miłej atmosferze</i>"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -44,14 +47,14 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "<i>You are passionate</i>"
-msgstr ""
+msgstr "<i>Jesteś pasjonatem</i>"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "<i>You autonomously and quickly learn</i>"
-msgstr ""
+msgstr "<i>Szybko i samodzielnie się uczysz</i>"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -59,14 +62,14 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "<i>You easily manage them</i>"
-msgstr ""
+msgstr "<i>Łatwo nimi zarządzać</i>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid ""
 "<span class=\"o_unfollow\">Unfollow</span>\n"
 "                                    <span class=\"o_following\">Following</span>"
-msgstr ""
+msgstr "<span class=\"o_unfollow\">Nie obserwuj</span>\n                                    <span class=\"o_following\">Obserwuj</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -76,12 +79,12 @@ msgstr "<span>Raporty</span>"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Approve</span>"
-msgstr ""
+msgstr "<span>Do aprobaty</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Do</span>"
-msgstr ""
+msgstr "<span>Do zrobienia</span>"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -107,7 +110,7 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "A good job in a young and dynamic team"
-msgstr ""
+msgstr "Dobra praca z młodym i dynamicznym zespołem"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_message_needaction
@@ -124,12 +127,12 @@ msgstr "Aktywne"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Analyse needs, write specification documents and quotation"
-msgstr ""
+msgstr "Zanalizuj potrzeby, napisz specyfikacje oraz ofertę"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
-msgstr "Zarchiwizowane"
+msgstr "Archiwalne"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
@@ -188,7 +191,7 @@ msgstr "Działy podrzędne"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Citizenship & Other Information"
-msgstr ""
+msgstr "Obywatelstwo i inne informacje"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_city
@@ -204,22 +207,22 @@ msgstr ""
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Click to add a new employee."
-msgstr ""
+msgstr "Kliknij, aby dodać nowego pracownika."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Click to create a department."
-msgstr ""
+msgstr "Kliknij, aby utworzyć dział."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
 msgid "Click to define a new department."
-msgstr ""
+msgstr "Kliknij, aby zdefiniować dział."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid "Click to define a new job position."
-msgstr ""
+msgstr "Kliknij, aby zdefiniować nową pozycję pracy"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -230,7 +233,7 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Close to the perfection ..."
-msgstr ""
+msgstr "Blisko perfekcji..."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_coach_id
@@ -272,7 +275,7 @@ msgstr "Konfiguracja"
 #. module: hr
 #: model:hr.job,name:hr.job_consultant
 msgid "Consultant"
-msgstr ""
+msgstr "Konsultant"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -289,7 +292,7 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.act_window,name:hr.view_department_form_installer
 msgid "Create Your Departments"
-msgstr "Utwórz swój dział"
+msgstr "Utwórz swoje działy"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
@@ -353,7 +356,7 @@ msgstr "Dział"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_name
 msgid "Department Name"
-msgstr "Nazwa departamentu"
+msgstr "Nazwa działu"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
@@ -439,14 +442,12 @@ msgid "Employees Tags"
 msgstr "Znaczniki pracowników"
 
 #. module: hr
-#: code:addons/hr/hr.py:299 constraint:hr.department:0
-#, python-format
+#: constraint:hr.department:0
 msgid "Error! You cannot create recursive departments."
 msgstr "Błąd! Nie możesz tworzyć rekurencyjnych działów."
 
 #. module: hr
-#: code:addons/hr/hr.py:269 constraint:hr.employee:0
-#, python-format
+#: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Błąd! Nie możesz utworzyć rekurencyjnej hierarchii pracownika(ów)."
 
@@ -509,16 +510,21 @@ msgid "Gender"
 msgstr "Płeć"
 
 #. module: hr
+#: model:web.tip,description:hr.hr_tip_1
+msgid "Get all applications related to this job position."
+msgstr ""
+
+#. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "Good knowledge of HTML and Javascript"
-msgstr ""
+msgstr "Dobra znajomość HTML i Javascript"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Good knowledge of object oriented programming"
-msgstr ""
+msgstr "Dobra znajomość programowania obiektowego"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -747,11 +753,6 @@ msgid "Last Modified on"
 msgstr "Ostatnio modyfikowano"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_last_website_so_id
-msgid "Last Online Sale Order"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_uid
@@ -816,7 +817,7 @@ msgstr "Stan cywilny"
 #. module: hr
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
-msgstr ""
+msgstr "Menedżer marketingu i społeczności"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -870,7 +871,7 @@ msgstr "Więcej"
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Must have ..."
-msgstr ""
+msgstr "Musisz mieć ..."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
@@ -882,7 +883,7 @@ msgstr "Nazwa"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_country_id
 msgid "Nationality (Country)"
-msgstr ""
+msgstr "Narodowość (Kraj)"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -982,6 +983,11 @@ msgid "Parent Department"
 msgstr "Dział nadrzędny"
 
 #. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "Passion for the Internet and its culture"
 msgstr ""
@@ -989,7 +995,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_passport_id
 msgid "Passport No"
-msgstr "Nr paszportu"
+msgstr "Numer paszportu"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -1032,7 +1038,7 @@ msgstr "Informacje publiczne"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Quantify and negotiate the resources required"
-msgstr ""
+msgstr "Określ ilość i negocjuj wymagane zasoby"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -1238,7 +1244,7 @@ msgstr "Całkowita przewidywana liczba pracowników"
 #. module: hr
 #: model:hr.job,name:hr.job_trainee
 msgid "Trainee"
-msgstr "Trener"
+msgstr "Stażysta"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
@@ -1323,7 +1329,7 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "What we offer"
-msgstr ""
+msgstr "co my oferujemy"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1334,7 +1340,7 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "What you will do ..."
-msgstr ""
+msgstr "Co Ty zrobisz ..."
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -1353,7 +1359,7 @@ msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
-msgstr ""
+msgstr "Wystarczy rzucić okiem na ekran pracownika Odoo\n                 i możesz łatwo znaleźć wszystkie potrzebne informacje dla każdej osoby;\n                 dane kontaktowe, stanowisko pracy, dostępność itp."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1407,7 +1413,7 @@ msgstr "Napisz ciekawą treść"
 #. module: hr
 #: model:hr.job,website_description:hr.job_hrm
 msgid "Write attractive content and build up Human Resources materials"
-msgstr ""
+msgstr "Pisz atrakcyjne treści i buduj materiały z zakresu zasobów ludzkich"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1441,7 +1447,7 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "You are creative"
-msgstr ""
+msgstr "Jesteś kreatywny"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1461,7 +1467,7 @@ msgid ""
 "You can attach a survey to a job position. It will be used in\n"
 "                the recruitment process to evaluate the applicants for this job\n"
 "                position."
-msgstr ""
+msgstr "Możesz dołączyć ankietę do stanowiska pracy. Zostanie użyta w\nprocesie rekrutacji w celu oceny kandydatów na to stanowisko"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1494,12 +1500,12 @@ msgstr ""
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You speak a third language"
-msgstr ""
+msgstr "Mówisz w trzech językach"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You speak fluently French and English"
-msgstr ""
+msgstr "Mówisz biegle po angielsku i franusku"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto

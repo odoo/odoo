@@ -52,6 +52,10 @@ var Sidebar = Widget.extend({
             event.preventDefault();
         });
     },
+    destroy: function() {
+        $(window).off(this.fileupload_id);
+        return this._super.apply(this, arguments);
+    },
     redraw: function() {
         var self = this;
         self.$el.html(QWeb.render('Sidebar', {widget: self}));

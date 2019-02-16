@@ -198,7 +198,7 @@ class view(osv.osv):
         """
         imd = self.pool['ir.model.data']
         theme_view_id = imd.xmlid_to_res_id(cr, uid, 'website.theme')
-        user = self.pool['res.users'].browse(cr, uid, context=context)
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         user_groups = set(user.groups_id)
         views = self._views_get(
             cr, uid, key, bundles=bundles,
@@ -228,3 +228,10 @@ class view(osv.osv):
                     'active': v.active,
                 })
         return result
+
+    def get_default_lang_code(self, cr, uid, context):
+        website_id = context['website_id']
+        if website_id:
+            return self.pool['website'].browse(cr, uid, website_id, context=context).default_lang_code
+        else:
+            return super(view, self).get_default_lang_code(cr, uid, context=context)

@@ -3,12 +3,13 @@
 # * auth_oauth
 # 
 # Translators:
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-03-01 11:22+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-12-22 11:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +28,7 @@ msgid ""
 "                                    - Edit settings and set both Authorized Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
 "                                    <br/>\n"
 "                                    Now copy paste the client_id here:"
-msgstr ""
+msgstr "<br/>\n                                    - Yeni bir proje oluştur<br/>\n                                    - Api Erişimine git<br/>\n                                    - Bir oauth client_id oluştur<br/>\n                                    - Ayarları düzenleyin ve makine adınızı hem Authorized Redirect URIs hem de Authorized JavaScript Origins olarak ayarlayın.<br/>\n                                    <br/>\n                                    Şimdi client_id'i buraya kopyalayıp yapıştırın:"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:99
@@ -104,8 +105,8 @@ msgstr "Oluşturuldu"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
-msgid "Currency id"
-msgstr ""
+msgid "Currency"
+msgstr "Kur"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
@@ -135,7 +136,7 @@ msgstr "Google API konsolü"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
 msgid "Has unreconciled entries"
-msgstr ""
+msgstr "Uzlaşmamış girişler var"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
@@ -174,12 +175,12 @@ msgid ""
 "Last time the invoices & payments matching was performed for this partner. "
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
-msgstr ""
+msgstr "Bu iş ortağı için son kez eşleşen fatura ve ödemeler. En azından bir uzlaşılamayan borç ve alacak yoksa veya \"Bitti\" düğmesini tıklarsanız ayarlanır."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
-msgstr ""
+msgstr "Son Faturalar ve Ödemeler Eşleştirme Tarihi"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
@@ -258,7 +259,7 @@ msgstr "Mali durum, iş ortağı için kullanılacak vergileri ve hesapları bel
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
-msgstr ""
+msgstr "İş ortağının son fatura ve ödemelerinin eşleştirmesinden bu yana en az bir uzlaşmamış borç ve alacak var."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_payable_id
@@ -279,7 +280,7 @@ msgstr "Bu hesap, geçerli İş Ortağı için alacak hesabı olarak varsayılan
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
-msgstr ""
+msgstr "Bu ödeme koşulu satınalma siparişleri ve satıcı faturaları için varsayılan fiyat yerine kullanılacaktır"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_payment_term_id
@@ -319,7 +320,7 @@ msgstr "Bu müşterinin size toplam borç tutarı"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_debit
 msgid "Total amount you have to pay to this vendor."
-msgstr ""
+msgstr "Bu tedarikçiye ödenmesi gereken toplam miktar."
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
@@ -329,7 +330,7 @@ msgstr "Kullanıcılar"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_currency_id
 msgid "Utility field to express amount currency"
-msgstr ""
+msgstr "Miktar bilgisini girmek için alan"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_validation_endpoint

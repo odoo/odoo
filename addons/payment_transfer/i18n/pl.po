@@ -3,43 +3,59 @@
 # * payment_transfer
 # 
 # Translators:
+# zbik2607 <darek@krokus.com.pl>, 2016
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2016-01-23 16:30+0000\n"
+"POT-Creation-Date: 2016-12-14 14:52+0000\n"
+"PO-Revision-Date: 2017-09-23 21:33+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment_acquirer.py:32
+#, python-format
+msgid ""
+"<div>\n"
+"<h3>Please use the following transfer details</h3>\n"
+"<h4>%(bank_title)s</h4>\n"
+"%(bank_accounts)s\n"
+"<h4>Communication</h4>\n"
+"<p>Please use the order name as communication reference.</p>\n"
+"</div>"
+msgstr ""
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_acquirer.py:68
 #, python-format
 msgid "; multiple order found"
-msgstr ""
+msgstr "; znaleziono wielokrotne zamówienie"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_acquirer.py:66
 #, python-format
 msgid "; no order found"
-msgstr ""
+msgstr "; nie znaleziono zamówienia"
 
 #. module: payment_transfer
 #: model:payment.acquirer,cancel_msg:payment_transfer.payment_acquirer_transfer
 msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr ""
+msgstr "<span><i>Anulowano,</i> Twoje płatność została anulowana.</span>"
 
 #. module: payment_transfer
 #: model:payment.acquirer,done_msg:payment_transfer.payment_acquirer_transfer
 msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
-msgstr ""
+msgstr "<span><i>Gotowe,</i> Twoja płatność online została pomyślnie przetworzona. Dziękujemy za Twoje zamówienie.</span>"
 
 #. module: payment_transfer
 #: model:payment.acquirer,error_msg:payment_transfer.payment_acquirer_transfer
@@ -47,14 +63,14 @@ msgid ""
 "<span><i>Error,</i> Please be aware that an error occurred during the "
 "transaction. The order has been confirmed but won't be paid. Don't hesitate "
 "to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
+msgstr "<span><i>Błąd,</i> Należy pamiętać, że ten błąd wystąpił podczas transakcji. Zamówienie zostało potwierdzone, ale nie będzie zapłacone. Nie wahaj się skontaktować się z nami, jeśli masz jakieś pytania dotyczące statusu twojego zamówienia.</span>"
 
 #. module: payment_transfer
 #: model:payment.acquirer,pending_msg:payment_transfer.payment_acquirer_transfer
 msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
-msgstr ""
+msgstr "<span><i>Oczekiwanie,</i> Twoja płatność online została pomyślnie przetworzona. Ale twoje zamówienie nie zostało jeszcze zatwierdzone.</span>"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_acquirer.py:30
@@ -81,7 +97,7 @@ msgstr "Transakcja płatności"
 #. module: payment_transfer
 #: model:payment.acquirer,pre_msg:payment_transfer.payment_acquirer_transfer
 msgid "Transfer information will be provided after choosing the payment mode."
-msgstr ""
+msgstr "Informacje o transferach otrzymają Państwo po wybraniu trybu płatności."
 
 #. module: payment_transfer
 #: model:payment.acquirer,name:payment_transfer.payment_acquirer_transfer
@@ -92,4 +108,4 @@ msgstr "Przelew bankowy"
 #: code:addons/payment_transfer/models/payment_acquirer.py:64
 #, python-format
 msgid "received data for reference %s"
-msgstr ""
+msgstr "odebrane dane do referencji %s"

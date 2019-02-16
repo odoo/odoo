@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-import urllib
+import urllib2
 
 from openerp.osv import osv, fields
 from openerp import tools
@@ -11,11 +11,13 @@ from openerp.exceptions import UserError
 
 
 def geo_find(addr):
+    if not addr:
+        return None
     url = 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&address='
-    url += urllib.quote(addr.encode('utf8'))
+    url += urllib2.quote(addr.encode('utf8'))
 
     try:
-        result = json.load(urllib.urlopen(url))
+        result = json.load(urllib2.urlopen(url))
     except Exception, e:
         raise UserError(_('Cannot contact geolocation servers. Please make sure that your internet connection is up and running (%s).') % e)
     if result['status'] != 'OK':

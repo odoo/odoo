@@ -267,7 +267,15 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
         $imagePopover.find('.o_image_alt').text( (alt || "").replace(/&quot;/g, '"') ).parent().toggle(oStyle.image.tagName === "IMG");
         $imagePopover.show();
 
-        range.createFromNode(dom.firstChild(oStyle.image)).select();
+        // for video tag (non-void) we select the range over the tag,
+        // for other media types we get the first descendant leaf element
+        var target_node = oStyle.image;
+        if (!oStyle.image.className.match(/(^|\s)media_iframe_video(\s|$)/i)) {
+            target_node = dom.firstChild(target_node);
+        }
+        range.createFromNode(target_node).select();
+        // save range on the editor so it is not lost if restored
+        eventHandler.modules.editor.saveRange(dom.makeLayoutInfo(target_node).editable());
     } else {
         $(".note-control-selection").hide();
     }
@@ -420,7 +428,7 @@ $.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
     if (($node.is('[data-oe-type="html"]') || $node.is('[data-oe-field="arch"]')) &&
         $node.hasClass("o_editable") &&
         !$node[0].children.length &&
-        "h1 h2 h3 h4 h5 h6 p b bold i u code sup strong small pre th td".toUpperCase().indexOf($node[0].nodeName) === -1) {
+        "h1 h2 h3 h4 h5 h6 p b bold i u code sup strong small pre th td label".toUpperCase().indexOf($node[0].nodeName) === -1) {
         var p = $('<p><br/></p>')[0];
         $node.append( p );
         range.createFromNode(p.firstChild).select();
@@ -477,7 +485,12 @@ function prettify_html(html) {
             level--;
         }
 
-        result += token.trim().replace(/\s+/, ' ');
+        // don't trim inline content (which could change appearance)
+        if (!inline) {
+            token = token.trim();
+        }
+
+        result += token.replace(/\s+/, ' ');
 
         if (inline_level > level) {
             result += '\n';
@@ -485,12 +498,32 @@ function prettify_html(html) {
     }
     return result;
 }
-$.summernote.pluginEvents.codeview = function (event, editor, layoutInfo) {
+
+/*
+ * This override when clicking on the 'Code View' button has two aims:
+ *
+ * - have our own code view implementation for FieldTextHtml
+ * - add an 'enable' paramater to call the function directly and allow us to
+ *   disable (false) or enable (true) the code view mode.
+ */
+$.summernote.pluginEvents.codeview = function (event, editor, layoutInfo, enable) {
+    if (layoutInfo === undefined) {
+        return;
+    }
     if (layoutInfo.toolbar) {
+        // if editor inline (FieldTextHtmlSimple)
+        var is_activated = $.summernote.eventHandler.modules.codeview.isActivated(layoutInfo);
+        if (is_activated === enable) {
+            return;
+        }
         return eventHandler.modules.codeview.toggle(layoutInfo);
     } else {
+        // if editor iframe (FieldTextHtml)
         var $editor = layoutInfo.editor();
         var $textarea = $editor.prev('textarea');
+        if ($textarea.is('textarea') === enable) {
+            return;
+        }
 
         if (!$textarea.length) {
             // init and create texarea
@@ -602,7 +635,15 @@ function summernote_mousedown (event) {
     }
 
     // restore range if range lost after clicking on non-editable area
-    var r = range.create();
+    try {
+        var r = range.create();
+    } catch (e) {
+        // If this code is running inside an iframe-editor and that the range
+        // is outside of this iframe, this will fail as the iframe does not have
+        // the permission to check the outside content this way. In that case,
+        // we simply ignore the exception as it is as if there was no range.
+        return;
+    }
     var editables = $(".o_editable[contenteditable], .note-editable[contenteditable]");
     var r_editable = editables.has((r||{}).sc);
     if (!r_editable.closest('.note-editor').is($editable) && !r_editable.filter('.o_editable').is(editables)) {

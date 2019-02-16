@@ -282,7 +282,7 @@ named :samp:`report.{module.report_name}`. If it exists, it will use it to
 call the QWeb engine; otherwise a generic function will be used. If you wish
 to customize your reports by including more things in the template (like
 records of others models, for example), you can define this model, overwrite
-the function ``render_html`` and pass objects in the ``docargs`` dictionnary:
+the function ``render_html`` and pass objects in the ``docargs`` dictionary:
 
 .. code-block:: python
 

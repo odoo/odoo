@@ -2,7 +2,7 @@
 {
     'name' : 'Products Expiration Date',
     'version' : '1.0',
-    'category' : 'Specific Industry Applications',
+    'category' : 'Warehouse',
     'depends' : ['stock'],
     'demo' : ['product_expiry_demo.xml'],
     'description': """

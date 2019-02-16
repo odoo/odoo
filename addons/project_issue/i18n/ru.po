@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:25+0000\n"
-"PO-Revision-Date: 2016-04-17 22:57+0000\n"
+"PO-Revision-Date: 2016-05-04 11:03+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -53,7 +53,7 @@ msgstr "<b>Проект:</b>"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
 msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">как </span>"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
@@ -105,17 +105,17 @@ msgstr "Назначено"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_delay_close
 msgid "Avg. Delay to Close"
-msgstr "Ср. задержка перед закрытием"
+msgstr "Ср. задержка до закрытия"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_delay_open
 msgid "Avg. Delay to Open"
-msgstr "Средняя задержка при Открытии"
+msgstr "Средняя задержка до открытия"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_working_hours_close
 msgid "Avg. Working Hours to Close"
-msgstr "Среднее количество часов до закрытия вопроса"
+msgstr "Среднее количество часов до закрытия заявки"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_working_hours_open
@@ -307,7 +307,7 @@ msgstr "Длительность"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "Edit Issue"
-msgstr "Редактор проблем"
+msgstr "Редактировать заявку"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_email_from
@@ -317,7 +317,7 @@ msgstr "Эл. почта"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Extra Info"
-msgstr "Доп. инфо."
+msgstr "Доп. инфо"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_feature_tree_view
@@ -394,13 +394,13 @@ msgstr "Заявка"
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
 msgid "Issue Blocked"
-msgstr "Заблокированная проблема"
+msgstr "Заявка блокирована"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Opened"
-msgstr "Проблема открыта"
+msgstr "Заявка открыта"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_ready
@@ -416,7 +416,7 @@ msgstr "Стадия проблемы изменена"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Issue Summary..."
-msgstr "Описание проблемы..."
+msgstr "Описание заявки..."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -459,7 +459,7 @@ msgstr "Заявка готова к следующему этапу"
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
 #: model:ir.ui.view,arch_db:project_issue.view_project_kanban_inherited
 msgid "Issues"
-msgstr "Вопросы"
+msgstr "Заявки"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_project_issue_report
@@ -539,7 +539,7 @@ msgstr "Сообщения и история общения"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "My Issues"
-msgstr "Мои инциденты"
+msgstr "Мои заявки"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -578,22 +578,22 @@ msgstr "Количество действий"
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
 msgid "Number of Days to close the project issue"
-msgstr "Число дней, чтобы закрыть проблему проекта"
+msgstr "Кол-во дней на закрытие заявки"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_open
 msgid "Number of Days to open the project issue."
-msgstr "Количество дней до открытия проблемы по проекту."
+msgstr "Кол-во дней на открытие заявки."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Количество сообщений, требующих реакции"
+msgstr "Количество сообщений, требующих внимания"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_message_unread_counter
 msgid "Number of unread messages"
-msgstr "Количество непрочтённых сообщений"
+msgstr "Количество непрочитанных сообщений"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
@@ -606,7 +606,7 @@ msgstr "Контрагент"
 msgid ""
 "Please remove existing issues in the project linked to the accounts you want"
 " to delete."
-msgstr "Пожалуйста, удалите из проекта существующие задачи, связанные с аккаунтами, которые вы собираетесь удалить."
+msgstr "Пожалуйста, сначала удалите из проекта существующие задачи, связанные с аккаунтами, которые вы собираетесь удалить."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_priority
@@ -637,13 +637,13 @@ msgstr "Проект"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_graph
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_pivot
 msgid "Project Issue"
-msgstr "Проблема проекта"
+msgstr "Заявка"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_graph_view
 #: model:ir.ui.view,arch_db:project_issue.project_issue_pivot_view
 msgid "Project Issues"
-msgstr "Project Issues"
+msgstr "Заявки"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
@@ -759,7 +759,7 @@ msgstr "Непрочитанные"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Счетчик непрочтённых сообщений"
+msgstr "Счетчик непрочитанных сообщений"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
@@ -769,12 +769,12 @@ msgstr "Дата изменения"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
 msgid "Use Issues"
-msgstr "Использовать проблемы"
+msgstr "Активировать заявки"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_project_label_issues
 msgid "Use Issues as"
-msgstr "Использовать проблемы как"
+msgstr "Активировать заявки как"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_user_email
@@ -799,32 +799,32 @@ msgstr "История общения с сайта"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_open
 msgid "Working Hours to assign the Issue"
-msgstr "Рабочие часы до назначения проблемы"
+msgstr "Рабочие часы до назначения заявки"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_close
 msgid "Working Hours to close the Issue"
-msgstr "Рабочие часы до закрытия проблемы"
+msgstr "Рабочие часы до закрытия заявки"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_task_id
 msgid ""
 "You can link this issue to an existing task or directly create a new one "
 "from here"
-msgstr "Вы можете привязать эту проблему к существующей задаче или непосредственно создать новую здесь"
+msgstr "Вы можете привязать эту заявку к существующей задаче или создать новую прямо отсюда"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.open_view_issue
 msgid ""
 "You can track your issues from this menu and the action we     \n"
 "                will take."
-msgstr "Вы можете отслеживать ваши задачи и наши действия в этом меню."
+msgstr "Вы можете отслеживать ваши заявки из этого меню."
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:260
 #, python-format
 msgid "issues"
-msgstr "проблемы"
+msgstr "заявки"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report

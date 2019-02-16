@@ -37,10 +37,10 @@ index_template = """
     <body>
         <h1>Your PosBox is up and running</h1>
         <p>
-        The PosBox is an hardware adapter that allows you to use 
+        The PosBox is a hardware adapter that allows you to use
         receipt printers and barcode scanners with Odoo's Point of
         Sale, <b>version 8.0 or later</b>. You can start an <a href='https://www.odoo.com/start'>online free trial</a>,
-        or <a href='https://www.odoo.com/start?download'>download and install</a> it yourself.
+        or <a href='https://www.odoo.com/page/download'>download and install</a> it yourself.
         </p>
         <p>
         For more information on how to setup the Point of Sale with
@@ -55,7 +55,11 @@ index_template = """
         Wi-Fi can be configured by visiting the <a href='/wifi'>Wi-Fi configuration page</a>.
         </p>
         <p>
-        The PosBox software installed on this posbox is <b>version 14</b>,
+        If you need to grant remote debugging access to a developer, you can do it <a href='/remote_connect'>here</a>.
+        </p>
+        %s
+        <p>
+        The PosBox software installed on this posbox is <b>version 16</b>,
         the posbox version number is independent from Odoo. You can upgrade
         the software on the <a href='/hw_proxy/upgrade/'>upgrade page</a>.
         </p>
@@ -68,10 +72,21 @@ index_template = """
 
 
 class PosboxHomepage(openerp.addons.web.controllers.main.Home):
+
+    def get_hw_screen_message(self):
+        return """
+<p>
+    The activate the customer display feature, you will need to reinstall the PosBox software.
+    You can find the latest images on the <a href="http://nightly.odoo.com/master/posbox/">Odoo Nightly builds</a> website.
+    Make sure to download at least the version 16.<br/>
+    Odoo version 11, or above, is required to use the customer display feature.
+</p>
+"""
+
     @http.route('/', type='http', auth='none', website=True)
     def index(self):
         #return request.render('hw_posbox_homepage.index',mimetype='text/html')
-        return index_template
+        return index_template % self.get_hw_screen_message()
 
     @http.route('/wifi', type='http', auth='none', website=True)
     def wifi(self):

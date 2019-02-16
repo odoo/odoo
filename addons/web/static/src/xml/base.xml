@@ -42,17 +42,17 @@
             <tr>
                 <td class="oe_form_group_cell oe_form_group_cell_label"><label for="old_pwd" class="oe_form_label">Old Password:</label></td>
                 <td class="oe_form_group_cell"><input type="password" name="old_pwd"
-                           minlength="1" autofocus="autofocus"/></td>
+                           minlength="1" autofocus="autofocus" autocomplete="current-password"/></td>
             </tr>
             <tr>
             <td class="oe_form_group_cell oe_form_group_cell_label"><label for="new_password" class="oe_form_label">New Password:</label></td>
             <td class="oe_form_group_cell"><input type="password" name="new_password"
-                       minlength="1"/></td>
+                       minlength="1" autocomplete="new-password"/></td>
             </tr>
             <tr>
                 <td class="oe_form_group_cell oe_form_group_cell_label"><label for="confirm_pwd" class="oe_form_label">Confirm New Password:</label></td>
                 <td class="oe_form_group_cell"><input type="password" name="confirm_pwd"
-                             minlength="1"/></td>
+                             minlength="1" autocomplete="new-password"/></td>
             </tr>
             <tr>
                 <td colspan="2" align="right">
@@ -412,12 +412,20 @@
     </tfoot>
 </table>
 <t t-name="ListView.buttons">
-    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
-    <div class="oe_list_buttons">
-        <button type="button" class="btn btn-sm btn-primary o_list_button_add" accesskey="C">
-            <t t-esc="widget.options.addable"/>
-        </button>
-    </div>
+    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false">
+        <div class="oe_list_buttons">
+            <t t-if="widget.options.addable and widget.is_action_enabled('create')">
+                <button type="button" class="btn btn-sm btn-primary o_list_button_add" accesskey="C">
+                    <t t-esc="widget.options.addable"/>
+                </button>
+            </t>
+            <button type="button" class="btn btn-primary btn-sm o_list_button_save" accesskey="S">
+                Save
+            </button>
+            <button type="button" class="btn btn-default btn-sm o_list_button_discard" accesskey="D">
+                Discard
+            </button>
+        </div>
     </t>
 </t>
 <t t-name="ListView.pager" t-if="!widget.no_leaf and widget.options.pager !== false" t-call="ViewPager">
@@ -453,16 +461,6 @@
         <span name="delete" class="fa fa-trash-o"/>
     </td>
 </tr>
-<t t-extend="ListView.buttons">
-    <t t-jquery="button.o_list_button_add" t-operation="after">
-        <button type="button" class="btn btn-primary btn-sm o_list_button_save" accesskey="S">
-            Save
-        </button>
-        <button type="button" class="btn btn-default btn-sm o_list_button_discard" accesskey="D">
-            Discard
-        </button>
-    </t>
-</t>
 <button t-name="ListView.row.text_button" type="button"
         t-att-title="widget.string" t-att-disabled="disabled || undefined"
         t-att-class="disabled ? 'oe_list_button_disabled btn_txt oe_link' : 'btn_txt oe_link'"
@@ -628,7 +626,7 @@
                 <a><t t-esc="measure[1].string"/></a>
             </li>
             <li class="divider"></li>
-            <li data-field="__count__"><a>Quantity</a></li>
+            <li data-field="__count__"><a>Count</a></li>
         </ul>
     </div>
 </t>
@@ -660,7 +658,7 @@
                 <a><t t-esc="measure[1].string"/></a>
             </li>
             <li class="divider"></li>
-            <li data-field="__count__"><a>Quantity</a></li>
+            <li data-field="__count__"><a>Count</a></li>
         </ul>
     </div>
 </t>
@@ -714,6 +712,7 @@
                 t-att-autofocus="widget.node.attrs.autofocus"
                 t-att-placeholder="widget.node.attrs.placeholder"
                 t-att-maxlength="widget.field.size"
+                t-att-autocomplete="widget.password ? 'new-password' : widget.node.attrs.autocomplete"
             /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
         </t>
         <t t-if="widget.get('effective_readonly')">
@@ -794,7 +793,7 @@
         <span class="o_count"/>
         <button class="btn btn-link" type="button"
             t-att-accesskey="widget.node.attrs.accesskey"/>
-        <input t-if="widget.debug" type="text" class="o_form_input o_debug_input"/>
+        <input t-if="widget.debug" t-att-readonly="widget.get('effective_readonly')" type="text" class="o_form_input o_debug_input"/>
     </div>
 </t>
 <t t-name="web.datepicker">
@@ -1064,7 +1063,7 @@
                         <t t-raw="file.name || file.filename"/>
                     </span>
                     <t t-if="(!file.upload or file.percent_loaded&gt;=100)">
-                        <a class="o_image" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-att-data-mimetype="file.mimetype" t-attf-data-src="/web/image/#{file.id}/100x80">
+                        <a class="o_image" target="_blank" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-att-data-mimetype="file.mimetype" t-attf-data-src="/web/image/#{file.id}/100x80">
                             <t t-raw="file.name || file.filename"/>
                         </a>
                         <span class="fa fa-stack oe_delete" title="Delete this file" t-attf-data-id="#{file.id}">
@@ -1079,7 +1078,7 @@
             <t t-foreach="widget.get('value')" t-as="id">
                 <t t-set="file" t-value="widget.data[id]"/>
                 <div>
-                    <a t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
+                    <a target="_blank" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
                         <t t-raw="file.name || file.filename"/>
                     </a>
                 </div>

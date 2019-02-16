@@ -104,12 +104,10 @@
                                     <div class="form-group">
                                         <label for="form_amount" class="col-sm-3 control-label">Amount</label>
                                         <div class="col-sm-9">
-                                            <span name="form_amount" class="form-control" t-esc="amount"/>
-                                            <!--
                                             <span name="form_amount" class="form-control" t-esc="amount" t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
-                                            -->
                                         </div>
                                     </div>
+                                    <div class="col-sm-9 col-sm-offset-3 text-muted mt16" t-raw="acquirer.pre_msg"/>
                                     <div class="col-sm-12 o_website_payment_form" t-raw="payment_form"/>
                                     <div class="col-sm-6 col-sm-offset-6 text-muted mt16">
                                         <img alt="payment_provider_logo" class="pull-right ml8" t-att-src="website.image_url(acquirer, 'image_small')"/>
@@ -117,6 +115,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="oe_structure"/>
                         </div>
                     </div>
                 </div>

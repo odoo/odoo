@@ -1,6 +1,6 @@
 {
     'name': 'Website Google Map',
-    'category': 'Hidden',
+    'category': 'Website',
     'summary': '',
     'version': '1.0',
     'description': """

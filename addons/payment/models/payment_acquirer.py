@@ -251,7 +251,7 @@ class PaymentAcquirer(osv.Model):
         # compute fees
         fees_method_name = '%s_compute_fees' % acquirer.provider
         if hasattr(self, fees_method_name):
-            fees = getattr(self, fees_method_name)(cr, uid, id, values['amount'], values['currency_id'], values['partner_country_id'], context=None)
+            fees = getattr(self, fees_method_name)(cr, uid, id, values['amount'], values['currency_id'], values.get('partner_country_id'), context=None)
             values['fees'] = float_round(fees, 2)
 
         # call <name>_form_generate_values to update the tx dict with acqurier specific values
@@ -331,7 +331,9 @@ class PaymentTransaction(osv.Model):
         return [(language.code, language.name) for language in languages]
 
     def _default_partner_country_id(self, cr, uid, context=None):
-        comp = self.pool['res.company'].browse(cr, uid, context.get('company_id', 1), context=context)
+        Company = self.pool['res.company']
+        company_id = Company.search(cr, uid, [], limit=1, order='id', context=context)
+        comp = Company.browse(cr, uid, context.get('company_id', company_id), context=context)
         return comp.country_id.id
 
     _columns = {
@@ -379,7 +381,7 @@ class PaymentTransaction(osv.Model):
 
         'callback_eval': fields.char('S2S Callback', help="""\
             Will be safe_eval with `self` being the current transaction. i.e.:
-                self.env['my.model'].payment_validated(self)""", oldname="s2s_cb_eval"),
+                self.env['my.model'].payment_validated(self)""", oldname="s2s_cb_eval", groups="base.group_system"),
         'payment_method_id': fields.many2one('payment.method', 'Payment Method', domain="[('acquirer_id', '=', acquirer_id)]"),
     }
 

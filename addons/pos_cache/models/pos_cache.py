@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from ast import literal_eval
-import cPickle
 
 from openerp import models, fields, api
+from openerp.tools import pickle as cPickle
 
 
 class pos_cache(models.Model):
@@ -28,7 +28,7 @@ class pos_cache(models.Model):
         prod_ctx = prod_ctx.sudo(self.compute_user_id.id)
         res = prod_ctx.read(self.get_product_fields())
         datas = {
-            'cache': cPickle.dumps(res, protocol=cPickle.HIGHEST_PROTOCOL),
+            'cache': cPickle.dumps(res),
         }
 
         self.write(datas)

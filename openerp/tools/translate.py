@@ -151,6 +151,8 @@ TRANSLATED_ATTRS = {
     'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title',
 }
 
+avoid_pattern = re.compile(r"[\s\n]*<!DOCTYPE", re.IGNORECASE)
+
 class XMLTranslator(object):
     """ A sequence of serialized XML/HTML items, with some of them to translate
         (todo) and others already translated (done). The purpose of this object
@@ -241,7 +243,11 @@ class XMLTranslator(object):
 
         # process children nodes locally in child_trans
         child_trans = XMLTranslator(self.callback, self.method, parser=self.parser)
-        child_trans.todo(escape(node.text or ""))
+        if node.text:
+            if avoid_pattern.match(node.text):
+                child_trans.done(escape(node.text)) # do not translate <!DOCTYPE...
+            else:
+                child_trans.todo(escape(node.text))
         for child in node:
             child_trans.process(child)
 
@@ -299,12 +305,16 @@ def html_translate(callback, value):
     if not value:
         return value
 
-    parser = etree.HTMLParser(encoding='utf-8')
-    trans = XMLTranslator(callback, 'html', parser)
-    wrapped = "<div>%s</div>" % encode(value)
-    root = etree.fromstring(wrapped, parser)
-    trans.process(root[0][0])               # html > body > div
-    return trans.get_done()[5:-6]           # remove tags <div> and </div>
+    try:
+        parser = etree.HTMLParser(encoding='utf-8')
+        trans = XMLTranslator(callback, 'html', parser)
+        wrapped = "<div>%s</div>" % encode(value)
+        root = etree.fromstring(wrapped, parser)
+        trans.process(root[0][0])               # html > body > div
+        value = trans.get_done()[5:-6]           # remove tags <div> and </div>
+    except ValueError:
+        _logger.exception("Cannot translate malformed HTML, using source value instead")
+    return value
 
 
 #
@@ -634,10 +644,10 @@ def trans_export(lang, modules, buffer, format, cr):
         if format == 'csv':
             writer = csv.writer(buffer, 'UNIX')
             # write header first
-            writer.writerow(("module","type","name","res_id","src","value"))
+            writer.writerow(("module","type","name","res_id","src","value","comments"))
             for module, type, name, res_id, src, trad, comments in rows:
-                # Comments are ignored by the CSV writer
-                writer.writerow((module, type, name, res_id, src, trad))
+                comments = '\n'.join(comments)
+                writer.writerow((module, type, name, res_id, src, trad, comments))
         elif format == 'po':
             writer = TinyPoFile(buffer)
             writer.write_infos(modules)
@@ -947,8 +957,10 @@ def trans_generate(lang, modules, cr):
 
     def get_module_from_path(path):
         for (mp, rec) in path_list:
-            if rec and path.startswith(mp) and os.path.dirname(path) != mp:
-                path = path[len(mp)+1:]
+            mp = os.path.join(mp, '')
+            dirname = os.path.join(os.path.dirname(path), '')
+            if rec and path.startswith(mp) and dirname != mp:
+                path = path[len(mp):]
                 return path.split(os.path.sep)[0]
         return 'base' # files that are not in a module are considered as being in 'base' module
 

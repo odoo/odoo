@@ -40,7 +40,7 @@ Running the server
 
     .. note:: multiprocessing mode is only available on Unix-based systems
 
-    A number of options allow limiting and recyling workers:
+    A number of options allow limiting and recycling workers:
 
     .. option:: --limit-request <limit>
 
@@ -54,7 +54,7 @@ Running the server
         Maximum allowed virtual memory per worker. If the limit is exceeded,
         the worker is killed and recycled at the end of the current request.
 
-        Defaults to 640MB.
+        Defaults to 2048MB.
 
     .. option:: --limit-memory-hard <limit>
 
@@ -62,7 +62,7 @@ Running the server
         immediately killed without waiting for the end of the current request
         processing.
 
-        Defaults to 768MB.
+        Defaults to 2560MB.
 
     .. option:: --limit-time-cpu <limit>
 
@@ -84,9 +84,9 @@ Running the server
 .. option:: --max-cron-threads <count>
 
     number of workers dedicated to cron jobs. Defaults to 2. The workers are
-    threads in multithreading mode and processes in multiprocessing mode.
+    threads in multi-threading mode and processes in multi-processing mode.
 
-    For multiprocessing mode, this is in addition to the HTTP worker
+    For multi-processing mode, this is in addition to the HTTP worker
     processes.
 
 .. option:: -c <config>, --config <config>
@@ -96,7 +96,7 @@ Running the server
 .. option:: -s, --save
 
     saves the server configuration to the current configuration file
-    (:file:`{$HOME}/.openerp_serverrc` by default, overridable using
+    (:file:`{$HOME}/.openerp_serverrc` by default, and can be overridden using
     :option:`-c`)
 
 .. option:: --proxy-mode
@@ -156,6 +156,45 @@ database
     when creating new databases from the database-management screens, use the
     specified `template database`_. Defaults to ``template1``.
 
+.. _reference/cmdline/server/internationalisation:
+
+Internationalisation
+--------------------
+
+Use these options to translate Odoo to another language. See i18n section of
+the user manual. Option '-d' is mandatory. Option '-l' is mandatory in case
+of importation
+
+.. option:: --load-language <languages>
+
+    specifies the languages (separated by commas) for the translations you
+    want to be loaded
+
+.. option:: -l, --language <language>
+
+    specify the language of the translation file. Use it with --i18n-export
+    or --i18n-import
+
+.. option:: --i18n-export <filename>
+
+    export all sentences to be translated to a CSV file, a PO file or a TGZ
+    archive and exit.
+
+.. option:: --i18n-import <filename>
+
+    import a CSV or a PO file with translations and exit. The '-l' option is
+    required.
+
+.. option:: --i18n-overwrite
+
+    overwrites existing translation terms on updating a module or importing
+    a CSV or a PO file.
+
+.. option:: --modules
+
+    specify modules to export. Use in combination with --i18n-export
+
+
 built-in HTTP
 -------------
 
@@ -187,7 +226,7 @@ logging
 By default, Odoo displays all logging of level_ ``info`` except for workflow
 logging (``warning`` only), and log output is sent to ``stdout``. Various
 options are available to redirect logging to other destinations and to
-customize the amout of logging output
+customize the amount of logging output
 
 .. option:: --logfile <file>
 

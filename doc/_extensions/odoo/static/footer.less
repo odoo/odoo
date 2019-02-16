@@ -1,0 +1,95 @@
+// Based on http://www.odoo.com/openerp_website/static/src/less/footer.less
+// ========================================================================
+
+body > footer {
+    font-size: 14px;
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: @footer-heigth;
+    background-color: @footer-bg-color;
+    color: @gray;
+
+    z-index: 1;
+    @media screen and (min-width: @screen-md-min) {
+        &.o_footer_effect {
+            .o-position-absolute(auto, 0, 0, 0);
+            position: fixed;
+            z-index: 0;
+        }
+    }
+
+    .o_footer_logo {
+        margin-bottom: 3em;
+        margin-top: 3em;
+    }
+
+    a {
+        color: @footer-text;
+        &:hover, &:active, &:focus {
+            color: white;
+        }
+    }
+    .dropdown-menu a {
+        color: @dropdown-link-color;
+        &:hover, &:focus {
+            color: @dropdown-link-hover-color;
+        }
+        &:active {
+            color: @dropdown-link-active-color;
+        }
+    }
+
+    .divider {
+        margin: 10px 0;
+    }
+    ul, ol {
+        list-style: none;
+        padding-left: 0;
+    }
+    span.menu_title {
+        font-weight: @fw_semibold;
+        color: white;
+        + ul {
+            margin-top: 10px;
+        }
+    }
+    .o_language_selector, .o_country_selector {
+        display: inline-block;
+        .opacity(0.8);
+        a {
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        img {
+            max-height: 20px;
+            margin-right: 10px;
+            vertical-align: bottom;
+        }
+        &:hover {
+            .opacity(1);
+        }
+    }
+    .o_country_selector {
+        float: right;
+    }
+
+    hr {
+        border-top-color: lighten(@footer-bg-color, 10%);
+    }
+    .o_footer_bottom {
+        background-color: @footer-bottom-bg-color;
+        color: @footer-text;
+        padding: 1em 0;
+        margin-top: 3em;
+        a {
+            .opacity(0.6);
+            &:hover {
+                .opacity(1);
+            }
+        }
+        .social-links .fa {
+            margin-left: 20px;
+        }
+    }
+}

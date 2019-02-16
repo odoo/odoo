@@ -57,6 +57,7 @@ var PivotView = View.extend({
         this.headers = {};
         this.cells = {};
         this.has_data = false;
+        this.$buttons = $();
 
         this.last_header_selected = null;
         this.sorted_column = {};
@@ -183,7 +184,7 @@ var PivotView = View.extend({
                 }
             }
         });
-        this.measures.__count__ = {string: _t("Quantity"), type: "integer"};
+        this.measures.__count__ = {string: _t("Count"), type: "integer"};
     },
     do_search: function (domain, context, group_by) {
         if (!this.ready) {
@@ -209,6 +210,10 @@ var PivotView = View.extend({
         this.do_push_state({});
         this.data_loaded.done(function () {
             self.display_table(); 
+            self.$buttons.find('.o_pivot_measures_list li').removeClass('selected');
+            self.active_measures.forEach(function (measure) {
+                self.$buttons.find('li[data-field="' + measure + '"]').addClass('selected');
+            });
         });
         return this._super();
     },
@@ -679,7 +684,6 @@ var PivotView = View.extend({
         if (width > 1) {
             var total_cell = {width:nbr_measures, height: depth, title:""};
             if (nbr_measures === 1) {
-                total_cell.title = this.measures[this.active_measures[0]].string;
                 total_cell.total = true;
             }
             result[0].push(total_cell);
@@ -814,6 +818,12 @@ var PivotView = View.extend({
             complete: framework.unblockUI,
             error: crash_manager.rpc_error.bind(crash_manager)
         });    
+    },
+    destroy: function () {
+        if (this.$buttons) {
+            this.$buttons.find('button').off(); // remove jquery's tooltip() handlers
+        }
+        return this._super.apply(this, arguments);
     },
 });
 

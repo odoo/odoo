@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:18+0000\n"
+"POT-Creation-Date: 2016-12-14 14:52+0000\n"
+"PO-Revision-Date: 2017-04-18 19:13+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -18,16 +18,29 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: payment_transfer
+#: code:addons/payment_transfer/models/payment_acquirer.py:32
+#, python-format
+msgid ""
+"<div>\n"
+"<h3>Please use the following transfer details</h3>\n"
+"<h4>%(bank_title)s</h4>\n"
+"%(bank_accounts)s\n"
+"<h4>Communication</h4>\n"
+"<p>Please use the order name as communication reference.</p>\n"
+"</div>"
+msgstr ""
+
+#. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_acquirer.py:68
 #, python-format
 msgid "; multiple order found"
-msgstr ""
+msgstr "; s-au găsit mai multe rezultate"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_acquirer.py:66
 #, python-format
 msgid "; no order found"
-msgstr ""
+msgstr "; nu a fost găsit nici un rezultat"
 
 #. module: payment_transfer
 #: model:payment.acquirer,cancel_msg:payment_transfer.payment_acquirer_transfer
@@ -86,10 +99,10 @@ msgstr ""
 #. module: payment_transfer
 #: model:payment.acquirer,name:payment_transfer.payment_acquirer_transfer
 msgid "Wire Transfer"
-msgstr ""
+msgstr "Transfer bancar"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_acquirer.py:64
 #, python-format
 msgid "received data for reference %s"
-msgstr ""
+msgstr "date primite pentru referința %s"

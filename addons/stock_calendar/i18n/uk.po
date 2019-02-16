@@ -3,25 +3,26 @@
 # * stock_calendar
 # 
 # Translators:
-# Bogdan, 2015
+# Bohdan Lisnenko, 2015
+# Bohdan Lisnenko, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-12-19 20:23+0000\n"
-"Last-Translator: Bogdan\n"
+"PO-Revision-Date: 2018-05-18 12:58+0000\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: stock_calendar
 #: model:ir.ui.view,arch_db:stock_calendar.view_procurement_form_stock_inherit
 msgid "Calculate dates according to Orderpoint"
-msgstr ""
+msgstr "Розрахуйте дати відповідно до Orderpoint"
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_stock_warehouse_orderpoint_calendar_id
@@ -39,12 +40,12 @@ msgstr ""
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_stock_warehouse_orderpoint_last_execution_date
 msgid "Last Execution Date"
-msgstr ""
+msgstr "Дата останнього виконання"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_resource_calendar_leaves
 msgid "Leave Detail"
-msgstr ""
+msgstr "Деталі пропуску"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_stock_warehouse_orderpoint
@@ -54,12 +55,12 @@ msgstr "Правило мінімальних залишків"
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_procurement_order_next_delivery_date
 msgid "Next Delivery Date"
-msgstr ""
+msgstr "Дата наступної доставки"
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_procurement_order_next_purchase_date
 msgid "Next Purchase Date"
-msgstr ""
+msgstr "Дата наступної купівлі"
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_resource_calendar_next_day
@@ -80,19 +81,19 @@ msgstr "Група забезпечення"
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_stock_warehouse_orderpoint_purchase_calendar_id
 msgid "Purchase Calendar"
-msgstr ""
+msgstr "Календар придбання"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_resource_calendar
 msgid "Resource Calendar"
-msgstr ""
+msgstr "Календар ресурсу"
 
 #. module: stock_calendar
 #: model:ir.model.fields,help:stock_calendar.field_procurement_order_next_delivery_date
 msgid ""
 "The date of the next delivery for this procurement group, when this group is"
 " on the purchase calendar of the orderpoint"
-msgstr ""
+msgstr "Дата наступної доставки для цієї групи закупівель, коли ця група знаходиться в календарі купівлі замовлення"
 
 #. module: stock_calendar
 #: model:ir.model.fields,help:stock_calendar.field_procurement_order_next_purchase_date
@@ -102,4 +103,4 @@ msgstr ""
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_resource_calendar_attendance
 msgid "Work Detail"
-msgstr ""
+msgstr "Деталі роботи"

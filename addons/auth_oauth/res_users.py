@@ -6,9 +6,13 @@ import urllib2
 import json
 
 import openerp
+from openerp import api
 from openerp.addons.auth_signup.res_users import SignupError
 from openerp.osv import osv, fields
 from openerp import SUPERUSER_ID
+
+from openerp.addons.base.res import res_users
+res_users.USER_PRIVATE_FIELDS.append('oauth_access_token')
 
 _logger = logging.getLogger(__name__)
 
@@ -121,5 +125,9 @@ class res_users(osv.Model):
             res = self.search(cr, SUPERUSER_ID, [('id', '=', uid), ('oauth_access_token', '=', password)])
             if not res:
                 raise
+
+    @api.model
+    def _get_session_token_fields(self):
+        return super(res_users, self)._get_session_token_fields() | {'oauth_access_token'}
 
 #

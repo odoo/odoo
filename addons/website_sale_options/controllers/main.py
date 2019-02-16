@@ -42,7 +42,7 @@ class website_sale_options(website_sale):
         value = {}
         if add_qty or set_qty:
             value = order._cart_update(product_id=int(product_id),
-                add_qty=int(add_qty), set_qty=int(set_qty),
+                add_qty=add_qty, set_qty=set_qty,
                 optional_product_ids=optional_product_ids)
 
         # options have all time the same quantity
@@ -57,6 +57,7 @@ class website_sale_options(website_sale):
     def modal(self, product_id, **kw):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         pricelist = self.get_pricelist()
+        quantity = kw['kwargs']['context']['quantity']
         if not context.get('pricelist'):
             context['pricelist'] = int(pricelist)
 
@@ -68,8 +69,16 @@ class website_sale_options(website_sale):
         product = pool['product.product'].browse(cr, uid, int(product_id), context=context)
         request.website = request.website.with_context(context)
 
+        main_product_attr_ids = self.get_attribute_value_ids(product)
+        for variant in main_product_attr_ids:
+            if variant[0] == product.id:
+                # We indeed need a list of lists (even with only 1 element)
+                main_product_attr_ids = [variant]
+                break
+
         return request.website._render("website_sale_options.modal", {
                 'product': product,
                 'compute_currency': compute_currency,
                 'get_attribute_value_ids': self.get_attribute_value_ids,
+                'main_product_attr_ids': main_product_attr_ids,
             })

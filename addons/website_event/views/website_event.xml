@@ -9,7 +9,7 @@
     </xpath>
 </template>
 
-<template id="assets_editor" inherit_id="website.assets_editor" name="Event Editor" groups="event.group_event_manager">
+<template id="assets_editor" inherit_id="website.assets_editor" name="Event Editor">
     <xpath expr="." position="inside">
         <script type="text/javascript" src="/website_event/static/src/js/website_event.editor.js"></script>
         <script type="text/javascript" src="/website_event/static/src/js/website.tour.event.js"></script>
@@ -67,7 +67,7 @@
                                     </t>
                                 </div>
                                 <div>
-                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-esc="event.date_begin_located[:-3]"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located[:-3]"> </span> (<span t-field="event.date_tz"/>)
+                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-field-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-field-options='{"hide_seconds":"True"}'> </span>
                                 </div>
                                 <div itemprop="location" t-field="event.address_id" t-field-options='{
                                     "widget": "contact",
@@ -243,7 +243,7 @@
         <h4 class="text-center text-muted"
             t-field="event.address_id" t-field-options='{
                 "widget": "contact",
-                "fields": ["address", "phone", "mobile", "fax"]
+                "fields": ["name", "address", "phone", "mobile", "fax"]
             }'/>
     </t>
 </template>
@@ -269,9 +269,8 @@
         <div itemscope="itemscope" itemtype="http://schema.org/Event" class="container">
             <h1 itemprop="name" class="text-center" t-field="event.name"></h1>
             <h4 class="text-center text-muted">
-                <i class="fa fa-clock-o"></i>
-                <span itemprop="startDate"><t t-esc="event.date_begin_located[:-3]"/></span> to
-                <span itemprop="endDate"><t t-esc="event.date_end_located[:-3]"/></span>
+                <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-field-options='{"hide_seconds":"True"}'/> to
+                <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-field-options='{"hide_seconds":"True"}'/>
                 <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
             </h4>
             <h4 class="text-center text-muted"
@@ -332,12 +331,18 @@
                     <h4>Where</h4>
                 </div>
                 <div class="panel-body">
-                    <a t-att-href="event.google_map_link()" target="_BLANK">
-                        <img t-att-src="event.google_map_img()" width="100%%"/>
-                    </a>
+                    <!-- FORWARD-PORT UP TO SAAS-12 -->
+                    <t t-if="'key=' in event.google_map_img()">
+                        <a t-att-href="event.google_map_link()" target="_BLANK">
+                           <img class="thumbnail img-responsive" t-att-src="event.google_map_img()" />
+                        </a>
+                    </t>
+                    <t t-if="'key=' not in event.google_map_img()">
+                        <a t-att-href="event.google_map_link()" target="_BLANK">Visualize on Google Maps</a>
+                    </t>
                     <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-field-options='{
                         "widget": "contact",
-                        "fields": ["address", "phone", "mobile", "fax", "email"]
+                        "fields": ["name", "address", "phone", "mobile", "fax", "email"]
                         }'/>
                 </div>
             </div>
@@ -347,8 +352,8 @@
                     <h4>When</h4>
                 </div>
                 <div class="panel-body">
-                    <i class="fa fa-clock-o"></i> From <span t-esc="event.date_begin_located[:-3]"> </span><br/>
-                    <i class="fa fa-clock-o"></i> To <span t-esc="event.date_end_located[:-3]"> </span>
+                    <i class="fa fa-clock-o"></i> From <span t-field="event.with_context(tz=event.date_tz).date_begin" t-field-options='{"hide_seconds":"True"}'> </span><br/>
+                    <i class="fa fa-clock-o"></i> To <span t-field="event.with_context(tz=event.date_tz).date_end" t-field-options='{"hide_seconds":"True"}'> </span>
                 </div>
             </div>
 
@@ -426,7 +431,7 @@
             class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Register Now</button>
         <div t-if="not event.state == 'confirm'" class="alert alert-info">
             Event registration not yet started. 
-            <t t-if="uid">
+            <t t-if="request.env.user.has_group('event.group_event_manager')">
                 <i class="fa fa-plus-circle"><a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event"> <em>Configure and Launch Event Registration</em></a></i>
             </t>
         </div>
@@ -436,7 +441,7 @@
 <template id="registration_attendee_details" name="Registration Attendee Details">
     <div id="modal_attendees_registration" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg">
-            <form id="attendee_registration" t-attf-action="/event/#{slug(event)}/registration/confirm" method="post">
+            <form id="attendee_registration" t-attf-action="/event/#{slug(event)}/registration/confirm" method="post" class="js_website_submit_form">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <div class="modal-content">
                     <div class="modal-header">
@@ -452,8 +457,7 @@
                                     <strong>
                                         Ticket Type #<t t-raw="counter_type"/>: <t t-esc="ticket['name']"/> (
                                         <t t-if="ticket['price'] > 0">
-                                            <t t-esc="ticket['price']"/>
-                                            <t t-esc="website.pricelist_id.currency_id.symbol"/>
+                                            <t t-esc="ticket['price']" t-esc-options='{"widget": "monetary", "display_currency": "website.pricelist_id.currency_id"}'/>
                                         </t>
                                         <t t-if="ticket['price'] == 0">Free</t>)
                                     </strong>
@@ -466,7 +470,8 @@
                                 <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter" name="attendee_loop">
                                     <t t-set="counter" t-value="counter + 1"/>
                                     <div class="row mb4">
-                                        <div class="col-md-4"><input class='form-control' type='text' t-attf-name="#{counter}-name" required="This field is required" t-att-placeholder="'Attendee #%s' %counter"/></div>
+                                        <t t-set="attendee_placeholder">Attendee #%s</t>
+                                        <div class="col-md-4"><input class='form-control' type='text' t-attf-name="#{counter}-name" required="This field is required" t-att-placeholder="attendee_placeholder %counter"/></div>
                                         <div class="col-md-5"><input class='form-control' type='email' t-attf-name="#{counter}-email" required="This field is required"/></div>
                                         <div class="col-md-3"><input class='form-control' type='tel' t-attf-name="#{counter}-phone"/></div>
                                         <input class='hidden' type='text' t-attf-name="#{counter}-ticket_id" t-attf-value="#{ticket['id']}"/>
@@ -501,7 +506,7 @@
                     <i class="fa fa-clock-o"/> <span itemprop="startDate" t-esc="event.date_begin_located[:-3]"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located[:-3]"> </span>
                     <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-field-options='{
                             "widget": "contact",
-                            "fields": ["address", "phone", "mobile", "fax", "email"]
+                            "fields": ["name", "address", "phone", "mobile", "fax", "email"]
                             }'/>
                 </div>
                 <div class="col-md-3 mt16">

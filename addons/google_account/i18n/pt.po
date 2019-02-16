@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-13 13:41+0000\n"
-"PO-Revision-Date: 2016-01-14 10:12+0000\n"
+"POT-Creation-Date: 2017-08-16 15:23+0000\n"
+"PO-Revision-Date: 2018-01-13 17:50+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
 "MIME-Version: 1.0\n"
@@ -59,7 +59,7 @@ msgstr "Última Actualização em"
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid"
-msgstr ""
+msgstr "Ocorreu algo deu errado durante a geração da sua senha. O seu 'Código de Autorização' pode ser inválido ou já expirou"
 
 #. module: google_account
 #: code:addons/google_account/google_account.py:37
@@ -67,7 +67,7 @@ msgstr ""
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired"
-msgstr ""
+msgstr "Ocorreu algo deu errado durante a geração da sua senha. O seu 'Código de Autorização' pode ser inválido ou já expirou"
 
 #. module: google_account
 #: code:addons/google_account/google_account.py:128
@@ -75,13 +75,19 @@ msgstr ""
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired [%s]"
-msgstr ""
+msgstr "Ocorreu algo deu errado durante a geração da sua senha. O seu 'Código de Autorização' pode ser inválido ou já expirou [%s]"
 
 #. module: google_account
 #: code:addons/google_account/google_account.py:173
 #, python-format
 msgid "Something went wrong with your request to google"
 msgstr "Aconteceu algo errado com o seu pedido à Google"
+
+#. module: google_account
+#: code:addons/google_account/google_account.py:109
+#, python-format
+msgid "The account for the Google service '%s' is not configured"
+msgstr "A conta para o serviço do Google '%s' não está configurada"
 
 #. module: google_account
 #: model:ir.model,name:google_account.model_google_service

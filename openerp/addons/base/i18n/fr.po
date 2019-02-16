@@ -4,24 +4,28 @@
 # 
 # Translators:
 # Benjamin Delagoutte <ben@ampletus.fr>, 2015
+# Denis Ledoux <dle@odoo.com>, 2016
 # Fabien Pinckaers <fp@openerp.com>, 2015
 # Leandre Berger <leandre.berger@gmail.com>, 2015
 # lucasdeliege <deliegelucas@gmail.com>, 2015
 # Lucas Deliege <lud@odoo.com>, 2015
 # Martin Malorni <mmalorni@gmail.com>, 2015
-# Martin Trigaux, 2015-2016
-# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
+# Martin Trigaux, 2015-2018
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2015
+# Micky Jault <micky037@hotmail.fr>, 2017
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2015
 # Sébastien Versailles <sve@openerp.com>, 2015
-# Symons Xavier <xsy@openerp.com>, 2015
+# Stéphanie Marcu <stephanie.marcu.smile@gmail.com>, 2016
+# Xavier Symons <xsy@openerp.com>, 2015
 # timo bellanger <bellanger.timo@gmail.com>, 2016
+# Xavier Symons <xsy@openerp.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-03-03 07:54+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-06-22 07:25+0000\n"
+"PO-Revision-Date: 2018-08-24 14:40+0000\n"
+"Last-Translator: Richard Mathot <rim@odoo.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -753,6 +757,14 @@ msgid ""
 "For instance when invoicing a training, the training agenda and materials will automatically be sent to your customers.'\n"
 "    "
 msgstr "\nAjouter des modèles de courriels à des produits pour envoyer des confirmations de facture\n================================================== ================\n\nCe module, lie les produits à un modèle pour envoyer des informations détaillées et des outils aux clients.\nPar exemple lors de la facturation d'une formation, le programme de formation et le matériel seront automatiquement envoyés aux clients."
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_full_reconcile
+msgid ""
+"\n"
+"Add the concept of full reconciliation back into the accounting.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_project_issue_sheet
@@ -1503,6 +1515,34 @@ msgid ""
 msgstr "\nMots de passe chiffrés\n=================\n\nRemplace le stockage des mots de passe par défaut par un hachage cryptographique.\n\nLa fonction de dérivation de clé actuellement utilisé est RSA Security LLC's industry-standard ``PKDF2``, en combinaison avec `` SHA512``.\n\nTous les mots de passe sont chiffrés à l'installation du module.\nCela peut prendre quelques minutes s'il y a des centaines d'utilisateurs.\n\nLes anciennes versions de mots de passes chiffrés seront automatiquement mis à jour vers le nouveau système dès qu'un utilisateur s'authentifiera.\n(``auth_crypt`` utilisait précédemment la fonction clé de dérivation `md5crypt`` plus faible)\n\nNote : Installer ce module empêche définitivement la récupération des mots de passe, et ne peut pas être annulé. Il est donc recommandé d'activer un mécanisme de réinitialisation de mot de passe pour les utilisateurs, tel que celui qui est prévu par le module '``auth_signup`` (il n'est pas nécessaire d'activer l'inscription de nouveaux utilisateurs).\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_account_extra_reports
+msgid ""
+"\n"
+"Extra Accounting Reports.\n"
+"====================================\n"
+"\n"
+"This module adds two new reports:\n"
+"* Sale/Purchase Journal report \n"
+"* Partner Ledger\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_hw_blackbox_be
+msgid ""
+"\n"
+"Fiscal Data Module Hardware Driver\n"
+"==================================\n"
+"\n"
+"This module allows a Point Of Sale client to communicate with a\n"
+"connected Belgian Fiscal Data Module.\n"
+"\n"
+"This module does **not** turn an Odoo Point Of Sale module into a certified\n"
+"Belgian cash register. It allows the communication on with a certified Fiscal\n"
+"Data Module but will not modify the behaviour of the Point of Sale.\n"
+msgstr "\nPilote de périphérique pour module de données fiscales\n==================================================\n\nCe module permet à un client point de vente de communiquer avec un module de gestion de données fiscales Belge.\n\nCe module ne transforme **pas** un module point de vente Odoo en caisse certifiée\npour la Belgique. Il permet la communication avec un module certifié\nmais ne modifie pas le comportement du point de vente.\n"
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
 msgid ""
 "\n"
@@ -2140,7 +2180,7 @@ msgid ""
 "---------------------------------------------\n"
 "Because of the QIF format limitation, we cannot ensure the same transactions aren't imported several times or handle multicurrency.\n"
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
-msgstr "\nModule d'importation des relevés bancaires QIF.\n======================================\n\nCe module permet d'importer des fichiers QIF dans Odoo : ils sont analysés et stockés sous format lisible dans Comptabilité \\ Banque et Cash \\ relevés bancaires.\n\nNota Bene\n---------------------------------------------\nQIF étant limité, on ne peut pas être sûr qu'une transaction n'a pas été importée plusieurs fois  ou manipulée en multi-devises.\nLorsque c'est possible, utiliser un meilleur format comme QFX.\n"
+msgstr "\nModule d'importation des relevés bancaires QIF.\n======================================\n\nCe module permet d'importer des fichiers QIF dans Odoo : ils sont analysés et stockés sous format lisible dans Comptabilité \\ Banque et Cash \\ relevés bancaires.\n\nNota Bene\n---------------------------------------------\nQIF étant limité, on ne peut pas être sûr qu'une transaction n'a pas été importée plusieurs fois  ou manipulée en multi-devises.\nLorsque c'est possible, utiliser un meilleur format comme OFX.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_warning
@@ -2165,6 +2205,21 @@ msgid ""
 "This module does not add any feature, despite a few demo data to\n"
 "test the features easily.\n"
 msgstr "\nModule utilisé pour les données de démonstration\n=========================\n\nCréer des produits pour lesquels vous pouvez re-facturer les coûts.\nCe module n'ajoute pas de fonctionnalité, en dépit du peu de données\nde démonstration pour tester facilement les fonctionnalités.\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_nz
+msgid ""
+"\n"
+"New Zealand Accounting Module\n"
+"=============================\n"
+"\n"
+"New Zealand accounting basic charts and localizations.\n"
+"\n"
+"Also:\n"
+"    - activates a number of regional currencies.\n"
+"    - sets up New Zealand taxes.\n"
+"    "
+msgstr "\nModule de comptabilité néo-zélandaise\n================================\n\nLocalisation et plan comptable néo-zélandais.\n\net :\n- active certaines monnaies régionales,\n- configure les taxes australiennes"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import
@@ -3643,7 +3698,7 @@ msgid ""
 "\n"
 "    3. The last one is available from the Analytic Chart of Accounts. It gives \n"
 "       the spreading, for the selected Analytic Accounts of Budgets.\n"
-msgstr "\nModule permettant aux comptables de gérer les budgets analytiques et croisés.\n================================================== ========================\n\n  Une fois que les budgets sont définis (dans Facturation / Budgets / Budgets), les gestionnaires de projet peuvent fixer le montant prévu sur chaque compte analytique.\n\nLe comptable a la possibilité de voir le total des prévisions de chaque budget afin d'assurer que le total prévu n'est ni supérieur ni inférieur à ce qu'il avait planifié. Chaque budget peut être visualisé sous forme de vue graphique.\n\n  Trois rapports sont disponibles:\n  ----------------------------\n  1. Le premier est réalisé à partir d'une liste des budgets. Il donne la répartition des comptes analytiques pour ces budgets.\n\n  2. Le second est un résumé du précédent, il donne la répartition par comptes analytiques budgétaires sélectionnés\n\n3. Le dernier est réalisé à partir du plan comptable analytique. Il donne la répartition, pour les comptes analytiques budgétaires sélectionnés.\n"
+msgstr "\nModule permettant aux comptables de gérer les budgets analytiques et croisés\n============================================================================\n\nUne fois que les budgets sont définis (dans Facturation / Budgets / Budgets), les gestionnaires de projet peuvent fixer le montant prévu sur chaque compte analytique.\n\nLe comptable a la possibilité de voir le total des prévisions de chaque budget afin d'assurer que le total prévu n'est ni supérieur ni inférieur à ce qu'il avait planifié. Chaque budget peut être visualisé sous forme de vue graphique.\n\nTrois rapports sont disponibles:\n--------------------------------\n\n1. Le premier est réalisé à partir d'une liste des budgets. Il donne la répartition des comptes analytiques pour ces budgets.\n2. Le second est un résumé du précédent, il donne la répartition par comptes analytiques budgétaires sélectionnés\n3. Le dernier est réalisé à partir du plan comptable analytique. Il donne la répartition, pour les comptes analytiques budgétaires sélectionnés.\n\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_action_rule
@@ -4386,7 +4441,6 @@ msgstr "(recharger les polices de caractères)"
 #: model:ir.module.module,description:base.module_mrp_repair
 msgid ""
 ",\n"
-"    'summary': 'Repair broken or damaged products',\n"
 "The aim is to have a complete module to manage all products repairs.\n"
 "====================================================================\n"
 "\n"
@@ -4398,7 +4452,7 @@ msgid ""
 "    * Warranty concept\n"
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
-msgstr ",\n'sommaire' : 'Réparation produits cassés ou endommagés',\nL'objectif est d'avoir un module complet pour gérer toutes les réparations de produits.\n\n================================================== ==================\n\nLes thèmes suivants devraient être couverts par ce module:\n-------------------------------------------------- ----\n* Ajouter / supprimer des produits dans la réparation\n* Conséquences pour les stocks\n* Facturation (produits et / ou services)\n* Concept de Garantie\n* Rapport de devis de réparation\n* Notes pour le technicien et pour le client final\n"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
@@ -4711,6 +4765,7 @@ msgstr "Une page d'accueil pour la PosBox"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_exceptions
+#: model:ir.module.module,description:base.module_test_mimetypes
 msgid "A module to generate exceptions."
 msgstr "Module de génération d'exceptions."
 
@@ -4733,6 +4788,11 @@ msgstr "Module pour tester l'API"
 #: model:ir.module.module,description:base.module_test_uninstall
 msgid "A module to test the uninstall feature."
 msgstr "Module de test pour la désinstallation."
+
+#. module: base
+#: model:ir.module.module,description:base.module_test_assetsbundle
+msgid "A module to verify the Assets Bundle mechanism."
+msgstr "Module de vérification du mécanisme d'« Assets Bundle »."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits
@@ -4917,6 +4977,11 @@ msgstr "Tests de cohérence comptable"
 #: model:ir.module.module,shortdesc:base.module_account_reports
 msgid "Accounting Reports"
 msgstr "Rapports comptables"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_tax_adjustments
+msgid "Accounting Tax Adjustments"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_accountant
@@ -5210,7 +5275,7 @@ msgid ""
 "         login once with a valid LDAP user, let OpenERP create a blank local\n"
 "         user with the same login (and a blank password), then rename this new\n"
 "         user to a username that does not exist in LDAP, and setup its groups\n"
-msgstr "Ajoute le support pour l'authentification par serveur LDAP. \n==========================================\nCe module permet aux utilisateurs de se connecter avec leur nom d'utilisateur et mot de passe LDAP, et il crée automatiquement les utilisateurs Odoo à la volée.\n** Note: ** \nCe module ne fonctionne que sur les serveurs possédant le module Python 'ldap'.\n\nConfiguration:\n-----------------\nAprès l'installation de ce module, configurer les paramètres LDAP dans l'onglet Configuration des détails Société. Chaque sociétés peut avoir son serveur LDAP, tant que les noms d'utilisateurs restent uniques (les noms d'utilisateur doivent être uniques dans Odoo, même pour plusieurs sociétés).\nLa liaison LDAP anonyme est prise en charge (sur les serveurs LDAP qui le permettent), en gardant simplement l'utilisateur LDAP avec un mot de passe vide dans la configuration LDAP. Cela ne permet pas l'authentification anonyme pour les utilisateurs, c'est seulement pour le compte maître LDAP utilisé pour vérifier si un utilisateur existe avant d'essayer de l'authentifier.\nSécuriser la connexion avec STARTTLS est disponible avec les serveurs LDAP le supportant, pour ceci, activer l'option TLS dans la configuration LDAP.\nPour plus d'options de configuration ses paramètres LDAP, se reporter à la page de ldap.conf : page du manuel : `ldap.conf (5)`.\n\nConsidérations de sécurité:\n------------------------\nLes mots de passe LDAP des utilisateurs ne sont jamais stockés dans la base de données de Odoo, le serveur LDAP est interrogé chaque fois qu'un utilisateur doit être authentifié. Aucune reproduction du mot de passe se produit, et les mots de passe sont gérés en un seul point.\nOdoo ne gère pas les changements de mot de passe dans LDAP, ainsi tout changement de mot de passe s'introduit par d'autres moyens dans le répertoire LDAP directement (pour les utilisateurs LDAP).\nIl est également possible d'avoir les utilisateurs Odoo locaux dans la base de données et des utilisateurs authentifiés LDAP (le compte Administrateur est un exemple évident).\n\nVoici comment cela fonctionne:\n ---------------------\n * Le système tente d'abord d'authentifier les utilisateurs sur la base de données de Odoo locale ;\n * Si cette authentification échoue (par exemple parce que l'utilisateur n'a pas de mot de passe local), le système tente alors une authentification LDAP ;\nComme les utilisateurs LDAP ont des mots de passe vierges par défaut dans la base de données de Odoo locale (ce qui signifie pas d'accès), la première étape est toujours un échec et le serveur LDAP est interrogé pour procéder à l'authentification.\nL'activation de STARTTLS veille à ce que la requête d'authentification au serveur LDAP est cryptée.\n\nModèle de l'utilisateur:\n --------------\n Dans la configuration de LDAP sur le formulaire Société, il est possible de sélectionner un *modèle utilisateur*. Si il est défini, cet utilisateur sera utilisé comme modèle pour créer les utilisateurs locaux chaque fois que quelqu'un s'authentifie pour la première fois via une authentification LDAP. Cela permet de pré-régler les groupes par défaut et les menus des utilisateurs pour la première fois.\n** Attention : ** si un mot de passe est donné pour le modèle d'utilisateur, ce mot de passe sera attribué comme mot de passe local à chaque nouvel utilisateur LDAP, mettant en place un *mot de passe maître* pour ces utilisateurs (jusqu'à la modification manuelle). Ceci n'est généralement pas recherché. On configure facilement modèle utilisateur en se connectant une fois avec un utilisateur LDAP valide : laisser Odoo créer un utilisateur local vide avec le même login (et un mot de passe vide), puis renommer ce nouvel utilisateur avec un nom d'utilisateur qui ne existe pas dans LDAP, puis configurer ses groupes\n"
+msgstr "Ajoute le support pour l'authentification par serveur LDAP\n==========================================================\nCe module permet aux utilisateurs de se connecter avec leur nom d'utilisateur et mot de passe LDAP, et il crée automatiquement les utilisateurs Odoo à la volée.\n** Note: ** \nCe module ne fonctionne que sur les serveurs possédant le module Python 'ldap'.\n\nConfiguration:\n--------------\nAprès l'installation de ce module, configurer les paramètres LDAP dans l'onglet Configuration des détails Société. Chaque sociétés peut avoir son serveur LDAP, tant que les noms d'utilisateurs restent uniques (les noms d'utilisateur doivent être uniques dans Odoo, même pour plusieurs sociétés).\nLa liaison LDAP anonyme est prise en charge (sur les serveurs LDAP qui le permettent), en gardant simplement l'utilisateur LDAP avec un mot de passe vide dans la configuration LDAP. Cela ne permet pas l'authentification anonyme pour les utilisateurs, c'est seulement pour le compte maître LDAP utilisé pour vérifier si un utilisateur existe avant d'essayer de l'authentifier.\nSécuriser la connexion avec STARTTLS est disponible avec les serveurs LDAP le supportant, pour ceci, activer l'option TLS dans la configuration LDAP.\nPour plus d'options de configuration ses paramètres LDAP, se reporter à la page de ldap.conf : page du manuel : `ldap.conf (5)`.\n\nConsidérations de sécurité:\n------------------------------\nLes mots de passe LDAP des utilisateurs ne sont jamais stockés dans la base de données de Odoo, le serveur LDAP est interrogé chaque fois qu'un utilisateur doit être authentifié. Aucune reproduction du mot de passe se produit, et les mots de passe sont gérés en un seul point.\nOdoo ne gère pas les changements de mot de passe dans LDAP, ainsi tout changement de mot de passe s'introduit par d'autres moyens dans le répertoire LDAP directement (pour les utilisateurs LDAP).\nIl est également possible d'avoir les utilisateurs Odoo locaux dans la base de données et des utilisateurs authentifiés LDAP (le compte Administrateur est un exemple évident).\n\nVoici comment cela fonctionne:\n------------------------------\n * Le système tente d'abord d'authentifier les utilisateurs sur la base de données de Odoo locale ;\n * Si cette authentification échoue (par exemple parce que l'utilisateur n'a pas de mot de passe local), le système tente alors une authentification LDAP ;\nComme les utilisateurs LDAP ont des mots de passe vierges par défaut dans la base de données de Odoo locale (ce qui signifie pas d'accès), la première étape est toujours un échec et le serveur LDAP est interrogé pour procéder à l'authentification.\nL'activation de STARTTLS veille à ce que la requête d'authentification au serveur LDAP est cryptée.\n\nModèle de l'utilisateur:\n-------------------------\n Dans la configuration de LDAP sur le formulaire Société, il est possible de sélectionner un *modèle utilisateur*. Si il est défini, cet utilisateur sera utilisé comme modèle pour créer les utilisateurs locaux chaque fois que quelqu'un s'authentifie pour la première fois via une authentification LDAP. Cela permet de pré-régler les groupes par défaut et les menus des utilisateurs pour la première fois.\n** Attention : ** si un mot de passe est donné pour le modèle d'utilisateur, ce mot de passe sera attribué comme mot de passe local à chaque nouvel utilisateur LDAP, mettant en place un *mot de passe maître* pour ces utilisateurs (jusqu'à la modification manuelle). Ceci n'est généralement pas recherché. On configure facilement modèle utilisateur en se connectant une fois avec un utilisateur LDAP valide : laisser Odoo créer un utilisateur local vide avec le même login (et un mot de passe vide), puis renommer ce nouvel utilisateur avec un nom d'utilisateur qui ne existe pas dans LDAP, puis configurer ses groupes\n"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_administration
@@ -5683,6 +5748,12 @@ msgid "Automatic Installation"
 msgstr "Installation automatisée"
 
 #. module: base
+#: code:addons/base/module/module.py:693
+#, python-format
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr "L'installation automatique des applications téléchargées est désactivée"
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
 msgid ""
 "Automatically set to let administators find new terms that might need to be "
@@ -5968,6 +6039,11 @@ msgid "Birthdate"
 msgstr "Date de Naissance"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hw_blackbox_be
+msgid "Blackbox Hardware Driver"
+msgstr "Pilote Blackbox"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
 msgid "Blogs"
 msgstr "Blogs"
@@ -6097,6 +6173,11 @@ msgstr "Bulgare / български език"
 #: model:res.country,name:base.bf
 msgid "Burkina Faso"
 msgstr "Burkina Faso"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Burmese / မြန်မာဘာသာ"
+msgstr "Birman / မြန်မာဘာသာ"
 
 #. module: base
 #: model:res.country,name:base.bi
@@ -6972,6 +7053,18 @@ msgid "Contact Name"
 msgstr "Nom du contact"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.view_partner_category_form
+msgid "Contact Tag"
+msgstr "Étiquette de contact"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_partner_category_form
+#: model:ir.ui.menu,name:base.menu_partner_category_form
+#: model:ir.ui.view,arch_db:base.view_partner_category_list
+msgid "Contact Tags"
+msgstr "Étiquettes de contact"
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
 #: model:ir.ui.menu,name:base.menu_partner_title_contact
 msgid "Contact Titles"
@@ -6993,7 +7086,7 @@ msgstr "Contacts & Adresses"
 #. module: base
 #: sql_constraint:res.partner:0
 msgid "Contacts require a name."
-msgstr "Les contacts demandent un nom."
+msgstr "Le nom est requis sur un contact."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters_context
@@ -7202,6 +7295,11 @@ msgid "Create surveys, collect answers and print statistics"
 msgstr "Créer des sondages, collecter les réponses et imprimer les statistiques"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_board
+msgid "Create your custom dashboard"
+msgstr "Créez votre tableau de bord personnalisé"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_crud_model_name
 msgid "Create/Write Target Model Name"
 msgstr "Créer/Enregistrer le nom du modèle cible"
@@ -7345,8 +7443,10 @@ msgstr "Créé par"
 #: model:ir.model.fields,field_description:base.field_res_lang_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_bank_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_category_create_date
+#: model:ir.model.fields,field_description:base.field_res_partner_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title_create_date
 #: model:ir.model.fields,field_description:base.field_res_request_link_create_date
+#: model:ir.model.fields,field_description:base.field_res_users_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log_create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_create_date
 #: model:ir.model.fields,field_description:base.field_wkf_activity_create_date
@@ -8051,7 +8151,7 @@ msgstr "Afficher"
 #: model:ir.model.fields,field_description:base.field_wkf_triggers_display_name
 #: model:ir.model.fields,field_description:base.field_wkf_workitem_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
@@ -8303,6 +8403,12 @@ msgid "Employees"
 msgstr "Employés"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:339
+#, python-format
+msgid "Empty dependency in %r"
+msgstr "Dépendance vide dans %r"
+
+#. module: base
 #: model:res.groups,name:base.group_light_multi_company
 msgid "Enable Light Multi Company"
 msgstr "Valider le Multi-sociétés Léger"
@@ -8377,6 +8483,12 @@ msgstr "Contexte de l'erreur :\nVue `%(view_name)s`"
 #, python-format
 msgid "Error details:"
 msgstr "Détails de l'erreur :"
+
+#. module: base
+#: code:addons/models.py:1281
+#, python-format
+msgid "Error while validating constraint"
+msgstr "Erreur lors de la validation de la contrainte"
 
 #. module: base
 #: constraint:res.company:0
@@ -8507,12 +8619,12 @@ msgstr "Réglages de l'Exportation"
 #: model:ir.actions.act_window,name:base.action_wizard_lang_export
 #: model:ir.ui.menu,name:base.menu_wizard_lang_export
 msgid "Export Translation"
-msgstr "Exporter une Traduction"
+msgstr "Exporter une traduction"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Export Translations"
-msgstr "Exporter les Traductions"
+msgstr "Exporter les traductions"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa
@@ -8591,6 +8703,11 @@ msgid "Extra"
 msgstr "Extra"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_extra_reports
+msgid "Extra Accounting Reports"
+msgstr "Rapports comptables supplémentaires"
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_usability
 #: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Extra Rights"
@@ -8637,6 +8754,56 @@ msgstr "États Fédéraux"
 #: model:ir.module.module,shortdesc:base.module_delivery_fedex
 msgid "Fedex Shipping"
 msgstr "Expédition Fedex"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_fr_fec
+msgid "Fichier d'Échange Informatisé (FEC) for France"
+msgstr "Fichier d'Échange Informatisé (FEC) pour la France"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_fec
+msgid ""
+"Fichier d'Échange Informatisé (FEC) pour la France\n"
+"==================================================\n"
+"\n"
+"Ce module permet de générer le fichier FEC tel que définit par `l'arrêté du 29\n"
+"Juillet 2013 <http://legifrance.gouv.fr/eli/arrete/2013/7/29/BUDE1315492A/jo/texte>`\n"
+"portant modification des dispositions de l'article A. 47 A-1 du\n"
+"livre des procédures fiscales.\n"
+"\n"
+"Cet arrêté prévoit l'obligation pour les sociétés ayant une comptabilité\n"
+"informatisée de pouvoir fournir à l'administration fiscale un fichier\n"
+"regroupant l'ensemble des écritures comptables de l'exercice. Le format de ce\n"
+"fichier, appelé *FEC*, est définit dans l'arrêté.\n"
+"\n"
+"Le détail du format du FEC est spécifié dans le bulletin officiel des finances publiques `BOI-CF-IOR-60-40-20-20131213 <http://bofip.impots.gouv.fr/bofip/ext/pdf/createPdfWithAnnexePermalien/BOI-CF-IOR-60-40-20-20131213.pdf?doc=9028-PGP&identifiant=BOI-CF-IOR-60-40-20-20131213>` du 13 Décembre 2013. Ce module implémente le fichier\n"
+"FEC au format texte et non au format XML, car le format texte sera facilement\n"
+"lisible et vérifiable par le comptable en utilisant un tableur.\n"
+"\n"
+"La structure du fichier FEC généré par ce module a été vérifiée avec le logiciel\n"
+"*Test Compta Demat* version 1_00_05 disponible sur\n"
+"`le site de la direction générale des finances publiques <http://www.economie.gouv.fr/dgfip/outil-test-des-fichiers-des-ecritures-comptables-fec>`\n"
+"en utilisant une base de donnée Odoo réelle.\n"
+"\n"
+"Configuration\n"
+"=============\n"
+"\n"
+"Aucune configuration n'est nécessaire.\n"
+"\n"
+"Utilisation\n"
+"===========\n"
+"\n"
+"Pour générer le *FEC*, allez dans le menu *Accounting > Reporting > French Statements > FEC* qui va démarrer l'assistant de génération du FEC.\n"
+"\n"
+"Credits\n"
+"=======\n"
+"\n"
+"Contributors\n"
+"------------\n"
+"\n"
+"* Alexis de Lattre <alexis.delattre@akretion.com>\n"
+"\n"
+msgstr "Fichier d'Échange Informatisé (FEC) pour la France\n==================================================\n\nCe module permet de générer le fichier FEC tel que définit par `l'arrêté du 29\nJuillet 2013 <http://legifrance.gouv.fr/eli/arrete/2013/7/29/BUDE1315492A/jo/texte>`\nportant modification des dispositions de l'article A. 47 A-1 du\nlivre des procédures fiscales.\n\nCet arrêté prévoit l'obligation pour les sociétés ayant une comptabilité\ninformatisée de pouvoir fournir à l'administration fiscale un fichier\nregroupant l'ensemble des écritures comptables de l'exercice. Le format de ce\nfichier, appelé *FEC*, est définit dans l'arrêté.\n\nLe détail du format du FEC est spécifié dans le bulletin officiel des finances publiques `BOI-CF-IOR-60-40-20-20131213 <http://bofip.impots.gouv.fr/bofip/ext/pdf/createPdfWithAnnexePermalien/BOI-CF-IOR-60-40-20-20131213.pdf?doc=9028-PGP&identifiant=BOI-CF-IOR-60-40-20-20131213>` du 13 Décembre 2013. Ce module implémente le fichier\nFEC au format texte et non au format XML, car le format texte sera facilement\nlisible et vérifiable par le comptable en utilisant un tableur.\n\nLa structure du fichier FEC généré par ce module a été vérifiée avec le logiciel\n*Test Compta Demat* version 1_00_05 disponible sur\n`le site de la direction générale des finances publiques <http://www.economie.gouv.fr/dgfip/outil-test-des-fichiers-des-ecritures-comptables-fec>`\nen utilisant une base de donnée Odoo réelle.\n\nConfiguration\n=============\n\nAucune configuration n'est nécessaire.\n\nUtilisation\n===========\n\nPour générer le *FEC*, allez dans le menu *Accounting > Reporting > French Statements > FEC* qui va démarrer l'assistant de génération du FEC.\n\nCredits\n=======\n\nContributors\n------------\n\n* Alexis de Lattre <alexis.delattre@akretion.com>\n\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_model_object_field
@@ -9016,6 +9183,11 @@ msgid "French Guyana"
 msgstr "Guyane Française"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_french_localization
+msgid "French Localization"
+msgstr "Localisation française"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_payroll
 msgid "French Payroll"
 msgstr "Paie française"
@@ -9049,6 +9221,11 @@ msgstr "Nom Complet"
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_complete_name
 msgid "Full Path"
 msgstr "Chemin Complet"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_full_reconcile
+msgid "Full Reconciliation Concept"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_func
@@ -9170,6 +9347,11 @@ msgstr "Georgie"
 #: selection:base.language.install,lang:0
 msgid "Georgian / ქართული ენა"
 msgstr "Georgien / ქართული ენა"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "German (CH) / Deutsch (CH)"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -9435,6 +9617,11 @@ msgstr "Haïti"
 #: model:ir.module.module,summary:base.module_hw_scanner
 msgid "Hardware Driver for Barcode Scanners"
 msgstr "Pilote pour lecteurs de code-barres"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_hw_blackbox_be
+msgid "Hardware Driver for Belgian Fiscal Data Modules"
+msgstr "Pilote matériel pour les modules de données fiscales belges"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
@@ -10004,7 +10191,7 @@ msgstr "Import / Export"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_ofx
 msgid "Import OFX Bank Statement"
-msgstr "Import d'un relevé bancaire QFX"
+msgstr "Import d'un relevé bancaire OFX"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_qif
@@ -10016,7 +10203,7 @@ msgstr "Import d'un relevé bancaire QIF"
 #: model:ir.ui.menu,name:base.menu_view_base_import_language
 #: model:ir.ui.view,arch_db:base.view_base_import_language
 msgid "Import Translation"
-msgstr "Importer de traduction"
+msgstr "Import de traductions"
 
 #. module: base
 #: model:ir.module.module,description:base.module_currency_rate_live
@@ -10682,6 +10869,12 @@ msgstr "Nom de la langue"
 #, python-format
 msgid "Language Pack"
 msgstr "Paquet de langue"
+
+#. module: base
+#: code:addons/base/res/res_lang.py:187
+#, python-format
+msgid "Language code cannot be modified."
+msgstr "Le code langue ne peut pas être modifié."
 
 #. module: base
 #: sql_constraint:ir.translation:0
@@ -11710,6 +11903,18 @@ msgid "Model"
 msgstr "Modèle"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:382
+#, python-format
+msgid "Model %s does not exist"
+msgstr "Le modèle %s n'existe pas"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:383
+#, python-format
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#. module: base
 #: code:addons/base/ir/ir_model.py:454
 #, python-format
 msgid "Model %s does not exist!"
@@ -11909,7 +12114,7 @@ msgstr "Mois"
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
 msgid "Month: %(month)s"
-msgstr "Mois : %(mois)"
+msgstr "Mois : %(month)s"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
@@ -12099,7 +12304,12 @@ msgid "New Zealand"
 msgstr "Nouvelle Zélande"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:522
+#: model:ir.module.module,shortdesc:base.module_l10n_nz
+msgid "New Zealand - Accounting"
+msgstr "Nouvelle-Zélande – Comptabilité"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:536
 #, python-format
 msgid ""
 "New field name must still start with x_ , because it is a custom field!"
@@ -12193,7 +12403,13 @@ msgid "Non Updatable"
 msgstr "Mise à jour impossible"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:307
+#: code:addons/base/ir/ir_model.py:348
+#, python-format
+msgid "Non-relational field %r in dependency %r"
+msgstr "Champ %r non relationnel pour la dépendance %r  "
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:305
 #, python-format
 msgid "Non-relational field name '%s' in related field '%s'"
 msgstr "Nom de champ '%s' non relationnel pour le champ connexe '%s'  "
@@ -13340,12 +13556,17 @@ msgid "Properties"
 msgstr "Propriétés"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:501
+#: code:addons/base/ir/ir_model.py:515
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
 "them through Python code, preferably through a custom addon!"
 msgstr "Les propriétés des champs de la base ne peuvent pas être modifiées de cette façon! SVP, veuillez les modifier via du code Python, de préférence via un module personnalisé!"
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_theme_install
+msgid "Propose to install a theme on website installation"
+msgstr "Propose d'installer un thème lors de l'installation du site web"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
@@ -13725,6 +13946,11 @@ msgstr "Retirer l'action contextuelle relative à cette action du serveur"
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "Renommer le champ fragmenté \"%s\" n'est pas autorisé"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_mrp_repair
+msgid "Repair broken or damaged products"
+msgstr "Réparation des produits endommagés"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_repair
@@ -15048,6 +15274,7 @@ msgstr "Rue"
 #: model:ir.ui.view,arch_db:base.view_company_form
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
+#: model:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Street 2..."
 msgstr "Rue 2..."
 
@@ -15384,6 +15611,12 @@ msgid "Technical Settings"
 msgstr "Paramètres techniques"
 
 #. module: base
+#: code:addons/base/ir/ir_translation.py:734
+#, python-format
+msgid "Technical Translation"
+msgstr "Traduction spécialisée"
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_partner_company_type
 #: model:ir.model.fields,help:base.field_res_users_company_type
 msgid ""
@@ -15391,8 +15624,10 @@ msgid ""
 " Odoo v9 RadioButton cannot be used on boolean fields, this one serves as "
 "interface. Due to the old API limitations with interface function field, we "
 "implement it by hand instead of a true function field. When migrating to the"
-" new API the code should be simplified."
-msgstr "Champ technique, uniquement utilisé pour afficher une valeur booléenne via un bouton radio. Comme un BoutonRadio Odoo_V9 ne peut pas être utilisé sur les champs booléens, celui-ci sert d'interface. En raison des limitations de l'ancienne API avec les champs faisant fonction d'interface, on le met en œuvre à la main à la place d'un véritable champ fonction. Lors de la migration vers la nouvelle API le code devrait être simplifié."
+" new API the code should be simplified. Changing the company_type of a "
+"company contact into a company will not display this contact as a company "
+"contact but as a standalone company."
+msgstr ""
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
@@ -16038,6 +16273,13 @@ msgid "To be upgraded"
 msgstr "À mettre à jour"
 
 #. module: base
+#: code:addons/base/module/module.py:694
+#, python-format
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr "Pour l'activer, assurez-vous que le répertoire suivant existe et est accessible en écriture sur le serveur :"
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Todo"
 msgstr "À faire"
@@ -16171,6 +16413,14 @@ msgstr "Les fonctions de traduction sont indisponibles tant qu'une traduction su
 #: selection:ir.translation,state:0
 msgid "Translation in Progress"
 msgstr "Traduction en cours"
+
+#. module: base
+#: code:addons/base/ir/ir_translation.py:551
+#, python-format
+msgid ""
+"Translation is not valid:\n"
+"%s"
+msgstr "La traduction est invalide :\n%s"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation

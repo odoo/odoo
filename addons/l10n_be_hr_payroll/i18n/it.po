@@ -1,4 +1,4 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * l10n_be_hr_payroll
 # 
@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:53+0000\n"
-"PO-Revision-Date: 2015-09-08 05:24+0000\n"
+"POT-Creation-Date: 2015-09-21 09:29+0000\n"
+"PO-Revision-Date: 2016-04-30 20:10+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -18,18 +18,43 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: l10n_be_hr_payroll
-#: help:hr.employee,disabled_spouse_bool:0
-msgid "if recipient spouse is declared disabled by law"
+#: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_contract_misc_advantage_amount
+msgid "Benefits of various nature "
 msgstr ""
 
 #. module: l10n_be_hr_payroll
-#: help:hr.employee,disabled_children_bool:0
-msgid "if recipient children is/are declared disabled by law"
+#: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_contract_meal_voucher_amount
+msgid "Check Value Meal "
 msgstr ""
 
 #. module: l10n_be_hr_payroll
-#: field:hr.contract,misc_onss_deduction:0
-msgid "Miscellaneous exempt ONSS "
+#: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_contract_meal_voucher_employee_deduction
+msgid "Check Value Meal - by worker "
+msgstr ""
+
+#. module: l10n_be_hr_payroll
+#: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_contract_car_employee_deduction
+msgid "Company Car Deduction for Worker"
+msgstr ""
+
+#. module: l10n_be_hr_payroll
+#: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_contract_car_company_amount
+msgid "Company car employer"
+msgstr ""
+
+#. module: l10n_be_hr_payroll
+#: model:ir.model,name:l10n_be_hr_payroll.model_hr_contract
+msgid "Contract"
+msgstr "Contratto"
+
+#. module: l10n_be_hr_payroll
+#: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_employee_disabled_children_bool
+msgid "Disabled Children"
+msgstr ""
+
+#. module: l10n_be_hr_payroll
+#: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_employee_disabled_spouse_bool
+msgid "Disabled Spouse"
 msgstr ""
 
 #. module: l10n_be_hr_payroll
@@ -38,34 +63,44 @@ msgid "Employee"
 msgstr "Impiegato"
 
 #. module: l10n_be_hr_payroll
-#: field:hr.employee,disabled_spouse_bool:0
-msgid "Disabled Spouse"
+#: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_contract_insurance_employee_deduction
+msgid "Insurance Group - by worker "
 msgstr ""
 
 #. module: l10n_be_hr_payroll
-#: field:hr.contract,retained_net_amount:0
+#: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_contract_misc_onss_deduction
+msgid "Miscellaneous exempt ONSS "
+msgstr ""
+
+#. module: l10n_be_hr_payroll
+#: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_contract_retained_net_amount
 msgid "Net retained "
 msgstr ""
 
 #. module: l10n_be_hr_payroll
-#: field:hr.employee,resident_bool:0
+#: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_contract_additional_net_amount
+msgid "Net supplements"
+msgstr ""
+
+#. module: l10n_be_hr_payroll
+#: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_employee_resident_bool
 msgid "Nonresident"
 msgstr ""
 
 #. module: l10n_be_hr_payroll
-#: help:hr.employee,resident_bool:0
-msgid "if recipient lives in a foreign country"
+#: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_employee_disabled_children_number
+msgid "Number of disabled children"
 msgstr ""
 
 #. module: l10n_be_hr_payroll
-#: view:hr.employee:0
-msgid "if spouse has professionnel income or not"
+#: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_contract_travel_reimbursement_amount
+msgid "Reimbursement of travel expenses"
 msgstr ""
 
 #. module: l10n_be_hr_payroll
-#: field:hr.contract,insurance_employee_deduction:0
-msgid "Insurance Group - by worker "
-msgstr ""
+#: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_employee_spouse_fiscal_status
+msgid "Tax status for spouse"
+msgstr "Regime fiscale per il coniuge"
 
 #. module: l10n_be_hr_payroll
 #: selection:hr.employee,spouse_fiscal_status:0
@@ -78,71 +113,26 @@ msgid "Without Income"
 msgstr ""
 
 #. module: l10n_be_hr_payroll
-#: field:hr.employee,disabled_children_number:0
-msgid "Number of disabled children"
+#: model:ir.model.fields,help:l10n_be_hr_payroll.field_hr_employee_disabled_children_bool
+msgid "if recipient children is/are declared disabled by law"
 msgstr ""
 
 #. module: l10n_be_hr_payroll
-#: field:hr.contract,additional_net_amount:0
-msgid "Net supplements"
+#: model:ir.model.fields,help:l10n_be_hr_payroll.field_hr_employee_resident_bool
+msgid "if recipient lives in a foreign country"
 msgstr ""
 
 #. module: l10n_be_hr_payroll
-#: field:hr.contract,car_company_amount:0
-msgid "Company car employer"
+#: model:ir.model.fields,help:l10n_be_hr_payroll.field_hr_employee_disabled_spouse_bool
+msgid "if recipient spouse is declared disabled by law"
 msgstr ""
 
 #. module: l10n_be_hr_payroll
-#: field:hr.contract,misc_advantage_amount:0
-msgid "Benefits of various nature "
+#: model:ir.ui.view,arch_db:l10n_be_hr_payroll.hr_employee_form__l10n_be_view_for
+msgid "if spouse has professionnel income or not"
 msgstr ""
 
 #. module: l10n_be_hr_payroll
-#: field:hr.contract,car_employee_deduction:0
-msgid "Company Car Deduction for Worker"
-msgstr ""
-
-#. module: l10n_be_hr_payroll
-#: field:hr.employee,disabled_children_bool:0
-msgid "Disabled Children"
-msgstr ""
-
-#. module: l10n_be_hr_payroll
-#: model:ir.model,name:l10n_be_hr_payroll.model_hr_contract
-msgid "Contract"
-msgstr "Contratto"
-
-#. module: l10n_be_hr_payroll
-#: field:hr.contract,meal_voucher_amount:0
-msgid "Check Value Meal "
-msgstr ""
-
-#. module: l10n_be_hr_payroll
-#: field:hr.contract,travel_reimbursement_amount:0
-msgid "Reimbursement of travel expenses"
-msgstr ""
-
-#. module: l10n_be_hr_payroll
-#: constraint:hr.contract:0
-msgid "Error! Contract start-date must be less than contract end-date."
-msgstr "Errore! La data di inizio del Contratto deve essere inferiore di quella finale."
-
-#. module: l10n_be_hr_payroll
-#: field:hr.employee,spouse_fiscal_status:0
-msgid "Tax status for spouse"
-msgstr ""
-
-#. module: l10n_be_hr_payroll
-#: view:hr.employee:0
+#: model:ir.ui.view,arch_db:l10n_be_hr_payroll.hr_employee_form__l10n_be_view_for
 msgid "number of dependent children declared as disabled"
-msgstr ""
-
-#. module: l10n_be_hr_payroll
-#: constraint:hr.employee:0
-msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr "Errore! Impossibile creare gerarchie di dipendenti ricorsive."
-
-#. module: l10n_be_hr_payroll
-#: field:hr.contract,meal_voucher_employee_deduction:0
-msgid "Check Value Meal - by worker "
 msgstr ""

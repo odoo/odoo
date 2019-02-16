@@ -7,7 +7,6 @@ import operator
 import os
 import time
 import datetime
-import dateutil
 import pytz
 
 import openerp
@@ -19,7 +18,7 @@ from openerp.osv import fields, osv
 from openerp.osv.orm import browse_record
 import openerp.report.interface
 from openerp.report.report_sxw import report_sxw, report_rml
-from openerp.tools import ormcache
+from openerp.tools import ormcache, wrap_module
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 import openerp.workflow
@@ -27,6 +26,16 @@ from openerp.exceptions import MissingError, UserError
 
 _logger = logging.getLogger(__name__)
 
+
+# build dateutil helper, starting with the relevant *lazy* imports
+import dateutil
+import dateutil.parser
+import dateutil.relativedelta
+import dateutil.rrule
+import dateutil.tz
+mods = {'parser', 'relativedelta', 'rrule', 'tz'}
+attribs = {atr for m in mods for atr in getattr(dateutil, m).__all__}
+dateutil = wrap_module(dateutil, mods | attribs)
 
 class actions(osv.osv):
     _name = 'ir.actions.actions'
@@ -430,7 +439,7 @@ class ir_actions_act_window_view(osv.osv):
     _name = 'ir.actions.act_window.view'
     _table = 'ir_act_window_view'
     _rec_name = 'view_id'
-    _order = 'sequence'
+    _order = 'sequence,id'
     _columns = {
         'sequence': fields.integer('Sequence'),
         'view_id': fields.many2one('ir.ui.view', 'View'),
@@ -443,10 +452,11 @@ class ir_actions_act_window_view(osv.osv):
         'multi': False,
     }
     def _auto_init(self, cr, context=None):
-        super(ir_actions_act_window_view, self)._auto_init(cr, context)
+        res = super(ir_actions_act_window_view, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'act_window_view_unique_mode_per_action\'')
         if not cr.fetchone():
             cr.execute('CREATE UNIQUE INDEX act_window_view_unique_mode_per_action ON ir_act_window_view (act_window_id, view_mode)')
+        return res
 
 
 class ir_actions_act_window_close(osv.osv):
@@ -1270,7 +1280,7 @@ class ir_actions_act_client(osv.osv):
     def _get_params(self, cr, uid, ids, field_name, arg, context):
         result = {}
         # Need to remove bin_size from context, to obtains the binary and not the length.
-        context = dict(context, bin_size_params_store=False)
+        context = dict(context, bin_size_params_store=False, bin_size=False)
         for record in self.browse(cr, uid, ids, context=context):
             result[record.id] = record.params_store and eval(record.params_store, {'uid': uid}) or False
         return result

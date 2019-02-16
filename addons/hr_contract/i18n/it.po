@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2016-01-05 15:38+0000\n"
-"Last-Translator: Francesco Garganese <francesco.garganese@aeromnia.aero>\n"
+"PO-Revision-Date: 2016-12-06 15:08+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,12 +80,12 @@ msgstr "Tipi contratto"
 #: model:mail.message.subtype,description:hr_contract.mt_contract_pending
 #: model:mail.message.subtype,description:hr_contract.mt_department_contract_pending
 msgid "Contract about to expire"
-msgstr ""
+msgstr "Contratti in scadenza"
 
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
-msgstr ""
+msgstr "Contratto scaduto"
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
@@ -121,12 +121,12 @@ msgstr "Creato il"
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Current Contract"
-msgstr ""
+msgstr "Contratto corrente"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Current Employee"
-msgstr ""
+msgstr "Dipendente attuale"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_message_last_post
@@ -190,7 +190,7 @@ msgstr "Followers (Partner)"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_type_sequence
 msgid "Gives the sequence when displaying a list of Contract."
-msgstr ""
+msgstr "Stabilisce la sequenza quando si guarda una lista di contratti."
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -200,12 +200,12 @@ msgstr "Raggruppa per"
 #. module: hr_contract
 #: model:ir.actions.server,name:hr_contract.contract_set_as_close
 msgid "HR Contract: set as close"
-msgstr ""
+msgstr "Contratti HR: imposta come chiusi"
 
 #. module: hr_contract
 #: model:ir.actions.server,name:hr_contract.contract_set_as_pending
 msgid "HR Contract: set as pending"
-msgstr ""
+msgstr "Contratti HR: imposta come pendente"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle_distance
@@ -227,11 +227,6 @@ msgstr "Se selezionato, nuovi messaggi richiedono la tua attenzione"
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Se selezionato, i nuovi messaggi richiedono la tua attenzione"
-
-#. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Important Messages"
-msgstr "Messaggi importanti"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
@@ -345,7 +340,7 @@ msgstr "Numero di messaggi non letti"
 #. module: hr_contract
 #: model:ir.filters,name:hr_contract.contract_open
 msgid "Open Contracts"
-msgstr ""
+msgstr "Contratti aperti"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_place_of_birth
@@ -391,7 +386,7 @@ msgstr "Stato"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_state
 msgid "Status of the contract"
-msgstr ""
+msgstr "Stato del contratto"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -417,6 +412,7 @@ msgstr "Data inizio prova"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_unread
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Unread Messages"
 msgstr "Messaggi Non Letti"
 

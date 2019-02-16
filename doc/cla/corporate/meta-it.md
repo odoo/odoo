@@ -12,4 +12,4 @@ Robin Lucbenet robin@meta-it.fr https://github.com/n1b0r
 
 List of contributors:
 
-Guillaume Masson guillaume.masson@meta-it.fr
+Guillaume Masson guillaume.masson@meta-it.fr https://github.com/metaminux

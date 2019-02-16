@@ -55,7 +55,7 @@ class event_event(models.Model):
             'interval_unit': 'now',
             'interval_type': 'after_sub',
             'template_id': self.env.ref('event.event_subscription')
-        })]
+        })] if self.user_has_groups('event.group_email_scheduling') else []
 
     # Seats and computation
     seats_max = fields.Integer(
@@ -290,7 +290,7 @@ class event_registration(models.Model):
         string='Status', default='draft', readonly=True, copy=False, track_visibility='onchange')
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
-    name = fields.Char(string='Attendee Name', select=True)
+    name = fields.Char(string='Attendee Name', index=True)
 
     @api.one
     @api.constrains('event_id', 'state')

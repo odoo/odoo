@@ -58,7 +58,6 @@ class AccountInvoiceRefund(models.TransientModel):
                 date = form.date or False
                 description = form.description or inv.name
                 refund = inv.refund(form.date_invoice, date, description, inv.journal_id.id)
-                refund.compute_taxes()
 
                 created_inv.append(refund.id)
                 if mode in ('cancel', 'modify'):
@@ -75,7 +74,7 @@ class AccountInvoiceRefund(models.TransientModel):
                     for tmpline in refund.move_id.line_ids:
                         if tmpline.account_id.id == inv.account_id.id:
                             to_reconcile_lines += tmpline
-                            to_reconcile_lines.reconcile()
+                    to_reconcile_lines.reconcile()
                     if mode == 'modify':
                         invoice = inv.read(
                                     ['name', 'type', 'number', 'reference',
@@ -87,7 +86,7 @@ class AccountInvoiceRefund(models.TransientModel):
                         invoice = invoice[0]
                         del invoice['id']
                         invoice_lines = inv_line_obj.browse(invoice['invoice_line_ids'])
-                        invoice_lines = inv_obj._refund_cleanup_lines(invoice_lines)
+                        invoice_lines = inv_obj.with_context(mode='modify')._refund_cleanup_lines(invoice_lines)
                         tax_lines = inv_tax_obj.browse(invoice['tax_line_ids'])
                         tax_lines = inv_obj._refund_cleanup_lines(tax_lines)
                         invoice.update({
@@ -98,7 +97,9 @@ class AccountInvoiceRefund(models.TransientModel):
                             'invoice_line_ids': invoice_lines,
                             'tax_line_ids': tax_lines,
                             'date': date,
-                            'name': description
+                            'name': description,
+                            'origin': inv.origin,
+                            'fiscal_position_id': inv.fiscal_position_id.id,
                         })
                         for field in ('partner_id', 'account_id', 'currency_id',
                                          'payment_term_id', 'journal_id'):

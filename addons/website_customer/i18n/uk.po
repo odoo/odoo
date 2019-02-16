@@ -3,21 +3,22 @@
 # * website_customer
 # 
 # Translators:
-# Bogdan, 2015-2016
+# Bohdan Lisnenko, 2015-2016
+# Bohdan Lisnenko, 2016
 # ТАрас <tratatuta@i.ua>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-02-13 15:19+0000\n"
-"Last-Translator: Bogdan\n"
+"PO-Revision-Date: 2018-05-22 12:06+0000\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_tag_list
@@ -68,7 +69,7 @@ msgstr "Дата створення"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_display_name
 msgid "Display Name"
-msgstr "Показати ім'я"
+msgstr "Назва для відображення"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_id
@@ -100,7 +101,7 @@ msgstr "Останнє оновлення"
 msgid ""
 "Manage the partner tags to better classify them on your website.\n"
 "                    You can add the filter by tag on your website in the \"Customize\" menu."
-msgstr "Керуйте тегами партнерів, щоб краще сортувати їх на сайті.\nВи можете додати фільтр за тегом на сайті в меню \"Налаштувати\"."
+msgstr "Керуйте мітками партнерів, щоб краще сортувати їх на сайті.\nВи можете додати фільтр за тегом на сайті в меню \"Налаштувати\"."
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.index
@@ -122,7 +123,7 @@ msgstr "Партнер"
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.view_partner_tag_form
 msgid "Partner Tag"
-msgstr "Тег партнера"
+msgstr "Мітка партнера"
 
 #. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
@@ -135,7 +136,7 @@ msgstr "Партнери"
 msgid ""
 "Partner Tags - These tags can be used on website to find customers by "
 "sector, or ... "
-msgstr "Теги партнерів - можуть використовуватись на сайті  для пошуку клієнтів за сектором чи ..."
+msgstr "Мітки партнерів - можуть використовуватись на сайті  для пошуку клієнтів за сектором чи ..."
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_partner_ids
@@ -155,12 +156,12 @@ msgstr "Посилання за країною"
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_tag_list
 msgid "References by Tag"
-msgstr "Посилання за тегом"
+msgstr "Посилання за міткою"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.index
 msgid "Search"
-msgstr "Пошук можливий"
+msgstr "Пошук"
 
 #. module: website_customer
 #: model:ir.ui.menu,name:website_customer.menu_partner_tag_form
@@ -185,7 +186,7 @@ msgstr "Видимий на сайті"
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.view_partners_form_website
 msgid "Website Tags"
-msgstr "Теги сайту"
+msgstr "Мітки сайту"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_website_url
@@ -195,7 +196,7 @@ msgstr "URL сайту"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_website_tag_ids
 msgid "Website tags"
-msgstr "Теги сайту"
+msgstr "Мітки сайту"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_country

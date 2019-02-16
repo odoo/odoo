@@ -817,12 +817,13 @@ models.PosModel = models.PosModel.extend({
     add_new_order: function() {
         if (this.config.iface_floorplan) {
             if (this.table) {
-                _super_posmodel.add_new_order.call(this);
+                return _super_posmodel.add_new_order.call(this);
             } else {
                 console.warn("WARNING: orders cannot be created when there is no active table in restaurant mode");
+                return undefined;
             }
         } else {
-            _super_posmodel.add_new_order.apply(this,arguments);
+            return _super_posmodel.add_new_order.apply(this,arguments);
         }
     },
 
@@ -928,5 +929,11 @@ screens.define_action_button({
         return this.pos.config.iface_floorplan;
     },
 });
+
+return {
+    TableGuestsButton : TableGuestsButton,
+    TableWidget       : TableWidget,
+    FloorScreenWidget : FloorScreenWidget,
+};
 
 });

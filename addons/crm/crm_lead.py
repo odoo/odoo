@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import logging
 from operator import itemgetter
-from werkzeug import url_encode
 
 from openerp import SUPERUSER_ID
-from openerp import tools, api
+from openerp import tools, api, fields as newfields
 from openerp.addons.base.res.res_partner import format_address
 from openerp.addons.crm import crm_stage
 from openerp.osv import fields, osv
@@ -528,11 +527,11 @@ class crm_lead(format_address, osv.osv):
                 value = dict(key).get(lead[field_name], lead[field_name])
             elif field.type == 'many2one':
                 if lead[field_name]:
-                    value = lead[field_name].name_get()[0][1]
+                    value = lead[field_name].sudo().name_get()[0][1]
             elif field.type == 'many2many':
                 if lead[field_name]:
                     for val in lead[field_name]:
-                        field_value = val.name_get()[0][1]
+                        field_value = val.sudo().name_get()[0][1]
                         value += field_value + ","
             else:
                 value = lead[field_name]
@@ -608,6 +607,8 @@ class crm_lead(format_address, osv.osv):
         """
         Search for opportunities that have   the same partner and that arent done or cancelled
         """
+        if not email:
+            return []
         partner_match_domain = []
         for email in set(email_split(email) + [email]):
             partner_match_domain.append(('email_from', '=ilike', email))
@@ -729,9 +730,11 @@ class crm_lead(format_address, osv.osv):
         return True
 
     def _lead_create_contact(self, cr, uid, lead, name, is_company, parent_id=False, context=None):
+        if context is None:
+            context = {}
         partner = self.pool.get('res.partner')
         vals = {'name': name,
-            'user_id': lead.user_id.id,
+            'user_id': context.get('default_user_id') or lead.user_id.id,
             'comment': lead.description,
             'team_id': lead.team_id.id or False,
             'parent_id': parent_id,
@@ -889,6 +892,9 @@ class crm_lead(format_address, osv.osv):
             context['default_team_id'] = vals.get('team_id')
         if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.datetime.now()
+        if context.get('default_partner_id') and not vals.get('email_from'):
+            partner_id = self.pool['res.partner'].browse(cr, uid, context.get('default_partner_id'))
+            vals['email_from'] = partner_id.email
 
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
@@ -906,7 +912,7 @@ class crm_lead(format_address, osv.osv):
             vals.update(onchange_stage_values)
         if vals.get('probability') >= 100 or not vals.get('active', True):
             vals['date_closed'] = fields.datetime.now()
-        elif vals.get('probability') < 100:
+        elif 'probability' in vals and vals['probability'] < 100:
             vals['date_closed'] = False
         return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
 
@@ -974,11 +980,12 @@ Update your business card, phone book, social media,... Send an email right now 
     def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
         res = super(crm_lead, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
 
-        won_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='case_mark_won')
-        lost_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='case_mark_lost')
-        convert_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='convert_opportunity')
-
         lead = self.browse(cr, uid, ids[0], context=context)
+
+        won_action = self._notification_link_helper(cr, uid, ids, 'controller', controller='/lead/case_mark_won', context=context)
+        lost_action = self._notification_link_helper(cr, uid, ids, 'controller', controller='/lead/case_mark_lost', context=context)
+        convert_action = self._notification_link_helper(cr, uid, ids, 'controller', controller='/lead/convert', context=context)
+
         if lead.type == 'lead':
             res['group_sale_salesman'] = {
                 'actions': [{'url': convert_action, 'title': 'Convert to opportunity'}]
@@ -1099,6 +1106,7 @@ Update your business card, phone book, social media,... Send an email right now 
         return res
 
     def retrieve_sales_dashboard(self, cr, uid, context=None):
+        date_today = newfields.Date.from_string(fields.date.context_today(self, cr, uid, context=context))
 
         res = {
             'meeting': {
@@ -1137,32 +1145,32 @@ Update your business card, phone book, social media,... Send an email right now 
             if opp['date_deadline']:
                 date_deadline = datetime.strptime(opp['date_deadline'], tools.DEFAULT_SERVER_DATE_FORMAT).date()
 
-                if date_deadline == date.today():
+                if date_deadline == date_today:
                     res['closing']['today'] += 1
-                if date_deadline >= date.today() and date_deadline <= date.today() + timedelta(days=7):
+                if date_deadline >= date_today and date_deadline <= date_today + timedelta(days=7):
                     res['closing']['next_7_days'] += 1
-                if date_deadline < date.today():
+                if date_deadline < date_today and not opp['date_closed']:
                     res['closing']['overdue'] += 1
 
             # Next activities
             if opp['next_activity_id'] and opp['date_action']:
                 date_action = datetime.strptime(opp['date_action'], tools.DEFAULT_SERVER_DATE_FORMAT).date()
 
-                if date_action == date.today():
+                if date_action == date_today:
                     res['activity']['today'] += 1
-                if date_action >= date.today() and date_action <= date.today() + timedelta(days=7):
+                if date_action >= date_today and date_action <= date_today + timedelta(days=7):
                     res['activity']['next_7_days'] += 1
-                if date_action < date.today():
+                if date_action < date_today and not opp['date_closed']:
                     res['activity']['overdue'] += 1
 
             # Won in Opportunities
             if opp['date_closed']:
                 date_closed = datetime.strptime(opp['date_closed'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
 
-                if date_closed <= date.today() and date_closed >= date.today().replace(day=1):
+                if date_closed <= date_today and date_closed >= date_today.replace(day=1):
                     if opp['planned_revenue']:
                         res['won']['this_month'] += opp['planned_revenue']
-                elif date_closed < date.today().replace(day=1) and date_closed >= date.today().replace(day=1) - relativedelta(months=+1):
+                elif date_closed < date_today.replace(day=1) and date_closed >= date_today.replace(day=1) - relativedelta(months=+1):
                     if opp['planned_revenue']:
                         res['won']['last_month'] += opp['planned_revenue']
 
@@ -1192,9 +1200,9 @@ Update your business card, phone book, social media,... Send an email right now 
         for act in activites_done:
             if act['date']:
                 date_act = datetime.strptime(act['date'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-                if date_act <= date.today() and date_act >= date.today().replace(day=1):
+                if date_act <= date_today and date_act >= date_today.replace(day=1):
                         res['done']['this_month'] += 1
-                elif date_act < date.today().replace(day=1) and date_act >= date.today().replace(day=1) - relativedelta(months=+1):
+                elif date_act < date_today.replace(day=1) and date_act >= date_today.replace(day=1) - relativedelta(months=+1):
                     res['done']['last_month'] += 1
 
         # Meetings
@@ -1210,9 +1218,9 @@ Update your business card, phone book, social media,... Send an email right now 
             if meeting['start']:
                 start = datetime.strptime(meeting['start'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
 
-                if start == date.today():
+                if start == date_today:
                     res['meeting']['today'] += 1
-                if start >= date.today() and start <= date.today() + timedelta(days=7):
+                if start >= date_today and start <= date_today + timedelta(days=7):
                     res['meeting']['next_7_days'] += 1
 
         res['nb_opportunities'] = len(opportunities)

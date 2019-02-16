@@ -113,11 +113,16 @@ var FieldTextHtmlSimple = widget.extend({
     },
     text_to_html: function (text) {
         var value = text || "";
-        if (value.match(/^\s*$/)) {
-            value = '<p><br/></p>';
-        } else {
-            value = "<p>"+value.split(/<br\/?>/).join("<br/></p><p>")+"</p>";
-            value = value.replace(/<p><\/p>/g, '').replace('<p><p>', '<p>').replace('<p><p ', '<p ').replace('</p></p>', '</p>');
+        try {
+            $(text)[0].innerHTML;
+            return text;
+        } catch (e) {
+            if (value.match(/^\s*$/)) {
+                value = '<p><br/></p>';
+            } else {
+                value = "<p>"+value.split(/<br\/?>/).join("<br/></p><p>")+"</p>";
+                value = value.replace(/<p><\/p>/g, '').replace('<p><p>', '<p>').replace('<p><p ', '<p ').replace('</p></p>', '</p>');
+            }
         }
         return value;
     },
@@ -133,7 +138,7 @@ var FieldTextHtmlSimple = widget.extend({
         }
     },
     resize: function() {
-        this.$('iframe').css('height', '0px').css('height', Math.max(30, Math.min(this.$content[0] ? this.$content[0].scrollHeight : 0, 500)) + 'px');
+        this.$('> iframe.o_readonly').css('height', '0px').css('height', Math.max(30, Math.min(this.$content[0] ? this.$content[0].scrollHeight : 0, 500)) + 'px');
     },
     render_value: function() {
         var value = this.get('value');
@@ -156,6 +161,11 @@ var FieldTextHtmlSimple = widget.extend({
         return !this.get('value') || this.get('value') === "<p><br/></p>" || !this.get('value').match(/\S/);
     },
     commit_value: function() {
+        /* Switch to WYSIWYG mode if currently in code view */
+        if (session.debug) {
+            var layoutInfo = this.$textarea.data('layoutInfo');
+            $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
+        }
         if (this.options['style-inline']) {
             transcoder.class_to_style(this.$content);
             transcoder.font_to_img(this.$content);
@@ -173,6 +183,11 @@ var FieldTextHtml = widget.extend({
     template: 'web_editor.FieldTextHtml',
     willStart: function () {
         var self = this;
+
+        if (this.field.translate === false) {
+            this.languages = [];
+            return $.when();
+        }
         return new Model('res.lang').call("search_read", [[['code', '!=', 'en_US']], ["name", "code"]]).then(function (res) {
             self.languages = res;
         });
@@ -213,16 +228,19 @@ var FieldTextHtml = widget.extend({
                 self.$iframe.css("height", (self.$body.find("#oe_snippets").length ? 500 : 300) + "px");
             }
         };
-        $(window).on('resize', self.resize);
+        $(window).on('resize', this.resize);
 
         var def = this._super.apply(this, arguments);
         this.$translate.remove();
         this.$translate = $();
         return def;
     },
+    get_datarecord: function() {
+        return this.view.get_fields_values();
+    },
     get_url: function (_attr) {
         var src = this.options.editor_url || "/web_editor/field/html";
-        var datarecord = this.view.get_fields_values();
+        var datarecord = this.get_datarecord();
 
         var attr = {
             'model': this.view.model,
@@ -269,18 +287,48 @@ var FieldTextHtml = widget.extend({
 
         delete datarecord[this.name];
         src += "&datarecord="+ encodeURIComponent(JSON.stringify(datarecord));
-
         return src;
     },
+    _toggleFormButtons: function(enable) {
+        if (this.$formButtons) {
+            if (enable) {
+                this.$formButtons.find('button').removeClass('o_disabled').attr('disabled', false);
+            } else {
+                this.$formButtons.find('button').addClass('o_disabled').attr('disabled', true);
+            }
+        }
+    },
     initialize_content: function() {
+        var self = this;
+
+        // Do not Forward port in >= 10.0
+        function getModalButtons() {
+            var $modal = self.getParent().getParent();
+            if ($modal && $modal.$footer) {
+                return $modal.$footer;
+            }
+        }
+
+        this.$formButtons = this.getParent().$buttons || getModalButtons();
         this.$el.closest('.modal-body').css('max-height', 'none');
         this.$iframe = this.$el.find('iframe');
+        // deactivate any button to avoid saving a not ready iframe
+        // Do not Forward port in >= 10.0
+        this._toggleFormButtons(false);
         this.document = null;
         this.$body = $();
         this.$content = $();
         this.editor = false;
         window.odoo[this.callback+"_updown"] = null;
         this.$iframe.attr("src", this.get_url());
+        this.view.on("load_record", this, function(r){
+            if (!self.$body.find('.o_dirty').length){
+                var url = self.get_url();
+                if(url !== self.$iframe.attr("src")){
+                    self.$iframe.attr("src", url);
+                }
+            }
+        });
     },
     on_content_loaded: function () {
         var self = this;
@@ -292,6 +340,9 @@ var FieldTextHtml = widget.extend({
         this.lang = this.lang ? this.lang[1] : this.view.dataset.context.lang;
         this._dirty_flag = false;
         this.render_value();
+        // reactivate all the buttons when the field's content (the iframe) is loaded
+        // Do not Forward port in >= 10.0
+        this._toggleFormButtons(true);
         setTimeout(function () {
             self.add_button();
             setTimeout(self.resize,0);
@@ -339,7 +390,12 @@ var FieldTextHtml = widget.extend({
         });
     },
     render_value: function() {
-        if (this.lang !== this.view.dataset.context.lang || this.$iframe.attr('src').match(/[?&]edit_translations=1/)) {
+        if (this.$iframe.attr('src').match(/[?&]edit_translations=1/)) {
+            return;
+        }
+        // ONLY HAVE THIS IN 9.0 AND SAAS-11
+        var is_editor_onchange = this.get('value') === '<p>on_change_model_and_list</p>';
+        if (this.lang !== this.view.dataset.context.lang && !is_editor_onchange) {
             return;
         }
         var value = (this.get('value') || "").replace(/^<p[^>]*>(\s*|<br\/?>)<\/p>$/, '');
@@ -367,12 +423,31 @@ var FieldTextHtml = widget.extend({
             this._dirty_flag = false;
             return this.editor.save();
         } else if (this._dirty_flag && this.editor && this.editor.buildingBlock) {
+            /* Switch to WYSIWYG mode if currently in code view */
+            if (session.debug) {
+                var layoutInfo = this.editor.rte.editable().data('layoutInfo');
+                $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
+            }
+            var $ancestors = this.$iframe.filter(':not(:visible)').parentsUntil(':visible').addBack();
+            var ancestorsStyle = [];
+            // temporarily force displaying iframe (needed for firefox)
+            _.each($ancestors, function (el) {
+                var $el = $(el);
+                ancestorsStyle.unshift($el.attr('style') || null);
+                $el.css({display: 'initial', visibility: 'hidden', height: 1});
+            });
             this.editor.buildingBlock.clean_for_save();
+            _.each($ancestors, function (el) {
+                var $el = $(el);
+                $el.attr('style', ancestorsStyle.pop());
+            });
             this.internal_set_value( this.$content.html() );
         }
     },
     destroy: function () {
-        $(window).off('resize', self.resize);
+        // Do not Forward port in >= 10.0
+        this._toggleFormButtons(true);
+        $(window).off('resize', this.resize);
         delete window.odoo[this.callback+"_editor"];
         delete window.odoo[this.callback+"_content"];
         delete window.odoo[this.callback+"_updown"];
@@ -383,5 +458,10 @@ var FieldTextHtml = widget.extend({
 core.form_widget_registry
     .add('html', FieldTextHtmlSimple)
     .add('html_frame', FieldTextHtml);
+
+return {
+    FieldTextHtmlSimple: FieldTextHtmlSimple,
+    FieldTextHtml: FieldTextHtml,
+};
 
 });

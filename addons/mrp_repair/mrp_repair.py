@@ -500,11 +500,11 @@ class ProductChangeMixin(object):
 
         if product:
             product_obj = self.pool.get('product.product').browse(cr, uid, product, context=ctx)
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
             if partner_id:
-                partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
                 result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position_id, product_obj.taxes_id, context=ctx)
 
-            result['name'] = product_obj.display_name
+            result['name'] = product_obj.with_context(lang=partner.lang).display_name
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id or False
             if not pricelist:
                 warning = {
@@ -562,7 +562,8 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         'invoiced': fields.boolean('Invoiced', readonly=True, copy=False),
         'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price')),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits=0),
-        'tax_id': fields.many2many('account.tax', 'repair_operation_line_tax', 'repair_operation_line_id', 'tax_id', 'Taxes'),
+        'tax_id': fields.many2many('account.tax', 'repair_operation_line_tax', 'repair_operation_line_id', 'tax_id', 'Taxes',
+            domain=['|', ('active', '=', False), ('active', '=', True)]),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True, copy=False),
@@ -656,7 +657,8 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
         'price_unit': fields.float('Unit Price', required=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits=0),
-        'tax_id': fields.many2many('account.tax', 'repair_fee_line_tax', 'repair_fee_line_id', 'tax_id', 'Taxes'),
+        'tax_id': fields.many2many('account.tax', 'repair_fee_line_tax', 'repair_fee_line_id', 'tax_id', 'Taxes',
+            domain=['|', ('active', '=', False), ('active', '=', True)]),
         'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True, copy=False),
         'to_invoice': fields.boolean('To Invoice'),
         'invoiced': fields.boolean('Invoiced', readonly=True, copy=False),

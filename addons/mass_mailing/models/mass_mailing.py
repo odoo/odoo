@@ -487,7 +487,7 @@ class MassMailing(osv.Model):
         'create_date': fields.datetime('Creation Date'),
         'sent_date': fields.datetime('Sent Date', oldname='date', copy=False),
         'schedule_date': fields.datetime('Schedule in the Future'),
-        'body_html': fields.html('Body', translate=True),
+        'body_html': fields.html('Body'),
         'attachment_ids': fields.many2many(
             'ir.attachment', 'mass_mailing_ir_attachments_rel',
             'mass_mailing_id', 'attachment_id', 'Attachments'
@@ -666,7 +666,8 @@ class MassMailing(osv.Model):
             email_fname = 'email_from'
             if 'email' in model._fields:
                 email_fname = 'email'
-            record_ids = model.search(cr, uid, [('id', 'in', res_ids), (email_fname, 'ilike', email)], context=context)
+            ctx = dict(context or {}, active_test=False)
+            record_ids = model.search(cr, uid, [('id', 'in', res_ids), (email_fname, 'ilike', email)], context=ctx)
             model.write(cr, uid, record_ids, {'opt_out': value}, context=context)
 
     #------------------------------------------------------
@@ -784,6 +785,7 @@ class MassMailing(osv.Model):
                 'mass_mailing_id': mailing.id,
                 'mailing_list_ids': [(4, l.id) for l in mailing.contact_list_ids],
                 'no_auto_thread': mailing.reply_to_mode != 'thread',
+                'template_id': None,
             }
             if mailing.reply_to_mode == 'email':
                 composer_values['reply_to'] = mailing.reply_to
@@ -835,9 +837,12 @@ class MassMailing(osv.Model):
 
         for mass_mailing_id in mass_mailing_ids:
             mass_mailing_record = self.browse(cr, uid, mass_mailing_id, context=context)
+            _uid = mass_mailing_record.write_uid.id or uid
+            _context = self.pool.get("res.users").context_get(cr, _uid, context=context)
+            _context = dict(context or {}, **_context)
 
-            if len(self.get_remaining_recipients(cr, uid, mass_mailing_record, context=context)) > 0:
-                self.write(cr, uid, [mass_mailing_id], {'state': 'sending'}, context=context)
-                self.send_mail(cr, uid, [mass_mailing_id], context=context)
+            if len(self.get_remaining_recipients(cr, uid, mass_mailing_record, context=_context)) > 0:
+                self.write(cr, uid, [mass_mailing_id], {'state': 'sending'}, context=_context)
+                self.send_mail(cr, uid, [mass_mailing_id], context=_context)
             else:
-                self.write(cr, uid, [mass_mailing_id], {'state': 'done'}, context=context)
+                self.write(cr, uid, [mass_mailing_id], {'state': 'done'}, context=_context)

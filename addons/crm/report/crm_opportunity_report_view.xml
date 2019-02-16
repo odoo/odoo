@@ -78,8 +78,8 @@
             <field name="domain">[('probability', '=', 100)]</field>
             <field name="context">{'col_group_by': ['create_date:month'], 'group_by': ['country_id']}</field>
         </record>
-        <record id="ir_filters_crm_opportunity_report_next_action" model="ir.filters">
-            <field name="name">Expected Revenus by Team</field>
+        <record id="filter_opportunity_expected_revenue" model="ir.filters">
+            <field name="name">Expected Revenue by Team</field>
             <field name="model_id">crm.opportunity.report</field>
             <field name="user_id" eval="False"/>
             <field name="context">{'group_by': ['create_date:month', 'team_id'], 'measures': ['expected_revenue', '__count']}</field>

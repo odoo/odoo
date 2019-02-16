@@ -442,7 +442,7 @@ class QWeb(orm.AbstractModel):
             init_lang = d.context.get('lang', 'en_US')
             lang = template_attributes['lang']
             d.context['lang'] = self.eval(lang, d) or lang
-            if not self.pool['res.lang'].search(d.cr, d.uid, [('code', '=', lang)], count=True, context=d.context):
+            if not self.pool['res.lang'].search(d.cr, d.uid, [('code', '=', d.context['lang'])], count=True, context=d.context):
                 _logger.info("'%s' is not a valid language code, is an empty field or is not installed, falling back to en_US", lang)
 
         d[0] = self.render_element(element, template_attributes, generated_attributes, d)
@@ -686,7 +686,7 @@ class IntegerConverter(osv.AbstractModel):
             context = {}
 
         lang_code = context.get('lang') or 'en_US'
-        return self.pool['res.lang'].format(cr, uid, [lang_code], '%d', value, grouping=True)
+        return self.pool['res.lang'].format(cr, uid, [lang_code], '%d', value, grouping=True).replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
 
 class FloatConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.float'
@@ -704,7 +704,7 @@ class FloatConverter(osv.AbstractModel):
 
         lang_code = context.get('lang') or 'en_US'
         lang = self.pool['res.lang']
-        formatted = lang.format(cr, uid, [lang_code], fmt.format(precision=precision), value, grouping=True)
+        formatted = lang.format(cr, uid, [lang_code], fmt.format(precision=precision), value, grouping=True).replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
 
         # %f does not strip trailing zeroes. %g does but its precision causes
         # it to switch to scientific notation starting at a million *and* to
@@ -763,6 +763,12 @@ class DateTimeConverter(osv.AbstractModel):
 
         return babel.dates.format_datetime(value, format=pattern, locale=locale)
 
+    def record_to_html(self, cr, uid, field_name, record, options, context=None):
+        field = field = record._fields[field_name]
+        value = record[field_name]
+        return self.value_to_html(
+            cr, uid, value, field, options=options, context=dict(context, **record.env.context))
+
 class TextConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.text'
     _inherit = 'ir.qweb.field'
@@ -792,6 +798,8 @@ class ManyToOneConverter(osv.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def record_to_html(self, cr, uid, field_name, record, options=None, context=None):
+        if not record:
+            return ''
         [read] = record.read([field_name])
         if not read[field_name]: return ''
         _, value = read[field_name]
@@ -881,7 +889,7 @@ class MonetaryConverter(osv.AbstractModel):
         lang = self.pool['res.lang']
         formatted_amount = lang.format(cr, uid, [lang_code],
             fmt, Currency.round(cr, uid, display_currency, from_amount),
-            grouping=True, monetary=True)
+            grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
 
         pre = post = u''
         if display_currency.position == 'before':
@@ -893,7 +901,7 @@ class MonetaryConverter(osv.AbstractModel):
             formatted_amount,
             pre=pre, post=post,
         ).format(
-            symbol=display_currency.symbol,
+            symbol=display_currency.symbol or '',
         ))
 
     def display_currency(self, cr, uid, currency, options):
@@ -936,7 +944,12 @@ class DurationConverter(osv.AbstractModel):
         factor = units[options['unit']]
 
         sections = []
+
         r = value * factor
+        if options.get('round') in units:
+            round_to = units[options['round']]
+            r = round(r / round_to) * round_to
+
         for unit, secs_per_unit in TIMEDELTA_UNITS:
             v, r = divmod(r, secs_per_unit)
             if not v: continue
@@ -1038,12 +1051,11 @@ class QwebWidgetMonetary(osv.AbstractModel):
     def _format(self, inner, options, qwebcontext):
         inner = self.pool['ir.qweb'].eval(inner, qwebcontext)
         display = self.pool['ir.qweb'].eval_object(options['display_currency'], qwebcontext)
-        precision = int(round(math.log10(display.rounding)))
-        fmt = "%.{0}f".format(-precision if precision < 0 else 0)
+        fmt = "%.{0}f".format(display.decimal_places)
         lang_code = qwebcontext.context.get('lang') or 'en_US'
         formatted_amount = self.pool['res.lang'].format(
             qwebcontext.cr, qwebcontext.uid, [lang_code], fmt, inner, grouping=True, monetary=True
-        )
+        ).replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
         pre = post = u''
         if display.position == 'before':
             pre = u'{symbol}\N{NO-BREAK SPACE}'
@@ -1247,7 +1259,10 @@ class AssetsBundle(object):
 
     def get_attachments(self, type, inc=None):
         ira = self.registry['ir.attachment']
-        domain = [('url', '=like', '/web/content/%%-%s/%s%s.%s' % (self.version, self.xmlid, ('%%' if inc is None else '.%s' % inc), type))]
+        domain = [
+            ('url', '=like', '/web/content/%%-%s/%s%s.%s' % (self.version, self.xmlid, ('%%' if inc is None else '.%s' % inc), type)),
+            ('create_uid', '=', openerp.SUPERUSER_ID),
+        ]
         attachment_ids = ira.search(self.cr, openerp.SUPERUSER_ID, domain, order='name asc', context=self.context)
         return ira.browse(self.cr, openerp.SUPERUSER_ID, attachment_ids, context=self.context)
 
@@ -1630,9 +1645,6 @@ class PreprocessedCSS(StylesheetAsset):
         self.html_url_format = '%%s/%s/%%s.css' % self.bundle.xmlid
         self.html_url_args = tuple(self.url.rsplit('/', 1))
 
-    def minify(self):
-        return self.with_header()
-
     def get_source(self):
         content = self.inline or self._fetch_content()
         return "/*! %s */\n%s" % (self.id, content)
@@ -1682,7 +1694,7 @@ class LessStylesheetAsset(PreprocessedCSS):
         except IOError:
             lessc = 'lessc'
         lesspath = get_resource_path('web', 'static', 'lib', 'bootstrap', 'less')
-        return [lessc, '-', '--clean-css', '--no-js', '--no-color', '--include-path=%s' % lesspath]
+        return [lessc, '-', '--no-js', '--no-color', '--include-path=%s' % lesspath]
 
 def rjsmin(script):
     """ Minify js with a clever regex.

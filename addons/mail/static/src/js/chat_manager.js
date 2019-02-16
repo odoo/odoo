@@ -12,13 +12,13 @@ var web_client = require('web.web_client');
 
 var _t = core._t;
 var _lt = core._lt;
-var LIMIT = 100;
+var LIMIT = 25;
 var preview_msg_max_size = 350;  // optimal for native english speakers
 
-var MessageModel = new Model('mail.message', session.context);
-var ChannelModel = new Model('mail.channel', session.context);
-var UserModel = new Model('res.users', session.context);
-var PartnerModel = new Model('res.partner', session.context);
+var MessageModel = new Model('mail.message', session.user_context);
+var ChannelModel = new Model('mail.channel', session.user_context);
+var UserModel = new Model('res.users', session.user_context);
+var PartnerModel = new Model('res.partner', session.user_context);
 
 // Private model
 //----------------------------------------------------------------------------------
@@ -112,8 +112,9 @@ function _parse_and_transform(nodes, transform_function) {
     }).join("");
 }
 
-// suggested regexp (gruber url matching regexp, adapted to js, see https://gist.github.com/gruber/8891611)
-var url_regexp = /\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi;
+// Suggested URL Javascript regex of http://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
+// Adapted to make http(s):// not required if (and only if) www. is given. So `should.notmatch` does not match.
+var url_regexp = /\b(?:https?:\/\/|(www\.))[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,13}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
 function add_link (node, transform_children) {
     if (node.nodeType === 3) {  // text node
         return node.data.replace(url_regexp, function (url) {
@@ -282,6 +283,30 @@ function make_message (data) {
         a.url = '/web/content/' + a.id + '?download=true';
     });
 
+    // format date to the local only once by message
+    // can not be done in preprocess, since it alter the original value
+    if (msg.tracking_value_ids && msg.tracking_value_ids.length) {
+        _.each(msg.tracking_value_ids, function(f) {
+            if (f.field_type === 'datetime') {
+                var format = 'LLL';
+                if (f.old_value) {
+                    f.old_value = moment.utc(f.old_value).local().format(format);
+                }
+                if (f.new_value) {
+                    f.new_value = moment.utc(f.new_value).local().format(format);
+                }
+            } else if (f.field_type === 'date') {
+                var format = 'LL';
+                if (f.old_value) {
+                    f.old_value = moment(f.old_value).local().format(format);
+                }
+                if (f.new_value) {
+                    f.new_value = moment(f.new_value).local().format(format);
+                }
+            }
+        });
+    }
+
     return msg;
 }
 
@@ -428,7 +453,7 @@ function fetch_from_channel (channel, options) {
         domain = new data.CompoundDomain([['id', '<', min_message_id]], domain);
     }
 
-    return MessageModel.call('message_fetch', [domain], {limit: LIMIT}).then(function (msgs) {
+    return MessageModel.call('message_fetch', [domain], {limit: LIMIT, context: session.user_context}).then(function (msgs) {
         if (!cache.all_history_loaded) {
             cache.all_history_loaded =  msgs.length < LIMIT;
         }
@@ -453,13 +478,13 @@ function fetch_document_messages (ids, options) {
     if (options.force_fetch || _.difference(ids.slice(0, LIMIT), loaded_msg_ids).length) {
         var ids_to_load = _.difference(ids, loaded_msg_ids).slice(0, LIMIT);
 
-        return MessageModel.call('message_format', [ids_to_load]).then(function (msgs) {
+        return MessageModel.call('message_format', [ids_to_load], {context: session.user_context}).then(function (msgs) {
             var processed_msgs = [];
             _.each(msgs, function (msg) {
                 processed_msgs.push(add_message(msg, {silent: true}));
             });
             return _.sortBy(loaded_msgs.concat(processed_msgs), function (msg) {
-                return msg.date;
+                return msg.id;
             });
         });
     } else {
@@ -960,7 +985,7 @@ var chat_manager = {
                 }
             });
         } else {
-            new Model(res_model).call('get_formview_id', [res_id, session.context]).then(function (view_id) {
+            new Model(res_model).call('get_formview_id', [res_id, session.user_context]).then(function (view_id) {
                 redirect_to_document(res_model, res_id, view_id);
             });
         }

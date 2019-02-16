@@ -73,7 +73,7 @@ class product_product(osv.osv):
 
             #Cost price is calculated afterwards as it is a property
             sqlstr="""select
-                    sum(l.price_unit * l.quantity)/sum(nullif(l.quantity,0)) as avg_unit_price,
+                    sum(l.price_unit * l.quantity)/nullif(sum(l.quantity),0) as avg_unit_price,
                     sum(l.quantity) as num_qty,
                     sum(l.quantity * (l.price_subtotal/(nullif(l.quantity,0)))) as total,
                     sum(l.quantity * pt.list_price) as sale_expected
@@ -103,9 +103,8 @@ class product_product(osv.osv):
             res[val.id]['total_cost'] = result[2] and result[2] or 0.0
             res[val.id]['normal_cost'] = prod.standard_price * res[val.id]['purchase_num_invoiced']
             res[val.id]['purchase_gap'] = res[val.id]['normal_cost'] - res[val.id]['total_cost']
-
-            if 'total_margin' in field_names:
-                res[val.id]['total_margin'] = res[val.id]['turnover'] - res[val.id]['total_cost']
+            res[val.id]['total_margin'] = res[val.id]['turnover'] - res[val.id]['total_cost']
+            
             if 'expected_margin' in field_names:
                 res[val.id]['expected_margin'] = res[val.id]['sale_expected'] - res[val.id]['normal_cost']
             if 'total_margin_rate' in field_names:

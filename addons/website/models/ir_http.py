@@ -5,6 +5,7 @@ import re
 import time
 import traceback
 
+import pytz
 import werkzeug
 import werkzeug.routing
 import werkzeug.utils
@@ -14,9 +15,11 @@ from openerp.addons.base import ir
 from openerp.addons.base.ir import ir_qweb
 from openerp.addons.website.models.website import slug, url_for, _UNSLUG_RE
 from openerp.http import request
-from openerp.tools import config
+from openerp.tools import config, ustr
 from openerp.osv import orm
 from openerp.tools.safe_eval import safe_eval as eval
+
+from ..geoipresolver import GeoIPResolver
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +43,7 @@ class ir_http(orm.AbstractModel):
     def _auth_method_public(self):
         if not request.session.uid:
             website = self.pool['website'].get_current_website(request.cr, openerp.SUPERUSER_ID, context=request.context)
-            if website:
+            if website and website.user_id:
                 request.uid = website.user_id.id
             else:
                 request.uid = self.pool['ir.model.data'].xmlid_to_res_id(request.cr, openerp.SUPERUSER_ID, 'base', 'public_user')
@@ -70,24 +73,17 @@ class ir_http(orm.AbstractModel):
 
     def _geoip_setup_resolver(self):
         if self._geoip_resolver is None:
+            geofile = config.get('geoip_database')
             try:
-                import GeoIP
-                # updated database can be downloaded on MaxMind website
-                # http://dev.maxmind.com/geoip/legacy/install/city/
-                geofile = config.get('geoip_database')
-                if os.path.exists(geofile):
-                    self._geoip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
-                else:
-                    self._geoip_resolver = False
-                    logger.warning('GeoIP database file %r does not exists, apt-get install geoip-database-contrib or download it from http://dev.maxmind.com/geoip/legacy/install/city/', geofile)
-            except ImportError:
-                self._geoip_resolver = False
+                self._geoip_resolver = GeoIPResolver.open(geofile) or False
+            except Exception as e:
+                logger.warning('Cannot load GeoIP: %s', ustr(e))
 
     def _geoip_resolve(self):
         if 'geoip' not in request.session:
             record = {}
             if self._geoip_resolver and request.httprequest.remote_addr:
-                record = self._geoip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
+                record = self._geoip_resolver.resolve(request.httprequest.remote_addr) or {}
             request.session['geoip'] = record
 
     def get_page_key(self):
@@ -132,13 +128,12 @@ class ir_http(orm.AbstractModel):
             langs = [lg[0] for lg in request.website.get_languages()]
             path = request.httprequest.path.split('/')
             if first_pass:
+                is_a_bot = self.is_a_bot()
                 nearest_lang = not func and self.get_nearest_lang(path[1])
                 url_lang = nearest_lang and path[1]
                 preferred_lang = ((cook_lang if cook_lang in langs else False)
-                                  or self.get_nearest_lang(request.lang)
+                                  or (not is_a_bot and self.get_nearest_lang(request.lang))
                                   or request.website.default_lang_code)
-
-                is_a_bot = self.is_a_bot()
 
                 request.lang = request.context['lang'] = nearest_lang or preferred_lang
                 # if lang in url but not the displayed or default language --> change or remove
@@ -161,10 +156,15 @@ class ir_http(orm.AbstractModel):
                     request.uid = None
                     path.pop(1)
                     return self.reroute('/'.join(path) or '/')
-            if path[1] == request.website.default_lang_code:
+            if request.lang == request.website.default_lang_code:
                 request.context['edit_translations'] = False
             if not request.context.get('tz'):
                 request.context['tz'] = request.session.get('geoip', {}).get('time_zone')
+                try:
+                    pytz.timezone(request.context['tz'] or '')
+                except pytz.UnknownTimeZoneError:
+                    request.context.pop('tz')
+
             # bind modified context
             request.website = request.website.with_context(request.context)
 
@@ -346,6 +346,8 @@ class PageConverter(werkzeug.routing.PathConverter):
         query = query and query.startswith('website.') and query[8:] or query
         if query:
             domain += [('key', 'like', query)]
+        website_id = request.context.get('website_id') or request.registry['website'].search(cr, uid, [], limit=1)[0]
+        domain += ['|', ('website_id', '=', website_id), ('website_id', '=', False)]
 
         views = View.search_read(cr, uid, domain, fields=['key', 'priority', 'write_date'], order='name', context=context)
         for view in views:
@@ -354,7 +356,7 @@ class PageConverter(werkzeug.routing.PathConverter):
             # when we will have an url mapping mechanism, replace this by a rule: page/homepage --> /
             if xid=='homepage': continue
             record = {'loc': xid}
-            if view['priority'] <> 16:
+            if view['priority'] != 16:
                 record['__priority'] = min(round(view['priority'] / 32.0,1), 1)
             if view['write_date']:
                 record['__lastmod'] = view['write_date'][:10]

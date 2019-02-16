@@ -50,7 +50,7 @@ def format_tz(pool, cr, uid, dt, tz=False, format=False, context=None):
         format_time = lang_params.get("time_format", '%I-%M %p')
 
         fdate = ts.strftime(format_date).decode('utf-8')
-        ftime = ts.strftime(format_time)
+        ftime = ts.strftime(format_time).decode('utf-8')
         return "%s %s%s" % (fdate, ftime, (' (%s)' % tz) if tz else '')
 
 try:
@@ -116,7 +116,7 @@ class MailTemplate(models.Model):
 
     name = fields.Char('Name')
     model_id = fields.Many2one('ir.model', 'Applies to', help="The kind of document with with this template can be used")
-    model = fields.Char('Related Document Model', related='model_id.model', select=True, store=True, readonly=True)
+    model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
     lang = fields.Char('Language',
                        help="Optional translation language (ISO code) to select when sending out an email. "
                             "If not set, the english version will be used. "
@@ -234,22 +234,22 @@ class MailTemplate(models.Model):
     def unlink_action(self):
         for template in self:
             if template.ref_ir_act_window:
-                template.ref_ir_act_window.sudo().unlink()
+                template.ref_ir_act_window.unlink()
             if template.ref_ir_value:
-                template.ref_ir_value.sudo().unlink()
+                template.ref_ir_value.unlink()
         return True
 
     @api.multi
     def create_action(self):
-        ActWindowSudo = self.env['ir.actions.act_window'].sudo()
-        IrValuesSudo = self.env['ir.values'].sudo()
+        ActWindow = self.env['ir.actions.act_window']
+        IrValues = self.env['ir.values']
         view = self.env.ref('mail.email_compose_message_wizard_form')
 
         for template in self:
             src_obj = template.model_id.model
 
             button_name = _('Send Mail (%s)') % template.name
-            action = ActWindowSudo.create({
+            action = ActWindow.create({
                 'name': button_name,
                 'type': 'ir.actions.act_window',
                 'res_model': 'mail.compose.message',
@@ -260,7 +260,7 @@ class MailTemplate(models.Model):
                 'view_id': view.id,
                 'target': 'new',
                 'auto_refresh': 1})
-            ir_value = IrValuesSudo.create({
+            ir_value = IrValues.create({
                 'name': button_name,
                 'model': src_obj,
                 'key2': 'client_action_multi',
@@ -493,7 +493,7 @@ class MailTemplate(models.Model):
                 )
 
             # Add report in attachments: generate once for all template_res_ids
-            if template.report_template and not 'report_template_in_attachment' in self.env.context:
+            if template.report_template:
                 for res_id in template_res_ids:
                     attachments = []
                     report_name = self.render_template(template.report_name, template.model, res_id)
@@ -549,6 +549,7 @@ class MailTemplate(models.Model):
                 'name': attachment[0],
                 'datas_fname': attachment[0],
                 'datas': attachment[1],
+                'type': 'binary',
                 'res_model': 'mail.message',
                 'res_id': mail.mail_message_id.id,
             }

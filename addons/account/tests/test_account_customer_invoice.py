@@ -65,6 +65,8 @@ class TestAccountCustomerInvoice(AccountTestUsers):
         tax = self.env['account.invoice.tax'].create(invoice_tax_line)
         assert tax, "Tax has not been assigned correctly"
 
+        total_before_confirm = self.partner3.total_invoiced
+
         # I check that Initially customer invoice is in the "Draft" state
         self.assertEquals(self.account_invoice_customer0.state, 'draft')
 
@@ -91,6 +93,9 @@ class TestAccountCustomerInvoice(AccountTestUsers):
 
         # I verify that invoice is now in Paid state
         assert (self.account_invoice_customer0.state == 'paid'), "Invoice is not in Paid state"
+
+        total_after_confirm = self.partner3.total_invoiced
+        self.assertEquals(total_after_confirm - total_before_confirm, self.account_invoice_customer0.amount_untaxed_signed)
 
         # I refund the invoice Using Refund Button
         invoice_refund_obj = self.env['account.invoice.refund']

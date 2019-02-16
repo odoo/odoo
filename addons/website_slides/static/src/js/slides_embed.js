@@ -50,12 +50,12 @@ $(document).ready(function () {
             },
             // page switching
             render_page: function (page_number) {
-                this.pdf_viewer.renderPage(page_number).then(this.on_rendered_page);
+                this.pdf_viewer.renderPage(page_number).then(this.on_rendered_page.bind(this));
             },
             change_page: function () {
                 var page_asked = parseInt(this.$('#page_number').val(), 10);
                 if(1 <= page_asked && page_asked <= this.pdf_viewer.pdf_page_total){
-                    this.pdf_viewer.changePage(page_asked).then(this.on_rendered_page);
+                    this.pdf_viewer.changePage(page_asked).then(this.on_rendered_page.bind(this));
                 }else{
                     // if page number out of range, reset the page_counter to the actual page
                     this.$('#page_number').val(this.pdf_viewer.pdf_page_current);

@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Fabian Liesch <fabian.liesch@gmail.com>, 2015
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Wolfgang Taferner, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-01-16 09:22+0000\n"
-"Last-Translator: Wolfgang Taferner\n"
+"PO-Revision-Date: 2016-05-27 07:31+0000\n"
+"Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,7 +88,7 @@ msgstr "Überprüfe den Saldo: Summe im Soll = Summe im Haben"
 #. module: account_test
 #: model:ir.actions.act_window,help:account_test.action_accounting_assert
 msgid "Click to create Accounting Test."
-msgstr ""
+msgstr "Klicken, um Plausibilität der Buchhaltung zu testen"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -117,7 +118,7 @@ msgid ""
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
-msgstr "Code sollte immer eine Variable namens 'Ergebnis' mit dem Ergebnis Ihres Tests erstellen. Das kann eine Liste oder\nein Wörterbuch sein. Wenn 'Ergebnis' eine leere Liste ist, war der Test erfolgreich. Ansonsten wird\nversucht zu übersetzen und zu drucken, was in 'Ergebnis' steht.\n\nWenn das Ergebnis Ihres Tests ein Wörterbuch ist, können Sie eine Variable namens 'Spalte_Bestellung' erstellen um auszuwählen\nin welcher Reihenfolge Sie die Inhalte von 'Ergebnis\" drucken wollen.\n\nWenn Sie sie benötigen, können Sie auch die folgenden Variablen in Ihrem Code verwenden:\n    *cr: cursor to the database\n    *uid: ID of the current user\n\nIn jeder Hinsicht muss der Code gültige Python-Anweisungen mit der richtigen Vertiefung haben (wenn nötig).\n\nBeispiel: \n    sql='''SELECT id, name, ref, date\n             FROM account_move_line \n             WHERE account_id IN (SELECT id FROM account_account WHERE type='view')\n          '''\n    cr.execute(sql)\n    result=cr.dictfetchall()"
+msgstr "Code sollte immer eine Variable namens 'result' mit dem Ergebnis Ihres Tests erstellen. Das kann eine Liste oder\nein Wörterbuch sein. Wenn 'result' eine leere Liste ist, war der Test erfolgreich. Ansonsten wird\nversucht zu übersetzen und zu drucken, was in 'result' steht.\n\nWenn das Ergebnis Ihres Tests ein Wörterbuch ist, können Sie eine Variable namens 'column_order' erstellen, um auszuwählen\nin welcher Reihenfolge Sie die Inhalte von 'result' drucken wollen.\n\nWenn Sie sie benötigen, können Sie auch die folgenden Variablen in Ihrem Code verwenden:\n    *cr: cursor to the database\n    *uid: ID of the current user\n\nIn jeder Hinsicht muss der Code gültige Python-Anweisungen mit der richtigen Vertiefung haben (wenn nötig).\n\nBeispiel: \n    sql='''SELECT id, name, ref, date\n             FROM account_move_line \n             WHERE account_id IN (SELECT id FROM account_account WHERE type='view')\n          '''\n    cr.execute(sql)\n    result=cr.dictfetchall()"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid
@@ -211,7 +212,7 @@ msgstr "Test 6 : Rechnungsstatus"
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 7 : Closing balance on bank statements"
-msgstr ""
+msgstr "Test 7: Abschlußsaldo im Bankkontoauszug"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_desc
@@ -238,9 +239,9 @@ msgstr "Die Prüfung war erfolgreich"
 #. module: account_test
 #: model:ir.model,name:account_test.model_accounting_assert_test
 msgid "accounting.assert.test"
-msgstr ""
+msgstr "accounting.assert.test"
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_report_account_test_report_accounttest
 msgid "report.account_test.report_accounttest"
-msgstr ""
+msgstr "report.account_test.report_accounttest"

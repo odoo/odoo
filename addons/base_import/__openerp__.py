@@ -21,7 +21,7 @@ Re-implement openerp's file import system:
 * In a module, so that administrators and users of OpenERP who do not
   need or want an online import can avoid it being available to users.
 """,
-    'category': 'Uncategorized',
+    'category': 'Extra Tools',
     'depends': ['web'],
     'installable': True,
     'auto_install': True,

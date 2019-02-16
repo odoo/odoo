@@ -54,6 +54,9 @@ class SaleOrderEventRegistration(models.TransientModel):
                     wiz_registration.registration_id.write(wiz_registration.get_registration_data()[0])
                 else:
                     Registration.create(wiz_registration.get_registration_data()[0])
+        if self.env.context.get('active_model') == 'sale.order':
+            for order in self.env['sale.order'].browse(self.env.context.get('active_ids', [])):
+                order.order_line._update_registrations(confirm=True)
         return {'type': 'ir.actions.act_window_close'}
 
 
@@ -68,7 +71,7 @@ class RegistrationEditorLine(models.TransientModel):
     event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket')
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
-    name = fields.Char(string='Name', select=True)
+    name = fields.Char(string='Name', index=True)
 
     @api.one
     def get_registration_data(self):

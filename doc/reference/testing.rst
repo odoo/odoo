@@ -48,6 +48,11 @@ related to testing Odoo content (modules, mainly):
 .. autoclass:: openerp.tests.common.SingleTransactionCase
     :members: browse_ref, ref
 
+.. autoclass:: openerp.tests.common.SavepointCase
+
+.. autoclass:: openerp.tests.common.HttpCase
+    :members: browse_ref, ref, url_open, phantom_js
+
 By default, tests are run once right after the corresponding module has been
 installed. Test cases can also be configured to run after all modules have
 been installed, and not run right after the module installation:
@@ -69,6 +74,10 @@ in each method::
                 expected_field_value)
 
         # other tests...
+
+.. note::
+
+    Test methods must start with ``test_``
 
 Running tests
 -------------

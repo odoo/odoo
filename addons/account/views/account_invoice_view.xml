@@ -61,7 +61,7 @@
                     <group>
                         <group>
                             <field name="product_id"
-                                 context="{'partner_id': parent.partner_id}"/>
+                                 context="parent and {'partner_id': parent.partner_id}"/>
                             <label for="quantity"/>
                             <div>
                                 <field name="quantity" class="oe_inline"/>
@@ -93,6 +93,7 @@
                     <field name="manual"/>
                     <field name="name"/>
                     <field name="account_id" groups="base.group_account_user"/>
+                    <field name="base"/>
                     <field name="amount"/>
                     <field name="currency_id" invisible="1"/>
                 </tree>
@@ -111,6 +112,7 @@
                         <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id), ('account_type', '=', 'normal')]" groups="analytic.group_analytic_accounting"/>
                         <field name="manual"/>
                         <field name="amount"/>
+                        <field name="base"/>
                         <field name="currency_id" invisible="1"/>
                     </group>
                 </form>
@@ -133,8 +135,8 @@
                     <field name="user_id"/>
                     <field name="date_due"/>
                     <field name="origin"/>
-                    <field name="amount_total_signed"/>
-                    <field name="residual_signed"/>
+                    <field name="amount_total_signed" sum="Total" />
+                    <field name="residual_signed" sum="Amount due"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="state"/>
@@ -195,8 +197,8 @@
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     <field name="date_due"/>
                     <field name="origin"/>
-                    <field name="amount_total_signed"/>
-                    <field name="residual_signed" string="To Pay"/>
+                    <field name="amount_total_signed" sum="Total"/>
+                    <field name="residual_signed" string="To Pay" sum="To pay"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="state"/>
@@ -281,7 +283,6 @@
                                                 <field name="name"/>
                                                 <!--Need invisible fields for on_change to create all necessary info -->
                                                 <field name="tax_id" invisible="1"/>
-                                                <field name="account_analytic_id" invisible="1"/>
                                                 <field name="sequence" invisible="1"/>
                                                 <field name="manual" invisible="1"/>
                                                 <field name="account_id" groups="account.group_account_invoice"/>
@@ -505,11 +506,11 @@
                     <field name="journal_id" />
                     <filter name="draft" string="Draft" domain="[('state','in',('draft', 'proforma'))]"/>
                     <filter name="proforma" string="Proforma" domain="[('state','=','proforma2')]" groups="account.group_proforma_invoices"/>
-                    <filter name="invoices" string="Invoices" domain="[('state','in',['open','paid']),('type','in',('out_invoice','in_invoice'))]"/>
-                    <filter name="refunds" string="Refunds" domain="[('state','in',['open','paid']),('type','in',('out_refund','in_refund'))]"/>
+                    <filter name="invoices" string="Invoices" domain="['&amp;', ('state','in',['open','paid']),('type','in',('out_invoice','in_invoice'))]"/>
+                    <filter name="refunds" string="Refunds" domain="['&amp;', ('state','in',['open','paid']),('type','in',('out_refund','in_refund'))]"/>
                     <separator/>
                     <filter name="unpaid" string="Not Paid" domain="[('state','=','open')]"/>
-                    <filter name="late" string="Overdue" domain="[('date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'open')]" help="Overdue invoices, maturity date passed"/>
+                    <filter name="late" string="Overdue" domain="['&amp;', ('date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'open')]" help="Overdue invoices, maturity date passed"/>
                     <separator/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="user_id" string="Salesperson"/>

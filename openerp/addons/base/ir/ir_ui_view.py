@@ -15,6 +15,7 @@ import json
 import werkzeug
 import HTMLParser
 from lxml import etree
+from lxml.etree import LxmlError
 
 import openerp
 from openerp import tools, api
@@ -49,7 +50,7 @@ def keep_query(*keep_params, **additional_params):
     if not keep_params and not additional_params:
         keep_params = ('*',)
     params = additional_params.copy()
-    qs_keys = request.httprequest.args.keys()
+    qs_keys = request.httprequest.args.keys() if request else []
     for keep_param in keep_params:
         for param in fnmatch.filter(qs_keys, keep_param):
             if param not in additional_params and param in qs_keys:
@@ -78,10 +79,11 @@ class view_custom(osv.osv):
 
 
     def _auto_init(self, cr, context=None):
-        super(view_custom, self)._auto_init(cr, context)
+        res = super(view_custom, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_custom_user_id_ref_id\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_ui_view_custom_user_id_ref_id ON ir_ui_view_custom (user_id, ref_id)')
+        return res
 
 def _hasclass(context, *cls):
     """ Checks if the context node has all the classes passed as arguments
@@ -131,6 +133,7 @@ TRANSLATED_ATTRS_RE = re.compile(r"@(%s)\b" % "|".join(TRANSLATED_ATTRS))
 
 class view(osv.osv):
     _name = 'ir.ui.view'
+    _parent_name = 'inherit_id'     # used for recursion check
 
     def _get_model_data(self, cr, uid, ids, fname, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -281,6 +284,10 @@ class view(osv.osv):
         return True
 
     def _check_xml(self, cr, uid, ids, context=None):
+        # As all constraints are verified on create/write, we must re-check that there is no
+        # recursion before calling `read_combined` to avoid an infinite loop.
+        if not self._check_recursion(cr, uid, ids, context=context):
+            return True     # pretend arch is valid to avoid misleading user about the error.
         if context is None:
             context = {}
         context = dict(context, check_view_ids=ids)
@@ -320,13 +327,15 @@ class view(osv.osv):
     ]
     _constraints = [
         (_check_xml, 'Invalid view definition', ['arch', 'arch_base']),
+        (osv.osv._check_recursion, 'You cannot create recursive inherited views.', ['inherit_id']),
     ]
 
     def _auto_init(self, cr, context=None):
-        super(view, self)._auto_init(cr, context)
+        res = super(view, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_model_type_inherit_id\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, inherit_id)')
+        return res
 
     def _compute_defaults(self, cr, uid, values, context=None):
         if 'inherit_id' in values:
@@ -339,7 +348,13 @@ class view(osv.osv):
             if values.get('inherit_id'):
                 values['type'] = self.browse(cr, uid, values['inherit_id'], context).type
             else:
-                values['type'] = etree.fromstring(values['arch']).tag
+
+                try:
+                    values['type'] = etree.fromstring(values.get('arch') or values.get('arch_base')).tag
+                except LxmlError:
+                    # don't raise here, the constraint that runs `self._check_xml` will
+                    # do the job properly.
+                    pass
 
         if not values.get('name'):
             values['name'] = "%s %s" % (values.get('model'), values['type'])
@@ -358,7 +373,7 @@ class view(osv.osv):
 
         # If view is modified we remove the arch_fs information thus activating the arch_db
         # version. An `init` of the view will restore the arch_fs for the --dev mode
-        if 'arch' in vals and 'install_mode_data' not in context:
+        if ('arch' in vals or 'arch_base' in vals) and 'install_mode_data' not in context:
             vals['arch_fs'] = False
 
         # drop the corresponding view customizations (used for dashboards for example), otherwise
@@ -1154,7 +1169,7 @@ class view(osv.osv):
         cr.execute("""SELECT max(v.id)
                         FROM ir_ui_view v
                    LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
-                       WHERE md.module IS NULL
+                       WHERE md.module IN (SELECT name FROM ir_module_module) IS NOT TRUE
                          AND v.model = %s
                          AND v.active = true
                     GROUP BY coalesce(v.inherit_id, v.id)

@@ -1,6 +1,7 @@
 #-*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import babel
 import time
 from datetime import date
 from datetime import datetime
@@ -455,7 +456,9 @@ class hr_payslip(osv.osv):
         def _sum_salary_rule_category(localdict, category, amount):
             if category.parent_id:
                 localdict = _sum_salary_rule_category(localdict, category.parent_id, amount)
-            localdict['categories'].dict[category.code] = category.code in localdict['categories'].dict and localdict['categories'].dict[category.code] + amount or amount
+            if category.code in localdict['categories'].dict:
+                amount += localdict['categories'].dict[category.code]
+            localdict['categories'].dict[category.code] = amount
             return localdict
 
         class BrowsableObject(object):
@@ -609,21 +612,23 @@ class hr_payslip(osv.osv):
         if context is None:
             context = {}
         #delete old worked days lines
+        worked_days_ids_to_remove=[]
         old_worked_days_ids = ids and worked_days_obj.search(cr, uid, [('payslip_id', '=', ids[0])], context=context) or False
         if old_worked_days_ids:
-            worked_days_obj.unlink(cr, uid, old_worked_days_ids, context=context)
+            worked_days_ids_to_remove = map(lambda x: (2, x,),old_worked_days_ids)
 
         #delete old input lines
+        input_line_ids_to_remove=[]
         old_input_ids = ids and input_obj.search(cr, uid, [('payslip_id', '=', ids[0])], context=context) or False
         if old_input_ids:
-            input_obj.unlink(cr, uid, old_input_ids, context=context)
+            input_line_ids_to_remove = map(lambda x: (2,x,), old_input_ids)
 
 
         #defaults
         res = {'value':{
                       'line_ids':[],
-                      'input_line_ids': [],
-                      'worked_days_line_ids': [],
+                      'input_line_ids': input_line_ids_to_remove,
+                      'worked_days_line_ids': worked_days_ids_to_remove,
                       #'details_by_salary_head':[], TODO put me back
                       'name':'',
                       'contract_id': False,
@@ -635,7 +640,7 @@ class hr_payslip(osv.osv):
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
         employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
         res['value'].update({
-                    'name': _('Salary Slip of %s for %s') % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
+                    'name': _('Salary Slip of %s for %s') % (employee_id.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=context.get('lang', 'en_US')))),
                     'company_id': employee_id.company_id.id
         })
 
@@ -694,7 +699,7 @@ class hr_payslip(osv.osv):
         date_to = self.date_to
 
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
-        self.name = _('Salary Slip of %s for %s') % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y')))
+        self.name = _('Salary Slip of %s for %s') % (employee_id.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=self.env.context.get('lang', 'en_US'))))
         self.company_id = employee_id.company_id
 
         if not self.env.context.get('contract') or not self.contract_id:
@@ -952,6 +957,15 @@ class hr_payslip_line(osv.osv):
         'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Payroll')),
         'total': fields.function(_calculate_total, method=True, type='float', string='Total', digits_compute=dp.get_precision('Payroll'),store=True ),
     }
+
+    def create(self, cr, uid, values, context=None):
+        if 'employee_id' not in values or 'contract_id' not in values:
+            payslip = self.pool['hr.payslip'].browse(cr, uid, values.get('slip_id') or [])
+            values['employee_id'] = values.get('employee_id') or payslip.employee_id.id
+            values['contract_id'] = values.get('contract_id') or payslip.contract_id and payslip.contract_id.id
+            if not values['contract_id']:
+                raise UserError(_('You must set a contract to create a payslip line.'))
+        return super(hr_payslip_line, self).create(cr, uid, values, context=context)
 
     _defaults = {
         'quantity': 1.0,

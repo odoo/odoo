@@ -5,12 +5,13 @@
 # Translators:
 # Bohdan Lisnenko, 2015-2016
 # Bohdan Lisnenko, 2016
+# ТАрас <tratatuta@i.ua>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:25+0000\n"
-"PO-Revision-Date: 2016-04-23 11:44+0000\n"
+"PO-Revision-Date: 2017-12-04 19:42+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -106,7 +107,7 @@ msgstr "Клієнт"
 #: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_display_name
 #: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_display_name
 msgid "Display Name"
-msgstr "Показати ім'я"
+msgstr "Назва для відображення"
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -169,7 +170,7 @@ msgstr "Імпорт / експорт"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Inter company"
-msgstr ""
+msgstr "Концерн"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
@@ -195,12 +196,12 @@ msgstr "Останнє оновлення"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_inter_company_rules
 msgid "Manage Inter Company"
-msgstr ""
+msgstr "Управляти концерном"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_light_multi_company
 msgid "Manage multiple companies"
-msgstr ""
+msgstr "Управляти багатьма компаніями"
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -217,7 +218,7 @@ msgstr "Головна компанія"
 msgid ""
 "Once installed, you can configure your API credentials for \"Google "
 "calendar\""
-msgstr ""
+msgstr "Після установки, Ви зможете змінювати свої облікові дані API для \"Google календаря\""
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -242,7 +243,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_share_partner
 msgid "Share partners to all companies"
-msgstr ""
+msgstr "Поділитися партнерами з усіма компаніями"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_company_share_partner
@@ -250,12 +251,12 @@ msgid ""
 "Share your partners to all companies defined in your instance.\n"
 " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
-msgstr ""
+msgstr "Поділіться своїми партнерами з усіма компаніями, визначеними у вашому випадку.\n  * Перевірено: партнерів видно кожній компанії, навіть якщо компанія визначена у партнера.\n  * Не перевірено: Кожна компанія може бачити лише свого партнера (партнера, де компанія визначена). Партнери, не пов'язані з компанією, видні для всіх компаній."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Shared resources"
-msgstr ""
+msgstr "Спільні ресурси"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
@@ -265,24 +266,24 @@ msgstr ""
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
 msgid "Tenant"
-msgstr ""
+msgstr "Орендар"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
 msgid "This installs the module google_calendar."
-msgstr ""
+msgstr "Встановлює модуль Google_календар."
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_drive
 msgid "This installs the module google_docs."
-msgstr ""
+msgstr "Встановлює модуль Google_документи."
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_inter_company_rules
 msgid ""
 "This installs the module inter_company_rules.\n"
 " Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
-msgstr ""
+msgstr "Це встановлює модуль inter_company_rules.\nНалаштуйте правила компанії, щоб автоматично створювати SO/PO, коли одна з вашої компанії продає/купує іншій вашій компанії."
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
@@ -302,28 +303,28 @@ msgid ""
 "                                    able to signup to get all his documents,\n"
 "                                    read your company news, check his projects,\n"
 "                                    etc."
-msgstr ""
+msgstr "Коли Ви надсилаєте замовнику документ \n(витяг, накладну), Ваш замовник зможе підписатися для отримання всіх своїх документів, читати новини Вашої компанії, перевіряти виконання своїх проектів та ін.."
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_group_light_multi_company
 msgid ""
 "Work in multi-company environments, with appropriate security access between"
 " companies."
-msgstr ""
+msgstr "Працюйте у великому корпоративному середовищі з відповідним безпечним доступом між компаніями."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
 msgid ""
 "You can use this wizard to change the terminologies for customers in the "
 "whole application."
-msgstr ""
+msgstr "Ви можете використовувати цю програму для зміни термінології для замовників в усьому додатку."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "You will find more options in your company details: address for the header "
 "and footer, overdue payments texts, etc."
-msgstr ""
+msgstr "Ви знайдете більше налаштувань у деталях вашої компанії: адреса, налаштування шапки та підвалу для друку, текст нагадування про оплату і т. д."
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_config_settings
@@ -338,4 +339,4 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"

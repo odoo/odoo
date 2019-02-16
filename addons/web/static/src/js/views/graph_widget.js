@@ -18,7 +18,7 @@ return Widget.extend({
         this._super(parent);
         this.context = options.context;
         this.fields = options.fields;
-        this.fields.__count__ = {string: _t("Quantity"), type: "integer"};
+        this.fields.__count__ = {string: _t("Count"), type: "integer"};
         this.model = new Model(model, {group_by_no_leaf: true});
 
         this.domain = options.domain || [];
@@ -66,7 +66,8 @@ return Widget.extend({
             values = [];
             if (this.groupbys.length === 1) data_pt.value = [data_pt.value];
             for (j = 0; j < data_pt.value.length; j++) {
-                values[j] = this.sanitize_value(data_pt.value[j], data_pt.grouped_on[j]);
+                var field = _.isArray(data_pt.grouped_on) ? data_pt.grouped_on[j] : data_pt.grouped_on;
+                values[j] = this.sanitize_value(data_pt.value[j], field);
             }
             value = is_count ? data_pt.length : data_pt.aggregates[this.measure];
             this.data.push({
@@ -97,7 +98,10 @@ return Widget.extend({
                     "there is no active filter in the search bar."),
             }));
         } else {
-            this['display_' + this.mode]();
+            var chart = this['display_' + this.mode]();
+            if (chart && chart.tooltip.chartContainer) {
+                chart.tooltip.chartContainer(this.$el[0]);
+            }
         }
     },
     display_bar: function () {
@@ -162,7 +166,9 @@ return Widget.extend({
         svg.transition().duration(0);
 
         var chart = nv.models.multiBarChart();
+        var maxVal = _.max(values, function(v) {return v.y})
         chart.options({
+          margin: {left: 12 * String(maxVal && maxVal.y || 10000000).length, bottom: 60},
           delay: 250,
           transition: 10,
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
@@ -171,7 +177,7 @@ return Widget.extend({
           rightAlignYAxis: false,
           stacked: this.stacked,
           reduceXTicks: false,
-          // rotateLabels: 40,
+          rotateLabels: -20,
           showControls: (this.groupbys.length > 1)
         });
         chart.yAxis.tickFormat(function(d) { return formats.format_value(d, { type : 'float' });});
@@ -179,6 +185,8 @@ return Widget.extend({
         chart(svg);
         this.to_remove = chart.update;
         nv.utils.onWindowResize(chart.update);
+
+        return chart;
     },
     display_pie: function () {
         var data = [],
@@ -229,6 +237,8 @@ return Widget.extend({
         chart(svg);
         this.to_remove = chart.update;
         nv.utils.onWindowResize(chart.update);
+
+        return chart;
     },
     display_line: function () {
         if (this.data.length < 2) {
@@ -292,8 +302,9 @@ return Widget.extend({
         svg.transition().duration(0);
 
         var chart = nv.models.lineChart();
+        var maxVal = _.max(values, function(v) {return v.y})
         chart.options({
-          margin: {left: 50, right: 50},
+          margin: {left: 12 * String(maxVal && maxVal.y || 10000000).length, right: 50},
           useInteractiveGuideline: true,
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
@@ -301,10 +312,13 @@ return Widget.extend({
         });
         chart.xAxis.tickValues(tickValues)
             .tickFormat(tickFormat);
+        chart.yAxis.tickFormat(function(d) { return openerp.web.format_value(d, { type : 'float' });});
 
         chart(svg);
         this.to_remove = chart.update;
-        nv.utils.onWindowResize(chart.update);  
+        nv.utils.onWindowResize(chart.update);
+
+        return chart;
     },
     destroy: function () {
         nv.utils.offWindowResize(this.to_remove);

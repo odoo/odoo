@@ -1,7 +1,5 @@
 #-*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import time
-from datetime import date, datetime, timedelta
 
 from openerp import api
 from openerp.osv import fields, osv
@@ -94,13 +92,12 @@ class hr_payslip(osv.osv):
         move_pool = self.pool.get('account.move')
         hr_payslip_line_pool = self.pool['hr.payslip.line']
         precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Payroll')
-        timenow = time.strftime('%Y-%m-%d')
 
         for slip in self.browse(cr, uid, ids, context=context):
             line_ids = []
             debit_sum = 0.0
             credit_sum = 0.0
-            date = timenow
+            date = slip.date or slip.date_to
 
             name = _('Payslip of %s') % (slip.employee_id.name)
             move = {
@@ -152,7 +149,6 @@ class hr_payslip(osv.osv):
                     raise UserError(_('The Expense Journal "%s" has not properly configured the Credit Account!') % (slip.journal_id.name))
                 adjust_credit = (0, 0, {
                     'name': _('Adjustment Entry'),
-                    'date': timenow,
                     'partner_id': False,
                     'account_id': acc_id,
                     'journal_id': slip.journal_id.id,

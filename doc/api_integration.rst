@@ -705,7 +705,7 @@ Search and read
 ---------------
 
 Because it is a very common task, Odoo provides a
-:meth:`~openerp.models.Model.search_read` shortcut which as its name notes is
+:meth:`~openerp.models.Model.search_read` shortcut which as its name suggests is
 equivalent to a :meth:`~openerp.models.Model.search` followed by a
 :meth:`~openerp.models.Model.read`, but avoids having to perform two requests
 and keep ids around.

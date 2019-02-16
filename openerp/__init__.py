@@ -6,11 +6,17 @@
 #----------------------------------------------------------
 # Running mode flags (gevent, prefork)
 #----------------------------------------------------------
-# Is the server running with gevent.
-import sys
-evented = False
-if sys.modules.get("gevent") is not None:
-    evented = True
+def is_server_running_with_gevent():
+    import sys
+    if sys.modules.get("gevent") is not None:
+        import socket
+        import gevent.socket
+        if socket.socket is gevent.socket.socket:
+            # gevent is loaded and activated
+            return True
+    return False
+
+evented = is_server_running_with_gevent()
 
 # Is the server running in pefork mode (e.g. behind Gunicorn).
 # If this is True, the processes have to communicate some events,

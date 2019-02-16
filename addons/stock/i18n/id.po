@@ -3,13 +3,15 @@
 # * stock
 # 
 # Translators:
+# firman firman <firman.olxbpn@gmail.com>, 2016
 # Martin Trigaux, 2015-2016
+# Rizky Fajar Ryanda <rizky.rikuverse@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-02-22 13:18+0000\n"
+"PO-Revision-Date: 2017-11-21 00:23+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/id/)\n"
 "MIME-Version: 1.0\n"
@@ -55,16 +57,6 @@ msgstr "(%s dicadangkan)"
 #, python-format
 msgid " (reserved)"
 msgstr "Disimpan"
-
-#. module: stock
-#: code:addons/stock/stock.py:3182
-#, python-format
-msgid ""
-"You cannot have two inventory adjustements in state 'in Progess' with the "
-"same product(%s), same location(%s), same package, same owner and same lot. "
-"Please first validate the first inventory adjustement with this product "
-"before creating another one."
-msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:3482
@@ -3885,6 +3877,12 @@ msgid "Original Move"
 msgstr "Asli bergerak"
 
 #. module: stock
+#: code:addons/stock/stock.py:576
+#, python-format
+msgid "Otherwise make sure the right stock/owner is set."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_out_type_id
 msgid "Out Type"
 msgstr "Keluar tipe"
@@ -5497,7 +5495,7 @@ msgstr "Stockable"
 #: code:addons/stock/product.py:400
 #, python-format
 msgid "Stockable Product"
-msgstr ""
+msgstr "Produk stockable"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_supplied_wh_id
@@ -6116,7 +6114,7 @@ msgstr "red cross permindahan darah"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_picking_partner_id
 msgid "Transfer Destination Address"
-msgstr ""
+msgstr "Alamat tujuan transfer"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_picking_id
@@ -6830,6 +6828,14 @@ msgstr "Anda hanya harus menerima dengan potongan dengan nomor seri yang sama"
 #, python-format
 msgid "You should provide a different serial number for each piece"
 msgstr "Anda harus memberikan nomor seri yang berbeda untuk setiap bagian"
+
+#. module: stock
+#: code:addons/stock/product.py:349
+#, python-format
+msgid ""
+"You still have some active reordering rules on this product. Please archive "
+"or delete them first."
+msgstr "Anda masih memiliki aturan order ulang yang aktif untuk produk ini. Silahkan arsipkan atau hapus aturan tersebut lebih dahulu."
 
 #. module: stock
 #: constraint:stock.move:0

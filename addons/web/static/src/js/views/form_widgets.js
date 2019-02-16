@@ -455,10 +455,16 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
 
         if (this.get('value')) {
             var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
-            var domain = pyeval.eval('domain', this.get('value'));
+            try{
+                var domain = pyeval.eval('domain', this.get('value'));
+            }
+            catch(e){
+                this.do_warn(_t('Error: Bad domain'), _t('The domain is wrong.'));
+                return;
+            }
             var ds = new data.DataSetStatic(self, model, self.build_context());
-            ds.call('search_count', [domain]).then(function (results) {
-                self.$('.o_count').text(results + _t(' selected records'));
+            ds.call('search_count', [domain, ds.get_context()]).then(function (results) {
+                self.$('.o_count').text(results + ' ' + _t(' selected records'));
                 if (self.get('effective_readonly')) {
                     self.$('button').text(_t('See selection '));
                 }
@@ -472,6 +478,7 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
                 this.$('.o_debug_input').val(this.get('value'));
             }
         } else {
+            this.$('.o_form_input').val('');
             this.$('.o_count').text(_t('No selected record'));
             var $arrow = this.$('button span').detach();
             this.$('button').text(_('Select records ')).append($("<span/>").addClass('fa fa-arrow-right'));
@@ -494,6 +501,8 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
                 }
             }
         }).open();
+        this.trigger("dialog_opened", dialog);
+        return dialog;
     },
 });
 
@@ -1061,7 +1070,7 @@ var FieldRadio = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     render_value: function () {
         var self = this;
         this.$el.toggleClass("oe_readonly", this.get('effective_readonly'));
-        this.$("input").filter(function () {return this.value == self.get_value();}).prop("checked", true);
+        this.$("input").prop("checked", false).filter(function () {return this.value == self.get_value();}).prop("checked", true);
         this.$(".oe_radio_readonly").text(this.get('value') ? this.get('value')[1] : "");
     }
 });
@@ -1106,6 +1115,7 @@ var FieldReference = common.AbstractField.extend(common.ReinitializeFieldMixin, 
         this.m2o = new FieldMany2One(fm, { attrs: {
             name: 'Referenced Document',
             modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
+            context: this.build_context().eval(),
         }});
         this.m2o.on("change:value", this, this.data_changed);
         this.m2o.appendTo(this.$(".oe_form_view_reference_m2o"));
@@ -1144,6 +1154,9 @@ var FieldReference = common.AbstractField.extend(common.ReinitializeFieldMixin, 
         this.m2o.set_value(this.get('value')[1]);
         this.m2o.do_toggle(!!this.get('value')[0]);
         this.reference_ready = true;
+    },
+    is_false: function() {
+        return this.get('value')[0] == false || this.get('value')[1] == false;
     },
 });
 
@@ -1516,13 +1529,17 @@ var FieldStatus = common.AbstractField.extend({
             return fields;
         });
     },
-    on_click_stage: function (ev) {
+    on_click_stage: _.debounce(function (ev) {
         var self = this;
         var $li = $(ev.currentTarget);
+        var ul = $li.closest('.oe_form_field_status');
         if (this.view.is_disabled) {
             return;
         }
         var val;
+        if (ul.attr('disabled')) {
+            return;
+        }
         if (this.field.type == "many2one") {
             val = parseInt($li.data("id"), 10);
         }
@@ -1539,13 +1556,16 @@ var FieldStatus = common.AbstractField.extend({
                 this.view.recursive_save().done(function() {
                     var change = {};
                     change[self.name] = val;
+                    ul.attr('disabled', true);
                     self.view.dataset.write(self.view.datarecord.id, change).done(function() {
                         self.view.reload();
+                    }).always(function() {
+                        ul.removeAttr('disabled');
                     });
                 });
             }
         }
-    },
+    }, 300, true),
 });
 
 var FieldMonetary = FieldFloat.extend({

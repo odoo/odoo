@@ -157,7 +157,7 @@ class website(osv.osv):
         'domain': fields.char('Website Domain'),
         'company_id': fields.many2one('res.company', string="Company"),
         'language_ids': fields.many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages'),
-        'default_lang_id': fields.many2one('res.lang', string="Default language"),
+        'default_lang_id': fields.many2one('res.lang', string="Default language", required=True),
         'default_lang_code': fields.related('default_lang_id', 'code', type="char", string="Default language code", store=True),
         'social_twitter': fields.char('Twitter Account'),
         'social_facebook': fields.char('Facebook Account'),
@@ -166,7 +166,7 @@ class website(osv.osv):
         'social_youtube': fields.char('Youtube Account'),
         'social_googleplus': fields.char('Google+ Account'),
         'google_analytics_key': fields.char('Google Analytics Key'),
-        'user_id': fields.many2one('res.users', string='Public User'),
+        'user_id': fields.many2one('res.users', string='Public User', required=True),
         'compress_html': fields.boolean('Compress HTML'),
         'cdn_activated': fields.boolean('Activate CDN for assets'),
         'cdn_url': fields.char('CDN Base URL'),
@@ -511,6 +511,7 @@ class website(osv.osv):
                   of the same.
         :rtype: list({name: str, url: str})
         """
+        request.context = dict(request.context, **context)
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
         url_set = set()
@@ -553,12 +554,12 @@ class website(osv.osv):
 
     def search_pages(self, cr, uid, ids, needle=None, limit=None, context=None):
         name = re.sub(r"^/p(a(g(e(/(w(e(b(s(i(t(e(\.)?)?)?)?)?)?)?)?)?)?)?)?", "", needle or "")
+        name = slugify(name, max_length=50)
         res = []
         for page in self.enumerate_pages(cr, uid, ids, query_string=name, context=context):
-            if needle in page['loc']:
-                res.append(page)
-                if len(res) == limit:
-                    break
+            res.append(page)
+            if len(res) == limit:
+                break
         return res
 
     def image_url(self, cr, uid, record, field, size=None, context=None):
@@ -645,6 +646,9 @@ class ir_attachment(osv.osv):
         'website_url': fields.related("local_url", string="Attachment URL", type='char', deprecated=True), # related for backward compatibility with saas-6
     }
 
+    def get_serving_groups(self):
+        return super(ir_attachment, self).get_serving_groups() + ['base.group_website_designer']
+
 class res_partner(osv.osv):
     _inherit = "res.partner"
 
@@ -656,6 +660,9 @@ class res_partner(osv.osv):
             'zoom': zoom,
             'sensor': 'false',
         }
+        google_maps_api_key = self.pool['ir.config_parameter'].get_param(cr, openerp.SUPERUSER_ID, 'google_maps_api_key', context=context)
+        if google_maps_api_key:
+            params['key'] = google_maps_api_key
         return urlplus('//maps.googleapis.com/maps/api/staticmap' , params)
 
     def google_map_link(self, cr, uid, ids, zoom=10, context=None):

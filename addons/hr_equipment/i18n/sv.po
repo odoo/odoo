@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:27+0000\n"
-"PO-Revision-Date: 2016-01-07 04:25+0000\n"
+"POT-Creation-Date: 2016-09-22 13:18+0000\n"
+"PO-Revision-Date: 2017-08-21 08:34+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -110,7 +110,7 @@ msgstr "Tillgång"
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5383
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_6493
 msgid "Asset Category"
 msgstr "Tillgångskategori"
 
@@ -144,7 +144,7 @@ msgstr "Tilldelad"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_department_id
 msgid "Assigned to Department"
-msgstr ""
+msgstr "Tilldelad till Avdelning"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
@@ -154,7 +154,7 @@ msgstr ""
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_employee_id
 msgid "Assigned to Employee"
-msgstr ""
+msgstr "Tilldelad till Anställd"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
@@ -242,7 +242,7 @@ msgstr "Kommentarer"
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_computer
 msgid "Computers"
-msgstr ""
+msgstr "Datorer"
 
 #. module: hr_equipment
 #: model:ir.ui.menu,name:hr_equipment.menu_equipment_configuration
@@ -391,7 +391,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_form
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_form
 msgid "Equipments"
-msgstr ""
+msgstr "Utrustning"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_fold
@@ -429,7 +429,7 @@ msgstr "Följare (Kanaler)"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_partner_ids
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Följare (Partners)"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
@@ -482,14 +482,7 @@ msgstr "Om ikryssad nya meddelanden som kräver din uppmärksamhet"
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
-msgid "Important Messages"
-msgstr ""
+msgstr "Om den är markerad så finns det meddelanden som kräver din uppmärksamhet."
 
 #. module: hr_equipment
 #: selection:hr.equipment.request,kanban_state:0
@@ -507,7 +500,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_is_follower
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Är följare"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_kanban_state
@@ -624,13 +617,6 @@ msgid "Messages"
 msgstr "Meddelanden"
 
 #. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_ids
-msgid "Messages and communication history"
-msgstr "Meddelande- och kommunikationshistorik"
-
-#. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_model
 msgid "Model"
 msgstr "Modell"
@@ -648,7 +634,7 @@ msgstr ""
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 msgid "My Requests"
-msgstr ""
+msgstr "Mina förfrågningar"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_name
@@ -677,21 +663,21 @@ msgstr "Anteckning"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_needaction_counter
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Antalet åtgärder"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_needaction_counter
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_needaction_counter
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Antal meddelanden som kräver en åtgärd"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_unread_counter
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_unread_counter
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Antalet olästa meddelanden"
 
 #. module: hr_equipment
 #: model:ir.actions.client,name:hr_equipment.action_client_hr_equipment_menu
@@ -740,7 +726,7 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
+"- followers: only followers of the related document or members of following channels\n"
 msgstr ""
 
 #. module: hr_equipment
@@ -850,7 +836,7 @@ msgstr "Nummerserie"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_serial_no
 msgid "Serial Number"
-msgstr ""
+msgstr "Serienummer"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_active
@@ -965,6 +951,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_unread
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_unread
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_unread
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Unread Messages"
 msgstr "Olästa meddelanden"
 
@@ -973,7 +962,7 @@ msgstr "Olästa meddelanden"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_unread_counter
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Antal olästa meddelande"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_equipment_alias_prefix
@@ -995,12 +984,12 @@ msgstr "Användare"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_partner_id
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Vendor"
-msgstr ""
+msgstr "Leverantör"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_partner_ref
 msgid "Vendor Reference"
-msgstr ""
+msgstr "Leverantör Referens"
 
 #. module: hr_equipment
 #: selection:hr.equipment.request,priority:0
@@ -1010,7 +999,7 @@ msgstr "Mycket låg"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_warranty
 msgid "Warranty"
-msgstr ""
+msgstr "Garanti"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_website_message_ids

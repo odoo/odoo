@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 import werkzeug
 
 from openerp import SUPERUSER_ID
@@ -10,6 +11,8 @@ from openerp.addons.website.models.website import slug
 
 PPG = 20 # Products Per Page
 PPR = 4  # Products Per Row
+
+_logger = logging.getLogger(__name__)
 
 class table_compute(object):
     def __init__(self):
@@ -105,6 +108,8 @@ class QueryURL(object):
 
 def get_pricelist():
     return request.website.get_current_pricelist()
+    if not pricelist:
+        _logger.error('Fail to find pricelist for partner "%s" (id %s)', partner.name, partner.id)
 
 class website_sale(http.Controller):
 
@@ -126,6 +131,11 @@ class website_sale(http.Controller):
             attribute_value_ids = [[p.id, [v.id for v in p.attribute_value_ids if v.attribute_id.id in visible_attrs], p.price, p.lst_price]
                 for p in product.product_variant_ids]
         return attribute_value_ids
+
+    def _get_search_order(self, post):
+        # OrderBy will be parsed in orm and so no direct sql injection
+        # id is added to be sure that order is a unique sort key
+        return 'website_published desc,%s , id desc' % post.get('order', 'website_sequence desc')
 
     @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True)
     def pricelist_change(self, pl_id, **post):
@@ -225,7 +235,7 @@ class website_sale(http.Controller):
 
         product_count = product_obj.search_count(cr, uid, domain, context=context)
         pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
-        product_ids = product_obj.search(cr, uid, domain, limit=ppg, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
+        product_ids = product_obj.search(cr, uid, domain, limit=ppg, offset=pager['offset'], order=self._get_search_order(post), context=context)
         products = product_obj.browse(cr, uid, product_ids, context=context)
 
         attributes_obj = request.registry['product.attribute']
@@ -358,7 +368,7 @@ class website_sale(http.Controller):
 
     @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True)
     def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
-        request.website.sale_get_order(force_create=1)._cart_update(product_id=int(product_id), add_qty=float(add_qty), set_qty=float(set_qty))
+        request.website.sale_get_order(force_create=1)._cart_update(product_id=int(product_id), add_qty=add_qty, set_qty=set_qty)
         return request.redirect("/shop/cart")
 
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
@@ -367,7 +377,6 @@ class website_sale(http.Controller):
         if order.state != 'draft':
             request.website.sale_reset()
             return {}
-
         value = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
         if not order.cart_quantity:
             request.website.sale_reset()
@@ -559,6 +568,8 @@ class website_sale(http.Controller):
 
         # vat validation
         if data.get("vat") and hasattr(registry["res.partner"], "check_vat"):
+            if data.get("country_id"):
+                data["vat"] = registry["res.partner"].fix_eu_vat_number(cr, uid, data.get("country_id"), data.get("vat"), context)
             if request.website.company_id.vat_check_vies:
                 # force full VIES online check
                 check_func = registry["res.partner"].vies_vat_check
@@ -620,7 +631,7 @@ class website_sale(http.Controller):
             # create partner
             billing_info['team_id'] = request.website.salesteam_id.id
             partner_id = orm_partner.create(cr, SUPERUSER_ID, billing_info, context=context)
-        order.write({'partner_id': partner_id, 'partner_invoice_id': partner_id})
+        order.write({'partner_id': partner_id})
         order_obj.onchange_partner_id(cr, SUPERUSER_ID, [order.id], context=context)
 
         # create a new shipping partner
@@ -630,14 +641,10 @@ class website_sale(http.Controller):
                 shipping_info['lang'] = partner_lang
             shipping_info['parent_id'] = partner_id
             checkout['shipping_id'] = orm_partner.create(cr, SUPERUSER_ID, shipping_info, context)
-        if checkout.get('shipping_id'):
-            order.write({'partner_shipping_id': checkout['shipping_id']})
-
-        order_obj.onchange_partner_shipping_id(cr, SUPERUSER_ID, [order.id], context=context)
-        order.order_line._compute_tax_id()
 
         order_info = {
             'message_partner_ids': [(4, partner_id), (3, request.website.partner_id.id)],
+            'partner_shipping_id': checkout.get('shipping_id') or partner_id,
         }
         order_obj.write(cr, SUPERUSER_ID, [order.id], order_info, context=context)
 
@@ -675,8 +682,8 @@ class website_sale(http.Controller):
 
         self.checkout_form_save(values["checkout"])
 
-        if not int(post.get('shipping_id', 0)):
-            order.partner_shipping_id = order.partner_invoice_id
+        order.onchange_partner_shipping_id()
+        order.order_line._compute_tax_id()
 
         request.session['sale_last_order_id'] = order.id
 

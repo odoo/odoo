@@ -26,15 +26,22 @@ class wizard_valuation_history(osv.osv_memory):
         ctx['history_date'] = data['date']
         ctx['search_default_group_by_product'] = True
         ctx['search_default_group_by_location'] = True
-        return {
-            'domain': "[('date', '<=', '" + data['date'] + "')]",
-            'name': _('Stock Value At Date'),
-            'view_type': 'form',
-            'view_mode': 'tree',
-            'res_model': 'stock.history',
-            'type': 'ir.actions.act_window',
-            'context': ctx,
-        }
+
+        action = self.pool.get('ir.model.data').xmlid_to_object(cr, uid, 'stock_account.action_stock_history', context=context)
+        if not action:
+            action = {
+                'view_type': 'form',
+                'view_mode': 'tree,graph,pivot',
+                'res_model': 'stock.history',
+                'type': 'ir.actions.act_window',
+            }
+        else:
+            action = action[0].read()[0]
+
+        action['domain'] = "[('date', '<=', '" + data['date'] + "')]"
+        action['name'] = _('Stock Value At Date')
+        action['context'] = ctx
+        return action
 
 
 class stock_history(osv.osv):
@@ -56,11 +63,11 @@ class stock_history(osv.osv):
             for ids in group_lines.values():
                 for product_id in ids:
                     line_ids.add(product_id)
-            line_ids = list(line_ids)
             lines_rec = {}
             if line_ids:
-                cr.execute('SELECT id, product_id, price_unit_on_quant, company_id, quantity FROM stock_history WHERE id in %s', (tuple(line_ids),))
-                lines_rec = cr.dictfetchall()
+                move_ids = tuple(abs(line_id) for line_id in line_ids)
+                cr.execute('SELECT id, product_id, price_unit_on_quant, company_id, quantity FROM stock_history WHERE move_id in %s', (move_ids,))
+                lines_rec = tuple(rec for rec in cr.dictfetchall() if rec['id'] in line_ids)
             lines_dict = dict((line['id'], line) for line in lines_rec)
             product_ids = list(set(line_rec['product_id'] for line_rec in lines_rec))
             products_rec = self.pool['product.product'].read(cr, uid, product_ids, ['cost_method', 'id'], context=context)
@@ -108,7 +115,7 @@ class stock_history(osv.osv):
         'product_categ_id': fields.many2one('product.category', 'Product Category', required=True),
         'quantity': fields.float('Product Quantity'),
         'date': fields.datetime('Operation Date'),
-        'price_unit_on_quant': fields.float('Value'),
+        'price_unit_on_quant': fields.float('Value', group_operator='avg'),
         'inventory_value': fields.function(_get_inventory_value, string="Inventory Value", type='float', readonly=True),
         'source': fields.char('Source'),
         'product_template_id': fields.many2one('product.template', 'Product Template', required=True),
@@ -128,7 +135,7 @@ class stock_history(osv.osv):
                 product_template_id,
                 SUM(quantity) as quantity,
                 date,
-                SUM(price_unit_on_quant * quantity) / SUM(quantity) as price_unit_on_quant,
+                COALESCE(SUM(price_unit_on_quant * quantity) / NULLIF(SUM(quantity), 0), 0) as price_unit_on_quant,
                 source,
                 string_agg(DISTINCT serial_number, ', ' ORDER BY serial_number) AS serial_number
                 FROM
@@ -163,8 +170,7 @@ class stock_history(osv.osv):
                     product_template ON product_template.id = product_product.product_tmpl_id
                 WHERE quant.qty>0 AND stock_move.state = 'done' AND dest_location.usage in ('internal', 'transit')
                 AND (
-                    (source_location.company_id is null and dest_location.company_id is not null) or
-                    (source_location.company_id is not null and dest_location.company_id is null) or
+                    not (source_location.company_id is null and dest_location.company_id is null) or
                     source_location.company_id != dest_location.company_id or
                     source_location.usage not in ('internal', 'transit'))
                 ) UNION ALL
@@ -199,8 +205,7 @@ class stock_history(osv.osv):
                     product_template ON product_template.id = product_product.product_tmpl_id
                 WHERE quant.qty>0 AND stock_move.state = 'done' AND source_location.usage in ('internal', 'transit')
                 AND (
-                    (dest_location.company_id is null and source_location.company_id is not null) or
-                    (dest_location.company_id is not null and source_location.company_id is null) or
+                    not (dest_location.company_id is null and source_location.company_id is null) or
                     dest_location.company_id != source_location.company_id or
                     dest_location.usage not in ('internal', 'transit'))
                 ))

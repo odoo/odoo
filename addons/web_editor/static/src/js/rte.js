@@ -48,7 +48,7 @@ var History = function History ($editable) {
         $editable.html(oSnap.contents).scrollTop(oSnap.scrollTop);
         $(".oe_overlay").remove();
         $(".note-control-selection").hide();
-        
+
         $editable.trigger("content_changed");
 
         try {
@@ -159,7 +159,7 @@ var History = function History ($editable) {
 
         if (aUndo[pos]) {
             pos = Math.min(pos, aUndo.length);
-            aUndo.splice(Math.max(pos,1), aUndo.length);
+            aUndo.splice(pos, aUndo.length);
         }
 
         // => make a snap when the user change editable zone (because: don't make snap for each keydown)
@@ -205,7 +205,7 @@ var history = new History();
 $.extend($.expr[':'],{
     o_editable: function(node,i,m){
         while (node) {
-            if (node.className) {
+            if (node.className && _.isString(node.className)) {
                 if (node.className.indexOf('o_not_editable')!==-1 ) {
                     return false;
                 }
@@ -271,15 +271,24 @@ var RTE = Widget.extend({
      * @param {DOM} target where the dom is changed is editable zone
      */
     historyRecordUndo: function ($target, event, internal_history) {
+        $target = $($target);
         var rng = range.create();
         var $editable = $(rng && rng.sc).closest(".o_editable");
         if (!rng || !$editable.length) {
-            $editable = $($target).closest(".o_editable");
+            $editable = $target.closest(".o_editable");
             rng = range.create($target.closest("*")[0],0);
         } else {
             rng = $editable.data('range') || rng;
         }
-        rng.select();
+        try {
+            // TODO this line might break for unknown reasons. I suppose that
+            // the created range is an invalid one. As it might be tricky to
+            // adapt that line and that it is not a critical one, temporary fix
+            // is to ignore the errors that this generates.
+            rng.select();
+        } catch (e) {
+            console.log('error', e);
+        }
         history.recordUndo($editable, event, internal_history);
     },
     /**
@@ -321,10 +330,11 @@ var RTE = Widget.extend({
         });
 
         // start element observation
-        $(document).on('content_changed', '.o_editable', function (event) {
+        $(document).on('content_changed', '.o_editable', function (ev) {
             self.trigger('change', this);
-            if(!$(this).hasClass('o_dirty')) {
+            if (!ev.__isDirtyHandled) {
                 $(this).addClass('o_dirty');
+                ev.__isDirtyHandled = true;
             }
         });
 
@@ -357,6 +367,10 @@ var RTE = Widget.extend({
 
         var editables = history.getEditableHasUndo();
 
+        $('.o_editable')
+            .destroy()
+            .removeClass('o_editable o_is_inline_editable');
+
         var defs = $('.o_dirty')
             .removeAttr('contentEditable')
             .removeClass('o_dirty oe_carlos_danger o_is_inline_editable')
@@ -364,8 +378,8 @@ var RTE = Widget.extend({
                 var $el = $(this);
 
                 $el.find('[class]').filter(function () {
-                    if (!this.className.match(/\S/)) {
-                        this.removeAttribute("class");
+                    if (!this.getAttribute('class').match(/\S/)) {
+                        this.removeAttribute('class');
                     }
                 });
 
@@ -438,7 +452,7 @@ var RTE = Widget.extend({
     saveElement: function ($el, context) {
         // remove multi edition
         if ($el.data('oe-model')) {
-            var key =  $el.data('oe-model')+":"+$el.data('oe-id')+":"+$el.data('oe-field')+":"+$el.data('oe-type')+":"+$el.data('oe-expression');
+            var key =  $el.data('oe-model')+":"+$el.data('oe-id')+":"+$el.data('oe-field')+":"+$el.data('oe-type')+":"+$el.data('oe-expression')+":"+$el.data('oe-xpath');
             if (this.__saved[key]) return true;
             this.__saved[key] = true;
         }
@@ -516,7 +530,7 @@ var RTE = Widget.extend({
             // add contenteditable on link to improve its editing behaviour
             $target.attr('contenteditable', true);
             setTimeout(function () {
-                $editable.attr('contenteditable', false);
+                $editable.not($target).attr('contenteditable', false);
             });
             // once clicked outside, remove contenteditable on link
             var reactive_editable = function(e){
@@ -574,8 +588,8 @@ var RTE = Widget.extend({
     onEnableEditableArea: function ($editable) {
     },
 
-    onMouseup: function (event) {
-        var $target = $(event.target);
+    onMouseup: function (ev) {
+        var $target = $(ev.target);
         var $editable = $target.closest('.o_editable');
 
         if (!$editable.size()) {
@@ -586,6 +600,18 @@ var RTE = Widget.extend({
         setTimeout(function () {
             self.historyRecordUndo($target, 'activate',  true);
         },0);
+
+        // Browsers select different content from one to another after a
+        // triple click (especially: if triple-clicking on a paragraph on
+        // Chrome, blank characters of the element following the paragraph are
+        // selected too)
+        //
+        // The triple click behavior is reimplemented for all browsers here
+        if (ev.originalEvent.detail === 3) {
+            // Select the whole content inside the deepest DOM element that was
+            // triple-clicked
+            range.create(ev.target, 0, ev.target, ev.target.childNodes.length).select();
+        }
     },
 
     editable: function () {

@@ -8,8 +8,7 @@
             <field name="arch" type="xml">
                 <graph string="Product Margins" type="bar">
                     <field name="product_tmpl_id"/>
-                    <field name="turnover" operator="+"/>
-                    <field name="total_cost" operator="+"/>
+                    <field name="total_margin" type="measure" operator="+"/>
                 </graph>
             </field>
     </record>
@@ -74,7 +73,7 @@
                     <field name="sales_gap" sum="Sales Gap"/>
                     <field name="total_cost" sum="Total Cost"/>
                     <field name="purchase_num_invoiced" string="#Purchased"/>
-                    <field name="total_margin"/>
+                    <field name="total_margin" sum="Total Margin"/>
                     <field name="expected_margin"/>
                     <field name="total_margin_rate"  widget="progressbar"/>
                     <field name="expected_margin_rate" widget="progressbar"/>

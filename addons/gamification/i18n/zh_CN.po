@@ -3,14 +3,17 @@
 # * gamification
 # 
 # Translators:
-# 珠海-老天 <liangjia@qq.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016-2017
+# 卓忆科技 <zhanghao@jointd.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-30 12:39+0000\n"
-"PO-Revision-Date: 2016-03-12 01:56+0000\n"
-"Last-Translator: Joroy <13637815@qq.com>\n"
+"POT-Creation-Date: 2016-09-22 13:18+0000\n"
+"PO-Revision-Date: 2017-02-11 09:24+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -127,13 +130,13 @@ msgstr "\n<header>\n    <strong>${object.name}</strong>\n</header>\n<p class=\"o
 msgid ""
 "<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
 " challenge."
-msgstr "<br/>没有人成功的完成每一个目标，那么这个挑战不会发放任何奖章"
+msgstr "<br/>没有人成功的完成每一个目标，那么这个挑战不会发放任何徽章"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:744
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
-msgstr "每一个成功用户的<br/> 奖励（奖章 %s）被送到 %s。"
+msgstr "每一个成功用户的<br/> 奖励（徽章 %s）被送到 %s。"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:753
@@ -213,7 +216,7 @@ msgstr "高级选项"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth
 msgid "Allowance to Grant"
-msgstr "津贴补助"
+msgstr "允许授予"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_user_domain
@@ -264,35 +267,35 @@ msgstr "自动:金额字段"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_badge_id
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge"
-msgstr "勋章"
+msgstr "徽章"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge Description"
-msgstr "勋章描述"
+msgstr "徽章描述"
 
 #. module: gamification
 #: model:mail.message.subtype,description:gamification.mt_badge_granted
 #: model:mail.message.subtype,name:gamification.mt_badge_granted
 msgid "Badge Granted"
-msgstr "授予勋章"
+msgstr "授予徽章"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_list_view
 msgid "Badge List"
-msgstr "勋章列表"
+msgstr "徽章列表"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_badge_name
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge Name"
-msgstr "勋章名称"
+msgstr "徽章名称"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.badge_list_action
 #: model:ir.ui.menu,name:gamification.gamification_badge_menu
 msgid "Badges"
-msgstr "勋章"
+msgstr "徽章"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -301,7 +304,7 @@ msgid ""
 "of a running period (eg: end of the month for a monthly challenge), at the "
 "end date of a challenge (if no periodicity is set) or when the challenge is "
 "manually closed."
-msgstr "当完成一个任务时授予一枚勋章，这是在一个运行周期结束时（如：最后的每月挑战月），在一个挑战的结束日期（如果没有周期性设置）或挑战时的手动关闭"
+msgstr "当完成一个任务时授予一枚徽章，这是在一个运行周期结束时（如：最后的每月挑战月），在一个挑战的结束日期（如果没有周期性设置）或挑战时的手动关闭"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_mode
@@ -390,7 +393,7 @@ msgstr "任务"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_rule_max
 msgid "Check to set a monthly limit per person of sending this badge"
-msgstr "检查设定每人每月限额发送此勋章"
+msgstr "检查设定每人每月限额发送此徽章"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.badge_list_action
@@ -493,7 +496,7 @@ msgstr "创建者"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_create_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_create_date
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建时间"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_create_uid
@@ -610,7 +613,7 @@ msgid ""
 "Domain for filtering records. General rule, not user depending, e.g. "
 "[('state', '=', 'done')]. The expression can contain reference to 'user' "
 "which is a browse record of the current user if not in batch mode."
-msgstr "域过滤记录。一般规则，不是用户依赖的，例如.[('state', '=', 'done')]. 如果不是在批处理模式下，该规则可以包含当前用户的浏览记录作为参考给“user”。"
+msgstr "域过滤记录。一般规则，不依赖用户，例如.[('state', '=', 'done')]。如果不是批处理模式，表达式可以包含当前用户的浏览记录的'user'参考。"
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
@@ -688,7 +691,7 @@ msgstr "关注者(频道)"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_partner_ids
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_partner_ids
 msgid "Followers (Partners)"
-msgstr "关注者（合作伙伴）"
+msgstr "关注者（业务伙伴）"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_first_id
@@ -733,7 +736,7 @@ msgstr "游戏化工具"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge
 msgid "Gamification badge"
-msgstr "游戏化勋章"
+msgstr "游戏化徽章"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge
@@ -758,7 +761,7 @@ msgstr "游戏化的目标实例"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user
 msgid "Gamification user badge"
-msgstr "游戏化的用户勋章"
+msgstr "游戏化的用户徽章"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_goal_id
@@ -837,18 +840,18 @@ msgstr "授予"
 #: model:ir.actions.act_window,name:gamification.action_grant_wizard
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Grant Badge"
-msgstr "授予奖章"
+msgstr "授予徽章"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 #: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Grant Badge To"
-msgstr "给予勋章"
+msgstr "授予徽章给"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Grant this Badge"
-msgstr "授予这枚勋章"
+msgstr "授予这枚徽章"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_user_kanban_view
@@ -924,7 +927,7 @@ msgstr "确认后, 会出现新消息."
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_challenge_id
 msgid "If this badge was rewarded through a challenge"
-msgstr "如果完成一个任务就奖赏这枚勋章"
+msgstr "如果完成一个任务就奖赏这枚徽章"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_image
@@ -993,7 +996,7 @@ msgstr "邀请"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_is_follower
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_is_follower
 msgid "Is Follower"
-msgstr "是否关注者"
+msgstr "是关注者"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_message_last_post
@@ -1011,7 +1014,7 @@ msgstr "最后消息日期"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition___last_update
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard___last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_last_report_date
@@ -1033,7 +1036,7 @@ msgstr "最新更新"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_write_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_write_uid
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最后更新者"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_write_date
@@ -1045,7 +1048,7 @@ msgstr "最后更新"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_write_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_write_date
 msgid "Last Updated on"
-msgstr "最后更新"
+msgstr "最后更新时间"
 
 #. module: gamification
 #: selection:gamification.challenge,visibility_mode:0
@@ -1087,12 +1090,6 @@ msgstr "以下邮件组"
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_message_ids
 msgid "Messages"
 msgstr "消息"
-
-#. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_message_ids
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_message_ids
-msgid "Messages and communication history"
-msgstr "消息和通信历史"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_model_id
@@ -1185,12 +1182,12 @@ msgstr "没有人完成已分配的任务"
 #: code:addons/gamification/models/challenge.py:756
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
-msgstr "没有人达到获得特殊勋章的要求"
+msgstr "没有人达到获得特殊徽章的要求"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
 msgid "Non recurring"
-msgstr "临时的"
+msgstr "非经常性"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_remind_update_delay
@@ -1233,12 +1230,12 @@ msgstr "改变"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_rule_auth_badge_ids
 msgid "Only the people having these badges can give this badge"
-msgstr "只有人有这些勋章，才可以给这个勋章"
+msgstr "只有人有这些徽章，才可以给这个徽章"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_rule_auth_user_ids
 msgid "Only these people can give this badge"
-msgstr "只有这些人能给这个勋章"
+msgstr "只有这些人能给这个徽章"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -1258,7 +1255,7 @@ msgstr "参与"
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "People having some badges"
-msgstr "有一些勋章的人"
+msgstr "有一些徽章的人"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -1280,7 +1277,7 @@ msgstr "周期"
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_problem_solver
 msgid "Problem Solver"
-msgstr "解决问题的方法"
+msgstr "问题解决者"
 
 #. module: gamification
 #: selection:gamification.goal.definition,display_mode:0
@@ -1362,7 +1359,7 @@ msgstr "报告模板"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth_badge_ids
 msgid "Required Badges"
-msgstr "需要勋章"
+msgstr "需要徽章"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
@@ -1446,7 +1443,7 @@ msgstr "搜索目标"
 msgid ""
 "Security rules to define who is allowed to manually grant badges. Not "
 "enforced for administrator."
-msgstr "安全规则来定义谁可以手动授予勋章，管理员不能强制执行"
+msgstr "安全规则来定义谁可以手动授予徽章，管理员不能强制执行"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1552,7 +1549,7 @@ msgstr "达到目标值"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "Target: less than"
-msgstr "目标：小于"
+msgstr "目标：少于"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_action_id
@@ -1568,7 +1565,7 @@ msgstr "我们面临的挑战 %s 已完成"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_full_suffix
 msgid "The currency and suffix field"
-msgstr "货币和后缀字段"
+msgstr "币种和后缀字段"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_field_date_id
@@ -1618,12 +1615,12 @@ msgstr "越高越好"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_owner_ids
 msgid "The list of instances of this badge granted to users"
-msgstr "本勋章的授予用户实例列表"
+msgstr "本徽章的授予用户实例列表"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_unique_owner_ids
 msgid "The list of unique users having received this badge."
-msgstr "唯一的用户已收到这个勋章"
+msgstr "唯一的用户已收到这个徽章"
 
 #. module: gamification
 #: selection:gamification.goal.definition,condition:0
@@ -1634,7 +1631,25 @@ msgstr "越低越好"
 #: model:ir.model.fields,help:gamification.field_gamification_badge_rule_max_number
 msgid ""
 "The maximum number of time this badge can be sent per month per person."
-msgstr "这个勋章可以给每人每月最大时间数"
+msgstr "这个徽章可以给每人每月最大时间数"
+
+#. module: gamification
+#: code:addons/gamification/models/goal.py:150
+#, python-format
+msgid ""
+"The model configuration for the definition %s seems incorrect, please check it.\n"
+"\n"
+"%s not found"
+msgstr "定义 %s 的模型配置貌似不正确，请检查它。\n\n%s 未找到"
+
+#. module: gamification
+#: code:addons/gamification/models/goal.py:147
+#, python-format
+msgid ""
+"The model configuration for the definition %s seems incorrect, please check it.\n"
+"\n"
+"%s not stored"
+msgstr "定义 %s 的模型配置貌似不正确，请检查它。\n\n%s 未存储"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_model_id
@@ -1652,32 +1667,32 @@ msgstr "数天之后，分配到一个手动目标的用户将被提醒。如果
 #: model:ir.model.fields,help:gamification.field_gamification_badge_stat_my_this_month
 msgid ""
 "The number of time the current user has received this badge this month."
-msgstr "本月当前用户已收到时间这个勋章的数量"
+msgstr "本月当前用户已收到时间这个徽章的数量"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_stat_my
 msgid "The number of time the current user has received this badge."
-msgstr "时间数当前用户已经收到这个勋章"
+msgstr "时间数当前用户已经收到这个徽章"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_stat_my_monthly_sending
 msgid "The number of time the current user has sent this badge this month."
-msgstr "时间数当前用户已经在本月发送此勋章"
+msgstr "时间数当前用户已经在本月发送此徽章"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_stat_count_distinct
 msgid "The number of time this badge has been received by unique users."
-msgstr "唯一的用户已收到时间这个勋章的数量"
+msgstr "唯一的用户已收到时间这个徽章的数量"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_stat_this_month
 msgid "The number of time this badge has been received this month."
-msgstr "本月的时间数这个勋章已经收到"
+msgstr "本月的时间数这个徽章已经收到"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_stat_count
 msgid "The number of time this badge has been received."
-msgstr "这个勋章已收到的时间数"
+msgstr "这个徽章已收到的时间数"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_monetary
@@ -1697,14 +1712,14 @@ msgstr "负责用户的挑战"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_sender_id
 msgid "The user who has send the badge"
-msgstr "用户发送的勋章"
+msgstr "用户发送的徽章"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_goal_definition_ids
 msgid ""
 "The users that have succeeded theses goals will receive automatically the "
 "badge."
-msgstr "这些目标已经成功的用户会自动的收到勋章"
+msgstr "这些目标已经成功的用户会自动的收到徽章"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_user_expression
@@ -1735,12 +1750,12 @@ msgstr "这些目标将不会被重新计算"
 #: code:addons/gamification/models/badge.py:223
 #, python-format
 msgid "This badge can not be sent by users."
-msgstr "这个勋章不能发送的用户"
+msgstr "这个徽章不能发送的用户"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_image
 msgid "This field holds the image used for the badge, limited to 256x256"
-msgstr "这一领域的图像用于勋章,仅限于256 x256"
+msgstr "这一领域的图像用于徽章,仅限于256 x256"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -1823,7 +1838,7 @@ msgstr "每周"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_rule_auth
 msgid "Who can grant this badge"
-msgstr "谁能授予这个勋章"
+msgstr "谁能授予这个徽章"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
@@ -1835,7 +1850,7 @@ msgstr "你希望谁来奖励？"
 msgid ""
 "With this option enabled, a user can receive a badge only once. The top 3 "
 "badges are still rewarded only at the end of the challenge."
-msgstr "启用此选项，一个用户可以一次获得一枚勋章。前3枚勋章只有在任务结束时才能奖励"
+msgstr "启用此选项，一个用户可以一次获得一枚徽章。前3枚徽章只有在任务结束时才能奖励"
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_idea
@@ -1858,7 +1873,7 @@ msgstr "你是不是在用户允许列表中"
 #: code:addons/gamification/wizard/grant_badge.py:26
 #, python-format
 msgid "You can not grant a badge to yourself"
-msgstr "你不能自己授予自己一个勋章"
+msgstr "你不能自己授予自己一个徽章"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:235
@@ -1880,13 +1895,13 @@ msgstr "你的工作做的很好"
 #: code:addons/gamification/models/badge.py:227
 #, python-format
 msgid "You do not have the required badges."
-msgstr "您没有必要的勋章"
+msgstr "您没有必要的徽章"
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:229
 #, python-format
 msgid "You have already sent this badge too many time this month."
-msgstr "您已经在本月太多的时间发送这个勋章"
+msgstr "您已经在本月太多的时间发送这个徽章"
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_hidden
@@ -1896,7 +1911,7 @@ msgstr "你找到了隐藏的徽章"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "badges this month"
-msgstr "本月的勋章"
+msgstr "本月的徽章"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view

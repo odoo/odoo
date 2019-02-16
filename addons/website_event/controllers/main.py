@@ -253,7 +253,7 @@ class website_event(http.Controller):
     def registration_new(self, event, **post):
         tickets = self._process_tickets_details(post)
         if not tickets:
-            return request.redirect("/event/%s" % slug(event))
+            return False
         return request.website._render("website_event.registration_attendee_details", {'tickets': tickets, 'event': event})
 
     def _process_registration_details(self, details):
@@ -286,7 +286,7 @@ class website_event(http.Controller):
                     Registration._prepare_attendee_values(cr, uid, registration),
                     context=context))
 
-        attendees = Registration.browse(cr, uid, registration_ids, context=context)
+        attendees = Registration.browse(cr, uid, registration_ids, context=context).sudo()
         return request.website.render("website_event.registration_complete", {
             'attendees': attendees,
             'event': event,

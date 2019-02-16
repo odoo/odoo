@@ -4,7 +4,7 @@
 from lxml import etree
 
 from openerp import models, api
-from openerp.tools.translate import encode, xml_translate
+from openerp.tools.translate import encode, xml_translate, html_translate
 
 def edit_translation_mapping(data):
     data = dict(data, model=data['name'].partition(',')[0])
@@ -35,4 +35,11 @@ class ir_translation(models.Model):
             # root is html > body > div
             # serialize div as XML and discard surrounding tags
             value = etree.tostring(root[0][0], encoding='utf-8')[5:-6]
+        elif field.translate == html_translate:
+            # wrap value inside a div and parse it as HTML
+            div = "<div>%s</div>" % encode(value)
+            root = etree.fromstring(div, etree.HTMLParser(encoding='utf-8'))
+            # root is html > body > div
+            # serialize div as HTML and discard surrounding tags
+            value = etree.tostring(root[0][0], encoding='utf-8', method='html')[5:-6]
         return self.write({'value': value})

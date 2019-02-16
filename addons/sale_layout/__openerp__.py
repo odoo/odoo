@@ -14,7 +14,7 @@ separators, page-breaks or subtotals.
     """,
     'website': 'https://www.odoo.com/page/crm',
     'depends': ['sale', 'report'],
-    'category': 'Sale',
+    'category': 'Sales',
     'data': ['views/sale_layout_category_view.xml',
              'views/report_invoice_layouted.xml',
              'views/report_quotation_layouted.xml',

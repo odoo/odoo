@@ -73,7 +73,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_cancel(self):
-        self.order_line.mapped('procurement_ids').cancel()
+        self.mapped('order_line').mapped('procurement_ids').cancel()
         super(SaleOrder, self).action_cancel()
 
     @api.multi
@@ -121,8 +121,9 @@ class SaleOrderLine(models.Model):
     def _compute_qty_delivered_updateable(self):
         for line in self:
             if line.product_id.type not in ('consu', 'product'):
-                return super(SaleOrderLine, self)._compute_qty_delivered_updateable()
-            line.qty_delivered_updateable = False
+                super(SaleOrderLine, line)._compute_qty_delivered_updateable()
+            else:
+                line.qty_delivered_updateable = False
 
     @api.onchange('product_id')
     def _onchange_product_id_set_customer_lead(self):
@@ -196,7 +197,8 @@ class SaleOrderLine(models.Model):
             #Note that we don't decrease quantity for customer returns on purpose: these are exeptions that must be treated manually. Indeed,
             #modifying automatically the delivered quantity may trigger an automatic reinvoicing (refund) of the SO, which is definitively not wanted
             if move.location_dest_id.usage == "customer":
-                qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
+                if not move.origin_returned_move_id:
+                    qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
         return qty
 
     @api.multi
@@ -268,8 +270,8 @@ class ProcurementOrder(models.Model):
     @api.model
     def _run_move_create(self, procurement):
         vals = super(ProcurementOrder, self)._run_move_create(procurement)
-        if self.sale_line_id:
-            vals.update({'sequence': self.sale_line_id.sequence})
+        if procurement.sale_line_id:
+            vals.update({'sequence': procurement.sale_line_id.sequence})
         return vals
 
 
@@ -303,7 +305,14 @@ class StockPicking(models.Model):
                     break
             picking.sale_id = sale_order.id if sale_order else False
 
-    sale_id = fields.Many2one(comodel_name='sale.order', string="Sale Order", compute='_compute_sale_id')
+    def _search_sale_id(self, operator, value):
+        moves = self.env['stock.move'].search(
+            [('picking_id', '!=', False), ('procurement_id.sale_line_id.order_id', operator, value)]
+        )
+        return [('id', 'in', moves.mapped('picking_id').ids)]
+
+    sale_id = fields.Many2one(comodel_name='sale.order', string="Sale Order",
+                              compute='_compute_sale_id', search='_search_sale_id')
 
 
 class AccountInvoiceLine(models.Model):
@@ -320,33 +329,34 @@ class AccountInvoiceLine(models.Model):
                 qty_done = sum([uom_obj._compute_qty_obj(x.uom_id, x.quantity, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'paid')])
                 quantity = uom_obj._compute_qty_obj(self.uom_id, self.quantity, self.product_id.uom_id)
                 # Put moves in fixed order by date executed
-                moves = self.env['stock.move']
-                for procurement in s_line.procurement_ids:
-                    moves |= procurement.move_ids
-                moves.sorted(lambda x: x.date)
+                moves = s_line.mapped('procurement_ids.move_ids').sorted(lambda x: x.date)
                 # Go through all the moves and do nothing until you get to qty_done
                 # Beyond qty_done we need to calculate the average of the price_unit
                 # on the moves we encounter.
-                average_price_unit = 0
-                qty_delivered = 0
-                invoiced_qty = 0
-                for move in moves:
-                    if move.state != 'done':
-                        continue
-                    invoiced_qty += move.product_qty
-                    if invoiced_qty <= qty_done:
-                        continue
-                    qty_to_consider = move.product_qty
-                    if invoiced_qty - move.product_qty < qty_done:
-                        qty_to_consider = invoiced_qty - qty_done
-                    qty_to_consider = min(qty_to_consider, quantity - qty_delivered)
-                    qty_delivered += qty_to_consider
-                    average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + move.price_unit * qty_to_consider) / qty_delivered
-                    if qty_delivered == quantity:
-                        break
+                average_price_unit = self._compute_average_price(qty_done, quantity, moves)
                 price_unit = average_price_unit or price_unit
-                price_unit = uom_obj._compute_qty_obj(self.uom_id, price_unit, self.product_id.uom_id, round=False)
+                price_unit = self.product_id.uom_id._compute_price(self.product_id.uom_id.id, price_unit, to_uom_id=self.uom_id.id)
         return price_unit
+
+    def _compute_average_price(self, qty_done, quantity, moves):
+        average_price_unit = 0
+        qty_delivered = 0
+        invoiced_qty = 0
+        for move in moves:
+            if move.state != 'done':
+                continue
+            invoiced_qty += move.product_qty
+            if invoiced_qty <= qty_done:
+                continue
+            qty_to_consider = move.product_qty
+            if invoiced_qty - move.product_qty < qty_done:
+                qty_to_consider = invoiced_qty - qty_done
+            qty_to_consider = min(qty_to_consider, quantity - qty_delivered)
+            qty_delivered += qty_to_consider
+            average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + move.price_unit * qty_to_consider) / qty_delivered
+            if qty_delivered == quantity:
+                break
+        return average_price_unit
 
 
 class ProductProduct(models.Model):

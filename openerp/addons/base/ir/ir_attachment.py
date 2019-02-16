@@ -26,7 +26,7 @@ class ir_attachment(osv.osv):
     The 'data' function field (_data_get,data_set) is implemented using
     _file_read, _file_write and _file_delete which can be overridden to
     implement other storage engines, such methods should check for other
-    location pseudo uri (example: hdfs://hadoppserver)
+    location pseudo uri (example: hdfs://hadoopserver)
 
     The default implementation is the file:dirname location that stores files
     on the local filesystem using name based on their sha1 hash
@@ -211,13 +211,14 @@ class ir_attachment(osv.osv):
         return mimetype or 'application/octet-stream'
 
     def _check_contents(self, cr, uid, values, context=None):
+        if context is None:
+            context = {}
         mimetype = values['mimetype'] = self._compute_mimetype(values)
-        needs_escape = 'htm' in mimetype or '/ht' in mimetype # hta, html, xhtml, etc.
-        if needs_escape and not self.pool['res.users']._is_admin(cr, uid, [uid]):
-            if 'datas' in values:
-                values['datas'] = html_escape(values['datas'].decode('base64')).encode('base64')
-            else:
-                values['mimetype'] = 'text/plain'
+        xml_like = 'ht' in mimetype or 'xml' in mimetype # hta, html, xhtml, etc.
+        force_text = (xml_like and (not self.pool['res.users']._is_admin(cr, uid, [uid]) or
+            context.get('attachments_mime_plainxml')))
+        if force_text:
+            values['mimetype'] = 'text/plain'
         return values
 
     def _index(self, cr, uid, bin_data, datas_fname, file_type):
@@ -234,6 +235,30 @@ class ir_attachment(osv.osv):
                 index_content = ustr("\n".join(words))
         return index_content
 
+    def get_serving_groups(self):
+        """ An ir.attachment record may be used as a fallback in the
+        http dispatch if its type field is set to "binary" and its url
+        field is set as the request's url. Only the groups returned by
+        this method are allowed to create and write on such records.
+        """
+        return ['base.group_system']
+
+    def _check_serving_attachments(self, cr, uid, ids, context=None):
+        # restrict writing on attachments that could be served by the
+        # ir.http's dispatch exception handling
+        if uid == SUPERUSER_ID:
+            return True
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        for ira in self.browse(cr, uid, ids, context):
+            if ira.type == 'binary' and ira.url:
+                has_group = user.has_group
+                if not any([has_group(g) for g in self.get_serving_groups()]):
+                    return False
+        return True
+
+    _constraints = [
+        (_check_serving_attachments, 'Sorry, you are not allowed to write on this document', ['type', 'url'])
+    ]
 
     _name = 'ir.attachment'
     _columns = {
@@ -270,11 +295,12 @@ class ir_attachment(osv.osv):
     }
 
     def _auto_init(self, cr, context=None):
-        super(ir_attachment, self)._auto_init(cr, context)
+        res = super(ir_attachment, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_attachment_res_idx',))
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_attachment_res_idx ON ir_attachment (res_model, res_id)')
             cr.commit()
+        return res
 
     def check(self, cr, uid, ids, mode, context=None, values=None):
         """Restricts the access to an ir.attachment, according to referred model

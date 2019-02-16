@@ -46,6 +46,19 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 
 
 import tools
+
+from tools import parse_version as pv
+if pv(psycopg2.__version__) < pv('2.7'):
+    from psycopg2._psycopg import QuotedString
+    def adapt_string(adapted):
+        """Python implementation of psycopg/psycopg2#459 from v2.7"""
+        if '\x00' in adapted:
+            raise ValueError("A string literal cannot contain NUL (0x00) characters.")
+        return QuotedString(adapted)
+
+    psycopg2.extensions.register_adapter(str, adapt_string)
+    psycopg2.extensions.register_adapter(unicode, adapt_string)
+
 from tools.func import frame_codeinfo
 from datetime import datetime as mdt
 from datetime import timedelta
@@ -601,7 +614,7 @@ class ConnectionPool(object):
                     cnx.close()
                 break
         else:
-            raise PoolError('This connection does not below to the pool')
+            raise PoolError('This connection does not belong to the pool')
 
     @locked
     def close_all(self, dsn=None):

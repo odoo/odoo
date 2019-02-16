@@ -64,7 +64,7 @@ Administrator</span>]]></field>
             <field name="company_id" ref="main_company"/>
         </record>
 
-        <record id="ir_mail_server_localhost0" model="ir.mail_server">
+        <record id="ir_mail_server_localhost0" model="ir.mail_server" forcecreate="0">
             <field name="name">localhost</field>
             <field name="smtp_host">localhost</field>
             <field eval="25" name="smtp_port"/>

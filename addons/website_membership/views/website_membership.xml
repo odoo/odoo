@@ -104,25 +104,27 @@
 <template id="opt_index_google_map" name="Left World Map"
         customize_show="True" inherit_id="website_membership.index">
     <xpath expr="//div[@id='left_column']/ul[last()]" position="after">
-        <!-- modal for large map -->
-        <div class="modal fade partner_map_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title">World Map</h4>
+        <t t-if="google_maps_api_key">
+            <!-- modal for large map -->
+            <div class="modal fade partner_map_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">World Map</h4>
+                    </div>
+                    <iframe t-attf-src="/google_map/?width=898&amp;height=485&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
+                    style="width:898px; height:485px; border:0; padding:0; margin:0;"></iframe>
                 </div>
-                <iframe t-attf-src="/google_map/?width=898&amp;height=485&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
-                style="width:898px; height:485px; border:0; padding:0; margin:0;"></iframe>
+              </div>
             </div>
-          </div>
-        </div>
-        <!-- modal end -->
-        <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".partner_map_modal"><span class="fa fa-external-link" /></button></h3>
-        <ul class="nav">
-            <iframe t-attf-src="/google_map/?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
-                style="width:260px; height:240px; border:0; padding:0; margin:0;"></iframe>
-        </ul>
+            <!-- modal end -->
+            <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".partner_map_modal"><span class="fa fa-external-link" /></button></h3>
+            <ul class="nav">
+                <iframe t-attf-src="/google_map/?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
+                    style="width:260px; height:240px; border:0; padding:0; margin:0;"></iframe>
+            </ul>
+        </t>
     </xpath>
 </template>
 

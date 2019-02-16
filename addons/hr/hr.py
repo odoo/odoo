@@ -62,7 +62,7 @@ class hr_job(osv.Model):
         'no_of_employee': fields.function(_get_nbr_employees, string="Current Number of Employees",
             help='Number of employees currently occupying this job position.',
             store = {
-                'hr.employee': (_get_job_position, ['job_id'], 10),
+                'hr.employee': (_get_job_position, ['job_id', 'active'], 10),
             }, type='integer',
             multi='_get_nbr_employees'),
         'no_of_recruitment': fields.integer('Expected New Employees', copy=False,
@@ -141,16 +141,16 @@ class hr_employee(osv.osv):
         #we need a related field in order to be able to sort the employee by name
         'name_related': fields.related('resource_id', 'name', type='char', string='Name', readonly=True, store=True),
         'country_id': fields.many2one('res.country', 'Nationality (Country)'),
-        'birthday': fields.date("Date of Birth"),
-        'ssnid': fields.char('SSN No', help='Social Security Number'),
-        'sinid': fields.char('SIN No', help="Social Insurance Number"),
-        'identification_id': fields.char('Identification No'),
-        'gender': fields.selection([('male', 'Male'), ('female', 'Female'), ('other', 'Other')], 'Gender'),
-        'marital': fields.selection([('single', 'Single'), ('married', 'Married'), ('widower', 'Widower'), ('divorced', 'Divorced')], 'Marital Status'),
+        'birthday': fields.date("Date of Birth", groups="base.group_hr_user"),
+        'ssnid': fields.char('SSN No', help='Social Security Number', groups="base.group_hr_user"),
+        'sinid': fields.char('SIN No', help="Social Insurance Number", groups="base.group_hr_user"),
+        'identification_id': fields.char('Identification No', groups="base.group_hr_user"),
+        'gender': fields.selection([('male', 'Male'), ('female', 'Female'), ('other', 'Other')], 'Gender', groups="base.group_hr_user"),
+        'marital': fields.selection([('single', 'Single'), ('married', 'Married'), ('widower', 'Widower'), ('divorced', 'Divorced')], 'Marital Status', groups="base.group_hr_user"),
         'department_id': fields.many2one('hr.department', 'Department'),
         'address_id': fields.many2one('res.partner', 'Working Address'),
         'address_home_id': fields.many2one('res.partner', 'Home Address'),
-        'bank_account_id': fields.many2one('res.partner.bank', 'Bank Account Number', domain="[('partner_id','=',address_home_id)]", help="Employee bank salary account"),
+        'bank_account_id': fields.many2one('res.partner.bank', 'Bank Account Number', domain="[('partner_id','=',address_home_id)]", help="Employee bank salary account", groups="base.group_hr_user"),
         'work_phone': fields.char('Work Phone', readonly=False),
         'mobile_phone': fields.char('Work Mobile', readonly=False),
         'work_email': fields.char('Work Email', size=240),
@@ -162,7 +162,7 @@ class hr_employee(osv.osv):
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True, auto_join=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job Title'),
-        'passport_id': fields.char('Passport No'),
+        'passport_id': fields.char('Passport No', groups="base.group_hr_user"),
         'color': fields.integer('Color Index'),
         'city': fields.related('address_id', 'city', type='char', string='City'),
         'login': fields.related('user_id', 'login', type='char', string='Login', readonly=1),
@@ -198,6 +198,10 @@ class hr_employee(osv.osv):
 
     @api.multi
     def write(self, vals):
+        if 'address_home_id' in vals:
+            account_id = vals.get('bank_account_id') or self.bank_account_id.id
+            if account_id:
+                self.env['res.partner.bank'].browse(account_id).partner_id = vals['address_home_id']
         tools.image_resize_images(vals)
         return super(hr_employee, self).write(vals)
 
@@ -261,7 +265,7 @@ class hr_employee(osv.osv):
                 user_field_lst.append(name)
         return user_field_lst
 
-    _constraints = [(osv.osv._check_recursion, _('Error! You cannot create recursive hierarchy of Employee(s).'), ['parent_id']),]
+    _constraints = [(osv.osv._check_recursion, 'Error! You cannot create recursive hierarchy of Employee(s).', ['parent_id']),]
 
 
 class hr_department(osv.osv):
@@ -291,7 +295,7 @@ class hr_department(osv.osv):
     }
 
     _constraints = [
-        (osv.osv._check_recursion, _('Error! You cannot create recursive departments.'), ['parent_id'])
+        (osv.osv._check_recursion, 'Error! You cannot create recursive departments.', ['parent_id'])
     ]
 
     def name_get(self, cr, uid, ids, context=None):

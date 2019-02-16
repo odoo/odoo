@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2015-10-26 16:26+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2019-01-14 21:34+0000\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: website_blog
 #. openerp-web
@@ -27,12 +27,12 @@ msgstr ""
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.latest_blogs
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_feed
 msgid "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
-msgstr ""
+msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 
 #. module: website_blog
 #: model:blog.post,content:website_blog.blog_post_1
@@ -221,13 +221,13 @@ msgstr ""
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_about_us
 msgid "About us"
-msgstr ""
+msgstr "O nás"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog_message_needaction
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Vyžadována akce"
 
 #. module: website_blog
 #. openerp-web
@@ -256,7 +256,7 @@ msgstr "Autor"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_author_avatar
 msgid "Avatar"
-msgstr ""
+msgstr "Avatar"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_blog_id
@@ -265,7 +265,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 #: model:website.menu,name:website_blog.menu_news
 msgid "Blog"
-msgstr ""
+msgstr "Blog"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog_name
@@ -330,7 +330,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_blog.menu_blog
 #: model:ir.ui.view,arch_db:website_blog.view_blog_blog_list
 msgid "Blogs"
-msgstr ""
+msgstr "Blogy"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -340,7 +340,7 @@ msgstr "Modrá"
 #. module: website_blog
 #: model:blog.post,subtitle:website_blog.blog_post_2
 msgid "Building your company's website and selling your products online easy."
-msgstr ""
+msgstr "Budování webových stránek společnosti a prodej vašich produktů online a snadno."
 
 #. module: website_blog
 #. openerp-web
@@ -369,14 +369,14 @@ msgstr ""
 #: code:addons/website_blog/static/src/js/website.tour.blog.js:68
 #, python-format
 msgid "Choose an image"
-msgstr ""
+msgstr "Vyberte obrázek"
 
 #. module: website_blog
 #. openerp-web
 #: code:addons/website_blog/static/src/js/website.tour.blog.js:69
 #, python-format
 msgid "Choose an image from the library."
-msgstr ""
+msgstr "Vyberte obrázek z knihovny."
 
 #. module: website_blog
 #: code:addons/website_blog/models/website_blog.py:220
@@ -427,7 +427,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Color"
-msgstr ""
+msgstr "Barva"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_about_us
@@ -538,7 +538,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Full Screen"
-msgstr ""
+msgstr "Celoobrazovkový režim"
 
 #. module: website_blog
 #: model:blog.blog,subtitle:website_blog.blog_blog_1
@@ -548,7 +548,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Green"
-msgstr ""
+msgstr "Zelená"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
@@ -570,7 +570,7 @@ msgstr "ID"
 #. module: website_blog
 #: model:blog.post,subtitle:website_blog.blog_post_1
 msgid "Ideas behind the Odoo communication tools."
-msgstr ""
+msgstr "Myšlenky za komunikačními nástroji Odoo."
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog_message_unread
@@ -582,7 +582,7 @@ msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
 #: model:ir.model.fields,help:website_blog.field_blog_blog_message_needaction
 #: model:ir.model.fields,help:website_blog.field_blog_post_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.latest_blogs
@@ -598,7 +598,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog_message_is_follower
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "je Sledující"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_write_uid
@@ -739,24 +739,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog_message_needaction_counter
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Počet akcí"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog_message_needaction_counter
 #: model:ir.model.fields,help:website_blog.field_blog_post_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Počet zpráv, které vyžadují akci"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog_message_unread_counter
 #: model:ir.model.fields,help:website_blog.field_blog_post_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Počet nepřečtených zpráv"
 
 #. module: website_blog
 #: model:blog.post,website_meta_keywords:website_blog.blog_post_1
 msgid "Odoo, email"
-msgstr ""
+msgstr "Odoo, email"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -783,7 +783,7 @@ msgstr ""
 #: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:28
 #, python-format
 msgid "Please"
-msgstr ""
+msgstr "Prosím"
 
 #. module: website_blog
 #. openerp-web
@@ -816,13 +816,13 @@ msgstr ""
 #: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:10
 #, python-format
 msgid "Published"
-msgstr ""
+msgstr "Publikováno"
 
 #. module: website_blog
 #: model:mail.message.subtype,description:website_blog.mt_blog_blog_published
 #: model:mail.message.subtype,name:website_blog.mt_blog_blog_published
 msgid "Published Post"
-msgstr ""
+msgstr "Publikovaný příspěvek"
 
 #. module: website_blog
 #. openerp-web
@@ -918,7 +918,7 @@ msgstr ""
 #: code:addons/website_blog/static/src/js/website.tour.blog.js:90
 #, python-format
 msgid "Start writing here..."
-msgstr ""
+msgstr "Začněte zde psát ..."
 
 #. module: website_blog
 #. openerp-web
@@ -932,7 +932,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_subtitle
 msgid "Sub Title"
-msgstr ""
+msgstr "Podtitulek"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_complete
@@ -969,12 +969,12 @@ msgstr "Technický"
 #: model:blog.post,name:website_blog.blog_post_1
 #: model:blog.post,website_meta_description:website_blog.blog_post_1
 msgid "The Future of Emails"
-msgstr ""
+msgstr "Budoucnost e-mailů"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_post_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "Celá adresa URL pro přístup k dokumentu prostřednictvím webu."
 
 #. module: website_blog
 #. openerp-web
@@ -1015,7 +1015,7 @@ msgstr "Nepřečtené zprávy"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog_message_unread_counter
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Počítadlo nepřečtených zpráv"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
@@ -1067,18 +1067,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog_website_message_ids
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Zprávy Webové stránky"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_website_url
 msgid "Website URL"
-msgstr ""
+msgstr "URL Webové stránky"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog_website_message_ids
 #: model:ir.model.fields,help:website_blog.field_blog_post_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Historie komunikace Webové stránky"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog_website_meta_description
@@ -1125,7 +1125,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
 msgid "Yellow"
-msgstr ""
+msgstr "Žlutý"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.latest_blogs
@@ -1145,13 +1145,13 @@ msgstr "od"
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
 #: model:ir.ui.view,arch_db:website_blog.latest_blogs
 msgid "comment"
-msgstr ""
+msgstr "komentář"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
 #: model:ir.ui.view,arch_db:website_blog.latest_blogs
 msgid "comments"
-msgstr ""
+msgstr "komentáře"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
@@ -1184,4 +1184,4 @@ msgstr ""
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "views"
-msgstr ""
+msgstr "zobrazení"

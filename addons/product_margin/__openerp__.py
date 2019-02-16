@@ -5,7 +5,7 @@
 {
     'name': 'Margins by Products',
     'version': '1.0',
-    'category': 'Sales Management',
+    'category': 'Sales',
     'description': """
 Adds a reporting menu in products that computes sales, purchases, margins and other interesting indicators based on invoices.
 =============================================================================================================================

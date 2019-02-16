@@ -18,7 +18,7 @@ class Users(models.Model):
                 ['country_id', 'city', 'website', 'website_description', 'website_published']))
         return init_res
 
-    create_date = fields.Datetime('Create Date', readonly=True, copy=False, select=True)
+    create_date = fields.Datetime('Create Date', readonly=True, copy=False, index=True)
     karma = fields.Integer('Karma', default=0)
     badge_ids = fields.One2many('gamification.badge.user', 'user_id', string='Badges', copy=False)
     gold_badge = fields.Integer('Gold badges count', compute="_get_user_badge_level")
@@ -76,7 +76,9 @@ class Users(models.Model):
                 params['forum_id'] = forum_id
             base_url = self.env['ir.config_parameter'].get_param('web.base.url')
             token_url = base_url + '/forum/validate_email?%s' % urlencode(params)
-            activation_template.sudo().with_context(token_url=token_url).send_mail(self.id, force_send=True)
+            with self._cr.savepoint():
+                activation_template.sudo().with_context(token_url=token_url).send_mail(
+                    self.id, force_send=True, raise_exception=True)
         return True
 
     @api.one

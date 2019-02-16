@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:39+0000\n"
-"PO-Revision-Date: 2015-09-07 16:03+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2018-04-20 00:04+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,18 +52,18 @@ msgstr "稅別"
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
 msgid "Tax Cash Basis Entry of"
-msgstr ""
+msgstr "稅金現金收付制分錄"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_config_settings_tax_cash_basis_journal_id
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_res_company_tax_cash_basis_journal_id
 msgid "Tax Cash Basis Journal"
-msgstr ""
+msgstr "稅金現金收付制日記帳"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_cash_basis_account
 msgid "Tax Received Account"
-msgstr ""
+msgstr "應收稅款科目"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,help:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
@@ -71,7 +71,7 @@ msgid ""
 "Technical field used to keep track of the tax cash basis reconciliation. "
 "This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
-msgstr ""
+msgstr "技術字段用於追蹤稅金現金收付制調節。當取消來源單據時需要它：它會登錄逆轉會計分錄來取消那部分。"
 
 #. module: account_tax_cash_basis
 #: code:addons/account_tax_cash_basis/tax_cash_basis.py:82
@@ -79,12 +79,12 @@ msgstr ""
 msgid ""
 "There is no tax cash basis journal defined for this company: \"%s\" \n"
 "Configure it in Accounting/Configuration/Settings"
-msgstr ""
+msgstr "這個公司尚未定義稅收現金收付制日記帳: \"%s\" \n在選單Accounting/Configuration/Settings下設定"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_use_cash_basis
 msgid "Use Cash Basis"
-msgstr ""
+msgstr "使用現金收付制"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_config_settings

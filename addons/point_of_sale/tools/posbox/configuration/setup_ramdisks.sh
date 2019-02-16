@@ -11,7 +11,7 @@ create_ramdisk () {
     echo "Creating ramdisk for ${1} of size ${SIZE}..."
 
     mount -t tmpfs -o size="${SIZE}" tmpfs "${RAMDISK}"
-    rsync -a --exclude="swap" --exclude="apt" --exclude="dpkg" "${ORIGINAL}/" "${RAMDISK}/"
+    rsync -a --exclude="swap" --exclude="apt" --exclude="dpkg" --exclude=".mozilla" "${ORIGINAL}/" "${RAMDISK}/"
     mount --bind "${RAMDISK}" "${ORIGINAL}"
 }
 

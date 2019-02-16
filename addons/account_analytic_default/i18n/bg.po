@@ -3,13 +3,14 @@
 # * account_analytic_default
 # 
 # Translators:
+# Boris Stefanov <borkata@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-12-01 07:47+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2018-05-29 10:45+0000\n"
+"Last-Translator: Boris Stefanov <borkata@gmail.com>\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +22,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_analytic_default.field_product_product_rules_count
 #: model:ir.model.fields,field_description:account_analytic_default.field_product_template_rules_count
 msgid "# Analytic Rules"
-msgstr "# Аналитични правила"
+msgstr "Брой Аналитични правила"
 
 #. module: account_analytic_default
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
@@ -80,12 +81,12 @@ msgstr "Създадено на"
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_stop
 msgid "Default end date for this Analytic Account."
-msgstr ""
+msgstr "Крайна дата по подразбиране за тази аналитична сметка"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_start
 msgid "Default start date for this Analytic Account."
-msgstr ""
+msgstr "Начална дата по подразбиране за тази аналитична сметка"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_display_name
@@ -105,13 +106,13 @@ msgstr "Записи"
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_product_product_expense_policy
 msgid "Expense Invoice Policy"
-msgstr ""
+msgstr "Политика за Възстановяване на Разходи"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
-msgstr ""
+msgstr "Дава реда на последователност при показване на списък с аналитично разпределение"
 
 #. module: account_analytic_default
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
@@ -129,7 +130,7 @@ msgid ""
 "If you invoice at cost, the expense will be invoiced on the sale order at "
 "the cost of the analytic line;if you invoice at sales price, the price of "
 "the product will be used instead."
-msgstr ""
+msgstr "Ако фактурирате някой разход, разходът ще бъде фактуриран към поръчката със съответната аналитична сметка; Ако фактурирате по продажна цена, Цената на продукта ще бъде използвана вместо това."
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
@@ -180,7 +181,7 @@ msgid ""
 "Select a company which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
 "company, it will automatically take this as an analytic account)"
-msgstr ""
+msgstr "Изберете фирма, която ще използва аналитично счетоводство с аналитичности по подразбиране (напр. създавай новите Поръчки и/или Фактури ако изберем тази фирма, да го разбира в тази и тази аналитична сметка.)"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_partner_id
@@ -188,7 +189,7 @@ msgid ""
 "Select a partner which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
 "partner, it will automatically take this as an analytic account)"
-msgstr ""
+msgstr "Изберете партньор, който ще използва аналитичната сметка, посочена по подразбиране (например при създаване на нова клиентска фактура или поръчка за продажба, ако изберем този партньор, автоматично ще го вземе като аналитична сметка)"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_product_id
@@ -196,13 +197,13 @@ msgid ""
 "Select a product which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
 "product, it will automatically take this as an analytic account)"
-msgstr ""
+msgstr "Изберете продукт, който ще използва посочената аналитична сметка, по подразбиране (напр. Създаване на нова клиентска фактура или поръчка за продажба, ако изберем този продукт, той автоматично ще вземе това като аналитична сметка"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_user_id
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
-msgstr ""
+msgstr "Изберете потребител, който ще използва аналитичната сметка по подразбиране."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_sequence
@@ -215,9 +216,14 @@ msgid "Start Date"
 msgstr "Начална дата"
 
 #. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_stock_move
+msgid "Stock Move"
+msgstr "Преместване на стока"
+
+#. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Трансфер"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_user_id

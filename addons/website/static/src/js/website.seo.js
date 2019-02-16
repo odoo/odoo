@@ -343,8 +343,8 @@ var Configurator = Widget.extend({
     template: 'website.seo_configuration',
     events: {
         'keyup input[name=seo_page_keywords]': 'confirmKeyword',
-        'keyup input[name=seo_page_title]': 'titleChanged',
-        'keyup textarea[name=seo_page_description]': 'descriptionChanged',
+        'blur input[name=seo_page_title]': 'titleChanged',
+        'blur textarea[name=seo_page_description]': 'descriptionChanged',
         'click button[data-action=add]': 'addKeyword',
         'click button[data-action=update]': 'update',
         'hidden.bs.modal': 'destroy',
@@ -354,7 +354,7 @@ var Configurator = Widget.extend({
     canEditKeywords: false,
     canEditLanguage: false,
     maxTitleSize: 65,
-    maxDescriptionSize: 150,
+    maxDescriptionSize: 160,  // TODO master: remove me and add warning
     start: function () {
         var self = this;
         var $modal = self.$el;

@@ -3,15 +3,16 @@
 # * product
 # 
 # Translators:
-# takuan_osho <shimizu.taku@gmail.com>, 2015
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015
+# SHIMIZU Taku <shimizu.taku@gmail.com>, 2015
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-01-14 10:10+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-12-08 05:56+0000\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +23,7 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
 msgid " Product Category"
-msgstr "製品分類"
+msgstr "製品カテゴリ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_product_variant_count
@@ -34,13 +35,13 @@ msgstr "製品バリアント数"
 #: code:addons/product/pricelist.py:288
 #, python-format
 msgid "%s %% discount"
-msgstr "%s %% 割引"
+msgstr "%s %% 値引"
 
 #. module: product
 #: code:addons/product/pricelist.py:290
 #, python-format
 msgid "%s %% discount and %s surcharge"
-msgstr ""
+msgstr "%s %% 値引と %s サーチャージ"
 
 #. module: product
 #: code:addons/product/product.py:710 code:addons/product/product.py:1134
@@ -61,7 +62,7 @@ msgid ""
 "Processor AMD 8-Core\n"
 "512MB RAM\n"
 "HDD SH-1"
-msgstr ""
+msgstr "17\" LCD モニタ\nプロセッサ AMD 8-Core\n512MB RAM\nHDD SH-1"
 
 #. module: product
 #: model:product.product,description:product.product_product_25
@@ -71,7 +72,7 @@ msgid ""
 "4GB RAM\n"
 "Standard-1294P Processor\n"
 "QWERTY keyboard"
-msgstr ""
+msgstr "17\" モニタ\n4GB RAM\nStandard-1294P プロセッサ\nQWERTY キーボード尾"
 
 #. module: product
 #: model:product.product,description:product.product_product_26
@@ -98,7 +99,7 @@ msgid ""
 "                1TB hard drive\n"
 "                Intel Iris Pro graphics\n"
 "            "
-msgstr ""
+msgstr "2.7GHz quad-core Intel Core i5\n                Turbo Boost up to 3.2GHz\n                8GB (two 4GB) memory\n                1TB hard drive\n                Intel Iris Pro graphics\n            "
 
 #. module: product
 #: model:product.product,name:product.product_product_52
@@ -124,13 +125,13 @@ msgid ""
 "7.9‑inch (diagonal) LED-backlit, 128Gb\n"
 "Dual-core A5 with quad-core graphics\n"
 "FaceTime HD Camera, 1.2 MP Photos"
-msgstr ""
+msgstr "7.9‑inch (diagonal) LED-backlit, 128Gb\nDual-core A5 with quad-core graphics\nFaceTime HD Camera, 1.2 MP Photos"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "75 percent less reflection."
-msgstr ""
+msgstr "75パーセント未満の反射。"
 
 #. module: product
 #: model:product.product,name:product.product_product_51
@@ -143,12 +144,12 @@ msgstr ""
 msgid ""
 "<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Public Price  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">公開価格  -  </span>\n<span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">他の価格リスト  -  </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>kg</span>"
-msgstr ""
+msgstr "<span>kg</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -163,7 +164,7 @@ msgstr "<strong>説明</strong>"
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Price List Name</strong>:<br/>"
-msgstr ""
+msgstr "<strong>P価格表名</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -176,13 +177,13 @@ msgid ""
 "<strong>Warning</strong>: adding or deleting attributes\n"
 "                            will delete and recreate existing variants and lead\n"
 "                            to the loss of their possible customizations."
-msgstr ""
+msgstr "<strong>警告</strong>： 特性の追加・削除により、、バリアントが追加・削除されます。"
 
 #. module: product
 #: code:addons/product/product.py:977 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
-msgstr ""
+msgstr "バーコードはプロダクトに対して1つのみ割り当てできます！"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_type
@@ -206,7 +207,7 @@ msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
-msgstr ""
+msgstr "顧客に伝えたい製品の説明。この説明は、すべての販売注文、配達の注文と得意先請求書/払い戻しにコピーされます"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_purchase
@@ -215,13 +216,13 @@ msgid ""
 "A description of the Product that you want to communicate to your vendors. "
 "This description will be copied to every Purchase Order, Receipt and Vendor "
 "Bill/Refund."
-msgstr ""
+msgstr "ベンダーとコミュニケーションしたい製品の詳細。この説明は、すべての発注書、領収書、およびベンダービル/払い戻しにコピーされます。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_9
 #: model:product.template,website_description:product.product_product_9_product_template
 msgid "A great Keyboard. Cordless."
-msgstr ""
+msgstr "すばらしいワイヤレスキーボード"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description
@@ -229,20 +230,20 @@ msgstr ""
 msgid ""
 "A precise description of the Product, used only for internal information "
 "purposes."
-msgstr ""
+msgstr "内部情報の目的でのみ使用される製品の正確な記述。"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
 "A price list contains rules to be evaluated in order to compute\n"
 "                the sales price of the products."
-msgstr ""
+msgstr "価格表には、製品の販売価格を計算するために評価されるべきルールが含まれています。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "A screen worthy of iPad."
-msgstr ""
+msgstr "A screen worthy of iPad."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -253,13 +254,13 @@ msgid ""
 "About the size of a credit card — and just 5.4 mm thin — iPod nano is the thinnest iPod ever made.\n"
 "                                    The 2.5-inch Multi-Touch display is nearly twice as big as the display on the previous iPod nano,\n"
 "                                    so you can see more of the music, photos, and videos you love."
-msgstr ""
+msgstr "About the size of a credit card — and just 5.4 mm thin — iPod nano is the thinnest iPod ever made.\n                                    The 2.5-inch Multi-Touch display is nearly twice as big as the display on the previous iPod nano,\n                                    so you can see more of the music, photos, and videos you love."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_needaction
 #: model:ir.model.fields,field_description:product.field_product_template_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "必要なアクション"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_active
@@ -278,12 +279,12 @@ msgstr "全て"
 #: code:addons/product/pricelist.py:283
 #, python-format
 msgid "All Products"
-msgstr ""
+msgstr "全製品"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "All general settings about this product are managed on"
-msgstr ""
+msgstr "この製品についてのすべての一般的な設定は、これで管理されています"
 
 #. module: product
 #: model:product.product,description:product.product_product_37
@@ -297,7 +298,7 @@ msgstr ""
 msgid ""
 "And at the Apple Online Store, you can configure your iMac with an even more"
 " powerful Intel Core i7 processor, up to 3.5GHz."
-msgstr ""
+msgstr "And at the Apple Online Store, you can configure your iMac with an even more powerful Intel Core i7 processor, up to 3.5GHz."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -309,13 +310,13 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4c_product_template
 #: model:product.template,website_description:product.product_product_4d_product_template
 msgid "And because it’s so easy to use, it’s easy to love."
-msgstr ""
+msgstr "使いやすいので、愛するのは簡単です。"
 
 #. module: product
 #: model:product.product,name:product.product_product_7
 #: model:product.template,name:product.product_product_7_product_template
 msgid "Apple In-Ear Headphones"
-msgstr ""
+msgstr "Apple In-Ear ヘッドフォン"
 
 #. module: product
 #: model:product.product,name:product.product_product_9
@@ -326,12 +327,12 @@ msgstr "Appleワイヤレスキーボード"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Applicable On"
-msgstr ""
+msgstr "適用箇所"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_applied_on
 msgid "Apply On"
-msgstr ""
+msgstr "適用対象"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -348,7 +349,7 @@ msgstr "組立サービスコスト"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr ""
+msgstr "製品ベンダのリストに優先順位を割り当てます。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_attribute_id
@@ -359,12 +360,12 @@ msgstr "属性"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_extra
 msgid "Attribute Price Extra"
-msgstr ""
+msgstr "価格追加属性"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_ids
 msgid "Attribute Prices"
-msgstr ""
+msgstr "属性価格"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.variants_action
@@ -387,14 +388,14 @@ msgstr "属性"
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Auxiliary input for portable devices"
-msgstr ""
+msgstr "Auxiliary input for portable devices"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "Auxiliary port lets you connect other audio sources, like an MP3 player"
-msgstr ""
+msgstr "Auxiliary port lets you connect other audio sources, like an MP3 player"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_barcode
@@ -428,34 +429,34 @@ msgstr "基準"
 #: model:product.product,name:product.product_product_57
 #: model:product.template,name:product.product_product_57_product_template
 msgid "Basic Computer"
-msgstr ""
+msgstr "基本コンピュータ"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Beautiful 7.9‑inch display."
-msgstr ""
+msgstr "Beautiful 7.9‑inch display."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Beautiful widescreen display."
-msgstr ""
+msgstr "Beautiful widescreen display."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image
 msgid "Big-sized image"
-msgstr ""
+msgstr "大サイズのイメージ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_factor_inv
 msgid "Bigger Ratio"
-msgstr ""
+msgstr "比率"
 
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference Unit of Measure"
-msgstr "基準単位よりも大きい"
+msgstr "基準単位より大きい"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
@@ -478,31 +479,31 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Bluetooth connectivity"
-msgstr ""
+msgstr "Bluetooth 接続性"
 
 #. module: product
 #: model:product.product,name:product.product_product_5b
 #: model:product.template,name:product.product_product_5b_product_template
 msgid "Bose Mini Bluetooth Speaker"
-msgstr ""
+msgstr "Bose Mini Bluetooth　スピーカー"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Bose Mini Bluetooth Speaker."
-msgstr ""
+msgstr "Bose Mini Bluetooth Speaker."
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_5b
 #: model:product.template,description_sale:product.product_product_5b_product_template
 msgid "Bose's smallest portable Bluetooth speaker"
-msgstr ""
+msgstr "Bose's smallest portable Bluetooth speaker"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Brilliance onscreen. And behind it."
-msgstr ""
+msgstr "Brilliance onscreen. And behind it."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -513,7 +514,7 @@ msgid ""
 "Buttons let you quickly play, pause, change songs, or adjust the volume.\n"
 "                                    The smooth anodized aluminum design makes iPod nano feel as good as it sounds.\n"
 "                                    And iPod nano wouldn’t be iPod nano without gorgeous, hard-to-choose-from color."
-msgstr ""
+msgstr "Buttons let you quickly play, pause, change songs, or adjust the volume.\n                                    The smooth anodized aluminum design makes iPod nano feel as good as it sounds.\n                                    And iPod nano wouldn’t be iPod nano without gorgeous, hard-to-choose-from color."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_active
@@ -554,25 +555,25 @@ msgstr "カテゴリタイプ"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Category name"
-msgstr ""
+msgstr "カテゴリ名"
 
 #. module: product
 #: code:addons/product/pricelist.py:277
 #, python-format
 msgid "Category: %s"
-msgstr ""
+msgstr "カテゴリ: %s"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Characteristics"
-msgstr ""
+msgstr "特徴"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Charges iPod/iPhone"
-msgstr ""
+msgstr "Charges iPod/iPhone"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -580,27 +581,27 @@ msgstr ""
 msgid ""
 "Charging cradle recharges the battery and serves as a convenient\n"
 "                                    home base for your speaker, and it lets you play while it charges."
-msgstr ""
+msgstr "Charging cradle recharges the battery and serves as a convenient\n                                    home base for your speaker, and it lets you play while it charges."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_child_id
 msgid "Child Categories"
-msgstr "子分類"
+msgstr "子カテゴリ"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
 msgid "Click to add a new unit of measure category."
-msgstr ""
+msgstr "クリックして新しい計量単位カテゴリを追加します。"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
 msgid "Click to add a new unit of measure."
-msgstr ""
+msgstr "クリックして新しい単位を追加する"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Click to create a pricelist."
-msgstr ""
+msgstr "クリックして価格表を作成"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -609,23 +610,23 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_template_action_product
 #: model:ir.actions.act_window,help:product.product_variant_action
 msgid "Click to define a new product."
-msgstr ""
+msgstr "クリックして新製品を定義してください。"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Codes"
-msgstr ""
+msgstr "コード"
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_2
 msgid "Color"
-msgstr ""
+msgstr "色"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_color
 #: model:ir.model.fields,field_description:product.field_product_template_color
 msgid "Color Index"
-msgstr "カラーインデックス"
+msgstr "カラーインデクス"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_6
@@ -639,7 +640,7 @@ msgid ""
 "Ultrafast wireless\n"
 "iOS7\n"
 "            "
-msgstr ""
+msgstr "Color: White\nCapacity: 16GB\nConnectivity: Wifi\nBeautiful 7.9-inch display\nOver 375,000 apps\nUltrafast wireless\niOS7\n            "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
@@ -658,24 +659,24 @@ msgstr "部材"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Compute Price"
-msgstr ""
+msgstr "価格計算"
 
 #. module: product
 #: model:product.product,name:product.product_product_16
 #: model:product.template,name:product.product_product_16_product_template
 msgid "Computer Case"
-msgstr ""
+msgstr "Computer ケース"
 
 #. module: product
 #: model:product.product,name:product.product_product_3
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Computer SC234"
-msgstr ""
+msgstr "Computer SC234"
 
 #. module: product
 #: model:product.public.category,name:product.Computer_all_in_one
 msgid "Computer all-in-one"
-msgstr ""
+msgstr "オールインワンコンピュータ"
 
 #. module: product
 #: model:product.public.category,name:product.sub_computers
@@ -686,7 +687,7 @@ msgstr "コンピュータ"
 #: code:addons/product/product.py:460
 #, python-format
 msgid "Consumable"
-msgstr ""
+msgstr "消耗品"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
@@ -701,7 +702,7 @@ msgstr "単位間の変換は同じカテゴリに属している場合のみ可
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
-msgstr "それらは両方が異なった分類に属しているので、製品の単位 %s からデフォルト単位 %s への変換はできません。"
+msgstr "異なったカテゴリに属しているので、製品の単位 %s からデフォルト単位 %s への変換はできません。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_cost
@@ -709,7 +710,7 @@ msgstr "それらは両方が異なった分類に属しているので、製品
 #: model:ir.model.fields,field_description:product.field_product_template_standard_price
 #: selection:product.pricelist.item,base:0
 msgid "Cost"
-msgstr "経費"
+msgstr "原価"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
@@ -717,12 +718,12 @@ msgid ""
 "Cost of the product template used for standard stock valuation in accounting"
 " and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
-msgstr ""
+msgstr "製品テンプレートのコストは、会計の標準在庫評価に使用し、発注書上の基準価格として使用します。製品のデフォルトの単位で表します。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_standard_price
 msgid "Cost of the product, in the default unit of measure of the product."
-msgstr ""
+msgstr "デフォルトの単位で製品コスト。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_uid
@@ -770,7 +771,7 @@ msgid ""
 "technological innovation. We refined,re-imagined,or re-engineered everything"
 " about iMac from the inside out. The result is an advanced, elegant all-in-"
 "one computer that’s as much a work of art as it is state of the art."
-msgstr ""
+msgstr "このような驚異的な薄型デザインを作成することは、技術革新の同様に驚くべき功績をもたらしました。 iMacのすべてを洗練された、再想像された、または再設計したものです。 その結果、先進的でエレガントなオールインワンコンピュータが実現し、これは最先端の技術と同じくらい芸術的なものです。"
 
 #. module: product
 #: model:ir.model,name:product.model_res_currency
@@ -786,19 +787,19 @@ msgstr "通貨"
 #: model:product.product,name:product.product_product_5
 #: model:product.template,name:product.product_product_5_product_template
 msgid "Custom Computer (kit)"
-msgstr ""
+msgstr "カスタムコンピュータ(キット)"
 
 #. module: product
 #: model:product.product,description:product.product_product_27
 #: model:product.template,description:product.product_product_27_product_template
 msgid "Custom Laptop based on customer's requirement."
-msgstr ""
+msgstr "顧客鵜の要望に応じたカスタムラップトップ"
 
 #. module: product
 #: model:product.product,description:product.product_product_5
 #: model:product.template,description:product.product_product_5_product_template
 msgid "Custom computer shipped in kit."
-msgstr ""
+msgstr "キットで発送されたカスタムコンピュータ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_partner_ref
@@ -809,7 +810,7 @@ msgstr "顧客参照"
 #: model:product.product,name:product.product_product_46
 #: model:product.template,name:product.product_product_46_product_template
 msgid "Datacard"
-msgstr ""
+msgstr "データカード"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_datetime
@@ -820,7 +821,7 @@ msgstr "日付"
 #: model:ir.model.fields,help:product.field_product_product_message_last_post
 #: model:ir.model.fields,help:product.field_product_template_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "記録上の最後のメッセージが投稿された日"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_day
@@ -839,7 +840,7 @@ msgstr "全在庫操作のために使用されるデフォルト単位"
 msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
-msgstr "発注オーダーに使われるデフォルト単位、それはデフォルト単位と同じ分類の中にある必要があります。"
+msgstr "発注に使われるデフォルト単位は、デフォルト単位と同じカテゴリでなければなりません。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_delay
@@ -866,7 +867,7 @@ msgstr "見積表示用説明"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Vendors"
-msgstr ""
+msgstr "見積依頼/発注表示用説明"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -874,7 +875,7 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Design. The thinnest iPod ever."
-msgstr ""
+msgstr "Design. The thinnest iPod ever."
 
 #. module: product
 #: model:product.product,name:product.product_product_55
@@ -892,12 +893,12 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute_sequence
 #: model:ir.model.fields,help:product.field_product_attribute_value_sequence
 msgid "Determine the display order"
-msgstr ""
+msgstr "表示順序を決定します"
 
 #. module: product
 #: model:product.public.category,name:product.devices
 msgid "Devices"
-msgstr ""
+msgstr "機器"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_display_name
@@ -922,7 +923,7 @@ msgstr "表示名"
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
 msgid "Dozen(s)"
-msgstr ""
+msgstr "ダース"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_57
@@ -930,7 +931,7 @@ msgstr ""
 msgid ""
 "Dvorak keyboard \n"
 "            left-handed mouse"
-msgstr ""
+msgstr "Dvorak keyboard \n            left-handed mouse"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
@@ -938,13 +939,13 @@ msgid ""
 "Each rule include a set of applicability criteria (date range,\n"
 "                product category...) and a computation that easily helps to achieve\n"
 "                any kind of pricing."
-msgstr ""
+msgstr "各ルールは適用基準のセット(日付範囲、製品カテゴリ...)と計算が\n                     含まれます。\n                これで、簡単に価格設定の任意の方法を得るのに役立ちます。\n                "
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Efficient, high-quality audio"
-msgstr ""
+msgstr "Efficient, high-quality audio"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_end
@@ -955,7 +956,7 @@ msgstr "終了日"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_end
 msgid "End date for this vendor price"
-msgstr ""
+msgstr "このベンダー価格の終了日"
 
 #. module: product
 #: selection:product.template,state:0
@@ -965,7 +966,7 @@ msgstr "ライフサイクルの終わり"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_end
 msgid "Ending valid for the pricelist item validation"
-msgstr ""
+msgstr "価格リスト項目の検証のための有効なエンディング"
 
 #. module: product
 #: model:product.product,name:product.product_product_54
@@ -976,19 +977,19 @@ msgstr ""
 #. module: product
 #: constraint:product.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr "エラー：再帰カテゴリーを作成することはできません。"
+msgstr "エラー: 再帰カテゴリを作成することはできません。"
 
 #. module: product
 #: constraint:product.pricelist.item:0
 msgid "Error! The minimum margin should be lower than the maximum margin."
-msgstr ""
+msgstr "エラー！最小マージンは最大マージンより小さくしてください。"
 
 #. module: product
 #: constraint:product.pricelist.item:0
 msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
-msgstr ""
+msgstr "エラー！ メイン価格表を価格一覧表の他の価格表に割り当てることはできません！"
 
 #. module: product
 #: constraint:res.currency:0
@@ -1009,7 +1010,7 @@ msgstr ""
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
 "in the same category."
-msgstr ""
+msgstr "エラー: デフォルトの計量単位と注文用の計量単位は同じカテゴリにしてください。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -1019,7 +1020,7 @@ msgid ""
 "                                    screen, fast Colors are vivid and text is sharp on the iPad mini display.\n"
 "                                    But what really makes it stand out is its size. At 7.9 inches,\n"
 "                                    it’s perfectly sized to deliver an experience every bit as big as iPad."
-msgstr ""
+msgstr "Everything you love about iPad — the beautiful\n                                    screen, fast Colors are vivid and text is sharp on the iPad mini display.\n                                    But what really makes it stand out is its size. At 7.9 inches,\n                                    it’s perfectly sized to deliver an experience every bit as big as iPad."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -1036,7 +1037,7 @@ msgid ""
 "                                    iSight cameras, thousands of amazing apps, 10-hour\n"
 "                                    battery life* — is everything you’ll love about\n"
 "                                    iPad mini, too. And you can hold it in one hand."
-msgstr ""
+msgstr "Everything you love about iPad — the beautiful\n                                    screen, fast and fluid performance, FaceTime and\n                                    iSight cameras, thousands of amazing apps, 10-hour\n                                    battery life* — is everything you’ll love about\n                                    iPad mini, too. And you can hold it in one hand."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -1046,31 +1047,31 @@ msgid ""
 "                                        fast and fluid performance, FaceTime and iSight cameras, \n"
 "                                        thousands of amazing apps, 10-hour battery life* — is everything\n"
 "                                        you’ll love about iPad mini, too. And you can hold it in one hand."
-msgstr ""
+msgstr "Everything you love about iPad — the beautiful screen,\n                                        fast and fluid performance, FaceTime and iSight cameras, \n                                        thousands of amazing apps, 10-hour battery life* — is everything\n                                        you’ll love about iPad mini, too. And you can hold it in one hand."
 
 #. module: product
 #: model:product.product,description:product.product_product_2
 #: model:product.template,description:product.product_product_2_product_template
 msgid "Example of product to invoice based on delivery."
-msgstr ""
+msgstr "製品例 インボイスベース配送"
 
 #. module: product
 #: model:product.product,description:product.product_product_0
 #: model:product.template,description:product.product_product_0_product_template
 msgid "Example of product to invoice on order."
-msgstr ""
+msgstr "製品例 オーダーインボイスベース"
 
 #. module: product
 #: model:product.product,description:product.product_product_1b
 #: model:product.template,description:product.product_product_1b_product_template
 msgid "Example of products to invoice based on cost."
-msgstr ""
+msgstr "製品例 コストインボイスベース"
 
 #. module: product
 #: model:product.product,description:product.product_product_1
 #: model:product.template,description:product.product_product_1_product_template
 msgid "Example of products to invoice based on delivery."
-msgstr ""
+msgstr "製品例 配送インボイスベース"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_name
@@ -1082,12 +1083,12 @@ msgstr "この価格リスト"
 #: model:product.product,name:product.product_product_1b
 #: model:product.template,name:product.product_product_1b_product_template
 msgid "External Audit"
-msgstr ""
+msgstr "外部監査"
 
 #. module: product
 #: model:product.public.category,name:product.External_Hard_Drive
 msgid "External Hard Drive"
-msgstr ""
+msgstr "外付ハードドライブ"
 
 #. module: product
 #: model:product.product,name:product.product_product_28
@@ -1099,17 +1100,17 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Fast connections.The world over."
-msgstr ""
+msgstr "高速接続。世界終了。"
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Fix Price"
-msgstr ""
+msgstr "固定価格"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_fixed_price
 msgid "Fixed Price"
-msgstr "固定金額"
+msgstr "固定価格"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_follower_ids
@@ -1121,25 +1122,25 @@ msgstr "フォロワー"
 #: model:ir.model.fields,field_description:product.field_product_product_message_channel_ids
 #: model:ir.model.fields,field_description:product.field_product_template_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "フォロワー (チャネル)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_template_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "フォロワー (取引先)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_min_quantity
 msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
-msgstr ""
+msgstr "ルールを適用するには、購入/販売数量は、このフィールドで指定された最小量以上でなければなりません。\nこれは製品のデフォルトの単位です。"
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Formula"
-msgstr "式"
+msgstr "計算式"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_7
@@ -1152,13 +1153,13 @@ msgid ""
 "Cable length: 1065 mm\n"
 "Weight: 10.2 grams\n"
 "            "
-msgstr ""
+msgstr "Frequency: 5Hz to 21kHz\nImpedance: 23 ohms\nSensitivity: 109 dB SPL/mW\nDrivers: two-way balanced armature\nCable length: 1065 mm\nWeight: 10.2 grams\n            "
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Friendly to the environment."
-msgstr ""
+msgstr "環境にやさしい"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_44
@@ -1170,7 +1171,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_1
 #: model:product.template,name:product.product_product_1_product_template
 msgid "GAP Analysis Service"
-msgstr ""
+msgstr "GAP分析サービス"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -1183,7 +1184,7 @@ msgstr "一般情報"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Genius. Your own personal DJ."
-msgstr ""
+msgstr "天才。 あなた自身の個人的なDJ。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_packaging_ids
@@ -1191,7 +1192,7 @@ msgstr ""
 msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
-msgstr "同じ製品を梱包するための異なる方法を提供します。これは集荷オーダーには影響を及ぼしません。また、EDIモジュールを使用する時に主に使用されます。"
+msgstr "同じ製品を梱包するための異なる方法を提供します。これはピッキングには影響を及ぼしません。また、EDIモジュールを使用する時に主に使用されます。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_sequence
@@ -1204,13 +1205,13 @@ msgstr "価格リスト項目がチェックされる順序を与えます。そ
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_sequence
 msgid "Gives the sequence order when displaying a list of product categories."
-msgstr "製品分類のリストを表示する時に並び順を与えます。"
+msgstr "製品カテゴリのリストを表示する時に並び順を与えます。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_sequence
 #: model:ir.model.fields,help:product.field_product_template_sequence
 msgid "Gives the sequence order when displaying a product list"
-msgstr ""
+msgstr "製品分類のリストを表示する時に並び順を与えます。"
 
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
@@ -1227,7 +1228,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_24
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Graphics Card"
-msgstr ""
+msgstr "グラフィックカード"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_weight
@@ -1239,7 +1240,7 @@ msgstr "総重量"
 #: model:product.product,name:product.product_product_17
 #: model:product.template,name:product.product_product_17_product_template
 msgid "HDD SH-1"
-msgstr ""
+msgstr "HDD SH-1"
 
 #. module: product
 #: model:product.product,name:product.product_product_18
@@ -1251,7 +1252,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_19
 #: model:product.template,name:product.product_product_19_product_template
 msgid "HDD on Demand"
-msgstr ""
+msgstr "HDDオンデマンド"
 
 #. module: product
 #: model:product.product,description:product.product_product_32
@@ -1266,18 +1267,18 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Have Genius call the tunes."
-msgstr ""
+msgstr "天才は、曲を呼んできました。"
 
 #. module: product
 #: model:product.public.category,name:product.Headset
 msgid "Headset"
-msgstr ""
+msgstr "ヘッドセット"
 
 #. module: product
 #: model:product.product,name:product.product_product_33
 #: model:product.template,name:product.product_product_33_product_template
 msgid "Headset USB"
-msgstr ""
+msgstr "ヘッドセットUSB"
 
 #. module: product
 #: model:product.product,description:product.product_product_33
@@ -1295,7 +1296,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Hear, hear."
-msgstr ""
+msgstr "聞いて、聞いてください。"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_11
@@ -1307,13 +1308,13 @@ msgid ""
 "Width:  39.6 mm\n"
 "Depth:  5.4 mm\n"
 "Weight: 31 grams"
-msgstr ""
+msgstr "Height: 76.5 mm\nWidth:  39.6 mm\nDepth:  5.4 mm\nWeight: 31 grams"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Highly rated designs."
-msgstr ""
+msgstr "評価の高いデザイン。"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
@@ -1328,7 +1329,7 @@ msgid ""
 "making it 75 percent less reflective. And by re-architecting the LCD and "
 "moving it right up against the cover glass. So you see your photos, games, "
 "movies, and everything else in vivid, lifelike detail."
-msgstr ""
+msgstr "すでに華麗なワイドスクリーンディスプレイをさらに優れたものにするにはどうすればよいでしょうか？ 反射率を75％低下させます。 そして、LCDを再構成して、カバーガラスに向かって直ちに動かしてください。 あなたの写真、ゲーム、映画、その他すべてを鮮やかで実物のようなディテールで見ることができます。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor_inv
@@ -1350,7 +1351,7 @@ msgstr "この単位がどのくらい大きいか小さいかは、このカテ
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "How to get your groove on."
-msgstr ""
+msgstr "あなたのグルーヴを手に入れる方法。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_id
@@ -1376,25 +1377,25 @@ msgstr "ID"
 #: model:ir.model.fields,help:product.field_product_product_message_unread
 #: model:ir.model.fields,help:product.field_product_template_message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_message_needaction
 #: model:ir.model.fields,help:product.field_product_template_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "If it's made for iPad, it's made for iPad mini."
-msgstr ""
+msgstr "If it's made for iPad, it's made for iPad mini."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_active
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
-msgstr ""
+msgstr "チェックを外すと、製品を削除せずに価格表を非表示にできます。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_active
@@ -1414,21 +1415,21 @@ msgid ""
 "Image of the product variant (Big-sized image of product template if false)."
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr ""
+msgstr "製品バリアント（falseの場合、製品テンプレートの大サイズの画像）の画像。これ自動的に保存され、アスペクト比で、1024x1024px画像としてサイズが変更されます。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr ""
+msgstr "製品バリアント(falseの場合、製品テンプレートの中サイズの画像)の画像"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_small
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr ""
+msgstr "製品バリアント(falseの場合、製品テンプレートの小サイズの画像)の画像。"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1439,12 +1440,12 @@ msgstr "開発で"
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Individually calibrated for true-to-life color."
-msgstr ""
+msgstr "真に生き生きとした色を個別に較正。"
 
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Information about a product vendor"
-msgstr ""
+msgstr "製品ベンダー情報"
 
 #. module: product
 #: model:product.product,name:product.product_product_38
@@ -1459,7 +1460,7 @@ msgid ""
 "Inside each earpiece is a stainless steel mesh cap that protects the precision acoustic\n"
 "                                    components from dust and debris. You can remove the caps for cleaning or replace\n"
 "                                    them with an extra set that’s included in the box."
-msgstr ""
+msgstr "各イヤホンの内部には、精密な音響部品を埃や破片から保護するステンレス製メッシュキャップがあります。\nキャップを取り外してクリーニングするか、ボックスに付属のセットで交換してください。"
 
 #. module: product
 #: model:product.category,name:product.product_category_2
@@ -1494,7 +1495,7 @@ msgstr "在庫"
 #: model:ir.model.fields,field_description:product.field_product_product_message_is_follower
 #: model:ir.model.fields,field_description:product.field_product_template_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "フォロー中"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
@@ -1506,30 +1507,30 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Keep it clean."
-msgstr ""
+msgstr "それをきれいに保つ。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Key Features"
-msgstr ""
+msgstr "主機能"
 
 #. module: product
 #: model:product.public.category,name:product.Keyboard_Mouse
 msgid "Keyboard / Mouse"
-msgstr ""
+msgstr "キーボード / マウス"
 
 #. module: product
 #: model:product.product,name:product.product_product_27
 #: model:product.template,name:product.product_product_27_product_template
 msgid "Laptop Customized"
-msgstr ""
+msgstr "ラップトップカスタマイズ済"
 
 #. module: product
 #: model:product.product,name:product.product_product_25
 #: model:product.template,name:product.product_product_25_product_template
 msgid "Laptop E5023"
-msgstr ""
+msgstr "ラップトップ E5023"
 
 #. module: product
 #: model:product.product,name:product.product_product_26
@@ -1540,13 +1541,13 @@ msgstr ""
 #. module: product
 #: model:product.public.category,name:product.laptops
 msgid "Laptops"
-msgstr ""
+msgstr "ラップトップ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_last_post
 #: model:ir.model.fields,field_description:product.field_product_template_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "最終メッセージ日"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute___last_update
@@ -1612,7 +1613,7 @@ msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
-msgstr ""
+msgstr "発注書の確認と、倉庫内の製品の受領日の間のリードタイム。購買発注計画の自動計算のためのスケジューラによって使用されます。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_left
@@ -1638,13 +1639,13 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_litre
 msgid "Liter(s)"
-msgstr ""
+msgstr "リッター（燃料量）"
 
 #. module: product
 #: model:product.product,name:product.product_product_58
 #: model:product.template,name:product.product_product_58_product_template
 msgid "Little server"
-msgstr ""
+msgstr "小さいサーバ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_packaging_ids
@@ -1660,7 +1661,7 @@ msgstr "複数の単位を管理"
 #. module: product
 #: model:res.groups,name:product.group_pricelist_item
 msgid "Manage Pricelist Items"
-msgstr ""
+msgstr "価格リスト明細を管理"
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -1671,7 +1672,7 @@ msgstr "製品パッケージを管理"
 #: model:ir.model.fields,field_description:product.field_base_config_settings_group_product_variant
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr ""
+msgstr "製品バリアントを管理"
 
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
@@ -1686,18 +1687,18 @@ msgstr "副次的な単位を管理"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Max. Margin"
-msgstr "最大利鞘"
+msgstr "最大マージン"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_max_margin
 msgid "Max. Price Margin"
-msgstr "最大利鞘"
+msgstr "最大価格マージン"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_medium
 #: model:ir.model.fields,field_description:product.field_product_template_image_medium
 msgid "Medium-sized image"
-msgstr ""
+msgstr "画像 (中)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image_medium
@@ -1705,12 +1706,12 @@ msgid ""
 "Medium-sized image of the product. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
 "one of those sizes. Use this field in form views or some kanban views."
-msgstr ""
+msgstr "製品の中型イメージ。自動的に画像がこれらのサイズのいずれか超えた場合にのみ、保存アスペクト比で、128x128px画像にサイズが変更されます。フォームビューまたは一部かんばんビューでは、このフィールドを使用します。"
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
 msgid "Memory"
-msgstr ""
+msgstr "メモリ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_ids
@@ -1727,12 +1728,12 @@ msgstr "メッセージと通信履歴"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Min. Margin"
-msgstr "最小利鞘"
+msgstr "最小マージン"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_min_margin
 msgid "Min. Price Margin"
-msgstr "最小利鞘"
+msgstr "最小価格マージン"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_min_quantity
@@ -1748,13 +1749,13 @@ msgstr "最小数量"
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "More energy efficient."
-msgstr ""
+msgstr "さらにエネルギー効率が良い。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "More features."
-msgstr ""
+msgstr "追加機能。"
 
 #. module: product
 #: model:product.product,name:product.product_product_21
@@ -1766,25 +1767,25 @@ msgstr ""
 #: model:product.product,name:product.product_product_20
 #: model:product.template,name:product.product_product_20_product_template
 msgid "Motherboard I9P57"
-msgstr ""
+msgstr "マザーボードI9P57"
 
 #. module: product
 #: model:product.product,name:product.product_product_10
 #: model:product.template,name:product.product_product_10_product_template
 msgid "Mouse, Optical"
-msgstr ""
+msgstr "光学マウス"
 
 #. module: product
 #: model:product.product,name:product.product_product_12
 #: model:product.template,name:product.product_product_12_product_template
 msgid "Mouse, Wireless"
-msgstr ""
+msgstr "ワイヤレスマウス"
 
 #. module: product
 #: model:product.product,name:product.product_product_31
 #: model:product.template,name:product.product_product_31_product_template
 msgid "Multimedia Speakers"
-msgstr ""
+msgstr "マルチメディアスピーカ"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1792,7 +1793,7 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Music. It's what beats inside."
-msgstr ""
+msgstr "Music. It's what beats inside."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_name
@@ -1808,7 +1809,7 @@ msgstr "名称"
 #. module: product
 #: model:product.public.category,name:product.network
 msgid "Network"
-msgstr ""
+msgstr "ネットワーク"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1829,13 +1830,13 @@ msgstr "注記"
 #: model:ir.model.fields,field_description:product.field_product_product_message_needaction_counter
 #: model:ir.model.fields,field_description:product.field_product_template_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "アクションの数"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "アクションを必要とするメッセージの数"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_message_unread_counter
@@ -1866,7 +1867,7 @@ msgstr ""
 #: model:product.product,description:product.product_product_19
 #: model:product.template,description:product.product_product_19_product_template
 msgid "On demand hard-disk having capacity based on requirement."
-msgstr ""
+msgstr "ハードディスク容量は要件に基づいて用意します"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -1877,13 +1878,13 @@ msgstr "その他情報"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_base_pricelist_id
 #: selection:product.pricelist.item,base:0
 msgid "Other Pricelist"
-msgstr "その他の価格リスト"
+msgstr "他の価格リスト"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Over 375,000 apps."
-msgstr ""
+msgstr "375,000以上のアプリ。"
 
 #. module: product
 #: model:ir.model,name:product.model_product_packaging
@@ -1896,12 +1897,12 @@ msgstr "梱包"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_name
 msgid "Packaging Type"
-msgstr ""
+msgstr "梱包タイプ"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
 msgid "Packagings"
-msgstr ""
+msgstr "梱包タイプ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_id
@@ -1916,7 +1917,7 @@ msgstr "取引先"
 #. module: product
 #: model:product.public.category,name:product.Pen_Drive
 msgid "Pen Drive"
-msgstr ""
+msgstr "ペンドライブ"
 
 #. module: product
 #: model:product.product,name:product.product_product_29
@@ -1933,17 +1934,17 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Percentage (discount)"
-msgstr ""
+msgstr "パーセント (値引)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_percent_price
 msgid "Percentage Price"
-msgstr ""
+msgstr "価格に対するパーセント"
 
 #. module: product
 #: model:product.category,name:product.product_category_5
 msgid "Physical"
-msgstr ""
+msgstr "商品"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1951,13 +1952,13 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Playlists. The perfect mix for every mood."
-msgstr ""
+msgstr "プレイリスト。 あらゆる気分のための完璧なミックス。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Plays where you play"
-msgstr ""
+msgstr "Plays where you play"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -1966,13 +1967,13 @@ msgid ""
 "Powered by fourth-generation Intel Core processors, this iMac is the fastest"
 " yet. Every model in the lineup comes standard with a quad-core Intel Core "
 "i5 processor, starting at 2.7GHz and topping out at 3.4GHz."
-msgstr ""
+msgstr "Powered by fourth-generation Intel Core processors, this iMac is the fastest yet. Every model in the lineup comes standard with a quad-core Intel Core i5 processor, starting at 2.7GHz and topping out at 3.4GHz."
 
 #. module: product
 #: model:product.product,name:product.product_product_0
 #: model:product.template,name:product.product_product_0_product_template
 msgid "Prepaid Consulting"
-msgstr ""
+msgstr "プリペイドコンサルティング"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price
@@ -1993,19 +1994,19 @@ msgstr "価格計算"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_discount
 msgid "Price Discount"
-msgstr "価格割引"
+msgstr "価格値引"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_price_extra
 msgid "Price Extra"
-msgstr ""
+msgstr "価格エクストラ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value_price_extra
 msgid ""
 "Price Extra: Extra price for the variant with this attribute value on sale "
 "price. eg. 200 price extra, 1000 + 200 = 1200."
-msgstr ""
+msgstr "価格追加：販売価格でこの属性値を持つバリアントのための追加価格です。 例えば。200 価格追加、1000 + 200=1200。"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -2030,7 +2031,7 @@ msgstr "追加料金の価格"
 #: model:ir.ui.view,arch_db:product.product_kanban_view
 #: model:ir.ui.view,arch_db:product.product_template_kanban_view
 msgid "Price:"
-msgstr ""
+msgstr "価格:"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_price_list
@@ -2050,7 +2051,7 @@ msgstr "価格リスト"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_applied_on
 msgid "Pricelist Item applicable on selected option"
-msgstr ""
+msgstr "選択したオプションに該当する価格表の項目"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_ids
@@ -2061,7 +2062,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist Items"
-msgstr ""
+msgstr "価格リストアイテム"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_name
@@ -2083,18 +2084,18 @@ msgstr "価格リスト"
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Pricelists On Product"
-msgstr ""
+msgstr "製品にて価格リスト管理"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
 msgid "Pricelists are managed on"
-msgstr ""
+msgstr "価格表は、これで管理されています"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Pricing"
-msgstr ""
+msgstr "価格設定"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
@@ -2104,7 +2105,7 @@ msgstr "印刷"
 #. module: product
 #: model:product.public.category,name:product.printer
 msgid "Printer"
-msgstr ""
+msgstr "プリンタ"
 
 #. module: product
 #: model:product.product,name:product.product_product_37
@@ -2122,7 +2123,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_22
 #: model:product.template,name:product.product_product_22_product_template
 msgid "Processor Core i5 2.70 Ghz"
-msgstr ""
+msgstr "Processor Core i5 2.70 Ghz"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -2224,7 +2225,7 @@ msgstr "製品バリアント"
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
 msgid "Product uom categ"
-msgstr "製品単位分類"
+msgstr "製品単位カテゴリ"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action
@@ -2261,7 +2262,7 @@ msgstr "製品価格検索"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Products your store in the inventory"
-msgstr ""
+msgstr "インベントリ内のお店の製品"
 
 #. module: product
 #: code:addons/product/product.py:817
@@ -2273,7 +2274,7 @@ msgstr "製品： "
 #: model:ir.model.fields,field_description:product.field_product_template_lst_price
 #: selection:product.pricelist.item,base:0
 msgid "Public Price"
-msgstr "公表価格"
+msgstr "公開価格"
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -2343,7 +2344,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "RAM SR5"
-msgstr ""
+msgstr "RAM SR5"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_factor
@@ -2359,7 +2360,7 @@ msgstr "このカテゴリの基準単位"
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Remote control for power, volume, track seek"
-msgstr ""
+msgstr "パワー、ボリューム、トラックシークのリモートコントロール"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_right
@@ -2374,7 +2375,7 @@ msgid ""
 "                                    They’re immersive, full-screen apps that let you do almost anything\n"
 "                                    you can imagine. And with automatic updates,\n"
 "                                    you're always getting the best experience possible."
-msgstr ""
+msgstr "Right from the start, apps made for iPad also work with iPad mini.\n                                    They’re immersive, full-screen apps that let you do almost anything\n                                    you can imagine. And with automatic updates,\n                                    you're always getting the best experience possible."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -2390,7 +2391,7 @@ msgid ""
 "                                    iPad. It’s simple yet powerful. Thin and light yet\n"
 "                                    full-featured. It can do just about everything and\n"
 "                                    be just about anything."
-msgstr ""
+msgstr "Right from the start, there’s a lot to love about\n                                    iPad. It’s simple yet powerful. Thin and light yet\n                                    full-featured. It can do just about everything and\n                                    be just about anything."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -2401,7 +2402,7 @@ msgid ""
 "                                   featured. It can do just about everything and be just\n"
 "                                   about anything.And because it’s so easy to use, it’s\n"
 "                                   easy to love."
-msgstr ""
+msgstr "Right from the start, there’s a lot to love about iPad.\n                                   It’s simple yet powerful. Thin and light yet full-\n                                   featured. It can do just about everything and be just\n                                   about anything.And because it’s so easy to use, it’s\n                                   easy to love."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2469,18 +2470,18 @@ msgid ""
 "                                        you wouldn’t have thought of yourself, create Genius Mixes in iTunes\n"
 "                                        and sync the ones you like to iPod nano. Then tap Genius Mixes and\n"
 "                                        rediscover songs you haven’t heard in a while — or find music you forgot you even had."
-msgstr ""
+msgstr "Say you’re listening to a song you love and you want to stay in the mood.\n                                        Just tap Genius. It finds other songs on iPod nano that go great together\n                                        and makes a Genius playlist for you. For more song combinations\n                                        you wouldn’t have thought of yourself, create Genius Mixes in iTunes\n                                        and sync the ones you like to iPod nano. Then tap Genius Mixes and\n                                        rediscover songs you haven’t heard in a while — or find music you forgot you even had."
 
 #. module: product
 #: model:product.public.category,name:product.Screen
 msgid "Screen"
-msgstr ""
+msgstr "スクリーン"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_categ_id
 #: model:ir.model.fields,help:product.field_product_template_categ_id
 msgid "Select category for the current product"
-msgstr "現在の製品のために分類を選択して下さい。"
+msgstr "現在の製品のカテゴリを選択して下さい。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_sequence
@@ -2499,20 +2500,20 @@ msgstr "付番"
 #: model:product.public.category,name:product.server
 #: model:product.template,name:product.product_product_59_product_template
 msgid "Server"
-msgstr ""
+msgstr "サーバ"
 
 #. module: product
 #: code:addons/product/product.py:460
 #, python-format
 msgid "Service"
-msgstr ""
+msgstr "サービス"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 #: model:product.category,name:product.product_category_3
 #: model:product.public.category,name:product.services
 msgid "Services"
-msgstr "サービス業"
+msgstr "サービス"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_round
@@ -2520,12 +2521,12 @@ msgid ""
 "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr "この値の倍数となる価格を設定します。\n丸めは割引後で追加料金の前に適用します。\n最終価格を9.99にするには、丸めを10に追加料金を-0.01とします。"
+msgstr "この値の倍数となる価格を設定します。\n丸めは値引後で追加料金の前に適用します。\n最終価格を9.99にするには、丸めを10に追加料金を-0.01とします。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
 msgid "Share product to all companies"
-msgstr ""
+msgstr "すべての会社でパートナーを共有"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_base_config_settings_company_share_product
@@ -2533,19 +2534,19 @@ msgid ""
 "Share your product to all companies defined in your instance.\n"
 " * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."
-msgstr ""
+msgstr "インスタンスに定義されているすべての企業にあなたのパートナーを共有します。\n * チェック：パートナーは、同社がパートナーに定義されている場合でも、すべての企業で閲覧できます。\n *　未チェック：各企業が唯一のパートナー（会社が定義されているパートナーを）見ることができます。会社に関係のないパートナーは、すべての企業に閲覧できます。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Sleek, compact design"
-msgstr ""
+msgstr "滑らかでコンパクトなデザイン"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_small
 #: model:ir.model.fields,field_description:product.field_product_template_image_small
 msgid "Small-sized image"
-msgstr ""
+msgstr "画像 (小)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image_small
@@ -2553,12 +2554,12 @@ msgid ""
 "Small-sized image of the product. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr ""
+msgstr "製品用の縮小されたイメージ。それは自動的に保存され、アスペクト比で、64x64px画像とサイズを変更します。小さな画像を必要とするどこでも、このフィールドを使用しています。"
 
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Smaller than the reference Unit of Measure"
-msgstr ""
+msgstr "基準単位より小さい"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2566,7 +2567,7 @@ msgstr ""
 msgid ""
 "Soft covers are available separately in blue, green or orange. Pick a color "
 "to match your style."
-msgstr ""
+msgstr "ソフトカバーは青、緑またはオレンジで別途購入できます。 自分のスタイルに合った色を選んでください。"
 
 #. module: product
 #: model:product.category,name:product.product_category_4
@@ -2577,28 +2578,28 @@ msgstr "ソフトウェア"
 #. module: product
 #: model:product.public.category,name:product.Speakers
 msgid "Speakers"
-msgstr ""
+msgstr "スピーカ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_categ_id
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
-msgstr ""
+msgstr "このルールは1つの製品だけに適用される場合は、製品を指定します。それ以外の場合は空のままにします。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_id
 msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
-msgstr ""
+msgstr "このルールが1つの製品にのみ適用される場合、製品を指定します。 それ以外の場合は空白にしておきます。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_tmpl_id
 msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
-msgstr ""
+msgstr "このルールが1つの製品テンプレートにのみ適用される場合は、テンプレートを指定します。 それ以外の場合は空白にしておきます。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_sale_ok
@@ -2611,17 +2612,17 @@ msgstr "受注明細で製品を選択できるかどうか指定します。"
 msgid ""
 "Specify the fixed amount to add or substract(if negative) to the amount "
 "calculated with the discount."
-msgstr ""
+msgstr "割引で計算された金額に(負の場合)を加算または減算する一定量を指定します。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_max_margin
 msgid "Specify the maximum amount of margin over the base price."
-msgstr ""
+msgstr "ベース価格の上マージンの最大量を指定します。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_min_margin
 msgid "Specify the minimum amount of margin over the base price."
-msgstr ""
+msgstr "ベース価格の上マージンの最小量を指定します。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_start
@@ -2632,12 +2633,12 @@ msgstr "開始日"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_start
 msgid "Start date for this vendor price"
-msgstr ""
+msgstr "このベンダー価格の開始日"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_start
 msgid "Starting date for the pricelist item validation"
-msgstr ""
+msgstr "価格リスト項目の検証のための開始日"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_state
@@ -2654,13 +2655,13 @@ msgstr "仕入先価格リスト"
 #: model:product.product,name:product.product_product_2
 #: model:product.template,name:product.product_product_2_product_template
 msgid "Support Contract (on timesheet)"
-msgstr ""
+msgstr "サポート契約(タイムシートで)"
 
 #. module: product
 #: model:product.product,name:product.product_product_47
 #: model:product.template,name:product.product_product_47_product_template
 msgid "Switch, 24 ports"
-msgstr ""
+msgstr "Switch, 24 ports"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2668,7 +2669,7 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Sync to your heart’s content."
-msgstr ""
+msgstr "Sync to your heart’s content."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2680,7 +2681,7 @@ msgid ""
 "                                    Or everything by one artist. You can even browse by genres or composers.\n"
 "                                    Flip through your music: Album art looks great on the bigger screen.\n"
 "                                    Or to keep things fresh, give iPod nano a shake and it shuffles to a different song in your music library."
-msgstr ""
+msgstr "Tap to play your favorite songs. Or entire albums.\n                                    Or everything by one artist. You can even browse by genres or composers.\n                                    Flip through your music: Album art looks great on the bigger screen.\n                                    Or to keep things fresh, give iPod nano a shake and it shuffles to a different song in your music library."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_name_template
@@ -2697,7 +2698,7 @@ msgid ""
 "                                    Three different sizes of ear tips are included so you can find a perfect fit for each ear.\n"
 "                                    Also included are a convenient carrying case for the ear tips and a cable-control case\n"
 "                                    for the headphones themselves."
-msgstr ""
+msgstr "The Apple In-Ear Headphones deliver a truly immersive sound experience by drastically\n                                    reducing unwanted outside noises. The soft, silicone ear tips fit snugly and comfortably\n                                    in your ear, creating a seal that isolates your music from your surroundings.\n                                    Three different sizes of ear tips are included so you can find a perfect fit for each ear.\n                                    Also included are a convenient carrying case for the ear tips and a cable-control case\n                                    for the headphones themselves."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2707,7 +2708,7 @@ msgid ""
 "                                    palm of your hand, yet gives you full, natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n"
 "                                    full-featured. It can do just about everything and\n"
 "                                    experience music just about anywhere."
-msgstr ""
+msgstr "The Bose® SoundLink® mini is Bose's smallest portable Bluetooth speaker. Its ultra-compact size fits in the \n                                    palm of your hand, yet gives you full, natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n                                    full-featured. It can do just about everything and\n                                    experience music just about anywhere."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2718,14 +2719,14 @@ msgid ""
 "                                        Its low profile lets you place it almost anywhere and\n"
 "                                        provides a low center of gravity that makes it nearly\n"
 "                                        impossible to tip over."
-msgstr ""
+msgstr "The SoundLink® Mini speaker is small and light enough\n                                        to tuck into your bag. It weighs in at just 1.5 pounds.\n                                        Its low profile lets you place it almost anywhere and\n                                        provides a low center of gravity that makes it nearly\n                                        impossible to tip over."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid ""
 "The computed price is expressed in the default Unit of Measure of the "
 "product."
-msgstr ""
+msgstr "価格計算には製品のデフォルト単位が使用されます。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_rounding
@@ -2743,12 +2744,12 @@ msgstr "単位の変換比率は0にできません。"
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "The desktop. In its most advanced form ever"
-msgstr ""
+msgstr "デスクトップ。 その最も進んだ形で"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_sequence
 msgid "The first in the sequence is the default one."
-msgstr ""
+msgstr "The first in the sequence is the default one."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -2762,7 +2763,7 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4d_product_template
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "The full iPad experience."
-msgstr ""
+msgstr "The full iPad experience."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_9
@@ -2771,7 +2772,7 @@ msgid ""
 "The incredibly thin Apple Wireless Keyboard uses Bluetooth technology,\n"
 "                                    which makes it compatible with iPad. And you’re free to type wherever\n"
 "                                    you like — with the keyboard in front of your iPad or on your lap."
-msgstr ""
+msgstr "The incredibly thin Apple Wireless Keyboard uses Bluetooth technology,\n                                    which makes it compatible with iPad. And you’re free to type wherever\n                                    you like — with the keyboard in front of your iPad or on your lap."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_min_qty
@@ -2779,7 +2780,7 @@ msgid ""
 "The minimal quantity to purchase from this vendor, expressed in the vendor "
 "Product Unit of Measure if not any, in the default unit of measure of the "
 "product otherwise."
-msgstr ""
+msgstr "このベンダーから購入する最小限の量、ベンダーの製品単位、そうでなければ製品のデフォルトの単位、どちらかで表現。"
 
 #. module: product
 #: code:addons/product/product.py:329
@@ -2787,12 +2788,12 @@ msgstr ""
 msgid ""
 "The operation cannot be completed:\n"
 "You are trying to delete an attribute value with a reference on a product variant."
-msgstr ""
+msgstr "操作を完了できません:\n製品バリアントに基づいて属性値を削除しようとしています。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_price
 msgid "The price to purchase a product"
-msgstr ""
+msgstr "製品発注のための価格"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -2802,14 +2803,14 @@ msgid ""
 "The product form contains information to simplify the sale\n"
 "                process: price, notes in the quotation, accounting data,\n"
 "                procurement methods, etc."
-msgstr ""
+msgstr "製品フォームには、販売プロセスを簡素化するための情報が含まれています。\n                     価格、見積の注記、会計データ、調達方法などです。\n "
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
 msgid ""
 "The product form contains information to simplify the sale process: price, "
 "notes in the quotation, accounting data, procurement methods, etc."
-msgstr ""
+msgstr "製品フォームには、販売プロセスを簡素化するための情報が含まれています。価格、見積の注記、会計データ、調達方法などです。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2818,7 +2819,7 @@ msgid ""
 "The rechargeable lithium-ion battery delivers up to seven hours of playtime.\n"
 "                                    And at home, you can listen even longer—the charging cradle lets\n"
 "                                    you listen while it charges."
-msgstr ""
+msgstr "The rechargeable lithium-ion battery delivers up to seven hours of playtime.\n                                    And at home, you can listen even longer—the charging cradle lets\n                                    you listen while it charges."
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_9
@@ -2826,7 +2827,7 @@ msgstr ""
 msgid ""
 "The sleek aluminium Apple Wireless Keyboard.\n"
 "            "
-msgstr ""
+msgstr "The sleek aluminium Apple Wireless Keyboard.\n            "
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2837,7 +2838,7 @@ msgid ""
 "                                    smartphone, iPad® or other Bluetooth device.\n"
 "                                    And it remembers the most recent six devices you've used,\n"
 "                                    so reconnecting is even simpler."
-msgstr ""
+msgstr "The speaker has a range of about 30 feet, so you can enjoy\n                                    the sound you want without wires. It pairs easily with your\n                                    smartphone, iPad® or other Bluetooth device.\n                                    And it remembers the most recent six devices you've used,\n                                    so reconnecting is even simpler."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
@@ -2854,7 +2855,7 @@ msgstr "立法メートルでの容積"
 #: model:ir.model.fields,help:product.field_product_product_weight
 #: model:ir.model.fields,help:product.field_product_template_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr ""
+msgstr "このコンテンツの重量のKgで表示、梱包数等の表示は含みません。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -2866,13 +2867,13 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4c_product_template
 #: model:product.template,website_description:product.product_product_4d_product_template
 msgid "There is less of it, but no less to it."
-msgstr ""
+msgstr "それはそれほどではありませんが、それ以下ではありません。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "There's less of it, but no less to it."
-msgstr ""
+msgstr "それはそれほどではありませんが、それ以下ではありません。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2884,12 +2885,12 @@ msgid ""
 "                                        Activate Genius in iTunes on your computer, and it automatically finds songs that sound\n"
 "                                        great together. Then it creates Genius Mixes, which you can easily sync to your iPod.\n"
 "                                        It’s the perfect way to rediscover songs you haven’t listened to in forever."
-msgstr ""
+msgstr "There’s another way to get a good mix of music on iPod: Let Genius do the work.\n                                        Activate Genius in iTunes on your computer, and it automatically finds songs that sound\n                                        great together. Then it creates Genius Mixes, which you can easily sync to your iPod.\n                                        It’s the perfect way to rediscover songs you haven’t listened to in forever."
 
 #. module: product
 #: sql_constraint:product.attribute.value:0
 msgid "This attribute value already exists !"
-msgstr ""
+msgstr "属性の値は既に存在します。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_uom
@@ -2901,14 +2902,14 @@ msgstr "これは製品フォームから来ています。"
 msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
-msgstr ""
+msgstr "このフィールドは、この製品の種類で使用するイメージを保持しています。最大1024x1024pxサイズです。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image
 msgid ""
 "This field holds the image used as image for the product, limited to "
 "1024x1024px."
-msgstr ""
+msgstr "このフィールドは、この製品のイメージとして使用するイメージを保持しています。最大1024x1024pxサイズです。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_qty
@@ -2918,17 +2919,17 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_price_extra
 msgid "This is the sum of the extra price of all attributes"
-msgstr ""
+msgstr "すべての属性の追加料金の合計です。"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note will be displayed on requests for quotation."
-msgstr ""
+msgstr "見積依頼に表示する説明"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note will be displayed on the quotations."
-msgstr ""
+msgstr "見積に表示する説明"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
@@ -2942,26 +2943,26 @@ msgstr "この価格リストは現在のパートナに販売するために、
 msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
+msgstr "見積依頼を印刷する場合、このベンダーの製品コードが使用されます。内部のものを使用する場合は空白のままにします。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_name
 msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
+msgstr "見積依頼を印刷する場合、このベンダーの製品名が使用されます。内部のものをを使用する場合は空白のままにします。"
 
 #. module: product
 #: model:product.product,name:product.product_product_39
 #: model:product.template,name:product.product_product_39_product_template
 msgid "Toner Cartridge"
-msgstr ""
+msgstr "トナーカートリッジ"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Two is better than one."
-msgstr ""
+msgstr "２は１よりも良い。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_uom_type
@@ -2978,7 +2979,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_48
 #: model:product.template,name:product.product_product_48_product_template
 msgid "USB Adapter"
-msgstr ""
+msgstr "USBアダプタ"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2986,19 +2987,19 @@ msgstr ""
 msgid ""
 "USB port allows for software update to ensure ongoing Bluetooth device "
 "compatibility"
-msgstr ""
+msgstr "USBポートによりソフトウェアのアップデートが可能で、Bluetoothデバイスとの互換性を確保"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Ultrafast wireless."
-msgstr ""
+msgstr "ウルトラ高速無線"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Ultrathin design"
-msgstr ""
+msgstr "極薄デザイン"
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -3021,7 +3022,7 @@ msgstr "単位カテゴリ"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_category_id
 msgid "Unit of Measure Category"
-msgstr ""
+msgstr "単位カテゴリ"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
@@ -3040,7 +3041,7 @@ msgstr "単位"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_uom_categ_form_view
 msgid "Units of Measure categories"
-msgstr "単位の分類"
+msgstr "単位カテゴリ"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
@@ -3055,7 +3056,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Universal iPod docking station fits most iPod/iPhone models"
-msgstr ""
+msgstr "Universal iPod docking station fits most iPod/iPhone models"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -3067,7 +3068,7 @@ msgid ""
 "                                    drivers help ensure accurate, detailed sound across the entire sonic spectrum.\n"
 "                                    The result: you’re immersed in the music and hear details you never knew existed.\n"
 "                                    Even when listening to an old favorite, you may feel like you’re hearing it for the first time."
-msgstr ""
+msgstr "Unlike many small headphones, each earpiece of the Apple In-Ear Headphones\n                                    contains two separate high-performance drivers — a woofer to handle bass and\n                                    mid-range sounds and a tweeter for high-frequency audio. These dedicated\n                                    drivers help ensure accurate, detailed sound across the entire sonic spectrum.\n                                    The result: you’re immersed in the music and hear details you never knew existed.\n                                    Even when listening to an old favorite, you may feel like you’re hearing it for the first time."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_unread
@@ -3084,7 +3085,7 @@ msgstr "未読メッセージカウンター"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Validity"
-msgstr ""
+msgstr "有効期間"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_name
@@ -3104,12 +3105,12 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_variant
 msgid "Variant Image"
-msgstr ""
+msgstr "バリアント画像"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Variant Information"
-msgstr ""
+msgstr "バリアント情報"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3121,7 +3122,7 @@ msgstr "バリアント価格"
 #: model:ir.ui.view,arch_db:product.attribute_tree_view
 #: model:ir.ui.view,arch_db:product.variants_tree_view
 msgid "Variant Values"
-msgstr ""
+msgstr "バリアント値"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_product_ids
@@ -3136,38 +3137,38 @@ msgstr "バリアント"
 #: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Vendor"
-msgstr ""
+msgstr "仕入先"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
-msgstr ""
+msgstr "仕入先情報"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
 msgid "Vendor Product Code"
-msgstr ""
+msgstr "仕入先製品コード"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_name
 msgid "Vendor Product Name"
-msgstr ""
+msgstr "仕入先製品名"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_uom
 msgid "Vendor Unit of Measure"
-msgstr ""
+msgstr "仕入先単位"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_name
 msgid "Vendor of this product"
-msgstr ""
+msgstr "この製品の仕入先"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Vendors"
-msgstr "外注先"
+msgstr "仕入先"
 
 #. module: product
 #: selection:product.category,type:0
@@ -3185,14 +3186,14 @@ msgstr "容積"
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Volume control on main system"
-msgstr ""
+msgstr "メインシステムのボリュームコントロール"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "Wall charger can be plugged into the cradle or directly into the speaker"
-msgstr ""
+msgstr "Wall charger can be plugged into the cradle or directly into the speaker"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_warranty
@@ -3223,19 +3224,19 @@ msgstr "重量等"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "When one playlist isn’t enough."
-msgstr ""
+msgstr "1つのプレイリストでは不十分です。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_id
 msgid ""
 "When this field is filled in, the vendor data will only apply to the "
 "variant."
-msgstr ""
+msgstr "このフィールドは記入されている場合、ベンダーのデータは、バリアントに適用されます。"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
 msgid "White"
-msgstr ""
+msgstr "白"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -3249,12 +3250,12 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4d_product_template
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Why you'll love an iPad."
-msgstr ""
+msgstr "Why you'll love an iPad."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_3
 msgid "Wi-Fi"
-msgstr ""
+msgstr "Wi-Fi"
 
 #. module: product
 #: model:product.product,name:product.product_product_40
@@ -3266,7 +3267,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_41
 #: model:product.template,name:product.product_product_41_product_template
 msgid "Windows Home Server 2011"
-msgstr ""
+msgstr "Windows Home サーバ 2011"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -3277,14 +3278,14 @@ msgid ""
 "                                   cellular data networks around the world, iPad mini\n"
 "                                   lets you download content, stream video,\n"
 "                                   and browse the web at amazing speeds."
-msgstr ""
+msgstr "With advanced Wi‑Fi that’s up to twice as fast as\n                                   any previous-generation iPad and access to fast\n                                   cellular data networks around the world, iPad mini\n                                   lets you download content, stream video,\n                                   and browse the web at amazing speeds."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_base_config_settings_group_product_variant
 msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
-msgstr ""
+msgstr "製品バリアントとの共用で、例えば、eコマースでは、同じ製品のいくつかのバリアント定義で使いやすい製品管理を定義することができます"
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
@@ -3306,7 +3307,7 @@ msgid ""
 "You must define a product for everything you sell, whether it's\n"
 "                a physical product, a consumable or a service you offer to\n"
 "                customers."
-msgstr ""
+msgstr "顧客に販売する製品すべてについて定義する必要があります。実態のある商品、\n                   サービスすべてです。"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
@@ -3326,13 +3327,13 @@ msgid ""
 "                                        to iPod, and you can play the perfect mix for whatever\n"
 "                                        mood strikes you. VoiceOver tells you the name of each playlist,\n"
 "                                        so it’s easy to switch between them and find the one you want without looking."
-msgstr ""
+msgstr "You probably have multiple playlists in iTunes on your computer.\n                                        One for your commute. One for the gym. Sync those playlists\n                                        to iPod, and you can play the perfect mix for whatever\n                                        mood strikes you. VoiceOver tells you the name of each playlist,\n                                        so it’s easy to switch between them and find the one you want without looking."
 
 #. module: product
 #: model:product.product,name:product.product_product_43
 #: model:product.template,name:product.product_product_43_product_template
 msgid "Zed+ Antivirus"
-msgstr ""
+msgstr "Zed+ Antivirus"
 
 #. module: product
 #: model:ir.model,name:product.model_base_config_settings
@@ -3342,7 +3343,7 @@ msgstr "base.config.settings"
 #. module: product
 #: model:product.uom,name:product.product_uom_cm
 msgid "cm"
-msgstr ""
+msgstr "cm"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3352,59 +3353,59 @@ msgstr "日数"
 #. module: product
 #: model:ir.model,name:product.model_decimal_precision
 msgid "decimal.precision"
-msgstr "十進数．精度"
+msgstr "decimal.precision"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "e.g. Lamps"
-msgstr ""
+msgstr "レイ. ランプ"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "e.g. Odoo Enterprise Susbcription"
-msgstr ""
+msgstr "例: Odooエンタープライズサブスクリプション"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "e.g. USD Retailers"
-msgstr ""
+msgstr "例. USD小売業"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_uom_form_view
 msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
+msgstr "注記: 1 * (基準単位) = 比率 * (本単位)"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_uom_form_view
 msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
+msgstr "注記: 1 * (本単位) = 比率 * (基準単位)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_floz
 msgid "fl oz"
-msgstr ""
+msgstr "fl oz"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_foot
 msgid "foot(ft)"
-msgstr ""
+msgstr "foot(ft)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_gal
 msgid "gal(s)"
-msgstr ""
+msgstr "gal(s)"
 
 #. module: product
 #: model:product.product,name:product.product_product_8
 #: model:product.template,name:product.product_product_8_product_template
 msgid "iMac"
-msgstr ""
+msgstr "iMac"
 
 #. module: product
 #: model:product.product,name:product.product_product_6
 #: model:product.template,name:product.product_product_6_product_template
 msgid "iPad Mini"
-msgstr ""
+msgstr "iPad Mini"
 
 #. module: product
 #: model:product.product,name:product.product_product_4
@@ -3416,7 +3417,7 @@ msgstr ""
 #: model:product.template,name:product.product_product_4c_product_template
 #: model:product.template,name:product.product_product_4d_product_template
 msgid "iPad Retina Display"
-msgstr ""
+msgstr "iPad Retina Display"
 
 #. module: product
 #: model:product.product,name:product.product_product_11
@@ -3424,7 +3425,7 @@ msgstr ""
 #: model:product.template,name:product.product_product_11_product_template
 #: model:product.template,name:product.product_product_11b_product_template
 msgid "iPod"
-msgstr ""
+msgstr "iPod"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -3435,32 +3436,32 @@ msgid ""
 "iTunes on your Mac or PC makes it easy to load up\n"
 "                                        your iPod. Just choose the playlists, audiobooks,\n"
 "                                        podcasts, and other audio files you want, then sync."
-msgstr ""
+msgstr "iTunes on your Mac or PC makes it easy to load up\n                                        your iPod. Just choose the playlists, audiobooks,\n                                        podcasts, and other audio files you want, then sync."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_inch
 msgid "inch(es)"
-msgstr ""
+msgstr "inch(es)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
 msgid "kg"
-msgstr ""
+msgstr "kg"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_km
 msgid "km"
-msgstr ""
+msgstr "km"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_lb
 msgid "lb(s)"
-msgstr ""
+msgstr "lb(s)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_mile
 msgid "mile(s)"
-msgstr ""
+msgstr "mile(s)"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3470,32 +3471,32 @@ msgstr "ヶ月"
 #. module: product
 #: model:product.uom,name:product.product_uom_oz
 msgid "oz(s)"
-msgstr ""
+msgstr "oz(s)"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_line
 msgid "product.attribute.line"
-msgstr ""
+msgstr "product.attribute.line"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_price
 msgid "product.attribute.price"
-msgstr ""
+msgstr "product.attribute.price"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_value
 msgid "product.attribute.value"
-msgstr ""
+msgstr "product.attribute.value"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_history
 msgid "product.price.history"
-msgstr ""
+msgstr "product.price.history"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_qt
 msgid "qt"
-msgstr ""
+msgstr "qt"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_58
@@ -3503,7 +3504,7 @@ msgstr ""
 msgid ""
 "raid 1 \n"
 "            512ECC ram"
-msgstr ""
+msgstr "raid 1 \n            512ECC ram"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_59
@@ -3511,12 +3512,12 @@ msgstr ""
 msgid ""
 "raid 10 \n"
 "            2048ECC ram"
-msgstr ""
+msgstr "raid 10 \n            2048ECC ram"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist
 msgid "report.product.report_pricelist"
-msgstr ""
+msgstr "report.product.report_pricelist"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
@@ -3526,7 +3527,7 @@ msgstr "親会社"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template"
-msgstr ""
+msgstr "製品テンプレート"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view

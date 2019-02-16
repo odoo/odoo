@@ -3,21 +3,23 @@
 # * product
 # 
 # Translators:
+# zbik2607 <darek@krokus.com.pl>, 2016
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
-# Mariusz <waniliowy@o2.pl>, 2015
+# Mariusz, 2015
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-01-23 16:31+0000\n"
-"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>\n"
+"PO-Revision-Date: 2018-07-31 12:01+0000\n"
+"Last-Translator: Wiktor Kaźmierczak <wik92tor@wp.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
@@ -34,13 +36,13 @@ msgstr "# wariantów produktu"
 #: code:addons/product/pricelist.py:288
 #, python-format
 msgid "%s %% discount"
-msgstr ""
+msgstr "%s %% upust"
 
 #. module: product
 #: code:addons/product/pricelist.py:290
 #, python-format
 msgid "%s %% discount and %s surcharge"
-msgstr ""
+msgstr "%s %% upust i %s dopłata"
 
 #. module: product
 #: code:addons/product/product.py:710 code:addons/product/product.py:1134
@@ -61,7 +63,7 @@ msgid ""
 "Processor AMD 8-Core\n"
 "512MB RAM\n"
 "HDD SH-1"
-msgstr ""
+msgstr "Monitor 17\" LCD\nProcesor AMD 8-Core\n512MB RAM\nHDD SH-1"
 
 #. module: product
 #: model:product.product,description:product.product_product_25
@@ -71,7 +73,7 @@ msgid ""
 "4GB RAM\n"
 "Standard-1294P Processor\n"
 "QWERTY keyboard"
-msgstr ""
+msgstr "17\" Monitor\n4GB RAM\nStandard-1294P Processor\nQWERTY keyboard"
 
 #. module: product
 #: model:product.product,description:product.product_product_26
@@ -81,7 +83,7 @@ msgid ""
 "6GB RAM\n"
 "Hi-Speed 234Q Processor\n"
 "QWERTY keyboard"
-msgstr ""
+msgstr "17\" Monitor\n6GB RAM\nHi-Speed 234Q Processor\nQWERTY keyboard"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -98,13 +100,13 @@ msgid ""
 "                1TB hard drive\n"
 "                Intel Iris Pro graphics\n"
 "            "
-msgstr ""
+msgstr "2.7GHz quad-core Intel Core i5\n                Turbo Boost up to 3.2GHz\n                8GB (two 4GB) memory\n                1TB hard drive\n                Intel Iris Pro graphics\n            "
 
 #. module: product
 #: model:product.product,name:product.product_product_52
 #: model:product.template,name:product.product_product_52_product_template
 msgid "30m RJ45 wire"
-msgstr ""
+msgstr "30m RJ45 wire"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -124,36 +126,36 @@ msgid ""
 "7.9‑inch (diagonal) LED-backlit, 128Gb\n"
 "Dual-core A5 with quad-core graphics\n"
 "FaceTime HD Camera, 1.2 MP Photos"
-msgstr ""
+msgstr "7.9‑inch (diagonal) LED-backlit, 128Gb\nDual-core A5 with quad-core graphics\nFaceTime HD Camera, 1.2 MP Photos"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "75 percent less reflection."
-msgstr ""
+msgstr "75 procent mniej spostrzeżeń."
 
 #. module: product
 #: model:product.product,name:product.product_product_51
 #: model:product.template,name:product.product_product_51_product_template
 msgid "8-port Switch"
-msgstr ""
+msgstr "8-port Switch"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid ""
 "<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Public Price  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Cena podstawowa  -  </span>\n                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">inny cennik  -  </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>kg</span>"
-msgstr ""
+msgstr "<span>kg</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Currency</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Waluta</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -163,12 +165,12 @@ msgstr "<strong>Opis</strong>"
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Price List Name</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Nazwa listy cen</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Print date</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Data wydruku</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -182,7 +184,7 @@ msgstr ""
 #: code:addons/product/product.py:977 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
-msgstr ""
+msgstr "Dany kod kreskowy może być przypisany tylko do jednego produktu!"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_type
@@ -221,7 +223,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_9
 #: model:product.template,website_description:product.product_product_9_product_template
 msgid "A great Keyboard. Cordless."
-msgstr ""
+msgstr "Świetna klawiatura. Bezprzewodowa."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description
@@ -242,7 +244,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "A screen worthy of iPad."
-msgstr ""
+msgstr "Ekran wart iPada"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -253,7 +255,7 @@ msgid ""
 "About the size of a credit card — and just 5.4 mm thin — iPod nano is the thinnest iPod ever made.\n"
 "                                    The 2.5-inch Multi-Touch display is nearly twice as big as the display on the previous iPod nano,\n"
 "                                    so you can see more of the music, photos, and videos you love."
-msgstr ""
+msgstr "Mniej więcej rozmiaru karty kredytowej - i ma tylko 5.4 mm grubości - iPod nano jest najcieńszym iPodem jaki kiedykolwiek istniał.\n2,5-calowy wyświetlacz Multi-Touch jest prawie dwa razy większy niż wyświetlacz poprzedniego iPoda nano,\nwięc możesz zobaczyć więcej muzyki, zdjęć i filmów, które kochasz."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_needaction
@@ -283,7 +285,7 @@ msgstr "Wszystkie produkty"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "All general settings about this product are managed on"
-msgstr ""
+msgstr "Wszystkie ogólne ustawienia dotyczące tego produktu są zarządzane"
 
 #. module: product
 #: model:product.product,description:product.product_product_37
@@ -297,7 +299,7 @@ msgstr "Wszystko mająca drukarka z faxem i skanerem."
 msgid ""
 "And at the Apple Online Store, you can configure your iMac with an even more"
 " powerful Intel Core i7 processor, up to 3.5GHz."
-msgstr ""
+msgstr "A w Apple Online Store, możesz wyposażyć swojego iMaca w jeszcze potężniejszy procesor Intel Core i7, aż do 3.5GHz."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -309,19 +311,19 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4c_product_template
 #: model:product.template,website_description:product.product_product_4d_product_template
 msgid "And because it’s so easy to use, it’s easy to love."
-msgstr ""
+msgstr "A ponieważ jest tak łatwy w użyciu, łatwo go pokochać."
 
 #. module: product
 #: model:product.product,name:product.product_product_7
 #: model:product.template,name:product.product_product_7_product_template
 msgid "Apple In-Ear Headphones"
-msgstr ""
+msgstr "Słuchawki Apple"
 
 #. module: product
 #: model:product.product,name:product.product_product_9
 #: model:product.template,name:product.product_product_9_product_template
 msgid "Apple Wireless Keyboard"
-msgstr ""
+msgstr "Bezprzewodowa klawiatura Apple"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
@@ -331,13 +333,13 @@ msgstr "Stosowane dla"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_applied_on
 msgid "Apply On"
-msgstr ""
+msgstr "aplikować na"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Archived"
-msgstr "Zarchiwizowane"
+msgstr "Archiwalne"
 
 #. module: product
 #: model:product.product,name:product.product_assembly
@@ -348,7 +350,7 @@ msgstr "Koszt montażu"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr ""
+msgstr "Przypisuje priorytet do listy dostawców produktów."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_attribute_id
@@ -387,14 +389,14 @@ msgstr "Atrybuty"
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Auxiliary input for portable devices"
-msgstr ""
+msgstr "Dodatkowe wejście dla urządzeń przenośnych"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "Auxiliary port lets you connect other audio sources, like an MP3 player"
-msgstr ""
+msgstr "Port pomocniczy umożliwia podłączenie innych źródeł dźwięku, takich jak odtwarzacz MP3"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_barcode
@@ -428,19 +430,19 @@ msgstr "Bazując na"
 #: model:product.product,name:product.product_product_57
 #: model:product.template,name:product.product_product_57_product_template
 msgid "Basic Computer"
-msgstr ""
+msgstr "Podstawowy Komputer"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Beautiful 7.9‑inch display."
-msgstr ""
+msgstr "Piękny 7.9-calowy wyświetlacz"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Beautiful widescreen display."
-msgstr ""
+msgstr "Piękny szerokokątny wyświetlacz"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image
@@ -478,31 +480,31 @@ msgstr "Pusty DVD-RW"
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Bluetooth connectivity"
-msgstr ""
+msgstr "Łączność Bluetooth"
 
 #. module: product
 #: model:product.product,name:product.product_product_5b
 #: model:product.template,name:product.product_product_5b_product_template
 msgid "Bose Mini Bluetooth Speaker"
-msgstr ""
+msgstr "Mini Bluetooth Głośnik Bose"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Bose Mini Bluetooth Speaker."
-msgstr ""
+msgstr "Mini Bluetooth Głośnik Bose"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_5b
 #: model:product.template,description_sale:product.product_product_5b_product_template
 msgid "Bose's smallest portable Bluetooth speaker"
-msgstr ""
+msgstr "Najmniejszy przenośny głośnik Bluetooth Bose'a"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Brilliance onscreen. And behind it."
-msgstr ""
+msgstr "Rewelacyjny na ekranie i za nim."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -513,7 +515,7 @@ msgid ""
 "Buttons let you quickly play, pause, change songs, or adjust the volume.\n"
 "                                    The smooth anodized aluminum design makes iPod nano feel as good as it sounds.\n"
 "                                    And iPod nano wouldn’t be iPod nano without gorgeous, hard-to-choose-from color."
-msgstr ""
+msgstr "Przyciski pozwalają ci szybko odtworzyć, zatrzymać, zmienić piosenkę czy dostosować głośność.\n                                    Gładka obudowa z anodyzowanego aluminium sprawia, że iPod nano jest w dotyku tak dobry, jak w brzmieniu.\n                                    I iPod nano nie byłby iPodem nano bez wspaniałych, trudnych do wybierania z pośród nich kolorów."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_active
@@ -554,25 +556,25 @@ msgstr "Typ Kategorii"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Category name"
-msgstr ""
+msgstr "Nazwa kategorii"
 
 #. module: product
 #: code:addons/product/pricelist.py:277
 #, python-format
 msgid "Category: %s"
-msgstr ""
+msgstr "Kategoria: %s"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Characteristics"
-msgstr ""
+msgstr "Charakterystyka"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Charges iPod/iPhone"
-msgstr ""
+msgstr "Ładuje iPoda/iPhone'a"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -590,17 +592,17 @@ msgstr "Kategorie podrzędne"
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
 msgid "Click to add a new unit of measure category."
-msgstr ""
+msgstr "Kliknij, aby dodać nową kategorię jednostki miary."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
 msgid "Click to add a new unit of measure."
-msgstr ""
+msgstr "Kliknij by dodać nową jednostkę miary."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Click to create a pricelist."
-msgstr ""
+msgstr "Kliknij, aby utworzyć cennik."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -609,12 +611,12 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_template_action_product
 #: model:ir.actions.act_window,help:product.product_variant_action
 msgid "Click to define a new product."
-msgstr ""
+msgstr "Kliknij aby zdefiniować nowy produkt."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Codes"
-msgstr ""
+msgstr "Kody"
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_2
@@ -639,7 +641,7 @@ msgid ""
 "Ultrafast wireless\n"
 "iOS7\n"
 "            "
-msgstr ""
+msgstr "Kolor: Biały\nPamięć wewnętrzna: 16GB\nŁączność: Wifi\nPiękny 7.9-calowy wyświetlacz\nPonad 375,000 aplikacji\nUltraszybki, gdy bezprzewodowy\niOS7\n            "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
@@ -658,24 +660,24 @@ msgstr "Komponenty"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Compute Price"
-msgstr ""
+msgstr "Oblicz cenę"
 
 #. module: product
 #: model:product.product,name:product.product_product_16
 #: model:product.template,name:product.product_product_16_product_template
 msgid "Computer Case"
-msgstr ""
+msgstr "pokrowiec komputera"
 
 #. module: product
 #: model:product.product,name:product.product_product_3
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Computer SC234"
-msgstr ""
+msgstr "Komputer SC234"
 
 #. module: product
 #: model:product.public.category,name:product.Computer_all_in_one
 msgid "Computer all-in-one"
-msgstr ""
+msgstr "Komputer \"wszystko-w-jednym\""
 
 #. module: product
 #: model:product.public.category,name:product.sub_computers
@@ -686,7 +688,7 @@ msgstr "Komputery"
 #: code:addons/product/product.py:460
 #, python-format
 msgid "Consumable"
-msgstr ""
+msgstr "Pomocniczy"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
@@ -786,19 +788,19 @@ msgstr "Waluta"
 #: model:product.product,name:product.product_product_5
 #: model:product.template,name:product.product_product_5_product_template
 msgid "Custom Computer (kit)"
-msgstr ""
+msgstr "Niestandardowy Komputer (zestaw)"
 
 #. module: product
 #: model:product.product,description:product.product_product_27
 #: model:product.template,description:product.product_product_27_product_template
 msgid "Custom Laptop based on customer's requirement."
-msgstr ""
+msgstr "Niestandardowy Laptop bazowany na wymaganiach klienta."
 
 #. module: product
 #: model:product.product,description:product.product_product_5
 #: model:product.template,description:product.product_product_5_product_template
 msgid "Custom computer shipped in kit."
-msgstr ""
+msgstr "Dostosowany komputer wysłany w zestawie."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_partner_ref
@@ -809,7 +811,7 @@ msgstr "Odn. klienta"
 #: model:product.product,name:product.product_product_46
 #: model:product.template,name:product.product_product_46_product_template
 msgid "Datacard"
-msgstr ""
+msgstr "karta danych"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_datetime
@@ -874,19 +876,19 @@ msgstr "Opis dla dostawców"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Design. The thinnest iPod ever."
-msgstr ""
+msgstr "Design. Najcieńszy iPod w historii."
 
 #. module: product
 #: model:product.product,name:product.product_product_55
 #: model:product.template,name:product.product_product_55_product_template
 msgid "Desktop Computer Table"
-msgstr ""
+msgstr "Komputer stacjonarny stołowy"
 
 #. module: product
 #: model:product.product,name:product.product_product_56
 #: model:product.template,name:product.product_product_56_product_template
 msgid "Desktop Lamp"
-msgstr ""
+msgstr "lampa na biurko"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_sequence
@@ -944,7 +946,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Efficient, high-quality audio"
-msgstr ""
+msgstr "Efficient, high-quality audio"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_end
@@ -955,7 +957,7 @@ msgstr "Data końcowa"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_end
 msgid "End date for this vendor price"
-msgstr ""
+msgstr "Data końcowa dla cennika dostawcy"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1019,7 +1021,7 @@ msgid ""
 "                                    screen, fast Colors are vivid and text is sharp on the iPad mini display.\n"
 "                                    But what really makes it stand out is its size. At 7.9 inches,\n"
 "                                    it’s perfectly sized to deliver an experience every bit as big as iPad."
-msgstr ""
+msgstr "Wszystko, co kochasz w iPadzie — piękny\n                                    ekran, szybkie Kolory są żywe, a tekst ostry na wyświetlaczu iPad mini.\n                                    Ale to co naprawdę sprawia, że się wyróżnia, to jego rozmiar. Przy 7.9 calach,\n                                    jest w idealnym rozmiarze do dostarczania doświadczenia tak samo dużego, jak iPad."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -1036,7 +1038,7 @@ msgid ""
 "                                    iSight cameras, thousands of amazing apps, 10-hour\n"
 "                                    battery life* — is everything you’ll love about\n"
 "                                    iPad mini, too. And you can hold it in one hand."
-msgstr ""
+msgstr "Wszystko, co kochasz w iPadzie — piękny\n                                    ekran, szybka i płynna wydajność, aparaty FaceTime i\n                                    iSight, tysiące niesamowitych aplikacji, 10-godzinna\n                                    żywotność baterii* — jest wszystkim, co pokochasz też w\n                                    iPadzie mini. I możesz go trzymać w jednej ręce."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -1046,19 +1048,19 @@ msgid ""
 "                                        fast and fluid performance, FaceTime and iSight cameras, \n"
 "                                        thousands of amazing apps, 10-hour battery life* — is everything\n"
 "                                        you’ll love about iPad mini, too. And you can hold it in one hand."
-msgstr ""
+msgstr "Wszystko, co kochasz w iPadzie — piękny wyświetlacz,\n                                        szybka i płynna wydajność, aparaty FaceTime i iSight, \n                                        tysiące niesamowitych aplikacji, 10-godzinna żywotność baterii* — jest wszystkim,\n                                        co pokochasz też w iPadzie mini. I możesz go trzymać w jednej ręce."
 
 #. module: product
 #: model:product.product,description:product.product_product_2
 #: model:product.template,description:product.product_product_2_product_template
 msgid "Example of product to invoice based on delivery."
-msgstr ""
+msgstr "Przykład produktu do sfakturowania na podstawie dostawy."
 
 #. module: product
 #: model:product.product,description:product.product_product_0
 #: model:product.template,description:product.product_product_0_product_template
 msgid "Example of product to invoice on order."
-msgstr ""
+msgstr "Przykład produktu do faktury na zamówienie."
 
 #. module: product
 #: model:product.product,description:product.product_product_1b
@@ -1070,7 +1072,7 @@ msgstr ""
 #: model:product.product,description:product.product_product_1
 #: model:product.template,description:product.product_product_1_product_template
 msgid "Example of products to invoice based on delivery."
-msgstr ""
+msgstr "Przykład produktów do sfakturowania na podstawie dostawy."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_name
@@ -1082,7 +1084,7 @@ msgstr "Opisowa nazwa reguły dla tej pozycji cennika."
 #: model:product.product,name:product.product_product_1b
 #: model:product.template,name:product.product_product_1b_product_template
 msgid "External Audit"
-msgstr ""
+msgstr "Audyt zewnętrzny"
 
 #. module: product
 #: model:product.public.category,name:product.External_Hard_Drive
@@ -1099,12 +1101,12 @@ msgstr "Dysk zewnętrzny"
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Fast connections.The world over."
-msgstr ""
+msgstr "Fast connections.The world over."
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Fix Price"
-msgstr ""
+msgstr "Ustal cenę"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_fixed_price
@@ -1152,13 +1154,13 @@ msgid ""
 "Cable length: 1065 mm\n"
 "Weight: 10.2 grams\n"
 "            "
-msgstr ""
+msgstr "Frequency: 5Hz to 21kHz\nImpedance: 23 ohms\nSensitivity: 109 dB SPL/mW\nDrivers: two-way balanced armature\nCable length: 1065 mm\nWeight: 10.2 grams\n            "
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Friendly to the environment."
-msgstr ""
+msgstr "Przyjazny dla środowiska"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_44
@@ -1183,7 +1185,7 @@ msgstr "Informacje ogólne"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Genius. Your own personal DJ."
-msgstr ""
+msgstr "Genialne. Twój osobisty DJ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_packaging_ids
@@ -1245,7 +1247,7 @@ msgstr "HDD SH-1"
 #: model:product.product,name:product.product_product_18
 #: model:product.template,name:product.product_product_18_product_template
 msgid "HDD SH-2 (mto)"
-msgstr ""
+msgstr "HDD SH-2 (mto)"
 
 #. module: product
 #: model:product.product,name:product.product_product_19
@@ -1266,7 +1268,7 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Have Genius call the tunes."
-msgstr ""
+msgstr "Niech Genius zapuści nutę."
 
 #. module: product
 #: model:product.public.category,name:product.Headset
@@ -1295,7 +1297,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Hear, hear."
-msgstr ""
+msgstr "Tutaj, tutaj."
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_11
@@ -1307,13 +1309,13 @@ msgid ""
 "Width:  39.6 mm\n"
 "Depth:  5.4 mm\n"
 "Weight: 31 grams"
-msgstr ""
+msgstr "Height: 76.5 mm\nWidth:  39.6 mm\nDepth:  5.4 mm\nWeight: 31 grams"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Highly rated designs."
-msgstr ""
+msgstr "Wysoko ocenione projekty"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
@@ -1350,7 +1352,7 @@ msgstr "Ile razy większa lub mniejsza jest ta jednostka w porównaniu do jednos
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "How to get your groove on."
-msgstr ""
+msgstr "Jak załapać swój rytm."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_id
@@ -1388,7 +1390,7 @@ msgstr "Jeśli zaznaczone, to nowa wiadomość wymaga twojej uwagi."
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "If it's made for iPad, it's made for iPad mini."
-msgstr ""
+msgstr "Jeżeli stworzono to do iPada, to stworzono to do iPada mini."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_active
@@ -1439,18 +1441,18 @@ msgstr "W przygotowaniu"
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Individually calibrated for true-to-life color."
-msgstr ""
+msgstr "Indywidualnie skalibrowane dla prawdziwego koloru."
 
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Information about a product vendor"
-msgstr ""
+msgstr "informacja o dostawcy produktu"
 
 #. module: product
 #: model:product.product,name:product.product_product_38
 #: model:product.template,name:product.product_product_38_product_template
 msgid "Ink Cartridge"
-msgstr ""
+msgstr "Atrament Cartridge"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -1506,13 +1508,13 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Keep it clean."
-msgstr ""
+msgstr "Utrzymaj to w czystości"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Key Features"
-msgstr ""
+msgstr "Kluczowe cechy"
 
 #. module: product
 #: model:product.public.category,name:product.Keyboard_Mouse
@@ -1523,13 +1525,13 @@ msgstr "Klawiatura / mysz"
 #: model:product.product,name:product.product_product_27
 #: model:product.template,name:product.product_product_27_product_template
 msgid "Laptop Customized"
-msgstr ""
+msgstr "Dostosowany Laptop"
 
 #. module: product
 #: model:product.product,name:product.product_product_25
 #: model:product.template,name:product.product_product_25_product_template
 msgid "Laptop E5023"
-msgstr ""
+msgstr "Laptop E5023"
 
 #. module: product
 #: model:product.product,name:product.product_product_26
@@ -1633,7 +1635,7 @@ msgstr "Pozycje"
 #: model:product.product,name:product.product_product_50
 #: model:product.template,name:product.product_product_50_product_template
 msgid "Linutop"
-msgstr ""
+msgstr "Linutop"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_litre
@@ -1644,7 +1646,7 @@ msgstr "l"
 #: model:product.product,name:product.product_product_58
 #: model:product.template,name:product.product_product_58_product_template
 msgid "Little server"
-msgstr ""
+msgstr "mały serwer"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_packaging_ids
@@ -1660,7 +1662,7 @@ msgstr "Określ wiele jednostek miary"
 #. module: product
 #: model:res.groups,name:product.group_pricelist_item
 msgid "Manage Pricelist Items"
-msgstr ""
+msgstr "Zarządzaj elementami cennika"
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -1671,7 +1673,7 @@ msgstr "Opakowania produktu"
 #: model:ir.model.fields,field_description:product.field_base_config_settings_group_product_variant
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr ""
+msgstr "Zarządzaj wariantami produktu"
 
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
@@ -1748,13 +1750,13 @@ msgstr "Minimalna ilość"
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "More energy efficient."
-msgstr ""
+msgstr "Bardziej energooszczędny."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "More features."
-msgstr ""
+msgstr "Więcej funkcji."
 
 #. module: product
 #: model:product.product,name:product.product_product_21
@@ -1784,7 +1786,7 @@ msgstr "Mysz, bezprzewodowa"
 #: model:product.product,name:product.product_product_31
 #: model:product.template,name:product.product_product_31_product_template
 msgid "Multimedia Speakers"
-msgstr ""
+msgstr "Multimedia Speakers"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1792,7 +1794,7 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Music. It's what beats inside."
-msgstr ""
+msgstr "Muzyka. To właśnie bije w środku."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_name
@@ -1883,7 +1885,7 @@ msgstr "Inny cennik"
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Over 375,000 apps."
-msgstr ""
+msgstr "Ponad 375000 aplikacji."
 
 #. module: product
 #: model:ir.model,name:product.model_product_packaging
@@ -1901,7 +1903,7 @@ msgstr ""
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
 msgid "Packagings"
-msgstr ""
+msgstr "Opakowania"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_id
@@ -1933,17 +1935,17 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Percentage (discount)"
-msgstr ""
+msgstr "Procent (obniżki)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_percent_price
 msgid "Percentage Price"
-msgstr ""
+msgstr "Cena procentowa"
 
 #. module: product
 #: model:product.category,name:product.product_category_5
 msgid "Physical"
-msgstr ""
+msgstr "Fizyczny"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1951,13 +1953,13 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Playlists. The perfect mix for every mood."
-msgstr ""
+msgstr "Playlisty. Perfekcyjny miks na każdy nastrój."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Plays where you play"
-msgstr ""
+msgstr "Gra tam, gdzie ty grasz"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -1972,7 +1974,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_0
 #: model:product.template,name:product.product_product_0_product_template
 msgid "Prepaid Consulting"
-msgstr ""
+msgstr "Konsultacja opłacona z góry"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price
@@ -2061,7 +2063,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist Items"
-msgstr ""
+msgstr "Pozycje cennika"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_name
@@ -2083,7 +2085,7 @@ msgstr "Cenniki"
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Pricelists On Product"
-msgstr ""
+msgstr "Cennik dla produktu"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
@@ -2331,7 +2333,7 @@ msgstr "Ilość-5"
 #: model:product.product,name:product.product_product_14
 #: model:product.template,name:product.product_product_14_product_template
 msgid "RAM SR2 (kit)"
-msgstr ""
+msgstr "RAM SR2 (kit)"
 
 #. module: product
 #: model:product.product,name:product.product_product_15
@@ -2469,7 +2471,7 @@ msgid ""
 "                                        you wouldn’t have thought of yourself, create Genius Mixes in iTunes\n"
 "                                        and sync the ones you like to iPod nano. Then tap Genius Mixes and\n"
 "                                        rediscover songs you haven’t heard in a while — or find music you forgot you even had."
-msgstr ""
+msgstr "Powiedzmy, że słuchasz piosenki, którą uwielbiasz i chcesz zostać w tym nastroju.\nPo prostu włącz Genius. Genius znajdzie utwory na iPoda nano, które wspaniale będą się komponować razem\ni zrobi dla ciebie playlistę Genius. Aby odkryć więcej muzycznych kombinacji, o których sam byś nie pomyślał, stwórz Miksy Genius w iTunes\ni zsynchronizuj te, które lubisz z iPodem nano. Później włącz Miksy Genius i\n odkryj od nowa piosenki, których nie słyszałeś od dawna - albo znajdź utwory, które zapomniałeś, że masz."
 
 #. module: product
 #: model:product.public.category,name:product.Screen
@@ -2505,7 +2507,7 @@ msgstr "Serwer"
 #: code:addons/product/product.py:460
 #, python-format
 msgid "Service"
-msgstr ""
+msgstr "Usługa"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
@@ -2525,7 +2527,7 @@ msgstr "Ustawia cenę, aby była wielokrotnością tej wartości.\nZaokrąglenie
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
 msgid "Share product to all companies"
-msgstr ""
+msgstr "Stosuj produkt we wszystkich firmach"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_base_config_settings_company_share_product
@@ -2539,7 +2541,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Sleek, compact design"
-msgstr ""
+msgstr "Gładka, zwarta konstrukcja"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_small
@@ -2566,7 +2568,7 @@ msgstr "Mniejsza niż jednostka referencyjna"
 msgid ""
 "Soft covers are available separately in blue, green or orange. Pick a color "
 "to match your style."
-msgstr ""
+msgstr "Miękkie zasłony są dostępne oddzielne w niebieskim, zielonym lub pomarańczowym kolorze. Wybierz ten, który pasuje do twojego stylu."
 
 #. module: product
 #: model:product.category,name:product.product_category_4
@@ -2632,12 +2634,12 @@ msgstr "Data Początkowa"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_start
 msgid "Start date for this vendor price"
-msgstr ""
+msgstr "Data początkowa dla tej ceny dostawcy"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_start
 msgid "Starting date for the pricelist item validation"
-msgstr ""
+msgstr "Data początkowa dla ważności przedmiotu z cennika"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_state
@@ -2668,7 +2670,7 @@ msgstr "Switch, 24 porty"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Sync to your heart’s content."
-msgstr ""
+msgstr "Synchronizuj treść z sercem."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2680,7 +2682,7 @@ msgid ""
 "                                    Or everything by one artist. You can even browse by genres or composers.\n"
 "                                    Flip through your music: Album art looks great on the bigger screen.\n"
 "                                    Or to keep things fresh, give iPod nano a shake and it shuffles to a different song in your music library."
-msgstr ""
+msgstr "Dotknij, aby odtworzyć swoje ulubione piosenki. Albo całe albumy.\n                                    Albo wszystko stworzone przez jednego artystę. Możesz nawet przeglądać po gatunku albo muzykach.\n                                    Przeglądaj muzykę: okładka albumu wygląda świetnie na większym ekranie.\n                                    Albo dla zachowania świeżości, potrząśnij iPodem nano, a odtworzy losowo inną piosenkę z twojej biblioteki."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_name_template
@@ -2697,7 +2699,7 @@ msgid ""
 "                                    Three different sizes of ear tips are included so you can find a perfect fit for each ear.\n"
 "                                    Also included are a convenient carrying case for the ear tips and a cable-control case\n"
 "                                    for the headphones themselves."
-msgstr ""
+msgstr "Słuchawki Apple In-Ear dostarczają prawdziwie uzależniających przeżyć dźwiękowych za pomocą drastycznej\n                                    redukcji niechcianych dźwięków. Delikatne, silikonowe końcówki douszne ciasno i komfortowo dopasowują się\n                                    do twojego ucha, tworząc uszczelkę, która izoluje twoją muzykę od twojego otoczenia.\n                                    Zawarte są trzy rozmiary końcówek, aby można było znaleźć idealny rozmiar dla każdego ucha.\n                                    Także zawarte są poręczne opakowania na każdą końcówkę i obudowa do sterowania kablami\n                                    dla właściwych słuchawek."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2707,7 +2709,7 @@ msgid ""
 "                                    palm of your hand, yet gives you full, natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n"
 "                                    full-featured. It can do just about everything and\n"
 "                                    experience music just about anywhere."
-msgstr ""
+msgstr "Bose® SoundLink® mini jest najmniejszym przenośnym głośnikiem Bluetooth Bose'a. Jego ultra kompaktowy rozmiar zmieści się w twojej dłoni, ale wciąż wyda z siebie pełny, naturalny dźwięk z twojego iPhone'a, iPada lub iPoda. Weź go i wykorzystaj\njego pełne możliwości. Może zrobić prawie wszystko i\ndoświadcz muzyki gdziekolwiek."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2743,7 +2745,7 @@ msgstr "Współczynnik konwersji jednostki miary nie może być 0!"
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "The desktop. In its most advanced form ever"
-msgstr ""
+msgstr "Pulpit. W swojej najbardziej zaawansowanej formie w historii"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_sequence
@@ -2792,7 +2794,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_price
 msgid "The price to purchase a product"
-msgstr ""
+msgstr "Koszt zakupu produktu"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -2826,7 +2828,7 @@ msgstr ""
 msgid ""
 "The sleek aluminium Apple Wireless Keyboard.\n"
 "            "
-msgstr ""
+msgstr "Gładka aluminiowa Klawiatura Bezprzewodowa Apple."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2918,17 +2920,17 @@ msgstr "To jest ilość skonwertowana do domyślnej jednostki miary."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_price_extra
 msgid "This is the sum of the extra price of all attributes"
-msgstr ""
+msgstr "To jest suma dodatkowych cen ze wszystkich atrybutów"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note will be displayed on requests for quotation."
-msgstr ""
+msgstr "Ta notatka będzie widoczna na zapytaniu ofertowym."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note will be displayed on the quotations."
-msgstr ""
+msgstr "Ta notatka będzie wyświetlana na ofertach cenowych."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
@@ -2942,14 +2944,14 @@ msgstr "Ten cennik będzie stosowany, zamiast domyślnego, do sprzedaży bieżą
 msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
+msgstr "Kod dostawcy będzie stosowany przy drukowaniu zapytań ofertowych. Zostaw puste, aby stosować kod wewnętrzny."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_name
 msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
+msgstr "Nazwa produktu u dostawcy będzie stosowana przy drukowaniu zapytań ofertowych. Zostaw puste, aby stosować nazwę własną."
 
 #. module: product
 #: model:product.product,name:product.product_product_39
@@ -2961,7 +2963,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Two is better than one."
-msgstr ""
+msgstr "Dwa jest lepsze od jednego"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_uom_type
@@ -2986,19 +2988,19 @@ msgstr ""
 msgid ""
 "USB port allows for software update to ensure ongoing Bluetooth device "
 "compatibility"
-msgstr ""
+msgstr "Port USB umożliwia aktualizację systemu, by zapewnić ciągłą kompatybilność z urządzeniami Bluetooth"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Ultrafast wireless."
-msgstr ""
+msgstr "Ultraszybki bezprzewodowy."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Ultrathin design"
-msgstr ""
+msgstr "Ultracienki design"
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -3010,7 +3012,7 @@ msgstr "Jednostka"
 #: model:ir.model.fields,field_description:product.field_product_template_uom_id
 #: model:ir.model.fields,field_description:product.field_product_uom_name
 msgid "Unit of Measure"
-msgstr "Jednostka Miary"
+msgstr "Jednostka miary"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_categ_form_action
@@ -3055,7 +3057,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Universal iPod docking station fits most iPod/iPhone models"
-msgstr ""
+msgstr "Uniwersalna stacja dokująca iPoda pasuje do większości modeli iPoda/iPhone'a."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -3067,7 +3069,7 @@ msgid ""
 "                                    drivers help ensure accurate, detailed sound across the entire sonic spectrum.\n"
 "                                    The result: you’re immersed in the music and hear details you never knew existed.\n"
 "                                    Even when listening to an old favorite, you may feel like you’re hearing it for the first time."
-msgstr ""
+msgstr "W odróżnieniu od wielu małych słuchawek, każda część douszna w Apple In-Ear Headphones\n                                    zawiera dwa osobne sterowniki o wysokiej wydajności — głośnik niskotonowy do zajmowania się basem i\n                                    dźwiękami średniego zasięgu i głośnik wysokotonowy dla dźwięku o wysokiej częstotliwości. Te dedykowane\n                                    sterowniki pomagają w zapewnieniu dokładnego, szczegółowego dźwięku w całym spektrum dźwiękowym.\n                                    Rezultat: jesteś pogrążony w muzyce i słyszysz detale, o których istnieniu nie miałeś pojęcia.\n                                    Nawet podczas słuchania starego ulubieńca, możesz poczuć się, jakbyś słyszał go po raz pierwszy."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_unread
@@ -3084,7 +3086,7 @@ msgstr "Licznik nieprzeczytanych wiadomości"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Validity"
-msgstr ""
+msgstr "Ważność"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_name
@@ -3109,7 +3111,7 @@ msgstr "Zdjęcie wariantu"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Variant Information"
-msgstr ""
+msgstr "Informacje o wariancie"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3142,27 +3144,27 @@ msgstr "Dostawca"
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
-msgstr ""
+msgstr "Informacje o dostawcy"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
 msgid "Vendor Product Code"
-msgstr ""
+msgstr "Kod produktu u dostawcy"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_name
 msgid "Vendor Product Name"
-msgstr ""
+msgstr "Nazwa produktu u dostawcy"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_uom
 msgid "Vendor Unit of Measure"
-msgstr ""
+msgstr "Jednostka miary u dostawcy"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_name
 msgid "Vendor of this product"
-msgstr ""
+msgstr "Dostawca tego produktu"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3185,14 +3187,14 @@ msgstr "Objętość"
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Volume control on main system"
-msgstr ""
+msgstr "Kontrola głośności na głównym systemie"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "Wall charger can be plugged into the cradle or directly into the speaker"
-msgstr ""
+msgstr "Ładowarkę ścienną można podłączyć do podstawki lub bezpośrednio do głośnika"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_warranty
@@ -3223,7 +3225,7 @@ msgstr "Wagi"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "When one playlist isn’t enough."
-msgstr ""
+msgstr "Kiedy jedna playlista nie wystarcza."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_id
@@ -3249,7 +3251,7 @@ msgstr "Biały"
 #: model:product.template,website_description:product.product_product_4d_product_template
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Why you'll love an iPad."
-msgstr ""
+msgstr "Dlaczego pokochasz iPada"
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_3
@@ -3277,7 +3279,7 @@ msgid ""
 "                                   cellular data networks around the world, iPad mini\n"
 "                                   lets you download content, stream video,\n"
 "                                   and browse the web at amazing speeds."
-msgstr ""
+msgstr "Z zaawansowanym Wi-Fi, które może być nawet dwukrotnie szybsze od\n                                   tego w jakimkolwiek iPadzie starej generacji, i dostępem do szybkiej\n                                   sieci komórkowej na całym świecie, iPad mini\n                                   pozwala na pobieranie zawartości, transmitowanie video,\n                                   i przeglądanie sieci w niesamowitych prędkościach."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_base_config_settings_group_product_variant
@@ -3306,7 +3308,7 @@ msgid ""
 "You must define a product for everything you sell, whether it's\n"
 "                a physical product, a consumable or a service you offer to\n"
 "                customers."
-msgstr ""
+msgstr "Musisz zdefiniować produkt na wszystkim co sprzedajesz, bez względu czy to\nprodukt fizyczny, konsumpcyjny czy usługa, którą oferujesz klientom."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
@@ -3326,13 +3328,13 @@ msgid ""
 "                                        to iPod, and you can play the perfect mix for whatever\n"
 "                                        mood strikes you. VoiceOver tells you the name of each playlist,\n"
 "                                        so it’s easy to switch between them and find the one you want without looking."
-msgstr ""
+msgstr "Pewnie masz mnóstwo playlist w iTunes na swoim komputerze.\n                                        Jedna do dojazdów. Jedna na siłownię. Synchronizuj te playlisty\n                                        z iPodem, i możesz zagrać idealną składankę na jakikolwiek\n                                        nastrój. VoiceOver mówi ci nazwę każdej playlisty,\n                                        więc przełączenie się między nimi i odnalezienie pożądanej jest proste bez patrzenia."
 
 #. module: product
 #: model:product.product,name:product.product_product_43
 #: model:product.template,name:product.product_product_43_product_template
 msgid "Zed+ Antivirus"
-msgstr ""
+msgstr "Antywirus Zed+"
 
 #. module: product
 #: model:ir.model,name:product.model_base_config_settings
@@ -3352,12 +3354,12 @@ msgstr "dni"
 #. module: product
 #: model:ir.model,name:product.model_decimal_precision
 msgid "decimal.precision"
-msgstr ""
+msgstr "decimal.precision"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "e.g. Lamps"
-msgstr ""
+msgstr "np. Lampy"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3435,7 +3437,7 @@ msgid ""
 "iTunes on your Mac or PC makes it easy to load up\n"
 "                                        your iPod. Just choose the playlists, audiobooks,\n"
 "                                        podcasts, and other audio files you want, then sync."
-msgstr ""
+msgstr "iTunes na twoim Macu lub PC czyni łatwym zapełnianie\n                                        twojego iPoda. Po prostu wybierz playlisty, audiobooki,\n                                        podcasty, i inne pliki audio, a później synchronizuj."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_inch
@@ -3455,12 +3457,12 @@ msgstr "km"
 #. module: product
 #: model:product.uom,name:product.product_uom_lb
 msgid "lb(s)"
-msgstr ""
+msgstr "funt(y)"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_mile
 msgid "mile(s)"
-msgstr ""
+msgstr "mila/mile"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3470,7 +3472,7 @@ msgstr "miesięcy"
 #. module: product
 #: model:product.uom,name:product.product_uom_oz
 msgid "oz(s)"
-msgstr ""
+msgstr "uncja/uncje"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_line
@@ -3526,7 +3528,7 @@ msgstr "Firma nadrzędna"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template"
-msgstr ""
+msgstr "szablon produktu"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view

@@ -133,7 +133,7 @@ class BlogPost(osv.Model):
         'author_avatar': fields.related(
             'author_id', 'image_small',
             string="Avatar", type="binary"),
-        'visits': fields.integer('No of Views'),
+        'visits': fields.integer('No of Views', copy=False),
         'ranking': fields.function(_compute_ranking, string='Ranking', type='float'),
     }
 
@@ -254,7 +254,7 @@ class BlogPost(osv.Model):
             'type': 'ir.actions.act_url',
             'url': '/blog/%s/post/%s' % (post.blog_id.id, post.id),
             'target': 'self',
-            'res_id': self.id,
+            'res_id': post.id,
         }
 
     def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):

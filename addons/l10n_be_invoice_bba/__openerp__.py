@@ -8,7 +8,7 @@
     'version': '1.2',
     'author': 'Noviat',
     'website': 'https://www.odoo.com/page/accounting',
-    'category' : 'Localization',
+    'category': 'Localization',
     'description': """
     
 Belgian localization for in- and outgoing invoices (prereq to account_coda):

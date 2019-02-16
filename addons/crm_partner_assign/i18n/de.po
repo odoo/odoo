@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
+# Rudolf Schnapka <rs@techno-flex.de>, 2016
 # Wolfgang Taferner, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2016-01-19 05:41+0000\n"
-"Last-Translator: Wolfgang Taferner\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-09-23 08:41+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +55,7 @@ msgid ""
 "PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "% endif\n"
 "            "
-msgstr ""
+msgstr "\n            \n<p>Hallo,</p>\n\n\n<p>Wir sind durch Interessenten Ihrer Region angesprochen worden. Daher wurden die folgenen Interessenten übertragen an ${ctx['partner_id'].name}:</p>\n\n<ol>\n% for lead in ctx['partner_leads']:\n     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Unbestimmter Betreff'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Ansprechpartner nicht festgelegt'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Land nicht festgelegt' }, ${lead.lead_id.email_from or 'Email nicht festgelegt'}, ${lead.lead_id.phone or ''} </li></br>\n% endfor\n</ol>\n\n% if ctx.get('partner_in_portal'):\n<p>Schauen Sie bitte in Ihr <a href=\"${object.get_portal_url()}\">Partner Portal</a> für Einzelheiten. Zu jedem Lead sind in der linken oberen Ecke zwei Schaltflächen, die Sie nutzen sollten nachdem Sie mit dem Lead Kontakt aufgenommen haben: \"Ich bin interessiert\" & \"Ich bin nicht interessiert\".</p>\n% else:\n<p>\n    Sie haben noch keinen Zugang zu unserem Portal. Bitte sprechen Sie \n    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'Ihren Benutzerverwalter %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'uns'} an.\n</p>\n% endif\n<p>Der Lead wird einem anderen Partner übermittelt, wenn Sie diesen nicht innerhalb von 20 Tagen ansprechen.</p>\n\n<p>Vielen Dank,</p>\n\n<pre>\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n</pre>\n% if not ctx['partner_id'].user_id:\nP.S.: Es sieht so aus, als wäre Ihnen kein Benutzerverwalter zugeordnet, sprechen Sie uns bitte an.\n% endif\n            "
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_nbr
@@ -91,7 +92,7 @@ msgstr "<p>Ich bin nicht an dem Lead interessiert. Ich habe den Lead nicht anges
 msgid ""
 "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n"
 "                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
-msgstr ""
+msgstr "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
@@ -100,7 +101,7 @@ msgid ""
 "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">E </span>\n"
 "                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
 "                                <span class=\"oe_grey\">) </span>"
-msgstr ""
+msgstr "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">O </span>\n                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n                                <span class=\"oe_grey\">) </span>"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_activation
@@ -175,7 +176,7 @@ msgstr "Durch. Wahrscheinl."
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_tree
 msgid "Avg. of Probability"
-msgstr ""
+msgstr "Mittlere Wahrscheinlichkeit"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_report_assign
@@ -244,7 +245,7 @@ msgstr "Land"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_create_date
 msgid "Create Date"
-msgstr "Datum Erstellung"
+msgstr "Erstellungsdatum"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_create_uid
@@ -356,7 +357,7 @@ msgstr "Weiter zu Partner"
 #. module: crm_partner_assign
 #: model:mail.template,subject:crm_partner_assign.email_template_lead_forward_mail
 msgid "Fwd: Lead: ${ctx['partner_id'].name}"
-msgstr ""
+msgstr "WL: Lead: ${ctx['partner_id'].name}"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_partner_latitude
@@ -372,7 +373,7 @@ msgstr "Längengrad"
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Geolocation"
-msgstr ""
+msgstr "Geo-Standort"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,help:crm_partner_assign.field_res_partner_grade_partner_weight
@@ -425,7 +426,7 @@ msgstr "ID"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_implemented_partner_ids
 msgid "Implementation References"
-msgstr ""
+msgstr "Implementierungsreferenzen"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_assigned_partner_id
@@ -435,11 +436,16 @@ msgstr "Implementiert durch"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_interested
 msgid "Interested by this lead"
-msgstr ""
+msgstr "Interessiert an diesem Link"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_date
 msgid "Invoice Account Date"
+msgstr "Rechnungsbuchdatum"
+
+#. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_account_invoice_report
+msgid "Invoices Statistics"
 msgstr ""
 
 #. module: crm_partner_assign
@@ -491,7 +497,7 @@ msgstr "Interessent"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_lead_link
 msgid "Lead  Single Links"
-msgstr ""
+msgstr "Lead einfache Links"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_report_crm_lead_assign_graph
@@ -502,7 +508,7 @@ msgstr "Interessent zuweisen"
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_channel_interested_act
 msgid "Lead Feedback"
-msgstr ""
+msgstr "Lead Rückmeldung"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_lead_location
@@ -543,13 +549,13 @@ msgstr "Ebene"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_name
 msgid "Level Name"
-msgstr ""
+msgstr "Stufenbezeichnung"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_partner_weight
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_partner_weight
 msgid "Level Weight"
-msgstr ""
+msgstr "Stufengewichtung"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
@@ -595,7 +601,7 @@ msgstr "Zahl Tage bis Eröffn."
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Once the lead is processed, it will be in your \"Opportunities\" menu."
-msgstr ""
+msgstr "Ist der Lead erst bearbeitet, erscheint er in Ihrem 'Chancen'-Menü."
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_opening_date
@@ -703,7 +709,7 @@ msgstr "Beginn Partnerschaft"
 #. module: crm_partner_assign
 #: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_partner_assign_tree
 msgid "Partnerships"
-msgstr ""
+msgstr "Partnerschaften"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_planned_revenue
@@ -762,13 +768,13 @@ msgstr "Reihenfolge"
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:84
 #, python-format
 msgid "Set an email address for the partner %s"
-msgstr ""
+msgstr "Setzen Sie eine Email-Anschrift für den Partner %s"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:82
 #, python-format
 msgid "Set an email address for the partner(s): %s"
-msgstr ""
+msgstr "Setzen Sie eine Email-Anschrift für Partner: %s"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_stage_id
@@ -785,19 +791,19 @@ msgstr "Betreff"
 #: code:addons/crm_partner_assign/crm_lead.py:17
 #, python-format
 msgid "The CRM Channel Interested Action is missing"
-msgstr ""
+msgstr "Der CRM-Kanal Interessierte an Aktion fehlt"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:69
 #, python-format
 msgid "The Forward Email Template is not in the database"
-msgstr ""
+msgstr "Die Weiterleitungs-Email-Vorlage ist nicht in der Datenbank"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:73
 #, python-format
 msgid "The Portal group cannot be found"
-msgstr ""
+msgstr "Die Portal-Gruppe wurde nicht gefunden "
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_channel_interested_contacted
@@ -838,7 +844,7 @@ msgstr "Sehr hoch"
 #. module: crm_partner_assign
 #: model:ir.model.fields,help:crm_partner_assign.field_crm_lead_channel_interested_comment
 msgid "What are the elements that have led to this decision?"
-msgstr ""
+msgstr "Was sind die Gründe, die zu dieser Entscheidung geführt haben?"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
@@ -859,7 +865,7 @@ msgstr "Sie müssen den Lead kontaktieren bevor Sie auswählen, dass Sie sich f�
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,forward_type:0
 msgid "a single partner: manual selection of partner"
-msgstr ""
+msgstr "ein einzelner Partner: Manuelle Auswahl des Partners"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_assignation
@@ -869,17 +875,17 @@ msgstr "crm.lead.assignation"
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_channel_interested
 msgid "crm.lead.channel.interested"
-msgstr ""
+msgstr "crm.lead.channel.interested"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_forward_to_partner
 msgid "crm.lead.forward.to.partner"
-msgstr ""
+msgstr "crm.lead.forward.to.partner"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_partner_grade_form
 msgid "e.g. Gold Partner"
-msgstr ""
+msgstr "z. B. Gold Partner"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_res_partner_activation
@@ -896,4 +902,4 @@ msgstr "res.partner.grade"
 msgid ""
 "several partners: automatic assignation, using GPS coordinates and partner's"
 " grades"
-msgstr ""
+msgstr "mehrere Partner: Automatische Zuweisung, über GPS-Koordinaten und Partner-Einstufung"

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-11-18 13:53+0000\n"
+"PO-Revision-Date: 2017-08-03 03:31+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -79,12 +79,12 @@ msgstr "Гэрээний төрлүүд"
 #: model:mail.message.subtype,description:hr_contract.mt_contract_pending
 #: model:mail.message.subtype,description:hr_contract.mt_department_contract_pending
 msgid "Contract about to expire"
-msgstr ""
+msgstr "Хугацаа нь дуусах дөхсөн гэрээ"
 
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
-msgstr ""
+msgstr "Хугацаа нь дууссан гэрээ"
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
@@ -120,12 +120,12 @@ msgstr "Үүсгэсэн"
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Current Contract"
-msgstr ""
+msgstr "Идэвхитэй Гэрээ"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Current Employee"
-msgstr ""
+msgstr "Идэвхитэй Ажилтан"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_message_last_post
@@ -169,7 +169,7 @@ msgstr "Алдаа! Гэрээний эхлэх хугацаа нь дуусах
 #: selection:hr.contract,state:0
 #: model:mail.message.subtype,name:hr_contract.mt_contract_close
 msgid "Expired"
-msgstr ""
+msgstr "Хугацаа дууссан"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_follower_ids
@@ -189,7 +189,7 @@ msgstr "Дагагчид (Харилцагчид)"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_type_sequence
 msgid "Gives the sequence when displaying a list of Contract."
-msgstr ""
+msgstr "Гэрээний жагсаалтыг харуулах үед дарааллыг өгдөг."
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -199,12 +199,12 @@ msgstr "Бүлэглэх"
 #. module: hr_contract
 #: model:ir.actions.server,name:hr_contract.contract_set_as_close
 msgid "HR Contract: set as close"
-msgstr ""
+msgstr "ХН Гэрээ: хаагдсан болгох"
 
 #. module: hr_contract
 #: model:ir.actions.server,name:hr_contract.contract_set_as_pending
 msgid "HR Contract: set as pending"
-msgstr ""
+msgstr "ХН Гэрээ: хүлээгдэж буй болгох"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle_distance
@@ -226,11 +226,6 @@ msgstr "Хэрэв тэмдэглэгдсэн бол таныг шинэ зур�
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
-
-#. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Important Messages"
-msgstr "Чухал зурвасууд"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
@@ -344,7 +339,7 @@ msgstr "Уншаагүй зурвасын тоо"
 #. module: hr_contract
 #: model:ir.filters,name:hr_contract.contract_open
 msgid "Open Contracts"
-msgstr ""
+msgstr "Нээлттэй Гэрээнүүд"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_place_of_birth
@@ -390,7 +385,7 @@ msgstr "Төлөв"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_state
 msgid "Status of the contract"
-msgstr ""
+msgstr "Гэрээний төлөв"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -416,6 +411,7 @@ msgstr "Туршилт эхлэх огноо"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_unread
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Unread Messages"
 msgstr "Уншаагүй Зурвасууд"
 

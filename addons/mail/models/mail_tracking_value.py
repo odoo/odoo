@@ -25,7 +25,7 @@ class MailTracking(models.Model):
     new_value_text = fields.Text('New Value Text', readonly=1)
     new_value_datetime = fields.Datetime('New Value Datetime', readonly=1)
 
-    mail_message_id = fields.Many2one('mail.message', 'Message ID', required=True, select=True, ondelete='cascade')
+    mail_message_id = fields.Many2one('mail.message', 'Message ID', required=True, index=True, ondelete='cascade')
 
     @api.model
     def create_tracking_values(self, initial_value, new_value, col_name, col_info):

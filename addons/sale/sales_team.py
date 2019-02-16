@@ -18,7 +18,7 @@ class crm_team(osv.Model):
         res = dict.fromkeys(ids, 0)
         domain = [
             ('team_id', 'in', ids),
-            ('state', '=', 'manual'),
+            ('invoice_status', '=', 'to invoice'),
         ]
         amounts = obj.read_group(cr, uid, domain, ['amount_total', 'team_id'], ['team_id'], context=context)
         for rec in amounts:
@@ -35,7 +35,8 @@ class crm_team(osv.Model):
                 ('state', 'in', ['open', 'paid']),
                 ('team_id', '=', team),
                 ('date', '<=', date.today()),
-                ('date', '>=', date.today().replace(day=1))
+                ('date', '>=', date.today().replace(day=1)),
+                ('type', 'in', ['out_invoice', 'out_refund']),
             ]
             invoices = obj_inv.search_read(cr, uid, domain, ['amount_untaxed_signed'], context=context)
             res[team] = sum([inv['amount_untaxed_signed'] for inv in invoices])

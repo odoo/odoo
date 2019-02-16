@@ -5,10 +5,10 @@
 
 {
     'name': 'Singapore - Accounting',
-    'version': '1.0',
+    'version': '2.0',
     'author': 'Tech Receptives',
     'website': 'http://www.techreceptives.com',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 Singapore accounting chart and localization.
 =======================================================
@@ -34,4 +34,5 @@ After installing this module, the Configuration wizard for accounting is launche
              'account_chart_template.yml',
     ],
     'installable': True,
+    'post_init_hook': '_preserve_tag_on_taxes',
 }

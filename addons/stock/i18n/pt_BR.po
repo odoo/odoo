@@ -3,18 +3,20 @@
 # * stock
 # 
 # Translators:
-# grazziano <g.negocios@outlook.com.br>, 2015
-# grazziano <g.negocios@outlook.com.br>, 2016
+# danimaribeiro <danimaribeiro@gmail.com>, 2016
+# grazziano <gra.negocia@gmail.com>, 2015
+# grazziano <gra.negocia@gmail.com>, 2016
 # Martin Trigaux, 2015-2016
-# Mateus Cerqueira Lopes <mateus1@gmail.com>, 2015
+# Mateus Lopes <mateus1@gmail.com>, 2015
 # Renato Lima <renatonlima@gmail.com>, 2016
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2016-04-13 19:11+0000\n"
-"Last-Translator: grazziano <g.negocios@outlook.com.br>\n"
+"PO-Revision-Date: 2017-11-21 00:23+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -267,7 +269,7 @@ msgid ""
 "                                        <strong>Import</strong><br/>\n"
 "                                        <span class=\"small\">&gt; 50 vendors</span>\n"
 "                                    </span>"
-msgstr "<span class=\"panel-title\">\n<span class=\"fa\" data-icon=\"&#57408;\"/>\n<strong>Import</strong><br/>\n<span class=\"small\">&gt; 50 fornecedores</span>\n</span>"
+msgstr "<span class=\"panel-title\">\n<span class=\"fa\" data-icon=\"&#57408;\"/>\n<strong>Importar</strong><br/>\n<span class=\"small\">&gt; 50 fornecedores</span>\n</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1078,7 +1080,7 @@ msgstr "Verifique a existência de operação de embalagem na coleta"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_quant_reserved_exist
 msgid "Check the existance of quants linked to this picking"
-msgstr "Verifique a existência de quantos vinculados a esta coleta"
+msgstr "Verifique a existência de quants vinculados a esta coleta"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_move_ids_exist
@@ -3879,6 +3881,12 @@ msgid "Original Move"
 msgstr "Visualização Original"
 
 #. module: stock
+#: code:addons/stock/stock.py:576
+#, python-format
+msgid "Otherwise make sure the right stock/owner is set."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_out_type_id
 msgid "Out Type"
 msgstr "Fora Tipo"
@@ -5614,7 +5622,7 @@ msgstr "O valor de  'Movimentação Automática' / 'Operação Manual' irá cria
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "The RFQ becomes a Purchase Order and a Transfer Order is created"
-msgstr ""
+msgstr "A RFQ se torna uma Ordem de Compra e uma Ordem de Transferência é criada"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_sale_delay
@@ -6824,6 +6832,14 @@ msgstr "Você só deve receber pela peça com o mesmo número de série"
 #, python-format
 msgid "You should provide a different serial number for each piece"
 msgstr "Você deve fornecer um número de série diferente para cada peça"
+
+#. module: stock
+#: code:addons/stock/product.py:349
+#, python-format
+msgid ""
+"You still have some active reordering rules on this product. Please archive "
+"or delete them first."
+msgstr ""
 
 #. module: stock
 #: constraint:stock.move:0

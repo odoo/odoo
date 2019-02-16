@@ -11,14 +11,14 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-04-23 11:39+0000\n"
-"Last-Translator: Bohdan Lisnenko\n"
+"PO-Revision-Date: 2018-11-30 12:57+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
@@ -41,7 +41,7 @@ msgstr "%s %% знижка"
 #: code:addons/product/pricelist.py:290
 #, python-format
 msgid "%s %% discount and %s surcharge"
-msgstr ""
+msgstr "%s %% знижка та %s додаткова плата"
 
 #. module: product
 #: code:addons/product/product.py:710 code:addons/product/product.py:1134
@@ -72,7 +72,7 @@ msgid ""
 "4GB RAM\n"
 "Standard-1294P Processor\n"
 "QWERTY keyboard"
-msgstr ""
+msgstr "17\" Monitor\n4GB RAM\nStandard-1294P Processor\nQWERTY keyboard"
 
 #. module: product
 #: model:product.product,description:product.product_product_26
@@ -99,7 +99,7 @@ msgid ""
 "                1TB hard drive\n"
 "                Intel Iris Pro graphics\n"
 "            "
-msgstr ""
+msgstr "2.7GHz quad-core Intel Core i5\n                Turbo Boost up to 3.2GHz\n                8GB (two 4GB) memory\n                1TB hard drive\n                Intel Iris Pro graphics\n            "
 
 #. module: product
 #: model:product.product,name:product.product_product_52
@@ -125,13 +125,13 @@ msgid ""
 "7.9‑inch (diagonal) LED-backlit, 128Gb\n"
 "Dual-core A5 with quad-core graphics\n"
 "FaceTime HD Camera, 1.2 MP Photos"
-msgstr ""
+msgstr "7.9‑inch (diagonal) LED-backlit, 128Gb\nDual-core A5 with quad-core graphics\nFaceTime HD Camera, 1.2 MP Photos"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "75 percent less reflection."
-msgstr ""
+msgstr "75 відсотків менше відображення."
 
 #. module: product
 #: model:product.product,name:product.product_product_51
@@ -164,12 +164,12 @@ msgstr "<strong>Опис</strong>"
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Price List Name</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Назва прайс-листа</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Print date</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Дата друку</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -183,14 +183,14 @@ msgstr ""
 #: code:addons/product/product.py:977 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
-msgstr ""
+msgstr "Штрих-код може бути призначений лише до одного товару!"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_type
 msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
-msgstr ""
+msgstr "Категорія типу перегляду - це віртуальна категорія, яка може бути використана як батьківська іншої категорії для створення ієрархічної структури."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_type
@@ -207,7 +207,7 @@ msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
-msgstr ""
+msgstr "Опис товару, який ви хочете повідомити своїм клієнтам. Цей опис буде скопійовано до кожного замовлення на продаж, замовлення на поставку та рахунок-фактуру/повернення"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_purchase
@@ -216,13 +216,13 @@ msgid ""
 "A description of the Product that you want to communicate to your vendors. "
 "This description will be copied to every Purchase Order, Receipt and Vendor "
 "Bill/Refund."
-msgstr ""
+msgstr "Опис товару, який ви хочете повідомити своїм постачальникам. Цей опис буде скопійовано до будь-якого замовлення на купівлю, квитанцію та рахунок постачальника/повернення коштів."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_9
 #: model:product.template,website_description:product.product_product_9_product_template
 msgid "A great Keyboard. Cordless."
-msgstr ""
+msgstr "Відмінна клавіатура. Бездротова"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description
@@ -230,7 +230,7 @@ msgstr ""
 msgid ""
 "A precise description of the Product, used only for internal information "
 "purposes."
-msgstr ""
+msgstr "Точний опис товару, який використовується лише для внутрішніх інформаційних цілей."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
@@ -243,7 +243,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "A screen worthy of iPad."
-msgstr ""
+msgstr "Екран гідний iPad."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -284,7 +284,7 @@ msgstr "Всі товари"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "All general settings about this product are managed on"
-msgstr ""
+msgstr "Усі загальні налаштування про цей товар керуються на"
 
 #. module: product
 #: model:product.product,description:product.product_product_37
@@ -298,7 +298,7 @@ msgstr ""
 msgid ""
 "And at the Apple Online Store, you can configure your iMac with an even more"
 " powerful Intel Core i7 processor, up to 3.5GHz."
-msgstr ""
+msgstr "А в Apple Online Store ви можете налаштувати свій iMac зі ще потужнішим процесором Intel Core i7 до 3,5 ГГц."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -316,13 +316,13 @@ msgstr ""
 #: model:product.product,name:product.product_product_7
 #: model:product.template,name:product.product_product_7_product_template
 msgid "Apple In-Ear Headphones"
-msgstr ""
+msgstr "Навушники Apple"
 
 #. module: product
 #: model:product.product,name:product.product_product_9
 #: model:product.template,name:product.product_product_9_product_template
 msgid "Apple Wireless Keyboard"
-msgstr ""
+msgstr "Бездротова клавіатура Apple"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
@@ -332,7 +332,7 @@ msgstr "Можна застосувати для"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_applied_on
 msgid "Apply On"
-msgstr ""
+msgstr "Застосувати на"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -344,12 +344,12 @@ msgstr "Заархівовано"
 #: model:product.product,name:product.product_assembly
 #: model:product.template,name:product.product_assembly_product_template
 msgid "Assembly Service Cost"
-msgstr ""
+msgstr "Вартість складання сервісу"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr ""
+msgstr "Присвоює пріоритет списку постачальника товару."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_attribute_id
@@ -360,12 +360,12 @@ msgstr "Атрибут"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_extra
 msgid "Attribute Price Extra"
-msgstr ""
+msgstr "Екстра ціна атрибуту"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_ids
 msgid "Attribute Prices"
-msgstr ""
+msgstr "Ціни атрибуту"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.variants_action
@@ -388,14 +388,14 @@ msgstr "Атрибути"
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Auxiliary input for portable devices"
-msgstr ""
+msgstr "Додатковий вхід для портативних пристроїв"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "Auxiliary port lets you connect other audio sources, like an MP3 player"
-msgstr ""
+msgstr "Допоміжний порт дозволяє підключати інші джерела звуку, такі як MP3-плеєр"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_barcode
@@ -418,7 +418,7 @@ msgstr ""
 msgid ""
 "Base price to compute the customer price. Sometimes called the catalog "
 "price."
-msgstr ""
+msgstr "Базова ціна для обчислення ціни покупця. Іноді називають ціну каталогу."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_base
@@ -429,13 +429,13 @@ msgstr "Базується на"
 #: model:product.product,name:product.product_product_57
 #: model:product.template,name:product.product_product_57_product_template
 msgid "Basic Computer"
-msgstr ""
+msgstr "Базовий комп'ютер"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Beautiful 7.9‑inch display."
-msgstr ""
+msgstr "Гарний дисплей 7.9‑дюймів."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -446,12 +446,12 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image
 msgid "Big-sized image"
-msgstr ""
+msgstr "Зображення великого розміру"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_factor_inv
 msgid "Bigger Ratio"
-msgstr ""
+msgstr "Більший коефіцієнт"
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -479,19 +479,19 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Bluetooth connectivity"
-msgstr ""
+msgstr "Підключення Bluetooth "
 
 #. module: product
 #: model:product.product,name:product.product_product_5b
 #: model:product.template,name:product.product_product_5b_product_template
 msgid "Bose Mini Bluetooth Speaker"
-msgstr ""
+msgstr "Гучномовець Bose Mini Bluetooth "
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Bose Mini Bluetooth Speaker."
-msgstr ""
+msgstr "Гучномовець Bose Mini Bluetooth."
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_5b
@@ -503,7 +503,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Brilliance onscreen. And behind it."
-msgstr ""
+msgstr "Блиск на екрані. І за ним."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -581,7 +581,7 @@ msgstr ""
 msgid ""
 "Charging cradle recharges the battery and serves as a convenient\n"
 "                                    home base for your speaker, and it lets you play while it charges."
-msgstr ""
+msgstr "Зарядний пристрій заряджає акумулятор і служить зручною\nдомашньою базою для вашого динаміка, і вона дозволяє вам грати, поки вона заряджає."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_child_id
@@ -591,7 +591,7 @@ msgstr "Дочірні Категорії"
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
 msgid "Click to add a new unit of measure category."
-msgstr ""
+msgstr "Натисніть тут, щоб додати нову категорію одиниць виміру."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
@@ -601,7 +601,7 @@ msgstr "Натисніть, щоб створити нову одиницю ви
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Click to create a pricelist."
-msgstr ""
+msgstr "Натисніть, щоб створити прайс-лист."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -659,24 +659,24 @@ msgstr "Компоненти"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Compute Price"
-msgstr ""
+msgstr "Розрахувати ціну"
 
 #. module: product
 #: model:product.product,name:product.product_product_16
 #: model:product.template,name:product.product_product_16_product_template
 msgid "Computer Case"
-msgstr ""
+msgstr "Комп'ютерний чохол"
 
 #. module: product
 #: model:product.product,name:product.product_product_3
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Computer SC234"
-msgstr ""
+msgstr "Комп'ютер SC234"
 
 #. module: product
 #: model:product.public.category,name:product.Computer_all_in_one
 msgid "Computer all-in-one"
-msgstr ""
+msgstr "Комп'ютер усе в одному"
 
 #. module: product
 #: model:product.public.category,name:product.sub_computers
@@ -694,7 +694,7 @@ msgstr "Витратний"
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
-msgstr ""
+msgstr "Перетворення між одиницями вимірювання може відбуватися лише у тому випадку, якщо вони належать до однієї і тієї ж категорії. Конвертація буде здійснюватися на основі співвідношення."
 
 #. module: product
 #: code:addons/product/product.py:119
@@ -702,7 +702,7 @@ msgstr ""
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
-msgstr ""
+msgstr "Конвертація з товару UoM %s до UoM за замовчуванням%s не можлива, оскільки y обоє належать до різних категорій!."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_cost
@@ -718,12 +718,12 @@ msgid ""
 "Cost of the product template used for standard stock valuation in accounting"
 " and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
-msgstr ""
+msgstr "Вартість шаблону товару, що використовується для стандартної оцінки вартості акцій у бухгалтерському обліку та використовується як базова ціна на замовлення на придбання. Виражається в стандартній одиниці виміру товару."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_standard_price
 msgid "Cost of the product, in the default unit of measure of the product."
-msgstr ""
+msgstr "Вартість товару в одиниці виміру за замовчуванням товару."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_uid
@@ -771,7 +771,7 @@ msgid ""
 "technological innovation. We refined,re-imagined,or re-engineered everything"
 " about iMac from the inside out. The result is an advanced, elegant all-in-"
 "one computer that’s as much a work of art as it is state of the art."
-msgstr ""
+msgstr "Створення такої неймовірно тонкої конструкції вимагало деяких не менш приголомшливих подвигів технологічних нововведень. Ми вдосконалили, переосмислили або переробили все про iMac зсередини. Результат - це просунутий, елегантний комп'ютер \"все-в-одному\", який є таким самим твором мистецтва, як і сучасний стан."
 
 #. module: product
 #: model:ir.model,name:product.model_res_currency
@@ -787,30 +787,30 @@ msgstr "Валюта"
 #: model:product.product,name:product.product_product_5
 #: model:product.template,name:product.product_product_5_product_template
 msgid "Custom Computer (kit)"
-msgstr ""
+msgstr "Користувацький комп'ютер (комплект)"
 
 #. module: product
 #: model:product.product,description:product.product_product_27
 #: model:product.template,description:product.product_product_27_product_template
 msgid "Custom Laptop based on customer's requirement."
-msgstr ""
+msgstr "Спеціальний ноутбук на основі вимог замовника."
 
 #. module: product
 #: model:product.product,description:product.product_product_5
 #: model:product.template,description:product.product_product_5_product_template
 msgid "Custom computer shipped in kit."
-msgstr ""
+msgstr "Користувацький комп'ютер, доставлений в комплекті."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_partner_ref
 msgid "Customer ref"
-msgstr "Клієнт"
+msgstr "Референс клієнта"
 
 #. module: product
 #: model:product.product,name:product.product_product_46
 #: model:product.template,name:product.product_product_46_product_template
 msgid "Datacard"
-msgstr ""
+msgstr "Карта даних"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_datetime
@@ -826,13 +826,13 @@ msgstr "Дата останнього повідомлення по запису
 #. module: product
 #: model:product.uom,name:product.product_uom_day
 msgid "Day(s)"
-msgstr "День (дні)"
+msgstr "День(і)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_uom_id
 #: model:ir.model.fields,help:product.field_product_template_uom_id
 msgid "Default Unit of Measure used for all stock operation."
-msgstr ""
+msgstr "Одиниця вимірювання за замовчуванням, що використовується для всіх операцій складу."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_uom_po_id
@@ -840,7 +840,7 @@ msgstr ""
 msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
-msgstr ""
+msgstr "Одиниця вимірювання за замовчуванням, що використовується для замовлень на купівлю. Вона повинна бути такою ж категорією, як одиниця виміру за замовчуванням."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_delay
@@ -875,7 +875,7 @@ msgstr "Опис для постачальників"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Design. The thinnest iPod ever."
-msgstr ""
+msgstr "Дизайн. Найтонший iPod за весь час."
 
 #. module: product
 #: model:product.product,name:product.product_product_55
@@ -893,12 +893,12 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute_sequence
 #: model:ir.model.fields,help:product.field_product_attribute_value_sequence
 msgid "Determine the display order"
-msgstr ""
+msgstr "Визначте порядок відображення"
 
 #. module: product
 #: model:product.public.category,name:product.devices
 msgid "Devices"
-msgstr ""
+msgstr "Пристрої"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_display_name
@@ -918,7 +918,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_uom_display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist_display_name
 msgid "Display Name"
-msgstr "Показати ім'я"
+msgstr "Назва для відображення"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
@@ -931,7 +931,7 @@ msgstr "Дюжина(и)"
 msgid ""
 "Dvorak keyboard \n"
 "            left-handed mouse"
-msgstr ""
+msgstr "Клавіатура Dvorak \n           мишка для шульги"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
@@ -939,13 +939,13 @@ msgid ""
 "Each rule include a set of applicability criteria (date range,\n"
 "                product category...) and a computation that easily helps to achieve\n"
 "                any kind of pricing."
-msgstr ""
+msgstr "Кожне правило включає набір критеріїв застосування (діапазон дат,\nкатегорія товару...) та обчислення, яке легко допомагає досягти\nбудь-який вид ціноутворення."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Efficient, high-quality audio"
-msgstr ""
+msgstr "Ефективне, якісне аудіо"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_end
@@ -956,7 +956,7 @@ msgstr "Кінцева дата"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_end
 msgid "End date for this vendor price"
-msgstr ""
+msgstr "Уінцева дата для цієї ціни постачальника"
 
 #. module: product
 #: selection:product.template,state:0
@@ -966,7 +966,7 @@ msgstr "Кінець життєвого циклу"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_end
 msgid "Ending valid for the pricelist item validation"
-msgstr ""
+msgstr "Завершення діє для перевірки позиції прайс-листа"
 
 #. module: product
 #: model:product.product,name:product.product_product_54
@@ -982,14 +982,14 @@ msgstr "Помилка! Ви не можете створювати рекурс
 #. module: product
 #: constraint:product.pricelist.item:0
 msgid "Error! The minimum margin should be lower than the maximum margin."
-msgstr ""
+msgstr "Помилка! Мінімальна маржа повинна бути нижчою, ніж максимальна маржа."
 
 #. module: product
 #: constraint:product.pricelist.item:0
 msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
-msgstr ""
+msgstr "Помилка! Ви не можете призначити головний прайс-лист як інший у прайс-листі!"
 
 #. module: product
 #: constraint:res.currency:0
@@ -1010,7 +1010,7 @@ msgstr ""
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
 "in the same category."
-msgstr ""
+msgstr "Помилка: одиниця виміру за замовчуванням та одиниця виміру закупівлі повинні бути в тій же категорії."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -1020,7 +1020,7 @@ msgid ""
 "                                    screen, fast Colors are vivid and text is sharp on the iPad mini display.\n"
 "                                    But what really makes it stand out is its size. At 7.9 inches,\n"
 "                                    it’s perfectly sized to deliver an experience every bit as big as iPad."
-msgstr ""
+msgstr "Все, що вам подобається в iPad - прекрасний\nекран, швидкі кольори - яскраві, а текст різкий на міні-дисплеї iPad.\nАле те, що дійсно виділяється, - його розмір. На 7,9 дюйма\nідеально розраховано на те, щоби поставити досвід будь-коли настільки ж великим, як iPad."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -1037,7 +1037,7 @@ msgid ""
 "                                    iSight cameras, thousands of amazing apps, 10-hour\n"
 "                                    battery life* — is everything you’ll love about\n"
 "                                    iPad mini, too. And you can hold it in one hand."
-msgstr ""
+msgstr "Все, що вам подобається в iPad - прекрасний\nекран, швидка і плавна продуктивність, FaceTime і\niSight камери, тисячі чудових додатків, 10 годин\nчасу автономної роботи * - це все, що вам сподобається в\nIPad міні теж. І ви можете тримати його в одній руці."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -1047,48 +1047,48 @@ msgid ""
 "                                        fast and fluid performance, FaceTime and iSight cameras, \n"
 "                                        thousands of amazing apps, 10-hour battery life* — is everything\n"
 "                                        you’ll love about iPad mini, too. And you can hold it in one hand."
-msgstr ""
+msgstr "Все, що вам подобається в iPad - красивий екран,\nшвидка і плавна продуктивність, камери FaceTime і iSight,\nтисячі чудових додатків, 10-годинний термін служби акумулятора * - це все\nви також будете любите в iPad mini. І ви можете тримати його в одній руці."
 
 #. module: product
 #: model:product.product,description:product.product_product_2
 #: model:product.template,description:product.product_product_2_product_template
 msgid "Example of product to invoice based on delivery."
-msgstr ""
+msgstr "Приклад товару в рахунку-фактурі на основі доставки."
 
 #. module: product
 #: model:product.product,description:product.product_product_0
 #: model:product.template,description:product.product_product_0_product_template
 msgid "Example of product to invoice on order."
-msgstr ""
+msgstr "Приклад товару в рахунку-фактурі на основі замовлення."
 
 #. module: product
 #: model:product.product,description:product.product_product_1b
 #: model:product.template,description:product.product_product_1b_product_template
 msgid "Example of products to invoice based on cost."
-msgstr ""
+msgstr "Приклад товару в рахунку-фактурі на основі вартості."
 
 #. module: product
 #: model:product.product,description:product.product_product_1
 #: model:product.template,description:product.product_product_1_product_template
 msgid "Example of products to invoice based on delivery."
-msgstr ""
+msgstr "Приклад товару в рахунку-фактурі на основі доставки."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_name
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price
 msgid "Explicit rule name for this pricelist line."
-msgstr ""
+msgstr "Явне ім'я правила для цього рядка прайс-листа."
 
 #. module: product
 #: model:product.product,name:product.product_product_1b
 #: model:product.template,name:product.product_product_1b_product_template
 msgid "External Audit"
-msgstr ""
+msgstr "Зовнішній аудит"
 
 #. module: product
 #: model:product.public.category,name:product.External_Hard_Drive
 msgid "External Hard Drive"
-msgstr ""
+msgstr "Зовнішній жорсткий диск"
 
 #. module: product
 #: model:product.product,name:product.product_product_28
@@ -1100,7 +1100,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Fast connections.The world over."
-msgstr ""
+msgstr "Швидке з'єднання. Світ закінчився."
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
@@ -1135,7 +1135,7 @@ msgstr "Підписники (Партнери)"
 msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
-msgstr ""
+msgstr "Для правила застосування купується/продана кількість повинна бути більшою або дорівнює мінімальної кількості, зазначеній у цьому полі.\nВиражається в одиниці виміру за замовчуванням товару."
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
@@ -1153,13 +1153,13 @@ msgid ""
 "Cable length: 1065 mm\n"
 "Weight: 10.2 grams\n"
 "            "
-msgstr ""
+msgstr "Частота: 5Hz to 21kHz\nІмпеданс: 23 ohms\nЧутливість: 109 dB SPL/mW\nМеханіка: двостороння збалансована арматура\nДовжина кабеля: 1065 mm\nВага: 10.2 grams\n            "
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Friendly to the environment."
-msgstr ""
+msgstr "Дружній до середовища."
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_44
@@ -1184,7 +1184,7 @@ msgstr "Загальна інформація"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Genius. Your own personal DJ."
-msgstr ""
+msgstr "Геній. Ваш персональний DJ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_packaging_ids
@@ -1192,7 +1192,7 @@ msgstr ""
 msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
-msgstr ""
+msgstr "Дає різні способи упаковки той же товар. Це не впливає на порядок вибору та використовується переважно, якщо ви використовуєте модуль електронного документообігу."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_sequence
@@ -1205,13 +1205,13 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_sequence
 msgid "Gives the sequence order when displaying a list of product categories."
-msgstr ""
+msgstr "Дає порядок послідовності при відображенні списку категорій товарів."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_sequence
 #: model:ir.model.fields,help:product.field_product_template_sequence
 msgid "Gives the sequence order when displaying a product list"
-msgstr ""
+msgstr "Дає порядок послідовності при відображенні списку категорій товарів."
 
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
@@ -1240,7 +1240,7 @@ msgstr "Вага"
 #: model:product.product,name:product.product_product_17
 #: model:product.template,name:product.product_product_17_product_template
 msgid "HDD SH-1"
-msgstr ""
+msgstr "HDD SH-1"
 
 #. module: product
 #: model:product.product,name:product.product_product_18
@@ -1252,7 +1252,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_19
 #: model:product.template,name:product.product_product_19_product_template
 msgid "HDD on Demand"
-msgstr ""
+msgstr "Жорсткий диск на вимогу"
 
 #. module: product
 #: model:product.product,description:product.product_product_32
@@ -1272,7 +1272,7 @@ msgstr ""
 #. module: product
 #: model:product.public.category,name:product.Headset
 msgid "Headset"
-msgstr ""
+msgstr "Гарнітура"
 
 #. module: product
 #: model:product.product,name:product.product_product_33
@@ -1296,7 +1296,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Hear, hear."
-msgstr ""
+msgstr "Почуй, почуй."
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_11
@@ -1308,13 +1308,13 @@ msgid ""
 "Width:  39.6 mm\n"
 "Depth:  5.4 mm\n"
 "Weight: 31 grams"
-msgstr ""
+msgstr "Висота: 76.5 mm\nШирина:  39.6 mm\nГлибина:  5.4 mm\nВага: 31 grams"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Highly rated designs."
-msgstr ""
+msgstr "Високо оцінені конструкції."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
@@ -1329,7 +1329,7 @@ msgid ""
 "making it 75 percent less reflective. And by re-architecting the LCD and "
 "moving it right up against the cover glass. So you see your photos, games, "
 "movies, and everything else in vivid, lifelike detail."
-msgstr ""
+msgstr "Як ми вже зробили чудовий широкоекранний дисплей ще краще? Роблячи його на 75 відсотків менш відбивним. І шляхом повторної архітектури РК-дисплея і переміщення його прямо проти обкладинки скла. Таким чином, ви бачите свої фотографії, ігри, фільми та все інше в яскравій, життєво важливій деталі."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor_inv
@@ -1389,20 +1389,20 @@ msgstr "Якщо відмічено, то нові повідомлення бу
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "If it's made for iPad, it's made for iPad mini."
-msgstr ""
+msgstr "Це зроблено для iPad, це зроблено для iPad mini."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_active
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
-msgstr ""
+msgstr "Якщо не вибрано, це дозволить вам приховати прайс-лист без його видалення."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_active
 #: model:ir.model.fields,help:product.field_product_template_active
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
-msgstr ""
+msgstr "Якщо не вибрано, це дозволить вам сховати правило без його видалення."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_image
@@ -1415,21 +1415,21 @@ msgid ""
 "Image of the product variant (Big-sized image of product template if false)."
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr ""
+msgstr "Зображення варіанта товару (зображення великого розміру шаблону товару, якщо воно помилкове). Він автоматично змінюється у вигляді зображення 1024x1024 пікселів із збереженим форматом зображення."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr ""
+msgstr "Зображення варіанта товару (зображення середнього розміру шаблону товару, якщо воно помилкове)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_small
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr ""
+msgstr "Зображення варіанта товару (зображення маленького розміру шаблону товару, якщо воно помилкове)."
 
 #. module: product
 #: selection:product.template,state:0
@@ -1445,7 +1445,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Information about a product vendor"
-msgstr ""
+msgstr "Інформація про товар постачальника"
 
 #. module: product
 #: model:product.product,name:product.product_product_38
@@ -1484,7 +1484,7 @@ msgstr "Внутрішні посилання"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_barcode
 msgid "International Article Number used for product identification."
-msgstr ""
+msgstr "Міжнародний номер статті, що використовується для ідентифікації товару."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -1501,36 +1501,36 @@ msgstr "Стежить"
 #: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
 #: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
 msgid "Is a product variant"
-msgstr ""
+msgstr "Чи є варіант товару"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Keep it clean."
-msgstr ""
+msgstr "Зберігайте це чистим."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Key Features"
-msgstr ""
+msgstr "Ключові особливості"
 
 #. module: product
 #: model:product.public.category,name:product.Keyboard_Mouse
 msgid "Keyboard / Mouse"
-msgstr ""
+msgstr "Клавіатура/Мишка"
 
 #. module: product
 #: model:product.product,name:product.product_product_27
 #: model:product.template,name:product.product_product_27_product_template
 msgid "Laptop Customized"
-msgstr ""
+msgstr "Налаштований ноутбук"
 
 #. module: product
 #: model:product.product,name:product.product_product_25
 #: model:product.template,name:product.product_product_25_product_template
 msgid "Laptop E5023"
-msgstr ""
+msgstr "Ноутбук E5023"
 
 #. module: product
 #: model:product.product,name:product.product_product_26
@@ -1541,7 +1541,7 @@ msgstr ""
 #. module: product
 #: model:product.public.category,name:product.laptops
 msgid "Laptops"
-msgstr ""
+msgstr "Ноутбуки"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_last_post
@@ -1613,12 +1613,12 @@ msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
-msgstr ""
+msgstr "Час проведення в дні між підтвердженням замовлення на купівлю та отримання товару на вашому складі. Використовується планувальником для автоматичного обчислення планування замовлення на придбання."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_left
 msgid "Left Parent"
-msgstr ""
+msgstr "Залишений батько "
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_length
@@ -1645,7 +1645,7 @@ msgstr "Літр(и)"
 #: model:product.product,name:product.product_product_58
 #: model:product.template,name:product.product_product_58_product_template
 msgid "Little server"
-msgstr ""
+msgstr "Маленький сервер"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_packaging_ids
@@ -1661,7 +1661,7 @@ msgstr "Керування різними одиницями віміру"
 #. module: product
 #: model:res.groups,name:product.group_pricelist_item
 msgid "Manage Pricelist Items"
-msgstr ""
+msgstr "Управляйте елементами прайс-листа"
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -1672,12 +1672,12 @@ msgstr "Керувати пакуваннями товару"
 #: model:ir.model.fields,field_description:product.field_base_config_settings_group_product_variant
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr ""
+msgstr "Керувати варіантами товру"
 
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
 msgid "Manage Properties of Product"
-msgstr ""
+msgstr "Управляйте властивостями товару"
 
 #. module: product
 #: model:res.groups,name:product.group_uos
@@ -1692,13 +1692,13 @@ msgstr "Макс. межа"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_max_margin
 msgid "Max. Price Margin"
-msgstr ""
+msgstr "Максимальна маржа ціни"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_medium
 #: model:ir.model.fields,field_description:product.field_product_template_image_medium
 msgid "Medium-sized image"
-msgstr ""
+msgstr "Зображення середньої величини"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image_medium
@@ -1706,12 +1706,12 @@ msgid ""
 "Medium-sized image of the product. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
 "one of those sizes. Use this field in form views or some kanban views."
-msgstr ""
+msgstr "Середній розмір зображення товару. Воно автоматично змінюється у вигляді зображення 128x128 пікселів зі збереженим форматом, лише якщо зображення перевищує один із цих розмірів. Використовуйте це поле у вигляді переглядів або деяких переглядів канбану."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
 msgid "Memory"
-msgstr ""
+msgstr "Пам'ять"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_ids
@@ -1733,7 +1733,7 @@ msgstr "Мін. межа"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_min_margin
 msgid "Min. Price Margin"
-msgstr ""
+msgstr "Мінімальна маржа ціни"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_min_quantity
@@ -1749,13 +1749,13 @@ msgstr "Мінімальна кількість"
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "More energy efficient."
-msgstr ""
+msgstr "Більш енергоефективний."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "More features."
-msgstr ""
+msgstr "Більше можливостей."
 
 #. module: product
 #: model:product.product,name:product.product_product_21
@@ -1767,19 +1767,19 @@ msgstr ""
 #: model:product.product,name:product.product_product_20
 #: model:product.template,name:product.product_product_20_product_template
 msgid "Motherboard I9P57"
-msgstr ""
+msgstr "Материнська плата I9P57"
 
 #. module: product
 #: model:product.product,name:product.product_product_10
 #: model:product.template,name:product.product_product_10_product_template
 msgid "Mouse, Optical"
-msgstr ""
+msgstr "Миша, Оптична"
 
 #. module: product
 #: model:product.product,name:product.product_product_12
 #: model:product.template,name:product.product_product_12_product_template
 msgid "Mouse, Wireless"
-msgstr ""
+msgstr "Миша, Бездротова"
 
 #. module: product
 #: model:product.product,name:product.product_product_31
@@ -1793,7 +1793,7 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Music. It's what beats inside."
-msgstr ""
+msgstr "Музика. Це те, що б'є всередині."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_name
@@ -1804,12 +1804,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_name
 #: model:ir.model.fields,field_description:product.field_product_uom_categ_name
 msgid "Name"
-msgstr "Name"
+msgstr "Назва"
 
 #. module: product
 #: model:product.public.category,name:product.network
 msgid "Network"
-msgstr ""
+msgstr "Мережа"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1867,7 +1867,7 @@ msgstr ""
 #: model:product.product,description:product.product_product_19
 #: model:product.template,description:product.product_product_19_product_template
 msgid "On demand hard-disk having capacity based on requirement."
-msgstr ""
+msgstr "На вимогу жорсткого диска місткість залежить від вимог."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -1878,7 +1878,7 @@ msgstr "Інша інформація"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_base_pricelist_id
 #: selection:product.pricelist.item,base:0
 msgid "Other Pricelist"
-msgstr ""
+msgstr "Інший прайс-лист."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -1917,7 +1917,7 @@ msgstr "Партнер"
 #. module: product
 #: model:product.public.category,name:product.Pen_Drive
 msgid "Pen Drive"
-msgstr ""
+msgstr "Флешка"
 
 #. module: product
 #: model:product.product,name:product.product_product_29
@@ -1934,7 +1934,7 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Percentage (discount)"
-msgstr ""
+msgstr "Відсоток (знижка)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_percent_price
@@ -1944,7 +1944,7 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_5
 msgid "Physical"
-msgstr ""
+msgstr "Фізичний"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1952,7 +1952,7 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Playlists. The perfect mix for every mood."
-msgstr ""
+msgstr "Плей-лист. Чудовий мікс для будь-якого настрою."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -1967,13 +1967,13 @@ msgid ""
 "Powered by fourth-generation Intel Core processors, this iMac is the fastest"
 " yet. Every model in the lineup comes standard with a quad-core Intel Core "
 "i5 processor, starting at 2.7GHz and topping out at 3.4GHz."
-msgstr ""
+msgstr "Завдяки чотирьом поколінням процесорів Intel Core, цей iMac найшвидший. Кожна модель в ряді поставляється зі стандартним чотирьохядерним процесором Intel Core i5, починаючи з 2,7 ГГц і закінчуючи на частоті 3,4 ГГц."
 
 #. module: product
 #: model:product.product,name:product.product_product_0
 #: model:product.template,name:product.product_product_0_product_template
 msgid "Prepaid Consulting"
-msgstr ""
+msgstr "Передплачений консалтинг"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price
@@ -2051,7 +2051,7 @@ msgstr "Прайс-лист"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_applied_on
 msgid "Pricelist Item applicable on selected option"
-msgstr ""
+msgstr "Вартість пункту, що застосовується до вибраної опції"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_ids
@@ -2062,12 +2062,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist Items"
-msgstr ""
+msgstr "Елементи прайс-листа"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_name
 msgid "Pricelist Name"
-msgstr ""
+msgstr "Назва прайс-листа"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2084,18 +2084,18 @@ msgstr "Прайс-листи"
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Pricelists On Product"
-msgstr ""
+msgstr "Прайс-лист на товарі"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
 msgid "Pricelists are managed on"
-msgstr ""
+msgstr "Прайс-лист керується на"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Pricing"
-msgstr ""
+msgstr "Ціноутворення"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
@@ -2105,7 +2105,7 @@ msgstr "Друк"
 #. module: product
 #: model:product.public.category,name:product.printer
 msgid "Printer"
-msgstr ""
+msgstr "Принтер"
 
 #. module: product
 #: model:product.product,name:product.product_product_37
@@ -2123,7 +2123,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_22
 #: model:product.template,name:product.product_product_22_product_template
 msgid "Processor Core i5 2.70 Ghz"
-msgstr ""
+msgstr "Процесор Core i5 2.70 Ghz"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -2150,13 +2150,13 @@ msgstr "Атрибути товару"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_value_id
 msgid "Product Attribute Value"
-msgstr ""
+msgstr "Значення атрибуту товару"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line_ids
 msgid "Product Attributes"
-msgstr ""
+msgstr "Атрибути товару"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -2176,7 +2176,7 @@ msgstr "Категорія товару"
 #: model:ir.model.fields,field_description:product.field_product_product_product_manager
 #: model:ir.model.fields,field_description:product.field_product_template_product_manager
 msgid "Product Manager"
-msgstr "Менеджер з товарів"
+msgstr "Керівник з товарів"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2257,12 +2257,12 @@ msgstr "Прескурант товарів"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price Search"
-msgstr ""
+msgstr "Пошук ціни товарів"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Products your store in the inventory"
-msgstr ""
+msgstr "Товари вашого магазину на складі"
 
 #. module: product
 #: code:addons/product/product.py:817
@@ -2274,12 +2274,12 @@ msgstr "Товари: "
 #: model:ir.model.fields,field_description:product.field_product_template_lst_price
 #: selection:product.pricelist.item,base:0
 msgid "Public Price"
-msgstr ""
+msgstr "Публічна ціна"
 
 #. module: product
 #: model:product.pricelist,name:product.list0
 msgid "Public Pricelist"
-msgstr ""
+msgstr "Відкритий прайс-лист"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_purchase
@@ -2344,7 +2344,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "RAM SR5"
-msgstr ""
+msgstr "RAM SR5"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_factor
@@ -2360,7 +2360,7 @@ msgstr "Основна одиниця виміру для цієї катего�
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Remote control for power, volume, track seek"
-msgstr ""
+msgstr "Пульт дистанційного керування для потужності, гучності, пошуку шляху"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_right
@@ -2375,7 +2375,7 @@ msgid ""
 "                                    They’re immersive, full-screen apps that let you do almost anything\n"
 "                                    you can imagine. And with automatic updates,\n"
 "                                    you're always getting the best experience possible."
-msgstr ""
+msgstr "З самого початку програми для iPad також працюють з iPad mini.\nЦе занурення, повноекранні додатки, які дозволяють вам робити майже все\n, що ви можете собі уявити. І за допомогою автоматичних оновлень\nви завжди отримуєте найкращий досвід."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -2391,7 +2391,7 @@ msgid ""
 "                                    iPad. It’s simple yet powerful. Thin and light yet\n"
 "                                    full-featured. It can do just about everything and\n"
 "                                    be just about anything."
-msgstr ""
+msgstr "З самого початку тут дуже багато чого любити в\niPad. Це просто, але потужно. Тонкий і світлий ще\nповнофункціональний. Він може робити майже все і\nмайже що завгодно."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -2402,7 +2402,7 @@ msgid ""
 "                                   featured. It can do just about everything and be just\n"
 "                                   about anything.And because it’s so easy to use, it’s\n"
 "                                   easy to love."
-msgstr ""
+msgstr "З самого початку, дуже подобається користуватися iPad.\nЦе просто, але потужно. Тонкий і легкий.\nВін може робити майже все і бути просто\nпро що-небудь. А тому, що це так просто, це все\nлегко любити."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2456,7 +2456,7 @@ msgstr "Продаж"
 #. module: product
 #: model:res.groups,name:product.group_sale_pricelist
 msgid "Sales Pricelists"
-msgstr ""
+msgstr "Прайс-лист продажів"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2470,18 +2470,18 @@ msgid ""
 "                                        you wouldn’t have thought of yourself, create Genius Mixes in iTunes\n"
 "                                        and sync the ones you like to iPod nano. Then tap Genius Mixes and\n"
 "                                        rediscover songs you haven’t heard in a while — or find music you forgot you even had."
-msgstr ""
+msgstr "Скажіть, що ви слухаєте пісню, яку любите, і хочете залишитися в хорошому настрої.\nПросто натисніть Genius. Вона знаходить інші пісні на iPod nano, які ідеально підходять\nі створює для вас плейлист Genius. Для більшої кількості комбінацій композицій\nви б не подумали про себе, створюйте суміші Genius в iTunes\nі синхронізувати ті, які вам подобаються для iPod nano. Потім торкніться Genius Mixes і\nпереглядайте пісні, які ви не чули в той час - або знайдіть музику, яку ви забули."
 
 #. module: product
 #: model:product.public.category,name:product.Screen
 msgid "Screen"
-msgstr ""
+msgstr "Екран"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_categ_id
 #: model:ir.model.fields,help:product.field_product_template_categ_id
 msgid "Select category for the current product"
-msgstr ""
+msgstr "Виберіть категорію поточного товару"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_sequence
@@ -2506,7 +2506,7 @@ msgstr "Сервер"
 #: code:addons/product/product.py:460
 #, python-format
 msgid "Service"
-msgstr ""
+msgstr "Послуга"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
@@ -2521,12 +2521,12 @@ msgid ""
 "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr ""
+msgstr "Встановлює ціну так, щоби вона була кратною цій величині.\nОкруглення застосовується після знижки та до надбавки.\nЩоби ці ціни закінчилися в 9.99, встановіть округлення 10, надбавка -0.01"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
 msgid "Share product to all companies"
-msgstr ""
+msgstr "Поділіться товаром для всіх компаній"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_base_config_settings_company_share_product
@@ -2534,13 +2534,13 @@ msgid ""
 "Share your product to all companies defined in your instance.\n"
 " * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."
-msgstr ""
+msgstr "Поділіться своїм товаром з усіма компаніям, визначеними у вашому випадку.\n * Перевірено: товар видно для кожної компанії, навіть якщо компанія визначена у партнера.\n * Неперевірено: Кожна компанія може бачити тільки свій товар (товар, де компанія визначена). Товар, не пов'язаний з компанією, видно для всіх компаній."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid "Sleek, compact design"
-msgstr ""
+msgstr "Гладкий, компактний дизайн"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_small
@@ -2554,7 +2554,7 @@ msgid ""
 "Small-sized image of the product. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr ""
+msgstr "Малий розмір зображення товару. Він автоматично змінюється у вигляді зображення 64x64 пікселів, при збереженні формату зображення. Використовуйте це поле в будь-якому місці, де потрібно невелике зображення."
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -2567,62 +2567,62 @@ msgstr "Менша за основну одиницю виміру катего�
 msgid ""
 "Soft covers are available separately in blue, green or orange. Pick a color "
 "to match your style."
-msgstr ""
+msgstr "М'які чохли доступні окремо синього, зеленого або помаранчевого кольорів. Виберіть колір, який відповідає вашому стилю."
 
 #. module: product
 #: model:product.category,name:product.product_category_4
 #: model:product.public.category,name:product.Software
 msgid "Software"
-msgstr ""
+msgstr "Програмне забезпечення"
 
 #. module: product
 #: model:product.public.category,name:product.Speakers
 msgid "Speakers"
-msgstr ""
+msgstr "Спікери"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_categ_id
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
-msgstr ""
+msgstr "Укажіть категорію товару, якщо це правило застосовується лише до товарів, що належать до цієї категорії, або до дочірніх категорій. Не зберігайте в іншому місці."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_id
 msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
-msgstr ""
+msgstr "Вкажіть товар, якщо це правило застосовується тільки до одного товару. Не зберігайте в іншому місці."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_tmpl_id
 msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
-msgstr ""
+msgstr "Вкажіть шаблон, якщо це правило застосовується тільки до одного шаблону товару. Не зберігайте в іншому місці.  "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_sale_ok
 #: model:ir.model.fields,help:product.field_product_template_sale_ok
 msgid "Specify if the product can be selected in a sales order line."
-msgstr ""
+msgstr "Вкажіть чи може продукт бути обрано в рядку замовлення на продаж."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_surcharge
 msgid ""
 "Specify the fixed amount to add or substract(if negative) to the amount "
 "calculated with the discount."
-msgstr ""
+msgstr "Вкажіть фіксовану суму, яку потрібно додати або відняти (якщо є негативним) до суми, яка розраховується зі знижкою."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_max_margin
 msgid "Specify the maximum amount of margin over the base price."
-msgstr ""
+msgstr "Вкажіть максимальну суму маржі по базовій ціні."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_min_margin
 msgid "Specify the minimum amount of margin over the base price."
-msgstr ""
+msgstr "Вкажіть мінімальну суму маржі по базовій ціні."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_start
@@ -2633,12 +2633,12 @@ msgstr "Початкова дата"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_start
 msgid "Start date for this vendor price"
-msgstr ""
+msgstr "Розпочніть дату для цієї ціни постачальника"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_start
 msgid "Starting date for the pricelist item validation"
-msgstr ""
+msgstr "Дата початку перевірки позиції прайс-листа"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_state
@@ -2655,13 +2655,13 @@ msgstr "Прайс-лист постачальника"
 #: model:product.product,name:product.product_product_2
 #: model:product.template,name:product.product_product_2_product_template
 msgid "Support Contract (on timesheet)"
-msgstr ""
+msgstr "Договір підтримки (на табель)"
 
 #. module: product
 #: model:product.product,name:product.product_product_47
 #: model:product.template,name:product.product_product_47_product_template
 msgid "Switch, 24 ports"
-msgstr ""
+msgstr "Свіч, 24 порта"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2669,7 +2669,7 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Sync to your heart’s content."
-msgstr ""
+msgstr "Синхронізувати з вашим серцевим вмістом."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2681,7 +2681,7 @@ msgid ""
 "                                    Or everything by one artist. You can even browse by genres or composers.\n"
 "                                    Flip through your music: Album art looks great on the bigger screen.\n"
 "                                    Or to keep things fresh, give iPod nano a shake and it shuffles to a different song in your music library."
-msgstr ""
+msgstr "Натисніть, щоб відтворити улюблені пісні. Або цілі альбоми.\nАбо все на одного виконавця. Ви навіть можете переглядати жанри або композиторів.\nПереверніть вашу музику: обкладинка альбому виглядає чудово на великому екрані.\nАбо, щоб зберегти речі свіжими, подаруйте iPod nano, і він переміщується на іншу композицію у вашій музичній бібліотеці."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_name_template
@@ -2698,7 +2698,7 @@ msgid ""
 "                                    Three different sizes of ear tips are included so you can find a perfect fit for each ear.\n"
 "                                    Also included are a convenient carrying case for the ear tips and a cable-control case\n"
 "                                    for the headphones themselves."
-msgstr ""
+msgstr "Навушники Apple In-Ear забезпечують по-справжньому захоплююче звучання, суттєво\nзменшуючи небажані зовнішні шуми. М'які, силіконові наконечники для вух чіткі та комфортні\nу вусі, створюючи пломбу, яка виділяє вашу музику з вашого оточення.\nВключено три різних розміри наконечників, щоби ви могли знайти ті, які ідеально підходить для кожного вуха.\nТакож в комплекті входить зручний чохол для навушників та корпус кабельного управління\nдля самих навушників."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2708,7 +2708,7 @@ msgid ""
 "                                    palm of your hand, yet gives you full, natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n"
 "                                    full-featured. It can do just about everything and\n"
 "                                    experience music just about anywhere."
-msgstr ""
+msgstr "Bose® SoundLink® mini - це найменший портативний динамік Bluetooth Bose. Його ультра-компактний розмір вписується в\nдолоню вашої руки, але надає вам повний, природний звук бездротовим способом з вашого iPhone, iPad або iPod. Візьміть це і користуйтесь\nповним функціоналом. Він може робити майже все і\nдосвід музики майже скрізь."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2719,37 +2719,37 @@ msgid ""
 "                                        Its low profile lets you place it almost anywhere and\n"
 "                                        provides a low center of gravity that makes it nearly\n"
 "                                        impossible to tip over."
-msgstr ""
+msgstr "Динамік SoundLink® Mini невеликий і досить легкий\n, який вміщується в сумку. Він важить всього 1,5 фунта.\nЙого низький профіль дозволяє розмістити його майже в будь-якому місці і\nзабезпечує низький центр тяжіння, що робить його майже\nнеможливим подолати."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid ""
 "The computed price is expressed in the default Unit of Measure of the "
 "product."
-msgstr ""
+msgstr "Обчислена ціна виражається в одиниці виміру за замовчуванням товару."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_rounding
 msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
-msgstr ""
+msgstr "Обчисленої кількості буде кілька цього значення. Використовуйте 1.0 для для одиниці вимірювання, які ще не можна розділити, наприклад, шматок."
 
 #. module: product
 #: sql_constraint:product.uom:0
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr ""
+msgstr "Коефіцієнт конверсії одиниці виміру не може бути 0!"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "The desktop. In its most advanced form ever"
-msgstr ""
+msgstr "Робочий стіл. У найбільш передовій формі за весь час"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_sequence
 msgid "The first in the sequence is the default one."
-msgstr ""
+msgstr "Перший в послідовності встановлений за замовчуванням."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -2763,7 +2763,7 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4d_product_template
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "The full iPad experience."
-msgstr ""
+msgstr "Повний досвід iPad."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_9
@@ -2772,7 +2772,7 @@ msgid ""
 "The incredibly thin Apple Wireless Keyboard uses Bluetooth technology,\n"
 "                                    which makes it compatible with iPad. And you’re free to type wherever\n"
 "                                    you like — with the keyboard in front of your iPad or on your lap."
-msgstr ""
+msgstr "Неперевершена тонка клавіатура Apple Wireless використовує технологію Bluetooth,\nщо робить його сумісним з iPad. І ви можете вільно користуватись нею будь-де, де\nвам подобається - з клавіатурою перед вашим iPad або на колінах."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_min_qty
@@ -2780,7 +2780,7 @@ msgid ""
 "The minimal quantity to purchase from this vendor, expressed in the vendor "
 "Product Unit of Measure if not any, in the default unit of measure of the "
 "product otherwise."
-msgstr ""
+msgstr "Мінімальне значення для покупки від цього постачальника, виражене в одиниці виміру товару постачальника, якщо його немає, в одиниці виміру товару за замовчуванням."
 
 #. module: product
 #: code:addons/product/product.py:329
@@ -2788,7 +2788,7 @@ msgstr ""
 msgid ""
 "The operation cannot be completed:\n"
 "You are trying to delete an attribute value with a reference on a product variant."
-msgstr ""
+msgstr "Операція не може бути завершена:\nВи намагаєтесь видалити значення атрибута з посиланням на варіант товару."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_price
@@ -2803,14 +2803,14 @@ msgid ""
 "The product form contains information to simplify the sale\n"
 "                process: price, notes in the quotation, accounting data,\n"
 "                procurement methods, etc."
-msgstr ""
+msgstr "Форма товару містить інформацію для спрощення процесу\nпродажу: ціна, нотатки в комерційній пропозиції, дані бухгалтерського обліку,\nспособи закупівлі тощо."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
 msgid ""
 "The product form contains information to simplify the sale process: price, "
 "notes in the quotation, accounting data, procurement methods, etc."
-msgstr ""
+msgstr "Форма товару містить інформацію для спрощення процесу продажу: ціна, нотатки в комерційній пропозиції, дані бухгалтерського обліку, способи закупівлі тощо."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2827,7 +2827,7 @@ msgstr ""
 msgid ""
 "The sleek aluminium Apple Wireless Keyboard.\n"
 "            "
-msgstr ""
+msgstr "Гладкий алюміній Apple Wireless Keyboard.\n            "
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2838,7 +2838,7 @@ msgid ""
 "                                    smartphone, iPad® or other Bluetooth device.\n"
 "                                    And it remembers the most recent six devices you've used,\n"
 "                                    so reconnecting is even simpler."
-msgstr ""
+msgstr "Динамік має діапазон приблизно 30 футів, тому ви можете насолоджуватися\nзвуком, який ви хочете отримати без проводів. Це просто пара з вашими\nсмартфон, iPad® або іншим пристроєм Bluetooth.\nВін запам'ятовує останні шість пристроїв, які ви використовували\nтому підключення ще простіше."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
@@ -2849,13 +2849,13 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_volume
 #: model:ir.model.fields,help:product.field_product_template_volume
 msgid "The volume in m3."
-msgstr ""
+msgstr "Об'єм в м3."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_weight
 #: model:ir.model.fields,help:product.field_product_template_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr ""
+msgstr "Маса вмісту в кг, без упаковки та ін."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -2873,7 +2873,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "There's less of it, but no less to it."
-msgstr ""
+msgstr "Це менше від цього, але не менше до цього."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2885,31 +2885,31 @@ msgid ""
 "                                        Activate Genius in iTunes on your computer, and it automatically finds songs that sound\n"
 "                                        great together. Then it creates Genius Mixes, which you can easily sync to your iPod.\n"
 "                                        It’s the perfect way to rediscover songs you haven’t listened to in forever."
-msgstr ""
+msgstr "Існує ще один спосіб отримати гарну музику на iPod: нехай Genius виконує роботу.\nАктивізуйте Genius в iTunes на своєму комп'ютері, і він автоматично знаходить пісні, які звучать\nздорово разом. Потім він створює суміші Genius, які можна легко синхронізувати зі своїм iPod.\nЦе ідеальний спосіб повторно відкрити пісні, які ви не слухали назавжди."
 
 #. module: product
 #: sql_constraint:product.attribute.value:0
 msgid "This attribute value already exists !"
-msgstr ""
+msgstr "Ця значення атрибуту вже існує!"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_uom
 msgid "This comes from the product form."
-msgstr ""
+msgstr "Це походить з форми товару."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_variant
 msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
-msgstr ""
+msgstr "Це поле містить зображення, яке використовується як зображення для варіанту товару, обмежене 1024x1024 пікселями."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image
 msgid ""
 "This field holds the image used as image for the product, limited to "
 "1024x1024px."
-msgstr ""
+msgstr "Це поле містить зображення, яке використовується як зображення, обмежене 1024x1024 пікселями."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_qty
@@ -2919,7 +2919,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_price_extra
 msgid "This is the sum of the extra price of all attributes"
-msgstr ""
+msgstr "Це сума додаткової ціни на всі атрибути"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2929,28 +2929,28 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note will be displayed on the quotations."
-msgstr ""
+msgstr "Ця примітка буде відображена в комерційній пропозиції."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
-msgstr ""
+msgstr "Цей прейскурант використовуватиметься, не за замовчуванням, для продажу поточному партнеру"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_code
 msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
+msgstr "Код товару цього постачальника буде використаний при друку запиту на комерційну пропозицію. Зберігайте порожнім, щоб використовувати внутрішній."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_name
 msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
+msgstr "Назва товару цього постачальника буде використаний при друку запиту на комерційну пропозицію. Зберігайте порожнім, щоб використовувати внутрішній."
 
 #. module: product
 #: model:product.product,name:product.product_product_39
@@ -2962,7 +2962,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_7
 #: model:product.template,website_description:product.product_product_7_product_template
 msgid "Two is better than one."
-msgstr ""
+msgstr "Два - краще, ніж один."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_uom_type
@@ -2987,19 +2987,19 @@ msgstr ""
 msgid ""
 "USB port allows for software update to ensure ongoing Bluetooth device "
 "compatibility"
-msgstr ""
+msgstr "Порт USB дозволяє оновлювати програмне забезпечення, щоб забезпечити сумісність пристрою Bluetooth"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Ultrafast wireless."
-msgstr ""
+msgstr "Ultrafast бездротовий."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Ultrathin design"
-msgstr ""
+msgstr "Супер тонкий дизайн "
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -3027,7 +3027,7 @@ msgstr "Категорія одиниць виміру"
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
 msgid "Unit(s)"
-msgstr "Штука(и)"
+msgstr "шт"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
@@ -3068,7 +3068,7 @@ msgid ""
 "                                    drivers help ensure accurate, detailed sound across the entire sonic spectrum.\n"
 "                                    The result: you’re immersed in the music and hear details you never knew existed.\n"
 "                                    Even when listening to an old favorite, you may feel like you’re hearing it for the first time."
-msgstr ""
+msgstr "На відміну від багатьох невеликих навушників, кожні навушники Apple In-Ear\nмістять два окремих високопродуктивних драйвера - вуфер для обробки басів та\nзвуки середнього діапазону та твітер для високочастотного звучання. \nЦі драйвера \nдопомагають забезпечити точний, детальний звук по всьому звуковому спектру.\nРезультат: ви занурюєтеся в музику та чуєте деталі, яких ви ніколи не знали.\nНавіть, коли ви слухаєте старого улюбленця, ви можете почути, ніби ви чуєте це вперше."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_message_unread
@@ -3143,7 +3143,7 @@ msgstr "Постачальник"
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
-msgstr ""
+msgstr "Інформація постачальника"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3158,12 +3158,12 @@ msgstr "Назва товару у постачальника"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_uom
 msgid "Vendor Unit of Measure"
-msgstr ""
+msgstr "Одиниця вимірювання постачальника"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_name
 msgid "Vendor of this product"
-msgstr ""
+msgstr "Постачальник цього товару"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3193,7 +3193,7 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_5b_product_template
 msgid ""
 "Wall charger can be plugged into the cradle or directly into the speaker"
-msgstr ""
+msgstr "Настінний зарядний пристрій можна підключити до кредла або безпосередньо до динаміка"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_warranty
@@ -3224,19 +3224,19 @@ msgstr "Ваги"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "When one playlist isn’t enough."
-msgstr ""
+msgstr "Коли один плейлист не закінчився."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_id
 msgid ""
 "When this field is filled in, the vendor data will only apply to the "
 "variant."
-msgstr ""
+msgstr "Коли це поле буде заповнено, дані постачальника будуть застосовуватися лише до варіанту."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
 msgid "White"
-msgstr ""
+msgstr "Білий"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_4
@@ -3250,12 +3250,12 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4d_product_template
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Why you'll love an iPad."
-msgstr ""
+msgstr "Чому ви полюбите iPad."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_3
 msgid "Wi-Fi"
-msgstr ""
+msgstr "Wi-Fi"
 
 #. module: product
 #: model:product.product,name:product.product_product_40
@@ -3278,7 +3278,7 @@ msgid ""
 "                                   cellular data networks around the world, iPad mini\n"
 "                                   lets you download content, stream video,\n"
 "                                   and browse the web at amazing speeds."
-msgstr ""
+msgstr "З покращеним Wi-Fi, що в два рази швидше, ніж у\nбудь-якому попередньому поколінні iPad і доступ до швидкої\nстільникової мережі передачі даних по всьому світу, iPad mini\nдозволяє завантажувати контент, потокове відео,\nі переглядайте веб-інтерв'ю з дивовижною швидкістю."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_base_config_settings_group_product_variant
@@ -3307,7 +3307,7 @@ msgid ""
 "You must define a product for everything you sell, whether it's\n"
 "                a physical product, a consumable or a service you offer to\n"
 "                customers."
-msgstr ""
+msgstr "Ви повинні визначити товар для всього, що ви продаєте, чи то\nфізичний товар, витратний матеріал або послуга, який ви пропонуєте\nклієнтам."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
@@ -3327,13 +3327,13 @@ msgid ""
 "                                        to iPod, and you can play the perfect mix for whatever\n"
 "                                        mood strikes you. VoiceOver tells you the name of each playlist,\n"
 "                                        so it’s easy to switch between them and find the one you want without looking."
-msgstr ""
+msgstr "Ви, напевно, маєте кілька плейлистів у iTunes на вашому комп'ютері.\nОдин для вашого переїзду. Один для тренажерного залу. Синхронізуйте ці списки відтворення\nз iPod, і ви можете включати ідеальне поєднання для будь-якого з них.\nНастрій вражає вас. VoiceOver повідомляє вам назву кожного списку відтворення\nтак, що легко переключатися між ними і знаходити те, що ви хочете, не дивлячись."
 
 #. module: product
 #: model:product.product,name:product.product_product_43
 #: model:product.template,name:product.product_product_43_product_template
 msgid "Zed+ Antivirus"
-msgstr ""
+msgstr "Zed+ Antivirus"
 
 #. module: product
 #: model:ir.model,name:product.model_base_config_settings
@@ -3353,17 +3353,17 @@ msgstr "дні"
 #. module: product
 #: model:ir.model,name:product.model_decimal_precision
 msgid "decimal.precision"
-msgstr ""
+msgstr "decimal.precision"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "e.g. Lamps"
-msgstr ""
+msgstr "напр. Світильники"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "e.g. Odoo Enterprise Susbcription"
-msgstr ""
+msgstr "напр. Підписка Odoo Enterprise"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
@@ -3399,13 +3399,13 @@ msgstr "галон(и)"
 #: model:product.product,name:product.product_product_8
 #: model:product.template,name:product.product_product_8_product_template
 msgid "iMac"
-msgstr ""
+msgstr "iMac"
 
 #. module: product
 #: model:product.product,name:product.product_product_6
 #: model:product.template,name:product.product_product_6_product_template
 msgid "iPad Mini"
-msgstr ""
+msgstr "iPad Mini"
 
 #. module: product
 #: model:product.product,name:product.product_product_4
@@ -3417,7 +3417,7 @@ msgstr ""
 #: model:product.template,name:product.product_product_4c_product_template
 #: model:product.template,name:product.product_product_4d_product_template
 msgid "iPad Retina Display"
-msgstr ""
+msgstr "iPad Retina Display"
 
 #. module: product
 #: model:product.product,name:product.product_product_11
@@ -3425,7 +3425,7 @@ msgstr ""
 #: model:product.template,name:product.product_product_11_product_template
 #: model:product.template,name:product.product_product_11b_product_template
 msgid "iPod"
-msgstr ""
+msgstr "iPod"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -3436,7 +3436,7 @@ msgid ""
 "iTunes on your Mac or PC makes it easy to load up\n"
 "                                        your iPod. Just choose the playlists, audiobooks,\n"
 "                                        podcasts, and other audio files you want, then sync."
-msgstr ""
+msgstr "iTunes на вашому Mac або ПК полегшує завантаження\nвашого iPod. Просто виберіть списки відтворення, аудіокниги,\nпідкасти та інші аудіофайли, які ви хочете потім синхронізувати."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_inch
@@ -3476,22 +3476,22 @@ msgstr "унції(й)"
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_line
 msgid "product.attribute.line"
-msgstr ""
+msgstr "product.attribute.line"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_price
 msgid "product.attribute.price"
-msgstr ""
+msgstr "product.attribute.price"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_value
 msgid "product.attribute.value"
-msgstr ""
+msgstr "product.attribute.value"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_history
 msgid "product.price.history"
-msgstr ""
+msgstr "product.price.history"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_qt
@@ -3504,7 +3504,7 @@ msgstr "кварта"
 msgid ""
 "raid 1 \n"
 "            512ECC ram"
-msgstr ""
+msgstr "raid 1 \n            512ECC ram"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_59
@@ -3512,12 +3512,12 @@ msgstr ""
 msgid ""
 "raid 10 \n"
 "            2048ECC ram"
-msgstr ""
+msgstr "raid 10 \n            2048ECC ram"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist
 msgid "report.product.report_pricelist"
-msgstr ""
+msgstr "report.product.report_pricelist"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form

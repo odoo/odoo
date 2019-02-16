@@ -8,24 +8,24 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-11-11 11:42+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2018-11-10 21:07+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_num_invoiced
 msgid "# Invoiced in Purchase"
-msgstr ""
+msgstr "# Išrašyta pirkimo sąskaitų"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_sale_num_invoiced
 msgid "# Invoiced in Sale"
-msgstr ""
+msgstr "# Išrašyta sąskaitų pardavimuose"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
@@ -35,23 +35,23 @@ msgstr ""
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Analysis Criteria"
-msgstr ""
+msgstr "Analizės kriterijus"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_avg_price
 msgid "Avg. Price in Customer Invoices."
-msgstr ""
+msgstr "Apytikslė kaina kliento sąskaitose faktūrose."
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_purchase_avg_price
 msgid "Avg. Price in Vendor Bills "
-msgstr ""
+msgstr "Apytikslė kaina tiekėjų sąskaitose."
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_avg_price
 #: model:ir.model.fields,field_description:product_margin.field_product_product_sale_avg_price
 msgid "Avg. Unit Price"
-msgstr ""
+msgstr "Vidutinė vieneto kaina"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -61,12 +61,12 @@ msgstr "Atšaukti"
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Catalog Price"
-msgstr ""
+msgstr "Katalogo kaina"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_membership
 msgid "Check if the product is eligible for membership."
-msgstr ""
+msgstr "Tikrinti, ar produktui galima narystė."
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_create_uid
@@ -86,12 +86,12 @@ msgstr "Kliento mokesčiai"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_membership_date_from
 msgid "Date from which membership becomes active."
-msgstr ""
+msgstr "Data, nuo kurios narystė tampa aktyvia."
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_membership_date_to
 msgid "Date until which membership remains active."
-msgstr ""
+msgstr "Data, iki kurios narystė išlieka aktyvi."
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_display_name
@@ -102,37 +102,37 @@ msgstr "Vaizduojamas pavadinimas"
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Draft, Open and Paid"
-msgstr ""
+msgstr "Juodraštis, atverta ir sumokėta."
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_expected_margin
 msgid "Expected Margin"
-msgstr ""
+msgstr "Numatoma marža"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_expected_margin_rate
 msgid "Expected Margin (%)"
-msgstr ""
+msgstr "Numatoma marža (%)"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_sale_expected
 msgid "Expected Sale"
-msgstr ""
+msgstr "Numatomi pardavimai"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_expected_margin
 msgid "Expected Sale - Normal Cost"
-msgstr ""
+msgstr "Numatomi pardavimai - Normali kaina"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sales_gap
 msgid "Expected Sale - Turn Over"
-msgstr ""
+msgstr "Numatomi pardavimai - apyvarta"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_expected_margin_rate
 msgid "Expected margin * 100 / Expected Sale"
-msgstr ""
+msgstr "Numatoma marža * 100 / Numatomi pardavimai"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_property_account_expense_id
@@ -163,7 +163,7 @@ msgstr "Pajamų sąskaita"
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_invoice_state
 #: model:ir.model.fields,field_description:product_margin.field_product_product_invoice_state
 msgid "Invoice State"
-msgstr ""
+msgstr "Sąskaitos būsena"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin___last_update
@@ -183,53 +183,53 @@ msgstr "Paskutinį kartą atnaujinta"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_date_from
 msgid "Margin Date From"
-msgstr ""
+msgstr "Maržos data nuo"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_date_to
 msgid "Margin Date To"
-msgstr ""
+msgstr "Maržos data iki"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Margins"
-msgstr ""
+msgstr "Maržos"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_membership
 msgid "Membership"
-msgstr ""
+msgstr "Narystė"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_membership_date_to
 msgid "Membership End Date"
-msgstr ""
+msgstr "Narystės laikotarpio pabaiga"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_membership_date_from
 msgid "Membership Start Date"
-msgstr ""
+msgstr "Narystės laikotarpio pradžia"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_normal_cost
 msgid "Normal Cost"
-msgstr ""
+msgstr "Įprasta kaina"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_purchase_gap
 msgid "Normal Cost - Total Cost"
-msgstr ""
+msgstr "Įprasta kaina - Visa kaina"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "Open Margins"
-msgstr ""
+msgstr "Atidaryti maržas"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Open and Paid"
-msgstr ""
+msgstr "Atverta ir sumokėta"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -245,12 +245,12 @@ msgstr "Produktas"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_email_template_id
 msgid "Product Email Template"
-msgstr ""
+msgstr "Produkto laiško šablonas"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
 msgid "Product Margin"
-msgstr ""
+msgstr "Produkto marža"
 
 #. module: product_margin
 #: code:addons/product_margin/wizard/product_margin.py:66
@@ -261,7 +261,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 #, python-format
 msgid "Product Margins"
-msgstr ""
+msgstr "Produkto maržos"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -271,7 +271,7 @@ msgstr "Savybių kategorijos"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_gap
 msgid "Purchase Gap"
-msgstr ""
+msgstr "Pirkimo spraga"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -287,7 +287,7 @@ msgstr "Pardavimai"
 #: model:ir.model.fields,field_description:product_margin.field_product_product_sales_gap
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Sales Gap"
-msgstr ""
+msgstr "Pardavimo spraga"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -297,35 +297,35 @@ msgstr "Standartinė kaina"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
-msgstr ""
+msgstr "Kaštų kainos ir tiekėjų sąskaitų kiekių sandauga"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_turnover
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
-msgstr ""
+msgstr "Sąskaitos kainos ir kliento sąskaitų kiekio sandauga"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_total_cost
 msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
-msgstr ""
+msgstr "Sąskaitos kainos ir tiekėjo sąskaitų kiekio sandauga"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_expected
 msgid ""
 "Sum of Multiplication of Sale Catalog price and quantity of Customer "
 "Invoices"
-msgstr ""
+msgstr "Pardavimo katalogo kainos ir klientų sąskaitų kiekio sandauga"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_num_invoiced
 msgid "Sum of Quantity in Customer Invoices"
-msgstr ""
+msgstr "Kiekių suma klientų sąskaitose"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_purchase_num_invoiced
 msgid "Sum of Quantity in Vendor Bills"
-msgstr ""
+msgstr "Kiekių suma tiekėjų sąskaitose"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_property_account_expense_id
@@ -350,38 +350,38 @@ msgstr "Iki"
 #: model:ir.model.fields,field_description:product_margin.field_product_product_total_cost
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Total Cost"
-msgstr ""
+msgstr "Bendros sąnaudos"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_total_margin
 msgid "Total Margin"
-msgstr ""
+msgstr "Visa marža"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_total_margin_rate
 msgid "Total Margin Rate(%)"
-msgstr ""
+msgstr "Visas maržos dydis(%)"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_total_margin_rate
 msgid "Total margin * 100 / Turnover"
-msgstr ""
+msgstr "Visa marža * 100 / Apyvarta"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_turnover
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Turnover"
-msgstr ""
+msgstr "Apyvarta"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_total_margin
 msgid "Turnover - Standard price"
-msgstr ""
+msgstr "Apyvarta-Savikaina"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_supplier_taxes_id
 msgid "Vendor Taxes"
-msgstr ""
+msgstr "Tiekėjo mokesčiai"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_email_template_id
@@ -389,4 +389,4 @@ msgid ""
 "When validating an invoice, an email will be sent to the customer based on "
 "this template. The customer will receive an email for each product linked to"
 " an email template."
-msgstr ""
+msgstr "Kai sąskaita patvirtinama, vartotojui pagal šį šabloną bus nusiunčiamas el. laiškas. Klientas gaus laišką kiekvienam produktui, susietam su laiško šablonu."

@@ -3,12 +3,13 @@
 # * hr
 # 
 # Translators:
+# Febrasari Almania <febrasari.almania@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 10:41+0000\n"
-"PO-Revision-Date: 2016-02-20 10:36+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-11-18 00:01+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/id/)\n"
 "MIME-Version: 1.0\n"
@@ -32,7 +33,7 @@ msgstr "%s (copy)"
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "<i>Work in a fun atmosphere</i>"
-msgstr "<i>Bekerja dalam menyenangkan suasana</i>"
+msgstr "<i>Bekerja dalam suasana yang menyenangkan</i>"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -43,14 +44,14 @@ msgstr "<i>Bekerja dalam menyenangkan suasana</i>"
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "<i>You are passionate</i>"
-msgstr "<i>Anda bergairah</i>"
+msgstr "<i>Anda penuh semangat</i>"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "<i>You autonomously and quickly learn</i>"
-msgstr "<i>Anda secara otonom dan dengan cepat belajar</i>"
+msgstr "<i>Anda belajar dengan cepat dan mandiri</i>"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -58,14 +59,14 @@ msgstr "<i>Anda secara otonom dan dengan cepat belajar</i>"
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "<i>You easily manage them</i>"
-msgstr "<i>Anda dengan mudah mengelola mereka</i>"
+msgstr "<i>Anda mengelola mereka dengan mudah</i>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid ""
 "<span class=\"o_unfollow\">Unfollow</span>\n"
 "                                    <span class=\"o_following\">Following</span>"
-msgstr "<span class=\"o_unfollow\">Unfollow</span> <span class=\"o_following\">Berikut</span>"
+msgstr "<span class=\"o_unfollow\">Batal Mengikuti</span> <span class=\"o_following\">Mengikuti</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -106,7 +107,7 @@ msgstr "Pekerjaan penuh waktu, dengan paket menarik gaji dalam sebuah tim kecil 
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "A good job in a young and dynamic team"
-msgstr "Pekerjaan yang baik dalam tim muda dan dinamis"
+msgstr "Pekerjaan bagus dalam tim yang muda dan dinamis"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_message_needaction
@@ -197,7 +198,7 @@ msgstr "Kota"
 #. module: hr
 #: model:web.tip,description:hr.hr_tip_2
 msgid "Click here to change the recruitment goal!"
-msgstr ""
+msgstr "Klik di sini untuk mengubah tujuan rekrutmen!"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
@@ -438,14 +439,12 @@ msgid "Employees Tags"
 msgstr "Tags karyawan"
 
 #. module: hr
-#: code:addons/hr/hr.py:299 constraint:hr.department:0
-#, python-format
+#: constraint:hr.department:0
 msgid "Error! You cannot create recursive departments."
 msgstr "Kesalahan! Anda tidak dapat membuat Departemen rekursif."
 
 #. module: hr
-#: code:addons/hr/hr.py:269 constraint:hr.employee:0
-#, python-format
+#: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Kesalahan! Anda tidak dapat membuat hierarki rekursif Karyawan(s)."
 
@@ -506,6 +505,11 @@ msgstr "Pengikut (mitra)"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
 msgid "Gender"
 msgstr "Jenis kelamin"
+
+#. module: hr
+#: model:web.tip,description:hr.hr_tip_1
+msgid "Get all applications related to this job position."
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -746,11 +750,6 @@ msgid "Last Modified on"
 msgstr "Terakhir Dimodifikasi pada"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_last_website_so_id
-msgid "Last Online Sale Order"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_uid
@@ -981,6 +980,11 @@ msgid "Parent Department"
 msgstr "Departemen Induk"
 
 #. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Partner"
+msgstr "Rekanan"
+
+#. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "Passion for the Internet and its culture"
 msgstr "Gairah untuk Internet dan budaya"
@@ -1186,7 +1190,7 @@ msgstr "Bawahan"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users_subscription_count
 msgid "Subscriptions"
-msgstr ""
+msgstr "Langganan"
 
 #. module: hr
 #: sql_constraint:hr.employee.category:0

@@ -51,7 +51,13 @@ class task(osv.osv):
     def _hours_get(self, cr, uid, ids, field_names, args, context=None):
         res = {}
         for task in self.browse(cr, uid, ids, context=context):
-            res[task.id] = {'effective_hours': 0.0, 'remaining_hours': task.planned_hours, 'progress': 0.0, 'total_hours': task.planned_hours, 'delay_hours': 0.0}
+            res[task.id] = {
+                'effective_hours': 0.0,
+                'remaining_hours': task.planned_hours,
+                'progress': 100.0 if task.stage_id and task.stage_id.fold else 0.0,
+                'total_hours': task.planned_hours,
+                'delay_hours': 0.0,
+            }
         tasks_data = self.pool['account.analytic.line'].read_group(cr, uid, [('task_id', 'in', ids)], ['task_id','unit_amount'], ['task_id'], context=context)
         for data in tasks_data:
             task = self.browse(cr, uid, data['task_id'][0], context=context)
@@ -115,15 +121,6 @@ class task(osv.osv):
         for task in self.browse(cr, uid, ids, context=context):
             vals[task.id]['planned_hours'] += task.effective_hours
         return vals
-
-    def onchange_project(self, cr, uid, ids, project_id, context=None):
-        result = super(task, self).onchange_project(cr, uid, ids, project_id, context=context)
-        if not project_id:
-            return result
-        if 'value' not in result:
-            result['value'] = {}
-        project = self.pool['project.project'].browse(cr, uid, project_id, context=context)
-        return result
 
 
 class res_partner(osv.osv):

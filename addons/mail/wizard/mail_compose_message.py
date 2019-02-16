@@ -12,18 +12,17 @@ from openerp.tools.safe_eval import safe_eval as eval
 EXPRESSION_PATTERN = re.compile('(\$\{.+?\})')
 
 
-def _reopen(self, res_id, model):
+def _reopen(self, res_id, model, context=None):
+    # save original model in context, because selecting the list of available
+    # templates requires a model in context
+    context = dict(context or {}, default_model=model)
     return {'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'view_type': 'form',
             'res_id': res_id,
             'res_model': self._name,
             'target': 'new',
-            # save original model in context, because selecting the list of available
-            # templates requires a model in context
-            'context': {
-                'default_model': model,
-            },
+            'context': context,
             }
 
 
@@ -118,7 +117,7 @@ class MailComposer(models.TransientModel):
     # mass mode options
     notify = fields.Boolean('Notify followers', help='Notify followers of the document (mass post only)')
     template_id = fields.Many2one(
-        'mail.template', 'Use template', select=True,
+        'mail.template', 'Use template', index=True,
         domain="[('model', '=', model)]")
 
     @api.multi
@@ -187,7 +186,7 @@ class MailComposer(models.TransientModel):
     @api.multi
     def send_mail_action(self):
         # TDE/ ???
-        return self.with_context(report_template_in_attachment=True).send_mail()
+        return self.send_mail()
 
     @api.multi
     def send_mail(self, auto_commit=False):
@@ -346,20 +345,6 @@ class MailComposer(models.TransientModel):
             if template.user_signature and 'body_html' in values:
                 signature = self.env.user.signature
                 values['body_html'] = tools.append_content_to_html(values['body_html'], signature, plaintext=False)
-            if template.report_template:
-                attachment = self.env['ir.attachment']
-                attach = self.generate_attachment_from_report(template_id, res_id)
-                for attach_fname, attach_datas in attach[res_id].pop('attachments', []):
-                    data_attach = {
-                        'name': attach_fname,
-                        'datas': attach_datas,
-                        'datas_fname': attach_fname,
-                        'res_model': 'mail.compose.message',
-                        'res_id': 0,
-                        'type': 'binary',
-                    }
-                values.setdefault('attachment_ids', list()).append(attachment.create(data_attach).id)
-
         elif template_id:
             values = self.generate_email_for_composer(template_id, [res_id])[res_id]
             # transform attachments into attachment_ids; not attached to the document because this will
@@ -391,13 +376,6 @@ class MailComposer(models.TransientModel):
         return {'value': values}
 
     @api.multi
-    def generate_attachment_from_report(self, template_id, res_id):
-        fields = ['attachment_ids']
-        result = self.env['mail.template'].with_context(tpl_partners_only=True).browse(template_id).generate_email([res_id], fields=fields)
-        return result
-
-
-    @api.multi
     def save_as_template(self):
         """ hit save as template button: current form value will be a new
             template attached to the current document. """
@@ -418,7 +396,7 @@ class MailComposer(models.TransientModel):
             # generate the saved template
             record.write({'template_id': template.id})
             record.onchange_template_id_wrapper()
-            return _reopen(self, record.id, record.model)
+            return _reopen(self, record.id, record.model, context=self._context)
 
     #------------------------------------------------------
     # Template rendering

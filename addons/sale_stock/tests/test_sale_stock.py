@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from openerp.addons.sale.tests.test_sale_common import TestSale
+from openerp.exceptions import UserError
 
 
 class TestSaleStock(TestSale):
@@ -102,7 +103,8 @@ class TestSaleStock(TestSale):
         del_qties_truth = [2.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after partial delivery')
         # invoice on delivery: nothing to invoice
-        self.assertFalse(self.so.action_invoice_create(), 'Sale Stock: there should be nothing to invoice')
+        with self.assertRaises(UserError):
+            self.so.action_invoice_create()
 
     def test_02_sale_stock_return(self):
         """

@@ -6,7 +6,7 @@
 {
     'name': 'France - Accounting',
     'version': '1.1',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 This is the module to manage the accounting chart for France in OpenERP.
 ========================================================================
@@ -41,4 +41,5 @@ configuration of their taxes and fiscal positions manually.
     'demo': [],
     'auto_install': False,
     'installable': True,
+    'post_init_hook': '_preserve_tag_on_taxes',
 }

@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-04-04 10:38+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>\n"
+"POT-Creation-Date: 2016-12-07 10:39+0000\n"
+"PO-Revision-Date: 2017-03-07 08:35+0000\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,10 +20,9 @@ msgstr ""
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "&amp;bull;"
-msgstr ""
+msgstr "&amp;bull;"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.layout
 #: model:ir.ui.view,arch_db:report.minimal_layout
 msgid "&lt;!DOCTYPE html&gt;"
 msgstr "&lt;!DOCTYPE html&gt;"
@@ -86,12 +85,12 @@ msgstr "A9 13 37 x 52 mm"
 #. module: report
 #: model:ir.model,name:report.model_report_paperformat
 msgid "Allows customization of a report."
-msgstr ""
+msgstr "Sallii raportin kustomoinnin."
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_report_ids
 msgid "Associated reports"
-msgstr ""
+msgstr "Liittyvät raportit"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -144,10 +143,10 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9 23 33 x 62 mm"
 
 #. module: report
-#: code:addons/report/models/report.py:257
+#: code:addons/report/models/report.py:274
 #, python-format
 msgid "Bad Report Reference"
-msgstr ""
+msgstr "Virheellinen raportin viittaus"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_margin_bottom
@@ -162,7 +161,7 @@ msgstr "C5E 24 163 x 229 mm"
 #. module: report
 #: selection:report.paperformat,format:0
 msgid "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
-msgstr ""
+msgstr "Comm10E 25 105 x 241 mm, U.S. Common 10 Envelope"
 
 #. module: report
 #: model:ir.model,name:report.model_res_company
@@ -194,19 +193,20 @@ msgstr "DLE 26 110 x 220 mm"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_default
 msgid "Default paper format ?"
-msgstr ""
+msgstr "Oletuspaperiformaatti?"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_display_name
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_paperformat_display_name
 msgid "Display Name"
-msgstr "Näytä nimi"
+msgstr "Näyttönimi"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_line
 msgid "Display a header line"
-msgstr ""
+msgstr "Näytä otsikkorivi"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
@@ -226,12 +226,12 @@ msgstr ""
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "Email:"
-msgstr ""
+msgstr "Sähköposti:"
 
 #. module: report
 #: constraint:report.paperformat:0
 msgid "Error ! You cannot select a format AND speficic page width/height."
-msgstr ""
+msgstr "Virhe ! Et voi valita formaattia JA erityistä sivun leveyttä/korkeutta."
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -241,7 +241,7 @@ msgstr "Executive 4 7,5 x 10 tuumaa, 190,5 x 254 mm"
 #. module: report
 #: model:ir.model.fields,help:report.field_report_paperformat_report_ids
 msgid "Explicitly associated reports"
-msgstr ""
+msgstr "Erityisesti liittyvät raportit"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -256,9 +256,10 @@ msgstr "Folio 27 210 x 330 mm"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_spacing
 msgid "Header spacing"
-msgstr ""
+msgstr "Otsikon välitys"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_id
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_id
 #: model:ir.model.fields,field_description:report.field_report_id
 #: model:ir.model.fields,field_description:report.field_report_paperformat_id
@@ -271,6 +272,7 @@ msgid "Landscape"
 msgstr "Vaakasuuntainen"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode___last_update
 #: model:ir.model.fields,field_description:report.field_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_abstract_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_paperformat___last_update
@@ -322,22 +324,22 @@ msgstr "Suunta"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_dpi
 msgid "Output DPI"
-msgstr ""
+msgstr "Käytettävä DPI"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_page_height
 msgid "Page height (mm)"
-msgstr ""
+msgstr "Sivun korkeus (mm)"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_page_width
 msgid "Page width (mm)"
-msgstr ""
+msgstr "Sivun leveys (mm)"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "Page:"
-msgstr ""
+msgstr "Sivu:"
 
 #. module: report
 #: model:ir.ui.menu,name:report.paper_format_menuitem
@@ -347,19 +349,19 @@ msgstr "Paperin formaatti"
 #. module: report
 #: model:ir.actions.act_window,name:report.paper_format_action
 msgid "Paper Format General Configuration"
-msgstr ""
+msgstr "Paperiformaatin yleisasetukset"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_paperformat_id
 #: model:ir.model.fields,field_description:report.field_res_company_paperformat_id
 msgid "Paper format"
-msgstr ""
+msgstr "Paperiformaatti"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.paperformat_view_form
 #: model:ir.ui.view,arch_db:report.paperformat_view_tree
 msgid "Paper format configuration"
-msgstr ""
+msgstr "Paperiformaatin asetukset"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_format
@@ -393,6 +395,7 @@ msgstr ""
 #: code:addons/report/static/src/js/qwebactionmanager.js:76
 #: code:addons/report/static/src/js/qwebactionmanager.js:84
 #: code:addons/report/static/src/js/qwebactionmanager.js:91
+#: code:addons/report/static/src/js/qwebactionmanager.js:96
 #: model:ir.model,name:report.model_report
 #, python-format
 msgid "Report"
@@ -413,7 +416,7 @@ msgstr "Oikean reunan marginaali (mm)"
 #. module: report
 #: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
 msgid "Search associated QWeb views"
-msgstr ""
+msgstr "Hae liittyviä QWeb-näkymiä"
 
 #. module: report
 #: model:ir.model.fields,help:report.field_report_paperformat_format
@@ -441,10 +444,10 @@ msgid "This is a sample of an internal report."
 msgstr ""
 
 #. module: report
-#: code:addons/report/models/report.py:257
+#: code:addons/report/models/report.py:274
 #, python-format
 msgid "This report is not loaded into the database: %s."
-msgstr ""
+msgstr "Tätä raporttia ei ole ladattu tietokantaan: %s."
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_margin_top
@@ -459,6 +462,12 @@ msgid ""
 "Unable to find Wkhtmltopdf on this \n"
 "system. The report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
 "wkhtmltopdf.org</a>"
+msgstr "Wkhtmltopdf ei löydetty tästä järjestelmästä. Raportti näytetään HTML-muodossa<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\nwkhtmltopdf.org</a>"
+
+#. module: report
+#: code:addons/report/models/report.py:164
+#, python-format
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr ""
 
 #. module: report
@@ -467,10 +476,10 @@ msgid "Website:"
 msgstr "Verkkosivusto:"
 
 #. module: report
-#: code:addons/report/models/report.py:413
+#: code:addons/report/models/report.py:464
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
-msgstr ""
+msgstr "Wkhtmltopdf epäonnistui (virhekoodi: %s). Viesti: %s"
 
 #. module: report
 #. openerp-web
@@ -479,7 +488,7 @@ msgstr ""
 msgid ""
 "You need to start OpenERP with at least two \n"
 "workers to print a pdf version of the reports."
-msgstr ""
+msgstr "Odoo pitää käynnistää vähintään kahdella worker-instanssilla jotta pdf-raportteja voidaan tulostaa."
 
 #. module: report
 #. openerp-web
@@ -493,11 +502,10 @@ msgid ""
 msgstr ""
 
 #. module: report
-#: model:ir.model,name:report.model_ir_actions_report_xml
-msgid "ir.actions.report.xml"
-msgstr "ir.actions.report.xml"
-
-#. module: report
-#: model:ir.model,name:report.model_report_abstract_report
-msgid "report.abstract_report"
+#. openerp-web
+#: code:addons/report/static/src/js/qwebactionmanager.js:96
+#, python-format
+msgid ""
+"Your installation of Wkhtmltopdf seems to be broken. The \n"
+"report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
 msgstr ""

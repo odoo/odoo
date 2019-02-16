@@ -57,12 +57,12 @@ class Message(models.Model):
         help='Attachments are linked to a document through model / res_id and to the message'
              'through this field.')
     parent_id = fields.Many2one(
-        'mail.message', 'Parent Message', select=True, ondelete='set null',
+        'mail.message', 'Parent Message', index=True, ondelete='set null',
         help="Initial thread message.")
     child_ids = fields.One2many('mail.message', 'parent_id', 'Child Messages')
     # related document
-    model = fields.Char('Related Document Model', select=1)
-    res_id = fields.Integer('Related Document ID', select=1)
+    model = fields.Char('Related Document Model', index=True)
+    res_id = fields.Integer('Related Document ID', index=True)
     record_name = fields.Char('Message Record Name', help="Name get of the related document.")
     # characteristics
     message_type = fields.Selection([
@@ -73,13 +73,13 @@ class Message(models.Model):
         help="Message type: email for email message, notification for system "
              "message, comment for other messages such as user replies",
         oldname='type')
-    subtype_id = fields.Many2one('mail.message.subtype', 'Subtype', ondelete='set null', select=1)
+    subtype_id = fields.Many2one('mail.message.subtype', 'Subtype', ondelete='set null', index=True)
     # origin
     email_from = fields.Char(
         'From', default=_get_default_from,
         help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
     author_id = fields.Many2one(
-        'res.partner', 'Author', select=1,
+        'res.partner', 'Author', index=True,
         ondelete='set null', default=_get_default_author,
         help="Author of the message. If not set, email_from may hold an email address that did not match any partner.")
     author_avatar = fields.Binary("Author's avatar", related='author_id.image_small')
@@ -102,13 +102,14 @@ class Message(models.Model):
     tracking_value_ids = fields.One2many(
         'mail.tracking.value', 'mail_message_id',
         string='Tracking values',
+        groups="base.group_no_one",
         help='Tracked values are stored in a separate model. This field allow to reconstruct'
              'the tracking and to generate statistics on the model.')
     # mail gateway
     no_auto_thread = fields.Boolean(
         'No threading for answers',
         help='Answers do not go in the original document discussion thread. This has an impact on the generated message-id.')
-    message_id = fields.Char('Message-Id', help='Message unique identifier', select=1, readonly=1, copy=False)
+    message_id = fields.Char('Message-Id', help='Message unique identifier', index=True, readonly=1, copy=False)
     reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
 
@@ -152,7 +153,7 @@ class Message(models.Model):
         """ Remove all needactions of the current partner. If channel_ids is
             given, restrict to messages written in one of those channels. """
         partner_id = self.env.user.partner_id.id
-        if domain is None:
+        if not domain:
             query = "DELETE FROM mail_message_res_partner_needaction_rel WHERE res_partner_id IN %s"
             args = [(partner_id,)]
             if channel_ids:
@@ -268,7 +269,7 @@ class Message(models.Model):
         # 1. Aggregate partners (author_id and partner_ids), attachments and tracking values
         partners = self.env['res.partner']
         attachments = self.env['ir.attachment']
-        trackings = self.env['mail.tracking.value']
+        message_ids = message_tree.keys()
         for key, message in message_tree.iteritems():
             if message.author_id:
                 partners |= message.author_id
@@ -278,8 +279,6 @@ class Message(models.Model):
                 partners |= message.partner_ids
             if message.attachment_ids:
                 attachments |= message.attachment_ids
-            if message.tracking_value_ids:
-                trackings |= message.tracking_value_ids
         # Read partners as SUPERUSER -> display the names like classic m2o even if no access
         partners_names = partners.sudo().name_get()
         partner_tree = dict((partner[0], partner) for partner in partners_names)
@@ -294,12 +293,18 @@ class Message(models.Model):
         }) for attachment in attachments_data)
 
         # 3. Tracking values
-        tracking_tree = dict((tracking.id, {
-            'id': tracking.id,
-            'changed_field': tracking.field_desc,
-            'old_value': tracking.get_old_display_value()[0],
-            'new_value': tracking.get_new_display_value()[0],
-        }) for tracking in trackings)
+        tracking_values = self.env['mail.tracking.value'].sudo().search([('mail_message_id', 'in', message_ids)])
+        message_to_tracking = dict()
+        tracking_tree = dict.fromkeys(tracking_values.ids, False)
+        for tracking in tracking_values:
+            message_to_tracking.setdefault(tracking.mail_message_id.id, list()).append(tracking.id)
+            tracking_tree[tracking.id] = {
+                'id': tracking.id,
+                'changed_field': tracking.field_desc,
+                'old_value': tracking.get_old_display_value()[0],
+                'new_value': tracking.get_new_display_value()[0],
+                'field_type': tracking.field_type,
+            }
 
         # 4. Update message dictionaries
         for message_dict in messages:
@@ -321,9 +326,9 @@ class Message(models.Model):
                 if attachment.id in attachments_tree:
                     attachment_ids.append(attachments_tree[attachment.id])
             tracking_value_ids = []
-            for tracking_value in message.tracking_value_ids:
-                if tracking_value.id in tracking_tree:
-                    tracking_value_ids.append(tracking_tree[tracking_value.id])
+            for tracking_value_id in message_to_tracking.get(message_id, list()):
+                if tracking_value_id in tracking_tree:
+                    tracking_value_ids.append(tracking_tree[tracking_value_id])
 
             message_dict.update({
                 'author_id': author,
@@ -741,7 +746,13 @@ class Message(models.Model):
                 ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = (%%s)
                 WHERE m.id = ANY (%%s)""" % self._table, (self.env.user.partner_id.id, self.env.user.partner_id.id, self.ids,))
             for mid, rmod, rid, author_id, parent_id, partner_id, channel_id in self._cr.fetchall():
-                message_values[mid] = {'model': rmod, 'res_id': rid, 'author_id': author_id, 'parent_id': parent_id, 'partner_id': partner_id, 'channel_id': channel_id}
+                message_values[mid] = {
+                    'model': rmod,
+                    'res_id': rid,
+                    'author_id': author_id,
+                    'parent_id': parent_id,
+                    'notified': any((message_values[mid].get('notified'), partner_id, channel_id))
+                }
         else:
             self._cr.execute("""SELECT DISTINCT id, model, res_id, author_id, parent_id FROM "%s" WHERE id = ANY (%%s)""" % self._table, (self.ids,))
             for mid, rmod, rid, author_id, parent_id in self._cr.fetchall():
@@ -780,7 +791,7 @@ class Message(models.Model):
         other_ids = set(self.ids).difference(set(author_ids), set(notified_ids))
         model_record_ids = _generate_model_record_ids(message_values, other_ids)
         if operation in ['read', 'write']:
-            notified_ids = [mid for mid, message in message_values.iteritems() if message.get('partner_id') or message.get('channel_id')]
+            notified_ids = [mid for mid, message in message_values.iteritems() if message.get('notified')]
         elif operation == 'create':
             for doc_model, doc_ids in model_record_ids.items():
                 followers = self.env['mail.followers'].sudo().search([
@@ -846,6 +857,13 @@ class Message(models.Model):
             message_id = tools.generate_tracking_message_id('private')
         return message_id
 
+    @api.multi
+    def _invalidate_documents(self):
+        """ Invalidate the cache of the documents followed by ``self``. """
+        for record in self:
+            if record.model and record.res_id:
+                self.env[record.model].invalidate_cache(ids=[record.res_id])
+
     @api.model
     def create(self, values):
         # coming from mail.js that does not have pid in its values
@@ -861,7 +879,13 @@ class Message(models.Model):
         if 'record_name' not in values and 'default_record_name' not in self.env.context:
             values['record_name'] = self._get_record_name(values)
 
+        # delegate creation of tracking after the create as sudo to avoid access rights issues
+        tracking_values_cmd = values.pop('tracking_value_ids', False)
         message = super(Message, self).create(values)
+        if tracking_values_cmd:
+            message.sudo().write({'tracking_value_ids': tracking_values_cmd})
+
+        message._invalidate_documents()
 
         message._notify(force_send=self.env.context.get('mail_notify_force_send', True),
                         user_signature=self.env.context.get('mail_notify_user_signature', True))
@@ -875,6 +899,14 @@ class Message(models.Model):
         return super(Message, self).read(fields=fields, load=load)
 
     @api.multi
+    def write(self, vals):
+        if 'model' in vals or 'res_id' in vals:
+            self._invalidate_documents()
+        res = super(Message, self).write(vals)
+        self._invalidate_documents()
+        return res
+
+    @api.multi
     def unlink(self):
         # cascade-delete attachments that are directly attached to the message (should only happen
         # for mail.messages that act as parent for a standalone mail.mail record).
@@ -882,6 +914,7 @@ class Message(models.Model):
         self.mapped('attachment_ids').filtered(
             lambda attach: attach.res_model == self._name and (attach.res_id in self.ids or attach.res_id == 0)
         ).unlink()
+        self._invalidate_documents()
         return super(Message, self).unlink()
 
     #------------------------------------------------------

@@ -91,6 +91,10 @@ preserve order.
 * ``record in set`` returns whether ``record`` (which must be a 1-element
   recordset) is present in ``set``. ``record not in set`` is the inverse
   operation
+* ``set1 <= set2`` and ``set1 < set2`` return whether ``set1`` is a subset
+  of ``set2`` (resp. strict)
+* ``set1 >= set2`` and ``set1 > set2`` return whether ``set1`` is a superset
+  of ``set2`` (resp. strict)
 * ``set1 | set2`` returns the union of the two recordsets, a new recordset
   containing all records present in either source
 * ``set1 & set2`` returns the intersection of two recordsets, a new recordset
@@ -309,9 +313,9 @@ Default values are defined as parameters on fields, either a value::
 or a function called to compute the default value, which should return that
 value::
 
-    a_field = fields.Char(default=compute_default_value)
     def compute_default_value(self):
         return self.get_value()
+    a_field = fields.Char(default=compute_default_value)
 
 Computed fields
 ---------------
@@ -639,8 +643,9 @@ Model Reference
     .. automethod:: write
 
     .. automethod:: read
+    .. automethod:: read_group
 
-    .. rubric:: Research
+    .. rubric:: Searching
 
     .. automethod:: search
     .. automethod:: search_count
@@ -666,7 +671,7 @@ Model Reference
     .. automethod:: fields_get
     .. automethod:: fields_view_get
 
-    .. rubric:: ???
+    .. rubric:: Miscellaneous methods
 
     .. automethod:: default_get
     .. automethod:: copy

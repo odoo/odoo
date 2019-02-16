@@ -37,3 +37,30 @@ class website_gengo(http.Controller):
     def post_gengo_jobs(self):
         request.registry['base.gengo.translations']._sync_request(request.cr, request.uid, limit=GENGO_DEFAULT_LIMIT, context=request.context)
         return True
+
+    @http.route('/website_gengo/set_translations', type='json', auth='user', website=True)
+    def set_translations(self, data, lang):
+        IrTranslation = request.env['ir.translation']
+        for term in data:
+            initial_content = term['initial_content'].strip()
+            translation_ids = term['translation_id']
+            if not translation_ids:
+                translations = IrTranslation.search_read([('lang', '=', lang), ('src', '=', initial_content)], fields=['id'])
+                if translations:
+                    translation_ids = map(lambda t_id: t_id['id'], translations)
+
+            vals = {
+                'gengo_comment': term['gengo_comment'],
+                'gengo_translation': term['gengo_translation'],
+                'state': 'to_translate',
+            }
+            if translation_ids:
+                IrTranslation.browse(translation_ids).write(vals)
+            else:
+                vals.update({
+                    'name': 'website',
+                    'lang': lang,
+                    'source': initial_content,
+                })
+                IrTranslation.create(vals)
+        return True

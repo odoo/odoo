@@ -28,6 +28,17 @@ from pyPdf import PdfFileWriter, PdfFileReader
 from reportlab.graphics.barcode import createBarcodeDrawing
 
 
+# A lock occurs when the user wants to print a report having multiple barcode while the server is
+# started in threaded-mode. The reason is that reportlab has to build a cache of the T1 fonts
+# before rendering a barcode (done in a C extension) and this part is not thread safe. We attempt
+# here to init the T1 fonts cache at the start-up of Odoo so that rendering of barcode in multiple
+# thread does not lock the server.
+try:
+    createBarcodeDrawing('Code128', value='foo', format='png', width=100, height=100, humanReadable=1).asString('png')
+except Exception:
+    pass
+
+
 #--------------------------------------------------------------------------
 # Helpers
 #--------------------------------------------------------------------------
@@ -50,16 +61,21 @@ except (OSError, IOError):
 else:
     _logger.info('Will use the Wkhtmltopdf binary at %s' % _get_wkhtmltopdf_bin())
     out, err = process.communicate()
-    version = re.search('([0-9.]+)', out).group(0)
-    if LooseVersion(version) < LooseVersion('0.12.0'):
-        _logger.info('Upgrade Wkhtmltopdf to (at least) 0.12.0')
-        wkhtmltopdf_state = 'upgrade'
-    else:
-        wkhtmltopdf_state = 'ok'
+    match = re.search('([0-9.]+)', out)
+    if match:
+        version = match.group(0)
+        if LooseVersion(version) < LooseVersion('0.12.0'):
+            _logger.info('Upgrade Wkhtmltopdf to (at least) 0.12.0')
+            wkhtmltopdf_state = 'upgrade'
+        else:
+            wkhtmltopdf_state = 'ok'
 
-    if config['workers'] == 1:
-        _logger.info('You need to start Odoo with at least two workers to print a pdf version of the reports.')
-        wkhtmltopdf_state = 'workers'
+        if config['workers'] == 1:
+            _logger.info('You need to start Odoo with at least two workers to print a pdf version of the reports.')
+            wkhtmltopdf_state = 'workers'
+    else:
+        _logger.info('Wkhtmltopdf seems to be broken.')
+        wkhtmltopdf_state = 'broken'
 
 
 class Report(osv.Model):
@@ -115,11 +131,11 @@ class Report(osv.Model):
         """
         # If the report is using a custom model to render its html, we must use it.
         # Otherwise, fallback on the generic html rendering.
-        try:
-            report_model_name = 'report.%s' % report_name
-            particularreport_obj = self.pool[report_model_name]
+        report_model_name = 'report.%s' % report_name
+        particularreport_obj = self.pool.get(report_model_name)
+        if particularreport_obj is not None:
             return particularreport_obj.render_html(cr, uid, ids, data=data, context=context)
-        except KeyError:
+        else:
             report = self._get_report_from_name(cr, uid, report_name)
             report_obj = self.pool[report.model]
             docs = report_obj.browse(cr, uid, ids, context=context)
@@ -139,6 +155,14 @@ class Report(osv.Model):
     def get_pdf(self, cr, uid, ids, report_name, html=None, data=None, context=None):
         """This method generates and returns pdf version of a report.
         """
+
+        if self._check_wkhtmltopdf() == 'install':
+            # wkhtmltopdf is not installed
+            # the call should be catched before (cf /report/check_wkhtmltopdf) but
+            # if get_pdf is called manually (email template), the check could be
+            # bypassed
+            raise UserError(_("Unable to find Wkhtmltopdf on this system. The PDF can not be created."))
+
         if context is None:
             context = {}
 
@@ -168,7 +192,7 @@ class Report(osv.Model):
         # Get the ir.actions.report.xml record we are working on.
         report = self._get_report_from_name(cr, uid, report_name)
         # Check if we have to save the report or if we have to get one from the db.
-        save_in_attachment = self._check_attachment_use(cr, uid, ids, report)
+        save_in_attachment = self._check_attachment_use(cr, uid, ids, report, context=context)
         # Get the paperformat associated to the report, otherwise fallback on the company one.
         if not report.paperformat_id:
             user = self.pool['res.users'].browse(cr, uid, uid)
@@ -241,7 +265,8 @@ class Report(osv.Model):
         return self._run_wkhtmltopdf(
             cr, uid, headerhtml, footerhtml, contenthtml, context.get('landscape'),
             paperformat, specific_paperformat_args, save_in_attachment,
-            context.get('set_viewport_size')
+            context.get('set_viewport_size'),
+            context
         )
 
     @api.v8
@@ -275,7 +300,6 @@ class Report(osv.Model):
             'report_name': report.report_name,
             'report_type': report.report_type,
             'report_file': report.report_file,
-            'context': context,
         }
 
     @api.v8
@@ -287,7 +311,7 @@ class Report(osv.Model):
     # Report generation helpers
     #--------------------------------------------------------------------------
     @api.v7
-    def _check_attachment_use(self, cr, uid, ids, report):
+    def _check_attachment_use(self, cr, uid, ids, report, context=None):
         """ Check attachment_use field. If set to true and an existing pdf is already saved, load
         this one now. Else, mark save it.
         """
@@ -296,19 +320,20 @@ class Report(osv.Model):
         save_in_attachment['loaded_documents'] = {}
 
         if report.attachment:
+            records = self.pool[report.model].browse(cr, uid, ids, context=context)
+            filenames = self._attachment_filename(cr, uid, records, report)
+            attachments = None
+            if report.attachment_use:
+                attachments = self._attachment_stored(cr, uid, records, report, filenames=filenames)
             for record_id in ids:
-                obj = self.pool[report.model].browse(cr, uid, record_id)
-                filename = eval(report.attachment, {'object': obj, 'time': time})
+                filename = filenames[record_id]
 
                 # If the user has checked 'Reload from Attachment'
-                if report.attachment_use:
-                    alreadyindb = [('datas_fname', '=', filename),
-                                   ('res_model', '=', report.model),
-                                   ('res_id', '=', record_id)]
-                    attach_ids = self.pool['ir.attachment'].search(cr, uid, alreadyindb)
-                    if attach_ids:
+                if attachments:
+                    attachment = attachments[record_id]
+                    if attachment:
                         # Add the loaded pdf in the loaded_documents list
-                        pdf = self.pool['ir.attachment'].browse(cr, uid, attach_ids[0]).datas
+                        pdf = attachment.datas
                         pdf = base64.decodestring(pdf)
                         save_in_attachment['loaded_documents'][record_id] = pdf
                         _logger.info('The PDF document %s was loaded from the database' % filename)
@@ -330,10 +355,24 @@ class Report(osv.Model):
         return Report._check_attachment_use(
             self._model, self._cr, self._uid, records.ids, report, context=self._context)
 
+    @api.model
+    def _attachment_filename(self, records, report):
+        return dict((record.id, eval(report.attachment, {'object': record, 'time': time})) for record in records)
+
+    @api.model
+    def _attachment_stored(self, records, report, filenames=None):
+        if not filenames:
+            filenames = self._attachment_filename(records, report)
+        return dict((record.id, self.env['ir.attachment'].search([
+            ('datas_fname', '=', filenames[record.id]),
+            ('res_model', '=', report.model),
+            ('res_id', '=', record.id)
+        ], limit=1)) for record in records)
+
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state
 
-    def _run_wkhtmltopdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None, set_viewport_size=False):
+    def _run_wkhtmltopdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None, set_viewport_size=False, context=None):
         """Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
         document.
 
@@ -436,7 +475,7 @@ class Report(osv.Model):
                             'res_id': reporthtml[0],
                         }
                         try:
-                            self.pool['ir.attachment'].create(cr, uid, attachment)
+                            self.pool['ir.attachment'].create(cr, uid, attachment, context)
                         except AccessError:
                             _logger.info("Cannot save PDF report %r as attachment", attachment['name'])
                         else:
@@ -483,7 +522,7 @@ class Report(osv.Model):
         :specific_paperformat_args: a dict containing prioritized wkhtmltopdf arguments
         :returns: list of string representing the wkhtmltopdf arguments
         """
-        command_args = []
+        command_args = ['--disable-local-file-access']
         if paperformat.format and paperformat.format != 'custom':
             command_args.extend(['--page-size', paperformat.format])
 
@@ -528,19 +567,23 @@ class Report(osv.Model):
         """
         writer = PdfFileWriter()
         streams = []  # We have to close the streams *after* PdfFilWriter's call to write()
-        for document in documents:
-            pdfreport = file(document, 'rb')
-            streams.append(pdfreport)
-            reader = PdfFileReader(pdfreport)
-            for page in range(0, reader.getNumPages()):
-                writer.addPage(reader.getPage(page))
+        try:
+            for document in documents:
+                pdfreport = file(document, 'rb')
+                streams.append(pdfreport)
+                reader = PdfFileReader(pdfreport)
+                for page in range(0, reader.getNumPages()):
+                    writer.addPage(reader.getPage(page))
 
-        merged_file_fd, merged_file_path = tempfile.mkstemp(suffix='.html', prefix='report.merged.tmp.')
-        with closing(os.fdopen(merged_file_fd, 'w')) as merged_file:
-            writer.write(merged_file)
-
-        for stream in streams:
-            stream.close()
+            merged_file_fd, merged_file_path = tempfile.mkstemp(suffix='.pdf', prefix='report.merged.tmp.')
+            with closing(os.fdopen(merged_file_fd, 'w')) as merged_file:
+                writer.write(merged_file)
+        finally:
+            for stream in streams:
+                try:
+                    stream.close()
+                except Exception:
+                    pass
 
         return merged_file_path
 

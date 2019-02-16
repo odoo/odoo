@@ -35,7 +35,7 @@
                             <field name="transient" attrs="{'readonly': [('id', '!=', False)]}"/>
                         </group>
                         <group>
-                            <field name="state" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="state" readonly="1"/>
                             <field name="modules"/>
                         </group>
                     </group>
@@ -62,8 +62,8 @@
                                         <page name="base" string="Base Properties">
                                             <group>
                                                 <field name="translate"
-                                                    attrs="{'readonly': [('ttype','not in',['char','text'])],
-                                                            'invisible': [('ttype','not in',['char','text'])]}"/>
+                                                    attrs="{'readonly': [('ttype','not in',['char','text','html'])],
+                                                            'invisible': [('ttype','not in',['char','text','html'])]}"/>
                                                 <field name="selection"
                                                     attrs="{'required': [('ttype','in',['selection','reference'])],
                                                             'readonly': [('ttype','not in',['selection','reference'])],
@@ -103,7 +103,7 @@
                                         <page name="advanced" string="Advanced Properties">
                                             <group>
                                                 <field name="serialization_field_id"
-                                                    domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]"
+                                                    domain="[('ttype','=','serialized'), ('model_id', '=', parent.model)]"
                                                     attrs="{'readonly': [('state','=','base')]}"/>
                                                 <field name="related"/>
                                                 <field name="depends"/>
@@ -212,7 +212,7 @@
         <record id="view_model_fields_form" model="ir.ui.view">
             <field name="model">ir.model.fields</field>
             <field name="arch" type="xml">
-                <form string="Fields">
+                <form string="Fields" duplicate="false">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -225,8 +225,8 @@
                             <page name="base" string="Base Properties">
                                 <group>
                                     <field name="translate"
-                                        attrs="{'readonly': [('ttype','not in',['char','text'])],
-                                                'invisible': [('ttype','not in',['char','text'])]}"/>
+                                        attrs="{'readonly': [('ttype','not in',['char','text','html'])],
+                                                'invisible': [('ttype','not in',['char','text','html'])]}"/>
                                     <field name="selection"
                                         attrs="{'required': [('ttype','in',['selection','reference'])],
                                                 'readonly': [('ttype','not in',['selection','reference'])],
@@ -315,7 +315,7 @@
         <record id="view_model_fields_tree" model="ir.ui.view">
             <field name="model">ir.model.fields</field>
             <field name="arch" type="xml">
-                <tree string="Fields">
+                <tree string="Fields" duplicate="false">
                     <field name="name"/>
                     <field name="field_description"/>
                     <field name="model_id"/>

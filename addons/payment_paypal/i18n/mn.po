@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:23+0000\n"
+"PO-Revision-Date: 2017-08-04 07:54+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -20,14 +20,14 @@ msgstr ""
 #. module: payment_paypal
 #: model:payment.acquirer,cancel_msg:payment_paypal.payment_acquirer_paypal
 msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr ""
+msgstr "<span><i>Цуцлах,</i> Таны төлбөр цуцлагдсан.</span>"
 
 #. module: payment_paypal
 #: model:payment.acquirer,done_msg:payment_paypal.payment_acquirer_paypal
 msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
-msgstr ""
+msgstr "<span><i>Хийгдсэн,</i> Таны онлайн төлбөр амжилттай боловсруулагдсан. Таны захиалгад баярлалаа</span>"
 
 #. module: payment_paypal
 #: model:payment.acquirer,error_msg:payment_paypal.payment_acquirer_paypal
@@ -42,7 +42,7 @@ msgstr ""
 msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
-msgstr ""
+msgstr "<span><i>Хүлээгдэж буй,</i> Таны онлайн төлбөр амжилттай бололвсруулагсан. Гэхдээ таны захиалга хараахан шалгагдаагүй.</span>"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token
@@ -62,7 +62,7 @@ msgstr "Компаниуд"
 #. module: payment_paypal
 #: model:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
 msgid "How to configure your paypal account?"
-msgstr ""
+msgstr "Өөрийн paypal бүртгэлийг хэрхэн тохируулах вэ?"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
@@ -77,7 +77,7 @@ msgstr "Төлбөрийн гүйлгээ"
 #. module: payment_paypal
 #: model:payment.acquirer,name:payment_paypal.payment_acquirer_paypal
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_email_account
@@ -92,35 +92,35 @@ msgstr "Paypal-н шуурхай Төлбөрийн мэдэгдэл"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_seller_account
 msgid "Paypal Merchant ID"
-msgstr ""
+msgstr "Paypal Худалдагчийн ID"
 
 #. module: payment_paypal
 #: model:ir.ui.view,arch_db:payment_paypal.transaction_form_paypal
 msgid "Paypal TX Details"
-msgstr ""
+msgstr "Paypal гүйлгээний дэлгэрэнгүй"
 
 #. module: payment_paypal
 #: code:addons/payment_paypal/models/paypal.py:186
 #, python-format
 msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
-msgstr ""
+msgstr "Paypal: хүлээн авсан өгөгдөлд код (%s) эсвэл txn_id (%s) алга"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_password
 msgid "Rest API Password"
-msgstr ""
+msgstr "Rest API Нууц үг"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_username
 msgid "Rest API Username"
-msgstr ""
+msgstr "Rest API Хэрэглэгчийн нэр"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_seller_account
 msgid ""
 "The Merchant ID is used to ensure communications coming from Paypal are "
 "valid and secured."
-msgstr ""
+msgstr "Худалдагчийн ID нь Paypal -с ирж буй харилцаа зөв ба аюулгүй байхыг хангахад ашиглагддаг."
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction_paypal_txn_type
@@ -130,16 +130,16 @@ msgstr "Гүйлгээний төрөл"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_use_ipn
 msgid "Use IPN"
-msgstr ""
+msgstr "IPN ашиглах"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_enabled
 msgid "Use Rest API"
-msgstr ""
+msgstr "Rest API ашиглах"
 
 #. module: payment_paypal
 #: model:payment.acquirer,pre_msg:payment_paypal.payment_acquirer_paypal
 msgid ""
 "You will be redirected to the Paypal website after clicking on the payment "
 "button."
-msgstr ""
+msgstr "Төлбөр товчийг дарсан дараа Paypal вебсайт руу шилжинэ."

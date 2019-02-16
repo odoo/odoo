@@ -45,8 +45,8 @@ class AccountInvoiceReport(models.Model):
     user_currency_price_total = fields.Float(string="Total Without Tax", compute='_compute_amounts_in_user_currency', digits=0)
     price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
     user_currency_price_average = fields.Float(string="Average Price", compute='_compute_amounts_in_user_currency', digits=0)
-    currency_rate = fields.Float(string='Currency Rate', readonly=True)
-    nbr = fields.Integer(string='# of Invoices', readonly=True)  # TDE FIXME master: rename into nbr_lines
+    currency_rate = fields.Float(string='Currency Rate', readonly=True, group_operator="avg")
+    nbr = fields.Integer(string='# of Lines', readonly=True)  # TDE FIXME master: rename into nbr_lines
     type = fields.Selection([
         ('out_invoice', 'Customer Invoice'),
         ('in_invoice', 'Vendor Bill'),
@@ -102,31 +102,41 @@ class AccountInvoiceReport(models.Model):
 
     def _sub_select(self):
         select_str = """
-                SELECT min(ail.id) AS id,
+                SELECT ail.id AS id,
                     ai.date_invoice AS date,
                     ail.product_id, ai.partner_id, ai.payment_term_id, ail.account_analytic_id,
                     u2.name AS uom_name,
                     ai.currency_id, ai.journal_id, ai.fiscal_position_id, ai.user_id, ai.company_id,
-                    count(ail.*) AS nbr,
+                    1 AS nbr,
                     ai.type, ai.state, pt.categ_id, ai.date_due, ai.account_id, ail.account_id AS account_line_id,
                     ai.partner_bank_id,
                     SUM(CASE
-                         WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
+                        WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
                             THEN (- ail.quantity) / u.factor * u2.factor
                             ELSE ail.quantity / u.factor * u2.factor
                         END) AS product_qty,
-                    SUM(ail.price_subtotal_signed) AS price_total,
-                    SUM(ail.price_subtotal_signed) / CASE
-                           WHEN SUM(ail.quantity / u.factor * u2.factor) <> 0::numeric
-                               THEN CASE
-                                     WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
-                                        THEN SUM((- ail.quantity) / u.factor * u2.factor)
-                                        ELSE SUM(ail.quantity / u.factor * u2.factor)
-                                    END
-                               ELSE 1::numeric
-                          END AS price_average,
-                    ai.residual_company_signed / (SELECT count(*) FROM account_invoice_line l where invoice_id = ai.id) *
-                    count(*) AS residual,
+                    SUM(ABS(ail.price_subtotal_signed)
+                        * CASE
+                            WHEN ail.price_subtotal < 0
+                                THEN -1
+                                ELSE 1
+                            END
+                        * CASE
+                            WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
+                                THEN -1
+                                ELSE 1
+                            END
+                    ) AS price_total,
+                    SUM(ABS(ail.price_subtotal_signed)) / CASE
+                        WHEN SUM(ail.quantity / u.factor * u2.factor) <> 0::numeric
+                            THEN SUM(ail.quantity / u.factor * u2.factor)
+                            ELSE 1::numeric
+                        END AS price_average,
+                    ai.residual_company_signed / (SELECT count(*) FROM account_invoice_line l where invoice_id = ai.id) * count(*) * CASE
+                        WHEN ai.type::text = ANY (ARRAY['in_refund'::character varying::text, 'in_invoice'::character varying::text])
+                            THEN -1
+                            ELSE 1
+                        END AS residual,
                     ai.commercial_partner_id as commercial_partner_id,
                     partner.country_id
         """
@@ -146,7 +156,7 @@ class AccountInvoiceReport(models.Model):
 
     def _group_by(self):
         group_by_str = """
-                GROUP BY ail.product_id, ail.account_analytic_id, ai.date_invoice, ai.id,
+                GROUP BY ail.id, ail.product_id, ail.account_analytic_id, ai.date_invoice, ai.id,
                     ai.partner_id, ai.payment_term_id, u2.name, u2.id, ai.currency_id, ai.journal_id,
                     ai.fiscal_position_id, ai.user_id, ai.company_id, ai.type, ai.state, pt.categ_id,
                     ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual_company_signed,

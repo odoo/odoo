@@ -66,7 +66,7 @@ var KanbanView = View.extend({
         this.qweb.default_dict = _.clone(QWeb.default_dict);
 
         this.model = this.dataset.model;
-        this.limit = options.limit || 40;
+        this.limit = options.limit;
         this.grouped = undefined;
         this.group_by_field = undefined;
         this.default_group_by = undefined;
@@ -84,6 +84,10 @@ var KanbanView = View.extend({
     },
 
     view_loading: function(fvg) {
+        if (!this.limit) {
+            this.limit = parseInt(fvg.arch.attrs.limit, 10) || 40;
+        }
+
         this.$el.addClass(fvg.arch.attrs.class);
         this.fields_view = fvg;
         this.default_group_by = fvg.arch.attrs.default_group_by;
@@ -528,9 +532,7 @@ var KanbanView = View.extend({
             active_ids: [event.target.id],
             active_model: this.dataset.model,
         });
-        this.do_execute_action(event.data, this.dataset, event.target.id).then(function () {
-            self.reload_record(event.target);
-        });
+        this.do_execute_action(event.data, this.dataset, event.target.id, _.bind(self.reload_record, this, event.target));
     },
 
     /*
@@ -712,14 +714,15 @@ var KanbanView = View.extend({
     add_new_column: function (event) {
         var self = this;
         var model = new Model(this.relation, this.search_context);
-        model.call('create', [{name: event.data.value}], {
+        var name = event.data.value;
+        model.call('name_create', [name], {
             context: this.search_context,
-        }).then(function (id) {
+        }).then(function (result) {
             var dataset = new data.DataSetSearch(self, self.dataset.model, self.dataset.get_context(), []);
             var group_data = {
                 records: [],
                 title: event.data.value,
-                id: id,
+                id: result[0],
                 attributes: {folded: false},
                 dataset: dataset,
                 values: {},

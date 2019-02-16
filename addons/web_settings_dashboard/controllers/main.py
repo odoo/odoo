@@ -20,12 +20,20 @@ class WebSettingsDashboard(http.Controller):
         ])
         cr = request.cr
         cr.execute("""
-            SELECT exists(SELECT 1 FROM res_users_log WHERE create_uid=u.id), count(1)
-              FROM res_users u
-             WHERE active=true
-          GROUP BY 1
+            SELECT count(*)
+              FROM res_users
+             WHERE active=true AND
+                   share=false
         """)
-        counts = dict(cr.fetchall())
+        active_count = cr.dictfetchall()[0].get('count')
+
+        cr.execute("""
+            SELECT count(u.*)
+            FROM res_users u
+            WHERE active=true AND
+                  NOT exists(SELECT 1 FROM res_users_log WHERE create_uid=u.id)
+        """)
+        pending_count = cr.dictfetchall()[0].get('count')
 
         cr.execute("""
            SELECT id, login
@@ -47,8 +55,8 @@ class WebSettingsDashboard(http.Controller):
                 'enterprise_users': enterprise_users,
             },
             'users_info': {
-                'active_users': counts.get(True, 0),
-                'pending_count': counts.get(False, 0),
+                'active_users': active_count,
+                'pending_count': pending_count,
                 'pending_users': pending_users,
                 'user_form_view_id': request.env['ir.model.data'].xmlid_to_res_id("base.view_users_form"),
             },

@@ -65,9 +65,10 @@ var KanbanColumn = Widget.extend({
         });
 
         var self = this;
-        if (group_data.options && group_data.options.group_by_tooltip) {
-            this.tooltip_info = _.map(group_data.options.group_by_tooltip, function (key, value, list) {
-                return (self.values && self.values[value] && "<div>" +key + "<br>" + self.values[value] + "</div>") || '';
+        if (group_data.options && group_data.options.group_by_tooltip && this.values) {
+            this.tooltip_info = _.map(group_data.options.group_by_tooltip, function (key, value) {
+                if (!self.values[value]) { return ''; }
+                return $('<div>').text(key + '<br>' + self.values[value]).text();
             }).join('');
         } else {
             this.tooltip_info = "";
@@ -91,7 +92,7 @@ var KanbanColumn = Widget.extend({
                 connectWith: '.o_kanban_group',
                 revert: 0,
                 delay: 0,
-                items: '> .o_kanban_record',
+                items: '> .o_kanban_record:not(.o_updating)',
                 helper: 'clone',
                 cursor: 'move',
                 over: function () {
@@ -116,7 +117,9 @@ var KanbanColumn = Widget.extend({
                     } else {
                         // adding record to this column
                         self.records.push(record);
+                        self.dataset.add_ids([record.id]);
                         record.setParent(self);
+                        ui.item.addClass('o_updating');
                         self.trigger_up('kanban_column_add_record', {record: record});
                     }
                     self.update_column();

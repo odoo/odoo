@@ -69,7 +69,42 @@ Tour.register({
             waitFor:    '.tab-pane:last tr:has(.oe_list_field_cell):not(:has(.oe_list_record_selector)):contains(user_test)',
         },
 
+        // add ourself as participant
+        {
+            title:      "change tab to Participants",
+            element:    '[data-toggle="tab"]:contains(Participants)'
+        },
+        {
+            title:      "click to add participants",
+            element:    '.tab-pane:eq(2).active .oe_form_field_x2many_list_row_add a'
+        },
+        {
+            title:      "select Admin",
+            element:    '.modal .oe_list_content tr:has(td[data-field="name"]:containsExact(Administrator)) .oe_list_record_selector input[type="checkbox"]'
+        },
+        {
+            title:      "save selected participants",
+            waitFor:    '.modal .oe_list_content tr:has(td[data-field="name"]:containsExact(Administrator)) .oe_list_record_selector input[type="checkbox"]:propChecked',
+            element:    '.o_selectcreatepopup_search_select'
+        },
+
+        // save
+        {
+            title:      "save discussion",
+            waitFor:    '.oe_form_field_many2many tbody tr td.oe_list_field_char:containsExact(Administrator)',
+            element:    'button.oe_form_button_save'
+        },
+        // edit
+        {
+            title:      "edit discussion",
+            element:    'button.oe_form_button_edit'
+        },
+
         // add message a
+        {
+            title:      "Select First Tab",
+            element:    'a[role=tab]:first',
+        },
         {
             title:      "create new message a",
             element:    '.oe_form_field_x2many_list_row_add:first a'
@@ -167,15 +202,10 @@ Tour.register({
         },
         {
             title:      "click to add participants",
-            element:    '.tab-pane:eq(1).active .oe_form_field_x2many_list_row_add a'
-        },
-        {
-            title:      "select Admin",
-            element:    '.modal .oe_list_content tr:has(td[data-field="name"]:containsExact(Administrator)) .oe_list_record_selector input[type="checkbox"]'
+            element:    '.tab-pane:eq(2).active .oe_form_field_x2many_list_row_add a'
         },
         {
             title:      "select Demo User",
-            waitFor:    '.modal .oe_list_content tr:has(td[data-field="name"]:containsExact(Administrator)) .oe_list_record_selector input[type="checkbox"]:propChecked',
             element:    '.modal .oe_list_content tr:has(td[data-field="name"]:containsExact(Demo User)) .oe_list_record_selector input[type="checkbox"]'
         },
         {
@@ -214,7 +244,7 @@ Tour.register({
             element:    'button.oe_form_button_edit'
         },
         {
-            title:      "change tab to Participants",
+            title:      "change tab to Messages",
             waitFor:    '.oe_form_editable',
             element:    '[data-toggle="tab"]:contains(Messages)'
         },

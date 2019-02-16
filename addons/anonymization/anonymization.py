@@ -4,14 +4,11 @@
 from lxml import etree
 import os
 import base64
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
 import random
 import datetime
 from openerp.release import version_info
 from openerp.osv import fields, osv
+from openerp.tools import pickle
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 
@@ -264,16 +261,17 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
         for anon_field in anon_fields:
             field = fields_by_id.get(anon_field.field_id.id)
-
-            values = {
-                'model_name': field.model_id.name,
-                'model_code': field.model_id.model,
-                'field_code': field.name,
-                'field_name': field.field_description,
-                'state': anon_field.state,
-            }
-            summary += u" * %(model_name)s (%(model_code)s) -> %(field_name)s (%(field_code)s): state: (%(state)s)\n" % values
-
+            if field:
+                values = {
+                    'model_name': field.model_id.name,
+                    'model_code': field.model_id.model,
+                    'field_code': field.name,
+                    'field_name': field.field_description,
+                    'state': anon_field.state,
+                }
+                summary += u" * %(model_name)s (%(model_code)s) -> %(field_name)s (%(field_code)s): state: (%(state)s)\n" % values
+            else:
+                summary += u"* Missing local model (%s) and field (%s): state: (%s) \n" % (anon_field.model_name, anon_field.field_name, anon_field.state)
         return summary
 
     def default_get(self, cr, uid, fields_list, context=None):
@@ -355,6 +353,8 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         raise UserError('%s: %s' % (error_type, error_msg))
 
     def anonymize_database(self, cr, uid, ids, context=None):
+        raise UserError("""The Odoo Migration Platform no longer accepts anonymized databases.\n
+            If you wish for your data to remain private during migration, please contact us at upgrade@odoo.com""")
         """Sets the 'anonymized' state to defined fields"""
 
         # create a new history record:
@@ -398,7 +398,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             table_name = self.pool[model_name]._table
 
             # get the current value
-            sql = "select id, %s from %s" % (field_name, table_name)
+            sql = "select id, \"%s\" from \"%s\"" % (field_name, table_name)
             cr.execute(sql)
             records = cr.dictfetchall()
             for record in records:
@@ -414,6 +414,8 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                     anonymized_value = 'xxx'+sid
                 elif field_type == 'text':
                     anonymized_value = 'xxx'+sid
+                elif field_type == 'html':
+                    anonymized_value = 'xxx'+sid
                 elif field_type == 'boolean':
                     anonymized_value = random.choice([True, False])
                 elif field_type == 'date':
@@ -421,6 +423,8 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 elif field_type == 'datetime':
                     anonymized_value = '2011-11-11 11:11:11'
                 elif field_type == 'float':
+                    anonymized_value = 0.0
+                elif field_type == 'monetary':
                     anonymized_value = 0.0
                 elif field_type == 'integer':
                     anonymized_value = 0
@@ -431,7 +435,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 if anonymized_value is None:
                     self._raise_after_history_update(cr, uid, history_id, _('Error !'), _("Anonymized value can not be empty."))
 
-                sql = "update %(table)s set %(field)s = %%(anonymized_value)s where id = %%(id)s" % {
+                sql = "update \"%(table)s\" set \"%(field)s\" = %%(anonymized_value)s where id = %%(id)s" % {
                     'table': table_name,
                     'field': field_name,
                 }
@@ -442,7 +446,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
         # save pickle:
         fn = open(abs_filepath, 'w')
-        pickle.dump(data, fn, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(data, fn, -1)
 
         # update the anonymization fields:
         values = {
@@ -539,7 +543,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                     custom_updates.sort(key=itemgetter('sequence'))
                     queries = [(record['query'], record['query_type']) for record in custom_updates if record['query_type']]
                 elif table_name:
-                    queries = [("update %(table)s set %(field)s = %%(value)s where id = %%(id)s" % {
+                    queries = [("update \"%(table)s\" set \"%(field)s\" = %%(value)s where id = %%(id)s" % {
                         'table': table_name,
                         'field': line['field_id'],
                     }, 'sql')]

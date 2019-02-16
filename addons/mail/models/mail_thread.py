@@ -4,6 +4,9 @@ import base64
 import datetime
 import dateutil
 import email
+import hashlib
+import hmac
+import json
 import lxml
 from lxml import etree
 import logging
@@ -178,10 +181,10 @@ class MailThread(models.AbstractModel):
                              RIGHT JOIN mail_channel_partner cp
                              ON (cp.channel_id = rel.mail_channel_id AND cp.partner_id = %s AND
                                 (cp.seen_message_id IS NULL OR cp.seen_message_id < msg.id))
-                             WHERE msg.model = %s AND msg.res_id in %s AND
+                             WHERE msg.model = %s AND msg.res_id = ANY(%s) AND
                                    (msg.author_id IS NULL OR msg.author_id != %s) AND
                                    (msg.message_type != 'notification' OR msg.model != 'mail.channel')""",
-                         (partner_id, self._name, tuple(self.ids), partner_id,))
+                         (partner_id, self._name, list(self.ids), partner_id,))
         for result in self._cr.fetchall():
             res[result[0]] += 1
 
@@ -538,6 +541,13 @@ class MailThread(models.AbstractModel):
             because portal users have a different Inbox action than classic users. """
         return 'mail.mail_channel_action_client_chat'
 
+    @api.model
+    def _generate_notification_token(self, base_link, params):
+        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
+        token = '%s?%s' % (base_link, ' '.join('%s=%s' % (key, params[key]) for key in sorted(params.keys())))
+        hm = hmac.new(str(secret), token, hashlib.sha1).hexdigest()
+        return hm
+
     @api.multi
     def _notification_link_helper(self, link_type, **kwargs):
         if kwargs.get('message_id'):
@@ -545,26 +555,30 @@ class MailThread(models.AbstractModel):
                 'message_id': kwargs.pop('message_id')
             }
         else:
-            self.ensure_one()
             base_params = {
-                'model': self._name,
-                'res_id': self.ids[0],
+                'model': kwargs.get('model', self._name),
+                'res_id': kwargs.get('res_id', self.ids and self.ids[0] or False),
             }
 
-        link = False
         if link_type in ['view', 'assign', 'follow', 'unfollow']:
             params = dict(base_params)
-            link = '/mail/view?%s' % url_encode(params)
-        elif link_type == 'workflow':
-            params = dict(base_params, signal=kwargs['signal'])
-            link = '/mail/workflow?%s' % url_encode(params)
-        elif link_type == 'method':
-            method = kwargs.pop('method')
-            params = dict(base_params, method=method, params=kwargs)
-            link = '/mail/method?%s' % url_encode(params)
+            base_link = '/mail/%s' % link_type
         elif link_type == 'new':
-            params = dict(base_params, action_id=kwargs.get('action_id'))
-            link = '/mail/new?%s' % url_encode(params)
+            params = dict(base_params, action_id=kwargs.get('action_id', ''))
+            base_link = '/mail/new'
+        elif link_type == 'controller':
+            controller = kwargs.pop('controller')
+            params = dict(base_params)
+            params.pop('model')
+            base_link = '%s' % controller
+        else:
+            return ''
+
+        if link_type not in ['view', 'new']:
+            token = self._generate_notification_token(base_link, params)
+            params['token'] = token
+
+        link = '%s?%s' % (base_link, url_encode(params))
         return link
 
     @api.multi
@@ -638,8 +652,8 @@ class MailThread(models.AbstractModel):
                 'followers': self.env['res.partner'],
                 'not_followers': self.env['res.partner'],
                 'button_access': {'url': access_link, 'title': view_title},
-                'button_follow': {'url': '/mail/follow?%s' % url_encode({'model': message.model, 'res_id': message.res_id}), 'title': _('Follow')},
-                'button_unfollow': {'url': '/mail/unfollow?%s' % url_encode({'model': message.model, 'res_id': message.res_id}), 'title': _('Unfollow')},
+                'button_follow': {'url': self._notification_link_helper('follow', model=message.model, res_id=message.res_id), 'title': _('Follow')},
+                'button_unfollow': {'url': self._notification_link_helper('unfollow', model=message.model, res_id=message.res_id), 'title': _('Unfollow')},
                 'actions': list(),
             }
             group_data[category] = self.env['res.partner']
@@ -1049,7 +1063,7 @@ class MailThread(models.AbstractModel):
                        decode_header(message, 'Cc'),
                        decode_header(message, 'Resent-To'),
                        decode_header(message, 'Resent-Cc')])
-        local_parts = [e.split('@')[0] for e in tools.email_split(rcpt_tos)]
+        local_parts = [e.split('@')[0].lower() for e in tools.email_split(rcpt_tos)]
         if local_parts:
             aliases = Alias.search([('alias_name', 'in', local_parts)])
             if aliases:
@@ -1104,6 +1118,7 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def message_route_process(self, message, message_dict, routes):
+        self = self.with_context(attachments_mime_plainxml=True) # import XML attachments as text
         # postpone setting message_dict.partner_ids after message_post, to avoid double notifications
         partner_ids = message_dict.pop('partner_ids', [])
         thread_id = False
@@ -1262,6 +1277,8 @@ class MailThread(models.AbstractModel):
         mail module, and should not contain security or generic html cleaning.
         Indeed those aspects should be covered by html_email_clean and
         html_sanitize methods located in tools. """
+        if not body:
+            return body, attachments
         root = lxml.html.fromstring(body)
         postprocessed = False
         to_remove = []
@@ -1289,7 +1306,7 @@ class MailThread(models.AbstractModel):
         # Content-Type: multipart/related;
         #   boundary="_004_3f1e4da175f349248b8d43cdeb9866f1AMSPR06MB343eurprd06pro_";
         #   type="text/html"
-        if not message.is_multipart() or message.get('content-type', '').startswith("text/"):
+        if message.get_content_maintype() == 'text':
             encoding = message.get_content_charset()
             body = message.get_payload(decode=True)
             body = tools.ustr(body, encoding, errors='replace')
@@ -1594,6 +1611,7 @@ class MailThread(models.AbstractModel):
             data_attach = {
                 'name': name,
                 'datas': base64.b64encode(str(content)),
+                'type': 'binary',
                 'datas_fname': name,
                 'description': name,
                 'res_model': attach_model,
@@ -1691,7 +1709,7 @@ class MailThread(models.AbstractModel):
             partner_to_subscribe = partner_ids
             if self._context.get('mail_post_autofollow_partner_ids'):
                 partner_to_subscribe = filter(lambda item: item in self._context.get('mail_post_autofollow_partner_ids'), partner_ids)
-            self.message_subscribe(list(partner_to_subscribe))
+            self.message_subscribe(list(partner_to_subscribe), force=False)
 
         # _mail_flat_thread: automatically set free messages to the first posted message
         MailMessage = self.env['mail.message']
@@ -1743,7 +1761,7 @@ class MailThread(models.AbstractModel):
                 # done with SUPERUSER_ID, because on some models users can post only with read access, not necessarily write access
                 self.sudo().write({'message_last_post': fields.Datetime.now()})
         if new_message.author_id and model and self.ids and message_type != 'notification' and not self._context.get('mail_create_nosubscribe'):
-            self.message_subscribe([new_message.author_id.id])
+            self.message_subscribe([new_message.author_id.id], force=False)
         return new_message
 
     @api.multi

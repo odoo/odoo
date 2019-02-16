@@ -343,7 +343,7 @@ var BasicComposer = Widget.extend({
             input_min_height: 28,
             mention_fetch_limit: 8,
             mention_partners_restricted: false, // set to true to only suggest prefetched partners
-            send_text: _('Send'),
+            send_text: _t('Send'),
             default_body: '',
             default_mention_selections: {},
         });
@@ -415,6 +415,11 @@ var BasicComposer = Widget.extend({
         this.mention_manager.prependTo(this.$('.o_composer'));
 
         return this._super();
+    },
+
+    destroy: function () {
+        $(window).off(this.fileupload_id);
+        return this._super.apply(this, arguments);
     },
 
     toggle: function(state) {
@@ -619,7 +624,7 @@ var BasicComposer = Widget.extend({
             // filter prefetched partners with the given search string
             var suggestions = [];
             var limit = self.options.mention_fetch_limit;
-            var search_regexp = new RegExp(self.unaccent(search), 'i');
+            var search_regexp = new RegExp(_.str.escapeRegExp(self.unaccent(search)), 'i');
             _.each(prefetched_partners, function (partners) {
                 if (limit > 0) {
                     var filtered_partners = _.filter(partners, function (partner) {

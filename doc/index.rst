@@ -1,4 +1,4 @@
-:main-title: doc
+:main-title: Developer Documentation
 :banner: banners/index.jpg
 
 =====

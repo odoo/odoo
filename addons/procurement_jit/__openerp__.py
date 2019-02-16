@@ -5,7 +5,7 @@
 {
     'name': 'Just In Time Scheduling',
     'version': '1.0',
-    'category': 'Base',
+    'category': 'Warehouse',
     'description': """
 This module will automatically reserve the picking from stock when a sale order is confirmed
 ============================================================================================

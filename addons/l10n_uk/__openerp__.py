@@ -6,7 +6,7 @@
 {
     'name': 'UK - Accounting',
     'version': '1.0',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 This is the latest UK OpenERP localisation necessary to run OpenERP accounting for UK SME's with:
 =================================================================================================

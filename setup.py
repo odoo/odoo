@@ -36,9 +36,11 @@ def py2exe_datafiles():
 
     import docutils
     import passlib
+    import reportlab
     import requests
     data_mapping = ((docutils, 'docutils'),
                     (passlib, 'passlib'),
+                    (reportlab, 'reportlab'),
                     (requests, 'requests'))
 
     for mod, datadir in data_mapping:
@@ -129,7 +131,7 @@ setup(
     author_email=author_email,
     classifiers=filter(None, classifiers.split('\n')),
     license=license,
-    scripts=['openerp-server', 'odoo.py'],
+    scripts=['openerp-server', 'openerp-gevent', 'odoo.py'],
     packages=find_packages(),
     package_dir={'%s' % lib_name: 'openerp'},
     include_package_data=True,

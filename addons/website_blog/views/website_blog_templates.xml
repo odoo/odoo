@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-<template id="assets_editor" inherit_id="website.assets_editor" name="Blog Editor" groups="base.group_website_publisher">
+<template id="assets_editor" inherit_id="website.assets_editor" name="Blog Editor">
     <xpath expr="." position="inside">
         <script type="text/javascript" src="/website_blog/static/src/js/website_blog.editor.js"></script>
         <script type="text/javascript" src="/website_blog/static/src/js/website.tour.blog.js"></script>
@@ -103,6 +103,7 @@
     <t t-call="website_blog.index">
         <t t-set="head">
             <link t-att-href="'/blog/%s/feed' % (blog.id)" type="application/atom+xml" rel="alternate" title="Atom Feed"/>
+            <meta t-if="len(active_tag_ids) > 0" name="robots" t-attf-content="#{len(active_tag_ids) > 1 and 'noindex,'} nofollow"/>
         </t>
         <div class="container">
             <t t-call="website.pager" >
@@ -472,8 +473,8 @@
     <updated t-esc="(posts[0] if posts else blog).write_date.replace(' ', 'T') + 'Z'"/>
     <entry t-foreach="posts" t-as="post">
         <title t-esc="post.name"/>
-        <link t-att-href="'%s/%s' % (base_url, post.website_url)"/>
-        <id t-esc="'%s/%s' % (base_url, post.website_url)"/>
+        <link t-att-href="'%s%s' % (base_url, post.website_url)"/>
+        <id t-esc="'%s%s' % (base_url, post.website_url)"/>
         <author><name t-esc="post.sudo().author_id.name"/></author>
         <summary t-esc="post.subtitle"/>
         <updated t-esc="post.write_date.replace(' ', 'T') + 'Z'"/>

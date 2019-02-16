@@ -84,7 +84,7 @@
 
 <template id="layout" name="Main layout">&lt;!DOCTYPE html&gt;
     <html t-att-lang="lang and lang.replace('_', '-')"
-          t-att-data-website-id="website.id if (editable or translatable) and website else None"
+          t-att-data-website-id="website.id if website else None"
           t-att-data-editable="'1' if editable else None"
           t-att-data-translatable="'1' if translatable else None"
           t-att-data-edit_translations="'1' if edit_translations else None"
@@ -104,11 +104,14 @@
             </t>
 
             <meta name="viewport" content="initial-scale=1"/>
-            <meta name="description" t-att-content="main_object and 'website_meta_description' in main_object
-                and main_object.website_meta_description or website_meta_description"/>
-            <meta name="keywords" t-att-content="main_object and 'website_meta_keywords' in main_object
-                and main_object.website_meta_keywords or website_meta_keywords"/>
             <meta name="generator" content="Odoo"/>
+
+            <t t-set="meta_description" t-value="main_object and 'website_meta_description' in main_object
+                and main_object.website_meta_description or website_meta_description"/>
+            <t t-set="meta_keywords" t-value="main_object and 'website_meta_keywords' in main_object
+                and main_object.website_meta_keywords or website_meta_keywords"/>
+            <meta t-if="meta_description or editable" name="description" t-att-content="meta_description"/>
+            <meta t-if="meta_keywords or editable" name="keywords" t-att-content="meta_keywords"/>
 
             <!-- OpenGraph tags for Facebook sharing -->
             <meta property="og:title" t-att-content="additional_title" />
@@ -578,6 +581,10 @@
         <div class="oe_structure">
 
             <section class="container">
+              <t t-if="not version">
+                <meta http-equiv="refresh" content="0;URL='/website/info'" />
+              </t>
+              <t t-if="version">
                 <h1><t t-esc="res_company.name"/>
                     <small>Odoo Version <t t-raw="version.get('server_version')"/></small>
                 </h1>
@@ -625,8 +632,7 @@
                         </t>
                     </dl>
                 </div>
-
-
+              </t>
             </section>
 
         </div>
@@ -923,9 +929,15 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 "widget": "contact",
                 "fields": ["name", "address", "phone", "mobile", "fax", "email"]}'/>
     </address>
-     <a t-att-href="res_company.google_map_link()" target="_BLANK">
-        <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
-    </a>
+    <!-- FORWARD-PORT UP TO SAAS-12 -->
+    <t t-if="'key=' in res_company.google_map_img()">
+        <a t-att-href="res_company.google_map_link()" target="_BLANK">
+           <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
+        </a>
+    </t>
+    <t t-if="'key=' not in res_company.google_map_img()">
+        <a t-att-href="res_company.google_map_link()" target="_BLANK">Visualize on Google Maps</a>
+    </t>
 </template>
 
 <template id="contactus" name="Contact us" page="True">

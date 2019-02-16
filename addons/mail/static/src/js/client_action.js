@@ -231,6 +231,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var def3 = this.extended_composer.appendTo(this.$('.o_mail_chat_content'));
         var def4 = this.searchview.appendTo($("<div>")).then(function () {
             self.$searchview_buttons = self.searchview.$buttons.contents();
+            // manually call do_search to generate the initial domain and filter
+            // the messages in the default channel
+            self.searchview.do_search();
         });
 
         this.render_sidebar();
@@ -272,12 +275,13 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
 
     unselect_message: function() {
-        if (this.channel.type !== 'static' && !this.channel.mass_mailing) {
-            this.basic_composer.toggle(true);
-            this.basic_composer.focus();
+        this.basic_composer.toggle(this.channel.type !== 'static' && !this.channel.mass_mailing);
+        this.extended_composer.toggle(this.channel.type !== 'static' && this.channel.mass_mailing);
+        if (!config.device.touch) {
+            var composer = this.channel.mass_mailing ? this.extended_composer : this.basic_composer;
+            composer.focus();
         }
         this.$el.removeClass('o_mail_selection_mode');
-        this.extended_composer.toggle(this.channel.mass_mailing);
         this.thread.unselect();
         this.selected_message = null;
     },
@@ -413,10 +417,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 .find('.o_mail_chat_button_unstar_all')
                 .toggle(channel.id === "channel_starred");
 
-            self.basic_composer.toggle(channel.type !== 'static' && !channel.mass_mailing);
-            self.extended_composer.toggle(channel.type !== 'static' && channel.mass_mailing);
-            self.$el.removeClass('o_mail_selection_mode');
-
             self.$('.o_mail_chat_channel_item')
                 .removeClass('o_active')
                 .filter('[data-channel-id=' + channel.id + ']')
@@ -432,13 +432,13 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
 
             // Update control panel before focusing the composer, otherwise focus is on the searchview
             self.update_cp();
-            if (!config.device.touch) {
-                var composer = channel.mass_mailing ? self.extended_composer : self.basic_composer;
-                composer.focus();
-            }
             if (config.device.size_class === config.device.SIZES.XS) {
                 self.$('.o_mail_chat_sidebar').hide();
             }
+
+            // Display and focus the adequate composer, and unselect possibly selected message
+            // to prevent sending messages as reply to that message
+            self.unselect_message();
 
             self.action_manager.do_push_state({
                 action: self.action.id,
@@ -550,7 +550,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         });
 
         this.domain = result.domain;
-        this.fetch_and_render_thread();
+        if (this.channel) {
+            // initially (when do_search is called manually), there is no
+            // channel set yet, so don't try to fetch and render the thread as
+            // this will be done as soon as the default channel is set
+            this.fetch_and_render_thread();
+        }
     },
 
     on_post_message: function (message) {
@@ -650,8 +655,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             view_type: 'form',
             views: [[false, 'form']],
             target: 'new',
-            context: "{'default_no_auto_thread': False}",
+            context: "{'default_no_auto_thread': False, 'active_model': 'mail.message'}",
         });
+    },
+    destroy: function() {
+        this.$buttons.off().destroy();
+        this._super.apply(this, arguments);
     },
 });
 

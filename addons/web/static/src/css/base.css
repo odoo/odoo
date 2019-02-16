@@ -1423,6 +1423,7 @@
 .openerp .oe_application .oe_form_sheetbg {
   background: url(/web/static/src/img/form_sheetbg.png);
   border-bottom: 1px solid #ddd;
+  z-index: 1;
 }
 .openerp .oe_application .oe_form_sheetbg .oe_subtotal_footer label {
   font-weight: bold;
@@ -1722,6 +1723,7 @@
   border: 1px solid #D00 !important;
 }
 .openerp .oe_form .oe_input_icon {
+  position: relative;
   cursor: pointer;
   margin: 3px 0 0 -21px;
   vertical-align: top;
@@ -2203,6 +2205,10 @@
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field textarea, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field select {
   min-width: 0;
 }
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field textarea.field_text {
+  position: relative;
+  z-index: 1;
+}
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_float.oe_readonly, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_view_integer.oe_readonly {
   padding: 6px 0px 0px;
   text-align: right;
@@ -2223,6 +2229,10 @@
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_reference {
   display: table;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_list_record_delete {
+  opacity: 0.5;
+  pointer-events: none;
 }
 .openerp .oe_list_group_name {
   white-space: nowrap;
@@ -2844,7 +2854,7 @@ body.oe_single_form .oe_single_form_container {
   .openerp .oe_header_row, .openerp ul.oe_header, .openerp div.oe_mail_thread_action, .openerp .oe_mail_recthread_actions, .openerp .oe_button_box, .openerp .oe_form button, .openerp button.oe_invite, .openerp .oe_form header, .openerp .openerp .oe_notebook > li.ui-state-default, .openerp .oe_topbar, .openerp .oe_leftbar, .openerp .oe_loading {
     display: none !important;
   }
-  .openerp .oe_list_content button, .openerp .oe_list_content input[type=checkbox] {
+  .openerp .oe_list_content button, .openerp .oe_list_content input[type=checkbox]:not(:checked) {
     visibility: hidden;
   }
   .openerp .tree_header button, .openerp .oe_mail .oe_mail_thread_msg .oe_mail_unread, .openerp .oe_mail_fetch_more, .openerp .oe_m2o_drop_down_button img, .openerp .oe_form_field_x2many_list_row_add {
@@ -3006,9 +3016,22 @@ body {
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   .oe-view-manager-content > div {
     position: absolute !important;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
   }
   .oe-view-manager-content .oe-view-manager-content > div {
     position: relative !important;
+  }
+
+  .modal .oe-view-manager-content > div {
+    position: static !important;
+    max-height: 450px;
+  }
+
+  .modal > .modal-dialog > .modal-content {
+    max-height: 450px;
   }
 }
 .o_progressbar > div {
@@ -3038,4 +3061,8 @@ body {
   width: 100px;
   white-space: nowrap;
   padding-left: 10px;
+}
+
+.nvtooltip thead {
+  background-color: transparent;
 }

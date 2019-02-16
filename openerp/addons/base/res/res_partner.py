@@ -9,7 +9,7 @@ import threading
 import urlparse
 
 import openerp
-from openerp import tools, api
+from openerp import tools, api, SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
@@ -212,7 +212,8 @@ class res_partner(osv.Model, format_address):
             [('contact', 'Contact'),
              ('invoice', 'Invoice address'),
              ('delivery', 'Shipping address'),
-             ('other', 'Other address')], 'Address Type',
+             ('other', 'Other address'),
+             ("private", "Private Address")], string='Address Type',
             help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'street': fields.char('Street'),
         'street2': fields.char('Street2'),
@@ -237,7 +238,9 @@ class res_partner(osv.Model, format_address):
                  'fields, this one serves as interface. Due to the old API '
                  'limitations with interface function field, we implement it '
                  'by hand instead of a true function field. When migrating to '
-                 'the new API the code should be simplified.'),
+                 'the new API the code should be simplified. Changing the'
+                 'company_type of a company contact into a company will not display'
+                 'this contact as a company contact but as a standalone company.'),
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
@@ -245,7 +248,7 @@ class res_partner(osv.Model, format_address):
         'contact_address': fields.function(_address_display,  type='char', string='Complete Address'),
 
         # technical field used for managing commercial fields
-        'commercial_partner_id': fields.function(_commercial_partner_id, type='many2one', relation='res.partner', string='Commercial Entity', store=_commercial_partner_store_triggers)
+        'commercial_partner_id': fields.function(_commercial_partner_id, type='many2one', relation='res.partner', string='Commercial Entity', store=_commercial_partner_store_triggers, index=True)
     }
 
     # image: all image fields are base64 encoded and PIL-supported
@@ -471,8 +474,6 @@ class res_partner(osv.Model, format_address):
             any(partner[f] for f in address_fields) and not any(parent[f] for f in address_fields):
             addr_vals = self._update_fields_values(cr, uid, partner, address_fields, context=context)
             parent.update_address(addr_vals)
-            if not parent.is_company:
-                parent.write({'is_company': True})
 
     def _clean_website(self, website):
         (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(website)
@@ -506,8 +507,12 @@ class res_partner(osv.Model, format_address):
         elif 'is_company' in vals:
             vals['company_type'] = is_company and 'company' or 'person'
         tools.image_resize_images(vals)
-
-        result = super(res_partner, self).write(vals)
+        result = True
+        #To write in SUPERUSER on field is_company and avoid access rights problems.
+        if 'is_company' in vals and self.user_has_groups('base.group_partner_manager') and not self.env.uid == SUPERUSER_ID:
+            result = super(res_partner, self).sudo().write({'is_company': vals.get('is_company')})
+            del vals['is_company']
+        result = result and super(res_partner, self).write(vals)
         for partner in self:
             if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
                 self.env['res.users'].check_access_rights('write')
@@ -563,12 +568,11 @@ class res_partner(osv.Model, format_address):
         if isinstance(ids, (int, long)):
             ids = [ids]
         res = []
-        types_dict = dict(self.fields_get(cr, uid, context=context)['type']['selection'])
         for record in self.browse(cr, uid, ids, context=context):
             name = record.name or ''
             if record.parent_id and not record.is_company:
                 if not name and record.type in ['invoice', 'delivery', 'other']:
-                    name = types_dict[record.type]
+                    name = dict(self.fields_get(cr, uid, ['type'], context=context)['type']['selection'])[record.type]
                 name = "%s, %s" % (record.parent_name, name)
             if context.get('show_address_only'):
                 name = self._display_address(cr, uid, record, without_company=True, context=context)

@@ -288,9 +288,13 @@ class stock_landed_cost(osv.osv):
                     v.update({'cost_id': cost.id, 'cost_line_id': line.id})
                     self.pool.get('stock.valuation.adjustment.lines').create(cr, uid, v, context=context)
                 total_qty += v.get('quantity', 0.0)
-                total_cost += v.get('former_cost', 0.0)
                 total_weight += v.get('weight', 0.0)
                 total_volume += v.get('volume', 0.0)
+
+                former_cost = v.get('former_cost', 0.0)
+                # round this because former_cost on the valuation lines is also rounded
+                total_cost += float_round(former_cost, precision_digits=digits[1]) if digits else former_cost
+
                 total_line += 1
 
             for line in cost.cost_lines:
