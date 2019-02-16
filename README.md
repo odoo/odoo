@@ -3,7 +3,7 @@
 [![Help](http://img.shields.io/badge/master-help-8f8f8f.svg?style=flat)](https://www.odoo.com/forum/help-1)
 [![Nightly Builds](http://img.shields.io/badge/master-nightly-8f8f8f.svg?style=flat)](http://nightly.odoo.com/)
 
-Odoo
+Odoo Bangali        
 ----
 
 Odoo is a suite of web based open source business apps.
@@ -37,3 +37,4 @@ To fetch odoo merge pull requests refs use this command:
 
     $ ./odoo.py setup_git_review
 
+Odoo Bangali Contributed By <a herf="http://mediajockey.org">Media Jockey</a> And <a herf="https://github.com/MjAbuz/>Abu Zafar</a>
