@@ -1815,3 +1815,29 @@ class TestReconciliation(AccountingTestCase):
             (move_lines - base_amount_tax_lines)
             .filtered(lambda l: l.account_id == self.tax_final_account)
             .debit, 17094.66)
+
+    def test_reconciliation_cash_basis_foreign_currency_low_values(self):
+        journal = self.env['account.journal'].create({
+            'name': 'Bank', 'type': 'bank', 'code': 'THE',
+            'currency_id': self.currency_usd_id,
+        })
+        usd = self.env['res.currency'].browse(self.currency_usd_id)
+        usd.rate_ids.unlink()
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y-01-01'),
+            'rate': 1/17.0,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id,
+        })
+        invoice = self.create_invoice(
+            type='out_invoice', invoice_amount=50,
+            currency_id=self.currency_usd_id)
+        invoice.journal_id.update_posted = True
+        invoice.action_cancel()
+        invoice.state = 'draft'
+        invoice.invoice_line_ids.write({
+            'invoice_line_tax_ids': [(6, 0, [self.tax_cash_basis.id])]})
+        invoice.compute_taxes()
+        invoice.action_invoice_open()
+        self.make_payment(invoice, journal, invoice.amount_total - 0.01)
+        self.make_payment(invoice, journal, 0.01)
