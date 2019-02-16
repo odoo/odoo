@@ -67,34 +67,38 @@ class Channel(models.Model):
         ('documentation', 'Documentation'), ('training', 'Training')],
         string="Course type", default="documentation", required=True)
     sequence = fields.Integer(default=10, help='Display order')
+    user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.uid)
     tag_ids = fields.Many2many(
         'slide.channel.tag', 'slide_channel_tag_rel', 'channel_id', 'tag_id',
         string='Tags', help='Used to categorize and filter displayed channels/courses')
     category_ids = fields.One2many('slide.category', 'channel_id', string="Categories")
     image = fields.Binary("Image", attachment=True)
+    image_large = fields.Binary("Large image", attachment=True)
     image_medium = fields.Binary("Medium image", attachment=True)
     image_small = fields.Binary("Small image", attachment=True)
     # slides: promote, statistics
     slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides")
+    slide_last_update = fields.Date('Last Update', compute='_compute_slide_last_update', store=True)
     slide_partner_ids = fields.One2many('slide.slide.partner', 'channel_id', string="Slide User Data", groups='website.group_website_publisher')
     promote_strategy = fields.Selection([
-        ('none', 'No Featured Presentation'),
         ('latest', 'Latest Published'),
         ('most_voted', 'Most Voted'),
-        ('most_viewed', 'Most Viewed'),
-        ('custom', 'Featured Presentation')],
-        string="Featuring Policy", default='most_voted', required=True)
-
+        ('most_viewed', 'Most Viewed')],
+        string="Featuring Policy", default='latest', required=True)
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     nbr_presentations = fields.Integer('Number of Presentations', compute='_compute_slides_statistics', store=True)
     nbr_documents = fields.Integer('Number of Documents', compute='_compute_slides_statistics', store=True)
     nbr_videos = fields.Integer('Number of Videos', compute='_compute_slides_statistics', store=True)
     nbr_infographics = fields.Integer('Number of Infographics', compute='_compute_slides_statistics', store=True)
+    nbr_webpages = fields.Integer("Number of Webpages", compute='_compute_slides_statistics', store=True)
     total_slides = fields.Integer('# Slides', compute='_compute_slides_statistics', store=True, oldname='total')
     total_views = fields.Integer('# Views', compute='_compute_slides_statistics', store=True)
     total_votes = fields.Integer('# Votes', compute='_compute_slides_statistics', store=True)
     total_time = fields.Float('# Hours', compute='_compute_slides_statistics', digits=(10, 4), store=True)
     # configuration
+    allow_comment = fields.Boolean("Allow comment on Content", default=False, help="When checked, the options will allow member to add comment on content:\n"
+             "  * Documentation channel: allow to like content and post comments\n"
+             "  * Training channel: allow to post comments and reviews\n")
     publish_template_id = fields.Many2one(
         'mail.template', string='Published Template',
         help="Email template to send slide publication through email",
@@ -110,7 +114,7 @@ class Channel(models.Model):
     partner_ids = fields.Many2many(
         'res.partner', 'slide_channel_partner', 'channel_id', 'partner_id',
         string='Members', help="All members of the channel.", context={'active_test': False})
-    members_count = fields.Integer('Attendees count', compute='_compute_members_count', compute_sudo=True)
+    members_count = fields.Integer('Attendees count', compute='_compute_members_count')
     is_member = fields.Boolean(string='Is Member', compute='_compute_is_member')
     channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='website.group_website_publisher')
     enroll_msg = fields.Html(
@@ -125,9 +129,14 @@ class Channel(models.Model):
     can_upload = fields.Boolean('Can Upload', compute='_compute_access')
     can_publish = fields.Boolean('Can Publish', compute='_compute_access')
 
-    @api.depends('partner_ids')
+    @api.depends('slide_ids.is_published')
+    def _compute_slide_last_update(self):
+        for record in self:
+            record.slide_last_update = fields.Date.today()
+
+    @api.depends('channel_partner_ids.channel_id')
     def _compute_members_count(self):
-        read_group_res = self.env['slide.channel.partner'].read_group([('channel_id', 'in', self.ids)], [], 'channel_id')
+        read_group_res = self.env['slide.channel.partner'].sudo().read_group([('channel_id', 'in', self.ids)], ['channel_id'], 'channel_id')
         data = dict((res['channel_id'][0], res['channel_id_count']) for res in read_group_res)
         for channel in self:
             channel.members_count = data.get(channel.id, 0)
@@ -145,12 +154,10 @@ class Channel(models.Model):
             channel.valid_channel_partner_ids = result.get(channel.id, False)
             channel.is_member = self.env.user.partner_id.id in channel.valid_channel_partner_ids if channel.valid_channel_partner_ids else False
 
-    @api.depends('slide_ids.slide_type', 'slide_ids.is_published',
+    @api.depends('slide_ids.slide_type', 'slide_ids.is_published', 'slide_ids.completion_time',
                  'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views')
     def _compute_slides_statistics(self):
-        result = dict.fromkeys(self.ids, dict(
-            nbr_presentations=0, nbr_documents=0, nbr_videos=0, nbr_infographics=0,
-            total_slides=0, total_views=0, total_votes=0, total_time=0))
+        result = dict((cid, dict(total_slides=0, total_views=0, total_votes=0, total_time=0)) for cid in self.ids)
         read_group_res = self.env['slide.slide'].read_group(
             [('is_published', '=', True), ('channel_id', 'in', self.ids)],
             ['channel_id', 'slide_type', 'likes', 'dislikes', 'total_views', 'completion_time'],
@@ -158,17 +165,30 @@ class Channel(models.Model):
             lazy=False)
         for res_group in read_group_res:
             cid = res_group['channel_id'][0]
-            result[cid]['nbr_presentations'] += res_group.get('slide_type', '') == 'presentation' and res_group['__count'] or 0
-            result[cid]['nbr_documents'] += res_group.get('slide_type', '') == 'document' and res_group['__count'] or 0
-            result[cid]['nbr_videos'] += res_group.get('slide_type', '') == 'video' and res_group['__count'] or 0
-            result[cid]['nbr_infographics'] += res_group.get('slide_type', '') == 'infographic' and res_group['__count'] or 0
             result[cid]['total_slides'] += res_group['__count']
             result[cid]['total_views'] += res_group.get('total_views', 0)
             result[cid]['total_votes'] += res_group.get('likes', 0)
             result[cid]['total_votes'] -= res_group.get('dislikes', 0)
             result[cid]['total_time'] += res_group.get('completion_time', 0)
+
+        type_stats = self._compute_slides_statistics_type(read_group_res)
+        for cid, cdata in type_stats.items():
+            result[cid].update(cdata)
+
         for record in self:
             record.update(result[record.id])
+
+    def _compute_slides_statistics_type(self, read_group_res):
+        """ Can be overridden to compute stats on added slide_types """
+        result = dict((cid, dict(nbr_presentations=0, nbr_documents=0, nbr_videos=0, nbr_infographics=0, nbr_webpages=0)) for cid in self.ids)
+        for res_group in read_group_res:
+            cid = res_group['channel_id'][0]
+            result[cid]['nbr_presentations'] += res_group.get('slide_type', '') == 'presentation' and res_group['__count'] or 0
+            result[cid]['nbr_documents'] += res_group.get('slide_type', '') == 'document' and res_group['__count'] or 0
+            result[cid]['nbr_videos'] += res_group.get('slide_type', '') == 'video' and res_group['__count'] or 0
+            result[cid]['nbr_infographics'] += res_group.get('slide_type', '') == 'infographic' and res_group['__count'] or 0
+            result[cid]['nbr_webpages'] += res_group.get('slide_type', '') == 'webpage' and res_group['__count'] or 0
+        return result
 
     @api.depends('slide_partner_ids')
     def _compute_user_statistics(self):
@@ -179,11 +199,12 @@ class Channel(models.Model):
         for record in self:
             record.completed, record.completion = mapped_data.get(record.id, (False, 0))
 
-    @api.one
-    @api.depends('visibility', 'partner_ids', 'upload_group_ids')
+    @api.depends('channel_type', 'partner_ids', 'upload_group_ids')
     def _compute_access(self):
-        self.can_upload = not self.env.user.share and (not self.upload_group_ids or bool(self.upload_group_ids & self.env.user.groups_id))
-        self.can_publish = self.can_upload and self.env.user.has_group('website.group_website_publisher')
+        for record in self:
+            is_doc = record.channel_type == 'documentation'
+            record.can_upload = not self.env.user.share and (not record.upload_group_ids or bool(record.upload_group_ids & self.env.user.groups_id))
+            record.can_publish = record.can_upload and self.env.user.has_group('website.group_website_publisher') and (is_doc or record.user_id == self.env.user)
 
     @api.multi
     @api.depends('name')
@@ -193,10 +214,6 @@ class Channel(models.Model):
         for channel in self:
             if channel.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
-
-    @api.onchange('visibility')
-    def change_visibility(self):
-        pass
 
     @api.multi
     def action_redirect_to_members(self):
@@ -262,13 +279,13 @@ class Channel(models.Model):
                 'partner_id': self.env.user.partner_id.id
             })]
         if 'image' in vals:
-            tools.image_resize_images(vals)
+            tools.image_resize_images(vals, return_large=True)
         return super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals)
 
     @api.multi
     def write(self, vals):
         if 'image' in vals:
-            tools.image_resize_images(vals)
+            tools.image_resize_images(vals, return_large=True)
         res = super(Channel, self).write(vals)
         if 'active' in vals:
             # archiving/unarchiving a channel does it on its slides, too
@@ -363,6 +380,7 @@ class Category(models.Model):
     nbr_documents = fields.Integer("Number of Documents", compute='_count_presentations', store=True)
     nbr_videos = fields.Integer("Number of Videos", compute='_count_presentations', store=True)
     nbr_infographics = fields.Integer("Number of Infographics", compute='_count_presentations', store=True)
+    nbr_webpages = fields.Integer("Number of Webpages", compute='_count_presentations', store=True)
     total_slides = fields.Integer(compute='_count_presentations', store=True, oldname='total')
 
     @api.depends('slide_ids.slide_type', 'slide_ids.is_published')
@@ -374,9 +392,25 @@ class Category(models.Model):
             lazy=False)
         for res_group in res:
             result[res_group['category_id'][0]][res_group['slide_type']] = result[res_group['category_id'][0]].get(res_group['slide_type'], 0) + res_group['__count']
+
         for record in self:
-            record.nbr_presentations = result[record.id].get('presentation', 0)
-            record.nbr_documents = result[record.id].get('document', 0)
-            record.nbr_videos = result[record.id].get('video', 0)
-            record.nbr_infographics = result[record.id].get('infographic', 0)
-            record.total_slides = record.nbr_presentations + record.nbr_documents + record.nbr_videos + record.nbr_infographics
+            record.update(self._extract_count_presentations_type(result, record.id))
+
+    def _extract_count_presentations_type(self, result, record_id):
+        """ Can be overridden to compute stats on added slide_types """
+        statistics = {
+            'nbr_presentations': result[record_id].get('presentation', 0),
+            'nbr_documents': result[record_id].get('document', 0),
+            'nbr_videos': result[record_id].get('video', 0),
+            'nbr_infographics': result[record_id].get('infographic', 0),
+            'nbr_webpages': result[record_id].get('webpage', 0),
+            'total_slides': 0
+        }
+
+        statistics['total_slides'] += statistics['nbr_presentations']
+        statistics['total_slides'] += statistics['nbr_documents']
+        statistics['total_slides'] += statistics['nbr_videos']
+        statistics['total_slides'] += statistics['nbr_infographics']
+        statistics['total_slides'] += statistics['nbr_webpages']
+
+        return statistics

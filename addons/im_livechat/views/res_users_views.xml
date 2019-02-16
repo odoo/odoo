@@ -8,7 +8,7 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='preferences']" position="after">
+                <xpath expr="//footer" position="before">
                     <group name="livechat" string="Livechat Preferences">
                         <group>
                             <field name="livechat_username" readonly="0"/>

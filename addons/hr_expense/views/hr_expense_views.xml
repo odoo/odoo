@@ -6,10 +6,19 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='active_group']" position="before">
-                    <group string="Expenses" name="timesheet">
-                        <field name="expense_manager_id"/>
-                    </group>
+                <xpath expr="//group[@name='managers']" position="inside">
+                    <field name="expense_manager_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_users_view_form_preferences" model="ir.ui.view">
+            <field name="name">hr.user.preferences.form.inherit.hr.expense</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="hr.res_users_view_form_profile" />
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='managers']" position="inside">
+                    <field name="expense_manager_id"/>
                 </xpath>
             </field>
         </record>
@@ -67,7 +76,9 @@
                     </div>
                     <group>
                         <group>
-                            <field name="product_id" required="1" context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view'}"/>
+                            <field name="product_id" required="1" context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view'}"
+                                   widget="many2one_barcode"
+                            />
                             <field name="unit_amount" required="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <label for="quantity"/>
                             <div>

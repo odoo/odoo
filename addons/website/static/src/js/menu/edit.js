@@ -11,6 +11,8 @@ var _t = core._t;
  * Adds the behavior when clicking on the 'edit' button (+ editor interaction)
  */
 var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
+    assetLibs: ['web_editor.compiled_assets_wysiwyg', 'website.compiled_assets_wysiwyg'],
+
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
     actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions, {
         edit: '_startEditMode',
@@ -121,19 +123,10 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * expects that the save action is performed. So, this empty action is
      * defined here so that all users have an 'on_save' related action.
      *
-     * As explained above, that action should always be defined in the current
-     * implementation (even an empty one) but in fact it is also needed to
-     * remove the data-editor-message attributes which are added when entering
-     * edition.
-     *
      * @private
      * @todo improve the system to somehow declare required/optional actions
      */
-    _onSave: function () {
-        if (this.$editorMessageElements) {
-            this.$editorMessageElements.removeAttr('data-editor-message');
-        }
-    },
+    _onSave: function () {},
 
     //--------------------------------------------------------------------------
     // Private

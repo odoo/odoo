@@ -122,10 +122,10 @@ var AbstractView = Factory.extend({
         this.controllerParams = {
             actionViews: params.actionViews,
             activeActions: {
-                edit: this.arch.attrs.edit ? JSON.parse(this.arch.attrs.edit) : true,
-                create: this.arch.attrs.create ? JSON.parse(this.arch.attrs.create) : true,
-                delete: this.arch.attrs.delete ? JSON.parse(this.arch.attrs.delete) : true,
-                duplicate: this.arch.attrs.duplicate ? JSON.parse(this.arch.attrs.duplicate) : true,
+                edit: this.arch.attrs.edit ? !!JSON.parse(this.arch.attrs.edit) : true,
+                create: this.arch.attrs.create ? !!JSON.parse(this.arch.attrs.create) : true,
+                delete: this.arch.attrs.delete ? !!JSON.parse(this.arch.attrs.delete) : true,
+                duplicate: this.arch.attrs.duplicate ? !!JSON.parse(this.arch.attrs.duplicate) : true,
             },
             bannerRoute: this.arch.attrs.banner_route,
             controllerID: params.controllerID,
@@ -192,10 +192,6 @@ var AbstractView = Factory.extend({
         }
         var _super = this._super.bind(this);
         return $.when(def).then(function (controlPanel) {
-            if (controlPanel) {
-                var searchQuery = controlPanel.getSearchQuery();
-                self._updateMVCParams(searchQuery);
-            }
             // get the parent of the model if it already exists, as _super will
             // set the new controller as parent, which we don't want
             var modelParent = self.model && self.model.getParent();
@@ -249,6 +245,7 @@ var AbstractView = Factory.extend({
         return controlPanelView.getController(parent).then(function (controlPanel) {
             self.controllerParams.controlPanel = controlPanel;
             return controlPanel.appendTo(document.createDocumentFragment()).then(function () {
+                self._updateMVCParams(controlPanel.getSearchQuery());
                 return controlPanel;
             });
         });

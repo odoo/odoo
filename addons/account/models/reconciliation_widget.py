@@ -417,6 +417,14 @@ class AccountReconciliation(models.AbstractModel):
     # Private
     ####################################################
 
+    def _str_domain_for_mv_line(self, search_str):
+        return [
+            '|', ('move_id.name', 'ilike', search_str),
+            '|', ('move_id.ref', 'ilike', search_str),
+            '|', ('date_maturity', 'like', search_str),
+            '&', ('name', '!=', '/'), ('name', 'ilike', search_str)
+        ]
+
     @api.model
     def _domain_move_lines(self, search_str):
         """ Returns the domain from the search_str search
@@ -424,12 +432,7 @@ class AccountReconciliation(models.AbstractModel):
         """
         if not search_str:
             return []
-        str_domain = [
-            '|', ('move_id.name', 'ilike', search_str),
-            '|', ('move_id.ref', 'ilike', search_str),
-            '|', ('date_maturity', 'like', search_str),
-            '&', ('name', '!=', '/'), ('name', 'ilike', search_str)
-        ]
+        str_domain = self._str_domain_for_mv_line(search_str)
         if search_str[0] in ['-', '+']:
             try:
                 amounts_str = search_str.split('|')

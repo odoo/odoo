@@ -46,7 +46,9 @@
                                 <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                             </button>
                         </div>
-                        <field name="image" widget="image" class="oe_avatar" options='{"preview_image": "image_thumb"}' readonly="1"/>
+                        <field name="image" widget="image" class="oe_avatar" options='{"preview_image": "image_large"}'
+                            attrs="{'readonly': [('slide_type', 'in', ('document', 'presentation', 'video'))]}"
+                        />
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name" string="Name"/>
@@ -68,16 +70,20 @@
                             </page>
                             <page string="Document">
                                 <group>
-                                    <field name="url" attrs="{'required': [('image', '=', False)]}"/>
                                     <field name="slide_type" readonly="1"/>
-                                    <field name="document_id" readonly="1"/>
-                                    <field name="mime_type" readonly="1"/>
-                                    <field name="datas" readonly="1"/>
+                                    <field name="url"
+                                        attrs="{'required': [('slide_type', 'in', ('document', 'video'))], 'readonly': [('slide_type', 'in', ('document', 'video'))], 'invisible': [('slide_type', 'not in', ('document', 'presentation', 'video'))]}" />
+                                    <field name="document_id" readonly="1" attrs="{'invisible': [('document_id', '=', False)]}"/>
+                                    <field name="mime_type" readonly="1"
+                                        attrs="{'invisible': [('slide_type', 'not in', ('document', 'presentation', 'infographic', 'webpage'))]}"/>
+                                    <field name="datas" readonly="1"
+                                        attrs="{'invisible': [('slide_type', 'not in', ('document', 'presentation', 'infographic', 'webpage'))]}"/>
                                 </group>
                             </page>
                             <page string="Website">
                                 <group>
                                     <group>
+                                        <field name="is_preview"/>
                                         <field name="download_security"/>
                                         <field name="date_published"/>
                                         <field name="likes"/>
@@ -85,12 +91,22 @@
                                     </group>
                                     <group>
                                         <field name="slide_views"/>
-                                        <field name="embed_views"/>
+                                        <field name="public_views"/>
                                         <field name="total_views"/>
                                     </group>
                                 </group>
                                 <label for="index_content"/>
                                 <field name="index_content"/>
+                            </page>
+                            <page string="External Links">
+                                <group>
+                                    <field name="link_ids" widget="one2many" nolabel="1">
+                                         <tree editable="top">
+                                            <field name="name"/>
+                                            <field name="link" widget="url"/>
+                                        </tree>
+                                    </field>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>

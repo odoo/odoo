@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
         <!-- Ranks views -->
@@ -35,8 +36,6 @@
                 <tree string="Ranks List">
                     <field name="name"/>
                     <field name="karma_min"/>
-                    <field name="description"/>
-                    <field name="user_ids"/>
                 </tree>
             </field>
         </record>
@@ -58,6 +57,7 @@
                         <group>
                             <field name="karma_min"/>
                             <field name="description" placeholder="e.g. A Master Chief knows quite everything on the forum! You cannot beat him!"/>
+                            <field name="description_motivational" placeholder="e.g. Reach this rank to gain a free mug !"/>
                             <field name="create_date" invisible="1"/>
                         </group>
                         <group string="Users to that rank" attrs="{'invisible': [('create_date','=',False)]}">
@@ -67,5 +67,7 @@
                 </form>
             </field>
         </record>
+
+        <menuitem id="gamification_karma_ranks_menu" parent="gamification_menu" action="gamification_karma_ranks_action" sequence="40"/>
     </data>
 </odoo>

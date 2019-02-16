@@ -778,9 +778,9 @@ class HolidaysRequest(models.Model):
     # ------------------------------------------------------------
 
     def _get_responsible_for_approval(self):
-        if self.state == 'confirm' and self.employee_id.leave_manager_id:
+        if self.state == 'confirm' and self.employee_id.leave_manager_id and self.employee_id.leave_manager_id.has_group('hr_holidays.group_hr_holidays_team_leader'):
             return self.employee_id.leave_manager_id
-        elif self.state == 'confirm' and self.employee_id.parent_id.user_id:
+        elif self.state == 'confirm' and self.employee_id.parent_id.user_id and self.employee_id.parent_id.user_id.has_group('hr_holidays.group_hr_holidays_team_leader'):
             return self.employee_id.parent_id.user_id
         elif self.department_id.manager_id.user_id:
             return self.department_id.manager_id.user_id

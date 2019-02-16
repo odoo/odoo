@@ -6,14 +6,13 @@ from PIL import Image
 import base64
 import datetime
 import io
-import json
 import re
+import uuid
 
 from werkzeug import urls
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.tools import image
 from odoo.exceptions import Warning, UserError
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
@@ -29,6 +28,15 @@ class SlidePartnerRelation(models.Model):
     partner_id = fields.Many2one('res.partner', index=True, required=True)
     vote = fields.Integer('Vote', default=0)
     completed = fields.Boolean('Completed')
+
+
+class SlideLink(models.Model):
+    _name = 'slide.slide.link'
+    _description = "External URL for a particular slide"
+
+    slide_id = fields.Many2one('slide.slide', required=True)
+    name = fields.Char('Title', required=True)
+    link = fields.Char("External Link", required=True)
 
 
 class EmbeddedSlide(models.Model):
@@ -74,11 +82,12 @@ class Slide(models.Model):
      - Document
      - Infographic
      - Video
+     - Webpage
 
     Slide has various statistics like view count, embed count, like, dislikes """
 
     _name = 'slide.slide'
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin', 'rating.mixin']
     _description = 'Slides'
     _mail_post_access = 'read'
     _order_by_strategy = {
@@ -87,14 +96,12 @@ class Slide(models.Model):
         'latest': 'date_published desc',
     }
 
-    _PROMOTIONAL_FIELDS = [
-        '__last_update', 'name', 'image_thumb', 'image_medium', 'slide_type', 'total_views', 'category_id',
-        'channel_id', 'description', 'tag_ids', 'write_date', 'create_date',
-        'website_published', 'website_url', 'website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
-
     _sql_constraints = [
-        ('name_uniq', 'UNIQUE(channel_id, name)', 'The slide name must be unique within a channel')
+        ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
     ]
+
+    def _default_access_token(self):
+        return str(uuid.uuid4())
 
     # description
     name = fields.Char('Title', required=True, translate=True)
@@ -108,29 +115,36 @@ class Slide(models.Model):
         [('none', 'No One'), ('user', 'Authenticated Users Only'), ('public', 'Everyone')],
         string='Download Security',
         required=True, default='user')
+    access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     is_preview = fields.Boolean('Always visible', default=False)
     completion_time = fields.Float('# Hours', default=1, digits=(10, 4))
-    image = fields.Binary('Image', attachment=True)
-    image_medium = fields.Binary('Medium', compute="_get_image", store=True, attachment=True)
-    image_thumb = fields.Binary('Thumbnail', compute="_get_image", store=True, attachment=True)
+    image = fields.Binary("Image", attachment=True)
+    image_large = fields.Binary("Large image", attachment=True)
+    image_medium = fields.Binary("Medium image", attachment=True)
+    image_small = fields.Binary("Small image", attachment=True)
     # subscribers
     partner_ids = fields.Many2many('res.partner', 'slide_slide_partner', 'slide_id', 'partner_id',
                                    string='Subscribers', groups='base.group_website_publisher')
     slide_partner_ids = fields.One2many('slide.slide.partner', 'slide_id', string='Subscribers information', groups='base.group_website_publisher')
+    user_membership_id = fields.Many2one('slide.slide.partner', string="Subscriber information", compute='_compute_user_membership_id',
+        help="Subscriber information for the current logged in user")
     # content
     slide_type = fields.Selection([
         ('infographic', 'Infographic'),
         ('presentation', 'Presentation'),
         ('document', 'Document'),
+        ('webpage', 'Web Page'),
         ('video', 'Video')],
         string='Type', required=True,
-        default='document',
+        default='document', readonly=True,
         help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
     index_content = fields.Text('Transcript')
     datas = fields.Binary('Content', attachment=True)
     url = fields.Char('Document URL', help="Youtube or Google Document URL")
     document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
+    link_ids = fields.One2many('slide.slide.link', 'slide_id', string="External URL for this slide")
     mime_type = fields.Char('Mime-type')
+    html_content = fields.Html("HTML Content", help="Custom HTML content for slides of type 'Web Page'.", translate=True)
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
     date_published = fields.Datetime('Publish Date')
@@ -140,24 +154,14 @@ class Slide(models.Model):
     embed_code = fields.Text('Embed Code', readonly=True, compute='_get_embed_code')
     # views
     embedcount_ids = fields.One2many('slide.embed', 'slide_id', string="Embed Count")
-    slide_views = fields.Integer('# of Website Views')
-    embed_views = fields.Integer('# of Embedded Views')
+    slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
+    public_views = fields.Integer('# of Public Views')
     total_views = fields.Integer("Total # Views", default="0", compute='_compute_total', store=True)
 
-    @api.depends('image')
-    def _get_image(self):
-        for record in self:
-            if record.image:
-                record.image_medium = image.crop_image(record.image, type='top', ratio=(4, 3), size=(500, 400))
-                record.image_thumb = image.crop_image(record.image, type='top', ratio=(4, 3), size=(200, 200))
-            else:
-                record.image_medium = False
-                record.iamge_thumb = False
-
-    @api.depends('slide_views', 'embed_views')
+    @api.depends('slide_views', 'public_views')
     def _compute_total(self):
         for record in self:
-            record.total_views = record.slide_views + record.embed_views
+            record.total_views = record.slide_views + record.public_views
 
     @api.depends('slide_partner_ids.vote')
     def _compute_user_info(self):
@@ -172,10 +176,35 @@ class Slide(models.Model):
                     slide_data[slide_partner.slide_id.id]['user_vote'] = 1
             elif slide_partner.vote == -1:
                 slide_data[slide_partner.slide_id.id]['dislikes'] += 1
-                if slide_partner.partner-id == self.env.user.partner_id:
+                if slide_partner.partner_id == self.env.user.partner_id:
                     slide_data[slide_partner.slide_id.id]['user_vote'] = -1
         for slide_sudo in self.sudo():
             slide_sudo.update(slide_data[slide_sudo.id])
+
+    @api.depends('slide_partner_ids.slide_id')
+    def _compute_slide_views(self):
+        # TODO awa: tried compute_sudo, for some reason it doesn't work in here...
+        read_group_res = self.env['slide.slide.partner'].sudo().read_group(
+            [('slide_id', 'in', self.ids)],
+            ['slide_id'],
+            groupby=['slide_id']
+        )
+        mapped_data = dict((res['slide_id'][0], res['slide_id_count']) for res in read_group_res)
+        for slide in self:
+            slide.slide_views = mapped_data.get(slide.id, 0)
+
+    @api.depends('slide_partner_ids.partner_id')
+    def _compute_user_membership_id(self):
+        slide_partners = self.env['slide.slide.partner'].sudo().search([
+            ('slide_id', 'in', self.ids),
+            ('partner_id', '=', self.env.user.partner_id.id),
+        ])
+
+        for record in self:
+            record.user_membership_id = next(
+                (slide_partner for slide_partner in slide_partners if slide_partner.slide_id == record),
+                self.env['slide.slide.partner']
+            )
 
     def _get_embed_code(self):
         base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -225,6 +254,10 @@ class Slide(models.Model):
                     url = '%s/slides/slide/%s' % (base_url, slug(slide))
                 slide.website_url = url
 
+    # ---------------------------------------------------------
+    # ORM Overrides
+    # ---------------------------------------------------------
+
     @api.model
     def create(self, values):
         # Do not publish slide if user has not publisher rights
@@ -244,6 +277,9 @@ class Slide(models.Model):
             for key, value in doc_data.items():
                 values.setdefault(key, value)
 
+        if 'image' in values:
+            tools.image_resize_images(values, return_large=True)
+
         slide = super(Slide, self).create(values)
 
         if slide.website_published:
@@ -252,13 +288,16 @@ class Slide(models.Model):
 
     @api.multi
     def write(self, values):
-        if values.get('website_published') and any(not slide.channel_id.can_publish for slide in self):
+        if 'website_published' in values and any(not slide.channel_id.can_publish for slide in self):
             values.pop('website_published')
 
         if values.get('url') and values['url'] != self.url:
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.items():
                 values.setdefault(key, value)
+
+        if 'image' in values:
+            tools.image_resize_images(values, return_large=True)
 
         res = super(Slide, self).write(values)
         if values.get('website_published'):
@@ -279,6 +318,10 @@ class Slide(models.Model):
                 'res_id': self.id,
             }
         return super(Slide, self).get_access_action(access_uid)
+
+    # ---------------------------------------------------------
+    # Business Methods
+    # ---------------------------------------------------------
 
     @api.multi
     def _notify_get_groups(self, message, groups):
@@ -318,6 +361,15 @@ class Slide(models.Model):
                 notif_layout='mail.mail_notification_light',
             )
         return True
+
+    def _generate_signed_token(self, partner_id):
+        """ Lazy generate the acces_token and return it signed by the given partner_id
+            :rtype tuple (string, int)
+            :return (signed_token, partner_id)
+        """
+        if not self.access_token:
+            self.write({'access_token': self._default_access_token()})
+        return self._sign_token(partner_id)
 
     @api.one
     def send_share_email(self, email):
@@ -365,7 +417,7 @@ class Slide(models.Model):
         if not all(slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide as viewed if you are not among its members.'))
 
-        return self._action_set_viewed(self.env.user.partner_id)
+        return bool(self._action_set_viewed(self.env.user.partner_id))
 
     def _action_set_viewed(self, target_partner):
         self_sudo = self.sudo()
@@ -376,13 +428,11 @@ class Slide(models.Model):
         ])
 
         new_slides = self_sudo - existing_sudo.mapped('slide_id')
-        SlidePartnerSudo.create([{
+        return SlidePartnerSudo.create([{
             'slide_id': new_slide.id,
             'channel_id': new_slide.channel_id.id,
             'partner_id': target_partner.id,
             'vote': 0} for new_slide in new_slides])
-
-        return True
 
     def action_set_completed(self):
         if not all(slide.channel_id.is_member for slide in self):
@@ -547,5 +597,5 @@ class Slide(models.Model):
         res = super(Slide, self)._default_website_meta()
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.description
-        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/slide.slide/%s/image_thumb" % (self.id)
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/slide.slide/%s/image_small" % (self.id)
         return res

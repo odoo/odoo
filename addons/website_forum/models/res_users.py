@@ -19,6 +19,7 @@ class Users(models.Model):
             set(
                 self.SELF_WRITEABLE_FIELDS +
                 ['country_id', 'city', 'website', 'website_description', 'website_published']))
+        type(self).SELF_READABLE_FIELDS = type(self).SELF_READABLE_FIELDS + ['karma']
         return init_res
 
     create_date = fields.Datetime('Create Date', readonly=True, index=True)
@@ -86,3 +87,11 @@ class Users(models.Model):
     @api.multi
     def open_website_url(self):
         return self.mapped('partner_id').open_website_url()
+
+    def get_gamification_redirection_data(self):
+        res = super(Users, self).get_gamification_redirection_data()
+        res.append({
+            'url': '/forum',
+            'label': 'See our Forum'
+        })
+        return res

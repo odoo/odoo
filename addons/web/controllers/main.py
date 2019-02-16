@@ -640,22 +640,6 @@ class WebClient(http.Controller):
 
 class Proxy(http.Controller):
 
-    @http.route('/web/proxy/load', type='json', auth="none")
-    def load(self, path):
-        """ Proxies an HTTP request through a JSON request.
-
-        It is strongly recommended to not request binary files through this,
-        as the result will be a binary data blob as well.
-
-        :param path: actual request path
-        :return: file content
-        """
-        from werkzeug.test import Client
-        from werkzeug.wrappers import BaseResponse
-
-        base_url = request.httprequest.base_url
-        return Client(request.httprequest.app, BaseResponse).get(path, base_url=base_url).data
-
     @http.route('/web/proxy/post/<path:path>', type='http', auth='user', methods=['GET'])
     def post(self, path):
         """Effectively execute a POST request that was hooked through user login"""
@@ -1068,8 +1052,8 @@ class Binary(http.Controller):
             content = base64.b64encode(self.placeholder(image='placeholder.png'))
             headers = self.force_contenttype(headers, contenttype='image/png')
             if not (width or height):
-                suffix = field.split('_')[-1]
-                if suffix in ('small', 'medium', 'big'):
+                suffix = 'big' if field == 'image' else field.split('_')[-1]
+                if suffix in ('small', 'medium', 'large', 'big'):
                     content = getattr(odoo.tools, 'image_resize_image_%s' % suffix)(content)
 
 
@@ -1200,6 +1184,37 @@ class Binary(http.Controller):
                 response = http.send_file(placeholder(imgname + imgext))
 
         return response
+
+    @http.route(['/web/sign/get_fonts','/web/sign/get_fonts/<string:fontname>'], type='json', auth='public')
+    def get_fonts(self, fontname=None):
+        """This route will return a list of base64 encoded fonts.
+
+        Those fonts will be proposed to the user when creating a signature
+        using mode 'auto'.
+
+        :return: base64 encoded fonts
+        :rtype: list
+        """
+
+
+        fonts = []
+        if fontname:
+            font_path = get_resource_path('web', 'static/src/fonts/sign', fontname)
+            if not font_path:
+                return []
+            font_file = open(font_path, 'rb')
+            font = base64.b64encode(font_file.read())
+            fonts.append(font)
+        else:
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            fonts_directory = os.path.join(current_dir, '..', 'static', 'src', 'fonts', 'sign')
+            font_filenames = sorted(os.listdir(fonts_directory))
+
+            for filename in font_filenames:
+                font_file = open(os.path.join(fonts_directory, filename), 'rb')
+                font = base64.b64encode(font_file.read())
+                fonts.append(font)
+        return fonts
 
 class Action(http.Controller):
 

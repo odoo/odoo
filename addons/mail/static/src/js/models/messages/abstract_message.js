@@ -249,6 +249,17 @@ var AbstractMessage =  Class.extend({
         return false;
     },
     /**
+     * State whether this message is empty
+     *
+     * @return {boolean}
+     */
+    isEmpty: function () {
+        return !this.hasTrackingValues() &&
+        !this.hasSubtypeDescription() &&
+        !this.hasAttachments() &&
+        !this.getBody();
+    },
+    /**
      * By default, messages do not have any subtype description
      *
      * @return {boolean}

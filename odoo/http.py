@@ -302,7 +302,7 @@ class WebRequest(object):
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
            to abitrary responses. Anything returned (except None) will
-           be used as response.""" 
+           be used as response."""
         self._failed = exception # prevent tx commit
         if not isinstance(exception, NO_POSTMORTEM) \
                 and not isinstance(exception, werkzeug.exceptions.HTTPException):
@@ -579,34 +579,14 @@ class JsonRequest(WebRequest):
     def __init__(self, *args):
         super(JsonRequest, self).__init__(*args)
 
-        self.jsonp_handler = None
         self.params = {}
 
         args = self.httprequest.args
-        jsonp = args.get('jsonp')
-        self.jsonp = jsonp
         request = None
         request_id = args.get('id')
-        
-        if jsonp and self.httprequest.method == 'POST':
-            # jsonp 2 steps step1 POST: save call
-            def handler():
-                self.session['jsonp_request_%s' % (request_id,)] = self.httprequest.form['r']
-                self.session.modified = True
-                headers=[('Content-Type', 'text/plain; charset=utf-8')]
-                r = werkzeug.wrappers.Response(request_id, headers=headers)
-                return r
-            self.jsonp_handler = handler
-            return
-        elif jsonp and args.get('r'):
-            # jsonp method GET
-            request = args.get('r')
-        elif jsonp and request_id:
-            # jsonp 2 steps step2 GET: run and return result
-            request = self.session.pop('jsonp_request_%s' % (request_id,), '{}')
-        else:
-            # regular jsonrpc2
-            request = self.httprequest.get_data().decode(self.httprequest.charset)
+
+        # regular jsonrpc2
+        request = self.httprequest.get_data().decode(self.httprequest.charset)
 
         # Read POST content or POST Form Data named "request"
         try:
@@ -630,16 +610,8 @@ class JsonRequest(WebRequest):
         if result is not None:
             response['result'] = result
 
-        if self.jsonp:
-            # If we use jsonp, that's mean we are called from another host
-            # Some browser (IE and Safari) do no allow third party cookies
-            # We need then to manage http sessions manually.
-            response['session_id'] = self.session.sid
-            mime = 'application/javascript'
-            body = "%s(%s);" % (self.jsonp, json.dumps(response, default=date_utils.json_default))
-        else:
-            mime = 'application/json'
-            body = json.dumps(response, default=date_utils.json_default)
+        mime = 'application/json'
+        body = json.dumps(response, default=date_utils.json_default)
 
         return Response(
             body, status=error and error.pop('http_status', 200) or 200,
@@ -674,8 +646,6 @@ class JsonRequest(WebRequest):
             return self._json_response(error=error)
 
     def dispatch(self):
-        if self.jsonp_handler:
-            return self.jsonp_handler()
         try:
             rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
             rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
@@ -1388,8 +1358,6 @@ class Root(object):
 
     def get_request(self, httprequest):
         # deduce type of request
-        if httprequest.args.get('jsonp'):
-            return JsonRequest(httprequest)
         if httprequest.mimetype in ("application/json", "application/json-rpc"):
             return JsonRequest(httprequest)
         else:
@@ -1646,16 +1614,6 @@ def content_disposition(filename):
     escaped = urls.url_quote(filename, safe='')
 
     return "attachment; filename*=UTF-8''%s" % escaped
-
-#----------------------------------------------------------
-# RPC controller
-#----------------------------------------------------------
-class CommonController(Controller):
-
-    @route('/gen_session_id', type='json', auth="none")
-    def gen_session_id(self):
-        nsession = root.session_store.new()
-        return nsession.sid
 
 #  main wsgi handler
 root = Root()

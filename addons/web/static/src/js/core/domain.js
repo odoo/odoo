@@ -359,6 +359,11 @@ var Domain = collections.Tree.extend({
                 rightBoundaryParams = t ? {days: -1} : {};
                 offsetPeriodParams = {days: -365};
                 return makeInterval();
+            case 'last_5_years':
+                leftBoundaryParams = {years: -5};
+                rightBoundaryParams = t ? {days: -1} : {};
+                offsetPeriodParams = {years: -5};
+                return makeInterval();
         }
     },
     /**

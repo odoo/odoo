@@ -153,3 +153,13 @@
     display: none; // hidden by default
     @include o-search-options-dropdown-custom-item;
 }
+
+@include media-breakpoint-down(sm) {
+    .o_dashboard .oe_dashboard {
+        table-layout: fixed;
+
+        .oe_action .oe_header .oe_header_text {
+            display: none;
+        }
+    }
+}

@@ -2,6 +2,48 @@
 <templates id="template" xml:space="preserve">
 
     <!--=================-->
+    <!-- Edition Iframe -->
+    <!--=================-->
+
+    <t t-name="wysiwyg.iframeContent"><head>
+            <meta charset="utf-8"/>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+            <t t-foreach="asset.cssLibs || []" t-as="cssLib">
+                <link type="text/css" rel="stylesheet" t-att-href="cssLib"/>
+            </t>
+            <t t-foreach="asset.cssContents || []" t-as="cssContent">
+                <style type="text/css" t-raw="cssContent"/>
+            </t>
+            <t t-foreach="asset.jsContents || []" t-as="jsContent" t-if="jsContent.indexOf('inline asset') !== -1">
+                <script type="text/javascript" t-raw="jsContent"/>
+            </t>
+        </head>
+        <body class="o_in_iframe">
+            <div id="iframe_target" style="height: calc(100vh - 6px);"/>
+            <script type="text/javascript">
+                window.$ = window.jQuery = window.top.jQuery;
+                var _summernoteMaster = $.summernote;
+                var _fnSummernoteMaster = $.fn.summernote;
+                delete $.summernote;
+                delete $.fn.summernote;
+            </script>
+            <script type="text/javascript" src="/web_editor/static/lib/summernote/summernote.js"/>
+            <script type="text/javascript">
+                window._summernoteSlave = $.summernote;
+                window._summernoteSlave.iframe = true;
+                window._summernoteSlave.lang = _summernoteMaster.lang;
+                window._fnSummenoteSlave = $.fn.summernote;
+                $.summernote = _summernoteMaster;
+                $.fn.summernote = _fnSummernoteMaster;
+                if (window.top.<t t-esc="updateIframeId"/>) {
+                    window.top.<t t-esc="updateIframeId"/>(<t t-esc="avoidDoubleLoad"/>);
+                }
+            </script>
+        </body>
+    </t>
+
+    <!--=================-->
     <!-- Edition Dialogs -->
     <!--=================-->
 

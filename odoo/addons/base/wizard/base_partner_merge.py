@@ -41,7 +41,7 @@ class MergePartnerAutomatic(models.TransientModel):
         active_ids = self.env.context.get('active_ids')
         if self.env.context.get('active_model') == 'res.partner' and active_ids:
             res['state'] = 'selection'
-            res['partner_ids'] = active_ids
+            res['partner_ids'] = [(6, 0, active_ids)]
             res['dst_partner_id'] = self._get_ordered_partner(active_ids)[-1].id
         return res
 
@@ -217,6 +217,11 @@ class MergePartnerAutomatic(models.TransientModel):
                 }
                 records_ref.sudo().write(values)
 
+    def _get_summable_fields(self):
+        """ Returns the list of fields that should be summed when merging partners
+        """
+        return []
+
     @api.model
     def _update_values(self, src_partners, dst_partner):
         """ Update values of dst_partner with the ones from the src_partners.
@@ -226,6 +231,7 @@ class MergePartnerAutomatic(models.TransientModel):
         _logger.debug('_update_values for dst_partner: %s for src_partners: %r', dst_partner.id, src_partners.ids)
 
         model_fields = dst_partner.fields_get().keys()
+        summable_fields = self._get_summable_fields()
 
         def write_serializer(item):
             if isinstance(item, models.BaseModel):
@@ -239,7 +245,10 @@ class MergePartnerAutomatic(models.TransientModel):
             if field.type not in ('many2many', 'one2many') and field.compute is None:
                 for item in itertools.chain(src_partners, [dst_partner]):
                     if item[column]:
-                        values[column] = write_serializer(item[column])
+                        if column in summable_fields and values.get(column):
+                            values[column] += write_serializer(item[column])
+                        else:
+                            values[column] = write_serializer(item[column])
         # remove fields that can not be updated (id and parent_id)
         values.pop('id', None)
         parent_id = values.pop('parent_id', None)

@@ -4,7 +4,7 @@ odoo.define('website.tour.rte', function (require) {
 var ajax = require('web.ajax');
 var session = require('web.session');
 var tour = require('web_tour.tour');
-var Wysiwyg = require('web_editor.wysiwyg');
+var Wysiwyg = require('web_editor.wysiwyg.root');
 
 var domReady = $.Deferred();
 $(domReady.resolve.bind(domReady));

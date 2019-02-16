@@ -19,7 +19,7 @@ PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'),
 class StockMove(models.Model):
     _name = "stock.move"
     _description = "Stock Move"
-    _order = 'picking_id, sequence, id'
+    _order = 'sequence, id'
 
     def _default_group_id(self):
         if self.env.context.get('default_picking_id'):
@@ -675,6 +675,10 @@ class StockMove(models.Model):
                 }
             }
 
+    def _key_assign_picking(self):
+        self.ensure_one()
+        return self.group_id, self.location_id, self.location_dest_id, self.picking_type_id
+
     def _search_picking_for_assignation(self):
         self.ensure_one()
         picking = self.env['stock.picking'].search([
@@ -692,11 +696,16 @@ class StockMove(models.Model):
         type (moves should already have them identical). Otherwise, create a new
         picking to assign them to. """
         Picking = self.env['stock.picking']
-        for move in self:
-            recompute = False
-            picking = move._search_picking_for_assignation()
+        grouped_moves = groupby(sorted(self, key=lambda m: [f.id for f in m._key_assign_picking()]), key=lambda m: [m._key_assign_picking()])
+        for group, moves in grouped_moves:
+            moves = self.env['stock.move'].concat(*list(moves))
+            new_picking = False
+            # Could pass the arguments contained in group but they are the same
+            # for each move that why moves[0] is acceptable
+            picking = moves[0]._search_picking_for_assignation()
             if picking:
-                if picking.partner_id.id != move.partner_id.id or picking.origin != move.origin:
+                if any(picking.partner_id.id != m.partner_id.id or
+                        picking.origin != m.origin for m in moves):
                     # If a picking is found, we'll append `move` to its move list and thus its
                     # `partner_id` and `ref` field will refer to multiple records. In this
                     # case, we chose to  wipe them.
@@ -705,33 +714,32 @@ class StockMove(models.Model):
                         'origin': False,
                     })
             else:
-                recompute = True
-                picking = Picking.create(move._get_new_picking_values())
-            move.write({'picking_id': picking.id})
-            move._assign_picking_post_process(new=recompute)
-            # If this method is called in batch by a write on a one2many and
-            # at some point had to create a picking, some next iterations could
-            # try to find back the created picking. As we look for it by searching
-            # on some computed fields, we have to force a recompute, else the
-            # record won't be found.
-            if recompute:
-                move.recompute()
+                new_picking = True
+                picking = Picking.create(moves._get_new_picking_values())
+
+            moves.write({'picking_id': picking.id})
+            moves._assign_picking_post_process(new=new_picking)
         return True
 
     def _assign_picking_post_process(self, new=False):
         pass
 
     def _get_new_picking_values(self):
-        """ Prepares a new picking for this move as it could not be assigned to
-        another picking. This method is designed to be inherited. """
+        """ return create values for new picking that will be linked with group
+        of moves in self.
+        """
+        origins = self.filtered(lambda m: m.origin).mapped('origin')
+        origin = len(origins) == 1 and origins[0] or False
+        partners = self.mapped('partner_id')
+        partner = len(partners) == 1 and partners.id or False
         return {
-            'origin': self.origin,
-            'company_id': self.company_id.id,
-            'move_type': self.group_id and self.group_id.move_type or 'direct',
-            'partner_id': self.partner_id.id,
-            'picking_type_id': self.picking_type_id.id,
-            'location_id': self.location_id.id,
-            'location_dest_id': self.location_dest_id.id,
+            'origin': origin,
+            'company_id': self.mapped('company_id').id,
+            'move_type': self.mapped('group_id').move_type or 'direct',
+            'partner_id': partner,
+            'picking_type_id': self.mapped('picking_type_id').id,
+            'location_id': self.mapped('location_id').id,
+            'location_dest_id': self.mapped('location_dest_id').id,
         }
 
     def _should_be_assigned(self):
@@ -764,11 +772,15 @@ class StockMove(models.Model):
                 to_assign[key] |= move
 
         # create procurements for make to order moves
+        procurement_requests = []
         for move in move_create_proc:
             values = move._prepare_procurement_values()
             origin = (move.group_id and move.group_id.name or (move.origin or move.picking_id.name or "/"))
-            self.env['procurement.group'].run(move.product_id, move.product_uom_qty, move.product_uom, move.location_id, move.rule_id and move.rule_id.name or "/", origin,
-                                              values)
+            procurement_requests.append(self.env['procurement.group'].Procurement(
+                move.product_id, move.product_uom_qty, move.product_uom,
+                move.location_id, move.rule_id and move.rule_id.name or "/",
+                origin, move.company_id, values))
+        self.env['procurement.group'].run(procurement_requests)
 
         move_to_confirm.write({'state': 'confirmed'})
         (move_waiting | move_create_proc).write({'state': 'waiting'})
@@ -794,7 +806,6 @@ class StockMove(models.Model):
             elif self.rule_id.group_propagation_option == 'none':
                 group_id = False
         return {
-            'company_id': self.company_id,
             'date_planned': self.date_expected,
             'move_dest_ids': self,
             'group_id': group_id,

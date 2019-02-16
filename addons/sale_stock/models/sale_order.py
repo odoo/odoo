@@ -60,17 +60,24 @@ class SaleOrder(models.Model):
     def write(self, values):
         if values.get('order_line') and self.state == 'sale':
             for order in self:
-                pre_order_line_qty = {order_line: order_line.product_uom_qty for order_line in order.mapped('order_line')}
+                pre_order_line_qty = {order_line: order_line.product_uom_qty for order_line in order.mapped('order_line') if not order_line.is_expense}
         res = super(SaleOrder, self).write(values)
         if values.get('order_line') and self.state == 'sale':
             for order in self:
                 to_log = {}
+                order_lines_to_run = self.env['sale.order.line']
                 for order_line in order.order_line:
-                    if pre_order_line_qty.get(order_line, False) and float_compare(order_line.product_uom_qty, pre_order_line_qty[order_line], order_line.product_uom.rounding) < 0:
+                    if order_line not in pre_order_line_qty:
+                        order_lines_to_run |= order_line
+                    elif float_compare(order_line.product_uom_qty, pre_order_line_qty[order_line], order_line.product_uom.rounding) < 0:
                         to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty[order_line])
+                    elif float_compare(order_line.product_uom_qty, pre_order_line_qty[order_line], order_line.product_uom.rounding) > 0:
+                        order_lines_to_run |= order_line
                 if to_log:
                     documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
                     order._log_decrease_ordered_quantity(documents)
+                if order_lines_to_run:
+                    order_lines_to_run._action_launch_stock_rule(pre_order_line_qty)
         return res
 
     @api.multi
@@ -155,7 +162,6 @@ class SaleOrder(models.Model):
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_so, documents)
 
 
-
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
@@ -198,19 +204,6 @@ class SaleOrderLine(models.Model):
         lines = super(SaleOrderLine, self).create(vals_list)
         lines.filtered(lambda line: line.state == 'sale')._action_launch_stock_rule()
         return lines
-
-    @api.multi
-    def write(self, values):
-        lines = self.env['sale.order.line']
-        if 'product_uom_qty' in values:
-            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            lines = self.filtered(
-                lambda r: r.state == 'sale' and not r.is_expense and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
-        previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
-        res = super(SaleOrderLine, self).write(values)
-        if lines:
-            lines.with_context(previous_product_uom_qty=previous_product_uom_qty)._action_launch_stock_rule()
-        return res
 
     @api.depends('order_id.state')
     def _compute_invoice_status(self):
@@ -327,7 +320,6 @@ class SaleOrderLine(models.Model):
         date_planned = self.order_id.confirmation_date\
             + timedelta(days=self.customer_lead or 0.0) - timedelta(days=self.order_id.company_id.security_lead)
         values.update({
-            'company_id': self.order_id.company_id,
             'group_id': group_id,
             'sale_line_id': self.id,
             'date_planned': date_planned,
@@ -342,7 +334,7 @@ class SaleOrderLine(models.Model):
             })
         return values
 
-    def _get_qty_procurement(self):
+    def _get_qty_procurement(self, previous_product_uom_qty=False):
         self.ensure_one()
         qty = 0.0
         for move in self.move_ids.filtered(lambda r: r.state != 'cancel'):
@@ -353,18 +345,18 @@ class SaleOrderLine(models.Model):
         return qty
 
     @api.multi
-    def _action_launch_stock_rule(self):
+    def _action_launch_stock_rule(self, previous_product_uom_qty=False):
         """
         Launch procurement group run method with required/custom fields genrated by a
         sale order line. procurement group will launch '_run_pull', '_run_buy' or '_run_manufacture'
         depending on the sale order line product rule.
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        errors = []
+        procurements = []
         for line in self:
             if line.state != 'sale' or not line.product_id.type in ('consu','product'):
                 continue
-            qty = line._get_qty_procurement()
+            qty = line._get_qty_procurement(previous_product_uom_qty)
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
                 continue
 
@@ -393,13 +385,12 @@ class SaleOrderLine(models.Model):
             line_uom = line.product_uom
             quant_uom = line.product_id.uom_id
             product_qty, procurement_uom = line_uom._adjust_uom_quantities(product_qty, quant_uom)
-
-            try:
-                self.env['procurement.group'].run(line.product_id, product_qty, procurement_uom, line.order_id.partner_shipping_id.property_stock_customer, line.name, line.order_id.name, values)
-            except UserError as error:
-                errors.append(error.name)
-        if errors:
-            raise UserError('\n'.join(errors))
+            procurements.append(self.env['procurement.group'].Procurement(
+                line.product_id, product_qty, procurement_uom,
+                line.order_id.partner_shipping_id.property_stock_customer,
+                line.name, line.order_id.name, line.order_id.company_id, values))
+        if procurements:
+            self.env['procurement.group'].run(procurements)
         return True
 
     @api.multi

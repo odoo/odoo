@@ -1446,7 +1446,6 @@ var AbstractFieldBinary = AbstractField.extend({
                     self.on_file_uploaded(file.size, file.name, file.type, data);
                 };
             } else {
-                this.$('form.o_form_binary_form input[name=session_id]').val(this.getSession().session_id);
                 this.$('form.o_form_binary_form').submit();
             }
             this.$('.o_form_binary_progress').show();
@@ -3006,6 +3005,7 @@ return {
     FieldEmail: FieldEmail,
     FieldBinaryFile: FieldBinaryFile,
     FieldPdfViewer: FieldPdfViewer,
+    AbstractFieldBinary: AbstractFieldBinary,
     FieldBinaryImage: FieldBinaryImage,
     FieldBoolean: FieldBoolean,
     FieldBooleanButton: FieldBooleanButton,

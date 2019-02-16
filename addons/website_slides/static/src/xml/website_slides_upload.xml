@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website.slide.upload.modal">
+        <div>
+            <div class="o_w_slide_upload_modal_container">
+                <t t-call="website.slide.upload.modal.select"/>
+            </div>
+        </div>
+    </t>
+
+    <!--
+        Slide Type Selection template
+    -->
+    <t t-name="website.slide.upload.modal.select">
+        <div class="d-flex flex-wrap justify-content-between align-items-stretch text-primary p-1 mt-4">
+            <t t-foreach="widget.slide_type_data" t-as="slide_type">
+                <t t-set="type_data" t-value="widget.slide_type_data[slide_type]"/>
+
+                <div class="content-type d-flex flex-column align-items-center p-1 mb-4 o_wslides_select_type" t-att-data-slide-type="slide_type">
+                    <i t-attf-class="fa #{type_data['icon']} mb-2" style="font-size:4rem;"></i>
+                    <t t-esc="type_data['label']"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <!--
+        Uploading template
+    -->
+    <t t-name="website.slide.upload.modal.uploading">
+        <div class="oe_slides_upload_loading text-center" aria-hidden="true" role="status">
+            <div class="fa-3x">
+                <i class="fas fa-spinner fa-pulse"></i>
+            </div>
+            <h4>Uploading document ...</h4>
+        </div>
+    </t>
+
+    <!--
+        Slide Type common form part template
+    -->
+    <t t-name="website.slide.upload.modal.common">
+        <div class="form-group row">
+            <label for="name" class="col-form-label col-md-3">Title</label>
+            <div class="col-md-9">
+                <input id="name" name="name" placeholder="Title" class="form-control" required="required"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="category_id" class="col-form-label col-md-3">Category</label>
+            <div class="controls col-md-9">
+                <input class="form-control" id="category_id"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="tag_ids" class="col-form-label col-md-3">Tags</label>
+            <div class="controls col-md-9">
+                <input id="tag_ids" name="tag_ids" type="hidden"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="is_preview" class="col-form-label col-md-3">Always visible</label>
+            <div class="controls col-md-9 mt8">
+                <input id="is_preview" name="is_preview" type="checkbox"/>
+            </div>
+        </div>
+    </t>
+
+    <!--
+        Slide Type templates
+    -->
+    <t t-name="website.slide.upload.modal.presentation">
+        <div>
+            <form class="clearfix">
+                <div class="form-group row">
+                    <div class="col-md-4">
+                        <div class="img-thumbnail">
+                            <div class="o_slide_preview">
+                                <img src="/website_slides/static/src/img/document.png" id="slide-image" title="Content Preview" alt="Content Preview" class="img-fluid"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <h5 class="list-group-item-heading">
+                                    <label for="upload" class="col-form-label">PDF or Image File</label>
+                                </h5>
+                                <input id="upload" name="file" class="form-control" accept="image/*,application/pdf" type="file" required="required"/>
+                                <input id="index_content" name="index_content" type="hidden"/>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <canvas id="data_canvas" class="d-none"></canvas>
+                <t t-call="website.slide.upload.modal.common"/>
+            </form>
+        </div>
+    </t>
+
+    <t t-name="website.slide.upload.modal.webpage">
+        <div>
+            <form class="clearfix">
+                <t t-call="website.slide.upload.modal.common"/>
+                <div class="form-group row">
+                    <div class="col-md-4">
+                        <div class="img-thumbnail">
+                            <div class="o_slide_preview">
+                                <img src="/website_slides/static/src/img/document.png" id="slide-image" title="Content Preview" alt="Content Preview" class="img-fluid"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <h5 class="list-group-item-heading">
+                                    <label for="upload" class="col-form-label">Cover Image File</label>
+                                </h5>
+                                <input id="upload" name="file" class="form-control" accept="image/*" type="file" required="required" data-prevent-onchange="1"/>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <canvas id="data_canvas" class="d-none"></canvas>
+            </form>
+        </div>
+    </t>
+
+    <t t-name="website.slide.upload.modal.video">
+        <div>
+            <form class="clearfix">
+                <div class="form-group row">
+                    <div class="col-md-4">
+                        <div class="img-thumbnail">
+                            <div class="o_slide_preview">
+                                <img src="/website_slides/static/src/img/document.png" id="slide-image" title="Content Preview" alt="Content Preview" class="img-fluid"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <h5 class="list-group-item-heading">
+                                    <label for="url" class="col-form-label">Youtube Link</label>
+                                </h5>
+                                <input id="url" name="url" class="form-control" placeholder="Youtube Video URL" required="required"/>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <canvas id="data_canvas" class="d-none"></canvas>
+                <t t-call="website.slide.upload.modal.common"/>
+            </form>
+        </div>
+    </t>
+
+</templates>

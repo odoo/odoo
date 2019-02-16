@@ -19,7 +19,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//button[@name='toggle_active']" position="before">
+                    <xpath expr="//div[@name='button_box']" position="inside">
                         <button name="%(act_hr_employee_2_hr_contract)d"
                             class="oe_stat_button"
                             icon="fa-book"
@@ -27,9 +27,6 @@
                             groups="hr.group_hr_manager">
                             <field name="contracts_count" widget="statinfo" string="Contracts"/>
                         </button>
-                    </xpath>
-                    <xpath expr="//field[@name='coach_id']" position="after">
-                        <field name="manager" groups="base.group_no_one"/>
                     </xpath>
                     <xpath expr="//group[@name='active_group']" position="after">
                         <group string="Current Contract">
@@ -43,6 +40,23 @@
                 </data>
             </field>
         </record>
+
+        <record id="hr_user_view_form" model="ir.ui.view">
+        <field name="name">hr.user.preferences.view.form.contract.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='active_group']" position="after">
+                <group string="Current Contract">
+                    <field name="medic_exam" string="Medical Exam"/>
+                    <field name="vehicle"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='employee_bank_account_id']" position="replace">
+                <field name="employee_bank_account_id" context="{'display_partner':True}"/>
+            </xpath>
+        </field>
+    </record>
 
         <record id="hr_contract_view_search" model="ir.ui.view">
             <field name="name">hr.contract.search</field>

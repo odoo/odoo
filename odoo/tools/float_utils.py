@@ -26,6 +26,8 @@ def _float_check_precision(precision_digits=None, precision_rounding=None):
     assert (precision_digits is not None or precision_rounding is not None) and \
         not (precision_digits and precision_rounding),\
          "exactly one of precision_digits and precision_rounding must be specified"
+    assert precision_rounding is None or precision_rounding > 0,\
+         "precision_rounding must be positive, got %s" % precision_rounding
     if precision_digits is not None:
         return 10 ** -precision_digits
     return precision_rounding
@@ -51,7 +53,8 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
     """
     rounding_factor = _float_check_precision(precision_digits=precision_digits,
                                              precision_rounding=precision_rounding)
-    if rounding_factor == 0 or value == 0: return 0.0
+    if rounding_factor == 0 or value == 0:
+        return 0.0
 
     # NORMALIZE - ROUND - DENORMALIZE
     # In order to easily support rounding to arbitrary 'steps' (e.g. coin values),

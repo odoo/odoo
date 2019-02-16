@@ -15,6 +15,270 @@ $MAX-Z-INDEX : 2147483647 !default;
     object-position: top;
 }
 
+
+// Common to new slides pages
+// **************************************************
+
+.o_wslides_wrap {
+    .text_small_caps {
+        font-variant: small-caps;
+    }
+    .image-muted {
+        opacity: 0.5;
+    }
+    .cta-title {
+        font-size: 1.2em;
+    }
+}
+
+
+// New home page
+// **************************************************
+
+div .o_wslides_home_nav {
+    position: relative;
+    top: -50px;
+}
+
+div .o_wslides_home_main {
+    .o_wslides_home_header {
+    }
+    .o_wslides_home_footer {
+    }
+
+    .o_wslides_home_aside {
+        .fa-check {
+            color: #00A09D;
+            font-size: 1.2em;
+        }
+    }
+    .o_wslides_home_content_section_title, .o_wslides_home_aside_title {
+        h3 {
+            font-size: 1.4em;
+        }
+        h4 {
+            font-size: 1.3em;
+        }
+    }
+
+    .o_wslides_course_card {
+        .card-body {
+            padding: 0.75em 1em;
+        }
+        .card-footer {
+            padding-top: 0.75em 1em;
+        }
+    }
+    // responsive card-deck like
+    .row.o_wslides_row > div[class*='col-'] {
+        display: flex;
+        flex:1 0 auto;
+        .card {
+            width:100%;
+        }
+    }
+
+    // tools
+    // ****************************************
+    .text_small_caps {
+        font-variant: small-caps;
+    }
+
+    .image-muted {
+        opacity: 0.5;
+    }
+
+    .o_wslides_home_circled {
+        border-radius: 50%;
+        width: 1.2em;
+        height: 1.2em;
+        padding: 0.25em 0.5em 0.25em 0.5em;
+        border: 0.2em solid #666;
+        text-align: center;
+        box-sizing: initial;
+    }
+
+    .progress {
+        overflow: visible;
+        margin-bottom: 0em;
+        height: 4px;
+        .progress-bar {
+            background-color: #00A09D;
+            position: relative;
+            border-radius: 4px;
+            span {
+                background-color: #00A09D;
+                position: absolute;
+                bottom: -20px;
+                font-size: 10px;
+                line-height: 10px;
+                padding: 2px 3px 2px 4px;
+                right: -1.4em;
+                border-radius: 2px;
+            }
+            span:after {
+                bottom: 100%;
+                left: 50%;
+                border: solid transparent;
+                content: " ";
+                height: 0;
+                width: 0;
+                position: absolute;
+                pointer-events: none;
+                border-color: rgba(255, 255, 255, 0);
+                border-bottom-color: #00A09D;
+                border-width: 5px;
+                margin-left: -5px;
+            }
+        }
+    }
+}
+
+// New course page
+// **************************************************
+
+.o_wslides_container {
+    margin: auto;
+    width: 100%;
+    max-width: 1140px;
+    padding: 32px 32px 0px 32px;
+}
+
+.o_wslides_course_nav {
+    margin: auto;
+    background: linear-gradient(150deg, #875A7B 20%, #62495B 80%) !important;
+    opacity: 0.95;
+
+    a {
+        color: #FFFFFF;
+    }
+
+    nav {
+        .breadcrumb-item::before {
+            font-weight: bold;
+            color: #FFFFFF;
+            opacity: 0.8;
+        }
+        .breadcrumb-item {
+            a {
+                font-weight: bold;
+                color: #FFFFFF;
+                opacity: 0.8;
+                transition: opacity linear .3s;
+            }
+            &.active {
+                a {
+                    opacity: 1.0;
+                }
+            }
+        }
+        ol {
+            background-color: transparent;
+        }
+    }
+}
+
+.o_wslides_course_header {
+    margin: auto;
+    background: linear-gradient(150deg, #875A7B 20%, #62495B 80%) !important;
+    border-bottom: 48px solid #66445e;
+
+    .o_wslides_course_header_container {
+        top: 48px;
+        padding-top: 0px;
+
+        .o_wslides_course_header_content {
+            font-size: 16px;
+            color: #FFFFFF;
+            .o_wslides_course_description {
+                margin-right: 36px;
+            }
+        }
+
+        .o_wslides_course_header_aside {
+            img {
+                width: 100%;
+                max-width: 256px;
+            }
+        }
+    }
+}
+
+.o_wslides_course_content {
+    margin: auto;
+    background-color: #f2f2f2;
+
+    .o_wslides_content_container {
+        position: relative;
+        top: -80px;
+    }
+
+    // responsive card-deck like
+    .row.o_wslides_row > div[class*='col-'] {
+        display: flex;
+        flex:1 0 auto;
+        .card {
+            width:100%;
+        }
+    }
+
+    .o_wslides_course_content_nav {
+        .o_wslides_nav_tabs {
+            border-bottom: 0px;
+        }
+        .o_wslides_navlink {
+            color: white;
+            border-radius: 0px;
+            height: 48px;
+            font-weight: bold;
+            padding-top: 12px;
+            border-left: 2px solid #875A7B;
+            text-align: center;
+            width: 120px;
+            &:hover {
+                border: 0px;
+                border-radius: 0px;
+                background-color: #875A7B;
+            }
+        }
+        .o_wslides_navlink.active {
+            color: #212529;
+            background-color: #f2f2f2;
+            border: 0px;
+        }
+    }
+    .o_wslides_course_content_main {
+        h3 {
+            font-size: 1.4em;
+        }
+
+        h4 {
+            font-size: 1.3em;
+        }
+
+        .o_wslides_course_content_aside {
+            top: 1px;
+            width: 256px;
+            max-width: 256px;
+            margin-left: 15px;
+            background-color: white;
+
+            .o_wslides_course_aside_line {
+            }
+        }
+
+        .o_wslides_lesson_card {
+            .card-footer {
+                padding-top: 0.75em;
+                padding-bottom: 0.75em;
+            }
+        }
+    }
+}
+
+// Old brol to clean someday
+// **************************************************
+
 .oe_slides_panel_footer .fa, .oe_slide_js_embed_option_link{
     color : theme-color('primary');
     cursor: pointer;
@@ -59,10 +323,6 @@ img.oe_slides_promote_image {
     width: 100%;
     overflow: hidden;
     display: block;
-}
-
-.oe_slides_box_shadow {
-    box-shadow: 0 0 5px #CCC;
 }
 
 .oe_slides_apart_small {
@@ -171,4 +431,10 @@ div.embed-responsive {
 
 .oe_show_footer {
     z-index: $MAX-Z-INDEX; // Looks terrible but seems necessary due to fullscreen & canvas in PDFSlidesViewer
+}
+
+
+// Upload Modal
+.o_wslides_select_type {
+    cursor: pointer;
 }

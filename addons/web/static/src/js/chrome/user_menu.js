@@ -97,10 +97,8 @@ var UserMenu = Widget.extend({
         this.trigger_up('clear_uncommitted_changes', {
             callback: function () {
                 self._rpc({
-                        route: "/web/action/load",
-                        params: {
-                            action_id: "base.action_res_users_my",
-                        },
+                        model: "res.users",
+                        method: "action_get"
                     })
                     .done(function (result) {
                         result.res_id = session.uid;

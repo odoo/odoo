@@ -5,7 +5,7 @@ require('web.dom_ready');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var localStorage = require('web.local_storage');
-var WysiwygTranslate = require('web_editor.wysiwyg.multizone.translate');
+var Wysiwyg = require('web_editor.wysiwyg.root');
 var EditorMenu = require('website.editor.menu');
 
 var _t = core._t;
@@ -44,6 +44,13 @@ var TranslatorInfoDialog = Dialog.extend({
     _onStrongOk: function () {
         localStorage.setItem(localStorageNoDialogKey, true);
     },
+});
+
+var WysiwygTranslate = Wysiwyg.extend({
+    assetLibs: Wysiwyg.prototype.assetLibs.concat(['website.compiled_assets_wysiwyg']),
+    _getWysiwygContructor: function () {
+        return odoo.__DEBUG__.services['web_editor.wysiwyg.multizone.translate'];
+    }
 });
 
 var TranslatorMenu = EditorMenu.extend({

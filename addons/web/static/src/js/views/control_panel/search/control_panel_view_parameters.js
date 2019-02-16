@@ -11,6 +11,7 @@ var PERIOD_OPTIONS = [
     {description: _lt('Last 7 Days'), optionId: 'last_7_days', groupId: 1},
     {description: _lt('Last 30 Days'), optionId: 'last_30_days', groupId: 1},
     {description: _lt('Last 365 Days'), optionId: 'last_365_days', groupId: 1},
+    {description: _lt('Last 5 Years'), optionId: 'last_5_years', groupId: 1},
     {description: _lt('Today'), optionId: 'today', groupId: 2},
     {description: _lt('This Week'), optionId: 'this_week', groupId: 2},
     {description: _lt('This Month'), optionId: 'this_month', groupId: 2},

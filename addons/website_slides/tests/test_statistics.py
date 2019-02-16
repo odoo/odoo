@@ -43,6 +43,13 @@ class TestStatistics(common.SlidesCase):
         self.assertEqual(channel_publisher.nbr_videos, len(channel_publisher.slide_ids.filtered(lambda s: s.slide_type == 'video')))
         # slide statistics computation
         self.assertEqual(float_compare(channel_publisher.total_time, sum(s.completion_time for s in channel_publisher.slide_ids), 3), 0)
+        # members computation
+        self.assertEqual(channel_publisher.members_count, 1)
+        channel_publisher.action_add_member()
+        self.assertEqual(channel_publisher.members_count, 1)
+        channel_publisher._action_add_member(self.user_emp.partner_id)
+        self.assertEqual(channel_publisher.members_count, 2)
+        self.assertEqual(channel_publisher.partner_ids, self.user_publisher.partner_id | self.user_emp.partner_id)
 
     @mute_logger('odoo.models')
     def test_channel_user_statistics(self):
@@ -83,3 +90,24 @@ class TestStatistics(common.SlidesCase):
         slides_emp.read(['name'])
         with self.assertRaises(UserError):
             slides_emp.action_set_viewed()
+
+    def test_slide_statistics(self):
+        channel_publisher = self.channel.sudo(self.user_publisher)
+        channel_publisher._action_add_member(self.user_emp.partner_id)
+
+        self.assertEqual(self.slide.slide_views, 0)
+        self.assertEqual(self.slide.public_views, 0)
+
+        self.slide.write({'public_views': 4})
+
+        self.assertEqual(self.slide.slide_views, 0)
+        self.assertEqual(self.slide.public_views, 4)
+        self.assertEqual(self.slide.total_views, 4)
+
+        slide_emp = self.slide.sudo(self.user_emp)
+        slide_emp.action_set_viewed()
+        # slide_emp.invalidate_cache()
+
+        self.assertEqual(slide_emp.slide_views, 1)
+        self.assertEqual(slide_emp.public_views, 4)
+        self.assertEqual(slide_emp.total_views, 5)
