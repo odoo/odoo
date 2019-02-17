@@ -130,6 +130,7 @@ msgstr ""
 #, python-format
 msgid " This channel is private. People must be invited to join it."
 msgstr ""
+"Este canal é privado. Pessoas precisam ser convidadas para particiapar."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type_days
@@ -154,12 +155,13 @@ msgstr ""
 #, python-format
 msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
 msgstr ""
+"%(user_name)s convida a você para seguir %(document)s documento: %(title)s"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:31
 #, python-format
 msgid "%(user_name)s invited you to follow a new document."
-msgstr ""
+msgstr "%(user_name)s convida a você para seguir um novo documento."
 
 #. module: mail
 #. openerp-web
@@ -173,7 +175,7 @@ msgstr "%d Mensagens"
 #: code:addons/mail/static/src/js/activity.js:89
 #, python-format
 msgid "%d days overdue"
-msgstr ""
+msgstr "%d dias atrasado"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:248
@@ -219,7 +221,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/activity.xml:49
 #, python-format
 msgid ", due on"
-msgstr ""
+msgstr ", devido a"
 
 #. module: mail
 #. openerp-web
@@ -233,21 +235,21 @@ msgstr "-------- Mostrar mensagens antigas --------"
 #: code:addons/mail/static/src/xml/systray.xml:78
 #, python-format
 msgid "0 Future"
-msgstr ""
+msgstr "0 Futuro"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/systray.xml:74
 #, python-format
 msgid "0 Late"
-msgstr ""
+msgstr "0 Atrasado"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/systray.xml:76
 #, python-format
 msgid "0 Today"
-msgstr ""
+msgstr "0 Hoje"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:686
@@ -268,6 +270,9 @@ msgid ""
 "href=\"#\" class=\"o_channel_redirect\" data-oe-"
 "id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">%(author)s convidado %(new_partner)s para"
+" <a href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:592
@@ -3755,6 +3760,8 @@ msgstr "Odoo"
 msgid ""
 "Odoo has now the permission to send you native notifications on this device."
 msgstr ""
+"Odoo agora tem permissão para enviar para você notificações neste "
+"dispositivo."
 
 #. module: mail
 #. openerp-web
@@ -3770,7 +3777,7 @@ msgstr "Odoo necessita de sua permissão para"
 msgid ""
 "Odoo will not have the permission to send native notifications on this "
 "device."
-msgstr ""
+msgstr "Odoo não tem permissão para enviar notificações deste dispositivo."
 
 #. module: mail
 #. openerp-web
@@ -4092,7 +4099,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/client_action.js:894
 #, python-format
 msgid "Permission denied"
-msgstr ""
+msgstr "Permissão negada"
 
 #. module: mail
 #. openerp-web
@@ -5397,6 +5404,9 @@ msgid ""
 "and Enterprise versions. Online users already benefit from a ready-to-use "
 "email server (@mycompany.odoo.com)."
 msgstr ""
+"É necessário usar seu próprio servidor de email para enviar / receber emails"
+" nas versões Community e Enterprise. Usuários on-line já se beneficiam de um"
+" servidor de e-mail pronto para uso (@mycompany.odoo.com)."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:675
@@ -5581,7 +5591,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/chat_manager.js:482
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
-msgstr ""
+msgstr "Você desafiou sua conversa com <b>%s</b>."
 
 #. module: mail
 #. openerp-web

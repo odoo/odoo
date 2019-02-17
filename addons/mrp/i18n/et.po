@@ -1385,9 +1385,8 @@ msgid ""
 "Set a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
 msgstr ""
-"Keep empty if you produce at the location where you find the raw materials. "
-"Set a location if you produce at a fixed location. This can be a partner "
-"location if you subcontract the manufacturing operations."
+"Jätke tühjaks kui toodate asukohas, kus asub ka toormaterjal. Määrake "
+"asukoht kui toodate kindlas asukohas. See võib olla ka partneri asukoht."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter selection:mrp.bom,type:0
@@ -1886,7 +1885,7 @@ msgstr "Tavaline"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_scrap_workorder_id
 msgid "Not to restrict or prefer quants, but informative."
-msgstr "Not to restrict or prefer quants, but informative."
+msgstr "Informatiivne, ei piira ega eelista."
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1917,12 +1916,12 @@ msgstr "Töös olevad tootmistellimused"
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_capacity
 msgid "Number of pieces that can be produced in parallel."
-msgstr "Number of pieces that can be produced in parallel."
+msgstr "Paralleelselt toodetud tükkide arv."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "OEE"
-msgstr "OEE"
+msgstr "OEE koguefektiivsus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_oee_target
@@ -2118,9 +2117,7 @@ msgstr "Palun määra partii/seerianumber tootele:  %s !"
 msgid ""
 "Please set the quantity you are currently producing. It should be different "
 "from zero."
-msgstr ""
-"Please set the quantity you are currently producing. It should be different "
-"from zero."
+msgstr "Palun määrake hetkel toodetud kogus. See peaks olema nullist erinev."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2303,12 +2300,12 @@ msgstr "Tootmise töökeskus"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Production started late"
-msgstr "Production started late"
+msgstr "Tootmine hilines"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_production_gantt
 msgid "Productions"
-msgstr "Productions"
+msgstr "Tootmised"
 
 #. module: mrp
 #: selection:mrp.workcenter.productivity.loss,loss_type:0
@@ -2377,13 +2374,13 @@ msgstr "Kogus"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line_lot_produced_qty
 msgid "Quantity Finished Product"
-msgstr "Quantity Finished Product"
+msgstr "Valmis toote kogus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_qty_produced
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Quantity Produced"
-msgstr "Quantity Produced"
+msgstr "Toodetud kogus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_qty_remaining
@@ -2480,8 +2477,7 @@ msgstr "Ettevõtte viide peab olema unikaalne!"
 #: model:ir.model.fields,help:mrp.field_mrp_production_origin
 msgid ""
 "Reference of the document that generated this production order request."
-msgstr ""
-"Reference of the document that generated this production order request."
+msgstr "Viide dokumendile, mis selle tootmistellimuse taotluse esitas."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_ir_attachment_id
@@ -2506,7 +2502,7 @@ msgstr "Aruandlus"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_serial
 msgid "Requires Serial"
-msgstr "Requires Serial"
+msgstr "Seerianumber on nõutud"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2532,7 +2528,7 @@ msgstr "Töötajate puudumised"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_res_model
 msgid "Resource Model"
-msgstr "Resource Model"
+msgstr "Ressursimudel"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_res_name
@@ -2687,7 +2683,7 @@ msgstr "Search Bill Of Material Components"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Search Production"
-msgstr "Search Production"
+msgstr "Otsi tootmist"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
@@ -2890,7 +2886,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_stock_move_is_done
 #: model:ir.model.fields,help:mrp.field_stock_move_line_done_move
 msgid "Technical Field to order moves"
-msgstr "Technical Field to order moves"
+msgstr "Tehniline väli tellimuste liikumiseks"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_check_to_done
@@ -3578,7 +3574,7 @@ msgstr "Work Instruction"
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line_workorder_id
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap_workorder_id
 msgid "Work Order"
-msgstr "Work Order"
+msgstr "Töökäsk"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_message_action_main
@@ -3637,7 +3633,7 @@ msgstr "Töökäsud ja kvaliteedikontroll"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_delta_report
 msgid "Work Orders Deviation"
-msgstr "Work Orders Deviation"
+msgstr "Töökäskude hälve"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_report
@@ -3702,7 +3698,7 @@ msgstr "Work orders in progress. Click to block work center."
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Workcenter"
-msgstr "Workcenter"
+msgstr "Töökeskus"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_form_view
@@ -3711,7 +3707,7 @@ msgstr "Workcenter"
 #: model:ir.ui.view,arch_db:mrp.oee_pivot_view
 #: model:ir.ui.view,arch_db:mrp.oee_tree_view
 msgid "Workcenter Productivity"
-msgstr "Workcenter Productivity"
+msgstr "Töökeskuse produktiivsus"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity
@@ -3727,7 +3723,7 @@ msgstr "Workcenter Productivity Loss"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Workcenter blocked, click to unblock."
-msgstr "Workcenter blocked, click to unblock."
+msgstr "Töökeskus on blokeeritud, kliki et blokeering tühistada"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
@@ -3742,7 +3738,7 @@ msgstr "Workorder Message"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_worksheet
 msgid "Worksheet"
-msgstr "Worksheet"
+msgstr "Tööleht"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document_type
@@ -3878,19 +3874,19 @@ msgstr ""
 #: code:addons/mrp/wizard/mrp_product_produce.py:126
 #, python-format
 msgid "You need to provide a lot for the finished product"
-msgstr "You need to provide a lot for the finished product"
+msgstr "Tuleb lisada partii lõpptootele"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:330
 #, python-format
 msgid "You should provide a lot/serial number for a component"
-msgstr "You should provide a lot/serial number for a component"
+msgstr "Tuleb määrata partii/seerianumber koostisosale"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:307
 #, python-format
 msgid "You should provide a lot/serial number for the final product"
-msgstr "You should provide a lot/serial number for the final product"
+msgstr "Tuleb määrata partii/seerianumbri lõpp-tootele"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:99
@@ -3898,20 +3894,18 @@ msgstr "You should provide a lot/serial number for the final product"
 msgid ""
 "You should specify a manufacturing order in order to find the correct "
 "tracked products."
-msgstr ""
-"You should specify a manufacturing order in order to find the correct "
-"tracked products."
+msgstr "Õige jälgitava toote leidmiseks peaksite määrama tootmisjärjestuse."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
-msgstr "päeva"
+msgstr "päev(a)"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "hour(s)"
-msgstr "hour(s)"
+msgstr "tund(i)"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -3921,7 +3915,7 @@ msgstr "viimasel"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "minute(s)"
-msgstr "minut (id)"
+msgstr "minut(iid)"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
