@@ -4,7 +4,7 @@
 
         <record id="transfer_account" model="account.account.template">
             <field name="name">Transfer Account</field>
-            <field name="code">100010</field>
+            <field name="code">101010</field>
             <field name="reconcile" eval="True"/>
             <field  name="user_type_id" ref="account.data_account_type_current_assets"/>
         </record>
@@ -94,9 +94,10 @@
             <field name="name">South African Tax and Account Chart Template (by Paradigm Digital)</field>
             <field name="bank_account_code_prefix">1200</field>
             <field name="cash_account_code_prefix">1250</field>
+            <field name="transfer_account_code_prefix">1010</field>
             <field name="code_digits">6</field>
             <field name="currency_id" ref="base.ZAR"/>
-            <field name="transfer_account_id" ref="transfer_account"/>
+            <!-- <field name="transfer_account_id" ref="transfer_account"/> -->
         </record>
 
         <record id="transfer_account" model="account.account.template">
@@ -183,8 +184,6 @@
             <field name="property_stock_valuation_account_id" ref="100020"/>
             <field name="income_currency_exchange_account_id" ref="610440"/>
             <field name="expense_currency_exchange_account_id" ref="610440"/>
-            <field name="default_sales_tax_id" ref="ST1"/>
-            <field name="default_purchase_tax_id" ref="PT15"/>
         </record>
 
          
