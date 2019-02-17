@@ -128,7 +128,7 @@ msgstr "-> 消込"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr ""
+msgstr "-> 部分的に消込済の仕訳照会"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:463
@@ -2573,13 +2573,13 @@ msgid ""
 "Cannot create a credit note for the invoice which is already reconciled, "
 "invoice should be unreconciled first, then only you can add credit note for "
 "this invoice."
-msgstr ""
+msgstr "消込済の請求にクレジットノートを作成することはできません。先に請求の消込を取り消した上で、クレジットノートを作成してください。"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:54
 #, python-format
 msgid "Cannot create credit note for the draft/cancelled invoice."
-msgstr ""
+msgstr "ドラフト/取消済請求にはクレジットノートが作成できません。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:197
@@ -5455,7 +5455,7 @@ msgstr "請求書番号"
 #: code:addons/account/models/account_invoice.py:440
 #, python-format
 msgid "Invoice - %s"
-msgstr ""
+msgstr "請求書 - %s"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_created
@@ -5525,7 +5525,7 @@ msgstr "クレジットノート対象請求書"
 #: code:addons/account/models/account_invoice.py:753
 #, python-format
 msgid "Invoice must be cancelled in order to reset it to draft."
-msgstr ""
+msgstr "ドラフトに再設定するには先に請求書を取り消してください。"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:801
@@ -5930,7 +5930,7 @@ msgstr "かんばんダッシュボード"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard_graph
 msgid "Kanban Dashboard Graph"
-msgstr ""
+msgstr "かんばんダッシュボードグラフ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
@@ -5945,7 +5945,7 @@ msgstr "現在日付を利用するには空のままとします。"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_date
 msgid "Keep empty to use the invoice date."
-msgstr ""
+msgstr "請求日を適用するには空のままにしてください。"
 
 #. module: account
 #: selection:account.payment,payment_difference_handling:0
@@ -6063,7 +6063,7 @@ msgstr "先月"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:119
 #, python-format
 msgid "Last Reconciliation:"
-msgstr ""
+msgstr "最終消込:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_write_uid
@@ -8701,7 +8701,7 @@ msgstr "付番"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Set To Draft"
-msgstr "予定に設定"
+msgstr "ドラフトに設定"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag_active
