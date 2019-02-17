@@ -6,6 +6,7 @@
 # sejun huang <sejun.huang@gmail.com>, 2018
 # Martin Trigaux, 2018
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Ying Chang <acc.tou@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"Last-Translator: Ying Chang <acc.tou@gmail.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +33,8 @@ msgid ""
 ".\n"
 "            Try the"
 msgstr ""
+".\n"
+"            嘗試"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -71,6 +74,8 @@ msgid ""
 "<em><i class=\"fa fa-plus-circle\" role=\"img\" aria-label=\"Create\" title=\"Create\"/>\n"
 "                    Configure and Launch Event Registration</em>"
 msgstr ""
+"<em><i class=\"fa fa-plus-circle\" role=\"img\" aria-label=\"Create\" title=\"Create\"/>\n"
+"                   配置和啟動活動報名</em>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
@@ -80,6 +85,8 @@ msgid ""
 "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Start date\" "
 "title=\"Start date\"/>"
 msgstr ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Start date\" "
+"title=\"Start date\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -92,11 +99,13 @@ msgid ""
 "<i class=\"fa fa-cloud\" title=\"It is an online event\" role=\"img\" aria-"
 "label=\"It is an online event\"/>"
 msgstr ""
+"<i class=\"fa fa-cloud\" title=\"It is an online event\" role=\"img\" aria-"
+"label=\"It is an online event\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events
@@ -104,6 +113,8 @@ msgid ""
 "<i class=\"fa fa-flag fa-5x text-muted\" title=\"Local Events\" role=\"img\""
 " aria-label=\"Local Events\"/>"
 msgstr ""
+"<i class=\"fa fa-flag fa-5x text-muted\" title=\"Local Events\" role=\"img\""
+" aria-label=\"Local Events\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_right_country_event
@@ -111,16 +122,18 @@ msgid ""
 "<i class=\"fa fa-flag fa-5x\"/>\n"
 "                            Events from Your Country"
 msgstr ""
+"<i class=\"fa fa-flag fa-5x\"/>\n"
+"                            來自您國家的活動"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Add to Google Calendar"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>添加到Google日曆"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Add to iCal/Outlook"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>添加到iCal/Outlook"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events_list
@@ -128,21 +141,23 @@ msgid ""
 "<i class=\"fa fa-map-marker\" title=\"It is a physical event\" role=\"img\" "
 "aria-label=\"It is a physical event\"/>"
 msgstr ""
+"<i class=\"fa fa-map-marker\" title=\"It is a physical event\" role=\"img\" "
+"aria-label=\"It is a physical event\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index
 msgid "<i class=\"fa fa-tag\" role=\"img\" aria-label=\"Event type\" title=\"Event type\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-tag\" role=\"img\" aria-label=\"Event type\" title=\"Event type\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i class=\"fa fa-user\" role=\"img\" aria-label=\"Name\" title=\"Name\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-user\" role=\"img\" aria-label=\"Name\" title=\"Name\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index
@@ -161,6 +176,8 @@ msgid ""
 "<span class=\"badge badge-danger\" role=\"img\" aria-label=\"Attention: not "
 "published\" title=\"Not published\"><i class=\"fa fa-ban\"/></span>"
 msgstr ""
+"<span class=\"badge badge-danger\" role=\"img\" aria-label=\"Attention: not "
+"published\" title=\"Not published\"><i class=\"fa fa-ban\"/></span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events
@@ -516,7 +533,7 @@ msgstr "次月"
 #: code:addons/website_event/models/event.py:150
 #, python-format
 msgid "No date has been specified for the event, no file will be generated."
-msgstr ""
+msgstr "尚未為活動指定日期，將不會產生檔案。"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index
@@ -570,7 +587,7 @@ msgstr "參與"
 #: code:addons/website_event/controllers/main.py:60
 #, python-format
 msgid "Past Events"
-msgstr ""
+msgstr "歷史活動"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -736,7 +753,7 @@ msgstr "您的登記"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.brand_promotion
 msgid "open source website builder"
-msgstr ""
+msgstr "源法開放版網站生成器"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
