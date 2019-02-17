@@ -7,7 +7,7 @@
 # Seongseok Shin <shinss61@hotmail.com>, 2018
 # Martin Trigaux, 2018
 # Goh Gangtai <gangtai.goh@gmail.com>, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
+# JH CHOI <hwangtog@gmail.com>, 2018
 # Link Up링크업 <linkup.way@gmail.com>, 2018
 # Linkup <link-up@naver.com>, 2018
 # Mark Lee <odoos@soti.33mail.com>, 2018
@@ -97,7 +97,11 @@ msgid ""
 "        <br/><br/>\n"
 "        Best regards,\n"
 "    </p>\n"
-"</div>"
+"</div><p style=\"color:#888888;\">\n"
+"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
+"    ${object.sudo().create_uid.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 msgstr ""
 
 #. module: purchase

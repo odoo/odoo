@@ -1253,7 +1253,7 @@ msgstr "Registrazioni contabili"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Overview"
-msgstr "Quadro generale contabilità"
+msgstr "Panoramica contabilità"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -1452,7 +1452,7 @@ msgstr "Imposta adeguamento"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__adjustment_type
 msgid "Adjustment Type"
-msgstr "Tipo di Adeguamento"
+msgstr "Tipo di rettifica"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -1915,7 +1915,7 @@ msgstr "Applicabilità"
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on credit journal item"
-msgstr "Applicare agli elementi del giornale dei crediti"
+msgstr "Applicare al movimento contabile in avere"
 
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
@@ -2942,7 +2942,7 @@ msgstr "Scegliere un'imposta predefinita di vendita per i prodotti."
 #: code:addons/account/static/src/xml/account_reconciliation.xml:137
 #, python-format
 msgid "Choose counterpart or Create Write-off"
-msgstr "Scegli una controparte o crea un Storno"
+msgstr "Scegli una controparte o crea un storno"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_refund__filter_refund
@@ -3211,7 +3211,7 @@ msgstr "Configura"
 #: code:addons/account/static/src/js/section_and_note_fields_backend.js:102
 #, python-format
 msgid "Configure a product"
-msgstr "Configura un prodotto"
+msgstr "Configurare un prodotto"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_invoice_layout
@@ -6669,7 +6669,7 @@ msgstr "VARIE"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_activity_type_id
 msgid "Mail Activity Type"
-msgstr "Inviare il tipo di attività per email"
+msgstr "Inviare tipo di attività per email"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mailing_list_ids
@@ -6734,11 +6734,11 @@ msgid ""
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit, module account_batch_payment must be installed.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
 msgstr ""
-"Pagamento manuale: puoi essere pagato in contanti, con assegni o con qualsiasi altro metodo esterno a Odoo.\n"
-"Pagamento elettronico: puoi essere pagato automaticamente tramite un metodo di pagamento che richiede una transazione su una carta registrata dal cliente al momento dell'acquisto o della registrazione online (gettone di pagamento).\n"
-"Assegno: paga la fattura con un assegno e stampalo da Odoo.\n"
-"Deposito Raggruppato: Incassa più assegni clienti contemporaneamente generando un deposito raggruppato da inviare alla tua banca. Quando inserisci l'estratto conto in Odoo, puoi riconciliare la transazione e il deposito raggruppato. Per attivare il deposito raggruppato, il modulo account_batch_deposit (conto-deposito-raggruppato) deve essere installato. \n"
-"Bonifico SEPA: paga la fattura inviando un file di bonifico SEPA alla tua banca. Per attivare il bonifico SEPA, il modulo account_sepa (conto-sepa) deve essere installato. "
+"Pagamento manuale: pagamento in contanti, con assegni o con qualsiasi altro metodo esterno a Odoo.\n"
+"Pagamento elettronico: incasso automatico tramite un sistema di pagamento che richiede un'operazione su una carta registrata dal cliente al momento dell'acquisto o della registrazione online (gettone di pagamento).\n"
+"Assegno: pagamento fattura con un assegno e stampa da Odoo.\n"
+"Deposito raggruppato: Raccolta di più assegni clienti contemporaneamente che generano un deposito raggruppato da trasmettere alla banca. Nel registrare l'estratto conto in Odoo, è possibile riconciliare l'operazione e il deposito raggruppato. Per attivare il deposito raggruppato, il modulo account_batch_deposit deve essere installato. \n"
+"Bonifico SEPA: pagamento fattura con un file di bonifico SEPA da inviare alla banca. Per attivare il bonifico SEPA, il modulo account_sepa (conto-sepa) deve essere installato. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_ids
@@ -7058,7 +7058,7 @@ msgstr "Richiede azione"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__need_moderation
 msgid "Need moderation"
-msgstr "Necessita una moderazione"
+msgstr "Necessita moderazione"
 
 #. module: account
 #. openerp-web
@@ -7141,7 +7141,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__no_auto_thread
 msgid "No threading for answers"
-msgstr "Nessun thread per le risposte"
+msgstr "Nessuna cronologia per le risposte"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -7495,7 +7495,7 @@ msgid ""
 msgstr ""
 "Operazione non consentita. Poiché la riga di estratto conto ha già ricevuto "
 "un riferimento (%s), non è possibile riconciliarla completamente con le "
-"registrazioni del sezionale, ciò creerebbe una discontinuità nella "
+"registrazioni del regisro, ciò creerebbe una discontinuità nella "
 "numerazione. È necessario creare una registrazione e cancellarla per "
 "cancellare la riga."
 
@@ -7622,7 +7622,7 @@ msgstr "Fatture in ritardo, la data di scadenza e' trascorsa"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Overview"
-msgstr "Quadro generale"
+msgstr "Panoramica"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7673,7 +7673,7 @@ msgstr "Messaggio Superiore"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__parent_path
 msgid "Parent Path"
-msgstr "Percorso"
+msgstr "Percorso padre"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__parent_state
@@ -10421,8 +10421,8 @@ msgstr ""
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
 msgstr ""
-"La posizione fiscale determina le imposte/i conti usati per questo contatto."
-" "
+"La posizione fiscale determina le imposte/i conti utilizzati per questo "
+"contatto. "
 
 #. module: account
 #: code:addons/account/models/account.py:555
@@ -11479,7 +11479,7 @@ msgstr "Utilizzo di pagamenti raggruppati"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use budgets to compare actual with expected revenues and costs"
 msgstr ""
-"Utilizza i budget per confrontare le entrate e i costi previsti con quelli "
+"Utilizzare i budget per confrontare i ricavi e i costi previsti con quelli "
 "effettivi"
 
 #. module: account
@@ -11736,7 +11736,7 @@ msgstr "Visualizza"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "View accounts detail"
-msgstr "Vedi i dettagli dei conti"
+msgstr "Vedere i dettagli dei conti"
 
 #. module: account
 #: selection:res.partner,invoice_warn:0
@@ -11984,7 +11984,7 @@ msgid ""
 "You cannot create journal items with a secondary currency without filling "
 "both 'currency' and 'amount currency' fields."
 msgstr ""
-"Non puoi creare movimenti contabili con una valuta secondaria senza "
+"Non è possibile creare movimenti contabili con una valuta secondaria senza "
 "completare entrambi i campi \"valuta\" e \"importo valuta\"."
 
 #. module: account
@@ -11995,8 +11995,8 @@ msgid ""
 " sure that the lock date on advisor is set before the lock date for users."
 msgstr ""
 "Non è possibile definire condizioni più severe per i consulenti che per gli "
-"utenti. Assicurati che la data blocco per il consulente sia impostata prima "
-"della data blocco per gli utenti. "
+"utenti. Assicurarsi che la data blocco per il consulente sia impostata prima"
+" della data blocco per gli utenti. "
 
 #. module: account
 #: code:addons/account/models/account_payment.py:583
@@ -12083,7 +12083,7 @@ msgid ""
 "You cannot lock a period that is not finished yet. Please make sure that the"
 " lock date for advisors is not set after the last day of the previous month."
 msgstr ""
-"Non è possibile bloccare un periodo che non è ancora terminato. Assicurati "
+"Non è possibile bloccare un periodo che non è ancora terminato. Assicurarsi "
 "che la data blocco per i consulenti non sia stata fissata dopo l'ultimo "
 "giorno del mese precedente. "
 
