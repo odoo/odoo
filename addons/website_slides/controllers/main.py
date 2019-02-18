@@ -639,8 +639,6 @@ class WebsiteSlides(WebsiteProfile):
             else:
                 values['category_id'] = post['category_id'][0]
 
-        values['is_preview'] = post.get('is_preview') == 'true'
-
         # handle exception during creation of slide and sent error notification to the client
         # otherwise client slide create dialog box continue processing even server fail to create a slide
         try:
@@ -681,7 +679,7 @@ class WebsiteSlides(WebsiteProfile):
             }
 
     def _get_valid_slide_post_values(self):
-        return ['name', 'url', 'tag_ids', 'slide_type', 'channel_id',
+        return ['name', 'url', 'tag_ids', 'slide_type', 'channel_id', 'is_preview',
             'mime_type', 'datas', 'description', 'image', 'index_content', 'website_published']
 
     @http.route(['/slides/channel/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
