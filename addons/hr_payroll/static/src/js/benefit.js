@@ -20,7 +20,9 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
             var primary = !secondary ? 'btn-primary' : 'btn-secondary';
             var txt = _t("Generate Benefits");
             this.$buttons.find('.o_calendar_button_month').after(
-                $('<button class="btn ' + primary + ' btn-benefit" type="button">'+ txt +'</button>')
+                $('<button class="btn btn-benefit" type="button">')
+                .text(txt)
+                .addClass(primary)
                 .off('click')
                 .on('click', function (e) {
                     e.preventDefault();
@@ -69,7 +71,8 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
             }
             if (is_validated && events.length !== 0) { // Generate Payslip button
                 this.$buttons.find('.o_calendar_button_month').after(
-                    $('<button class="btn btn-primary btn-benefit" type="button">'+ _t('Generate Payslips') +'</button>')
+                    $('<button class="btn btn-primary btn-benefit" type="button">')
+                    .text(_t('Generate Payslips'))
                     .off('click')
                     // action_hr_payslip_by_employees
                     .on('click', function (e) {
@@ -87,7 +90,8 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
             }
             else if (!is_validated) { // Validate button
                 this.$buttons.find('.o_calendar_button_month').after(
-                    $('<button class="btn btn-primary btn-benefit" type="button">'+ _t('Validate Benefits') +'</button>')
+                    $('<button class="btn btn-primary btn-benefit" type="button">')
+                    .text(_t('Validate Benefits'))
                     .off('click')
                     .on('click', function (e) {
                         e.preventDefault();
