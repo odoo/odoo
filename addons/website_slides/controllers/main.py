@@ -196,7 +196,7 @@ class WebsiteSlides(WebsiteProfile):
         order = self._channel_order_by_criterion.get(post.get('sorting', 'date'), 'create_date desc')
 
         channels = request.env['slide.channel'].search(domain, order=order)
-        channels_layouted = list(itertools.zip_longest(*[iter(channels)] * 4, fillvalue=None))
+        # channels_layouted = list(itertools.zip_longest(*[iter(channels)] * 4, fillvalue=None))
 
         tag_groups = request.env['slide.channel.tag.group'].search(['&', ('tag_ids', '!=', False), ('website_published', '=', True)])
         search_tags = self._extract_channel_tag_search(**post)
@@ -204,7 +204,7 @@ class WebsiteSlides(WebsiteProfile):
         return request.render('website_slides.courses_all', {
             'user': request.env.user,
             'is_public_user': request.website.is_public_user(),
-            'channels_layouted': channels_layouted,
+            'channels': channels,
             'tag_groups': tag_groups,
             'search_term': post.get('search'),
             'search_tags': search_tags,
