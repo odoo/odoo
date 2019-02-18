@@ -2253,11 +2253,11 @@ QUnit.module('relational_fields', {
 
         assert.containsOnce(form, 'div.o_field_widget.oe_fileupload',
             "there should be the attachment widget");
-        assert.strictEqual(form.$('div.o_field_widget.oe_fileupload .oe_attachments').children().length, 1,
+        assert.strictEqual(form.$('div.o_field_widget.oe_fileupload .o_attachments').children().length, 1,
             "there should be no attachment");
         assert.containsNone(form, 'div.o_field_widget.oe_fileupload .o_attach',
             "there should not be an Add button (readonly)");
-        assert.containsNone(form, 'div.o_field_widget.oe_fileupload .oe_attachment .oe_delete',
+        assert.containsNone(form, 'div.o_field_widget.oe_fileupload .o_attachment .o_attachment_delete',
             "there should not be a Delete button (readonly)");
 
         // to edit mode
@@ -2273,8 +2273,7 @@ QUnit.module('relational_fields', {
         // no idea how to test this
 
         // delete the attachment
-        await testUtils.dom.click(form.$('div.o_field_widget.oe_fileupload .oe_attachment .oe_delete'));
-
+        await testUtils.dom.click(form.$('div.o_field_widget.oe_fileupload .o_attachment .o_attachment_delete'));
 
         assert.verifySteps([
             '/web/dataset/call_kw/turtle/read',
@@ -2283,7 +2282,7 @@ QUnit.module('relational_fields', {
 
         await testUtils.form.clickSave(form);
 
-        assert.strictEqual(form.$('div.o_field_widget.oe_fileupload .oe_attachments').children().length, 0,
+        assert.strictEqual(form.$('div.o_field_widget.oe_fileupload .o_attachments').children().length, 0,
             "there should be no attachment");
 
         assert.verifySteps([
