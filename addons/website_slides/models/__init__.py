@@ -2,6 +2,7 @@
 
 from . import gamification_challenge
 from . import slide_slide
+from . import slide_category
 from . import slide_channel
 from . import slide_channel_tag
 from . import slide_channel_invite

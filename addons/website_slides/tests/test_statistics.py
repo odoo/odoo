@@ -37,10 +37,10 @@ class TestStatistics(common.SlidesCase):
         channel_publisher = self.channel.sudo(self.user_publisher)
         # slide type computation
         self.assertEqual(channel_publisher.total_slides, len(channel_publisher.slide_ids))
-        self.assertEqual(channel_publisher.nbr_infographics, len(channel_publisher.slide_ids.filtered(lambda s: s.slide_type == 'infographic')))
-        self.assertEqual(channel_publisher.nbr_presentations, len(channel_publisher.slide_ids.filtered(lambda s: s.slide_type == 'presentation')))
-        self.assertEqual(channel_publisher.nbr_documents, len(channel_publisher.slide_ids.filtered(lambda s: s.slide_type == 'document')))
-        self.assertEqual(channel_publisher.nbr_videos, len(channel_publisher.slide_ids.filtered(lambda s: s.slide_type == 'video')))
+        self.assertEqual(channel_publisher.nbr_infographic, len(channel_publisher.slide_ids.filtered(lambda s: s.slide_type == 'infographic')))
+        self.assertEqual(channel_publisher.nbr_presentation, len(channel_publisher.slide_ids.filtered(lambda s: s.slide_type == 'presentation')))
+        self.assertEqual(channel_publisher.nbr_document, len(channel_publisher.slide_ids.filtered(lambda s: s.slide_type == 'document')))
+        self.assertEqual(channel_publisher.nbr_video, len(channel_publisher.slide_ids.filtered(lambda s: s.slide_type == 'video')))
         # slide statistics computation
         self.assertEqual(float_compare(channel_publisher.total_time, sum(s.completion_time for s in channel_publisher.slide_ids), 3), 0)
         # members computation
