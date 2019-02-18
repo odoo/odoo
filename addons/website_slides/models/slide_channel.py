@@ -6,7 +6,6 @@ import uuid
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.tools.translate import html_translate
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -63,7 +62,10 @@ class Channel(models.Model):
     """ A channel is a container of slides. """
     _name = 'slide.channel'
     _description = 'Slide Channel'
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin', 'rating.mixin']
+    _inherit = [
+        'mail.thread', 'rating.mixin',
+        'image.mixin',
+        'website.seo.metadata', 'website.published.multi.mixin']
     _order = 'sequence, id'
 
     def _default_access_token(self):
@@ -72,7 +74,7 @@ class Channel(models.Model):
     # description
     name = fields.Char('Name', translate=True, required=True)
     active = fields.Boolean(default=True)
-    description = fields.Html('Description', translate=html_translate, sanitize_attributes=False)
+    description = fields.Html('Description', translate=tools.html_translate, sanitize_attributes=False)
     channel_type = fields.Selection([
         ('documentation', 'Documentation'), ('training', 'Training')],
         string="Course type", default="documentation", required=True)
@@ -82,10 +84,6 @@ class Channel(models.Model):
         'slide.channel.tag', 'slide_channel_tag_rel', 'channel_id', 'tag_id',
         string='Tags', help='Used to categorize and filter displayed channels/courses')
     category_ids = fields.One2many('slide.category', 'channel_id', string="Categories")
-    image = fields.Binary("Image", attachment=True)
-    image_large = fields.Binary("Large image", attachment=True)
-    image_medium = fields.Binary("Medium image", attachment=True)
-    image_small = fields.Binary("Small image", attachment=True)
     # slides: promote, statistics
     slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides")
     slide_last_update = fields.Date('Last Update', compute='_compute_slide_last_update', store=True)
@@ -129,7 +127,7 @@ class Channel(models.Model):
     channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='website.group_website_publisher')
     enroll_msg = fields.Html(
         'Enroll Message', help="Message explaining the enroll process",
-        default=False, translate=html_translate, sanitize_attributes=False)
+        default=False, translate=tools.html_translate, sanitize_attributes=False)
     upload_group_ids = fields.Many2many(
         'res.groups', 'rel_upload_groups', 'channel_id', 'group_id',
         string='Upload Groups', help="Groups allowed to upload presentations in this channel. If void, every user can upload.")
@@ -294,14 +292,10 @@ class Channel(models.Model):
             vals['channel_partner_ids'] = [(0, 0, {
                 'partner_id': self.env.user.partner_id.id
             })]
-        if 'image' in vals:
-            tools.image_resize_images(vals, return_large=True)
         return super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals)
 
     @api.multi
     def write(self, vals):
-        if 'image' in vals:
-            tools.image_resize_images(vals, return_large=True)
         res = super(Channel, self).write(vals)
         if 'active' in vals:
             # archiving/unarchiving a channel does it on its slides, too
