@@ -119,7 +119,7 @@ class WebsiteSlides(WebsiteProfile):
             domain = expression.AND([domain, [('tag_ids', 'in', tags.ids)]])
 
         if slide_type and 'nbr_%ss' % slide_type in request.env['slide.channel']:
-            domain = expression.AND([domain, [('nbr_%ss' % slide_type, '>', 0)]])
+            domain = expression.AND([domain, [('nbr_%s' % slide_type, '>', 0)]])
         return domain
 
     def _prepare_channel_values(self, **kwargs):

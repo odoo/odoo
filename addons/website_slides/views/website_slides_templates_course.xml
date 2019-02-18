@@ -178,10 +178,10 @@
                                     </span>
                                     <span class="col">
                                         <t t-if="search_category">
-                                            <span class="badge badge-pill badge-info" t-esc="search_category['nbr_%ss' % slide_type_key]"/>
+                                            <span class="badge badge-pill badge-info" t-esc="search_category['nbr_%s' % slide_type_key]"/>
                                         </t>
                                         <t t-else="">
-                                            <span class="badge badge-pill badge-info" t-esc="channel['nbr_%ss' % slide_type_key]"/>
+                                            <span class="badge badge-pill badge-info" t-esc="channel['nbr_%s' % slide_type_key]"/>
                                         </t>
                                     </span>
                                 </div>
