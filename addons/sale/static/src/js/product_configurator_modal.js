@@ -69,9 +69,9 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
         this.dialogClass = 'oe_optional_products_modal' + (params.isWebsite ? ' oe_website_sale' : '');
 
         if (this.isWebsite) {
-            delete this.events['change [data-attribute_exclusions]'];
             delete this.events['click button.js_add_cart_json'];
         }
+        this._productImageField = 'image_medium';
     },
      /**
      * @override
@@ -440,7 +440,17 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
             delete optionalProductsMap[optionId];
         }
     },
+    /**
+     * @override
+     */
+    _onChangeCombination:function (ev, $parent, combination) {
+        $parent
+            .find('.td-product_name .product-name')
+            .first()
+            .text(combination.display_name);
 
+        ProductConfiguratorMixin._onChangeCombination.apply(this, arguments);
+    },
     /**
      * When the quantity of the root product is updated, we need to update
      * the quantity of all the selected optional products.
