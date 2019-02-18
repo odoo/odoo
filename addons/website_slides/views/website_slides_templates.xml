@@ -139,13 +139,14 @@
                         <div class="col-8">
                             <ul class="nav nav-tabs o_wslides_nav_tabs" role="tablist" id="profile_extra_info_tablist">
                                 <li class="nav-item o_wslides_nav_tabs_item_home">
-                                    <a t-att-href="'/slides/%s%s?%s' % (slug(channel), '/%s' % slug(category) if category else '', keep_query('debug'))"
-                                        t-att-class="'nav-link o_wslides_navlink %s' % ('' if search_slide_type else 'active')">
-                                        <i class="fa fa-home"/> Home</a>
+                                    <a class="nav-link o_wslides_navlink" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">
+                                        <i class="fa fa-home"/> Home
+                                    </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a t-att-href="'/slides/%s' % (slug(channel))"
-                                        t-att-class="'nav-link o_wslides_navlink'">Review</a>
+                                <li class="nav-item o_wslides_nav_tabs_item_home">
+                                    <a class="nav-link o_wslides_navlink" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review" aria-selected="false">
+                                        Review
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -242,7 +243,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                             <div t-if="channel.can_upload" class="row justify-content-center mt8 mb8">
                                 <a role="button" class="btn btn-primary oe_slide_js_upload col-10" title="Upload Presentation"
@@ -254,34 +254,52 @@
                                 </a>
                             </div>
                         </div>
-                        <!-- Channel content, aka slides (lessons in documentation mode) -->
-                        <div class="col-8 mt24 ml32 o_wslides_channel_content_promoted">
-                            <div class="row mt16 align-items-center">
-                                <div class="col">
-                                    <h3><i class="fa fa-plus-square"/> Featured lesson</h3>
-                                    <hr/>
-                                </div>
-                            </div>
-                            <div class="row" t-if="slide_promoted">
-                                <div class="col-4">
-                                    <img class="img img-fluid" style=""
-                                        t-att-src="'/slides/slide/%s/get_image?field=image_large' % slide_promoted.id"
-                                        t-att-alt="slide_promoted.name"/>
-                                </div>
-                                <div class="col-8">
-                                    <div class="row">
-                                        <h3 class="col-6" t-att-title="slide_promoted.name">
-                                            <t t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher">
-                                                <a t-attf-href="/slides/slide/#{slug(slide_promoted)}" class="font-weight-bold text-muted" t-field="slide_promoted.name"/>
-                                            </t>
-                                            <t t-else="">
-                                                <span class="font-weight-bold text-muted" t-field="slide_promoted.name"/>
-                                            </t>
-                                        </h3>
-                                        <div class="col-12" t-field="slide_promoted.description"/>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+                                <!-- Channel content, aka slides (lessons in documentation mode) -->
+                                <div class="col-8 mt24 ml32 o_wslides_channel_content_promoted">
+                                    <div class="row mt16 align-items-center">
+                                        <div class="col">
+                                            <h3><i class="fa fa-plus-square"/> Featured lesson</h3>
+                                            <hr/>
+                                        </div>
+                                    </div>
+                                    <div class="row" t-if="slide_promoted">
+                                        <div class="col-4">
+                                            <img class="img img-fluid" style=""
+                                                t-att-src="'/slides/slide/%s/get_image?field=image_large' % slide_promoted.id"
+                                                t-att-alt="slide_promoted.name"/>
+                                        </div>
+                                        <div class="col-8">
+                                            <div class="row">
+                                                <h3 class="col-6" t-att-title="slide_promoted.name">
+                                                    <t t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher">
+                                                        <a t-attf-href="/slides/slide/#{slug(slide_promoted)}" class="font-weight-bold text-muted" t-field="slide_promoted.name"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span class="font-weight-bold text-muted" t-field="slide_promoted.name"/>
+                                                    </t>
+                                                </h3>
+                                                <div class="col-12" t-field="slide_promoted.description"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div><!-- end of tab content Home -->
+                            <div class="tab-pane fade show" id="review" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="row mt24 ml32">
+                                    <div class="col-12">
+                                        <t t-call="portal.message_thread">
+                                            <t t-set="object" t-value="channel"/>
+                                            <t t-set="hash" t-value="message_post_hash"/>
+                                            <t t-set="pid" t-value="message_post_pid"/>
+                                            <t t-set="display_rating" t-value="True"/>
+                                            <t t-set="disable_composer" t-value="True"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div><!-- end of tab content review -->
                         </div>
                         <!-- Channel content, aka slides (lessons in documentation mode) -->
                         <div class="col-12">
@@ -363,14 +381,14 @@
                             <i class="fa fa-thumbs-down fa-1x" role="img" aria-label="Dislikes" title="Dislikes"></i>
                             <span t-esc="slide.dislikes"/>
                         </span>
-                    </div>    
+                    </div>
                     <small class="text-muted">
                         <t t-call="website_slides.slides_misc_float_time">
                             <t t-set="value" t-value="slide.completion_time"/>
                         </t>
 <!--                         <t t-esc="slide.total_views"/> Views
                         <timeago class="timeago" t-att-datetime="slide.create_date"></timeago> -->
-                    </small>                
+                    </small>
                 </div>
             </div>
         </div>
