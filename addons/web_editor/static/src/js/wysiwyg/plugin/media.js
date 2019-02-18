@@ -204,11 +204,13 @@ var MediaPlugin = AbstractPlugin.extend({
                             point.node.insertBefore(newMedia, node || null);
                         }
                     }
-                    if (!newMedia.previousSibling) {
-                        $(newMedia).before(this.document.createTextNode('\u200B'), newMedia);
-                    }
-                    if (!newMedia.nextSibling) {
-                        $(newMedia).after(this.document.createTextNode('\u200B'), newMedia);
+                    if (!this._isFakeNotEditable(newMedia)) {
+                        if (!newMedia.previousSibling) {
+                            $(newMedia).before(this.document.createTextNode('\u200B'), newMedia);
+                        }
+                        if (!newMedia.nextSibling) {
+                            $(newMedia).after(this.document.createTextNode('\u200B'), newMedia);
+                        }
                     }
                 } else {
                     var next = this.document.createTextNode(point.node.textContent.slice(point.offset));
@@ -216,11 +218,13 @@ var MediaPlugin = AbstractPlugin.extend({
 
                     $(point.node).after(next).after(newMedia);
                     point.node.parentNode.normalize();
-                    if (!newMedia.previousSibling) {
-                        $(newMedia).before(this.document.createTextNode('\u200B'), newMedia);
-                    }
-                    if (!newMedia.nextSibling) {
-                        $(newMedia).after(this.document.createTextNode('\u200B'), newMedia);
+                    if (!this._isFakeNotEditable(newMedia)) {
+                        if (!newMedia.previousSibling) {
+                            $(newMedia).before(this.document.createTextNode('\u200B'), newMedia);
+                        }
+                        if (!newMedia.nextSibling) {
+                            $(newMedia).after(this.document.createTextNode('\u200B'), newMedia);
+                        }
                     }
                     rng = this.context.invoke('editor.setRange', newMedia.nextSibling || newMedia, 0);
                     rng.normalize().select();
@@ -304,6 +308,18 @@ var MediaPlugin = AbstractPlugin.extend({
             };
         });
         this._createDropdownButton('padding', this.options.icons.padding, this.lang.image.padding, values);
+    },
+    /**
+     * Return true if the node is a fake not-editable.
+     *
+     * @param {Node} node
+     * @returns {Boolean}
+     */
+    _isFakeNotEditable: function (node) {
+        var contentEditableAncestor = dom.ancestor(node, function (n) {
+            return !!n.contentEditable && n.contentEditable !== 'inherit';
+        });
+        return !!contentEditableAncestor && contentEditableAncestor.contentEditable === 'false';
     },
     /**
      * Select the target media based on the
