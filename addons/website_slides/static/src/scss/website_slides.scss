@@ -27,10 +27,11 @@ $MAX-Z-INDEX : 2147483647 !default;
 }
 
 .o_wslides_wrap {
-    .cta-title {
-        font-size: 1.2em;
-    }
+    background-color: desaturate(map-get($grays, "200"), 80%);
 
+    .cta-title {
+        font-size: 1.2em;   
+    }
     .o_wslides_course_card {
         .card-body {
             padding: 0.75em 1em;
@@ -123,8 +124,17 @@ $MAX-Z-INDEX : 2147483647 !default;
 // **************************************************
 
 div .o_wslides_home_nav {
-    position: relative;
-    top: -50px;
+    top: -40px;
+
+    @include media-breakpoint-up(md) {
+        font-size: 1rem;
+
+         .o_wslides_nav_navbar_right {
+            margin-left: auto;
+            padding-left: $spacer;
+            border-left: 1px solid $border-color;
+        }
+    }
 }
 
 div .o_wslides_home_main {
