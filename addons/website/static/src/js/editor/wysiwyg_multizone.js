@@ -89,7 +89,7 @@ var WysiwygMultizone = Wysiwyg.extend({
                 }
             }
             if (ev.key.length === 1) {
-                this._onChange();
+                this._onChangeThrottled();
             }
         },
         'click .note-editable': function (ev) {
@@ -123,6 +123,7 @@ var WysiwygMultizone = Wysiwyg.extend({
         options.addDropSelector = ':o_editable';
         this.savingMutex = new concurrency.Mutex();
         this._super(parent, options);
+        this._onChangeThrottled = _.throttle(this._onChange.bind(this), 300);
     },
     /**
      * Prevent some default features for the editable area.
