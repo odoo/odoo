@@ -73,6 +73,10 @@ class ImageMixin(models.AbstractModel):
     def _set_image(self):
         for record in self:
             record.image_original = record.image
+        # We want the image field to be recomputed to have a correct size.
+        # Without this `invalidate_cache`, the image field will keep holding the
+        # image_original instead of the big-sized image.
+        self.invalidate_cache()
 
     @api.multi
     def _compute_image_large(self):
