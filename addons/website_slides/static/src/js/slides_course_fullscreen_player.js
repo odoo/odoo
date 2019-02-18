@@ -249,11 +249,10 @@ odoo.define('website_slides.fullscreen', function (require) {
                 }
             });
         },
-        _updateProgressbar: function (){
-            var self = this;
-            var completion = self.channelCompletion <= 100 ? self.channelCompletion : 100;
-            $('.o_wslides_fs_sidebar_progress_gauge').css('width', completion + "%" );
-            $('.o_wslides_progress_percentage').text(completion);
+        _updateProgressbar: function () {
+            var completion = _.min([this.channelCompletion, 100]);
+            this.$('.o_wslides_fs_sidebar_progressbar .progress-bar').css('width', completion + "%" );
+            this.$('.o_wslides_progress_percentage').text(completion);
         },
         /**
          * @private
