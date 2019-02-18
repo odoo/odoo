@@ -3823,7 +3823,7 @@ var BasicModel = AbstractModel.extend({
      */
     _readGroup: function (list, options) {
         var self = this;
-        var groupByField = list.groupedBy[0];
+        var groupByField = typeof list.groupedBy === "string" ? list.groupedBy : list.groupedBy[0];
         var rawGroupBy = groupByField.split(':')[0];
         var fields = _.uniq(list.getFieldNames().concat(rawGroupBy));
         return this._rpc({

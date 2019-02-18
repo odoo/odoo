@@ -424,7 +424,7 @@ var ListRenderer = BasicRenderer.extend({
             $cells.unshift($('<td>'));
         }
         var name = group.value === undefined ? _t('Undefined') : group.value;
-        var groupBy = this.state.groupedBy[groupLevel];
+        var groupBy = typeof this.state.groupedBy === "string" ? this.state.groupedBy : this.state.groupedBy[groupLevel];
         if (group.fields[groupBy.split(':')[0]].type !== 'boolean') {
             name = name || _t('Undefined');
         }
