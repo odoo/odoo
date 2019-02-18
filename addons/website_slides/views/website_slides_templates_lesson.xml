@@ -12,9 +12,12 @@
                 <div class="o_wslides_slide_header_container">
                     <div class="o_wslides_slide_header_box">
                         <a t-attf-href="/slides/#{slug(slide.channel_id)}" t-field="slide.channel_id.name"/>
+
                         <div t-if="slide.channel_id.channel_type == 'training'" class="d-flex align-items-end">
-                            <div class="o_wslides_slide_progress_bar">
-                                <div class="o_wslides_progress_gauge m-0 oe_slide_js_progress_bar" t-attf-channel_completion="#{slide.channel_id.completion}"/>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar"
+                                    t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100"
+                                    t-att-style="'width: %s' % (slide.channel_id.completion)"/>
                             </div>
                             <i class="fa fa-trophy ml-2 mb-0 p-0" style="font-size:1.8rem; color: #cdcdcd;"></i>
                         </div>
