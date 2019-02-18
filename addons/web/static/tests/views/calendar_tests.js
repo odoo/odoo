@@ -288,13 +288,6 @@ QUnit.module('Views', {
                 'mode="month" '+
                 'readonly_form_view_id="1">'+
                     '<field name="name"/>'+
-                    '<templates>'+
-                        '<t t-name="calendar-box">'+
-                            '<div>'+
-                                '<div class="o_event_title" t-esc="record.name"/>'+
-                            '</div>'+
-                        '</t>'+
-                    '</templates>'+
             '</calendar>',
             archs: archs,
             mockRPC: function (route, args) {
