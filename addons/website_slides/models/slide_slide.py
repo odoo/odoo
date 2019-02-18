@@ -11,7 +11,7 @@ import uuid
 
 from werkzeug import urls
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import Warning, UserError
 from odoo.http import request
@@ -78,7 +78,10 @@ class SlideTag(models.Model):
 
 class Slide(models.Model):
     _name = 'slide.slide'
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin', 'rating.mixin']
+    _inherit = [
+        'mail.thread', 'rating.mixin',
+        'image.mixin',
+        'website.seo.metadata', 'website.published.mixin']
     _description = 'Slides'
     _mail_post_access = 'read'
     _order_by_strategy = {
@@ -104,10 +107,6 @@ class Slide(models.Model):
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     is_preview = fields.Boolean('Always visible', default=False)
     completion_time = fields.Float('# Hours', default=1, digits=(10, 4))
-    image = fields.Binary("Image", attachment=True)
-    image_large = fields.Binary("Large image", attachment=True)
-    image_medium = fields.Binary("Medium image", attachment=True)
-    image_small = fields.Binary("Small image", attachment=True)
     # subscribers
     partner_ids = fields.Many2many('res.partner', 'slide_slide_partner', 'slide_id', 'partner_id',
                                    string='Subscribers', groups='base.group_website_publisher')
@@ -287,9 +286,6 @@ class Slide(models.Model):
             for key, value in doc_data.items():
                 values.setdefault(key, value)
 
-        if 'image' in values:
-            tools.image_resize_images(values, return_large=True)
-
         slide = super(Slide, self).create(values)
 
         if slide.website_published:
@@ -302,9 +298,6 @@ class Slide(models.Model):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.items():
                 values.setdefault(key, value)
-
-        if 'image' in values:
-            tools.image_resize_images(values, return_large=True)
 
         res = super(Slide, self).write(values)
         if values.get('website_published'):
