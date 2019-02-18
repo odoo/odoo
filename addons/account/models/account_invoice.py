@@ -287,7 +287,7 @@ class AccountInvoice(models.Model):
         default=False, copy=False,
         help="Technical field holding the number given to the invoice, automatically set when the invoice is validated then stored to set the same number again if the invoice is cancelled, set to draft and re-validated.")
     reference = fields.Char(string='Payment Ref.', copy=False, readonly=True, states={'draft': [('readonly', False)]},
-        help='The payment communication that will be automatically populated once the invoice validation. You can also write a free communication.')
+        help='Automatically generated once the invoice is confirmed. You can also write a free communication.')
     comment = fields.Text('Additional Information', readonly=True, states={'draft': [('readonly', False)]}, default=_default_comment)
 
     state = fields.Selection([
@@ -387,7 +387,9 @@ class AccountInvoice(models.Model):
         readonly=True, states={'draft': [('readonly', False)]},
         default=lambda self: self.env.user, copy=False)
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', oldname='fiscal_position',
-        readonly=True, states={'draft': [('readonly', False)]})
+        readonly=True, states={'draft': [('readonly', False)]},
+        help="""Fiscal positions are used to adapt taxes and accounts for particular customers or sales orders/invoices.
+            The default value comes from the customer.""")
     commercial_partner_id = fields.Many2one('res.partner', string='Commercial Entity', compute_sudo=True,
         related='partner_id.commercial_partner_id', store=True, readonly=True,
         help="The commercial entity that will be used on Journal Entries for this invoice")

@@ -468,7 +468,6 @@
                             <field name="date_invoice" options="{'datepicker': {'warn_future': true}}"/>
                             <field name="date_due" attrs="{'readonly': ['|',('payment_term_id','!=',False), ('state', 'in', ['open', 'in_payment', 'paid'])]}" force_save="1"/>
                             <field name="move_name" invisible="1"/>
-                            <field name="user_id" groups="base.group_user"/>
                             <label for="currency_id" groups="base.group_multi_currency"/>
                             <div groups="base.group_multi_currency">
                                 <field name="currency_id" options="{'no_create': True, 'no_open': True}" class="oe_inline"/>
@@ -597,19 +596,20 @@
                         <page string="Other Info" name="other_info">
                             <group>
                                 <group>
+                                    <field name="user_id"/>
                                     <field name="journal_id" groups="account.group_account_user"
                                         options="{'no_create': True}" attrs="{'readonly':[('move_name','!=',False)]}"/>
                                     <field domain="[('company_id', '=', company_id),('internal_type','=', 'receivable'), ('deprecated', '=', False)]"
                                         name="account_id" groups="account.group_account_user"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                    <field name="reference" attrs="{'readonly':[('state','!=','draft')]}"/>
-                                    <field name="name"/>
+                                    <field name="move_id" groups="account.group_account_user" attrs="{'invisible': [('move_id', '=', False)]}"/>
                                 </group>
                                 <group>
                                     <field name="incoterm_id" options="{'no_create': True}"/>
                                     <field name="fiscal_position_id" options="{'no_create': True}" />
-                                    <field name="move_id" groups="account.group_account_user" attrs="{'invisible': [('move_id', '=', False)]}"/>
+                                    <field name="name"/>
                                     <field name="origin" groups="base.group_user" attrs="{'invisible': [('origin', '=', False)]}"/>
+                                    <field name="reference" attrs="{'readonly':[('state','!=','draft')]}"/>
                                     <field name="partner_bank_id" domain="[('partner_id.ref_company_ids', 'in', [company_id])]" context="{'default_partner_id':company_id}"/>
                                 </group>
                             </group>
