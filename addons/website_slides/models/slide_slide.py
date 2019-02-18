@@ -109,6 +109,7 @@ class Slide(models.Model):
     user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
     description = fields.Text('Description', translate=True)
     channel_id = fields.Many2one('slide.channel', string="Channel", required=True)
+    can_publish = fields.Boolean('Can Publish', compute='_compute_can_publish')
     category_id = fields.Many2one('slide.category', string="Category", domain="[('channel_id', '=', channel_id)]")
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     download_security = fields.Selection(
@@ -205,6 +206,12 @@ class Slide(models.Model):
                 (slide_partner for slide_partner in slide_partners if slide_partner.slide_id == record),
                 self.env['slide.slide.partner']
             )
+
+    @api.depends('channel_id.can_publish')
+    def _compute_can_publish(self):
+        # (awa) tried a related field instead but it doesn't seem to work with a non-stored computed on the other side
+        for record in self:
+            record.can_publish = record.channel_id.can_publish
 
     def _get_embed_code(self):
         base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')

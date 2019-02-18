@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="user_navbar_inherit_website_slides" inherit_id="website.user_navbar">
+            <xpath expr="//ul[hasclass('o_menu_systray')]/li" position="attributes">
+                <attribute name="t-if">'website_published' in main_object.fields_get() and (not 'can_publish' in main_object.fields_get() or main_object.can_publish)</attribute>
+            </xpath>
+        </template>
+    </data>
+</odoo>
