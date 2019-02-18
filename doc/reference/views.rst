@@ -1355,6 +1355,9 @@ take the following attributes:
   * ``week``
   * ``month``
   * ``year``
+``scales``
+  comma-separated list of allowed scales for this view. By default, all scales
+  are allowed. For possible scale values to use in this list, see ``default_scale``.
 
 ``templates``
   defines the :ref:`reference/qweb` template ``gantt-popover`` which is used
