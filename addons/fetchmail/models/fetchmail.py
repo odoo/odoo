@@ -44,7 +44,7 @@ class FetchmailServer(models.Model):
     original = fields.Boolean('Keep Original', help="Whether a full original copy of each email should be kept for reference "
                                                     "and attached to each processed message. This will usually double the size of your message database.")
     date = fields.Datetime(string='Last Fetch Date', readonly=True)
-    user = fields.Char(string='Username', readonly=True, states={'draft': [('readonly', False)]})
+    username = fields.Char(string='Username', readonly=True, states={'draft': [('readonly', False)]})
     password = fields.Char(readonly=True, states={'draft': [('readonly', False)]})
     object_id = fields.Many2one('ir.model', string="Create a New Record", help="Process each incoming mail as part of a conversation "
                                                                                 "corresponding to this document type. This will create "
@@ -111,7 +111,7 @@ class FetchmailServer(models.Model):
                 connection = IMAP4_SSL(self.server, int(self.port))
             else:
                 connection = IMAP4(self.server, int(self.port))
-            connection.login(self.user, self.password)
+            connection.login(self.username, self.password)
         elif self.server_type == 'pop':
             if self.is_ssl:
                 connection = POP3_SSL(self.server, int(self.port))
@@ -119,7 +119,7 @@ class FetchmailServer(models.Model):
                 connection = POP3(self.server, int(self.port))
             #TODO: use this to remove only unread messages
             #connection.user("recent:"+server.user)
-            connection.user(self.user)
+            connection.user(self.username)
             connection.pass_(self.password)
         # Add timeout on socket
         connection.sock.settimeout(MAIL_TIMEOUT)
