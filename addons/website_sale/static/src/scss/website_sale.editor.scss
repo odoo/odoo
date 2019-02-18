@@ -1,0 +1,30 @@
+.oe_overlay_options {
+    .dropdown {
+        div[name="size"] {
+            table {
+                margin-left: 20px;
+            }
+
+            td {
+                margin: 0;
+                padding: 0;
+                width: 20px;
+                height: 20px;
+                border: 1px #dddddd solid;
+                cursor: pointer;
+
+                &.selected {
+                    background-color: #B1D4F1;
+                }
+            }
+
+            table.oe_hover td.selected {
+                background-color: transparent;
+            }
+
+            table.oe_hover td.select {
+                background-color: #B1D4F1;
+            }
+        }
+    }
+}
