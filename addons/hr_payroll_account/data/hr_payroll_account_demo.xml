@@ -3,4 +3,11 @@
         <record id="hr_payroll.hr_employee_payroll" model="hr.employee">
             <field name="address_home_id" ref="base.res_partner_main2"/>
         </record>
+
+    <record id="hr_payslip_test" model="hr.payslip">
+        <field name="name">Payroll Test</field>
+        <field name="employee_id" ref="hr.employee_qdp"/>
+        <field name="contract_id" ref="hr_payroll.hr_contract_gilles_gravie"/>
+    </record>
+
 </odoo>
