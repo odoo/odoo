@@ -712,15 +712,15 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClickChangeShipping: function (ev) {
-        var $old = $('.all_shipping').find('.card.border_primary');
+        var $old = $('.all_shipping').find('.card.border.border-primary');
         $old.find('.btn-ship').toggle();
         $old.addClass('js_change_shipping');
-        $old.removeClass('border_primary');
+        $old.removeClass('border border-primary');
 
         var $new = $(ev.currentTarget).parent('div.one_kanban').find('.card');
         $new.find('.btn-ship').toggle();
         $new.removeClass('js_change_shipping');
-        $new.addClass('border_primary');
+        $new.addClass('border border-primary');
 
         var $form = $(ev.currentTarget).parent('div.one_kanban').find('form.d-none');
         $.post($form.attr('action'), $form.serialize()+'&xhr=1');
