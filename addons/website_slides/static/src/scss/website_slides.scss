@@ -19,46 +19,16 @@ $MAX-Z-INDEX : 2147483647 !default;
 // Common to new slides pages
 // **************************************************
 
+.o_wslides_container {
+    margin: auto;
+    width: 100%;
+    max-width: 1140px;
+    padding: 0px 32px 0px 32px;
+}
+
 .o_wslides_wrap {
-    .text_small_caps {
-        font-variant: small-caps;
-    }
-    .image-muted {
-        opacity: 0.5;
-    }
     .cta-title {
         font-size: 1.2em;
-    }
-}
-
-
-// New home page
-// **************************************************
-
-div .o_wslides_home_nav {
-    position: relative;
-    top: -50px;
-}
-
-div .o_wslides_home_main {
-    .o_wslides_home_header {
-    }
-    .o_wslides_home_footer {
-    }
-
-    .o_wslides_home_aside {
-        .fa-check {
-            color: #00A09D;
-            font-size: 1.2em;
-        }
-    }
-    .o_wslides_home_content_section_title, .o_wslides_home_aside_title {
-        h3 {
-            font-size: 1.4em;
-        }
-        h4 {
-            font-size: 1.3em;
-        }
     }
 
     .o_wslides_course_card {
@@ -66,9 +36,19 @@ div .o_wslides_home_main {
             padding: 0.75em 1em;
         }
         .card-footer {
-            padding-top: 0.75em 1em;
+            padding: 0.75em 1em;
         }
     }
+
+    .o_wslides_lesson_card {
+        .card-body {
+            padding: 0.75em 1em;
+        }
+        .card-footer {
+            padding: 0.75em 1em;
+        }
+    }
+
     // responsive card-deck like
     .row.o_wslides_row > div[class*='col-'] {
         display: flex;
@@ -80,12 +60,17 @@ div .o_wslides_home_main {
 
     // tools
     // ****************************************
+
     .text_small_caps {
         font-variant: small-caps;
     }
 
-    .image-muted {
+    img.image-muted {
         opacity: 0.5;
+    }
+    img.image-center-cropped {
+        object-fit: cover;
+        object-position: center;
     }
 
     .o_wslides_home_circled {
@@ -134,15 +119,34 @@ div .o_wslides_home_main {
     }
 }
 
-// New course page
+
+// New home page
 // **************************************************
 
-.o_wslides_container {
-    margin: auto;
-    width: 100%;
-    max-width: 1140px;
-    padding: 32px 32px 0px 32px;
+div .o_wslides_home_nav {
+    position: relative;
+    top: -50px;
 }
+
+div .o_wslides_home_main {
+    .o_wslides_home_aside {
+        .fa-check {
+            color: #00A09D;
+            font-size: 1.2em;
+        }
+    }
+    .o_wslides_home_content_section_title, .o_wslides_home_aside_title {
+        h3 {
+            font-size: 1.4em;
+        }
+        h4 {
+            font-size: 1.3em;
+        }
+    }
+}
+
+// New course page
+// **************************************************
 
 .o_wslides_course_nav {
     margin: auto;
@@ -187,66 +191,54 @@ div .o_wslides_home_main {
         top: 48px;
         padding-top: 0px;
 
-        .o_wslides_course_header_content {
-            font-size: 16px;
-            color: #FFFFFF;
-            .o_wslides_course_description {
-                margin-right: 36px;
-            }
-        }
-
         .o_wslides_course_header_aside {
+            max-width: 286px;
             img {
                 width: 100%;
                 max-width: 256px;
             }
         }
+
+        .o_wslides_course_header_content {
+            font-size: 16px;
+            color: #FFFFFF;
+
+            .o_wslides_course_header_nav {
+                ul.o_wslides_nav_tabs {
+                    border-bottom: 0px;
+                    li.nav-item {
+                        margin-bottom: 0px;
+                    }
+                    a.nav-link {
+                        color: white;
+                        border-radius: 0px;
+                        height: 48px;
+                        font-weight: bold;
+                        padding-top: 12px;
+                        border-left: 2px solid #875A7B;
+                        text-align: center;
+                        width: 120px;
+                        &:hover {
+                            border: 0px;
+                            border-radius: 0px;
+                            background-color: #875A7B;
+                        }
+                        &.active {
+                            color: #212529;
+                            background-color: #f2f2f2;
+                            border: 0px;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
-.o_wslides_course_content {
+.o_wslides_course_main {
     margin: auto;
     background-color: #f2f2f2;
 
-    .o_wslides_content_container {
-        position: relative;
-        top: -80px;
-    }
-
-    // responsive card-deck like
-    .row.o_wslides_row > div[class*='col-'] {
-        display: flex;
-        flex:1 0 auto;
-        .card {
-            width:100%;
-        }
-    }
-
-    .o_wslides_course_content_nav {
-        .o_wslides_nav_tabs {
-            border-bottom: 0px;
-        }
-        .o_wslides_navlink {
-            color: white;
-            border-radius: 0px;
-            height: 48px;
-            font-weight: bold;
-            padding-top: 12px;
-            border-left: 2px solid #875A7B;
-            text-align: center;
-            width: 120px;
-            &:hover {
-                border: 0px;
-                border-radius: 0px;
-                background-color: #875A7B;
-            }
-        }
-        .o_wslides_navlink.active {
-            color: #212529;
-            background-color: #f2f2f2;
-            border: 0px;
-        }
-    }
     .o_wslides_course_content_main {
         h3 {
             font-size: 1.4em;
@@ -257,20 +249,18 @@ div .o_wslides_home_main {
         }
 
         .o_wslides_course_content_aside {
-            top: 1px;
-            width: 256px;
-            max-width: 256px;
-            margin-left: 15px;
-            background-color: white;
+            max-width: 286px;
+            .bg-white {
+                max-width: 256px;
+                background-color: white;
+                padding-bottom: 8px;
+                 > div.row {
+                    padding-left: 15px;
+                    padding-right: 15px;
+                 }
+            }
 
             .o_wslides_course_aside_line {
-            }
-        }
-
-        .o_wslides_lesson_card {
-            .card-footer {
-                padding-top: 0.75em;
-                padding-bottom: 0.75em;
             }
         }
     }

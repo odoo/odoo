@@ -6,7 +6,7 @@
     <xpath expr="//li[hasclass('o_wslides_nav_tabs_item_home')]" position="after">
         <li class="nav-item" t-if="channel.forum_id">
             <a t-att-href="'/forum/%s' % (slug(channel))"
-                t-att-class="'nav-link o_wslides_navlink'">Forum</a>
+                t-att-class="'nav-link'">Forum</a>
         </li>
     </xpath>
 </template>

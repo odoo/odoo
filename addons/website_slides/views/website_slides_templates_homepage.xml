@@ -11,7 +11,7 @@
             <t t-set="header_cta_url" t-value="'slides'"/>
             <t t-set="header_cta_title" t-value="'Pick a course'"/>
         </t>
-        <div class="wrap">
+        <div class="wrap o_wslides_wrap">
             <div class="container mt16 o_wslides_home_nav">
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
                     <button class="navbar-toggler" type="button"
@@ -32,7 +32,7 @@
                     </div>
                 </nav>
             </div>
-            <div class="container mt16 o_wslides_home_main">
+            <div class="container o_wslides_home_main">
                 <div class="row">
                     <div class="col-md-9">
                         <t t-if="channels_my">
@@ -41,7 +41,7 @@
                                 <div class="row mt16 o_wslides_home_content_section_title align-items-center">
                                     <div class="col">
                                         <a href="slides/all" class="float-right">View all</a>
-                                        <h3><i class="fa fa-certificate"/> Complete latest courses</h3>
+                                        <h3><i class="fa fa-trophy"/> Complete latest courses</h3>
                                         <hr/>
                                     </div>
                                 </div>
@@ -111,7 +111,7 @@
             <t t-set="header_title" t-value="'All Courses'"/>
             <t t-set="header_subtitle" t-value="'Start your online course today !'"/>
         </t>
-        <div class="wrap">
+        <div class="wrap o_wslides_wrap">
             <div class="container mt16 o_wslides_home_nav">
                 <!-- Navbar dynamically composed using displayed channel tag groups. -->
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -162,7 +162,7 @@
                     </div>
                 </nav>
             </div>
-            <div class="container mt16 o_wslides_home_main">
+            <div class="container o_wslides_home_main">
                 <t t-if="search_term and not channels_layouted">
                     <div class="row">
                         <div class="col">
@@ -245,9 +245,9 @@
 
 <template id='course_card' name="Course Card">
     <div class="card o_wslides_course_card">
-        <img class="card-img-top img-fuild"
+        <img class="card-img-top img-fuild image-center-cropped"
             style="max-height: 160px;"
-            t-att-src="'/web/image/slide.channel/%s/image_large' % channel.id if channel.image else '/website_slides/static/src/img/channel-default.jpg'"
+            t-att-src="'/web/image/slide.channel/%s/image_large' % channel.id"
             t-att-alt="channel.name"/>
         <div class="card-body">
             <h5 class="card-title" t-att-title="channel.name">
@@ -266,22 +266,24 @@
         </div>
         <div class="card-footer">
             <div class="row justify-content-between align-items-center">
-                <small class="text-muted col-3">
-                    <t t-call="website_slides.slides_misc_float_time">
-                        <t t-set="value" t-value="channel.total_time"/>
-                    </t>
-                </small>
-                <t t-if="channel.is_member">
+                <small class="text-muted col-3" t-field="channel.total_time" t-options='{"widget": "float_time"}'/>
+                <t t-if="channel.is_member and channel.completed">
+                    <div class="col-5">
+                        <span class="badge badge-pill badge-success pull-right"><i class="fa fa-check"/> Completed</span>
+                    </div>
+                </t>
+                <t t-elif="channel.is_member">
                     <div class="col">
                         <div class="progress">
                             <div class="progress-bar" role="progressbar" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{channel.completion}%;">
-                                <!-- <span><t t-esc="channel.completion"/>%</span> -->
                             </div>
                         </div>
                     </div>
                 </t>
                 <t t-else="">
-                    <small class="text-muted col-5"><span t-esc="channel.total_slides"/> steps</small>
+                    <div class="col-5">
+                        <small class="text-muted pull-right"><span t-esc="channel.total_slides"/> steps</small>
+                    </div>
                 </t>
             </div>
         </div>
