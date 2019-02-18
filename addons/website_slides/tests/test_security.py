@@ -154,3 +154,8 @@ class TestAccess(common.SlidesCase):
         # standard people should not be responsible as they still cannot publish
         self.assertTrue(channel_emp.can_upload)
         self.assertFalse(channel_emp.can_publish)
+
+        # superuser should always be able to publish even if he's not the responsible
+        channel_superuser = self.channel.sudo()
+        self.assertTrue(channel_superuser.can_upload)
+        self.assertTrue(channel_superuser.can_publish)
