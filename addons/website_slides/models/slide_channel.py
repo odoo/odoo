@@ -290,7 +290,7 @@ class Channel(models.Model):
         if 'active' in vals:
             # archiving/unarchiving a channel does it on its slides, too
             self.with_context(active_test=False).mapped('slide_ids').write({'active': vals['active']})
-        return res
+        return res 
 
     @api.multi
     @api.returns('mail.message', lambda value: value.id)
