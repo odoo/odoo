@@ -152,6 +152,8 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         'change #shipping_use_same': '_onChangeShippingUseSame',
         'click .toggle_summary': '_onToggleSummary',
         'click input.js_product_change': 'onChangeVariant',
+        // dirty fix: prevent options modal events to be triggered and bubbled
+        'change oe_optional_products_modal [data-attribute_exclusions]': 'onChangeVariant',
     },
 
     /**
@@ -588,6 +590,20 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
      */
     _onChangeShippingUseSame: function (ev) {
         $('.ship_to_other').toggle(!$(ev.currentTarget).prop('checked'));
+    },
+    /**
+     * @override
+     *
+     * Dirty fix: prevent options modal events to be triggered and bubbled
+     */
+    onChangeVariant: function (ev, data) {
+        var $originPath = ev.originalEvent && Array.isArray(ev.originalEvent.path) ? $(ev.originalEvent.path) : $();
+        var $container = data && data.$container ? data.$container : $();
+        if ($originPath.add($container).hasClass('oe_optional_products_modal')) {
+            ev.stopPropagation();
+            return;
+        }
+        return ProductConfiguratorMixin.onChangeVariant.apply(this, arguments);
     },
     /**
      * @private
