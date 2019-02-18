@@ -300,6 +300,7 @@ class WebsiteSlides(WebsiteProfile):
                 ('model', '=', channel._name),
                 ('res_id', '=', channel.id),
                 ('author_id', '=', request.env.user.partner_id.id),
+                ('message_type', '=', 'comment'),
                 ('website_published', '=', True)
             ], order='write_date DESC', limit=1).read(['body', 'rating_value'])
             last_message_data = last_message_values[0] if last_message_values else {}
