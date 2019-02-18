@@ -477,7 +477,7 @@ var SlideUploadDialog = Dialog.extend({
         this.isValidUrl = false;
         this.set('can_submit_form', false);
         this._fetchUrlPreview(url).then(function (data) {
-            this.set('can_submit_form', true);
+            self.set('can_submit_form', true);
             if (data.error) {
                 self._alertDisplay(data.error);
             } else {
