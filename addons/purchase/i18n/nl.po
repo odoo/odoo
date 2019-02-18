@@ -115,7 +115,11 @@ msgid ""
 "        <br/><br/>\n"
 "        Best regards,\n"
 "    </p>\n"
-"</div>"
+"</div><p style=\"color:#888888;\">\n"
+"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
+"    ${object.sudo().create_uid.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -124,7 +128,7 @@ msgstr ""
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Hierbij ontvangt u, in de bijlage, onze offerteaanvraag <strong>${object.name}</strong>\n"
+"        Hierbij ontvangt u, in de bijlage, onze offerte-aanvraag <strong>${object.name}</strong>\n"
 "        % if object.partner_ref:\n"
 "            met referentie: ${object.partner_ref}\n"
 "        % endif\n"
@@ -134,7 +138,11 @@ msgstr ""
 "        <br/><br/>\n"
 "        Met vriendelijke groet,\n"
 "    </p>\n"
-"</div>"
+"</div><p style=\"color:#888888;\">\n"
+"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
+"    ${object.sudo().create_uid.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -390,7 +398,7 @@ msgstr "Aantal bijlagen"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice__vendor_bill_purchase_id
 msgid "Auto-Complete"
-msgstr "Auto-complete"
+msgstr "Automatisch aanvullen"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
