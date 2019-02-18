@@ -308,7 +308,7 @@
 </template>
 
 <template id="course_content_documentation" name="Content of a training channel">
-    <div class="col-md-8 col-xs-12 mt16 o_wslides_channel_content_promoted">
+    <div t-if="not search" class="col-md-8 col-xs-12 mt16 o_wslides_channel_content_promoted">
          <div class="row align-items-center">
             <div class="col">
                 <h3> Featured lesson</h3>
@@ -336,7 +336,14 @@
             </div>
         </div>
     </div>
-    <div class="col-12">
+    <div t-if="search and not category_data" class="col-12">
+        <div class="row mt16 justify-content-end">
+            <div class="col-12">
+                <p class="text-center">No content was found using your search <span class="font-weight-bold" t-esc="search"/>.</p>
+            </div>
+        </div>
+    </div>
+    <div t-if="category_data" class="col-12">
         <div class="tab-content mt16" id="slideChannelContent">
             <div class="tab-pane active" role="tabpanel" aria-labelledby="profile-tab" id="slideChannelContentAbout">
                 <t t-foreach="category_data" t-as="category">
