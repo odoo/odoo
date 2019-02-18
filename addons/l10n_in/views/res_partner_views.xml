@@ -8,6 +8,24 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="attributes">
                 <attribute name="string">GSTIN</attribute>
+                <attribute name="attrs"/>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/form//field[@name='parent_id']" position="after">
+                <group>
+                    <field name="vat" string="GSTIN"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    <record id="l10n_in_view_partner_short_form" model="ir.ui.view">
+        <field name="name">l10n.in.res.partner.vat.short.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="priority" eval="100"/>
+        <field name="inherit_id" ref="base.view_partner_short_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="string">GSTIN</attribute>
+                <attribute name="attrs"/>
             </xpath>
         </field>
     </record>
