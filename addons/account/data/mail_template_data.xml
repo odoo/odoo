@@ -14,9 +14,11 @@
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
-        Dear ${object.partner_id.name}
+        Dear
         % if object.partner_id.parent_id:
-            (${object.partner_id.parent_id.name})
+            ${object.partner_id.name} (${object.partner_id.parent_id.name}),
+        % else:
+            ${object.partner_id.name},
         % endif
         <br /><br />
         Here is your 
