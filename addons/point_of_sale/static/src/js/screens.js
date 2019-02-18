@@ -842,8 +842,8 @@ var ProductListWidget = PosBaseWidget.extend({
         };
 
         this.keypress_product_handler = function(ev){
-            if (ev.which != 13 && ev.which != 32) {
-                // Key is not space or enter
+            // React only to SPACE to avoid interfering with warcode scanner which sends ENTER
+            if (ev.which != 32) {
                 return;
             }
             ev.preventDefault();
