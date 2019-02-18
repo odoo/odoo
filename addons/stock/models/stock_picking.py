@@ -708,7 +708,7 @@ class Picking(models.Model):
         # If no lots when needed, raise error
         picking_type = self.picking_type_id
         precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        no_quantities_done = all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in self.move_line_ids)
+        no_quantities_done = all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in self.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel')))
         no_reserved_quantities = all(float_is_zero(move_line.product_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in self.move_line_ids)
         if no_reserved_quantities and no_quantities_done:
             raise UserError(_('You cannot validate a transfer if you have not processed any quantity. You should rather cancel the transfer.'))
