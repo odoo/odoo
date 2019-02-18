@@ -540,31 +540,6 @@ class WebsiteForum(WebsiteProfile):
 
     # User
     # --------------------------------------------------
-    @http.route(['''/forum/<model("forum.forum", "[('website_id', 'in', (False, current_website_id))]"):forum>/users''',
-                 '''/forum/<model("forum.forum"):forum>/users/page/<int:page>'''],
-                type='http', auth="public", website=True)
-    def users(self, forum, page=1, **searches):
-        User = request.env['res.users']
-        step = 30
-        dom = [('karma', '>', 1), ('website_published', '=', True)]
-        tag_count = User.sudo().search_count(dom)
-        pager = request.website.pager(url="/forum/%s/users" % slug(forum), total=tag_count, page=page, step=step, scope=30)
-
-        if searches.get('user'):
-            dom += [('name', 'ilike', searches.get('user'))]
-
-        users = User.sudo().search(dom, limit=step, offset=pager['offset'], order='karma DESC')
-
-        searches['users'] = 'True'
-        values = self._prepare_user_values(forum=forum, searches=searches)
-        values .update({
-            'users': users,
-            'main_object': forum,
-            'pager': pager,
-        })
-
-        return request.render("website_forum.users", values)
-
     @http.route(['/forum/<model("forum.forum"):forum>/partner/<int:partner_id>'], type='http', auth="public", website=True)
     def open_partner(self, forum, partner_id=0, **post):
         if partner_id:

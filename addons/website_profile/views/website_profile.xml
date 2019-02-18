@@ -6,6 +6,11 @@
         </xpath>
     </template>
 
+
+    <!--
+    Single User Profile Page
+    -->
+
     <!-- Edit Profile Page -->
     <template id="user_profile_edit_main" name="Edit Profile">
         <t t-call="website.layout">
@@ -36,7 +41,7 @@
                                 </a>
                             </div>
                             <div class="form-group mt-3 mb-0 pt-2 border-top">
-                                <label class="text-primary" for="user_website_published" t-if="user.id == uid"><b>Public profile</b></label>
+                                <label class="text-primary" for="user_website_published" t-if="user.id == uid"><span class="font-weight-bold">Public profile</span></label>
                                 <div class=" mb-0 float-right" t-if="user.id == uid">
                                     <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" t-if="not user.website_published"/>
                                     <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" checked="checked" t-if="user.website_published"/>
@@ -51,14 +56,14 @@
                             <div class="row">
                                 <input name="user_id" t-att-value="user.id" type="hidden"/>
                                 <div class="form-group col-12">
-                                    <label class="text-primary mb-1 d-block" for="user_name"><b>Real name</b></label>
+                                    <label class="text-primary mb-1 d-block" for="user_name"><span class="font-weight-bold">Real name</span></label>
                                     <div>
                                         <input type="text" class="form-control" name="name" id="user_name" required="True" t-attf-value="#{user.name}"/>
                                     </div>
                                 </div>
 
                                 <div class="form-group col-6">
-                                    <label class="mb-1 text-primary" for="user_website"><b>Website</b></label>
+                                    <label class="mb-1 text-primary" for="user_website"><span class="font-weight-bold">Website</span></label>
                                     <div>
                                         <input type="text" class="form-control" name="website" id="user_website" t-attf-value="#{user.partner_id.website or ''}"/>
                                     </div>
@@ -68,19 +73,19 @@
                                         <button type="button" class="close" data-dismiss="alert">x</button>
                                         <p>Please enter a valid email address in order to receive notifications from answers or comments.</p>
                                     </div>
-                                    <label class="mb-1 text-primary" for="user_email"><b>Email</b></label>
+                                    <label class="mb-1 text-primary" for="user_email"><span class="font-weight-bold">Email</span></label>
                                     <div>
                                         <input type="text" class="form-control" name="email" id="user_email" required="True" t-attf-value="#{user.partner_id.email}"/>
                                     </div>
                                 </div>
                                 <div class="form-group col-6">
-                                    <label class="mb-1 text-primary" for="user_city"><b>City</b></label>
+                                    <label class="mb-1 text-primary" for="user_city"><span class="font-weight-bold">City</span></label>
                                     <div>
                                         <input type="text" class="form-control" name="city" id="user_city" t-attf-value="#{user.partner_id.city or ''}"/>
                                     </div>
                                 </div>
                                 <div class="form-group col-6">
-                                    <label class="mb-1 text-primary"><b>Country</b></label>
+                                    <label class="mb-1 text-primary"><span class="font-weight-bold">Country</span></label>
                                     <div>
                                         <select class="form-control" name="country">
                                             <option value="">Country...</option>
@@ -91,7 +96,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-12">
-                                    <label class="mb-1 text-primary" for="description"><b>Biography</b></label>
+                                    <label class="mb-1 text-primary" for="description"><span class="font-weight-bold">Biography</span></label>
                                     <textarea name="description" id="description" style="min-height: 120px" required="True"
                                         class="form-control load_editor"><t t-esc="user.partner_id.website_description"/></textarea>
                                 </div>
@@ -124,9 +129,9 @@
                     <div class="col-8 o_wprofile_id">
                         <a id="edit_profile_button" class="btn btn-primary o_wprofile_edit"
                             t-if="request.env.user == user"
-                           t-attf-href="/profile/edit?url_param=#{edit_button_url_param}"><b>EDIT PROFILE</b></a>
+                           t-attf-href="/profile/edit?url_param=#{edit_button_url_param}"><span class="font-weight-bold">EDIT PROFILE</span></a>
                         <div class="row mb32">
-                            <h3 class="o_card_people_name text-white"><b t-field="user.name"/></h3>
+                            <h3 class="o_card_people_name text-white"><span class="font-weight-bold" t-field="user.name"/></h3>
                         </div>
                         <div class="row">
                             <div class="o_wprofile_id_info">
@@ -177,7 +182,7 @@
                             <div class="row">
                                 <div class="col-lg-12 pt16 o_wprofile_rank">
                                     <table><tbody><tr>
-                                        <th><b class="text-muted">Current <a href="/profile/ranks">Rank</a> : </b></th>
+                                        <th><span class="font-weight-bold text-muted">Current <a href="/profile/ranks">Rank</a> : </span></th>
                                         <th><span class="float-right" t-field="user.rank_id"/></th>
                                     </tr></tbody></table>
                                     <t t-call="website_profile.profile_next_rank_card"></t>
@@ -190,11 +195,11 @@
                                 <table>
                                     <tbody>
                                         <tr>
-                                            <th style="width: 30%"><b class="text-muted">Joined</b></th>
+                                            <th style="width: 30%"><span class="font-weight-bold text-muted">Joined</span></th>
                                             <th style="width: 70%"><span t-field="user.create_date" t-options='{"format": "d MMM Y"}'/></th>
                                         </tr>
                                         <tr>
-                                            <th style="width: 30%"><b class="text-muted">Badges</b></th>
+                                            <th style="width: 30%"><span class="font-weight-bold text-muted">Badges</span></th>
                                             <th style="width: 70%">
                                                 <t t-if="user.badge_ids">
                                                     <span t-esc="len(user.badge_ids)"/>
@@ -206,20 +211,20 @@
                                         </tr>
                                         <t t-if="user.website">
                                             <tr>
-                                                <th style="width: 30%"><b class="text-muted">Website</b></th>
+                                                <th style="width: 30%"><span class="font-weight-bold text-muted">Website</span></th>
                                                 <th style="width: 70%"><span t-field="user.website"/></th>
                                             </tr>
                                         </t>
                                         <t t-if="user.city or user.country_id">
                                             <tr>
-                                                <th style="width: 30%"><b class="text-muted">Location</b></th>
+                                                <th style="width: 30%"><span class="font-weight-bold text-muted">Location</span></th>
                                                 <th style="width: 70%">
                                                     <span t-field="user.city"/><t t-if="user.country_id"> (</t><span t-field="user.country_id"/><t t-if="user.country_id">)</t>
                                                 </th>
                                             </tr>
                                         </t>
                                         <tr id="profile_abstract_info_company">
-                                            <th style="width: 30%"><b class="text-muted">Company</b></th>
+                                            <th style="width: 30%"><span class="font-weight-bold text-muted">Company</span></th>
                                             <th style="width: 70%"><span t-field="user.company_id"/></th>
                                         </tr>
                                     </tbody>
@@ -249,8 +254,8 @@
     <template id="profile_next_rank_card" name="Profile Next Rank Card">
         <div class="card-body o_wprofile_next_rank_card mt-2 pt-2">
             <div><img class="o_wprofile_img_medium" t-attf-src="/web/image/gamification.karma.rank/#{user.next_rank_id.id}/image_medium"/></div>
-            <div><span class="text-center"><b>"<span t-field="user.next_rank_id.name"/>"</b></span></div>
-            <div><span class="text-center"><b class="text-primary" t-field="user.karma"/>/<b t-field="user.next_rank_id.karma_min"/> xp</span></div>
+            <div><span class="text-center font-weight-bold">"<span t-field="user.next_rank_id.name"/>"</span></div>
+            <div><span class="text-center"><span class="font-weight-bold text-primary" t-field="user.karma"/>/<span class="font-weight-bold" t-field="user.next_rank_id.karma_min"/> xp</span></div>
             <div class="progress o_wprofile_next_rank_progress">
                 <t t-if="user.next_rank_id.karma_min - user.rank_id.karma_min > 0">
                     <div class="progress-bar o_wprofile_next_rank_progress_bar" style="background-color: #00A09D !important"
@@ -274,7 +279,7 @@
                                 <img class="o_wprofile_img_thumb" t-attf-src="/web/image/gamification.badge/#{badge.badge_id.id}/image_small"/>
                             </th>
                             <th style="">
-                                <b t-field="badge.badge_id.name"/>
+                                <span class="font-weight-bold" t-field="badge.badge_id.name"/>
                             </th>
                         </tr></tbody></table>
                     </div>
@@ -282,7 +287,7 @@
             </div>
         </t>
         <div class="mb16" t-if="not user.badge_ids">
-            <b>No badge yet!</b><br/>
+            <span class="font-weight-bold">No badge yet!</span><br/>
             <t t-if="badge_category">
                  <a t-attf-href="/profile/badge?category=#{badge_category}" class="fa fa-arrow-right"> Check available badges</a>
             </t>
@@ -303,10 +308,10 @@
                     Do not stop learning with <t t-esc="user.company_id.name"/>. Collects points on the forum or the eLearning platform. Those points will make you reach new ranks.
                 </p>
                 <p>
-                    <b>How do I earn badges?</b> When you finish a course, reach milestones, you're awarded badges.
+                    <span class="font-weight-bold">How do I earn badges?</span> When you finish a course, reach milestones, you're awarded badges.
                 </p>
                 <p>
-                    <b>How do I score more points?</b> You can score more points by answering quizzes at the end of each course content. Points can also be earned on the forum. Follow this link to the guidelines of the forum.
+                    <span class="font-weight-bold">How do I score more points?</span> You can score more points by answering quizzes at the end of each course content. Points can also be earned on the forum. Follow this link to the guidelines of the forum.
                 </p>
             </div>
             <t t-call="website_profile.rank_content">
@@ -321,7 +326,7 @@
                 <div class="row">
                     <div class="o_wprofile_rank_tile" t-foreach="ranks" t-as="rank">
                         <div><img class="mb-3" t-attf-src="/web/image/gamification.karma.rank/#{rank.id}/image"/></div>
-                        <div><b t-field="rank.name"/></div>
+                        <div><span class="font-weight-bold" t-field="rank.name"/></div>
                         <div><span style="color: #00A09D;"><span t-field="rank.karma_min"/> point<span t-if="rank.karma_min">s</span></span></div>
                     </div>
                 </div>
@@ -352,12 +357,12 @@
                 <tr t-foreach="badges" t-as="badge">
                     <td>
                         <span class="badge badge-pill float-left">
-                            <span t-if="badge.level == 'gold'"><i class="fa fa-trophy badge-gold"/> <b t-field="badge.name" class="text-white bg-gold badge-pill"/></span>
-                            <span t-if="badge.level == 'silver'"><i class="fa fa-trophy badge-silver"/> <b t-field="badge.name" class="text-white bg-silver badge-pill"/></span>
-                            <span t-if="badge.level == 'bronze'"><i class="fa fa-trophy badge-bronze"/> <b t-field="badge.name" class="text-white bg-bronze badge-pill"/></span>
+                            <span t-if="badge.level == 'gold'"><i class="fa fa-trophy badge-gold"/> <span t-field="badge.name" class="font-weight-bold text-white bg-gold badge-pill"/></span>
+                            <span t-if="badge.level == 'silver'"><i class="fa fa-trophy badge-silver"/> <span t-field="badge.name" class="font-weight-bold text-white bg-silver badge-pill"/></span>
+                            <span t-if="badge.level == 'bronze'"><i class="fa fa-trophy badge-bronze"/> <span t-field="badge.name" class="font-weight-bold text-white bg-bronze badge-pill"/></span>
                         </span>
                     </td><td>
-                        <b t-esc="badge.stat_count_distinct"/>
+                        <span class="font-weight-bold" t-esc="badge.stat_count_distinct"/>
                         <i class="text-muted"> awarded users</i>
                     </td><td>
                         <span t-field="badge.description"/>
@@ -377,4 +382,85 @@
             </div>
         </t>
     </template>
+
+    <!--
+    All Users Page
+    -->
+    <template id="users_page_main" name="Users Page">
+         <t t-call="website.layout">
+            <t t-call="website_profile.users_page_header"></t>
+            <t t-call="website_profile.users_page_content"></t>
+        </t>
+    </template>
+
+    <template id="users_page_header" name="Users Page Header">
+        <div class="row o_wprofile_all_users_header">
+            <div class="col-lg-12">
+                <h2 class="row">Users</h2>
+            </div>
+        </div>
+    </template>
+
+    <template id="users_page_content">
+        <div class="row o_wprofile_all_user_content">
+            <div class="container mb32 mt48">
+                <div class="row">
+                    <div class="col-lg-4 mb32" t-foreach="top3_users" t-as="user" t-attf-onclick="location.href='/profile/user/#{user['id']}';">
+                        <t t-call="website_profile.top3_user_card"></t>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12" t-foreach="users" t-as="user" t-attf-onclick="location.href='/profile/user/#{user['id']}';">
+                        <t t-call="website_profile.all_user_card"></t>
+                    </div>
+                </div>
+                <div class="float-left">
+                    <t t-call="website.pager"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="top3_user_card" name="Top 3 User Card">
+        <div class="card o_wprofile_all_user_card_top3 o_wprofile_bb_grey">
+            <div class="card-body">
+                <div>
+                    <img class="mb-3 rounded-circle o_wprofile_img_medium" t-att-src="'/profile/avatar/%s?field=image_medium%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
+                    <div t-if="user['position'] == 1" class="o_wprofile_top3_first"><span>1st</span></div>
+                    <div t-if="user['position'] == 2" class="o_wprofile_top3_second"><span>2nd</span></div>
+                    <div t-if="user['position'] == 3" class="o_wprofile_top3_third"><span>3rd</span></div>
+                </div>
+                <div><h3 t-esc="user['name']"></h3></div>
+                <div><span t-esc="user['rank']"></span></div>
+                <div class="row">
+                    <div class="col" style="border-right: 1px solid lightgrey"><span><span t-esc="user['karma']"/> XP</span></div>
+                    <div id="top3_user_badge_count" class="col"><span><span t-esc="user['badge_count']"/> Badges</span></div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="all_user_card" name="All User Card">
+        <div class="card o_wprofile_all_users_card o_wprofile_bb_grey">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="row">
+                        <div><span><span t-esc="user['position']"/>th</span></div>
+                        <div><img class="rounded-circle o_wprofile_img_small" t-att-src="'/profile/avatar/%s?field=image_medium%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/></div>
+                        <div>
+                                <span class="font-weight-bold" t-esc="user['name']"/><br/>
+                                <span t-esc="user['rank']"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body col-lg-8">
+                    <div class="row">
+                        <div class="col"><span><span t-esc="user['karma']"/> XP</span></div>
+                        <div id="all_user_badge_count" class="col"><span><span t-esc="user['badge_count']"/> Badges</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
 </data></odoo>
