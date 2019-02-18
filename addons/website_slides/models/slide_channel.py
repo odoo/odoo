@@ -45,8 +45,11 @@ class ChannelUsersRelation(models.Model):
             slide_done = mapped_data.get(record.channel_id.id, dict()).get(record.partner_id.id, 0)
             slide_total = channel_data.get(record.channel_id.id) or 1
             record.completion = math.ceil(100.0 * slide_done / slide_total)
-            if record.completion >= 100:
-                record.update({'completed': True})
+
+    def _write(self, values):
+        if 'completion' in values and values['completion'] >= 100:
+            values['completed'] = True
+        return super(ChannelUsersRelation, self)._write(values)
 
 
 class Channel(models.Model):
