@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import codecs
 import fnmatch
+import functools
 import inspect
 import io
 import locale
@@ -444,12 +445,18 @@ class GettextAlias(object):
         return lang
 
     def __call__(self, source):
+        return self._get_translation(source)
+
+    def _get_translation(self, source):
         res = source
         cr = None
         is_new_cr = False
         try:
             frame = inspect.currentframe()
             if frame is None:
+                return source
+            frame = frame.f_back
+            if not frame:
                 return source
             frame = frame.f_back
             if not frame:
@@ -472,6 +479,45 @@ class GettextAlias(object):
             if cr and is_new_cr:
                 cr.close()
         return res
+
+
+@functools.total_ordering
+class _lt:
+    """ Lazy code translation
+
+    Similar to GettextAlias but the translation lookup will be done only at
+    __str__ execution.
+
+    A code using translated global variables such as:
+
+    LABEL = _lt("User")
+
+    def _compute_label(self):
+        context = {'lang': self.partner_id.lang}
+        self.user_label = LABEL
+
+    works as expected (unlike the classic GettextAlias implementation).
+    """
+
+    __slots__ = ['_source']
+    def __init__(self, source):
+        self._source = source
+
+    def __str__(self):
+        # Call _._get_translation() like _() does, so that we have the same number
+        # of stack frames calling _get_translation()
+        return _._get_translation(self._source)
+
+    def __eq__(self, other):
+        """ Prevent using equal operators
+
+        Prevent direct comparisons with ``self``.
+        One should compare the translation of ``self._source`` as ``str(self) == X``.
+        """
+        raise NotImplementedError()
+
+    def __lt__(self, other):
+        raise NotImplementedError()
 
 _ = GettextAlias()
 
@@ -974,7 +1020,8 @@ def trans_generate(lang, modules, cr):
         _logger.debug("Scanning files of modules at %s", path)
         for root, dummy, files in walksymlinks(path):
             for fname in fnmatch.filter(files, '*.py'):
-                babel_extract_terms(fname, path, root)
+                babel_extract_terms(fname, path, root,
+                                    extract_keywords={'_': None, '_lt': None})
             # Javascript source files in the static/src/js directory, rest is ignored (libs)
             if fnmatch.fnmatch(root, '*/static/src/js*'):
                 for fname in fnmatch.filter(files, '*.js'):
