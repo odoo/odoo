@@ -67,7 +67,7 @@ class HrLeave(models.Model):
     @api.multi
     def action_validate(self):
         super(HrLeave, self).action_validate()
-        self._cancel_benefit_conflict()
+        self.sudo()._cancel_benefit_conflict()
         calendar_leaves = self.env['resource.calendar.leaves'].search([('holiday_id', 'in', self.ids)])
         calendar_leaves.write({'benefit_type_id': self.holiday_status_id.benefit_type_id.id})
         return True
@@ -75,6 +75,6 @@ class HrLeave(models.Model):
     @api.multi
     def action_refuse(self):
         super(HrLeave, self).action_refuse()
-        benefits = self.env['hr.benefit'].search([('leave_id', 'in', self.ids)])
+        benefits = self.env['hr.benefit'].sudo().search([('leave_id', 'in', self.ids)])
         benefits.write({'display_warning': False, 'leave_id': None})
         return True
