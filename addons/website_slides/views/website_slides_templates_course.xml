@@ -71,6 +71,7 @@
     </div>
 </template>
 
+
 <!-- Channel main template -->
 <template id='course_main' name="Course Main">
     <t t-set="head">
@@ -82,8 +83,8 @@
             <t t-set="main_object" t-value="channel"/>
             <t t-call="website_slides.course_nav"/>
 
-            <div class="row o_wslides_course_header">
-                <div class="col-lg-12 o_wslides_container o_wslides_course_header_container">
+            <div class="o_wslides_course_header">
+                <div class="container o_wslides_course_header_container">
                     <div class="row align-items-end d-flex">
                         <div class="col-md-4 d-none d-sm-block o_wslides_course_header_aside">
                             <div t-field="channel.image" widget="image" t-options="{'widget': 'image'}"/>
@@ -108,15 +109,14 @@
                             </div>
                             <div class="row mt-auto o_wslides_course_header_nav">
                                 <div class="col-xs-12 col-md-8">
-                                    <ul class="nav nav-tabs o_wslides_nav_tabs" role="tablist" id="profile_extra_info_tablist">
-                                        <li class="nav-item o_wslides_nav_tabs_item_home">
-                                            <a t-att-href="'/slides/%s%s?%s' % (slug(channel), '/%s' % slug(category) if category else '', keep_query('debug'))"
-                                                t-att-class="'nav-link %s' % ('' if search_slide_type else 'active')">
-                                                <i class="fa fa-home"/> Course</a>
+                                    <ul class="nav nav-tabs o_wslides_nav_tabs" id="profile_extra_info_tablist" role="tablist">
+                                        <li class="nav-item o_wlides_course_header_nav_home">
+                                            <a t-att-class="'nav-link %s' % ('' if search_slide_type else 'active')" id="home-tab" data-toggle="pill" href="#home" role="tab" aria-controls="home" aria-selected="true">
+                                                <i class="fa fa-home"/> Course
+                                            </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a t-att-href="'/slides/%s' % (slug(channel))"
-                                                t-att-class="'nav-link'">Review</a>
+                                            <a class="nav-link" id="review-tab" data-toggle="pill" href="#review" role="tab" aria-controls="review" aria-selected="false">Review</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -125,12 +125,25 @@
                     </div>
                 </div>
             </div>
-            <div class="row o_wslides_course_main">
-                <div class="col-lg-12 o_wslides_container">
-                    <div class="row o_wslides_course_content_main">
-                        <t t-call="website_slides.course_sidebar"/>
+            <div class="container o_wslides_course_main">
+                <div class="tab-content" id="courseMainTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <t t-if="channel.channel_type == 'training'" t-call="website_slides.course_slides_list"/>
                         <t t-if="channel.channel_type == 'documentation'" t-call="website_slides.course_slides_cards"/>
+                    </div>
+                    <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
+                        <div class="row">
+                            <t t-call="website_slides.course_sidebar"/>
+                            <div class="col-lg-8">
+                                <t t-call="portal.message_thread">
+                                    <t t-set="object" t-value="channel"/>
+                                    <t t-set="hash" t-value="message_post_hash"/>
+                                    <t t-set="pid" t-value="message_post_pid"/>
+                                    <t t-set="display_rating" t-value="True"/>
+                                    <t t-set="disable_composer" t-value="True"/>
+                                </t>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -140,7 +153,7 @@
 
 <template id="course_sidebar" name="Course Sidebar (infos, CTA)">
     <!-- Channel presentation, aka general information + CTAs -->
-    <div class="col-md-4 col-xs-12 o_wslides_course_content_aside">
+    <div class="col-lg-4 col-xs-12 o_wslides_course_content_aside">
         <div class="bg-white">
             <div class="row justify-content-center o_wslides_js_course_join">
                 <a t-if="not channel.is_member and channel.enroll == 'public'" role="button"
@@ -248,8 +261,9 @@
 </template>
 
 <template id="course_slides_list" name="Training Course content: list">
-    <div class="col-8 d-flex flex-column ml-4">
-        <div class="o_wslides_slides_list w-100 mt8" t-att-data-channel-id="channel.id">
+    <div class="row">
+        <t t-call="website_slides.course_sidebar"/>
+        <div class="col-lg-8 mt-3 mb-5 o_wslides_slides_list" t-att-data-channel-id="channel.id">
             <ul class="o_wslides_slides_list_container">
                 <t t-set="j" t-value="0"/>
                 <li t-if="uncategorized_slides or channel.can_publish">
@@ -351,73 +365,65 @@
 </template>
 
 <template id="course_slides_cards" name="Documentation Course content: cards / categories">
-    <div t-if="not search" class="col-md-8 col-xs-12 mt16 o_wslides_channel_content_promoted">
-         <div class="row align-items-center">
-            <div class="col">
-                <h5 class="m-0"> Featured lesson</h5>
-                <hr class="mt-2"/>
+    <div t-if="not search" class="row mb-5">
+        <t t-call="website_slides.course_sidebar"/>
+        <div class="col-lg-8">
+             <div class="row align-items-center mt-3">
+                <div class="col">
+                    <h5 class="m-0"> Featured lesson</h5>
+                    <hr class="mt-2"/>
+                </div>
             </div>
-        </div>
-        <div class="row" t-if="slide_promoted">
-            <div class="col-4">
-                <img class="img img-fluid" style=""
-                    t-att-src="'/slides/slide/%s/get_image?field=image_large' % slide_promoted.id"
-                    t-att-alt="slide_promoted.name"/>
-            </div>
-            <div class="col-8">
-                <div class="row">
-                    <h3 class="col-6" t-att-title="slide_promoted.name">
-                        <t t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher">
-                            <a t-attf-href="/slides/slide/#{slug(slide_promoted)}" class="font-weight-bold text-muted" t-field="slide_promoted.name"/>
-                        </t>
-                        <t t-else="">
-                            <span class="font-weight-bold text-muted" t-field="slide_promoted.name"/>
-                        </t>
-                    </h3>
-                    <div class="col-12" t-field="slide_promoted.description"/>
+            <div class="row" t-if="slide_promoted">
+                <div class="col-4">
+                    <img class="img img-fluid" style=""
+                        t-att-src="'/slides/slide/%s/get_image?field=image_large' % slide_promoted.id"
+                        t-att-alt="slide_promoted.name"/>
+                </div>
+                <div class="col-8">
+                    <div class="row">
+                        <h3 class="col-6" t-att-title="slide_promoted.name">
+                            <t t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher">
+                                <a t-attf-href="/slides/slide/#{slug(slide_promoted)}" class="font-weight-bold text-muted" t-field="slide_promoted.name"/>
+                            </t>
+                            <t t-else="">
+                                <span class="font-weight-bold text-muted" t-field="slide_promoted.name"/>
+                            </t>
+                        </h3>
+                        <div class="col-12" t-field="slide_promoted.description"/>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div t-if="search and not category_data" class="col-12">
-        <div class="row mt16 justify-content-end">
-            <div class="col-12">
-                <p class="text-center">No content was found using your search <span class="font-weight-bold" t-esc="search"/>.</p>
-            </div>
+    <div t-if="search and not category_data" class="row mt16 justify-content-end">
+        <div class="col-12">
+            <p class="text-center">No content was found using your search <span class="font-weight-bold" t-esc="search"/>.</p>
         </div>
     </div>
-    <div t-if="category_data" class="col-12">
-        <div class="tab-content mt16" id="slideChannelContent">
-            <div class="tab-pane active" role="tabpanel" aria-labelledby="profile-tab" id="slideChannelContentAbout">
-                <t t-foreach="category_data" t-as="category">
-                    <div class="row mt16 align-items-center">
-                        <div class="col">
-                            <t t-if="category['id']">
-                                <a t-att-href="'/slides/%s/category/%s' % (slug(channel), category['slug_name'])" class="float-right">View all</a>
-                            </t>
-                            <t t-else="">
-                                <a t-att-href="'/slides/%s?uncategorized=1' % (slug(channel))" class="float-right">View all</a>
-                            </t>
-                            <h5 class="m-0"><t t-esc="category['name']"/></h5>
-                            <hr class="mt-2"/>
-                        </div>
-                    </div>
-                    <t t-call="website_slides.course_lessons_grid">
-                        <t t-set="slides" t-value="category['slides']"/>
+    <t t-foreach="category_data" t-as="category">
+        <div class="mb-5">
+            <div class="row align-items-center">
+                <div class="col">
+                    <t t-if="category['id']">
+                        <a t-att-href="'/slides/%s/category/%s' % (slug(channel), category['slug_name'])" class="float-right">View all</a>
                     </t>
+                    <t t-else="">
+                        <a t-att-href="'/slides/%s?uncategorized=1' % (slug(channel))" class="float-right">View all</a>
+                    </t>
+                    <h5 class="m-0"><t t-esc="category['name']"/></h5>
+                    <hr class="mt-2"/>
+                </div>
+            </div>
+            <div class="row mx-n2 mt8">
+                <t t-foreach="category['slides']" t-as="slide">
+                    <div class="col-md-3 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1" t-call="website_slides.lesson_card"/>
                 </t>
             </div>
         </div>
-        <div t-field="channel.description_html"/>
-    </div>
-</template>
-
-<!-- Embedded template: display a list of slides in a grid view -->
-<template id='course_lessons_grid' name="Course: Lessons Grid View">
-    <div class="row mx-n2 mt8">
-        <t t-foreach="slides" t-as="slide">
-            <div class="col-md-3 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1" t-call="website_slides.lesson_card"/>
-        </t>
+    </t>
+    <div class="row">
+        <div class="col" t-field="channel.description_html"/>
     </div>
 </template>
 
