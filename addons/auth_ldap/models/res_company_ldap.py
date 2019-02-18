@@ -29,7 +29,7 @@ class CompanyLDAP(models.Model):
         help="The password of the user account on the LDAP server that is used to query the directory.")
     ldap_filter = fields.Char(string='LDAP filter', required=True)
     ldap_base = fields.Char(string='LDAP base', required=True)
-    user = fields.Many2one('res.users', string='Template User',
+    user_id = fields.Many2one('res.users', string='Template User',
         help="User to copy when creating new users")
     create_user = fields.Boolean(default=True,
         help="Automatically create local user accounts for new users authenticating via LDAP")
@@ -56,7 +56,7 @@ class CompanyLDAP(models.Model):
             'ldap_password',
             'ldap_filter',
             'ldap_base',
-            'user',
+            'user_id',
             'create_user',
             'ldap_tls'
         ])
@@ -193,9 +193,9 @@ class CompanyLDAP(models.Model):
             _logger.debug("Creating new Odoo user \"%s\" from LDAP" % login)
             values = self._map_ldap_attributes(conf, login, ldap_entry)
             SudoUser = self.env['res.users'].sudo().with_context(no_reset_password=True)
-            if conf['user']:
+            if conf['user_id']:
                 values['active'] = True
-                return SudoUser.browse(conf['user'][0]).copy(default=values).id
+                return SudoUser.browse(conf['user_id'][0]).copy(default=values).id
             else:
                 return SudoUser.create(values).id
 
