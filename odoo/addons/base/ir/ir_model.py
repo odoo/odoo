@@ -739,6 +739,10 @@ class IrModelFields(models.Model):
     def _reflect_field_params(self, field):
         """ Return the values to write to the database for the given field. """
         model = self.env['ir.model']._get(field.model_name)
+        selection = getattr(field, 'selection', None)
+        if not isinstance(selection, list):
+            # only reflect the selection of a selection field if it's a list
+            selection = None
         return {
             'model_id': model.id,
             'model': field.model_name,
@@ -756,6 +760,7 @@ class IrModelFields(models.Model):
             'readonly': bool(field.readonly),
             'required': bool(field.required),
             'selectable': bool(field.search or field.store),
+            'selection': selection,
             'size': getattr(field, 'size', None),
             'translate': bool(field.translate),
             'relation_field': field.inverse_name if field.type == 'one2many' else None,
