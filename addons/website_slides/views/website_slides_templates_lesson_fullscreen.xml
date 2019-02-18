@@ -29,10 +29,12 @@
                                     <span t-field="slide.channel_id.name"/>
                                 </a>
                                 <div class="o_wslides_slide_fs_progress_box">
-                                    <div class="o_wslides_fs_sidebar_progressbar">
-                                        <div class="o_wslides_fs_sidebar_progress_gauge oe_slide_js_progress_bar" t-attf-channel_completion="#{slide.channel_id.completion}"/>
+                                    <div class="progress o_wslides_fs_sidebar_progressbar">
+                                        <div class="progress-bar" role="progressbar"
+                                            t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100"
+                                            t-att-style="'width: %s' % (slide.channel_id.completion)"/>
                                     </div>
-                                    <span><span class="o_wslides_progress_percentage" t-esc="slide.channel_id.completion"/>%</span>
+                                    <div><span class="o_wslides_progress_percentage" t-esc="slide.channel_id.completion"/>%</div>
                                 </div>
                             </div>
                         </li>
