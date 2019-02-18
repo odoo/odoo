@@ -10,10 +10,9 @@ var _t = core._t;
 
 var MyAttendances = AbstractAction.extend({
     events: {
-        "click .o_hr_attendance_sign_in_out_icon": function() {
-            this.$('.o_hr_attendance_sign_in_out_icon').attr("disabled", "disabled");
+        "click .o_hr_attendance_sign_in_out_icon": _.debounce(function() {
             this.update_attendance();
-        },
+        }, 200, true),
     },
 
     start: function () {
