@@ -182,8 +182,8 @@ var SlideUploadDialog = Dialog.extend({
         } else if (state !== '_upload') { // no button when uploading
             if (this.canUpload) {
                 if (this.canPublish) {
-                    btnList.push({text: _t("Save as Draft"), classes: 'o_w_slide_upload', click: this._onClickFormSubmit.bind(this)});
                     btnList.push({text: _t("Publish"), classes: 'btn-primary o_w_slide_upload o_w_slide_upload_published', click: this._onClickFormSubmit.bind(this)});
+                    btnList.push({text: _t("Save as Draft"), classes: 'o_w_slide_upload', click: this._onClickFormSubmit.bind(this)});
                 } else {
                     btnList.push({text: _t("Save as Draft"), classes: 'btn-primary o_w_slide_upload', click: this._onClickFormSubmit.bind(this)});
                 }
@@ -320,7 +320,7 @@ var SlideUploadDialog = Dialog.extend({
         this.slide_type_data = {
             presentation: {
                 icon: 'fa-file-pdf-o',
-                label: _t('Presentation (PDF)'),
+                label: _t('Presentation'),
                 template: 'website.slide.upload.modal.presentation',
             },
             webpage: {
