@@ -372,7 +372,7 @@
                 </div>
                 <div class="card-footer">
                     <!-- CHECKME: like only if logged -->
-                    <div class="float-right text-right o_wslides_like">
+                    <div t-if="slide.channel_id.allow_comment and slide.channel_id.channel_type == 'documentation'" class="float-right text-right o_wslides_like">
                         <span class="o_wslides_like_up" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
                             <i class="fa fa-thumbs-up fa-1x" role="img" aria-label="Likes" title="Likes"></i>
                             <span t-esc="slide.likes"/>
