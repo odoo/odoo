@@ -26,6 +26,7 @@ class ResourceCalendar(models.Model):
     def _onchange_hours_per_day(self):
         return super(ResourceCalendar, self)._onchange_hours_per_day()
 
+
 class ResourceCalendarAttendance(models.Model):
     _inherit = 'resource.calendar.attendance'
 
@@ -34,8 +35,10 @@ class ResourceCalendarAttendance(models.Model):
 
     benefit_type_id = fields.Many2one('hr.benefit.type', 'Benefit Type', default=_default_benefit_type_id)
 
+
 class ResourceCalendarLeave(models.Model):
     _inherit = 'resource.calendar.leaves'
+
     benefit_type_id = fields.Many2one('hr.benefit.type', 'Benefit Type')
 
 
