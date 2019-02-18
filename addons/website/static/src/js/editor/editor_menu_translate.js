@@ -54,7 +54,6 @@ var WysiwygTranslate = Wysiwyg.extend({
 });
 
 var TranslatorMenu = EditorMenu.extend({
-    LOCATION_SEARCH: 'edit_translations',
 
     /**
      * @override
