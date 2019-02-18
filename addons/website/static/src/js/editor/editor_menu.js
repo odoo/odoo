@@ -177,6 +177,7 @@ var EditorMenu = Widget.extend({
     _reload: function () {
         $('body').addClass('o_wait_reload');
         this.wysiwyg.destroy();
+        this.$el.hide();
         window.location.hash = 'scrollTop=' + window.document.body.scrollTop;
         window.location.reload(true);
         return $.Deferred();
