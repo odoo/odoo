@@ -26,8 +26,6 @@ var EditorMenu = Widget.extend({
         request_save: '_onSnippetRequestSave',
     },
 
-    LOCATION_SEARCH: 'enable_editor',
-
     /**
      * @override
      */
@@ -180,12 +178,7 @@ var EditorMenu = Widget.extend({
         $('body').addClass('o_wait_reload');
         this.wysiwyg.destroy();
         window.location.hash = 'scrollTop=' + window.document.body.scrollTop;
-        if (window.location.search.indexOf(this.LOCATION_SEARCH) >= 0) {
-            var regExp = new RegExp('[&?]' + this.LOCATION_SEARCH + '(=[^&]*)?', 'g');
-            window.location.href = window.location.href.replace(regExp, '?');
-        } else {
-            window.location.reload(true);
-        }
+        window.location.reload(true);
         return $.Deferred();
     },
 
