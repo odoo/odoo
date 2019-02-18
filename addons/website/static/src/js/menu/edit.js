@@ -40,6 +40,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             },
         });
         this._editorAutoStart = (context.editable && window.location.search.indexOf('enable_editor') >= 0);
+        var url = window.location.href.replace(/([?&])&*enable_editor[^&#]*&?/, '\$1');
+        window.history.replaceState({}, null, url);
     },
     /**
      * Auto-starts the editor if necessary or add the welcome message otherwise.

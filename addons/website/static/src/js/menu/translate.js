@@ -26,6 +26,9 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         });
         this._mustEditTranslations = context.edit_translations;
         if (this._mustEditTranslations) {
+            var url = window.location.href.replace(/([?&])&*edit_translations[^&#]*&?/, '\$1');
+            window.history.replaceState({}, null, url);
+
             this._startTranslateMode();
         }
         return this._super.apply(this, arguments);
@@ -71,6 +74,7 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             window.location.search += '&edit_translations';
             return $.Deferred();
         }
+
         var translator = new TranslatorMenu(this);
         return translator.prependTo(document.body);
     },
