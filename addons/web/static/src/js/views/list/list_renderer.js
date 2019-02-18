@@ -302,6 +302,8 @@ var ListRenderer = BasicRenderer.extend({
             return $td.append(this._renderButton(record, node));
         } else if (node.tag === 'widget') {
             return $td.append(this._renderWidget(record, node));
+        } else if (node.tag === 'control') {
+            return $td;
         }
         if (node.attrs.widget || (options && options.renderWidgets)) {
             var $el = this._renderFieldWidget(node, record, _.pick(options, 'mode'));
