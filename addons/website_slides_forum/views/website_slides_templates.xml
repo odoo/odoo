@@ -2,7 +2,7 @@
 <odoo><data>
     <template id='course_main' inherit_id="website_slides.course_main">
         <!-- Channel main template: add link to forum -->
-        <xpath expr="//li[hasclass('o_wslides_nav_tabs_item_home')]" position="after">
+        <xpath expr="//li[hasclass('o_wlides_course_header_nav_home')]" position="after">
             <li class="nav-item" t-if="channel.forum_id">
                 <a t-att-href="'/forum/%s' % (slug(channel.forum_id))"
                     t-att-class="'nav-link'" target="new">Forum</a>
