@@ -7,8 +7,9 @@ from odoo import api, fields, models
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
-    task_id = fields.Many2one('project.task', 'Task')
-    project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
+    task_id = fields.Many2one('project.task', 'Task', ondelete='restrict')
+    project_id = fields.Many2one('project.project', 'Project', domain=[(
+        'allow_timesheets', '=', True)],  ondelete='restrict')
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True)
 
     @api.onchange('project_id')
