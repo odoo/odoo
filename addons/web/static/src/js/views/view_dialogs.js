@@ -338,14 +338,19 @@ var SelectCreateDialog = ViewDialog.extend({
         var fragment = document.createDocumentFragment();
 
         var domain = this.domain;
+        var additionalFilters;
         if (this.initialIDs) {
-            domain = domain.concat([['id', 'in', this.initialIDs]]);
+            additionalFilters = [{
+                description: _t('Current Search'),
+                domain: [['id', 'in', this.initialIDs]],
+            }];
         }
         var listView = new ListView(fieldsViews.list, _.extend({
             action: {
                 controlPanelFieldsView: fieldsViews.search,
             },
             action_buttons: false,
+            additionalFilters: additionalFilters,
             context: this.context,
             domain: domain,
             hasSelectors: !this.options.disable_multiple_selection,

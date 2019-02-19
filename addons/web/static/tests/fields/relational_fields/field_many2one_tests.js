@@ -958,7 +958,7 @@ QUnit.module('fields', {}, function () {
                     return result;
                 },
             });
-            await testUtils.fields.many2one.searchAndClickItem('trululu', 'b');
+            await testUtils.fields.many2one.searchAndClickItem('trululu', {search: 'b'});
             testUtils.form.clickSave(form);
 
             assert.verifySteps(['name_create'],
@@ -2592,6 +2592,48 @@ QUnit.module('fields', {}, function () {
             domain = [['id', 'in', [10]]]; // domain for subrecord 1 should have been kept
             testUtils.dom.click(form.$('.o_data_row:first .o_data_cell'));
             testUtils.dom.click(form.$('.o_field_widget[name=trululu] input'));
+
+            form.destroy();
+        });
+
+        QUnit.test('search more in many2one: filter on ids', async function (assert) {
+            assert.expect(4);
+
+            for (var i = 0; i < 8; i++) {
+                this.data.partner.records.push({id: 100 + i, display_name: 'test_' + i});
+            }
+
+            var expectedDomain;
+            var form = createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form><field name="trululu"/></form>',
+                archs: {
+                    'partner,false,list': '<list><field name="display_name"/></list>',
+                    'partner,false,search': '<search></search>',
+                },
+                mockRPC: function (route, args) {
+                    if (route === '/web/dataset/search_read') {
+                        assert.deepEqual(args.domain, expectedDomain);
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+
+            expectedDomain = [['id', 'in', [100, 101, 102, 103, 104, 105, 106, 107]]];
+            await testUtils.fields.many2one.searchAndClickItem('trululu', {
+                item: 'Search More',
+                search: 'test',
+            });
+
+            assert.containsOnce(document.body, '.modal .o_list_view');
+            assert.containsOnce(document.body, '.modal .o_cp_searchview .o_facet_values',
+                "should have a special facet for the pre-selected ids");
+
+            // remove the filter on ids
+            expectedDomain = [];
+            testUtils.dom.click($('.modal .o_cp_searchview .o_facet_remove'));
 
             form.destroy();
         });

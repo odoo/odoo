@@ -43,8 +43,11 @@ var ControlPanelView = Factory.extend({
      *   breadcrumbs won't be rendered
      * @param {boolean} [params.withSearchBar=true] if set to false, no default
      *   search bar will be rendered
-     * @param {boolean} [activateDefaultFavorite=false] determine if the default
-     *   custom filters can be activated
+     * @param {boolean} [params.activateDefaultFavorite=false] determine if the
+     *   default custom filters can be activated
+     * @param {Object[]} [params.additionalFilters=[]] filters to add to the
+     *   search, each filter being an object with keys 'description' (what is
+     *   displayed in the searchbar) and 'domain'
      */
     init: function (params) {
         var self = this;
@@ -103,6 +106,19 @@ var ControlPanelView = Factory.extend({
         INTERVAL_OPTIONS = INTERVAL_OPTIONS.map(function (option) {
             return _.extend(option, {description: option.description.toString()});
         });
+
+        // add a filter group with the additional filters, if any
+        if (params.additionalFilters && params.additionalFilters.length) {
+            var additionalGroup = params.additionalFilters.map(function (filter) {
+                return {
+                    description: filter.description,
+                    domain: JSON.stringify(filter.domain),
+                    isDefault: true,
+                    type: 'filter',
+                };
+            });
+            this.loadParams.groups.unshift(additionalGroup);
+        }
     },
 
     //--------------------------------------------------------------------------

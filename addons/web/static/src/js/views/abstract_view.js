@@ -71,6 +71,8 @@ var AbstractView = Factory.extend({
      * @param {Object} params
      * @param {string} [params.modelName]
      * @param {Object} [params.action={}]
+     * @param {Object[]} [params.additionalFilters] transmitted to the
+     *   ControlPanelView
      * @param {Object} [params.context={}]
      * @param {string} [params.controllerID]
      * @param {number} [params.count]
@@ -165,6 +167,7 @@ var AbstractView = Factory.extend({
         this.controlPanelParams = {
             action: action,
             activateDefaultFavorite: params.activateDefaultFavorite,
+            additionalFilters: params.additionalFilters,
             breadcrumbs: params.breadcrumbs,
             context: this.loadParams.context,
             domain: this.loadParams.domain,
