@@ -138,8 +138,10 @@
                     </group>
                 </group>
                 <notebook>
-                <page string="Work Instruction" attrs="{'invisible': [('worksheet', '=', False)]}">
-                    <field name="worksheet" widget="pdf_viewer"/>
+                <page string="Work Instruction" attrs="{'invisible': [('worksheet', '=', False),('worksheet_google_slide', '=', False)]}">
+                    <field name="worksheet_type" invisible="1"/>
+                    <field name="worksheet_google_slide" widget="embed_viewer" attrs="{'invisible': [('worksheet_type', '=', 'pdf')]}"/>
+                    <field name="worksheet" widget="pdf_viewer" attrs="{'invisible': [('worksheet_type', '=', 'google_slide')]}"/>
                 </page>
                 <page string="Current Production">
                     <group>
