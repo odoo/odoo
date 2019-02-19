@@ -9,7 +9,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, AccessError, ValidationError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_round
 from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -120,7 +120,10 @@ class HolidaysType(models.Model):
             if not record.limit:
                 name = "%(name)s (%(count)s)" % {
                     'name': name,
-                    'count': _('%g remaining out of %g') % (record.virtual_remaining_leaves or 0.0, record.max_leaves or 0.0)
+                    'count': _('%g remaining out of %g') % (
+                        float_round(record.virtual_remaining_leaves or 0.0, precision_digits=2) + 0.0,
+                        record.max_leaves or 0.0
+                    )
                 }
             res.append((record.id, name))
         return res
