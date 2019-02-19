@@ -5,7 +5,7 @@ var core = require('web.core');
 var utils = require('web.utils');
 var time = require('web.time');
 
-function genericJsonRpc (fct_name, params, settings, fct) {
+function genericJsonRpc (fct_name, params, settings, fct, url) {
     var shadow = settings.shadow || false;
     delete settings.shadow;
     if (! shadow)
@@ -17,9 +17,17 @@ function genericJsonRpc (fct_name, params, settings, fct) {
         params: params,
         id: Math.floor(Math.random() * 1000 * 1000 * 1000)
     };
+    var start_time = Math.floor(Date.now());
     var xhr = fct(data);
     var result = xhr.pipe(function(result) {
-        core.bus.trigger('rpc:result', data, result);
+        var end_time = Math.floor(Date.now());
+        var timings = {
+            'method': url || params['method'],
+            'request_time': (end_time-start_time) / 1000,
+            'server_time': parseFloat(xhr.getResponseHeader('x-server-time'))
+        };
+        core.bus.trigger('rpc:result', data, result, timings);    
+        
         if (result.error !== undefined) {
             if (result.error.data.arguments[0] !== "bus.Bus not available in test mode") {
                 console.error("Server application error", JSON.stringify(result.error));
@@ -85,7 +93,7 @@ function jsonRpc(url, fct_name, params, settings) {
             data: JSON.stringify(data, time.date_to_utc),
             contentType: 'application/json'
         }));
-    });
+    }, url);
 }
 
 function jsonpRpc(url, fct_name, params, settings) {
@@ -159,7 +167,7 @@ function jsonpRpc(url, fct_name, params, settings) {
             }
             return deferred;
         }
-    });
+    }, url);
 }
 
 // helper function to make a rpc with a function name hardcoded to 'call'
