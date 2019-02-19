@@ -195,7 +195,8 @@ class Slide(models.Model):
                 self.env['slide.slide.partner']
             )
 
-    def _get_embed_code(self):
+    @api.depends('document_id', 'slide_type', 'mime_type')
+    def _compute_embed_code(self):
         base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         if base_url[-1] == '/':
             base_url = base_url[:-1]
@@ -214,7 +215,7 @@ class Slide(models.Model):
                 record.embed_code = False
 
     @api.onchange('url')
-    def on_change_url(self):
+    def _on_change_url(self):
         self.ensure_one()
         if self.url:
             res = self._parse_document_url(self.url)
@@ -229,6 +230,7 @@ class Slide(models.Model):
     @api.multi
     @api.depends('name')
     def _compute_website_url(self):
+        # TDE FIXME: clena this link.tracker strange stuff
         super(Slide, self)._compute_website_url()
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for slide in self:
@@ -360,10 +362,13 @@ class Slide(models.Model):
             self.write({'access_token': self._default_access_token()})
         return self._sign_token(partner_id)
 
-    @api.one
-    def send_share_email(self, email):
+    def _send_share_email(self, email):
+        # TDE FIXME: template to check
+        mail_ids = []
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        return self.channel_id.share_template_id.with_context(email=email, base_url=base_url).send_mail(self.id, notif_layout='mail.mail_notification_light')
+        for record in self:
+            mail_ids.append(self.channel_id.share_template_id.with_context(email=email, base_url=base_url).send_mail(self.id, notif_layout='mail.mail_notification_light'))
+        return mail_ids
 
     def action_like(self):
         self.check_access_rights('read')
