@@ -1838,6 +1838,9 @@ var HelperPlugin = AbstractPlugin.extend({
         return range;
     },
     _wrapTextWithP: function (textNode) {
+        if (dom.ancestor(textNode, dom.isAnchor)) {
+            return;
+        }
         var self = this;
         var isFormatNode = dom.ancestor(textNode, this.isFormatNode.bind(this));
         if (!isFormatNode) {
