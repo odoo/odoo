@@ -9,6 +9,14 @@
         file="point_of_sale.report_userlabel"
     />
 
+    <report 
+        id="action_report_pos_ticket"
+        string="POS Ticket"
+        model="pos.order" 
+        report_type="qweb-pdf"
+        file="point_of_sale.report_pos_ticket" 
+        name="point_of_sale.report_pos_ticket"
+    />
     <!-- used from POS UI, no need to be in print menu -->
     <record id="pos_invoice_report" model="ir.actions.report">
         <field name="name">Invoice</field>

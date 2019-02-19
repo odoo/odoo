@@ -53,5 +53,27 @@
         <record id="uom.product_uom_categ_unit" model="uom.category">
             <field name="is_pos_groupable">True</field>
         </record>
+
+        <record id="email_template_pos_sale" model="mail.template">
+            <field name="name">POS Order: Send by email</field>
+            <field name="model_id" ref="point_of_sale.model_pos_order"/>
+            <field name="email_from">${object.user_id.email_formatted |safe}</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear ${object.partner_id.name},
+                        <br /><br />
+                        Here is your electronic ticket for your order of <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> from the ${object.name}.
+                    </p>
+                </div>
+            </field>
+            <field name="report_template" ref="action_report_pos_ticket"/>
+            <field name="report_name">${object.name}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
     </data>
 </odoo>

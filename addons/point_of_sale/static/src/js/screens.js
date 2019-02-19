@@ -1998,6 +1998,11 @@ var PaymentScreenWidget = ScreenWidget.extend({
             this.$('.js_invoice').removeClass('highlight');
         }
     },
+    click_email: function(){
+        var order = this.pos.get_order();
+        order.set_to_email(!order.is_to_email());
+        this.$('.js_email').toggleClass('highlight', order.is_to_email());
+    },
     click_tip: function(){
         var self   = this;
         var order  = this.pos.get_order();
@@ -2019,9 +2024,14 @@ var PaymentScreenWidget = ScreenWidget.extend({
             }
         });
     },
+    toggle_email_button: function() {
+        var client = this.pos.get_client();
+        this.$('.js_email').removeClass('oe_hidden', client);
+    },
     customer_changed: function() {
         var client = this.pos.get_client();
-        this.$('.js_customer_name').text( client ? client.name : _t('Customer') ); 
+        this.$('.js_customer_name').text( client ? client.name : _t('Customer') );
+        this.toggle_email_button();
     },
     click_set_customer: function(){
         this.gui.show_screen('clientlist');
@@ -2058,6 +2068,9 @@ var PaymentScreenWidget = ScreenWidget.extend({
         });
         this.$('.js_invoice').click(function(){
             self.click_invoice();
+        });
+        this.$('.js_email').click(function(){
+            self.click_email();
         });
 
         this.$('.js_cashdrawer').click(function(){
@@ -2188,11 +2201,24 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 self.invoicing = false;
                 self.gui.show_screen('receipt');
             });
-        } else {
-            this.pos.push_order(order);
-            this.gui.show_screen('receipt');
         }
+        else if (order.is_to_email() && !order.get_client().email) {
+            order.finalized = false;
+            this.gui.show_popup('confirm',{
+                'title': _t('Please fill the Customer Email'),
+                'body': _t('This customer does not have an email address, define one or do not send an email'),
+                confirm: function(){
+                    this.gui.show_screen('clientlist');
+                },
+            });
+        }
+        else {
+            var ordered = this.pos.push_order(order, {'to_email': order.to_email});
 
+            ordered.then(function(){
+                self.gui.show_screen('receipt');
+            });
+        }
     },
 
     // Check if the order is paid, then sends it to the backend,

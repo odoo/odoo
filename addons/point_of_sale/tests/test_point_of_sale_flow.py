@@ -458,7 +458,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
            'uid': '00042-003-0014',
            'user_id': self.env.uid},
           'id': '00042-003-0014',
-          'to_invoice': False}
+          'to_invoice': False,
+          'to_email': False}
 
         untax, atax = compute_tax(self.whiteboard_pen, 1.2)
         zucchini_order = {'data':
@@ -494,7 +495,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
            'uid': '00043-003-0014',
            'user_id': self.env.uid},
           'id': '00043-003-0014',
-          'to_invoice': False}
+          'to_invoice': False,
+          'to_email': False}
 
         untax, atax = compute_tax(self.newspaper_rack, 1.28)
         newspaper_rack_order = {'data':
@@ -530,7 +532,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
            'uid': '00044-003-0014',
            'user_id': self.env.uid},
           'id': '00044-003-0014',
-          'to_invoice': False}
+          'to_invoice': False,
+          'to_email': False}
 
         # I create an order on an open session
         self.PosOrder.create_from_ui([carrot_order])
