@@ -311,6 +311,28 @@ class TestBenefit(TestPayslipBase):
         data = self.richard_emp.get_benefit_days_data(self.env.ref('hr_payroll.benefit_type_attendance'), self.start, self.end)
         self.assertEqual(data['hours'], 168.0)
 
+    def test_multiple_benefit_types_data(self):
+        self.env['resource.calendar.leaves'].create({
+            'name': 'leave name',
+            'date_from': self.start + relativedelta(days=1),
+            'date_to': self.start + relativedelta(days=1, hours=15),
+            'resource_id': self.richard_emp.resource_id.id,
+            'calendar_id': self.richard_emp.resource_calendar_id.id,
+            'benefit_type_id': self.benefit_type_leave.id,
+            'time_type': 'leave',
+        })
+        self.env['resource.calendar.attendance'].create({
+            'name': 'unpaid name',
+            'dayofweek': '4',
+            'hour_from': 8.0,
+            'hour_to': 17.0,
+            'resource_id': self.richard_emp.resource_id.id,
+            'calendar_id': self.richard_emp.resource_calendar_id.id,
+            'benefit_type_id': self.benefit_type.id,
+        })
+        data = self.richard_emp.get_benefit_days_data(self.benefit_type_leave | self.benefit_type, self.start, self.end)
+        self.assertEqual(data['hours'], 44.0, "It shoudl be the sum of both benefit types")
+
     def test_time_extra_benefit(self):
         start = datetime.strptime('2015-11-01 10:00:00', '%Y-%m-%d %H:%M:%S').replace(tzinfo=self.tz)
         end = datetime.strptime('2015-11-01 17:00:00', '%Y-%m-%d %H:%M:%S').replace(tzinfo=self.tz)

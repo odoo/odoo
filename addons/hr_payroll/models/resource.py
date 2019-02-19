@@ -78,7 +78,7 @@ class ResourceCalendarLeave(models.Model):
 class ResourceMixin(models.AbstractModel):
     _inherit = "resource.mixin"
 
-    def get_benefit_days_data(self, benefit_type, from_datetime, to_datetime, calendar=None):
+    def get_benefit_days_data(self, benefit_types, from_datetime, to_datetime, calendar=None):
         """
             By default the resource calendar is used, but it can be
             changed using the `calendar` argument.
@@ -88,20 +88,23 @@ class ResourceMixin(models.AbstractModel):
         """
         resource = self.resource_id
         calendar = calendar or self.resource_calendar_id
-        benefit_type_ids = benefit_type.ids
-        if benefit_type == self.env.ref('hr_payroll.benefit_type_attendance'): # special case for global attendances
-            benefit_type_ids += [False]# no benefit type = normal/global attendance
-        domain = [('benefit_type_id', 'in', benefit_type_ids)]
+
+        type_leave = benefit_types.filtered(lambda t: t.is_leave)
+        type_attendance = benefit_types - type_leave
+
+        leave_domain = [('benefit_type_id', 'in', type_leave.ids)]
+        attendance_type_ids = type_attendance.ids
+        if self.env.ref('hr_payroll.benefit_type_attendance') in type_attendance:  # special case for global attendances
+            attendance_type_ids += [False]  # no benefit type = normal/global attendance
+        attendance_domain = [('benefit_type_id', 'in', attendance_type_ids)]
 
         # naive datetimes are made explicit in UTC
         from_datetime = self._timezone_datetime(from_datetime)
         to_datetime = self._timezone_datetime(to_datetime)
 
         day_total = self._get_day_total(from_datetime, to_datetime, calendar, resource)
-        # actual hours per day
-        if benefit_type.is_leave:
-            intervals = calendar._attendance_intervals(from_datetime, to_datetime, resource) & calendar._leave_intervals(from_datetime, to_datetime, resource, domain) # use domain to only retrieve leaves of this type
-        else:
-            intervals = calendar._attendance_intervals(from_datetime, to_datetime, resource, domain) - calendar._leave_intervals(from_datetime, to_datetime, resource)
 
-        return self._get_days_data(intervals, day_total)
+        leave_intervals = calendar._attendance_intervals(from_datetime, to_datetime, resource) & calendar._leave_intervals(from_datetime, to_datetime, resource, leave_domain)  # use domain to only retrieve leaves of this type
+        attendance_intervals = calendar._attendance_intervals(from_datetime, to_datetime, resource, attendance_domain) - calendar._leave_intervals(from_datetime, to_datetime, resource)
+
+        return self._get_days_data(leave_intervals | attendance_intervals, day_total)
