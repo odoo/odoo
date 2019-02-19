@@ -276,6 +276,7 @@ var KanbanController = BasicController.extend({
             }).then(function () {
                 self._updateButtons();
                 self.renderer.quickCreateToggleFold();
+                self.renderer.trigger_up("quick_create_column_created");
             });
         });
     },

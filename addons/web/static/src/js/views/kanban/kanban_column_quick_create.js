@@ -6,6 +6,7 @@ odoo.define('web.kanban_column_quick_create', function (require) {
  * create kanban columns directly from the Kanban view.
  */
 
+var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
@@ -34,6 +35,7 @@ var ColumnQuickCreate = Widget.extend({
         this._super.apply(this, arguments);
         this.examples = options.examples;
         this.folded = true;
+        this.isMobile = config.device.isMobile;
     },
     /**
      * @override
@@ -101,9 +103,13 @@ var ColumnQuickCreate = Widget.extend({
      */
     _cancel: function () {
         if (!this.folded) {
-            this.folded = true;
             this.$input.val('');
-            this._update();
+            if (this.isMobile) {
+                this.trigger_up('cancel_column_quick_create');
+            } else {
+                this.folded = true;
+                this._update();
+            }
         }
     },
     /**
@@ -222,6 +228,12 @@ var ColumnQuickCreate = Widget.extend({
 
         // ignore clicks if target is inside the quick create
         if (this.el.contains(event.target)) {
+            return;
+        }
+
+        // ignore if Create button is clicked in mobile, addQuickCreate of kanban_render_mobile will
+        // move user to first column while this.cancel will move to previous column in mobile
+        if (this.isMobile && $(event.target).is('.o-kanban-button-new')) {
             return;
         }
 

@@ -1,12 +1,21 @@
 odoo.define('web.kanban_mobile_tests', function (require) {
 "use strict";
 
+var core = require('web.core');
+var KanbanRenderer = require('web.KanbanRenderer');
 var KanbanView = require('web.KanbanView');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
 
 QUnit.module('Views', {
+    before: function () {
+        this._initialKanbanRendererAnimate = KanbanRenderer.prototype.ANIMATE;
+        KanbanRenderer.prototype.ANIMATE = false;
+    },
+    after: function () {
+        KanbanRenderer.prototype.ANIMATE = this._initialKanbanRendererAnimate;
+    },
     beforeEach: function () {
         this.data = {
             partner: {
@@ -105,7 +114,7 @@ QUnit.module('Views', {
         var column_ids = kanban.$('.o_kanban_group').map(function () {
             return $(this).data('id');
         }).get();
-        var tab_ids = kanban.$('.o_kanban_mobile_tab').map(function () {
+        var tab_ids = kanban.$('.o_kanban_mobile_tab:not(:last)').map(function() {
             return $(this).data('id');
         }).get();
         assert.deepEqual(column_ids, tab_ids, "all columns data-id should match mobile tabs data-id");
@@ -142,7 +151,7 @@ QUnit.module('Views', {
         var column_ids = kanban.$('.o_kanban_group').map(function () {
             return $(this).data('id');
         }).get();
-        var tab_ids = kanban.$('.o_kanban_mobile_tab').map(function () {
+        var tab_ids = kanban.$('.o_kanban_mobile_tab:not(:last)').map(function() {
             return $(this).data('id');
         }).get();
         assert.deepEqual(column_ids, tab_ids, "all columns data-id should match mobile tabs data-id");
@@ -219,6 +228,89 @@ QUnit.module('Views', {
         assert.containsNone(kanban, '.o_search_panel');
         assert.verifySteps(['/web/dataset/search_read']);
 
+        kanban.destroy();
+    });
+    QUnit.test('mobile quick create column view rendering', function (assert) {
+        assert.expect(14);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test o_kanban_small_column" on_create="quick_create">' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            domain: [['product_id', '!=', false]],
+            groupBy: ['product_id'],
+        });
+
+        // basic rendering tests
+        assert.containsN(kanban, '.o_kanban_mobile_tab', 3, "should have 3 kanban mobile tabs");
+        assert.hasClass(kanban.$('.o_kanban_view > div:last'), 'o_column_quick_create',
+            "should have column quick create tab and should be displayed as last tab");
+        assert.hasClass(kanban.$('.o_kanban_mobile_tab:first'), 'o_current',
+            "should have first tab as active tab with class 'o_current'");
+        assert.hasClass(kanban.$('.o_kanban_group:first'), 'o_current',
+            "should have first group as active group with class 'o_current'");
+        assert.hasClass(kanban.$('.o_kanban_group:first'), 'o_current',
+            "should have first column as active column with left 0");
+
+        // quick create record in first column(tab)
+        testUtils.dom.click(kanban.$buttons.find('.o-kanban-button-new'));
+        assert.hasClass(kanban.$('.o_kanban_group:nth(0) > div:nth(1)'), 'o_kanban_quick_create',
+            "should open record quick create when clicking on create button in first column");
+
+        // quick create record not allowed in quick create column tab
+        // clicking quick create record should move to first column and create record in first column
+        kanban.$('.o_kanban_mobile_tab:last').trigger('click');
+        testUtils.dom.click(kanban.$buttons.find('.o-kanban-button-new'));
+        assert.hasClass(kanban.$('.o_kanban_group:nth(0) > div:nth(1)'), 'o_kanban_quick_create',
+            "should open record quick create when clicking on create button in new column quick create");
+
+        // new quick create column
+        kanban.$('.o_kanban_mobile_tab:last').trigger('click');
+        assert.isVisible(kanban.$('.o_quick_create_unfolded'),
+            "kanban quick create should be unfolded by default")
+        assert.isVisible(kanban.$('.o_column_quick_create input'),
+            "the quick create column input should be visible");
+        assert.containsNone(kanban, '.o_kanban_examples', "Should not have See Examples link in mobile");
+        assert.containsNone(kanban, '.o_discard_msg', "Should not have Esc to Discard in mobile kanban");
+        kanban.$('.o_column_quick_create input').val('msh');
+        testUtils.dom.click(kanban.$('.o_column_quick_create button.o_kanban_add'));
+
+        assert.strictEqual(kanban.$('.o_kanban_group:last span:contains(msh)').length, 1,
+            "the last column(tab) should be the newly created one");
+        assert.strictEqual(kanban.$('.o_kanban_mobile_tab.o_current > span').text(), 'Add column',
+            "Add column tab should be active after new column created");
+
+        testUtils.dom.click(kanban.$('.o_column_quick_create button.o_kanban_add'));
+        assert.strictEqual(kanban.$('.o_kanban_mobile_tab.o_current > span').text(), 'msh',
+            "clicking on window should move to previous column");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('mobile no quick create column when grouping on non m2o field', function (assert) {
+        assert.expect(2);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test o_kanban_small_column" on_create="quick_create">' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                        '<div><field name="int_field"/></div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['int_field'],
+        });
+
+        assert.containsN(kanban, '.o_kanban_mobile_tab', 5, "should have 5 kanban mobile tabs");
+        assert.doesNotHaveClass(kanban.$('.o_kanban_view > div:last'), 'o_column_quick_create',
+            "should not have column quick create tab as we grouped records on integer field");
         kanban.destroy();
     });
 });

@@ -30,7 +30,7 @@
         }
 
         // [class] to get same specificity as elsewhere (kanban_view.less)
-        &[class] .o_kanban_group:not(.o_column_folded) {
+        &[class] .o_kanban_group:not(.o_column_folded), &[class] .o_column_quick_create {
             @include o-position-absolute($top: $o-kanban-mobile-tabs-height, $left: 0, $bottom: 0);
             overflow-x: scroll;
             width: 100%;
@@ -56,6 +56,17 @@
                 border-bottom: 1px solid lightgray;
                 padding: 10px 16px;
                 margin: 0;
+            }
+        }
+        &[class] .o_column_quick_create {
+            .o_kanban_header {
+                display: block;
+            }
+            .o_quick_create_unfolded {
+                width: 100%;
+            }
+            .o_kanban_add {
+                padding: 0.375rem 0.75rem;
             }
         }
     }
