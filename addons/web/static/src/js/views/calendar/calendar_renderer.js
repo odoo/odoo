@@ -7,10 +7,8 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
 var FieldManagerMixin = require('web.FieldManagerMixin');
-var QWeb = require('web.QWeb');
 var relational_fields = require('web.relational_fields');
 var session = require('web.session');
-var utils = require('web.utils');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -183,11 +181,6 @@ return AbstractRenderer.extend({
         this.model = params.model;
         this.filters = [];
         this.color_map = {};
-
-        if (params.eventTemplate) {
-            this.qweb = new QWeb(session.debug, {_s: session.origin});
-            this.qweb.add_template(utils.json_node_to_xml(params.eventTemplate));
-        }
     },
     /**
      * @override
@@ -337,19 +330,14 @@ return AbstractRenderer.extend({
     _eventRender: function (event) {
         var qweb_context = {
             event: event,
-            fields: this.state.fields,
-            format: this._format.bind(this),
-            isMobile: config.device.isMobile,
-            read_only_mode: this.read_only_mode,
             record: event.record,
-            user_context: session.user_context,
-            widget: this,
+            color: this.getColor(event.color_index),
         };
         this.qweb_context = qweb_context;
         if (_.isEmpty(qweb_context.record)) {
             return '';
         } else {
-            return (this.qweb || qweb).render("calendar-box", qweb_context);
+            return qweb.render("calendar-box", qweb_context);
         }
     },
     /**

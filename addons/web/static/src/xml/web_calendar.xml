@@ -12,7 +12,6 @@
     </div>
 
     <t t-name="calendar-box">
-        <t t-set="color" t-value="widget.getColor(event.color_index)"/>
         <div t-att-style="typeof color === 'string' ? ('background-color:'+color)+';' : ''" t-attf-class="#{!event.color_index ? 'text-white' : ''} #{record.is_highlighted &amp;&amp; record.is_highlighted.value ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? 'o_calendar_color_'+color : ''}">
             <div class="o_event_title" t-esc="record.display_name"/>
         </div>
