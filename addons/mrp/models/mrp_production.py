@@ -825,8 +825,8 @@ class MrpProduction(models.Model):
             moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done','cancel'))
             moves_to_finish._action_done()
             order.action_assign()
-            consume_move_lines = moves_to_do.mapped('active_move_line_ids')
-            for moveline in moves_to_finish.mapped('active_move_line_ids'):
+            consume_move_lines = moves_to_do.mapped('move_line_ids')
+            for moveline in moves_to_finish.mapped('move_line_ids'):
                 if moveline.product_id == order.product_id and moveline.move_id.has_tracking != 'none':
                     if any([not ml.lot_produced_id for ml in consume_move_lines]):
                         raise UserError(_('You can not consume without telling for which lot you consumed it'))
