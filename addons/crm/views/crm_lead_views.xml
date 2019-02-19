@@ -107,6 +107,7 @@
                                     aria-label="Blacklisted" attrs="{'invisible': [('is_blacklisted', '=', False)]}" groups="base.group_user"></i>
                                 <field name="email_from" widget="email"/>
                             </div>
+                            <field name="email_cc" groups="base.group_no_one"/>
                             <field name="function"/>
                             <field name="phone" widget="phone"/>
                             <field name="mobile"/>

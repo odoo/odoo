@@ -124,3 +124,10 @@ class MailModel(models.Model):
     def _value_pc(self):
         for record in self:
             record.value_pc = float(record.value) / 100
+
+
+class MailCC(models.Model):
+    _name = 'mail.test.cc'
+    _inherit = ['mail.thread.cc']
+
+    name = fields.Char()
