@@ -1226,6 +1226,56 @@ class AccountMoveLine(models.Model):
             )
         return rec_move_ids.unlink()
 
+    def _apply_taxes(self, vals, amount):
+        tax_lines_vals = []
+        # Get ids from triplets : https://www.odoo.com/documentation/10.0/reference/orm.html#odoo.models.Model.write
+        tax_ids = [tax['id'] for tax in self.resolve_2many_commands('tax_ids', vals['tax_ids']) if tax.get('id')]
+        # Since create() receives ids instead of recordset, let's just use the old-api bridge
+        taxes = self.env['account.tax'].browse(tax_ids)
+        currency = self.env['res.currency'].browse(vals.get('currency_id'))
+        partner = self.env['res.partner'].browse(vals.get('partner_id'))
+        ctx = dict(self._context)
+        ctx['round'] = ctx.get('round', True)
+        res = taxes.with_context(ctx).compute_all(amount,
+            currency, 1, vals.get('product_id'), partner)
+        # Adjust line amount if any tax is price_include
+        if abs(res['total_excluded']) < abs(amount):
+            if vals['debit'] != 0.0: vals['debit'] = res['total_excluded']
+            if vals['credit'] != 0.0: vals['credit'] = -res['total_excluded']
+            if vals.get('amount_currency'):
+                vals['amount_currency'] = self.env['res.currency'].browse(vals['currency_id']).round(vals['amount_currency'] * (res['total_excluded']/amount))
+        # Create tax lines
+        for tax_vals in res['taxes']:
+            if tax_vals['amount']:
+                tax = self.env['account.tax'].browse([tax_vals['id']])
+                account_id = (amount > 0 and tax_vals['account_id'] or tax_vals['refund_account_id'])
+                if not account_id: account_id = vals['account_id']
+                temp = {
+                    'account_id': account_id,
+                    'name': vals['name'] + ' ' + tax_vals['name'],
+                    'tax_line_id': tax_vals['id'],
+                    'move_id': vals['move_id'],
+                    'partner_id': vals.get('partner_id'),
+                    'statement_id': vals.get('statement_id'),
+                    'debit': tax_vals['amount'] > 0 and tax_vals['amount'] or 0.0,
+                    'credit': tax_vals['amount'] < 0 and -tax_vals['amount'] or 0.0,
+                    'analytic_account_id': vals.get('analytic_account_id') if tax.analytic else False,
+                }
+                bank = self.env["account.bank.statement.line"].browse(vals.get('statement_line_id')).statement_id
+                if bank.currency_id != bank.company_id.currency_id:
+                    ctx = {}
+                    if 'date' in vals:
+                        ctx['date'] = vals['date']
+                    elif 'date_maturity' in vals:
+                        ctx['date'] = vals['date_maturity']
+                    temp['currency_id'] = bank.currency_id.id
+                    temp['amount_currency'] = bank.company_id.currency_id.with_context(ctx).compute(tax_vals['amount'], bank.currency_id, round=True)
+                if vals.get('tax_exigible'):
+                    temp['tax_exigible'] = True
+                    temp['account_id'] = tax.cash_basis_account.id or account_id
+                tax_lines_vals.append(temp)
+        return tax_lines_vals
+
     ####################################################
     # CRUD methods
     ####################################################
@@ -1293,50 +1343,7 @@ class AccountMoveLine(models.Model):
         # Create tax lines
         tax_lines_vals = []
         if context.get('apply_taxes') and vals.get('tax_ids'):
-            # Get ids from triplets : https://www.odoo.com/documentation/10.0/reference/orm.html#odoo.models.Model.write
-            tax_ids = [tax['id'] for tax in self.resolve_2many_commands('tax_ids', vals['tax_ids']) if tax.get('id')]
-            # Since create() receives ids instead of recordset, let's just use the old-api bridge
-            taxes = self.env['account.tax'].browse(tax_ids)
-            currency = self.env['res.currency'].browse(vals.get('currency_id'))
-            partner = self.env['res.partner'].browse(vals.get('partner_id'))
-            res = taxes.with_context(dict(self._context, round=True)).compute_all(amount,
-                currency, 1, vals.get('product_id'), partner)
-            # Adjust line amount if any tax is price_include
-            if abs(res['total_excluded']) < abs(amount):
-                if vals['debit'] != 0.0: vals['debit'] = res['total_excluded']
-                if vals['credit'] != 0.0: vals['credit'] = -res['total_excluded']
-                if vals.get('amount_currency'):
-                    vals['amount_currency'] = self.env['res.currency'].browse(vals['currency_id']).round(vals['amount_currency'] * (res['total_excluded']/amount))
-            # Create tax lines
-            for tax_vals in res['taxes']:
-                if tax_vals['amount']:
-                    tax = self.env['account.tax'].browse([tax_vals['id']])
-                    account_id = (amount > 0 and tax_vals['account_id'] or tax_vals['refund_account_id'])
-                    if not account_id: account_id = vals['account_id']
-                    temp = {
-                        'account_id': account_id,
-                        'name': vals['name'] + ' ' + tax_vals['name'],
-                        'tax_line_id': tax_vals['id'],
-                        'move_id': vals['move_id'],
-                        'partner_id': vals.get('partner_id'),
-                        'statement_id': vals.get('statement_id'),
-                        'debit': tax_vals['amount'] > 0 and tax_vals['amount'] or 0.0,
-                        'credit': tax_vals['amount'] < 0 and -tax_vals['amount'] or 0.0,
-                        'analytic_account_id': vals.get('analytic_account_id') if tax.analytic else False,
-                    }
-                    bank = self.env["account.bank.statement.line"].browse(vals.get('statement_line_id')).statement_id
-                    if bank.currency_id != bank.company_id.currency_id:
-                        ctx = {}
-                        if 'date' in vals:
-                            ctx['date'] = vals['date']
-                        elif 'date_maturity' in vals:
-                            ctx['date'] = vals['date_maturity']
-                        temp['currency_id'] = bank.currency_id.id
-                        temp['amount_currency'] = bank.company_id.currency_id.with_context(ctx).compute(tax_vals['amount'], bank.currency_id, round=True)
-                    if vals.get('tax_exigible'):
-                        temp['tax_exigible'] = True
-                        temp['account_id'] = tax.cash_basis_account.id or account_id
-                    tax_lines_vals.append(temp)
+            tax_lines_vals = self._apply_taxes(vals, amount)
 
         #Toggle the 'tax_exigible' field to False in case it is not yet given and the tax in 'tax_line_id' or one of
         #the 'tax_ids' is a cash based tax.
