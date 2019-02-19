@@ -92,7 +92,7 @@ class Applicant(models.Model):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "priority desc, id desc"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
+    _inherit = ['mail.thread.cc', 'mail.activity.mixin', 'utm.mixin']
 
     def _default_stage_id(self):
         if self._context.get('default_job_id'):
@@ -117,8 +117,6 @@ class Applicant(models.Model):
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Text("Description")
     email_from = fields.Char("Email", size=128, help="Applicant email")
-    email_cc = fields.Text("Watchers Emails", size=252,
-                           help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
     probability = fields.Float("Probability")
     partner_id = fields.Many2one('res.partner', "Contact")
     create_date = fields.Datetime("Creation Date", readonly=True, index=True)
@@ -407,7 +405,6 @@ class Applicant(models.Model):
             'name': msg.get('subject') or _("No Subject"),
             'partner_name': val,
             'email_from': msg.get('from'),
-            'email_cc': msg.get('cc'),
             'partner_id': msg.get('author_id', False),
         }
         if msg.get('priority'):
