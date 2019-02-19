@@ -193,10 +193,6 @@ Wysiwyg.include({
  *
  * @param {Node} [DOM]
  * @returns {Object}
- * @returns {Node} sc - start container
- * @returns {Number} so - start offset
- * @returns {Node} ec - end container
- * @returns {Number} eo - end offset
 */
 Wysiwyg.getRange = function (DOM) {
     var summernote = (DOM.defaultView || DOM.ownerDocument.defaultView)._summernoteSlave || _summernoteMaster;
