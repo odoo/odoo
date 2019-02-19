@@ -16,13 +16,13 @@ class TestCoursePurchaseFlow(common.SlidesCase):
         })
 
         self.channel.write({
-            'visibility': 'payment',
+            'enroll': 'payment',
             'product_id': course_product.id
         })
 
         self.channel_2 = self.env['slide.channel'].sudo(self.user_publisher).create({
             'name': 'Test Channel',
-            'visibility': 'payment',
+            'enroll': 'payment',
             'product_id': course_product.id
         })
 

@@ -59,6 +59,7 @@
                             <field name="tag_ids" widget="many2many_tags" placeholder="Tags..."/>
                         </div>
                         <group>
+                            <field name="user_id"/>
                             <field name="channel_id"/>
                             <field name="category_id" context="{'default_channel_id': channel_id}"/>
                             <field name="website_id" groups="website.group_multi_website"/>
@@ -84,7 +85,6 @@
                                 <group>
                                     <group>
                                         <field name="is_preview"/>
-                                        <field name="download_security"/>
                                         <field name="date_published"/>
                                         <field name="likes"/>
                                         <field name="dislikes"/>
