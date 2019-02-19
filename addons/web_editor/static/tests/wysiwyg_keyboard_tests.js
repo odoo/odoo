@@ -3093,22 +3093,6 @@ var keyboardTestsBackspace = [{
         },
     },
     {
-        name: "in complex-dom (empty-td (td before) -> 2x SHIFT-ENTER): 3x BACKSPACE",
-        content: '<table class="table table-bordered"><tbody><tr><td><p>dom not to edit</p></td><td><p><br><br><br></p></td></tr></tbody></table>',
-        steps: [{
-            start: 'p:eq(1)->3',
-            key: 'BACKSPACE',
-        }, {
-            key: 'BACKSPACE',
-        }, {
-            key: 'BACKSPACE',
-        }],
-        test: {
-            content: '<table class="table table-bordered"><tbody><tr><td><p>dom not to edit</p></td><td><p><br></p></td></tr></tbody></table>',
-            start: "p:eq(1):contents()[0]->0",
-        },
-    },
-    {
         name: "in complex-dom (empty-td (td before) -> 2x SHIFT-ENTER): 3x BACKSPACE -> 'a'",
         content: '<table class="table table-bordered"><tbody><tr><td><p>dom not to edit</p></td><td><p><br><br><br></p></td></tr></tbody></table>',
         steps: [{
