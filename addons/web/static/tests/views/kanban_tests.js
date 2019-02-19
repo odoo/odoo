@@ -4310,6 +4310,45 @@ QUnit.module('Views', {
         delete widgetRegistry.map.test;
     });
 
+    QUnit.test('support for delayed deferred on a kanban widget', function (assert) {
+        assert.expect(2);
+
+        var def = $.Deferred();
+        var MyWidget = Widget.extend({
+            init: function (parent, dataPoint) {
+                this.data = dataPoint.data;
+            },
+            willStart: function () {
+                return def;
+            },
+            start: function () {
+                this.$el.text(JSON.stringify(this.data));
+            },
+        });
+        widgetRegistry.add('test', MyWidget);
+
+        var view = testUtils.createAsyncView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                    '<div>' +
+                    '<widget name="test"/>' +
+                    '</div>' +
+                '</t></templates></kanban>',
+            debug: true,
+        }).then(function (kanban) {
+            assert.strictEqual(kanban.$('.o_kanban_record:eq(2)').text(), '{"id":3}',
+                "widget should have been instantiated");
+
+            kanban.destroy();
+            delete widgetRegistry.map.test;
+        });
+
+        assert.equal(view.state(), 'pending', 'The deferred blocks the rendering');
+        def.resolve();
+    });
+
     QUnit.test('column progressbars properly work', function (assert) {
         assert.expect(2);
 

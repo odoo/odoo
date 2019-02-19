@@ -313,6 +313,7 @@ var KanbanRecord = Widget.extend({
         var def = widget.replace($field);
         if (def.state() === 'pending') {
             this.defs.push(def);
+            widget.$el = $('<div>');
         }
         this._setFieldDisplay(widget.$el, field_name);
         return widget;
@@ -327,6 +328,7 @@ var KanbanRecord = Widget.extend({
             var def = widget._widgetRenderAndInsert(function () {});
             if (def.state() === 'pending') {
                 self.defs.push(def);
+                widget.$el = $('<div>');
             }
             widget.$el.addClass('o_widget');
             $field.replaceWith(widget.$el);
