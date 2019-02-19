@@ -2936,8 +2936,8 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('navigation: not moving down with keydown', function (assert) {
-        assert.expect(2);
+    QUnit.test('navigation: moving down with keydown', function (assert) {
+        assert.expect(3);
 
         var list = createView({
             View: ListView,
@@ -2946,12 +2946,17 @@ QUnit.module('Views', {
             arch: '<tree editable="bottom"><field name="foo"/></tree>',
         });
 
-        list.$('td:contains(yop)').click();
-        assert.ok(list.$('tr.o_data_row:eq(0)').hasClass('o_selected_row'),
-            "1st row should be selected");
-        list.$('tr.o_selected_row input[name="foo"]').trigger({type: 'keydown', which: $.ui.keyCode.DOWN});
-        assert.ok(list.$('tr.o_data_row:eq(0)').hasClass('o_selected_row'),
-            "1st row should still be selected");
+        $('.o_list_button_add').trigger({type: 'keydown', which: $.ui.keyCode.DOWN});
+        assert.strictEqual($(document.activeElement).parents('tr').find('.o_data_cell').text(), 'yop',
+            "first row(yop) should be focused");
+
+        $(document.activeElement).trigger({type: 'keydown', which: $.ui.keyCode.DOWN});
+        assert.strictEqual($(document.activeElement).parents('tr').find('.o_data_cell').text(), 'blip',
+            "second row(blip) should be focused");
+
+        $(document.activeElement).trigger({type: 'keydown', which: $.ui.keyCode.DOWN});
+        assert.strictEqual($(document.activeElement).parents('tr').find('.o_data_cell').text(), 'gnap',
+            "third row(gnap) should be focused");
         list.destroy();
     });
 
