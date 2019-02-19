@@ -1205,6 +1205,7 @@ var HandlePlugin = Plugins.handle.extend({
             w: $target.outerWidth(false),
             h: $target.outerHeight(false)
         };
+
         $selection.css({
             display: 'block',
             left: pos.left - posContainer.left,
@@ -1214,12 +1215,23 @@ var HandlePlugin = Plugins.handle.extend({
         }).data('target', $target); // save current target element.
 
         var src = $target.attr('src');
-        var sizingText = imageSize.w + 'x' + imageSize.h;
+        var displayInfo = imageSize.w >= 170 || (imageSize.w >= 120 && imageSize.h >= 58) || (imageSize.w >= 80 && imageSize.h >= 76);
+
+        var sizingText = '';
+        if (displayInfo) {
+            sizingText = imageSize.w + 'x' + imageSize.h;
+            sizingText += ' (' + this.lang.image.original + ': ';
+        } else if (src && imageSize.w >= 80 && imageSize.h >= 32) {
+            displayInfo = true;
+            sizingText = '(';
+        }
+
         if (src) {
             var origImageObj = new Image();
             origImageObj.src = src;
-            sizingText += ' (' + this.lang.image.original + ': ' + origImageObj.width + 'x' + origImageObj.height + ')';
+            sizingText += origImageObj.width + 'x' + origImageObj.height + ')';
         }
+
         $selection.find('.note-control-selection-info').text(sizingText);
         this.context.invoke('editor.saveTarget', target);
 
