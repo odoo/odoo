@@ -958,7 +958,7 @@ QUnit.module('fields', {}, function () {
                     return result;
                 },
             });
-            await testUtils.fields.many2one.searchAndClickItem('trululu', 'b');
+            await testUtils.fields.many2one.searchAndClickItem('trululu', {search: 'b'});
             testUtils.form.clickSave(form);
 
             assert.verifySteps(['name_create'],
@@ -2592,6 +2592,107 @@ QUnit.module('fields', {}, function () {
             domain = [['id', 'in', [10]]]; // domain for subrecord 1 should have been kept
             testUtils.dom.click(form.$('.o_data_row:first .o_data_cell'));
             testUtils.dom.click(form.$('.o_field_widget[name=trululu] input'));
+
+            form.destroy();
+        });
+
+        QUnit.test('search more in many2one: no text in input', async function (assert) {
+            // when the user clicks on 'Search More...' in a many2one dropdown, and there is no text
+            // in the input (i.e. no value to search on), we bypass the name_search that is meant to
+            // return a list of preselected ids to filter on in the list view (opened in a dialog)
+            assert.expect(6);
+
+            for (var i = 0; i < 8; i++) {
+                this.data.partner.records.push({id: 100 + i, display_name: 'test_' + i});
+            }
+
+            var form = createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form><field name="trululu"/></form>',
+                archs: {
+                    'partner,false,list': '<list><field name="display_name"/></list>',
+                    'partner,false,search': '<search></search>',
+                },
+                mockRPC: function (route, args) {
+                    assert.step(args.method || route);
+                    if (route === '/web/dataset/search_read') {
+                        assert.deepEqual(args.domain, [],
+                            "should not preselect ids as there as nothing in the m2o input");
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+
+            await testUtils.fields.many2one.searchAndClickItem('trululu', {
+                item: 'Search More',
+                search: '',
+            });
+
+            assert.verifySteps([
+                'default_get',
+                'name_search', // to display results in the dropdown
+                'load_views', // list view in dialog
+                '/web/dataset/search_read', // to display results in the dialog
+            ]);
+
+            form.destroy();
+        });
+
+        QUnit.test('search more in many2one: text in input', async function (assert) {
+            // when the user clicks on 'Search More...' in a many2one dropdown, and there is some
+            // text in the input, we perform a name_search to get a (limited) list of preselected
+            // ids and we add a dynamic filter (with those ids) to the search view in the dialog, so
+            // that the user can remove this filter to bypass the limit
+            assert.expect(12);
+
+            for (var i = 0; i < 8; i++) {
+                this.data.partner.records.push({id: 100 + i, display_name: 'test_' + i});
+            }
+
+            var expectedDomain;
+            var form = createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form><field name="trululu"/></form>',
+                archs: {
+                    'partner,false,list': '<list><field name="display_name"/></list>',
+                    'partner,false,search': '<search></search>',
+                },
+                mockRPC: function (route, args) {
+                    assert.step(args.method || route);
+                    if (route === '/web/dataset/search_read') {
+                        assert.deepEqual(args.domain, expectedDomain);
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+
+            expectedDomain = [['id', 'in', [100, 101, 102, 103, 104, 105, 106, 107]]];
+            await testUtils.fields.many2one.searchAndClickItem('trululu', {
+                item: 'Search More',
+                search: 'test',
+            });
+
+            assert.containsOnce(document.body, '.modal .o_list_view');
+            assert.containsOnce(document.body, '.modal .o_cp_searchview .o_facet_values',
+                "should have a special facet for the pre-selected ids");
+
+            // remove the filter on ids
+            expectedDomain = [];
+            testUtils.dom.click($('.modal .o_cp_searchview .o_facet_remove'));
+
+            assert.verifySteps([
+                'default_get',
+                'name_search', // empty search, triggered when the user clicks in the input
+                'name_search', // to display results in the dropdown
+                'name_search', // to get preselected ids matching the search
+                'load_views', // list view in dialog
+                '/web/dataset/search_read', // to display results in the dialog
+                '/web/dataset/search_read', // after removal of dynamic filter
+            ]);
 
             form.destroy();
         });
