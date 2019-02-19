@@ -136,8 +136,7 @@ class Channel(models.Model):
     # not stored access fields, depending on each user
     completed = fields.Boolean('Done', compute='_compute_user_statistics')
     completion = fields.Integer('Completion', compute='_compute_user_statistics')
-    can_upload = fields.Boolean('Can Upload', compute='_compute_access')
-    can_publish = fields.Boolean('Can Publish', compute='_compute_access')
+    can_upload = fields.Boolean('Can Upload', compute='_compute_can_upload')
     # karma generation
     karma_gen_slide_vote = fields.Integer(string='Lesson voted', default=1)
     karma_gen_channel_share = fields.Integer(string='Course shared', default=2)
@@ -215,12 +214,25 @@ class Channel(models.Model):
         for record in self:
             record.completed, record.completion = mapped_data.get(record.id, (False, 0))
 
-    @api.depends('channel_type', 'partner_ids', 'upload_group_ids')
-    def _compute_access(self):
+    @api.depends('upload_group_ids')
+    def _compute_can_upload(self):
+        for record in self:
+            record.can_upload = not self.env.user.share and (not record.upload_group_ids or bool(record.upload_group_ids & self.env.user.groups_id))
+
+    @api.depends('channel_type', 'user_id', 'can_upload')
+    def _compute_can_publish(self):
+        """ For channels of type 'training', only the responsible (see user_id field) can publish slides.
+        The 'sudo' user needs to be handled because he's the one used for uploads done on the front-end when the
+        logged in user is not publisher but fulfills the upload_group_ids condition. """
         for record in self:
             is_doc = record.channel_type == 'documentation'
-            record.can_upload = not self.env.user.share and (not record.upload_group_ids or bool(record.upload_group_ids & self.env.user.groups_id))
-            record.can_publish = record.can_upload and self.env.user.has_group('website.group_website_publisher') and (is_doc or record.user_id == self.env.user)
+            record.can_publish = record.can_upload \
+                and self.env.user.has_group('website.group_website_publisher') \
+                and (is_doc or record.user_id == self.env.user or self.env.user._is_superuser())
+
+    @api.model
+    def _get_can_publish_error_message(self):
+        return _("Publishing is restricted to the responsible of training courses or members of the publisher group for documentation courses")
 
     @api.multi
     @api.depends('name')
