@@ -136,7 +136,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
                 'qty_to_consume': to_consume_in_line,
                 'qty_reserved': move_line.product_uom_qty,
                 'lot_id': move_line.lot_id.id,
-                'qty_done': is_tracked and 0 or to_consume_in_line
+                'qty_done': to_consume_in_line
             }
             lines.append(line)
             qty_to_consume -= to_consume_in_line
@@ -159,7 +159,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
                     'product_id': move.product_id.id,
                     'product_uom_id': move.product_uom.id,
                     'qty_to_consume': qty_to_consume,
-                    'qty_done': is_tracked and 0 or qty_to_consume
+                    'qty_done': qty_to_consume
                 }
                 lines.append(line)
         return lines

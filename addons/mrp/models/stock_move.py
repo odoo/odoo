@@ -16,7 +16,6 @@ class StockMoveLine(models.Model):
     lot_produced_qty = fields.Float(
         'Quantity Finished Product', digits=dp.get_precision('Product Unit of Measure'),
         help="Informative, not used in matching")
-    done_wo = fields.Boolean('Done for Work Order', default=True, help="Technical Field which is False when temporarily filled in in work order")  # TDE FIXME: naming
     done_move = fields.Boolean('Move Done', related='move_id.is_done', readonly=False, store=True)  # TDE FIXME: naming
 
     def _get_similar_move_lines(self):
@@ -24,12 +23,11 @@ class StockMoveLine(models.Model):
         if self.move_id.production_id:
             finished_moves = self.move_id.production_id.move_finished_ids
             finished_move_lines = finished_moves.mapped('move_line_ids')
-            lines |= finished_move_lines.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name) and ml.done_wo == self.done_wo)
+            lines |= finished_move_lines.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
         if self.move_id.raw_material_production_id:
             raw_moves = self.move_id.raw_material_production_id.move_raw_ids
             raw_moves_lines = raw_moves.mapped('move_line_ids')
-            raw_moves_lines |= self.move_id.active_move_line_ids
-            lines |= raw_moves_lines.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name) and ml.done_wo == self.done_wo)
+            lines |= raw_moves_lines.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
         return lines
 
     def _reservation_is_updatable(self, quantity, reserved_quant):
@@ -46,7 +44,7 @@ class StockMoveLine(models.Model):
         for move_line in self:
             if move_line.move_id.production_id and 'lot_id' in vals:
                 move_line.production_id.move_raw_ids.mapped('move_line_ids')\
-                    .filtered(lambda r: r.done_wo and not r.done_move and r.lot_produced_id == move_line.lot_id)\
+                    .filtered(lambda r: not r.done_move and r.lot_produced_id == move_line.lot_id)\
                     .write({'lot_produced_id': vals['lot_id']})
             production = move_line.move_id.production_id or move_line.move_id.raw_material_production_id
             if production and move_line.state == 'done' and any(field in vals for field in ('lot_id', 'location_id', 'qty_done')):
@@ -71,7 +69,6 @@ class StockMove(models.Model):
     workorder_id = fields.Many2one(
         'mrp.workorder', 'Work Order To Consume')
     # Quantities to process, in normalized UoMs
-    active_move_line_ids = fields.One2many('stock.move.line', 'move_id', domain=[('done_wo', '=', True)], string='Lots')
     bom_line_id = fields.Many2one('mrp.bom.line', 'BoM Line')
     unit_factor = fields.Float('Unit Factor')
     is_done = fields.Boolean(
@@ -88,10 +85,6 @@ class StockMove(models.Model):
         .mapped('move_line_ids')\
         .filtered(lambda ml: ml.qty_done == 0.0)\
         .write({'move_id': new_move, 'product_uom_qty': 0})
-
-    @api.depends('active_move_line_ids.qty_done', 'active_move_line_ids.product_uom_id')
-    def _compute_done_quantity(self):
-        super(StockMove, self)._compute_done_quantity()
 
     @api.depends('raw_material_production_id.move_finished_ids.move_line_ids.lot_id')
     def _compute_order_finished_lot_ids(self):
@@ -115,13 +108,6 @@ class StockMove(models.Model):
         for move in self:
             if move.raw_material_production_id:
                 move.is_locked = move.raw_material_production_id.is_locked
-
-    def _get_move_lines(self):
-        self.ensure_one()
-        if self.raw_material_production_id:
-            return self.active_move_line_ids
-        else:
-            return super(StockMove, self)._get_move_lines()
 
     @api.depends('state')
     def _compute_is_done(self):
