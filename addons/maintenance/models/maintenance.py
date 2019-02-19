@@ -81,7 +81,7 @@ class MaintenanceEquipmentCategory(models.Model):
         return res
 
     def get_alias_model_name(self, vals):
-        return vals.get('alias_model', 'maintenance.equipment')
+        return vals.get('alias_model', 'maintenance.request')
 
     def get_alias_values(self):
         values = super(MaintenanceEquipmentCategory, self).get_alias_values()
@@ -253,9 +253,10 @@ class MaintenanceEquipment(models.Model):
             if not next_requests:
                 equipment._create_new_request(equipment.next_action_date)
 
+
 class MaintenanceRequest(models.Model):
     _name = 'maintenance.request'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread.cc', 'mail.activity.mixin']
     _description = 'Maintenance Request'
     _order = "id desc"
 

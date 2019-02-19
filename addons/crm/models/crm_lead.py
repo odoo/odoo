@@ -50,7 +50,7 @@ class Lead(models.Model):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority desc,activity_date_deadline,id desc"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin', 'mail.blacklist.mixin']
+    _inherit = ['mail.thread.cc', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin', 'mail.blacklist.mixin']
     _primary_email = 'email_from'
 
     def _default_probability(self):
@@ -74,7 +74,6 @@ class Lead(models.Model):
         index=True, tracking=True, help='When sending mails, the default email address is taken from the Sales Team.')
     kanban_state = fields.Selection([('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')],
         string='Kanban State', compute='_compute_kanban_state')
-    email_cc = fields.Text('Global CC', help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
     description = fields.Text('Notes')
     tag_ids = fields.Many2many('crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id', string='Tags', help="Classify and analyze your lead/opportunity categories like: Training, Service")
     contact_name = fields.Char('Contact Name', tracking=30)
@@ -1204,7 +1203,6 @@ class Lead(models.Model):
         defaults = {
             'name':  msg_dict.get('subject') or _("No Subject"),
             'email_from': msg_dict.get('from'),
-            'email_cc': msg_dict.get('cc'),
             'partner_id': msg_dict.get('author_id', False),
         }
         if msg_dict.get('author_id'):
