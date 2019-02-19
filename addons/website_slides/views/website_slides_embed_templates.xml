@@ -43,7 +43,7 @@
                         <div id="PDFSlideViewer" class="text-center position-relative flex-grow-1" style="height: 0;"
                                 t-attf-data-slideid="#{slide.id}"
                                 t-attf-data-slideurl="/slides/slide/#{slug(slide)}/pdf_content"
-                                t-attf-data-downloadable="#{slide.download_security}"
+                                t-attf-data-downloadable="#{False}"
                                 t-att-data-defaultpage="page">
                             <t t-if="is_embedded">
                                 <div id="slide_share" class="oe_slide_embed_option">
@@ -106,9 +106,6 @@
                                         </a>
                                     </div>
                                     <div class="col-auto text-right ml-auto mt-2 mb-2">
-                                        <a t-if="slide.download_security != 'none' and not is_embedded" target="_top" t-attf-href="/slides/slide/#{slug(slide)}/download" title="Download" id="download">
-                                            <i class="fa fa-download fa-2x" role="img" aria-label="Download"></i>
-                                        </a>
                                         <span id="fullscreen" title="View fullscreen" role="img" aria-label="Fullscreen">
                                             <i class="fa fa-arrows-alt fa-2x"></i>
                                         </span>

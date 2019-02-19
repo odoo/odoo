@@ -154,7 +154,7 @@
                         <!-- Channel presentation, aka general information + CTAs -->
                         <div class="col-4 o_wslides_course_content_aside">
                             <div class="row justify-content-center mt8 o_wslides_join_channel">
-                                <a t-if="not channel.is_member and channel.visibility == 'public'" role="button"
+                                <a t-if="not channel.is_member and channel.enroll == 'public'" role="button"
                                     class="col-10 btn btn-primary o_wslides_join_channel_link"
                                     title="Start Course" aria-label="Start Course Channel"
                                     t-att-href="'#'"
@@ -164,7 +164,7 @@
                                         <t t-else="">Join Course</t>
                                     </span>
                                 </a>
-                                <t t-if="not channel.is_member and channel.visibility == 'invite'">
+                                <t t-if="not channel.is_member and channel.enroll == 'invite'">
                                     <a role="button" class="col-10 btn btn-light" t-att-href="'#'">
                                         <span class="cta-title text_small_caps">Private Course</span>
                                     </a>
