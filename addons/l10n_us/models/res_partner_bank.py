@@ -34,5 +34,5 @@ class ResPartnerBank(models.Model):
         result = super(ResPartnerBank, self).read(fields, load=load)
         for record in result:
             if record.get('aba_routing'):
-                record['aba_routing'] = str(record['aba_routing'])
+                record['aba_routing'] = '{0:09d}'.format(record['aba_routing']) if record['aba_routing'] else False
         return result
