@@ -166,6 +166,44 @@ class TestReconciliation(AccountingTestCase):
         supplier_move_lines = bank_stmt.move_line_ids
         return customer_move_lines, supplier_move_lines
 
+    def create_invoice_line_fx_test(self, invoice_id, price_unit):
+        self.product.sudo().write({'default_code': 'PR01'})
+        invoice_line = self.account_invoice_line_model.new({
+            'product_id': self.product.id,
+            'invoice_id': invoice_id,
+            'quantity': 1,
+        })
+        invoice_line._onchange_product_id()
+        invoice_line_dict = invoice_line._convert_to_write({
+            name: invoice_line[name] for name in invoice_line._cache})
+        invoice_line_dict['price_unit'] = price_unit
+        self.account_invoice_line_model.create(invoice_line_dict)
+
+    def create_invoice_fx_test(
+            self, amount, date_invoice, inv_type='out_invoice',
+            currency_id=None):
+        if currency_id is None:
+            currency_id = self.usd.id
+        invoice = self.account_invoice_model.create({
+            'partner_id': self.partner_agrolait_id,
+            'type': inv_type,
+            'currency_id': currency_id,
+            'date_invoice': date_invoice,
+        })
+
+        tcb16percent = self.tax_cash_basis.copy({'amount': 16})
+        self.create_invoice_line_fx_test(invoice, amount)
+        invoice.invoice_line_ids.write(
+            {'invoice_line_tax_ids': [(6, None, [tcb16percent.id])]})
+
+        invoice.refresh()
+
+        # validate invoice
+        invoice.compute_taxes()
+        invoice.action_invoice_open()
+
+        return invoice
+
     def test_statement_usd_invoice_eur_transaction_eur(self):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_euro_id, 30, self.bank_journal_usd, 42, 30, self.currency_euro_id)
         self.assertRecordValues(customer_move_lines, [
@@ -1815,3 +1853,247 @@ class TestReconciliation(AccountingTestCase):
             (move_lines - base_amount_tax_lines)
             .filtered(lambda l: l.account_id == self.tax_final_account)
             .debit, 17094.66)
+
+    def test_reconciliation_fx_gain_loss_to_invoice(self):
+        """
+        Company's Currency EUR
+
+        Having issued an invoice at date Nov-21-2018 as:
+
+        Accounts         Amount Currency         Debit(EUR)       Credit(EUR)
+        ---------------------------------------------------------------------
+        Expenses            5,301.00 USD         106,841.65              0.00
+        Taxes                 848.16 USD          17,094.66              0.00
+            Payables       -6,149.16 USD               0.00        123,936.31
+
+        On Nov-30-2018 user issues an FX Journal Entry as required by law:
+
+        Accounts         Amount Currency         Debit(EUR)       Credit(EUR)
+        ---------------------------------------------------------------------
+        FX Losses               0.00 USD           1,572.96             0.00
+            Payables            0.00 USD               0.00         1,572.96
+
+        On Dec-31-2018 user issues an FX Journal Entry as required by law:
+
+        Accounts         Amount Currency         Debit(EUR)       Credit(EUR)
+        ---------------------------------------------------------------------
+        Payables                0.00 USD           4,475.97             0.00
+            FX Gains            0.00 USD               0.00         4,475.97
+
+        After applying FX to Invoice residual shall remain the same.
+        """
+
+        company = self.env.ref('base.main_company')
+        company.country_id = self.ref('base.us')
+
+        aml_obj = self.env['account.move.line'].with_context(
+            check_move_validity=False)
+
+        self.env['res.currency.rate'].create({
+            'name': '2018-11-21',
+            'rate': 1.0/20.1550,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id
+        })
+        self.env['res.currency.rate'].create({
+            'name': '2018-11-30',
+            'rate': 1.0/20.4108,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id
+        })
+        self.env['res.currency.rate'].create({
+            'name': '2018-12-31',
+            'rate': 1.0/19.6829,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id
+        })
+
+        # Purchase
+        invoice_id = self.create_invoice_fx_test(
+            5301, '2018-11-30',
+            inv_type='in_invoice',
+            currency_id=self.currency_usd_id)
+        self.assertEquals(invoice_id.residual, 6149.16,
+                          "It's not possible we just approved this invoice")
+
+        inv_aml_id = invoice_id.move_id.line_ids.filtered(
+            lambda x: x.account_id == invoice_id.account_id)
+
+        self.assertEquals(inv_aml_id.amount_currency, -6149.16)
+        self.assertEquals(inv_aml_id.currency_id.id, self.currency_usd_id)
+
+        # FX 01 Move
+        fx_move_01 = self.env['account.move'].create({
+            'date': '2018-11-30',
+            'name': 'FX 01',
+            'journal_id': self.fx_journal.id,
+        })
+        fx_01_payable_line = aml_obj.create({
+            'account_id': self.account_rsa.id,
+            'credit': 1572.96,
+            'move_id': fx_move_01.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 0.00,
+        })
+        aml_obj.create({
+            'account_id': self.diff_expense_account.id,
+            'debit': 1572.96,
+            'move_id': fx_move_01.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 0.00,
+        })
+        fx_move_01.post()
+
+        invoice_id.assign_outstanding_credit(fx_01_payable_line.id)
+        self.assertEquals(
+            invoice_id.residual, 6149.16,
+            'Exchange Difference Losses must not affected Invoice residual')
+
+        # FX 02 Move
+        fx_move_02 = self.env['account.move'].create({
+            'date': '2018-12-31',
+            'name': 'FX 02',
+            'journal_id': self.fx_journal.id,
+        })
+        fx_02_payable_line = aml_obj.create({
+            'account_id': self.account_rsa.id,
+            'debit': 1740.82,
+            'move_id': fx_move_02.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 0.00,
+        })
+        aml_obj.create({
+            'account_id': self.diff_income_account.id,
+            'credit': 1740.82,
+            'move_id': fx_move_02.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 0.00,
+        })
+        fx_move_02.post()
+
+        invoice_id.assign_outstanding_credit(fx_02_payable_line.id)
+        self.assertEquals(
+            invoice_id.residual, 6149.16,
+            'Exchange Difference Gains must not affected Invoice residual')
+
+    def test_reconciliation_fx_gain_loss_to_customer_invoice(self):
+        """
+        Company's Currency EUR
+
+        Having issued an invoice at date Nov-21-2018 as:
+
+        Accounts         Amount Currency         Debit(EUR)       Credit(EUR)
+        ---------------------------------------------------------------------
+        Receivables         6,149.16 USD         123,936.31              0.00
+            Revenue        -5,301.00 USD               0.00        106,841.65
+            Taxes            -848.16 USD               0.00         17,094.66
+
+        On Nov-30-2018 user issues an FX Journal Entry as required by law:
+
+        Accounts         Amount Currency         Debit(EUR)       Credit(EUR)
+        ---------------------------------------------------------------------
+        Receivables             0.00 USD           1,572.96             0.00
+            FX Gains            0.00 USD               0.00         1,572.96
+
+        On Dec-31-2018 user issues an FX Journal Entry as required by law:
+
+        Accounts         Amount Currency         Debit(EUR)       Credit(EUR)
+        ---------------------------------------------------------------------
+        FX Losses               0.00 USD           4,475.97             0.00
+            Receivables         0.00 USD               0.00         4,475.97
+
+        After applying FX to Invoice residual shall remain the same.
+        """
+
+        company = self.env.ref('base.main_company')
+        company.country_id = self.ref('base.us')
+
+        aml_obj = self.env['account.move.line'].with_context(
+            check_move_validity=False)
+
+        self.env['res.currency.rate'].create({
+            'name': '2018-11-21',
+            'rate': 1.0/20.1550,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id
+        })
+        self.env['res.currency.rate'].create({
+            'name': '2018-11-30',
+            'rate': 1.0/20.4108,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id
+        })
+        self.env['res.currency.rate'].create({
+            'name': '2018-12-31',
+            'rate': 1.0/19.6829,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id
+        })
+
+        # Sale
+        invoice_id = self.create_invoice_fx_test(
+            5301, '2018-11-30',
+            inv_type='out_invoice',
+            currency_id=self.currency_usd_id)
+        self.assertEquals(invoice_id.residual, 6149.16,
+                          "It's not possible we just approved this invoice")
+
+        inv_aml_id = invoice_id.move_id.line_ids.filtered(
+            lambda x: x.account_id == invoice_id.account_id)
+
+        self.assertEquals(inv_aml_id.amount_currency, 6149.16)
+        self.assertEquals(inv_aml_id.currency_id.id, self.currency_usd_id)
+
+        # FX 01 Move
+        fx_move_01 = self.env['account.move'].create({
+            'date': '2018-11-30',
+            'name': 'FX 01',
+            'journal_id': self.fx_journal.id,
+        })
+        fx_01_receivable_line = aml_obj.create({
+            'account_id': self.account_rcv.id,
+            'debit': 1572.96,
+            'move_id': fx_move_01.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 0.00,
+        })
+        aml_obj.create({
+            'account_id': self.diff_expense_account.id,
+            'credit': 1572.96,
+            'move_id': fx_move_01.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 0.00,
+        })
+        fx_move_01.post()
+
+        invoice_id.assign_outstanding_credit(fx_01_receivable_line.id)
+        self.assertEquals(
+            invoice_id.residual, 6149.16,
+            'Exchange Difference Losses must not affected Invoice residual')
+
+        # FX 02 Move
+        fx_move_02 = self.env['account.move'].create({
+            'date': '2018-12-31',
+            'name': 'FX 02',
+            'journal_id': self.fx_journal.id,
+        })
+        fx_02_receivable_line = aml_obj.create({
+            'account_id': self.account_rcv.id,
+            'credit': 1740.82,
+            'move_id': fx_move_02.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 0.00,
+        })
+        aml_obj.create({
+            'account_id': self.diff_income_account.id,
+            'debit': 1740.82,
+            'move_id': fx_move_02.id,
+            'currency_id': self.currency_usd_id,
+            'amount_currency': 0.00,
+        })
+        fx_move_02.post()
+
+        invoice_id.assign_outstanding_credit(fx_02_receivable_line.id)
+        self.assertEquals(
+            invoice_id.residual, 6149.16,
+            'Exchange Difference Gains must not affected Invoice residual')
