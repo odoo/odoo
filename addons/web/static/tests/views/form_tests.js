@@ -4170,6 +4170,49 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('o2m line should be focused after save', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="name"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'partner,false,form': '<form>' +
+                        '<sheet>' +
+                            '<group>' +
+                                '<field name="name"/>' +
+                            '</group>' +
+                        '</sheet>' +
+                    '</form>',
+            },
+        });
+
+        testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+
+        $('.modal .o_field_widget[name=name]').val('new name').trigger('input');
+        $(document.activeElement).trigger({type: 'keydown', which: $.ui.keyCode.TAB});
+        testUtils.dom.click($('.modal-footer button:first'));  // save & close
+
+        assert.strictEqual(document.activeElement, $('.o_field_x2many_list_row_add a')[0],
+            "add a line should be focused");
+
+        testUtils.dom.click($(document.activeElement));
+        $('.modal .o_field_widget[name=name]').val('last name').trigger('input');
+        testUtils.dom.click($('.modal-footer button:first'));
+
+        form.destroy();
+    });
+
     QUnit.test('ESC on create edit dialog should set focus on the same field in form view', function (assert) {
         assert.expect(2);
 
