@@ -231,41 +231,6 @@ class Channel(models.Model):
             if channel.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
 
-    @api.multi
-    def action_redirect_to_members(self):
-        action = self.env.ref('website_slides.slide_channel_partner_action').read()[0]
-        action['view_mode'] = 'tree'
-        action['domain'] = [('channel_id', 'in', self.ids)]
-        if len(self) == 1:
-            action['context'] = {'default_channel_id': self.id}
-
-        return action
-
-    @api.multi
-    def action_channel_invite(self):
-        self.ensure_one()
-
-        if self.visibility != 'invite':
-            raise UserError(_("You cannot send invitations for channels that are not set as 'invite'."))
-
-        template = self.env.ref('website_slides.mail_template_slide_channel_invite', raise_if_not_found=False)
-
-        local_context = dict(
-            self.env.context,
-            default_channel_id=self.id,
-            default_use_template=bool(template),
-            default_template_id=template and template.id or False,
-            notif_layout='mail.mail_notification_light',
-        )
-        return {
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'slide.channel.invite',
-            'target': 'new',
-            'context': local_context,
-        }
-
     # ---------------------------------------------------------
     # ORM Overrides
     # ---------------------------------------------------------
@@ -324,8 +289,43 @@ class Channel(models.Model):
         return super(Channel, self).message_post(parent_id=parent_id, subtype=subtype, **kwargs)
 
     # ---------------------------------------------------------
-    # Rating Mixin API
+    # Business / Actions
     # ---------------------------------------------------------
+
+    @api.multi
+    def action_redirect_to_members(self):
+        action = self.env.ref('website_slides.slide_channel_partner_action').read()[0]
+        action['view_mode'] = 'tree'
+        action['domain'] = [('channel_id', 'in', self.ids)]
+        if len(self) == 1:
+            action['context'] = {'default_channel_id': self.id}
+
+        return action
+
+    @api.multi
+    def action_channel_invite(self):
+        self.ensure_one()
+
+        if self.visibility != 'invite':
+            raise UserError(_("You cannot send invitations for channels that are not set as 'invite'."))
+
+        template = self.env.ref('website_slides.mail_template_slide_channel_invite', raise_if_not_found=False)
+
+        local_context = dict(
+            self.env.context,
+            default_channel_id=self.id,
+            default_use_template=bool(template),
+            default_template_id=template and template.id or False,
+            notif_layout='mail.mail_notification_light',
+        )
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'slide.channel.invite',
+            'target': 'new',
+            'context': local_context,
+        }
 
     def action_add_member(self, **member_values):
         """ Adds the logged in user in the channel members.
@@ -365,11 +365,6 @@ class Channel(models.Model):
             else:
                 allowed |= on_invite
         return allowed
-
-    def list_all(self):
-        return {
-            'channels': [{'id': channel.id, 'name': channel.name, 'website_url': channel.website_url} for channel in self.search([])]
-        }
 
     # ---------------------------------------------------------
     # Rating Mixin API

@@ -75,17 +75,6 @@ class SlideTag(models.Model):
 
 
 class Slide(models.Model):
-    """ This model represents actual presentations. Those must be one of four
-    types:
-
-     - Presentation
-     - Document
-     - Infographic
-     - Video
-     - Webpage
-
-    Slide has various statistics like view count, embed count, like, dislikes """
-
     _name = 'slide.slide'
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin', 'rating.mixin']
     _description = 'Slides'
@@ -95,10 +84,6 @@ class Slide(models.Model):
         'most_voted': 'likes desc',
         'latest': 'date_published desc',
     }
-
-    _sql_constraints = [
-        ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
-    ]
 
     def _default_access_token(self):
         return str(uuid.uuid4())
@@ -151,12 +136,16 @@ class Slide(models.Model):
     likes = fields.Integer('Likes', compute='_compute_user_info', store=True)
     dislikes = fields.Integer('Dislikes', compute='_compute_user_info', store=True)
     user_vote = fields.Integer('User vote', compute='_compute_user_info')
-    embed_code = fields.Text('Embed Code', readonly=True, compute='_get_embed_code')
+    embed_code = fields.Text('Embed Code', readonly=True, compute='_compute_embed_code')
     # views
     embedcount_ids = fields.One2many('slide.embed', 'slide_id', string="Embed Count")
     slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
     public_views = fields.Integer('# of Public Views')
     total_views = fields.Integer("Total # Views", default="0", compute='_compute_total', store=True)
+
+    _sql_constraints = [
+        ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
+    ]
 
     @api.depends('slide_views', 'public_views')
     def _compute_total(self):
