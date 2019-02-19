@@ -25,10 +25,14 @@ var InlineActivityFieldTextHtml = HtmlField.extend({
 });
 
 var InlineActivityFormController = FormController.extend({
-    className: "o_chat_composer o_activity_inline_form",
     custom_events: _.extend({}, FormController.prototype.custom_events, {
         env_updated: '_onEnvUpdated',
     }),
+
+    start: function () {
+        this.$el.addClass('o_chat_composer').addClass('o_activity_inline_form');
+        return this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
