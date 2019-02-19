@@ -232,8 +232,10 @@ odoo.define('website_slides.fullscreen', function (require) {
                     'slide_id': self.slide.id
                 }
             }).then(function(data){
-                self.slide.htmlContent = data.html_content;
-                self._renderPlayer();
+                if (data.html_content) {
+                    self.slide.htmlContent = data.html_content;
+                    self._renderPlayer();
+                }
             })
         },
         /**
