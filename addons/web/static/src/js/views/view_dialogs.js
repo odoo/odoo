@@ -304,6 +304,7 @@ var SelectCreateDialog = ViewDialog.extend({
      * - list_view_options: dict of options to pass to the List View
      * - on_selected: optional callback to execute when records are selected
      * - disable_multiple_selection: true to allow create/select multiple records
+     * - dynamicFilters: filters to add to the searchview
      */
     init: function () {
         this._super.apply(this, arguments);
@@ -346,6 +347,7 @@ var SelectCreateDialog = ViewDialog.extend({
                 controlPanelFieldsView: fieldsViews.search,
             },
             action_buttons: false,
+            dynamicFilters: this.options.dynamicFilters,
             context: this.context,
             domain: domain,
             hasSelectors: !this.options.disable_multiple_selection,
