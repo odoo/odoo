@@ -85,7 +85,7 @@ class SlideChannelInvite(models.TransientModel):
 
         mail_values = []
         for partner_id in self.partner_ids:
-            slide_channel_partner = self.channel_id._action_add_member(target_partner=partner_id)
+            slide_channel_partner = self.channel_id._action_add_members(partner_id)
             if slide_channel_partner:
                 mail_values.append(self._prepare_mail_values(slide_channel_partner))
 

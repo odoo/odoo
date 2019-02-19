@@ -369,7 +369,6 @@ class WebsiteSlides(WebsiteProfile):
                 return request.render("website_slides.slide_fullscreen", values)
         return request.render("website_slides.slide_detail_view", values)
 
-
     @http.route('''/slides/slide/<model("slide.slide"):slide>/pdf_content''',
                 type='http', auth="public", website=True, sitemap=False)
     def slide_get_pdf_content(self, slide):
@@ -377,21 +376,6 @@ class WebsiteSlides(WebsiteProfile):
         response.data = slide.datas and base64.b64decode(slide.datas) or b''
         response.mimetype = 'application/pdf'
         return response
-
-    @http.route('''/slides/slide/<model("slide.slide"):slide>/download''', type='http', auth="public", website=True, sitemap=False)
-    def slide_download(self, slide, **kw):
-        slide = slide.sudo()
-        if slide.download_security == 'public' or (slide.download_security == 'user' and request.env.user and request.env.user != request.website.user_id):
-            filecontent = base64.b64decode(slide.datas)
-            disposition = 'attachment; filename=%s.pdf' % werkzeug.urls.url_quote(slide.name)
-            return request.make_response(
-                filecontent,
-                [('Content-Type', 'application/pdf'),
-                 ('Content-Length', len(filecontent)),
-                 ('Content-Disposition', disposition)])
-        elif not request.session.uid and slide.download_security == 'user':
-            return request.redirect('/web/login?redirect=/slides/slide/%s' % (slide.id))
-        return request.render("website.403")
 
     @http.route('/slides/slide/<int:slide_id>/get_image', type='http', auth="public", website=True, sitemap=False)
     def slide_get_image(self, slide_id, field='image_medium', width=0, height=0, crop=False, avoid_if_small=False, upper_limit=False):

@@ -116,10 +116,6 @@ class Slide(models.Model):
     channel_id = fields.Many2one('slide.channel', string="Channel", required=True)
     category_id = fields.Many2one('slide.category', string="Category", domain="[('channel_id', '=', channel_id)]")
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
-    download_security = fields.Selection(
-        [('none', 'No One'), ('user', 'Authenticated Users Only'), ('public', 'Everyone')],
-        string='Download Security',
-        required=True, default='user')
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     is_preview = fields.Boolean('Always visible', default=False)
     completion_time = fields.Float('# Hours', default=1, digits=(10, 4))

@@ -6,9 +6,9 @@
             <field name="model">slide.channel</field>
             <field name="inherit_id" ref="website_slides.view_slide_channel_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='visibility']" position="after">
+                <xpath expr="//field[@name='enroll']" position="after">
                     <field name="product_id"
-                        attrs="{'invisible': [('visibility', '!=', 'payment')], 'required': [('visibility', '=', 'payment')]}" />
+                        attrs="{'invisible': [('enroll', '!=', 'payment')], 'required': [('enroll', '=', 'payment')]}" />
                 </xpath>
             </field>
         </record>
