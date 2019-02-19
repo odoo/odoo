@@ -35,9 +35,9 @@ var MassMailingFieldHtml = FieldHtml.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Commit the change in 'style-inline' on an other field
-     * nodeOptions:
-     *      - inline-field: fieldName to save the html value converted into inline code
+     * Commit the change in 'style-inline' on an other field nodeOptions:
+     *
+     * - inline-field: fieldName to save the html value converted into inline code
      *
      * @override
      */

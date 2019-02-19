@@ -125,7 +125,7 @@ var HelperPlugin = AbstractPlugin.extend({
      * Returns the number of leading breakable space in the textNode.
      * Note: returns 0 if the node is not a textNode.
      *
-     * @param {Node}
+     * @param {Node} node
      */
     countLeadingBreakableSpace: function (node) {
         if (!dom.isText(node)) {
@@ -151,19 +151,20 @@ var HelperPlugin = AbstractPlugin.extend({
     },
     /**
      * Remove the dom between 2 points (respecting unbreakable rules).
-     * Returns an object:
-     * {
-     *  node: pointA.node (updated if necessary),
-     *  offset: pointA.offset (updated if necessary),
-     *  changed: bool (whether changes were applied)
-     * }
+     * Returns an object::
+     *
+     *     {
+     *         node: pointA.node (updated if necessary),
+     *         offset: pointA.offset (updated if necessary),
+     *         changed: bool (whether changes were applied)
+     *     }
      * 
      * @param {Object} pointA
      * @param {Node} pointA.node
-     * @param {Integer} pointA.offset
+     * @param {number} pointA.offset
      * @param {Object} pointB
      * @param {Node} pointB.node
-     * @param {Integer} pointB.offset
+     * @param {number} pointB.offset
      * @returns {Object} {node, offset, changed}
      */
     deleteBetween: function (pointA, pointB) {
@@ -704,7 +705,7 @@ var HelperPlugin = AbstractPlugin.extend({
     /**
      * Returns the node targeted by a path
      *
-     * @param {Object[]} list of object (tagName, offset)
+     * @param {Object[]} path list of object (tagName, offset)
      * @returns {Node}
      */
     fromPath: function (path) {

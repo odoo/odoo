@@ -33,7 +33,9 @@ var Unbreakable = AbstractPlugin.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Change the selection if it breaks an unbreakable node.
+     * Change the selection if it breaks an unbreakable node:
+     *
+     * .. code-block:: xml
      *
         <unbreakable id="a">
             content_1
@@ -56,6 +58,8 @@ var Unbreakable = AbstractPlugin.extend({
             </allow>
         </unbreakable>
 
+     * .. code-block: none
+
         START            END            RESIZE START     RESIZE END
 
         content_1       content_1       content_3       content_3   (find the first allowed node)
@@ -70,9 +74,9 @@ var Unbreakable = AbstractPlugin.extend({
         content_6       content_8       -               content_6
         content_7       content_8       -               content_8
         content_9       content_12      content_10      -
-        *
-        * @returns {WrappedRange}
-        */
+     *
+     * @returns {WrappedRange}
+     */
     secureRange: function () {
         var self = this;
         var range = this.context.invoke('editor.createRange');
