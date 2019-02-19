@@ -273,27 +273,12 @@ class WebsiteSlides(WebsiteProfile):
                 'last_rating_value': last_message_data.get('rating_value'),
             })
 
-        # Display uncategorized slides
         # fetch slides; done as sudo because we want to display all of them but
         # unreachable ones won't be clickable (+ slide controller will crash anyway)
         if not category:
-            category_data = []
-            for category in request.env['slide.slide'].sudo().read_group(domain, ['category_id'], ['category_id']):
-                category_id, name = category.get('category_id') or (False, _('Uncategorized'))
-                category_data.append({
-                    'id': category_id,
-                    'name': name,
-                    'total_slides': category['category_id_count'],
-                    'slides': request.env['slide.slide'].sudo().search(category['__domain'], limit=4, offset=0, order=order)
-                })
+            category_data = channel._get_category_data(domain, slide_per_category=4, offset=0, order=order)
         else:
-            slides_sudo = request.env['slide.slide'].sudo().search(domain, limit=self._slides_per_page, offset=pager['offset'], order=order)
-            category_data = [{
-                'id': category.id,
-                'name': category.name,
-                'total_slides': len(slides_sudo),
-                'slides': slides_sudo,
-            }]
+            category_data = channel._get_category_data(domain, slide_per_category=self._slides_per_page, offset=pager['offset'], order=order)
         values['slide_promoted'] = request.env['slide.slide'].sudo().search(domain, limit=1, order=order)
         values['category_data'] = category_data
 

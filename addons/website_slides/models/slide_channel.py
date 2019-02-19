@@ -324,7 +324,7 @@ class Channel(models.Model):
         return super(Channel, self).message_post(parent_id=parent_id, subtype=subtype, **kwargs)
 
     # ---------------------------------------------------------
-    # Rating Mixin API
+    # Business methods
     # ---------------------------------------------------------
 
     def action_add_member(self, **member_values):
@@ -366,10 +366,36 @@ class Channel(models.Model):
                 allowed |= on_invite
         return allowed
 
-    def list_all(self):
-        return {
-            'channels': [{'id': channel.id, 'name': channel.name, 'website_url': channel.website_url} for channel in self.search([])]
-        }
+    def _get_category_data(self, slide_domain, category=None, slide_per_category=None, offset=0, order=None):
+        """ Fetch slides by categories. Either a specific category is given either
+        all slides are fetched based on a groupby category. Void categories are
+        supported.
+
+         :param slide_domain: domain to apply to slides fetched in each category;
+         :param category: optional specific category;
+         :param slide_per_category: number of slides per category;
+         :param offset: see ``search``
+         :param order: see ``search``
+        """
+        if category:
+            slides_sudo = self.env['slide.slide'].sudo().search(slide_domain, limit=slide_per_category, offset=offset, order=order)
+            category_data = [{
+                'id': category.id,
+                'name': category.name,
+                'total_slides': len(slides_sudo),
+                'slides': slides_sudo,
+            }]
+        else:
+            category_data = []
+            for category in self.env['slide.slide'].sudo().read_group(slide_domain, ['category_id'], ['category_id']):
+                category_id, name = category.get('category_id') or (False, _('Uncategorized'))
+                category_data.append({
+                    'id': category_id,
+                    'name': name,
+                    'total_slides': category['category_id_count'],
+                    'slides': self.env['slide.slide'].sudo().search(category['__domain'], limit=slide_per_category, offset=offset, order=order)
+                })
+        return category
 
     # ---------------------------------------------------------
     # Rating Mixin API
