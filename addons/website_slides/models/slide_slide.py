@@ -254,6 +254,15 @@ class Slide(models.Model):
                     url = '%s/slides/slide/%s' % (base_url, slug(slide))
                 slide.website_url = url
 
+    @api.depends('channel_id.can_publish')
+    def _compute_can_publish(self):
+        for record in self:
+            record.can_publish = record.channel_id.can_publish
+
+    @api.model
+    def _get_can_publish_error_message(self):
+        return _("Publishing is restricted to the responsible of training courses or members of the publisher group for documentation courses")
+
     # ---------------------------------------------------------
     # ORM Overrides
     # ---------------------------------------------------------
@@ -263,7 +272,7 @@ class Slide(models.Model):
         # Do not publish slide if user has not publisher rights
         channel = self.env['slide.channel'].browse(values['channel_id'])
         if not channel.can_publish:
-            values['website_published'] = False
+            # 'website_published' is handled by mixin
             values['date_published'] = False
 
         if not values.get('index_content'):
@@ -288,9 +297,6 @@ class Slide(models.Model):
 
     @api.multi
     def write(self, values):
-        if 'website_published' in values and any(not slide.channel_id.can_publish for slide in self):
-            values.pop('website_published')
-
         if values.get('url') and values['url'] != self.url:
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.items():
