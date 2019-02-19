@@ -90,6 +90,9 @@ var MediaPlugin = AbstractPlugin.extend({
             return;
         }
         if (!this.options.displayPopover(target)) {
+            if (dom.isImg(target)) {
+                this.context.invoke('HandlePlugin.update', target);
+            }
             return;
         }
 
