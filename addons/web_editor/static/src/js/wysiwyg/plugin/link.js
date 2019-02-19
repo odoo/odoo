@@ -259,7 +259,7 @@ var LinkPlugin = Plugins.linkDialog.extend({
      * @param {jQueryEvent} e
      */
     _onDblclick: function (e) {
-        if (dom.isAnchor(e.target)) {
+        if (dom.ancestor(e.target, dom.isAnchor) && !dom.isMedia(e.target)) {
             this.show();
         }
     },
