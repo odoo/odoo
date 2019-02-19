@@ -47,10 +47,15 @@ class WebsiteSlides(WebsiteProfile):
             slide.action_set_viewed()
         return True
 
+    def _set_completed_slide(self, slide):
+        if slide.website_published and slide.channel_id.is_member:
+            slide.action_set_completed()
+        return True
+
     def _get_slide_detail(self, slide):
         most_viewed_slides = slide.get_most_viewed_slides(self._slides_per_list)
         related_slides = slide.get_related_slides(self._slides_per_list)
-        values =  {
+        values = {
             'slide': slide,
             'most_viewed_slides': most_viewed_slides,
             'related_slides': related_slides,
@@ -477,20 +482,19 @@ class WebsiteSlides(WebsiteProfile):
             'error': "You already passed this quiz"
         }
 
-    #SLIDE STATE CONTROLLERS
+    # SLIDE STATE CONTROLLERS
+    # TDE CLEANME: clean ctrlr / method name
 
     @http.route('/slide/completed/<int:slide_id>', website=True, type="http", auth="user")
-    def mark_as_completed(self, slide_id, next_slide=None, **kw):
+    def mark_as_completed(self, slide_id, next_slide=None):
         slide = request.env['slide.slide'].browse(slide_id)
-        slide.action_set_completed()
+        self._set_completed_slide(slide)
         return werkzeug.utils.redirect("/slides/slide/%s" %(next_slide))
 
-
     @http.route('/slides/set_completed', website=True, type="json", auth="user")
-    def set_status_as_done(self, slide_id, **kw):
+    def set_status_as_done(self, slide_id):
         slide = request.env['slide.slide'].browse(slide_id)
-        slide.channel_id.invalidate_cache()
-        slide.action_set_completed()
+        self._set_completed_slide(slide)
         return {
             'channel_completion': slide.channel_id.completion
         }
