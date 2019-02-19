@@ -84,10 +84,9 @@ class MrpAbstractWorkorder(models.AbstractModel):
                 for move_line in move_raw.move_line_ids:
                     # Get workorder lines that match reservation.
                     candidates = move_workorder_lines._find_candidate(move_line)
-                    while candidates:
+                    for candidate in candidates:
                         if float_compare(qty_todo, 0, precision_rounding=rounding) <= 0:
                             break
-                        candidate = candidates.pop()
                         qty_to_add = move_line.product_uom_qty - candidate.qty_done
                         line_values['to_update'][candidate] = {
                             'qty_done': candidate.qty_done + qty_to_add,
