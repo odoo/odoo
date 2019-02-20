@@ -86,8 +86,11 @@ sAnimations.registry.websiteSlidesLike = sAnimations.Class.extend({
      * @param {Object} parent
      */
     start: function () {
+        var self = this;
         var defs = [this._super.apply(this, arguments)];
-        defs.push(new LikeButton(this).attachTo($('.o_wslides_like')));
+        $('.o_wslides_like').each(function () {
+            defs.push(new LikeButton(self).attachTo($(this)));
+        });
         return $.when.apply($, defs);
     },
 });

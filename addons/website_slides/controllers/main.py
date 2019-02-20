@@ -538,7 +538,7 @@ class WebsiteSlides(WebsiteProfile):
         }
 
     # JSONRPC
-    @http.route('/slides/slide/like', type='json', auth="user", website=True)
+    @http.route('/slides/slide/like', type='json', auth="public", website=True)
     def slide_like(self, slide_id, upvote):
         if request.website.is_public_user():
             return {'error': 'public_user'}
