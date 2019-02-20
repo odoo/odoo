@@ -126,7 +126,7 @@
                                     <td colspan="6">
                                         <strong>Subtotal: </strong>
                                         <t t-set="subtotal" t-value="sum(line.price_subtotal for line in layout_category['lines'])"/>
-                                        <span t-esc="subtotal" t-options="{'widget': 'monetary', 'display_currency': doc.pricelist_id.currency_id}"/>
+                                        <span t-esc="subtotal" t-options="{'widget': 'monetary', 'display_currency': doc.pricelist_id.currency_id, 'lang': doc._context.get('lang')}"/>
                                     </td>
                                 </tr>
                             </t>
@@ -156,11 +156,11 @@
                                     <t t-if="amount_by_group[3] == 1 and doc.amount_untaxed == amount_by_group[2]">
                                         <td>
                                             <span t-esc="amount_by_group[0]"/>
-                                            <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group[2]" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></span>
+                                            <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group[2]" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id, "lang": doc._context.get("lang")}'/></span>
                                         </td>
                                         <td class="text-right">
                                             <span t-esc="amount_by_group[1]"
-                                                t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                                t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id, "lang": doc._context.get("lang")}'/>
                                         </td>
                                     </t>
                                     <t t-else ="">
@@ -169,7 +169,7 @@
                                         </td>
                                         <td class="text-right">
                                             <span t-esc="amount_by_group[1]"
-                                                t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                                t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id, "lang": doc._context.get("lang")}'/>
                                         </td>
                                     </t>
                                 </tr>

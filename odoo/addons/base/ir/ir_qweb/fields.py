@@ -106,6 +106,10 @@ class FieldConverter(models.AbstractModel):
         value = record[field_name]
         return False if value is False else record.env[self._name].value_to_html(value, options=options)
 
+    def _get_lang(self, lang_code=None):
+        lang_code = lang_code or self._context.get('lang') or 'en_US'
+        return self.env['res.lang']._lang_get(lang_code)
+
     @api.model
     def user_lang(self):
         """ user_lang()
@@ -116,8 +120,7 @@ class FieldConverter(models.AbstractModel):
 
         :returns: Model[res.lang]
         """
-        lang_code = self._context.get('lang') or 'en_US'
-        return self.env['res.lang']._lang_get(lang_code)
+        return self._get_lang(lang_code=None)
 
 
 class IntegerConverter(models.AbstractModel):
@@ -324,7 +327,7 @@ class MonetaryConverter(models.AbstractModel):
         if options.get('from_currency'):
             value = options['from_currency'].compute(value, display_currency)
 
-        lang = self.user_lang()
+        lang = self._get_lang(lang_code=options.get('lang'))
         formatted_amount = lang.format(fmt, display_currency.round(value),
                                 grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
 
