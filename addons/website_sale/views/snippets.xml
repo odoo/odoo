@@ -40,6 +40,24 @@
 
 <template id="snippet_options" inherit_id="website.snippet_options" name="e-commerce snippet options">
     <xpath expr="." position="inside">
+        <div data-js="WebsiteSaleGridLayout"
+            data-selector="#products_grid > table"
+            data-no-check="true">
+            <a href="#" class="dropdown-item" role="menuitem" data-no-preview="true" data-choose-ppg="1">
+                <i class="fa fa-cart-plus"/>Choose number of products
+            </a>
+            <div class="dropdown-submenu" role="menuitem" aria-haspopup="true">
+                <a tabindex="-1" href="#" class="dropdown-item" role="menuitem">
+                    <i class="fa fa-columns"/>Number of Columns
+                </a>
+                <div class="dropdown-menu" role="menu" data-no-preview="true">
+                    <a href="#" class="dropdown-item" role="menuitem" data-set-ppr="2">2</a>
+                    <a href="#" class="dropdown-item" role="menuitem" data-set-ppr="3">3</a>
+                    <a href="#" class="dropdown-item" role="menuitem" data-set-ppr="4">4</a>
+                </div>
+            </div>
+        </div>
+
         <div data-js="WebsiteSaleProductsItem"
             data-selector="#products_grid .oe_product"
             data-no-check="true">

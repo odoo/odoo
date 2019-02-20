@@ -218,10 +218,10 @@
                                 <t t-set='editor_msg'>Drag building blocks here to customize the header for "<t t-esc='category.name'/>" category.</t>
                                 <div class="mb16" id="category_header" t-att-data-editor-message="editor_msg" t-field="category.website_description"/>
                             </t>
-                            <table t-if="bins" class="table table-borderless my-2">
+                            <table t-if="bins" class="table table-borderless my-2" t-att-data-ppg="ppg" t-att-data-ppr="ppr">
                                 <colgroup t-ignore="true">
                                     <!-- Force the number of columns (useful when only one row of (x < ppr) products) -->
-                                    <col t-foreach="rows" t-as="p"/>
+                                    <col t-foreach="ppr" t-as="p"/>
                                 </colgroup>
                                 <tbody>
                                     <tr t-foreach="bins" t-as="tr_product">

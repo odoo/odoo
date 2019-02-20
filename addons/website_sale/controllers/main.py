@@ -17,65 +17,62 @@ from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
-PPG = 20  # Products Per Page
-PPR = 4   # Products Per Row
-
 
 class TableCompute(object):
 
     def __init__(self):
         self.table = {}
 
-    def _check_place(self, posx, posy, sizex, sizey):
+    def _check_place(self, posx, posy, sizex, sizey, ppr):
         res = True
         for y in range(sizey):
             for x in range(sizex):
-                if posx + x >= PPR:
+                if posx + x >= ppr:
                     res = False
                     break
                 row = self.table.setdefault(posy + y, {})
                 if row.setdefault(posx + x) is not None:
                     res = False
                     break
-            for x in range(PPR):
+            for x in range(ppr):
                 self.table[posy + y].setdefault(x, None)
         return res
 
-    def process(self, products, ppg=PPG):
+    def process(self, products, ppg=20, ppr=4):
         # Compute products positions on the grid
         minpos = 0
         index = 0
         maxy = 0
         x = 0
         for p in products:
-            x = min(max(p.website_size_x, 1), PPR)
-            y = min(max(p.website_size_y, 1), PPR)
+            x = min(max(p.website_size_x, 1), ppr)
+            y = min(max(p.website_size_y, 1), ppr)
             if index >= ppg:
                 x = y = 1
 
             pos = minpos
-            while not self._check_place(pos % PPR, pos // PPR, x, y):
+            while not self._check_place(pos % ppr, pos // ppr, x, y, ppr):
                 pos += 1
-            # if 21st products (index 20) and the last line is full (PPR products in it), break
-            # (pos + 1.0) / PPR is the line where the product would be inserted
+            # if 21st products (index 20) and the last line is full (ppr products in it), break
+            # (pos + 1.0) / ppr is the line where the product would be inserted
             # maxy is the number of existing lines
             # + 1.0 is because pos begins at 0, thus pos 20 is actually the 21st block
             # and to force python to not round the division operation
-            if index >= ppg and ((pos + 1.0) // PPR) > maxy:
+            if index >= ppg and ((pos + 1.0) // ppr) > maxy:
                 break
 
             if x == 1 and y == 1:   # simple heuristic for CPU optimization
-                minpos = pos // PPR
+                minpos = pos // ppr
 
             for y2 in range(y):
                 for x2 in range(x):
-                    self.table[(pos // PPR) + y2][(pos % PPR) + x2] = False
-            self.table[pos // PPR][pos % PPR] = {
+                    self.table[(pos // ppr) + y2][(pos % ppr) + x2] = False
+            self.table[pos // ppr][pos % ppr] = {
                 'product': p, 'x': x, 'y': y,
                 'class': " ".join(x.html_class for x in p.website_style_ids if x.html_class)
             }
             if index <= ppg:
-                maxy = max(maxy, y + (pos // PPR))
+                maxy = max(maxy, y + (pos // ppr))
             index += 1
 
         # Format table according to HTML needs
@@ -210,11 +207,13 @@ class WebsiteSale(http.Controller):
         if ppg:
             try:
                 ppg = int(ppg)
+                post['ppg'] = ppg
             except ValueError:
-                ppg = PPG
-            post["ppg"] = ppg
-        else:
-            ppg = PPG
+                ppg = False
+        if not ppg:
+            ppg = request.env['website'].get_current_website().shop_ppg or 20
+
+        ppr = request.env['website'].get_current_website().shop_ppr or 4
 
         attrib_list = request.httprequest.args.getlist('attrib')
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
@@ -279,8 +278,9 @@ class WebsiteSale(http.Controller):
             'add_qty': add_qty,
             'products': products,
             'search_count': product_count,  # common for all searchbox
-            'bins': TableCompute().process(products, ppg),
-            'rows': PPR,
+            'bins': TableCompute().process(products, ppg, ppr),
+            'ppg': ppg,
+            'ppr': ppr,
             'categories': categs,
             'attributes': attributes,
             'compute_currency': compute_currency,
@@ -1074,6 +1074,14 @@ class WebsiteSale(http.Controller):
     def change_size(self, id, x, y):
         product = request.env['product.template'].browse(id)
         return product.write({'website_size_x': x, 'website_size_y': y})
+
+    @http.route(['/shop/change_ppg'], type='json', auth='user')
+    def change_ppg(self, ppg):
+        request.env['website'].get_current_website().shop_ppg = ppg
+
+    @http.route(['/shop/change_ppr'], type='json', auth='user')
+    def change_ppr(self, ppr):
+        request.env['website'].get_current_website().shop_ppr = ppr
 
     def order_lines_2_google_api(self, order_lines):
         """ Transforms a list of order lines into a dict for google analytics """

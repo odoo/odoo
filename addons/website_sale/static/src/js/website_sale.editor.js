@@ -87,6 +87,94 @@ function reload() {
     }
 }
 
+options.registry.WebsiteSaleGridLayout = options.Class.extend({
+    xmlDependencies: ['/website_sale/static/src/xml/website_sale.editor.xml'],
+
+    /**
+     * @override
+     */
+    start: function () {
+        this.ppg = this.$target.closest('[data-ppg]').data('ppg');
+        this.ppr = this.$target.closest('[data-ppr]').data('ppr');
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for params
+     */
+    choosePpg: function (previewMode, value, $opt) {
+        var self = this;
+        new Dialog(this, {
+            title: _t("Choose number of products"),
+            $content: $(qweb.render('website_sale.dialog.choosePPG', {widget: this})),
+            buttons: [
+                {text: _t("Save"), classes: 'btn-primary', click: function () {
+                    var $input = this.$('input');
+                    var def = self._setPPG($input.val());
+                    if (!def) {
+                        $input.addClass('is-invalid');
+                        return;
+                    }
+                    return def.then(this.close.bind(this));
+                }},
+                {text: _t("Discard"), close: true},
+            ],
+        }).open();
+    },
+    /**
+     * @see this.selectClass for params
+     */
+    setPpr: function (previewMode, value, $opt) {
+        this._rpc({
+            route: '/shop/change_ppr',
+            params: {
+                'ppr': value,
+            },
+        }).then(reload);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _setActive: function () {
+        var self = this;
+        this._super.apply(this, arguments);
+        this.$el.find('[data-set-ppr]')
+            .addBack('[data-set-ppr]')
+            .removeClass('active')
+            .filter(function () {
+                var nbColumns = $(this).data('setPpr');
+                return nbColumns === self.ppr;
+            })
+            .addClass('active');
+    },
+    /**
+     * @private
+     * @param {integer} ppg
+     * @returns {Promise|false}
+     */
+    _setPPG: function (ppg) {
+        ppg = parseInt(ppg);
+        if (!ppg || ppg < 1) {
+            return false;
+        }
+        return this._rpc({
+            route: '/shop/change_ppg',
+            params: {
+                'ppg': ppg,
+            },
+        }).then(reload);
+    },
+});
+
 options.registry.WebsiteSaleProductsItem = options.Class.extend({
     events: _.extend({}, options.Class.prototype.events || {}, {
         'mouseenter .o_wsale_soptions_menu_sizes table': '_onTableMouseEnter',
@@ -101,6 +189,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
     start: function () {
         var self = this;
 
+        this.ppr = this.$target.closest('[data-ppr]').data('ppr');
         this.productTemplateID = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
 
         var defs = [this._super.apply(this, arguments)];
@@ -165,6 +254,9 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         var $size = this.$el.find('.o_wsale_soptions_menu_sizes');
         $size.find('tr:nth-child(-n + ' + sizeY + ') td:nth-child(-n + ' + sizeX + ')')
              .addClass('selected');
+
+        // Adapt size array preview to fit ppr
+        $size.find('tr td:nth-child(n + ' + parseInt(this.ppr + 1) + ')').hide();
 
         return this._super.apply(this, arguments);
     },
