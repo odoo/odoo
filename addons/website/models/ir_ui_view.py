@@ -158,6 +158,9 @@ class View(models.Model):
                     # care of creating pages and menus.
                     view.with_context(website_id=website.id).write({'name': view.name})
 
+        if self.pool._init:
+            self += self._get_specific_views()
+
         result = super(View, self).unlink()
         self.clear_caches()
         return result
