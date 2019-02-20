@@ -212,8 +212,8 @@
                         </t>
                     </div>
                     <div class="row mt-3">
-                        <div class="d-none" id="products_grid_before"></div>
-                        <div class="col-lg-12" id="products_grid">
+                        <div t-if="enable_left_column" id="products_grid_before" class="col-lg-3"/>
+                        <div id="products_grid" class="col">
                             <t t-if="category">
                                 <t t-set='editor_msg'>Drag building blocks here to customize the header for "<t t-esc='category.name'/>" category.</t>
                                 <div class="mb16" id="category_header" t-att-data-editor-message="editor_msg" t-field="category.website_description"/>
@@ -328,6 +328,9 @@
     </template>
 
     <template id="products_categories" inherit_id="website_sale.products" active="False" customize_show="True" name="eCommerce Categories">
+        <xpath expr="//div[@id='products_grid_before']" position="before">
+            <t t-set="enable_left_column" t-value="True"/>
+        </xpath>
         <xpath expr="//div[@id='products_grid_before']" position="inside">
             <ul class="nav nav-pills flex-column my-2">
                 <li class="nav-item">
@@ -337,12 +340,6 @@
                     <t t-call="website_sale.categories_recursive" />
                 </t>
             </ul>
-        </xpath>
-        <xpath expr="//div[@id='products_grid_before']" position="attributes">
-            <attribute name="class">col-lg-3</attribute>
-        </xpath>
-        <xpath expr="//div[@id='products_grid']" position="attributes">
-            <attribute name="class">col-lg-9</attribute>
         </xpath>
     </template>
 
@@ -372,6 +369,9 @@
     </template>
 
     <template id="products_attributes" inherit_id="website_sale.products" active="False" customize_show="True" name="Product Attribute's Filters">
+        <xpath expr="//div[@id='products_grid_before']" position="before">
+            <t t-set="enable_left_column" t-value="True"/>
+        </xpath>
         <xpath expr="//div[@id='products_grid_before']" position="inside">
             <form class="js_attributes my-2" method="get">
                 <input type="hidden" name="search" t-att-value="search" />
@@ -412,12 +412,6 @@
                     </t>
                 </ul>
             </form>
-        </xpath>
-        <xpath expr="//div[@id='products_grid_before']" position="attributes">
-            <attribute name="class">col-lg-3 d-none d-md-block</attribute>
-        </xpath>
-        <xpath expr="//div[@id='products_grid']" position="attributes">
-            <attribute name="class">col-lg-9</attribute>
         </xpath>
     </template>
 
