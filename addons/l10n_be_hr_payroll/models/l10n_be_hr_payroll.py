@@ -1,9 +1,90 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from dateutil import rrule
+from dateutil.relativedelta import relativedelta
+from datetime import date, datetime
+from pytz import timezone
 from odoo import api, fields, models, _
-
 from odoo.exceptions import ValidationError
+from odoo.osv.expression import AND
+
+
+class HrPayslip(models.Model):
+    _inherit = 'hr.payslip'
+
+    def _get_13th_month_basic(self, struct_cp_200):
+        contracts = self.employee_id.contract_ids.filtered(lambda c: c.state not in ['draft', 'cancel'] and c.struct_id == struct_cp_200)
+        if not contracts:
+            return 0.0
+
+        # 1. Seniority: an employee must have a seniority of at least 6 months to be granted the 13th month
+        first_contract = min(contracts, key=lambda c: c.date_start)
+        start_of_service = first_contract.date_start
+        year = self.date_to.year
+        if start_of_service >= date(year, 7, 1):
+            return 0.0
+
+        # 2. Working months
+        n_months = 12
+        if start_of_service > date(year, 1, 1):
+            n_months = 12 - start_of_service.month
+            # only count full months
+            work_days = {int(d) for d in first_contract.resource_calendar_id.mapped('normal_attendance_ids.dayofweek')}
+            # working days between the 1st and the start of service (including start of service)
+            first_days_of_month = rrule.rrule(rrule.DAILY, byweekday=work_days, dtstart=start_of_service.replace(day=1), until=start_of_service)
+            if len(list(first_days_of_month)) <= 1:
+                n_months += 1
+
+        # 3. Deduct absences
+        unpaid_benefit_type = self.env['hr.benefit.type']._load_from_xmlid(
+            'hr_payroll.benefit_type_unpaid_leave',
+            'l10n_be_hr_payroll.benefit_type_credit',
+            'l10n_be_hr_payroll.benefit_type_unpredictable',
+            'l10n_be_hr_payroll.benefit_type_long_sick',
+            'l10n_be_hr_payroll.benefit_type_part_sick',
+        )
+        paid_benefit_type = self.env['hr.benefit.type']._load_from_xmlid(
+            'hr_payroll.benefit_type_attendance',
+            'hr_payroll.benefit_type_home_working',
+            'hr_payroll.benefit_type_legal_leave',
+            'hr_payroll.benefit_type_sick_leave',
+            'l10n_be_hr_payroll.benefit_type_additional_paid',
+            'l10n_be_hr_payroll.benefit_type_breast_feeding',
+            'l10n_be_hr_payroll.benefit_type_european',
+            'l10n_be_hr_payroll.benefit_type_extra_legal',
+            'l10n_be_hr_payroll.benefit_type_maternity',
+            'l10n_be_hr_payroll.benefit_type_notice',
+            'l10n_be_hr_payroll.benefit_type_paternity_company',
+            'l10n_be_hr_payroll.benefit_type_paternity_legal',
+            'l10n_be_hr_payroll.benefit_type_recovery',
+            'l10n_be_hr_payroll.benefit_type_recovery_additional',
+            'l10n_be_hr_payroll.benefit_type_small_unemployment',
+            'l10n_be_hr_payroll.benefit_type_training',
+            'l10n_be_hr_payroll.benefit_type_training_time_off',
+        )
+
+        paid_days = self.employee_id._get_contracts_benefit_days(self.date_from, self.date_to, paid_benefit_type)
+        unpaid_days = self.employee_id._get_contracts_benefit_days(self.date_from, self.date_to, unpaid_benefit_type)
+        presence_prorata = paid_days / (paid_days + unpaid_days)
+
+        basic = self.contract_id.wage_with_holidays
+        return basic * n_months / 12 * presence_prorata
+
+    @api.multi
+    def _get_basic(self):
+        self.ensure_one()
+        struct_13th_month = self.env.ref('l10n_be_hr_payroll.hr_payroll_salary_structure_end_of_year_bonus')
+        struct_double_holiday = self.env.ref('l10n_be_hr_payroll.hr_payroll_salary_structure_double_holiday_pay')
+        struct_cp_200 = self.env.ref('l10n_be_hr_payroll.hr_payroll_salary_structure_employee')
+
+        if self.struct_id == struct_13th_month:
+            return self._get_13th_month_basic(struct_cp_200)
+
+        elif self.struct_id in [struct_cp_200, struct_double_holiday]:
+            return self.contract_id.wage_with_holidays - self._get_unpaid_deduction()
+
+        return super(HrPayslip, self)._get_basic()
 
 
 class HrContract(models.Model):
@@ -281,6 +362,24 @@ class HrEmployee(models.Model):
 
         payslips = self.env['hr.payslip'].search(domain)
         return sum(payslips.mapped('line_ids').filtered(lambda l: l.code == code).mapped('total'))
+
+    def _get_contracts_benefit_days(self, start, end, benefit_types):
+        """
+        Return the number of days in the employee's calendar between two dates.
+        Only count days associated with provided benefit types.
+        For each contract between the two dates, use the contract's calendar to count
+        days within the contract time period.
+        """
+        res = 0
+        contracts = self.contract_ids.filtered(lambda c: c.date_start < end and c.date_end or date.max > start and c.state in ['open', 'pending', 'close'])
+        for contract in contracts:
+            contract_start = max(contract.date_start, start)
+            contract_end = min(contract.date_end or date.max, end)
+            tz = timezone(self.tz)
+            contract_start = datetime.combine(contract_start, datetime.min.time()).replace(tzinfo=tz)
+            contract_end = datetime.combine(contract_end, datetime.max.time()).replace(tzinfo=tz)
+            res += self.get_benefit_days_data(benefit_types, contract_start, contract_end, calendar=contract.resource_calendar_id)['days']
+        return res
 
     @api.depends('disabled_children_bool', 'disabled_children_number', 'children')
     def _compute_dependent_children(self):

@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="hr_payroll.hr_rule_basic" model="hr.salary.rule">
-        <field name="amount_python_compute">
-result = contract.wage_with_holidays - payslip.unpaid_amount
-        </field>
-    </record>
 
 <!-- CONTRIBUTION REGISTERS -->
     <record id="res_partner_onss" model="res.partner">
@@ -205,7 +200,7 @@ wage = categories.BASIC
 if employee.resident_bool:
     result = 0.0
 elif employee.marital in ['divorced', 'single', 'widower'] or (employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='without income'):
-    if wage &gt;= 0.01 and wage &lt;= 1095.09:
+    if wage &gt;= 0.0 and wage &lt;= 1095.09:
         result = 0.0
     elif wage &gt;= 1095.10 and wage &lt;= 1945.38:
         result = 0.0

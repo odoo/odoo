@@ -29,11 +29,6 @@ class TestBenefit(TestPayslipBase):
         })
         self.richard_emp.resource_calendar_id = self.resource_calendar_id
         self.richard_emp.contract_id = contract
-        self.benefit_type = self.env['hr.benefit.type'].create({
-            'name': 'Extra attendance',
-            'is_leave': False,
-            'code': 'WORK200'
-        })
 
     def test_no_duplicate(self):
         self.richard_emp.generate_benefit(self.start, self.end)
