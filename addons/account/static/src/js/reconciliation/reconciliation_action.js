@@ -259,7 +259,7 @@ var StatementAction = AbstractAction.extend({
             }
         });
     },
-    
+
     /**
      * @private
      * @param {OdooEvent} ev
@@ -308,7 +308,7 @@ var StatementAction = AbstractAction.extend({
         return this.model.closeStatement().then(function (result) {
             self.do_action({
                 name: 'Bank Statements',
-                res_model: 'account.bank.statement',
+                res_model: 'account.bank.statement.line',
                 res_id: result,
                 views: [[false, 'form']],
                 type: 'ir.actions.act_window',
