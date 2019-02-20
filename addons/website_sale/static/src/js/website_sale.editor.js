@@ -79,102 +79,151 @@ publicWidget.registry.websiteSaleCurrency = publicWidget.Widget.extend({
     },
 });
 
-options.registry.website_sale = options.Class.extend({
+function reload() {
+    if (window.location.href.match(/\?enable_editor/)) {
+        window.location.reload();
+    } else {
+        window.location.href = window.location.href.replace(/\?(enable_editor=1&)?|#.*|$/, '?enable_editor=1&');
+    }
+}
+
+options.registry.WebsiteSaleProductsItem = options.Class.extend({
+    events: _.extend({}, options.Class.prototype.events || {}, {
+        'mouseenter .o_wsale_soptions_menu_sizes table': '_onTableMouseEnter',
+        'mouseleave .o_wsale_soptions_menu_sizes table': '_onTableMouseLeave',
+        'mouseover .o_wsale_soptions_menu_sizes td': '_onTableItemMouseEnter',
+        'click .o_wsale_soptions_menu_sizes td': '_onTableItemClick',
+    }),
+
     /**
      * @override
      */
     start: function () {
         var self = this;
-        this.product_tmpl_id = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
 
-        var size_x = parseInt(this.$target.attr("colspan") || 1);
-        var size_y = parseInt(this.$target.attr("rowspan") || 1);
+        this.productTemplateID = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
 
-        var $size = this.$el.find('div[name="size"]');
-        var $select = $size.find('tr:eq(0) td:lt('+size_x+')');
-        if (size_y >= 2) $select = $select.add($size.find('tr:eq(1) td:lt('+size_x+')'));
-        if (size_y >= 3) $select = $select.add($size.find('tr:eq(2) td:lt('+size_x+')'));
-        if (size_y >= 4) $select = $select.add($size.find('tr:eq(3) td:lt('+size_x+')'));
-        $select.addClass("selected");
+        var defs = [this._super.apply(this, arguments)];
 
-        this._rpc({
+        defs.push(this._rpc({
             model: 'product.style',
             method: 'search_read',
         }).then(function (data) {
             var $ul = self.$el.find('div[name="style"]');
             for (var k in data) {
                 $ul.append(
-                    $('<a class="dropdown-item" role="menuitem" data-style="'+data[k]['id']+'" data-toggle-class="'+data[k]['html_class']+'" data-no-preview="true"/>')
-                        .append(data[k]['name']));
+                    $('<a class="dropdown-item" role="menuitem" data-style="' + data[k]['id'] + '" data-toggle-class="' + data[k]['html_class'] + '"/>')
+                        .append(data[k]['name'])
+                );
             }
             self._setActive();
-        });
+        }));
 
-        this.bind_resize();
+        return $.when.apply($, defs);
     },
-    reload: function () {
-        if (window.location.href.match(/\?enable_editor/)) {
-            window.location.reload();
-        } else {
-            window.location.href = window.location.href.replace(/\?(enable_editor=1&)?|#.*|$/, '?enable_editor=1&');
-        }
-    },
-    bind_resize: function () {
-        var self = this;
-        this.$el.on('mouseenter', 'div[name="size"] table', function (event) {
-            $(event.currentTarget).addClass("oe_hover");
-        });
-        this.$el.on('mouseleave', 'div[name="size"] table', function (event) {
-            $(event.currentTarget).removeClass("oe_hover");
-        });
-        this.$el.on('mouseover', 'div[name="size"] td', function (event) {
-            var $td = $(event.currentTarget);
-            var $table = $td.closest("table");
-            var x = $td.index()+1;
-            var y = $td.parent().index()+1;
 
-            var tr = [];
-            for (var yi=0; yi<y; yi++) tr.push("tr:eq("+yi+")");
-            var $select_tr = $table.find(tr.join(","));
-            var td = [];
-            for (var xi=0; xi<x; xi++) td.push("td:eq("+xi+")");
-            var $select_td = $select_tr.find(td.join(","));
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
 
-            $table.find("td").removeClass("select");
-            $select_td.addClass("select");
-        });
-        this.$el.on('click', 'div[name="size"] td', function (event) {
-            var $td = $(event.currentTarget);
-            var x = $td.index()+1;
-            var y = $td.parent().index()+1;
-            self._rpc({
-                route: '/shop/change_size',
-                params: {
-                    id: self.product_tmpl_id,
-                    x: x,
-                    y: y,
-                },
-            }).then(self.reload);
-        });
-    },
-    style: function (previewMode, value, $li) {
+    /**
+     * @see this.selectClass for params
+     */
+    style: function (previewMode, value, $opt) {
         this._rpc({
             route: '/shop/change_styles',
             params: {
-                id: this.product_tmpl_id,
-                style_id: value,
+                'id': this.productTemplateID,
+                'style_id': value,
             },
         });
     },
-    go_to: function (previewMode, value) {
+    /**
+     * @see this.selectClass for params
+     */
+    changeSequence: function (previewMode, value, $opt) {
         this._rpc({
             route: '/shop/change_sequence',
             params: {
-                id: this.product_tmpl_id,
+                id: this.productTemplateID,
                 sequence: value,
             },
-        }).then(this.reload);
-    }
+        }).then(reload);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _setActive: function () {
+        var sizeX = parseInt(this.$target.attr('colspan') || 1);
+        var sizeY = parseInt(this.$target.attr('rowspan') || 1);
+
+        var $size = this.$el.find('.o_wsale_soptions_menu_sizes');
+        $size.find('tr:nth-child(-n + ' + sizeY + ') td:nth-child(-n + ' + sizeX + ')')
+             .addClass('selected');
+
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onTableMouseEnter: function (ev) {
+        $(ev.currentTarget).addClass('oe_hover');
+    },
+    /**
+     * @private
+     */
+    _onTableMouseLeave: function (ev) {
+        $(ev.currentTarget).removeClass('oe_hover');
+    },
+    /**
+     * @private
+     */
+    _onTableItemMouseEnter: function (ev) {
+        var $td = $(ev.currentTarget);
+        var $table = $td.closest("table");
+        var x = $td.index()+1;
+        var y = $td.parent().index()+1;
+
+        var tr = [];
+        for (var yi = 0; yi < y; yi++) {
+            tr.push("tr:eq(" + yi + ")");
+        }
+        var $selectTr = $table.find(tr.join(","));
+        var td = [];
+        for (var xi = 0; xi < x; xi++) {
+            td.push("td:eq(" + xi + ")");
+        }
+        var $selectTd = $selectTr.find(td.join(","));
+
+        $table.find("td").removeClass("select");
+        $selectTd.addClass("select");
+    },
+    /**
+     * @private
+     */
+    _onTableItemClick: function (ev) {
+        var $td = $(ev.currentTarget);
+        var x = $td.index() + 1;
+        var y = $td.parent().index() + 1;
+        this._rpc({
+            route: '/shop/change_size',
+            params: {
+                id: this.productTemplateID,
+                x: x,
+                y: y,
+            },
+        }).then(reload);
+    },
 });
 
 /**
