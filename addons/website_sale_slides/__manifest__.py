@@ -5,7 +5,7 @@
     'summary': 'Sell your courses online',
     'description': """Sell your courses using the e-commerce features of the website.""",
     'category': 'Hidden',
-    'version': '0.1',
+    'version': '1.0',
 
     'depends': ['website_slides', 'website_sale'],
     'installable': True,
