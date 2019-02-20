@@ -4,6 +4,9 @@
         <xpath expr="link[last()]" position="after">
             <link rel="stylesheet" type="text/scss" href="/website_profile/static/src/scss/website_profile.scss"/>
         </xpath>
+        <xpath expr="script[last()]" position="after">
+            <script type="text/javascript" src="/website_profile/static/src/js/website_profile.js"/>
+        </xpath>
     </template>
 
 
@@ -130,7 +133,7 @@
                     <div class="col-12 col-md-4 col-lg-3">
                         <div t-attf-class="d-flex align-items-start #{'justify-content-between' if (request.env.user == user) else 'justify-content-around' }">
                             <div class="o_wprofile_pict d-inline-block mb-3 mb-md-0" t-attf-style="background-image:url(/web/image/res.users/#{user.id}/image)"/>
-                            <a class="btn btn-primary d-inline-block d-md-none" t-if="request.env.user == user" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
+                            <a class="btn btn-primary d-inline-block d-md-none" t-if="request.env.user == user and validation_email_done" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
                                 <i class="fa fa-pencil mr-1"/>EDIT
                             </a>
                         </div>
@@ -139,8 +142,10 @@
                     <!-- ==== Header Right ==== -->
                     <div class="col-12 col-md-8 col-lg-9 d-flex flex-column">
                         <div class="d-flex justify-content-between align-items-start">
-                            <h1 class="o_card_people_name" t-field="user.name"/>
-                            <a class="btn btn-primary d-none d-md-inline-block" t-if="request.env.user == user" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
+                            <h1 class="o_card_people_name">
+                                <span t-field="user.name"/><small t-if="not validation_email_done"> (not verified)</small>
+                            </h1>
+                            <a class="btn btn-primary d-none d-md-inline-block" t-if="request.env.user == user and validation_email_done" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
                                 <i class="fa fa-pencil mr-2"/>EDIT PROFILE
                             </a>
                         </div>
@@ -212,6 +217,12 @@
                     </ul>
                     <div class="tab-content py-4 o_wprofile_tabs_content mb-4" id="profile_extra_info_tabcontent">
                         <div role="tabpanel" class="tab-pane active" id="profile_tab_content_about">
+                            <div class="o_wprofile_email_validation_container mb16 mt16">
+                                <t t-call="website_profile.email_validation_banner">
+                                    <t t-set="redirect_url" t-value="'/profile/user/%s' % user.id"/>
+                                    <t t-set="send_validation_email_message" t-value="'Click here to send a verification email.'"/>
+                                </t>
+                            </div>
                             <div id="profile_about_badge" class="mb32">
                                 <h5 class="border-bottom pb-1">Badges</h5>
                                 <t t-call="website_profile.user_badges"></t>
@@ -461,6 +472,28 @@
                 <a t-att-href=" pager['page_last']['url'] if pager['page']['num'] != pager['page_count'] else None" class="page-link"><i class="fa fa-step-forward"/></a>
             </li>
         </ul>
+    </template>
+
+    <template id="email_validation_banner">
+        <div t-if="not validation_email_sent and not is_public_user and user.karma == 0" class="alert alert-danger alert-dismissable" role="alert">
+            <button type="button" class="close validation_email_close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+            <div>
+                <p>
+                    It appears your email has not been verified.
+                    <a class="send_validation_email" href="#" t-att-data-redirect_url="redirect_url">
+                    <span t-esc="send_validation_email_message"/></a>
+                </p>
+            </div>
+        </div>
+        <div t-if="validation_email_done" class="alert alert-success alert-dismissable" role="status">
+            <button type="button" class="close validated_email_close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+            <div>
+                <p>
+                    <span id="email_validated_message">Congratulations! Your email has just been validated.</span>
+                    <span t-esc="additional_validated_email_message"/>
+                </p>
+            </div>
+        </div>
     </template>
 
 </data></odoo>
