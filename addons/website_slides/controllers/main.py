@@ -100,9 +100,8 @@ class WebsiteSlides(WebsiteProfile):
                     tags |= search_tag
         return tags
 
-    def _build_channel_domain(self, base_domain, slide_type=None, **post):
+    def _build_channel_domain(self, base_domain, slide_type=None, my=False, **post):
         search_term = post.get('search')
-        category_id = post.get('category_id')
         channel_tag_id = post.get('channel_tag_id')
         tags = self._extract_channel_tag_search(**post)
 
@@ -111,15 +110,16 @@ class WebsiteSlides(WebsiteProfile):
             domain = expression.AND([
                 domain,
                 ['|', ('name', 'ilike', search_term), ('description', 'ilike', search_term)]])
-        if category_id:
-            domain = expression.AND([domain, [('category_ids', 'in', [category_id])]])
-        elif channel_tag_id:
+        if channel_tag_id:
             domain = expression.AND([domain, [('tag_ids', 'in', [channel_tag_id])]])
         elif tags:
             domain = expression.AND([domain, [('tag_ids', 'in', tags.ids)]])
 
         if slide_type and 'nbr_%s' % slide_type in request.env['slide.channel']:
             domain = expression.AND([domain, [('nbr_%s' % slide_type, '>', 0)]])
+
+        if my:
+            domain = expression.AND([domain, [('partner_ids', '=', request.env.user.partner_id.id)]])
         return domain
 
     def _prepare_channel_values(self, **kwargs):
@@ -179,19 +179,24 @@ class WebsiteSlides(WebsiteProfile):
         })
 
     @http.route('/slides/all', type='http', auth="public", website=True)
-    def slides_channel_all(self, slide_type=None, **post):
+    def slides_channel_all(self, slide_type=None, my=False, **post):
         """ Home page displaying a list of courses displayed according to some
         criterion and search terms.
 
-         : param string slide_type: if provided, filter the slide.channels
-           to contain at least one slide of type 'slide_type'
-         : param dict post: post parameters, including
-           * search_term: keywords entered in the search box, used to filter on slide content;
-           * category_id: id of a slide.category;
-           * channel_tag_id: id of a channel.tag;
+          :param string slide_type: if provided, filter the course to contain at
+           least one slide of type 'slide_type'. Used notably to display courses
+           with certifications;
+          :param bool my: if provided, filter the slide.channels for which the
+           current user is a member of
+          :param dict post: post parameters, including
+
+           * ``search``: filter on course description / name;
+           * ``channel_tag_id``: filter on courses containing this tag;
+           * ``channel_tag_group_id_<id>``: filter on courses containing this tag
+             in the tag group given by <id> (used in navigation based on tag group);
         """
         domain = request.website.website_domain()
-        domain = self._build_channel_domain(domain, slide_type=slide_type, **post)
+        domain = self._build_channel_domain(domain, slide_type=slide_type, my=my, **post)
 
         order = self._channel_order_by_criterion.get(post.get('sorting', 'date'), 'create_date desc')
 
@@ -207,7 +212,10 @@ class WebsiteSlides(WebsiteProfile):
             'channels': channels,
             'tag_groups': tag_groups,
             'search_term': post.get('search'),
+            'search_slide_type': slide_type,
+            'search_my': my,
             'search_tags': search_tags,
+            'search_channel_tag_id': post.get('channel_tag_id'),
         })
 
     def _prepare_additional_channel_values(self, values, **kwargs):
