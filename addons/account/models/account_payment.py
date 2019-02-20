@@ -256,7 +256,7 @@ class account_register_payments(models.TransientModel):
     _inherit = 'account.abstract.payment'
     _description = "Register Payments"
 
-    group_invoices = fields.Boolean(string="Group Invoices", help="""If enabled, groups invoices by commercial partner, invoice account,
+    group_invoices = fields.Boolean(string="Group Payments", help="""If enabled, groups invoices by commercial partner, invoice account,
                                                                     type and recipient bank account in the generated payments. If disabled,
                                                                     a distinct payment will be generated for each invoice.""")
     show_communication_field = fields.Boolean(compute='_compute_show_communication_field')
@@ -301,7 +301,7 @@ class account_register_payments(models.TransientModel):
 
         :return: a dictionary mapping, grouping invoices as a recordset under each of its keys.
         '''
-        if not self.group_invoices:
+        if not self.group_invoices or not self.multi:
             return {inv.id: inv for inv in self.invoice_ids}
 
         results = {}
@@ -324,12 +324,11 @@ class account_register_payments(models.TransientModel):
         :param invoices: The invoices that should have the same commercial partner and the same type.
         :return: The payment values as a dictionary.
         '''
-        amount = self._compute_payment_amount(invoices=invoices) if self.multi else self.amount
+        amount = self._compute_payment_amount(invoices=invoices)
         payment_type = ('inbound' if amount > 0 else 'outbound') if self.multi else self.payment_type
         bank_account = self.multi and invoices[0].partner_bank_id or self.partner_bank_account_id
-        pmt_communication = self.show_communication_field and self.communication \
-                            or self.group_invoices and ' '.join([inv.reference or inv.number for inv in invoices]) \
-                            or invoices[0].reference # in this case, invoices contains only one element, since group_invoices is False
+        pmt_communication = self.communication \
+                            or ' '.join([inv.reference or inv.number for inv in invoices])
         values = {
             'journal_id': self.journal_id.id,
             'payment_method_id': self.payment_method_id.id,
@@ -356,10 +355,8 @@ class account_register_payments(models.TransientModel):
 
         :return: a list of payment values (dictionary).
         '''
-        if self.multi:
-            groups = self._groupby_invoices()
-            return [self._prepare_payment_vals(invoices) for invoices in groups.values()]
-        return [self._prepare_payment_vals(self.invoice_ids)]
+        groups = self._groupby_invoices()
+        return [self._prepare_payment_vals(invoices) for invoices in groups.values()]
 
     @api.multi
     def create_payments(self):

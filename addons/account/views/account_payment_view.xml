@@ -167,7 +167,7 @@
                                 <field name="show_partner_bank_account" invisible="1"/>
                                 <field name="payment_method_code" invisible="1"/>
                             </group>
-                            <group>
+                            <group name="right_column">
                                 <field name="payment_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="communication" attrs="{'invisible': [('state', '!=', 'draft'), ('communication', '=', False)], 'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
@@ -273,7 +273,7 @@
                                 <field name="show_partner_bank_account" invisible="1"/>
                                 <field name="payment_method_code" invisible="1"/>
                             </group>
-                            <group>
+                            <group name="right_column">
                                 <field name="payment_date"/>
                                 <field name="communication"/>
                             </group>
@@ -338,11 +338,11 @@
                             <field name="journal_id" widget="selection" attrs="{'invisible': [('amount', '=', 0)]}"/>
                             <field name="hide_payment_method" invisible="1"/>
                             <field name="payment_method_id" widget="radio" attrs="{'invisible': ['|', ('hide_payment_method', '=', True), ('amount', '=', 0.0)]}"/>
-                            <field name="partner_bank_account_id" attrs="{'invisible': [('show_partner_bank_account', '!=', True)], 'required': [('show_partner_bank_account', '=', True)]}" context="{'default_partner_id': partner_id}"/>
+                            <field name="partner_bank_account_id" attrs="{'invisible': [('show_partner_bank_account', '!=', True)],}" context="{'default_partner_id': partner_id}"/>
                             <field name="show_partner_bank_account" invisible="1"/>
                             <field name="payment_method_code" invisible="1"/>
                         </group>
-                        <group>
+                        <group name="right_column">
                             <field name="payment_date"/>
                             <field name="group_invoices"/>
                             <field name="show_communication_field" invisible="1"/>
