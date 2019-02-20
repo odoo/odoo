@@ -400,15 +400,16 @@
                         <ul class="list-group mb-4">
                             <t t-foreach="invoices" t-as="i">
                                 <t t-set="report_url" t-value="i.get_portal_url(report_type='pdf', download=True)"/>
-                                <a class="list-group-item list-group-item-action d-flex flex-wrap align-items-center justify-content-between py-2 px-3" t-att-href="report_url">
+                                <div class="d-flex flex-wrap align-items-center justify-content-between">
                                     <div>
-                                        <i class="fa fa-download mr-1" role="img" aria-label="Download" title="Download"/>
-                                        <span t-esc="i.number" class="mr-lg-3"/>
+                                        <a t-att-href="report_url">
+                                            <span t-esc="i.number"/>
+                                        </a>
                                         <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.date_invoice"/></div>
                                     </div>
-                                    <span t-if="i.state == 'paid'" class="small text-success orders_label_text_align"><i class="fa fa-fw fa-check"/> <b>Paid</b></span>
-                                    <span t-else="" class="small text-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> <b>Waiting Payment</b></span>
-                                </a>
+                                    <span t-if="i.state == 'paid'" class="small badge badge-success orders_label_text_align"><i class="fa fa-fw fa-check"/> <b>Paid</b></span>
+                                    <span t-else="" class="small badge badge-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> <b>Waiting Payment</b></span>
+                                </div>
                             </t>
                         </ul>
                     </div>
