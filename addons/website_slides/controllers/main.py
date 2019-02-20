@@ -53,8 +53,8 @@ class WebsiteSlides(WebsiteProfile):
         return True
 
     def _get_slide_detail(self, slide):
-        most_viewed_slides = slide.get_most_viewed_slides(self._slides_per_list)
-        related_slides = slide.get_related_slides(self._slides_per_list)
+        most_viewed_slides = slide._get_most_viewed_slides(self._slides_per_list)
+        related_slides = slide._get_related_slides(self._slides_per_list)
         values = {
             'slide': slide,
             'most_viewed_slides': most_viewed_slides,
@@ -119,7 +119,7 @@ class WebsiteSlides(WebsiteProfile):
             domain = expression.AND([domain, [('tag_ids', 'in', tags.ids)]])
 
         if slide_type and 'nbr_%ss' % slide_type in request.env['slide.channel']:
-            domain = expression.AND([domain, [('nbr_%ss' % slide_type, '>', 0)]])
+            domain = expression.AND([domain, [('nbr_%s' % slide_type, '>', 0)]])
         return domain
 
     def _prepare_channel_values(self, **kwargs):
@@ -521,7 +521,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route(['/slides/slide/send_share_email'], type='json', auth='user', website=True)
     def slide_send_share_email(self, slide_id, email):
         slide = request.env['slide.slide'].browse(int(slide_id))
-        result = slide.send_share_email(email)
+        result = slide._send_share_email(email)
         return result
 
     # --------------------------------------------------
