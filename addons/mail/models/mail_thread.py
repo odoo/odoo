@@ -2358,6 +2358,24 @@ class MailThread(models.AbstractModel):
             )
 
     @api.multi
+    def _message_auto_subscribe_check_access(self, pid):
+        """ Check if the specified partner has read access rights on the records to autofollow it.
+        """
+        partner_id = self.env['res.partner'].sudo().browse(pid).exists()
+        # a partner with no users cannot autofollow
+        if not partner_id.user_ids:
+            return False
+
+        for user in partner_id.user_ids:
+            sudoed_records = self.sudo(user.id)
+            try:
+                sudoed_records.check_access_rights('read')
+                sudoed_records.check_access_rule('read')
+            except exceptions.AccessError:
+                return False
+        return True
+
+    @api.multi
     def _message_auto_subscribe(self, updated_values):
         """ Handle auto subscription. Auto subscription is done based on two
         main mechanisms
@@ -2397,7 +2415,7 @@ class MailThread(models.AbstractModel):
             for fid, rid, pid, cid, subtype_ids, pshare in res:
                 sids = [parent[sid] for sid in subtype_ids if parent.get(sid)]
                 sids += [sid for sid in subtype_ids if sid not in parent and sid in def_ids]
-                if pid:
+                if pid and self._message_auto_subscribe_check_access(pid):
                     new_partners[pid] = (set(sids) & set(all_ids)) - set(int_ids) if pshare else set(sids) & set(all_ids)
                 if cid:
                     new_channels[cid] = (set(sids) & set(all_ids)) - set(int_ids)
