@@ -110,12 +110,11 @@ class Quant(models.Model):
         res = super(Quant, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
         if 'inventory_value' in fields:
             for line in res:
-                if '__domain' in line:
-                    lines = self.search(line['__domain'])
-                    inv_value = 0.0
-                    for line2 in lines:
-                        inv_value += line2.inventory_value
-                    line['inventory_value'] = inv_value
+                lines = self.search(line.get('__domain', domain))
+                inv_value = 0.0
+                for line2 in lines:
+                    inv_value += line2.inventory_value
+                line['inventory_value'] = inv_value
         return res
 
     @api.multi
