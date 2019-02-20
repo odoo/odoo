@@ -56,7 +56,7 @@
             <field name="category_id" ref="hr_payroll.BASIC"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = contract.wage</field>
+            <field name="amount_python_compute">result = payslip.get_basic()</field>
         </record>
 
         <record id="hr_rule_taxable" model="hr.salary.rule">

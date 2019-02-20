@@ -77,6 +77,12 @@ class HrPayslip(models.Model):
         for payslip in self:
             payslip.unpaid_amount = payslip._get_unpaid_deduction()
 
+    @api.multi
+    def _get_basic(self):
+        self.ensure_one()
+        return self.contract_id.wage - self._get_unpaid_deduction()
+
+    @api.multi
     def _compute_basic_net(self):
         for payslip in self:
             payslip.basic_wage = payslip.get_salary_line_total('BASIC')

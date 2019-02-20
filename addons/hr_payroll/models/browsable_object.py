@@ -60,3 +60,6 @@ class Payslips(BrowsableObject):
                     (self.employee_id, from_date, to_date, code))
         res = self.env.cr.fetchone()
         return res and res[0] or 0.0
+
+    def get_basic(self):
+        return self.dict._get_basic()
