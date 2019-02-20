@@ -17,6 +17,10 @@ odoo.define('website_slides.fullscreen', function (require) {
 
 
     var Fullscreen = Widget.extend({
+        custom_events: {
+            quiz_next_slide: '_goToNextSlide',
+            quiz_completed: '_onQuizCompleted'
+        },
         /**
         * @override
         * @param {Object} el
@@ -36,11 +40,11 @@ odoo.define('website_slides.fullscreen', function (require) {
             this.activetab = undefined;
             this.player = undefined;
             this.goToQuiz = false;
-            this.answeredQuestions = [];
             this.slideTitle = undefined;
             return this._super.apply(this,arguments);
         },
         start: function (){
+            var self = this;
             this.url = window.location.pathname;
             this.urlToSmallScreen = this.url.replace('/fullscreen','');
             this._getSlides();
@@ -58,46 +62,50 @@ odoo.define('website_slides.fullscreen', function (require) {
          */
         _renderPlayer: function (){
             var self = this;
-            var embed_url;
-            if (self.slide.slide_type !== 'webpage' || self.slide.htmlContent){
-                if ((self.slide.slide_type === "quiz" || self.slide.has_quiz) && !self.slide.quiz){
-                    self._fetchQuiz();
-                } else {
-                    embed_url = $(this.slide.embed_code).attr('src');
-                    if (self.slide.slide_type === "video"){
+
+            var def = $.Deferred();
+            if (this.slide.slide_type === 'webpage') {
+                this._fetchHtmlContent().then(function () {
+                    self._renderWebpage();
+                    def.resolve();
+                });
+            } else {
+                if (this.slide.slide_type !== 'quiz') {
+                    // no RPC, get slide data from existing DOM
+                    var embed_url = $(this.slide.embed_code).attr('src');
+                    if (this.slide.slide_type === "video"){
                         embed_url = "https://" + embed_url + "&rel=0&autoplay=1&enablejsapi=1&origin=" + window.location.origin;
                     }
                     $('.o_wslides_fs_player').html(QWeb.render('website.slides.fullscreen', {
                         slide: self.slide,
                         nextSlide: self.nextSlide,
                         questions: self.slide.quiz ? self.slide.quiz.questions: '',
-                        reward: self.slide.quiz ? self.slide.quiz.nb_attempts < 3 ? self.slide.quiz.possible_rewards[self.slide.quiz.nb_attempts] : self.slide.quiz.possible_rewards[3]: self.slide.maxPoints,
                         embed_url: embed_url,
                         question_count: self.slide.quiz ? self.slide.quiz.questions.length : '',
                         letters: self.slide.quiz ? self.letters : '',
                         showMiniQuiz: self.goToQuiz
                     }));
-                    if (self.slide.slide_type === "video"){
-                      self._renderYoutubeIframe();
+
+                    if(this.slide.slide_type === "video"){
+                      this._renderYoutubeIframe();
                     }
-                    if (self.slide.slide_type === 'webpage'){
-                        self._renderWebpage();
-                    }
-                    if ((self.slide.slide_type === "presentation" || self.slide.slide_type === "document" || self.slide.slide_type === "infographic" || self.slide.slide_type === "webpage") && !self.slide.quiz){
-                        self._setSlideStateAsDone();
-                    }
-                    if ((self.slide.quiz && self.slide.slide_type === "quiz") || self.goToQuiz){
-                        self._renderQuiz();
-                    }
+                    def.resolve();
                 }
-            } else {
-                self._fetchHtmlContent();
             }
-            self._renderTitle();
+
+            if (this.slide.slide_type === "quiz" || this.goToQuiz) {
+                this._renderQuiz().then(function() {
+                    def.resolve();
+                });
+            }
+
+            return def.then(function() {
+                self._renderTitle();
+            });
         },
         _renderYoutubeIframe: function (){
             var self = this;
-              /**
+            /**
              * Due to issues of synchronization between the youtube api script and the widget's instanciation.
              */
             try {
@@ -114,18 +122,15 @@ odoo.define('website_slides.fullscreen', function (require) {
             var self = this;
             $(self.slide.htmlContent).appendTo('.o_wslides_fs_webpage_content');
         },
+
         _renderQuiz: function (){
-            var self = this;
-            var Quiz = new QuizWidget(this, self.slide, self.nextSlide);
-            Quiz.appendTo('.o_wslides_fs_player');
-            $('.next-slide').click(function (){
-                self._goToNextSlide();
+            var quizSlideData = _.extend(this.slide, {
+                completed: this.slide.done,
             });
-            $('.back-to-video').click(function (){
-                self.goToQuiz = false;
-                self._renderPlayer();
-            });
+            var Quiz = new QuizWidget(this, quizSlideData);
+            return Quiz.appendTo('.o_wslides_fs_player');
         },
+
         _renderTitle: function (){
             var self = this;
             $('.o_wslides_fs_slide_title').empty().html(QWeb.render('website.course.fullscreen.title', {
@@ -168,7 +173,7 @@ odoo.define('website_slides.fullscreen', function (require) {
                         var totalTime = event.target.getDuration();
                         if (totalTime && currentTime > totalTime - 30){
                             clearInterval(self.tid);
-                            if (!self.slide.has_quiz && !self.slide.done){
+                            if (!self.slide.hasQuiz && !self.slide.done){
                                 self.slide.done = true;
                                 self._setSlideStateAsDone();
                             }
@@ -194,26 +199,11 @@ odoo.define('website_slides.fullscreen', function (require) {
                 this._getActiveSlide();
             }
         },
+
         /**
          * @private
-         * @param {object} slide
-         * Fetch the quiz for a particular slide
          */
-        _fetchQuiz: function (){
-            var self = this;
-            return self._rpc({
-                route:"/slide/quiz/get",
-                params: {
-                    'slide_id': self.slide.id
-                }
-            }).then(function (data){
-                if (data){
-                    self.slide.quiz = data;
-                    self._renderPlayer();
-                }
-            });
-        },
-        _fetchHtmlContent: function (){
+        _fetchHtmlContent: function(){
             var self = this;
             return self._rpc({
                 route: 'slides/slide/get_html_content',
@@ -223,7 +213,6 @@ odoo.define('website_slides.fullscreen', function (require) {
             }).then(function (data){
                 if (data.html_content) {
                     self.slide.htmlContent = data.html_content;
-                    self._renderPlayer();
                 }
             });
         },
@@ -269,7 +258,7 @@ odoo.define('website_slides.fullscreen', function (require) {
             var self = this;
             clearInterval(self.tid);
             self.player = undefined;
-            self.goToQuiz = self.slide.has_quiz && !self.goToQuiz && self.slide.slide_type !== 'quiz';
+            self.goToQuiz = self.slide.hasQuiz && !self.goToQuiz && self.slide.slide_type !== 'quiz';
             if (self.nextSlide && !self.goToQuiz){
                 self.slide = self.nextSlide;
                 self.index++;
@@ -369,7 +358,7 @@ odoo.define('website_slides.fullscreen', function (require) {
         },
         _onMiniQuizClick: function (ev){
             var self = this;
-            self.index = parseInt($(ev.currentTarget).attr('index'));
+            self.index = parseInt($(ev.currentTarget).attr('index')) || 0;
             self.slide = self.slides[self.index];
             self.goToQuiz = true;
             self._setPreviousAndNextSlides();
@@ -377,6 +366,9 @@ odoo.define('website_slides.fullscreen', function (require) {
             self._setActiveTab();
             self._updateUrl();
             history.pushState(null,'' ,self.url);
+        },
+        _onQuizCompleted: function (ev) {
+            this._setSlideStateAsDone();
         },
          /**
         * @private

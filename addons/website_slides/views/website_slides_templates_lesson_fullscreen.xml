@@ -82,8 +82,9 @@
                             t-att-data-slug="slug(course_slide)"
                             t-att-data-done="course_slide.id in user_progress and user_progress[course_slide.id].completed"
                             t-att-data-id="course_slide.id"
+                            t-att-data-readonly="not course_slide.channel_id.is_member"
                             t-att-data-name="course_slide.name"
-                            t-attf-data-has_quiz="#{True if course_slide.question_ids else False}"
+                            t-att-data-has-quiz="True if course_slide.question_ids else False"
                             t-att-data-slide_type="course_slide.slide_type"
                             t-att-data-embed_code="course_slide.embed_code"
                             t-attf-class="o_wslides_fs_sidebar_slide_tab #{'active' if slide.id == course_slide.id else ''} d-flex justify-content-between">

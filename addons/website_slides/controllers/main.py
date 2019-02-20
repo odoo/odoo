@@ -51,7 +51,7 @@ class WebsiteSlides(WebsiteProfile):
             return {'error': 'slide_access'}
         return {'slide': slide}
 
-    def _set_viewed_slide(self, slide):
+    def _set_viewed_slide(self, slide, quiz_attempts_inc=False):
         if request.env.user._is_public() or not slide.website_published or not slide.channel_id.is_member:
             viewed_slides = request.session.setdefault('viewed_slides', list())
             if slide.id not in viewed_slides:
@@ -59,12 +59,12 @@ class WebsiteSlides(WebsiteProfile):
                 viewed_slides.append(slide.id)
                 request.session['viewed_slides'] = viewed_slides
         else:
-            slide.action_set_viewed()
+            slide.action_set_viewed(quiz_attempts_inc=quiz_attempts_inc)
         return True
 
-    def _set_completed_slide(self, slide):
+    def _set_completed_slide(self, slide, quiz_attempts_inc=False):
         if slide.website_published and slide.channel_id.is_member:
-            slide.action_set_completed()
+            slide.action_set_completed(quiz_attempts_inc=quiz_attempts_inc)
         return True
 
     def _get_slide_detail(self, slide):
@@ -104,11 +104,29 @@ class WebsiteSlides(WebsiteProfile):
                 'message_post_pid': request.env.user.partner_id.id,
             })
 
+        if slide.question_ids:
+            values.update(self._get_slide_quiz_info(slide))
+
         return values
 
-    def _get_quiz_points(self, slide, attempt_count):
-        possible_points = [slide.quiz_first_attempt_reward,slide.quiz_second_attempt_reward,slide.quiz_third_attempt_reward, slide.quiz_fourth_attempt_reward]
-        return possible_points[attempt_count] if attempt_count < len(possible_points) else possible_points[-1]
+    def _get_slide_quiz_info(self, slide, quiz_done=False):
+        gains = [slide.quiz_first_attempt_reward,
+                 slide.quiz_second_attempt_reward,
+                 slide.quiz_third_attempt_reward,
+                 slide.quiz_fourth_attempt_reward]
+        result = {
+            'quiz_karma_max': gains[0],  # what could be gained if succeed at first try
+            'quiz_karma_gain': gains[0],  # what would be gained at next test
+            'quiz_karma_won': 0,  # what has been gained
+            'quiz_attempts_count': 0,  # number of attempts
+        }
+        if slide.user_membership_id:
+            if slide.user_membership_id.quiz_attempts_count:
+                result['quiz_karma_gain'] = gains[slide.user_membership_id.quiz_attempts_count] if slide.user_membership_id.quiz_attempts_count <= len(gains) else gains[-1]
+                result['quiz_attempts_count'] = slide.user_membership_id.quiz_attempts_count
+            if quiz_done or slide.user_membership_id.completed:
+                result['quiz_karma_won'] = gains[slide.user_membership_id.quiz_attempts_count-1] if slide.user_membership_id.quiz_attempts_count < len(gains) else gains[-1]
+        return result
 
     # CHANNEL UTILITIES
     # --------------------------------------------------
@@ -513,6 +531,7 @@ class WebsiteSlides(WebsiteProfile):
         self._set_viewed_slide(slide)
 
         values = self._get_slide_detail(slide)
+        values['channel_progress'] = self._get_channel_progress(slide.channel_id)
 
         if 'fullscreen' in kwargs:
             return request.render("website_slides.slide_fullscreen", values)
@@ -569,9 +588,10 @@ class WebsiteSlides(WebsiteProfile):
         }
 
     @http.route('/slides/slide/<model("slide.slide"):slide>/set_completed', website=True, type="http", auth="user")
-    def slide_set_completed_and_redirect(self, slide, next_slide=None):
+    def slide_set_completed_and_redirect(self, slide, next_slide_id=None):
         self._set_completed_slide(slide)
-        return werkzeug.utils.redirect("/slides/slide/%s" % (next_slide if next_slide else slide.id))
+        next_slide = request.env['slide.slide'].browse(next_slide_id) if next_slide_id else None
+        return werkzeug.utils.redirect("/slides/slide/%s" % (slug(next_slide) if next_slide else slug(slide)))
 
     @http.route('/slides/slide/set_completed', website=True, type="json", auth="public")
     def slide_set_completed(self, slide_id):
@@ -624,68 +644,70 @@ class WebsiteSlides(WebsiteProfile):
     # QUIZZ SECTION
     # --------------------------------------------------
 
-    @http.route('/slide/quiz/get', type="json", auth="public", website=True)
-    def get_quiz(self, **kw):
-        if 'slide_id' in kw:
-            slide = request.env['slide.slide'].browse(kw['slide_id'])
-            slide_partner = request.env['slide.slide.partner'].search([('slide_id', '=', slide.id), ('partner_id', '=', request.env.user.partner_id.id)])
-            possible_points = [slide.quiz_first_attempt_reward,slide.quiz_second_attempt_reward,slide.quiz_third_attempt_reward, slide.quiz_fourth_attempt_reward]
-            points = 0
-            if slide_partner.quiz_attempts_count < len(possible_points):
-                points = possible_points[slide_partner.quiz_attempts_count]
-            else:
-                points = possible_points[len(possible_points)-1]
-            res = {
-                'questions':[
-                    {'title': question.question,
-                        'id': question.id,
-                        'answers': [{'text': answer.text_value, 'correct':answer.is_correct,'id': answer.id} for answer in question.answer_ids]
-                        } for question in slide.question_ids
-                    ],
-                'nb_attempts': slide_partner.quiz_attempts_count if slide_partner else 0,
-                'possible_rewards': possible_points,
-                'reward': points
-            }
-            return res
+    @http.route('/slides/slide/quiz/get', type="json", auth="public", website=True)
+    def slide_quiz_get(self, slide_id):
+        fetch_res = self._fetch_slide(slide_id)
+        if fetch_res.get('error'):
+            return fetch_res
+        slide = fetch_res['slide']
+        quiz_info = self._get_slide_quiz_info(slide)
+        return {
+            'questions': [{
+                'id': question.id,
+                'question': question.question,
+                'answers': [{
+                    'id': answer.id,
+                    'text_value': answer.text_value,
+                    'is_correct': answer.is_correct,
+                } for answer in question.answer_ids],
+            } for question in slide.question_ids],
+            'quizAttemptsCount': quiz_info['quiz_attempts_count'],
+            'quizKarmaGain': quiz_info['quiz_karma_gain'],
+            'quizKarmaWon': quiz_info['quiz_karma_won'],
+        }
 
-    @http.route('/slide/quiz/submit', type="json", auth="user", website=True)
-    def submit_quiz(self, slide_id, answer_ids,**kw):
-        slide = request.env['slide.slide'].browse(slide_id)
-        good_answers = request.env['slide.answer'].search([('id', 'in', answer_ids), ('is_correct', '=', True)])
-        bad_answers = request.env['slide.answer'].browse(answer_ids) - good_answers
-        slide_partner = request.env['slide.slide.partner'].search([('slide_id', '=', slide_id), ('partner_id', '=', request.env.user.partner_id.id)])
-        points = 0
-        if not slide_partner:
-            slide.action_set_viewed()
-        if not slide_partner.completed:
-            points = self._get_quiz_points(slide, slide_partner.quiz_attempts_count)
-            slide_partner.sudo().write({
-                'quiz_attempts_count': slide_partner.quiz_attempts_count if not bad_answers else slide_partner.quiz_attempts_count + 1,
-                'points_won': points if not bad_answers else 0,
-                'completed': not bad_answers
-            })
-            user = {}
-            if not bad_answers:
-                request.env.user.sudo().add_karma(points)
-                lower_bound = request.env.user.rank_id.karma_min
-                upper_bound = request.env.user.next_rank_id.karma_min
-                user= {
-                        'lower_bound': lower_bound,
-                        'upper_bound': upper_bound,
-                        'karma': request.env.user.karma,
-                        'progress_bar_percentage': 100 * ((request.env.user.karma - lower_bound) / (upper_bound - lower_bound))
-                    }
-            return {
-                'goodAnswers': [good_answer.id for good_answer in good_answers],
-                'badAnswers': [bad_answer.id for bad_answer in bad_answers],
-                'passed': not bad_answers,
-                'points': points if not bad_answers else 0,
-                'attempts_count': slide_partner.quiz_attempts_count if slide_partner else 0,
-                'channel_completion': slide.channel_id.completion,
-                'user': user
+    @http.route('/slides/slide/quiz/submit', type="json", auth="user", website=True)
+    def slide_quiz_submit(self, slide_id, answer_ids):
+        fetch_res = self._fetch_slide(slide_id)
+        if fetch_res.get('error'):
+            return fetch_res
+        slide = fetch_res['slide']
+
+        if slide.user_membership_id.completed:
+            return {'error': 'slide_quiz_done'}
+
+        all_questions = request.env['slide.question'].sudo().search([('slide_id', '=', slide.id)])
+
+        user_answers = request.env['slide.answer'].sudo().search([('id', 'in', answer_ids)])
+        if user_answers.mapped('question_id') != all_questions:
+            return {'error': 'slide_quiz_incomplete'}
+
+        user_bad_answers = user_answers.filtered(lambda answer: not answer.is_correct)
+        user_good_answers = user_answers - user_bad_answers
+
+        self._set_viewed_slide(slide, quiz_attempts_inc=True)
+        quiz_info = self._get_slide_quiz_info(slide, quiz_done=True)
+
+        rank_progress = {}
+        if not user_bad_answers:
+            slide._action_set_quiz_done()
+            lower_bound = request.env.user.rank_id.karma_min
+            upper_bound = request.env.user.next_rank_id.karma_min
+            rank_progress = {
+                'lowerBound': lower_bound,
+                'upperBound': upper_bound,
+                'currentKarma': request.env.user.karma,
+                'motivational': request.env.user.next_rank_id.description_motivational,
+                'progress': 100 * ((request.env.user.karma - lower_bound) / (upper_bound - lower_bound))
             }
         return {
-            'error': "You already passed this quiz"
+            'goodAnswers': user_good_answers.ids,
+            'badAnswers': user_bad_answers.ids,
+            'completed': not user_bad_answers,
+            'quizKarmaWon': quiz_info['quiz_karma_won'],
+            'quizKarmaGain': quiz_info['quiz_karma_gain'],
+            'quizAttemptsCount': quiz_info['quiz_attempts_count'],
+            'rankProgress': rank_progress
         }
 
     # --------------------------------------------------
