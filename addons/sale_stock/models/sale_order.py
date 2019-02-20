@@ -61,6 +61,17 @@ class SaleOrder(models.Model):
         if values.get('order_line') and self.state == 'sale':
             for order in self:
                 pre_order_line_qty = {order_line: order_line.product_uom_qty for order_line in order.mapped('order_line') if not order_line.is_expense}
+
+        if values.get('partner_shipping_id'):
+            new_partner = self.env['res.partner'].browse(values.get('partner_shipping_id'))
+            for record in self:
+                picking = record.mapped('picking_ids').filtered(lambda x: x.state not in ('done', 'cancel'))
+                addresses = (record.partner_shipping_id.display_name, new_partner.display_name)
+                message = _("""The delivery address has been changed on the Sales Order<br/>
+                        From <strong>"%s"</strong> To <strong>"%s"</strong>,
+                        You should probably update the partner on this document.""") % addresses
+                picking.activity_schedule('mail.mail_activity_data_warning', note=message, user_id=self.env.user.id)
+
         res = super(SaleOrder, self).write(values)
         if values.get('order_line') and self.state == 'sale':
             for order in self:
