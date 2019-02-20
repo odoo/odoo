@@ -1458,7 +1458,7 @@ class QWeb(object):
             )
 
             if call_options:
-            # update this dict with the content of `t-call-options`
+                # update this dict with the content of `t-call-options`
                 content.extend([
                     # options_.update(template options)
                     ast.Expr(ast.Call(
@@ -1469,7 +1469,56 @@ class QWeb(object):
                         ),
                         args=[self._compile_expr(call_options)],
                         keywords=[], starargs=None, kwargs=None
-                    ))
+                    )),
+
+                    # if options.get('lang') != options_.get('lang'):
+                    #   self = self.with_context(lang=options.get('lang'))
+                    ast.If(
+                        test=ast.Compare(
+                            left=ast.Call(
+                                func=ast.Attribute(
+                                    value=ast.Name(id='options', ctx=ast.Load()),
+                                    attr='get',
+                                    ctx=ast.Load()
+                                ),
+                                args=[ast.Str("lang")], keywords=[],
+                                starargs=None, kwargs=None
+                            ),
+                            ops=[ast.NotEq()],
+                            comparators=[ast.Call(
+                                func=ast.Attribute(
+                                    value=ast.Name(id=name_options, ctx=ast.Load()),
+                                    attr='get',
+                                    ctx=ast.Load()
+                                ),
+                                args=[ast.Str("lang")], keywords=[],
+                                starargs=None, kwargs=None
+                            )]
+                        ),
+                        body=[
+                            ast.Assign(
+                                targets=[ast.Name(id='self', ctx=ast.Store())],
+                                value=ast.Call(
+                                    func=ast.Attribute(
+                                        value=ast.Name(id='self', ctx=ast.Load()),
+                                        attr='with_context',
+                                        ctx=ast.Load()
+                                    ),
+                                    args=[],
+                                    keywords=[ast.keyword('lang', ast.Call(
+                                        func=ast.Attribute(
+                                            value=ast.Name(id=name_options, ctx=ast.Load()),
+                                            attr='get',
+                                            ctx=ast.Load()
+                                        ),
+                                        args=[ast.Str("lang")], keywords=[],
+                                        starargs=None, kwargs=None
+                                    ))],
+                                    starargs=None, kwargs=None
+                                )
+                            )],
+                        orelse=[],
+                    )
                 ])
 
             if nsmap:
