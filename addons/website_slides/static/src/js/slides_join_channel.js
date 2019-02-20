@@ -51,10 +51,10 @@ var JoinChannelButton = Widget.extend({
             },
         }).then(function (data) {
             if (! data.error) {
-                self.$('a.o_wslides_join_channel_link').text(_t('Joined'));
+                location.reload();
             } else {
                 if (data.error === 'public_user') {
-                    self._popoverAlert(self.$el, _.str.sprintf(_t('Please <a href="/web/login?redirect=%s">login</a> to join this channel.'), (document.URL)));
+                    self._popoverAlert(self.$el, _.str.sprintf(_t('Please <a href="/web/login?redirect=%s">login</a> to join this course.'), (document.URL)));
                 } else if (data.error === 'join_done') {
                     self._popoverAlert(self.$el, _t('You have already joined this channel'));
                 } else {
