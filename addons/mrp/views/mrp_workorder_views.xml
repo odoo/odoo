@@ -158,7 +158,7 @@
                         <tree editable="bottom" create="0" delete="0">
                             <field name="product_id" string="Components"/>
                             <field name="product_tracking" invisible="1"/>
-                            <field name="lot_id" attrs="{'readonly': [('product_tracking', '=', 'none')]}" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
+                            <field name="lot_id" attrs="{'readonly': [('product_tracking', '=', 'none')]}" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id, 'active_mo_id': parent.production_id}"/>
                             <field name="qty_to_consume" readonly="1"/>
                             <field name="qty_reserved" readonly="1"/>
                             <field name="qty_done" string="Done"/>
