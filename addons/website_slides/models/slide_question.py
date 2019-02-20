@@ -8,14 +8,11 @@ from odoo.exceptions import ValidationError
 class SlideQuestion(models.Model):
     _name = "slide.question"
     _rec_name = "question"
-    _description = """
-        Question for a slide. A slide can have multiple questions and each question
-        must have at least 2 possible answers and only one good answer.
-        """
+    _description = "Slide Quiz Question"
 
     sequence = fields.Integer("Sequence", default=10)
-    question = fields.Char("Question Name", required=True)
-    slide_id = fields.Many2one('slide.slide', string="Slide")
+    question = fields.Char("Question Name", required=True, translate=True)
+    slide_id = fields.Many2one('slide.slide', string="Slide", required=True)
     answer_ids = fields.One2many('slide.answer', 'question_id', string="Answer")
 
     @api.constrains('answer_ids')
@@ -44,8 +41,9 @@ class SlideQuestion(models.Model):
 class SlideAnswer(models.Model):
     _name = "slide.answer"
     _rec_name = "text_value"
-    _description = """Answer for a slide question"""
+    _description = "Answer for a slide question"
+    _order = 'question_id, id'
 
-    question_id = fields.Many2one('slide.question', string="Question")
-    text_value = fields.Char("Answer", required=True,)
-    is_correct = fields.Boolean("Is correct answer", default=False)
+    question_id = fields.Many2one('slide.question', string="Question", required=True)
+    text_value = fields.Char("Answer", required=True, translate=True)
+    is_correct = fields.Boolean("Is correct answer")
