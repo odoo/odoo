@@ -160,32 +160,34 @@
                                     <span class="col" t-esc="channel.members_count"/>
                                 </div>
                                 <div class="row mt8"><div class="col"><hr/></div></div>
-                                <t t-set="slide_type_keys" t-value="slide_types.keys()"/>
-                                <t t-foreach="slide_type_keys" t-as="slide_type_key">
-                                    <div class="row mt8 align-items-center">
-                                        <span class="col-5">
-                                            <t t-if="search_category">
-                                                <a t-att-href="'/slides/%s/category/%s?%s' % (slug(channel), slug(search_category), keep_query('debug', slide_type=slide_type_key))"
-                                                    t-att-class="'%s' % ('active' if search_slide_type == slide_type_key else '')">
-                                                    <t t-esc="slide_types[slide_type_key]"/>
-                                                </a>
-                                            </t>
-                                            <t t-else="">
-                                                <a t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', slide_type=slide_type_key))"
-                                                    t-att-class="'%s' % ('active' if search_slide_type == slide_type_key else '')">
-                                                    <t t-esc="slide_types[slide_type_key]"/>
-                                                </a>
-                                            </t>
-                                        </span>
-                                        <span class="col">
-                                            <t t-if="search_category">
-                                                <span class="badge badge-pill badge-info" t-esc="search_category['nbr_%s' % slide_type_key]"/>
-                                            </t>
-                                            <t t-else="">
-                                                <span class="badge badge-pill badge-info" t-esc="channel['nbr_%s' % slide_type_key]"/>
-                                            </t>
-                                        </span>
-                                    </div>
+                                <t t-if="channel.channel_type == 'documentation'">
+                                    <t t-set="slide_type_keys" t-value="slide_types.keys()"/>
+                                    <t t-foreach="slide_type_keys" t-as="slide_type_key">
+                                        <div class="row mt8 align-items-center">
+                                            <span class="col-5">
+                                                <t t-if="search_category">
+                                                    <a t-att-href="'/slides/%s/category/%s?%s' % (slug(channel), slug(search_category), keep_query('debug', slide_type=slide_type_key))"
+                                                        t-att-class="'%s' % ('active' if search_slide_type == slide_type_key else '')">
+                                                        <t t-esc="slide_types[slide_type_key]"/>
+                                                    </a>
+                                                </t>
+                                                <t t-else="">
+                                                    <a t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', slide_type=slide_type_key))"
+                                                        t-att-class="'%s' % ('active' if search_slide_type == slide_type_key else '')">
+                                                        <t t-esc="slide_types[slide_type_key]"/>
+                                                    </a>
+                                                </t>
+                                            </span>
+                                            <span class="col">
+                                                <t t-if="search_category">
+                                                    <span class="badge badge-pill badge-info" t-esc="search_category['nbr_%s' % slide_type_key]"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span class="badge badge-pill badge-info" t-esc="channel['nbr_%s' % slide_type_key]"/>
+                                                </t>
+                                            </span>
+                                        </div>
+                                    </t>
                                 </t>
                                 <div class="row mt8"><div class="col"><hr/></div></div>
                                 <div class="row justify-content-center mt8">
@@ -252,7 +254,6 @@
                                 <div class="mr-2">Section <span class="section-index" t-esc="i"/>:</div>
                                 <span t-field="category.name"/>
                             </div>
-                            <!-- <a t-if="channel.user_id == user" title="Add content to this section" class="mr-2 p-0 oe_slide_js_add_slide"  href="#" t-attf-channel_id="#{channel.id}" t-attf-category_id="#{category.id}">+</a> -->
                             <a  class="mr-2 oe_slide_js_upload"
                                 role="button"
                                 aria-label="Upload Presentation"
@@ -292,7 +293,7 @@
                     </li>
                 </t>
             </ul>
-            <div t-if="channel.user_id == user" class="content-actions">
+            <div t-if="channel.can_upload" class="content-actions">
                 <a  class="mr-2 oe_slide_js_upload"
                     role="button"
                     aria-label="Upload Presentation"
@@ -300,7 +301,8 @@
                     t-att-data-channel-id="channel.id"
                     t-att-data-can-upload="channel.can_upload"
                     t-att-data-can-publish="channel.can_publish">Add Content</a>
-                <a class="oe_slide_js_add_section" t-attf-channel_id="#{channel.id}" href="#">Add Section</a>
+                <a class="oe_slide_js_add_section" t-attf-channel_id="#{channel.id}" href="#"
+                    groups="website.group_website_publisher">Add Section</a>
             </div>
         </div>
         <div t-field="channel.description_html"/>
@@ -384,11 +386,6 @@
                         </t>
                     </h5>
                     <h6 class="card-subtitle mb-2 text-muted">
-                        <t t-if="user.has_group('website.group_website_publisher')">
-                            <i class="fa fa-globe float-right o_wslides_slide_manage_publish"></i>
-                            <i class="fa fa-pencil float-right o_wslides_slide_manage_edit"></i>
-                            <i class="fa fa-trash float-right o_wslides_slide_manage_unlink"></i>
-                        </t>
                         <t t-if="slide.is_preview">
                             <span class="badge badge-info">Free preview</span>
                         </t>
