@@ -1036,7 +1036,7 @@ class WebsiteSale(http.Controller):
         })
         return "/shop/product/%s?enable_editor=1" % slug(product.product_tmpl_id)
 
-    @http.route(['/shop/change_styles'], type='json', auth="public")
+    @http.route(['/shop/change_styles'], type='json', auth='user')
     def change_styles(self, id, style_id):
         product = request.env['product.template'].browse(id)
 
@@ -1058,7 +1058,7 @@ class WebsiteSale(http.Controller):
 
         return not active
 
-    @http.route(['/shop/change_sequence'], type='json', auth="public")
+    @http.route(['/shop/change_sequence'], type='json', auth='user')
     def change_sequence(self, id, sequence):
         product_tmpl = request.env['product.template'].browse(id)
         if sequence == "top":
@@ -1070,7 +1070,7 @@ class WebsiteSale(http.Controller):
         elif sequence == "down":
             product_tmpl.set_sequence_down()
 
-    @http.route(['/shop/change_size'], type='json', auth="public")
+    @http.route(['/shop/change_size'], type='json', auth='user')
     def change_size(self, id, x, y):
         product = request.env['product.template'].browse(id)
         return product.write({'website_size_x': x, 'website_size_y': y})
