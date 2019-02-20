@@ -9,22 +9,16 @@
                 <div>
                     <t t-foreach="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code != 'internal')" t-as="i">
                         <t t-set="delivery_report_url" t-value="'/my/picking/pdf/%s?%s' % (i.id, keep_query())"/>
-                        <div id='picking_info'>
-                            <a t-att-href="delivery_report_url"><span class="fa fa-download" role="img" aria-label="Download" title="Download"/></a>
-                            <a t-att-href="delivery_report_url"><span t-field="i.name"/></a>
-                            <span class="text-muted" t-field="i.date" t-options='{"widget": "date"}'/>
-                            <t t-if="i.state == 'done'">
-                                <span class="badge badge-success label-text-align"><i class="fa fa-fw fa-truck"/> Shipped</span>
-                            </t>
-                            <t t-if="i.state == 'partially_available'">
-                                <span class="badge badge-warning label-text-align"><i class="fa fa-fw fa-clock-o"/> Partially Available</span>
-                            </t>
-                            <t t-if="i.state == 'cancel'">
-                                <span class="badge badge-danger label-text-align"><i class="fa fa-fw fa-times"/> Cancelled</span>
-                            </t>
-                            <t t-if="i.state in ['draft', 'waiting', 'confirmed', 'assigned']">
-                                <span class="badge badge-info label-text-align"><i class="fa fa-fw fa-clock-o"/> Preparation</span>
-                            </t>
+                        <div class="d-flex flex-wrap align-items-center justify-content-between o_sale_stock_picking">
+                            <div>
+                                <a t-att-href="delivery_report_url">
+                                    <span t-esc="i.name"/>
+                                </a>
+                                <div class="small d-lg-inline-block ml-3">Date: <span class="text-muted" t-field="i.date" t-options="{'date_only': True}"/></div>
+                            </div>
+                            <span t-if="i.state == 'done'" class="small badge badge-success orders_label_text_align"><i class="fa fa-fw fa-truck"/> <b>Shipped</b></span>
+                            <span t-if="i.state == 'cancel'" class="small badge badge-danger orders_label_text_align"><i class="fa fa-fw fa-times"/> <b>Cancelled</b></span>
+                            <span t-if="i.state in ['draft', 'waiting', 'confirmed', 'assigned']" class="small badge badge-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> <b>Preparation</b></span>
                         </div>
                     </t>
                 </div>
