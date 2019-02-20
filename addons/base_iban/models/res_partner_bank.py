@@ -70,13 +70,21 @@ class ResPartnerBank(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('acc_number'):
-            vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
+            try:
+                validate_iban(vals['acc_number'])
+                vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
+            except ValidationError:
+                pass
         return super(ResPartnerBank, self).create(vals)
 
     @api.multi
     def write(self, vals):
         if vals.get('acc_number'):
-            vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
+            try:
+                validate_iban(vals['acc_number'])
+                vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
+            except ValidationError:
+                pass
         return super(ResPartnerBank, self).write(vals)
 
     @api.one
