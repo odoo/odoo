@@ -264,6 +264,24 @@ class HrEmployee(models.Model):
         self.other_juniors_dependent = 0.0
         self.other_disabled_juniors_dependent = 0.0
 
+    def _get_yearly_income(self, structures=None, code='BASIC'):
+        """
+        From payslips of the last 12 months, sum payslip line's (total amount) having code `code`.
+        If `structures` is not `None`, only consider payslips belonging to `structures`.
+        """
+        today = fields.Date.today()
+        domain = [
+            ('employee_id', '=', self.id),
+            ('date_from', '<=', today),
+            ('date_to', '>', today - relativedelta(months=12)),
+            ('state', '=', 'done'),
+        ]
+        if structures:
+            domain = AND([domain, [('struct_id', 'in', structures.ids)]])
+
+        payslips = self.env['hr.payslip'].search(domain)
+        return sum(payslips.mapped('line_ids').filtered(lambda l: l.code == code).mapped('total'))
+
     @api.depends('disabled_children_bool', 'disabled_children_number', 'children')
     def _compute_dependent_children(self):
         for employee in self:
