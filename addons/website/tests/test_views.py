@@ -628,6 +628,76 @@ class TestCowViewSaving(common.TransactionCase):
         views = View.with_context(website_id=1).get_related_views('B')
         self.assertEqual(views.mapped('key'), ['B', 'I', 'II'], "Should only return the specific tree")
 
+    def test_get_related_views_tree_recursive_t_call_and_inherit_inactive(self):
+        """ If a view A was doing a t-call on a view B and view B had view C as child.
+            And view A had view D as child.
+            And view D also t-call view B (that as mentionned above has view C as child).
+            And view D was inactive (`d` in bellow schema).
+
+            Then COWing C to set it as inactive would make `get_related_views()` on A to return
+            both generic active C and COW inactive C.
+            (Typically the case for Customize show on /shop for Wishlist, compare..)
+            See commit message for detailed explanation.
+        """
+        # A -> B
+        # |    ^ \
+        # |    |  C
+        # d ___|
+
+        View = self.env['ir.ui.view']
+        Website = self.env['website']
+
+        products = View.create({
+            'name': 'Products',
+            'type': 'qweb',
+            'key': '_website_sale.products',
+            'arch': '''
+                <div id="products_grid">
+                    <t t-call="_website_sale.products_item"/>
+                </div>
+        ''',
+        })
+
+        products_item = View.create({
+            'name': 'Products item',
+            'type': 'qweb',
+            'key': '_website_sale.products_item',
+            'arch': '''
+                <div class="product_price"/>
+            ''',
+        })
+
+        add_to_wishlist = View.create({
+            'name': 'Wishlist',
+            'active': True,
+            'customize_show': True,
+            'inherit_id': products_item.id,
+            'key': '_website_sale_wishlist.add_to_wishlist',
+            'arch': '''
+                <xpath expr="//div[hasclass('product_price')]" position="inside"></xpath>
+            ''',
+        })
+
+        products_list_view = View.create({
+            'name': 'List View',
+            'active': False,  # <- That's the reason of why this behavior needed a fix
+            'customize_show': True,
+            'inherit_id': products.id,
+            'key': '_website_sale.products_list_view',
+            'arch': '''
+                <div id="products_grid" position="replace">
+                    <t t-call="_website_sale.products_item"/>
+                </div>
+            ''',
+        })
+
+        views = View.with_context(website_id=1).get_related_views('_website_sale.products')
+        self.assertEqual(views, products + products_item + add_to_wishlist + products_list_view, "The four views should be returned.")
+        add_to_wishlist.with_context(website_id=1).write({'active': False})  # Trigger cow on hierarchy
+        add_to_wishlist_cow = Website.with_context(website_id=1).viewref(add_to_wishlist.key)
+        views = View.with_context(website_id=1).get_related_views('_website_sale.products')
+        self.assertEqual(views, products + products_item + add_to_wishlist_cow + products_list_view, "The generic wishlist view should have been replaced by the COW one.")
+
     def test_cow_inherit_children_order(self):
         """ COW method should loop on inherit_children_ids in correct order
             when copying them on the new specific tree.

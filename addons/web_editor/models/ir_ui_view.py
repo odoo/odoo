@@ -205,11 +205,7 @@ class IrUiView(models.Model):
 
     @api.model
     def _view_get_inherited_children(self, view, options):
-        extensions = view.inherit_children_ids
-        if not options:
-            # only active children
-            extensions = extensions.filtered(lambda view: view.active)
-        return extensions
+        return view.inherit_children_ids
 
     @api.model
     def _view_obj(self, view_id):
@@ -257,6 +253,9 @@ class IrUiView(models.Model):
                 views_to_return += self._views_get(called_view, options=options, bundles=bundles)
 
         extensions = self._view_get_inherited_children(view, options)
+        if not options:
+            # only active children
+            extensions = extensions.filtered(lambda view: view.active)
 
         # Keep options in a deterministic order regardless of their applicability
         for extension in extensions.sorted(key=lambda v: v.id):
