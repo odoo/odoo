@@ -42,6 +42,31 @@ $gray-50: #f4f4f4 !default;
         color: $link-color;
     }
 
+    .o_wslides_js_lesson_quiz_question {
+        li {
+            font-size: 1.2rem;
+        }
+
+        .o_wslides_quiz_answer {
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            label {
+                font-size: 1.4rem;
+
+                i.fa-circle {
+                }
+
+                input:checked + i.fa-circle {
+                    color: $primary !important;
+                    overflow: hidden;
+                }
+            }
+        }
+    }
+
     // tools
     // ****************************************
 
@@ -51,6 +76,10 @@ $gray-50: #f4f4f4 !default;
 
     .o_wslides_entry_muted {
         opacity: 0.5;
+    }
+
+    .bg-brand {
+        background-color: $o-enterprise-color;
     }
 
     .progress {
