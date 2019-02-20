@@ -242,9 +242,8 @@ class WebsiteSlides(WebsiteProfile):
         else:
             users = None
 
-        return request.render('website_slides.courses_home', {
-            'user': request.env.user,
-            'is_public_user': request.website.is_public_user(),
+        values = self._prepare_user_values(**post)
+        values.update({
             'channels_my': channels_my,
             'channels_popular': channels_popular,
             'channels_newest': channels_newest,
@@ -253,6 +252,8 @@ class WebsiteSlides(WebsiteProfile):
             'challenges': challenges,
             'challenges_done': challenges_done,
         })
+
+        return request.render('website_slides.courses_home', values)
 
     @http.route('/slides/all', type='http', auth="public", website=True)
     def slides_channel_all(self, slide_type=None, my=False, **post):
@@ -282,9 +283,8 @@ class WebsiteSlides(WebsiteProfile):
         tag_groups = request.env['slide.channel.tag.group'].search(['&', ('tag_ids', '!=', False), ('website_published', '=', True)])
         search_tags = self._extract_channel_tag_search(**post)
 
-        return request.render('website_slides.courses_all', {
-            'user': request.env.user,
-            'is_public_user': request.website.is_public_user(),
+        values = self._prepare_user_values(**post)
+        values.update({
             'channels': channels,
             'tag_groups': tag_groups,
             'search_term': post.get('search'),
@@ -293,6 +293,8 @@ class WebsiteSlides(WebsiteProfile):
             'search_tags': search_tags,
             'search_channel_tag_id': post.get('channel_tag_id'),
         })
+
+        return request.render('website_slides.courses_all', values)
 
     def _prepare_additional_channel_values(self, values, **kwargs):
         return values
