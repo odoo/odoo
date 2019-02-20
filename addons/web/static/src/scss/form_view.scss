@@ -744,6 +744,10 @@
             .o_field_widget {
                 width: 50%;
                 flex: 0 0 auto;
+
+                &.o_field_many2manytags > .o_field_widget {
+                    flex: 1 0 50px;
+                }
             }
             button.btn-link:first-child {
                 padding-left: 0;
