@@ -641,7 +641,7 @@ class ResourceResource(models.Model):
 
     name = fields.Char(required=True)
     active = fields.Boolean(
-        'Active', default=True, tracking=True,
+        'Active', default=True,
         help="If the active field is set to False, it will allow you to hide the resource record without removing it.")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     resource_type = fields.Selection([
