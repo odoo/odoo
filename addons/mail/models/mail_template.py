@@ -99,8 +99,7 @@ class MailTemplate(models.Model):
                             "If not set, the english version will be used. "
                             "This should usually be a placeholder expression "
                             "that provides the appropriate language, e.g. "
-                            "${object.partner_id.lang}.",
-                       placeholder="${object.partner_id.lang}")
+                            "${object.partner_id.lang}.")
     subject = fields.Char('Subject', translate=True, help="Subject (placeholders may be used here)")
     email_from = fields.Char('From',
                              help="Sender address (placeholders may be used here). If not set, the default "
