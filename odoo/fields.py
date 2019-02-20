@@ -2025,7 +2025,8 @@ class Many2one(_Relational):
             return ()
 
     def convert_to_record(self, value, record):
-        return record.env[self.comodel_name]._browse(value, record.env, record._prefetch)
+        # use registry to avoid creating a recordset for the model
+        return record.env.registry[self.comodel_name]._browse(value, record.env, record._prefetch)
 
     def convert_to_read(self, value, record, use_name_get=True):
         if use_name_get and value:
@@ -2141,7 +2142,8 @@ class _RelationalMulti(_Relational):
         raise ValueError("Wrong value for %s: %s" % (self, value))
 
     def convert_to_record(self, value, record):
-        return record.env[self.comodel_name]._browse(value, record.env, record._prefetch)
+        # use registry to avoid creating a recordset for the model
+        return record.env.registry[self.comodel_name]._browse(value, record.env, record._prefetch)
 
     def convert_to_read(self, value, record, use_name_get=True):
         return value.ids
@@ -2575,9 +2577,15 @@ class Id(Field):
     def __get__(self, record, owner):
         if record is None:
             return self         # the field is accessed through the class owner
-        if not record:
+
+        # the code below is written to make record.id as quick as possible
+        ids = record._ids
+        size = len(ids)
+        if size is 0:
             return False
-        return record.ensure_one()._ids[0]
+        elif size is 1:
+            return ids[0]
+        raise ValueError("Expected singleton: %s" % record)
 
     def __set__(self, record, value):
         raise TypeError("field 'id' cannot be assigned")
