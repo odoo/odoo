@@ -3,11 +3,11 @@
             <div t-if="slide.slide_type == 'video' &amp;&amp; !showMiniQuiz" class="player embed-responsive embed-responsive-16by9 embed-responsive-item">
                 <iframe id="youtube-player" t-att-src="embed_url" allowFullScreen="true" frameborder="0" enablejsapi="1" autoplay="1" allow="autoplay"></iframe>
             </div>
-            <div t-if="slide.slide_type in ['presentation', 'document'] &amp;&amp; !showMiniQuiz" class="embed-responsive embed-responsive-4by3 embed-responsive-item ">
+            <div t-if="['presentation', 'document'].indexOf(slide.slide_type) !== -1 &amp;&amp; !showMiniQuiz" class="embed-responsive embed-responsive-4by3 embed-responsive-item ">
                 <iframe t-att-src="embed_url" class="o_wslides_iframe_viewer" allowFullScreen="true" height="315" width="420" frameborder="0"></iframe>
             </div>
-            <div style="width:100%;height:100%;" t-if="slide.slide_type == 'infographic' &amp;&amp; !showMiniQuiz">
-                <img t-attf-src="/web/image/slide.slide/#{slide.id}/datas" class="img-fluid" style="width: 100%" alt="Slide image"/>
+            <div style="width:100%;height:100%;text-align:center;" t-if="slide.slide_type == 'infographic' &amp;&amp; !showMiniQuiz">
+                <img t-attf-src="/web/image/slide.slide/#{slide.id}/image" class="img-fluid" style="height: 100%" alt="Slide image"/>
             </div>
             <div t-if="(slide.slide_type == 'quiz' || showMiniQuiz) &amp;&amp; questions " class="o_wslides_fullscreen_quiz">
                 <div>
