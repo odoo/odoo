@@ -9,7 +9,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools import float_compare, float_round
+from odoo.tools import float_compare
 from odoo.tools.translate import _
 
 from odoo.addons.resource.models.resource import HOURS_PER_DAY
