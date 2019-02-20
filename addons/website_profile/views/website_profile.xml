@@ -252,19 +252,29 @@
     </template>
 
     <template id="profile_next_rank_card" name="Profile Next Rank Card">
-        <div class="card-body o_wprofile_next_rank_card mt-2 pt-2">
-            <div><img class="o_wprofile_img_medium" t-attf-src="/web/image/gamification.karma.rank/#{user.next_rank_id.id}/image_medium"/></div>
-            <div><span class="text-center font-weight-bold">"<span t-field="user.next_rank_id.name"/>"</span></div>
-            <div><span class="text-center"><span class="font-weight-bold text-primary" t-field="user.karma"/>/<span class="font-weight-bold" t-field="user.next_rank_id.karma_min"/> xp</span></div>
-            <div class="progress o_wprofile_next_rank_progress">
-                <t t-if="user.next_rank_id.karma_min - user.rank_id.karma_min > 0">
-                    <div class="progress-bar o_wprofile_next_rank_progress_bar" style="background-color: #00A09D !important"
-                       t-att-style="'width: '+ str(100*(user.karma - user.rank_id.karma_min)/(user.next_rank_id.karma_min - user.rank_id.karma_min))+'%'"></div>
-                </t>
-                <t t-else="">
-                    <div class="progress-bar o_wprofile_next_rank_progress_bar" style="background-color: #00A09D !important"
-                       t-att-style="'width: 0%'"></div>
-                </t>
+        <div t-attf-class="o_wprofile_progress_circle #{bg_class if bg_class else ''}">
+            <div class="o_progress_circle_container">
+                <div class="o_pc" t-att-data-progress="int(100*(user.karma - user.rank_id.karma_min)/(user.next_rank_id.karma_min - user.rank_id.karma_min))" >
+                    <div class="o_pc_circle">
+                        <div class="o_pc_slice full">
+                            <div class="o_pc_fill"/>
+                        </div>
+                        <div class="o_pc_slice">
+                            <div class="o_pc_fill full"/>
+                            <div class="o_pc_fill o_pc_bar"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_pc_overlay d-flex flex-column align-items-center justify-content-center">
+                    <img class="img-fluid"
+                        t-attf-src="/web/image/gamification.karma.rank/#{user.next_rank_id.id}/image_medium"
+                        t-att-alt="user.next_rank_id.name + ' badge'"
+                        t-att-style="'max-width: ' + (img_max_width if img_max_width else '60%;')"/>
+                    <h4 class="mt-2 mb-0">"<span t-field="user.next_rank_id.name"/>"</h4>
+                    <small>
+                        <span class="font-weight-bold text-primary" t-field="user.karma"/>/<span class="font-weight-bold" t-field="user.next_rank_id.karma_min"/> xp
+                    </small>
+                </div>
             </div>
         </div>
     </template>
