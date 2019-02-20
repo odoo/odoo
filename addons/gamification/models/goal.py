@@ -153,9 +153,9 @@ class Goal(models.Model):
              "to generate goals with a value in this field.")
     start_date = fields.Date("Start Date", default=fields.Date.today)
     end_date = fields.Date("End Date")  # no start and end = always active
-    target_goal = fields.Float('To Reach', required=True, tracking=True)
+    target_goal = fields.Float('To Reach', required=True)
 # no goal = global index
-    current = fields.Float("Current Value", required=True, default=0, tracking=True)
+    current = fields.Float("Current Value", required=True, default=0)
     completeness = fields.Float("Completeness", compute='_get_completion')
     state = fields.Selection([
         ('draft', "Draft"),
@@ -163,7 +163,7 @@ class Goal(models.Model):
         ('reached', "Reached"),
         ('failed', "Failed"),
         ('canceled', "Canceled"),
-    ], default='draft', string='State', required=True, tracking=True)
+    ], default='draft', string='State', required=True)
     to_update = fields.Boolean('To update')
     closed = fields.Boolean('Closed goal', help="These goals will not be recomputed.")
 
