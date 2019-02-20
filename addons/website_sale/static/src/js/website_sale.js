@@ -146,10 +146,11 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         'change select[name="country_id"]': '_onChangeCountry',
         'change #shipping_use_same': '_onChangeShippingUseSame',
         'click .toggle_summary': '_onToggleSummary',
-        'click #add_to_cart, #buy_now, #products_grid .product_price .a-submit': 'async _onClickAdd',
+        'click #add_to_cart, #buy_now, #products_grid .o_wsale_product_btn .a-submit': 'async _onClickAdd',
         'click input.js_product_change': 'onChangeVariant',
         // dirty fix: prevent options modal events to be triggered and bubbled
         'change oe_optional_products_modal [data-attribute_exclusions]': 'onChangeVariant',
+        'change .o_wsale_apply_layout': '_onApplyShopLayoutChange',
     }),
 
     /**
@@ -187,6 +188,15 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         });
 
         this._startZoom();
+
+        var $active = null;
+        if (this.$('#products_grid').hasClass('o_wsale_layout_list')) {
+            $active = this.$('.o_wsale_apply_list');
+        } else {
+            $active = this.$('.o_wsale_apply_grid');
+        }
+        $active.find('input').prop('checked', true);
+        $active.button('toggle').blur();
 
         return def;
     },
@@ -426,6 +436,22 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onApplyShopLayoutChange: function (ev) {
+        var switchToList = $(ev.currentTarget).find('.o_wsale_apply_list input').is(':checked');
+        var $grid = this.$('#products_grid');
+        // Disable transition on all list elements, then switch to the new
+        // layout then reenable all transitions after having forced a redraw
+        // TODO should probably be improved to allow disabling transitions
+        // altogether with a class/option.
+        $grid.find('*').css('transition', 'none');
+        $grid.toggleClass('o_wsale_layout_list', switchToList);
+        void $grid[0].offsetWidth;
+        $grid.find('*').css('transition', '');
+    },
     /**
      * @private
      * @param {MouseEvent} ev
