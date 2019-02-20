@@ -139,7 +139,10 @@ class HrLeave(models.Model):
     def action_refuse(self):
         super(HrLeave, self).action_refuse()
         benefits = self.env['hr.benefit'].search([('leave_id', 'in', self.ids)])
-        benefits.write({'display_warning': False, 'active': False})
+        benefits.write({'display_warning': False})
+
+        # Archive associated leave benefits
+        benefits.filtered(lambda b: b.benefit_type_id.is_leave).write({'active': False})
         return True
 
     def _get_number_of_days(self, date_from, date_to, employee_id):
