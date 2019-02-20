@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Slides',
-    'version': '1.0',
+    'name': 'eLearning',
+    'version': '2.0',
     'sequence': 145,
-    'summary': 'Publish videos, slides and documents',
+    'summary': 'Create online Courses',
     'website': 'https://www.odoo.com/page/slides',
     'category': 'Website',
     'description': """
-Share and Publish Videos, Presentations and Documents'
-======================================================
+Create Online Courses
+=====================
 
- * Website Application
- * Channel Management
- * Filters and Tagging
- * Statistics of Presentation
- * Channel Subscription
- * Supported document types : PDF, images, YouTube videos and Google Drive documents)
+Featuring
+
+ * Integrated course and lesson management
+ * Fullscreen navigation
+ * Support Youtube videos, Google documents, PDF, images, web pages
+ * Test knowledge with quizzes
+ * Filter and Tag
+ * Statistics
 """,
     'depends': [
         'website',
