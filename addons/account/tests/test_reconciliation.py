@@ -1815,3 +1815,46 @@ class TestReconciliation(AccountingTestCase):
             (move_lines - base_amount_tax_lines)
             .filtered(lambda l: l.account_id == self.tax_final_account)
             .debit, 17094.66)
+
+    def test_reconciliation_cash_basis_fx_reverse(self):
+        journal = self.env['account.journal'].create({
+            'name': 'Bank', 'type': 'bank', 'code': 'THE',
+            'currency_id': self.currency_usd_id,
+        })
+        usd = self.env['res.currency'].browse(self.currency_usd_id)
+        usd.rate_ids.unlink()
+        date_invoice = time.strftime('%Y') + '-07-01'
+        self.env['res.currency.rate'].create({
+            'name': date_invoice,
+            'rate': 1/17.0,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id,
+        })
+        date_payment = time.strftime('%Y') + '-07-15'
+        self.env['res.currency.rate'].create({
+            'name': date_payment,
+            'rate': 1/19.0,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id,
+        })
+        date_cancellation = time.strftime('%Y') + '-07-25'
+        self.env['res.currency.rate'].create({
+            'name': date_cancellation,
+            'rate': 1/21.0,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id,
+        })
+
+        invoice = self.create_invoice(
+            type='out_invoice', invoice_amount=50,
+            currency_id=self.currency_usd_id)
+        invoice.journal_id.update_posted = True
+        invoice.action_cancel()
+        invoice.state = 'draft'
+        invoice.date = date_invoice
+        invoice.invoice_line_ids.write({
+            'invoice_line_tax_ids': [(6, 0, [self.tax_cash_basis.id])]})
+        invoice.compute_taxes()
+        invoice.action_invoice_open()
+        self.env['account.move.reversal'].with_context(
+            active_ids=invoice.move_id.ids).create({'date': date_cancellation}).reverse_moves()
