@@ -238,8 +238,8 @@
 </template>
 
 <template id="course_content_training" name="Content of a training channel">
-    <div style="width:70%;" class="d-flex align-items-center ml-4 justify-content-center">
-        <div class="course-content oe_js_course_slides_list" style="width: 100%">
+    <div class="col-8 d-flex flex-column ml-4">
+        <div class="course-content oe_js_course_slides_list w-100 mt8">
             <ul>
                 <t t-set="i" t-value="1"/>
                 <t t-set="j" t-value="0"/>
@@ -302,6 +302,7 @@
                 <a class="oe_slide_js_add_section" t-attf-channel_id="#{channel.id}" href="#">Add Section</a>
             </div>
         </div>
+        <div t-field="channel.description_html"/>
     </div>
 </template>
 
@@ -353,6 +354,7 @@
                 </t>
             </div>
         </div>
+        <div t-field="channel.description_html"/>
     </div>
 </template>
 
