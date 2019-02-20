@@ -410,7 +410,7 @@ class PurchaseOrder(models.Model):
             raise UserError(_("You must set a Vendor Location for this partner %s") % self.partner_id.name)
         return {
             'picking_type_id': self.picking_type_id.id,
-            'partner_id': self.partner_id.id,
+            'partner_id': self.dest_address_id.id or self.partner_id.id,
             'date': self.date_order,
             'origin': self.name,
             'location_dest_id': self._get_destination_location(),
