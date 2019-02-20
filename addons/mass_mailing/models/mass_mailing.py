@@ -498,12 +498,12 @@ class MassMailing(models.Model):
     scheduled = fields.Integer(compute="_compute_statistics")
     expected = fields.Integer(compute="_compute_statistics")
     ignored = fields.Integer(compute="_compute_statistics")
-    sent = fields.Integer(compute="_compute_statistics")
-    delivered = fields.Integer(compute="_compute_statistics")
-    opened = fields.Integer(compute="_compute_statistics")
-    clicked = fields.Integer(compute="_compute_statistics")
-    replied = fields.Integer(compute="_compute_statistics")
-    bounced = fields.Integer(compute="_compute_statistics")
+    sent = fields.Integer(compute="_compute_statistics", store=True)
+    delivered = fields.Integer(compute="_compute_statistics", store=True)
+    opened = fields.Integer(compute="_compute_statistics", store=True)
+    clicked = fields.Integer(compute="_compute_statistics", store=True)
+    replied = fields.Integer(compute="_compute_statistics", store=True)
+    bounced = fields.Integer(compute="_compute_statistics", store=True)
     failed = fields.Integer(compute="_compute_statistics")
     received_ratio = fields.Integer(compute="_compute_statistics", string='Received Ratio')
     opened_ratio = fields.Integer(compute="_compute_statistics", string='Opened Ratio')
@@ -534,6 +534,7 @@ class MassMailing(models.Model):
         for record in self:
             record.mailing_model_real = (record.mailing_model_name != 'mail.mass_mailing.list') and record.mailing_model_name or 'mail.mass_mailing.contact'
 
+    @api.depends('statistics_ids.sent', 'statistics_ids.bounced', 'statistics_ids.opened', 'statistics_ids.clicked', 'statistics_ids.replied')
     def _compute_statistics(self):
         """ Compute statistics of the mass mailing """
         self.env.cr.execute("""

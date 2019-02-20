@@ -761,7 +761,24 @@
             <field name="arch" type="xml">
                 <graph string="Mailing" type="bar">
                     <field name="state" type="row"/>
+                    <field name="sent" type="measure"/>
+                    <field name="delivered" type="measure"/>
+                    <field name="opened" type="measure"/>
+                    <field name="replied" type="measure"/>
+                    <field name="clicked" type="measure"/>
+                    <field name="bounced" type="measure"/>
                 </graph>
+            </field>
+        </record>
+
+        <record id="view_mail_mass_mailing_pivot" model="ir.ui.view">
+            <field name="name">mail.mass_mailing.pivot</field>
+            <field name="model">mail.mass_mailing</field>
+            <field name="arch" type="xml">
+                <pivot string="Mass Mail" disable_linking="True">
+                    <field name="mass_mailing_campaign_id" type="row"/>
+                    <field name="state" type="col"/>
+                </pivot>
             </field>
         </record>
 
@@ -769,7 +786,7 @@
             <field name="name">Mailings</field>
             <field name="res_model">mail.mass_mailing</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form,graph</field>
+            <field name="view_mode">kanban,tree,form,graph,pivot</field>
             <field name="context">{
                     'search_default_assigned_to_me': 1,
                     'default_user_id': uid,
