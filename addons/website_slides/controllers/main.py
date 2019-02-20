@@ -100,7 +100,7 @@ class WebsiteSlides(WebsiteProfile):
                     tags |= search_tag
         return tags
 
-    def _build_channel_domain(self, base_domain, slide_type=None, **post):
+    def _build_channel_domain(self, base_domain, slide_type=None, my_courses=False, **post):
         search_term = post.get('search')
         category_id = post.get('category_id')
         channel_tag_id = post.get('channel_tag_id')
@@ -120,6 +120,9 @@ class WebsiteSlides(WebsiteProfile):
 
         if slide_type and 'nbr_%s' % slide_type in request.env['slide.channel']:
             domain = expression.AND([domain, [('nbr_%s' % slide_type, '>', 0)]])
+
+        if my_courses:
+            domain = expression.AND([domain, [('partner_ids', '=', request.env.user.partner_id.id)]])
         return domain
 
     def _prepare_channel_values(self, **kwargs):
@@ -180,18 +183,27 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route('/slides/all', type='http', auth="public", website=True)
     def slides_channel_all(self, slide_type=None, **post):
+        return self._slides_channels(slide_type=slide_type, **post)
+
+    @http.route('/slides/my', type='http', auth="public", website=True)
+    def slides_channel_my(self, **post):
+        return self._slides_channels(my_courses=True, **post)
+
+    def _slides_channels(self, slide_type=None, my_courses=False, **post):
         """ Home page displaying a list of courses displayed according to some
         criterion and search terms.
 
          : param string slide_type: if provided, filter the slide.channels
            to contain at least one slide of type 'slide_type'
+         : param bool: if provided, filter the slide.channels for which the current
+           user is a member of
          : param dict post: post parameters, including
            * search_term: keywords entered in the search box, used to filter on slide content;
            * category_id: id of a slide.category;
            * channel_tag_id: id of a channel.tag;
         """
         domain = request.website.website_domain()
-        domain = self._build_channel_domain(domain, slide_type=slide_type, **post)
+        domain = self._build_channel_domain(domain, slide_type=slide_type, my_courses=my_courses, **post)
 
         order = self._channel_order_by_criterion.get(post.get('sorting', 'date'), 'create_date desc')
 
@@ -202,6 +214,7 @@ class WebsiteSlides(WebsiteProfile):
         search_tags = self._extract_channel_tag_search(**post)
 
         return request.render('website_slides.courses_all', {
+            'header_title': _("My Courses") if my_courses else _("All Courses"),
             'user': request.env.user,
             'is_public_user': request.website.is_public_user(),
             'channels_layouted': channels_layouted,
