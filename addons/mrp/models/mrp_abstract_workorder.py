@@ -24,6 +24,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
         ('flexible', 'Flexible')],
         required=True,
     )
+    use_create_components_lots = fields.Boolean(related="production_id.picking_type_id.use_create_components_lots")
 
     @api.onchange('qty_producing')
     def _onchange_qty_producing(self):
