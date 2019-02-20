@@ -30,7 +30,7 @@
                             <tree editable="top" delete="0" decoration-danger="(qty_to_consume &lt; qty_done)">
                                 <field name="product_id" attrs="{'readonly': [('move_id', '!=', False)]}" required="1" domain="[('id', '!=', parent.product_id)]" force_save="1"/>
                                 <field name="product_tracking" invisible="1"/>
-                                <field name="lot_id" attrs="{'readonly': [('product_tracking', '=', 'none')]}" context="{'default_product_id': product_id}" domain="[('product_id', '=', product_id)]" groups="stock.group_production_lot"/>
+                                <field name="lot_id" attrs="{'readonly': [('product_tracking', '=', 'none')]}" context="{'default_product_id': product_id, 'active_mo_id': parent.production_id}" domain="[('product_id', '=', product_id)]" groups="stock.group_production_lot"/>
                                 <field name="qty_to_consume" readonly="1" force_save="1"/>
                                 <field name="qty_reserved" readonly="1" force_save="1"/>
                                 <field name="qty_done"/>
