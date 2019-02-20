@@ -265,26 +265,4 @@
                                                         ref("payment.payment_icon_cc_codensa_easy_credit")])]'/>
     </record>
 
-    <record id="payment_acquirer_ccavenue" model="payment.acquirer">
-        <field name="name">CCAvenue</field>
-        <field name="image" type="base64" file="payment_ccavenue/static/src/img/ccavenue_icon.png"/>
-        <field name="view_template_id" ref="default_acquirer_button"/>
-        <field name="module_id" ref="base.module_payment_ccavenue"/>
-        <field name="description" type="html">
-            <p>
-                CCAvenue provides complete, simple and secure online payment gateway services and e-business solutions to Indian websites, with real time Credit Card, Debit Card and Net Banking.
-            </p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
-            </ul>
-        </field>
-        <!-- https://www.ccavenue.com/widest_range_of_payment_options.jsp# -->
-        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_mastercard"),
-                                                        ref("payment.payment_icon_cc_diners_club_intl"),
-                                                        ref("payment.payment_icon_cc_jcb"),
-                                                        ref("payment.payment_icon_cc_american_express"),
-                                                        ref("payment.payment_icon_cc_visa")])]'/>
-    </record>
-
 </odoo>
