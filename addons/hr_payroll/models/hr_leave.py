@@ -43,7 +43,10 @@ class HrLeave(models.Model):
         This is needed in order to compute the correct number of hours/days of the leave
         according to the contract's calender.
         """
-        super(HrLeave, self)._create_resource_leave()
+        resource_leaves = super(HrLeave, self)._create_resource_leave()
+        for resource_leave in resource_leaves:
+            resource_leave.benefit_type_id = resource_leave.holiday_id.holiday_status_id.benefit_type_id.id
+
         resource_leave_values = []
 
         for leave in self.filtered(lambda l: l.employee_id):
@@ -61,8 +64,7 @@ class HrLeave(models.Model):
                     'calendar_id': contract.resource_calendar_id.id,
                 }]
 
-        self.env['resource.calendar.leaves'].create(resource_leave_values)
-        return True
+        return resource_leaves | self.env['resource.calendar.leaves'].create(resource_leave_values)
 
     @api.constrains('date_from', 'date_to')
     def _check_contracts(self):

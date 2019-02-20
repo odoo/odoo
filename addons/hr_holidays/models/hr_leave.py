@@ -568,12 +568,15 @@ class HolidaysRequest(models.Model):
 
     @api.multi
     def _create_resource_leave(self):
-        """ This method will create entry in resource calendar time off object at the time of holidays validated """
+        """ This method will create entry in resource calendar time off object at the time of holidays validated
+        :returns: created `resource.calendar.leaves`
+        """
+        vals_list = []
         for leave in self:
             date_from = fields.Datetime.from_string(leave.date_from)
             date_to = fields.Datetime.from_string(leave.date_to)
 
-            self.env['resource.calendar.leaves'].create({
+            vals_list.append({
                 'name': leave.name,
                 'date_from': fields.Datetime.to_string(date_from),
                 'holiday_id': leave.id,
@@ -582,7 +585,7 @@ class HolidaysRequest(models.Model):
                 'calendar_id': leave.employee_id.resource_calendar_id.id,
                 'time_type': leave.holiday_status_id.time_type,
             })
-        return True
+        return self.env['resource.calendar.leaves'].create(vals_list)
 
     @api.multi
     def _remove_resource_leave(self):
