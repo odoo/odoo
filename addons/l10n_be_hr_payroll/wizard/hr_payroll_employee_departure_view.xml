@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_payroll_employee_departure_notice" model="ir.ui.view">
+        <field name="name">hr_payroll_employee_departure_notice</field>
+        <field name="model">hr.payslip.employee.depature.notice</field>
+        <field name="arch" type="xml">
+            <form string="Employee Departure">
+                <group class="o_label_nowrap">
+                    <group>
+                        <field name="employee_id" readonly="1"/>
+                        <field name="oldest_contract_id"/>
+                    </group>
+                    <group>
+                        <field name="leaving_type" widget="radio"/>
+                        <field name="salary_visibility" invisible="1"/>
+                    </group>
+                </group>
+                <group>
+                    <group class="o_label_nowrap">
+                        <field name="first_contract" attrs="{'invisible': [('leaving_type','=','retired')]}"/>
+                        <field name="start_notice_period"/>
+                        <label for="notice_duration_month_before_2014" string="Notice duration computed" help="Computed value base on leaving type, arrival of the employee in the company, ..."/>
+                        <div>
+                            <field name="notice_duration_month_before_2014" nolabel="1" class="oe_inline" attrs="{'invisible': [('notice_duration_month_before_2014','=',0)]}"/>
+                            <span attrs="{'invisible': [('notice_duration_month_before_2014','=',0)]}"> months and </span>
+                            <field name="notice_duration_week_after_2014" nolabel="1" class="oe_inline"/>
+                            <span> weeks</span>
+                        </div>
+                        <field name="end_notice_period"/>
+                    </group>
+                    <group>
+                        <field name="salary_december_2013" attrs="{'invisible': [('salary_visibility','=',False)]}"/>
+                    </group>
+                </group>
+                <group class="o_label_nowrap">
+                    <field name="notice_respect" attrs="{'invisible': [('leaving_type','=','retired')]}"/>
+                </group>
+                <footer>
+                    <button name="validate_termination" string="Validate" type="object" class="oe_highlight" attrs="{'invisible': [('notice_respect','=','without')]}"/>
+                    <button name="compute_termination_fee" string="Validate &amp; Compute termination fees" type="object" class="oe_highlight" attrs="{'invisible': [('notice_respect','=','with')]}"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hr_payroll_employee_departure_holiday_attests" model="ir.ui.view">
+        <field name="name">view_hr_payroll_employee_departure_holiday_attests</field>
+        <field name="model">hr.payslip.employee.depature.holiday.attests</field>
+        <field name="arch" type="xml">
+            <form string="Employee Departure - Holiday Attests">
+                <group class="o_label_nowrap">
+                    <group>
+                        <field name="employee_id" readonly="1"/>
+                    </group>
+                </group>
+                <group string="Payslip" colspan="4">
+                    <group>
+                        <span>
+                            Taking into account for remuneration:
+                            <ul>
+                                <li>Fixed and variable remuneration</li>
+                                <li>Overtime worked</li>
+                                <li>Benefits in kind and bonuses</li>
+                                <li>Remuneration of statutory holidays occurring within 30 days of the end date of the contract</li>
+                                <li>End-of-year bonus, 13th month or other similar amount</li>
+                                <li>Beneficiary holdings</li>
+                                <li>Various bonuses</li>
+                            </ul>
+                        </span>
+                    </group>
+                    <group>
+                        <span>
+                            We draw your attention to the fact that this information is based on the data in Odoo and / or that you
+                            have introduced in Odoo and that it is important that they be accompanied by a verification on your part
+                            according to the particularities related to contract of the worker or your company which Odoo would not
+                            know.
+                        </span>
+                    </group>
+
+                    <group class="o_label_nowrap" string="Payslip current year" colspan="4">
+                        <field name="payslip_n_ids" nolabel="1" colspan="4">
+                            <tree>
+                                <field name="number"/>
+                                <field name="payslip_run_id"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="basic_wage" sum="Total basic wage"/>
+                                <field name="net_wage" sum="Total net wage"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                        <field name="net_n" colspan="2"/>
+                    </group>
+                    <group class="o_label_nowrap" string="Payslip previous year" colspan="4">
+                        <field name="payslip_n1_ids" nolabel="1" colspan="4">
+                            <tree>
+                                <field name="number"/>
+                                <field name="payslip_run_id"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="basic_wage" sum="Total basic wage"/>
+                                <field name="net_wage" sum="Total net wage"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                        <field name="net_n1"/>
+                    </group>
+                </group>
+                <group>
+                    <group string="Allocation Time Off" colspan="4">
+                        <field name="time_off_allocation_n_ids" nolabel="1" colspan="4">
+                            <tree>
+                                <field name="holiday_status_id"/>
+                                <field name="name"/>
+                                <field name="number_of_days" sum="Total allocated days"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                        <field name="time_off_allocated"/>
+                    </group>
+                    <group string="Time Off" colspan="4">
+                        <field name="time_off_n_ids" nolabel="1" colspan="4">
+                            <tree>
+                                <field name="holiday_type"/>
+                                <field name="name"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="number_of_days" sum="Total time off days"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                        <field name="time_off_taken"/>
+
+                    </group>
+                </group>
+                <group string="Unpaid Time Off">
+                    <group>
+                        <field name="unpaid_time_off_n"/>
+                        <field name="unpaid_average_remunaration_n"/>
+                        <field name="fictitious_remuneration_n"/>
+                    </group>
+                    <group>
+                        <field name="unpaid_time_off_n1"/>
+                        <field name="unpaid_average_remunaration_n1"/>
+                        <field name="fictitious_remuneration_n1"/>
+                    </group>
+                </group>
+
+                <footer>
+                    <button name="compute_termination_holidays" string="Validate &amp; Compute holiday attests" type="object" class="oe_highlight"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="departure_notice_wizard_action" model="ir.actions.act_window">
+        <field name="name">Employee Departure</field>
+        <field name="res_model">hr.payslip.employee.depature.notice</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="departure_holiday_wizard_action" model="ir.actions.act_window">
+        <field name="name">Employee Departure - Holiday Attests</field>
+        <field name="res_model">hr.payslip.employee.depature.holiday.attests</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -123,7 +123,8 @@
             <field name="priority">30</field>
             <field name="arch" type="xml">
                 <xpath expr="//header" position="inside">
-                    <button name="%(departure_notice_wizard_action)d" string="Employee Departure" type="action" groups="hr.group_hr_manager"/>
+                    <button name="%(departure_notice_wizard_action)d" attrs="{'invisible': ['|', ('departure_reason', '!=', False), ('country_company_code', '!=', 'BE')]}" string="Employee Departure" type="action" groups="hr.group_hr_manager"/>
+                    <button name="%(departure_holiday_wizard_action)d" attrs="{'invisible': ['|', ('departure_reason', 'not in', ['fired', 'resigned']), ('country_company_code', '!=', 'BE')]}" string="Departure - Holiday Attests" type="action" groups="hr.group_hr_manager"/>
                 </xpath>
                 <xpath expr="//field[@name='vehicle']" position="after">
                     <field name="resident_bool" eval="False"/>
@@ -134,6 +135,7 @@
                 </xpath>
                 <xpath expr="//field[@name='gender']" position="after">
                     <field name="disabled"/>
+                    <field name="country_company_code"/>
                 </xpath>
                 <xpath expr="//field[@name='children']" position="after">
                     <field name="disabled_children_bool"/>
@@ -148,6 +150,13 @@
                 <xpath expr="//field[@name='spouse_fiscal_status']" position="after">
                     <field name="spouse_net_revenue" attrs="{'invisible': ['|', ('marital', 'not in', ['married', 'cohabitant']), ('spouse_fiscal_status', '!=', 'with income')]}"/>
                     <field name="spouse_other_net_revenue" attrs="{'invisible': ['|', ('marital', 'not in', ['married', 'cohabitant']), ('spouse_fiscal_status', '!=', 'with income')]}"/>
+                </xpath>
+                <xpath expr="//group[@name='departure']" position="attributes">
+                    <attribute name="attrs">{'invisible': ['&amp;', ('active', '=', True), ('departure_reason', '=', False)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='departure_reason']" position="after">
+                    <field name="start_notice_period"/>
+                    <field name="end_notice_period"/>
                 </xpath>
             </field>
         </record>

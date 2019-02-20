@@ -10,4 +10,34 @@
             print_report_name="'Payslip - %s' % (object.employee_id.name)"
         />
 
+        <report
+            id="action_report_termination_fees"
+            model="hr.payslip"
+            string="Termination"
+            report_type="qweb-pdf"
+            name="l10n_be_hr_payroll.report_termination_fees"
+            file="l10n_be_hr_payroll.report_termination_fees"
+            print_report_name="'Termination - %s' % (object.employee_id.name)"
+        />
+
+        <report
+            id="action_report_termination_holidays_n"
+            model="hr.payslip"
+            string="Termination Holidays Current Year"
+            report_type="qweb-pdf"
+            name="l10n_be_hr_payroll.report_termination_holidays_n"
+            file="l10n_be_hr_payroll.report_termination_holidays"
+            print_report_name="'Termination Holidays N - %s' % (object.employee_id.name)"
+        />
+
+        <report
+            id="action_report_termination_holidays_n1"
+            model="hr.payslip"
+            string="Termination Holidays Previous Year"
+            report_type="qweb-pdf"
+            name="l10n_be_hr_payroll.report_termination_holidays_n1"
+            file="l10n_be_hr_payroll.report_termination_holidays"
+            print_report_name="'Termination Holidays N-1 - %s' % (object.employee_id.name)"
+        />
+
 </odoo>

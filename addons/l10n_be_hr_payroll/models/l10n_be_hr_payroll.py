@@ -242,6 +242,11 @@ class HrEmployee(models.Model):
     spouse_other_net_revenue = fields.Float(string="Spouse Other Net Revenue",
         help='Own professional income which is exclusively composed of pensions, annuities or similar income', groups="hr.group_hr_user")
 
+    start_notice_period = fields.Date("Start notice period", groups="hr.group_hr_user")
+    end_notice_period = fields.Date("End notice period", groups="hr.group_hr_user")
+    first_contract_in_company = fields.Date("First contract in company", groups="hr.group_hr_user")
+    country_company_code = fields.Char(related='company_id.country_id.code', size=2)
+
     @api.constrains('spouse_fiscal_status', 'spouse_net_revenue', 'spouse_other_net_revenue')
     def _check_spouse_revenue(self):
         for employee in self:

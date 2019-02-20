@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_termination_holidays_n">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <h3 t-field="o.name"/>
+
+                    <h4 class="text-center">
+                        Holiday exercise <span t-esc="o.date_to.year"/>
+                        /Holiday year <span t-esc="o.date_to.year + 1"/>
+                    </h4>
+
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td><strong>Company Information</strong></td>
+                            <td>
+                                <div><span t-field="o.company_id.name"/></div>
+                                <div><span t-field="o.company_id.street"/></div>
+                                <div><span t-field="o.company_id.street2" t-if="o.company_id.street2"/></div>
+                                <div>
+                                    <span t-field="o.company_id.city"/>
+                                    <span t-field="o.company_id.state_id"/>
+                                    <span t-field="o.company_id.zip"/>
+                                </div>
+                                <div><span t-field="o.company_id.country_id"/></div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td><strong>Name</strong></td>
+                            <td><span t-field="o.employee_id"/></td>
+                            <td><strong>Designation</strong></td>
+                            <td><span t-field="o.employee_id.job_id"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Address</strong></td>
+                            <td colspan="3">
+                                <div t-field="o.employee_id.address_home_id"
+                                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email</strong></td>
+                            <td><span t-field="o.employee_id.work_email"/></td>
+                            <td><strong>Identification No</strong></td>
+                            <td><span t-field="o.employee_id.identification_id"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reference</strong></td>
+                            <td><span t-field="o.number"/></td>
+                            <td><strong>Bank Account</strong></td>
+                            <td><span t-field="o.employee_id.bank_account_id"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Registration Number</strong></td>
+                            <td><span t-field="o.employee_id.registration_number"/></td>
+                        </tr>
+                    </table>
+
+                    <t t-set="total_annual" t-value="0" />
+                    <t t-set="total" t-value="0" />
+                    <h6>
+                        Actual and similar remuneration for the period from <span t-field="o.date_from"/>
+                        to <span t-field="o.date_to"/> included:
+                    </h6>
+
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>Gross reference remuneration</td>
+                                <td><span t-esc="o.input_line_ids.filtered(lambda line: line.code == 'GROSS_REF').amount"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h6>Holiday pay to receive:</h6>
+
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td colspan="2"><strong>Pay simple</strong></td>
+                            </tr>
+                            <tr>
+                                <td>7,67% of gross reference remuneration</td>
+                                <td><span t-esc="o.line_ids.filtered(lambda line: line.code == 'PAY_SIMPLE').total"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><strong>Pay holiday double</strong></td>
+                            </tr>
+                            <tr>
+                                <td>6,8% of gross reference remuneration</td>
+                                <td><span t-esc="o.line_ids.filtered(lambda line: line.code == 'PAY DOUBLE').total"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><strong>Pay holiday double complementary</strong></td>
+                            </tr>
+                            <tr>
+                                <td>0,87% of gross reference remuneration</td>
+                                <td><span t-esc="o.line_ids.filtered(lambda line: line.code == 'PAY DOUBLE COMPLEMENTARY').total"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>TOTAL</strong></td>
+                                <td><span t-esc="o.line_ids.filtered(lambda line: line.code == 'BASIC').total"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p class="text-right"><strong>Established on <span t-field="o.compute_date"/></strong></p>
+                    <p class="text-right"><strong>Authorized signature</strong></p>
+                </div>
+                <div class="page">
+                <p style="page-break-after:always;"/>
+
+                    <span>
+                        To the attention of the worker
+                        <ul>
+                            <li>You must return this certificate to your next employer, or failing that, to your allowance payment agency.
+                            Social security contributions on holiday pay have already been retained.</li>
+                            <li>The amount covered by this certificate pre-emptively compensates the vacation days you will take in the
+                            near future in <span t-esc="o.date_to.year + 1"/>.
+                            Your next employer or payment agency will not pay for these days off. So you are advised to keep this amount
+                            until you take these days off.</li>
+                        </ul>
+                    </span>
+                </div>
+
+            </t>
+        </t>
+    </t>
+</template>
+
+<template id="report_termination_holidays_n1">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <h3 t-field="o.name"/>
+
+                    <h4 class="text-center">
+                        Holiday exercise <span t-esc="o.date_to.year - 1"/>
+                        /Holiday year <span t-esc="o.date_to.year"/>
+                    </h4>
+
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td><strong>Company Information</strong></td>
+                            <td>
+                                <div><span t-field="o.company_id.name"/></div>
+                                <div><span t-field="o.company_id.street"/></div>
+                                <div><span t-field="o.company_id.street2" t-if="o.company_id.street2"/></div>
+                                <div>
+                                    <span t-field="o.company_id.city"/>
+                                    <span t-field="o.company_id.state_id"/>
+                                    <span t-field="o.company_id.zip"/>
+                                </div>
+                                <div><span t-field="o.company_id.country_id"/></div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td><strong>Name</strong></td>
+                            <td><span t-field="o.employee_id"/></td>
+                            <td><strong>Designation</strong></td>
+                            <td><span t-field="o.employee_id.job_id"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Address</strong></td>
+                            <td colspan="3">
+                                <div t-field="o.employee_id.address_home_id"
+                                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email</strong></td>
+                            <td><span t-field="o.employee_id.work_email"/></td>
+                            <td><strong>Identification No</strong></td>
+                            <td><span t-field="o.employee_id.identification_id"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reference</strong></td>
+                            <td><span t-field="o.number"/></td>
+                            <td><strong>Bank Account</strong></td>
+                            <td><span t-field="o.employee_id.bank_account_id"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Registration Number</strong></td>
+                            <td><span t-field="o.employee_id.registration_number"/></td>
+                        </tr>
+                    </table>
+
+                    <t t-set="total_annual" t-value="0" />
+                    <t t-set="total" t-value="0" />
+                    <h6>
+                        Actual and similar remuneration for the period from <span t-field="o.date_from"/>
+                        to <span t-field="o.date_to"/> included:
+                    </h6>
+
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>Gross reference remuneration</td>
+                                <td><span t-esc="o.input_line_ids.filtered(lambda line: line.code == 'GROSS_REF').amount"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            </tr>
+                            <tr>
+                                <td>Time off already taken</td>
+                                <td><span t-esc="o.input_line_ids.filtered(lambda line: line.code == 'TIME_OFF_TAKEN').amount"/></td>
+                            </tr>
+                            <tr>
+                                <td>Right to time off</td>
+                                <td><span t-esc="o.input_line_ids.filtered(lambda line: line.code == 'ALLOCATION').amount"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h6>Holiday pay to receive:</h6>
+
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td colspan="2"><strong>Pay simple</strong></td>
+                            </tr>
+                            <tr>
+                                <td>7,67% of gross reference remuneration * (time off not taken) / (right to time off)</td>
+                                <td><span t-esc="o.line_ids.filtered(lambda line: line.code == 'PAY_SIMPLE').total"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><strong>Pay holiday double</strong> only if the majority of vacation days
+                                have not yet been taken</td>
+                            </tr>
+                            <tr>
+                                <td>6,8% of gross reference remuneration</td>
+                                <td><span t-esc="o.line_ids.filtered(lambda line: line.code == 'PAY DOUBLE').total"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            </tr>
+                            <tr>
+                                <td>0,87% of gross reference remuneration</td>
+                                <td><span t-esc="o.line_ids.filtered(lambda line: line.code == 'PAY DOUBLE COMPLEMENTARY').total"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>TOTAL</strong></td>
+                                <td><span t-esc="o.line_ids.filtered(lambda line: line.code == 'BASIC').total"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p class="text-right"><strong>Established on <span t-field="o.compute_date"/></strong></p>
+                    <p class="text-right"><strong>Authorized signature</strong></p>
+                </div>
+                <div class="page">
+                <p style="page-break-after:always;"/>
+                    <span>
+                        To the attention of the worker
+                        <ul>
+                            <li>You must return this certificate to your next employer, or failing that, to your allowance payment agency.
+                            Social security contributions on holiday pay have already been retained.</li>
+                            <li>The amount covered by this certificate pre-emptively compensates the vacation days you will take in the near
+                            future in <span t-esc="o.date_to.year"/>.
+                            Your next employer or payment agency will not pay for these days off. So you are advised to keep this amount
+                            until you take these days off.</li>
+                        </ul>
+                    </span>
+                </div>
+
+            </t>
+        </t>
+    </t>
+</template>
+</odoo>

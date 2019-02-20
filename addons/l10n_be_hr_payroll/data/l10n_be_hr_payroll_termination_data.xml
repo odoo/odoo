@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- HR SALARY RULE CATEGORIES -->
+    <record id="hr_payroll_termination" model="hr.salary.rule.category">
+        <field name="name">Annual salary revalued</field>
+        <field name="code">REVALUED</field>
+    </record>
+
+    <record id="hr_payroll_termination_salary" model="hr.salary.rule.category">
+        <field name="name">Notice salary</field>
+        <field name="code">NOTICE_SALARY</field>
+    </record>
+
+    <record id="hr_payroll_notice_duration" model="hr.salary.rule.category">
+        <field name="name">Notice Duration</field>
+        <field name="code">NOTICE_DURATION</field>
+    </record>
+
+    <record id="hr_payroll_termination_holidays_simple" model="hr.salary.rule.category">
+        <field name="name">Terminaison Holidays Simple Pay</field>
+        <field name="code">TERMINAISON_SIMPLE</field>
+    </record>
+
+    <record id="hr_payroll_termination_holidays_double" model="hr.salary.rule.category">
+        <field name="name">Terminaison Holidays Double Pay</field>
+        <field name="code">TERMINAISON_DOUBLE</field>
+    </record>
+
+    <record id="hr_payroll_termination_holidays" model="hr.salary.rule.category">
+        <field name="name">Terminaison Holidays</field>
+        <field name="code">TERMINAISON</field>
+    </record>
+
+ <!-- HR SALARY RULES -->
+    <record id="hr_payroll_rule_basic_12_92" model="hr.salary.rule">
+        <field name="name">Gross Monthly Salary</field>
+        <field name="sequence" eval="1"/>
+        <field name="code">BASIC2</field>
+        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12.92
+result = contract.wage
+        </field>
+    </record>
+
+    <record id="hr_payroll_rule_year_end_bonus" model="hr.salary.rule">
+        <field name="name">Year-end bonus</field>
+        <field name="sequence" eval="2"/>
+        <field name="code">YEAREND_BONUS</field>
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs.YEAREND_BONUS.amount
+        </field>
+    </record>
+
+    <record id="hr_payroll_rule_residence" model="hr.salary.rule">
+        <field name="name">Home/Residence Allowance</field>
+        <field name="sequence" eval="3"/>
+        <field name="code">RESIDENCE</field>
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 13.92
+result = inputs.RESIDENCE.amount
+        </field>
+    </record>
+
+    <record id="hr_payroll_rule_expatrie" model="hr.salary.rule">
+        <field name="name">Expatrie Allowance</field>
+        <field name="sequence" eval="4"/>
+        <field name="code">EXPATRIE</field>
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12
+result = inputs.EXPATRIE.amount
+        </field>
+    </record>
+
+    <record id="hr_payroll_rule_ch_year" model="hr.salary.rule">
+        <field name="name">Meal Voucher</field>
+        <field name="sequence" eval="5"/>
+        <field name="code">MEAL_VOUCHER</field>
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 231
+result = contract.meal_voucher_amount
+        </field>
+    </record>
+
+    <record id="hr_payroll_eco_checks" model="hr.salary.rule">
+        <field name="name">Eco Vouchers</field>
+        <field name="sequence" eval="6"/>
+        <field name="code">ECO_VOUCHER</field>
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = contract.eco_checks
+        </field>
+    </record>
+
+    <record id="hr_payroll_annual_variable_salary" model="hr.salary.rule">
+        <field name="name">Annual variable salary</field>
+        <field name="sequence" eval="7"/>
+        <field name="code">VARIABLE_SALARY</field>
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs.VARIABLE_SALARY.amount
+        </field>
+    </record>
+
+    <record id="hr_payroll_pay_variable_salary" model="hr.salary.rule">
+        <field name="name">Pay on variable salary (15.34 of the annual amount)</field>
+        <field name="sequence" eval="8"/>
+        <field name="code">PAY_VARIABLE_SALARY</field>
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = 15.34
+result = VARIABLE_SALARY
+        </field>
+    </record>
+
+    <record id="hr_payroll_benefit_in_kind" model="hr.salary.rule">
+        <field name="name">Monthly benefit in kind</field>
+        <field name="sequence">9</field>
+        <field name="code">BENEFIT_IN_KIND</field>
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs.BENEFIT_IN_KIND.amount
+result_qty = 12.92
+        </field>
+    </record>
+
+    <record id="hr_payroll_advantage_any_kind" model="hr.salary.rule">
+        <field name="name">ATN</field>
+        <field name="sequence">10</field>
+        <field name="code">ADVANTAGE_ANY_KIND</field>
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12.92
+result = 0
+if contract.internet:
+    result += 5.0
+if contract.mobile:
+    result += 12.0
+        </field>
+    </record>
+
+    <record id="hr_payroll_company_car_annual" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">ATN Company Car</field>
+        <field name="code">ATN.CAR</field>
+        <field name="sequence">11</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12
+result = contract.car_atn
+        </field>
+    </record>
+
+    <record id="hr_payroll_hospital_insurance" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Monthly hospital insurance (employer's share)</field>
+        <field name="code">HOSPITAL_INSURANCE</field>
+        <field name="sequence">12</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12
+result = inputs.HOSPITAL_INSURANCE.amount
+        </field>
+    </record>
+
+    <record id="hr_payroll_group_insurance" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Monthly group insurance (employer's share)</field>
+        <field name="code">GROUPE_INSURANCE</field>
+        <field name="sequence">13</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12
+result = inputs.GROUPE_INSURANCE.amount
+        </field>
+    </record>
+
+    <record id="hr_payroll_stock_option" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Stock Option</field>
+        <field name="code">STOCK_OPTION</field>
+        <field name="sequence">14</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12
+result = inputs.STOCK_OPTION.amount
+        </field>
+    </record>
+
+    <record id="hr_payroll_specific_CP" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Rules specific to Auxiliary Joint Committee</field>
+        <field name="code">SPECIFIC RULES</field>
+        <field name="sequence">15</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12
+result = inputs.SPECIFIC_RULES.amount
+        </field>
+    </record>
+
+    <record id="hr_payroll_other_annual" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Other monthly/yearly</field>
+        <field name="code">OTHER</field>
+        <field name="sequence">16</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 12
+result = inputs.OTHER.amount
+        </field>
+    </record>
+
+    <record id="hr_payroll_annual_salary_revalued" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination"/>
+        <field name="name">Annual salary revalued</field>
+        <field name="code">ANNUAL_SALARY_REVALUED</field>
+        <field name="sequence">17</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories.BASIC + categories.ALW</field>
+    </record>
+
+    <record id="hr_payroll_notice_duration_month" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_notice_duration"/>
+        <field name="name">months</field>
+        <field name="code">ND_MONTH</field>
+        <field name="sequence">18</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = ANNUAL_SALARY_REVALUED / 12
+result_qty = inputs.MONTHS.amount
+        </field>
+    </record>
+
+    <record id="hr_payroll_notice_duration_week" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_notice_duration"/>
+        <field name="name">weeks</field>
+        <field name="code">ND_WEEK</field>
+        <field name="sequence">19</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = ANNUAL_SALARY_REVALUED * 3 / (12 * 13)
+result_qty = inputs.WEEKS.amount
+        </field>
+    </record>
+
+    <record id="hr_payroll_notice_duration_day" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_notice_duration"/>
+        <field name="name">days</field>
+        <field name="code">ND_DAY</field>
+        <field name="sequence">20</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = ANNUAL_SALARY_REVALUED / 365
+result_qty = inputs.DAYS.amount
+        </field>
+    </record>
+
+    <record id="hr_payroll_termination_total" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_salary"/>
+        <field name="name">Total</field>
+        <field name="code">NET</field>
+        <field name="sequence">21</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories.NOTICE_DURATION</field>
+    </record>
+
+    <record id="hr_payroll_termination_outplacement" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_salary"/>
+        <field name="name">Outplacement (if more than 30 weeks notice duration)</field>
+        <field name="code">OUTPLACEMENT</field>
+        <field name="sequence">22</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if ( inputs.MONTHS.amount / 3 * 13 + inputs.WEEKS.amount + inputs.DAYS.amount / 7 ) &gt;= 30:
+    result = - 4 * ANNUAL_SALARY_REVALUED * 3 / (12 * 13)
+else:
+    result = 0
+        </field>
+    </record>
+
+    <record id="hr_payroll_termination_ONSS" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_spec_soc_contribution"/>
+        <field name="name">Social employer contributions to the ONSS</field>
+        <field name="code">ONSS</field>
+        <field name="sequence">23</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = NET - OUTPLACEMENT
+result_rate = 27
+        </field>
+    </record>
+
+    <record id="hr_payroll_termination_unreasonable_dismissal" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_salary"/>
+        <field name="name">Unreasonable dismissal</field>
+        <field name="code">UNREASONABLE_DISMISSAL</field>
+        <field name="sequence">24</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = inputs.UNREASONABLE_DISMISSAL.amount
+result = ANNUAL_SALARY_REVALUED * 3 / (12 * 13)
+        </field>
+    </record>
+
+    <record id="hr_payroll_termination_non_respect_motivation" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_salary"/>
+        <field name="name">Non respect motivation (= 2 weeks)</field>
+        <field name="code">NON_RESPECT_MOTIVATION</field>
+        <field name="sequence">25</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = inputs.NON_RESPECT_MOTIVATION.amount
+result = ANNUAL_SALARY_REVALUED * 3 / (12 * 13)
+        </field>
+    </record>
+
+    <record id="hr_payroll_termination_total_cost" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_salary"/>
+        <field name="name">Total cost employer</field>
+        <field name="code">BASIC</field>
+        <field name="sequence">50</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = NET + ONSS + OUTPLACEMENT + UNREASONABLE_DISMISSAL + NON_RESPECT_MOTIVATION
+        </field>
+    </record>
+
+    <record id="hr_payroll_pay_simple" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays_simple"/>
+        <field name="name">Pay simple</field>
+        <field name="code">PAY_SIMPLE</field>
+        <field name="sequence">1</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if inputs.ALLOCATION.amount:
+    result_qty = 1 - (inputs.TIME_OFF_TAKEN.amount / inputs.ALLOCATION.amount)
+result_rate = 7.67
+result = inputs.GROSS_REF.amount
+        </field>
+    </record>
+
+    <record id="hr_payroll_pay_double" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays_double"/>
+        <field name="name">Pay double</field>
+        <field name="code">PAY DOUBLE</field>
+        <field name="sequence">2</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if bool(inputs.TIME_OFF_TAKEN.amount) &amp; bool(inputs.ALLOCATION.amount):
+    if inputs.TIME_OFF_TAKEN.amount &lt; (inputs.ALLOCATION.amount / 2):
+        result_qty = 1
+    else:
+        result_qty = 0
+result_rate = 6.8
+result = inputs.GROSS_REF.amount
+        </field>
+    </record>
+
+    <record id="hr_payroll_pay_double_complementary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays_double"/>
+        <field name="name">Pay double complementary</field>
+        <field name="code">PAY DOUBLE COMPLEMENTARY</field>
+        <field name="sequence">3</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if bool(inputs.TIME_OFF_TAKEN.amount) &amp; bool(inputs.ALLOCATION.amount):
+    if inputs.TIME_OFF_TAKEN.amount &lt; (inputs.ALLOCATION.amount / 2):
+        result_qty = 1
+    else:
+        result_qty = 0
+result_rate = 0.87
+result = inputs.GROSS_REF.amount
+        </field>
+    </record>
+
+    <record id="hr_payroll_total_n" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_termination_holidays"/>
+        <field name="name">Total</field>
+        <field name="code">BASIC</field>
+        <field name="sequence">4</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories.TERMINAISON_SIMPLE + categories.TERMINAISON_DOUBLE
+        </field>
+    </record>
+
+    <record id="hr_payroll_rules_onss_termination" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_onss"/>
+        <field name="name">Social contribution</field>
+        <field name="code">ONSS</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">PAY_SIMPLE</field>
+        <field name="amount_percentage">-13.07</field>
+        <field name="register_id" ref="contrib_register_onss"/>
+    </record>
+
+    <record id="hr_payroll_rules_special_contribution_termination" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_onss"/>
+        <field name="name">Special Social contribution</field>
+        <field name="code">M_ONSS</field>
+        <field name="sequence">11</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories.TERMINAISON_DOUBLE
+result_rate = -13.07
+result_qty = 6.8/7.67
+        </field>
+    </record>
+
+    <record id="hr_payroll_rules_taxable_termination" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_onss"/>
+        <field name="name">Taxable Termination Amount</field>
+        <field name="code">TAXABLE</field>
+        <field name="sequence">12</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = BASIC + ONSS + M_ONSS
+        </field>
+    </record>
+
+    <record id="hr_payroll_rules_professional_tax_termination" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_onss"/>
+        <field name="name">Professional Tax</field>
+        <field name="code">PROF_TAX</field>
+        <field name="sequence">13</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = TAXABLE
+result_rate = -36.34
+        </field>
+    </record>
+
+    <record id="hr_salary_rule_pay_net_termination" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="name">Net</field>
+        <field name="code">NET</field>
+        <field name="sequence">14</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = TAXABLE + PROF_TAX
+        </field>
+    </record>
+
+ <!-- HR PAYROLL STRUCTURE -->
+    <record id="hr_payroll_salary_structure_departure_termination" model="hr.payroll.structure">
+        <field name="code">TERMINATION</field>
+        <field name="name">Termination fees</field>
+        <field eval="[(6, 0, [
+            ref('hr_payroll_rule_basic_12_92'),
+            ref('hr_payroll_rule_year_end_bonus'),
+            ref('hr_payroll_rule_residence'),
+            ref('hr_payroll_rule_expatrie'),
+            ref('hr_payroll_rule_ch_year'),
+            ref('hr_payroll_eco_checks'),
+            ref('hr_payroll_annual_variable_salary'),
+            ref('hr_payroll_pay_variable_salary'),
+            ref('hr_payroll_benefit_in_kind'),
+            ref('hr_payroll_advantage_any_kind'),
+            ref('hr_payroll_company_car_annual'),
+            ref('hr_payroll_hospital_insurance'),
+            ref('hr_payroll_group_insurance'),
+            ref('hr_payroll_stock_option'),
+            ref('hr_payroll_specific_CP'),
+            ref('hr_payroll_other_annual'),
+            ref('hr_payroll_annual_salary_revalued'),
+            ref('hr_payroll_notice_duration_month'),
+            ref('hr_payroll_notice_duration_week'),
+            ref('hr_payroll_notice_duration_day'),
+            ref('hr_payroll_termination_total'),
+            ref('hr_payroll_termination_outplacement'),
+            ref('hr_payroll_termination_ONSS'),
+            ref('hr_payroll_termination_unreasonable_dismissal'),
+            ref('hr_payroll_termination_non_respect_motivation'),
+            ref('hr_payroll_termination_total_cost'),
+        ])]" name="rule_ids"/>
+        <field name="country_id" ref="base.be"/>
+        <field name="report_id" ref="l10n_be_hr_payroll.action_report_termination_fees"/>
+        <field name="payslip_name">Termination</field>
+        <field name="parent_id"></field>
+    </record>
+
+    <record id="hr_payroll_salary_structure_departure_n_holidays" model="hr.payroll.structure">
+        <field name="code">TERMINATION_N_HOLIDAYS</field>
+        <field name="name">Termination Holidays N</field>
+        <field eval="[(6, 0, [
+            ref('hr_payroll_pay_simple'),
+            ref('hr_payroll_pay_double'),
+            ref('hr_payroll_pay_double_complementary'),
+            ref('hr_payroll_total_n'),
+            ref('hr_payroll_rules_onss_termination'),
+            ref('hr_payroll_rules_special_contribution_termination'),
+            ref('hr_payroll_rules_taxable_termination'),
+            ref('hr_payroll_rules_professional_tax_termination'),
+            ref('hr_salary_rule_pay_net_termination'),
+        ])]" name="rule_ids"/>
+        <field name="country_id" ref="base.be"/>
+        <field name="report_id" ref="l10n_be_hr_payroll.action_report_termination_holidays_n"/>
+        <field name="payslip_name">Certificate Relating To Annual Holidays For The Civil Year Ending The Contract Of Employment</field>
+        <field name="parent_id"></field>
+    </record>
+
+    <record id="hr_payroll_salary_structure_departure_n1_holidays" model="hr.payroll.structure">
+        <field name="code">TERMINATION_N1_HOLIDAYS</field>
+        <field name="name">Termination Holidays N-1</field>
+        <field eval="[(6, 0, [
+            ref('hr_payroll_pay_simple'),
+            ref('hr_payroll_pay_double'),
+            ref('hr_payroll_pay_double_complementary'),
+            ref('hr_payroll_total_n'),
+            ref('hr_payroll_rules_onss_termination'),
+            ref('hr_payroll_rules_special_contribution_termination'),
+            ref('hr_payroll_rules_taxable_termination'),
+            ref('hr_payroll_rules_professional_tax_termination'),
+            ref('hr_salary_rule_pay_net_termination'),
+        ])]" name="rule_ids"/>
+        <field name="country_id" ref="base.be"/>
+        <field name="report_id" ref="l10n_be_hr_payroll.action_report_termination_holidays_n1"/>
+        <field name="payslip_name">Certificate Relating To Annual Vacations For The Calendar Year Preceding The End Of The Contract Of Employment</field>
+        <field name="parent_id"></field>
+    </record>
+
+</odoo>
