@@ -275,10 +275,25 @@ class ClassDoc(NSDoc):
         d['mixins'] = self.mixins
         return d
 
+DEFAULT = object()
 class UnknownNS(NSDoc):
+    params = () # TODO: log warning when (somehow) trying to access / document an unknown object as ctor?
     def get_property(self, name):
         return super(UnknownNS, self).get_property(name) or \
            UnknownNS({'name': '{}.{}'.format(self.name, name)})
+
+    def __getitem__(self, item):
+        if self._probably_not_property(item):
+            return super().__getitem__(item)
+        return self.get_property(item)
+
+    def _probably_not_property(self, item):
+        return (
+            not isinstance(item, str)
+            or item in (self.namekey, 'name', 'params')
+            or item.startswith(('_', 'guessed_'))
+            or item in self.parsed
+        )
 
 class Unknown(CommentDoc):
     @classmethod
@@ -325,7 +340,7 @@ def parse_comments(comments, doctype=None):
     # in case a specific doctype is given, allow overriding it anyway
     return guess(parsed, default=doctype)
 
-def guess(parsed, default=NSDoc):
+def guess(parsed, default=UnknownNS):
     if 'class' in parsed:
         return ClassDoc(parsed)
     if 'function' in parsed:

@@ -45,8 +45,18 @@ class ChannelUsersRelation(models.Model):
             slide_done = mapped_data.get(record.channel_id.id, dict()).get(record.partner_id.id, 0)
             slide_total = channel_data.get(record.channel_id.id) or 1
             record.completion = math.ceil(100.0 * slide_done / slide_total)
-            if record.completion >= 100:
-                record.update({'completed': True})
+
+    def _write(self, values):
+        if 'completion' in values and values['completion'] >= 100:
+            values['completed'] = True
+            result = super(ChannelUsersRelation, self)._write(values)
+            partner_has_completed = {channel_partner.partner_id.id: channel_partner.channel_id for channel_partner in self}
+            users = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_has_completed.keys()))])
+            for user in users:
+                users.add_karma(partner_has_completed[user.partner_id.id].karma_gen_channel_finish)
+        else:
+            result = super(ChannelUsersRelation, self)._write(values)
+        return result
 
 
 class Channel(models.Model):
@@ -91,14 +101,17 @@ class Channel(models.Model):
     nbr_videos = fields.Integer('Number of Videos', compute='_compute_slides_statistics', store=True)
     nbr_infographics = fields.Integer('Number of Infographics', compute='_compute_slides_statistics', store=True)
     nbr_webpages = fields.Integer("Number of Webpages", compute='_compute_slides_statistics', store=True)
+    nbr_quizs = fields.Integer("Number of quizzes", compute="_compute_slides_statistics", store=True)
     total_slides = fields.Integer('# Slides', compute='_compute_slides_statistics', store=True, oldname='total')
     total_views = fields.Integer('# Views', compute='_compute_slides_statistics', store=True)
     total_votes = fields.Integer('# Votes', compute='_compute_slides_statistics', store=True)
     total_time = fields.Float('# Hours', compute='_compute_slides_statistics', digits=(10, 4), store=True)
     # configuration
-    allow_comment = fields.Boolean("Allow comment on Content", default=False, help="When checked, the options will allow member to add comment on content:\n"
-             "  * Documentation channel: allow to like content and post comments\n"
-             "  * Training channel: allow to post comments and reviews\n")
+    allow_comment = fields.Boolean(
+        "Allow comment on Content", default=False,
+        help="If checked it allows members to either:\n"
+             " * like content and post comments on documentation course;\n"
+             " * post comment and review on training course;")
     publish_template_id = fields.Many2one(
         'mail.template', string='Published Template',
         help="Email template to send slide publication through email",
@@ -107,27 +120,37 @@ class Channel(models.Model):
         'mail.template', string='Shared Template',
         help="Email template used when sharing a slide",
         default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('website_slides.slide_template_shared'))
+    enroll = fields.Selection([
+        ('public', 'Public'), ('invite', 'Invite')],
+        default='public', string='Enroll Policy', required=True,
+        help='Condition to enroll: everyone, on invite, on payment (sale bridge).')
+    enroll_msg = fields.Html(
+        'Enroll Message', help="Message explaining the enroll process",
+        default=False, translate=html_translate, sanitize_attributes=False)
+    enroll_group_ids = fields.Many2many('res.groups', string='Auto Enroll Groups', help="Members of those groups are automatically added as members of the channel.")
     visibility = fields.Selection([
-        ('public', 'Public'),
-        ('invite', 'Invite')],
-        default='public', required=True)
+        ('public', 'Public'), ('members', 'Members')],
+        default='public', string='Visibility', required=True,
+        help='Applied directly as ACLs. Allow to hide channels and their content for non members.')
     partner_ids = fields.Many2many(
         'res.partner', 'slide_channel_partner', 'channel_id', 'partner_id',
         string='Members', help="All members of the channel.", context={'active_test': False})
     members_count = fields.Integer('Attendees count', compute='_compute_members_count')
     is_member = fields.Boolean(string='Is Member', compute='_compute_is_member')
     channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='website.group_website_publisher')
-    enroll_msg = fields.Html(
-        'Enroll Message', help="Message explaining the enroll process",
-        default=False, translate=html_translate, sanitize_attributes=False)
     upload_group_ids = fields.Many2many(
-        'res.groups', 'rel_upload_groups', 'channel_id', 'group_id',
-        string='Upload Groups', help="Groups allowed to upload presentations in this channel. If void, every user can upload.")
+        'res.groups', 'rel_upload_groups', 'channel_id', 'group_id', string='Upload Groups',
+        help="Who can publish: responsible, members of upload_group_ids if defined or website publisher group members.")
     # not stored access fields, depending on each user
     completed = fields.Boolean('Done', compute='_compute_user_statistics')
     completion = fields.Integer('Completion', compute='_compute_user_statistics')
-    can_upload = fields.Boolean('Can Upload', compute='_compute_access')
-    can_publish = fields.Boolean('Can Publish', compute='_compute_access')
+    can_upload = fields.Boolean('Can Upload', compute='_compute_can_upload')
+    # karma generation
+    karma_gen_slide_vote = fields.Integer(string='Lesson voted', default=1)
+    karma_gen_channel_share = fields.Integer(string='Course shared', default=2)
+    karma_gen_channel_rank = fields.Integer(string='Course ranked', default=5)
+    karma_gen_channel_finish = fields.Integer(string='Course finished', default=10)
+    # TODO DBE : Add karma based action rules (like in forum)
 
     @api.depends('slide_ids.is_published')
     def _compute_slide_last_update(self):
@@ -159,7 +182,7 @@ class Channel(models.Model):
     def _compute_slides_statistics(self):
         result = dict((cid, dict(total_slides=0, total_views=0, total_votes=0, total_time=0)) for cid in self.ids)
         read_group_res = self.env['slide.slide'].read_group(
-            [('is_published', '=', True), ('channel_id', 'in', self.ids)],
+            [('is_published', '=', True),('channel_id', 'in', self.ids)],
             ['channel_id', 'slide_type', 'likes', 'dislikes', 'total_views', 'completion_time'],
             groupby=['channel_id', 'slide_type'],
             lazy=False)
@@ -180,7 +203,7 @@ class Channel(models.Model):
 
     def _compute_slides_statistics_type(self, read_group_res):
         """ Can be overridden to compute stats on added slide_types """
-        result = dict((cid, dict(nbr_presentations=0, nbr_documents=0, nbr_videos=0, nbr_infographics=0, nbr_webpages=0)) for cid in self.ids)
+        result = dict((cid, dict(nbr_presentations=0, nbr_documents=0, nbr_videos=0, nbr_infographics=0, nbr_webpages=0, nbr_quizs=0)) for cid in self.ids)
         for res_group in read_group_res:
             cid = res_group['channel_id'][0]
             result[cid]['nbr_presentations'] += res_group.get('slide_type', '') == 'presentation' and res_group['__count'] or 0
@@ -188,6 +211,7 @@ class Channel(models.Model):
             result[cid]['nbr_videos'] += res_group.get('slide_type', '') == 'video' and res_group['__count'] or 0
             result[cid]['nbr_infographics'] += res_group.get('slide_type', '') == 'infographic' and res_group['__count'] or 0
             result[cid]['nbr_webpages'] += res_group.get('slide_type', '') == 'webpage' and res_group['__count'] or 0
+            result[cid]['nbr_quizs'] += res_group.get('slide_type', '') == 'quiz' and res_group['__count'] or 0
         return result
 
     @api.depends('slide_partner_ids')
@@ -199,12 +223,32 @@ class Channel(models.Model):
         for record in self:
             record.completed, record.completion = mapped_data.get(record.id, (False, 0))
 
-    @api.depends('channel_type', 'partner_ids', 'upload_group_ids')
-    def _compute_access(self):
+    @api.depends('upload_group_ids', 'user_id')
+    def _compute_can_upload(self):
         for record in self:
-            is_doc = record.channel_type == 'documentation'
-            record.can_upload = not self.env.user.share and (not record.upload_group_ids or bool(record.upload_group_ids & self.env.user.groups_id))
-            record.can_publish = record.can_upload and self.env.user.has_group('website.group_website_publisher') and (is_doc or record.user_id == self.env.user)
+            if record.user_id == self.env.user:
+                record.can_upload = True
+            elif record.upload_group_ids:
+                record.can_upload = bool(record.upload_group_ids & self.env.user.groups_id)
+            else:
+                record.can_upload = self.env.user.has_group('website.group_website_publisher')
+
+    @api.depends('channel_type', 'user_id', 'can_upload')
+    def _compute_can_publish(self):
+        """ For channels of type 'training', only the responsible (see user_id field) can publish slides.
+        The 'sudo' user needs to be handled because he's the one used for uploads done on the front-end when the
+        logged in user is not publisher but fulfills the upload_group_ids condition. """
+        for record in self:
+            if not record.can_upload:
+                record.can_publish = False
+            elif record.user_id == self.env.user or self.env.user._is_superuser():
+                record.can_publish = True
+            else:
+                record.can_publish = self.env.user.has_group('website.group_website_publisher')
+
+    @api.model
+    def _get_can_publish_error_message(self):
+        return _("Publishing is restricted to the responsible of training courses or members of the publisher group for documentation courses")
 
     @api.multi
     @api.depends('name')
@@ -229,7 +273,7 @@ class Channel(models.Model):
     def action_channel_invite(self):
         self.ensure_one()
 
-        if self.visibility != 'invite':
+        if self.enroll != 'invite':
             raise UserError(_("You cannot send invitations for channels that are not set as 'invite'."))
 
         template = self.env.ref('website_slides.mail_template_slide_channel_invite', raise_if_not_found=False)
@@ -280,16 +324,25 @@ class Channel(models.Model):
             })]
         if 'image' in vals:
             tools.image_resize_images(vals, return_large=True)
-        return super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals)
+        channel = super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals)
+        if channel.user_id:
+            channel._action_add_members(channel.user_id.partner_id)
+        if 'enroll_group_ids' in vals:
+            channel._add_groups_members()
+        return channel
 
     @api.multi
     def write(self, vals):
         if 'image' in vals:
             tools.image_resize_images(vals, return_large=True)
         res = super(Channel, self).write(vals)
+        if vals.get('user_id'):
+            self._action_add_members(self.env['res.users'].sudo().browse(vals['user_id']).partner_id)
         if 'active' in vals:
             # archiving/unarchiving a channel does it on its slides, too
             self.with_context(active_test=False).mapped('slide_ids').write({'active': vals['active']})
+        if 'enroll_group_ids' in vals:
+            self._add_groups_members()
         return res
 
     @api.multi
@@ -308,38 +361,44 @@ class Channel(models.Model):
         return super(Channel, self).message_post(parent_id=parent_id, subtype=subtype, **kwargs)
 
     # ---------------------------------------------------------
-    # Rating Mixin API
+    # Business / Actions
     # ---------------------------------------------------------
 
     def action_add_member(self, **member_values):
         """ Adds the logged in user in the channel members.
-        (see '_action_add_member' for more info)
+        (see '_action_add_members' for more info)
 
         Returns True if added successfully, False otherwise."""
-        return bool(self._action_add_member(target_partner=self.env.user.partner_id, **member_values))
+        return bool(self._action_add_members(self.env.user.partner_id, **member_values))
 
-    def _action_add_member(self, target_partner=False, **member_values):
+    def _action_add_members(self, target_partners, **member_values):
         """ Add the target_partner as a member of the channel (to its slide.channel.partner).
         This will make the content (slides) of the channel available to that partner.
 
         Returns the added 'slide.channel.partner's (! as sudo !)
         """
-        existing = self.env['slide.channel.partner'].sudo().search([
-            ('channel_id', 'in', self.ids),
-            ('partner_id', '=', target_partner.id)
-        ])
-        to_join = (self - existing.mapped('channel_id'))._filter_add_member(target_partner, **member_values)
+        to_join = self._filter_add_members(target_partners, **member_values)
         if to_join:
-            slide_partners_sudo = self.env['slide.channel.partner'].sudo().create([
-                dict(channel_id=channel.id, partner_id=target_partner.id, **member_values)
-                for channel in to_join
+            existing = self.env['slide.channel.partner'].sudo().search([
+                ('channel_id', 'in', self.ids),
+                ('partner_id', 'in', target_partners.ids)
             ])
+            existing_map = dict((cid, list()) for cid in self.ids)
+            for item in existing:
+                existing_map[item.channel_id.id].append(item.partner_id.id)
+
+            to_create_values = [
+                dict(channel_id=channel.id, partner_id=partner.id, **member_values)
+                for channel in to_join
+                for partner in target_partners if partner.id not in existing_map[channel.id]
+            ]
+            slide_partners_sudo = self.env['slide.channel.partner'].sudo().create(to_create_values)
             return slide_partners_sudo
         return self.env['slide.channel.partner'].sudo()
 
-    def _filter_add_member(self, target_partner, **member_values):
-        allowed = self.filtered(lambda channel: channel.visibility == 'public')
-        on_invite = self.filtered(lambda channel: channel.visibility == 'invite')
+    def _filter_add_members(self, target_partners, **member_values):
+        allowed = self.filtered(lambda channel: channel.enroll == 'public')
+        on_invite = self.filtered(lambda channel: channel.enroll == 'invite')
         if on_invite:
             try:
                 on_invite.check_access_rights('write')
@@ -349,6 +408,10 @@ class Channel(models.Model):
             else:
                 allowed |= on_invite
         return allowed
+
+    def _add_groups_members(self):
+        for channel in self:
+            channel._action_add_members(channel.mapped('enroll_group_ids.users.partner_id'))
 
     def list_all(self):
         return {
@@ -381,6 +444,7 @@ class Category(models.Model):
     nbr_videos = fields.Integer("Number of Videos", compute='_count_presentations', store=True)
     nbr_infographics = fields.Integer("Number of Infographics", compute='_count_presentations', store=True)
     nbr_webpages = fields.Integer("Number of Webpages", compute='_count_presentations', store=True)
+    nbr_quizs = fields.Integer("Number of quizzes", compute="_count_presentations", store=True)
     total_slides = fields.Integer(compute='_count_presentations', store=True, oldname='total')
 
     @api.depends('slide_ids.slide_type', 'slide_ids.is_published')
@@ -404,6 +468,7 @@ class Category(models.Model):
             'nbr_videos': result[record_id].get('video', 0),
             'nbr_infographics': result[record_id].get('infographic', 0),
             'nbr_webpages': result[record_id].get('webpage', 0),
+            'nbr_quizs': result[record_id].get('quiz', 0),
             'total_slides': 0
         }
 
@@ -412,5 +477,6 @@ class Category(models.Model):
         statistics['total_slides'] += statistics['nbr_videos']
         statistics['total_slides'] += statistics['nbr_infographics']
         statistics['total_slides'] += statistics['nbr_webpages']
+        statistics['total_slides'] += statistics['nbr_quizs']
 
         return statistics

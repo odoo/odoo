@@ -47,7 +47,7 @@ class TestStatistics(common.SlidesCase):
         self.assertEqual(channel_publisher.members_count, 1)
         channel_publisher.action_add_member()
         self.assertEqual(channel_publisher.members_count, 1)
-        channel_publisher._action_add_member(self.user_emp.partner_id)
+        channel_publisher._action_add_members(self.user_emp.partner_id)
         self.assertEqual(channel_publisher.members_count, 2)
         self.assertEqual(channel_publisher.partner_ids, self.user_publisher.partner_id | self.user_emp.partner_id)
 
@@ -55,9 +55,9 @@ class TestStatistics(common.SlidesCase):
     def test_channel_user_statistics(self):
         channel_publisher = self.channel.sudo(self.user_publisher)
         channel_publisher.write({
-            'visibility': 'invite',
+            'enroll': 'invite',
         })
-        channel_publisher._action_add_member(self.user_emp.partner_id)
+        channel_publisher._action_add_members(self.user_emp.partner_id)
         channel_emp = self.channel.sudo(self.user_emp)
 
         slides_emp = (self.slide | self.slide_2).sudo(self.user_emp)
@@ -93,7 +93,7 @@ class TestStatistics(common.SlidesCase):
 
     def test_slide_statistics(self):
         channel_publisher = self.channel.sudo(self.user_publisher)
-        channel_publisher._action_add_member(self.user_emp.partner_id)
+        channel_publisher._action_add_members(self.user_emp.partner_id)
 
         self.assertEqual(self.slide.slide_views, 0)
         self.assertEqual(self.slide.public_views, 0)

@@ -31,37 +31,38 @@ $bronze: #eea91e;
     }
 }
 
+.o_wprofile_navtabs_container {
+    .o_wprofile_nav_tabs {
+        border-bottom: 0px;
+    }
+    .o_wprofile_navlink {
+        color: white;
+        border-radius: 0px;
+        height: 48px;
+        font-weight: bold;
+        padding-top: 12px;
+        border-left: 2px solid #875A7B;
+        text-align: center;
+        width: 120px;
+        &:hover {
+            border: 0px;
+            border-radius: 0px;
+            background-color: #875A7B;
+        }
+    }
+    .o_wprofile_navlink.active {
+        color: #212529;
+        background-color: #f2f2f2;
+        border: 0px;
+    }
+}
+
 .o_wprofile_content {
     margin: auto;
     background-color: #f2f2f2 !important;
     .o_wprofile_content_container{
         position: relative;
         top: -80px;
-        .o_wprofile_navtabs_container {
-            .o_wprofile_nav_tabs {
-                border-bottom: 0px;
-            }
-            .o_wprofile_navlink {
-                color: white;
-                border-radius: 0px;
-                height: 48px;
-                font-weight: bold;
-                padding-top: 12px;
-                border-left: 2px solid #875A7B;
-                text-align: center;
-                width: 120px;
-                &:hover {
-                    border: 0px;
-                    border-radius: 0px;
-                    background-color: #875A7B;
-                }
-            }
-            .o_wprofile_navlink.active {
-                color: #212529;
-                background-color: #f2f2f2;
-                border: 0px;
-            }
-        }
         .o_wprofile_detail {
             .o_wprofile_content_abstract {
                 top: 1px;
@@ -144,6 +145,88 @@ $bronze: #eea91e;
     padding-right: 16px;
 }
 
+// All Users Page
+.o_wprofile_all_users_header {
+    margin: auto;
+    background-color: #875A7B !important;
+    > div:first-child {
+        margin: auto;
+        width: 100%;
+        max-width: 1140px;
+        padding: 32px 32px 0px 32px;
+        color: white;
+        top: 48px;
+        padding-top: 0px;
+        height: 250px;
+    }
+}
+
+.o_wprofile_all_user_content {
+    position: relative;
+    top: -140px;
+    .o_wprofile_all_user_card_top3 {
+        cursor: pointer;
+        height: 325px;
+        text-align: center;
+        border-radius: 0px;
+        border: 0px;
+        .card-body {
+            padding-left: 0px;
+            padding-right: 0px;
+            > div:first-child {
+                margin-bottom: -40px;
+                div {
+                    position: relative;
+                    margin: auto;
+                    right: -35px;
+                    bottom: 55px;
+                    width: 45px;
+                    padding: 12px 0px 12px 0px;
+                    border-radius: 50%;
+                }
+                .o_wprofile_top3_first {
+                    background-color: $gold;
+                }
+                .o_wprofile_top3_second {
+                    background-color: $silver;
+                }
+                .o_wprofile_top3_third {
+                    background-color: $bronze;
+                }
+            }
+            :nth-child(4) {
+                position: absolute;
+                bottom: 0px;
+                width: 100%;
+                margin: auto;
+                border-top: 1px solid lightgrey;
+                div {
+                    padding: 4% 0% 4% 0%;
+                    border-radius: 0px;
+                }
+            }
+        }
+    }
+    .o_wprofile_all_users_card {
+        cursor: pointer;
+        border-radius: 0px;
+        border: 0px;
+        padding: 8px 15px 8px 15px;
+        > div > div:first-child > div > div:nth-child(3) {
+            padding-top: 12px;
+            padding-bottom: 12px;
+        }
+        > div > div:first-child > div > div:nth-child(2) {
+            padding: 0px;
+            width: 80px;
+        }
+        > div > div:first-child > div > div:first-child {
+            padding: 5% 0px 5% 16px;
+            width: 60px;
+        }
+    }
+}
+
 // Badges
 .badge-gold {
     color: $gold;
@@ -168,7 +251,7 @@ $bronze: #eea91e;
 
 // Other stuffs
 .o_wprofile_bb_grey {
-    border-bottom: 2px solid lightgrey;
+    border-bottom: 2px solid lightgrey !important;
 }
 
 .country_flag {

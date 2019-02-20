@@ -69,5 +69,19 @@
         <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
     </record>
 
+    <record id="ir_rule_hr_payslip_run_multi_company" model="ir.rule">
+        <field name="name">HR Payslip: Multi Company</field>
+        <field name="model_id" ref="model_hr_payslip_run"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
+    </record>
+
+    <record id="ir_rule_hr_benefit_multi_company" model="ir.rule">
+        <field name="name">HR Payslip: Multi Company</field>
+        <field name="model_id" ref="model_hr_benefit"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
+    </record>
+
 </data>
 </odoo>

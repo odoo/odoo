@@ -734,26 +734,19 @@ class ChromeBrowser():
                 if res.get('result', {}).get('result').get('subtype', '') == 'error':
                     self._logger.error("Running code returned an error")
                     return False
-            elif res and res.get('method') == 'Runtime.consoleAPICalled' and res.get('params', {}).get('type') in ('log', 'error'):
+            elif res and res.get('method') == 'Runtime.consoleAPICalled' and res.get('params', {}).get('type') in ('log', 'error', 'trace'):
                 logs = res.get('params', {}).get('args')
                 log_type = res.get('params', {}).get('type')
                 content = " ".join([str(log.get('value', '')) for log in logs])
                 if log_type == 'error':
                     self._logger.error(content)
-                    logged_error = True
+                    self.take_screenshot()
+                    self._save_screencast()
+                    return False
                 else:
                     self._logger.info('console log: %s', content)
-                for log in logs:
-                    if log.get('type', '') == 'string' and log.get('value', '').lower() == 'ok':
-                        # it is possible that some tests returns ok while an error was shown in logs.
-                        # since runbot should always be red in this case, better explicitly fail.
-                        if logged_error:
-                            return False
+                    if 'test successful' in content:
                         return True
-                    elif log.get('type', '') == 'string' and log.get('value', '').lower().startswith('error'):
-                        self.take_screenshot()
-                        self._save_screencast()
-                        return False
             elif res and res.get('method') == 'Page.screencastFrame':
                 self.screencast_frames.append(res.get('params'))
             elif res:
@@ -892,10 +885,10 @@ class HttpCase(TransactionCase):
         - eval(code) inside the page
 
         To signal success test do:
-        console.log('ok')
+        console.log('test successful')
 
         To signal failure do:
-        console.log('error')
+        console.error('test failed')
 
         If neither are done before timeout test fails.
         """

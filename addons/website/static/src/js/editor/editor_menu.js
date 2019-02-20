@@ -26,8 +26,6 @@ var EditorMenu = Widget.extend({
         request_save: '_onSnippetRequestSave',
     },
 
-    LOCATION_SEARCH: 'enable_editor',
-
     /**
      * @override
      */
@@ -136,12 +134,14 @@ var EditorMenu = Widget.extend({
         return $wrapwrap.find('[data-oe-model]')
             .not('.o_not_editable')
             .filter(function () {
-                return !$(this).closest('.o_not_editable').length;
+                var $parent = $(this).closest('.o_editable, .o_not_editable');
+                return !$parent.length || $parent.hasClass('o_editable');
             })
             .not('link, script')
             .not('[data-oe-readonly]')
             .not('img[data-oe-field="arch"], br[data-oe-field="arch"], input[data-oe-field="arch"]')
             .not('.oe_snippet_editor')
+            .not('hr, br, input, textarea')
             .add('.o_editable');
     },
 
@@ -177,13 +177,9 @@ var EditorMenu = Widget.extend({
     _reload: function () {
         $('body').addClass('o_wait_reload');
         this.wysiwyg.destroy();
+        this.$el.hide();
         window.location.hash = 'scrollTop=' + window.document.body.scrollTop;
-        if (window.location.search.indexOf(this.LOCATION_SEARCH) >= 0) {
-            var regExp = new RegExp('[&?]' + this.LOCATION_SEARCH + '(=[^&]*)?', 'g');
-            window.location.href = window.location.href.replace(regExp, '?');
-        } else {
-            window.location.reload(true);
-        }
+        window.location.reload(true);
         return $.Deferred();
     },
 

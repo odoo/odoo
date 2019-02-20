@@ -533,7 +533,7 @@
                                 <button type="button" data-toggle="modal" data-target=".modal_edit_opp" class="btn btn-link btn-sm"><i class="fa fa-pencil mr-1"/>Edit</button>
                             </div>
                             <div class="row mb-2">
-                                <strong class="col-12 col-sm-4">Deadline</strong>
+                                <strong class="col-12 col-sm-4">Expected Closing</strong>
                                 <div class="col">
                                     <span t-if="opportunity.date_deadline" t-field="opportunity.date_deadline"/>
                                     <span t-else="" class="text-muted"> - </span>
@@ -672,7 +672,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <label>Deadline:</label>
+                                                        <label>Expected Closing:</label>
                                                         <div class="input-group date">
                                                             <input type="text" name="date_deadline" t-att-value="opportunity.date_deadline" class="form-control date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD"/>
                                                             <div class="input-group-append">

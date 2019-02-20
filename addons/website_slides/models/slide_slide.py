@@ -23,11 +23,13 @@ class SlidePartnerRelation(models.Model):
     _description = 'Slide / Partner decorated m2m'
     _table = 'slide_slide_partner'
 
-    slide_id = fields.Many2one('slide.slide', index=True, required=True)
+    slide_id = fields.Many2one('slide.slide', ondelete="cascade", index=True, required=True)
     channel_id = fields.Many2one('slide.channel', string="Channel", related="slide_id.channel_id", store=True, index=True)
     partner_id = fields.Many2one('res.partner', index=True, required=True)
     vote = fields.Integer('Vote', default=0)
     completed = fields.Boolean('Completed')
+
+    quiz_attempts_count = fields.Integer(string="Number of times this user attempted the quiz")
 
 
 class SlideLink(models.Model):
@@ -95,6 +97,7 @@ class Slide(models.Model):
         'most_voted': 'likes desc',
         'latest': 'date_published desc',
     }
+    _order = 'category_sequence asc, sequence asc'
 
     _sql_constraints = [
         ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
@@ -106,15 +109,13 @@ class Slide(models.Model):
     # description
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)
+    sequence = fields.Integer('Sequence', default=10)
+    category_sequence = fields.Integer('Category sequence', related="category_id.sequence", store=True)
     user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
     description = fields.Text('Description', translate=True)
     channel_id = fields.Many2one('slide.channel', string="Channel", required=True)
     category_id = fields.Many2one('slide.category', string="Category", domain="[('channel_id', '=', channel_id)]")
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
-    download_security = fields.Selection(
-        [('none', 'No One'), ('user', 'Authenticated Users Only'), ('public', 'Everyone')],
-        string='Download Security',
-        required=True, default='user')
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     is_preview = fields.Boolean('Always visible', default=False)
     completion_time = fields.Float('# Hours', default=1, digits=(10, 4))
@@ -126,15 +127,24 @@ class Slide(models.Model):
     partner_ids = fields.Many2many('res.partner', 'slide_slide_partner', 'slide_id', 'partner_id',
                                    string='Subscribers', groups='base.group_website_publisher')
     slide_partner_ids = fields.One2many('slide.slide.partner', 'slide_id', string='Subscribers information', groups='base.group_website_publisher')
-    user_membership_id = fields.Many2one('slide.slide.partner', string="Subscriber information", compute='_compute_user_membership_id',
+    user_membership_id = fields.Many2one(
+        'slide.slide.partner', string="Subscriber information", compute='_compute_user_membership_id',
         help="Subscriber information for the current logged in user")
+    # Quiz related fields
+    question_ids = fields.One2many("slide.question","slide_id", string="Questions")
+    quiz_first_attempt_reward = fields.Integer("First attempt reward", default=10)
+    quiz_second_attempt_reward = fields.Integer("Second attempt reward", default=7)
+    quiz_third_attempt_reward = fields.Integer("Third attempt reward", default=5,)
+    quiz_fourth_attempt_reward = fields.Integer("Reward for every attempt after the third try", default=2)
+
     # content
     slide_type = fields.Selection([
         ('infographic', 'Infographic'),
+        ('webpage', 'Web Page'),
         ('presentation', 'Presentation'),
         ('document', 'Document'),
-        ('webpage', 'Web Page'),
-        ('video', 'Video')],
+        ('video', 'Video'),
+        ('quiz', "Quiz")],
         string='Type', required=True,
         default='document', readonly=True,
         help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
@@ -254,6 +264,15 @@ class Slide(models.Model):
                     url = '%s/slides/slide/%s' % (base_url, slug(slide))
                 slide.website_url = url
 
+    @api.depends('channel_id.can_publish')
+    def _compute_can_publish(self):
+        for record in self:
+            record.can_publish = record.channel_id.can_publish
+
+    @api.model
+    def _get_can_publish_error_message(self):
+        return _("Publishing is restricted to the responsible of training courses or members of the publisher group for documentation courses")
+
     # ---------------------------------------------------------
     # ORM Overrides
     # ---------------------------------------------------------
@@ -263,7 +282,7 @@ class Slide(models.Model):
         # Do not publish slide if user has not publisher rights
         channel = self.env['slide.channel'].browse(values['channel_id'])
         if not channel.can_publish:
-            values['website_published'] = False
+            # 'website_published' is handled by mixin
             values['date_published'] = False
 
         if not values.get('index_content'):
@@ -288,9 +307,6 @@ class Slide(models.Model):
 
     @api.multi
     def write(self, values):
-        if 'website_published' in values and any(not slide.channel_id.can_publish for slide in self):
-            values.pop('website_published')
-
         if values.get('url') and values['url'] != self.url:
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.items():
@@ -412,6 +428,7 @@ class Slide(models.Model):
             new_slide.write({
                 'slide_partner_ids': [(0, 0, {'vote': new_vote, 'partner_id': self.env.user.partner_id.id})]
             })
+            self.env.user.add_karma(new_slide.channel_id.karma_gen_slide_vote)
 
     def action_set_viewed(self):
         if not all(slide.channel_id.is_member for slide in self):

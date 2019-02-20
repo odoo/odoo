@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_individual_account">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <t t-foreach="report_data['employee_data']" t-as="employee">
+                        <div class="page">
+                            <h2>
+                                <span>Individual Account Report for year </span><t t-esc="report_data['year']"/>
+                            </h2>
+                            <br/>
+                            <tbody>
+                                <table class="table table-sm table-bordered">
+                                    <tr>
+                                        <td><strong>Company Information</strong></td>
+                                        <td>
+                                            <div><span t-field="employee.company_id.name"/></div>
+                                            <div><span t-field="employee.company_id.street"/></div>
+                                            <div><span t-field="employee.company_id.street2" t-if="employee.company_id.street2"/></div>
+                                            <div>
+                                                <span t-field="employee.company_id.city"/>
+                                                <span t-field="employee.company_id.state_id"/>
+                                                <span t-field="employee.company_id.zip"/>
+                                            </div>
+                                            <div><span t-field="employee.company_id.country_id"/></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table class="table table-sm table-bordered">
+                                    <tr>
+                                        <td><strong>Name</strong></td>
+                                        <td><span t-field="employee.name"/></td>
+                                        <td><strong>Designation</strong></td>
+                                        <td><span t-field="employee.job_id"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Address</strong></td>
+                                        <td colspan="3">
+                                            <div t-field="employee.address_home_id"
+                                                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Email</strong></td>
+                                        <td><span t-field="employee.work_email"/></td>
+                                        <td><strong>Identification No</strong></td>
+                                        <td><span t-field="employee.identification_id"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Bank Account</strong></td>
+                                        <td><span t-field="employee.bank_account_id"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Registration Number</strong></td>
+                                        <td><span t-field="employee.registration_number"/></td>
+                                    </tr>
+                                </table>
+                                <table class="table table-bordered table-sm">
+                                    <thead><tr>
+                                        <th class="text-center">Name</th>
+                                        <th class="text-center">JAN</th>
+                                        <th class="text-center">FEB</th>
+                                        <th class="text-center">MARS</th>
+                                        <th class="text-center">APR</th>
+                                        <th class="text-center">MAY</th>
+                                        <th class="text-center">JUNE</th>
+                                        <th class="text-center">JUL</th>
+                                        <th class="text-center">AUG</th>
+                                        <th class="text-center">SEP</th>
+                                        <th class="text-center">OCT</th>
+                                        <th class="text-center">NOV</th>
+                                        <th class="text-center">DEC</th>
+                                    </tr></thead>
+                                    <tr>
+                                        <td><strong>Worked Days</strong></td>
+                                        <td colspan="12"/>
+                                    </tr>
+                                    <t t-foreach="report_data['employee_data'][employee]['worked_days']" t-as="worked_day">
+                                        <t t-set="value" t-value="report_data['employee_data'][employee]['worked_days'][worked_day]['month']"/>
+                                        <t t-set="name" t-value="False"/>
+
+                                        <t t-foreach="[0,1,2,3,4,5,6,7,8,9,10,11]" t-as="c">
+                                            <t t-if="value[c]['name'] != False">
+                                                <t t-set="name" t-value="value[c]['name']"/>
+                                            </t>
+                                        </t>
+                                        <t t-if="name != False">
+                                            <tr>
+                                                <td t-esc="name"/>
+                                                <t t-foreach="[0,1,2,3,4,5,6,7,8,9,10,11]" t-as="m">
+                                                    <t t-if="value[m]['number_of_days'] != 0">
+                                                        <td class="text-left"><t t-esc="value[m]['number_of_days']"/></td>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <td class="text-center">/</td>
+                                                    </t>
+                                                </t>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center"><span>hours</span></td>
+                                                <t t-foreach="[0,1,2,3,4,5,6,7,8,9,10,11]" t-as="m">
+                                                    <t t-if="value[m]['number_of_days'] != 0">
+                                                        <td class="text-left"><t t-esc="value[m]['number_of_hours']"/></td>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <td class="text-center">/</td>
+                                                    </t>
+                                                </t>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                    <tr>
+                                        <td><strong>Salary Computation</strong></td>
+                                        <td colspan="12"/>
+                                    </tr>
+                                    <tr t-foreach="report_data['employee_data'][employee]['rules']" t-as="rule">
+                                        <t t-set="value" t-value="report_data['employee_data'][employee]['rules'][rule]['month']"/>
+                                        <t t-set="name" t-value="False"/>
+
+                                        <t t-foreach="[0,1,2,3,4,5,6,7,8,9,10,11]" t-as="c">
+                                            <t t-if="value[c]['name'] != False">
+                                                <t t-set="name" t-value="value[c]['name']"/>
+                                            </t>
+                                        </t>
+                                        <t t-if="name != False">
+                                            <td t-esc="name"/>
+                                            <t t-foreach="[0,1,2,3,4,5,6,7,8,9,10,11]" t-as="m">
+                                                <t t-if="value[m]['total'] != 0">
+                                                    <td class="text-left"><t t-esc="value[m]['total']"/></td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td class="text-center">/</td>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </tr>
+                                </table>
+                            <p style="page-break-before:always;"></p>
+                                <table class="table table-bordered table-sm">
+                                    <thead><tr>
+                                        <th class="text-center">Name</th>
+                                        <th class="text-center">Quarter 1</th>
+                                        <th class="text-center">Quarter 2</th>
+                                        <th class="text-center">Quarter 3</th>
+                                        <th class="text-center">Quarter 4</th>
+                                        <th class="text-center">Total Year</th>
+                                    </tr></thead>
+                                    <tr>
+                                        <td><strong>Worked Days</strong></td>
+                                        <td colspan="5"/>
+                                    </tr>
+                                    <t t-foreach="report_data['employee_data'][employee]['worked_days']" t-as="worked_day">
+                                        <t t-set="value_q" t-value="report_data['employee_data'][employee]['worked_days'][worked_day]['quarter']"/>
+                                        <t t-set="value_y" t-value="report_data['employee_data'][employee]['worked_days'][worked_day]['year']"/>
+                                        <t t-set="name_t" t-value="False"/>
+                                        <t t-foreach="[0,1,2,3]" t-as="c">
+                                            <t t-if="value_q[c]['name'] != False">
+                                                <t t-set="name_t" t-value="value_q[c]['name']"/>
+                                            </t>
+                                        </t>
+                                        <t t-if="name_t != False">
+                                            <tr>
+                                                <td t-esc="name_t"/>
+                                                <t t-foreach="[0,1,2,3]" t-as="q">
+                                                    <t t-if="value_q[q]['number_of_days'] != 0">
+                                                        <td class="text-left"><t t-esc="value_q[q]['number_of_days']"/></td>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <td class="text-center">/</td>
+                                                    </t>
+                                                </t>
+                                                <t t-if="value_y['number_of_days'] != 0">
+                                                    <td class="text-left"><t t-esc="value_y['number_of_days']"/></td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td class="text-center">/</td>
+                                                </t>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center"><span>hours</span></td>
+                                                <t t-foreach="[0,1,2,3]" t-as="q">
+                                                    <t t-if="value_q[q]['number_of_days'] != 0">
+                                                        <td class="text-left"><t t-esc="value_q[q]['number_of_hours']"/></td>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <td class="text-center">/</td>
+                                                    </t>
+                                                </t>
+                                                <t t-if="value_y['number_of_hours'] != 0">
+                                                    <td class="text-left"><t t-esc="value_y['number_of_hours']"/></td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td class="text-center">/</td>
+                                                </t>
+                                            </tr>
+                                        </t>
+                                    </t>
+
+                                    <tr>
+                                        <td><strong>Salary Computation</strong></td>
+                                        <td colspan="5"/>
+                                    </tr>
+                                    <tr t-foreach="report_data['employee_data'][employee]['rules']" t-as="rule">
+                                        <t t-set="value_q" t-value="report_data['employee_data'][employee]['rules'][rule]['quarter']"/>
+                                        <t t-set="value_y" t-value="report_data['employee_data'][employee]['rules'][rule]['year']"/>
+                                        <t t-set="name_t" t-value="False"/>
+                                        <t t-foreach="[0,1,2,3]" t-as="c">
+                                            <t t-if="value_q[c]['name'] != False">
+                                                <t t-set="name_t" t-value="value_q[c]['name']"/>
+                                            </t>
+                                        </t>
+                                        <t t-if="name_t != False">
+                                            <td t-esc="name_t"/>
+                                            <t t-foreach="[0,1,2,3]" t-as="q">
+                                                <t t-if="value_q[q]['total'] != 0">
+                                                    <td class="text-left"><t t-esc="value_q[q]['total']"/></td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td class="text-center">/</td>
+                                                </t>
+                                            </t>
+                                            <t t-if="value_y['total'] != 0">
+                                                <td class="text-left"><t t-esc="value_y['total']"/></td>
+                                            </t>
+                                            <t t-else="">
+                                                <td class="text-center">/</td>
+                                            </t>
+                                        </t>
+                                    </tr>
+                                </table>
+                            </tbody>
+                        </div>
+                        <p style="page-break-before:always;"></p>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

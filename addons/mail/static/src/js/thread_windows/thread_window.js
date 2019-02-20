@@ -238,6 +238,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
         this.$el.addClass('o_thread_less');
         this.$('.o_thread_search_input input')
             .autocomplete({
+                autoFocus: true,
                 source: function (request, response) {
                     self.call('mail_service', 'searchPartner', request.term, 10)
                         .done(response);

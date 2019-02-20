@@ -42,11 +42,8 @@
                 <button name="toggle_active" position="before">
                     <button class="oe_stat_button" name="%(act_hr_timesheet_line_by_project)d" type="action" icon="fa-calendar" string="Timesheets" attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </button>
-                <xpath expr="//div[@name='options_active']" position="inside">
-                    <div>
-                        <field name="allow_timesheets" class="oe_inline" string="Allow timesheets"/>
-                        <label for="allow_timesheets"/>
-                    </div>
+                <xpath expr="//group[@name='extra_settings']" position="inside">
+                    <field name="allow_timesheets"/>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="analytic_account_id"/>

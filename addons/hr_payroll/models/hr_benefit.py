@@ -33,6 +33,8 @@ class HrBenefit(models.Model):
     ], default='draft')
     display_warning = fields.Boolean(string="Error")
     leave_id = fields.Many2one('hr.leave', string='Leave')
+    company_id = fields.Many2one('res.company', string='Company', readonly=True, required=True,
+        default=lambda self: self.env['res.company']._company_default_get())
 
     _sql_constraints = [
         ('_unique', 'unique (employee_id, date_start, date_stop, benefit_type_id)', "Benefit already exists for this attendence"),

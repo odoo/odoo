@@ -40,6 +40,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             },
         });
         this._editorAutoStart = (context.editable && window.location.search.indexOf('enable_editor') >= 0);
+        var url = window.location.href.replace(/([?&])&*enable_editor[^&#]*&?/, '\$1');
+        window.history.replaceState({}, null, url);
     },
     /**
      * Auto-starts the editor if necessary or add the welcome message otherwise.
@@ -87,6 +89,9 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      */
     _startEditMode: function () {
         var self = this;
+        if (this.editModeEnable) {
+            return;
+        }
         this.trigger_up('animation_stop_demand', {
             $target: this._targetForEdition(),
         });
@@ -95,6 +100,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             $welcomeMessageParent = this.$welcomeMessage.parent();
             this.$welcomeMessage.detach(); // detach from the readonly rendering before the clone by summernote
         }
+        this.editModeEnable = true;
         return new EditorMenu(this).prependTo(document.body).then(function () {
             if (self.$welcomeMessage) {
                 $welcomeMessageParent.append(self.$welcomeMessage); // reappend if the user cancel the edition
@@ -195,6 +201,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         this.trigger_up('animation_start_demand', {
             $target: this._targetForEdition(),
         });
+        this.editModeEnable = false;
     },
     /**
      * Called when a snippet is cloned in the page. Notifies the WebsiteRoot

@@ -90,6 +90,9 @@ var MediaPlugin = AbstractPlugin.extend({
             return;
         }
         if (!this.options.displayPopover(target)) {
+            if (dom.isImg(target)) {
+                this.context.invoke('HandlePlugin.update', target);
+            }
             return;
         }
 
@@ -204,11 +207,13 @@ var MediaPlugin = AbstractPlugin.extend({
                             point.node.insertBefore(newMedia, node || null);
                         }
                     }
-                    if (!newMedia.previousSibling) {
-                        $(newMedia).before(this.document.createTextNode('\u200B'), newMedia);
-                    }
-                    if (!newMedia.nextSibling) {
-                        $(newMedia).after(this.document.createTextNode('\u200B'), newMedia);
+                    if (!this._isFakeNotEditable(newMedia)) {
+                        if (!newMedia.previousSibling) {
+                            $(newMedia).before(this.document.createTextNode('\u200B'), newMedia);
+                        }
+                        if (!newMedia.nextSibling) {
+                            $(newMedia).after(this.document.createTextNode('\u200B'), newMedia);
+                        }
                     }
                 } else {
                     var next = this.document.createTextNode(point.node.textContent.slice(point.offset));
@@ -216,11 +221,13 @@ var MediaPlugin = AbstractPlugin.extend({
 
                     $(point.node).after(next).after(newMedia);
                     point.node.parentNode.normalize();
-                    if (!newMedia.previousSibling) {
-                        $(newMedia).before(this.document.createTextNode('\u200B'), newMedia);
-                    }
-                    if (!newMedia.nextSibling) {
-                        $(newMedia).after(this.document.createTextNode('\u200B'), newMedia);
+                    if (!this._isFakeNotEditable(newMedia)) {
+                        if (!newMedia.previousSibling) {
+                            $(newMedia).before(this.document.createTextNode('\u200B'), newMedia);
+                        }
+                        if (!newMedia.nextSibling) {
+                            $(newMedia).after(this.document.createTextNode('\u200B'), newMedia);
+                        }
                     }
                     rng = this.context.invoke('editor.setRange', newMedia.nextSibling || newMedia, 0);
                     rng.normalize().select();
@@ -304,6 +311,18 @@ var MediaPlugin = AbstractPlugin.extend({
             };
         });
         this._createDropdownButton('padding', this.options.icons.padding, this.lang.image.padding, values);
+    },
+    /**
+     * Return true if the node is a fake not-editable.
+     *
+     * @param {Node} node
+     * @returns {Boolean}
+     */
+    _isFakeNotEditable: function (node) {
+        var contentEditableAncestor = dom.ancestor(node, function (n) {
+            return !!n.contentEditable && n.contentEditable !== 'inherit';
+        });
+        return !!contentEditableAncestor && contentEditableAncestor.contentEditable === 'false';
     },
     /**
      * Select the target media based on the
@@ -1186,6 +1205,7 @@ var HandlePlugin = Plugins.handle.extend({
             w: $target.outerWidth(false),
             h: $target.outerHeight(false)
         };
+
         $selection.css({
             display: 'block',
             left: pos.left - posContainer.left,
@@ -1195,12 +1215,23 @@ var HandlePlugin = Plugins.handle.extend({
         }).data('target', $target); // save current target element.
 
         var src = $target.attr('src');
-        var sizingText = imageSize.w + 'x' + imageSize.h;
+        var displayInfo = imageSize.w >= 170 || (imageSize.w >= 120 && imageSize.h >= 58) || (imageSize.w >= 80 && imageSize.h >= 76);
+
+        var sizingText = '';
+        if (displayInfo) {
+            sizingText = imageSize.w + 'x' + imageSize.h;
+            sizingText += ' (' + this.lang.image.original + ': ';
+        } else if (src && imageSize.w >= 80 && imageSize.h >= 32) {
+            displayInfo = true;
+            sizingText = '(';
+        }
+
         if (src) {
             var origImageObj = new Image();
             origImageObj.src = src;
-            sizingText += ' (' + this.lang.image.original + ': ' + origImageObj.width + 'x' + origImageObj.height + ')';
+            sizingText += origImageObj.width + 'x' + origImageObj.height + ')';
         }
+
         $selection.find('.note-control-selection-info').text(sizingText);
         this.context.invoke('editor.saveTarget', target);
 

@@ -198,6 +198,8 @@
                 <field name="address_id"/>
                 <field name="guarantee_limit"/>
                 <field name="state"/>
+                <field name="activity_state"/>
+                <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">

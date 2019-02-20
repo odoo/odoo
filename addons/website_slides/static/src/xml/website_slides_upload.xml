@@ -47,7 +47,7 @@
                 <input id="name" name="name" placeholder="Title" class="form-control" required="required"/>
             </div>
         </div>
-        <div class="form-group row">
+        <div t-if="!widget.defaultCategoryID" class="form-group row">
             <label for="category_id" class="col-form-label col-md-3">Category</label>
             <div class="controls col-md-9">
                 <input class="form-control" id="category_id"/>
@@ -152,6 +152,109 @@
                 <canvas id="data_canvas" class="d-none"></canvas>
                 <t t-call="website.slide.upload.modal.common"/>
             </form>
+        </div>
+    </t>
+
+    <t t-name="website.slide.upload.quiz">
+        <div>
+            <form class="clearfix">
+                <canvas id="data_canvas" class="d-none"></canvas>
+                <t t-call="website.slide.upload.modal.common"/>
+            </form>
+        </div>
+    </t>
+
+    <t t-name="website.slide.image.upload">
+         <div role="dialog" class="modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <header class="modal-header">
+                        <h3 class="modal-title">Upload Image</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                    </header>
+                    <div class="oe_slides_upload_loading text-center" style="display:none" aria-hidden="true" role="status">
+                        <h4><i class='fa fa-spinner fa-spin'></i> Uploading Image...  </h4>
+                    </div>
+                    <main class="modal-body">
+                        <form class="clearfix">
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <div class="img-thumbnail">
+                                        <div class="o_slide_preview">
+                                            <img src="/website_slides/static/src/img/document.png" id="slide-image" title="Content Preview" alt="Content Preview" class="img-fluid"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <h5 class="list-group-item-heading">
+                                                <label for="upload" class="col-form-label">Image File</label>
+                                            </h5>
+                                            <input id="upload" name="file" class="form-control" accept="image/*,application/pdf" type="file"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <canvas id="data_canvas" style="display: none;"></canvas>
+                        </form>
+                    </main>
+                    <footer class="modal-footer">
+                        <button type="button" data-loading-text="Loading..." data-published="true" class="btn btn-primary save">Upload</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.slide.delete.slide">
+        <div role="dialog" class="modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <header class="modal-header">
+                        <h3 class="modal-title">Delete Slide</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                    </header>
+                    <main class="modal-body">
+                        <div>
+                           <p>Are you sure you want to remove this slide ? </p>
+                        </div>
+                    </main>
+                    <footer class="modal-footer">
+                        <button type="button" class="btn btn-primary delete" data-dismiss="modal">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </t>
+
+     <t t-name="website.slide.add.section">
+         <div role="dialog" class="modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <header class="modal-header">
+                        <h3 class="modal-title">Add a section</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                    </header>
+                    <main class="modal-body modal-content">
+                        <form class="clearfix">
+                            <div class="form-group row">
+                                <label for="section_name" class="col-form-label col-md-3">Section name</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" id="section_name"/>
+                                </div>
+                            </div>
+                            <canvas id="data_canvas" style="display: none;"></canvas>
+                        </form>
+                    </main>
+                    <footer class="modal-footer">
+                        <button type="button" data-loading-text="Loading..." data-published="true" class="btn btn-primary save">Add</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Discard</button>
+                    </footer>
+                </div>
+            </div>
         </div>
     </t>
 

@@ -44,6 +44,7 @@ class SlidesCase(common.SavepointCase):
             'name': 'Test Channel',
             'channel_type': 'documentation',
             'promote_strategy': 'most_voted',
+            'enroll': 'public',
             'visibility': 'public',
             'website_published': True,
         })

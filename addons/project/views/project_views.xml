@@ -132,20 +132,24 @@
                     <notebook>
                         <page name="settings" string="Settings">
                             <group>
-                                <field name="user_id" string="Project Manager"
+                                <group>
+                                    <field name="user_id" string="Project Manager"
                                         attrs="{'readonly':[('active','=',False)]}"/>
-                                <field name="privacy_visibility" widget="radio"/>
-                                <field name="partner_id" string="Customer"/>
-                                <label for="rating_status" groups="project.group_project_rating"/>
-                                <div groups="project.group_project_rating">
-                                    <field name="rating_status" widget="radio"/>
-                                    <p attrs="{'invisible': [('rating_status','not in',('periodic','stage'))]}" class="text-muted oe_edit_only">
-                                        Edit project's stages and set an email template on the stages on which you want to activate the rating.
-                                    </p>
-                                </div>
-                                <field name="rating_status_period"  class="oe_inline" attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}" groups="project.group_project_rating"/>
-                                <field name="portal_show_rating" attrs="{'invisible': [('rating_status','==','no')]}" groups="project.group_project_rating"/>
-                                <field name="subtask_project_id" groups="project.group_subtask_project"/>
+                                    <field name="privacy_visibility" widget="radio"/>
+                                    <field name="partner_id" string="Customer"/>
+                                    <label for="rating_status" groups="project.group_project_rating"/>
+                                    <div groups="project.group_project_rating">
+                                        <field name="rating_status" widget="radio"/>
+                                        <p attrs="{'invisible': [('rating_status','not in',('periodic','stage'))]}" class="text-muted oe_edit_only">
+                                            Edit project's stages and set an email template on the stages on which you want to activate the rating.
+                                        </p>
+                                    </div>
+                                    <field name="rating_status_period"  class="oe_inline" attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}" groups="project.group_project_rating"/>
+                                    <field name="portal_show_rating" attrs="{'invisible': [('rating_status','==','no')]}" groups="project.group_project_rating"/>
+                                    <field name="subtask_project_id" groups="project.group_subtask_project"/>
+                                </group>
+                                <group name="extra_settings">
+                                </group>
                             </group>
                             <group name="misc">
                                 <group string="Configuration" groups="base.group_no_one" name="configuration">
@@ -531,7 +535,7 @@
                 <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create" quick_create_view="project.quick_create_task_form" examples="project">
                     <field name="color"/>
                     <field name="priority"/>
-                    <field name="stage_id" options='{"group_by_tooltip": {"description": "Stage Description", "legend_priority": "Use of stars"}}'/>
+                    <field name="stage_id" options='{"group_by_tooltip": {"legend_priority": "Use of stars"}}'/>
                     <field name="user_id"/>
                     <field name="user_email"/>
                     <field name="sequence"/>
