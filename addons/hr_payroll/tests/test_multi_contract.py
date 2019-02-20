@@ -63,7 +63,7 @@ class TestPayslipMultiContract(TestPayslipContractBase):
         })
         payslip.onchange_employee()
         work = payslip.worked_days_line_ids.filtered(lambda line: line.code == 'WORK100')
-        leave = payslip.worked_days_line_ids.filtered(lambda line: line.code == 'LEAVE100')
+        leave = payslip.worked_days_line_ids.filtered(lambda line: line.code == 'LEAVE101')
         self.assertEqual(work.number_of_hours, 49, "It should be 49 hours of work this month for this contract")
         self.assertEqual(leave.number_of_hours, 28, "It should be 28 hours of leave this month for this contract")
         self.assertEqual(work.number_of_days, 7, "It should be 7 days of work this month for this contract")

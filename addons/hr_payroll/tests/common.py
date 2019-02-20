@@ -51,14 +51,32 @@ class TestPayslipBase(TransactionCase):
         self.benefit_type_leave = self.env['hr.benefit.type'].create({
             'name': 'Leave',
             'is_leave': True,
-            'code': 'LEAVE100'
+            'code': 'LEAVE101'
+        })
+        self.benefit_type_unpaid = self.env['hr.benefit.type'].create({
+            'name': 'Unpaid Leave',
+            'is_leave': True,
+            'unpaid': True,
+            'code': 'LEAVE222'
+        })
+        self.leave_type_unpaid = self.env['hr.leave.type'].create({
+            'name': 'Unpaid Leaves',
+            'time_type': 'leave',
+            'allocation_type': 'no',
+            'benefit_type_id': self.benefit_type_unpaid.id
         })
         self.leave_type = self.env['hr.leave.type'].create({
-            'name': 'Legal Leaves',
+            'name': 'Paid Time Off',
             'time_type': 'leave',
             'allocation_type': 'no',
             'benefit_type_id': self.benefit_type_leave.id
         })
+        self.benefit_type = self.env['hr.benefit.type'].create({
+            'name': 'Extra attendance',
+            'is_leave': False,
+            'code': 'WORK222'
+        })
+
 
 class TestPayslipContractBase(TestPayslipBase):
 

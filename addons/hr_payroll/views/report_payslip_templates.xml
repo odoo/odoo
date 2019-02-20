@@ -93,8 +93,10 @@
                                 <td><span t-field="worked_days.number_of_hours"/></td>
                                 <td><span t-field="worked_days.number_of_days"/></td>
                                 <td></td>
-                                <td></td>
-                                <td></td>
+                                <td><span t-esc="worked_days.amount" digits="[42, 2]"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                <td><span t-esc="worked_days.amount" digits="[42, 2]"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
                             </tr>
                             <tr t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip)" t-as="line">
                                 <td><span t-field="line.code"/></td>

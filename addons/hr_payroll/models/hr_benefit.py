@@ -282,12 +282,18 @@ class HrBenefitType(models.Model):
     _description = 'hr.benefit.type'
 
     name = fields.Char(required=True)
-    code = fields.Char()
+    code = fields.Char(required=True, help="The code that can be used in the salary rules")
     color = fields.Integer(default=1) # Will be used with the new calendar/kanban view
-    sequence = fields.Integer(default=25)
+    sequence = fields.Integer(default=10, required=True)
     active = fields.Boolean('Active', default=True,
                             help="If the active field is set to false, it will allow you to hide the benefit type without removing it.")
     is_leave = fields.Boolean(default=False, string="Leave")
+    unpaid = fields.Boolean(default=False, string="Unpaid")
+
+    _sql_constraints = [
+        ('_unique_code', 'unique (code)', "Benefit type codes must be unique."),
+    ]
+
 
 class Contacts(models.Model):
     """ Personnal calendar filter """

@@ -66,12 +66,17 @@ class HrPayslip(models.Model):
     payslip_run_id = fields.Many2one('hr.payslip.run', string='Batche Name', readonly=True,
         copy=False, states={'draft': [('readonly', False)], 'verify': [('readonly', False)]}, ondelete='cascade')
     compute_date = fields.Date('Computed On')
+    unpaid_amount = fields.Float(compute='_compute_unpaid_deduction', digits=dp.get_precision('Payroll'))
 
     basic_wage = fields.Monetary(compute='_compute_basic_net')
     net_wage = fields.Monetary(compute='_compute_basic_net')
     currency_id = fields.Many2one(related='contract_id.currency_id')
 
     @api.multi
+    def _compute_unpaid_deduction(self):
+        for payslip in self:
+            payslip.unpaid_amount = payslip._get_unpaid_deduction()
+
     def _compute_basic_net(self):
         for payslip in self:
             payslip.basic_wage = payslip.get_salary_line_total('BASIC')
@@ -167,8 +172,7 @@ class HrPayslip(models.Model):
                 if hours:
                     line = {
                         'name': benefit_type.name,
-                        'sequence': benefit_type.sequence,
-                        'code': benefit_type.code,
+                        'benefit_type_id': benefit_type.id,
                         'number_of_days': hours / calendar.hours_per_day, # n_days returned by benefit_days_data doesn't make sense for extra work
                         'number_of_hours': hours,
                     }
@@ -288,6 +292,8 @@ class HrPayslip(models.Model):
         for r in worked_days_line_ids:
             worked_days_lines += worked_days_lines.new(r)
         self.worked_days_line_ids = worked_days_lines
+        self._compute_worked_days_lines_amount()
+        return
 
     @api.onchange('struct_id')
     def _onchange_struct_id(self):
@@ -295,6 +301,24 @@ class HrPayslip(models.Model):
         locale = self.env.context.get('lang') or 'en_US'
         payslip_name = self.struct_id.payslip_name or _('Salary Slip')
         self.name = '%s - %s - %s' % (payslip_name, self.employee_id.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale)))
+
+    def _get_unpaid_deduction(self):
+        self.ensure_one()
+        days_per_week = len(set(self.contract_id.resource_calendar_id.normal_attendance_ids.mapped('dayofweek')))
+        if days_per_week:
+            avg_per_day = self.contract_id.wage * 3 / 13 / days_per_week  # there are always 13 weeks in 3 months
+            unpaid_worked_days_lines = self.worked_days_line_ids.filtered(lambda line: line.benefit_type_id.unpaid)
+            return sum(unpaid_worked_days_lines.mapped('number_of_days')) * avg_per_day
+        return 0.0
+
+    def _compute_worked_days_lines_amount(self):
+        for payslip in self:
+            deduction = payslip._get_unpaid_deduction()
+            basic = payslip.contract_id.wage - deduction
+            paid_worked_days_lines = self.worked_days_line_ids.filtered(lambda line: not line.benefit_type_id.unpaid)
+            total_paid_days = sum(paid_worked_days_lines.mapped('number_of_days'))
+            for line in paid_worked_days_lines:
+                line.amount = line.number_of_days / total_paid_days * basic
 
     def get_salary_line_total(self, code):
         self.ensure_one()
@@ -365,12 +389,15 @@ class HrPayslipWorkedDays(models.Model):
 
     name = fields.Char(string='Description', required=True)
     payslip_id = fields.Many2one('hr.payslip', string='Pay Slip', required=True, ondelete='cascade', index=True)
-    sequence = fields.Integer(required=True, index=True, default=10)
-    code = fields.Char(required=True, help="The code that can be used in the salary rules")
+    benefit_type_id = fields.Many2one('hr.benefit.type', required=True)
+    sequence = fields.Integer(related='benefit_type_id.sequence')
+    code = fields.Char(related='benefit_type_id.code')
+    unpaid = fields.Boolean(related='benefit_type_id.unpaid')
     number_of_days = fields.Float(string='Number of Days')
     number_of_hours = fields.Float(string='Number of Hours')
     contract_id = fields.Many2one(related='payslip_id.contract_id', string='Contract', required=True,
         help="The contract for which applied this worked days")
+    amount = fields.Float(digits=dp.get_precision('Payroll'))
 
 
 class HrPayslipInput(models.Model):

@@ -397,7 +397,7 @@ class TestBenefit(TestPayslipBase):
         payslip_wizard.with_context({'default_date_start': start.strftime('%Y-%m-%d'),'default_date_end': end.strftime('%Y-%m-%d')}).compute_sheet()
         payslip = self.env['hr.payslip'].search([('employee_id', '=', self.richard_emp.id)])
         work_line = payslip.worked_days_line_ids.filtered(lambda l: l.code == 'WORK100') # From default calendar.attendance
-        leave_line = payslip.worked_days_line_ids.filtered(lambda l: l.code == 'LEAVE100')
+        leave_line = payslip.worked_days_line_ids.filtered(lambda l: l.code == 'LEAVE101')
 
         self.assertTrue(work_line, "It should have a work line in the payslip")
         self.assertTrue(leave_line, "It should have a leave line in the payslip")
@@ -424,7 +424,7 @@ class TestBenefit(TestPayslipBase):
             }).compute_sheet()
         payslip = self.env['hr.payslip'].search([('employee_id', '=', self.richard_emp.id)])
         work_line = payslip.worked_days_line_ids.filtered(lambda l: l.code == 'WORK100') # From default calendar.attendance
-        leave_line = payslip.worked_days_line_ids.filtered(lambda l: l.code == 'WORK200')
+        leave_line = payslip.worked_days_line_ids.filtered(lambda l: l.code == 'WORK222')
 
         self.assertTrue(work_line, "It should have a work line in the payslip")
         self.assertTrue(leave_line, "It should have an extra work line in the payslip")

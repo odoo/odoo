@@ -32,18 +32,18 @@
         </record>
         <record id="hr_line_admin1" model="hr.payslip.worked_days">
             <field name="name">Normal working days</field>
-            <field name="code">WORK100</field>
             <field name="number_of_days">20</field>
             <field name="number_of_hours">160</field>
             <field name="contract_id" ref="hr_contract.hr_contract_admin"/>
+            <field name="benefit_type_id" ref="hr_payroll.benefit_type_attendance"/>
             <field name="payslip_id" ref="hr_payslip_admin"/>
         </record>
         <record id="hr_line_admin2" model="hr.payslip.worked_days">
             <field name="name">Sick leave</field>
-            <field name="code">LEAVE200</field>
             <field name="number_of_days">2</field>
             <field name="number_of_hours">16</field>
             <field name="contract_id" ref="hr_contract.hr_contract_admin"/>
+            <field name="benefit_type_id" ref="hr_payroll.benefit_type_sick_leave"/>
             <field name="payslip_id" ref="hr_payslip_admin"/>
         </record>
 
@@ -60,26 +60,28 @@
         </record>
         <record id="hr_line_demo1" model="hr.payslip.worked_days">
             <field name="name">Normal working days</field>
-            <field name="code">WORK100</field>
             <field name="number_of_days">18</field>
             <field name="number_of_hours">144</field>
             <field name="contract_id" ref="hr_contract.hr_contract_qdp"/>
+            <field name="benefit_type_id" ref="hr_payroll.benefit_type_attendance"/>
             <field name="payslip_id" ref="hr_payslip_demo"/>
         </record>
         <record id="hr_line_demo2" model="hr.payslip.worked_days">
             <field name="name">Extra work</field>
-            <field name="code">WORK200</field>
             <field name="number_of_days">1.5</field>
             <field name="number_of_hours">12</field>
             <field name="contract_id" ref="hr_contract.hr_contract_qdp"/>
+            <field name="benefit_type_id" ref="hr_payroll.benefit_type_extra_hours"/>
             <field name="payslip_id" ref="hr_payslip_demo"/>
         </record>
         <record id="hr_line_demo3" model="hr.payslip.worked_days">
             <field name="name">Paid Time Off</field>
-            <field name="code">LEAVE100</field>
+            <field name="code">LEAVE90</field>
+            <field name="name">Legal leave</field>
             <field name="number_of_days">4</field>
             <field name="number_of_hours">32</field>
             <field name="contract_id" ref="hr_contract.hr_contract_qdp"/>
+            <field name="benefit_type_id" ref="hr_payroll.benefit_type_sick_leave"/>
             <field name="payslip_id" ref="hr_payslip_demo"/>
         </record>
 
@@ -105,10 +107,10 @@
         </record>
         <record id="hr_line_admin1_may" model="hr.payslip.worked_days">
             <field name="name">Normal working days</field>
-            <field name="code">WORK100</field>
             <field name="number_of_days">22</field>
             <field name="number_of_hours">175</field>
             <field name="contract_id" ref="hr_contract.hr_contract_admin"/>
+            <field name="benefit_type_id" ref="hr_payroll.benefit_type_attendance"/>
             <field name="payslip_id" ref="hr_payslip_admin_may"/>
         </record>
 
@@ -125,26 +127,26 @@
         </record>
         <record id="hr_line_demo1_may" model="hr.payslip.worked_days">
             <field name="name">Normal working days</field>
-            <field name="code">WORK100</field>
             <field name="number_of_days">20</field>
             <field name="number_of_hours">16</field>
             <field name="contract_id" ref="hr_contract.hr_contract_qdp"/>
+            <field name="benefit_type_id" ref="hr_payroll.benefit_type_attendance"/>
             <field name="payslip_id" ref="hr_payslip_demo_may"/>
         </record>
         <record id="hr_line_demo2_may" model="hr.payslip.worked_days">
             <field name="name">Extra work</field>
-            <field name="code">WORK200</field>
             <field name="number_of_days">0.5</field>
             <field name="number_of_hours">4</field>
             <field name="contract_id" ref="hr_contract.hr_contract_qdp"/>
+            <field name="benefit_type_id" ref="hr_payroll.benefit_type_extra_hours"/>
             <field name="payslip_id" ref="hr_payslip_demo_may"/>
         </record>
         <record id="hr_line_demo3_may" model="hr.payslip.worked_days">
             <field name="name">Sick Time Off</field>
-            <field name="code">LEAVE200</field>
             <field name="number_of_days">1</field>
             <field name="number_of_hours">8</field>
             <field name="contract_id" ref="hr_contract.hr_contract_qdp"/>
+            <field name="benefit_type_id" ref="hr_payroll.benefit_type_sick_leave"/>
             <field name="payslip_id" ref="hr_payslip_demo_may"/>
         </record>
 </odoo>
