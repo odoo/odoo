@@ -427,51 +427,82 @@ class Slide(models.Model):
             })
             self.env.user.add_karma(new_slide.channel_id.karma_gen_slide_vote)
 
-    def action_set_viewed(self):
+    def action_set_viewed(self, quiz_attempts_inc=False):
         if not all(slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide as viewed if you are not among its members.'))
 
-        return bool(self._action_set_viewed(self.env.user.partner_id))
+        return bool(self._action_set_viewed(self.env.user.partner_id, quiz_attempts_inc=quiz_attempts_inc))
 
-    def _action_set_viewed(self, target_partner):
+    def _action_set_viewed(self, target_partner, quiz_attempts_inc=False):
         self_sudo = self.sudo()
         SlidePartnerSudo = self.env['slide.slide.partner'].sudo()
         existing_sudo = SlidePartnerSudo.search([
             ('slide_id', 'in', self.ids),
             ('partner_id', '=', target_partner.id)
         ])
+        if quiz_attempts_inc:
+            for exsting_slide in existing_sudo:
+                exsting_slide.write({
+                    'quiz_attempts_count': exsting_slide.quiz_attempts_count + 1
+                })
 
         new_slides = self_sudo - existing_sudo.mapped('slide_id')
         return SlidePartnerSudo.create([{
             'slide_id': new_slide.id,
             'channel_id': new_slide.channel_id.id,
             'partner_id': target_partner.id,
+            'quiz_attempts_count': 1 if quiz_attempts_inc else 0,
             'vote': 0} for new_slide in new_slides])
 
-    def action_set_completed(self):
+    def action_set_completed(self, quiz_attempts_inc=False):
         if not all(slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide as completed if you are not among its members.'))
 
-        return self._action_set_completed(self.env.user.partner_id)
+        return self._action_set_completed(self.env.user.partner_id, quiz_attempts_inc=quiz_attempts_inc)
 
-    def _action_set_completed(self, target_partner):
+    def _action_set_completed(self, target_partner, quiz_attempts_inc=False):
         self_sudo = self.sudo()
         SlidePartnerSudo = self.env['slide.slide.partner'].sudo()
         existing_sudo = SlidePartnerSudo.search([
             ('slide_id', 'in', self.ids),
             ('partner_id', '=', target_partner.id)
         ])
-        existing_sudo.write({'completed': True})
+        if quiz_attempts_inc:
+            for existing_slide in existing_sudo:
+                existing_slide.write({
+                    'completed': True,
+                    'quiz_attempts_count': existing_slide.quiz_attempts_count + 1
+                })
+        else:
+            existing_sudo.write({'completed': True})
 
         new_slides = self_sudo - existing_sudo.mapped('slide_id')
         SlidePartnerSudo.create([{
             'slide_id': new_slide.id,
             'channel_id': new_slide.channel_id.id,
             'partner_id': target_partner.id,
+            'quiz_attempts_count': 1 if quiz_attempts_inc else 0,
             'vote': 0,
             'completed': True} for new_slide in new_slides])
 
         return True
+
+    def _action_set_quiz_done(self):
+        if not all(slide.channel_id.is_member for slide in self):
+            raise UserError(_('You cannot mark a slide quiz as completed if you are not among its members.'))
+
+        points = 0
+        for slide in self:
+            if not slide.user_membership_id or slide.user_membership_id.completed or not slide.user_membership_id.quiz_attempts_count:
+                continue
+
+            gains = [slide.quiz_first_attempt_reward,
+                     slide.quiz_second_attempt_reward,
+                     slide.quiz_third_attempt_reward,
+                     slide.quiz_fourth_attempt_reward]
+            points += gains[slide.user_membership_id.quiz_attempts_count-1] if slide.user_membership_id.quiz_attempts_count <= len(gains) else gains[-1]
+
+        return self.env.user.sudo().add_karma(points)
 
     # --------------------------------------------------
     # Parsing methods

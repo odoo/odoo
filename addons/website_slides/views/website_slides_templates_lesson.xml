@@ -59,12 +59,12 @@
                         <a class="o_wslides_slide_button" t-attf-href="/slides/slide/#{slug(previous_slide)}">Prev</a>
                     </t>
                     <a t-if="slide.slide_type in ('webpage', 'video', 'document', 'iconographic') and not slide.question_ids and (slide.id in user_progress and  not user_progress[slide.id].completed)" 
-                        t-att-href="'/slides/slide/%s/set_completed?%s' % (slide.id, 'next_slide=%s' % next_slide.id if next_slide else '')"
+                        t-att-href="'/slides/slide/%s/set_completed?%s' % (slide.id, 'next_slide_id=%s' % next_slide.id if next_slide else '')"
                         class="o_wslides_slide_button_done">Set Done</a>
                     <t t-if="next_slide">
                         <a class="o_wslides_slide_button" t-attf-href="/slides/slide/#{slug(next_slide)}">Next</a>
                     </t>
-                    <a t-if="slide.channel_id.channel_type == 'training'" t-attf-href="/slides/slide/#{slug(slide)}?fullscreen=1" class="o_wslides_slide_button_fullscreen ml-2"><i class="fa fa-desktop mr-2"></i>fullscreen</a>
+                    <a t-if="slide.channel_id.channel_type == 'training'" t-attf-href="/slides/slide/#{slug(slide)}?fullscreen=1" class="o_wslides_slide_button_fullscreen ml-2"><i class="fa fa-desktop mr-2"></i>Fullscreen</a>
                 </div>
             </div>
         <div class="o_wslides_slide_header_container mt16">
@@ -83,49 +83,7 @@
                         <div t-if="slide.slide_type == 'webpage'" class="border border-light rounded">
                             <div t-field="slide.html_content"/>
                         </div>
-                        <div t-if="slide.question_ids">
-                            <div class=".o_wslides_fs_quiz o_w_slides_quiz_no_fullscreen mt-2"
-                                t-attf-slide_id="#{slide.id}"
-                                t-attf-slide_done="#{slide.id in user_progress and user_progress[slide.id].completed}"
-                                t-attf-nb_attempts="#{user_progress[slide.id].quiz_attempts_count if slide.id in user_progress else ''}"
-                                t-attf-first_reward="#{slide.quiz_first_attempt_reward}"
-                                t-attf-second_reward="#{slide.quiz_second_attempt_reward}"
-                                t-attf-third_reward="#{slide.quiz_third_attempt_reward}"
-                                t-attf-fourth_reward="#{slide.quiz_fourth_attempt_reward}"
-                                t-if="slide.question_ids">
-                            <div>
-                                <t t-set="i" t-value="1"/>
-                                <t t-foreach="slide.question_ids" t-as="question">
-                                    <t t-set="j" t-value="0"/>
-                                    <div class="o_wslides_quiz_question" t-attf-id="#{question.id}" t-attf-title="#{question.question}">
-                                        <div>
-                                            <div class="o_wslides_quiz_question_title">
-                                                <span class="o_wslides_quiz_question_title_number"><span t-esc="i"/>. </span>
-                                                <span class="o_wslides_quiz_question_title_text"  t-esc="question.question"/>
-                                            </div>
-                                            <ul class="o_wslides_quiz_question_answers">
-                                                <t t-foreach="question.answer_ids" t-as="answer">
-                                                    <li t-attf-id="answer#{answer.id}" t-att-question_id="question.id" t-attf-text_value="#{answer.text_value}" t-attf-class="#{'o_wslides_quiz_answer o_wslides_quiz_good_answer' if slide.id in user_progress and user_progress[slide.id].completed and answer.is_correct else 'o_wslides_quiz_answer o_wslides_quiz_ignored_answer' if slide.id in user_progress and user_progress[slide.id].completed else 'o_wslides_quiz_answer'}">
-                                                        <label class="o_wslides_quiz_radio_box">
-                                                            <input t-att-answer_id="answer.id" type="radio" t-att-name="question.id" t-att-question_id="question.id" t-att-value="answer.id" t-att-checked="'checked' if slide.id in user_progress and user_progress[slide.id].completed and answer.is_correct else False" t-att-disabled="slide.id in user_progress and user_progress[slide.id].completed"/>
-                                                            <span t-if="not slide.id in user_progress or not (user_progress[slide.id].completed and answer.is_correct)"/>
-                                                            <i t-if="slide.id in user_progress and user_progress[slide.id].completed and answer.is_correct" class="fa fa-check-circle"></i>
-                                                        </label>
-                                                            <span t-esc="answer.text_value"/>
-                                                    </li>
-                                                    <t t-set="j" t-value="j+1"/>
-                                                </t>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <t t-set="i" t-value="i+1"/>
-                                </t>
-                                <button t-if="not slide.id in user_progress or not user_progress[slide.id].completed" class="btn btn-primary submit-quiz" >Check your answers</button>
-                                <a t-if="next_slide" t-attf-style="#{'display: none' if not slide.id in user_progress or not user_progress[slide.id].completed else ''}" class="btn btn-primary next-slide" t-attf-href="/slides/slide/#{next_slide}">Continue</a>
-                            </div>
-
-                        </div>
-                        </div>
+                        <t t-if="slide.question_ids" t-call="website_slides.lesson_content_quiz"/>
                         <div class="row mt-3">
                             <div class="col-lg-6">
                                 <div clas="row">
@@ -460,6 +418,54 @@
             <t t-set="i" t-value="i+1"/>
         </t>
     </ul>
+</template>
+
+<!-- Slide sub-tempalte: render a quiz serverside. Should be sync with JS qweb template "slide.slide.quiz" -->
+<template id="lesson_content_quiz" name="Lesson: Quiz specific content">
+    <div class="o_wslides_js_lesson_quiz"
+        t-att-data-id="slide.id"
+        t-att-data-name="slide.name"
+        t-att-data-slide-type="slide.slide_type"
+        t-att-data-readonly="not slide.id in user_progress"
+        t-att-data-completed="slide.id in user_progress and user_progress[slide.id].completed"
+        t-att-data-quiz-attempts-count="quiz_attempts_count"
+        t-att-data-quiz-karma-max="quiz_karma_max"
+        t-att-data-quiz-karma-gain="quiz_karma_gain"
+        t-att-data-quiz-karma-won="quiz_karma_won"
+        t-att-data-has-next="1 if next_slide else 0"
+        t-att-data-next-slide-url="'/slides/slide/%s' % (slug(next_slide)) if next_slide else None">
+        <div t-foreach="slide.question_ids" t-as="question"
+            class="o_wslides_js_lesson_quiz_question mt-3" t-att-data-question-id="question.id" t-att-data-title="question.question">
+            <div class="h3">
+                <small class="text-muted"><span t-esc="question_index+1"/>. </small> <span t-esc="question.question"/>
+            </div>
+            <ul class="bg-white list-unstyled">
+                <t t-foreach="question.answer_ids" t-as="answer">
+                    <li t-att-data-answer-id="answer.id"
+                        t-att-data-text="answer.text_value"
+                        class="o_wslides_quiz_answer pt-2 pb-2 border-bottom rounded d-flex align-items-center">
+                        <label class="mb-0 d-flex align-items-center justify-content-center mr-3 ml-3">
+                            <input type="radio"
+                                t-att-name="question.id"
+                                t-att-value="answer.id"
+                                class="d-none"/>
+                            <i class="fa fa-circle text-muted"></i>
+                            <i class="fa fa-times-circle text-danger d-none"></i>
+                            <i class="fa fa-check-circle text-success d-none"></i>
+                        </label>
+                        <span t-esc="answer.text_value"/>
+                    </li>
+                </t>
+            </ul>
+        </div>
+        <div class="alert alert-danger o_wslides_js_lesson_quiz_error d-none" role="alert">
+            <span></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&amp;times;</span>
+            </button>
+        </div>
+        <div class="o_wslides_js_lesson_quiz_validation"/>
+    </div>
 </template>
 
 <!-- Slide sub-template: display an item in a list of related slides (Related, Most Viewed, ...) -->

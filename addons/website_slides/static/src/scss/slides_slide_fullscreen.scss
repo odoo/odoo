@@ -268,5 +268,44 @@
     .o_wslides_fs_player_no_sidebar {
         max-width: 100%;
         width: 100%;
-    }  
+    }
+
+    // quizz
+    .o_wslides_fs_quiz_container {
+        background-color: $gray-200;
+        height: 100%;
+        overflow: scroll;
+        overflow-x: hidden;
+        width: 100%;
+
+        .o_wslides_js_lesson_quiz_question {
+            li {
+                font-size: 1.2rem;
+            }
+
+            .o_wslides_quiz_answer {
+
+                &:hover {
+                    cursor: pointer;
+                }
+
+                label {
+                    font-size: 1.4rem;
+
+                    i.fa-circle {
+                    }
+
+                    input:checked + i.fa-circle {
+                        color: $primary !important;
+                        overflow: hidden;
+                    }
+                }
+            }
+        }
+    }
+
+    // Tools
+    .bg-brand {
+        background-color: $o-enterprise-color;
+    }
 }
