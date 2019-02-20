@@ -845,7 +845,7 @@ class Meeting(models.Model):
     partner_id = fields.Many2one('res.partner', string='Responsible', related='user_id.partner_id', readonly=True)
     active = fields.Boolean('Active', default=True, help="If the active field is set to false, it will allow you to hide the event alarm information without removing it.")
     categ_ids = fields.Many2many('calendar.event.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags')
-    attendee_ids = fields.One2many('calendar.attendee', 'event_id', 'Participant', ondelete='cascade')
+    attendee_ids = fields.One2many('calendar.attendee', 'event_id', 'Participant')
     partner_ids = fields.Many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees', states={'done': [('readonly', True)]}, default=_default_partners)
     alarm_ids = fields.Many2many('calendar.alarm', 'calendar_alarm_calendar_event_rel', string='Reminders', ondelete="restrict", copy=False)
     is_highlighted = fields.Boolean(compute='_compute_is_highlighted', string='Is the Event Highlighted')

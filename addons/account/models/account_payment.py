@@ -48,7 +48,7 @@ class account_payment(models.Model):
     has_invoices = fields.Boolean(compute="_compute_reconciled_invoice_ids", help="Technical field used for usability purposes")
     reconciled_invoices_count = fields.Integer(compute="_compute_reconciled_invoice_ids")
 
-    move_line_ids = fields.One2many('account.move.line', 'payment_id', readonly=True, copy=False, ondelete='restrict')
+    move_line_ids = fields.One2many('account.move.line', 'payment_id', readonly=True, copy=False)
     move_reconciled = fields.Boolean(compute="_get_move_reconciled", readonly=True)
 
     state = fields.Selection([('draft', 'Draft'), ('posted', 'Validated'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancelled', 'Cancelled'), ('invoicing_legacy', 'Invoicing App Legacy')], readonly=True, default='draft', copy=False, string="Status", tracking=True)
