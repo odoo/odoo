@@ -348,13 +348,13 @@
 
     <template id="option_collapse_categories_recursive" name="Collapse Category Recursive">
         <li class="nav-item">
-            <i t-if="categ.child_id" t-attf-class="text-primary fa #{'fa-chevron-down' if categ.id in parent_category_ids else 'fa-chevron-right'}"
-               t-attf-title="#{'Unfold' if categ.id in parent_category_ids else 'Fold'}"
-               t-attf-aria-label="#{'Unfold' if categ.id in parent_category_ids else 'Fold'}" role="img"/>
-            <a t-att-href="keep('/shop/category/' + slug(categ), category=0)" t-attf-class="nav-link#{' active' if categ.id == int(category or 0) else ''}" t-field="categ.name"></a>
-            <ul t-if="categ.child_id" class="nav nav-pills flex-column nav-hierarchy" t-att-style="'display:block;' if categ.id in parent_category_ids else 'display:none;'">
-                <t t-foreach="categ.child_id" t-as="categ">
-                    <t t-if="not search or categ.id in search_categories_ids">
+            <i t-if="c.child_id" t-attf-class="text-primary fa #{'fa-chevron-down' if c.id in parent_category_ids else 'fa-chevron-right'}"
+               t-attf-title="#{'Unfold' if c.id in parent_category_ids else 'Fold'}"
+               t-attf-aria-label="#{'Unfold' if c.id in parent_category_ids else 'Fold'}" role="img"/>
+            <a t-att-href="keep('/shop/category/' + slug(c), category=0)" t-attf-class="nav-link#{' active' if c.id == int(category or 0) else ''}" t-field="c.name"></a>
+            <ul t-if="c.child_id" class="nav nav-pills flex-column nav-hierarchy" t-att-style="'display:block;' if c.id in parent_category_ids else 'display:none;'">
+                <t t-foreach="c.child_id" t-as="c">
+                    <t t-if="not search or c.id in search_categories_ids">
                         <t t-call="website_sale.option_collapse_categories_recursive"/>
                     </t>
                 </t>
@@ -363,15 +363,11 @@
     </template>
 
     <template id="option_collapse_products_categories" name="Collapsible Category List" inherit_id="website_sale.products_categories" active="False" customize_show="True">
-        <xpath expr="//div[@id='products_grid_before']/div" position="replace">
-            <ul class="nav nav-pills flex-column my-2" id="o_shop_collapse_category">
-                <li class="nav-item">
-                    <a t-att-href="keep('/shop', category=0)" t-attf-class="nav-link#{'' if category else ' active'} o_not_editable">All Products</a>
-                </li>
-                <t t-foreach="categories" t-as="categ">
-                    <t t-call="website_sale.option_collapse_categories_recursive"/>
-                </t>
-            </ul>
+        <xpath expr="//div[@id='wsale_products_categories_collapse']/ul" position="attributes">
+            <attribute name="id">o_shop_collapse_category</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='website_sale.categories_recursive']" position="attributes">
+            <attribute name="t-call">website_sale.option_collapse_categories_recursive</attribute>
         </xpath>
     </template>
 
