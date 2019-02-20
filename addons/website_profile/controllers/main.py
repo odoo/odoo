@@ -36,7 +36,6 @@ class WebsiteProfile(http.Controller):
         content = base64.b64encode(image)
         dictheaders = dict(headers) if headers else {}
         dictheaders['Content-Type'] = 'image/png'
-        headers = list(dictheaders.items())
         if not (width or height):
             suffix = field.split('_')[-1] if '_' in field else 'large'
             if suffix in ('small', 'medium', 'large', 'big'):
