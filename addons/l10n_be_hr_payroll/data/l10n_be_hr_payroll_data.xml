@@ -357,16 +357,16 @@ children_exoneration = [0.0, 13329.0, 16680.0, 21820.0, 27560.0, 33300.0, 39040.
 children_reduction = [(0, 0), (22940.0, 0.075), (22940.0, 0.2), (25235.0, 0.35), (29825.0, 0.55), (32120.0, 0.75)]
 
 n = employee.dependent_children
-yearly_revenue = employee._get_yearly_income(contract.struct_id, code='GROSS')
+yearly_revenue = employee._get_yearly_income(contract.struct_id, code='BASIC')
 
 if 0 &lt; n &lt; 13 and yearly_revenue &lt;= children_exoneration[n]:
     yearly_revenue = yearly_revenue - (children_exoneration[n] - yearly_revenue)
 
 if n &lt;= 5 and yearly_revenue &lt;= children_reduction[n][0]:
-    withholding_tax_amount = yearly_revenue * find_taux(yearly_revenue) * (1 - children_reduction[n][1])
+    withholding_tax_amount = categories.GROSS * find_taux(yearly_revenue) * (1 - children_reduction[n][1])
 else:
-    withholding_tax_amount = yearly_revenue * find_taux(yearly_revenue)
-result = -withholding_tax_amount / 12.0
+    withholding_tax_amount = categories.GROSS * find_taux(yearly_revenue)
+result = -withholding_tax_amount
         </field>
     </record>
 
@@ -396,16 +396,16 @@ children_exoneration = [0.0, 13329.0, 16680.0, 21820.0, 27560.0, 33300.0, 39040.
 children_reduction = [(0, 0), (22940.0, 0.075), (22940.0, 0.2), (25235.0, 0.35), (29825.0, 0.55), (32120.0, 0.75)]
 
 n = employee.dependent_children
-yearly_revenue = employee._get_yearly_income(contract.struct_id, code='GROSS')
+yearly_revenue = employee._get_yearly_income(contract.struct_id, code='BASIC')
 
 if 0 &lt; n &lt; 13 and yearly_revenue &lt;= children_exoneration[n]:
     yearly_revenue = yearly_revenue - (children_exoneration[n] - yearly_revenue)
 
 if n &lt;= 5 and yearly_revenue &lt;= children_reduction[n][0]:
-    withholding_tax_amount = yearly_revenue * find_taux(yearly_revenue) * (1 - children_reduction[n][1])
+    withholding_tax_amount = categories.GROSS * find_taux(yearly_revenue) * (1 - children_reduction[n][1])
 else:
-    withholding_tax_amount = yearly_revenue * find_taux(yearly_revenue)
-result = -withholding_tax_amount / 12.0
+    withholding_tax_amount = categories.GROSS * find_taux(yearly_revenue)
+result = -withholding_tax_amount
         </field>
     </record>
 
