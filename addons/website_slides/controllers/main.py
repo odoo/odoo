@@ -687,15 +687,26 @@ class WebsiteSlides(WebsiteProfile):
             'can_create': can_create,
         }
 
-    @http.route('/slides/add_category', type="json", website=True, auth="user")
-    def add_category(self, channel_id, name, **kw):
-        channel = request.env['slide.channel'].browse(channel_id)
-        request.env['slide.category'].create({
+    @http.route('/slides/category/add', type="http", website=True, auth="user")
+    def slide_add_category(self, channel_id, name):
+        """ Adds a category to the specified channel.
+        If categories already exist within this channel, it will be added at the bottom (sequence+1) """
+        channel = request.env['slide.channel'].browse(int(channel_id))
+
+        values = {
             'name': name,
             'channel_id': channel.id
-        })
+        }
 
-        return {'url': "/slides/%s" %(slug(channel))}
+        latest_category = request.env['slide.category'].search_read([
+            ('channel_id', '=', channel.id)
+        ], ["sequence"], order="sequence desc", limit=1)
+        if len(latest_category) == 1:
+            values['sequence'] = latest_category[0]['sequence'] + 1
+
+        request.env['slide.category'].create(values)
+
+        return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
 
     #Not using the /web/dataset/resequence route as a slide can be dragged into another category at the same time
     @http.route('/slides/resequence_slides', type="json", website=True, auth="user")
