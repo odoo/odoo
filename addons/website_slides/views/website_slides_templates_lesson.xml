@@ -95,8 +95,8 @@
             <div class="row">
                 <div style="width:100%;">
                     <div class="o_w_slides_slide_detail_container" style="width: 100%;">
-                            <t t-if="slide.datas and slide.slide_type == 'infographic'">
-                                <img t-attf-src="/web/image/slide.slide/#{slide.id}/datas" class="img-fluid" style="width:100%" alt="Slide image"/>
+                            <t t-if="slide.slide_type == 'infographic'">
+                                <img t-attf-src="/web/image/slide.slide/#{slide.id}/image" class="img-fluid" style="width:100%" alt="Slide image"/>
                             </t>
                         <div style="height: 600px;" t-if="slide.slide_type in ('presentation', 'document')" class="embed-responsive embed-responsive-4by3 embed-responsive-item mb8">
                             <t t-raw="slide.embed_code"/>
