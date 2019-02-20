@@ -33,7 +33,11 @@
                             <a class="nav-link nav-link mr-md-2 o_wslides_home_all_slides" href="/slides/all"><i class="fa fa-graduation-cap mr-1"/>All courses</a>
                         </div>
                         <div class="navbar-nav o_wslides_nav_navbar_right">
-                            <a class="nav-link nav-link" href="/slides/all"><i class="fa fa-file mr-1"/>My courses</a>
+                            <t t-if="is_public_user">
+                                <a class="nav-link nav-link" href="/web/login?redirect=/slides/all?my=1"><i class="fa fa-file mr-1"/>My courses</a>
+                            </t><t t-else="">
+                                <a class="nav-link nav-link" href="/slides/all?my=1"><i class="fa fa-file mr-1"/>My courses</a>
+                            </t>
                         </div>
                     </div>
                 </nav>
@@ -124,7 +128,7 @@
         <div class="wrap o_wslides_wrap">
             <section class="s_banner bg-900" style="background-image: url(&quot;/website_slides/static/src/img/banner_default_all.svg&quot;); background-size: cover; background-position: 80% 20%">
                 <div class="container py-5">
-                    <h1 class="display-3 mb-0">All Courses</h1>
+                    <h1 class="display-3 mb-0"><t t-if="search_my">My Courses</t><t t-else="">All Courses</t></h1>
                     <h3 class="mb-4">Start your online course today !</h3>
                 </div>
             </section>
@@ -161,8 +165,16 @@
                             </t>
                             <!-- karma / profile -->
                             <li class="nav-item ml-auto" t-if="not is_public_user">
-                                <a t-att-href="'/profile/user/%s' % user.id" class="nav-link mr-2">
+                                <a t-att-href="'/profile/user/%s' % user.id" class="nav-link mr-2"
+                                    role="button" title="My Profile">
                                     <i class="fa fa-diamond"/> <t t-esc="user_id.karma"/>
+                                </a>
+                            </li>
+                            <!-- clear filtering -->
+                            <li class="nav-item" t-if="search_slide_type or search_my or search_tags or search_channel_tag_id">
+                                <a t-att-href="'/slides/all?%s' % keep_query('debug')" class="nav-link mr-2"
+                                    role="button" title="Clear filters">
+                                    <i class="fa fa-eraser"/>
                                 </a>
                             </li>
                         </ul>
