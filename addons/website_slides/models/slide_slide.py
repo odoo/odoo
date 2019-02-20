@@ -109,8 +109,8 @@ class Slide(models.Model):
     completion_time = fields.Float('# Hours', default=1, digits=(10, 4))
     # subscribers
     partner_ids = fields.Many2many('res.partner', 'slide_slide_partner', 'slide_id', 'partner_id',
-                                   string='Subscribers', groups='base.group_website_publisher')
-    slide_partner_ids = fields.One2many('slide.slide.partner', 'slide_id', string='Subscribers information', groups='base.group_website_publisher')
+                                   string='Subscribers', groups='website.group_website_publisher')
+    slide_partner_ids = fields.One2many('slide.slide.partner', 'slide_id', string='Subscribers information', groups='website.group_website_publisher')
     user_membership_id = fields.Many2one(
         'slide.slide.partner', string="Subscriber information", compute='_compute_user_membership_id',
         help="Subscriber information for the current logged in user")
