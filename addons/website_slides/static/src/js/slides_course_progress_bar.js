@@ -1,47 +1,62 @@
 odoo.define('website_slides.progress.bar', function (require) {
 
-    var sAnimations = require('website.content.snippets.animation');
-    var Widget = require('web.Widget');
+var sAnimations = require('website.content.snippets.animation');
+var Widget = require('web.Widget');
 
-    var ProgressBar = Widget.extend({
+/**
+ * TODO awa/qmo:
+ * Right now widgets using this progress bar update the progression using
+ * a global css selector (= dirty).
+ *
+ * They should instead instantiate this widget and attach it to the right element of their template
+ * structure and then update the progression using methods inside this widget.
+ */
+var ProgressBar = Widget.extend({
 
-        /**
-         * @override
-         * @param {Object} el
-         * @param {number} channel_id
-         */
-        init: function (el, completion) {
-            this._super(el);
-            this.completion = completion;
-        },
-        /**
-         * @override
-         */
-        start: function () {
-            this._renderProgressBar();
-            return this._super.apply(this, arguments);
-        },
-        //--------------------------------------------------------------------------
-        // Handlers
-        //--------------------------------------------------------------------------
-        _renderProgressBar: function (ev) {
-            var self = this;
-            $('.oe_slide_js_progress_bar').css('width', (self.completion <= 100 ? self.completion : 100)  + '%');
-        },
-    });
+    /**
+     * @override
+     * @param {integer} options.completion initial progress bar completion (%age)
+     */
+    init: function (parent, options) {
+        this.completion = options.completion;
 
-    sAnimations.registry.websiteSlidesProgressBar = sAnimations.Class.extend({
-        selector: '.oe_slide_js_progress_bar',
-        /**
-         * @override
-         */
-        start: function () {
-            var completion = parseInt($('.oe_slide_js_progress_bar').attr('channel_completion'));
-            var progressBar = new ProgressBar(this, completion);
-            progressBar.appendTo(".oe_slide_js_progress_bar");
-            return this._super.apply(this, arguments);
-        },
-    });
+        this._super(parent, options);
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        this._renderProgressBar();
 
-    return ProgressBar;
-    });
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    _renderProgressBar: function (ev) {
+        if (this.completion) {
+            this.$el.css('width', Math.min(this.completion, 100)  + '%');
+        }
+    },
+});
+
+sAnimations.registry.websiteSlidesProgressBar = sAnimations.Class.extend({
+    selector: '.oe_slide_js_progress_bar',
+
+    /**
+     * @override
+     */
+    start: function () {
+        var completion = parseInt($('.oe_slide_js_progress_bar').attr('channel_completion'));
+        var progressBar = new ProgressBar(this, {completion: completion});
+        progressBar.attachTo(".oe_slide_js_progress_bar");
+
+        return this._super.apply(this, arguments);
+    },
+});
+
+return ProgressBar;
+
+});
