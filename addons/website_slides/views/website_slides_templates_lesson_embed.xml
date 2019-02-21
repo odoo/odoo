@@ -80,8 +80,8 @@
                                 </div>
                                 <canvas id="PDFViewerCanvas" class="img-fluid" style="margin: auto; height: 100%; display: none;"></canvas>
                             </t>
-                            <t t-if="slide.slide_type in ('infographic')">
-                                <img t-attf-src="/web/image/slide.slide/#{slide.id}/datas" class="img-fluid" style="width: 100%" alt="Slide image"/>
+                            <t t-if="slide.slide_type == 'infographic'">
+                                <img t-attf-src="/web/image/slide.slide/#{slide.id}/image" class="img-fluid" style="width: 100%" alt="Slide image"/>
                             </t>
                         </div>
                         <!-- Fixed bottom navbar -->
