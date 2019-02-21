@@ -83,10 +83,10 @@ QUnit.module('Views', {
             // not so easy, because there is an animation which means that we
             // don't really have a nice way to find the proper rect elements.
             // So, instead we will do some white box testing.
-            assert.strictEqual(graph.model.chart.data[0].value, 3,
+            assert.strictEqual(graph.model.chart.dataPoints[0].value, 3,
                 "should have first datapoint with value 3");
-            assert.strictEqual(graph.model.chart.data[1].value, 5,
-                "should have first datapoint with value 5");
+            assert.strictEqual(graph.model.chart.dataPoints[1].value, 5,
+                "should have second datapoint with value 5");
             graph.destroy();
             done();
         });
@@ -391,7 +391,6 @@ QUnit.module('Views', {
                     graph_mode: 'bar',
                     graph_measure: '__count__',
                     graph_groupbys: ['product_id'],
-                    graph_intervalMapping: {},
                 }
             }, "context should be correct");
 
@@ -405,7 +404,6 @@ QUnit.module('Views', {
                     graph_mode: 'bar',
                     graph_measure: 'foo',
                     graph_groupbys: ['product_id'],
-                    graph_intervalMapping: {},
                 },
             }, "context should be correct");
 
@@ -418,7 +416,6 @@ QUnit.module('Views', {
                     graph_mode: 'line',
                     graph_measure: 'foo',
                     graph_groupbys: ['product_id'],
-                    graph_intervalMapping: {},
                 },
             }, "context should be correct");
 
@@ -431,7 +428,6 @@ QUnit.module('Views', {
                     graph_mode: 'line',
                     graph_measure: 'foo',
                     graph_groupbys: ['product_id', 'color_id'],
-                    graph_intervalMapping: {},
                 },
             }, "context should be correct");
 
@@ -642,7 +638,7 @@ QUnit.module('Views', {
 
             assert.strictEqual(graph.renderer.state.mode, "bar",
                 "should be in bar chart mode by default");
-            assert.strictEqual(graph.model.chart.data[0].value, 2,
+            assert.strictEqual(graph.model.chart.dataPoints[0].value, 2,
                 "should have a datapoint with value 2");
             graph.destroy();
             done();
@@ -668,9 +664,9 @@ QUnit.module('Views', {
 
             assert.strictEqual(graph.renderer.state.mode, "bar",
                 "should be in bar chart mode by default");
-            assert.strictEqual(graph.model.chart.data[0].value, 1,
+            assert.strictEqual(graph.model.chart.dataPoints[0].value, 1,
                 "should have first datapoint with value 2");
-            assert.strictEqual(graph.model.chart.data[1].value, 2,
+            assert.strictEqual(graph.model.chart.dataPoints[1].value, 2,
                 "should have second datapoint with value 2");
             graph.destroy();
             done();
@@ -697,9 +693,9 @@ QUnit.module('Views', {
         await testUtils.dom.click(graph.$buttons.find('.dropdown-toggle:contains(Measures)'));
         await testUtils.dom.click(graph.$buttons.find('.dropdown-item[data-field="product_id"]'));
 
-        assert.strictEqual(graph.model.chart.data[0].value, 1,
+        assert.strictEqual(graph.model.chart.dataPoints[0].value, 1,
             "should have first datapoint with value 1");
-        assert.strictEqual(graph.model.chart.data[1].value, 1,
+        assert.strictEqual(graph.model.chart.dataPoints[1].value, 1,
             "should have second datapoint with value 1");
 
         graph.destroy();
