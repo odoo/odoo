@@ -345,6 +345,18 @@ class WebsiteSlides(WebsiteProfile):
                 'total_slides': len(slides_sudo),
                 'slides': slides_sudo,
             }]
+
+        # post slide-fetch computation: promoted, user completion (separated because sudo-ed)
+        if not request.website.is_public_user() and channel.is_member:
+            displayed_slide_ids = list(set(sid for item in category_data for sid in item['slides'].ids))
+            done_slide_ids = request.env['slide.slide.partner'].sudo().search([
+                ('slide_id', 'in', displayed_slide_ids),
+                ('partner_id', '=', request.env.user.partner_id.id),
+                ('completed', '=', True)
+            ]).mapped('slide_id').ids
+        else:
+            done_slide_ids = []
+        values['done_slide_ids'] = done_slide_ids
         values['slide_promoted'] = request.env['slide.slide'].sudo().search(domain, limit=1, order=order)
         values['category_data'] = category_data
 
