@@ -3360,7 +3360,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 _logger.warning('Field %s is deprecated: %s', field, field.deprecated)
 
             if field.column_type:
-                if single_lang or not (has_translation and field.translate is True):
+                if single_lang or not (has_translation and field.translate):
                     # val is not a translation: update the table
                     val = field.convert_to_column(val, self, vals)
                     columns.append((name, field.column_format, val))
