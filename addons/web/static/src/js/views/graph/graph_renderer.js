@@ -13,9 +13,11 @@ var AbstractRenderer = require('web.AbstractRenderer');
 var config = require('web.config');
 var core = require('web.core');
 var field_utils = require('web.field_utils');
+var dataComparisonUtils = require('web.dataComparisonUtils');
 
 var _t = core._t;
 var qweb = core.qweb;
+var DateClasses = dataComparisonUtils.DateClasses;
 
 var CHART_TYPES = ['pie', 'bar', 'line'];
 
@@ -34,10 +36,24 @@ return AbstractRenderer.extend({
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
-        this.isComparison = !!state.comparisonData;
+        this.datasets = [];
         this.isEmbedded = params.isEmbedded;
-        this.stacked = this.isComparison ? false : params.stacked;
+        this.stacked = this.state.compare ? false : params.stacked;
         this.title = params.title || '';
+        this.fields = params.fields || {};
+        this.formatOptions = {
+            // allow to decide if utils.human_number should be used
+            humanReadable: function (value) {
+                return Math.abs(value) >= 1000;
+            },
+            // with the choices below, 1236 is represented by 1.24k
+            minDigits: 1,
+            decimals: 2,
+            // avoid comma separators for thousands in numbers when human_number is used
+            formatterCallback: function (str) {
+                return str;
+            }
+        };
     },
     /**
      * @override
@@ -80,8 +96,7 @@ return AbstractRenderer.extend({
      * @param {Object} params
      */
     updateState: function (state, params) {
-        this.isComparison = !!state.comparisonData;
-        this.stacked = this.isComparison ? false : params.stacked;
+        this.stacked = this.state.compare ? false : params.stacked;
         return this._super.apply(this, arguments);
     },
 
@@ -89,6 +104,16 @@ return AbstractRenderer.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Used to format correctly the value in tooltips and y axis
+     *
+     * @private
+     * @param {number} value
+     * @returns {strin} The number formatted
+     */
+    _formatValue: function (value) {
+        return field_utils.format.float(value, this.formatOption);
+    },
     /**
      * Render the chart.
      *
@@ -111,7 +136,7 @@ return AbstractRenderer.extend({
                 title: _t('Invalid mode for chart'),
                 message: _t('Cannot render chart with mode : ') + this.state.mode
             });
-        } else if (!this.state.data.length &&  this.state.mode !== 'pie') {
+        } else if (!this.state.dataPoints.length && this.state.mode !== 'pie') {
             this.$el.empty();
             this.$el.append(qweb.render('GraphView.error', {
                 title: _t("No data to display"),
@@ -127,6 +152,126 @@ return AbstractRenderer.extend({
         }
         return this._super.apply(this, arguments);
     },
+
+    _prepareDataSets: function (dataPoints) {
+        var self = this;
+        var measure = this.fields[this.state.measure].string;
+
+        function getGroupLabel(dataPt) {
+            // ([origin] + second to last groupBys) or measure
+            var z = dataPt.labels.slice(1).join("/");
+            if (self.state.compare) {
+                z = self.state.origins[dataPt.originIndex] + (z ? ('/' + z) : '');
+            }
+            z = z || measure;
+            return z;
+        }
+
+        function getXLabel(dataPt) {
+            return dataPt.labels.slice(0, 1).join("/") || _t('Total');
+        }
+
+        var comparisonField = this.state.comparisonField;
+        var groupBys = this.state.groupBy.map(function (gb) {
+            return gb.split(":")[0];
+        });
+
+        // if dateIdentification is true, we will identify dates coming from
+        // different origins if they have same rank in the corresponding date sets
+        // (date sets are assumed pairwise disjoint, naturally ordered and not all empty)
+        var dateIdentification = groupBys.indexOf(comparisonField) === 0;
+
+        var dateSets;
+        var dateClasses;
+        if (dateIdentification) {
+            dateSets = this.state.origins.map(function () {
+                return [];
+            });
+            dataPoints.forEach(function (dataPt) {
+                dateSets[dataPt.originIndex].push(dataPt.labels[0]);
+            });
+            dateSets = dateSets.map(function (dateSet) {
+                return _.uniq(dateSet);
+            });
+            var interval = this.state.groupBy[0].split(":")[1] || 'month';
+            dateClasses = new DateClasses(dateSets, interval);
+        }
+
+        // dataPoints --> points separated into different groups
+        var groups = {};
+        var groupInfo = {};
+        var xRange = [];
+        dataPoints.forEach(function (dataPt) {
+            var groupLabel = getGroupLabel(dataPt);
+            if (!(groupLabel in groups)) {
+                groups[groupLabel] = {};
+            }
+            if (!(groupLabel in groupInfo)) {
+                groupInfo[groupLabel] = {
+                    // by construction, all data points in the same group
+                    // have the same origin.
+                    originIndex: dataPt.originIndex,
+                    xLabels: {}
+                };
+            }
+            var xLabel = getXLabel(dataPt);
+            var xValue;
+            if (dateIdentification) {
+                xValue = dateClasses.representative(xLabel);
+            } else {
+                xValue = xLabel;
+            }
+            xRange.push(xValue);
+
+            groups[groupLabel][xValue] = dataPt.value;
+            groupInfo[groupLabel].xLabels[xValue] = xLabel;
+        });
+
+        xRange = _.uniq(xRange);
+
+        // If not dateIdentification, each group is completed to have points over each x in xrange
+        // If dateIdentification, we complete each group to have points over each x corresponding
+        // to a date coming from a datapoint from the same origin.
+        // Each group is transformed into a single datum for nvd3.
+        var datasets = Object.keys(groups).map(function (groupLabel) {
+            var range;
+            var originIndex = groupInfo[groupLabel].originIndex;
+            if (dateIdentification) {
+                range = xRange.slice(0, dateSets[originIndex].length);
+            } else {
+                range = xRange;
+            }
+            var points = range.reduce(
+                function (acc, xValue) {
+                    var y = groups[groupLabel][xValue];
+                    if (!y) {
+                        if (dateIdentification) {
+                            groupInfo[groupLabel].xLabels[xValue] = dateClasses.representative(xValue, originIndex);
+                        } else {
+                            groupInfo[groupLabel].xLabels[xValue] = xValue;
+                        }
+                    }
+                    acc.push({
+                        x: xValue,
+                        y: y || 0,
+                    });
+                    return acc;
+                },
+                []
+            );
+            return {
+                key: groupLabel,
+                values: points
+            };
+        });
+
+        return {
+            datasets: datasets,
+            ticksLabels: xRange,
+            groupInfo: groupInfo,
+        };
+    },
+
     /**
      * Helper function to set up data properly for the multiBarChart model in
      * nvd3.
@@ -134,88 +279,32 @@ return AbstractRenderer.extend({
      * @returns {nvd3 chart}
      */
     _renderBarChart: function () {
-        // prepare data for bar chart
         var self = this;
-        var data = [];
-        var values;
-        var measure = this.state.fields[this.state.measure].string;
 
-        // undefined label value becomes a string 'Undefined' translated
-        this.state.data.forEach(self._sanitizeLabel);
+        // prepare data for bar chart
+        var dataPoints = this.state.dataPoints.filter(function (dataPt) {
+            return dataPt.count > 0;
+        });
 
-        if (this.state.groupedBy.length === 0) {
-            data = [{
-                values: [{
-                    x: _t('Total'),
-                    y: this.state.data[0].value}],
-                key: this.state.timeRangeDescription ?
-                        this.state.timeRangeDescription:
-                        measure,
-            }];
-        } else if (this.state.groupedBy.length === 1) {
-            values = this.state.data.map(function (datapt, index) {
-                return {x: datapt.labels, y: datapt.value};
-            });
-            data.push({
-                values: values,
-                key: this.state.timeRangeDescription ?
-                        this.state.timeRangeDescription:
-                        measure,
-            });
-            if (this.state.comparisonData) {
-                values = this.state.comparisonData.map(function (datapt, index) {
-                    return {x: datapt.labels, y: datapt.value};
-                });
-                data.push({
-                    values: values,
-                    key: this.state.comparisonTimeRangeDescription ?
-                        this.state.comparisonTimeRangeDescription:
-                        measure,
-                    color: '#ff7f0e',
-                });
-            }
-        } else if (this.state.groupedBy.length > 1) {
-            var xlabels = [],
-                series = [],
-                label, serie, value;
-            values = {};
-            for (var i = 0; i < this.state.data.length; i++) {
-                label = this.state.data[i].labels[0];
-                serie = this.state.data[i].labels.slice(1).join("/");
-                value = this.state.data[i].value;
-                if ((!xlabels.length) || (xlabels[xlabels.length-1] !== label)) {
-                    xlabels.push(label);
+        // put data in a format for nvd3
+        var dataProcessed = this._prepareDataSets(dataPoints);
+        var groupInfo = dataProcessed.groupInfo;
+        this.datasets = dataProcessed.datasets;
+
+        // style data
+        if (this.state.groupBy.length === 1) {
+            this.datasets.forEach(function (group) {
+                if (groupInfo[group.key].originIndex === 1) {
+                    group.color = '#ff7f0e';
                 }
-                series.push(serie);
-                if (!(serie in values)) {values[serie] = {};}
-                values[serie][label] = this.state.data[i].value;
-            }
-            series = _.uniq(series);
-            data = [];
-            var current_serie, j;
-            for (i = 0; i < series.length; i++) {
-                current_serie = {values: [], key: series[i]};
-                for (j = 0; j < xlabels.length; j++) {
-                    current_serie.values.push({
-                        x: xlabels[j],
-                        y: values[series[i]][xlabels[j]] || 0,
-                    });
-                }
-                data.push(current_serie);
-            }
-        }
-
-        // For one level Bar chart View, we keep only groups where count > 0
-        if (this.state.groupedBy.length <= 1) {
-            data[0].values  = _.filter(data[0].values, function (elem, index) {
-                return self.state.data[index].count > 0;
             });
         }
 
+        // nvd3 specific
         var $svgContainer = $('<div/>', {class: 'o_graph_svg_container'});
         this.$el.append($svgContainer);
         var svg = d3.select($svgContainer[0]).append('svg');
-        svg.datum(data);
+        svg.datum(this.datasets);
 
         svg.transition().duration(0);
 
@@ -228,37 +317,39 @@ return AbstractRenderer.extend({
             'grouped': _t('Grouped'),
             'stacked': _t('Stacked'),
           },
-          showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
+          showLegend: _.size(this.datasets) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
           showYAxis: true,
           rightAlignYAxis: false,
           stacked: this.stacked,
           reduceXTicks: false,
           rotateLabels: -20,
-          showControls: (this.state.groupedBy.length > 1)
+          showControls: (this.state.groupBy.length > 1)
         });
-        chart.yAxis.tickFormat(function (d) {
-            var measure_field = self.state.fields[self.measure];
-            return field_utils.format.float(d, {
-                digits: measure_field && measure_field.digits || [69, 2],
+
+        chart.yAxis
+            .tickFormat(function (d) {
+                return self._formatValue(d);
             });
-        });
+
 
         chart.tooltip.contentGenerator(function (data) {
             var lines = data.series.map(function (serie) {
-                var label = data.value;
-                if (self.state.groupedBy.length > 1 || self.isComparison) {
+                var label = groupInfo[serie.key].xLabels[data.value];
+                if (self.state.groupBy.length > 1 || self.state.compare) {
                     label = label + "/" + serie.key;
                 }
                 return {
                     color: serie.color,
                     label: label,
-                    value: serie.value,
+                    value: self._formatValue(serie.value),
                 };
             });
             return qweb.render("web.Chart.Tooltip", {
-                title: self.state.fields[self.state.measure].string,
-                lines: lines,
+                title: self.fields[self.state.measure].string,
+                lines: lines.sort(function (line1, line2) {
+                    return line2.value - line1.value;
+                }),
             });
         });
 
@@ -274,17 +365,16 @@ return AbstractRenderer.extend({
      *.
      * @returns {nvd3 chart|undefined}
      */
-    _renderPieChart: function (stateData) {
+    _renderPieChart: function (originIndex) {
         var self = this;
-        var data = [];
         var all_negative = true;
         var some_negative = false;
         var all_zero = true;
 
-        // undefined label value becomes a string 'Undefined' translated
-        stateData.forEach(self._sanitizeLabel);
-
-        stateData.forEach(function (datapt) {
+        var dataPoints = this.state.dataPoints.filter(function (dataPt) {
+            return dataPt.originIndex === originIndex && dataPt.count > 0;
+        });
+        dataPoints.forEach(function (datapt) {
             all_negative = all_negative && (datapt.value < 0);
             some_negative = some_negative || (datapt.value < 0);
             all_zero = all_zero && (datapt.value === 0);
@@ -298,9 +388,9 @@ return AbstractRenderer.extend({
             return;
         }
         if (all_zero) {
-            if (this.isEmbedded || this.isComparison) {
+            if (this.isEmbedded || this.state.compare) {
                 // add fake data to display an empty pie chart
-                data = [{
+                this.datasets = [{
                     x : "No data" ,
                     y : 1
                 }];
@@ -313,22 +403,18 @@ return AbstractRenderer.extend({
                 return;
             }
         } else {
-            if (this.state.groupedBy.length) {
-                data = stateData.map(function (datapt) {
-                    return {x:datapt.labels.join("/"), y: datapt.value};
-                });
-            }
-
-            // We only keep groups where count > 0
-            data  = _.filter(data, function (elem, index) {
-                return stateData[index].count > 0;
+            this.datasets = dataPoints.map(function (datapt) {
+                return {
+                    x: datapt.labels.join("/") || _t('Total'),
+                    y: datapt.value,
+                };
             });
         }
 
         var $svgContainer = $('<div/>', {class: 'o_graph_svg_container'});
         this.$el.append($svgContainer);
         var svg = d3.select($svgContainer[0]).append('svg');
-        svg.datum(data);
+        svg.datum(this.datasets);
 
         svg.transition().duration(100);
 
@@ -348,7 +434,7 @@ return AbstractRenderer.extend({
         var chart = nv.models.pieChart().labelType('percent');
         chart.options({
           delay: 250,
-          showLegend: !all_zero && (legend_right || _.size(data) <= MAX_LEGEND_LENGTH),
+          showLegend: !all_zero && (legend_right || _.size(this.datasets) <= MAX_LEGEND_LENGTH),
           legendPosition: legend_right ? 'right' : 'top',
           transition: 100,
           color: color,
@@ -357,11 +443,11 @@ return AbstractRenderer.extend({
 
         chart.tooltip.contentGenerator(function (data) {
             return qweb.render("web.Chart.Tooltip", {
-                title: self.state.fields[self.state.measure].string,
+                title: self.fields[self.state.measure].string,
                 lines : [{
                     color: data.color,
                     label: data.data.x,
-                    value: data.data.y,
+                    value: self._formatValue(data.data.y),
                 }],
             });
         });
@@ -378,93 +464,44 @@ return AbstractRenderer.extend({
     _renderLineChart: function () {
         var self = this;
 
-        // Remove Undefined of first GroupBy
-        var graphData = _.filter(this.state.data, function (elem) {
-            return elem.labels[0] !== undefined && elem.labels[0] !== _t("Undefined");
+        // remove some data points
+        var dataPoints = this.state.dataPoints.filter(function (dataPt) {
+            return dataPt.labels[0] !== _t("Undefined");
         });
 
-        // undefined label value becomes a string 'Undefined' translated
-        this.state.data.forEach(self._sanitizeLabel);
+        var dataProcessed = this._prepareDataSets(dataPoints);
+        var ticksLabels = dataProcessed.ticksLabels;
+        var groupInfo = dataProcessed.groupInfo;
+        this.datasets = dataProcessed.datasets;
 
-        var data = [];
-        var ticksLabels = [];
-        var measure = this.state.fields[this.state.measure].string;
-        var values;
-
-        if (this.state.groupedBy.length === 1) {
-            values = graphData.map(function (datapt, index) {
-                return {x: index, y: datapt.value};
+        // style data
+        if (this.state.groupBy.length === 1) {
+            this.datasets.forEach(function (group) {
+                if (groupInfo[group.key].originIndex === 0) {
+                    group.area = true;
+                }
+                if (groupInfo[group.key].originIndex === 1) {
+                    group.color = '#ff7f0e';
+                }
             });
-            data.push({
-                    area: true,
-                    values: values,
-                    key: this.state.timeRangeDescription ?
-                        this.state.timeRangeDescription:
-                        measure,
-                });
-            if (this.state.comparisonData && this.state.comparisonData.length > 0) {
-                values = this.state.comparisonData.map(function (datapt, index) {
-                    return {x: index, y: datapt.value};
-                });
-                data.push({
-                    values: values,
-                    key: this.state.comparisonTimeRangeDescription ?
-                        this.state.comparisonTimeRangeDescription:
-                        measure,
-                    color: '#ff7f0e',
-                });
-            }
-
-            for (var i = 0; i < graphData.length; i++) {
-                ticksLabels.push(graphData[i].labels);
-            }
-            if (this.state.comparisonData && this.state.comparisonData.length > this.state.data.length) {
-                var diff = this.state.comparisonData.length - this.state.data.length;
-                var length = self.state.data.length;
-                var diffTime = 0;
-                if (length < self.state.data.length) {
-                    var date1 = moment(self.state.data[length - 1].labels[0]);
-                    var date2 = moment(self.state.data[length - 2].labels[0]);
-                    diffTime = date1 - date2;
-                    for (i = 0; i < diff; i++) {
-                        var value = moment(date1).add(diffTime + i * diffTime).format('DD MMM YYYY');
-                        ticksLabels.push([value]);
-                    }
-                }
-            }
-        } else if (this.state.groupedBy.length > 1) {
-            var data_dict = {};
-            var tick = 0;
-            var serie, tickLabel;
-            var identity = function (p) {return p;};
-            for (var i = 0; i < graphData.length; i++) {
-                if (graphData[i].labels[0] !== tickLabel) {
-                    tickLabel = graphData[i].labels[0];
-                    ticksLabels.push(tickLabel);
-                    tick++;
-                }
-                serie = graphData[i].labels.slice(1).join("/");
-                if (!data_dict[serie]) {
-                    data_dict[serie] = {
-                        values: [],
-                        key: serie,
-                    };
-                }
-                data_dict[serie].values.push({
-                    x: tick - 1, y: graphData[i].value,
-                });
-                data = _.map(data_dict, identity);
-            }
         }
+        this.datasets.forEach(function (group) {
+            group.values = group.values.map(function (value) {
+                return {
+                    x: ticksLabels.indexOf(value.x),
+                    y: value.y
+                };
+            });
+        });
 
         var $svgContainer = $('<div/>', { class: 'o_graph_svg_container'});
         // Split the tooltip into columns for large data because some portion goes out off the screen.
-        if (data.length >= SPLIT_THRESHOLD) {
+        if (this.datasets.length >= SPLIT_THRESHOLD) {
             $svgContainer.addClass('o_tooltip_split_in_columns');
         }
         this.$el.append($svgContainer);
         var svg = d3.select($svgContainer[0]).append('svg');
-        svg.datum(data);
+        svg.datum(this.datasets);
 
         svg.transition().duration(0);
 
@@ -472,9 +509,10 @@ return AbstractRenderer.extend({
         chart.options({
           margin: {left: 0, bottom: 20, top: 0, right: 0},
           useInteractiveGuideline: true,
-          showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
+          showLegend: _.size(this.datasets) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
           showYAxis: true,
+          stacked: true,
         });
         chart.forceY([0]);
         chart.xAxis
@@ -484,35 +522,37 @@ return AbstractRenderer.extend({
         chart.yAxis
             .showMaxMin(false)
             .tickFormat(function (d) {
-                return field_utils.format.float(d, {
-                    digits : self.state.fields[self.state.measure] && self.state.fields[self.state.measure].digits || [69, 2],
-                });
+                return self._formatValue(d);
             });
         chart.yAxis.tickPadding(5);
         chart.yAxis.orient("right");
 
         chart.interactiveLayer.tooltip.contentGenerator(function (data) {
-            var lines = data.series.map(function (serie) {
-                var label = ticksLabels[data.value];
-                if (self.state.groupedBy.length > 1 || self.isComparison) {
+            var lines = data.series.filter(function (serie) {
+                return serie.data.x === data.value;
+            }).map(function (serie) {
+                var label = groupInfo[serie.key].xLabels[ticksLabels[data.value]];
+                if (self.state.groupBy.length > 1 || self.state.compare) {
                     label = label + "/" + serie.key;
                 }
                 return {
                     color: serie.color,
                     label: label,
-                    value: serie.value,
+                    value: self._formatValue(serie.value),
                 };
             });
             return qweb.render("web.Chart.Tooltip", {
-                title: self.state.fields[self.state.measure].string,
-                lines: lines,
+                title: self.fields[self.state.measure].string,
+                lines: lines.sort(function (line1, line2) {
+                    return line2.value - line1.value;
+                }),
             });
         });
 
         chart(svg);
 
         // Bigger line (stroke-width 1.5 is hardcoded in nv.d3)
-        $svgContainer.find('.nvd3 .nv-groups g.nv-group').css('stroke-width', '2px')
+        $svgContainer.find('.nvd3 .nv-groups g.nv-group').css('stroke-width', '2px');
 
         // Delete first and last label because there is no enough space because
         // of the tiny margins.
@@ -533,14 +573,14 @@ return AbstractRenderer.extend({
 
         this.$el.empty();
 
-        var chartResize = function (chart){
+        function chartResize (chart){
             if (chart && chart.tooltip.chartContainer) {
                 self.to_remove = chart.update;
                 nv.utils.onWindowResize(chart.update);
                 chart.tooltip.chartContainer(self.$('.o_graph_svg_container').last()[0]);
             }
         }
-        var chart = this['_render' + _.str.capitalize(this.state.mode) + 'Chart'](this.state.data);
+        var chart = this['_render' + _.str.capitalize(this.state.mode) + 'Chart'](0);
 
         if (chart) {
             chart.dispatch.on('renderEnd', function () {
@@ -548,12 +588,11 @@ return AbstractRenderer.extend({
                 $('.nv-y .tick > line').attr('x2', function (i, value) {
                     return Math.abs(value);
                 });
-            })
-
+            });
             chartResize(chart);
         }
 
-        if (this.state.mode === 'pie' && this.isComparison) {
+        if (this.state.mode === 'pie' && this.state.compare) {
             // Render graph title
             var chartTitle = this.title + ' (' + this.state.timeRangeDescription + ')';
             this.$('.o_graph_svg_container').last().prepend($('<label/>', {
@@ -561,7 +600,7 @@ return AbstractRenderer.extend({
             }));
 
             // Instantiate comparison graph
-            var comparisonChart = this['_render' + _.str.capitalize(this.state.mode) + 'Chart'](this.state.comparisonData);
+            var comparisonChart = this['_render' + _.str.capitalize(this.state.mode) + 'Chart'](1);
             // Render comparison graph title
             var comparisonChartTitle = this.title + ' (' + this.state.comparisonTimeRangeDescription + ')';
             this.$('.o_graph_svg_container').last().prepend($('<label/>', {
@@ -576,20 +615,6 @@ return AbstractRenderer.extend({
                 text: this.title,
             }));
         }
-    },
-    /**
-     * Helper function, turns label value into a usable string form if it is
-     * undefined, that we can display in the interface.
-     *
-     * @param {Array} datapt an array that contains groupby labels of the graph
-     *     received by the read_group rpc.
-     * @returns {string}
-     */
-    _sanitizeLabel: function (datapt) {
-        datapt.labels = datapt.labels.map(function(label) {
-            if (label === undefined) return _t("Undefined");
-            return label;
-        });
     },
 });
 

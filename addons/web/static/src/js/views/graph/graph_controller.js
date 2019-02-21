@@ -71,13 +71,7 @@ var GraphController = AbstractController.extend(GroupByMenuMixin,{
             context: {
                 graph_measure: state.measure,
                 graph_mode: state.mode,
-                graph_groupbys: state.groupedBy,
-                // this parameter is not used anywher for now
-                // the idea would be to seperate intervals from
-                // fieldnames in groupbys. This could be done
-                // in graph view only or everywhere but this is
-                // a big refactoring.
-                graph_intervalMapping: state.intervalMapping,
+                graph_groupbys: state.groupBy,
             }
         };
     },
@@ -115,10 +109,10 @@ var GraphController = AbstractController.extend(GroupByMenuMixin,{
      * override
      *
      * @private
-     * @param {string[]} groupBys
+     * @param {string[]} groupBy
      */
-    _setGroupby: function (groupBys) {
-        this.update({groupBy: groupBys});
+    _setGroupby: function (groupBy) {
+        this.update({groupBy: groupBy});
     },
 
     /**
@@ -127,7 +121,7 @@ var GraphController = AbstractController.extend(GroupByMenuMixin,{
      *
      * private
      *
-     * @param {string} mode one of 'pie', 'line' or 'bar'
+     * @param {'pie'|'line'|'bar'} mode
      */
     _setMode: function (mode) {
         this.update({mode: mode});

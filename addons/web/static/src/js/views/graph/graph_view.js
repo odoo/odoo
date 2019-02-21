@@ -49,14 +49,12 @@ var GraphView = AbstractView.extend({
         var groupBys = [];
         var measures = {__count__: {string: _t("Count"), type: "integer"}};
         var groupableFields = {};
-        var intervalMapping = {};
         this.fields.__count__ = {string: _t("Count"), type: "integer"};
 
         this.arch.children.forEach(function (field) {
             var fieldName = field.attrs.name;
             var interval = field.attrs.interval;
             if (interval) {
-                intervalMapping[fieldName] = interval;
                 fieldName = fieldName + ':' + interval;
             }
             if (field.attrs.type === 'measure') {
@@ -81,13 +79,13 @@ var GraphView = AbstractView.extend({
 
         this.controllerParams.measures = measures;
         this.controllerParams.groupableFields = groupableFields;
+        this.rendererParams.fields = this.fields;
         this.rendererParams.stacked = this.arch.attrs.stacked !== "False";
         this.rendererParams.title = this.arch.attrs.title; // TODO: use attrs.string instead
 
         this.loadParams.mode = this.arch.attrs.type || 'bar';
         this.loadParams.measure = measure || '__count__';
-        this.loadParams.groupBys = groupBys || [];
-        this.loadParams.intervalMapping = intervalMapping;
+        this.loadParams.groupBys = groupBys;
         this.loadParams.fields = this.fields;
         this.loadParams.comparisonDomain = params.comparisonDomain;
     },
