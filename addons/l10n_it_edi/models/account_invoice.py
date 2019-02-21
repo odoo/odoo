@@ -49,6 +49,12 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def invoice_validate(self):
+        # Clean context from default_type to avoid making attachment
+        # with wrong values in subsequent operations
+        cleaned_ctx = dict(self.env.context)
+        cleaned_ctx.pop('default_type', None)
+        self = self.with_context(cleaned_ctx)
+
         super(AccountInvoice, self).invoice_validate()
         for invoice in self:
             if invoice.company_id.country_id != self.env.ref('base.it'):
