@@ -10,6 +10,7 @@ var ListView = require('web.ListView');
 var mixins = require('web.mixins');
 var NotificationService = require('web.NotificationService');
 var testUtils = require('web.test_utils');
+var testUtilsDom = require('web.test_utils_dom');
 var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
 
@@ -273,6 +274,51 @@ QUnit.module('Views', {
 
         list.$buttons.find('.o_list_button_add').click();
         assert.verifySteps(['search_read', 'default_get'], "no nameget should be done");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list datetimepicker destroy widget', function (assert) {
+        assert.expect(7);
+        var done = assert.async();
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<field name="date"/>' +
+                '</tree>',
+        });
+        list.$el.on({
+            'show.datetimepicker': function () {
+                assert.equal($('.bootstrap-datetimepicker-widget').length, 1,
+                    'The datetimepicker is open');
+
+                assert.equal(list.$('.o_data_row').length, 5,
+                    'There should be 5 rows');
+
+                assert.equal(list.$('.o_selected_row').length, 1,
+                    'One row in edit mode');
+
+                list.$('input.o_datepicker_input').trigger($.Event('keydown', {which: $.ui.keyCode.ESCAPE}));
+
+                assert.equal(list.$('.o_data_row').length, 4,
+                    'There should be 4 rows');
+
+                assert.equal(list.$('.o_selected_row').length, 0,
+                    'No row should be in edit mode');
+
+                done();
+            }
+        });
+        assert.equal(list.$('.o_data_row').length, 4,
+            'There should be 4 rows');
+
+        assert.equal(list.$('.o_selected_row').length, 0,
+            'No row should be in edit mode');
+
+        testUtilsDom.click(list.$buttons.find('.o_list_button_add'));
 
         list.destroy();
     });
