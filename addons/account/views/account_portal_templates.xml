@@ -113,7 +113,7 @@
                                     </div>
                                     <div class="col pl-0">
                                         <span t-field="invoice.user_id" t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
-                                        <a data-toggle="modal" href="#" data-target="#invoice_chatter" class="small"><i class="fa fa-fw fa-comments"/><b>Send message</b></a>
+                                        <a href="#invoice_history" class="small"><i class="fa fa-fw fa-comments"/><b>Send message</b></a>
                                     </div>
                                 </div>
                             </li>
@@ -134,28 +134,14 @@
                             <iframe id="invoice_html" class="mt8 mb8" width="100%" height="100%" frameborder="0" scrolling="no" t-att-src="invoice.get_portal_url(report_type='html')"/>
                         </div>
                     </div>
-                </div>
-            </div>
-        </xpath>
-    </template>
-
-    <template id="portal_invoice_chatter" name="Allow Comments &amp; History" inherit_id="account.portal_invoice_page">
-        <xpath expr="//div[@id='invoice_content']//div[hasclass('o_portal_html_view')]" position="after">
-            <div class="modal fade" id="invoice_chatter" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h3 class="mt0 ml16 mb0">History</h3>
-                            <button type="button" class="close" data-dismiss="modal">&amp;times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <t t-call="portal.message_thread">
-                                <t t-set="token" t-value="invoice.access_token"/>
-                                <t t-set="object" t-value="invoice"/>
-                                <t t-set="pid" t-value="pid"/>
-                                <t t-set="hash" t-value="hash"/>
-                            </t>
-                        </div>
+                    <div id="invoice_communication" class="mt-4 pl-4 col-sm-11">
+                        <h2 id="invoice_history">History</h2>
+                        <t t-call="portal.message_thread">
+                            <t t-set="token" t-value="invoice.access_token"/>
+                            <t t-set="object" t-value="invoice"/>
+                            <t t-set="pid" t-value="pid"/>
+                            <t t-set="hash" t-value="hash"/>
+                        </t>
                     </div>
                 </div>
             </div>

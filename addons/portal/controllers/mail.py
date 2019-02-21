@@ -90,7 +90,7 @@ def _message_post_helper(res_model, res_id, message, token='', nosubscribe=True,
 
 class PortalChatter(http.Controller):
 
-    @http.route(['/mail/chatter_post'], type='http', methods=['POST'], auth='public', website=True)
+    @http.route(['/mail/chatter_post'], type='json', methods=['POST'], auth='public', website=True)
     def portal_chatter_post(self, res_model, res_id, message, **kw):
         url = request.httprequest.referrer
         if message:
@@ -98,7 +98,7 @@ class PortalChatter(http.Controller):
             message = plaintext2html(message)
             _message_post_helper(res_model, int(res_id), message, **kw)
             url = url + "#discussion"
-        return request.redirect(url)
+        return url
 
     @http.route('/mail/chatter_init', type='json', auth='public', website=True)
     def portal_chatter_init(self, res_model, res_id, domain=False, limit=False, **kwargs):

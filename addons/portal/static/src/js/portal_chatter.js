@@ -60,8 +60,8 @@ var PortalChatter = Widget.extend({
     template: 'portal.Chatter',
     events: {
         "click .o_portal_chatter_pager_btn": '_onClickPager',
+        "submit .o_portal_chatter_composer_form": '_onChatterFormSubmit',
     },
-    xmlDependencies: ['/portal/static/src/xml/portal_chatter.xml'],
 
     init: function(parent, options){
         var self = this;
@@ -95,19 +95,8 @@ var PortalChatter = Widget.extend({
         this._current_page = this.options['pager_start'];
     },
     willStart: function(){
-        var self = this;
         // load qweb template and init data
-        return $.when(
-            rpc.query({
-                route: '/mail/chatter_init',
-                params: this._messageFetchPrepareParams()
-            }),
-            this._super.apply(this, arguments),
-        ).then(function(result){
-            self.result = result;
-            self.options = _.extend(self.options, self.result['options'] || {});
-            return result;
-        });
+        return $.when(this.initializeData(), this._loadTemplates());
     },
     /**
      * @override
@@ -121,10 +110,6 @@ var PortalChatter = Widget.extend({
         });
         this.on("change:pager", this, this._renderPager);
         this.on("change:domain", this, this._onChangeDomain);
-        // set options and parameters
-        this.set('message_count', this.options['message_count']);
-        this.set('messages', this.preprocessMessages(this.result['messages']));
-
 
         var defs = [];
         defs.push(this._super.apply(this, arguments));
@@ -142,6 +127,27 @@ var PortalChatter = Widget.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    /*
+     * initialize data, fetches data and prepare it for template rendering
+     * this method is called from willStart to get initialize data first time and
+     * from reinitialize method to fetch latest data
+     *
+     */
+    initializeData: function () {
+        var self = this;
+        return rpc.query({
+                route: '/mail/chatter_init',
+                params: this._messageFetchPrepareParams()
+            }).then(function (result) {
+                self.result = result;
+                self.options = _.extend(self.options, self.result['options'] || {});
+                // set options and parameters
+                self.set('message_count', self.options['message_count']);
+                self.set('messages', self.preprocessMessages(self.result['messages']));
+
+                return result;
+            });
+    },
     /**
      * Fetch the messages and the message count from the server for the
      * current page and current domain.
@@ -172,6 +178,22 @@ var PortalChatter = Widget.extend({
         });
         return messages;
     },
+    /*
+     * fetch latest data/messages and re-render widget with latest data
+     */
+    reinitialize: function () {
+        var self = this;
+        this.initializeData().then(function (result) {
+            var defs = [];
+
+            self._render();
+            if (self.options['display_composer']) {
+                self._composer = new PortalComposer(self, self.options);
+                defs.push(self._composer.replace(self.$('.o_portal_chatter_composer')));
+            }
+            return $.when.apply($, defs);
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -188,6 +210,13 @@ var PortalChatter = Widget.extend({
         this._current_page = page;
         var d = domain ? domain : _.clone(this.get('domain'));
         this.set('domain', d); // trigger fetch message
+    },
+    /**
+     * @private
+     * @returns {Deferred}
+     */
+    _loadTemplates: function(){
+        return ajax.loadXML('/portal/static/src/xml/portal_chatter.xml', qweb);
     },
     _messageFetchPrepareParams: function(){
         var self = this;
@@ -252,6 +281,16 @@ var PortalChatter = Widget.extend({
             "pages": pages
         };
     },
+     /*
+     * renders template, method is called explicitly to render widget
+     * method created so that later it can be re-called when re-rendering needed
+     *
+     */
+    _render: function () {
+        this.$el.html(qweb.render('portal.Chatter', {
+            widget: this,
+        }));
+    },
     _renderMessages: function(){
         this.$('.o_portal_chatter_messages').html(qweb.render("portal.chatter_messages", {widget: this}));
     },
@@ -272,6 +311,25 @@ var PortalChatter = Widget.extend({
             var p = self._current_page;
             self.set('pager', self._pager(p));
         });
+    },
+    /**
+     * Submits form data manually when message is published from chatter
+     * also re-render widget once message is posted
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onChatterFormSubmit: function (ev) {
+        ev.preventDefault();
+        var self = this;
+        var message = this.$el.find('textarea[name="message"]').val();
+        if (message) {
+            ajax.jsonRpc(ev.currentTarget.action, 'call', {'res_model': this.options.res_model, 'res_id': this.options.res_id, 'message': message, 'token': this.options.token})
+                .done(function () {
+                    // re-render widget after message post
+                    self.reinitialize();
+                });
+        }
     },
     /**
      * @private
