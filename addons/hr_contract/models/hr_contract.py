@@ -86,6 +86,8 @@ class Contract(models.Model):
     visa_expire = fields.Date('Visa Expire Date', related="employee_id.visa_expire", readonly=False)
     reported_to_secretariat = fields.Boolean('Social Secretariat',
         help='Green this button when the contract information has been transfered to the social secretariat.')
+    hr_responsible_id = fields.Many2one('res.users', 'HR Responsible', tracking=True,
+        help='Person responsible for validating the employee\'s contracts.')
 
     def _expand_states(self, states, domain, order):
         return [key for key, val in type(self).state.selection]
