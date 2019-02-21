@@ -201,48 +201,52 @@
             <t t-set="additional_title">Shop</t>
             <div id="wrap" class="js_sale">
                 <div class="oe_structure" id="oe_structure_website_sale_products_1"/>
-                <div class="container py-2 oe_website_sale">
-                    <div class="products_pager form-inline justify-content-center">
-                        <t t-call="website_sale.search"/>
+                <div class="container oe_website_sale">
+                    <div class="products_pager form-inline flex-md-nowrap justify-content-between justify-content-md-center">
+                        <t t-call="website_sale.search">
+                            <t t-set="_classes">w-100 w-md-auto mt-2</t>
+                        </t>
                         <t t-call="website_sale.pricelist_list">
-                            <t t-set="_classes">ml-2</t>
+                            <t t-set="_classes">mt-2 ml-md-2</t>
                         </t>
                         <t t-call="website.pager">
-                            <t t-set="_classes">ml-2</t>
+                            <t t-set="_classes">mt-2 ml-md-2</t>
                         </t>
                     </div>
-                    <div class="row mt-3">
+                    <div class="row o_wsale_products_main_row">
                         <div t-if="enable_left_column" id="products_grid_before" class="col-lg-3"/>
                         <div id="products_grid" class="col">
                             <t t-if="category">
                                 <t t-set='editor_msg'>Drag building blocks here to customize the header for "<t t-esc='category.name'/>" category.</t>
                                 <div class="mb16" id="category_header" t-att-data-editor-message="editor_msg" t-field="category.website_description"/>
                             </t>
-                            <table t-if="bins" class="table table-borderless my-2" t-att-data-ppg="ppg" t-att-data-ppr="ppr">
-                                <colgroup t-ignore="true">
-                                    <!-- Force the number of columns (useful when only one row of (x < ppr) products) -->
-                                    <col t-foreach="ppr" t-as="p"/>
-                                </colgroup>
-                                <tbody>
-                                    <tr t-foreach="bins" t-as="tr_product">
-                                        <t t-foreach="tr_product" t-as="td_product">
-                                            <t t-if="td_product">
-                                                <t t-set="product" t-value="td_product['product']" />
-                                                <td t-att-colspan="td_product['x'] != 1 and td_product['x']"
-                                                    t-att-rowspan="td_product['y'] != 1 and td_product['y']"
-                                                    t-attf-class="oe_product #{td_product['class']}">
-                                                    <div t-attf-class="o_wsale_product_grid_filler"
-                                                        t-attf-style="padding-top: #{'%.2f' % (100 * td_product['y'] / td_product['x'])}%;"/>
-                                                    <t t-call="website_sale.products_item">
-                                                        <t t-set="product_image_big" t-value="td_product['x'] + td_product['y'] &gt; 2"/>
-                                                    </t>
-                                                </td>
+                            <div t-if="bins" class="o_wsale_products_grid_table_wrapper">
+                                <table class="table table-borderless m-0" t-att-data-ppg="ppg" t-att-data-ppr="ppr">
+                                    <colgroup t-ignore="true">
+                                        <!-- Force the number of columns (useful when only one row of (x < ppr) products) -->
+                                        <col t-foreach="ppr" t-as="p"/>
+                                    </colgroup>
+                                    <tbody>
+                                        <tr t-foreach="bins" t-as="tr_product">
+                                            <t t-foreach="tr_product" t-as="td_product">
+                                                <t t-if="td_product">
+                                                    <t t-set="product" t-value="td_product['product']" />
+                                                    <td t-att-colspan="td_product['x'] != 1 and td_product['x']"
+                                                        t-att-rowspan="td_product['y'] != 1 and td_product['y']"
+                                                        t-attf-class="oe_product #{td_product['class']}">
+                                                        <div t-attf-class="o_wsale_product_grid_filler"
+                                                            t-attf-style="padding-top: #{'%.2f' % (100 * td_product['y'] / td_product['x'])}%;"/>
+                                                        <t t-call="website_sale.products_item">
+                                                            <t t-set="product_image_big" t-value="td_product['x'] + td_product['y'] &gt; 2"/>
+                                                        </t>
+                                                    </td>
+                                                </t>
+                                                <td t-else=""/>
                                             </t>
-                                            <td t-else=""/>
-                                        </t>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                             <t t-else="">
                                 <div class="text-center text-muted oe_product">
                                     <h3 class="css_editable_display mt8">No product defined.</h3>
@@ -278,16 +282,19 @@
                 (name_desc_label, 'name desc')
             ]"/>
             <t t-set="website_sale_sortable_current" t-value="[sort for sort in website_sale_sortable if sort[1]==request.params.get('order', '')]"/>
-            <div class="dropdown ml-2 dropdown_sorty_by">
+            <div class="dropdown mt-2 ml-md-2 dropdown_sorty_by">
                 <a role="button" href="#" class="dropdown-toggle btn btn-secondary" data-toggle="dropdown">
-                    <t t-if='len(website_sale_sortable_current)'>
-                        <span>Sorting by : <t t-raw='website_sale_sortable_current[0][0]'/></span>
-                    </t>
-                    <t t-else='1'>
-                        <span>Sort by</span>
-                    </t>
+                    <span class="d-none d-lg-inline">
+                        <t t-if='len(website_sale_sortable_current)'>
+                            Sorting by : <t t-raw='website_sale_sortable_current[0][0]'/>
+                        </t>
+                        <t t-else='1'>
+                            Sort by
+                        </t>
+                    </span>
+                    <i class="fa fa-sort-amount-asc d-lg-none"/>
                 </a>
-                <div class="dropdown-menu" role="menu">
+                <div class="dropdown-menu dropdown-menu-right" role="menu">
                     <t t-foreach="website_sale_sortable" t-as="sortby">
                         <a role="menuitem" t-att-href="keep('/shop', order=sortby[1])" class="dropdown-item">
                             <span t-raw="sortby[0]"/>
@@ -300,7 +307,7 @@
 
     <template id="add_grid_or_list_option" inherit_id="website_sale.products" active="True" customize_show="True" name="Grid or List button">
         <xpath expr="//div[hasclass('products_pager')]/t[@t-call][last()]" position="after">
-            <div class="btn-group btn-group-toggle ml-2 o_wsale_apply_layout" data-toggle="buttons">
+            <div class="btn-group btn-group-toggle mt-2 ml-md-2 d-none d-sm-inline-flex o_wsale_apply_layout" data-toggle="buttons">
                 <label class="btn btn-secondary fa fa-th-large o_wsale_apply_grid" title="Grid">
                     <input type="radio" name="wsale_products_layout"/>
                 </label>
@@ -337,7 +344,7 @@
                 Show categories
             </button>
             <div class="collapse d-lg-block" id="wsale_products_categories_collapse">
-                <ul class="nav nav-pills flex-column my-2">
+                <ul class="nav nav-pills flex-column mb-2">
                     <li class="nav-item">
                         <a t-att-href="keep('/shop', category=0)" t-attf-class="nav-link#{'' if category else ' active'} o_not_editable">All Products</a>
                     </li>
@@ -384,7 +391,7 @@
                 Show options
             </button>
             <div class="collapse d-lg-block" id="wsale_products_attributes_collapse">
-                <form class="js_attributes my-2" method="get">
+                <form class="js_attributes mb-2" method="get">
                     <input type="hidden" name="search" t-att-value="search" />
                     <ul class="nav nav-pills flex-column">
                         <t t-foreach="attributes" t-as="a">
