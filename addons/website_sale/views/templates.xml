@@ -332,14 +332,20 @@
             <t t-set="enable_left_column" t-value="True"/>
         </xpath>
         <xpath expr="//div[@id='products_grid_before']" position="inside">
-            <ul class="nav nav-pills flex-column my-2">
-                <li class="nav-item">
-                    <a t-att-href="keep('/shop', category=0)" t-attf-class="nav-link#{'' if category else ' active'} o_not_editable">All Products</a>
-                </li>
-                <t t-foreach="categories" t-as="c">
-                    <t t-call="website_sale.categories_recursive" />
-                </t>
-            </ul>
+            <button type="button" class="btn btn-link d-lg-none"
+                data-target="#wsale_products_categories_collapse" data-toggle="collapse">
+                Show categories
+            </button>
+            <div class="collapse d-lg-block" id="wsale_products_categories_collapse">
+                <ul class="nav nav-pills flex-column my-2">
+                    <li class="nav-item">
+                        <a t-att-href="keep('/shop', category=0)" t-attf-class="nav-link#{'' if category else ' active'} o_not_editable">All Products</a>
+                    </li>
+                    <t t-foreach="categories" t-as="c">
+                        <t t-call="website_sale.categories_recursive" />
+                    </t>
+                </ul>
+            </div>
         </xpath>
     </template>
 
@@ -373,45 +379,51 @@
             <t t-set="enable_left_column" t-value="True"/>
         </xpath>
         <xpath expr="//div[@id='products_grid_before']" position="inside">
-            <form class="js_attributes my-2" method="get">
-                <input type="hidden" name="search" t-att-value="search" />
-                <ul class="nav nav-pills flex-column">
-                    <t t-foreach="attributes" t-as="a">
-                        <li t-if="a.value_ids and len(a.value_ids) &gt; 1" class="nav-item">
-                            <div>
-                                <strong t-field="a.name" />
-                            </div>
-                            <t t-if="a.type == 'select'">
-                                <select class="form-control" name="attrib">
-                                    <option value="" />
-                                    <t t-foreach="a.value_ids" t-as="v">
-                                        <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set" />
-                                    </t>
-                                </select>
-                            </t>
-                            <t t-if="a.type == 'radio'">
-                                <ul class="nav nav-pills flex-column">
-                                    <t t-foreach="a.value_ids" t-as="v">
-                                        <li class="nav-item">
-                                            <label style="margin: 0 20px;" t-attf-class="nav-link#{' active' if v.id in attrib_set else ''}">
-                                                <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" />
-                                                <span style="font-weight: normal" t-field="v.name" />
-                                            </label>
-                                        </li>
-                                    </t>
-                                </ul>
-                            </t>
-                            <t t-if="a.type == 'color'">
-                                <t t-foreach="a.value_ids" t-as="v">
-                                    <label t-attf-style="background-color:#{v.html_color or v.name}" t-attf-class="css_attribute_color #{'active' if v.id in attrib_set else ''}">
-                                        <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" t-att-title="v.name" />
-                                    </label>
+            <button type="button" class="btn btn-link d-lg-none"
+                data-target="#wsale_products_attributes_collapse" data-toggle="collapse">
+                Show options
+            </button>
+            <div class="collapse d-lg-block" id="wsale_products_attributes_collapse">
+                <form class="js_attributes my-2" method="get">
+                    <input type="hidden" name="search" t-att-value="search" />
+                    <ul class="nav nav-pills flex-column">
+                        <t t-foreach="attributes" t-as="a">
+                            <li t-if="a.value_ids and len(a.value_ids) &gt; 1" class="nav-item">
+                                <div>
+                                    <strong t-field="a.name" />
+                                </div>
+                                <t t-if="a.type == 'select'">
+                                    <select class="form-control" name="attrib">
+                                        <option value="" />
+                                        <t t-foreach="a.value_ids" t-as="v">
+                                            <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set" />
+                                        </t>
+                                    </select>
                                 </t>
-                            </t>
-                        </li>
-                    </t>
-                </ul>
-            </form>
+                                <t t-if="a.type == 'radio'">
+                                    <ul class="nav nav-pills flex-column">
+                                        <t t-foreach="a.value_ids" t-as="v">
+                                            <li class="nav-item">
+                                                <label style="margin: 0 20px;" t-attf-class="nav-link#{' active' if v.id in attrib_set else ''}">
+                                                    <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" />
+                                                    <span style="font-weight: normal" t-field="v.name" />
+                                                </label>
+                                            </li>
+                                        </t>
+                                    </ul>
+                                </t>
+                                <t t-if="a.type == 'color'">
+                                    <t t-foreach="a.value_ids" t-as="v">
+                                        <label t-attf-style="background-color:#{v.html_color or v.name}" t-attf-class="css_attribute_color #{'active' if v.id in attrib_set else ''}">
+                                            <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" t-att-title="v.name" />
+                                        </label>
+                                    </t>
+                                </t>
+                            </li>
+                        </t>
+                    </ul>
+                </form>
+            </div>
         </xpath>
     </template>
 
