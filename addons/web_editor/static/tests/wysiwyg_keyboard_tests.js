@@ -3110,6 +3110,55 @@ var keyboardTestsBackspace = [{
             start: "p:eq(1):contents()[0]->1",
         },
     },
+    {
+        name: "in h1: BACKSPACE on full selection -> 'a'",
+        content: '<h1>dom to delete</h1>',
+        steps: [{
+            start: 'h1:contents()[0]->0',
+            end: 'h1:contents()[0]->13',
+            key: 'BACKSPACE',
+        }, {
+            key: 'a',
+        }],
+        test: {
+            content: '<h1>a</h1>',
+            start: "h1:contents()[0]->1",
+        },
+    },
+    {
+        name: "in h1: BACKSPACE on full selection -> BACKSPACE -> 'a'",
+        content: '<h1>dom to delete</h1>',
+        steps: [{
+            start: 'h1:contents()[0]->0',
+            end: 'h1:contents()[0]->13',
+            key: 'BACKSPACE',
+        }, {
+            key: 'BACKSPACE',
+        }, {
+            key: 'a',
+        }],
+        test: {
+            content: '<p>a</p>',
+            start: "p:contents()[0]->1",
+        },
+    },
+    {
+        name: "in h1: BACKSPACE on full selection -> DELETE -> 'a'",
+        content: '<h1>dom to delete</h1>',
+        steps: [{
+            start: 'h1:contents()[0]->0',
+            end: 'h1:contents()[0]->13',
+            key: 'BACKSPACE',
+        }, {
+            key: 'DELETE',
+        }, {
+            key: 'a',
+        }],
+        test: {
+            content: '<h1>a</h1>',
+            start: "h1:contents()[0]->1",
+        },
+    },
 
     // merging non-similar blocks
 
