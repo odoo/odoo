@@ -2,10 +2,8 @@
 <odoo>
     <data>
         <template id="courses_home_inherit_survey" inherit_id="website_slides.courses_home">
-            <xpath expr="//li[hasclass('o_wslides_home_all_slides')]" position="after">
-                <li class="nav-item ml16">
-                    <h4><a class="nav-link" href="/slides/all?slide_type=certification"><i class="fa fa-trophy"/> Certifications</a></h4>
-                </li>
+            <xpath expr="//a[hasclass('o_wslides_home_all_slides')]" position="after">
+                <a class="nav-link nav-link" href="/slides/all?slide_type=certification"><i class="fa fa-trophy mr-1"/>Certifications</a>
             </xpath>
         </template>
     </data>

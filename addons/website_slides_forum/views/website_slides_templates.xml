@@ -5,7 +5,7 @@
         <xpath expr="//li[hasclass('o_wslides_nav_tabs_item_home')]" position="after">
             <li class="nav-item" t-if="channel.forum_id">
                 <a t-att-href="'/forum/%s' % (slug(channel.forum_id))"
-                    t-att-class="'nav-link o_wslides_navlink'" target="new">Forum</a>
+                    t-att-class="'nav-link'" target="new">Forum</a>
             </li>
         </xpath>
     </template>
@@ -16,6 +16,5 @@
             <a t-if="slide.channel_id.forum_id" id="fullscreen_forum_button" t-attf-href="/forum/#{slug(slide.channel_id.forum_id)}" target="new"><i class="fa fa-comments"></i>Ask a question</a>
         </xpath>
     </template>
-
 
 </data></odoo>
