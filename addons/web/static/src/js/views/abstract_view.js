@@ -330,6 +330,7 @@ var AbstractView = Factory.extend({
         var timeRangeDescription = timeRangeMenuData.timeRangeDescription || '';
         this.loadParams = _.extend(this.loadParams, {
             compare: comparisonTimeRange.length > 0,
+            comparisonField: timeRangeMenuData.comparisonField,
             comparisonTimeRange: comparisonTimeRange,
             comparisonTimeRangeDescription: comparisonTimeRangeDescription,
             context: searchQuery.context,
