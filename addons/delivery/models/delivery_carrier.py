@@ -60,9 +60,20 @@ class DeliveryCarrier(models.Model):
     free_over = fields.Boolean('Free if order amount is above', help="If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping", default=False, oldname='free_if_more_than')
     amount = fields.Float(string='Amount', help="Amount of the order to benefit from a free shipping, expressed in the company currency")
 
+    can_generate_return = fields.Boolean(compute="_compute_can_generate_return")
+    return_label_on_delivery = fields.Boolean(string="Generate Return Label", required=True, default=False,
+    help="The return label is automatically generated at the delivery.")
+    get_return_label_from_portal = fields.Boolean(string="Return Label Accessible from Customer Portal", required=True, default=False,
+    help="The return label can be downloaded by the customer from the customer portal.")
+
     _sql_constraints = [
         ('margin_not_under_100_percent', 'CHECK (margin >= -100)', 'Margin cannot be lower than -100%'),
     ]
+
+    @api.depends('delivery_type')
+    def _compute_can_generate_return(self):
+        for carrier in self:
+            carrier.can_generate_return = hasattr(self, '%s_get_return_label' % carrier.delivery_type)
 
     def toggle_prod_environment(self):
         for c in self:
@@ -99,6 +110,16 @@ class DeliveryCarrier(models.Model):
         if self.zip_to and (partner.zip or '').upper() > self.zip_to.upper():
             return False
         return True
+
+    @api.onchange('can_generate_return')
+    def _onchange_can_generate_return(self):
+        if not self.can_generate_return:
+            self.return_label_on_delivery = False
+
+    @api.onchange('return_label_on_delivery')
+    def _onchange_return_label_on_delivery(self):
+        if not self.return_label_on_delivery:
+            self.get_return_label_from_portal = False
 
     @api.onchange('state_ids')
     def onchange_states(self):
@@ -150,7 +171,7 @@ class DeliveryCarrier(models.Model):
 
     def get_return_label(self,pickings):
         self.ensure_one()
-        if hasattr(self, '%s_get_return_label' % self.delivery_type):
+        if self.can_generate_return:
             return getattr(self, '%s_get_return_label' % self.delivery_type)(pickings)
 
     def get_tracking_link(self, picking):
