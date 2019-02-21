@@ -1435,7 +1435,7 @@ class Form(object):
                 return []
 
             v = []
-            c = {t[1]: t[2] for t in current if t[0] == 1}
+            c = {t[1]: t[2] for t in current if t[0] == 1} if current else {}
             # which view should this be???
             subfields = descr['views']['edition']['fields']
             for command in value:
