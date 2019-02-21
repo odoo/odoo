@@ -542,7 +542,7 @@ var SlideUploadDialog = Dialog.extend({
                     //Quick and really dirty fix for reordering issues
                     if (data.channel_type === 'training' && self.categoryID){
                         var categoryElement = $('ul[category_id='+self.categoryID+']');
-                        $('<li hidden class="content-slide" slide_id="'+data.slide_id+'" category_id="'+self.categoryID+'">temp</li>').appendTo(categoryElement);
+                        $('<li hidden class="o_wslides_content_slide" slide_id="'+data.slide_id+'" category_id="'+self.categoryID+'">temp</li>').appendTo(categoryElement);
                         self._reorderSlidesSequence();
                     }
                     window.location = data.url;

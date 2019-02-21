@@ -16,9 +16,9 @@ odoo.define('website_slides.slideslist', function (require) {
         },
         start: function (){
             this._super.apply(this,arguments);
-            this.slideCount = $('li.content-slide').length;
+            this.slideCount = $('li.o_wslides_content_slide').length;
             //Change links HREF to fullscreen mode for SEO
-            var links = $(".link-to-slide");
+            var links = $('.o_wslides_course_slide_link');
             for (var i = 0; i < links.length; i++){
                 $(links[i]).attr('href', $(links[i]).attr('href') + "?fullscreen=1");
             }
