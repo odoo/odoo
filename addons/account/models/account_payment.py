@@ -211,6 +211,8 @@ class account_abstract_payment(models.AbstractModel):
         self.amount = abs(self._compute_payment_amount())
 
         # Set by default the first liquidity journal having this currency if exists.
+        if self.journal_id:
+            return
         journal = self.env['account.journal'].search(
             [('type', 'in', ('bank', 'cash')), ('currency_id', '=', self.currency_id.id)], limit=1)
         if journal:

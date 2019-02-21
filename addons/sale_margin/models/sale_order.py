@@ -46,7 +46,7 @@ class SaleOrderLine(models.Model):
 
         # Calculation of the margin for programmatic creation of a SO line. It is therefore not
         # necessary to call product_id_change_margin manually
-        if 'purchase_price' not in vals:
+        if 'purchase_price' not in vals and ('display_type' not in vals or not vals['display_type']):
             order_id = self.env['sale.order'].browse(vals['order_id'])
             product_id = self.env['product.product'].browse(vals['product_id'])
             product_uom_id = self.env['uom.uom'].browse(vals['product_uom'])

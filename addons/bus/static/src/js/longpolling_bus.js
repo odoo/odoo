@@ -57,6 +57,7 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
         $(window).off("click." + this._id);
         $(window).off("keydown." + this._id);
         $(window).off("keyup." + this._id);
+        this._super();
     },
     //--------------------------------------------------------------------------
     // Public
