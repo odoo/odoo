@@ -8,7 +8,7 @@ from odoo.addons.portal.controllers.mail import PortalChatter
 
 class SlidesPortalChatter(PortalChatter):
 
-    @http.route(['/mail/chatter_post'], type='http', methods=['POST'], auth='public', website=True)
+    @http.route(['/mail/chatter_post'], type='json', methods=['POST'], auth='public', website=True)
     def portal_chatter_post(self, res_model, res_id, message, **kw):
         result = super(SlidesPortalChatter, self).portal_chatter_post(res_model, res_id, message, **kw)
         if res_model == 'slide.channel':
