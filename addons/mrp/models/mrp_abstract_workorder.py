@@ -26,6 +26,11 @@ class MrpAbstractWorkorder(models.AbstractModel):
     )
     use_create_components_lots = fields.Boolean(related="production_id.picking_type_id.use_create_components_lots")
 
+    @api.depends('raw_workorder_line_ids', 'finished_workorder_line_ids')
+    def _compute_workorder_line_ids(self):
+        for workorder in self:
+            workorder.workorder_line_ids = workorder.raw_workorder_line_ids | workorder.finished_workorder_line_ids
+
     @api.onchange('qty_producing')
     def _onchange_qty_producing(self):
         """ Modify the qty currently producing will modify the existing
@@ -35,10 +40,14 @@ class MrpAbstractWorkorder(models.AbstractModel):
         if self.qty_producing <= 0:
             raise UserError('You have to produce at least one unit.')
         line_values = self._update_workorder_lines()
-        for vals in line_values['to_create']:
-            self.workorder_line_ids |= self.workorder_line_ids.new(vals)
-        if line_values['to_delete']:
-            self.workorder_line_ids -= line_values['to_delete']
+        for workorder_field, list_vals in line_values['to_create'].items():
+            for vals in list_vals:
+                self[workorder_field] |= self[workorder_field].new(vals)
+        for line in line_values['to_delete']:
+            if line in self.raw_workorder_line_ids:
+                self.raw_workorder_line_ids -= line
+            else:
+                self.finished_workorder_line_ids -= line
         for line, vals in line_values['to_update'].items():
             line.update(vals)
 
@@ -48,18 +57,20 @@ class MrpAbstractWorkorder(models.AbstractModel):
         It do not directly write or unlink the line because this function is
         used in onchange and request that write on db (e.g. workorder creation).
         """
-        line_values = {'to_create': [], 'to_delete': [], 'to_update': {}}
-        for move_raw in self.move_raw_ids.filtered(lambda move: move.state not in ('done', 'cancel')):
-            move_workorder_lines = self.workorder_line_ids.filtered(lambda w: w.move_id == move_raw)
+        line_values = {'to_create': defaultdict(list), 'to_delete': [], 'to_update': {}}
+        move_finished_ids = self.move_finished_ids.filtered(lambda move: move.product_id != self.product_id and move.state not in ('done', 'cancel'))
+        move_raw_ids = self.move_raw_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
+        for move in move_raw_ids | move_finished_ids:
+            move_workorder_lines = self.workorder_line_ids.filtered(lambda w: w.move_id == move)
 
             # Compute the new quantity for the current component
-            rounding = move_raw.product_uom.rounding
-            if move_raw.product_id.tracking == 'serial':
-                uom = move_raw.product_id.uom_id
+            rounding = move.product_uom.rounding
+            if move.product_id.tracking == 'serial':
+                uom = move.product_id.uom_id
             else:
-                uom = move_raw.product_uom
-            new_qty = move_raw.product_uom._compute_quantity(
-                self.qty_producing * move_raw.unit_factor,
+                uom = move.product_uom
+            new_qty = move.product_uom._compute_quantity(
+                self.qty_producing * move.unit_factor,
                 uom,
                 round=False
             )
@@ -141,8 +152,11 @@ class MrpAbstractWorkorder(models.AbstractModel):
 
                 # if there are still qty_todo, create new wo lines
                 if float_compare(qty_todo, 0.0, precision_rounding=rounding) > 0:
-                    for vals in self._generate_lines_values(move_raw, qty_todo):
-                        line_values['to_create'].append(vals)
+                    for vals in self._generate_lines_values(move, qty_todo):
+                        if move in self.production_id.move_raw_ids:
+                            line_values['to_create']['raw_workorder_line_ids'].append(vals)
+                        else:
+                            line_values['to_create']['finished_workorder_line_ids'].append(vals)
         return line_values
 
     @api.model
@@ -180,7 +194,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
                 'qty_to_consume': to_consume_in_line,
                 'qty_reserved': to_consume_in_line,
                 'lot_id': move_line.lot_id.id,
-                'qty_done': to_consume_in_line
+                'qty_done': to_consume_in_line,
             }
             lines.append(line)
             qty_to_consume -= to_consume_in_line
@@ -203,7 +217,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
                     'product_id': move.product_id.id,
                     'product_uom_id': move.product_uom.id,
                     'qty_to_consume': qty_to_consume,
-                    'qty_done': qty_to_consume
+                    'qty_done': qty_to_consume,
                 }
                 lines.append(line)
         return lines
@@ -244,32 +258,6 @@ class MrpAbstractWorkorder(models.AbstractModel):
             production_move._set_quantity_done(
                 float_round(self.qty_producing, precision_rounding=rounding)
             )
-
-        by_product_moves = self.production_id.move_finished_ids.filtered(lambda m: m.product_id != self.product_id and m.state not in ('done', 'cancel'))
-        for by_product_move in by_product_moves:
-            rounding = by_product_move.product_uom.rounding
-            quantity = float_round(self.qty_producing * by_product_move.unit_factor, precision_rounding=rounding)
-            values = {
-                'move_id': by_product_move.id,
-                'product_id': by_product_move.product_id.id,
-                'production_id': self.production_id.id,
-                'product_uom_id': by_product_move.product_uom.id,
-                'location_id': by_product_move.location_id.id,
-                'location_dest_id': by_product_move.location_dest_id.id,
-            }
-            if by_product_move.product_id.tracking == 'lot':
-                values.update({
-                    'product_uom_qty': quantity,
-                    'qty_done': quantity,
-                })
-                self.env['stock.move.line'].create(values)
-            else:
-                values.update({
-                    'product_uom_qty': 1.0,
-                    'qty_done': 1.0,
-                })
-                for i in range(0, int(quantity)):
-                    self.env['stock.move.line'].create(values)
 
     def _update_raw_moves(self):
         """ Once the production is done. Modify the workorder lines into

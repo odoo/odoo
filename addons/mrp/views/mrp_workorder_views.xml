@@ -153,10 +153,10 @@
                             <field name="product_tracking" invisible="1"/>
                         </group>
                     </group>
-                    <field name="move_raw_ids" invisible="1"/>
-                    <field name="workorder_line_ids" attrs="{'invisible': [('workorder_line_ids', '=', [])], 'readonly': [('state', 'in', 'cancel', 'done')]}">
+                    <h4 attrs="{'invisible': [('raw_workorder_line_ids', '=', [])]}">Components</h4>
+                    <field name="raw_workorder_line_ids" attrs="{'invisible': [('raw_workorder_line_ids', '=', [])], 'readonly': [('state', 'in', 'cancel', 'done')]}">
                         <tree editable="bottom" create="0" delete="0">
-                            <field name="product_id" string="Components"/>
+                            <field name="product_id"/>
                             <field name="product_tracking" invisible="1"/>
                             <field name="lot_id" attrs="{'readonly': [('product_tracking', '=', 'none')]}" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id, 'active_mo_id': parent.production_id}"/>
                             <field name="qty_to_consume" readonly="1"/>
@@ -166,11 +166,16 @@
                             <field name="move_id" invisible="1"/>
                         </tree>
                     </field>
-                    <field name="final_lot_line_ids" attrs="{'invisible': [('final_lot_line_ids', '=', [])]}" readonly="1">
+                    <h4 attrs="{'invisible': [('finished_workorder_line_ids', '=', [])]}">Finished Products</h4>
+                    <field name="finished_workorder_line_ids" attrs="{'invisible': [('finished_workorder_line_ids', '=', [])], 'readonly': [('state', 'in', 'cancel', 'done')]}">
                         <tree editable="bottom" create="0" delete="0">
                             <field name="product_id"/>
-                            <field name="lot_id"/>
+                            <field name="product_tracking" invisible="1"/>
+                            <field name="lot_id" attrs="{'readonly': [('product_tracking', '=', 'none')]}" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
+                            <field name="qty_to_consume" readonly="1" string="To Produce"/>
                             <field name="qty_done" string="Done"/>
+                            <field name="product_uom_id" invisible="1"/>
+                            <field name="move_id" invisible="1"/>
                         </tree>
                     </field>
                 </page>
