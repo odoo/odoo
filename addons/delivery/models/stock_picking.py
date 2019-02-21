@@ -84,6 +84,7 @@ class StockPicking(models.Model):
     weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight')
     shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight', help="Total weight of the packages and products which are not in a package. That's the weight used to compute the cost of the shipping.")
     is_return_picking = fields.Boolean(compute='_compute_return_picking')
+    return_label_ids = fields.One2many('ir.attachment', compute='_compute_return_label')
 
     @api.depends('carrier_id', 'carrier_tracking_ref')
     def _compute_carrier_tracking_url(self):
@@ -93,10 +94,15 @@ class StockPicking(models.Model):
     @api.depends('carrier_id', 'move_ids_without_package')
     def _compute_return_picking(self):
         for picking in self:
-            if picking.carrier_id and hasattr(picking.carrier_id, '%s_get_return_label' % picking.carrier_id.delivery_type):
+            if picking.carrier_id and picking.carrier_id.can_generate_return:
                 picking.is_return_picking = any(m.origin_returned_move_id for m in picking.move_ids_without_package)
             else:
                 picking.is_return_picking = False
+
+    def _compute_return_label(self):
+        for picking in self:
+            picking.return_label_ids = self.env['ir.attachment'].search([('res_model', '=', 'stock.picking'), ('res_id', '=', picking.id), ('name', 'ilike', 'ReturnLabel')])
+
     @api.depends('move_lines')
     def _cal_weight(self):
         for picking in self:
