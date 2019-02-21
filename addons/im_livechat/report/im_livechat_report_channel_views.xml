@@ -56,6 +56,13 @@
             <field name="help">Livechat Support Channel Statistics allows you to easily check and analyse your company livechat session performance. Extract information about the missed sessions, the audiance, the duration of a session, etc.</field>
         </record>
 
+        <record id="im_livechat_report_channel_time_to_answer_action" model="ir.actions.act_window">
+            <field name="name">Session Statistics</field>
+            <field name="res_model">im_livechat.report.channel</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="context">{"graph_measure": "time_to_answer", "search_default_last_week":1}</field>
+        </record>
+
         <menuitem
             id="menu_reporting_livechat_channel"
             name="Session Statistics"
