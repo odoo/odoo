@@ -173,7 +173,7 @@ var PortalChatter = Widget.extend({
      */
     preprocessMessages: function(messages){
         _.each(messages, function(m){
-            m['author_avatar_url'] = _.str.sprintf('/web/image/%s/%s/author_avatar/50x50', 'mail.message', m.id);
+            m['author_avatar_url'] = _.str.sprintf('/portal/image/%s/%s/author_avatar/50x50', 'mail.message', m.id);
             m['published_date_str'] = _.str.sprintf(_t('Published on %s'), moment(time.str_to_datetime(m.date)).format('MMMM Do YYYY, h:mm:ss a'));
         });
         return messages;

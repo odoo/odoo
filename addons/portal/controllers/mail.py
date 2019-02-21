@@ -6,12 +6,13 @@ import base64
 from werkzeug import urls
 from werkzeug.exceptions import NotFound, Forbidden
 
-from odoo import http
+from odoo import http, tools
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import consteq, plaintext2html
 from odoo.addons.mail.controllers.main import MailController
 from odoo.exceptions import AccessError
+from odoo.modules import get_module_resource
 
 
 def _check_special_access(res_model, res_id, token='', _hash='', pid=False):
@@ -144,6 +145,25 @@ class PortalChatter(http.Controller):
             'messages': Message.search(domain, limit=limit, offset=offset).portal_message_format(),
             'message_count': Message.search_count(domain)
         }
+
+    @http.route([
+        '/portal/image/<string:res_model>/<int:partner_id>/<string:field_name>',
+        '/portal/image/<string:res_model>/<int:partner_id>/<string:field_name>/<int:width>x<int:height>'
+        ], type='http', auth='public')
+    def avatar(self, res_model, partner_id, field_name, width=50, height=50):
+        status, headers, content = request.env['ir.http'].binary_content(model=res_model, id=partner_id, field=field_name)
+        if status == 304:
+            return werkzeug.wrappers.Response(status=304)
+
+        if not content:
+            img_path = get_module_resource('base', 'static/img', 'avatar.png')
+            content = tools.image_resize_image(base64.b64encode(open(img_path, 'rb').read()), (width, height))
+            headers = [('Content-Type', 'image/png')]
+        image_base64 = base64.b64decode(content)
+        headers.append(('Content-Length', len(image_base64)))
+        response = request.make_response(image_base64, headers)
+        response.status = str(status)
+        return response
 
     @http.route('/portal/content/<int:attachment_id>', type='http', auth="public")
     def attachment_access(self, attachment_id, access_token=None, download=None):
