@@ -4,6 +4,8 @@
 import logging
 
 from ast import literal_eval
+from collections import defaultdict
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -200,6 +202,28 @@ class ResUsers(models.Model):
             with self.env.cr.savepoint():
                 template.with_context(lang=user.lang).send_mail(user.id, force_send=True, raise_exception=True)
             _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
+
+    @api.multi
+    def send_unregistered_user_reminder(self, after_days=5):
+        datetime_min = fields.Datetime.today() - relativedelta(days=after_days)
+        datetime_max = datetime_min + relativedelta(hours=23, minutes=59, seconds=59)
+
+        res_users_with_details = self.env['res.users'].search_read([
+            ('share', '=', False),
+            ('create_uid.email', '!=', False),
+            ('create_date', '>=', datetime_min),
+            ('create_date', '<=', datetime_max),
+            ('log_ids', '=', False)], ['create_uid', 'name', 'login'])
+
+        # group by invited by
+        invited_users = defaultdict(list)
+        for user in res_users_with_details:
+            invited_users[user.get('create_uid')[0]].append("%s (%s)" % (user.get('name'), user.get('login')))
+
+        # For sending mail to all the invitors about their invited users
+        for user in invited_users:
+            template = self.env.ref('auth_signup.mail_template_data_unregistered_users').with_context(dbname=self._cr.dbname, invited_users=invited_users[user])
+            template.send_mail(user, notif_layout='mail.mail_notification_light', force_send=False)
 
     @api.model
     def web_dashboard_create_users(self, emails):
