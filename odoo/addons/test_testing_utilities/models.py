@@ -71,7 +71,7 @@ class M2Onchange(models.Model):
     def _on_change_f2(self):
         self.f = self.env['test_testing_utilities.m2o'].search([
             ('name', 'ilike', self.f2),
-        ], limit=1)
+        ], limit=1) if self.f2 else False
 
 class M2MChange(models.Model):
     _name = 'test_testing_utilities.e'
