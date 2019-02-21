@@ -987,6 +987,95 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('Unload Filter, reset display, load another filter', function (assert) {
+        assert.expect(18);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="foo" type="measure"/>' +
+                '</pivot>',
+            viewOptions: {
+                context: {
+                    pivot_measures: ['foo'],
+                    pivot_column_groupby: ['customer'],
+                    pivot_row_groupby: ['product_id'],
+                },
+            },
+        });
+
+        // Check Columns
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_opened').length, 1,
+            'The column should be grouped');
+        assert.strictEqual(pivot.$('thead tr:contains("First")').length, 1,
+            'There should be a column "First"');
+        assert.strictEqual(pivot.$('thead tr:contains("Second")').length, 1,
+            'There should be a column "Second"');
+
+        // Check Rows
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_opened').length, 1,
+            'The row should be grouped');
+        assert.strictEqual(pivot.$('tbody tr:contains("xphone")').length, 1,
+            'There should be a row "xphone"');
+        assert.strictEqual(pivot.$('tbody tr:contains("xpad")').length, 1,
+            'There should be a row "xpad"');
+
+        // Equivalent to unload the filter
+        var reloadParams = {
+            context: {},
+        };
+        pivot.reload(reloadParams);
+        // collapse all headers
+        pivot.$('.o_pivot_header_cell_opened').click();
+        pivot.$('.o_pivot_header_cell_opened').click();
+
+        // Check Columns
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_closed').length, 1,
+            'The column should not be grouped');
+        assert.strictEqual(pivot.$('thead tr:contains("First")').length, 0,
+            'There should not be a column "First"');
+        assert.strictEqual(pivot.$('thead tr:contains("Second")').length, 0,
+            'There should not be a column "Second"');
+
+        // Check Rows
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_closed').length, 1,
+            'The row should not be grouped');
+        assert.strictEqual(pivot.$('tbody tr:contains("xphone")').length, 0,
+            'There should not be a row "xphone"');
+        assert.strictEqual(pivot.$('tbody tr:contains("xpad")').length, 0,
+            'There should not be a row "xpad"');
+
+        // Equivalent to load another filter
+        reloadParams = {
+            context: {
+                pivot_measures: ['foo'],
+                pivot_column_groupby: ['customer'],
+                pivot_row_groupby: ['product_id'],
+            },
+        };
+        pivot.reload(reloadParams);
+
+        // Check Columns
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_opened').length, 1,
+            'The column should be grouped');
+        assert.strictEqual(pivot.$('thead tr:contains("First")').length, 1,
+            'There should be a column "First"');
+        assert.strictEqual(pivot.$('thead tr:contains("Second")').length, 1,
+            'There should be a column "Second"');
+
+        // Check Rows
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_opened').length, 1,
+            'The row should be grouped');
+        assert.strictEqual(pivot.$('tbody tr:contains("xphone")').length, 1,
+            'There should be a row "xphone"');
+        assert.strictEqual(pivot.$('tbody tr:contains("xpad")').length, 1,
+            'There should be a row "xpad"');
+
+        pivot.destroy();
+    });
+
     QUnit.test('correctly uses pivot_ keys from the context', function (assert) {
         assert.expect(7);
 
