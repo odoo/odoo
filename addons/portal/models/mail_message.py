@@ -19,5 +19,5 @@ class MailMessage(models.Model):
     def _portal_message_format(self, fields_list):
         message_values = self.read(fields_list)
         message_tree = dict((m.id, m) for m in self.sudo())
-        self._message_read_dict_postprocess(message_values, message_tree)
+        self.with_context(attachment_access_token=True)._message_read_dict_postprocess(message_values, message_tree)
         return message_values

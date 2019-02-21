@@ -336,14 +336,21 @@ class Message(models.Model):
         partner_tree = dict((partner[0], partner) for partner in partners_names)
 
         # 2. Attachments as SUPERUSER, because could receive msg and attachments for doc uid cannot see
-        attachments_data = attachments.sudo().read(['id', 'datas_fname', 'name', 'mimetype'])
+        attachments_sudo = attachments.sudo()
         safari = request and request.httprequest.user_agent.browser == 'safari'
-        attachments_tree = dict((attachment['id'], {
-            'id': attachment['id'],
-            'filename': attachment['datas_fname'],
-            'name': attachment['name'],
-            'mimetype': 'application/octet-stream' if safari and attachment['mimetype'] and 'video' in attachment['mimetype'] else attachment['mimetype'],
-        }) for attachment in attachments_data)
+        attachments_tree = dict()
+        for attachment in attachments_sudo:
+            attachment_dict = {
+                'id': attachment.id,
+                'filename': attachment.datas_fname,
+                'name': attachment.name,
+                'mimetype': 'application/octet-stream' if safari and 'video' in attachment.mimetype else attachment.mimetype,
+            }
+            if self.env.context.get('attachment_access_token'):
+                if not attachment.access_token:
+                    attachment.generate_access_token()
+                attachment_dict['access_token'] = attachment.access_token
+            attachments_tree[attachment.id] = attachment_dict
 
         # 3. Tracking values
         tracking_values = self.env['mail.tracking.value'].sudo().search([('mail_message_id', 'in', message_ids)])

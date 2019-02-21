@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import werkzeug
+import base64
 from werkzeug import urls
 from werkzeug.exceptions import NotFound, Forbidden
 
@@ -143,6 +144,20 @@ class PortalChatter(http.Controller):
             'messages': Message.search(domain, limit=limit, offset=offset).portal_message_format(),
             'message_count': Message.search_count(domain)
         }
+
+    @http.route('/portal/content/<int:attachment_id>', type='http', auth="public")
+    def attachment_access(self, attachment_id, access_token=None, download=None):
+        status, headers, content = request.env['ir.http'].binary_content(id=attachment_id, download=download, access_token=access_token)
+        if status == 304:
+            return werkzeug.wrappers.Response(status=304)
+
+        attachment_sudo = request.env['ir.attachment'].sudo().browse(attachment_id).exists()
+        if access_token and consteq(attachment_sudo.access_token, access_token):
+            content_base64 = base64.b64decode(content)
+            headers.append(('Content-Length', len(content_base64)))
+            return request.make_response(content_base64, headers)
+        else:
+            raise Forbidden()
 
 
 class MailController(MailController):
