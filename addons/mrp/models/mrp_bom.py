@@ -290,10 +290,17 @@ class MrpBomLine(models.Model):
 
     @api.onchange('parent_product_tmpl_id')
     def onchange_parent_product(self):
-        return {'domain': {'attribute_value_ids': [
-            ('id', 'in', self.parent_product_tmpl_id._get_valid_product_attribute_values().ids),
-            ('attribute_id.create_variant', '!=', 'no_variant')
-        ]}}
+        """ Show attribute values of the selected product.
+        If no selected product, force empty domain. """
+        if self.parent_product_tmpl_id:
+            return {'domain': {'attribute_value_ids': [
+                ('id', 'in', self.parent_product_tmpl_id._get_valid_product_attribute_values().ids),
+                ('attribute_id.create_variant', '!=', 'no_variant')
+            ]}}
+        else:
+            return {'domain': {'attribute_value_ids': [
+                (0, '=', 1)
+            ]}}
 
     @api.model_create_multi
     def create(self, vals_list):
