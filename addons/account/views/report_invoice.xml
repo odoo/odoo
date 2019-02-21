@@ -84,7 +84,7 @@
                                             <span t-field="line.uom_id"  groups="uom.group_uom"/>
                                         </td>
                                         <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                            <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            <span t-field="line.price_unit"/>
                                         </td>
                                         <td t-if="display_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                             <span t-field="line.discount"/>
