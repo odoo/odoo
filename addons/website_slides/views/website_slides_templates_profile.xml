@@ -13,26 +13,18 @@
         <xpath expr="//div[@id='profile_about_badge']" position="before">
             <t t-if="channel">
                 <div class="mb32">
-                    <h4><i class="fa fa-graduation-cap"/> Completed Courses</h4>
-                    <t t-if="courses_completed">
-                        <t t-call="website_slides.display_course">
-                            <t t-set="courses" t-value="courses_completed"></t>
-                        </t>
+                    <h5 class="border-bottom pb-1">Completed Courses</h5>
+                    <t t-if="courses_completed" t-call="website_slides.display_course">
+                        <t t-set="courses" t-value="courses_completed"></t>
                     </t>
-                    <t t-else="">
-                        <span class="font-weight-bold">No completed course yet!</span>
-                    </t>
+                    <p t-else="" class="text-muted">No completed course yet</p>
                 </div>
                 <div class="mb32">
-                    <h4><i class="fa fa-book"/> Followed Courses</h4>
-                    <t t-if="courses_ongoing">
-                        <t t-call="website_slides.display_course">
-                            <t t-set="courses" t-value="courses_ongoing"></t>
-                        </t>
+                    <h5 class="border-bottom pb-1">Followed Courses</h5>
+                    <t t-if="courses_ongoing" t-call="website_slides.display_course">
+                        <t t-set="courses" t-value="courses_ongoing"></t>
                     </t>
-                    <t t-else="">
-                        <span class="font-weight-bold">No followed course!</span>
-                    </t>
+                    <p t-else="" class="text-muted">No followed course yet</p>
                 </div>
             </t>
         </xpath>
@@ -40,27 +32,34 @@
 
     <template id="display_course">
         <div class="row">
-            <div class="col-lg-6 o_wprofile_slides_card" t-foreach="courses" t-as="course">
-                <div class="card-body o_wprofile_slides_course_card_body o_wprofile_bb_grey" t-attf-onclick="location.href='/slides/#{slug(course.channel_id)}';">
-                    <div class="row">
-                        <div class="o_wprofile_slides_course_img">
-                            <img class="o_wprofile_img_small" t-attf-src="/web/image/slide.channel/#{course.channel_id.id}/image_small"/>
-                        </div>
-                        <div class="col-10 o_wprofile_slides_title">
-                            <span class="font-weight-bold" t-field="course.channel_id.name"/>
-                        </div>
-                        <div class="o_wprofile_slide_course_rating">
-                            <t t-call="website_rating.rating_widget_stars_static">
-                                <t t-set="rating_avg" t-value="course.channel_id.rating_avg"/>
-                                <t t-set="rating_count" t-value="course.channel_id.rating_count"/>
-                            </t>
-                        </div>
-                        <div class="row o_wprofile_slide_course_progress">
-                            <div class="col progress o_wprofile_slide_course_progress_bar">
-                                <div class="progress-bar" style="background-color: #00A09D !important"
-                                   t-att-style="'width: '+ str(course.completion)+'%'"></div>
+            <div class="col-12 col-lg-6" t-foreach="courses" t-as="course">
+                <div class="card mb-2">
+                    <div class="card-body o_wprofile_slides_course_card_body p-0 d-flex"
+                        t-attf-onclick="location.href='/slides/#{slug(course.channel_id)}';">
+
+                        <div class="pl-5 pr-4 rounded-left" t-attf-style="background-image:url(/web/image/slide.channel/#{course.channel_id.id}/image); background-size: cover; background-position: center"/>
+
+                        <div class="p-2 w-100">
+                            <h5 class="mt-0 mb-1" t-field="course.channel_id.name"/>
+
+                            <div class="overflow-hidden mb-1" style="height:24px">
+                                <t t-foreach="course.channel_id.tag_ids" t-as="tag">
+                                    <a t-att-href="'/slides/all?channel_tag_id=%s' % tag.id" class="badge badge-light" t-esc="tag.name"/>
+                                </t>
+                                <t t-foreach="course.channel_id.tag_ids" t-as="tag">
+                                    <a t-att-href="'/slides/all?channel_tag_id=%s' % tag.id" class="badge badge-light" t-esc="tag.name"/>
+                                </t>
+                                <t t-foreach="course.channel_id.tag_ids" t-as="tag">
+                                    <a t-att-href="'/slides/all?channel_tag_id=%s' % tag.id" class="badge badge-light" t-esc="tag.name"/>
+                                </t>
                             </div>
-                            <span class="col-3 text-primary o_wprofile_slide_course_progress_value"><span t-field="course.completion"/> %</span>
+
+                            <div class="d-flex align-items-center">
+                                <div class="progress flex-grow-1" style="height:0.5em">
+                                    <div class="progress-bar bg-primary" t-att-style="'width: '+ str(course.completion)+'%'"/>
+                                </div>
+                                <small class="font-weight-bold pl-2"><span t-field="course.completion"/> %</small>
+                            </div>
                         </div>
                     </div>
                 </div>

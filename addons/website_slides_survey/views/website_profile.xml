@@ -4,7 +4,7 @@
         <xpath expr="//div[@id='profile_about_badge']" position="before">
             <t t-if="channel">
                 <div class="mb32">
-                    <h4><i class="fa fa-trophy"/> Certifications</h4>
+                    <h5 class="border-bottom pb-1">Certifications</h5>
                     <t t-call="website_slides_survey.display_certificate"/>
                 </div>
             </t>
@@ -38,19 +38,21 @@
             </div>
         </t>
         <t t-else="">
-            <b>No certifications yet!</b>
+            <p class="text-muted">No certifications yet!</p>
         </t>
     </template>
 
     <template id="top3_user_card" inherit_id="website_profile.top3_user_card">
-        <xpath expr="//div[@id='top3_user_badge_count']" position="after">
-           <div class="col" style="border-left: 1px solid lightgrey"><span><span t-esc="user['certification_count']"/> Certifications</span></div>
+        <xpath expr="//div[hasclass('o_wprofile_top3_card_footer')]//div[last()]" position="after">
+            <div class="col py-3"><b t-esc="user['certification_count']"/> <span class="text-muted">Certifications</span></div>
         </xpath>
     </template>
 
     <template id="all_user_card" inherit_id="website_profile.all_user_card">
-        <xpath expr="//div[@id='all_user_badge_count']" position="after">
-           <div class="col"><span><span t-esc="user['certification_count']"/> Certifications</span></div>
+        <xpath expr="//td[hasclass('all_user_badge_count')]" position="after">
+            <td class="align-middle text-right pr-3 text-nowrap all_user_certification_count">
+                <b t-esc="user['certification_count']"/> <span class="text-muted small font-weight-bold">Certifications</span>
+            </td>
         </xpath>
     </template>
 </data></odoo>
