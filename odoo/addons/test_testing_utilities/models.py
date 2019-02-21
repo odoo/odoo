@@ -211,3 +211,25 @@ class M2OOnchangeLine(models.Model):
     @api.onchange('dummy')
     def _onchange_flag(self):
         self.flag = True
+
+class O2MChangeCount(models.Model):
+    _name = 'test_testing_utilities.onchange_count'
+    _description = _name
+
+    count = fields.Integer()
+    line_ids = fields.One2many('test_testing_utilities.onchange_count_sub', 'parent')
+
+    @api.onchange('count')
+    def _onchange_count(self):
+        Sub = self.env['test_testing_utilities.onchange_count_sub']
+        recs = Sub
+        for i in range(self.count):
+            recs |= Sub.new({'name': str(i)})
+        self.line_ids = recs
+
+class O2MChangeSub(models.Model):
+    _name = 'test_testing_utilities.onchange_count_sub'
+    _description = _name
+
+    parent = fields.Many2one('test_testing_utilities.onchange_count')
+    name = fields.Char()

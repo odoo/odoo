@@ -1435,12 +1435,12 @@ class Form(object):
                 return []
 
             v = []
-            c = {t[1]: t[2] for t in current if t[0] == 1} if current else {}
+            c = {t[1]: t[2] for t in current if t[0] in (1, 2)} if current else {}
             # which view should this be???
             subfields = descr['views']['edition']['fields']
             for command in value:
-                # TODO: get existing sub-values so we can pass them along?
                 if command[0] in (0, 1):
+                    c.pop(command[1], None) # remove record from currents
                     v.append((command[0], command[1], {
                         k: self._cleanup_onchange(
                             subfields[k], v, None
@@ -1448,10 +1448,14 @@ class Form(object):
                         for k, v in command[2].items()
                         if k in subfields
                     }))
+                elif command[0] == 2:
+                    v.append((2, command[1], False))
                 elif command[0] == 4:
-                    v.append((1, command[1], c.get(command[1], {})))
+                    v.append((1, command[1], c.pop(command[1], {})))
                 elif command[0] == 5:
                     v = []
+            # explicitly mark all non-relinked (or modified) records as deleted
+            for id_ in c: v.append((2, id_, False))
             return v
         elif descr['type'] == 'many2many':
             # onchange result is a bunch of commands, normalize to single 6

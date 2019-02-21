@@ -432,6 +432,40 @@ class TestO2M(TransactionCase):
         with f.line_ids.edit(index=0) as new_line:
             self.assertTrue(new_line.flag)
 
+    def test_o2m_remove(self):
+        def commands():
+            return [c[0] for c in f._values['line_ids']]
+        f = Form(self.env['test_testing_utilities.onchange_count'])
+
+        self.assertEqual(f.count, 0)
+        self.assertEqual(len(f.line_ids), 0)
+
+        f.count = 5
+        self.assertEqual(f.count, 5)
+        self.assertEqual(len(f.line_ids), 5)
+
+        f.count = 2
+        self.assertEqual(f.count, 2)
+        self.assertEqual(len(f.line_ids), 2)
+
+        f.count = 4
+
+        r = f.save()
+
+        previous = r.line_ids
+        self.assertEqual(len(previous), 4)
+
+        with Form(r) as f:
+            f.count = 2
+            self.assertEqual(commands(), [0, 0, 2, 2, 2, 2], "Should contain 2 creations and 4 deletions")
+        self.assertEqual(len(r.line_ids), 2)
+
+        with Form(r) as f:
+            f.line_ids.remove(0)
+            self.assertEqual(commands(), [2, 1])
+            f.count = 1
+            self.assertEqual(commands(), [0, 2, 2], "should contain 1 '0' command and 2 deletions")
+        self.assertEqual(len(r.line_ids), 1)
 
 class TestEdition(TransactionCase):
     """ These use the context manager form as we don't need the record
