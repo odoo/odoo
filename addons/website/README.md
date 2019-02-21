@@ -1,5 +1,6 @@
 Odoo Website Builder
 --------------------
+Make Odoo Website In Bangal, Bangla (bn.po) Added to make website in Bangla
 
 Get an awesome and <a href="https://www.odoo.com/page/website-builder">free website</a>,
 easily customizable with the Odoo <a href="https://www.odoo.com/page/website-builder">website builder</a>.
@@ -115,3 +116,6 @@ Write news, attract new visitors, build customer loyalty.
 ### Online Events
 
 Schedule, organize, promote or sell events online; conferences, trainings, webinars, etc.
+
+# Odoo-Bangla
+Contributed By <a herf="http://mediajockey.org">Media Jockey</a> & Abu Zafar
