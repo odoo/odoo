@@ -303,6 +303,11 @@ var PivotModel = AbstractModel.extend({
         temp = this.data.groupedBy;
         this.data.groupedBy = this.data.colGroupBys;
         this.data.colGroupBys = temp;
+
+        // we need to swap initial groupbys data
+        temp = this.initialColGroupBys;
+        this.initialColGroupBys = this.initialRowGroupBys;
+        this.initialRowGroupBys = temp;
     },
     /**
      * @override
@@ -365,6 +370,7 @@ var PivotModel = AbstractModel.extend({
 
         this.initialDomain = params.domain;
         this.initialRowGroupBys = params.context.pivot_row_groupby || params.rowGroupBys;
+        this.initialColGroupBys = params.context.pivot_column_groupby || params.colGroupBys;
         this.fields = params.fields;
         this.modelName = params.modelName;
         this.data = {
@@ -376,7 +382,7 @@ var PivotModel = AbstractModel.extend({
             compare: params.compare || false,
             context: _.extend({}, session.user_context, params.context),
             groupedBy: params.groupedBy,
-            colGroupBys: params.context.pivot_column_groupby || params.colGroupBys,
+            colGroupBys: params.colGroupBys,
             measures: this._processMeasures(params.context.pivot_measures) || params.measures,
             sorted_column: {},
         };
@@ -711,7 +717,7 @@ var PivotModel = AbstractModel.extend({
         var self = this;
         var groupBys = [];
         var rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys;
-        var colGroupBys = this.data.colGroupBys;
+        var colGroupBys = !_.isEmpty(this.data.colGroupBys) ? this.data.colGroupBys : this.initialColGroupBys;
         var measures = _.map(this.data.measures, function(measure) {
             if (self.fields[measure].type === 'many2one') {
                 return measure + ":count_distinct";
@@ -987,7 +993,7 @@ var PivotModel = AbstractModel.extend({
 
         var index = 0;
         var rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys;
-        var colGroupBys = this.data.colGroupBys;
+        var colGroupBys = !_.isEmpty(this.data.colGroupBys) ? this.data.colGroupBys : this.initialColGroupBys;
         var dataPoint, row, col, attrs, cell_value;
         var main_row_header, main_col_header;
         var groupBys;
