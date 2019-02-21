@@ -556,6 +556,17 @@ class WebsiteSlides(WebsiteProfile):
         slide.invalidate_cache()
         return slide.read(['likes', 'dislikes', 'user_vote'])[0]
 
+    @http.route('/slides/slide/archive', type='json', auth='user', website=True)
+    def slide_archive(self, slide_id):
+        """ This route allows channel publishers to archive slides.
+        It has to be done in sudo mode since only website_publishers can write on slides in ACLs """
+        slide = request.env['slide.slide'].browse(int(slide_id))
+        if slide.channel_id.can_publish:
+            slide.sudo().active = False
+            return True
+
+        return False
+
     @http.route(['/slides/slide/send_share_email'], type='json', auth='user', website=True)
     def slide_send_share_email(self, slide_id, email):
         slide = request.env['slide.slide'].browse(int(slide_id))
