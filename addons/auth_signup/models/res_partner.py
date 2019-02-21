@@ -25,9 +25,9 @@ def now(**kwargs):
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    signup_token = fields.Char(copy=False, groups="base.group_erp_manager")
-    signup_type = fields.Char(string='Signup Token Type', copy=False, groups="base.group_erp_manager")
-    signup_expiration = fields.Datetime(copy=False, groups="base.group_erp_manager")
+    signup_token = fields.Char(copy=False)
+    signup_type = fields.Char(string='Signup Token Type', copy=False)
+    signup_expiration = fields.Datetime(copy=False)
     signup_valid = fields.Boolean(compute='_compute_signup_valid', compute_sudo=True, string='Signup Token is Valid')
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
 
