@@ -8,6 +8,10 @@ Odoo Bangla
 
 Odoo is a suite of web based open source business apps now available in bangla. To have Odoo in bangla, clone this repo and follow the installation instruction as usaul.
 
+
+Odoo         
+----
+
 The main Odoo Apps include an <a href="https://www.odoo.com/page/crm">Open Source CRM</a>, <a href="https://www.odoo.com/page/website-builder">Website Builder</a>, <a href="https://www.odoo.com/page/e-commerce">eCommerce</a>, <a href="https://www.odoo.com/page/project-management">Project Management</a>, <a href="https://www.odoo.com/page/accounting">Billing &amp; Accounting</a>, <a href="https://www.odoo.com/page/point-of-sale">Point of Sale</a>, <a href="https://www.odoo.com/page/employees">Human Resources</a>, Marketing, Manufacturing, Purchase Management, ...  
 
 Odoo Apps can be used as stand-alone applications, but they also integrate seamlessly so you get
@@ -37,4 +41,6 @@ To fetch odoo merge pull requests refs use this command:
 
     $ ./odoo.py setup_git_review
 
-Odoo Bangali Contributed By <a herf="http://mediajockey.org/">Media Jockey</a> And <a herf="https://github.com/MjAbuz/">Abu Zafar</a>
+# Odoo Bangla
+
+Contributed By <a herf="http://mediajockey.org/">Media Jockey</a> And <a herf="https://github.com/MjAbuz/">Abu Zafar</a>
