@@ -12,6 +12,9 @@
     <record id="hr_skill_type_music" model="hr.skill.type">
         <field name="name">Music</field>
     </record>
+    <record id="hr_skill_type_marketing" model="hr.skill.type">
+        <field name="name">Marketing</field>
+    </record>
 
     <!--Skill Levels-->
     <record id="hr_skill_level_a1" model="hr.skill.level">
@@ -107,6 +110,31 @@
         <field name="skill_type_id" ref="hr_skill_type_music"/>
     </record>
 
+    <record id="hr_skill_level_ml1" model="hr.skill.level">
+        <field name="name">L1</field>
+        <field name="level_progress">25</field>
+        <field name="sequence">1</field>
+        <field name="skill_type_id" ref="hr_skill_type_marketing"/>
+    </record>
+    <record id="hr_skill_level_ml2" model="hr.skill.level">
+        <field name="name">L2</field>
+        <field name="level_progress">50</field>
+        <field name="sequence">5</field>
+        <field name="skill_type_id" ref="hr_skill_type_marketing"/>
+    </record>
+    <record id="hr_skill_level_ml3" model="hr.skill.level">
+        <field name="name">L3</field>
+        <field name="level_progress">75</field>
+        <field name="sequence">15</field>
+        <field name="skill_type_id" ref="hr_skill_type_marketing"/>
+    </record>
+    <record id="hr_skill_level_ml4" model="hr.skill.level">
+        <field name="name">L4</field>
+        <field name="level_progress">100</field>
+        <field name="sequence">25</field>
+        <field name="skill_type_id" ref="hr_skill_type_marketing"/>
+    </record>
+
     <!-- **** Skills **** -->
     <!-- Languages -->
     <record id="hr_skill_french" model="hr.skill">
@@ -127,6 +155,14 @@
     </record>
     <record id="hr_skill_filipino" model="hr.skill">
         <field name="name">Filipino</field>
+        <field name="skill_type_id" ref="hr_skill_type_lang"/>
+    </record>
+    <record id="hr_skill_arabic" model="hr.skill">
+        <field name="name">Arabic</field>
+        <field name="skill_type_id" ref="hr_skill_type_lang"/>
+    </record>
+    <record id="hr_skill_bengali" model="hr.skill">
+        <field name="name">Bengali</field>
         <field name="skill_type_id" ref="hr_skill_type_lang"/>
     </record>
 
@@ -155,6 +191,22 @@
         <field name="name">Spark</field>
         <field name="skill_type_id" ref="hr_skill_type_dev"/>
     </record>
+    <record id="hr_skill_react" model="hr.skill">
+        <field name="name">React</field>
+        <field name="skill_type_id" ref="hr_skill_type_dev"/>
+    </record>
+    <record id="hr_skill_django" model="hr.skill">
+        <field name="name">Django</field>
+        <field name="skill_type_id" ref="hr_skill_type_dev"/>
+    </record>
+    <record id="hr_skill_sql" model="hr.skill">
+        <field name="name">RDMS</field>
+        <field name="skill_type_id" ref="hr_skill_type_dev"/>
+    </record>
+    <record id="hr_skill_nosql" model="hr.skill">
+        <field name="name">NoSQL</field>
+        <field name="skill_type_id" ref="hr_skill_type_dev"/>
+    </record>
 
     <!-- Music -->
     <record id="hr_skill_piano" model="hr.skill">
@@ -174,95 +226,30 @@
         <field name="skill_type_id" ref="hr_skill_type_music"/>
     </record>
 
-    <!-- **** Employee Skills **** -->
-    <!-- Abigael -->
-    <record id="employee_level_1" model="hr.employee.skill">
-        <field name="employee_id" ref="hr.employee_hne"/>
-        <field name="skill_id" ref="hr_skill_french"/>
-        <field name="skill_type_id" ref="hr_skill_type_lang"/>
-        <field name="skill_level_id" ref="hr_skill_level_b2"/>
+    <!-- Marketing -->
+    <record id="hr_skill_com" model="hr.skill">
+        <field name="name">Communication</field>
+        <field name="skill_type_id" ref="hr_skill_type_marketing"/>
     </record>
-    <record id="employee_level_2" model="hr.employee.skill">
-        <field name="employee_id" ref="hr.employee_hne"/>
-        <field name="skill_id" ref="hr_skill_filipino"/>
-        <field name="skill_type_id" ref="hr_skill_type_lang"/>
-        <field name="skill_level_id" ref="hr_skill_level_a1"/>
+    <record id="hr_skill_analytics" model="hr.skill">
+        <field name="name">Analytics</field>
+        <field name="skill_type_id" ref="hr_skill_type_marketing"/>
     </record>
-    <record id="employee_level_3" model="hr.employee.skill">
-        <field name="employee_id" ref="hr.employee_hne"/>
-        <field name="skill_id" ref="hr_skill_english"/>
-        <field name="skill_type_id" ref="hr_skill_type_lang"/>
-        <field name="skill_level_id" ref="hr_skill_level_c2"/>
+    <record id="hr_skill_digital_ad" model="hr.skill">
+        <field name="name">Digital advertising</field>
+        <field name="skill_type_id" ref="hr_skill_type_marketing"/>
     </record>
-
-    <!-- Admin -->
-    <record id="employee_level_4" model="hr.employee.skill">
-        <field name="employee_id" ref="hr.employee_admin"/>
-        <field name="skill_id" ref="hr_skill_spanish"/>
-        <field name="skill_type_id" ref="hr_skill_type_lang"/>
-        <field name="skill_level_id" ref="hr_skill_level_c2"/>
+    <record id="hr_skill_public" model="hr.skill">
+        <field name="name">Public Speaking</field>
+        <field name="skill_type_id" ref="hr_skill_type_marketing"/>
     </record>
-    <record id="employee_level_5" model="hr.employee.skill">
-        <field name="employee_id" ref="hr.employee_admin"/>
-        <field name="skill_id" ref="hr_skill_filipino"/>
-        <field name="skill_type_id" ref="hr_skill_type_lang"/>
-        <field name="skill_level_id" ref="hr_skill_level_a2"/>
+    <record id="hr_skill_cms" model="hr.skill">
+        <field name="name">CMS</field>
+        <field name="skill_type_id" ref="hr_skill_type_marketing"/>
     </record>
-    <record id="employee_level_6" model="hr.employee.skill">
-        <field name="employee_id" ref="hr.employee_admin"/>
-        <field name="skill_id" ref="hr_skill_js"/>
-        <field name="skill_type_id" ref="hr_skill_type_dev"/>
-        <field name="skill_level_id" ref="hr_skill_level_intermediate"/>
-    </record>
-    <record id="employee_level_7" model="hr.employee.skill">
-        <field name="employee_id" ref="hr.employee_admin"/>
-        <field name="skill_id" ref="hr_skill_c"/>
-        <field name="skill_type_id" ref="hr_skill_type_dev"/>
-        <field name="skill_level_id" ref="hr_skill_level_advanced"/>
-    </record>
-    <record id="employee_level_8" model="hr.employee.skill">
-        <field name="employee_id" ref="hr.employee_admin"/>
-        <field name="skill_id" ref="hr_skill_spark"/>
-        <field name="skill_type_id" ref="hr_skill_type_dev"/>
-        <field name="skill_level_id" ref="hr_skill_level_expert"/>
-    </record>
-
-    <!-- Demo -->
-    <record id="employee_level_9" model="hr.employee.skill">
-        <field name="employee_id" ref="hr.employee_qdp"/>
-        <field name="skill_id" ref="hr_skill_french"/>
-        <field name="skill_type_id" ref="hr_skill_type_lang"/>
-        <field name="skill_level_id" ref="hr_skill_level_c2"/>
-    </record>
-    <record id="employee_level_10" model="hr.employee.skill">
-        <field name="employee_id" ref="hr.employee_qdp"/>
-        <field name="skill_id" ref="hr_skill_js"/>
-        <field name="skill_type_id" ref="hr_skill_type_dev"/>
-        <field name="skill_level_id" ref="hr_skill_level_elementary"/>
-    </record>
-    <record id="employee_level_11" model="hr.employee.skill">
-        <field name="employee_id" ref="hr.employee_qdp"/>
-        <field name="skill_id" ref="hr_skill_python"/>
-        <field name="skill_type_id" ref="hr_skill_type_dev"/>
-        <field name="skill_level_id" ref="hr_skill_level_expert"/>
-    </record>
-    <record id="employee_level_12" model="hr.employee.skill">
-        <field name="employee_id" ref="hr.employee_qdp"/>
-        <field name="skill_id" ref="hr_skill_spark"/>
-        <field name="skill_type_id" ref="hr_skill_type_dev"/>
-        <field name="skill_level_id" ref="hr_skill_level_expert"/>
-    </record>
-    <record id="employee_level_13" model="hr.employee.skill">
-        <field name="employee_id" ref="hr.employee_qdp"/>
-        <field name="skill_id" ref="hr_skill_piano"/>
-        <field name="skill_type_id" ref="hr_skill_type_music"/>
-        <field name="skill_level_id" ref="hr_skill_level_l1"/>
-    </record>
-    <record id="employee_level_14" model="hr.employee.skill">
-        <field name="employee_id" ref="hr.employee_qdp"/>
-        <field name="skill_id" ref="hr_skill_singing"/>
-        <field name="skill_type_id" ref="hr_skill_type_music"/>
-        <field name="skill_level_id" ref="hr_skill_level_l3"/>
+    <record id="hr_skill_email" model="hr.skill">
+        <field name="name">Email Marketing</field>
+        <field name="skill_type_id" ref="hr_skill_type_marketing"/>
     </record>
 
     <!-- Resumé -->
