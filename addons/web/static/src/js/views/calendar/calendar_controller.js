@@ -374,7 +374,7 @@ var CalendarController = AbstractController.extend({
             }
             self.dialog = new dialogs.FormViewDialog(self, options).open();
         };
-        open_dialog(true);
+        open_dialog(this.readonlyFormViewId);
     },
     /**
      * @private
