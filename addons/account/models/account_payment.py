@@ -236,10 +236,14 @@ class account_abstract_payment(models.AbstractModel):
             currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id or invoices and invoices[0].currency_id
 
         # Avoid currency rounding issues by summing the amounts according to the company_currency_id before
+        invoice_datas = invoices.read_group(
+            [('id', 'in', invoices.ids)],
+            ['currency_id', 'type', 'residual_signed'],
+            ['currency_id', 'type'], lazy=False)
         total = 0.0
-        groups = groupby(invoices, lambda i: i.currency_id)
-        for payment_currency, payment_invoices in groups:
-            amount_total = sum([MAP_INVOICE_TYPE_PAYMENT_SIGN[i.type] * i.residual_signed for i in payment_invoices])
+        for invoice_data in invoice_datas:
+            amount_total = MAP_INVOICE_TYPE_PAYMENT_SIGN[invoice_data['type']] * invoice_data['residual_signed']
+            payment_currency = self.env['res.currency'].browse(invoice_data['currency_id'][0])
             if payment_currency == currency:
                 total += amount_total
             else:
