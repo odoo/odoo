@@ -33,6 +33,7 @@ class SlidesMail(http.Controller):
             ('res_id', '=', res_id),
             ('website_published', '=', True),
             ('author_id', '=', request.env.user.partner_id.id),
+            ('message_type', '=', 'comment'),
             ('id', '=', message_id)
         ]  # restrict to the given message_id
         message = request.env['mail.message'].search(domain, limit=1)
