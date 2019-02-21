@@ -96,6 +96,9 @@
                                 <field nolabel="1" name="amount" attrs="{'required':[('free_over','!=', False)], 'invisible':[('free_over','=', False)]}"/>
                                 <field name="product_id" context="{'default_type': 'service', 'sale_ok': False, 'purchase_ok': False}" />
                                 <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="can_generate_return" invisible="1"/>
+                                <field name="return_label_on_delivery" attrs="{'invisible': [('can_generate_return', '=', False)]}"/>
+                                <field name="get_return_label_from_portal" attrs="{'invisible': [('return_label_on_delivery', '=', False)]}"/>
                             </group>
                         </group>
                         <notebook>
