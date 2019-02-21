@@ -90,6 +90,7 @@ var Chatter = Widget.extend({
         this._$topbar = this.$('.o_chatter_topbar');
         if(!this._disableAttachmentBox) {
             this.$('.o_topbar_right_area').append(QWeb.render('mail.chatter.Attachment.Button', {
+                displayCounter: !!this.fields.thread,
                 count: this.record.data.message_attachment_count || 0,
             }));
         }
@@ -362,7 +363,9 @@ var Chatter = Widget.extend({
         if (this._isAttachmentBoxOpen) {
             this._fetchAttachments().then(this._openAttachmentBox.bind(this));
         }
-        this.trigger_up('reload', { fieldNames: ['message_attachment_count'] });
+        if (this.fields.thread) {
+            this.trigger_up('reload', { fieldNames: ['message_attachment_count'] });
+        }
     },
     /**
      * @private
@@ -490,7 +493,9 @@ var Chatter = Widget.extend({
                 })
                 .then(function () {
                     self._reloadAttachmentBox();
-                    self.fields.thread.removeAttachments([ev.data.attachmentId]);
+                    if (self.fields.thread) {
+                        self.fields.thread.removeAttachments([ev.data.attachmentId]);
+                    }
                     self.trigger_up('reload');
                 });
             }

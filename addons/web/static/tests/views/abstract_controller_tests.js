@@ -67,6 +67,8 @@ odoo.define("base.abstract_controller_tests", function(require) {
                     testUtils.dom.click(view.$(".simple"));
                     testUtils.dom.click(view.$(".with-child span"));
                     assert.verifySteps(["a1", "a2"]);
+
+                    view.destroy();
                 }
             );
         }
