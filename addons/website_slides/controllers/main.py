@@ -221,11 +221,12 @@ class WebsiteSlides(WebsiteProfile):
         '/slides/<model("slide.channel"):channel>/category/<model("slide.category"):category>',
         '/slides/<model("slide.channel"):channel>/category/<model("slide.category"):category>/page/<int:page>'
     ], type='http', auth="public", website=True, sitemap=sitemap_slide)
-    def channel(self, channel, category=None, tag=None, page=1, slide_type=None, sorting=None, search=None, **kw):
+    def channel(self, channel, category=None, tag=None, page=1, slide_type=None, uncategorized=False, sorting=None, search=None, **kw):
         if not channel.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
+
         domain = [('channel_id', '=', channel.id)]
-        if not request.env.user.has_group('website.group_website_publisher'):
+        if not channel.can_publish:
             domain = expression.AND([
                 domain,
                 ['&', ('website_published', '=', True), ('channel_id.website_published', '=', True)]
@@ -250,7 +251,10 @@ class WebsiteSlides(WebsiteProfile):
             elif tag:
                 domain += [('tag_ids.id', '=', tag.id)]
                 pager_url += "/tag/%s" % tag.id
-            if slide_type:
+            if uncategorized:
+                domain += [('category_id', '=', False)]
+                pager_url += "?uncategorized=1"
+            elif slide_type:
                 domain += [('slide_type', '=', slide_type)]
                 pager_url += "?slide_type=%s" % slide_type
 
@@ -270,6 +274,7 @@ class WebsiteSlides(WebsiteProfile):
             'search_category': category,
             'search_tag': tag,
             'search_slide_type': slide_type,
+            'search_uncategorized': uncategorized,
             'slide_types': slide_types,
             'sorting': actual_sorting,
             'search': search,
@@ -301,21 +306,33 @@ class WebsiteSlides(WebsiteProfile):
         # Display uncategorized slides
         # fetch slides; done as sudo because we want to display all of them but
         # unreachable ones won't be clickable (+ slide controller will crash anyway)
-        if not category:
+        if not category and not uncategorized:
             category_data = []
             for category in request.env['slide.slide'].sudo().read_group(domain, ['category_id'], ['category_id']):
                 category_id, name = category.get('category_id') or (False, _('Uncategorized'))
+                slides_sudo = request.env['slide.slide'].sudo().search(category['__domain'], limit=4, offset=0, order=order)
                 category_data.append({
                     'id': category_id,
                     'name': name,
+                    'slug_name': slug((category_id, name)) if category_id else name,
                     'total_slides': category['category_id_count'],
-                    'slides': request.env['slide.slide'].sudo().search(category['__domain'], limit=4, offset=0, order=order)
+                    'slides': slides_sudo,
                 })
+        elif uncategorized:
+            slides_sudo = request.env['slide.slide'].sudo().search(domain, limit=self._slides_per_page, offset=pager['offset'], order=order)
+            category_data = [{
+                'id': False,
+                'name':  _('Uncategorized'),
+                'slug_name':  _('Uncategorized'),
+                'total_slides': len(slides_sudo),
+                'slides': slides_sudo,
+            }]
         else:
             slides_sudo = request.env['slide.slide'].sudo().search(domain, limit=self._slides_per_page, offset=pager['offset'], order=order)
             category_data = [{
                 'id': category.id,
                 'name': category.name,
+                'slug_name': slug(category),
                 'total_slides': len(slides_sudo),
                 'slides': slides_sudo,
             }]
