@@ -2371,9 +2371,10 @@ class MailThread(models.AbstractModel):
             try:
                 sudoed_records.check_access_rights('read')
                 sudoed_records.check_access_rule('read')
+                return True
             except exceptions.AccessError:
-                return False
-        return True
+                pass
+        return False
 
     @api.multi
     def _message_auto_subscribe(self, updated_values):
