@@ -47,7 +47,7 @@ var SlideArchiveDialog = Dialog.extend({
                 slide_id: this.slideId
             },
         }).then(function () {
-            self.$slideTarget.closest('.o_wslides_content_slide').remove();
+            self.$slideTarget.closest('.o_wslides_slides_list_slide').remove();
             self.close();
         });
     }

@@ -311,25 +311,6 @@ var SlideUploadDialog = Dialog.extend({
 
         return values;
     },
-    _reorderSlidesSequence: function (){
-        var self = this;
-        var slidesElement = $('li.o_wslides_content_slide');
-        var slides = [];
-        for (var i = 0; i < slidesElement.length;i++){
-            slides.push({
-                id: parseInt($(slidesElement[i]).attr('slide_id')),
-                category_id: parseInt($(slidesElement[i]).attr('category_id')),
-                sequence: i
-            });
-        }
-        self._rpc({
-            route: '/slides/resequence_slides',
-            params: {
-                slides_data: slides
-            }
-        }).then(function (){
-        });
-    },
     /**
      * Init the data relative to the support slide type to upload
      *
@@ -539,12 +520,6 @@ var SlideUploadDialog = Dialog.extend({
                     self.set('state', oldType);
                     self._alertDisplay(data.error);
                 } else {
-                    //Quick and really dirty fix for reordering issues
-                    if (data.channel_type === 'training' && self.categoryID){
-                        var categoryElement = $('ul[category_id='+self.categoryID+']');
-                        $('<li hidden class="o_wslides_content_slide" slide_id="'+data.slide_id+'" category_id="'+self.categoryID+'">temp</li>').appendTo(categoryElement);
-                        self._reorderSlidesSequence();
-                    }
                     window.location = data.url;
                 }
             });
