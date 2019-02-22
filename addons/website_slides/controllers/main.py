@@ -5,6 +5,7 @@ import base64
 import itertools
 import logging
 import werkzeug
+import math
 
 from odoo import http, modules, tools, _
 from odoo.exceptions import AccessError, UserError
@@ -21,6 +22,7 @@ _logger = logging.getLogger(__name__)
 class WebsiteSlides(WebsiteProfile):
     _slides_per_page = 12
     _slides_per_list = 20
+    _pager_max_pages = 5
     _channel_order_by_criterion = {
         'vote': 'total_votes desc',
         'view': 'total_views desc',
@@ -283,9 +285,10 @@ class WebsiteSlides(WebsiteProfile):
         pager_args['sorting'] = actual_sorting
 
         pager_count = request.env['slide.slide'].sudo().search_count(domain)
+        page_count = math.ceil(pager_count / self._slides_per_page)
         pager = request.website.pager(url=pager_url, total=pager_count, page=page,
-                                      step=self._slides_per_page, scope=self._slides_per_page,
-                                      url_args=pager_args)
+                                      step=self._slides_per_page, url_args=pager_args,
+                                      scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages)
 
         values = {
             'channel': channel,
