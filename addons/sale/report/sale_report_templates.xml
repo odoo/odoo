@@ -192,9 +192,9 @@
             <p t-if="doc.payment_term_id.note">
                 <span t-field="doc.payment_term_id.note"/>
             </p>
-            <p id="fiscal_position_remark" t-if="doc.fiscal_position_id and doc.fiscal_position_id.note">
+            <p id="fiscal_position_remark" t-if="doc.fiscal_position_id and doc.fiscal_position_id.sudo().note">
                 <strong>Fiscal Position Remark:</strong>
-                <span t-field="doc.fiscal_position_id.note"/>
+                <span t-field="doc.fiscal_position_id.sudo().note"/>
             </p>
 
             <div t-if="doc.signature" class="mt32 ml16 mr16" name="signature">
