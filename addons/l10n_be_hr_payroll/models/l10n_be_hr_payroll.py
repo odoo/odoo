@@ -5,6 +5,8 @@ from odoo import api, fields, models, _
 
 from odoo.exceptions import ValidationError
 
+EMPLOYER_ONSS = 0.2714
+
 
 class HrContract(models.Model):
     _inherit = 'hr.contract'
@@ -89,7 +91,7 @@ class HrContract(models.Model):
     def _inverse_wage_with_holidays(self):
         for contract in self:
             if contract.holidays:
-                remaining_for_gross = contract.wage_with_holidays * (13.0 + 13.0 * 0.3507 + 0.92)
+                remaining_for_gross = contract.wage_with_holidays * (13.0 + 13.0 * EMPLOYER_ONSS + 0.92)
                 yearly_cost = remaining_for_gross \
                     + 12.0 * contract.representation_fees \
                     + 12.0 * contract.fuel_card \
@@ -162,7 +164,7 @@ class HrContract(models.Model):
     def _compute_social_security_contributions(self):
         for contract in self:
             total_wage = contract.wage * 13.0
-            contract.social_security_contributions = (total_wage) * 0.3507
+            contract.social_security_contributions = (total_wage) * EMPLOYER_ONSS
 
     @api.depends('wage')
     def _compute_ucm_insurance(self):
@@ -214,7 +216,7 @@ class HrContract(models.Model):
             - 12.0 * contract.transport_employer_cost \
             - contract.warrants_cost \
             - 220.0 * contract.meal_voucher_paid_by_employer
-        gross = remaining_for_gross / (13.0 + 13.0 * 0.3507 + 0.92)
+        gross = remaining_for_gross / (13.0 + 13.0 * EMPLOYER_ONSS + 0.92)
         return gross
 
 
