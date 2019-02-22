@@ -13,7 +13,7 @@ sAnimations.registry.crmPartnerAssign = sAnimations.Class.extend({
         'click .edit_contact_confirm': '_onEditContactConfirm',
         'click .new_opp_confirm': '_onNewOppConfirm',
         'click .edit_opp_confirm': '_onEditOppConfirm',
-        'change .edit_opp_form .next_activity': '_onEditOppConfirm',
+        'change .edit_opp_form .next_activity': '_onEditOppForm',
         'click div.input-group span.fa-calendar': '_onCalendarIconClick',
     },
 
