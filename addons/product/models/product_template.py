@@ -311,6 +311,11 @@ class ProductTemplate(models.Model):
         if self.uom_id:
             self.uom_po_id = self.uom_id.id
 
+    @api.onchange('type')
+    def _onchange_type(self):
+        # Do nothing but needed for inheritance
+        return {}
+
     @api.model_create_multi
     def create(self, vals_list):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''

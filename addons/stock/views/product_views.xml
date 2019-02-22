@@ -111,7 +111,8 @@
                             <field name="sale_delay" class="oe_inline" style="vertical-align:baseline"/> days
                         </div>
                     </group>
-                    <group string="Traceability" name="traceability" groups="stock.group_production_lot">
+                    <group string="Traceability" name="traceability" groups="stock.group_production_lot"
+                           attrs="{'invisible': [('type', '=', 'consu')]}">
                         <field name="tracking" widget="radio" attrs="{'invisible': [('type', 'in', ['service', 'digital'])]}"/>
                     </group>
                      <group string="Counterpart Locations" name="stock_property" groups="base.group_no_one">
