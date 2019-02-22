@@ -889,14 +889,14 @@ var ListRenderer = BasicRenderer.extend({
         var currentElement = ev.currentTarget;
         if (!currentElement.checked) {
             var rmIndex = _.findIndex(this.columns, function (col) {
-                return col.attrs.name === ev.currentTarget.value;
+                return col.attrs.name === currentElement.value;
             });
             var rmCol = this.columns[rmIndex];
             this.displayedColumns.splice(this.displayedColumns.indexOf(rmCol.attrs.name), 1);
             this.columns.splice(rmIndex, 1);
         } else {
             var self = this;
-            this.displayedColumns.push(ev.currentTarget.value);
+            this.displayedColumns.push(currentElement.value);
             this.columns = _.filter(this.allColumns, function (col) {
                 return _.contains(self.displayedColumns, col.attrs.name);
             });

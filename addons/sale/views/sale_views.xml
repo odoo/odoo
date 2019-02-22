@@ -178,14 +178,14 @@
                 <tree string="Sales Orders" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Order Number"/>
-                    <field name="confirmation_date" string="Confirmation Date"/>
+                    <field name="confirmation_date" string="Confirmation Date" optional="True"/>
                     <field name="commitment_date" groups="sale.group_sale_order_dates"/>
                     <field name="expected_date" groups="sale.group_sale_order_dates"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
-                    <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
-                    <field name="currency_id" invisible="1"/>
-                    <field name="invoice_status" invisible="1"/>
+                    <field name="amount_total" sum="Total Tax Included" widget="monetary" optional="True"/>
+                    <field name="currency_id" invisible="1" optional="True"/>
+                    <field name="invoice_status" invisible="1" optional="True"/>
                     <field name="state" invisible="1"/>
                 </tree>
             </field>
