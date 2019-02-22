@@ -209,6 +209,7 @@ odoo.define('website_slides.fullscreen', function (require) {
             }).then(function (data){
                 if (data){
                     self.slide.quiz = data;
+                    console.log(self.slide);
                     self._renderPlayer();
                 }
             });
