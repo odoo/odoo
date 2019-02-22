@@ -33,6 +33,8 @@ var FIELD_CLASSES = {
     many2one: 'o_list_many2one',
 };
 
+var HEADING_COLUMNS_TO_SKIP_IN_GROUPS = 2;
+
 var ListRenderer = BasicRenderer.extend({
     className: 'o_list_view',
     events: {
@@ -601,6 +603,9 @@ var ListRenderer = BasicRenderer.extend({
                 'class': 'o_group_lable',
                 'text': name + ' (' + group.count + ')'
             }));
+        if (this.hasSelectors) {
+            $th.attr('colspan', HEADING_COLUMNS_TO_SKIP_IN_GROUPS);
+        }
         var $arrow = $('<span>')
             .css('padding-left', (groupLevel * 20) + 'px')
             .css('padding-right', '5px')
@@ -960,7 +965,7 @@ var ListRenderer = BasicRenderer.extend({
                 });
                 $checked_rows.find('.o_list_record_selector input').prop('checked', true);
             }
-            if (this.selectedGroups.length) {
+            if (self.selectedGroups.length) {
                 var $checkedGroups = this.$('tr').filter(function (index, el) {
                     var group = $(el).data('group');
                     return _.contains(self.selectedGroups, group && group.id);
@@ -1254,7 +1259,7 @@ var ListRenderer = BasicRenderer.extend({
         var $checkeBox = $(ev.currentTarget);
         var group = $checkeBox.closest('.o_group_has_content').data('group');
         var checked = $checkeBox.prop('checked') || false;
-        this.$('tbody[data-group_id="'+ group.id +'"] .o_list_record_selector input:not(":disabled")').prop('checked', checked);
+        this.$('tbody[data-group_id="'+ group.id +'"]').next().find('.o_list_record_selector input:not(":disabled")').prop('checked', checked);
         this._updateSelection();
     },
     /**

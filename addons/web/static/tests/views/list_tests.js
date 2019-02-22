@@ -2902,7 +2902,7 @@ QUnit.module('Views', {
         assert.containsOnce(list, 'tbody', "there should be 1 tbody");
         assert.containsN(list, '.o_group_header', 2,
             "should contain 2 groups at first level");
-        assert.strictEqual(list.$('.o_group_name:first').text(), 'Value 1 (4)',
+        assert.strictEqual(list.$('.o_group_name:first .o_group_lable').text(), 'Value 1 (4)',
             "group should have correct name and count");
         assert.containsN(list, '.o_group_name .fa-caret-right', 2,
             "the carret of closed groups should be right");
@@ -2919,16 +2919,16 @@ QUnit.module('Views', {
         assert.deepEqual(list.exportState().resIds, envIDs);
 
         var $openGroup = list.$('tbody:nth(1)');
-        assert.strictEqual(list.$('.o_group_name:first').text(), 'Value 1 (4)',
+        assert.strictEqual(list.$('.o_group_name:first .o_group_lable').text(), 'Value 1 (4)',
             "group should have correct name and count (of records, not inner subgroups)");
         assert.containsN(list, 'tbody', 3, "there should be 3 tbodys");
         assert.containsOnce(list, '.o_group_name:first .fa-caret-down',
             "the carret of open groups should be down");
         assert.strictEqual($openGroup.find('.o_group_header').length, 3,
             "open group should contain 3 groups");
-        assert.strictEqual($openGroup.find('.o_group_name:nth(2)').text(), 'blip (2)',
+        assert.strictEqual($openGroup.find('.o_group_name:nth(2) .o_group_lable').text(), 'blip (2)',
             "group should have correct name and count");
-        assert.strictEqual($openGroup.find('.o_group_name:nth(2) span').css('padding-left'),
+        assert.strictEqual($openGroup.find('.o_group_name:nth(2) span.fa').css('padding-left'),
             '20px', "groups of level 2 should have a 20px padding-left");
         assert.strictEqual($openGroup.find('.o_group_header:nth(2) td:last').text(), '-11',
             "inner group aggregates are correctly displayed");
@@ -3014,7 +3014,7 @@ QUnit.module('Views', {
             "should have 3 subgroups");
         assert.strictEqual($openGroup.find('tr').length, 3,
             "should have 3 subgroups");
-        assert.strictEqual($openGroup.find('.o_group_name:first').text(), 'Low (3)',
+        assert.strictEqual($openGroup.find('.o_group_name:first .o_group_lable').text(), 'Low (3)',
             "should display the selection name in the group header");
 
         list.destroy();
@@ -4807,9 +4807,11 @@ QUnit.module('Views', {
             arch: '<tree><field name="date"/></tree>',
             groupBy: ['date:month'],
         });
-
-        assert.strictEqual(list.$('tbody').text(), "January 2017 (1)Undefined (3)",
-            "the group names should be correct");
+        assert.strictEqual(list.$('.o_group_header').length, 2, "there should be two groups");
+        assert.strictEqual(list.$('.o_group_header:first .o_group_lable').text(), 'January 2017 (1)',
+            "there should be two groups");
+        assert.strictEqual(list.$('.o_group_header:nth(1) .o_group_lable').text(), 'Undefined (3)',
+            "there should be two groups");
 
         list.destroy();
     });
@@ -4843,7 +4845,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('grouped list view, indentation for empty group', async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         this.data.foo.fields.priority = {
             string: "Priority",
@@ -4889,6 +4891,8 @@ QUnit.module('Views', {
             "The first element of the row name should have the fa class");
         assert.strictEqual(list.$('th.o_group_name').eq(1).children().eq(0).is('span'), true,
             "The first element of the row name should be a span");
+        assert.hasClass(list.$('th.o_group_name').eq(1).children().eq(2), 'o_group_lable',
+            "The first element of the row name should be a class 'o_group_lable'");
         list.destroy();
     });
 
