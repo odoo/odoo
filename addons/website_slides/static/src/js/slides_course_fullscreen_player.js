@@ -22,10 +22,10 @@ odoo.define('website_slides.fullscreen', function (require) {
         * @param {Object} el
         * @param {Object} data holding channelId and optionally upload and publish control parameters
         */
-        init: function (el, course_id,slide_id, user_id){
-            this.courseID = parseInt(course_id, 10);
-            this.slideID = parseInt(slide_id, 10);
-            this.userID = parseInt(user_id, 10);
+        init: function (el, courseId, slideId, userId) {
+            this.courseID = parseInt(courseId, 10);
+            this.slideID = parseInt(slideId, 10);
+            this.userID = parseInt(userId, 10);
             this.course = undefined;
             this.slide = undefined;
             this.slides = [];
@@ -325,7 +325,7 @@ odoo.define('website_slides.fullscreen', function (require) {
             var self = this;
             self.activeTab.removeClass('active');
             $('li.active').removeClass('active');
-            $('li[slide_id='+self.slide.id+']').addClass('active');
+            $('li[data-slide-id='+self.slide.id+']').addClass('active');
             self.activeTab = $('.o_wslides_fs_sidebar_slide_tab[index="'+self.index+'"]');
             self.activeTab.addClass('active');
         },
@@ -356,7 +356,7 @@ odoo.define('website_slides.fullscreen', function (require) {
                 self._getActiveSlide();
                 self._renderPlayer();
                 $('li.active').removeClass('active');
-                $('li[slide_id='+self.slide.id+']').addClass('active');
+                $('li[data-slide-id='+self.slide.id+']').addClass('active');
                 self._setPreviousAndNextSlides();
                 self._updateUrl();
                 history.pushState(null,'',self.url);
@@ -416,10 +416,10 @@ odoo.define('website_slides.fullscreen', function (require) {
         },
         start: function (){
             var defs = [this._super.apply(this, arguments)];
-            var user_id = this.$el.attr('user_id');
-            var course_id = this.$el.attr('course_id');
-            var slide_id = this.$el.attr('slide_id');
-            var fullscreen = new Fullscreen(this, course_id, slide_id, user_id);
+            var userId = this.$el.data('userId');
+            var courseId = this.$el.data('courseId');
+            var slideId = this.$el.data('slideId');
+            var fullscreen = new Fullscreen(this, courseId, slideId, userId);
             defs.push(fullscreen.attachTo(this.$el));
             return $.when.apply($, defs);
         }
