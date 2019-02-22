@@ -82,7 +82,7 @@ class PaymentTransactionPayulatam(models.Model):
         if not reference or not txnid or not sign:
             raise ValidationError(_('PayUlatam: received data with missing reference (%s) or transaction id (%s) or sign (%s)') % (reference, txnid, sign))
 
-        transaction = self.search([('acquirer_reference', '=', reference)])
+        transaction = self.search([('reference', '=', reference)])
 
         if not transaction:
             error_msg = (_('PayUlatam: received data for reference %s; no order found') % (reference))

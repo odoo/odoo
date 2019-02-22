@@ -121,10 +121,9 @@ class PayUlatamForm(PayUlatamCommon):
             'amount': 0.01,
             'acquirer_id': self.payulatam.id,
             'currency_id': self.currency_euro.id,
-            'reference': 'test_ref_2',
+            'reference': 'test_ref_10',
             'partner_name': 'Norbert Buyer',
             'partner_country_id': self.country_france.id,
-            'acquirer_reference': 'test_ref_10',
             'partner_id': self.buyer_id})
 
         # validate transaction
