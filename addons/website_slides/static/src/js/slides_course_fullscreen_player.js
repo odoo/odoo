@@ -193,7 +193,7 @@ odoo.define('website_slides.fullscreen', function (require) {
             for(var i = 0; i < slides.length;i++){
                 var slide = $(slides[i]);
                 self.slides.push({
-                    id: parseInt(slide.attr('slide_id'), 10),
+                    id: parseInt(slide.data('slideId'), 10),
                     name: slide.attr('slide_name'),
                     embed_code: slide.attr('slide_embed_code'),
                     slide_type: slide.attr('slide_type'),
@@ -334,7 +334,7 @@ odoo.define('website_slides.fullscreen', function (require) {
             var self = this;
             self.activeTab.removeClass('active');
             $('li.active').removeClass('active');
-            $('li[slide_id='+self.slide.id+']').addClass('active');
+            $('li[data-slide-id='+self.slide.id+']').addClass('active');
             self.activeTab = $('.o_wslides_fullscreen_sidebar_slide_tab[index="'+self.index+'"]')
             self.activeTab.addClass('active');
         },
@@ -365,7 +365,7 @@ odoo.define('website_slides.fullscreen', function (require) {
                 self._getActiveSlide();
                 self._renderPlayer();
                 $('li.active').removeClass('active');
-                $('li[slide_id='+self.slide.id+']').addClass('active');
+                $('li[data-slide-id='+self.slide.id+']').addClass('active');
                 self._setPreviousAndNextSlides();
                 self._updateUrl();
                 history.pushState(null,'',self.url);
@@ -419,7 +419,7 @@ odoo.define('website_slides.fullscreen', function (require) {
             this._super.apply(this, arguments);
             var user_id = this.$el.attr('user_id');
             var course_id = this.$el.attr('course_id');
-            var slide_id = this.$el.attr('slide_id');
+            var slide_id = this.$el.data('slideId');
             var fullscreen = new Fullscreen(this, course_id, slide_id, user_id);
             fullscreen.appendTo(".oe_js_course_slide");
         }

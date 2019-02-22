@@ -177,7 +177,7 @@ odoo.define('website_slides.quiz', function (require) {
         },
         start: function (){
             this._super.apply(this, arguments);
-            var slideID = parseInt(this.$el.attr('slide_id'),10);
+            var slideID = parseInt(this.$el.data('slideId'),10);
             var slideDone = this.$el.attr('slide_done');
             var nbAttempts = parseInt(this.$el.attr('nb_attempts'), 10);
             var firstAttemptReward = this.$el.attr('first_reward');

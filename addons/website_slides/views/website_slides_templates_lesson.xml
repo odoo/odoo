@@ -15,8 +15,8 @@
     <ul class="collapse show p-0 m-0" t-att-id="('collapse-%s') % (category.id if category else 0)" >
         <t t-foreach="category_slide_ids" t-as="course_slide">
             <li class="slide-content-list-slide">
-                <a t-attf-href="/slides/slide/#{slug(course_slide)}" t-att-index="i" t-att-slide_id="course_slide.id">
-                    <div  t-attf-index="#{i}" t-attf-slide_id="#{course_slide.id}"  t-attf-class="#{'active' if slide.id == course_slide.id else ''} d-flex justify-content-between">
+                <a t-attf-href="/slides/slide/#{slug(course_slide)}" t-att-index="i" t-att-data-slide-id="course_slide.id">
+                    <div  t-attf-index="#{i}" t-att-data-slide-id="course_slide.id"  t-attf-class="#{'active' if slide.id == course_slide.id else ''} d-flex justify-content-between">
                         <div>
                             <t t-call="website_slides.slide_icon">
                                 <t t-set="slide" t-value="course_slide" />
@@ -120,7 +120,7 @@
                         </div>
                         <div t-if="slide.question_ids">
                             <div class=".o_wslides_fullscreen_quiz o_w_slides_quiz_no_fullscreen mt-2"
-                                t-attf-slide_id="#{slide.id}"
+                                t-att-data-slide-id="slide.id"
                                 t-attf-slide_done="#{slide.id in user_progress and user_progress[slide.id].completed}"
                                 t-attf-nb_attempts="#{user_progress[slide.id].quiz_attempts_count if slide.id in user_progress else ''}"
                                 t-attf-first_reward="#{slide.quiz_first_attempt_reward}"
@@ -471,18 +471,18 @@
             <t t-foreach="category_slide_ids" t-as="course_slide">
                 <!-- AWA FIXME: remove that index crap but right now fullscreen JS uses it too much -->
                 <t t-set="i" t-value="list(slide.channel_id.slide_ids).index(course_slide)"/>
-                <li t-att-index="i" t-att-slide_id="course_slide.id" t-attf-class="#{'active' if slide.id == course_slide.id else ''}">
+                <li t-att-index="i" t-att-data-slide-id="course_slide.id" t-attf-class="#{'active' if slide.id == course_slide.id else ''}">
                     <span class="o_wslides_fullscreen_slide_tab_line">
                         <span class="o_wslides_top_line"></span>
                         <i t-attf-id="check-#{course_slide.id}" t-if="not course_slide.id in user_progress or not user_progress[course_slide.id].completed" class="check-done fa fa-circle-thin"></i>
                         <i t-attf-id="check-#{course_slide.id}" t-if="course_slide.id in user_progress and user_progress[course_slide.id].completed" class="check-done o_wslides_slide_completed fa fa-check-circle"></i>
                         <span class="o_wslides_bottom_line"></span>
                     </span>
-                    <a t-att-index="i" t-att-slide_id="course_slide.id">
+                    <a t-att-index="i" t-att-data-slide-id="course_slide.id">
                         <div t-attf-index="#{i}"
                             t-attf-slide_slug="#{slug(course_slide)}"
                             t-attf-done="#{course_slide.id in user_progress and user_progress[course_slide.id].completed}"
-                            t-attf-slide_id="#{course_slide.id}"
+                            t-att-data-slide-id="course_slide.id"
                             t-attf-slide_name="#{course_slide.name}"
                             t-attf-quiz="#{True if course_slide.question_ids else False}"
                             t-attf-slide_type="#{course_slide.slide_type}"
@@ -556,7 +556,7 @@
                         </t>
                     </ul>
                 </div>
-                <div class="oe_js_course_slide" t-attf-user_id="#{user.id}" t-attf-course_name="#{slide.channel_id.name}" t-attf-course_id="#{slide.channel_id.id}" t-attf-course_slug="#{slug(slide.channel_id)}" t-attf-slide_id="#{slide.id}"/>
+                <div class="oe_js_course_slide" t-attf-user_id="#{user.id}" t-attf-course_name="#{slide.channel_id.name}" t-attf-course_id="#{slide.channel_id.id}" t-attf-course_slug="#{slug(slide.channel_id)}" t-att-data-slide-id="slide.id"/>
                 <div class="o_wslides_fullscreen_player"/>
             </div>
         </div>

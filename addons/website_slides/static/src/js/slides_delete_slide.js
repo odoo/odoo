@@ -39,13 +39,13 @@ odoo.define('website_slides.delete.slide', function (require) {
         _delete: function (ev) {
             var self = this;
             // TO FIX: CallBack is not executed
-            $('[slide_id='+this.slide_id+']').remove();
+            $('[data-slide-id='+this.slide_id+']').remove();
             this._rpc({
                 model: 'slide.slide',
                 method: 'unlink',
                 args: [[self.slide_id]],
             }).then(function () {
-                $('[slide='+this.slide_id+']').remove();
+                $('[data-slide-id='+this.slide_id+']').remove();
             });
         },
         /**
@@ -81,7 +81,7 @@ odoo.define('website_slides.delete.slide', function (require) {
          */
         _onDeleteSlideClick: function (ev) {
             var target = $(ev.currentTarget);
-            this._openDialog(target.attr('slide_id'));
+            this._openDialog(target.data('slideId'));
         },
     });
     return DeleteSlideDialog;
