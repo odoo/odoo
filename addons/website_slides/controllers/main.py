@@ -583,6 +583,24 @@ class WebsiteSlides(WebsiteProfile):
             return {'error': 'join_done'}
         return success
 
+    @http.route('/slides/channel/resequence', type="json", website=True, auth="user")
+    def resequence_slides(self, channel_id, slides_data):
+        """" Reorder the slides within the channel by reassigning their 'sequence' field.
+        This method also handles slides that are put in a new category. """
+        channel = request.env['slide.channel'].browse(int(channel_id))
+        if not channel.can_publish:
+            return {'error': 'Only the publishers of the channel can edit it'}
+
+        slides = request.env['slide.slide'].search([
+            ('id', 'in', [int(key) for key in slides_data.keys()]),
+            ('channel_id', '=', channel.id)
+        ])
+
+        for slide in slides:
+            slide_key = str(slide.id)
+            slide.sequence = slides_data[slide_key]['sequence']
+            slide.category_id = slides_data[slide_key]['category_id']
+
     @http.route(['/slides/prepare_preview'], type='json', auth='user', methods=['POST'], website=True)
     def prepare_preview(self, **data):
         Slide = request.env['slide.slide']
@@ -697,21 +715,6 @@ class WebsiteSlides(WebsiteProfile):
         })
 
         return {'url': "/slides/%s" %(slug(channel))}
-
-    #Not using the /web/dataset/resequence route as a slide can be dragged into another category at the same time
-    @http.route('/slides/resequence_slides', type="json", website=True, auth="user")
-    def resequence_slides(self, slides_data=None, **kw):
-        channel_user = None
-        for slide in slides_data:
-            s = request.env['slide.slide'].browse(slide['id'])
-            if not channel_user:
-                channel_user = s.channel_id.user_id
-                if request.env.user != channel_user:
-                    return {'error': 'Only the responsible of the channel can edit it'}
-            s.write({
-                'sequence': slide['sequence'],
-                'category_id': slide['category_id']
-            })
 
 
     # --------------------------------------------------
