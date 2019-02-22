@@ -3254,6 +3254,7 @@ QUnit.module('Views', {
         }));
         assert.strictEqual(document.activeElement, $('.o_searchview_input')[0],
             "focus should be set on searchview input");
+        actionmanager.destroy();
     });
 
     QUnit.test('Editable listview, press Enter should open edit mode', function (assert) {
