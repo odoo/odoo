@@ -5,6 +5,7 @@ import base64
 import itertools
 import logging
 import werkzeug
+import math
 
 from odoo import http, modules, tools, _
 from odoo.exceptions import AccessError, UserError
@@ -307,10 +308,11 @@ class WebsiteSlides(WebsiteProfile):
         order = request.env['slide.slide']._order_by_strategy[actual_sorting]
         pager_args['sorting'] = actual_sorting
 
-        pager_count = request.env['slide.slide'].sudo().search_count(domain)
-        pager = request.website.pager(url=pager_url, total=pager_count, page=page,
-                                      step=self.SLIDES_PER_PAGE, scope=self.SLIDES_PER_PAGE,
-                                      url_args=pager_args)
+        slide_count = request.env['slide.slide'].sudo().search_count(domain)
+        page_count = math.ceil(slide_count / self.SLIDES_PER_PAGE)
+        pager = request.website.pager(url=pager_url, total=slide_count, page=page,
+                                      step=self.SLIDES_PER_PAGE, url_args=pager_args,
+                                      scope=page_count if page_count < self.PAGER_MAX_PAGE else self.PAGER_MAX_PAGE)
 
         values = {
             'channel': channel,
