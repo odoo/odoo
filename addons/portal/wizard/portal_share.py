@@ -10,10 +10,11 @@ class PortalShare(models.TransientModel):
     @api.model
     def default_get(self, fields):
         result = super(PortalShare, self).default_get(fields)
-        record = self.env[result['res_model']].browse(result['res_id'])
+        if result.get('res_model') and result.get('res_id'):
+            record = self.env[result['res_model']].browse(result['res_id'])
+            result['share_link'] = record.get_base_url() + record._get_share_url(redirect=True)
         result['res_model'] = self._context.get('active_model')
         result['res_id'] = self._context.get('active_id')
-        result['share_link'] = record.get_base_url() + record._get_share_url(redirect=True)
         return result
 
     res_model = fields.Char('Related Document Model', required=True)
