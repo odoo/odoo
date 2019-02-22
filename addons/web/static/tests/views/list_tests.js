@@ -346,7 +346,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('Loading a filter with a sort attribute', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         this.data.foo.fields.foo.sortable = true;
         this.data.foo.fields.date.sortable = true;
@@ -377,6 +377,9 @@ QUnit.module('Views', {
                     } else if (searchReads === 1) {
                         assert.strictEqual(args.sort, 'date DESC, foo ASC',
                             'The sort attribute of the filter should be used by the next search_read');
+                    } else if (searchReads === 2) {
+                        assert.strictEqual(args.sort, 'date DESC, foo ASC',
+                            'The sort attribute on the element should be used by the next search_read');
                     }
                     searchReads += 1;
                 }
@@ -396,6 +399,13 @@ QUnit.module('Views', {
                     }]
                 }
             });
+
+        // Simulates going back to the list with breadcrumbs
+        list.update({
+            context: {
+                orderedBy: []
+            }
+        });
 
         list.destroy()
     });

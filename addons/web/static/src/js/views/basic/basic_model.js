@@ -4030,7 +4030,8 @@ var BasicModel = AbstractModel.extend({
 
         if (options.context !== undefined) {
             element.context = options.context;
-            element.orderedBy =  options.context.orderedBy || element.orderedBy;
+            element.orderedBy =
+                options.context.orderedBy && options.context.orderedBy.length ? options.context.orderedBy : element.orderedBy;
         }
         if (options.domain !== undefined) {
             element.domain = options.domain;
