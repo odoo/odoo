@@ -230,6 +230,46 @@ $MAX-Z-INDEX : 2147483647 !default;
     }
 }
 
+// Slides list reordering widget
+.o_wslides_slides_list {
+    padding: 0;
+
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .o_wslides_slide_list_category_container {
+        margin: 0;
+        background-color: #ddd;
+        display: flex;
+        list-style: none;
+        font-size: 1.05rem;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .o_wslides_slides_list_slide {
+        &.o_not_editable {
+            height: 0px;
+        }
+
+        &:nth-child(odd) {
+            background-color: #f6f6f6;
+        }
+
+        &:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .o_wslides_slides_list_slide_controls {
+            i:hover {
+                color: $primary !important;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
 
 // New lesson page
 // **************************************************

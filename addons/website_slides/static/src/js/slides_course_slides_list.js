@@ -1,4 +1,4 @@
-odoo.define('website_slides.slideslist', function (require) {
+odoo.define('website_slides.course.slides.list', function (require) {
 'use strict';
 
 var sAnimations = require('website.content.snippets.animation');
@@ -30,23 +30,41 @@ sAnimations.registry.websiteSlidesCourseSlidesList = sAnimations.Class.extend({
     _bindSortable: function () {
         this.$('ul.o_wslides_slides_list_container').sortable({
             handle: '.fa-arrows',
-            stop: this._reorderCategories.bind(this)
+            stop: this._reorderCategories.bind(this),
+            items: '.o_wslides_slide_list_category'
         });
 
         this.$('.o_wslides_slides_list_container ul').sortable({
             handle: '.fa-arrows',
             connectWith: '.o_wslides_slides_list_container ul',
             stop: this._reorderSlides.bind(this),
-            items: '.o_wslides_slides_list_slide'
+            items: '.o_wslides_slides_list_slide:not(.o_wslides_empty_category)'
+        });
+    },
+
+    /**
+     * This method will check that a section is empty/not empty
+     * when the slides are reordered and show/hide the
+     * "Empty category" placeholder.
+     *
+     * @private
+     */
+    _checkForEmptySections: function (){
+        this.$('.o_wslides_slides_list_container ul').each(function (){
+            var $emptyCategory = $(this).find('.o_wslides_empty_category');
+            if ($(this).find('li.o_wslides_slides_list_slide[data-slide-id]').length === 0) {
+                $emptyCategory.removeClass('d-none').addClass('d-flex');
+            } else {
+                $emptyCategory.addClass('d-none').removeClass('d-flex');
+            }
         });
     },
 
     _getCategories: function (){
         var categories = [];
-        this.$('.o_wslides_slide_list_category_container').each(function (){
-            categories.push(parseInt($(this).attr('category_id')));
+        this.$('.o_wslides_js_category').each(function (){
+            categories.push(parseInt($(this).data('categoryId')));
         });
-
         return categories;
     },
 
@@ -54,18 +72,25 @@ sAnimations.registry.websiteSlidesCourseSlidesList = sAnimations.Class.extend({
      * Returns a slides dict in the form:
      * {slide_id: {'sequence': slide_sequence, 'category_id': slide.category_id.id}}
      *
+     *
+     * (Uncategorized slides don't have the category_id key)
+     *
      * @private
      */
     _getSlides: function (){
         var slides = {};
-        this.$('li.o_wslides_slides_list_slide').each(function (index){
+        this.$('li.o_wslides_slides_list_slide[data-slide-id]').each(function (index){
             var $slide = $(this);
-            slides[$slide.attr('slide_id')] = {
-                category_id: parseInt(
-                    $slide.closest('.o_wslides_slide_list_category').attr('category_id')
-                ),
+            var values = {
                 sequence: index
             };
+
+            var categoryId = $slide.closest('.o_wslides_slide_list_category').data('categoryId');
+            if (typeof categoryId !== typeof undefined && categoryId !== false) {
+                values.category_id = categoryId;
+            }
+
+            slides[$slide.data('slideId')] = values;
         });
 
         return slides;
@@ -79,27 +104,18 @@ sAnimations.registry.websiteSlidesCourseSlidesList = sAnimations.Class.extend({
                 model: "slide.category",
                 ids: self._getCategories()
             }
-        }).then(function (){
-            self._resetCategoriesIndex();
         });
     },
 
     _reorderSlides: function (){
+        this._checkForEmptySections();
+
         this._rpc({
             route: "/slides/channel/resequence",
             params: {
                 channel_id: this.channelId,
                 slides_data: this._getSlides()
             }
-        });
-    },
-
-    /**
-     * Used to reset the categories numbering (1, 2, 3, ...) in the UI
-     */
-    _resetCategoriesIndex: function (){
-        this.$('.section-index').each(function (index){
-            $(this).text(index + 1);
         });
     },
 
