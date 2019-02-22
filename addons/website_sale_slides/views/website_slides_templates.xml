@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <odoo><data>
 
-<template id='course_main' inherit_id="website_slides.course_main">
+<template id='course_sidebar' inherit_id="website_slides.course_sidebar">
     <!-- Channel main template: override button to join channel -->
     <xpath expr="//div[hasclass('o_wslides_join_channel')]" position="inside">
         <t t-if="not channel.is_member and channel.enroll == 'payment'">
