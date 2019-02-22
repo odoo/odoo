@@ -24,6 +24,7 @@ import odoo.tools as tools
 import odoo.release as release
 from odoo import SUPERUSER_ID, api
 from odoo.tools import pycompat
+from odoo.tools import config
 
 MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
 README = ['README.rst', 'README.md', 'README.txt']
@@ -491,6 +492,18 @@ def runs_at(test, hook, default):
 runs_at_install = functools.partial(runs_at, hook='at_install', default=True)
 runs_post_install = functools.partial(runs_at, hook='post_install', default=False)
 
+def xml_test_runner():
+    """Provide a test runner to output results to XML."""
+    # Only import xmlrunner if an xml output has been specified
+    if config['test_xml_file']:
+        import xmlrunner
+
+        xml_output_file_name = '.'.join([config['test_xml_file'], str(time.time()), 'xml'])
+        _logger.info('saving xml results to %s', xml_output_file_name)
+        xml_output_file = open(xml_output_file_name, 'wb')
+        return xmlrunner.XMLTestRunner(output=xml_output_file)
+    return None
+
 def run_unit_tests(module_name, dbname, position=runs_at_install):
     """
     :returns: ``True`` if all of ``module_name``'s tests succeeded, ``False``
@@ -510,7 +523,11 @@ def run_unit_tests(module_name, dbname, position=runs_at_install):
             t0 = time.time()
             t0_sql = odoo.sql_db.sql_counter
             _logger.info('%s running tests.', m.__name__)
-            result = unittest.TextTestRunner(verbosity=2, stream=TestStream(m.__name__)).run(suite)
+            if config['test_xml_file']:
+                test_runner = xml_test_runner()
+            else:
+                test_runner = unittest.TextTestRunner(verbosity=2, stream=TestStream(m.__name__))
+            result = test_runner.run(suite)
             if time.time() - t0 > 5:
                 _logger.log(25, "%s tested in %.2fs, %s queries", m.__name__, time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
             if not result.wasSuccessful():
