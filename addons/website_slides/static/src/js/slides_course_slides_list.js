@@ -52,7 +52,7 @@ sAnimations.registry.websiteSlidesCourseSlidesList = sAnimations.Class.extend({
     _checkForEmptySections: function (){
         this.$('.o_wslides_slides_list_container ul').each(function (){
             var $emptyCategory = $(this).find('.o_wslides_empty_category');
-            if ($(this).find('li.o_wslides_slides_list_slide[slide_id]').length === 0) {
+            if ($(this).find('li.o_wslides_slides_list_slide[data-slide-id]').length === 0) {
                 $emptyCategory.removeClass('d-none').addClass('d-flex');
             } else {
                 $emptyCategory.addClass('d-none').removeClass('d-flex');
@@ -63,7 +63,7 @@ sAnimations.registry.websiteSlidesCourseSlidesList = sAnimations.Class.extend({
     _getCategories: function (){
         var categories = [];
         this.$('.o_wslides_slide_list_category_container').each(function (){
-            categories.push(parseInt($(this).attr('category_id')));
+            categories.push(parseInt($(this).data('categoryId')));
         });
 
         return categories;
@@ -91,7 +91,7 @@ sAnimations.registry.websiteSlidesCourseSlidesList = sAnimations.Class.extend({
                 values.category_id = categoryId;
             }
 
-            slides[$slide.attr('slide-id')] = values;
+            slides[$slide.data('slideId')] = values;
         });
 
         return slides;
