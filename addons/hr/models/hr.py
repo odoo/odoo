@@ -360,13 +360,13 @@ class Employee(models.Model):
             self = self.sudo(real_user)
         return self
 
-    def _message_log(self, body='', subject=False, message_type='notification', **kwargs):
-        return super(Employee, self._post_author()).message_post(body=body, subject=subject, message_type=message_type, **kwargs)
+    def _message_log(self, *args, **kwargs):
+        return super(Employee, self._post_author())._message_log(*args, **kwargs)
 
     @api.multi
     @api.returns('mail.message', lambda value: value.id)
-    def message_post(self, **kwargs):
-        return super(Employee, self._post_author()).message_post(**kwargs)
+    def message_post(self, *args, **kwargs):
+        return super(Employee, self._post_author()).message_post(*args, **kwargs)
 
 
 class Department(models.Model):
