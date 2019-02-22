@@ -133,11 +133,7 @@ class BlogPost(models.Model):
         return '''
             <section class="s_text_block">
                 <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12 mb16 mt16">
-                            <p class="o_default_snippet_text">''' + _("Start writing here...") + '''</p>
-                        </div>
-                    </div>
+                    <p class="o_default_snippet_text">''' + _("Start writing here...") + '''</p>
                 </div>
             </section>
         '''
