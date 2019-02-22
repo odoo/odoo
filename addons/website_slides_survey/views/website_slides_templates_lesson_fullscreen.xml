@@ -2,9 +2,9 @@
 <odoo><data>
 
     <template id="slide_fullscreen_sidebar_category" inherit_id="website_slides.slide_fullscreen_sidebar_category">
-        <xpath expr="//div[@t-attf-index='#{i}']" position="attributes">
-             <attribute name="t-att-data-certification-done">channel_progress[course_slide.id].get('survey_quizz_passed')</attribute>
-             <attribute name="t-att-data-certification-id">course_slide.survey_id.id</attribute>
+        <xpath expr="//li[hasclass('o_wslides_fs_sidebar_list_item')]" position="attributes">
+             <attribute name="t-att-data-certification-done">channel_progress[slide.id].get('survey_quizz_passed')</attribute>
+             <attribute name="t-att-data-certification-id">slide.survey_id.id</attribute>
         </xpath>
     </template>
 

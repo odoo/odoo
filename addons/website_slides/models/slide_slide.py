@@ -512,7 +512,7 @@ class Slide(models.Model):
             slide_partner = slide_partners_map.get(slide.id)
             if slide.question_ids and slide_partner:
                 if slide_partner.quiz_attempts_count:
-                    result[slide.id]['quiz_karma_gain'] = gains[slide_partner.quiz_attempts_count] if slide_partner.quiz_attempts_count <= len(gains) else gains[-1]
+                    result[slide.id]['quiz_karma_gain'] = gains[slide_partner.quiz_attempts_count] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
                     result[slide.id]['quiz_attempts_count'] = slide_partner.quiz_attempts_count
                 if quiz_done or slide_partner.completed:
                     result[slide.id]['quiz_karma_won'] = gains[slide_partner.quiz_attempts_count-1] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
