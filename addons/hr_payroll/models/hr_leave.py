@@ -163,7 +163,7 @@ class HrLeave(models.Model):
             # Use sudo otherwise base users can't compute number of days
             contracts = employee.sudo()._get_contracts(date_from, date_to, states=['incoming', 'open', 'pending'])
             calendar = contracts[:1].resource_calendar_id if contracts else None # Note: if len(contracts)>1, the leave creation will crash because of unicity constaint
-            return employee.get_work_days_data(date_from, date_to, calendar=calendar)['days']
+            return employee._get_work_days_data(date_from, date_to, calendar=calendar)['days']
 
         return days
 
