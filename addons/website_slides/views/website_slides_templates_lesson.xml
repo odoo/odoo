@@ -49,7 +49,7 @@
                                                 <i t-if="course_slide.slide_type == 'quiz'" class="fa fa-question-circle mr-2 text-muted"></i>
                                                 <t t-esc="course_slide.name"/>
                                             </div>
-                                            <div class="o_wslides_content_slide_controls mr-2">
+                                            <div class="o_wslides_slides_list_slide_controls mr-2">
                                                 <i t-attf-id="check-#{course_slide.id}" t-if="course_slide.id in user_progress and not user_progress[course_slide.id].completed" class="check-done fa fa-check-circle text-muted mr-1"></i>
                                                 <i t-attf-id="check-#{course_slide.id}" t-if="course_slide.id in user_progress and user_progress[course_slide.id].completed" class="check-done text-primary fa fa-check-circle mr-1"></i>
                                             </div>
