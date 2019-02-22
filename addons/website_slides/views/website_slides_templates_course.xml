@@ -234,7 +234,7 @@
                                 </div>
                             </div>
                         </div>
-                        <t t-if="channel.channel_type == 'training'" t-call="website_slides.course_content_training"/>
+                        <t t-if="channel.channel_type == 'training'" t-call="website_slides.course_slides_list"/>
                         <t t-if="channel.channel_type == 'documentation'" t-call="website_slides.course_content_documentation"/>
                     </div>
                 </div>
@@ -243,54 +243,43 @@
     </t>
 </template>
 
-<template id="course_content_training" name="Content of a training channel">
+<template id="course_slides_list" name="Content of a training channel">
     <div class="col-8 d-flex flex-column ml-4">
         <div class="o_wslides_slides_list w-100 mt8" t-att-data-channel-id="channel.id">
             <ul class="o_wslides_slides_list_container">
-                <t t-set="i" t-value="1"/>
                 <t t-set="j" t-value="0"/>
-                <t t-foreach="channel.category_ids" t-as="category">
-                    <li class="o_wslides_slide_list_category" t-attf-category_id="#{category.id}">
-                        <div t-attf-category_id="#{category.id}" class="o_wslides_slide_list_category_container text-muted font-weight-bold pt-0 pb-0 pl-2 pr-2 d-flex justify-content-between align-items-center">
-                            <div style="width:50%;" class="d-flex align-items-center">
-                                <i t-if="channel.can_publish" class="fa fa-arrows mr-3 text-muted"></i>
-                                <div class="mr-2">Section <span class="section-index" t-esc="i"/>:</div>
-                                <span t-field="category.name"/>
+                <li t-if="uncategorized_slides or channel.can_publish">
+                    <div class="text-muted font-weight-bold pt-0 pb-0 pl-2 pr-2 d-flex justify-content-between align-items-center">
+                        <t t-call="website_slides.course_slides_list_category"/>
+                    </div>
+                    <ul>
+                        <li t-att-class="('text-muted font-italic o_wslides_slides_list_slide o_wslides_empty_category justify-content-between align-items-center p-2 %s') % ('d-none' if uncategorized_slides else 'd-flex')">
+                            <div class="content-slide-infos ml-2">
+                                <span>Empty category</span>
                             </div>
-                            <a  class="mr-2 oe_slide_js_upload"
-                                role="button"
-                                aria-label="Upload Presentation"
-                                href="#"
-                                style="font-size: 1.5rem;text-decoration: none;"
-                                t-att-data-channel-id="channel.id"
-                                t-att-data-category-id="category.id"
-                                t-att-data-can-upload="channel.can_upload"
-                                t-att-data-can-publish="channel.can_publish">+</a>
-                            <t t-set="i" t-value="i+1"/>
+                        </li>
+                        <li class="o_wslides_slides_list_slide o_not_editable"></li>
+                        <t t-foreach="uncategorized_slides" t-as="slide">
+                            <t t-call="website_slides.course_slides_list_slide" />
+                            <t t-set="j" t-value="j+1"/>
+                        </t>
+                    </ul>
+                </li>
+                <t t-foreach="channel.category_ids" t-as="category">
+                    <li t-if="category.slide_ids or channel.can_publish" class="o_wslides_slide_list_category" t-att-data-category-id="category.id">
+                        <div t-att-data-category-id="category.id"
+                            class="o_wslides_js_category text-muted font-weight-bold pt-0 pb-0 pl-2 pr-2 d-flex justify-content-between align-items-center">
+                            <t t-call="website_slides.course_slides_list_category" />
                         </div>
-                        <ul t-attf-category_id="#{category.id}" >
+                        <ul t-att-data-category-id="category.id">
+                            <li t-att-class="('text-muted font-italic o_wslides_slides_list_slide o_wslides_empty_category justify-content-between align-items-center p-2 %s') % ('d-none' if category.slide_ids else 'd-flex')">
+                                <div class="content-slide-infos ml-2">
+                                    <span>Empty category</span>
+                                </div>
+                            </li>
+                            <li class="o_wslides_slides_list_slide o_not_editable"></li>
                             <t t-foreach="category.slide_ids" t-as="slide">
-                                <li t-att-index="j" t-attf-slide_id="#{slide.id}" t-attf-category_id="#{category.id}"
-                                    class="o_wslides_slides_list_slide d-flex justify-content-between align-items-center p-2">
-                                    <div class="ml-2">
-                                        <i t-if="channel.can_publish" class="fa fa-arrows mr-2 text-muted"></i>
-                                        <i t-if="slide.slide_type == 'document'" class="fa fa-file-pdf-o mr-2 text-muted"></i>
-                                        <i t-if="slide.slide_type == 'infographic'" class="fa fa-file-picture-o mr-2 text-muted"></i>
-                                        <i t-if="slide.slide_type == 'video'" class="fa fa-play-circle mr-2 text-muted"></i>
-                                        <i t-if="slide.slide_type == 'link'" class="fa fa-file-code-o mr-2 text-muted"></i>
-                                        <i t-if="slide.slide_type == 'webpage'" class="fa fa-file-text mr-2 text-muted"></i>
-                                        <i t-if="slide.slide_type == 'quiz'" class="fa fa-question-circle mr-2 text-muted"></i>
-                                        <i t-if="slide.slide_type == 'certification'" class="fa fa-trophy mr-2 text-muted"></i>
-                                        <a class="o_wslides_slides_list_slide_link" t-attf-href="/slides/slide/#{slug(slide)}"><span t-field="slide.name"/></a>
-                                    </div>
-                                    <div class="o_wslides_slides_list_slide_controls mr-2">
-                                        <i t-if="not slide.id in user_progress or not user_progress[slide.id].completed" class="check-done fa fa-check-circle text-muted mr-1"></i>
-                                        <i t-if="slide.id in user_progress and user_progress[slide.id].completed" class="check-done text-primary fa fa-check-circle mr-1"></i>
-                                        <a t-if="channel.can_publish and not slide.slide_type == 'webpage'" t-attf-href="/web#id=#{slide.id}&amp;action=#{slide_action}&amp;model=slide.slide&amp;view_type=form"><i class="fa fa-pencil text-muted mr-1"></i></a>
-                                        <a t-if="channel.can_publish and slide.slide_type == 'webpage'" t-attf-href="/slides/slide/#{slug(slide)}?enable_editor=1"><i class="fa fa-pencil text-muted mr-1"></i></a>
-                                        <i t-if="channel.can_publish" t-attf-slide_id="#{slide.id}" class="fa fa-trash text-muted o_wslides_js_slide_archive"></i>
-                                    </div>
-                                </li>
+                                <t t-call="website_slides.course_slides_list_slide" />
                                 <t t-set="j" t-value="j+1"/>
                             </t>
                         </ul>
@@ -311,6 +300,55 @@
         </div>
         <div t-field="channel.description_html"/>
     </div>
+</template>
+
+<template id="course_slides_list_slide" name="Slide template for a training channel">
+    <li t-att-index="j" t-att-data-slide-id="slide.id" t-att-data-category-id="category.id if category else None"
+        class="o_wslides_slides_list_slide d-flex justify-content-between align-items-center p-2">
+        <div class="ml-2">
+            <i t-if="channel.can_publish" class="fa fa-arrows mr-2 text-muted"></i>
+            <i t-if="slide.slide_type == 'document'" class="fa fa-file-pdf-o mr-2 text-muted"></i>
+            <i t-if="slide.slide_type == 'infographic'" class="fa fa-file-picture-o mr-2 text-muted"></i>
+            <i t-if="slide.slide_type == 'video'" class="fa fa-play-circle mr-2 text-muted"></i>
+            <i t-if="slide.slide_type == 'link'" class="fa fa-file-code-o mr-2 text-muted"></i>
+            <i t-if="slide.slide_type == 'webpage'" class="fa fa-file-text mr-2 text-muted"></i>
+            <i t-if="slide.slide_type == 'quiz'" class="fa fa-question-circle mr-2 text-muted"></i>
+            <i t-if="slide.slide_type == 'certification'" class="fa fa-trophy mr-2 text-muted"></i>
+            <a class="o_wslides_slides_list_slide_link" t-attf-href="/slides/slide/#{slug(slide)}"><span t-field="slide.name"/></a>
+        </div>
+        <div class="o_wslides_slides_list_slide_controls mr-2">
+            <i t-if="not slide.id in user_progress or not user_progress[slide.id].completed" class="check-done fa fa-check-circle text-muted mr-1"></i>
+            <i t-if="slide.id in user_progress and user_progress[slide.id].completed" class="check-done text-primary fa fa-check-circle mr-1"></i>
+            <a t-if="channel.can_publish and not slide.slide_type == 'webpage'" t-attf-href="/web#id=#{slide.id}&amp;action=#{slide_action}&amp;model=slide.slide&amp;view_type=form">
+                <i class="fa fa-pencil text-muted mr-1"></i>
+            </a>
+            <a t-if="channel.can_publish and slide.slide_type == 'webpage'" t-attf-href="/slides/slide/#{slug(slide)}?enable_editor=1">
+                <i class="fa fa-pencil text-muted mr-1"></i>
+            </a>
+            <i t-if="channel.can_publish" t-att-data-slide-id="slide.id" class="fa fa-trash text-muted o_wslides_js_slide_archive"></i>
+        </div>
+    </li>
+</template>
+
+<template id="course_slides_list_category" name="Category template for a training channel">
+    <div style="width:50%;" class="d-flex align-items-center">
+        <i t-if="channel.can_publish and category" class="fa fa-arrows mr-3 text-muted"></i>
+        <t t-if="category">
+            <span t-field="category.name"/>
+        </t>
+        <t t-else="">
+            <span>Uncategorized</span>
+        </t>
+    </div>
+    <a  class="mr-2 oe_slide_js_upload"
+        role="button"
+        aria-label="Upload Presentation"
+        href="#"
+        style="font-size: 1.5rem;text-decoration: none;"
+        t-att-data-channel-id="channel.id"
+        t-att-data-category-id="category.id if category else None"
+        t-att-data-can-upload="channel.can_upload"
+        t-att-data-can-publish="channel.can_publish">+</a>
 </template>
 
 <template id="course_content_documentation" name="Content of a training channel">

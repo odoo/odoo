@@ -15,18 +15,23 @@
         border-bottom: 1px solid #ccc;
     }
 
-    .o_wslides_slides_list_slide:nth-child(odd) {
-        background-color: #f6f6f6;
-    }
+    .o_wslides_slides_list_slide {
+        &.o_not_editable {
+            height: 0px;
+        }
 
-    .o_wslides_slides_list_slide:nth-child(even) {
-        background-color: #f9f9f9;
-    }
+        &:nth-child(odd) {
+            background-color: #f6f6f6;
+        }
 
-    .o_wslides_slides_list_slide_controls {
-        i:hover {
-            color: $primary !important;
-            cursor: pointer;
+        &:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .o_wslides_slides_list_slide_controls {
+            i:hover {
+                color: $primary !important;
+                cursor: pointer;
+            }
         }
     }
 }

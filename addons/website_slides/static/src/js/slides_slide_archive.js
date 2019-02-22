@@ -27,7 +27,7 @@ var ArchiveSlideDialog = Dialog.extend({
         });
 
         this.$slideTarget = options.slideTarget;
-        this.slideId = this.$slideTarget.attr('slide_id');
+        this.slideId = this.$slideTarget.data('slideId');
         this._super(parent, options);
     },
 
