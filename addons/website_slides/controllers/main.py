@@ -568,6 +568,7 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/channel/enroll'], type='http', auth='public', website=True)
     def slide_channel_join_http(self, channel_id):
+        # TDE FIXME: why 2 routes ?
         if not request.website.is_public_user():
             channel = request.env['slide.channel'].browse(int(channel_id))
             channel.action_add_member()

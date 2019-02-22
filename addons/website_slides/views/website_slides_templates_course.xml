@@ -376,7 +376,7 @@
 
 <!-- Embedded template: display a list of slides in a grid view -->
 <template id='course_lessons_grid' name="Course: Lessons Grid View">
-    <div class="row o_wslides_row mx-n2 mt8">
+    <div class="row mx-n2 mt8">
         <t t-foreach="slides" t-as="slide">
             <div class="col-md-3 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1" t-call="website_slides.lesson_card"/>
         </t>
