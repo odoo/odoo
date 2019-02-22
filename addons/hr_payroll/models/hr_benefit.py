@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import pytz
 import itertools
+import pytz
+
 from psycopg2 import IntegrityError
 from dateutil.relativedelta import relativedelta
-from odoo import api, fields, models, exceptions, _
-from odoo.tools import mute_logger
-from odoo.exceptions import UserError, ValidationError
+
+from odoo import api, fields, models, _
 from odoo.addons.resource.models.resource import Intervals
+from odoo.exceptions import ValidationError
+from odoo.tools import mute_logger
+
 
 class HrBenefit(models.Model):
     _name = 'hr.benefit'
@@ -17,8 +20,7 @@ class HrBenefit(models.Model):
 
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
-    employee_id = fields.Many2one('hr.employee', required=True,
-        domain=lambda self: [('contract_ids.state', 'in', ('open', 'pending')), ('company_id', '=', self.env.user.company_id.id)])
+    employee_id = fields.Many2one('hr.employee', required=True, domain=[('contract_ids.state', 'in', ('open', 'pending'))])
     date_start = fields.Datetime(required=True, string='From')
     date_stop = fields.Datetime(string='To')
     duration = fields.Float(compute='_compute_duration', inverse='_inverse_duration', store=True, string="Period")
@@ -37,34 +39,25 @@ class HrBenefit(models.Model):
         default=lambda self: self.env['res.company']._company_default_get())
 
     _sql_constraints = [
-        ('_unique', 'unique (employee_id, date_start, date_stop, benefit_type_id)', "Benefit already exists for this attendence"),
+        ('_unique', 'unique (date_start, date_stop, employee_id, benefit_type_id)', "Benefit already exists for this attendance"),
+        ('_benefit_has_end', 'check (date_stop IS NOT NULL OR duration <> 0)', 'Benefit must end. Please define an end date or a duration.'),
+        ('_benefit_start_before_end', 'check (date_stop is null OR (date_stop > date_start))', 'Starting time should be before end time.')
     ]
-
-    @api.constrains('date_stop', 'duration')
-    def _check_validity_benefit_ends(self):
-        """ verifies if benefit has an end. """
-        for benefit in self:
-            if not (benefit.date_stop or benefit.duration):
-                    raise exceptions.ValidationError(_('Benefit must end. Please define an end date or a duration.'))
-
-    @api.constrains('date_start', 'date_stop')
-    def _check_validity_start_before_end(self):
-        """ verifies if benefit has an end. """
-        for benefit in self:
-            if benefit.date_stop < benefit.date_start:
-                    raise exceptions.ValidationError(_('Starting time should be before end time.'))
-
 
     @api.onchange('duration')
     def _onchange_duration(self):
         self._inverse_duration()
 
+    def _get_duration(self, date_start, date_stop):
+        if not date_start or not date_stop:
+            return 0
+        dt = date_stop - date_start
+        return dt.days * 24 + dt.seconds / 3600 # Number of hours
+
     @api.depends('date_stop', 'date_start')
     def _compute_duration(self):
         for benefit in self:
-             if benefit.date_start and benefit.date_stop:
-                dt = benefit.date_stop - benefit.date_start
-                benefit.duration = dt.days * 24 + dt.seconds / 3600 # Number of hours
+            benefit.duration = benefit._get_duration(benefit.date_start, benefit.date_stop)
 
     def _inverse_duration(self):
         for benefit in self:
@@ -81,25 +74,22 @@ class HrBenefit(models.Model):
         return super(HrBenefit, self).write(vals)
 
     @api.multi
-    def check_if_error(self):
+    def _check_if_error(self):
         if not self:
             return False
         undefined_type = self.filtered(lambda b: not b.benefit_type_id)
         undefined_type.write({'display_warning': True})
-        conflict = self._compute_schedule_conflicts()
-        conflict_with_leaves = self.compute_conflicts_leaves_to_approve()
+        conflict = self._mark_conflicting_benefits(min(self.mapped('date_start')), max(self.mapped('date_stop')))
+        conflict_with_leaves = self._compute_conflicts_leaves_to_approve()
         return undefined_type or conflict or conflict_with_leaves
 
-    @api.multi
-    def _compute_schedule_conflicts(self):
+    @api.model
+    def _mark_conflicting_benefits(self, start, stop):
         conflict = False
-        date_start_benefits = min(self.mapped('date_start'))
-        date_stop_benefits = max(self.mapped('date_stop'))
         domain = [
-            ('date_start', '<', date_stop_benefits),
-            ('date_stop', '>', date_start_benefits),
+            ('date_start', '<', stop),
+            ('date_stop', '>', start),
         ]
-
         benefs = self.search(domain)
         benefits_by_employee = itertools.groupby(benefs, lambda b: b.employee_id)
         for employee, benefs in benefits_by_employee:
@@ -111,8 +101,7 @@ class HrBenefit(models.Model):
         return conflict
 
     @api.multi
-    def compute_conflicts_leaves_to_approve(self):
-
+    def _compute_conflicts_leaves_to_approve(self):
         if not self:
             return False
 
@@ -137,26 +126,35 @@ class HrBenefit(models.Model):
             })
         return bool(conflicts)
 
-    def safe_duplicate_create(self, vals):
+    def _safe_duplicate_create(self, vals_list, date_start, date_stop):
         """
-        Create benefit but silently abord if it already exists in the database (according to the _unique constraints).
-        @return: new record if it didn't exist, empty recordset otherwise.
+        Create benefits between date_start and date_stop according to vals_list.
+        Skip the values in vals_list if a benefit already exists for the given
+        date_start, date_stop, employee_id, benefit_type_id
+        :return: new record id if it didn't exist.
         """
-        try:
-            with mute_logger('odoo.sql_db'), self.env.cr.savepoint():
-                # Any database call will be run inside a postgresql savepoint which is
-                # rolledback if an exception occurs allowing to make subsequent calls in the transaction.
-                # (Otherwise InternalError is raised by any subsequent database operations)
-                return self.create(vals)
-        except IntegrityError as err:
-            if 'hr_benefit__unique' not in err.pgerror:
-                raise err
-            return self.env['hr.benefit']
+        # The search_read should be fast as date_start and date_stop are indexed from the
+        # unique sql constraint
+        month_recs = self.search_read([('date_start', '>=', date_start), ('date_stop', '<=', date_stop)],
+                                      ['employee_id', 'date_start', 'date_stop', 'benefit_type_id'])
+        existing_entries = {(
+            r['date_start'],
+            r['date_stop'],
+            r['employee_id'][0],
+            r['benefit_type_id'][0] if r['benefit_type_id'] else False,
+        ) for r in month_recs}
+        new_vals = [v for v in vals_list if (v['date_start'].replace(tzinfo=None), v['date_stop'].replace(tzinfo=None), v['employee_id'], v['benefit_type_id']) not in existing_entries]
+        # Remove duplicates from vals_list, shouldn't be necessary from saas-12.2
+        unique_new_vals = set()
+        for values in new_vals:
+            unique_new_vals.add(tuple(values.items()))
+        new_vals = [dict(values) for values in unique_new_vals]
+        return self.create(new_vals)
 
     def action_leave(self):
         leave = self.leave_id
         return {
-            'type':'ir.actions.act_window',
+            'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
             'res_id': leave.id,
@@ -164,7 +162,7 @@ class HrBenefit(models.Model):
             'views': [[False, 'form']],
         }
 
-    def split_by_day(self):
+    def _split_by_day(self):
         """
         Split the benefit by days and unlink the original benefit.
         @return recordset
@@ -184,6 +182,8 @@ class HrBenefit(models.Model):
             return [(start, end) for start, end in days if start != end]
 
         new_benefits = self.env['hr.benefit']
+        benefits_to_unlink = self.env['hr.benefit']
+
         for benefit in self:
             if benefit.date_start.date() == benefit.date_stop.date():
                 new_benefits |= benefit
@@ -197,7 +197,7 @@ class HrBenefit(models.Model):
                     'contract_id': benefit.contract_id.id,
                 }
                 benefit_state = benefit.state
-                benefit.unlink()
+                benefits_to_unlink |= benefit
                 for start, stop in _split_range_by_day(benefit_start, benefit_stop):
                     values['date_start'] = start.astimezone(pytz.utc)
                     values['date_stop'] = stop.astimezone(pytz.utc)
@@ -206,6 +206,7 @@ class HrBenefit(models.Model):
                     new_benefit.state = benefit_state
                     new_benefits |= new_benefit
 
+        benefits_to_unlink.unlink()
         return new_benefits
 
     @api.multi
@@ -213,31 +214,36 @@ class HrBenefit(models.Model):
         """
             Duplicate data to keep the complexity in benefit and not mess up payroll, etc.
         """
+        attendance_type = self.env.ref('hr_payroll.benefit_type_attendance')
         attendance_benefits = self.filtered(lambda b:
             not b.benefit_type_id.is_leave and
             # Normal benefit are global to all employees -> avoid duplicating it
-            not b.benefit_type_id == self.env.ref('hr_payroll.benefit_type_attendance'))
+            not b.benefit_type_id == attendance_type)
         leave_benefits = self.filtered(lambda b: b.benefit_type_id.is_leave)
 
+        benefits_to_duplicate = self.env['hr.benefit']
         for benefit in attendance_benefits:
-            benefit = benefit.split_by_day()
-            benefit._duplicate_to_calendar_attendance()
+            benefit = benefit._split_by_day()
+            benefits_to_duplicate |= benefit
+
+        benefits_to_duplicate._duplicate_to_calendar_attendance()
         leave_benefits._duplicate_to_calendar_leave()
 
     @api.multi
     def _duplicate_to_calendar_leave(self):
-
+        vals_list = []
         for benefit in self:
             if not benefit.leave_id:
-                tz = pytz.timezone(benefit.employee_id.tz)
-                self.env['resource.calendar.leaves'].create({
+                vals_list += [{
                     'name': benefit.name,
                     'date_from': benefit.date_start,
                     'date_to': benefit.date_stop,
                     'calendar_id': benefit.employee_id.resource_calendar_id.id,
                     'resource_id': benefit.employee_id.resource_id.id,
                     'benefit_type_id': benefit.benefit_type_id.id,
-                })
+                }]
+        if vals_list:
+            self.env['resource.calendar.leaves'].create(vals_list)
 
     @api.multi
     def _duplicate_to_calendar_attendance(self):
@@ -251,31 +257,34 @@ class HrBenefit(models.Model):
         if any(data[0].date() != data[1].date() for data in mapped_data.values()):
             raise ValidationError(_("You can't validate a benefit that covers several days."))
 
+        vals_list = []
         for benefit in self:
             start, end = mapped_data.get(benefit)
 
-            self.env['resource.calendar.attendance'].create({
+            vals_list += [{
                 'name': benefit.name,
                 'dayofweek': str(start.weekday()),
                 'date_from': start.date(),
                 'date_to': end.date(),
-                'hour_from':start.hour + start.minute/60,
-                'hour_to': end.hour + end.minute/60,
+                'hour_from': start.hour + start.minute / 60,
+                'hour_to': end.hour + end.minute / 60,
                 'calendar_id': benefit.contract_id.resource_calendar_id.id,
                 'day_period': 'morning' if end.hour <= 12 else 'afternoon',
                 'resource_id': benefit.employee_id.resource_id.id,
                 'benefit_type_id': benefit.benefit_type_id.id,
-            })
+            }]
+        self.env['resource.calendar.attendance'].create(vals_list)
 
     @api.model
     def action_validate(self, ids):
         benefits = self.env['hr.benefit'].search([('id', 'in', ids), ('state', '!=', 'validated')])
         benefits.write({'display_warning': False})
-        if not benefits.check_if_error():
+        if not benefits._check_if_error():
             benefits.write({'state': 'validated'})
             benefits._duplicate_to_calendar()
             return True
         return False
+
 
 class HrBenefitType(models.Model):
     _name = 'hr.benefit.type'
@@ -285,8 +294,9 @@ class HrBenefitType(models.Model):
     code = fields.Char()
     color = fields.Integer(default=1) # Will be used with the new calendar/kanban view
     sequence = fields.Integer(default=25)
-    active = fields.Boolean('Active', default=True,
-                            help="If the active field is set to false, it will allow you to hide the benefit type without removing it.")
+    active = fields.Boolean(
+        'Active', default=True,
+        help="If the active field is set to false, it will allow you to hide the benefit type without removing it.")
     is_leave = fields.Boolean(default=False, string="Leave")
 
 class Contacts(models.Model):

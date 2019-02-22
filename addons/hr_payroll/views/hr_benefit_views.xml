@@ -53,8 +53,7 @@
                                     <span class="fa fa-exclamation-triangle mr-2" aria-label="Conflict" title="error"/>
                                 </t>
                                 <t t-if="record.state == 'validated'">
-                                    <span class="fa fa-check-circle-o" aria-label="Validated" title="validated"/>
-                                    <t t-esc="' '"/>
+                                    <span class="fa fa-check-circle-o mr-2" aria-label="Validated" title="validated"/>
                                 </t>
                                 <t t-foreach="widget.displayFields" t-as="name">
                                     <t t-esc="format(record, name)"/>
@@ -75,7 +74,7 @@
                 <header>
                     <field name="display_warning" invisible="1"/>
                     <field name="leave_id" invisible="1"/>
-                    <button string="Go To Conflicting Leave" name="action_leave" type="object" attrs="{'invisible': ['|', '|', '!',('display_warning', '=', True), '!', ('leave_id', '!=', False), ('benefit_type_id', '=', False)]}"/>
+                    <button string="Go To Conflicting Leave" name="action_leave" type="object" attrs="{'invisible': ['|', '|', '!',('display_warning', '=', True), ('leave_id', '=', False), ('benefit_type_id', '=', False)]}"/>
                     <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>

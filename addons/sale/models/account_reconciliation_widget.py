@@ -16,7 +16,7 @@ class AccountReconciliation(models.AbstractModel):
             FROM sale_order o,
                  account_bank_statement_line stl
             WHERE
-                lower(concat(o.name,o.reference)) ~ lower(stl.name)
+                POSITION(lower(stl.name) IN lower(concat(o.name,o.reference))) != 0
               AND stl.id IN %s
               AND (stl.partner_id is null OR stl.partner_id = o.partner_id)
               AND (o.invoice_status = 'to invoice' OR o.state = 'sent')

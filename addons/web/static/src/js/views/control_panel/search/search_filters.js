@@ -171,15 +171,6 @@ var Char = Field.extend({
         {value: "∃", text: _lt("is set")},
         {value: "∄", text: _lt("is not set")}
     ],
-    get_domain: function (field, operator) {
-        switch (operator.value) {
-        case '∃': return [[field.name, '!=', false]];
-        case '∄': return [[field.name, '=', false]];
-        // does not work in all cases
-        // default: return "[('" + field.name + "', '" + operator.value + "', '" + this.get_value() + "')]";
-        default: return [[field.name, operator.value, this.get_value()]];
-        }
-    },
     get_value: function () {
         return this.$el.val();
     }
@@ -251,7 +242,7 @@ var DateTime = Field.extend({
     _create_new_widget: function (name) {
         this[name] = new (this._get_widget_class())(this);
         return this[name].appendTo(this.$el).then((function () {
-            this[name].setValue(moment(new Date()));
+            this[name].setValue(moment());
         }).bind(this));
     },
     _get_widget_class: function () {

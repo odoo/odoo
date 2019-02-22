@@ -80,6 +80,8 @@ odoo.define("base.abstract_controller_tests", function(require) {
                     testUtils.dom.click(view.$(".descr"));
                     testUtils.dom.click(view.$(".descr2"));
                     assert.verifySteps(["a1", "a2", "method", "method", "descr", "descr2"]);
+
+                    view.destroy();
                 }
             );
         }

@@ -927,10 +927,21 @@ var ControlPanelModel = mvc.Model.extend({
                     }
                     var sort = JSON.parse(favorite.sort);
                     var orderedBy = sort.map(function (order) {
-                        var orderTerms = order.split(' ');
+                        var fieldName;
+                        var asc;
+                        var sqlNotation = order.split(' ');
+                        if (sqlNotation.length > 1) {
+                            // regex: \fieldName (asc|desc)?\
+                            fieldName = sqlNotation[0];
+                            asc = sqlNotation[1] === 'asc';
+                        } else {
+                            // legacy notation -- regex: \-?fieldName\
+                            fieldName = order[0] === '-' ? order.slice(1) : order;
+                            asc = order[0] === '-' ? false : true;
+                        }
                         return {
-                            name: orderTerms[0],
-                            asc: orderTerms.length === 2 && orderTerms[1] === 'asc',
+                            name: fieldName,
+                            asc: asc,
                         };
                     });
                     return {

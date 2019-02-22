@@ -13,6 +13,17 @@ var AbstractStorageService = AbstractService.extend({
     // this abstraction
     storage: null,
 
+    /**
+     * @override
+     */
+    destroy: function () {
+        // storage can be permanent or transient, destroy transient ones
+        if ((this.storage || {}).destroy) {
+            this.storage.destroy();
+        }
+        this._super.apply(this, arguments);
+    },
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------

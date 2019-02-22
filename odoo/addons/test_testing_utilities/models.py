@@ -6,7 +6,7 @@ class A(models.Model):
     _name = 'test_testing_utilities.a'
     _description = 'Testing Utilities A'
 
-    f1 = fields.Integer(required=True)
+    f1 = fields.Char(required=True)
     f2 = fields.Integer(default=42)
     f3 = fields.Integer()
     f4 = fields.Integer(compute='_compute_f4')
@@ -22,7 +22,7 @@ class A(models.Model):
     @api.depends('f1', 'f2')
     def _compute_f4(self):
         for r in self:
-            r.f4 = r.f2 / (r.f1 or 1)
+            r.f4 = r.f2 / (int(r.f1) or 1)
 
 class B(models.Model):
     _name = 'test_testing_utilities.readonly'
@@ -71,7 +71,7 @@ class M2Onchange(models.Model):
     def _on_change_f2(self):
         self.f = self.env['test_testing_utilities.m2o'].search([
             ('name', 'ilike', self.f2),
-        ], limit=1)
+        ], limit=1) if self.f2 else False
 
 class M2MChange(models.Model):
     _name = 'test_testing_utilities.e'
@@ -154,7 +154,6 @@ class O2MSub(models.Model):
 
     @api.onchange('has_parent')
     def _onchange_has_parent(self):
-        self.has_parent = bool(self.parent_id)
         if self.has_parent:
             self.value = self.parent_id.value
 

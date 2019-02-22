@@ -30,7 +30,6 @@
         'views/report_contributionregister_templates.xml',
         'views/report_payslip_templates.xml',
         'views/hr_benefit_views.xml',
-        'views/hr_benefit_views.xml',
         'views/hr_leave_views.xml',
         'views/resource_views.xml',
         'views/hr_benefit_template.xml',

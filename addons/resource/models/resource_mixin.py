@@ -12,6 +12,12 @@ from odoo.tools import float_utils
 ROUNDING_FACTOR = 16
 
 
+def timezone_datetime(time):
+    if not time.tzinfo:
+        time = time.replace(tzinfo=utc)
+    return time
+
+
 class ResourceMixin(models.AbstractModel):
     _name = "resource.mixin"
     _description = 'Resource Mixin'
@@ -75,7 +81,7 @@ class ResourceMixin(models.AbstractModel):
 
     def _get_day_total(self, from_datetime, to_datetime, calendar, resource):
         """
-        @return dict with hours of attendance in each day between `from_datetime` and `to_datetime`
+        :return: dict with hours of attendance in each day between `from_datetime` and `to_datetime`
         """
 
         # total hours per day:  retrieve attendances with one extra day margin,
@@ -88,13 +94,7 @@ class ResourceMixin(models.AbstractModel):
             day_total[start.date()] += (stop - start).total_seconds() / 3600
         return day_total
 
-    def _timezone_datetime(self, time):
-        if not time.tzinfo:
-            time = time.replace(tzinfo=utc)
-        return time
-
-
-    def get_work_days_data(self, from_datetime, to_datetime, compute_leaves=True, calendar=None, domain=None):
+    def _get_work_days_data(self, from_datetime, to_datetime, compute_leaves=True, calendar=None, domain=None):
         """
             By default the resource calendar is used, but it can be
             changed using the `calendar` argument.
@@ -109,8 +109,8 @@ class ResourceMixin(models.AbstractModel):
         calendar = calendar or self.resource_calendar_id
 
         # naive datetimes are made explicit in UTC
-        from_datetime = self._timezone_datetime(from_datetime)
-        to_datetime = self._timezone_datetime(to_datetime)
+        from_datetime = timezone_datetime(from_datetime)
+        to_datetime = timezone_datetime(to_datetime)
 
         day_total = self._get_day_total(from_datetime, to_datetime, calendar, resource)
 
@@ -122,7 +122,7 @@ class ResourceMixin(models.AbstractModel):
 
         return self._get_days_data(intervals, day_total)
 
-    def get_leave_days_data(self, from_datetime, to_datetime, calendar=None, domain=None):
+    def _get_leave_days_data(self, from_datetime, to_datetime, calendar=None, domain=None):
         """
             By default the resource calendar is used, but it can be
             changed using the `calendar` argument.
@@ -137,8 +137,8 @@ class ResourceMixin(models.AbstractModel):
         calendar = calendar or self.resource_calendar_id
 
         # naive datetimes are made explicit in UTC
-        from_datetime = self._timezone_datetime(from_datetime)
-        to_datetime = self._timezone_datetime(to_datetime)
+        from_datetime = timezone_datetime(from_datetime)
+        to_datetime = timezone_datetime(to_datetime)
 
         day_total = self._get_day_total(from_datetime, to_datetime, calendar, resource)
 

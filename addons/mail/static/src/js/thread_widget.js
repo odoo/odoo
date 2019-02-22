@@ -103,6 +103,7 @@ var ThreadWidget = Widget.extend({
             this._messageSeenPopover.popover('hide');
         }
         this._destroyOpenSeenPopoverIDs();
+        this._super();
     },
     /**
      * @param {mail.model.AbstractThread} thread the thread to render.

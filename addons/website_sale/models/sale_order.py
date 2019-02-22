@@ -43,11 +43,17 @@ class SaleOrder(models.Model):
     @api.multi
     @api.depends('website_id', 'date_order', 'order_line', 'state', 'partner_id')
     def _compute_abandoned_cart(self):
-        abandoned_delay = self.website_id and self.website_id.cart_abandoned_delay or 1.0
-        abandoned_datetime = datetime.utcnow() - relativedelta(hours=abandoned_delay)
         for order in self:
-            domain = order.date_order and order.date_order <= abandoned_datetime and order.state == 'draft' and order.partner_id.id != self.env.ref('base.public_partner').id and order.order_line
-            order.is_abandoned_cart = bool(domain)
+            # a quotation can be considered as an abandonned cart if it is linked to a website,
+            # is in the 'draft' state and has an expiration date
+            if order.website_id and order.state == 'draft' and order.date_order:
+                public_partner_id = order.website_id.user_id.partner_id
+                # by default the expiration date is 1 hour if not specified on the website configuration
+                abandoned_delay = order.website_id.cart_abandoned_delay or 1.0
+                abandoned_datetime = datetime.utcnow() - relativedelta(hours=abandoned_delay)
+                order.is_abandoned_cart = bool(order.date_order <= abandoned_datetime and order.partner_id != public_partner_id and order.order_line)
+            else:
+                order.is_abandoned_cart = False
 
     def _search_abandoned_cart(self, operator, value):
         abandoned_delay = self.website_id and self.website_id.cart_abandoned_delay or 1.0
@@ -312,6 +318,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_recovery_email_send(self):
+        self._portal_ensure_token()
         composer_form_view_id = self.env.ref('mail.email_compose_message_wizard_form').id
         try:
             default_template = self.env.ref('website_sale.mail_template_sale_cart_recovery', raise_if_not_found=False)
@@ -337,6 +344,13 @@ class SaleOrder(models.Model):
                 'active_ids': self.ids,
             },
         }
+
+    @api.multi
+    def get_base_url(self):
+        """When using multi-website, we want the user to be redirected to the
+        most appropriate website if possible."""
+        res = super(SaleOrder, self).get_base_url()
+        return self.website_id and self.website_id._get_http_domain() or res
 
 
 class SaleOrderLine(models.Model):

@@ -163,7 +163,7 @@ class HrPayslip(models.Model):
 
             benefit_types = self.env['hr.benefit.type'].search([('code', '!=', False)])
             for benefit_type in benefit_types:
-                hours = contract.employee_id.get_benefit_days_data(benefit_type, day_from, day_to, calendar=calendar)['hours']
+                hours = contract.employee_id._get_benefit_days_data(benefit_type, day_from, day_to, calendar=calendar)['hours']
                 if hours:
                     line = {
                         'name': benefit_type.name,
