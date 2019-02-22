@@ -365,9 +365,13 @@
             <field name="model">event.event</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar date_start="date_begin" date_stop="date_end" string="Event Organization" color="event_type_id">
-                    <field name="name"/>
-                    <field name="event_type_id"/>
+                <calendar date_start="date_begin" date_stop="date_end" string="Event Organization" mode="month" color="event_type_id" event_limit="5">
+                    <field name="user_id" avatar_field="image_small"/>
+                    <field name="state"/>
+                    <field name="seats_expected"/>
+                    <field name="seats_reserved"/>
+                    <field name="seats_used"/>
+                    <field name="seats_unconfirmed"/>
                 </calendar>
             </field>
         </record>
@@ -508,7 +512,7 @@
             <field name="model">event.registration</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar date_start="event_begin_date" date_stop="event_end_date" string="Event Registration" color="event_id">
+                <calendar date_start="event_begin_date" date_stop="event_end_date" string="Event Registration" color="event_id" event_limit="5">
                     <field name="event_id"/>
                     <field name="name"/>
                 </calendar>

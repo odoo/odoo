@@ -23,13 +23,13 @@ var CalendarController = AbstractController.extend({
     custom_events: _.extend({}, AbstractController.prototype.custom_events, {
         changeDate: '_onChangeDate',
         changeFilter: '_onChangeFilter',
+        deleteRecord: '_onDeleteRecord',
         dropRecord: '_onDropRecord',
         next: '_onNext',
         openCreate: '_onOpenCreate',
         openEvent: '_onOpenEvent',
         prev: '_onPrev',
         quickCreate: '_onQuickCreate',
-        toggleFullWidth: '_onToggleFullWidth',
         updateRecord: '_onUpdateRecord',
         viewUpdated: '_onViewUpdated',
     }),
@@ -199,6 +199,20 @@ var CalendarController = AbstractController.extend({
      * @private
      * @param {OdooEvent} event
      */
+    _onDeleteRecord: function (event) {
+        var self = this;
+        Dialog.confirm(this, _t("Are you sure you want to delete this record ?"), {
+            confirm_callback: function () {
+                self.model.deleteRecords([event.data.id], self.modelName).always(function () {
+                    self.reload();
+                });
+            }
+        });
+    },
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
     _onDropRecord: function (event) {
         this._updateRecord(event.data);
     },
@@ -360,7 +374,7 @@ var CalendarController = AbstractController.extend({
             }
             self.dialog = new dialogs.FormViewDialog(self, options).open();
         };
-        open_dialog(true);
+        open_dialog(this.readonlyFormViewId);
     },
     /**
      * @private
@@ -400,15 +414,6 @@ var CalendarController = AbstractController.extend({
             .always(function () {
                 self.quickCreating = false;
             });
-    },
-    /**
-     * Called when we want to open or close the sidebar.
-     *
-     * @private
-     */
-    _onToggleFullWidth: function () {
-        this.model.toggleFullWidth();
-        this.reload();
     },
     /**
      * @private

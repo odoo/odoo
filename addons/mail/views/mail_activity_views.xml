@@ -201,8 +201,9 @@
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <calendar string="Activity" date_start="date_deadline" color="activity_type_id">
+                <field name="user_id" avatar_field="image_small"/>
                 <field name="res_name"/>
-                <field name="user_id"/>
+                <field name="date_deadline"/>
                 <field name="summary"/>
             </calendar>
         </field>

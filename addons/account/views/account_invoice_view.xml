@@ -7,9 +7,11 @@
             <field name="name">account.invoice.calendar</field>
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
-                <calendar string="Invoices" date_start="date_invoice" color="journal_id">
-                    <field name="partner_id"/>
+                <calendar string="Invoices" date_start="date_invoice" color="journal_id" hide_time="true" event_limit="5">
+                    <field name="partner_id" avatar_field="image_small"/>
                     <field name="amount_total_signed"/>
+                    <field name="date_due"/>
+                    <field name="state"/>
                 </calendar>
             </field>
         </record>

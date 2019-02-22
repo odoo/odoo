@@ -39,30 +39,9 @@
                 quick_add="False"
                 color="benefit_type_id"
                 event_limit="5">
-                <field name="state" invisible="1"/>
-                <field name="display_warning" invisible="1"/>
+                <field name="state"/>
                 <!-- Sidebar favorites filters -->
                 <field name="employee_id" write_model="hr.user.benefit.employee" write_field="employee_id" avatar_field="image_small"/>
-                <templates>
-                    <t t-name="calendar-box">
-                        <t t-set="color" t-value="widget.getColor(event.color_index)"/>
-                        <div t-att-style="typeof color === 'string' ? ('background-color:'+color)+';' : ''" t-attf-class="#{record.is_highlighted &amp;&amp; record.is_highlighted.value ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? 'o_calendar_color_'+color : ''}">
-                            <div class="fc-time"/>
-                            <div class="o_fields">
-                                <t t-if="record.display_warning">
-                                    <span class="fa fa-exclamation-triangle mr-2" aria-label="Conflict" title="error"/>
-                                </t>
-                                <t t-if="record.state == 'validated'">
-                                    <span class="fa fa-check-circle-o" aria-label="Validated" title="validated"/>
-                                    <t t-esc="' '"/>
-                                </t>
-                                <t t-foreach="widget.displayFields" t-as="name">
-                                    <t t-esc="format(record, name)"/>
-                                </t>
-                            </div>
-                        </div>
-                    </t>
-                </templates>
             </calendar>
         </field>
     </record>
