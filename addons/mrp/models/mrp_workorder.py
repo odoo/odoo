@@ -226,10 +226,6 @@ class MrpWorkorder(models.Model):
         # TODO: should be same as checking if for every workorder something has been done?
         if not self.next_work_order_id:
             self._update_finished_move()
-            self.production_id.move_finished_ids.filtered(
-                lambda move: move.product_id == self.product_id and
-                move.state not in ('done', 'cancel')
-            ).workorder_id = self.id
 
         # Transfer quantities from temporary to final move line or make them final
         self._update_raw_moves()
