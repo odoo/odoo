@@ -18,12 +18,9 @@
                 <a t-attf-href="/slides/slide/#{slug(course_slide)}" t-att-index="i" t-att-slide_id="course_slide.id">
                     <div  t-attf-index="#{i}" t-attf-slide_id="#{course_slide.id}"  t-attf-class="#{'active' if slide.id == course_slide.id else ''} d-flex justify-content-between">
                         <div>
-                            <i t-if="course_slide.slide_type == 'presentation'" class="fa fa-file-pdf-o mr-2 text-muted"></i>
-                            <i t-if="course_slide.slide_type == 'infographic'" class="fa fa-file-picture-o mr-2 text-muted"></i>
-                            <i t-if="course_slide.slide_type == 'video'" class="fa fa-play-circle mr-2 text-muted"></i>
-                            <i t-if="course_slide.slide_type == 'link'" class="fa fa-file-code-o mr-2 text-muted"></i>
-                            <i t-if="course_slide.slide_type == 'webpage'" class="fa fa-file-text mr-2 text-muted"></i>
-                            <i t-if="course_slide.slide_type == 'quiz'" class="fa fa-question-circle mr-2 text-muted"></i>
+                            <t t-call="website_slides.slide_icon">
+                                <t t-set="slide" t-value="course_slide" />
+                            </t>
                             <t t-esc="course_slide.name"/>
                         </div>
                         <div class="content-slide-controls mr-2">
@@ -492,13 +489,9 @@
                             t-attf-slide_embed_code="#{course_slide.embed_code}"
                             t-attf-class="o_wslides_fullscreen_sidebar_slide_tab #{'active' if slide.id == course_slide.id else ''} d-flex justify-content-between">
                             <div>
-                                <i t-if="course_slide.slide_type == 'document'" class="fa fa-file-pdf-o mr-2 text-muted"></i>
-                                <i t-if="course_slide.slide_type == 'infographic'" class="fa fa-file-picture-o mr-2 text-muted"></i>
-                                <i t-if="course_slide.slide_type == 'video'" class="fa fa-play-circle mr-2 text-muted"></i>
-                                <i t-if="course_slide.slide_type == 'link'" class="fa fa-file-code-o mr-2 text-muted"></i>
-                                <i t-if="course_slide.slide_type == 'webpage'" class="fa fa-file-text mr-2 text-muted"></i>
-                                <i t-if="course_slide.slide_type == 'quiz'" class="fa fa-question-circle mr-2 text-muted"></i>
-                                <i t-if="course_slide.slide_type == 'certification'" class="fa fa-trophy mr-2 text-muted"></i>
+                                <t t-call="website_slides.slide_icon">
+                                    <t t-set="slide" t-value="course_slide" />
+                                </t>
                                 <t t-esc="course_slide.name"/>
                             </div>
                         </div>
