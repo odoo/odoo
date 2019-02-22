@@ -364,6 +364,7 @@ class WebsiteSlides(WebsiteProfile):
 
         if channel.channel_type == "training":
             values.update(self._get_user_progress(channel))
+            values['uncategorized_slides'] = channel.slide_ids.filtered(lambda slide: not slide.category_id)
 
         return request.render('website_slides.course_main', values)
 
@@ -408,6 +409,7 @@ class WebsiteSlides(WebsiteProfile):
         self._set_viewed_slide(slide)
         if slide.channel_id.channel_type == "training":
             values.update(self._get_user_progress(slide.channel_id))
+            values['uncategorized_slides'] = slide.channel_id.slide_ids.filtered(lambda slide: not slide.category_id)
             if 'fullscreen' in kwargs:
                 return request.render("website_slides.slide_fullscreen", values)
         return request.render("website_slides.slide_detail_view", values)
@@ -585,7 +587,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route('/slides/channel/resequence', type="json", website=True, auth="user")
     def resequence_slides(self, channel_id, slides_data):
         """" Reorder the slides within the channel by reassigning their 'sequence' field.
-        This method also handles slides that are put in a new category. """
+        This method also handles slides that are put in a new category (or uncategorized). """
         channel = request.env['slide.channel'].browse(int(channel_id))
         if not channel.can_publish:
             return {'error': 'Only the publishers of the channel can edit it'}
@@ -598,7 +600,7 @@ class WebsiteSlides(WebsiteProfile):
         for slide in slides:
             slide_key = str(slide.id)
             slide.sequence = slides_data[slide_key]['sequence']
-            slide.category_id = slides_data[slide_key]['category_id']
+            slide.category_id = slides_data[slide_key]['category_id'] if 'category_id' in slides_data[slide_key] else False
 
     @http.route(['/slides/prepare_preview'], type='json', auth='user', methods=['POST'], website=True)
     def prepare_preview(self, **data):
