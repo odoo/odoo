@@ -5,6 +5,8 @@ var core = require('web.core');
 var sAnimations = require('website.content.snippets.animation');
 
 var _t = core._t;
+var concurrency = require('web.concurrency');
+var dp = new concurrency.DropPrevious();
 
 sAnimations.registry.websiteSaleDelivery = sAnimations.Class.extend({
     selector: '.oe_website_sale',
@@ -89,12 +91,12 @@ sAnimations.registry.websiteSaleDelivery = sAnimations.Class.extend({
         $payButton.prop('disabled', true);
         $payButton.data('disabled_reasons', $payButton.data('disabled_reasons') || {});
         $payButton.data('disabled_reasons').carrier_selection = true;
-        this._rpc({
+        dp.add(this._rpc({
             route: '/shop/update_carrier',
             params: {
                 carrier_id: $radio.val(),
             },
-        }).then(this._handleCarrierUpdateResult.bind(this));
+        })).then(this._handleCarrierUpdateResult.bind(this));
     },
     /**
      * @private

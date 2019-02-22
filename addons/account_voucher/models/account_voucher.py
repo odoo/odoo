@@ -274,6 +274,8 @@ class AccountVoucher(models.Model):
         :return: Tuple build as (remaining amount not allocated on voucher lines, list of account_move_line created in this method)
         :rtype: tuple(float, list of int)
         '''
+        tax_calculation_rounding_method = self.env.user.company_id.tax_calculation_rounding_method
+        tax_lines_vals = []
         for line in self.line_ids:
             #create one move line per voucher line where amount is not 0.0
             if not line.price_subtotal:
@@ -331,6 +333,33 @@ class AccountVoucher(models.Model):
                         self.env['account.move.line'].create(temp)
 
             self.env['account.move.line'].create(move_line)
+            # When global rounding is activated, we must wait until all tax lines are computed to
+            # merge them.
+            if tax_calculation_rounding_method == 'round_globally':
+                tax_lines_vals += self.env['account.move.line'].with_context(round=False)._apply_taxes(
+                    move_line,
+                    move_line.get('debit', 0.0) - move_line.get('credit', 0.0)
+                )
+
+        # When round globally is set, we merge the tax lines
+        if tax_calculation_rounding_method == 'round_globally':
+            tax_lines_vals_merged = {}
+            for tax_line_vals in tax_lines_vals:
+                key = (
+                    tax_line_vals['tax_line_id'],
+                    tax_line_vals['account_id'],
+                    tax_line_vals['analytic_account_id'],
+                )
+                if key not in tax_lines_vals_merged:
+                    tax_lines_vals_merged[key] = tax_line_vals
+                else:
+                    tax_lines_vals_merged[key]['debit'] += tax_line_vals['debit']
+                    tax_lines_vals_merged[key]['credit'] += tax_line_vals['credit']
+            currency = self.env['res.currency'].browse(company_currency)
+            for vals in tax_lines_vals_merged.values():
+                vals['debit'] = currency.round(vals['debit'])
+                vals['credit'] = currency.round(vals['credit'])
+                self.env['account.move.line'].create(vals)
         return line_total
 
     @api.multi
@@ -363,12 +392,12 @@ class AccountVoucher(models.Model):
             line_total = voucher.with_context(ctx).voucher_move_line_create(line_total, move.id, company_currency, current_currency)
 
             # Create a payment to allow the reconciliation when pay_now = 'pay_now'.
-            if self.pay_now == 'pay_now':
-                payment_id = self.env['account.payment'].create(self.voucher_pay_now_payment_create())
+            if voucher.pay_now == 'pay_now':
+                payment_id = self.env['account.payment'].create(voucher.voucher_pay_now_payment_create())
                 payment_id.post()
 
                 # Reconcile the receipt with the payment
-                lines_to_reconcile = (payment_id.move_line_ids + move.line_ids).filtered(lambda l: l.account_id == self.account_id)
+                lines_to_reconcile = (payment_id.move_line_ids + move.line_ids).filtered(lambda l: l.account_id == voucher.account_id)
                 lines_to_reconcile.reconcile()
 
             # Add tax correction to move line if any tax correction specified

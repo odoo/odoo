@@ -1191,6 +1191,11 @@ class Form(object):
             if fields[k]['type'] == 'one2many':
                 # o2m default gets a (6) at the start, makes no sense
                 return [c for c in v if c[0] != 6]
+            elif fields[k]['type'] == 'datetime' and isinstance(v, datetime):
+                return odoo.fields.Datetime.to_string(v)
+            elif fields[k]['type'] == 'date' and isinstance(v, date):
+                return odoo.fields.Datetime.to_string(v)
+
             return v
         defaults = {
             k: cleanup(k, v)
@@ -1206,9 +1211,12 @@ class Form(object):
                     vals[k] = [(6, False, [])]
                 elif type_ == 'one2many':
                     vals[k] = []
+                elif type_ in ('integer', 'float'):
+                    vals[k] = 0
 
-        # TODO: check that only fields with default values should be sent
-        self._perform_onchange(list(defaults.keys()))
+        # on creation, every field is considered changed by the client
+        # apparently
+        self._perform_onchange(list(vals.keys() - {'id'}))
 
     def _init_from_values(self, values):
         self._values.update(
@@ -1362,20 +1370,22 @@ class Form(object):
                 node = self._get_node(f)
                 if not node.get('force_save'):
                     continue
-            # TODO: filter out (1, _, {}) from o2m values
+
             values[f] = v
         return values
 
     def _perform_onchange(self, fields):
         assert isinstance(fields, list)
-
-        # marks any onchange source as changed (default_get or explicit set)
+        # marks any onchange source as changed
         self._changed.update(fields)
-        result = self._model.onchange(
-            self._onchange_values(),
-            fields,
-            self._view['onchange'],
-        )
+
+        # skip calling onchange() if there's no trigger on any of the changed
+        # fields
+        spec = self._view['onchange']
+        if not any(spec[f] for f in fields):
+            return
+
+        result = self._model.onchange(self._onchange_values(), fields, spec)
         if result.get('warning'):
             _logger.getChild('onchange').warn("%(title)s %(message)s" % result.get('warning'))
         values = result.get('value', {})
@@ -1391,7 +1401,18 @@ class Form(object):
         )
 
     def _onchange_values(self):
-        return dict(self._values)
+        f = self._view['fields']
+        values = {}
+        for k, v in self._values.items():
+            if f[k]['type'] == 'one2many':
+                # web client sends a 4 for unmodified o2m rows
+                values[k] = [
+                    (4, rid, False) if (c == 1 and not vs) else (c, rid, vs)
+                    for (c, rid, vs) in v
+                ]
+            else:
+                values[k] = v
+        return values
 
     def _cleanup_onchange(self, descr, value, current):
         if descr['type'] == 'many2one':
@@ -1405,6 +1426,7 @@ class Form(object):
                 return []
 
             v = []
+            c = {t[1]: t[2] for t in current if t[0] == 1} if current else {}
             # which view should this be???
             subfields = descr['views']['edition']['fields']
             for command in value:
@@ -1417,7 +1439,10 @@ class Form(object):
                         for k, v in command[2].items()
                         if k in subfields
                     }))
-                    # TODO: should reuse existing values if not 5?
+                elif command[0] == 4:
+                    v.append((1, command[1], c.get(command[1], {})))
+                elif command[0] == 5:
+                    v = []
             return v
         elif descr['type'] == 'many2many':
             # onchange result is a bunch of commands, normalize to single 6
@@ -1437,7 +1462,7 @@ class Form(object):
                 else:
                     raise ValueError(
                         "Unsupported M2M command %d" % command[0])
-            return [(6, 0, ids)]
+            return [(6, False, ids)]
 
         return value
 
@@ -1501,7 +1526,6 @@ class O2MForm(Form):
                 continue
             # if self._get_modifier(f, 'readonly'):
             #     continue
-            # TODO: filter out (1, _, {}) from o2m values
             values[f] = v
         return values
 
@@ -1534,7 +1558,10 @@ class O2MProxy(X2MProxy):
             elif command == 2:
                 pass
             else:
-                raise AssertionError("O2M proxy only supports commands 0, 1 and 2")
+                raise AssertionError("O2M proxy only supports commands 0, 1 and 2, found %s" % command)
+
+    def __len__(self):
+        return len(self._records)
 
     @property
     def _model(self):
@@ -1696,6 +1723,10 @@ def record_to_values(fields, record):
             v = [(6, 0, v.ids)]
         elif descr['type'] == 'one2many':
             v = [(1, r.id, {}) for r in v]
+        elif descr['type'] == 'datetime' and isinstance(v, datetime):
+            v = odoo.fields.Datetime.to_string(v)
+        elif descr['type'] == 'date' and isinstance(v, date):
+            v = odoo.fields.Date.to_string(v)
         r[f] = v
     return r
 

@@ -48,6 +48,8 @@
     <template id="assets_common" name="tour" inherit_id="web.assets_common">
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop.js"></script>
+            <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_cart_recovery.js"></script>
+            <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_mail.js"></script>
         </xpath>
     </template>
 
@@ -1319,7 +1321,7 @@
                                     <t t-set="partner_id" t-value="partner"/>
 
                                     <t t-set="back_button_icon_class" t-value="'fa-chevron-left'"/>
-                                    <t t-set="back_button_txt" t-value="'Return to Cart'"/>
+                                    <t t-set="back_button_txt">Return to Cart</t>
                                     <t t-set="back_button_class" t-value="'btn btn-secondary'"/>
                                     <t t-set="back_button_link" t-value="'/shop/cart'"/>
                                 </t>

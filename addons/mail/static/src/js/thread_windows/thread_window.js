@@ -402,6 +402,9 @@ var ThreadWindow = AbstractThreadWindow.extend({
      * @param {integer} channelID
      */
     _onUpdateChannel: function (channelID) {
+        if (!this.hasThread()) {
+            return;
+        }
         if (this._thread.getID() !== channelID) {
             return;
         }
