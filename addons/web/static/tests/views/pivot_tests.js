@@ -1494,7 +1494,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('rendering of pivot view with comparison', function (assert) {
-        assert.expect(92);
+        assert.expect(91);
 
         this.data.partner.records[0].date = '2016-12-15';
         this.data.partner.records[1].date = '2016-12-17';
@@ -1530,17 +1530,6 @@ QUnit.module('Views', {
                         '<field name="foo" type="measure"/>' +
                   '</pivot>',
                 'partner,false,search': '<search></search>',
-            },
-            intercepts: {
-                create_filter: function (ev) {
-                    var data = ev.data;
-                    assert.deepEqual(data.filter.context.timeRangeMenuData, {
-                        timeRange: ["&",["date",">=","2016-12-01"],["date","<","2017-01-01"]],
-                        timeRangeDescription: 'This Month',
-                        comparisonTimeRange: ["&",["date",">=","2016-11-01"],["date","<","2016-12-01"]],
-                        comparisonTimeRangeDescription: 'Previous Period',
-                    });
-                }
             }
         });
 
