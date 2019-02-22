@@ -25,14 +25,15 @@
     <template id="so_template" name="SO Template">
         <t t-call="website.layout">
             <body>
+                <t t-set="o_portal_fullwidth_alert">
+                    <t t-call="portal.portal_back_in_edit_mode">
+                        <t t-set="backend_url" t-value="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (template._name, template.id, request.env.ref('sale_management.sale_order_template_action').id)"/>
+                        <t t-set="custom_html">This is a preview of the sale order template.</t>
+                    </t>
+                </t>
                 <div class="container o_sale_order">
                     <div class="row mt16">
                         <div class="col-lg-9 ml-auto">
-                            <div class="row mb8">
-                                <div t-ignore="true" class="css_editable_mode_hidden offset-lg-11">
-                                  <a role="button" class="btn btn-info d-print-none" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (template._name, template.id, request.env.ref('sale_management.sale_order_template_action').id)">Back</a>
-                                </div>
-                            </div>
                             <div class="alert alert-info" t-ignore="True" role="status">
                                 <p>
                                     <strong>Template Header:</strong> this content
