@@ -1487,35 +1487,44 @@ options.registry.anchorName = options.Class.extend({
      */
     openAnchorDialog: function (previewMode, value, $opt) {
         var self = this;
+        var buttons = [{
+            text: _t("Save"),
+            classes: 'btn-primary',
+            click: function () {
+                var $input = this.$('.o_input_anchor_name');
+                var anchorName = $input.val().trim().replace(/\s/g, '_');
+                var isValid = /^[\w-]+$/.test(anchorName);
+                var alreadyExists = isValid && $('#' + anchorName).length > 0;
+                var anchorOK = isValid && !alreadyExists;
+                this.$('.o_anchor_not_valid').toggleClass('d-none', isValid);
+                this.$('.o_anchor_already_exists').toggleClass('d-none', !alreadyExists);
+                $input.toggleClass('is-invalid', !anchorOK);
+                if (anchorOK) {
+                    self._setAnchorName(anchorName);
+                    this.close();
+                }
+            },
+        }, {
+            text: _t("Discard"),
+            close: true,
+        }];
+        if (this.$target.attr('id')) {
+            buttons.push({
+                text: _t("Remove"),
+                classes: 'btn-link ml-auto',
+                icon: 'fa-trash',
+                close: true,
+                click: function () {
+                    self._setAnchorName();
+                },
+            });
+        }
         new Dialog(this, {
             title: _t("Anchor Name"),
             $content: $(qweb.render('website.dialog.anchorName', {
                 currentAnchor: this.$target.attr('id'),
             })),
-            buttons: [
-                {
-                    text: _t("Save"),
-                    classes: 'btn-primary',
-                    click: function () {
-                        var $input = this.$('.o_input_anchor_name');
-                        var anchorName = $input.val().trim().replace(/\s/g, '_');
-                        var isValid = /^[\w-]+$/.test(anchorName);
-                        var alreadyExists = isValid && $('#' + anchorName).length > 0;
-                        var anchorOK = isValid && !alreadyExists;
-                        this.$('.o_anchor_not_valid').toggleClass('d-none', isValid);
-                        this.$('.o_anchor_already_exists').toggleClass('d-none', !alreadyExists);
-                        $input.toggleClass('is-invalid', !anchorOK);
-                        if (anchorOK) {
-                            self._setAnchorName(anchorName);
-                            this.close();
-                        }
-                    }
-                },
-                {
-                    text: _t("Discard"),
-                    close: true,
-                },
-            ],
+            buttons: buttons,
         }).open();
     },
 
