@@ -566,6 +566,13 @@ class ProductTemplate(models.Model):
     def onchange_tracking(self):
         return self.mapped('product_variant_ids').onchange_tracking()
 
+    @api.onchange('type')
+    def _onchange_type(self):
+        res = super(ProductTemplate, self)._onchange_type()
+        if self.type == 'consu' and self.tracking != 'none':
+            self.tracking = 'none'
+        return res
+
     def write(self, vals):
         if 'uom_id' in vals:
             new_uom = self.env['uom.uom'].browse(vals['uom_id'])
