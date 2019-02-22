@@ -518,11 +518,16 @@ class AccountMoveLine(models.Model):
                 #  - add matched_credit_ids (partial_line.credit_move_id != line)
                 # If line is a debit (sign = 1), do the opposite.
                 sign_partial_line = sign if partial_line.credit_move_id == line else (-1 * sign)
+                exchange = (
+                    (partial_line.credit_move_id.currency_id
+                     and not partial_line.credit_move_id.amount_currency and partial_line.debit_move_id.invoice_id) or
+                    (partial_line.debit_move_id.currency_id
+                     and not partial_line.debit_move_id.amount_currency and partial_line.credit_move_id.invoice_id))
 
                 amount += sign_partial_line * partial_line.amount
                 #getting the date of the matched item to compute the amount_residual in currency
                 if line.currency_id and line.amount_currency:
-                    if partial_line.currency_id and partial_line.currency_id == line.currency_id:
+                    if partial_line.currency_id and partial_line.currency_id == line.currency_id and not exchange:
                         amount_residual_currency += sign_partial_line * partial_line.amount_currency
                     else:
                         if line.balance and line.amount_currency:
@@ -530,7 +535,7 @@ class AccountMoveLine(models.Model):
                         else:
                             date = partial_line.credit_move_id.date if partial_line.debit_move_id == line else partial_line.debit_move_id.date
                             rate = line.currency_id.with_context(date=date).rate
-                        amount_residual_currency += sign_partial_line * line.currency_id.round(partial_line.amount * rate)
+                        amount_residual_currency += sign_partial_line * line.currency_id.round(partial_line.amount * rate) if not exchange else 0
 
             #computing the `reconciled` field.
             reconciled = False
@@ -831,8 +836,11 @@ class AccountMoveLine(models.Model):
             credit_move = credit_moves[0]
             company_currency = debit_move.company_id.currency_id
             # We need those temporary value otherwise the computation might be wrong below
+            exchange = ((debit_move.currency_id and not debit_move.amount_currency and credit_move.invoice_id) or
+                        (credit_move.currency_id and not credit_move.amount_currency and debit_move.invoice_id))
             temp_amount_residual = min(debit_move.amount_residual, -credit_move.amount_residual)
-            temp_amount_residual_currency = min(debit_move.amount_residual_currency, -credit_move.amount_residual_currency)
+            temp_amount_residual_currency = min(debit_move.amount_residual_currency,
+                                                -credit_move.amount_residual_currency) if not exchange else 0
             dc_vals[(debit_move.id, credit_move.id)] = (debit_move, credit_move, temp_amount_residual_currency)
             amount_reconcile = min(debit_move[field], -credit_move[field])
 
