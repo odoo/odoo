@@ -12,8 +12,10 @@
 
     <template id="slide_fullscreen" inherit_id="website_slides.slide_fullscreen">
         <!-- Fullscreen template: add link to forum -->
-        <xpath expr="//a[@id='fullscreen_sidebar_button']" position="after">
-            <a t-if="slide.channel_id.forum_id" id="fullscreen_forum_button" t-attf-href="/forum/#{slug(slide.channel_id.forum_id)}" target="new"><i class="fa fa-comments"></i>Ask a question</a>
+        <xpath expr="//div[hasclass('o_wslides_fs_slide_title')]" position="before">
+            <a t-if="slide.channel_id.forum_id" class="p-3 h-100 d-inline-block text-uppercase" t-attf-href="/forum/#{slug(slide.channel_id.forum_id)}" target="new">
+                <i class="fa fa-comments"></i>Ask a question
+            </a>
         </xpath>
     </template>
 

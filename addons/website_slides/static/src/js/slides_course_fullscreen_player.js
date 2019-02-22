@@ -7,175 +7,99 @@ odoo.define('website_slides.fullscreen', function (require) {
     var core = require('web.core');
     var QWeb = core.qweb;
 
-    var tag = document.createElement('script');
+    var Quiz = require('website_slides.quiz');
 
-    var QuizWidget = require('website_slides.quiz');
+    /**
+     * This widget is responsible of display Youtube Player
+     *
+     * The widget will trigger an event `change_slide` when the video is at
+     * its end, and `slide_completed` when the player is at 30 sec before the
+     * end of the video (30 sec before is considered as completed).
+     */
+    var VideoPlayer = Widget.extend({
+        template: 'website.slides.fullscreen.video',
+        youtubeUrl: 'https://www.youtube.com/iframe_api',
 
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-
-    var Fullscreen = Widget.extend({
-        custom_events: {
-            quiz_next_slide: '_goToNextSlide',
-            quiz_completed: '_onQuizCompleted'
-        },
-        /**
-        * @override
-        * @param {Object} el
-        * @param {Object} data holding channelId and optionally upload and publish control parameters
-        */
-        init: function (el, courseId, slideId, userId) {
-            this.courseID = parseInt(courseId, 10);
-            this.slideID = parseInt(slideId, 10);
-            this.userID = parseInt(userId, 10);
-            this.course = undefined;
-            this.slide = undefined;
-            this.slides = [];
-            this.nextSlide = undefined;
-            this.previousSlide = undefined;
-            this.url = undefined;
-            this.urlToSmallScreen = undefined;
-            this.activetab = undefined;
-            this.player = undefined;
-            this.goToQuiz = false;
-            this.slideTitle = undefined;
-            return this._super.apply(this,arguments);
-        },
-        start: function (){
-            var self = this;
-            this.url = window.location.pathname;
-            this.urlToSmallScreen = this.url.replace('/fullscreen','');
-            this._getSlides();
-            this._renderPlayer();
-            this._bindListEvents();
-            $(document).keydown(this._onKeyDown.bind(this));
+        init: function (parent, slide) {
+            this.slide = slide;
             return this._super.apply(this, arguments);
         },
-        //--------------------------------------------------------------------------
-        // Private
-        //--------------------------------------------------------------------------
-         /**
-         * @private
-         * Renders the player accordingly to the current slide
-         */
-        _renderPlayer: function (){
-            var self = this;
-
-            var def = $.Deferred();
-            if (this.slide.slide_type === 'webpage') {
-                this._fetchHtmlContent().then(function () {
-                    self._renderWebpage();
-                    def.resolve();
-                });
-            } else {
-                if (this.slide.slide_type !== 'quiz') {
-                    // no RPC, get slide data from existing DOM
-                    var embed_url = $(this.slide.embed_code).attr('src');
-                    if (this.slide.slide_type === "video"){
-                        embed_url = "https://" + embed_url + "&rel=0&autoplay=1&enablejsapi=1&origin=" + window.location.origin;
-                    }
-                    $('.o_wslides_fs_player').html(QWeb.render('website.slides.fullscreen', {
-                        slide: self.slide,
-                        nextSlide: self.nextSlide,
-                        questions: self.slide.quiz ? self.slide.quiz.questions: '',
-                        embed_url: embed_url,
-                        question_count: self.slide.quiz ? self.slide.quiz.questions.length : '',
-                        letters: self.slide.quiz ? self.letters : '',
-                        showMiniQuiz: self.goToQuiz
-                    }));
-
-                    if(this.slide.slide_type === "video"){
-                      this._renderYoutubeIframe();
-                    }
-                    def.resolve();
-                }
-            }
-
-            if (this.slide.slide_type === "quiz" || this.goToQuiz) {
-                this._renderQuiz().then(function() {
-                    def.resolve();
-                });
-            }
-
-            return def.then(function() {
-                self._renderTitle();
-            });
+        start: function (){
+            return $.when(this._super.apply(this, arguments), this._loadYoutubeAPI());
         },
-        _renderYoutubeIframe: function (){
-            var self = this;
-            /**
-             * Due to issues of synchronization between the youtube api script and the widget's instanciation.
-             */
-            try {
-                self._setupYoutubePlayer();
+        _loadYoutubeAPI: function () {
+            var def = $.Deferred();
+            if(!document.querySelector('script[src="' + this.youtubeUrl + '"]')) {
+                var tag = document.createElement('script');
+                tag.setAttribute('src', this.youtubeUrl);
+                tag.onload = function() {
+                    def.resolve();
+                };
+                document.head.appendChild(tag);
+            } else {
+                def.resolve();
             }
-            catch (error) {
-                onYouTubeIframeAPIReady = function (){
-                    var self = this;
-                    self._setupYoutubePlayer();
+            return def;
+        },
+        /**
+         * When attaching event to widget DOM (setElement, or start, or attachTo), we need to rebind
+         * Youtube player to the div from the template.
+         *
+         * @private
+         */
+        _delegateEvents: function (){
+            var res = this._super.apply(this, arguments);
+            try {  // Due to issues of synchronization between the youtube api script and the widget's instanciation.
+                this._setupYoutubePlayer();
+            } catch (err) {
+                onYouTubeIframeAPIReady = function () {
+                    this._setupYoutubePlayer();
                 }.bind(this);
             }
-        },
-        _renderWebpage: function (){
-            var self = this;
-            $(self.slide.htmlContent).appendTo('.o_wslides_fs_webpage_content');
-        },
-
-        _renderQuiz: function (){
-            var quizSlideData = _.extend(this.slide, {
-                completed: this.slide.done,
-            });
-            var Quiz = new QuizWidget(this, quizSlideData);
-            return Quiz.appendTo('.o_wslides_fs_player');
-        },
-
-        _renderTitle: function (){
-            var self = this;
-            $('.o_wslides_fs_slide_title').empty().html(QWeb.render('website.course.fullscreen.title', {
-                slide: self.slide,
-                miniQuiz: self.goToQuiz
-            }));
+            return res;
         },
         /**
-         * @private
          * Links the youtube api to the iframe present in the template
+         *
+         * @private
          */
         _setupYoutubePlayer: function (){
-            var self = this;
-            self.player = new YT.Player('youtube-player', {
+            this.player = new YT.Player('youtube-player', {
                 host: 'https://www.youtube.com',
-                playerVars: {'autoplay': 1, 'origin': window.location.origin},
+                playerVars: {
+                    'autoplay': 1,
+                    'origin': window.location.origin
+                },
                 autoplay: 1,
                 events: {
-                    'onReady': self._onPlayerReady,
-                    'onStateChange': this._onPlayerStateChange.bind(self)
+                    'onStateChange': this._onPlayerStateChange.bind(this)
                 }
             });
         },
         /**
-         * @param {*} event
          * Specific method of the youtube api.
          * Whenever the player starts playing, a setinterval is created.
          * This setinterval is used to check te user's progress in the video.
-         * Once the user reaches a particular time in the video, the slide will be considered as completed if the video doesn't have a mini-quiz.
-         * This method also allows to automatically go to the next slide (or the quiz associated to the current video) once the video is over
+         * Once the user reaches a particular time in the video, the slide will be considered as completed
+         * if the video doesn't have a mini-quiz.
+         * This method also allows to automatically go to the next slide (or the quiz associated to the current
+         * video) once the video is over
+         *
+         * @private
+         * @param {*} event
          */
         _onPlayerStateChange: function (event){
             var self = this;
-            var tid;
             clearInterval(self.tid);
-            if (event.data === YT.PlayerState.PLAYING && !self.slide.done) {
+            if (event.data === YT.PlayerState.PLAYING && !self.slide.completed) {
                 self.tid = setInterval(function (){
                     if (event.target.getCurrentTime){
                         var currentTime = event.target.getCurrentTime();
                         var totalTime = event.target.getDuration();
                         if (totalTime && currentTime > totalTime - 30){
                             clearInterval(self.tid);
-                            if (!self.slide.hasQuiz && !self.slide.done){
-                                self.slide.done = true;
-                                self._setSlideStateAsDone();
+                            if (!self.slide.hasQuestion && !self.slide.completed){
+                                self.trigger_up('slide_completed', self.slide);
                             }
                         }
                     }
@@ -183,237 +107,485 @@ odoo.define('website_slides.fullscreen', function (require) {
             }
             if (event.data === YT.PlayerState.ENDED){
                 self.player = undefined;
-                self._goToNextSlide();
+                if (self.slide.hasNext) {
+                    self.trigger_up('slide_go_next');
+                }
+            }
+        },
+    });
+
+
+    /**
+     * This widget is responsible of navigation for one slide to another:
+     *  - by clicking on any slide list entry
+     *  - by mouse click (next / prev)
+     *  - by recieving the order to go to prev/next slide (`goPrevious` and `goNext` public methods)
+     *
+     * The widget will trigger an event `change_slide` with
+     * the `slideId` and `isMiniQuiz` as data.
+     */
+    var Sidebar = Widget.extend({
+        events: {
+            "click .o_wslides_fs_sidebar_list_item": '_onClickTab',
+        },
+        init: function (parent, slideList, defaultSlide) {
+            var result = this._super.apply(this, arguments);
+            this.slideEntries = slideList;
+            this.set('slideEntry', defaultSlide);
+            return result;
+        },
+        start: function (){
+            var self = this;
+            this.on('change:slideEntry', this, this._onChangeCurrentSlide);
+            return this._super.apply(this, arguments).then(function (){
+                $(document).keydown(self._onKeyDown.bind(self));
+            });
+        },
+        destroy: function () {
+            $(document).unbind('keydown', this._onKeyDown.bind(this));
+            return this._super.apply(this, arguments);
+        },
+        //--------------------------------------------------------------------------
+        // Public
+        //--------------------------------------------------------------------------
+        /**
+         * Change the current slide with the next one (if there is one).
+         *
+         * @public
+         */
+        goNext: function () {
+            var currentIndex = this._getCurrentIndex();
+            if (currentIndex < this.slideEntries.length-1) {
+                this.set('slideEntry', this.slideEntries[currentIndex+1]);
             }
         },
         /**
-         * @private
-         * Creates slides objects from every slide-list-cells attributes
+         * Change the current slide with the previous one (if there is one).
+         *
+         * @public
          */
-        _getSlides: function (){
-            var self = this;
-            var slides = $('.o_wslides_fs_sidebar_slide_tab');
-            for (var i = 0; i < slides.length;i++){
-                var slide = $(slides[i]);
-                self.slides.push(slide.data());
-                this._getActiveSlide();
+        goPrevious: function () {
+            var currentIndex = this._getCurrentIndex();
+            if (currentIndex >= 1) {
+                this.set('slideEntry', this.slideEntries[currentIndex-1]);
             }
+        },
+        /**
+         * Greens up the bullet when the slide is completed
+         *
+         * @public
+         * @param {*} slide_id
+         */
+        setSlideCompleted: function (slideId) {
+            var $elem = this.$('.fa-circle-thin[data-slide-id="'+slideId+'"]');
+            $elem.removeClass('fa-circle-thin').addClass('fa-check-circle text-success');
+        },
+        /**
+         * Updates the progressbar whenever a lesson is completed
+         *
+         * @public
+         * @param {*} channelCompletion
+         */
+        updateProgressbar: function (channelCompletion) {
+            var completion = Math.min(100, channelCompletion);
+            this.$('.progress-bar').css('width', completion + "%" );
+            this.$('.o_wslides_progress_percentage').text(completion);
+        },
+
+        //--------------------------------------------------------------------------
+        // Private
+        //--------------------------------------------------------------------------
+        /**
+         * Get the index of the current slide entry (slide and/or quiz)
+         */
+        _getCurrentIndex: function() {
+            var slide = this.get('slideEntry');
+            var currentIndex = _.findIndex(this.slideEntries, function (entry) {
+                return entry.id === slide.id && entry.isQuiz === slide.isQuiz;
+            });
+            return currentIndex;
+        },
+        //--------------------------------------------------------------------------
+        // Handler
+        //--------------------------------------------------------------------------
+        /**
+         * Handler called whenever the user clicks on a sub-quiz which is linked to a slide.
+         * This does NOT handle the case of a slide of type "quiz".
+         * By going through this handler, the widget will be able to determine that it has to render
+         * the associated quiz and not the main content.
+         *
+         * @private
+         * @param {*} ev
+         */
+        _onClickMiniQuiz: function (ev){
+            var slideID = parseInt($(ev.currentTarget).data().slide_id);
+            this.set('slideEntry',{
+                slideID: slideID,
+                isMiniQuiz: true
+            });
+            this.trigger_up('change_slide', this.get('slideEntry'));
+        },
+        /**
+         * Handler called when the user clicks on a normal slide tab
+         *
+         * @private
+         * @param {*} ev
+         */
+        _onClickTab: function (ev) {
+            var $elem = $(ev.currentTarget);
+            var isQuiz = $elem.data('isQuiz');
+            var slideID = parseInt($elem.data('id'));
+            var slide = _.filter(this.slideEntries, function (entry) {
+                return entry.id === slideID && entry.isQuiz == isQuiz;
+            });
+            this.set('slideEntry', slide[0]);
+        },
+        /**
+         * Actively changes the active tab in the sidebar so that it corresponds
+         * the slide currently displayed
+         *
+         * @private
+         */
+        _onChangeCurrentSlide: function () {
+            var slide = this.get('slideEntry');
+            this.$('.o_wslides_fs_sidebar_list_item.active').removeClass('active');
+            var selector = '.o_wslides_fs_sidebar_list_item[data-id='+slide.id+']';
+            if (slide.isQuiz) {
+                selector += '[data-is-quiz="1"]';
+            } else {
+                selector += '[data-is-quiz!="1"]';
+            }
+            this.$(selector).addClass('active');
+            this.trigger_up('change_slide', this.get('slideEntry'));
         },
 
         /**
+         * Binds left and right arrow to allow the user to navigate between slides
+         *
+         * @param {*} ev
          * @private
          */
-        _fetchHtmlContent: function(){
+        _onKeyDown: function (ev){
+            switch (ev.key){
+                case "ArrowLeft":
+                    this.goPrevious();
+                    break;
+                case "ArrowRight":
+                    this.goNext();
+                    break;
+            }
+        },
+    });
+
+
+    /**
+     * This widget's purpose is to show content of a course, naviguating through contents
+     * and correclty display it. It also handle slide completion, course progress, ...
+     *
+     * This widget is rendered sever side, and attached to the existing DOM.
+     */
+    var Fullscreen = Widget.extend({
+        events: {
+            "click .o_wslides_fs_toggle_sidebar": '_onClickToggleSidebar',
+        },
+        custom_events: {
+            'change_slide': '_onChangeSlideRequest',
+            'toggle_sidebar': '_onToggleSidebar',
+            'slide_completed': '_onSlideCompleted',
+            'quiz_completed': '_onSlideCompleted',
+            'slide_go_next': '_onSlideGoToNext',
+        },
+        /**
+        * @override
+        * @param {Object} el
+        * @param {Object} slides Contains the list of all slides of the course
+        * @param {Int} defaultSlideId Contains the ID of the slide requested by the user
+        */
+        init: function (el, slides, defaultSlideId){
+            var result = this._super.apply(this,arguments);
+            this.initialSlideID = defaultSlideId;
+            this.slides = this._preprocessSlideData(slides);
+
+            var slide;
+            if (defaultSlideId) {
+                slide = this._findSlide({id: defaultSlideId});
+            } else {
+                slide = this.slides[0];
+            }
+
+            this.set('slide', slide);
+
+            // extract data for sidebar
+            var sidebarData = _.map(this.slides, function(slide) {
+                return {
+                    id: slide.id,
+                    hasNext: slide.hasNext,
+                    isQuiz: slide.isQuiz,
+                }
+            });
+            this.sidebar = new Sidebar(this, sidebarData, {
+                id: slide.id,
+                isQuiz: slide.isQuiz,
+                hasNext: slide.hasNext,
+            });
+            return result;
+        },
+        /**
+         * @override
+         */
+        start: function (){
             var self = this;
+            this.on('change:slide', this, this._onChangeSlide);
+            return this._super.apply(this, arguments).then(function () {
+                self._onChangeSlide(); // trigger manually once DOM ready, since slide content is not rendered server side
+            });
+        },
+        /**
+         * Extended to attach sub widget to sub DOM. This might be experimental but
+         * seems working fine.
+         *
+         * @override
+         */
+        attachTo: function (){
+            var defs = [this._super.apply(this, arguments)];
+            defs.push(this.sidebar.attachTo(this.$('.o_wslides_fs_sidebar')));
+            return $.when.apply($, defs);
+        },
+        //--------------------------------------------------------------------------
+        // Private
+        //--------------------------------------------------------------------------
+        /**
+         * Fetches content with an rpc call for slides of type "webpage"
+         *
+         * @private
+         */
+        _fetchHtmlContent: function (){
+            var self = this;
+            var currentSlide = this.get('slide');
             return self._rpc({
-                route: 'slides/slide/get_html_content',
+                route:"/slides/slide/get_html_content",
                 params: {
-                    'slide_id': self.slide.id
+                    'slide_id': currentSlide.id
                 }
             }).then(function (data){
                 if (data.html_content) {
-                    self.slide.htmlContent = data.html_content;
+                    currentSlide.htmlContent = data.html_content;
                 }
             });
         },
         /**
-         * @private
-         * Once the completion conditions are filled,
-         * sends a json request to the backend to set the relation between the slide and the user as being completed
-         */
-        _setSlideStateAsDone: function (){
-            var self = this;
-            return self._rpc({
-                route: '/slides/slide/set_completed',
-                params: {
-                    slide_id: self.slide.id,
-                }
-            }).then(function (data) {
-                if (! data.error) {
-                    $('#check-'+self.slide.id).replaceWith($('<i class="check-done o_wslides_slide_completed fa fa-check-circle"></i>'));
-                    self.slide.done = true;
-                    clearInterval(self.tid);
-                    self.channelCompletion = data.channel_completion;
-                    self._updateProgressbar();
-                }
-            });
-        },
-        _updateProgressbar: function () {
-            var completion = _.min([this.channelCompletion, 100]);
-            this.$('.o_wslides_fs_sidebar_progressbar .progress-bar').css('width', completion + "%" );
-            this.$('.o_wslides_progress_percentage').text(completion);
+        * Fetches slide content depending on its type.
+        * If the slide doesn't need to fetch any content, return a resolved deferred
+        *
+        * @private
+        */
+        _fetchSlideContent: function (){
+            var slide = this.get('slide');
+            if (slide.type === 'webpage') {
+                return this._fetchHtmlContent();
+            }
+            return $.when();
         },
         /**
+         * Get the slide dict matching the given criteria
+         *
          * @private
-         * Creates an array of letters to be used in the quiz with a foreach
+         * @param {Object} matcher (see https://underscorejs.org/#matcher)
          */
-        _generateQuizLetters: function (){
-            var letters = [];
-            for (var i = 65; i < 91; i++){
-                letters.push(String.fromCharCode(i));
-            }
-            return letters;
+        _findSlide: function (matcher) {
+            var slideMatch = _.matcher(matcher);
+            var result = _.filter(this.slides, slideMatch);
+            return result[0];
         },
-        _goToNextSlide: function (){
-            var self = this;
-            clearInterval(self.tid);
-            self.player = undefined;
-            self.goToQuiz = self.slide.hasQuiz && !self.goToQuiz && self.slide.slide_type !== 'quiz';
-            if (self.nextSlide && !self.goToQuiz){
-                self.slide = self.nextSlide;
-                self.index++;
-                self._setActiveTab();
-                self._renderPlayer();
-                self._setPreviousAndNextSlides();
-                self._updateUrl();
-                history.pushState(null,'',self.url);
-            }
-            else if (self.nextSlide){
-                self._renderPlayer();
-            }
-        },
-        _goToPreviousSlide: function (){
-            var self = this;
-            clearInterval(self.tid);
-            self.goToQuiz = false;
-            self.player = undefined;
-            if (self.previousSlide){
-                self.slide = self.previousSlide;
-                self.index--;
-                self._setActiveTab();
-                self._renderPlayer();
-                self._setPreviousAndNextSlides();
-                self._updateUrl();
-                history.pushState(null,'',self.url);
-            }
-        },
-        _setPreviousAndNextSlides: function (){
-            var self = this;
-            self.previousSlide = self.index > 0 ? self.slides[self.index-1] : undefined;
-            self.nextSlide = self.index < (self.slides.length - 1) ? self.slides[self.index+1] : undefined;
+        /**
+         * Extend the slide data list to add informations about rendering method, and other
+         * specific values according to their slide_type.
+         */
+        _preprocessSlideData: function(slidesDataList) {
+            _.each(slidesDataList, function (slideData, index) {
+                // compute hasNext slide
+                slideData.hasNext = index < slidesDataList.length-1;
+                // compute embed url
+                if (slideData.type === 'video') {
+                    slideData.embedCode = $(slideData.embedCode).attr('src');  // embedCode containts an iframe tag, where src attribute is the url (youtube or embed document from odoo)
+                    slideData.embedUrl =  "https://" + slideData.embedCode + "&rel=0&autoplay=1&enablejsapi=1&origin=" + window.location.origin;
+                } else if (slideData.type === 'infographic') {
+                    slideData.embedUrl = _.str.sprintf('/web/image/slide.slide/%s/image', slideData.id);
+                } else if (_.contains(['document', 'presentation'], slideData.type)) {
+                    slideData.embedUrl = $(slideData.embedCode).attr('src');
+                }
+                // fill empty property to allow searching on it with _.filter(list, matcher)
+                slideData.isQuiz = slideData.isQuiz ? true : false;
+                slideData.hasQuestion = slideData.hasQuestion ? true : false;
+                // technical settings for the Fullscreen to work
+                slideData._autoSetDone = _.contains(['infographic', 'presentation', 'document', 'webpage'], slideData.type) && !slideData.hasQuestion;
+            });
+            return slidesDataList;
         },
         /**
          * Changes the url whenever the user changes slides.
-         * This allows the user to refresh the page and stay at the right video
+         * This allows the user to refresh the page and stay on the right slide
+         *
+         * @private
          */
-        _updateUrl: function (){
-            var self = this;
-            var url = window.location.pathname.split('/');
-            url[url.length-1] = self.slide.slug;
-            url = url.join('/');
-            self.url = url;
-            self.urlToSmallScreen = self.url;
-            self.url += "?fullscreen=1";
-            $('.o_wslides_small_screen').attr('href', self.urlToSmallScreen);
+        _pushUrlState: function (){
+            var urlParts = window.location.pathname.split('/');
+            urlParts[urlParts.length-1] = this.get('slide').id;
+            var url = _.str.sprintf('%s?fullscreen=1', urlParts.join('/'));
+            history.pushState(null, '', url);
         },
         /**
-         * Whenever the user changes slide, change the active tab
+         * Render the current slide content using specific mecanism according to slide type:
+         * - simply append content (for webpage)
+         * - template rendering (for image, document, ....)
+         * - using a sub widget (quiz and video)
+         *
+         * @private
+         * @returns Deferred
          */
-        _setActiveTab: function (){
-            var self = this;
-            self.activeTab.removeClass('active');
-            $('li.active').removeClass('active');
-            $('li[data-slide-id='+self.slide.id+']').addClass('active');
-            self.activeTab = $('.o_wslides_fs_sidebar_slide_tab[index="'+self.index+'"]');
-            self.activeTab.addClass('active');
+        _renderSlide: function () {
+            var slide = this.get('slide');
+            var $content = this.$('.o_wslides_fs_content');
+            $content.empty();
+            $content.removeClass('bg-white'); // webpage case
+
+            // display quiz slide, or quiz attached to a slide
+            if (slide.type === 'quiz' || slide.isQuiz) {
+                var QuizWidget = new Quiz(this, this.get('slide'));
+                return QuizWidget.appendTo($content);
+            }
+
+            // render slide content
+            if (_.contains(['document', 'presentation', 'infographic'], slide.type)) {
+                $content.html(QWeb.render('website.slides.fullscreen.content', {widget: this}));
+            } else if (slide.type === 'video') {
+                this.videoPlayer = new VideoPlayer(this, slide);
+                return this.videoPlayer.appendTo($content);
+            } else if (slide.type === 'webpage'){
+                $(slide.htmlContent).appendTo($content);
+                $content.addClass('bg-white');
+            }
+            return $.when();
         },
         /**
-         * The first time the user gets on the player,
-         * get the slide that is represented by the active tab in the sidebar
+         * Once the completion conditions are filled,
+         * rpc call to set the the relation between the slide and the user as "completed"
+         *
+         * @private
+         * @param slideId: the id of slide to set as completed
          */
-        _getActiveSlide: function (){
+        _setCompleted: function (slideId){
             var self = this;
-            self.activeTab = $('.o_wslides_fs_sidebar_slide_tab.active');
-            self.index = parseInt(self.activeTab.attr('index'), 10);
-            self.slide = self.slides[self.index];
-            self._setPreviousAndNextSlides();
+            var slide = this._findSlide({id: slideId});
+            if (!slide.completed) {  // no useless RPC call
+                return this._rpc({
+                    route: '/slides/slide/set_completed',
+                    params: {
+                        slide_id: slide.id,
+                    }
+                }).then(function (data){
+                    slide.completed = true;
+                    self.sidebar.setSlideCompleted(slide.id);
+                    self.sidebar.updateProgressbar(data.channel_completion);
+                });
+            }
+            return $.when();
         },
         //--------------------------------------------------------------------------
         // Handlers
         //--------------------------------------------------------------------------
-        _onListCellClick: function (ev){
+        /**
+         * Method called whenever the user changes slides.
+         * When the current slide is changed, it will autoimatically update the widget
+         * and allow it to fetch the content if needs be, render it, update the url and set the
+         * slide as "completed" if its type makes it necessary
+         *
+         * @private
+         */
+        _onChangeSlide: function (){
             var self = this;
-            clearInterval(self.tid);
-            self.player = undefined;
-            var target = $(ev.currentTarget);
-            self.goToQuiz = false;
-            if (target[0] !== self.activeTab[0]){
-                self.activeTab.removeClass('active');
-                target.addClass('active');
-                self.index = parseInt(target.attr('index'));
-                self._getActiveSlide();
-                self._renderPlayer();
-                $('li.active').removeClass('active');
-                $('li[data-slide-id='+self.slide.id+']').addClass('active');
-                self._setPreviousAndNextSlides();
-                self._updateUrl();
-                history.pushState(null,'',self.url);
-            }
+            var slide = this.get('slide');
+            return this._fetchSlideContent().then(function() { // update title and render content
+                self.$('.o_wslides_fs_slide_title').html(QWeb.render('website.slides.fullscreen.title', {widget: self}));
+                return self._renderSlide();
+            }).then(function() {
+                if (slide._autoSetDone) {
+                    self._setCompleted(slide.id);
+                }
+                self._pushUrlState();
+            });
         },
-        _sidebarToggle: function (ev){
+        /**
+         * Changes current slide when receiving custom event `change_slide` with
+         * its id and if it's its quizz or not we need to display.
+         *
+         * @private
+         */
+        _onChangeSlideRequest: function (ev){
+            var slideData = ev.data;
+            var newSlide = this._findSlide({
+                id: slideData.id,
+                isQuiz: slideData.isQuiz || false,
+            });
+            this.set('slide', newSlide);
+        },
+        /**
+         * Triggered when sub widget business is done and that slide
+         * can now be marked as done.
+         *
+         * @private
+         */
+        _onSlideCompleted: function (ev) {
+            var slideId = ev.data.id;
+            this._setCompleted(slideId);
+        },
+        /**
+         * Go the next slide
+         *
+         * @private
+         */
+        _onSlideGoToNext: function (ev) {
+            this.sidebar.goNext();
+        },
+        /**
+         * Show or Hide the sidebar
+         *
+         * @private
+         */
+        _onClickToggleSidebar: function (ev){
             ev.preventDefault();
-            $(ev.currentTarget).toggleClass('active');
-            $('.o_wslides_fs_sidebar').toggleClass('o_wslides_fs_sidebar_hidden');
-            $('.o_wslides_fs_player').toggleClass('o_wslides_fs_player_no_sidebar');
-        },
-        _onMiniQuizClick: function (ev){
-            var self = this;
-            self.index = parseInt($(ev.currentTarget).attr('index')) || 0;
-            self.slide = self.slides[self.index];
-            self.goToQuiz = true;
-            self._setPreviousAndNextSlides();
-            self._renderPlayer();
-            self._setActiveTab();
-            self._updateUrl();
-            history.pushState(null,'' ,self.url);
-        },
-        _onQuizCompleted: function (ev) {
-            this._setSlideStateAsDone();
-        },
-         /**
-        * @private
-        * Binds events related to the list
-        */
-        _bindListEvents: function (){
-            var self = this;
-            $('.o_wslides_fs_sidebar_slide_tab').each(function () {
-                $(this).click(self._onListCellClick.bind(self));
-            });
-            $('.o_wslides_fs_slide_quiz ').each(function (){
-                $(this).click(self._onMiniQuizClick.bind(self));
-            });
-            $('.o_wslides_fs_toggle_sidebar').click(function (ev){
-                self._sidebarToggle(ev);
-            });
-        },
-        _onKeyDown: function (ev){
-            var self = this;
-            switch (ev.key){
-                case "ArrowRight":
-                self._goToNextSlide();
-                break;
-                case "ArrowLeft":
-                self._goToPreviousSlide();
-                break;
-            }
+            this.$('.o_wslides_fs_sidebar').toggleClass('d-none');
+            this.$('.o_wslides_fs_content').toggleClass('col-10');
+            this.$('.o_wslides_fs_content').toggleClass('col-12');
+            this.$('.o_wslides_fs_toggle_sidebar').toggleClass('active');
         },
     });
 
     sAnimations.registry.websiteSlidesFullscreenPlayer = Widget.extend({
         selector: '.o_wslides_fs_main',
         xmlDependencies: ['/website_slides/static/src/xml/website_slides_fullscreen.xml'],
-        init: function (el){
-            this._super.apply(this, arguments);
-        },
         start: function (){
             var defs = [this._super.apply(this, arguments)];
-            var userId = this.$el.data('userId');
-            var courseId = this.$el.data('courseId');
-            var slideId = this.$el.data('slideId');
-            var fullscreen = new Fullscreen(this, courseId, slideId, userId);
-            defs.push(fullscreen.attachTo(this.$el));
+            var fullscreen = new Fullscreen(this, this._getSlides(), this._getCurrentSlideID());
+            defs.push(fullscreen.attachTo(".o_wslides_fs_main"));
             return $.when.apply($, defs);
-        }
+        },
+        _getCurrentSlideID: function (){
+            return parseInt(this.$('.o_wslides_fs_sidebar_list_item.active').data('id'));
+        },
+        /**
+         * @private
+         * Creates slides objects from every slide-list-cells attributes
+         */
+        _getSlides: function (){
+            var $slides = this.$('.o_wslides_fs_sidebar_list_item');
+            var slideList = [];
+            $slides.each(function() {
+                var slideData = $(this).data();
+                slideList.push(slideData);
+            });
+            return slideList;
+        },
     });
 
     return Fullscreen;

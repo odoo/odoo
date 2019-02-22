@@ -15,9 +15,8 @@ odoo.define('website_slides.quiz', function (require) {
      * used client side (Fullscreen).
      *
      * Triggered events are :
-     * - quiz_next_slide: need to go to the next slide, when quiz is done. Event data contains the current slide id.
-     * - quiz_completed: when the quiz is passed and completed by the user. Event data contains completion
-     *      percentage and current slide id.
+     * - slide_go_next: need to go to the next slide, when quiz is done. Event data contains the current slide id.
+     * - quiz_completed: when the quiz is passed and completed by the user. Event data contains current slide data.
      */
     var Quiz = Widget.extend({
         template: 'slide.slide.quiz',
@@ -184,9 +183,7 @@ odoo.define('website_slides.quiz', function (require) {
          * @param {Integer} completion
          */
         _setCompleted: function () {
-            this.trigger_up('quiz_completed', {
-                'slideId': this.slide.id,
-            });
+            this.trigger_up('quiz_completed', this.slide);
         },
         /*
          * Submit the given answer, and display the result
@@ -241,9 +238,7 @@ odoo.define('website_slides.quiz', function (require) {
          */
         _onClickNext: function (ev) {
             if (this.slide.hasNext) {
-                this.trigger_up('quiz_next_slide', {
-                    'slideId': this.slide.id,
-                });
+                this.trigger_up('slide_go_next');
             }
         },
         /**
@@ -272,7 +267,7 @@ odoo.define('website_slides.quiz', function (require) {
     sAnimations.registry.websiteSlidesQuizNoFullscreen = sAnimations.Class.extend({
         selector: '.o_wslides_js_lesson_quiz',
         custom_events: {
-            quiz_next_slide: '_onQuizNextSlide',
+            slide_go_next: '_onQuizNextSlide',
             quiz_completed: '_onQuizCompleted',
         },
 

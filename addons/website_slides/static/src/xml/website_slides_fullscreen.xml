@@ -1,41 +1,36 @@
 <templates id="template" xml:space="preserve">
-    <t t-name="website.slides.fullscreen">
-            <div t-if="slide.slide_type == 'video' &amp;&amp; !showMiniQuiz" class="player embed-responsive embed-responsive-16by9 embed-responsive-item">
-                <iframe id="youtube-player" t-att-src="embed_url" allowFullScreen="true" frameborder="0" enablejsapi="1" autoplay="1" allow="autoplay"></iframe>
-            </div>
-            <div t-if="['presentation', 'document'].indexOf(slide.slide_type) !== -1 &amp;&amp; !showMiniQuiz" class="embed-responsive embed-responsive-4by3 embed-responsive-item ">
-                <iframe t-att-src="embed_url" class="o_wslides_iframe_viewer" allowFullScreen="true" height="315" width="420" frameborder="0"></iframe>
-            </div>
-            <div t-if="slide.slide_type == 'infographic' &amp;&amp; !showMiniQuiz" style="width:100%;height:100%;text-align:center;">
-                <img t-attf-src="/web/image/slide.slide/#{slide.id}/image" class="img-fluid" style="height: 100%" alt="Slide image"/>
-            </div>
-        <div class="o_wslides_fs_content"/>
-    </t>
 
-    <t t-name="website.course.player.infos">
-        <div class="text-box">
-            <h1><t t-esc="slide.name"/></h1>
-            <a t-att-href="url" class="oe_js_show_comments">Show comments</a>
-        </div>
-        <div>
-            <button class="oe_js_slide_full_screen btn btn-secondary">Full Screen</button>
-            <button t-att-current_slide_id="slide.id" class="btn btn-primary oe_js_slide_completed">Mark as completed<i class="fa fa-check-circle ml-1"></i></button>
-        </div>
-    </t>
-
-    <t t-name="website.course.fullscreen.title">
-        <t t-if="!miniQuiz">
-            <i t-if="slide.slide_type == 'document'" class="fa fa-file-pdf-o mr-2"></i>
-            <i t-if="slide.slide_type == 'infographic'" class="fa fa-file-picture-o mr-2"></i>
-            <i t-if="slide.slide_type == 'video'" class="fa fa-play-circle mr-2"></i>
-            <i t-if="slide.slide_type == 'link'" class="fa fa-file-code-o mr-2"></i>
-            <i t-if="slide.slide_type == 'webpage'" class="fa fa-file-text mr-2"></i>
-            <i t-if="slide.slide_type == 'quiz'" class="fa fa-question-circle mr-2 text"></i>
-            <span class="o_wslides_fs_slide_title_span" t-esc="slide.name"/>
+    <t t-name="website.slides.fullscreen.title">
+        <t t-if="!widget.get('slide').isQuiz">
+            <i t-if="widget.get('slide').type == 'document'" class="fa fa-file-pdf-o mr-2"></i>
+            <i t-if="widget.get('slide').type == 'infographic'" class="fa fa-file-picture-o mr-2"></i>
+            <i t-if="widget.get('slide').type == 'video'" class="fa fa-play-circle mr-2"></i>
+            <i t-if="widget.get('slide').type == 'webpage'" class="fa fa-file-text mr-2"></i>
+            <i t-if="widget.get('slide').type == 'quiz'" class="fa fa-question-circle mr-2 text"></i>
+            <span class="o_wslides_fs_slide_title_span" t-esc="widget.get('slide').name"/>
         </t>
         <t t-else="">
-            <span><i class="fa fa-flag-checkered"></i>Quiz: <span t-esc="slide.name"/></span>
+            <span><i class="fa fa-flag-checkered"></i>Quiz: <span t-esc="widget.get('slide').name"/></span>
         </t>
+    </t>
+
+    <t t-name="website.slides.fullscreen.content">
+        <t t-if="_.contains(['document', 'presentation'], widget.get('slide').type)">
+            <div class="embed-responsive embed-responsive-4by3 embed-responsive-item h-100">
+                <iframe t-att-src="widget.get('slide').embedUrl" class="o_wslides_iframe_viewer" allowFullScreen="true" height="315" width="420" frameborder="0"></iframe>
+            </div>
+        </t>
+        <t t-if="widget.get('slide').type === 'infographic'">
+            <div style="width:100%;height:100%;text-align:center;">
+                <img t-att-src="'/web/image/slide.slide/'+ widget.get('slide').id +'/image'" class="img-fluid" style="height: 100%" alt="Slide image"/>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="website.slides.fullscreen.video">
+        <div class="player embed-responsive embed-responsive-16by9 embed-responsive-item h-100">
+            <iframe id="youtube-player" t-att-src="widget.slide.embedUrl" allowFullScreen="true" frameborder="0" enablejsapi="1" autoplay="1" allow="autoplay"></iframe>
+        </div>
     </t>
 
 </templates>
