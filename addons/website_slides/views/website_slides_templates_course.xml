@@ -307,13 +307,7 @@
         class="o_wslides_slides_list_slide d-flex justify-content-between align-items-center p-2">
         <div class="ml-2">
             <i t-if="channel.can_publish" class="fa fa-arrows mr-2 text-muted"></i>
-            <i t-if="slide.slide_type == 'document'" class="fa fa-file-pdf-o mr-2 text-muted"></i>
-            <i t-if="slide.slide_type == 'infographic'" class="fa fa-file-picture-o mr-2 text-muted"></i>
-            <i t-if="slide.slide_type == 'video'" class="fa fa-play-circle mr-2 text-muted"></i>
-            <i t-if="slide.slide_type == 'link'" class="fa fa-file-code-o mr-2 text-muted"></i>
-            <i t-if="slide.slide_type == 'webpage'" class="fa fa-file-text mr-2 text-muted"></i>
-            <i t-if="slide.slide_type == 'quiz'" class="fa fa-question-circle mr-2 text-muted"></i>
-            <i t-if="slide.slide_type == 'certification'" class="fa fa-trophy mr-2 text-muted"></i>
+            <t t-call="website_slides.slide_icon"/>
             <a class="o_wslides_slides_list_slide_link" t-attf-href="/slides/slide/#{slug(slide)}"><span t-field="slide.name"/></a>
         </div>
         <div class="o_wslides_slides_list_slide_controls mr-2">
@@ -471,6 +465,15 @@
             </div>
         </div>
     </div>
+</template>
+
+<template id="slide_icon">
+    <i t-if="slide.slide_type == 'document'" class="fa fa-file-pdf-o mr-2 text-muted"></i>
+    <i t-if="slide.slide_type == 'infographic'" class="fa fa-file-picture-o mr-2 text-muted"></i>
+    <i t-if="slide.slide_type == 'video'" class="fa fa-play-circle mr-2 text-muted"></i>
+    <i t-if="slide.slide_type == 'link'" class="fa fa-file-code-o mr-2 text-muted"></i>
+    <i t-if="slide.slide_type == 'webpage'" class="fa fa-file-text mr-2 text-muted"></i>
+    <i t-if="slide.slide_type == 'quiz'" class="fa fa-question-circle mr-2 text-muted"></i>
 </template>
 
 </data></odoo>
