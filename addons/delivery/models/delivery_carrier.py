@@ -56,7 +56,7 @@ class DeliveryCarrier(models.Model):
     zip_from = fields.Char('Zip From')
     zip_to = fields.Char('Zip To')
 
-    margin = fields.Integer(help='This percentage will be added to the shipping price.')
+    margin = fields.Float(help='This percentage will be added to the shipping price.')
     free_over = fields.Boolean('Free if order amount is above', help="If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping", default=False, oldname='free_if_more_than')
     amount = fields.Float(string='Amount', help="Amount of the order to benefit from a free shipping, expressed in the company currency")
 
@@ -147,7 +147,7 @@ class DeliveryCarrier(models.Model):
         if hasattr(self, '%s_rate_shipment' % self.delivery_type):
             res = getattr(self, '%s_rate_shipment' % self.delivery_type)(order)
             # apply margin on computed price
-            res['price'] = float(res['price']) * (1.0 + (float(self.margin) / 100.0))
+            res['price'] = float(res['price']) * (1.0 + (self.margin / 100.0))
             # free when order is large enough
             if res['success'] and self.free_over and order._compute_amount_total_without_delivery() >= self.amount:
                 res['warning_message'] = _('Info:\nThe shipping is free because the order amount exceeds %.2f.\n(The actual shipping cost is: %.2f)') % (self.amount, res['price'])
