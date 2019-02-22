@@ -260,6 +260,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
             messageID: this.getID(),
             status: this.status,
             title: title,
+            isLinkedToDocumentThread: this.isLinkedToDocumentThread(),
         };
     },
     /**
