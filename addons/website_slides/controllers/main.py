@@ -622,8 +622,10 @@ class WebsiteSlides(WebsiteProfile):
             'quizKarmaWon': quiz_info['quiz_karma_won'],
         }
 
-    @http.route('/slides/slide/quiz/submit', type="json", auth="user", website=True)
+    @http.route('/slides/slide/quiz/submit', type="json", auth="public", website=True)
     def slide_quiz_submit(self, slide_id, answer_ids):
+        if request.website.is_public_user():
+            return {'error': 'public_user'}
         fetch_res = self._fetch_slide(slide_id)
         if fetch_res.get('error'):
             return fetch_res
