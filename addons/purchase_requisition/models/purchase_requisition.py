@@ -439,12 +439,6 @@ class ProductTemplate(models.Model):
              "is selected, the system will create a draft call for tender.")
 
 
-class StockMove(models.Model):
-    _inherit = "stock.move"
-
-    requistion_line_ids = fields.One2many('purchase.requisition.line', 'move_dest_id')
-
-
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
 
