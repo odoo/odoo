@@ -12,7 +12,8 @@ class ProductTemplate(models.Model):
         """ We want to prevent storable product to be expensed, since it make no sense as when confirm
             expenses, the product is already out of our stock.
         """
-        super(ProductTemplate, self)._onchange_type()
+        res = super(ProductTemplate, self)._onchange_type()
         if self.type == 'product':
             self.expense_policy = 'no'
             self.service_type = 'manual'
+        return res
