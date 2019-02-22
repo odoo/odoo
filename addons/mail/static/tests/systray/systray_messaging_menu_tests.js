@@ -881,5 +881,44 @@ QUnit.test('messaging menu widget: do not open chat window twice on preview clic
     messagingMenu.destroy();
 });
 
+QUnit.test('messaging menu widget: expand on thread preview', async function (assert) {
+    assert.expect(4);
+
+    this.data['mail.message'].records.push({
+        author_id: [1, "Demo"],
+        body: "<p>Office Design Project</p>",
+        res_id: 123,
+        model: 'some.res.model',
+        needaction: true,
+        needaction_partner_ids: [44],
+    });
+
+    var messagingMenu = new MessagingMenu();
+    testUtils.mock.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+        session: { partner_id: 44 },
+        intercepts: {
+            do_action: function (ev) {
+                const { res_model, res_id } = ev.data.action;
+                if (res_model === 'some.res.model' && res_id === 123) {
+                    assert.step('open_document');
+                }
+            },
+        },
+    });
+    await messagingMenu.appendTo($('#qunit-fixture'));
+
+    await testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    var $preview = messagingMenu.$('.o_mail_preview');
+    assert.containsOnce(messagingMenu, '.o_thread_window_expand', "should display one preview");
+    assert.strictEqual($preview.data('document-model'), "some.res.model", "preview should be from some.res.model");
+
+    await testUtils.dom.click($preview.find('.o_thread_window_expand'));
+    assert.verifySteps(['open_document']);
+
+    messagingMenu.destroy();
+});
+
 });
 });

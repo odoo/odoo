@@ -77,11 +77,14 @@ var AbstractThreadWindow = Widget.extend({
         var self = this;
         this.$input = this.$('.o_composer_text_field');
         this.$header = this.$('.o_thread_window_header');
-
-        this._threadWidget = new ThreadWidget(this, {
-            displayMarkAsRead: false,
-            displayStars: this.options.displayStars,
-        });
+        var options = {
+           displayMarkAsRead: false,
+           displayStars: this.options.displayStars,
+        };
+        if (this._thread && this._thread._type === 'document_thread') {
+           options.displayDocumentLinks = false;
+        }
+        this._threadWidget = new ThreadWidget(this, options);
 
         // animate the (un)folding of thread windows
         this.$el.css({transition: 'height ' + this.FOLD_ANIMATION_DURATION + 'ms linear'});
