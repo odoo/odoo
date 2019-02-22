@@ -656,6 +656,10 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_done(self):
+        tx = self.sudo().transaction_ids.get_last_transaction()
+        if tx and tx.state == 'pending' and tx.acquirer_id.provider == 'transfer':
+            tx._set_transaction_done()
+            tx.write({'is_processed': True})
         return self.write({'state': 'done'})
 
     @api.multi
