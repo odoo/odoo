@@ -35,6 +35,11 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * Статус \"Чернетка\" використовується, коли користувач кодує новий і непідтверджений рахунок.\n"
+" * Статус \"Відкрито\" використовується, коли користувач створює рахунок-фактуру, генерується номер рахунку-фактури. Він залишається у відкритому стані, поки користувач не оплатить рахунок.\n"
+" * Статус \"В оплаті\" використовується, коли платежі були зареєстровані для загального рахунку в журналі, налаштованому для розміщення записів тільки при узгодженні банківської виписки, а деякі з них ще не узгоджені з рядком банківської виписки.\n"
+" * Статус \"Оплачено\" встановлюється автоматично після оплати рахунка-фактури. Його пов'язані записи журналу можуть або не можуть бути узгоджені.\n"
+" * Статус \"Скасовано\" використовується, коли користувач скасовує рахунок-фактуру."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -151,6 +156,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Шановний(а) ${object.partner_id.name}<br/><br/>\n"
+"        Дякуємо за вашу оплату.\n"
+"        Це ваша квитанція про оплату <strong>${(object.name or '').replace('/','-')}</strong> у сумі\n"
+"        в <strong>${format_amount(object.amount, object.currency_id)}</strong> від ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Не соромтеся звертатися до нас, якщо у вас виникли питання.\n"
+"        <br/><br/>\n"
+"       З найкращими побажаннями,<br/>\n"
+"        % if user and user.signature:\n"
+"        ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -184,6 +205,34 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Шановий(а) ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Це ваш рахунок \n"
+"        % if object.number:\n"
+"            invoice <strong>${object.number}</strong>\n"
+"        % else:\n"
+"            invoice\n"
+"        %endif\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin})\n"
+"        % endif\n"
+"        у сумі <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        від ${object.company_id.name}.\n"
+"        % if object.state=='paid':\n"
+"            Цей рахунок вже оплачено.\n"
+"        % else:\n"
+"            Здійсніть платіж якомога швидше.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Не соромтеся зв'язатися з нами, якщо у вас є запитання.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -351,6 +400,8 @@ msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
 msgstr ""
+"<span class=\"o_form_label\">Всі вибрані записи журналу будуть перевірені та"
+" опубліковані. Після цього ви не зможете змінити їх.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -400,6 +451,8 @@ msgid ""
 "<span class=\"text-muted\">Only journals not yet linked to a bank account "
 "are proposed</span>"
 msgstr ""
+"<span class=\"text-muted\">Запропоновано лише журнали, які ще не пов'язані з"
+" банківським рахунком</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -565,6 +618,8 @@ msgid ""
 "<strong class=\"text-center\">The SEPA QR Code informations are not set "
 "correctly.</strong><br/>"
 msgstr ""
+"<strong class=\"text-center\">Інформація QR-коду SEPA не встановлена "
+"правильно.</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -701,7 +756,7 @@ msgstr "Термін оплати повинен мати тільки один 
 #: code:addons/account/models/account.py:854
 #, python-format
 msgid "A bank account can belong to only one journal."
-msgstr ""
+msgstr "Банківський рахунок може належати лише одному журналу."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -716,7 +771,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_line
 msgid "A bank statement line is a financial transaction on a bank account"
-msgstr ""
+msgstr "Банківська виписка - це фінансова операція на банківському рахунку"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -745,6 +800,10 @@ msgid ""
 "posted. Those will be posted automatically after performing the bank "
 "reconciliation."
 msgstr ""
+"Запис журналу платежів, згенерований у журналі, налаштований для публікації "
+"записів тільки тоді, коли платежі узгоджуються з випискою банку, не може "
+"бути опубліковано вручну. Вони будуть опубліковані автоматично після "
+"виконання банківської звірки."
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:681
@@ -779,6 +838,7 @@ msgstr ""
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
+"Схема оподаткування може бути визначена лише один раз на однакові податки."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -821,6 +881,8 @@ msgid ""
 "Account %s (%s) does not allow reconciliation. First change the "
 "configuration of this account to allow it."
 msgstr ""
+"Рахунок %s (%s) не дозволяє узгодження. Спочатку змініть налаштування цього "
+"рахунку, щоби дозволити узгодження."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -830,7 +892,7 @@ msgstr "Бухоблік"
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Cash Rounding"
-msgstr ""
+msgstr "Округлення рахунку в бухобліку"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
@@ -1300,7 +1362,7 @@ msgstr "Додати примітку"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Add a payment QR code to your invoices"
-msgstr ""
+msgstr "Додайте QR-код оплати до ваших рахунків"
 
 #. module: account
 #: selection:account.cash.rounding,strategy:0
@@ -2364,7 +2426,7 @@ msgstr "Рахунки до оплати"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
-msgstr ""
+msgstr "Рахунки для перевірки"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:178
@@ -6513,7 +6575,7 @@ msgstr "Введіть внутрішню примітку"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Looks great!"
-msgstr ""
+msgstr "Виглядає чудово!"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:175
@@ -7737,7 +7799,7 @@ msgstr "Квитанція про оплату:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__reference
 msgid "Payment Ref."
-msgstr ""
+msgstr "Референс оплати"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
@@ -9049,7 +9111,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
 msgid "Send sample"
-msgstr ""
+msgstr "Надіслати зразок"
 
 #. module: account
 #: selection:account.payment,state:0
@@ -9690,7 +9752,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__amount_by_group
 msgid "Tax amount by group"
-msgstr ""
+msgstr "Сума податку за групами"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_calculation_rounding_method
@@ -12201,7 +12263,7 @@ msgstr "транзакція в"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__amount_by_group
 msgid "type: [(name, amount, base, formated amount, formated base)]"
-msgstr ""
+msgstr "type: [(name, amount, base, formated amount, formated base)]"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
