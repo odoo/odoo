@@ -3,20 +3,21 @@
 # * sale_payment
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
-# Murat Kaplan <muratk@projetgrup.com>, 2017
 # Saban Yildiz <sabany@projetgrup.com>, 2017
 # Ediz Duman <neps1192@gmail.com>, 2017
+# Martin Trigaux, 2017
 # Hakan ıı, 2017
-# Umur Akın <umura@projetgrup.com>, 2018
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
+# Murat Kaplan <muratk@projetgrup.com>, 2018
+# Umur Akın <umura@projetgrup.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:56+0000\n"
-"PO-Revision-Date: 2018-07-27 11:56+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:23+0000\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,19 +34,19 @@ msgstr "&amp;times;"
 #: code:addons/sale_payment/models/payment.py:134
 #, python-format
 msgid "<%s> transaction (%s) failed: <%s>"
-msgstr ""
+msgstr "<%s> işlem (%s) başarısız: <%s>"
 
 #. module: sale_payment
 #: code:addons/sale_payment/models/payment.py:141
 #, python-format
 msgid "<%s> transaction (%s) invalid state: %s"
-msgstr ""
+msgstr "<%s> işlem(%s) geçersiz durum: %s"
 
 #. module: sale_payment
 #: code:addons/sale_payment/models/payment.py:149
 #, python-format
 msgid "<%s> transaction (%s) order confirmation failed: <%s>"
-msgstr ""
+msgstr "<%s> işlem(%s) sipariş onaylama başarısız: <%s>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -55,7 +56,7 @@ msgstr "<i class=\"fa fa-arrow-circle-right\"/> Şimdi Öde"
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "<i class=\"fa fa-check-circle\"/> Done"
-msgstr ""
+msgstr "<i class=\"fa fa-check-circle\"/> Tamamlandı"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -63,6 +64,8 @@ msgid ""
 "<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
 "to be able to use them."
 msgstr ""
+"<i class=\"fa fa-info\"/> Kayıtlı bir kredi kartınız var, kullanabilmek için"
+" giriş yapabilirsiniz."
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -91,27 +94,27 @@ msgstr "<strong>İşlemler</strong>"
 #: code:addons/sale_payment/models/payment.py:55
 #, python-format
 msgid "Amount Mismatch (%s)"
-msgstr ""
+msgstr "Uyuşmayan Tutar (%s)"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_amount
 msgid "Amount of pending transactions"
-msgstr ""
+msgstr "Beklemedeki işlem miktarı"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_authorized_payment_transactions_amount
 msgid "Amount of transactions to capture"
-msgstr ""
+msgstr "Alınacak işlem miktarı"
 
 #. module: sale_payment
 #: model:ir.actions.act_window,name:sale_payment.payment_transaction_action_authorized
 msgid "Authorized Payment Transactions"
-msgstr ""
+msgstr "Yetkili Ödeme İşlemleri"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
 msgid "Awaiting Payment"
-msgstr ""
+msgstr "Beklemedeki Ödeme"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
@@ -141,12 +144,12 @@ msgstr "Ödeme işlemleri sayısı"
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_count
 msgid "Number of pending transactions"
-msgstr ""
+msgstr "Bekleyen işlemleri sayısı"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_authorized_payment_transactions_count
 msgid "Number of transactions to capture"
-msgstr ""
+msgstr "Alınacak işlemlerin sayısı"
 
 #. module: sale_payment
 #: code:addons/sale_payment/controllers/payment.py:47
@@ -193,7 +196,7 @@ msgstr "Yakalanacak Ödemeler"
 #. module: sale_payment
 #: model:ir.actions.act_window,name:sale_payment.payment_transaction_action_pending
 msgid "Pending Payment Transactions"
-msgstr ""
+msgstr "Bekleyen Ödeme İşlemleri"
 
 #. module: sale_payment
 #: model:ir.model,name:sale_payment.model_sale_order
@@ -222,22 +225,25 @@ msgid ""
 "The sale order was not confirmed despite response from the acquirer (%s): SO"
 " amount is %r but acquirer replied with %r."
 msgstr ""
+"Satış siparişinin alıcısı olmasına rağmen, fatura doğrulanmamış (%s): Fatura"
+" tutarı %r ancak alıcı bu tutarla yanıt verdi %r."
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid ""
 "There was an error processing your payment: impossible to validate order."
 msgstr ""
+"Ödeme işlemi sırasında bir hata oluştu: siparişi onaylamanız mümkün değil."
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: invalid order state."
-msgstr ""
+msgstr "Ödeme işlemi sırasında bir hata oluştu: geçersiz sipariş durumu."
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: invalid order."
-msgstr ""
+msgstr "Ödeme işlemi sırasında bir hata oluştu: Geçersiz sipariş"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
@@ -251,17 +257,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid ""
 "There was an error processing your payment: transaction amount issue.<br/>"
-msgstr ""
+msgstr "Ödeme işlemi sırasında bir sorun oluştu: işlem tutarı problemi<br/>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr ""
+msgstr "Ödeme işlemi sırasında bir sorun oluştu: işlem başarısız. <br/>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: transaction issue.<br/>"
-msgstr ""
+msgstr "Ödeme işlemi sırasında bir sorun oluştu: işlem problemi<br/>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error

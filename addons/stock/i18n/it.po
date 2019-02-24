@@ -18,7 +18,6 @@
 # Davide Corio <enlightx@gmail.com>, 2018
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
 # Fabio Genovese <ing.fabiogenovese@gmail.com>, 2018
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 # Martin Trigaux, 2018
@@ -26,6 +25,7 @@
 # Alessandro Camilli <alessandrocamilli@openforce.it>, 2018
 # Paolo Valier, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:24+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2019\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -639,7 +639,7 @@ msgstr "<strong>Origine Ordine</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Package</strong>"
-msgstr "<strong>Confezione</strong>"
+msgstr "<strong>Collo</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
@@ -1310,8 +1310,7 @@ msgstr "Controlla disponibilità"
 #: model:ir.model.fields,help:stock.field_stock_picking_has_packages
 msgid "Check the existence of destination packages on move lines"
 msgstr ""
-"Verifica l’esistenza dei pacchetti di destinazione sulle linee di "
-"spostamento"
+"Verifica l’esistenza di colli di destinazione nelle righe dei movimenti"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_move_line_exist
@@ -2103,7 +2102,7 @@ msgstr "Ordini di consegna"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_tracking_lot
 msgid "Delivery Packages"
-msgstr "Pacchetti di consegna"
+msgstr "Colli di consegna"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_delivery_route_id
@@ -2206,12 +2205,12 @@ msgstr "Destinazione Spstamenti"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_result_package_id
 #: model:ir.ui.view,arch_db:stock.view_move_line_form
 msgid "Destination Package"
-msgstr "Pacchetto di destinazione"
+msgstr "Collo di destinazione"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Destination Package :"
-msgstr "Pacchetto di destinazione :"
+msgstr "Collo di destinazione :"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_route_ids
@@ -2373,12 +2372,12 @@ msgstr "Fine"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_entire_package_ids
 msgid "Entire Package"
-msgstr "Intero pacchetto"
+msgstr "Intero collo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_entire_package_detail_ids
 msgid "Entire Package Detail"
-msgstr "L’intero dettaglio del pacchetto"
+msgstr "Dettaglio dell'intero collo"
 
 #. module: stock
 #. openerp-web
@@ -2411,8 +2410,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:453
 #, python-format
 msgid "Everything inside a package should be in the same location"
-msgstr ""
-"Tutto all’interno di un pacchetto dovrebbe essere nella stessa location"
+msgstr "Il contenuto del collo deve trovarsi tutto nello stesso luogo"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2679,7 +2677,7 @@ msgstr "Ha Operazioni di confezionamento"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_packages
 msgid "Has Packages"
-msgstr "Ha Confezioni"
+msgstr "Contiene colli"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_scrap_move
@@ -2860,7 +2858,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line_result_package_id
 msgid "If set, the operations are packed into this package"
-msgstr "Se impostato, le operazioni sono incluse in questo pacchetto"
+msgstr "Se impostato, le operazioni sono incluse in questo collo"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_active
@@ -2901,9 +2899,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will show which products are reserved "
 "(lot/serial number, source location, source package)."
 msgstr ""
-"Se questa casella è spuntata, Odoo mostrerà quali prodotti sono riservati "
-"(numero di lotto / numero di serie, posizione di origine, pacchetto "
-"sorgente)."
+"Se questa casella è selezionata, Odoo mostrerà quali prodotti sono riservati"
+" (numero di lotto/serie, luogo e collo di origine)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_show_operations
@@ -3037,7 +3034,7 @@ msgstr "Importa utilizzando il pulsante in alto a sinistra"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_in_entire_package
 msgid "In Entire Package"
-msgstr "In tutto il pacchetto"
+msgstr "Nell'intero collo"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3477,9 +3474,7 @@ msgstr "È tempo di fare il tuo inventario iniziale. Per fare ciò:"
 #: model:ir.model.fields,help:stock.field_stock_move_product_packaging
 msgid ""
 "It specifies attributes of packaging like type, quantity of packaging,etc."
-msgstr ""
-"Specifica gli attributi di tipo di imballaggio, quantità di imballaggio, "
-"ecc."
+msgstr "Specifica gli attributi come tipo di imballaggio, quantità ecc."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_move_type
@@ -3875,8 +3870,8 @@ msgid ""
 "Make packages into a dedicated location, then bring them to the output "
 "location for shipping (Pick + Pack + Ship)"
 msgstr ""
-"Prepara i pacchi in un punto dedicato, portali nel punto di partenza per la "
-"spedizione (Prelievo + Imballaggio + Spedizione)"
+"Creare i colli in un luogo dedicato, quindi collocarli in una zona di uscita"
+" per la spedizione (Prelievo + Imballaggio + Spedizione)"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
@@ -3901,7 +3896,7 @@ msgstr "Gestisci più magazzini"
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_lot
 msgid "Manage Packages"
-msgstr "Gestisci le confezioni"
+msgstr "Gestione dei colli"
 
 #. module: stock
 #: model:res.groups,name:stock.group_adv_location
@@ -3922,8 +3917,8 @@ msgstr "Gestire le catene di produzione del prodotto"
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Manage product packages (e.g. pack of 6 bottles, box of 10 pieces)"
 msgstr ""
-"Gestisci le confezioni dei prodotti (ad esempio un pacchetto di 6 bottiglie,"
-" confezione da 10 pezzi)"
+"Gestione dei colli prodotto (es. confezione da 6 bottiglie, scatola da 10 "
+"pezzi)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -4634,61 +4629,61 @@ msgstr "Tipo di Confezione"
 #: model:ir.ui.view,arch_db:stock.view_quant_package_picking_tree
 #: model:ir.ui.view,arch_db:stock.view_quant_package_tree
 msgid "Package"
-msgstr "Confezione"
+msgstr "Collo"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
 msgid "Package BarCode"
-msgstr "Codice a barre del pacchetto"
+msgstr "Codice a barre del collo"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode
 msgid "Package BarCode with Contents"
-msgstr "Codice a barre del pacchetto con Contenuto"
+msgstr "Codice a barre del collo con contenuti"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "Package Content"
-msgstr "Contenuto del Pacco"
+msgstr "Contenuto del collo"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
 msgid "Package Name"
-msgstr "Nome del Pacchetto"
+msgstr "Nome collo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_name
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Reference"
-msgstr "Riferimento del Pacchetto"
+msgstr "Riferimento collo"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Package Reference:"
-msgstr "Riferimento del Pacchetto:"
+msgstr "Riferimento collo:"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Transfers"
-msgstr "Trasferimento del Pacchetto"
+msgstr "Trasferimenti collo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
 msgid "Package Type"
-msgstr "Tipo di Confezione"
+msgstr "Tipo di collo"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_package_barcode
 #: model:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Package Type:"
-msgstr "Tipo di Confezione:"
+msgstr "Tipo di collo:"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
 #: model:ir.ui.menu,name:stock.menu_package
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Packages"
-msgstr "Pacchetti"
+msgstr "Colli"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_package_view
@@ -4699,12 +4694,12 @@ msgid ""
 " A package can also be unpacked, allowing the disposal of its former content"
 " as single units again."
 msgstr ""
-"I pacchetti vengono generalmente creati dalle operazioni di confezionamento "
-"effettuate sui trasferimenti e possono contenere diversi prodotti. È quindi "
-"possibile riutilizzare una confezione per spostare l’intero contenuto da "
-"qualche altra parte o per comprimerlo in un altro pacchetto più grande. Un "
-"pacchetto può anche essere deismesso, consentendo di smaltire nuovamente il "
-"suo contenuto precedente come singole unità."
+"I colli vengono generalmente creati dalle operazioni effettuate sui "
+"trasferimenti e possono contenere molti prodotti diversi. È possibile "
+"riutilizzare un collo per movimentare l’intero contenuto in altri luoghi o "
+"per inserirlo in un altro collo di maggiori dimensioni. Un collo può anche "
+"essere scomposto, consentendo il riutilizzo del suo contenuto come singole "
+"unità."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -4803,7 +4798,7 @@ msgstr "Location fisiche"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant_package
 msgid "Physical Packages"
-msgstr "Confezioni Fisiche"
+msgstr "Colli fisici"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:228
@@ -5122,7 +5117,7 @@ msgstr "Nome prodotto"
 #: model:ir.ui.menu,name:stock.menu_product_packagings
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Product Packages"
-msgstr "Pacchetti di prodotti"
+msgstr "Colli prodotto"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
@@ -5260,13 +5255,13 @@ msgstr "Mettere da parte una strategia"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Put in Pack"
-msgstr "Metti in confezione"
+msgstr "Crea collo"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Put your products in packs (e.g. parcels, boxes) and track them"
 msgstr ""
-"Metti i tuoi prodotti in confezioni (ad esempio pacchi, scatole) e tracciali"
+"Aggiunta dei prodotti a colli (es. pacchi, scatole) e relativo tracciamento"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_putaway
@@ -6201,12 +6196,12 @@ msgstr "Ubicazione di origine"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_package_id
 #: model:ir.ui.view,arch_db:stock.view_move_line_form
 msgid "Source Package"
-msgstr "Pacco di origine"
+msgstr "Collo di origine"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Source Package :"
-msgstr "Pacco di origine:"
+msgstr "Collo di origine :"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_location_src_id
@@ -6347,12 +6342,12 @@ msgstr "Quantità in Possesso"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_form_view
 msgid "Stock Operation"
-msgstr "Operazione di stoccaggio"
+msgstr "Operazione di magazzino"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_all
 msgid "Stock Operations"
-msgstr "Operazioni di stoccaggio"
+msgstr "Operazioni di magazzino"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn
@@ -6654,7 +6649,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package_id
 msgid "The package containing this quant"
-msgstr "Il pacchetto che contiene questo campo di quantità"
+msgstr "Il collo che contiene questa quantità"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_location_id
@@ -6775,8 +6770,8 @@ msgid ""
 "This field should be completed only if everything inside the package share "
 "the same product, otherwise it doesn't really makes sense."
 msgstr ""
-"Questo campo deve essere compilato solo se tutto il contenuto del pacco "
-"proviene dallo stesso prodotto, altrimenti non ha davvero senso."
+"Questo campo deve essere compilato solo se tutto il contenuto del collo è "
+"composto dallo stesso prodotto, altrimenti perde di significato."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_name
@@ -6991,12 +6986,16 @@ msgid ""
 "Those are the entire packages of a picking shown in the view of detailed "
 "operations"
 msgstr ""
+"Corrispondono a tutti i colli di un prelievo mostrati nella vista delle "
+"operazioni dettagliate"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_entire_package_ids
 msgid ""
 "Those are the entire packages of a picking shown in the view of operations"
 msgstr ""
+"Corrispondono a tutti i colli di un prelievo mostrati nella vista delle "
+"operazioni"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_location_dest_id
