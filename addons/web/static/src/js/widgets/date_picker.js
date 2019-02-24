@@ -50,6 +50,7 @@ var DateWidget = Widget.extend({
             widgetParent: 'body',
             keyBinds: null,
             allowInputToggle: true,
+            locale: moment.locale(),
         }, options || {});
 
         this.__libInput = 0;
