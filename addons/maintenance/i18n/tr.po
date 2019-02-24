@@ -5,26 +5,27 @@
 # Translators:
 # Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017
 # Cem Uygur <cemuygur.beb@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Murat Kaplan <muratk@projetgrup.com>, 2017
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
-# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2017
-# gezgin biri <gezginbiri@hotmail.com>, 2017
 # Esin Kandemir <esaykandemir@gmail.com>, 2017
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
-# Ediz Duman <neps1192@gmail.com>, 2017
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2017
+# gezgin biri <gezginbiri@hotmail.com>, 2017
+# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# Murat Kaplan <muratk@projetgrup.com>, 2017
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
+# Umur Akın <umura@projetgrup.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-30 13:41+0000\n"
-"PO-Revision-Date: 2018-01-30 13:41+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:19+0000\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,7 +46,7 @@ msgstr "<b>Model Numarası:</b>"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 msgid "<b>Request to:</b>"
-msgstr ""
+msgstr "<b>Talep:</b>"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
@@ -55,7 +56,7 @@ msgstr "<b>Seri Numarası:</b>"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "<span class=\"label label-warning pull-right\">Canceled</span>"
-msgstr ""
+msgstr "<span class=\"label label-warning pull-right\">İptal Edildi</span>"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -70,12 +71,12 @@ msgstr "<span>Görünüm</span>"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
 msgid "<strong>Equipments:</strong>"
-msgstr ""
+msgstr "<strong>Ekipmanlar:</strong>"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
 msgid "<strong>Maintenance:</strong>"
-msgstr ""
+msgstr "<strong>Bakım:</strong>"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_defaults
@@ -151,7 +152,7 @@ msgstr "Demirbaş Kategorisi"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_tree
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_tree
 msgid "Assign To User"
-msgstr ""
+msgstr "Kullanıcıya Ata"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -307,7 +308,7 @@ msgstr "Bir sonraki önleyici bakım tarihi"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_request_date
 msgid "Date requested for the maintenance to happen"
-msgstr ""
+msgstr "Bakımın gerçekleşmesi için talep edilen tarih"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_schedule_date
@@ -315,11 +316,13 @@ msgid ""
 "Date the maintenance team plans the maintenance.  It should not differ much "
 "from the Request Date. "
 msgstr ""
+"Bakım ekibinin bakımı planladığı tarih. İstek Tarihinden çok farklı "
+"olmamalıdır."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_close_date
 msgid "Date the maintenance was finished. "
-msgstr ""
+msgstr "Bakımın tamamlandığı tarih."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_period
@@ -556,7 +559,7 @@ msgstr "Konum"
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_losses
 msgid "Losses Analysis"
-msgstr ""
+msgstr "Zarar Analizi"
 
 #. module: maintenance
 #: selection:maintenance.request,priority:0
@@ -589,7 +592,7 @@ msgstr "Bakım Süresi"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_maintenance_duration
 msgid "Maintenance Duration in hours."
-msgstr ""
+msgstr "Saat olarak Bakım Süresi"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -664,7 +667,7 @@ msgstr "Bakım Tipi"
 #: model:ir.cron,cron_name:maintenance.maintenance_requests_cron
 #: model:ir.cron,name:maintenance.maintenance_requests_cron
 msgid "Maintenance: generate preventive maintenance requests"
-msgstr ""
+msgstr "Bakım: önleyici bakım talepleri oluşturun"
 
 #. module: maintenance
 #: model:maintenance.team,name:maintenance.equipment_team_metrology
@@ -769,7 +772,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_oee
 msgid "Overall Equipment Effectiveness (OEE)"
-msgstr ""
+msgstr "Toplam Ekipman Verimliliği (OEE)"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -864,7 +867,7 @@ msgstr "Sonraki aşaması için hazır"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Record Colour"
-msgstr ""
+msgstr "Kayıt Rengi"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_force_thread_id
@@ -874,7 +877,7 @@ msgstr "Konu Kayıt ID"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Reopen Request"
-msgstr ""
+msgstr "Talebi Yeniden Aç"
 
 #. module: maintenance
 #: model:maintenance.stage,name:maintenance.stage_3
@@ -982,7 +985,7 @@ msgstr "Seri Numarası"
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_archive
 msgid ""
 "Set archive to true to hide the maintenance request without deleting it."
-msgstr ""
+msgstr "Bakım isteğini silmeden gizlemek için arşivi true olarak ayarlayın."
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -1044,7 +1047,7 @@ msgstr "Satış Ekip Üyeleri"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "Team Name"
-msgstr ""
+msgstr "Ekip Adı"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.maintenance_team_action_settings
@@ -1117,6 +1120,9 @@ msgid ""
 "                Create some laptop, printer or phone and link each equipment to an employee or department.\n"
 "                You will manage allocations, issues and maintenance of equipment."
 msgstr ""
+"Bu uygulama personelinizin kullandığı ekipmanları takip etmenize yardımcı olur.\n"
+"Her ekipmanı bir personele ya da bir departmana bağlamak için birkaç laptop, yazıcı yada telefon oluştur.\n"
+"Tahsisleri, sorunları ve ekipman bakımlarını yöneteceksiniz."
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -1175,7 +1181,7 @@ msgstr "Yaklaşan Aktiviteler (7 gün)"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Upcoming Activities (All)"
-msgstr ""
+msgstr "Yaklaşan Etkinlikler (Tümü)"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -1221,7 +1227,7 @@ msgstr "gün"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "for"
-msgstr ""
+msgstr "için"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form

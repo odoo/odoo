@@ -13,12 +13,12 @@
 # Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017
 # Saban Yildiz <sabany@projetgrup.com>, 2017
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
 # Ediz Duman <neps1192@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Murat Kaplan <muratk@projetgrup.com>, 2019
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:06+0000\n"
 "PO-Revision-Date: 2017-09-20 10:25+0000\n"
-"Last-Translator: Ramiz Deniz Öner <deniz@denizoner.com>, 2019\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3075,6 +3075,13 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Yalnızca bu görünüm diğerinden devir alınırsa uygulanır (inherit_id False / Null değil).\n"
+"\n"
+"* eğer uzantı (varsayılan), bu görünüm gerekirse en yakın birincil görünüm\n"
+"aranır (via inherit_id), daha sonra bu görünüm modeliyle devralınan tüm görünümler uygulanır.\n"
+"* birincil ise, en yakın ana görünüm tam olarak çözülür\n"
+" (bundan farklı bir model kullanılıyor olsa bile), daha sonra bu görüşün devralma özellikleri\n"
+"(<xpath/>) uygulanır, ve sonuç, bu görünümün asıl arch gibi kullanılır.\n"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
