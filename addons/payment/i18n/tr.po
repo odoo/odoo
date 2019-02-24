@@ -11,10 +11,10 @@
 # Levent Karakaş <levent@mektup.at>, 2018
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
 # Doğan Altunbay <doganaltunbay@gmail.com>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
 # Buket Şeker <buket_skr@hotmail.com>, 2018
 # Murat Kaplan <muratk@projetgrup.com>, 2018
-# Ediz Duman <neps1192@gmail.com>, 2018
+# Umur Akın <umura@projetgrup.com>, 2019
+# Ediz Duman <neps1192@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2018\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +48,7 @@ msgstr "3D Güvenli HTML"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<b>Amount:</b>"
-msgstr ""
+msgstr "<b>Tutar:</b>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -58,7 +58,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<b>Reference:</b>"
-msgstr ""
+msgstr "<b>Referans:</b>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -112,6 +112,8 @@ msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
 "for your order."
 msgstr ""
+"<i>Tamamlandı,</i> Online ödemeniz başarıyla gerçekleşmiştir. Siparişiniz "
+"için teşekkür ederiz."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:128
@@ -121,6 +123,10 @@ msgid ""
 " The order has been confirmed but will not be paid. Do not hesitate to "
 "contact us if you have any questions on the status of your order."
 msgstr ""
+"<i>Hata,</i> İşlem sırasında bir hata oluştuğunu lütfen unutmayın. Sipariş "
+"onaylanmış olup ödeme yapılmayacaktır. Siparişinizin durumu hakkında "
+"herhangi bir sorunuz olursa bizimle iletişim kurmakta  lütfen tereddüt "
+"etmeyiniz.."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:116
@@ -129,13 +135,15 @@ msgid ""
 "<i>Pending,</i> Your online payment has been successfully processed. But "
 "your order is not validated yet."
 msgstr ""
+"<i>Beklemede,</i> Çevrimiçi ödemeniz başarıyla işlendi. Ancak siparişiniz "
+"henüz doğrulanmadı."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:352
 #, python-format
 msgid "<p>This card is currently linked to the following records:<p/>"
-msgstr ""
+msgstr "<p>Bu kart, şu anda takip eden kayıtlara bağlı:<p/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -158,6 +166,8 @@ msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"o_warning_text\">Test</span>\n"
+"                                    <span class=\"o_stat_text\">Ortamı</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -165,6 +175,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"text-success\">Üretim</span>\n"
+"                                    <span class=\"o_stat_text\">Ortamı</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
@@ -215,6 +227,10 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
+"<span><i>Hata,</i>  İşlem sırasında bir hata oluştuğunu lütfen unutmayın. "
+"Sipariş onaylanmış olup ödeme yapılmayacaktır. Siparişinizin durumu hakkında"
+" herhangi bir sorunuz olursa bizimle iletişim kurmakta lütfen tereddüt "
+"etmeyiniz..</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -230,13 +246,15 @@ msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
 msgstr ""
+"<span><i>Beklemede,</i> Çevrimiçi ödemeniz başarıyla işlendi. Ancak "
+"siparişiniz henüz doğrulanmadı.</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid ""
 "<span><i>Pending</i>... The order will be validated after the "
 "payment.</span>"
-msgstr ""
+msgstr "<span><i>Beklemede</i>... Sipariş, ödemeden sonra onaylanacak.</span>"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:72
@@ -448,7 +466,7 @@ msgstr "Geri Arama Dokuman Modeli"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr ""
+msgstr "Geri Çağırma "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
@@ -491,7 +509,7 @@ msgstr "Ödeme ayarlanamadı."
 #: code:addons/payment/controllers/portal.py:225
 #, python-format
 msgid "Cannot setup the payment."
-msgstr ""
+msgstr "Ödeme ayarlanamadı."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__capture_manually
@@ -779,7 +797,7 @@ msgstr "Uluslararası sabit ücretler"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inbound_payment_method_ids
 msgid "For Incoming Payments"
-msgstr ""
+msgstr "Gelen Ödemeler İçin"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -911,7 +929,7 @@ msgstr "Faturalar"
 #. module: payment
 #: selection:res.company,payment_acquirer_onboarding_state:0
 msgid "Just done"
-msgstr ""
+msgstr "Yeni bitti"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
@@ -1098,7 +1116,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "No payment acquirer found."
-msgstr ""
+msgstr "Ödeme alıcısı bulunamadı"
 
 #. module: payment
 #. openerp-web
@@ -1353,7 +1371,7 @@ msgstr ""
 #: code:addons/payment/controllers/portal.py:252
 #, python-format
 msgid "Payment transaction failed."
-msgstr ""
+msgstr "Ödeme işlemi başarısız"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
@@ -1430,7 +1448,7 @@ msgstr "Telefon"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "Please configure a payment acquirer."
-msgstr ""
+msgstr "Lütfen bir ödeme alıcısı yapılandırın"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:33
@@ -1696,7 +1714,7 @@ msgstr "Teşekkür Mesajı"
 #: code:addons/payment/models/payment_acquirer.py:871
 #, python-format
 msgid "The %s payment acquirers are not allowed to manual capture mode!"
-msgstr ""
+msgstr "Ödeme %s alıcılarının manuel çekim moduna geçmesine izin verilmiyor!"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1896,7 +1914,7 @@ msgstr "Şuanda ödeme metodunuzu ekleyemiyoruz."
 #: code:addons/payment/static/src/js/payment_form.js:303
 #, python-format
 msgid "We are not able to add your payment method at the moment.</p>"
-msgstr ""
+msgstr "Şuanda ödeme metodunuzu ekleyemiyoruz.</p>"
 
 #. module: payment
 #. openerp-web
@@ -1925,7 +1943,7 @@ msgstr "Ödeme formuna yönlendiremiyoruz."
 #: code:addons/payment/static/src/js/payment_form.js:182
 #, python-format
 msgid "We are not able to redirect you to the payment form. "
-msgstr ""
+msgstr "Sizi ödeme formuna yönlendiremiyoruz."
 
 #. module: payment
 #. openerp-web

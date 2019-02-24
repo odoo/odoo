@@ -6,15 +6,17 @@
 # Martin Trigaux, 2018
 # Levent Karakaş <levent@mektup.at>, 2018
 # Murat Kaplan <muratk@projetgrup.com>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2018
+# Umur Akın <umura@projetgrup.com>, 2019
+# Ediz Duman <neps1192@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Ramiz Deniz Öner <deniz@denizoner.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:33+0000\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,12 +32,12 @@ msgstr "Etkin"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr ""
+msgstr "Yeni bir ölçü birimi ekle"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
-msgstr ""
+msgstr "Yeni bir ölçü birimi kategorisi ekle"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
@@ -203,12 +205,12 @@ msgstr "Ölçü birimi çevrimi için çevrim oranı 0 olamaz !"
 #. module: uom
 #: sql_constraint:uom.uom:0
 msgid "The reference unit must have a conversion factor equal to 1."
-msgstr ""
+msgstr "Referans birim 1 eşit bir dönüşüm faktörüne sahip olmalıdır."
 
 #. module: uom
 #: sql_constraint:uom.uom:0
 msgid "The rounding precision must be strictly positive."
-msgstr ""
+msgstr "Yuvarlama hassasiyeti kesinlikle pozitif olmalıdır."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:152
@@ -233,12 +235,12 @@ msgstr "Tür"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
 msgid "Type of Measure"
-msgstr ""
+msgstr "Ölçü Türü"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__measure_type
 msgid "Type of measurement category"
-msgstr ""
+msgstr "Ölçü türü kategorisi"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
@@ -276,7 +278,7 @@ msgstr "Adet"
 #. module: uom
 #: selection:uom.category,measure_type:0
 msgid "Units"
-msgstr ""
+msgstr "Birim"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
@@ -298,6 +300,9 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
+"Ölçü birimleri, birbirine çevrilebilen aynı kategorilere aittir. Örneğin,  bu kategoride\n"
+"            <i>'Zaman'</i>, bu ölçü birimlerini elde edeceksiniz:\n"
+"            Saat. Gün."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:93

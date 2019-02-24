@@ -1,20 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * google_spreadsheet
-#
+# 
 # Translators:
+# Abu Zafar <azmikbal@gmail.com>, 2019
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-09-07 19:08+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Bengali (http://www.transifex.com/odoo/odoo-9/language/bn/)\n"
-"Language: bn\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
+"Language-Team: Bengali (https://www.transifex.com/odoo/teams/41243/bn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: bn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: google_spreadsheet
@@ -23,6 +26,11 @@ msgstr ""
 #, python-format
 msgid "Add to Google Spreadsheet"
 msgstr "Google স্প্রেডশীট যোগ করুন"
+
+#. module: google_spreadsheet
+#: model:ir.model,name:google_spreadsheet.model_res_config_settings
+msgid "Config Settings"
+msgstr "রূপরেখা নির্ধারণ"
 
 #. module: google_spreadsheet
 #: model:ir.model,name:google_spreadsheet.model_google_drive_config
@@ -43,3 +51,20 @@ msgstr "Google স্প্রেডশীট"
 #: model_terms:ir.ui.view,arch_db:google_spreadsheet.view_ir_attachment_google_spreadsheet_tree
 msgid "Name"
 msgstr "নাম"
+
+#. module: google_spreadsheet
+#: model_terms:ir.ui.view,arch_db:google_spreadsheet.res_config_settings_view_form
+msgid ""
+"Please use the settings of Google Drive\n"
+"                            on the left or above."
+msgstr ""
+
+#. module: google_spreadsheet
+#: model:ir.model.fields,help:google_spreadsheet.field_res_config_settings__google_drive_uri_copy
+msgid "The URL to generate the authorization code from Google"
+msgstr ""
+
+#. module: google_spreadsheet
+#: model:ir.model.fields,field_description:google_spreadsheet.field_res_config_settings__google_drive_uri_copy
+msgid "URI Copy"
+msgstr ""
