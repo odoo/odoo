@@ -15,7 +15,6 @@ class TranslationWizard(models.TransientModel):
 
         domain = self._prepare_domain()
         translations = IrTranslation.search(domain)
-        translations = translations.filtered(lambda translation: translation.source)
         res['translation_lines'] = [[0, False, {
             'value': line.value or line.source,
             'lang': line.lang,
@@ -58,7 +57,7 @@ class TranslationWizard(models.TransientModel):
             fld = record._fields[field]
             if not fld.related:
                 domain += ['|', ('name', '=',  "%s,%s" % (fld.model_name, fld.name)),
-                            ('name', 'ilike', "%s,%s" % (fld.model_name, fld.name))]
+                            ('name', 'ilike', "%s,%s," % (fld.model_name, fld.name))]
             else:
                 rec = record
                 try:
@@ -66,7 +65,7 @@ class TranslationWizard(models.TransientModel):
                         rec, fld = fld.traverse_related(rec)
                     if rec:
                         domain += ['|', ('name', '=',  "%s,%s" % (fld.model_name, fld.name)),
-                            ('name', 'ilike', "%s,%s" % (fld.model_name, fld.name))]
+                            ('name', 'ilike', "%s,%s," % (fld.model_name, fld.name))]
                 except AccessError:
                     pass
         return domain
