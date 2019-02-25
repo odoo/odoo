@@ -1,0 +1,49 @@
+.o_wslides_course_content {
+    padding: 0;
+
+    ul {
+        list-style: none;
+        padding: 0
+    }
+}
+
+.o_wslides_course_section {
+    margin: 0;
+    background-color: #ddd;
+    display: flex;
+    list-style: none;
+    font-size: 1.05rem;
+    border-bottom: 1px solid #ccc
+}
+
+.o_wslides_content_tab{
+    .active {
+
+        border: none;
+        border-bottom: 1px solid $secondary;
+    }
+}
+
+.o_wslides_content_tab a:hover{
+    border:none;
+    border-bottom: 1px solid $secondary;
+}
+
+.o_wslides_content_container{
+    border:none;
+}
+
+.o_wslides_content_slide:nth-child(odd){
+    background-color: #f6f6f6;
+}
+
+.o_wslides_content_slide:nth-child(even){
+    background-color: #f9f9f9;
+}
+
+.o_wslides_content_slide_controls {
+    i:hover{
+        color: $primary !important;
+        cursor: pointer;
+    }
+}

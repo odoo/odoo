@@ -48,8 +48,8 @@ odoo.define('website_slides.slideslist', function (require) {
         },
         _getSlides: function (){
             var self = this;
-            var slides = $('li.content-slide');
-            for(var i = 0; i < slides.length;i++){
+            var slides = $('li.o_wsldies_content_slide');
+            for (var i = 0; i < slides.length;i++){
                 var slide = $(slides[i]);
                 self.slides.push({
                     id: parseInt(slide.attr('slide_id')),
@@ -75,12 +75,12 @@ odoo.define('website_slides.slideslist', function (require) {
                 }
                 self.dropTarget = $(ev.currentTarget);
                 self.draggedElement[0].parentNode.removeChild(self.draggedElement[0]);
-                $('ul[category_id='+target.attr('category_id')+']').append(self.draggedElement)
+                $('ul[category_id='+target.attr('category_id')+']').append(self.draggedElement);
                 self._addSlideDragAndDropHandlers(self.draggedElement);
                 self._reorderSlides();
             });
             target.on('dragover', function (ev){
-                if(ev.preventDefault){
+                if (ev.preventDefault){
                     ev.preventDefault();
                 }
             });
@@ -88,7 +88,7 @@ odoo.define('website_slides.slideslist', function (require) {
         _addSlideDragAndDropHandlers: function (target){
             var self = this;
             target.on('dragstart', function (ev){
-                $('.section-draggable').removeClass('hold')
+                $('.section-draggable').removeClass('hold');
                 self._unbind('section-draggable');
                 ev.originalEvent.dataTransfer.effectAllowed = 'move';
                 ev.originalEvent.dataTransfer.setData('text/html', this.outerHTML);
@@ -136,7 +136,7 @@ odoo.define('website_slides.slideslist', function (require) {
                 target.removeClass('hold');
             });
         },
-        _addSectionDragAndDropHandlers: function(target){
+        _addSectionDragAndDropHandlers: function (target){
             var self = this;
             target.on('dragstart', function (ev){
                 self._unbind('slide-draggable');
@@ -161,14 +161,14 @@ odoo.define('website_slides.slideslist', function (require) {
                 target.removeClass('slide-hovered');
             });
             target.on('drop', function (ev){
-                if(ev.preventDefault){
+                if (ev.preventDefault){
                     ev.preventDefault();
                 }
-                if(self.draggedElement.hasClass('section-draggable')  && target.hasClass('section-draggable')){
+                if (self.draggedElement.hasClass('section-draggable')  && target.hasClass('section-draggable')){
                     target.removeClass('slide-hovered');
                     target.removeClass('hold');
                     self.dropTarget = $(ev.currentTarget);
-                    if(target !== self.draggedElement && $(ev.currentTarget).hasClass('section-draggable')){
+                    if (target !== self.draggedElement && $(ev.currentTarget).hasClass('section-draggable')){
                         self.draggedElement[0].parentNode.removeChild(self.draggedElement[0]);
                         var dropHTML = ev.originalEvent.dataTransfer.getData('text/html');
                         target[0].insertAdjacentHTML('beforebegin',dropHTML);
@@ -203,16 +203,16 @@ odoo.define('website_slides.slideslist', function (require) {
             });
         },
         _resetCategoriesIndex: function (){
-            var categoriesIndexes = $('.section-index')
+            var categoriesIndexes = $('.section-index');
             for (var i = 0; i < categoriesIndexes.length; i++){
-                $(categoriesIndexes[i]).text(i+1)
+                $(categoriesIndexes[i]).text(i+1);
             }
         },
-        _reorderSlides: function(){
+        _reorderSlides: function (){
             var self = this;
             // In case the slide was transfered to another section
             if (self.draggedElement.hasClass('slide-draggable')){
-                self.draggedElement.attr('category_id', parseInt(self.dropTarget.attr('category_id')))
+                self.draggedElement.attr('category_id', parseInt(self.dropTarget.attr('category_id')));
             }
             self.slides = [];
             self._getSlides();
@@ -221,20 +221,20 @@ odoo.define('website_slides.slideslist', function (require) {
                 params: {
                     slides_data: self.slides
                 }
-            }).then(function(){
+            }).then(function (){
             });
         },
-        _rebindUploadButton: function(categoryID){
+        _rebindUploadButton: function (categoryID){
             var self = this;
-            this.$('.oe_slide_js_upload[data-category-id='+categoryID+']').click(function(ev){
+            this.$('.oe_slide_js_upload[data-category-id='+categoryID+']').click(function (ev){
                 ev.preventDefault();
                 var data = $(ev.currentTarget).data();
                 var dialog = new SlideUpload.SlideUploadDialog(self, data);
                 dialog.appendTo(document.body);
                 dialog.open();
-            })
+            });
         }
-    })
+    });
 
     sAnimations.registry.websiteSlidesCourseSlidesList = Widget.extend({
         selector: '.oe_js_course_slides_list',

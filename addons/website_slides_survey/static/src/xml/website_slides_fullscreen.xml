@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-extend="website.slides.fullscreen">
-        <t t-jquery=".o_wslides_fullscreen_content" t-operation="append">
-            <div class="o_wslides_fullscreen_certification" t-if="slide.slide_type == 'certification'">
+        <t t-jquery=".o_wslides_fs_content" t-operation="append">
+            <div class="o_wslides_fs_certification" t-if="slide.slide_type == 'certification'">
                 <a class="btn btn-primary" t-att-href="'/slides/slide/' + slide.slug" target="new"><i class="fa fa-trophy"/> Pass Certification</a>
             </div>
         </t>
     </t>
 
     <t t-extend="website.course.fullscreen.title">
-        <t t-jquery=".o_wslides_fullscreen_slide_title_span" t-operation="before">
+        <t t-jquery=".o_wslides_fs_slide_title_span" t-operation="before">
             <i t-if="slide.slide_type == 'certification'" class="fa fa-trophy mr-2 text"></i>
         </t>
     </t>

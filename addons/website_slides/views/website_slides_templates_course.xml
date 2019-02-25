@@ -245,13 +245,13 @@
 
 <template id="course_content_training" name="Content of a training channel">
     <div class="col-8 d-flex flex-column ml-4">
-        <div class="course-content oe_js_course_slides_list w-100 mt8">
+        <div class="o_wslides_course_content oe_js_course_slides_list w-100 mt8">
             <ul>
                 <t t-set="i" t-value="1"/>
                 <t t-set="j" t-value="0"/>
                 <t t-foreach="channel.category_ids" t-as="category">
                     <li t-attf-class="#{'section-draggable' if user == user_id else ''}" t-attf-category_id="#{category.id}">
-                        <div t-attf-category_id="#{category.id}" class="course-section text-muted font-weight-bold pt-0 pb-0 pl-2 pr-2 d-flex justify-content-between align-items-center">
+                        <div t-attf-category_id="#{category.id}" class="o_wslides_course_section text-muted font-weight-bold pt-0 pb-0 pl-2 pr-2 d-flex justify-content-between align-items-center">
                             <div style="width:50%;" class="d-flex align-items-center">
                                 <i t-if="channel.user_id == user" class="fa fa-arrows mr-3 text-muted"></i>
                                 <div class="mr-2">Section <span class="section-index" t-esc="i"/>:</div>
@@ -270,8 +270,8 @@
                         </div>
                         <ul t-attf-category_id="#{category.id}" >
                             <t t-foreach="category.slide_ids" t-as="slide">
-                                <li t-att-index="j" t-attf-slide_id="#{slide.id}" t-attf-category_id="#{category.id}" t-attf-class="#{'content-slide slide-draggable d-flex justify-content-between align-items-center p-2' if channel.user_id == user else 'content-slide d-flex justify-content-between align-items-center p-2'}">
-                                    <div class="content-slide-infos ml-2">
+                                <li t-att-index="j" t-attf-slide_id="#{slide.id}" t-attf-category_id="#{category.id}" t-attf-class="#{'o_wslides_content_slide slide-draggable d-flex justify-content-between align-items-center p-2' if channel.user_id == user else 'content-slide d-flex justify-content-between align-items-center p-2'}">
+                                    <div class="ml-2">
                                         <i t-if="channel.user_id == user" class="fa fa-arrows mr-2 text-muted"></i>
                                         <i t-if="slide.slide_type == 'document'" class="fa fa-file-pdf-o mr-2 text-muted"></i>
                                         <i t-if="slide.slide_type == 'infographic'" class="fa fa-file-picture-o mr-2 text-muted"></i>
@@ -282,7 +282,7 @@
                                         <i t-if="slide.slide_type == 'certification'" class="fa fa-trophy mr-2 text-muted"></i>
                                         <a class="link-to-slide" t-attf-href="/slides/slide/#{slug(slide)}"><span t-field="slide.name"/></a>
                                     </div>
-                                    <div class="content-slide-controls mr-2">
+                                    <div class="o_wslides_content_slide_controls mr-2">
                                         <i t-if="not slide.id in user_progress or not user_progress[slide.id].completed" class="check-done fa fa-check-circle text-muted mr-1"></i>
                                         <i t-if="slide.id in user_progress and user_progress[slide.id].completed" class="check-done text-primary fa fa-check-circle mr-1"></i>
                                         <a t-if="channel.user_id == user and not slide.slide_type == 'webpage'" t-attf-href="/web#id=#{slide.id}&amp;action=#{slide_action}&amp;model=slide.slide&amp;view_type=form"><i class="fa fa-pencil text-muted mr-1"></i></a>
@@ -296,7 +296,7 @@
                     </li>
                 </t>
             </ul>
-            <div t-if="channel.can_upload" class="content-actions">
+            <div t-if="channel.can_upload" class="o_wslides_content_actions">
                 <a  class="mr-2 oe_slide_js_upload"
                     role="button"
                     aria-label="Upload Presentation"
@@ -376,7 +376,7 @@
 
 <!-- Embedded template: display a list of slides in a grid view -->
 <template id='course_lessons_grid' name="Course: Lessons Grid View">
-    <div class="row o_wslides_row mx-n2 mt8">
+    <div class="row mx-n2 mt8">
         <t t-foreach="slides" t-as="slide">
             <div class="col-md-3 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1" t-call="website_slides.lesson_card"/>
         </t>
