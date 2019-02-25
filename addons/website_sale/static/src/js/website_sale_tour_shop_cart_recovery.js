@@ -1,10 +1,10 @@
 odoo.define('website_sale.tour_shop_cart_recovery', function (require) {
 'use strict';
 
-var base = require('web_editor.base');
 var localStorage = require('web.local_storage');
 var rpc = require('web.rpc');
 var tour = require('web_tour.tour');
+require('web.dom_ready');
 
 var orderIdKey = 'website_sale.tour_shop_cart_recovery.orderId';
 var recoveryLinkKey = 'website_sale.tour_shop_cart_recovery.recoveryLink';
@@ -12,7 +12,6 @@ var recoveryLinkKey = 'website_sale.tour_shop_cart_recovery.recoveryLink';
 tour.register('shop_cart_recovery', {
     test: true,
     url: '/shop?search=Acoustic Bloc Screens',
-    wait_for: base.ready(),
 },
 [
     {

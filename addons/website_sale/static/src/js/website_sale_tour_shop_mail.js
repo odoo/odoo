@@ -1,14 +1,14 @@
 odoo.define('website_sale.tour_shop_mail', function (require) {
 'use strict';
 
-var base = require('web_editor.base');
 var rpc = require('web.rpc');
 var tour = require('web_tour.tour');
+
+require('web.dom_ready');
 
 tour.register('shop_mail', {
     test: true,
     url: '/',
-    wait_for: base.ready(),
 },
 [
     {

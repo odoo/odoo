@@ -1,10 +1,10 @@
 odoo.define('website.tour_reset_password', function (require) {
 'use strict';
 
-var base = require('web_editor.base');
 var localStorage = require('web.local_storage');
 var rpc = require('web.rpc');
 var tour = require('web_tour.tour');
+require('web.dom_ready');
 
 var currentDomain = window.location.protocol + '//' + window.location.hostname;
 var emailsUrl = '/web#action=mail.action_view_mail_mail&view_type=list';
@@ -14,7 +14,6 @@ var resetLinkKey = 'website.tour_reset_password.resetLink';
 tour.register('website_reset_password', {
     test: true,
     url: '/web',
-    wait_for: base.ready(),
 },
 [
     {
