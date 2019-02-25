@@ -9,19 +9,20 @@ from odoo.http import request
 
 class Rating(http.Controller):
 
-    @http.route('/rating/<string:token>/<int:rate>', type='http', auth="public")
+    @http.route('/rating/<string:token>/<int:rate>', type='http', auth="public", website=True)
     def open_rating(self, token, rate, **kwargs):
         assert rate in (1, 5, 10), "Incorrect rating"
         rating = request.env['rating.rating'].sudo().search([('access_token', '=', token)])
         if not rating:
             return request.not_found()
+        rating.write({'rating': rate, 'consumed': True})
         lang = rating.partner_id.lang or 'en_US'
         return request.env['ir.ui.view'].with_context(lang=lang).render_template('rating.rating_external_page_submit', {
             'rating': rating, 'token': token,
             'rate': rate
         })
 
-    @http.route(['/rating/<string:token>/submit_feedback'], type="http", auth="public", methods=['post'])
+    @http.route(['/rating/<string:token>/submit_feedback'], type="http", auth="public", methods=['post'], website=True)
     def submit_rating(self, token, **kwargs):
         rating = request.env['rating.rating'].sudo().search([('access_token', '=', token)])
         if not rating:

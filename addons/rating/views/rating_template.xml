@@ -3,16 +3,16 @@
 
         <!-- External page : thanks message -->
         <template id="rating_external_page_view" name="Rating Page Done">
-            <t t-call="web.layout">
+            <t t-call="portal.frontend_layout">
                 <t t-set="head">
                     <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
                 </t>
                 <div class="container">
-                    <div class="text-center" style="margin-top:260px; font-family:Courier New, Courier, monospace;">
+                    <div class="text-center" style="margin-top: 10%; font-family:Courier New, Courier, monospace;">
                         <b><span style="font-size:35px;">Thank you,</span><span style="font-size:22px;"> We appreciate your feedback!</span></b>
                     </div>
                     <div class="text-center">
-                        <a role="button" t-att-href="web_base_url" class="btn btn-primary bg-success mt-sm-5 border-0 rounded-0 text-dark">Go back to the Homepage</a>
+                        <a role="button" t-att-href="web_base_url" class="btn btn-primary bg-success mt-5 border-0 rounded-0 text-dark">Go back to the Homepage</a>
                     </div>
                 </div>
             </t>
@@ -20,10 +20,10 @@
 
         <!-- External page: rate and submit feedback -->
         <template id="rating_external_page_submit" name="Rating Page Submit">
-            <script type="text/javascript" src="/rating/static/src/js/rating.js"></script>
-            <t t-call="web.layout">
+            <t t-call="portal.frontend_layout">
                 <t t-set="head">
                     <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+                    <script type="text/javascript" src="/rating/static/src/js/rating.js"></script>
                 </t>
                 <div class="container">
                     <div class="mt-5">
@@ -31,17 +31,17 @@
                         <table class="mt-5">
                             <tr>
                                 <td>
-                                    <a class="o_rating" href="#" id="10">
-                                        <img src='/rating/static/src/img/rating_10.png' alt="Satisfied" t-att-style="'-webkit-filter: drop-shadow(0 0 5px black);' if rate == 10 else ''" class="mr-md-5"/>
+                                    <a class="o_rating" href="#" data-value="10">
+                                        <img src='/rating/static/src/img/rating_10.png' alt="Satisfied" t-att-style="'-webkit-filter: drop-shadow(0 0 5px black);' if rate == 10 else ''" class="mr-5"/>
                                     </a>
                                 </td>
                                 <td>
-                                    <a class="o_rating" href="#" id="5">
-                                        <img src='/rating/static/src/img/rating_5.png' alt="Not satisfied" t-att-style="'-webkit-filter: drop-shadow(0 0 5px black);' if rate == 5 else ''" class="mr-md-5" />
+                                    <a class="o_rating" href="#" data-value="5">
+                                        <img src='/rating/static/src/img/rating_5.png' alt="Not satisfied" t-att-style="'-webkit-filter: drop-shadow(0 0 5px black);' if rate == 5 else ''" class="mr-5" />
                                     </a>
                                 </td>
                                 <td>
-                                    <a class="o_rating" href="#" id="1">
+                                    <a class="o_rating" href="#" data-value="1">
                                         <img src='/rating/static/src/img/rating_1.png' alt="Highly Dissatisfied" t-att-style="'-webkit-filter: drop-shadow(0 0 5px black);' if rate == 1 else ''"/>
                                     </a>
                                 </td>
@@ -55,7 +55,7 @@
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input type="hidden" name="rate" t-att-value="rate" id="rate_id"/>
                             <textarea class="form-control" name="feedback" rows="8" t-att-value="rating.feedback"></textarea>
-                            <button type="submit" class="btn btn-primary bg-success mt-sm-5 border-0 rounded-0 text-dark">Send Feedback</button>
+                            <button type="submit" class="btn btn-primary bg-success mt-5 border-0 rounded-0 text-dark">Send Feedback</button>
                         </form>
                     </div>
                 </div>

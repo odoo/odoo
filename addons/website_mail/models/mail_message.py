@@ -24,7 +24,6 @@ class MailMessage(models.Model):
         return defaults
 
     description = fields.Char(compute="_compute_description", help='Message description: either the subject, or the beginning of the body')
-    website_published = fields.Boolean(string='Published', help="Visible on the website as a comment", copy=False)
 
     @api.multi
     def _compute_description(self):

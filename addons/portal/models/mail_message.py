@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, models, fields
 
 
 class MailMessage(models.Model):
     _inherit = 'mail.message'
+
+    website_published = fields.Boolean(string='Published', help="Visible on the website as a comment", copy=False)
 
     @api.multi
     def portal_message_format(self):
