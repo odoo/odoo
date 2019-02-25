@@ -1139,7 +1139,8 @@ class StockMove(models.Model):
         moves_todo.mapped('move_dest_ids')._action_assign()
 
         # We don't want to create back order for scrap moves
-        if all(move_todo.scrapped for move_todo in moves_todo):
+        # Replace by a kwarg in master
+        if self.env.context.get('is_scrap'):
             return moves_todo
 
         if picking:
