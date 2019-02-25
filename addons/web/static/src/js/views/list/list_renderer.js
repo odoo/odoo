@@ -212,8 +212,8 @@ var ListRenderer = BasicRenderer.extend({
             return col.attrs.optional === "True" && !(col.attrs.modifiers && col.attrs.modifiers.required) ? "hiddenColumns" : "columns";
         });
         this.columns = colGroup.columns;
-        this.displayedColumns = _.map(this.columns, function (col) {return col.attrs.name});
         this.hiddenColumns = colGroup.hiddenColumns;
+        this.displayedColumns = _.map(this.columns, function (col) {return col.attrs.name});
     },
     /**
      * Render a list of <td>, with aggregates if available.  It can be displayed

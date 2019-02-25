@@ -4160,6 +4160,95 @@ QUnit.module('Views', {
         list.destroy();
         delete widgetRegistry.map.asyncWidget;
     });
+
+    QUnit.test('list view with optional fields rendering', function (assert) {
+        assert.expect(7);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="m2o" optional="True"/>' +
+                    '<field name="amount"/>' +
+                    '<field name="currency_id"/>' +
+                    '<field name="reference" optional="True"/>' +
+                '</tree>',
+        });
+
+        // 5 th (1 for checkbox, 3 for columns, 1 for optional field dropdown)
+        assert.containsN(list, 'th', 5, "should have 5 columns");
+
+        assert.hasClass(list.$('thead th:last'),'o_add_column',
+            "should have add column option at last");
+
+        // optional fields
+        testUtils.dom.click(list.$('th.o_add_column > a.dropdown-toggle'));
+        assert.strictEqual(list.$('div.o_add_column_dropdown > div.dropdown-item').length,
+            2, "dropdown have 2 optional fields");
+
+        // enable optional field
+        testUtils.dom.click(list.$('div.o_add_column_dropdown > div.dropdown-item:first input'));
+        assert.ok(list.$('th:contains(M2O field):not(.o_add_column)').is(':visible'),
+            "should have a visible m2o field"); //m2o field
+
+        testUtils.dom.click(list.$('th.o_add_column > a.dropdown-toggle'));
+        testUtils.dom.click(list.$('div.o_add_column_dropdown > div.dropdown-item:last input'));
+        assert.ok(list.$('th:contains(Reference Field):not(.o_add_column)').is(':visible'),
+            "should have a visible reference field"); //reference field
+
+        // disable optional field
+        testUtils.dom.click(list.$('th.o_add_column > a.dropdown-toggle'));
+        testUtils.dom.click(list.$('div.o_add_column_dropdown > div.dropdown-item:first input'));
+        assert.notOk(list.$('th:contains(M2O field):not(.o_add_column)').is(':visible'),
+            "should not have a visible m2o field"); //m2o field deselect
+
+        testUtils.dom.click(list.$('th.o_add_column > a.dropdown-toggle'));
+        testUtils.dom.click(list.$('div.o_add_column_dropdown > div.dropdown-item:last input'));
+        assert.notOk(list.$('th:contains(Reference Field):not(.o_add_column)').is(':visible'),
+            "should not have a visible reference field"); //reference field deselect
+
+        list.destroy();
+    });
+
+    QUnit.test('optional fields are disappear at the reload', function (assert) {
+        assert.expect(4);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="m2o" optional="True"/>' +
+                    '<field name="amount"/>' +
+                    '<field name="currency_id"/>' +
+                    '<field name="reference" optional="True"/>' +
+                '</tree>',
+        });
+
+        // enable optional field
+        testUtils.dom.click(list.$('th.o_add_column > a.dropdown-toggle'));
+        testUtils.dom.click(list.$('div.o_add_column_dropdown > div.dropdown-item:first input'));
+        assert.ok(list.$('th:contains(M2O field):not(.o_add_column)').is(':visible'),
+            "should have a visible m2o field"); //m2o field
+
+        testUtils.dom.click(list.$('th.o_add_column > a.dropdown-toggle'));
+        testUtils.dom.click(list.$('div.o_add_column_dropdown > div.dropdown-item:last input'));
+        assert.ok(list.$('th:contains(Reference Field):not(.o_add_column)').is(':visible'),
+            "should have a visible reference field"); //reference field
+
+        // reload
+        list.reload();
+
+        assert.notOk(list.$('th:contains(M2O field):not(.o_add_column)').is(':visible'),
+            "should not have a visible m2o field");
+        assert.notOk(list.$('th:contains(Reference Field):not(.o_add_column)').is(':visible'),
+            "should not have a visible reference field");
+
+        list.destroy();
+    });
 });
 
 });
