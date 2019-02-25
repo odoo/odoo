@@ -1553,6 +1553,168 @@ class TestSinglePicking(TestStockCommon):
         move_line.lot_id = lot1
         delivery_order.action_done()
 
+    def test_duplicate_serial_1(self):
+        """ Receipt two times the same product with the same serial number. Check
+        that an error is generated even if the product are put in different locations
+        """
+        self.env['stock.picking.type']\
+            .browse(self.picking_type_in)\
+            .write({
+                'use_create_lots': True,
+                'use_existing_lots': True,
+            })
+
+        receipt_order1 = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in,
+        })
+        self.MoveObj.create({
+            'name': self.productS.name,
+            'product_id': self.productS.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productS.uom_id.id,
+            'picking_id': receipt_order1.id,
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+
+        receipt_order1.action_confirm()
+        receipt_order1.move_lines.quantity_done = 1
+        receipt_order1.move_lines.move_line_ids.lot_name = 'SN1'
+        receipt_order1.action_done()
+
+        receipt_order2 = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in,
+        })
+        self.MoveObj.create({
+            'name': self.productS.name,
+            'product_id': self.productS.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productS.uom_id.id,
+            'picking_id': receipt_order2.id,
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+
+        lot = self.env['stock.production.lot'].search([
+            ('product_id', '=', self.productS.id)
+        ])
+        receipt_order2.action_confirm()
+        receipt_order2.move_lines.quantity_done = 1
+        receipt_order2.move_lines.move_line_ids.location_dest_id = self.env.ref('stock.stock_location_14').id
+        receipt_order2.move_lines.move_line_ids.lot_id = lot.id
+        with self.assertRaises(UserError):
+            receipt_order2.action_done()
+
+    def test_duplicate_serial_2(self):
+        """ deliver two times the same product with the same serial number. Check
+        that an error is generated even if the product are put in packs
+        """
+        delivery_order1 = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in,
+        })
+        move = self.MoveObj.create({
+            'name': self.productS.name,
+            'product_id': self.productS.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productS.uom_id.id,
+            'picking_id': delivery_order1.id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        lot = self.env['stock.production.lot'].create({
+            'product_id': self.productS.id,
+            'name': 'deli1'
+        })
+        pack1 = self.env['stock.quant.package'].create({
+            'name': 'PACK00001'
+        })
+        delivery_order1.action_confirm()
+
+        self.StockPackObj.create({
+            'move_id': move.id,
+            'product_id': self.productS.id,
+            'product_uom_id': self.productS.uom_id.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'lot_id': lot.id,
+            'result_package_id': pack1.id,
+            'qty_done': 1
+        })
+        self.StockPackObj.create({
+            'move_id': move.id,
+            'product_id': self.productS.id,
+            'product_uom_id': self.productS.uom_id.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'lot_id': lot.id,
+            'qty_done': 1
+        })
+
+        with self.assertRaises(UserError):
+            delivery_order1.action_done()
+
+    def test_duplicate_serial_3(self):
+        """ Delivery operation is set to Pick + Ship. We deliver a serial tracked
+        product before receive it. It should not trigger any error even if the
+        serial number is technicaly into two locations as the same time.
+        """
+
+        lot = self.env['stock.production.lot'].create({
+            'product_id': self.productS.id,
+            'name': 'deli2'
+        })
+
+        move = self.MoveObj.create({
+            'name': self.productS.name,
+            'product_id': self.productS.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productS.uom_id.id,
+            'location_id': self.env.ref('stock.stock_location_output').id,
+            'location_dest_id': self.customer_location,
+        })
+
+        self.StockPackObj.create({
+            'move_id': move.id,
+            'product_id': self.productS.id,
+            'product_uom_id': self.productS.uom_id.id,
+            'location_id': move.location_id.id,
+            'location_dest_id': move.location_dest_id.id,
+            'lot_id': lot.id,
+            'qty_done': 1
+        })
+
+        move._action_done()
+
+        move = self.MoveObj.create({
+            'name': self.productS.name,
+            'product_id': self.productS.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productS.uom_id.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+
+        self.StockPackObj.create({
+            'move_id': move.id,
+            'product_id': self.productS.id,
+            'product_uom_id': self.productS.uom_id.id,
+            'location_id': move.location_id.id,
+            'location_dest_id': move.location_dest_id.id,
+            'lot_id': lot.id,
+            'qty_done': 1
+        })
+
+        move._action_done()
+
     def test_merge_moves_1(self):
         receipt = self.env['stock.picking'].create({
             'location_id': self.supplier_location,
@@ -1914,7 +2076,7 @@ class TestRoutes(TestStockCommon):
 
         # create and get back the pick ship route
         self.wh.write({'delivery_steps': 'pick_ship'})
-        
+
         self.pick_ship_route = self.wh.route_ids.filtered(lambda r: '(pick + ship)' in r.name)
     def test_pick_ship_1(self):
         """ Enable the pick ship route, force a procurement group on the

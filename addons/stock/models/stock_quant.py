@@ -73,12 +73,6 @@ class StockQuant(models.Model):
         if any(elem.product_id.type != 'product' for elem in self):
             raise ValidationError(_('Quants cannot be created for consumables or services.'))
 
-    @api.constrains('quantity')
-    def check_quantity(self):
-        for quant in self:
-            if float_compare(quant.quantity, 1, precision_rounding=quant.product_uom_id.rounding) > 0 and quant.lot_id and quant.product_id.tracking == 'serial':
-                raise ValidationError(_('A serial number should only be linked to a single product.'))
-
     @api.constrains('location_id')
     def check_location_id(self):
         for quant in self:

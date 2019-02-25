@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import Counter
+from itertools import groupby
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
@@ -205,6 +206,7 @@ class StockMoveLine(models.Model):
                 next_moves = ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
                 next_moves._do_unreserve()
                 next_moves._action_assign()
+        mls.filtered(lambda ml: ml.state == 'done')._check_duplicates()
 
         return mls
 
@@ -311,7 +313,6 @@ class StockMoveLine(models.Model):
                             if not location_id.should_bypass_reservation():
                                 ml._free_reservation(ml.product_id, location_id, untracked_qty, lot_id=False, package_id=package_id, owner_id=owner_id)
                     Quant._update_available_quantity(product_id, location_dest_id, quantity, lot_id=lot_id, package_id=result_package_id, owner_id=owner_id, in_date=in_date)
-
                 # Unreserve and reserve following move in order to have the real reserved quantity on move_line.
                 next_moves |= ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
 
@@ -320,6 +321,7 @@ class StockMoveLine(models.Model):
                     ml._log_message(ml.picking_id, ml, 'stock.track_move_template', vals)
 
         res = super(StockMoveLine, self).write(vals)
+        self.filtered(lambda line: line.state == 'done')._check_duplicates()
 
         # Update scrap object linked to move_lines to the new quantity.
         if 'qty_done' in vals:
@@ -446,11 +448,72 @@ class StockMoveLine(models.Model):
                         Quant._update_available_quantity(ml.product_id, ml.location_id, taken_from_untracked_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
                 Quant._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=ml.owner_id, in_date=in_date)
             done_ml |= ml
+
+        (self - ml_to_delete)._check_duplicates()
+
         # Reset the reserved quantity as we just moved it to the destination location.
         (self - ml_to_delete).with_context(bypass_reservation_update=True).write({
             'product_uom_qty': 0.00,
             'date': fields.Datetime.now(),
         })
+
+    def _check_duplicates(self):
+        # Unicity of serial tracked product. Search in quants if the sn is
+        # already present in stock or delivered to a customer
+        error_message = ''
+        line_to_check = self.filtered(lambda line: line.tracking == 'serial' and line.lot_id)
+        if line_to_check:
+            quants = self.env['stock.quant'].search([
+                ('lot_id', 'in', line_to_check.mapped('lot_id').ids),
+                '|',
+                ('location_id.usage', 'not in', ('supplier', 'inventory', 'production')),
+                ('location_id.scrap_location', '=', True),
+                ('quantity', '!=', 0)
+            ])
+            for lot in line_to_check.mapped('lot_id'):
+                similar_quant = quants.filtered(lambda quant: quant.lot_id == lot)
+
+                # Check if SN has been scrapped
+                scrapped = any([quant.location_id.scrap_location for quant in similar_quant])
+                if scrapped and not line_to_check.filtered(lambda line: line.lot_id == lot).location_dest_id.scrap_location:
+                    error_message = _('Some serial numbers are duplicated across different locations:')
+                    error_message += _('\n%s for product %s.') % (lot.name, lot.product_id.display_name)
+                    error_message += _('\nCorrect your inventory with an inventory adjustment before validating this product move')
+                    raise UserError(error_message)
+                if similar_quant:
+                    # the following step will group the quants by location usage
+                    # if similar_quant =
+                    #   1 in customer in PACK1
+                    #   1 in customer in PACK2
+                    #   -1 in stock in PACK3
+                    #   -1 in output without pack
+                    #   1 in stock without pack
+                    # The group_by becomes
+                    #  2 in customer
+                    #  -1 in internal (+1 -1 -1 = -1)
+
+                    # First, we sort the quant by location usage
+                    sq = sorted([(q.location_id.usage, q.quantity) for q in similar_quant], key=lambda x: x[0])
+                    # -> [('internal', 1), ('customer', 1), ('internal', -1), ('internal', -1), ('customer', 1)]
+
+                    # Second, we group by location usage and sum the quantity in the groups
+                    sq = [(x[0], sum([y[1] for y in x[1]])) for x in groupby(sq, key=lambda x:x[0])]
+                    # -> [('internal', [('internal',1), ('internal', -1), ('internal', 1)]), ('customer', [('customer', 1), ('customer', 1)])]
+                    # -> [('internal', -1), ('customer', 2)]
+
+                    # Third, we search group with quantity > 1
+                    duplicates = any([x[1] > 1 for x in sq])
+                    # -> duplicates = True (for customer usage)
+
+                    # Fourth we sum the total quantity
+                    quantity = sum([x[1] >= 1 for x in sq])
+                    if duplicates or quantity > 1:
+                        if not error_message:
+                            error_message = _('Some serial numbers are duplicated across different locations:')
+                        error_message += _('\n%s for product %s.') % (lot.name, lot.product_id.display_name)
+        if error_message:
+            error_message += _('\nCorrect your inventory with an inventory adjustment before validating this product move')
+            raise UserError(error_message)
 
     def _reservation_is_updatable(self, quantity, reserved_quant):
         self.ensure_one()

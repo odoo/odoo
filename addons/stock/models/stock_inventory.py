@@ -88,6 +88,12 @@ class Inventory(models.Model):
         readonly=True, states={'draft': [('readonly', False)]},
         help="Specify Product Category to focus your inventory on a particular Category.")
     exhausted = fields.Boolean('Include Exhausted Products', readonly=True, states={'draft': [('readonly', False)]})
+    show_locations = fields.Boolean(compute='_compute_show_locations')
+
+    @api.depends('line_ids')
+    def _compute_show_locations(self):
+        group = self.user_has_groups("stock.group_stock_multi_locations")
+        self.show_locations = any([line.correction_line != False for line in self.line_ids]) or group
 
     @api.one
     @api.depends('product_id', 'line_ids.product_qty')
@@ -164,6 +170,47 @@ class Inventory(models.Model):
         return True
 
     def action_validate(self):
+        # Check the serial numbers uniquiness
+        serials = self.line_ids.filtered(lambda l: l.product_id.tracking == 'serial' and l.prod_lot_id and l.theoretical_qty < l.product_qty)
+        wiz_lines = []
+        for line in serials:
+            similar_quant = self.env['stock.quant'].search([
+                ('lot_id', '=', line.prod_lot_id.id),
+                '|',
+                ('location_id.usage', 'not in', ('supplier', 'inventory', 'production')),
+                ('location_id.scrap_location', '=', True),
+                ('quantity', '!=', 0)
+            ])
+            # Extract the quant to correct
+            for sq in similar_quant:
+                related_lines = self.line_ids.filtered(
+                    lambda line: line.prod_lot_id == sq.lot_id and
+                    line.location_id == sq.location_id and
+                    line.partner_id == sq.owner_id and
+                    line.package_id == sq.package_id
+                )
+                theoretical_qty = sum(related_lines.mapped('theoretical_qty'))
+                if float_compare(theoretical_qty, sq.quantity, precision_rounding=sq.product_id.uom_id.rounding) != 0:
+                    wiz_lines.append({
+                        'product_qty': sq.quantity,
+                        'product_id': sq.product_id.id,
+                        'location_id': sq.location_id.id,
+                        'lot_id': sq.lot_id.id,
+                        'inventory_line_id': line.id,
+                    })
+        if wiz_lines:
+            wiz = self.env['stock.duplicate.warning'].create({
+                'inventory_id': self.id,
+                'tracking_line_ids': [(0, 0, line) for line in wiz_lines]
+            })
+            return {
+                'name': _('Duplicated serial numbers'),
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'stock.duplicate.warning',
+                'target': 'new',
+                'res_id': wiz.id,
+            }
         inventory_lines = self.line_ids.filtered(lambda l: l.product_id.tracking in ['lot', 'serial'] and not l.prod_lot_id and l.theoretical_qty != l.product_qty)
         lines = self.line_ids.filtered(lambda l: float_compare(l.product_qty, 1, precision_rounding=l.product_uom_id.rounding) > 0 and l.product_id.tracking == 'serial' and l.prod_lot_id)
         if inventory_lines and not lines:
@@ -356,6 +403,7 @@ class InventoryLine(models.Model):
     inventory_location_id = fields.Many2one(
         'stock.location', 'Inventory Location', related='inventory_id.location_id', related_sudo=False, readonly=False)
     product_tracking = fields.Selection('Tracking', related='product_id.tracking', readonly=True)
+    correction_line = fields.Selection([('warning', 'Warning'), ('danger', 'Danger')], default=False)
 
     @api.one
     @api.depends('location_id', 'product_id', 'package_id', 'product_uom_id', 'company_id', 'prod_lot_id', 'partner_id')
@@ -399,6 +447,9 @@ class InventoryLine(models.Model):
 
     @api.multi
     def write(self,vals):
+        # reset decoration style
+        if self.correction_line == 'danger' and not vals.get('correction_line'):
+            vals['correction_line'] = False
         res = super(InventoryLine, self).write(vals)
         self._check_no_duplicate_line()
         return res

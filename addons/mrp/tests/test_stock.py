@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import common
-from odoo.exceptions import except_orm
+from odoo.exceptions import except_orm, UserError
 from odoo.tests import Form
 
 
@@ -138,11 +138,40 @@ class TestWarehouse(common.TestMrpCommon):
         # Scrap Product Wood with lot.
         self.env['stock.scrap'].with_context(active_model='mrp.production', active_id=production_3.id).create({'product_id': self.product_2.id, 'scrap_qty': 1.0, 'product_uom_id': self.product_2.uom_id.id, 'location_id': location_id, 'lot_id': lot_product_2.id, 'production_id': production_3.id})
 
-        #Check scrap move is created for this production order.
-        #TODO: should check with scrap objects link in between
+    def test_manufacturing_scrap_2(self):
+        """ Testing to do a scrap of serial tracked consumed materialself.
+        Then consuming again the same serial number. We should be blocked """
 
-#        scrap_move = production_3.move_raw_ids.filtered(lambda x: x.product_id == self.product_2 and x.scrapped)
-#        self.assertTrue(scrap_move, "There are no any scrap move created for production order.")
+        mo, bom, p_final, compo1, compo2 = self.generate_mo(tracking_base_1='serial', qty_final=1, qty_base_1=1, qty_base_2=1)
+        sn1 = self.env['stock.production.lot'].create({
+            'name': 'sn1',
+            'product_id': compo1.id
+        })
+        stock_inv_compo1 = self.env['stock.inventory'].create({
+            'name': 'Stock Inventory for Stick',
+            'filter': 'product',
+            'product_id': compo1.id,
+            'line_ids': [
+                (0, 0, {'product_id': compo1.id, 'product_uom_id': compo1.uom_id.id, 'product_qty': 1, 'prod_lot_id': sn1.id, 'location_id': self.ref('stock.stock_location_14')}),
+            ]})
+
+        stock_inv_compo1.action_start()
+        stock_inv_compo1.action_validate()
+
+        # Scrap Product.
+        scrap_id = self.env['stock.scrap'].with_context(active_model='mrp.production', active_id=mo.id).create({'product_id': compo1.id, 'scrap_qty': 1.0, 'lot_id': sn1.id, 'product_uom_id': compo1.uom_id.id, 'location_id': self.ref('stock.stock_location_14'), 'production_id': mo.id})
+        scrap_id.do_scrap()
+
+        # Try to consume sn1
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        product_produce = produce_form.save()
+        product_produce.raw_workorder_line_ids.filtered(lambda line: line.product_id == compo1).lot_id = sn1.id
+        product_produce.do_produce()
+        with self.assertRaises(UserError):
+            mo.button_mark_done()
 
     def test_putaway_after_manufacturing_1(self):
         """ This test checks a manufactured product without tracking will go to

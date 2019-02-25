@@ -44,6 +44,7 @@ class TestStockCommon(common.SavepointCase):
         cls.productC = cls.ProductObj.create({'name': 'Product C', 'type': 'product'})
         cls.productD = cls.ProductObj.create({'name': 'Product D', 'type': 'product'})
         cls.productE = cls.ProductObj.create({'name': 'Product E', 'type': 'product'})
+        cls.productS = cls.ProductObj.create({'name': 'Product S', 'type': 'product', 'tracking': 'serial'})
 
         # Configure unit of measure.
         cls.uom_kg = cls.env['uom.uom'].search([('category_id', '=', cls.categ_kgm), ('uom_type', '=', 'reference')], limit=1)

@@ -18,7 +18,7 @@
         <field name="name">stock.inventory.line.tree2</field>
         <field name="model">stock.inventory.line</field>
         <field name="arch" type="xml">
-            <tree editable="top" string="Inventory Details" decoration-info="product_qty != theoretical_qty" decoration-danger="theoretical_qty &lt; 0">
+            <tree editable="top" string="Inventory Details" decoration-info="product_qty != theoretical_qty and correction_line == 'none'" decoration-danger="theoretical_qty &lt; 0 or correction_line == 'danger'" decoration-warning="correction_line == 'warning'">
                 <field name="product_tracking" invisible="1"/>
                 <field name="product_id"  domain="[('type','=','product')]"/>
                 <field name="product_uom_id" string="UoM" groups="uom.group_uom"/>
@@ -31,6 +31,7 @@
                 <field name="state" invisible="1"/>
                 <field name="inventory_id" invisible="1"/>
                 <field name="inventory_location_id" options="{'no_create': True}" invisible="1"/>
+                <field name="correction_line" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -148,6 +149,7 @@
                     </group>
                     <group>
                         <field name="date"/>
+                        <field name="show_locations" invisible="1"/>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         <field name="product_id" domain="[('type','=','product')]" attrs="{'invisible': [('filter', 'not in', ('product', 'product_owner'))], 'required': [('filter', 'in', ('product', 'product_owner'))]}" options="{'no_create': True}"/>
                         <field name="category_id" attrs="{'invisible': [('filter', 'not in','category')], 'required': [('filter', 'in', 'category')]}" options="{'no_create': True}"/>
@@ -161,18 +163,19 @@
                     <page string="Inventory Details" >
                         <button name="action_reset_product_qty" states="confirm" string="⇒ Set quantities to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
                         <field name="line_ids" string="Inventory Details" context="{'default_location_id': location_id,  'default_product_id': product_id, 'default_prod_lot_id': lot_id, 'default_package_id': package_id, 'default_partner_id': partner_id}" mode="tree,kanban">
-                            <tree string="Inventory Details" editable="bottom" decoration-info="product_qty != theoretical_qty" decoration-danger="theoretical_qty &lt; 0">
+                            <tree string="Inventory Details" editable="bottom" decoration-info="product_qty != theoretical_qty or correction_line == 'none'" decoration-danger="theoretical_qty &lt; 0 or correction_line == 'danger'" decoration-warning="correction_line == 'warning'">
                                 <field name="product_tracking" invisible="1"/>
                                 <field name="product_id" domain="[('type','=','product')]" attrs="{'readonly': [('parent.filter', '=', 'product')]}" force_save="1"/>
                                 <field name="product_uom_id" string="UoM" groups="uom.group_uom" domain="[('category_id', '=', product_uom_category_id)]"/>
                                 <field name="product_uom_category_id" invisible="1"/>
-                                <field name="location_id" options="{'no_create': True}" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_stock_multi_locations"/>
+                                <field name="location_id" options="{'no_create': True}" domain="[('id', 'child_of', parent.location_id)]" attrs="{'column_invisible': [('parent.show_locations', '=', False)]}"/>
                                 <field name="prod_lot_id" domain="[('product_id', '=', product_id)]" attrs="{'readonly': [('product_tracking', '=', 'none')]}" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
                                 <field name="package_id" domain="['|', ('location_id','=', False), ('location_id', '=', location_id)]" groups="stock.group_tracking_lot"/>
                                 <field name="partner_id" groups="stock.group_tracking_owner"/>
                                 <field name="theoretical_qty" readonly="1"/>
                                 <field name="product_qty" string="Real Quantity"/>
                                 <field name="state" invisible="True"/>
+                                <field name="correction_line" invisible="1"/>
                             </tree>
                             <kanban class="o_kanban_mobile">
                                 <field name="product_tracking" invisible="1"/>

@@ -312,7 +312,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(line1['qty_done'], 3, "Wrong quantity done")
         self.assertEqual(line2['qty_to_consume'], 12, "Wrong quantity to consume")
         self.assertEqual(line2['qty_done'], 12, "Wrong quantity done")
-        
+
         product_produce = produce_form.save()
         self.assertEqual(len(product_produce.raw_workorder_line_ids), 2, 'You should have produce lines even the consumed products are not tracked.')
         product_produce.do_produce()
@@ -989,3 +989,41 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(product_produce.raw_workorder_line_ids[0].product_uom_id, unit, 'Should be the product uom so "unit"')
         self.assertEqual(product_produce.raw_workorder_line_ids[1].qty_to_consume, 1, 'Should be 1 unit since the tracking is serial and quantity 2.')
         self.assertEqual(product_produce.raw_workorder_line_ids[1].product_uom_id, unit, 'should be the product uom so "unit"')
+
+    def test_duplicate_serial_1(self):
+        """The production of a serial tracked product is forbidden if the serial
+        number has already be produced"""
+        mo, bom, p_final, compo1, compo2 = self.generate_mo('serial', qty_final=1, qty_base_1=1, qty_base_2=1)
+        sn1 = self.env['stock.production.lot'].create({
+            'name': 'sn1',
+            'product_id': p_final.id
+        })
+        # First production
+        mo.action_assign()
+        # produce product
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        produce_form.final_lot_id = sn1
+        product_produce = produce_form.save()
+        product_produce.do_produce()
+        mo.button_mark_done()
+
+        # move product to another location
+        quant = self.env['stock.quant']._gather(p_final, self.env.ref('stock.stock_location_stock'))
+        quant.location_id = self.env.ref('stock.stock_location_customers')
+
+        # Second production
+        mo2 = mo.copy()
+        mo2.action_confirm()
+        mo2.action_assign()
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo2.id,
+            'active_ids': [mo2.id],
+        }))
+        produce_form.final_lot_id = sn1
+        product_produce = produce_form.save()
+        product_produce.do_produce()
+        with self.assertRaises(UserError):
+            mo2.button_mark_done()

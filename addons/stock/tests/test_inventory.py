@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 from odoo.tests.common import SavepointCase
 
 
@@ -103,7 +103,7 @@ class TestInventory(SavepointCase):
         inventory.line_ids.prod_lot_id = lot1
         inventory.line_ids.product_qty = 2
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(UserError):
             inventory.action_validate()
 
     def test_inventory_4(self):
@@ -287,7 +287,7 @@ class TestInventory(SavepointCase):
         self.env['stock.quant'].create(vals)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 2.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 2.0)
-        
+
         inventory = self.env['stock.inventory'].create({
             'name': 'product1',
             'filter': 'product',
@@ -298,3 +298,64 @@ class TestInventory(SavepointCase):
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.theoretical_qty, 2)
 
+    def test_duplicate_serial_1(self):
+        # add sn1 for a serial tracked products in stock
+        sn1 = self.env['stock.production.lot'].create({
+            'product_id': self.product2.id,
+            'name': 'SN1'
+        })
+        inventory = self.env['stock.inventory'].create({
+            'name': 'serial product',
+            'filter': 'product',
+            'location_id': self.stock_location.id,
+            'product_id': self.product2.id,
+            'exhausted': True,  # should be set by an onchange
+        })
+        inventory.action_start()
+        inventory.line_ids.prod_lot_id = sn1
+        inventory.line_ids.product_qty = 1
+        inventory.action_validate()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 1.0)
+
+        # Make a move to customer for sn1
+        move_delivery = self.env['stock.move'].create({
+            'name': 'delivery1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product2.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+
+        move_delivery._action_confirm()
+        move_delivery._action_assign()
+        self.assertEqual(move_delivery.state, 'assigned')
+        move_delivery.move_line_ids.qty_done = 1
+        move_delivery._action_done()
+        self.assertEqual(move_delivery.state, 'done')
+        self.assertEqual(self.env['stock.quant']._gather(self.product2, self.customer_location).quantity, 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 0.0)
+
+        # Create a new inventory and try to put sn1 in stock
+        inventory = self.env['stock.inventory'].create({
+            'name': 'serial product',
+            'filter': 'product',
+            'location_id': self.stock_location.id,
+            'product_id': self.product2.id,
+            'exhausted': True,  # should be set by an onchange
+        })
+        inventory.action_start()
+        inventory.line_ids.prod_lot_id = sn1
+        inventory.line_ids.product_qty = 1
+        res_dict_for_duplicate = inventory.action_validate()
+        wizard_duplicate = self.env[(res_dict_for_duplicate.get('res_model'))].browse(res_dict_for_duplicate.get('res_id'))
+        wizard_duplicate.action_confirm()
+        self.assertEqual(len(inventory.line_ids), 2, "There is a missing line")
+        correction_line = inventory.line_ids.filtered(lambda line: line.correction_line == 'warning')
+        self.assertEqual(correction_line.location_id, self.customer_location, "There is a missing line")
+        self.assertEqual(correction_line.theoretical_qty, 1, "The theoretical quantity is wrong")
+        self.assertEqual(correction_line.product_qty, 0, "The real quantity is wrong")
+        inventory.action_validate()
+        self.assertEqual(inventory.state, 'done')
+        self.assertEqual(self.env['stock.quant']._gather(self.product2, self.customer_location).quantity, 0)
+        self.assertEqual(self.env['stock.quant']._gather(self.product2, self.stock_location).quantity, 1.0)
