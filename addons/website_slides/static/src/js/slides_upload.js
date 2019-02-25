@@ -30,7 +30,7 @@ var SlideUploadDialog = Dialog.extend({
         this._setup();
 
         this.channelID = parseInt(options.channelId, 10);
-        this.defaultCategoryID = parseInt(options.categoryId,10)
+        this.defaultCategoryID = parseInt(options.categoryId,10);
         this.canUpload = options.canUpload === 'True';
         this.canPublish = options.canPublish === 'True';
 
@@ -213,7 +213,7 @@ var SlideUploadDialog = Dialog.extend({
             result['tag_ids'] = tagValues;
         }
         // category
-        if(!self.defaultCategoryID){
+        if (!self.defaultCategoryID){
             var categoryValue = this.$('#category_id').select2('data');
             if (categoryValue && categoryValue.create) {
                 result['category_id'] = [0, {'name': categoryValue.text}];
@@ -311,24 +311,24 @@ var SlideUploadDialog = Dialog.extend({
 
         return values;
     },
-    _reorderSlidesSequence: function(){
+    _reorderSlidesSequence: function (){
         var self = this;
-        var slidesElement = $('li.content-slide');
+        var slidesElement = $('li.o_wslides_content_slide');
         var slides = [];
-        for(var i = 0; i < slidesElement.length;i++){
+        for (var i = 0; i < slidesElement.length;i++){
             slides.push({
                 id: parseInt($(slidesElement[i]).attr('slide_id')),
                 category_id: parseInt($(slidesElement[i]).attr('category_id')),
                 sequence: i
-            })
+            });
         }
         self._rpc({
             route: '/slides/resequence_slides',
             params: {
                 slides_data: slides
             }
-        }).then(function(){
-        })
+        }).then(function (){
+        });
     },
     /**
      * Init the data relative to the support slide type to upload
@@ -540,9 +540,9 @@ var SlideUploadDialog = Dialog.extend({
                     self._alertDisplay(data.error);
                 } else {
                     //Quick and really dirty fix for reordering issues
-                    if(data.channel_type == 'training' && self.categoryID){
+                    if (data.channel_type === 'training' && self.categoryID){
                         var categoryElement = $('ul[category_id='+self.categoryID+']');
-                        $('<li hidden class="content-slide" slide_id="'+data.slide_id+'" category_id="'+self.categoryID+'">temp</li>').appendTo(categoryElement)
+                        $('<li hidden class="content-slide" slide_id="'+data.slide_id+'" category_id="'+self.categoryID+'">temp</li>').appendTo(categoryElement);
                         self._reorderSlidesSequence();
                     }
                     window.location = data.url;
@@ -584,7 +584,7 @@ sAnimations.registry.websiteSlidesUpload = sAnimations.Class.extend({
 
     _openDialog: function ($element) {
         var data = $element.data();
-        var dialog = new SlideUploadDialog(this, data)
+        var dialog = new SlideUploadDialog(this, data);
         dialog.appendTo(document.body);
         return dialog.open();
     },

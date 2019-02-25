@@ -65,19 +65,19 @@ class WebsiteSlides(WebsiteProfile):
             'user_progress': {}
         }
         if slide.channel_id.channel_type == "training":
-            channel_slides = slide.channel_id.slide_ids.ids
-            slide_index = channel_slides.index(slide.id)
-            previous_slide = None
-            next_slide = None
-            if slide_index > 0:
-                previous_slide = slide.channel_id.slide_ids[slide_index-1]
-            if slide_index < len(channel_slides) - 1:
-                next_slide = slide.channel_id.slide_ids[slide_index+1]
+            channel_slides_ids = slide.channel_id.slide_ids.ids
+            slide_index = channel_slides_ids.index(slide.id)
+            previous_slide = slide.channel_id.slide_ids[slide_index-1] if slide_index > 0 else None
+            next_slide = slide.channel_id.slide_ids[slide_index+1] if slide_index < len(channel_slides_ids) - 1 else None
             values.update({
                 'previous_slide': slug(previous_slide) if previous_slide else "",
                 'next_slide': slug(next_slide) if next_slide else ""
             })
         return values
+
+    def _get_quiz_points(self, slide, attempt_count):
+        possible_points = [slide.quiz_first_attempt_reward,slide.quiz_second_attempt_reward,slide.quiz_third_attempt_reward, slide.quiz_fourth_attempt_reward]
+        return possible_points[attempt_count] if attempt_count < len(possible_points) else possible_points[-1]
 
     def _get_user_progress(self, channel):
         user_progress = { slide_partner.slide_id.id: slide_partner for slide_partner in request.env['slide.slide.partner'].sudo().search([('channel_id', '=', channel.id),('partner_id', '=', request.env.user.partner_id.id)])}
@@ -489,32 +489,35 @@ class WebsiteSlides(WebsiteProfile):
         good_answers = request.env['slide.answer'].search([('id', 'in', answer_ids), ('is_correct', '=', True)])
         bad_answers = request.env['slide.answer'].browse(answer_ids) - good_answers
         slide_partner = request.env['slide.slide.partner'].search([('slide_id', '=', slide_id), ('partner_id', '=', request.env.user.partner_id.id)])
-        possible_points = [slide.quiz_first_attempt_reward, slide.quiz_second_attempt_reward, slide.quiz_third_attempt_reward, slide.quiz_fourth_attempt_reward]
         points = 0
         if not slide_partner:
-            slide_partner = request.env['slide.slide.partner'].sudo().create({
-                "slide_id": slide.id,
-                "partner_id": request.env.user.partner_id.id,
-                "channel_id": slide.channel_id.id,
-                "completed": False
-            })
+            slide.action_set_viewed()
         if not slide_partner.completed:
-            if slide_partner.quiz_attempts_count < len(possible_points):
-                points = possible_points[slide_partner.quiz_attempts_count]
-            else:
-                points = possible_points[-1]
+            points = self._get_quiz_points(slide, slide_partner.quiz_attempts_count)
             slide_partner.sudo().write({
                 'quiz_attempts_count': slide_partner.quiz_attempts_count if not bad_answers else slide_partner.quiz_attempts_count + 1,
                 'points_won': points if not bad_answers else 0,
                 'completed': not bad_answers
             })
+            user = {}
+            if not bad_answers:
+                request.env.user.sudo().add_karma(points)
+                lower_bound = request.env.user.rank_id.karma_min
+                upper_bound = request.env.user.next_rank_id.karma_min
+                user= {
+                        'lower_bound': lower_bound,
+                        'upper_bound': upper_bound,
+                        'karma': request.env.user.karma,
+                        'progress_bar_percentage': 100 * ((request.env.user.karma - lower_bound) / (upper_bound - lower_bound))
+                    }
             return {
                 'goodAnswers': [good_answer.id for good_answer in good_answers],
                 'badAnswers': [bad_answer.id for bad_answer in bad_answers],
                 'passed': not bad_answers,
                 'points': points if not bad_answers else 0,
                 'attempts_count': slide_partner.quiz_attempts_count if slide_partner else 0,
-                'channel_completion': slide.channel_id.completion
+                'channel_completion': slide.channel_id.completion,
+                'user': user
             }
         return {
             'error': "You already passed this quiz"
@@ -568,6 +571,7 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/channel/enroll'], type='http', auth='public', website=True)
     def slide_channel_join_http(self, channel_id):
+        # TDE FIXME: why 2 routes ?
         if not request.website.is_public_user():
             channel = request.env['slide.channel'].browse(int(channel_id))
             channel.action_add_member()
