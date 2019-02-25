@@ -105,7 +105,7 @@ class Slide(models.Model):
     category_id = fields.Many2one('slide.category', string="Category", domain="[('channel_id', '=', channel_id)]")
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
-    is_preview = fields.Boolean('Always visible', default=False)
+    is_preview = fields.Boolean('Is Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
     completion_time = fields.Float('# Hours', default=1, digits=(10, 4))
     # subscribers
     partner_ids = fields.Many2many('res.partner', 'slide_slide_partner', 'slide_id', 'partner_id',
