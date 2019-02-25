@@ -241,7 +241,11 @@ class Pricelist(models.Model):
                 break
             # Final price conversion into pricelist currency
             if suitable_rule and suitable_rule.compute_price != 'fixed' and suitable_rule.base != 'pricelist':
-                price = product.currency_id.compute(price, self.currency_id, round=False)
+                if suitable_rule.base == 'standard_price':
+                    # The cost of the product is always in the company currency
+                    price = product.cost_currency_id.compute(price, self.currency_id, round=False)
+                else:
+                    price = product.currency_id.compute(price, self.currency_id, round=False)
 
             results[product.id] = (price, suitable_rule and suitable_rule.id or False)
 
