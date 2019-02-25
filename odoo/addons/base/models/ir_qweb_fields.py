@@ -224,6 +224,7 @@ class DateTimeConverter(models.AbstractModel):
             format=dict(type='string', string=_('Pattern to format')),
             time_only=dict(type='boolean', string=_('Display only the time')),
             hide_seconds=dict(type='boolean', string=_('Hide seconds')),
+            date_only=dict(type='boolean', string=_('Display only the date')),
         )
         return options
 
@@ -244,6 +245,8 @@ class DateTimeConverter(models.AbstractModel):
         else:
             if options and options.get('time_only'):
                 strftime_pattern = (u"%s" % (lang.time_format))
+            elif options and options.get('date_only'):
+                strftime_pattern = (u"%s" % (lang.date_format))
             else:
                 strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
 
