@@ -4107,7 +4107,7 @@
         <record id="account_1788" model="account.account.template">
             <field name="code">1788</field>
             <field name="name">Aufgeschobene Einfuhr-Umsatzsteuer</field>
-            <field name="reconcile" eval="False"/>
+            <field name="reconcile" eval="True"/>
             <field name="tag_ids" eval="[(6,0, [ref('l10n_de.tag_de_liabilities_bs_D_8')])]"/>
             <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
@@ -6784,7 +6784,7 @@
         </record>
         <record id="account_3551" model="account.account.template">
             <field name="code">3551</field>
-            <field name="name">Wareneingang, im Drittland steuerbar</field>
+            <field name="name">Wareneingang, im Drittland steuerbar (19%)</field>
             <field name="reconcile" eval="False"/>
             <field name="tag_ids" eval="[(6,0, [ref('l10n_de.tag_de_pl_05')])]"/>
             <field name="user_type_id" ref="account.data_account_type_expenses"/>
@@ -6801,6 +6801,14 @@
         <record id="account_3553" model="account.account.template">
             <field name="code">3553</field>
             <field name="name">Erwerb Waren als letzter Abnehmer innerhalb Dreiecksgeschäft 19% Vorsteuer und 19% Umsatzsteuer</field>
+            <field name="reconcile" eval="False"/>
+            <field name="tag_ids" eval="[(6,0, [ref('l10n_de.tag_de_pl_05')])]"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+        </record>
+        <record id="account_3557" model="account.account.template">
+            <field name="code">3557</field>
+            <field name="name">Wareneingang, im Drittland steuerbar (7%)</field>
             <field name="reconcile" eval="False"/>
             <field name="tag_ids" eval="[(6,0, [ref('l10n_de.tag_de_pl_05')])]"/>
             <field name="user_type_id" ref="account.data_account_type_expenses"/>
@@ -9737,7 +9745,7 @@
         </record>
         <record id="account_8738" model="account.account.template">
             <field name="code">8738</field>
-            <field name="name">Gewährte Skonti aus Lieferungen von Mobilfunkgeräten/Schaltkreisen, für die der Leistungsempfänger die Umsatzsteuer nach § 13b UStG schuldet</field>
+            <field name="name">Gewährte Skonti aus Lieferungen von Mobilfunkgeräten/Schaltkreisen, für die der Leistungsempfänger die Umsatzsteuer nach § 13b Abs. 2 Nr. 10 UStG schuldet</field>
             <field name="reconcile" eval="False"/>
             <field name="tag_ids" eval="[(6,0, [ref('l10n_de.tag_de_pl_01')])]"/>
             <field name="user_type_id" ref="account.data_account_type_revenue"/>
@@ -10262,6 +10270,13 @@
         <record id="account_9090" model="account.account.template">
             <field name="code">9090</field>
             <field name="name">Summenvortragskonto</field>
+            <field name="reconcile" eval="False"/>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+        </record>
+        <record id="account_9089" model="account.account.template">
+            <field name="code">9089</field>
+            <field name="name">Offene Posten aus 2019</field>
             <field name="reconcile" eval="False"/>
             <field name="user_type_id" ref="account.data_account_type_other_income"/>
             <field name="chart_template_id" ref="l10n_de_chart_template"/>
