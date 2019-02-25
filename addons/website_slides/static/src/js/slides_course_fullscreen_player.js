@@ -235,16 +235,18 @@ odoo.define('website_slides.fullscreen', function (require) {
         _setSlideStateAsDone: function (){
             var self = this;
             self._rpc({
-                route: '/slides/set_completed',
+                route: '/slides/slide/set_completed',
                 params: {
                     slide_id: self.slide.id,
                 }
-            }).then(function (data){
-                $('#check-'+self.slide.id).replaceWith($('<i class="check-done o_wslides_slide_completed fa fa-check-circle"></i>'));
-                self.slide.done = true;
-                clearInterval(self.tid);
-                self.channelCompletion = data.channel_completion;
-                self._updateProgressbar();
+            }).then(function (data) {
+                if (! data.error) {
+                    $('#check-'+self.slide.id).replaceWith($('<i class="check-done o_wslides_slide_completed fa fa-check-circle"></i>'));
+                    self.slide.done = true;
+                    clearInterval(self.tid);
+                    self.channelCompletion = data.channel_completion;
+                    self._updateProgressbar();
+                }
             });
         },
         _updateProgressbar: function (){
