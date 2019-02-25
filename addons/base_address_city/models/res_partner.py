@@ -15,9 +15,10 @@ class Partner(models.Model):
 
     @api.onchange('city_id')
     def _onchange_city_id(self):
-        self.city = self.city_id.name
-        self.zip = self.city_id.zipcode
-        self.state_id = self.city_id.state_id
+        if self.city_id:
+            self.city = self.city_id.name
+            self.zip = self.city_id.zipcode
+            self.state_id = self.city_id.state_id
 
     @api.model
     def _fields_view_get_address(self, arch):
@@ -37,7 +38,10 @@ class Partner(models.Model):
                     }"
                 />
                 <field name='city_id' placeholder="%(placeholder)s" string="%(placeholder)s"
-                    context="{'default_country_id': country_id}"
+                    context="{'default_country_id': country_id,
+                              'default_name': city,
+                              'default_zipcode': zip,
+                              'default_state_id': state_id}"
                     domain="[('country_id', '=', country_id)]"
                     attrs="{
                         'invisible': [('country_enforce_cities', '=', False)],

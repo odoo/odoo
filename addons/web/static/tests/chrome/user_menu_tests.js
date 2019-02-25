@@ -25,6 +25,7 @@ QUnit.module('chrome', {}, function () {
             "should have a 'Shortcuts' item");
 
         userMenu.destroy();
+        parent.destroy();
     });
 });
 

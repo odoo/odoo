@@ -17,7 +17,7 @@
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
 # David Minneci <david@numeko.it>, 2018
 # Paolo Valier, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +36,7 @@ msgstr ""
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
@@ -81,7 +81,7 @@ msgstr "Contatti Archiviati"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_attachment_count
 msgid "Attachment Count"
-msgstr "Numero di allegati"
+msgstr "Totale allegati"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -152,12 +152,12 @@ msgstr "Dashboard"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_button_name
 msgid "Dashboard Button"
-msgstr "Tasto del Dashboard"
+msgstr "Pulsante bacheca"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_data
 msgid "Dashboard Graph Data"
-msgstr "Dati del grafico Dashboard"
+msgstr "Dati grafico bacheca"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_group:0
@@ -168,7 +168,7 @@ msgstr "Giorno"
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid "Define a new Sales Team"
-msgstr "Definisci un nuovo team di vendita"
+msgstr "Definire un nuovo team di vendita"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
@@ -190,7 +190,7 @@ msgstr "Membri preferiti"
 msgid ""
 "Favorite teams to display them in the dashboard and access them easily."
 msgstr ""
-"Aggiungi gruppi ai tuoi preferiti per vederli sul dashboard e poter "
+"Aggiungi gruppi ai tuoi preferiti per vederli nella bacheca e poter "
 "accederci facilmente."
 
 #. module: sales_team
@@ -274,8 +274,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
 msgstr ""
-"Impostando il campo \"attivo\" a falso, sarai in grado di nascondere il team"
-" di vendita senza doverlo rimuovere."
+"È possibile nascondere il team di vendita senza doverlo rimuovere, "
+"impostando il campo \"attivo\" a falso."
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_model:0
@@ -423,7 +423,7 @@ msgid ""
 "Team through the inverse one2many"
 msgstr ""
 "Team di vendita di cui l'utente è membro. Usato per ottenere l'elenco dei "
-"membri di un team di vendita attraverso il campo one2many inverso"
+"membri di un team di vendita attraverso il campo inverso uno a molti"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.sales_team_config_action
@@ -458,7 +458,7 @@ msgstr "Impostazioni"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
-msgstr "Mostrare sul dashboard"
+msgstr "Mostrare sulla bacheca"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
@@ -492,13 +492,13 @@ msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Odoo about "
 "cases in this Sales Team"
 msgstr ""
-"L'indirizzo email inserito nel campo 'Rispondi-A' di tutte le email inviate "
-"da Odoo relative a questo team di vendita."
+"L'indirizzo email inserito nel campo \"Rispondi-a\" di tutte le email "
+"inviate da Odoo relative a questo team di vendita."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_model
 msgid "The graph this channel will display in the Dashboard.\n"
-msgstr "Il grafico di questo canale sarà visibile sul Dashboard.\n"
+msgstr "Il grafico che questo canale visualizzerà nella bacheca.\n"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_period
@@ -509,7 +509,7 @@ msgstr ""
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_type
 msgid "The type of graph this channel will display in the dashboard."
-msgstr "Il tipo di grafico che questo canale mostrerà sul dashboard."
+msgstr "Il tipo di grafico che questo canale visualizzerà nella bacheca."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__team_type

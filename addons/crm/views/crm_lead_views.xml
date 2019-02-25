@@ -117,8 +117,8 @@
                         </page>
                         <page name="extra" string="Extra Info">
                             <group>
-                                <group string="Email">
-                                    <field name="message_bounce" readonly="1" groups="base.group_no_one"/>
+                                <group string="Email" groups="base.group_no_one">
+                                    <field name="message_bounce" readonly="1"/>
                                 </group>
                                 <group string="Tracking" groups="base.group_multi_company,base.group_no_one" name="categorization">
                                     <field name="company_id"
@@ -947,7 +947,6 @@ for rec in records:
             <field name="domain">[('type','=','opportunity')]</field>
             <field name="context">{
                     'default_type': 'opportunity',
-                    'default_user_id': uid
                 }
             </field>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
@@ -1009,7 +1008,6 @@ for rec in records:
             <field name="domain">[('type','=','opportunity')]</field>
             <field name="context">{
                     'default_type': 'opportunity',
-                    'default_user_id': uid,
                     'search_default_assigned_to_me': 1
             }</field>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>

@@ -177,6 +177,7 @@ class ImLivechatChannel(models.Model):
             'public': 'private',
             'email_send': False,
         })
+        mail_channel._broadcast([operator_partner_id])
         return mail_channel.sudo().with_context(im_livechat_operator_partner_id=operator_partner_id).channel_info()[0]
 
     @api.model

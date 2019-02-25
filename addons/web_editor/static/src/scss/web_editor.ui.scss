@@ -276,12 +276,12 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         }
 
         &.oe_vertical {
-            border: 2px dashed $o-brand-odoo;
+            border: $o-we-dropzone-border;
             border-left: none;
             border-right: none;
 
             width: $o-we-dropzone-size;
-            float: left;
+            height: 100%;
             margin: 0 (-$o-we-dropzone-size/2);
 
             &:after {
@@ -1086,7 +1086,7 @@ body.editor_enable {
 
         &:checked + span {
             box-shadow: none;
-            background-image: linear-gradient(0deg, $o-we-color-success, darken($o-we-color-success, 10%));
+            background: $o-we-color-success;
 
             &:after {
                 margin-left: ($o-we-switch-size*1.8 - $o-we-switch-size) + 0.1;
@@ -1097,7 +1097,7 @@ body.editor_enable {
         > input {
             &:not(:checked) + span {
                 box-shadow: none;
-                background-image: linear-gradient(0deg, lighten(theme-color('danger'), 5%), darken(theme-color('danger'), 5%));
+                background: $o-we-color-danger;
             }
         }
     }

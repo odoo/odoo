@@ -23,6 +23,7 @@ from contextlib import closing
 from distutils.version import LooseVersion
 from reportlab.graphics.barcode import createBarcodeDrawing
 from PyPDF2 import PdfFileWriter, PdfFileReader
+from collections import OrderedDict
 
 
 _logger = logging.getLogger(__name__)
@@ -466,7 +467,10 @@ class IrActionsReport(models.Model):
             )
             return barcode.asString('png')
         except (ValueError, AttributeError):
-            raise ValueError("Cannot convert into barcode.")
+            if barcode_type == 'Code128':
+                raise ValueError("Cannot convert into barcode.")
+            else:
+                return self.barcode('Code128', value, width=width, height=height, humanreadable=humanreadable)
 
     @api.multi
     def render_template(self, template, values=None):
@@ -643,7 +647,7 @@ class IrActionsReport(models.Model):
         if isinstance(self.env.cr, TestCursor):
             return self.with_context(context).render_qweb_html(res_ids, data=data)[0]
 
-        save_in_attachment = {}
+        save_in_attachment = OrderedDict()
         if res_ids:
             # Dispatch the records by ones having an attachment and ones requesting a call to
             # wkhtmltopdf.
@@ -753,7 +757,7 @@ class IrActionsReport(models.Model):
         :param report_name: Name of the template to generate an action for
         """
         discard_logo_check = self.env.context.get('discard_logo_check')
-        if (self.env.uid == SUPERUSER_ID) and ((not self.env.user.company_id.external_report_layout_id) or (not discard_logo_check and not self.env.user.company_id.logo)) and config:
+        if (self.env.user._is_admin()) and ((not self.env.user.company_id.external_report_layout_id) or (not discard_logo_check and not self.env.user.company_id.logo)) and config:
             template = self.env.ref('base.view_company_report_form_with_print') if self.env.context.get('from_transient_model', False) else self.env.ref('base.view_company_report_form')
             return {
                 'name': _('Choose Your Document Layout'),

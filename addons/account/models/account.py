@@ -67,12 +67,11 @@ class AccountAccount(models.Model):
     @api.constrains('user_type_id')
     def _check_user_type_id(self):
         data_unaffected_earnings = self.env.ref('account.data_unaffected_earnings')
-        for company in self.mapped('company_id'):
-            account_unaffected_earnings = self.search([
-                ('company_id', '=', company.id),
-                ('user_type_id', '=', data_unaffected_earnings.id),
-            ])
-            if len(account_unaffected_earnings) >= 2:
+        result = self.read_group([('user_type_id', '=', data_unaffected_earnings.id)], ['company_id'], ['company_id'])
+        for res in result:
+            if res.get('company_id_count', 0) >= 2:
+                account_unaffected_earnings = self.search([('company_id', '=', res['company_id'][0]), 
+                                                           ('user_type_id', '=', data_unaffected_earnings.id)])
                 raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)') % [a.code for a in account_unaffected_earnings])
 
     name = fields.Char(required=True, index=True)
@@ -202,7 +201,7 @@ class AccountAccount(models.Model):
             domain = ['|', ('code', '=ilike', name.split(' ')[0] + '%'), ('name', operator, name)]
             if operator in expression.NEGATIVE_TERM_OPERATORS:
                 domain = ['&', '!'] + domain[1:]
-        account_ids = self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
+        account_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return self.browse(account_ids).name_get()
 
     @api.onchange('internal_type')
@@ -228,7 +227,6 @@ class AccountAccount(models.Model):
         self.group_id = group
 
     @api.multi
-    @api.depends('name', 'code')
     def name_get(self):
         result = []
         for account in self:
@@ -384,11 +382,13 @@ class AccountGroup(models.Model):
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        if not args:
-            args = []
-        criteria_operator = ['|'] if operator not in expression.NEGATIVE_TERM_OPERATORS else ['&', '!']
-        domain = criteria_operator + [('code_prefix', '=ilike', name + '%'), ('name', operator, name)]
-        group_ids = self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
+        args = args or []
+        if operator == 'ilike' and not (name or '').strip():
+            domain = []
+        else:
+            criteria_operator = ['|'] if operator not in expression.NEGATIVE_TERM_OPERATORS else ['&', '!']
+            domain = criteria_operator + [('code_prefix', '=ilike', name + '%'), ('name', operator, name)]
+        group_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return self.browse(group_ids).name_get()
 
 
@@ -481,7 +481,7 @@ class AccountJournal(models.Model):
     post_at_bank_rec = fields.Boolean(string="Post At Bank Reconciliation", help="Whether or not the payments made in this journal should be generated in draft state, so that the related journal entries are only posted when performing bank reconciliation.")
 
     # alias configuration for 'purchase' type journals
-    alias_id = fields.Many2one('mail.alias', string='Alias')
+    alias_id = fields.Many2one('mail.alias', string='Alias', copy=False)
     alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
     alias_name = fields.Char('Alias Name for Vendor Bills', related='alias_id.alias_name', help="It creates draft vendor bill by sending an email.", readonly=False)
 
@@ -801,7 +801,6 @@ class AccountJournal(models.Model):
         }).id
 
     @api.multi
-    @api.depends('name', 'currency_id', 'company_id', 'company_id.currency_id')
     def name_get(self):
         res = []
         for journal in self:
@@ -813,10 +812,13 @@ class AccountJournal(models.Model):
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []
-        connector = '|'
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            connector = '&'
-        journal_ids = self._search([connector, ('code', operator, name), ('name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
+
+        if operator == 'ilike' and not (name or '').strip():
+            domain = []
+        else:
+            connector = '&' if operator in expression.NEGATIVE_TERM_OPERATORS else '|'
+            domain = [connector, ('code', operator, name), ('name', operator, name)]
+        journal_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return self.browse(journal_ids).name_get()
 
     @api.multi
@@ -946,7 +948,6 @@ class AccountTax(models.Model):
         default = dict(default or {}, name=_("%s (Copy)") % self.name)
         return super(AccountTax, self).copy(default=default)
 
-    @api.depends('name', 'type_tax_use')
     def name_get(self):
         if not self._context.get('append_type_to_tax_name'):
             return super(AccountTax, self).name_get()
@@ -958,10 +959,11 @@ class AccountTax(models.Model):
             result format: {[(id, name), (id, name), ...]}
         """
         args = args or []
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            domain = [('description', operator, name), ('name', operator, name)]
+        if operator == 'ilike' and not (name or '').strip():
+            domain = []
         else:
-            domain = ['|', ('description', operator, name), ('name', operator, name)]
+            connector = '&' if operator in expression.NEGATIVE_TERM_OPERATORS else '|'
+            domain = [connector, ('description', operator, name), ('name', operator, name)]
         tax_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return self.browse(tax_ids).name_get()
 
@@ -986,6 +988,11 @@ class AccountTax(models.Model):
     def onchange_amount(self):
         if self.amount_type in ('percent', 'division') and self.amount != 0.0 and not self.description:
             self.description = "{0:.4g}%".format(self.amount)
+
+    @api.onchange('amount_type')
+    def onchange_amount_type(self):
+        if self.amount_type is not 'group':
+            self.children_tax_ids = [(5,)]
 
     @api.onchange('account_id')
     def onchange_account_id(self):

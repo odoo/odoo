@@ -842,8 +842,8 @@ var ProductListWidget = PosBaseWidget.extend({
         };
 
         this.keypress_product_handler = function(ev){
-            if (ev.which != 13 && ev.which != 32) {
-                // Key is not space or enter
+            // React only to SPACE to avoid interfering with warcode scanner which sends ENTER
+            if (ev.which != 32) {
                 return;
             }
             ev.preventDefault();
@@ -2087,6 +2087,17 @@ var PaymentScreenWidget = ScreenWidget.extend({
                         'body': _t('You need to select the customer before you can invoice an order.'),
                         confirm: function(){
                             self.gui.show_screen('clientlist');
+                        },
+                    });
+                } else if (error.message === 'Backend Invoice') {
+                    self.gui.show_popup('confirm',{
+                        'title': _t('Please print the invoice from the backend'),
+                        'body': _t('The order has been synchronized earlier. Please make the invoice from the backend for the order: ') + error.data.order.name,
+                        confirm: function () {
+                            this.gui.show_screen('receipt');
+                        },
+                        cancel: function () {
+                            this.gui.show_screen('receipt');
                         },
                     });
                 } else if (error.code < 0) {        // XmlHttpRequest Errors

@@ -85,6 +85,11 @@ msgid "<div style=\"margin: 0px; padding: 0px;\">\n"
 "        Best regards,\n"
 "    </p>\n"
 "</div>"
+"<p style=\"color:#888888;\">\n"
+"% if object.sudo().create_uid and object.sudo().create_uid.signature:\n"
+"    ${object.sudo().create_uid.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 msgstr ""
 
 #. module: purchase

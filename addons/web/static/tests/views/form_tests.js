@@ -16,7 +16,6 @@ var Widget = require('web.Widget');
 
 var _t = core._t;
 var createView = testUtils.createView;
-var createActionManager = testUtils.createActionManager;
 var createAsyncView = testUtils.createAsyncView;
 var createActionManager = testUtils.createActionManager;
 
@@ -106,6 +105,14 @@ QUnit.module('Views', {
                 ]
             },
         };
+
+        this.actions = [{
+            id: 1,
+            name: 'Partners Action 1',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'kanban'], [false, 'form']],
+        }];
     }
 }, function () {
 
@@ -7458,6 +7465,95 @@ QUnit.module('Views', {
             "should not display the 'Changes will be discarded' dialog");
 
         form.destroy();
+    });
+
+    QUnit.test('domain returned by onchange is cleared on discard', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.onchanges = {
+            foo: function () {},
+        };
+
+        var domain = ['id', '=', 1];
+        var expectedDomain = domain;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="foo"/><field name="trululu"/></form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange' && args.args[0][0] === 1) {
+                    // onchange returns a domain only on record 1
+                    return $.when({
+                        domain: {
+                            trululu: domain,
+                        },
+                    });
+                }
+                if (args.method === 'name_search') {
+                    assert.deepEqual(args.kwargs.args, expectedDomain);
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 1,
+            viewOptions: {
+                ids: [1, 2],
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('input[name=foo]').val(), 'yop', "should be on record 1");
+
+        // change foo to trigger the onchange
+        testUtils.fields.editInput(form.$('input[name=foo]'), 'new value');
+
+        // open many2one dropdown to check if the domain is applied
+        testUtils.fields.many2one.clickOpenDropdown('trululu');
+
+        // switch to another record (should ask to discard changes, and reset the domain)
+        testUtils.dom.click(form.pager.$('.o_pager_next'));
+
+        // discard changes by clicking on confirm in the dialog
+        testUtils.dom.click($('.modal .modal-footer .btn-primary:first'));
+
+        assert.strictEqual(form.$('input[name=foo]').val(), 'blip', "should be on record 2");
+
+        // open many2one dropdown to check if the domain is applied
+        expectedDomain = [];
+        testUtils.fields.many2one.clickOpenDropdown('trululu');
+
+        form.destroy();
+    });
+
+    QUnit.test('discard after a failed save', function (assert) {
+        assert.expect(2);
+
+        var actionManager = createActionManager({
+            data: this.data,
+            archs: {
+                'partner,false,form': '<form>' +
+                                        '<field name="date" required="true"/>' +
+                                        '<field name="foo" required="true"/>' +
+                                    '</form>',
+                'partner,false,kanban': '<kanban><templates><t t-name="kanban-box">' +
+                                        '</t></templates></kanban>',
+                'partner,false,search': '<search></search>',
+            },
+            actions: this.actions,
+        });
+
+        actionManager.doAction(1);
+
+        testUtils.dom.click('.o_control_panel .o-kanban-button-new');
+
+        //cannot save because there is a required field
+        testUtils.dom.click('.o_control_panel .o_form_button_save');
+        testUtils.dom.click('.o_control_panel .o_form_button_cancel');
+
+        assert.containsNone(actionManager, '.o_form_view');
+        assert.containsOnce(actionManager, '.o_kanban_view');
+
+        actionManager.destroy();
     });
 
     QUnit.module('FormViewTABMainButtons');

@@ -51,11 +51,16 @@ class Web_Editor(http.Controller):
 
         kwargs.update(trans)
 
-        record = None
-        if model and kwargs.get('res_id'):
-            record = request.env[model].with_context(trans).browse(kwargs.get('res_id'))
+        content = None
+        if model:
+            Model = request.env[model].with_context(trans)
+            if kwargs.get('res_id'):
+                record = Model.browse(kwargs.get('res_id'))
+                content = record and getattr(record, field)
+            else:
+                content = Model.default_get([field]).get(field)
 
-        kwargs.update(content=record and getattr(record, field) or "")
+        kwargs.update(content=content or '')
 
         return request.render(kwargs.get("template") or "web_editor.FieldTextHtml", kwargs, uid=request.uid)
 
@@ -266,6 +271,9 @@ class Web_Editor(http.Controller):
             result['originalSrc'] = record.url
         return result
 
+    def _get_view_fields_to_read(self):
+        return ['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id']
+
     ## The get_assets_editor_resources route is in charge of transmitting the resources the assets
     ## editor needs to work.
     ## @param key - the xml_id or id of the view the resources are related to
@@ -278,7 +286,7 @@ class Web_Editor(http.Controller):
     def get_assets_editor_resources(self, key, get_views=True, get_scss=True, bundles=False, bundles_restriction=[]):
         # Related views must be fetched if the user wants the views and/or the style
         views = request.env["ir.ui.view"].get_related_views(key, bundles=bundles)
-        views = views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
+        views = views.read(self._get_view_fields_to_read())
 
         scss_files_data_by_bundle = []
 

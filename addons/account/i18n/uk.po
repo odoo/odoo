@@ -35,6 +35,11 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * Статус \"Чернетка\" використовується, коли користувач кодує новий і непідтверджений рахунок.\n"
+" * Статус \"Відкрито\" використовується, коли користувач створює рахунок-фактуру, генерується номер рахунку-фактури. Він залишається у відкритому стані, поки користувач не оплатить рахунок.\n"
+" * Статус \"В оплаті\" використовується, коли платежі були зареєстровані для загального рахунку в журналі, налаштованому для розміщення записів тільки при узгодженні банківської виписки, а деякі з них ще не узгоджені з рядком банківської виписки.\n"
+" * Статус \"Оплачено\" встановлюється автоматично після оплати рахунка-фактури. Його пов'язані записи журналу можуть або не можуть бути узгоджені.\n"
+" * Статус \"Скасовано\" використовується, коли користувач скасовує рахунок-фактуру."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -151,6 +156,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Шановний(а) ${object.partner_id.name}<br/><br/>\n"
+"        Дякуємо за вашу оплату.\n"
+"        Це ваша квитанція про оплату <strong>${(object.name or '').replace('/','-')}</strong> у сумі\n"
+"        в <strong>${format_amount(object.amount, object.currency_id)}</strong> від ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Не соромтеся звертатися до нас, якщо у вас виникли питання.\n"
+"        <br/><br/>\n"
+"       З найкращими побажаннями,<br/>\n"
+"        % if user and user.signature:\n"
+"        ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -184,6 +205,34 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Шановий(а) ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Це ваш рахунок \n"
+"        % if object.number:\n"
+"            invoice <strong>${object.number}</strong>\n"
+"        % else:\n"
+"            invoice\n"
+"        %endif\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin})\n"
+"        % endif\n"
+"        у сумі <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        від ${object.company_id.name}.\n"
+"        % if object.state=='paid':\n"
+"            Цей рахунок вже оплачено.\n"
+"        % else:\n"
+"            Здійсніть платіж якомога швидше.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Не соромтеся зв'язатися з нами, якщо у вас є запитання.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -351,6 +400,8 @@ msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
 msgstr ""
+"<span class=\"o_form_label\">Всі вибрані записи журналу будуть перевірені та"
+" опубліковані. Після цього ви не зможете змінити їх.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -400,6 +451,8 @@ msgid ""
 "<span class=\"text-muted\">Only journals not yet linked to a bank account "
 "are proposed</span>"
 msgstr ""
+"<span class=\"text-muted\">Запропоновано лише журнали, які ще не пов'язані з"
+" банківським рахунком</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -565,6 +618,8 @@ msgid ""
 "<strong class=\"text-center\">The SEPA QR Code informations are not set "
 "correctly.</strong><br/>"
 msgstr ""
+"<strong class=\"text-center\">Інформація QR-коду SEPA не встановлена "
+"правильно.</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -701,7 +756,7 @@ msgstr "Термін оплати повинен мати тільки один 
 #: code:addons/account/models/account.py:854
 #, python-format
 msgid "A bank account can belong to only one journal."
-msgstr ""
+msgstr "Банківський рахунок може належати лише одному журналу."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -716,7 +771,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_line
 msgid "A bank statement line is a financial transaction on a bank account"
-msgstr ""
+msgstr "Банківська виписка - це фінансова операція на банківському рахунку"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -745,6 +800,10 @@ msgid ""
 "posted. Those will be posted automatically after performing the bank "
 "reconciliation."
 msgstr ""
+"Запис журналу платежів, згенерований у журналі, налаштований для публікації "
+"записів тільки тоді, коли платежі узгоджуються з випискою банку, не може "
+"бути опубліковано вручну. Вони будуть опубліковані автоматично після "
+"виконання банківської звірки."
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:681
@@ -779,6 +838,7 @@ msgstr ""
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
+"Схема оподаткування може бути визначена лише один раз на однакові податки."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -821,6 +881,8 @@ msgid ""
 "Account %s (%s) does not allow reconciliation. First change the "
 "configuration of this account to allow it."
 msgstr ""
+"Рахунок %s (%s) не дозволяє узгодження. Спочатку змініть налаштування цього "
+"рахунку, щоби дозволити узгодження."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -830,7 +892,7 @@ msgstr "Бухоблік"
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Cash Rounding"
-msgstr ""
+msgstr "Округлення рахунку в бухобліку"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
@@ -1300,7 +1362,7 @@ msgstr "Додати примітку"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Add a payment QR code to your invoices"
-msgstr ""
+msgstr "Додайте QR-код оплати до ваших рахунків"
 
 #. module: account
 #: selection:account.cash.rounding,strategy:0
@@ -1589,25 +1651,25 @@ msgstr "Сума боргу у валюті рахунка-фактури"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_total_amount
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_total_amount
 msgid "Amount Matching"
-msgstr ""
+msgstr "Відповідність суми"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_total_amount_param
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_total_amount_param
 msgid "Amount Matching %"
-msgstr ""
+msgstr "Відповідність суми %"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount_max
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_amount_max
 msgid "Amount Max Parameter"
-msgstr ""
+msgstr "Максимальний параметр суми"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount_min
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_amount_min
 msgid "Amount Min Parameter"
-msgstr ""
+msgstr "Мінімальний параметр суми"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_nature
@@ -1625,7 +1687,7 @@ msgstr "Сплачена сума"
 #: selection:account.reconcile.model,match_nature:0
 #: selection:account.reconcile.model.template,match_nature:0
 msgid "Amount Paid/Received"
-msgstr ""
+msgstr "Оплачена/отримана сума"
 
 #. module: account
 #: selection:account.reconcile.model,match_nature:0
@@ -1676,6 +1738,8 @@ msgstr "Сума:"
 msgid ""
 "An account fiscal position could be defined only one time on same accounts."
 msgstr ""
+"Схема оподаткування може бути визначена лише один раз на одних і тих же "
+"рахунках."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -2218,7 +2282,7 @@ msgstr "Банківські виписки"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_account_id
 msgid "Bank account that was used in this transaction."
-msgstr ""
+msgstr "Банківський рахунок, який використовувався в цій транзакції."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_type
@@ -2287,7 +2351,7 @@ msgstr "Базується на рахунку"
 #: code:addons/account/models/company.py:19
 #, python-format
 msgid "Based on Invoice Number"
-msgstr ""
+msgstr "На основі номера рахунка-фактури"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__tax_exigibility
@@ -2362,7 +2426,7 @@ msgstr "Рахунки до оплати"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
-msgstr ""
+msgstr "Рахунки для перевірки"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:178
@@ -2600,12 +2664,12 @@ msgstr "Журнал касового методу податків"
 #. module: account
 #: model:ir.model,name:account.model_cash_box_in
 msgid "Cash Box In"
-msgstr ""
+msgstr "Гроші в касу"
 
 #. module: account
 #: model:ir.model,name:account.model_cash_box_out
 msgid "Cash Box Out"
-msgstr ""
+msgstr "Гроші з каси"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:212
@@ -2897,7 +2961,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:17
 #, python-format
 msgid "Click to Rename"
-msgstr ""
+msgstr "Натисніть, щоб змінити назву"
 
 #. module: account
 #. openerp-web
@@ -3062,7 +3126,7 @@ msgstr "Повний набір податків"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composer_id
 msgid "Composer"
-msgstr ""
+msgstr "Автор"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composition_mode
@@ -3091,7 +3155,7 @@ msgstr "Розрахований баланс"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Conditions on Bank Statement Line"
-msgstr ""
+msgstr "Умови на рядку банківського рахунку"
 
 #. module: account
 #: model:ir.model,name:account.model_res_config_settings
@@ -3114,12 +3178,12 @@ msgstr "Налаштування"
 #: code:addons/account/static/src/js/section_and_note_fields_backend.js:102
 #, python-format
 msgid "Configure a product"
-msgstr ""
+msgstr "Налаштувати товар"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_invoice_layout
 msgid "Configure your document layout"
-msgstr ""
+msgstr "Налаштуйте макет документа"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox
@@ -3173,7 +3237,7 @@ msgstr "Вітаємо, ви все завершили!"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
 msgid "Congratulations! You are all set."
-msgstr ""
+msgstr "Вітаємо! Ви все налаштували."
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner
@@ -3202,7 +3266,7 @@ msgstr "Містить"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contracts_count
 msgid "Contracts Count"
-msgstr ""
+msgstr "Підрахунок контрактів"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -3328,22 +3392,22 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
 msgid "Create a new reconciliation model"
-msgstr ""
+msgstr "Створити нову модель узгодження"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_sellable
 msgid "Create a new sellable product"
-msgstr ""
+msgstr "Створити новий товар, що продається"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_tax_form
 msgid "Create a new tax"
-msgstr ""
+msgstr "Створити новий податок"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_in_refund
 msgid "Create a vendor credit note"
-msgstr ""
+msgstr "Створити нове сторно постачальника"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -4507,7 +4571,7 @@ msgstr "Зовнішній довідник"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:333
 #, python-format
 msgid "External link"
-msgstr ""
+msgstr "Зовнішнє посилання"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FAS
@@ -4548,7 +4612,7 @@ msgstr "Області"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_import_wizard__attachment_ids
 msgid "Files"
-msgstr ""
+msgstr "Файли"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.cash_box_in_form
@@ -4629,7 +4693,7 @@ msgstr "Звітний період"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.action_account_fiscal_year_form
 msgid "Fiscal Year 2018"
-msgstr ""
+msgstr "Звітний період 2018"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.actions_account_fiscal_year
@@ -4640,12 +4704,12 @@ msgstr "Звітні періоди"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
 msgid "Fiscal year last day."
-msgstr ""
+msgstr "Останній день звітного періоду."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_month
 msgid "Fiscal year last month."
-msgstr ""
+msgstr "Останній місяць звітного періоду."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -4811,7 +4875,7 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:385
 #, python-format
 msgid "From: "
-msgstr ""
+msgstr "Від: "
 
 #. module: account
 #: model:ir.model,name:account.model_account_full_reconcile
@@ -4908,7 +4972,7 @@ msgstr "Перейти до панелі налаштувань"
 #: code:addons/account/models/company.py:459
 #, python-format
 msgid "Go to the journal configuration"
-msgstr ""
+msgstr "Перейти на налаштування журналу"
 
 #. module: account
 #: selection:res.partner,trust:0
@@ -4949,7 +5013,7 @@ msgstr "Згрупувати рядки рахунків"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_register_payments__group_invoices
 msgid "Group Invoices"
-msgstr ""
+msgstr "Групувати рахунки"
 
 #. module: account
 #: selection:account.tax,amount_type:0
@@ -4996,7 +5060,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__has_error
 #: model:ir.model.fields,help:account.field_account_invoice_send__has_error
 msgid "Has error"
-msgstr ""
+msgstr "Має помилку"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment__hide_payment_method
@@ -5297,12 +5361,12 @@ msgstr "Імпорт файлів .qif"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_invoice_import_wizard_action
 msgid "Import Vendor Bills"
-msgstr ""
+msgstr "Імпортувати рахунки постачальника"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_import_wizard
 msgid "Import Your Vendor Bills from Files."
-msgstr ""
+msgstr "Імпортуйте ваші рахунки постачальника з файлів."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_csv
@@ -5348,7 +5412,7 @@ msgstr "Імпортувати вашу банківську виписку у Q
 #: selection:account.invoice,state:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "In Payment"
-msgstr ""
+msgstr "В оплаті"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:345
@@ -5720,6 +5784,8 @@ msgid ""
 "Invoice_${(object.number or '').replace('/','_')}${object.state == 'draft' "
 "and '_draft' or ''}"
 msgstr ""
+"Invoice_${(object.number or '').replace('/','_')}${object.state == 'draft' "
+"and '_draft' or ''}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -6509,7 +6575,7 @@ msgstr "Введіть внутрішню примітку"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Looks great!"
-msgstr ""
+msgstr "Виглядає чудово!"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:175
@@ -6654,7 +6720,7 @@ msgstr "Кампанія масової розсилки"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_name
 msgid "Mass Mailing Name"
-msgstr ""
+msgstr "Назва масової розсилки"
 
 #. module: account
 #: selection:account.reconcile.model,match_label:0
@@ -6792,12 +6858,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__moderator_id
 msgid "Moderated By"
-msgstr ""
+msgstr "Модерував"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__moderation_status
 msgid "Moderation Status"
-msgstr ""
+msgstr "Статус модерації"
 
 #. module: account
 #. openerp-web
@@ -6922,7 +6988,7 @@ msgstr "Необхідна дія"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__need_moderation
 msgid "Need moderation"
-msgstr ""
+msgstr "Необхідна модерація"
 
 #. module: account
 #. openerp-web
@@ -7733,7 +7799,7 @@ msgstr "Квитанція про оплату:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__reference
 msgid "Payment Ref."
-msgstr ""
+msgstr "Референс оплати"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
@@ -9045,7 +9111,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
 msgid "Send sample"
-msgstr ""
+msgstr "Надіслати зразок"
 
 #. module: account
 #: selection:account.payment,state:0
@@ -9686,7 +9752,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__amount_by_group
 msgid "Tax amount by group"
-msgstr ""
+msgstr "Сума податку за групами"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_calculation_rounding_method
@@ -9774,7 +9840,7 @@ msgid ""
 "Taxes, fiscal positions, chart of accounts &amp; legal statements for your "
 "country"
 msgstr ""
-"Податки, схеми оподаткування, план рахунків та юридичні виписки вашої країни"
+"Податки, схеми оподаткування, план рахунків та офіційні звіти вашої країни"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__invoice_ids
@@ -11206,7 +11272,7 @@ msgstr "Оновити курси обміну автоматично"
 #: code:addons/account/static/src/xml/bills_tree_upload_views.xml:5
 #, python-format
 msgid "Upload"
-msgstr ""
+msgstr "Завантажити"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_import_wizard_form_view
@@ -12197,7 +12263,7 @@ msgstr "транзакція в"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__amount_by_group
 msgid "type: [(name, amount, base, formated amount, formated base)]"
-msgstr ""
+msgstr "type: [(name, amount, base, formated amount, formated base)]"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form

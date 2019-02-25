@@ -378,8 +378,8 @@
         clear: both; // For the notebook not to have alongside floating elements
         margin-top: $o-form-spacing-unit * 2;
 
-        .nav-tabs > .tab-pane {
-            min-height: 100px;
+        .tab-content > .tab-pane {
+            padding: $o-horizontal-padding 0;
         }
     }
 
@@ -744,6 +744,10 @@
             .o_field_widget {
                 width: 50%;
                 flex: 0 0 auto;
+
+                &.o_field_many2manytags > .o_field_widget {
+                    flex: 1 0 50px;
+                }
             }
             button.btn-link:first-child {
                 padding-left: 0;

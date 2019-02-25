@@ -81,7 +81,7 @@ msgstr ""
 #: code:addons/stock/models/res_company.py:24
 #, python-format
 msgid "%s: Transit Location"
-msgstr "%s: Transittsted"
+msgstr "%s: Transittlokasjon"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -268,7 +268,7 @@ msgstr "<strong>Lagerbeholdning</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Location</strong>"
-msgstr "<strong>Sted</strong>"
+msgstr "<strong>Lokasjon</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -775,8 +775,7 @@ msgstr ""
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
 msgstr ""
-"Du kan skjule et sted uten å slette det ved å ta bort avmerking av Aktiv-"
-"feltet."
+"Skjul en lokasjon uten å slette den ved å ta bort avmerking på Aktiv-feltet."
 
 #. module: stock
 #: model:product.product,name:stock.product_cable_management_box
@@ -793,7 +792,7 @@ msgstr "Kalendervisning"
 #: code:addons/stock/models/stock_warehouse.py:520
 #, python-format
 msgid "Can't find any customer or supplier location."
-msgstr "Finner ikke noe sted for kunde eller leverandør."
+msgstr "Finner ingen lokasjon for kunde eller leverandør."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:256
@@ -891,7 +890,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__return_location
 msgid "Check this box to allow using this location as a return location."
-msgstr "Merk av for å tillate å bruke dette stedet som retursted"
+msgstr "Huk av for å tillate bruk av denne lokasjonen som returlokasjon."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__scrap_location
@@ -899,7 +898,8 @@ msgstr "Merk av for å tillate å bruke dette stedet som retursted"
 msgid ""
 "Check this box to allow using this location to put scrapped/damaged goods."
 msgstr ""
-"Merk av for å tillate å bruke dette stedet til varer som er vraket/skadet."
+"Huk av for å tillate bruk av denne lokasjonen til varer som er "
+"vraket/skadet."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_qty
@@ -1336,12 +1336,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_res_partner__property_stock_customer
 #: selection:stock.location,usage:0
 msgid "Customer Location"
-msgstr "Kundested"
+msgstr "Kundelokasjon"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Customer Locations"
-msgstr "Kundesteder"
+msgstr "Kundelokasjoner"
 
 #. module: stock
 #: selection:stock.picking.type,code:0
@@ -1885,7 +1885,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway__fixed_location_ids
 msgid "Fixed Locations Per Product Category"
-msgstr "Faste steder per produktkategori"
+msgstr "Faste lokasjoner pr produktkategori"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__group_id
@@ -1967,7 +1967,7 @@ msgstr "Fra leverandør"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__complete_name
 msgid "Full Location Name"
-msgstr "Fullt navn på sted"
+msgstr "Fullt navn på lokasjon"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -2366,13 +2366,13 @@ msgstr "Intern"
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Internal Location"
-msgstr "Internt sted"
+msgstr "Intern lokasjon"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Internal Locations"
-msgstr "Interne steder"
+msgstr "Interne lokasjoner"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__ref
@@ -2389,7 +2389,7 @@ msgstr "Interne overføringer"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__internal_transit_location_id
 msgid "Internal Transit Location"
-msgstr "Internt overføringssted"
+msgstr "Intern overføringslokasjon"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__int_type_id
@@ -2511,7 +2511,7 @@ msgstr "Lagerlokasjon"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr "Lagersteder"
+msgstr "Lagerlokasjoner"
 
 #. module: stock
 #: selection:stock.location,usage:0
@@ -2590,12 +2590,12 @@ msgstr "Er låst"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__return_location
 msgid "Is a Return Location?"
-msgstr "Er et retursted?"
+msgstr "Er en returlokasjon?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__scrap_location
 msgid "Is a Scrap Location?"
-msgstr "Er et vraksted?"
+msgstr "Er en vraklokasjon?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_initial_demand_editable
@@ -2852,7 +2852,7 @@ msgstr "Finn"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Location"
-msgstr "Sted"
+msgstr "Lokasjon"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_location_barcode
@@ -2862,7 +2862,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__name
 msgid "Location Name"
-msgstr "Navn på sted"
+msgstr "Navn på lokasjon"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__lot_stock_id
@@ -2872,12 +2872,12 @@ msgstr "Lokasjon lager"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__usage
 msgid "Location Type"
-msgstr "Type sted"
+msgstr "Type lokasjon"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "Location where the system will stock the finished products."
-msgstr "Sted hvor systemet vil lagre de ferdige produktene."
+msgstr "Lokasjon hvor systemet vil lagre de ferdige produktene."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -2887,7 +2887,7 @@ msgstr "Sted hvor systemet vil lagre de ferdige produktene."
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Locations"
-msgstr "Steder"
+msgstr "Lokasjoner"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -3586,7 +3586,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__original_location_id
 msgid "Original Location"
-msgstr "Opprinnelig sted"
+msgstr "Opprinnelig lokasjon"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_orig_ids
@@ -3664,7 +3664,7 @@ msgstr "Eier:"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__partner_id
 msgid "Owner of the location if not internal"
-msgstr "Eier av stedet hvis ikke intern"
+msgstr "Eier av lokasjonen hvis ikke intern"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__owner_id
@@ -4198,7 +4198,7 @@ msgstr "Produksjon"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_production
 msgid "Production Location"
-msgstr "Produksjonssted"
+msgstr "Produksjonslokasjon"
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:177
@@ -4318,7 +4318,7 @@ msgstr "Kvalitetskontroll"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_qc_stock_loc_id
 msgid "Quality Control Location"
-msgstr "Sted for kvalitetskontroll"
+msgstr "Lokasjon for kvalitetskontroll"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__quant_ids
@@ -4734,7 +4734,7 @@ msgstr "Retur"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__location_id
 msgid "Return Location"
-msgstr "Retursted"
+msgstr "Returlokasjon"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -4879,7 +4879,7 @@ msgstr "Vrak"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__scrap_location_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_search_view
 msgid "Scrap Location"
-msgstr "Vraksted"
+msgstr "Vraklokasjon"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__move_id
@@ -4908,7 +4908,7 @@ msgid ""
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
 "Å vrake et produkt fjerner det fra lagerbeholdningen. Produktet\n"
-"plasseres på et vraksted som kan brukes til rapportering."
+"plasseres på en vraklokasjon som kan brukes til rapportering."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5054,8 +5054,8 @@ msgid ""
 "Sets a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
 msgstr ""
-"Angir et varehus hvis du produserer på et fast sted. Dette kan være et "
-"samarbeidssted hvis du setter bort produksjonsoperasjonene."
+"Angir et varehus hvis du produserer på en fast lokasjon. Dette kan være en "
+"samarbeidslokasjon hvis du setter bort produksjonsoperasjonene."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
@@ -5569,7 +5569,7 @@ msgstr ""
 #. module: stock
 #: sql_constraint:stock.location:0
 msgid "The barcode for a location must be unique per company !"
-msgstr "Strekkoden for et sted må være unik per selskap!"
+msgstr "Strekkoden for en lokasjon må være unik pr selskap!"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
@@ -6008,12 +6008,12 @@ msgstr "Overføringer"
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Transit Location"
-msgstr "Transittsted"
+msgstr "Transittlokasjon"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Transit Locations"
-msgstr "Transittsteder"
+msgstr "Transittlokasjoner"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -6259,12 +6259,12 @@ msgstr "Leverandør"
 #: model:ir.model.fields,field_description:stock.field_res_partner__property_stock_supplier
 #: selection:stock.location,usage:0
 msgid "Vendor Location"
-msgstr "Leverandørsted"
+msgstr "Leverandørlokasjon"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor Locations"
-msgstr "Leverandørsteder"
+msgstr "Leverandørlokasjoner"
 
 #. module: stock
 #: selection:stock.picking.type,code:0
@@ -6284,7 +6284,7 @@ msgstr "Visning"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
 msgid "View Location"
-msgstr "Se sted"
+msgstr "Se lokasjon"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -6423,7 +6423,7 @@ msgstr "Nettstedmeldinger"
 #: model:ir.model.fields,help:stock.field_stock_picking__website_message_ids
 #: model:ir.model.fields,help:stock.field_stock_production_lot__website_message_ids
 msgid "Website communication history"
-msgstr "Kommunikasjonshistorikk på nettstedet"
+msgstr "Kommunikasjonshistorikk for nettsted"
 
 #. module: stock
 #: selection:barcode.rule,type:0
@@ -6781,7 +6781,7 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:109
 #, python-format
 msgid "You have to set a name for this location."
-msgstr "Du må gi dette stedet et navn."
+msgstr "Du må gi denne lokasjonen et navn."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:47

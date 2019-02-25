@@ -144,7 +144,8 @@
 
 <div t-name="reconciliation.line.match">
     <div class="match_controls">
-        <input class="filter" placeholder="Filter..." type="text" value=""/>
+        <input class="filter o_input" placeholder="Filter..." type="text" value=""/>
+        <button class="btn btn-secondary btn-sm fa fa-search" type="button"></button>
     </div>
     <table>
         <tbody>
@@ -210,6 +211,10 @@
             </tr>
             <tr class="create_force_tax_included d-none">
                 <td class="o_td_label">Tax Included in Price</td>
+                <td class="o_td_field"></td>
+            </tr>
+            <tr class="create_date d-none">
+                <td class="o_td_label">Writeoff Date</td>
                 <td class="o_td_field"></td>
             </tr>
         </tbody>

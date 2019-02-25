@@ -467,6 +467,7 @@ var BasicModel = AbstractModel.extend({
         var isNew = this.isNew(id);
         var rollback = 'rollback' in options ? options.rollback : isNew;
         var initialOffset = element.offset;
+        element._domains = {};
         this._visitChildren(element, function (elem) {
             if (rollback && elem._savePoint) {
                 if (elem._savePoint instanceof Array) {
@@ -2399,7 +2400,7 @@ var BasicModel = AbstractModel.extend({
             if (field.type === 'many2one' && !record.fieldsInfo[record.viewType][name].__no_fetch) {
                 var localId = (record._changes && record._changes[name]) || record.data[name];
                 var relatedRecord = self.localData[localId];
-                if (!relatedRecord) {
+                if (!relatedRecord || relatedRecord.data.display_name) {
                     return;
                 }
                 toBeFetched.push({

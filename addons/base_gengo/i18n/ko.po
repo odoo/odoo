@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
+# JH CHOI <hwangtog@gmail.com>, 2018
 # Linkup <link-up@naver.com>, 2018
 # Seongseok Shin <shinss61@hotmail.com>, 2018
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:05+0000\n"
+"POT-Creation-Date: 2019-01-22 11:11+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
 "Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2018\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -63,6 +63,11 @@ msgstr "자동 번역 승인"
 #: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__gengo_auto_approve
 msgid "Auto Approve Translation ?"
 msgstr "번역을 자동으로 승인할까요?"
+
+#. module: base_gengo
+#: model:ir.model,name:base_gengo.model_base_gengo_translations
+msgid "Base Gengo Translations"
+msgstr ""
 
 #. module: base_gengo
 #: selection:base.gengo.translations,sync_type:0
@@ -166,7 +171,7 @@ msgid "Gengo Translation Service Level"
 msgstr "Gengo 번역 서비스 수준"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:84
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:85
 #, python-format
 msgid ""
 "Gengo `Public Key` or `Private Key` are missing. Enter your Gengo "
@@ -174,7 +179,7 @@ msgid ""
 msgstr "Gengo `공개 키` 혹은 `개인 키` 가 없습니다. `설정 > 회사 > Gengo 변수`에서 인증 변수를 입력하세요."
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:95
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:96
 #, python-format
 msgid ""
 "Gengo connection failed with this message:\n"
@@ -287,7 +292,7 @@ msgid "Sync Type"
 msgstr "동기화 유형"
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:114
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:115
 #, python-format
 msgid ""
 "The number of terms to sync should be between 1 to 200 to work with Gengo "
@@ -308,7 +313,7 @@ msgid ""
 msgstr "이 댓글은 Gengo에 보내는 모든 요청별로 자동으로 포함될 것입니다."
 
 #. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:109
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:110
 #, python-format
 msgid "This language is not supported by the Gengo translation services."
 msgstr "이 언어는 Gengo 번역 서비스에서 지원하지 않습니다."
@@ -339,8 +344,3 @@ msgid ""
 "You can select here the service level you want for an automatic translation "
 "using Gengo."
 msgstr "Gengo를 이용해서 자동으로 번역되기를 원하는 서비스 수준을 선택하십시오."
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_base_gengo_translations
-msgid "base.gengo.translations"
-msgstr ""

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from lxml import etree
 import traceback
 import os
 import unittest
@@ -12,14 +13,14 @@ import werkzeug.routing
 import werkzeug.utils
 
 import odoo
-from odoo import api, models
+from odoo import api, models, registry
 from odoo import SUPERUSER_ID
 from odoo.http import request
 from odoo.tools import config
-from odoo.exceptions import QWebException
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN, OR
 
+from odoo.addons.base.models.qweb import QWebException
 from odoo.addons.http_routing.models.ir_http import ModelConverter, _guess_mimetype
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 
@@ -185,7 +186,7 @@ class Http(models.AbstractModel):
                     # if parent excplicitely returns a plain response, then we don't touch it
                     return response
             except Exception as e:
-                if 'werkzeug' in config['dev_mode'] and (not isinstance(exception, QWebException) or not exception.qweb.get('cause')):
+                if 'werkzeug' in config['dev_mode']:
                     raise e
                 exception = e
 
@@ -207,18 +208,12 @@ class Http(models.AbstractModel):
 
             if isinstance(exception, QWebException):
                 values.update(qweb_exception=exception)
-                if isinstance(exception.qweb.get('cause'), odoo.exceptions.AccessError):
-                    code = 403
 
-            if code == 500:
-                logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
-                if 'qweb_exception' in values:
-                    view = request.env["ir.ui.view"]
-                    views = view._views_get(exception.qweb['template'])
-                    to_reset = views.filtered(lambda view: view.model_data_id.noupdate is True and view.arch_fs)
-                    values['views'] = to_reset
-            elif code == 403:
-                logger.warn("403 Forbidden:\n\n%s", values['traceback'])
+                # retro compatibility to remove in 12.2
+                exception.qweb = dict(message=exception.message, expression=exception.html)
+
+                if type(exception.error) == odoo.exceptions.AccessError:
+                    code = 403
 
             values.update(
                 status_message=werkzeug.http.HTTP_STATUS_CODES[code],
@@ -233,10 +228,51 @@ class Http(models.AbstractModel):
             if not request.uid:
                 cls._auth_method_public()
 
-            try:
-                html = request.env['ir.ui.view'].render_template('website.%s' % view_id, values)
-            except Exception:
-                html = request.env['ir.ui.view'].render_template('website.http_error', values)
+            with registry(request.env.cr.dbname).cursor() as cr:
+                env = api.Environment(cr, request.uid, request.env.context)
+                if code == 500:
+                    logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
+                    View = env["ir.ui.view"]
+                    if 'qweb_exception' in values:
+                        if 'load could not load template' in exception.args:
+                            # When t-calling an inexisting template, we don't have reference to
+                            # the view that did the t-call. We need to find it.
+                            values['views'] = View.search([
+                                ('type', '=', 'qweb'),
+                                '|',
+                                ('arch_db', 'ilike', 't-call="%s"' % exception.name),
+                                ('arch_db', 'ilike', "t-call='%s'" % exception.name)
+                            ], order='write_date desc', limit=1)
+                        else:
+                            try:
+                                # exception.name might be int, string
+                                exception_template = int(exception.name)
+                            except:
+                                exception_template = exception.name
+                            view = View._view_obj(exception_template)
+                            et = etree.fromstring(view.with_context(inherit_branding=False).read_combined(['arch'])['arch'])
+                            node = et.find(exception.path.replace('/templates/t/', './'))
+                            line = node is not None and etree.tostring(node, encoding='unicode')
+                            # line = exception.html  # FALSE -> contains branding <div t-att-data="request.browse('ok')"/>
+                            if line:
+                                # If QWebException occurs in a child view, the parent view is raised
+                                values['editable'] = request.uid and request.website.is_publisher()
+                                values['views'] = View._views_get(exception_template).filtered(
+                                    lambda v: line in v.arch
+                                )
+                            else:
+                                values['views'] = view
+                        # Keep only views that we can reset
+                        values['views'] = values['views'].filtered(
+                            lambda view: view._get_original_view().arch_fs or 'oe_structure' in view.key
+                        )
+                elif code == 403:
+                    logger.warn("403 Forbidden:\n\n%s", values['traceback'])
+                try:
+                    html = env['ir.ui.view'].render_template('website.%s' % view_id, values)
+                except Exception:
+                    html = env['ir.ui.view'].render_template('website.http_error', values)
+
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
     @classmethod

@@ -211,6 +211,8 @@ class account_abstract_payment(models.AbstractModel):
         self.amount = abs(self._compute_payment_amount())
 
         # Set by default the first liquidity journal having this currency if exists.
+        if self.journal_id:
+            return
         journal = self.env['account.journal'].search(
             [('type', 'in', ('bank', 'cash')), ('currency_id', '=', self.currency_id.id)], limit=1)
         if journal:
@@ -434,6 +436,8 @@ class account_payment(models.Model):
             if move_line.account_id.reconcile:
                 move_line_id = move_line.id
                 break;
+        if not self.partner_id:
+            raise UserError(_("Payments without a customer can't be matched"))
         action_context = {'company_ids': [self.company_id.id], 'partner_ids': [self.partner_id.commercial_partner_id.id]}
         if self.partner_type == 'customer':
             action_context.update({'mode': 'customers'})

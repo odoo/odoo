@@ -312,11 +312,13 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_recovery_email_send(self):
+        self._portal_ensure_token()
         composer_form_view_id = self.env.ref('mail.email_compose_message_wizard_form').id
         try:
             default_template = self.env.ref('website_sale.mail_template_sale_cart_recovery', raise_if_not_found=False)
             default_template_id = default_template.id if default_template else False
-            template_id = self.website_id and self.website_id.cart_recovery_mail_template_id.id or default_template_id
+            template_id = (self.filtered('website_id') == self and
+                           self.mapped('website_id')[-1:1].cart_recovery_mail_template_id.id) or default_template_id
         except:
             template_id = False
         return {
@@ -336,6 +338,13 @@ class SaleOrder(models.Model):
                 'active_ids': self.ids,
             },
         }
+
+    @api.multi
+    def get_base_url(self):
+        """When using multi-website, we want the user to be redirected to the
+        most appropriate website if possible."""
+        res = super(SaleOrder, self).get_base_url()
+        return self.website_id and self.website_id._get_http_domain() or res
 
 
 class SaleOrderLine(models.Model):

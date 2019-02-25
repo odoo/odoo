@@ -279,6 +279,16 @@ class View(models.Model):
         return super(View, self).get_view_id(xml_id)
 
     @api.multi
+    def _get_original_view(self):
+        """Given a view, retrieve the original view it was COW'd from.
+        The given view might already be the original one. In that case it will
+        (and should) return itself.
+        """
+        self.ensure_one()
+        domain = [('key', '=', self.key), ('model_data_id', '!=', None)]
+        return self.search(domain, limit=1)  # Useless limit has multiple xmlid should not be possible
+
+    @api.multi
     def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
         """ Render the template. If website is enabled on request, then extend rendering context with website values. """
         new_context = dict(self._context)
@@ -371,6 +381,15 @@ class View(models.Model):
         res = super(View, self)._save_oe_structure_hook()
         res['website_id'] = self.env['website'].get_current_website().id
         return res
+
+    @api.model
+    def _set_noupdate(self):
+        '''If website is installed, any call to `save` from the frontend will
+        actually write on the specific view (or create it if not exist yet).
+        In that case, we don't want to flag the generic view as noupdate.
+        '''
+        if not self._context.get('website_id'):
+            super(View, self)._set_noupdate()
 
     @api.multi
     def save(self, value, xpath=None):

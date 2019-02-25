@@ -11,15 +11,14 @@
 # Simone Bernini <simone@aperturelabs.it>, 2018
 # Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2018
 # Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
-# p_amoruso <p.amoruso@elvenstudio.it>, 2018
 # Alessandro Forte <a.forte1010@gmail.com>, 2018
 # Paolo Caruccio <paolo.caruccio66@gmail.com>, 2018
 # Niccolò Lubello <nlubello@gmail.com>, 2018
 # efraimbiffi <eab@odoo.com>, 2018
 # Martin Trigaux, 2018
-# Paolo Valier, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Paolo Valier, 2019
 # 
 msgid ""
 msgstr ""
@@ -27,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2018\n"
+"Last-Translator: Paolo Valier, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -136,6 +135,8 @@ msgid ""
 "<i>Pending,</i> Your online payment has been successfully processed. But "
 "your order is not validated yet."
 msgstr ""
+"<i>In corso,</i> il tuo pagamento online è stato processato correttamente ma"
+" il tuo ordine non è ancora stato convalidato."
 
 #. module: payment
 #. openerp-web
@@ -173,8 +174,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Ambiente di</span>\n"
-"<span class=\"text-success\">Produzione</span>"
+"<span class=\"text-success\">Ambiente</span>\n"
+"                                    <span class=\"o_stat_text\">di produzione</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
@@ -272,13 +273,13 @@ msgstr "Per creare una transazione è necessario un sistema di pagamento."
 #: code:addons/payment/models/account_payment.py:55
 #, python-format
 msgid "A payment transaction already exists."
-msgstr ""
+msgstr "Esiste già una transazione di pagamento."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:57
 #, python-format
 msgid "A token is required to create a new payment transaction."
-msgstr ""
+msgstr "Per creare una nuova transazione di pagamento è necessario un token."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:657
@@ -399,7 +400,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Apply"
-msgstr "Salva"
+msgstr "Applica"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
@@ -408,8 +409,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
-"Sei sicuro di voler annullare la transazione autorizzata? Questo azione non "
-"può essere cancellata."
+"Annullare veramente la transazione autorizzata? Questa azione non può essere"
+" annullata."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
@@ -631,7 +632,7 @@ msgstr "Crea un nuovo sistema di pagamento"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
 msgid "Create a new payment transaction"
-msgstr ""
+msgstr "Crea una nuova transazione di pagamento"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_icon
@@ -762,7 +763,7 @@ msgstr "Messaggio di errore"
 #: code:addons/payment/static/src/js/payment_form.js:430
 #, python-format
 msgid "Error: "
-msgstr ""
+msgstr "Errore:"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
@@ -832,7 +833,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pre_msg
 msgid "Help Message"
-msgstr "Messaggio d'aiuto"
+msgstr "Messaggio di aiuto"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__id
@@ -887,14 +888,14 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
 msgid "Internal reference of the TX"
-msgstr ""
+msgstr "Riferimento interno del TX"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:145
 #, python-format
 msgid "Internal server error"
-msgstr ""
+msgstr "Errore interno del server"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:55
@@ -906,7 +907,7 @@ msgstr "Rilevato token non valido. Token del sistema %s != %s"
 #: code:addons/payment/models/account_invoice.py:58
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "Rilevato token non valido. Token del partner %s != %s"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_invoice
@@ -916,7 +917,7 @@ msgstr "Fattura"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Invoice(s)"
-msgstr ""
+msgstr "Fattura/e"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:851
@@ -942,7 +943,7 @@ msgstr "Lingua"
 #: model:ir.model.fields,field_description:payment.field_payment_token____last_update
 #: model:ir.model.fields,field_description:payment.field_payment_transaction____last_update
 msgid "Last Modified on"
-msgstr "Data di ultima modifica"
+msgstr "Ultima modifica il"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__write_uid
@@ -951,7 +952,7 @@ msgstr "Data di ultima modifica"
 #: model:ir.model.fields,field_description:payment.field_payment_token__write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__write_uid
 msgid "Last Updated by"
-msgstr "Ultima modifica di"
+msgstr "Ultimo aggiornamento di"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__write_date
@@ -960,7 +961,7 @@ msgstr "Ultima modifica di"
 #: model:ir.model.fields,field_description:payment.field_payment_token__write_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__write_date
 msgid "Last Updated on"
-msgstr "Ultima modifica il"
+msgstr "Ultimo aggiornamento il"
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
@@ -1030,25 +1031,27 @@ msgstr "Messaggio"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__post_msg
 msgid "Message displayed after having done the payment process."
-msgstr "Messaggio da mostrare una volta processato il pagamento."
+msgstr "Messaggio visualizzato dopo l'elaborazione del pagamento."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pre_msg
 msgid "Message displayed to explain and help the payment process."
 msgstr ""
-"Messaggio da visualizzare per aiutare a chiarire il processo di pagamento."
+"Messaggio visualizzato per aiutare a chiarire il processo di pagamento."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__error_msg
 msgid "Message displayed, if error is occur during the payment process."
 msgstr ""
+"Messaggio visualizzato se l'errore si verifica durante l'elaborazione del "
+"pagamento."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
 msgstr ""
-"Messaggio visualizzato se l'ordine viene annullato durante il processo di "
-"pagamento."
+"Messaggio visualizzato se l'ordine viene annullato durante l'elaborazione "
+"del pagamento."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__done_msg
@@ -1093,7 +1096,7 @@ msgstr "Nome"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__name
 msgid "Name of the payment token"
-msgstr ""
+msgstr "Nome del token di pagamento"
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
@@ -1221,7 +1224,7 @@ msgstr "Partner"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_name
 msgid "Partner Name"
-msgstr "Nome Partner"
+msgstr "Nome partner"
 
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
@@ -1246,7 +1249,7 @@ msgstr "PayPal"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_email_account
 msgid "PayPal Email ID"
-msgstr "ID email PayPal"
+msgstr "ID e-mail PayPal"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
@@ -1316,7 +1319,7 @@ msgstr "Metodi di pagamento"
 #: model:ir.model,name:payment.model_payment_token
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_token_id
 msgid "Payment Token"
-msgstr "Token Pagamento"
+msgstr "Token di pagamento"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_ids
@@ -1325,7 +1328,7 @@ msgstr "Token Pagamento"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_tree_view
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_view_search
 msgid "Payment Tokens"
-msgstr "Token Pagamento"
+msgstr "Token di pagamento"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -1401,7 +1404,7 @@ msgstr ""
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Paypal"
-msgstr "Paypal"
+msgstr "PayPal"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -1474,7 +1477,7 @@ msgstr "Usare il nome dell'ordine come riferimento per le comunicazioni."
 #: code:addons/payment/static/src/xml/payment_processing.xml:139
 #, python-format
 msgid "Please wait ..."
-msgstr ""
+msgstr "Attendere ..."
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
@@ -1498,7 +1501,7 @@ msgstr "Produzione"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__provider
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Provider"
-msgstr "Provider"
+msgstr "Fornitore"
 
 #. module: payment
 #. openerp-web
@@ -1521,7 +1524,7 @@ msgstr "Riferimento"
 #. module: payment
 #: sql_constraint:payment.transaction:0
 msgid "Reference must be unique!"
-msgstr ""
+msgstr "Il riferimento deve essere univoco!"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
@@ -1531,7 +1534,7 @@ msgstr ""
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr "Campi obbligatori non completati"
+msgstr "Campi obbligatori non compilati"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__return_url
@@ -1602,14 +1605,14 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:302
 #, python-format
 msgid "Server error"
-msgstr "Errore Server"
+msgstr "Errore del server"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:138
 #, python-format
 msgid "Server error:"
-msgstr ""
+msgstr "Errore del server:"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
@@ -1619,7 +1622,7 @@ msgstr "Imposta pagamenti"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__short_name
 msgid "Short name"
-msgstr ""
+msgstr "Nome corto"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_sips
@@ -1665,12 +1668,12 @@ msgstr "Stripe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr "Chiave pubblicabile Stripe"
+msgstr "Chiave pubblica Stripe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr "Chiave segreta Stripe"
+msgstr "Chiave privata Stripe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids

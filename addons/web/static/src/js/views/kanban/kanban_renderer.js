@@ -244,7 +244,6 @@ var KanbanRenderer = BasicRenderer.extend({
      */
     updateState: function (state) {
         this._setState(state);
-        this._toggleNoContentHelper();
         return this._super.apply(this, arguments);
     },
 
@@ -382,11 +381,8 @@ var KanbanRenderer = BasicRenderer.extend({
         var self = this;
         var oldWidgets = this.widgets;
         this.widgets = [];
-        this.$el.empty();
 
         var isGrouped = !!this.state.groupedBy.length;
-        this.$el.toggleClass('o_kanban_grouped', isGrouped);
-        this.$el.toggleClass('o_kanban_ungrouped', !isGrouped);
         var fragment = document.createDocumentFragment();
         // render the kanban view
         this.defs = [];
@@ -395,15 +391,19 @@ var KanbanRenderer = BasicRenderer.extend({
         } else {
             this._renderUngrouped(fragment);
         }
-        this.$el.append(fragment);
-        this._toggleNoContentHelper();
         var defs = this.defs;
-        return this._super.apply(this, arguments).then(function () {
+        delete this.defs;
+        defs.push(this._super.apply(this, arguments));
+        return $.when.apply($, defs).then(function () {
             _.invoke(oldWidgets, 'destroy');
+            self.$el.empty();
+            self.$el.toggleClass('o_kanban_grouped', isGrouped);
+            self.$el.toggleClass('o_kanban_ungrouped', !isGrouped);
+            self.$el.append(fragment);
+            self._toggleNoContentHelper();
             if (self._isInDom) {
                 _.invoke(self.widgets, 'on_attach_callback');
             }
-            return $.when.apply(null, defs);
         });
     },
     /**
