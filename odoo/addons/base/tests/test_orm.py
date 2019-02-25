@@ -452,3 +452,15 @@ class TestO2MSerialization(TransactionCase):
         commands = [DELETE_ALL()]
         results = self.env['res.partner'].resolve_2many_commands('child_ids', commands, ['name'])
         self.assertEqual(results, [])
+
+
+class TestRegressionNotInOperator(TransactionCase):
+    def setUp(self):
+        super(TestRegressionNotInOperator, self).setUp()
+        # Ensure there's with color 0
+        self.env['res.partner'].create({'name': 'Uncolored', 'color': 0})
+
+    @mute_logger('odoo.models')
+    def test_not_in_operator_filtering_zeros(self):
+        res = self.env['res.partner'].search([('color', 'not in', [0])])
+        self.assertFalse(any(rec.color == 0 for rec in res))
