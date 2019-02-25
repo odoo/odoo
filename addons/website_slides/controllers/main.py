@@ -36,6 +36,17 @@ class WebsiteSlides(WebsiteProfile):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
+    def _fetch_slide(self, slide_id):
+        slide = request.env['slide.slide'].browse(int(slide_id)).exists()
+        if not slide:
+            return {'error': 'slide_wrong'}
+        try:
+            slide.check_access_rights()
+            slide.check_access_rule()
+        except:
+            return {'error': 'slide_access'}
+        return {'slide': slide}
+
     def _set_viewed_slide(self, slide):
         if request.env.user._is_public() or slide.is_preview or not slide.channel_id.is_member:
             viewed_slides = request.session.setdefault('viewed_slides', list())
@@ -523,24 +534,27 @@ class WebsiteSlides(WebsiteProfile):
             'error': "You already passed this quiz"
         }
 
-    # SLIDE STATE CONTROLLERS
-    # TDE CLEANME: clean ctrlr / method name
+    # --------------------------------------------------
+    # SLIDE.SLIDE TOOLS CONTOLLERS
+    # --------------------------------------------------
 
-    @http.route('/slide/completed/<int:slide_id>', website=True, type="http", auth="user")
-    def mark_as_completed(self, slide_id, next_slide=None):
-        slide = request.env['slide.slide'].browse(slide_id)
+    @http.route('/slides/slide/<model("slide.slide"):slide>/set_completed', website=True, type="http", auth="user")
+    def slide_set_completed(self, slide, next_slide=None):
         self._set_completed_slide(slide)
-        return werkzeug.utils.redirect("/slides/slide/%s" %(next_slide))
+        return werkzeug.utils.redirect("/slides/slide/%s" % (next_slide if next_slide else slide.id))
 
-    @http.route('/slides/set_completed', website=True, type="json", auth="user")
-    def set_status_as_done(self, slide_id):
-        slide = request.env['slide.slide'].browse(slide_id)
-        self._set_completed_slide(slide)
+    @http.route('/slides/slide/set_completed', website=True, type="json", auth="public")
+    def slide_set_completed(self, slide_id):
+        if request.website.is_public_user():
+            return {'error': 'public_user'}
+        fetch_res = self._fetch_slide(slide_id)
+        if fetch_res['error']:
+            return fetch_res
+        self._set_completed_slide(fetch_res['slide'])
         return {
-            'channel_completion': slide.channel_id.completion
+            'channel_completion': fetch_res['slide'].channel_id.completion
         }
 
-    # JSONRPC
     @http.route('/slides/slide/like', type='json', auth="public", website=True)
     def slide_like(self, slide_id, upvote):
         if request.website.is_public_user():
