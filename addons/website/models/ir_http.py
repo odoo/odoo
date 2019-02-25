@@ -247,8 +247,8 @@ class Http(models.AbstractModel):
                                 exception_template = exception.name
                             view = View._view_obj(exception_template)
                             et = etree.fromstring(view.with_context(inherit_branding=False).read_combined(['arch'])['arch'])
-                            node = et.find(exception.path.replace('/templates/t/', './'))
-                            line = node is not None and etree.tostring(node, encoding='unicode')
+                            node = et.xpath(exception.path)
+                            line = node is not None and etree.tostring(node[0], encoding='unicode')
                             # line = exception.html  # FALSE -> contains branding <div t-att-data="request.browse('ok')"/>
                             if line:
                                 # If QWebException occurs in a child view, the parent view is raised
