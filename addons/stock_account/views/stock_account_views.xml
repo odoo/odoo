@@ -77,7 +77,8 @@
                     <field name="qty_at_date"/>
                     <field name="uom_id" groups="product.group_uom"/>
                     <field name="currency_id" invisible="1"/>
-                    <field name="stock_value" sum="Stock Valuation" widget="monetary"/>
+                    <field name="cost_currency_id" invisible="1"/>
+                    <field name="stock_value" sum="Stock Valuation" widget="monetary" options="{'currency_field': 'cost_currency_id'}"/>
                     <field name="cost_method" invisible="1"/>
                     <button name="action_valuation_at_date_details" type="object" icon="fa-info-circle" attrs="{'invisible': [('cost_method', '!=', 'fifo')]}" />
                 </tree>
