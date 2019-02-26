@@ -4170,7 +4170,7 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('o2m line should be focused after save', function (assert) {
+    QUnit.test('navigation with o2m form popup, closing o2m form popup should set focus back to o2m', function (assert) {
         assert.expect(1);
 
         var form = createView({
@@ -4183,48 +4183,42 @@ QUnit.module('Views', {
                             '<tree>' +
                                 '<field name="name"/>' +
                             '</tree>' +
+                            '<form>' +
+                                '<group>' +
+                                    '<field name="name"/>' +
+                                '</group>' +
+                            '</form>' +
                         '</field>' +
                     '</sheet>' +
                 '</form>',
-            archs: {
-                'partner,false,form': '<form>' +
-                        '<sheet>' +
-                            '<group>' +
-                                '<field name="name"/>' +
-                            '</group>' +
-                        '</sheet>' +
-                    '</form>',
-            },
         });
 
         testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
-        $('.modal .o_field_widget[name=name]').val('new name').trigger('input');
+        $('.modal-body .o_field_widget[name=name]').val('new name').trigger('input');
         $(document.activeElement).trigger({type: 'keydown', which: $.ui.keyCode.TAB});
         testUtils.dom.click($('.modal-footer button:first'));  // save & close
 
-        assert.strictEqual(document.activeElement, $('.o_field_x2many_list_row_add a')[0],
+        assert.strictEqual(document.activeElement, form.$('.o_field_x2many_list_row_add a')[0],
             "add a line should be focused");
-
-        testUtils.dom.click($(document.activeElement));
-        $('.modal .o_field_widget[name=name]').val('last name').trigger('input');
-        testUtils.dom.click($('.modal-footer button:first'));
 
         form.destroy();
     });
 
-    QUnit.test('ESC on create edit dialog should set focus on the same field in form view', function (assert) {
-        assert.expect(2);
+    QUnit.test('pressing ESCAPE on create and edit dialog should set focus back on the same field in form view', function (assert) {
+        assert.expect(7);
 
         var form = createView({
             View: FormView,
             model: 'partner',
             data: this.data,
             arch: '<form string="Partners">' +
-                    '<sheet><group>' +
-                        '<field name="product_id"/>' +
-                        '<field name="foo"/>' +
-                    '</group></sheet>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="product_id"/>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
                 '</form>',
             archs: {
                 'product,false,form': '<form>' +
@@ -4238,6 +4232,20 @@ QUnit.module('Views', {
             res_id: 2,
         });
         form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(document.activeElement, form.$('[name="product_id"] input')[0],
+            "product_id should have focus by default");
+
+        $(document.activeElement).trigger({type: 'keydown', which: $.ui.keyCode.TAB});
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
+            "product_id should have focus by default");
+        assert.strictEqual(form.renderer.lastActivatedFieldIndex, 1, "lastActivatedFieldIndex should be 1");
+
+        // going back using shift + tab should set lastActivatedFieldIndex of form renderer
+        $(document.activeElement).trigger({type: 'keydown', which: $.ui.keyCode.TAB, shiftKey: true});
+        assert.strictEqual(document.activeElement, form.$('[name="product_id"] input')[0],
+            "product_id should have focus by default");
+        assert.strictEqual(form.renderer.lastActivatedFieldIndex, 0, "lastActivatedFieldIndex should be 0");
 
         var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
         form.$('.o_field_many2one input').click();
@@ -4247,23 +4255,10 @@ QUnit.module('Views', {
         assert.strictEqual($('.modal-dialog').length, 1, "create edit dialog should be opened");
 
         // Press ESC to cancel create dialog
-        form.$('.o_field_widget[name="display_name"]').trigger($.Event('keydown', {
+        $('.modal-body input[name="name"]').trigger($.Event('keydown', {
             which: $.ui.keyCode.ESCAPE,
-            keyCode: $.ui.keyCode.ESCAPE,
         }));
 
-        testUtils.dom.click(form.$('.o_field_many2one input'));
-        testUtils.dom.click($dropdown.find('li:first()'));
-
-        form.$('input[name="product_id"]').focus();
-        testUtils.dom.click(form.$('.o_field_many2one input'));
-        testUtils.dom.click($dropdown.find('.o_m2o_dropdown_option:contains(Create)').mouseenter());
-
-        // Again press ESC
-        $('.modal-header').trigger($.Event('keydown', {
-            which: $.ui.keyCode.ESCAPE,
-            keyCode: $.ui.keyCode.ESCAPE,
-        }));
         assert.strictEqual(document.activeElement, form.$('.o_field_widget[name="product_id"] input')[0],
             "product_id field should be focused");
 
@@ -4271,8 +4266,8 @@ QUnit.module('Views', {
     });
 
 
-    QUnit.test('shift+tab should set focus on last activate widget', function (assert) {
-        assert.expect(3);
+    QUnit.test('shift + tab on save button should set focus on last widget in form', function (assert) {
+        assert.expect(4);
 
         var form = createView({
             View: FormView,
@@ -4284,15 +4279,6 @@ QUnit.module('Views', {
                         '<field name="foo"/>' +
                     '</group></sheet>' +
                 '</form>',
-            archs: {
-                'product,false,form': '<form>' +
-                        '<sheet>' +
-                            '<group>' +
-                                '<field name="name"/>' +
-                            '</group>' +
-                        '</sheet>' +
-                    '</form>',
-            },
             res_id: 2,
         });
 
@@ -4300,16 +4286,20 @@ QUnit.module('Views', {
         assert.strictEqual(document.activeElement, form.$('.o_field_widget[name="product_id"] input')[0],
             "product_id should be focused");
 
-        form.$('.o_field_widget[name="product_id"] input').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        form.$('.o_field_widget[name="product_id"] input').trigger($.Event('keydown',
+            {which: $.ui.keyCode.TAB}));
         assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
             "foo should be focused");
 
         form.$('input[name="foo"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
-        // simulate shift+tab on active element
+        assert.strictEqual(document.activeElement, form.$buttons.find('.o_form_button_save')[0],
+            "Save button should have focus");
+
+        // Shift + Tab on save button should set focus back to last widget in form
         $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
 
         assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
-            "foo(last active element) should be focused");
+            "foo(last element) should be focused");
         form.destroy();
     });
 

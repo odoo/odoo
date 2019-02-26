@@ -2936,8 +2936,8 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('navigation: moving down with keydown', function (assert) {
-        assert.expect(3);
+    QUnit.test('navigation: moving down with keydown in editable list', function (assert) {
+        assert.expect(4);
 
         var list = createView({
             View: ListView,
@@ -2946,17 +2946,22 @@ QUnit.module('Views', {
             arch: '<tree editable="bottom"><field name="foo"/></tree>',
         });
 
-        $('.o_list_button_add').trigger({type: 'keydown', which: $.ui.keyCode.DOWN});
-        assert.strictEqual($(document.activeElement).parents('tr').find('.o_data_cell').text(), 'yop',
-            "first row(yop) should be focused");
+        list.$buttons.find(".o_list_button_add").trigger({type: 'keydown', which: $.ui.keyCode.DOWN});
+        assert.strictEqual($(document.activeElement).closest('tr.o_data_row').index(), 0,
+            "first row should be focused");
 
         $(document.activeElement).trigger({type: 'keydown', which: $.ui.keyCode.DOWN});
-        assert.strictEqual($(document.activeElement).parents('tr').find('.o_data_cell').text(), 'blip',
-            "second row(blip) should be focused");
+        assert.strictEqual($(document.activeElement).closest('tr.o_data_row').index(), 1,
+            "second row should be focused");
 
         $(document.activeElement).trigger({type: 'keydown', which: $.ui.keyCode.DOWN});
-        assert.strictEqual($(document.activeElement).parents('tr').find('.o_data_cell').text(), 'gnap',
-            "third row(gnap) should be focused");
+        assert.strictEqual($(document.activeElement).closest('tr').index(), 2,
+            "third row should be focused");
+
+        $(document.activeElement).trigger({type: 'keydown', which: $.ui.keyCode.UP});
+        assert.strictEqual($(document.activeElement).closest('tr').index(), 1,
+            "second row should be focused");
+
         list.destroy();
     });
 
@@ -3223,8 +3228,8 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('Editable listview, pressing ESC set focus on searchview', function (assert) {
-        assert.expect(1);
+    QUnit.test('editable listview, pressing ESCAPE set focus on searchview', function (assert) {
+        assert.expect(2);
 
         this.actions = [{
             id: 1,
@@ -3232,10 +3237,9 @@ QUnit.module('Views', {
             res_model: 'foo',
             type: 'ir.actions.act_window',
             views: [[false, 'list']],
-        }
-        ];
+        }];
 
-        var actionmanager = createActionManager({
+        var actionManager = createActionManager({
             actions: this.actions,
             data: this.data,
             archs: {
@@ -3244,20 +3248,23 @@ QUnit.module('Views', {
             },
         });
 
-        actionmanager.doAction(1);
+        actionManager.doAction(1);
 
-        testUtils.dom.click($('.o_list_button_add'));
-        // press 'ESC'
-        actionmanager.$('tr.o_selected_row .o_field_widget').trigger($.Event('keydown', {
+        var currentController = actionManager.getCurrentController().widget;
+        testUtils.dom.click(actionManager.controlPanel.$('.o_list_button_add'));
+        assert.strictEqual(document.activeElement,
+            currentController.$('tr.o_selected_row .o_field_widget')[0], "foo should have focus");
+
+        // press Escape key to discard current line
+        currentController.$('tr.o_selected_row .o_field_widget').trigger($.Event('keydown', {
             which: $.ui.keyCode.ESCAPE,
-            keyCode: $.ui.keyCode.ESCAPE,
         }));
-        assert.strictEqual(document.activeElement, $('.o_searchview_input')[0],
+        assert.strictEqual(document.activeElement, actionManager.controlPanel.$('.o_searchview_input')[0],
             "focus should be set on searchview input");
-        actionmanager.destroy();
+        actionManager.destroy();
     });
 
-    QUnit.test('Editable listview, press Enter should open edit mode', function (assert) {
+    QUnit.test('editable listview, press ENTER on selected row should open edit mode', function (assert) {
         assert.expect(1);
 
         var list = createView({
@@ -3270,9 +3277,9 @@ QUnit.module('Views', {
         testUtils.dom.click(list.$('.o_data_row:first .o_list_record_selector input'));  // select first record
 
         list.$('.o_data_row:first .o_list_record_selector')
-            .trigger({type: "keydown", which: $.ui.keyCode.ENTER})
+            .trigger({type: "keydown", which: $.ui.keyCode.ENTER});
 
-        assert.strictEqual(list.$('tr.o_data_row:first .o_data_cell input').length, 1,
+        assert.strictEqual(list.$('tr.o_selected_row .o_data_cell .o_field_widget').length, 1,
             "should open in edit mode");
         list.destroy();
     });

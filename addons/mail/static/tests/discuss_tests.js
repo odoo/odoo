@@ -107,7 +107,7 @@ QUnit.test('basic rendering', function (assert) {
     });
 });
 
-QUnit.test('Focus is on searchview', function (assert) {
+QUnit.test('focus on searchview', function (assert) {
     assert.expect(1);
     var done = assert.async();
 
