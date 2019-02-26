@@ -8,10 +8,36 @@ from odoo.exceptions import ValidationError
 EMPLOYER_ONSS = 0.2714
 
 
+def get_private_car_reimbursed_amount(distance):
+    # monthly train subscription amount => half is reimbursed
+    amounts_train = [
+        (3, 0.0), (4, 39.5), (5, 42.5), (6, 45.0),
+        (7, 48.0), (8, 51.0), (9, 53.0), (10, 56.0),
+        (11, 59.0), (12, 62.0), (13, 64.0), (14, 67.0),
+        (15, 70.0), (16, 72.0), (17, 75.0), (18, 78.0),
+        (19, 81.0), (20, 83.0), (21, 86.0), (22, 89.0),
+        (23, 91.0), (24, 94.0), (25, 97.0), (26, 100.0),
+        (27, 102.0), (28, 105.0), (29, 108.0), (30, 110.0),
+        (33, 115.0), (36, 122.0), (39, 128.0), (42, 135.0),
+        (42, 135.0), (45, 142.0), (48, 148.0), (51, 155.0),
+        (54, 160.0), (57, 164.0), (60, 169.0), (65, 176.0),
+        (70, 183.0), (75, 191.0), (80, 199.0), (85, 207.0),
+        (90, 215.0), (95, 223.0), (100, 231.0), (105, 239.0),
+        (110, 247.0), (115, 255.0), (120, 263.0), (125, 271.0),
+        (130, 279.0), (135, 286.0), (140, 294.0), (145, 302.0),
+    ]
+
+    for distance_boundary, amount in amounts_train:
+        if distance <= distance_boundary:
+            return amount / 2
+    return 313.0 / 2
+
+
 class HrContract(models.Model):
     _inherit = 'hr.contract'
 
     transport_mode_car = fields.Boolean('Uses company car')
+    transport_mode_private_car = fields.Boolean('Uses private car')
     transport_mode_public = fields.Boolean('Uses public transportation')
     transport_mode_others = fields.Boolean('Uses another transport mode')
     car_atn = fields.Monetary(string='ATN Company Car')
@@ -31,6 +57,8 @@ class HrContract(models.Model):
     yearly_cost_before_charges = fields.Monetary(compute='_compute_yearly_cost_before_charges', string="Yearly Costs Before Charges")
     meal_voucher_paid_by_employer = fields.Monetary(compute='_compute_meal_voucher_paid_by_employer', string="Meal Voucher Paid by Employer")
     company_car_total_depreciated_cost = fields.Monetary()
+    private_car_reimbursed_amount = fields.Monetary(compute='_compute_private_car_reimbursed_amount')
+    km_home_work = fields.Integer(related="employee_id.km_home_work", related_sudo=True, readonly=False)
     public_transport_reimbursed_amount = fields.Monetary(string='Reimbursed amount',
         compute='_compute_public_transport_reimbursed_amount', readonly=False, store=True)
     others_reimbursed_amount = fields.Monetary(string='Other Reimbursed amount')
@@ -106,8 +134,8 @@ class HrContract(models.Model):
             else:
                 contract.wage = contract.wage_with_holidays
 
-    @api.depends('transport_mode_car', 'transport_mode_public', 'transport_mode_others',
-        'company_car_total_depreciated_cost', 'public_transport_reimbursed_amount', 'others_reimbursed_amount')
+    @api.depends('transport_mode_car', 'transport_mode_public', 'transport_mode_private_car', 'transport_mode_others',
+        'company_car_total_depreciated_cost', 'public_transport_reimbursed_amount', 'others_reimbursed_amount', 'km_home_work')
     def _compute_transport_employer_cost(self):
         # Don't call to super has we ovewrite the method
         for contract in self:
@@ -118,6 +146,8 @@ class HrContract(models.Model):
                 transport_employer_cost += contract.public_transport_reimbursed_amount
             if contract.transport_mode_others:
                 transport_employer_cost += contract.others_reimbursed_amount
+            if contract.transport_mode_private_car:
+                transport_employer_cost += get_private_car_reimbursed_amount(contract.km_home_work)
             contract.transport_employer_cost = transport_employer_cost
 
     @api.depends('commission_on_target')
@@ -185,6 +215,15 @@ class HrContract(models.Model):
     def _compute_monthly_yearly_costs(self):
         for contract in self:
             contract.monthly_yearly_costs = contract.final_yearly_costs / 12.0
+
+    @api.depends('km_home_work', 'transport_mode_private_car')
+    def _compute_private_car_reimbursed_amount(self):
+        for contract in self:
+            if contract.transport_mode_private_car:
+                amount = get_private_car_reimbursed_amount(contract.km_home_work)
+            else:
+                amount = 0.0
+            contract.private_car_reimbursed_amount = amount
 
     @api.onchange('transport_mode_car', 'transport_mode_public', 'transport_mode_others')
     def _onchange_transport_mode(self):

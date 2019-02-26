@@ -78,10 +78,15 @@
                             <field name="public_transport_reimbursed_amount" class="oe_inline"/>
                         </div>
                     </div>
-                    <field name="transport_mode_others"/>
-                    <span class="o_form_label" attrs="{'invisible': [('transport_mode_others', '=', False)]}" name="others_label">Other</span>
-                    <div attrs="{'invisible': [('transport_mode_others', '=', False)]}" class="o_row" name="others_div">
-                        <field name="others_reimbursed_amount" class="oe_inline" nolabel="1"/>
+                    <field name="transport_mode_private_car"/>
+                    <span class="o_form_label" groups="hr.group_hr_user" attrs="{'invisible': [('transport_mode_private_car', '=', False)]}">Distance home-work</span>
+                    <div class="o_row" groups="hr.group_hr_user" attrs="{'invisible': [('transport_mode_private_car', '=', False)]}">
+                        <field name="km_home_work" class="oe_inline"/>
+                        <span>km</span>
+                    </div>
+                    <span class="o_form_label" attrs="{'invisible': [('transport_mode_private_car', '=', False)]}">Reimboursed amount</span>
+                    <div class="o_row" attrs="{'invisible': [('transport_mode_private_car', '=', False)]}">
+                        <field name="private_car_reimbursed_amount"/>
                         <span>/ month</span>
                     </div>
                     <label for="internet"/>

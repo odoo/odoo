@@ -512,6 +512,16 @@ result = -contract.car_atn
         <field name="condition_python">result = bool(contract.others_reimbursed_amount)</field>
         <field name="amount_python_compute">result = contract.others_reimbursed_amount</field>
     </record>
+    <record id="hr_salary_rule_private_car_amount" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Private car</field>
+        <field name="code">CAR.PRIV</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">168</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.transport_mode_private_car</field>
+        <field name="amount_python_compute">result = contract.private_car_reimbursed_amount</field>
+    </record>
     <record id="hr_salary_rule_representation_fees" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_net"/>
         <field name="name">Representation Fees</field>
@@ -632,6 +642,7 @@ result = -min(ip_amount * tax_rate, 11745)
             ref('hr_payroll_rules_reim_travel'),
             ref('hr_payroll_rules_mis_ex_onss'),
             ref('hr_salary_rule_representation_fees'),
+            ref('hr_salary_rule_private_car_amount'),
             ref('hr_payroll_rules_suppl_net'),
             ref('hr_payroll_rules_retained_net'),
             ref('hr_salary_rule_ip'),
