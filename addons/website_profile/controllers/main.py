@@ -6,6 +6,7 @@ import werkzeug
 import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
+import math
 
 from odoo import http, modules, tools
 from odoo.http import request
@@ -13,8 +14,9 @@ from odoo.osv import expression
 
 
 class WebsiteProfile(http.Controller):
-    PAGER_MAX_PAGE = 5
-
+    _users_per_page = 30
+    _pager_max_pages = 5
+    
     # Profile
     # ---------------------------------------------------
 
@@ -198,11 +200,12 @@ class WebsiteProfile(http.Controller):
 
     # All Users Page
     # ---------------------------------------------------
-    def _prepare_all_users_values(self, user, position):
+    def _prepare_all_users_values(self, user):
         return {
-            'position': position,
+            'position': user.karma_position,
             'id': user.id,
             'name': user.name,
+            'company_name': user.company_id.name,
             'rank': user.rank_id.name,
             'karma': user.karma,
             'badge_count': len(user.badge_ids),
@@ -214,26 +217,22 @@ class WebsiteProfile(http.Controller):
         User = request.env['res.users']
         dom = [('karma', '>', 1), ('website_published', '=', True)]
 
-        # Get the Top 3 users
-        top3_users = User.sudo().search(dom, limit=3, order='karma DESC')
-        top3_user_values = [self._prepare_all_users_values(user, position+1) for position, user in enumerate(top3_users)]
+        # Searches
+        search_term = searches.get('search')
+        if search_term:
+            dom = expression.AND([['|', ('name', 'ilike', search_term), ('company_id.name', 'ilike', search_term)], dom])
 
-        # Get the other users
-        if top3_users:
-           dom += [('id', 'not in', top3_users.ids)]
-        step = 30
         user_count = User.sudo().search_count(dom)
-        pager = request.website.pager(url="/profile/users", total=user_count, page=page, step=step, scope=step)
+        page_count = math.ceil(user_count / self._users_per_page)
+        pager = request.website.pager(url="/profile/users", total=user_count, page=page, step=self._users_per_page,
+                                      scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages)
 
-        if searches.get('user'):
-            dom += [('name', 'ilike', searches.get('user'))]
+        users = User.sudo().search(dom, limit=self._users_per_page, offset=pager['offset'], order='karma DESC')
+        user_values = [self._prepare_all_users_values(user) for user in users]
 
-        users = User.sudo().search(dom, limit=step, offset=pager['offset'], order='karma DESC')
-
-        user_values = [self._prepare_all_users_values(user, position + 4 + ((page-1) * step)) for position, user in enumerate(users)]
         values = {
-            'top3_users': top3_user_values,
-            'users': user_values,
+            'top3_users': user_values[:3] if not search_term and page == 1 else None,
+            'users': user_values[3:] if not search_term and page == 1 else user_values,
             'pager': pager
         }
         return request.render("website_profile.users_page_main", values)

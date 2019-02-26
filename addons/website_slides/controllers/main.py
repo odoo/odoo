@@ -20,9 +20,9 @@ _logger = logging.getLogger(__name__)
 
 
 class WebsiteSlides(WebsiteProfile):
-    SLIDES_PER_PAGE = 12
-    SLIDES_PER_ASIDE = 20
-    SLIDES_PER_CATEGORY = 4
+    _slides_per_page = 12
+    _slides_per_aside = 20
+    _slides_per_category = 4
     _channel_order_by_criterion = {
         'vote': 'total_votes desc',
         'view': 'total_views desc',
@@ -73,8 +73,8 @@ class WebsiteSlides(WebsiteProfile):
         if slide.channel_id.channel_type == 'documentation':
             related_domain = expression.AND([base_domain, [('category_id', '=', slide.category_id.id)]])
 
-            most_viewed_slides = request.env['slide.slide'].search(base_domain, limit=self.SLIDES_PER_ASIDE, order='total_views desc')
-            related_slides = request.env['slide.slide'].search(related_domain, limit=self.SLIDES_PER_ASIDE)
+            most_viewed_slides = request.env['slide.slide'].search(base_domain, limit=self._slides_per_aside, order='total_views desc')
+            related_slides = request.env['slide.slide'].search(related_domain, limit=self._slides_per_aside)
             category_data = []
             uncategorized_slides = request.env['slide.slide']
         else:
@@ -348,10 +348,10 @@ class WebsiteSlides(WebsiteProfile):
         pager_args['sorting'] = actual_sorting
 
         slide_count = request.env['slide.slide'].sudo().search_count(domain)
-        page_count = math.ceil(slide_count / self.SLIDES_PER_PAGE)
+        page_count = math.ceil(slide_count / self._slides_per_page)
         pager = request.website.pager(url=pager_url, total=slide_count, page=page,
-                                      step=self.SLIDES_PER_PAGE, url_args=pager_args,
-                                      scope=page_count if page_count < self.PAGER_MAX_PAGE else self.PAGER_MAX_PAGE)
+                                      step=self._slides_per_page, url_args=pager_args,
+                                      scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages)
 
         values = {
             'channel': channel,
@@ -397,7 +397,7 @@ class WebsiteSlides(WebsiteProfile):
         values['category_data'] = channel._get_categorized_slides(
             domain, order,
             force_void=True,
-            limit=self.SLIDES_PER_CATEGORY if channel.channel_type == 'documentation' else False,
+            limit=self._slides_per_category if channel.channel_type == 'documentation' else False,
             offset=pager['offset'])
         values['channel_progress'] = self._get_channel_progress(channel, include_quiz=True)
 
