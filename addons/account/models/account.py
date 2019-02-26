@@ -70,7 +70,7 @@ class AccountAccount(models.Model):
         result = self.read_group([('user_type_id', '=', data_unaffected_earnings.id)], ['company_id'], ['company_id'])
         for res in result:
             if res.get('company_id_count', 0) >= 2:
-                account_unaffected_earnings = self.search([('company_id', '=', res['company_id'][0]), 
+                account_unaffected_earnings = self.search([('company_id', '=', res['company_id'][0]),
                                                            ('user_type_id', '=', data_unaffected_earnings.id)])
                 raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)') % [a.code for a in account_unaffected_earnings])
 
@@ -385,6 +385,16 @@ class AccountGroup(models.Model):
         return self.browse(group_ids).name_get()
 
 
+class AccountJournalGroup(models.Model):
+    _name = 'account.journal.group'
+    _description = "Account Journal Group"
+
+    name = fields.Char(required=True, translate=True)
+    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env['res.company']._company_default_get('account.account'))
+    account_journal_ids = fields.Many2many('account.journal', string="Journals")
+    sequence = fields.Integer(default=10)
+
+
 class AccountJournal(models.Model):
     _name = "account.journal"
     _description = "Journal"
@@ -478,6 +488,8 @@ class AccountJournal(models.Model):
     alias_id = fields.Many2one('mail.alias', string='Alias', copy=False)
     alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
     alias_name = fields.Char('Alias Name for Vendor Bills', related='alias_id.alias_name', help="It creates draft vendor bill by sending an email.", readonly=False)
+
+    journal_group_ids = fields.Many2many('account.journal.group', string="Journal Groups")
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
