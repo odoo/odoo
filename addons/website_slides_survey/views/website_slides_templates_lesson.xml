@@ -15,9 +15,8 @@
                 </div>
                 <div t-if="slide.slide_type == 'certification' and certification_done" class="col mt32 mb8 d-flex justify-content-center">
                     <a role="button"
-                        t-att-data-survey_id="survey_id"
-                        class="btn btn-primary btn-lg o_wslides_survey_download_certification"
-                        href="#">
+                        class="btn btn-primary btn-lg"
+                        t-att-href="'/survey/%s/get_certification' % survey_id">
                         <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/>
                         Download certification
                     </a>

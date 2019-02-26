@@ -5,8 +5,8 @@
             <div t-if="widget.get('slide').type === 'certification' &amp;&amp; !widget.get('slide').certificationDone" class="o_wslides_fs_certification">
                 <a class="btn btn-primary" t-att-href="'/slides/slide/' + widget.get('slide').id" target="new"><i class="fa fa-trophy"/> Pass Certification</a>
             </div>
-            <div class="o_wslides_fs_certification" t-if="widget.get('slide').type === 'certification' &amp;&amp; widget.get('slide').certificationDone">
-                <a role="button" t-att-data-survey_id="widget.get('slide').certificationId" class="btn btn-primary o_wslides_survey_download_certification" href="#">
+            <div class="o_wslides_fs_certification" t-if="widget.get('slide').type == 'certification' &amp;&amp; widget.get('slide').completed">
+                <a role="button" class="btn btn-primary" t-att-href="'/survey/' + widget.get('slide').certificationId + '/get_certification'">
                     <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/> Download certification
                 </a>
             </div>

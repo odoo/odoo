@@ -29,6 +29,15 @@
                             <div>You scored <t t-esc="answer.quizz_score" />%</div>
                             <t t-if="answer.quizz_passed">
                                 <div>Congratulations, you have passed the test!</div>
+
+                                <div t-if="survey.certificate" class="mt16 mb16">
+                                    <a role="button"
+                                        class="btn btn-primary btn-lg"
+                                        t-att-href="'/survey/%s/get_certification' % survey.id">
+                                        <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/>
+                                        Download certification
+                                    </a>
+                                </div>
                             </t>
                             <t t-else="">
                                 <div>Unfortunately, you have failed the test.</div>
