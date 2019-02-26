@@ -13,6 +13,7 @@ from odoo.osv import expression
 
 
 class WebsiteProfile(http.Controller):
+    PAGER_MAX_PAGE = 5
 
     # Profile
     # ---------------------------------------------------

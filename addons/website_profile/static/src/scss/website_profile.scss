@@ -137,6 +137,43 @@ $owprofile-tabs-height: 37px;
     }
 }
 
+.o_wprofile_pager {
+    li.page-item {
+        a.page-link {
+            background-color: transparent;
+            border: 0;
+            color: $gray-600;
+            transition-duration: .3s;
+
+            &:hover {
+                color: $primary;
+            }
+        }
+
+        &.active {
+            a.page-link {
+                color: $white;
+            }
+        }
+
+        &.o_wprofile_pager_arrow a {
+            color: $primary;
+
+            &:hover {
+                transform: scaleX(1.50) scaleY(1.50);
+            }
+        }
+
+        &.o_wprofile_pager_arrow.disabled a {
+            color: $gray-600;
+        }
+
+        .page-link:focus {
+            box-shadow: 0 0 0 0;
+        }
+    }
+}
+
 
 // Other stuffs
 .country_flag {
