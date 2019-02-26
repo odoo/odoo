@@ -328,7 +328,7 @@
                         <group>
                             <field name="journal_id" options="{'no_open': True, 'no_create': True}"/>
                             <field name="company_id" required="1" groups="base.group_multi_company"/>
-                            <field name="amount" invisible="1"/>
+                            <field name="amount" invisible="1" readonly="1"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
                     </group>
@@ -363,8 +363,7 @@
                         </page>
                         <page string="Other Info">
                             <group>
-                                <field name="auto_reverse" attrs="{'readonly':[('reverse_entry_id', '!=', False)]}"/>
-                                <field name="reverse_date" attrs="{'invisible':[('auto_reverse', '=', False)], 'required':[('auto_reverse', '=', True)],'readonly':[('reverse_entry_id', '!=', False)]}"/>
+                                <field name="auto_post" attrs="{'readonly':[('reverse_entry_id', '!=', False)]}"/>
                                 <field name="reverse_entry_id" attrs="{'invisible':True}"/>
                                 <field name="to_check"/>
                             </group>
