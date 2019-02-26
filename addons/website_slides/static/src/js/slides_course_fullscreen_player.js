@@ -105,7 +105,7 @@ odoo.define('website_slides.fullscreen', function (require) {
             try{
                 self._setupYoutubePlayer();
             }
-            catch {
+            catch (err) {
                 onYouTubeIframeAPIReady = function(){
                     var self = this;
                     self._setupYoutubePlayer();
