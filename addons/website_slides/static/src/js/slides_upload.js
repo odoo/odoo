@@ -536,7 +536,7 @@ var SlideUploadDialog = Dialog.extend({
 
 
 sAnimations.registry.websiteSlidesUpload = sAnimations.Class.extend({
-    selector: '.oe_slide_js_upload',
+    selector: '.o_wslides_js_slide_upload',
     xmlDependencies: ['/website_slides/static/src/xml/website_slides_upload.xml'],
     read_events: {
         'click': '_onUploadClick',
