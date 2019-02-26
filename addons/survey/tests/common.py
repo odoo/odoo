@@ -16,6 +16,33 @@ class SurveyCase(common.SavepointCase):
     def setUp(self):
         super(SurveyCase, self).setUp()
 
+        self.create_utility_users()
+        self.create_survey_data()
+
+    def create_utility_users(self):
+        self.user_emp = survey_new_test_user(
+            self.env, name='Eglantine Employee', login='user_emp', email='employee@example.com',
+            groups='base.group_user', password='user_emp'
+        )
+
+        self.user_portal = survey_new_test_user(
+            self.env, name='Patrick Portal', login='user_portal', email='portal@example.com',
+            groups='base.group_portal'
+        )
+
+        self.user_public = survey_new_test_user(
+            self.env, name='Pauline Public', login='user_public', email='public@example.com',
+            groups='base.group_public'
+        )
+
+        self.customer = self.env['res.partner'].create({
+            'name': 'Caroline Customer',
+            'email': 'customer@example.com',
+            'customer': True,
+        })
+
+    def create_survey_data(self):
+
         """ Some custom stuff to make the matching between questions and answers
           :param dict _type_match: dict
             key: question type
@@ -41,27 +68,6 @@ class SurveyCase(common.SavepointCase):
             self.env, name='Lukas Peeters', login='survey_user', email='survey.user@example.com',
             groups='survey.group_survey_user,base.group_user'
         )
-
-        self.user_emp = survey_new_test_user(
-            self.env, name='Eglantine Employee', login='user_emp', email='employee@example.com',
-            groups='base.group_user', password='user_emp'
-        )
-
-        self.user_portal = survey_new_test_user(
-            self.env, name='Patrick Portal', login='user_portal', email='portal@example.com',
-            groups='base.group_portal'
-        )
-
-        self.user_public = survey_new_test_user(
-            self.env, name='Pauline Public', login='user_public', email='public@example.com',
-            groups='base.group_public'
-        )
-
-        self.customer = self.env['res.partner'].create({
-            'name': 'Caroline Customer',
-            'email': 'customer@example.com',
-            'customer': True,
-        })
 
         self.survey = self.env['survey.survey'].sudo(self.survey_manager).create({
             'title': 'Test Survey',

@@ -14,11 +14,10 @@ class SlidesCase(common.SavepointCase):
     def setUp(self):
         super(SlidesCase, self).setUp()
 
-        self.user_publisher = slides_new_test_user(
-            self.env, name='Paul Publisher', login='user_publisher', email='publisher@example.com',
-            groups='base.group_user,website.group_website_publisher'
-        )
+        self.create_utility_users()
+        self.create_slides_data()
 
+    def create_utility_users(self):
         self.user_emp = slides_new_test_user(
             self.env, name='Eglantine Employee', login='user_emp', email='employee@example.com',
             groups='base.group_user'
@@ -39,6 +38,12 @@ class SlidesCase(common.SavepointCase):
             'email': 'customer@example.com',
             'customer': True,
         })
+
+    def create_slides_data(self):
+        self.user_publisher = slides_new_test_user(
+            self.env, name='Paul Publisher', login='user_publisher', email='publisher@example.com',
+            groups='base.group_user,website.group_website_publisher'
+        )
 
         self.channel = self.env['slide.channel'].sudo(self.user_publisher).create({
             'name': 'Test Channel',

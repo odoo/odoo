@@ -34,7 +34,10 @@ class Slide(models.Model):
 
     def _action_set_viewed(self, target_partner):
         """ If the slide viewed is a certification, we initialize the first survey.user_input
-        for the current partner. """
+        for the current partner.
+        We have to generate a new invite_token to differentiate pools of attempts since the
+        course can be enrolled multiple times.
+        (A new 'slide.slide.partner' will be generated for the slide each time the course is re-enrolled). """
         new_slide_partners = super(Slide, self)._action_set_viewed(target_partner)
         certification_slides = self.search([
             ('id', 'in', new_slide_partners.mapped('slide_id').ids),
@@ -43,12 +46,15 @@ class Slide(models.Model):
         ])
 
         for new_slide_partner in new_slide_partners:
-            if new_slide_partner.slide_id in certification_slides and not new_slide_partner.user_input_ids:
+            if new_slide_partner.slide_id in certification_slides:
                 new_slide_partner.slide_id.survey_id._create_answer(
                     partner=target_partner,
                     check_attempts=False,
                     **{
                         'slide_id': new_slide_partner.slide_id.id,
                         'slide_partner_id': new_slide_partner.id
-                    }
+                    },
+                    invite_token=self.env['survey.user_input']._generate_invite_token()
                 )
+
+        return new_slide_partners
