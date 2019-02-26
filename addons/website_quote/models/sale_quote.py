@@ -117,7 +117,10 @@ class SaleQuoteOption(models.Model):
         product = self.product_id
         self.price_unit = product.list_price
         self.website_description = product.product_tmpl_id.quote_description
-        self.name = product.name
+        name = product.name
+        if self.product_id.description_sale:
+            name += '\n' + self.product_id.description_sale
+        self.name = name
         self.uom_id = product.uom_id
         domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         return {'domain': domain}
