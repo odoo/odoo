@@ -5,6 +5,7 @@ import logging
 import psycopg2
 
 from odoo import api, fields, models, registry, SUPERUSER_ID, _
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -57,8 +58,10 @@ class DeliveryCarrier(models.Model):
     zip_to = fields.Char('Zip To')
 
     margin = fields.Float(help='This percentage will be added to the shipping price.')
-    free_over = fields.Boolean('Free if order amount is above', help="If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping", default=False, oldname='free_if_more_than')
+    free_over = fields.Boolean('Free if order amount is above', help="If the order total amount (shipping excluded and VAT included) is above this amount, the customer benefits from a free shipping", default=False, oldname='free_if_more_than')
     amount = fields.Float(string='Amount', help="Amount of the order to benefit from a free shipping, expressed in the company currency")
+    deliver_over = fields.Boolean(string='Unavailable if order amount is below', help="If the order total amount (shipping excluded and VAT included) is below this amount, this delivery method is not available")
+    minimum_amount = fields.Float(string='Unavailable if Amount', help="Minimum amount of the order to use this delivery method, expressed in the company currency")
 
     can_generate_return = fields.Boolean(compute="_compute_can_generate_return")
     return_label_on_delivery = fields.Boolean(string="Generate Return Label", help="The return label is automatically generated at the delivery.")
@@ -127,6 +130,12 @@ class DeliveryCarrier(models.Model):
     def onchange_countries(self):
         self.state_ids = [(6, 0, self.state_ids.filtered(lambda state: state.id in self.country_ids.mapped('state_ids').ids).ids)]
 
+    @api.constrains('minimum_amount', 'amount')
+    def _check_minimum_amount(self):
+        for record in self:
+            if record.free_over and record.amount < record.minimum_amount:
+                raise ValidationError(_("Minimum amount can not be greater than free delivery amount."))
+
     # -------------------------- #
     # API for external providers #
     # -------------------------- #
@@ -142,6 +151,13 @@ class DeliveryCarrier(models.Model):
                        # TODO maybe the currency code?
         '''
         self.ensure_one()
+        if self.deliver_over and order._compute_amount_total_without_delivery() < self.minimum_amount:
+            return {
+                'success': False,
+                'price': 0.0,
+                'error_message': _('The amount of the SO is below the minimum allowed with this delivery method. The minimum amount should be %s. Please choose another delivery method.') % self.minimum_amount,
+                'warning_message': False
+            }
         if hasattr(self, '%s_rate_shipment' % self.delivery_type):
             res = getattr(self, '%s_rate_shipment' % self.delivery_type)(order)
             # apply margin on computed price

@@ -74,6 +74,8 @@ class ChooseDeliveryCarrier(models.TransientModel):
         }
 
     def button_confirm(self):
+        if self.carrier_id.deliver_over and self.order_id._compute_amount_total_without_delivery() < self.carrier_id.minimum_amount:
+            raise UserError(_('The amount of the SO is below the minimum allowed with this delivery method. The minimum amount should be %s. Please choose another delivery method.') % self.carrier_id.minimum_amount)
         self.order_id.carrier_id = self.carrier_id
         self.order_id.delivery_message = self.delivery_message
         self.order_id.set_delivery_line(self.carrier_id, self.delivery_price)

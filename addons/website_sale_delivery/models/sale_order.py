@@ -74,7 +74,10 @@ class SaleOrder(models.Model):
     def _get_delivery_methods(self):
         address = self.partner_shipping_id
         # searching on website_published will also search for available website (_search method on computed field)
-        return self.env['delivery.carrier'].sudo().search([('website_published', '=', True)]).available_carriers(address)
+        available_carriers = self.env['delivery.carrier'].sudo().search([('website_published', '=', True)]).available_carriers(address)
+        # remove the delivery method which are not available due to minimum amount of order.
+        amount = self._compute_amount_total_without_delivery()
+        return available_carriers.filtered(lambda x: amount >= x.minimum_amount if x.deliver_over else x)
 
     @api.multi
     def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
