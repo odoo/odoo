@@ -424,8 +424,8 @@
                         <t t-call="website_profile.all_user_card"></t>
                     </div>
                 </div>
-                <div class="float-left">
-                    <t t-call="website.pager"/>
+                <div class="form-inline justify-content-center">
+                    <t t-call="website_profile.pager"/>
                 </div>
             </div>
         </div>
@@ -471,6 +471,27 @@
                 </div>
             </div>
         </div>
+    </template>
+
+    <!-- Custom Pager -->
+    <template id="pager" name="Pager">
+        <ul t-if="pager['page_count'] > 1" t-attf-class="o_wprofile_pager pagination m-0">
+            <li t-attf-class="page-item o_wprofile_pager_arrow #{'disabled' if pager['page']['num'] == 1 else ''}">
+                <a t-att-href=" pager['page_first']['url'] if pager['page']['num'] != 1 else None" class="page-link"><i class="fa fa-step-backward"/></a>
+            </li>
+            <li t-attf-class="page-item o_wprofile_pager_arrow #{'disabled' if pager['page']['num'] == 1 else ''}">
+                <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None" class="page-link"><i class="fa fa-caret-left"/></a>
+            </li>
+            <t t-foreach="pager['pages']" t-as="page">
+                <li t-attf-class="page-item #{'active disabled' if page['num'] == pager['page']['num'] else ''}"> <a t-att-href="page['url']" class="page-link" t-raw="page['num']"></a></li>
+            </t>
+            <li t-attf-class="page-item o_wprofile_pager_arrow #{'disabled' if pager['page']['num'] == pager['page_count'] else ''}">
+                <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None" class="page-link"><i class="fa fa-caret-right"/></a>
+            </li>
+            <li t-attf-class="page-item o_wprofile_pager_arrow #{'disabled' if pager['page']['num'] == pager['page_count'] else ''}">
+                <a t-att-href=" pager['page_last']['url'] if pager['page']['num'] != pager['page_count'] else None" class="page-link"><i class="fa fa-step-forward"/></a>
+            </li>
+        </ul>
     </template>
 
 </data></odoo>
