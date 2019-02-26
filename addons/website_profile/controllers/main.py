@@ -163,40 +163,36 @@ class WebsiteProfile(http.Controller):
             return werkzeug.utils.redirect("/profile/user/%d?%s" % (user.id, kwargs['url_param']))
         else:
             return werkzeug.utils.redirect("/profile/user/%d" % user.id)
-    # Ranks
-    # ---------------------------------------------------
-    @http.route('/profile/ranks', type='http', auth="public", website=True)
-    def ranks(self, **kwargs):
-        Rank = request.env['gamification.karma.rank']
-        ranks = Rank.sudo().search([])
-        ranks = ranks.sorted(key=lambda b: b.karma_min)
-        values = {
-            'ranks': ranks,
-            'user': request.env.user,
-        }
-        return request.render("website_profile.rank_main", values)
 
-    # Badges
+    # Ranks and Badges
     # ---------------------------------------------------
     def _prepare_badges_domain(self, **kwargs):
         """
         Hook for other modules to restrict the badges showed on profile page, depending of the context
         """
         domain = [('website_published', '=', True)]
-        if 'category' in kwargs:
-            domain = expression.AND([[('challenge_ids.category', '=', kwargs.get('category'))], domain])
+        if 'badge_category' in kwargs:
+            domain = expression.AND([[('challenge_ids.category', '=', kwargs.get('badge_category'))], domain])
         return domain
 
-    @http.route('/profile/badge', type='http', auth="public", website=True)
-    def badges(self, **kwargs):
+    @http.route('/profile/ranks_badges', type='http', auth="public", website=True)
+    def view_ranks_badges(self, **kwargs):
+        ranks = []
+        if 'badge_category' not in kwargs:
+            Rank = request.env['gamification.karma.rank']
+            ranks = Rank.sudo().search([], order='karma_min DESC')
+
         Badge = request.env['gamification.badge']
         badges = Badge.sudo().search(self._prepare_badges_domain(**kwargs))
         badges = sorted(badges, key=lambda b: b.stat_count_distinct, reverse=True)
         values = self._prepare_user_values(searches={'badges': True})
+
         values.update({
+            'ranks': ranks,
             'badges': badges,
+            'user': request.env.user,
         })
-        return request.render("website_profile.badge_main", values)
+        return request.render("website_profile.rank_badge_main", values)
 
     # All Users Page
     # ---------------------------------------------------

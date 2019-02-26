@@ -161,7 +161,7 @@
                                 t-attf-class="nav-link #{searches.get('tags') and 'active' or ''}">Tags</a>
                         </li>
                         <li class="nav-item">
-                            <a t-attf-href="/profile/badge?category=forum"
+                            <a t-attf-href="/profile/ranks_badges?badge_category=forum"
                                 t-attf-class="nav-link #{searches.get('badges') and 'active' or ''}">Badges</a>
                         </li>
                         <li class="nav-item" t-if="user.karma >= forum.karma_moderate">
