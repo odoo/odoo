@@ -33,6 +33,11 @@ odoo.define('website_rating.thread', function(require) {
         init: function(parent, options){
             this._super.apply(this, arguments);
 
+            // apply ratio to default rating value
+            if (options.default_rating_value) {
+                options.default_rating_value = parseFloat(options.default_rating_value) / STAR_RATING_RATIO;
+            }
+
             // default options
             this.options = _.defaults(this.options, {
                 'default_message': false,
@@ -50,7 +55,7 @@ odoo.define('website_rating.thread', function(require) {
                 '5': _t("I love it"),
             };
             this.user_click = false; // user has click or not
-            this.set("star_value", this.options.rating_default_value);
+            this.set("star_value", this.options.default_rating_value);
             this.on("change:star_value", this, this._onChangeStarValue);
         },
         start: function(){
@@ -59,7 +64,7 @@ odoo.define('website_rating.thread', function(require) {
                 // rating stars
                 self.$input = self.$('input[name="rating_value"]');
                 self.$star_list = self.$('.stars').find('i');
-                self.set("star_value", self.options.rating_default_value); // set the default value to trigger the display of star widget
+                self.set("star_value", self.options.default_rating_value); // set the default value to trigger the display of star widget
             });
         },
 
@@ -265,7 +270,7 @@ odoo.define('website_rating.thread', function(require) {
         _onChangeRatingDomain: function(){
             var domain = [];
             if(this.get('rating_value')){
-                domain = [['rating_value', '=', this.get('rating_value')]];
+                domain = [['rating_value', '=', this.get('rating_value') * STAR_RATING_RATIO]];
             }
             this._changeCurrentPage(1, domain);
         },

@@ -4,14 +4,13 @@
     <record id="website_slides.channel_public" model="slide.channel">
         <field name="name">Basics of Gardening</field>
         <field name="channel_type">training</field>
-        <field name="promote_strategy">latest</field>
+        <field name="promote_strategy">most_voted</field>
         <field name="tag_ids" eval="[(5, 0),
                                      (4, ref('website_slides.slide_channel_tag_level_basic')),
                                      (4, ref('website_slides.slide_channel_tag_role_gardener')),
                                      (4, ref('website_slides.slide_channel_tag_other_0'))]"/>
         <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_gardening.jpg"/>
-        <field name="description" type="html">
-<div>Learn the basics of gardening !</div></field>
+        <field name="description">Learn the basics of gardening !</field>
     </record>
     <record id="slide_category_demo_0_0" model="slide.category">
         <field name="name">Requirements</field>
@@ -34,8 +33,7 @@
         <field name="website_published" eval="True"/>
         <field name="enroll">public</field>
         <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_gardening_2.jpg"/>
-        <field name="description" type="html">
-<div>In this training you will learn how to take care of trees: when to plant, potted trees, ...</div></field>
+        <field name="description">Learn how to take care of your favorite trees. Learn when to plant, how to manage potted trees, ...</field>
     </record>
     <record id="slide_category_demo_1_0" model="slide.category">
         <field name="name">Interesting Facts</field>
@@ -60,8 +58,7 @@
         <field name="website_published" eval="True"/>
         <field name="enroll">public</field>
         <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_flowers.jpg"/>
-        <field name="description" type="html">
-<div>A lot of nice documentation: trees, wood, gardens. After that you will know everything.</div></field>
+        <field name="description">A lot of nice documentation: trees, wood, gardens. A gold mine for references.</field>
     </record>
     <record id="slide_category_demo_2_0" model="slide.category">
         <field name="name">Trees</field>
@@ -86,10 +83,9 @@
         <field name="promote_strategy">latest</field>
         <field name="website_published" eval="True"/>
         <field name="enroll">public</field>
-        <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_flowers.jpg"/>
-        <field name="description" type="html">
-<div>Knowing which kind of wood to use depending on your application is important. In this course you
-will learn the basics of wood characteristics.</div></field>
+        <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_tree_1.jpg"/>
+        <field name="description">Knowing which kind of wood to use depending on your application is important. In this course you
+will learn the basics of wood characteristics.</field>
     </record>
     <record id="slide_category_demo_3_0" model="slide.category">
         <field name="name">Introduction</field>
@@ -106,10 +102,8 @@ will learn the basics of wood characteristics.</div></field>
         <field name="promote_strategy">most_voted</field>
         <field name="website_published" eval="True"/>
         <field name="enroll">invite</field>
-        <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_furniture.jpg"/>
-        <field name="description" type="html">
-<div>We're also Santa Claus! Belligerent and numerous. I am the man with no name,
-    Zapp Brannigan! </div></field>
+        <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_furniture_2.jpg"/>
+        <field name="description">We're also Santa Claus! Belligerent and numerous. I am the man with no name, Zapp Brannigan!</field>
     </record>
     <record id="slide_category_demo_4_0" model="slide.category">
         <field name="name">Introduction</field>
@@ -129,7 +123,7 @@ will learn the basics of wood characteristics.</div></field>
         <field name="website_published" eval="True"/>
         <field name="enroll">invite</field>
         <field name="image" type="base64" file="website_slides/static/src/img/channel_demo_furniture.jpg"/>
-        <field name="description" type="html"><div>All you need to know about furniture creation.</div></field>
+        <field name="description">All you need to know about furniture creation.</field>
     </record>
     <record id="slide_category_demo_5_0" model="slide.category">
         <field name="name">Introduction</field>
@@ -137,21 +131,20 @@ will learn the basics of wood characteristics.</div></field>
         <field name="sequence">10</field>
     </record>
 
-    <record id="slide_tag_demo_0" model="slide.tag">
-        <field name="name">Tag0</field>
+    <record id="slide_tag_demo_cheatsheet" model="slide.tag">
+        <field name="name">CheatSheet</field>
     </record>
-    <record id="slide_tag_demo_1" model="slide.tag">
-        <field name="name">Tag1</field>
+    <record id="slide_tag_demo_theory" model="slide.tag">
+        <field name="name">Theory</field>
     </record>
-    <record id="slide_tag_demo_2" model="slide.tag">
-        <field name="name">Tag2</field>
+    <record id="slide_tag_demo_exercises" model="slide.tag">
+        <field name="name">Exercises</field>
     </record>
-
     <record id="slide_tag_demo_tools" model="slide.tag">
         <field name="name">Tools</field>
     </record>
-    <record id="slide_tag_demo_colorfull" model="slide.tag">
-        <field name="name">Colorfull</field>
+    <record id="slide_tag_demo_colorful" model="slide.tag">
+        <field name="name">Colorful</field>
     </record>
     <record id="slide_tag_demo_howto" model="slide.tag">
         <field name="name">HowTo</field>

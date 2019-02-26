@@ -6,7 +6,6 @@ import uuid
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.tools.translate import html_translate
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -63,7 +62,10 @@ class Channel(models.Model):
     """ A channel is a container of slides. """
     _name = 'slide.channel'
     _description = 'Slide Channel'
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin', 'rating.mixin']
+    _inherit = [
+        'mail.thread', 'rating.mixin',
+        'image.mixin',
+        'website.seo.metadata', 'website.published.multi.mixin']
     _order = 'sequence, id'
 
     def _default_access_token(self):
@@ -72,7 +74,8 @@ class Channel(models.Model):
     # description
     name = fields.Char('Name', translate=True, required=True)
     active = fields.Boolean(default=True)
-    description = fields.Html('Description', translate=html_translate, sanitize_attributes=False)
+    description = fields.Text('Short Description', translate=True)
+    description_html = fields.Html('Description', translate=tools.html_translate, sanitize_attributes=False)
     channel_type = fields.Selection([
         ('documentation', 'Documentation'), ('training', 'Training')],
         string="Course type", default="documentation", required=True)
@@ -82,10 +85,6 @@ class Channel(models.Model):
         'slide.channel.tag', 'slide_channel_tag_rel', 'channel_id', 'tag_id',
         string='Tags', help='Used to categorize and filter displayed channels/courses')
     category_ids = fields.One2many('slide.category', 'channel_id', string="Categories")
-    image = fields.Binary("Image", attachment=True)
-    image_large = fields.Binary("Large image", attachment=True)
-    image_medium = fields.Binary("Medium image", attachment=True)
-    image_small = fields.Binary("Small image", attachment=True)
     # slides: promote, statistics
     slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides")
     slide_last_update = fields.Date('Last Update', compute='_compute_slide_last_update', store=True)
@@ -96,12 +95,12 @@ class Channel(models.Model):
         ('most_viewed', 'Most Viewed')],
         string="Featuring Policy", default='latest', required=True)
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
-    nbr_presentations = fields.Integer('Number of Presentations', compute='_compute_slides_statistics', store=True)
-    nbr_documents = fields.Integer('Number of Documents', compute='_compute_slides_statistics', store=True)
-    nbr_videos = fields.Integer('Number of Videos', compute='_compute_slides_statistics', store=True)
-    nbr_infographics = fields.Integer('Number of Infographics', compute='_compute_slides_statistics', store=True)
-    nbr_webpages = fields.Integer("Number of Webpages", compute='_compute_slides_statistics', store=True)
-    nbr_quizs = fields.Integer("Number of quizzes", compute="_compute_slides_statistics", store=True)
+    nbr_presentation = fields.Integer('Number of Presentations', compute='_compute_slides_statistics', store=True)
+    nbr_document = fields.Integer('Number of Documents', compute='_compute_slides_statistics', store=True)
+    nbr_video = fields.Integer('Number of Videos', compute='_compute_slides_statistics', store=True)
+    nbr_infographic = fields.Integer('Number of Infographics', compute='_compute_slides_statistics', store=True)
+    nbr_webpage = fields.Integer("Number of Webpages", compute='_compute_slides_statistics', store=True)
+    nbr_quiz = fields.Integer("Number of Quizs", compute='_compute_slides_statistics', store=True)
     total_slides = fields.Integer('# Slides', compute='_compute_slides_statistics', store=True, oldname='total')
     total_views = fields.Integer('# Views', compute='_compute_slides_statistics', store=True)
     total_votes = fields.Integer('# Votes', compute='_compute_slides_statistics', store=True)
@@ -126,7 +125,7 @@ class Channel(models.Model):
         help='Condition to enroll: everyone, on invite, on payment (sale bridge).')
     enroll_msg = fields.Html(
         'Enroll Message', help="Message explaining the enroll process",
-        default=False, translate=html_translate, sanitize_attributes=False)
+        default=False, translate=tools.html_translate, sanitize_attributes=False)
     enroll_group_ids = fields.Many2many('res.groups', string='Auto Enroll Groups', help="Members of those groups are automatically added as members of the channel.")
     visibility = fields.Selection([
         ('public', 'Public'), ('members', 'Members')],
@@ -180,7 +179,7 @@ class Channel(models.Model):
     @api.depends('slide_ids.slide_type', 'slide_ids.is_published', 'slide_ids.completion_time',
                  'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views')
     def _compute_slides_statistics(self):
-        result = dict((cid, dict(total_slides=0, total_views=0, total_votes=0, total_time=0)) for cid in self.ids)
+        result = dict((cid, dict(total_views=0, total_votes=0, total_time=0)) for cid in self.ids)
         read_group_res = self.env['slide.slide'].read_group(
             [('is_published', '=', True),('channel_id', 'in', self.ids)],
             ['channel_id', 'slide_type', 'likes', 'dislikes', 'total_views', 'completion_time'],
@@ -188,7 +187,6 @@ class Channel(models.Model):
             lazy=False)
         for res_group in read_group_res:
             cid = res_group['channel_id'][0]
-            result[cid]['total_slides'] += res_group['__count']
             result[cid]['total_views'] += res_group.get('total_views', 0)
             result[cid]['total_votes'] += res_group.get('likes', 0)
             result[cid]['total_votes'] -= res_group.get('dislikes', 0)
@@ -202,16 +200,16 @@ class Channel(models.Model):
             record.update(result[record.id])
 
     def _compute_slides_statistics_type(self, read_group_res):
-        """ Can be overridden to compute stats on added slide_types """
-        result = dict((cid, dict(nbr_presentations=0, nbr_documents=0, nbr_videos=0, nbr_infographics=0, nbr_webpages=0, nbr_quizs=0)) for cid in self.ids)
+        """ Compute statistics based on all existing slide types """
+        slide_types = self.env['slide.slide']._fields['slide_type'].get_values(self.env)
+        keys = ['nbr_%s' % slide_type for slide_type in slide_types]
+        keys.append('total_slides')
+        result = dict((cid, dict((key, 0) for key in keys)) for cid in self.ids)
         for res_group in read_group_res:
             cid = res_group['channel_id'][0]
-            result[cid]['nbr_presentations'] += res_group.get('slide_type', '') == 'presentation' and res_group['__count'] or 0
-            result[cid]['nbr_documents'] += res_group.get('slide_type', '') == 'document' and res_group['__count'] or 0
-            result[cid]['nbr_videos'] += res_group.get('slide_type', '') == 'video' and res_group['__count'] or 0
-            result[cid]['nbr_infographics'] += res_group.get('slide_type', '') == 'infographic' and res_group['__count'] or 0
-            result[cid]['nbr_webpages'] += res_group.get('slide_type', '') == 'webpage' and res_group['__count'] or 0
-            result[cid]['nbr_quizs'] += res_group.get('slide_type', '') == 'quiz' and res_group['__count'] or 0
+            for slide_type in slide_types:
+                result[cid]['nbr_%s' % slide_type] += res_group.get('slide_type', '') == slide_type and res_group['__count'] or 0
+                result[cid]['total_slides'] += res_group.get('slide_type', '') == slide_type and res_group['__count'] or 0
         return result
 
     @api.depends('slide_partner_ids')
@@ -259,41 +257,6 @@ class Channel(models.Model):
             if channel.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
 
-    @api.multi
-    def action_redirect_to_members(self):
-        action = self.env.ref('website_slides.slide_channel_partner_action').read()[0]
-        action['view_mode'] = 'tree'
-        action['domain'] = [('channel_id', 'in', self.ids)]
-        if len(self) == 1:
-            action['context'] = {'default_channel_id': self.id}
-
-        return action
-
-    @api.multi
-    def action_channel_invite(self):
-        self.ensure_one()
-
-        if self.enroll != 'invite':
-            raise UserError(_("You cannot send invitations for channels that are not set as 'invite'."))
-
-        template = self.env.ref('website_slides.mail_template_slide_channel_invite', raise_if_not_found=False)
-
-        local_context = dict(
-            self.env.context,
-            default_channel_id=self.id,
-            default_use_template=bool(template),
-            default_template_id=template and template.id or False,
-            notif_layout='mail.mail_notification_light',
-        )
-        return {
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'slide.channel.invite',
-            'target': 'new',
-            'context': local_context,
-        }
-
     # ---------------------------------------------------------
     # ORM Overrides
     # ---------------------------------------------------------
@@ -322,9 +285,8 @@ class Channel(models.Model):
             vals['channel_partner_ids'] = [(0, 0, {
                 'partner_id': self.env.user.partner_id.id
             })]
-        if 'image' in vals:
-            tools.image_resize_images(vals, return_large=True)
         channel = super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals)
+
         if channel.user_id:
             channel._action_add_members(channel.user_id.partner_id)
         if 'enroll_group_ids' in vals:
@@ -333,8 +295,6 @@ class Channel(models.Model):
 
     @api.multi
     def write(self, vals):
-        if 'image' in vals:
-            tools.image_resize_images(vals, return_large=True)
         res = super(Channel, self).write(vals)
         if vals.get('user_id'):
             self._action_add_members(self.env['res.users'].sudo().browse(vals['user_id']).partner_id)
@@ -363,6 +323,41 @@ class Channel(models.Model):
     # ---------------------------------------------------------
     # Business / Actions
     # ---------------------------------------------------------
+
+    @api.multi
+    def action_redirect_to_members(self):
+        action = self.env.ref('website_slides.slide_channel_partner_action').read()[0]
+        action['view_mode'] = 'tree'
+        action['domain'] = [('channel_id', 'in', self.ids)]
+        if len(self) == 1:
+            action['context'] = {'default_channel_id': self.id}
+
+        return action
+
+    @api.multi
+    def action_channel_invite(self):
+        self.ensure_one()
+
+        if self.visibility != 'invite':
+            raise UserError(_("You cannot send invitations for channels that are not set as 'invite'."))
+
+        template = self.env.ref('website_slides.mail_template_slide_channel_invite', raise_if_not_found=False)
+
+        local_context = dict(
+            self.env.context,
+            default_channel_id=self.id,
+            default_use_template=bool(template),
+            default_template_id=template and template.id or False,
+            notif_layout='mail.mail_notification_light',
+        )
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'slide.channel.invite',
+            'target': 'new',
+            'context': local_context,
+        }
 
     def action_add_member(self, **member_values):
         """ Adds the logged in user in the channel members.
@@ -413,11 +408,6 @@ class Channel(models.Model):
         for channel in self:
             channel._action_add_members(channel.mapped('enroll_group_ids.users.partner_id'))
 
-    def list_all(self):
-        return {
-            'channels': [{'id': channel.id, 'name': channel.name, 'website_url': channel.website_url} for channel in self.search([])]
-        }
-
     # ---------------------------------------------------------
     # Rating Mixin API
     # ---------------------------------------------------------
@@ -439,12 +429,12 @@ class Category(models.Model):
     channel_id = fields.Many2one('slide.channel', string="Channel", required=True, ondelete='cascade')
     sequence = fields.Integer(default=10, help='Display order')
     slide_ids = fields.One2many('slide.slide', 'category_id', string="Slides")
-    nbr_presentations = fields.Integer("Number of Presentations", compute='_count_presentations', store=True)
-    nbr_documents = fields.Integer("Number of Documents", compute='_count_presentations', store=True)
-    nbr_videos = fields.Integer("Number of Videos", compute='_count_presentations', store=True)
-    nbr_infographics = fields.Integer("Number of Infographics", compute='_count_presentations', store=True)
-    nbr_webpages = fields.Integer("Number of Webpages", compute='_count_presentations', store=True)
-    nbr_quizs = fields.Integer("Number of quizzes", compute="_count_presentations", store=True)
+    nbr_presentation = fields.Integer("Number of Presentations", compute='_count_presentations', store=True)
+    nbr_document = fields.Integer("Number of Documents", compute='_count_presentations', store=True)
+    nbr_video = fields.Integer("Number of Videos", compute='_count_presentations', store=True)
+    nbr_infographic = fields.Integer("Number of Infographics", compute='_count_presentations', store=True)
+    nbr_webpage = fields.Integer("Number of Webpages", compute='_count_presentations', store=True)
+    nbr_quiz = fields.Integer("Number of Quizs", compute="_count_presentations", store=True)
     total_slides = fields.Integer(compute='_count_presentations', store=True, oldname='total')
 
     @api.depends('slide_ids.slide_type', 'slide_ids.is_published')
@@ -454,29 +444,23 @@ class Category(models.Model):
             [('is_published', '=', True), ('category_id', 'in', self.ids)],
             ['category_id', 'slide_type'], ['category_id', 'slide_type'],
             lazy=False)
-        for res_group in res:
-            result[res_group['category_id'][0]][res_group['slide_type']] = result[res_group['category_id'][0]].get(res_group['slide_type'], 0) + res_group['__count']
+
+        type_stats = self._compute_slides_statistics_type(res)
+        for cid, cdata in type_stats.items():
+            result[cid].update(cdata)
 
         for record in self:
-            record.update(self._extract_count_presentations_type(result, record.id))
+            record.update(result[record.id])
 
-    def _extract_count_presentations_type(self, result, record_id):
-        """ Can be overridden to compute stats on added slide_types """
-        statistics = {
-            'nbr_presentations': result[record_id].get('presentation', 0),
-            'nbr_documents': result[record_id].get('document', 0),
-            'nbr_videos': result[record_id].get('video', 0),
-            'nbr_infographics': result[record_id].get('infographic', 0),
-            'nbr_webpages': result[record_id].get('webpage', 0),
-            'nbr_quizs': result[record_id].get('quiz', 0),
-            'total_slides': 0
-        }
-
-        statistics['total_slides'] += statistics['nbr_presentations']
-        statistics['total_slides'] += statistics['nbr_documents']
-        statistics['total_slides'] += statistics['nbr_videos']
-        statistics['total_slides'] += statistics['nbr_infographics']
-        statistics['total_slides'] += statistics['nbr_webpages']
-        statistics['total_slides'] += statistics['nbr_quizs']
-
-        return statistics
+    def _compute_slides_statistics_type(self, read_group_res):
+        """ Compute statistics based on all existing slide types """
+        slide_types = self.env['slide.slide']._fields['slide_type'].get_values(self.env)
+        keys = ['nbr_%s' % slide_type for slide_type in slide_types]
+        keys.append('total_slides')
+        result = dict((cid, dict((key, 0) for key in keys)) for cid in self.ids)
+        for res_group in read_group_res:
+            cid = res_group['category_id'][0]
+            for slide_type in slide_types:
+                result[cid]['nbr_%s' % slide_type] += res_group.get('slide_type', '') == slide_type and res_group['__count'] or 0
+                result[cid]['total_slides'] += res_group.get('slide_type', '') == slide_type and res_group['__count'] or 0
+        return result

@@ -53,6 +53,12 @@ var MailManager =  AbstractService.extend({
      */
     start: function () {
         this._super.apply(this, arguments);
+
+        this._throttleNotifyChannelFetched = _.throttle(this._notifyChannelFetched.bind(this), 3000);
+        // List of channel that have requested the service to notify when
+        // it has been fetched, so that throttled RPCs batch the ids.
+        this._toNotifyChannelFetchedIDs = [];
+
         this._initializeInternalState();
         this._listenOnBuses();
         this._fetchMailStateFromServer();
@@ -337,6 +343,14 @@ var MailManager =  AbstractService.extend({
         } else {
             return $.when();
         }
+    },
+    /**
+     * @param {Object} data
+     * @param {integer} data.channelID
+     */
+    notifyChannelFetched: function (data) {
+        this._toNotifyChannelFetchedIDs = _.uniq(this._toNotifyChannelFetchedIDs.concat(data.channelID));
+        this._throttleNotifyChannelFetched();
     },
     /**
      * @param {integer|string} threadID
@@ -917,6 +931,23 @@ var MailManager =  AbstractService.extend({
      */
     _makeMessage: function (data) {
         return new Message(this, data);
+    },
+    /**
+     * @private
+     * @returns {$.Promise}
+     */
+    _notifyChannelFetched: function () {
+        var channelIDs = this._toNotifyChannelFetchedIDs;
+        this._toNotifyChannelFetchedIDs = [];
+        if (_.isEmpty(channelIDs)) {
+            // no channel to notify fetched
+            return $.when();
+        }
+        return this._rpc({
+            model: 'mail.channel',
+            method: 'channel_fetched',
+            args: [channelIDs],
+        }, { shadow: true });
     },
     /**
      * shows a popup to notify a new received message.

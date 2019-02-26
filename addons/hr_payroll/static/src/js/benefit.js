@@ -3,11 +3,11 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
 
     var core = require('web.core');
     var CalendarController = require("web.CalendarController");
+    var time = require('web.time');
     var CalendarModel = require('web.CalendarModel');
     var CalendarRenderer = require('web.CalendarRenderer');
     var CalendarView = require('web.CalendarView');
     var viewRegistry = require('web.view_registry');
-
     var _t = core._t;
     var BenefitCalendarController = CalendarController.extend({
 
@@ -35,8 +35,8 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
                 return;
             }
 
-            this.firstDay = this.model.data.target_date.clone().startOf('month');
-            this.lastDay = this.model.data.target_date.clone().endOf('month');
+            this.firstDay = this.model.data.target_date.clone().startOf('month').toDate();
+            this.lastDay = this.model.data.target_date.clone().endOf('month').toDate();
             this.events = this._checkDataInRange(this.firstDay, this.lastDay, this.model.data.data);
             var is_validated = this._checkValidation(this.events);
             this.$buttons.find('.btn-benefit').remove();
@@ -54,11 +54,10 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
         _onGeneratePayslips: function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            var date_fmt = 'YYYY-MM-DD';
             this.do_action('hr_payroll.action_generate_payslips_from_benefits', {
                 additional_context: {
-                    default_date_start: this.firstDay.format(date_fmt),
-                    default_date_end: this.lastDay.format(date_fmt),
+                    default_date_start: time.datetime_to_str(this.firstDay),
+                    default_date_end: time.datetime_to_str(this.lastDay),
                 },
             });
         },
@@ -79,12 +78,11 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
         _onGenerateBenefits: function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            var date_fmt = 'YYYY-MM-DD HH:mm:ss';
             var self = this;
             this._rpc({
                 model: 'hr.employee',
                 method: 'generate_benefit',
-                args: [this.firstDay.format(date_fmt), this.lastDay.format(date_fmt)],
+                args: [time.datetime_to_str(this.firstDay), time.datetime_to_str(this.lastDay)],
             }).then(function () {
                 self.reload();
             });

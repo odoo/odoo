@@ -11,7 +11,7 @@ import uuid
 
 from werkzeug import urls
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import Warning, UserError
 from odoo.http import request
@@ -77,19 +77,11 @@ class SlideTag(models.Model):
 
 
 class Slide(models.Model):
-    """ This model represents actual presentations. Those must be one of four
-    types:
-
-     - Presentation
-     - Document
-     - Infographic
-     - Video
-     - Webpage
-
-    Slide has various statistics like view count, embed count, like, dislikes """
-
     _name = 'slide.slide'
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin', 'rating.mixin']
+    _inherit = [
+        'mail.thread', 'rating.mixin',
+        'image.mixin',
+        'website.seo.metadata', 'website.published.mixin']
     _description = 'Slides'
     _mail_post_access = 'read'
     _order_by_strategy = {
@@ -98,10 +90,6 @@ class Slide(models.Model):
         'latest': 'date_published desc',
     }
     _order = 'category_sequence asc, sequence asc'
-
-    _sql_constraints = [
-        ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
-    ]
 
     def _default_access_token(self):
         return str(uuid.uuid4())
@@ -119,14 +107,10 @@ class Slide(models.Model):
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     is_preview = fields.Boolean('Always visible', default=False)
     completion_time = fields.Float('# Hours', default=1, digits=(10, 4))
-    image = fields.Binary("Image", attachment=True)
-    image_large = fields.Binary("Large image", attachment=True)
-    image_medium = fields.Binary("Medium image", attachment=True)
-    image_small = fields.Binary("Small image", attachment=True)
     # subscribers
     partner_ids = fields.Many2many('res.partner', 'slide_slide_partner', 'slide_id', 'partner_id',
-                                   string='Subscribers', groups='base.group_website_publisher')
-    slide_partner_ids = fields.One2many('slide.slide.partner', 'slide_id', string='Subscribers information', groups='base.group_website_publisher')
+                                   string='Subscribers', groups='website.group_website_publisher')
+    slide_partner_ids = fields.One2many('slide.slide.partner', 'slide_id', string='Subscribers information', groups='website.group_website_publisher')
     user_membership_id = fields.Many2one(
         'slide.slide.partner', string="Subscriber information", compute='_compute_user_membership_id',
         help="Subscriber information for the current logged in user")
@@ -161,12 +145,16 @@ class Slide(models.Model):
     likes = fields.Integer('Likes', compute='_compute_user_info', store=True)
     dislikes = fields.Integer('Dislikes', compute='_compute_user_info', store=True)
     user_vote = fields.Integer('User vote', compute='_compute_user_info')
-    embed_code = fields.Text('Embed Code', readonly=True, compute='_get_embed_code')
+    embed_code = fields.Text('Embed Code', readonly=True, compute='_compute_embed_code')
     # views
     embedcount_ids = fields.One2many('slide.embed', 'slide_id', string="Embed Count")
     slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
     public_views = fields.Integer('# of Public Views')
     total_views = fields.Integer("Total # Views", default="0", compute='_compute_total', store=True)
+
+    _sql_constraints = [
+        ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
+    ]
 
     @api.depends('slide_views', 'public_views')
     def _compute_total(self):
@@ -216,7 +204,8 @@ class Slide(models.Model):
                 self.env['slide.slide.partner']
             )
 
-    def _get_embed_code(self):
+    @api.depends('document_id', 'slide_type', 'mime_type')
+    def _compute_embed_code(self):
         base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         if base_url[-1] == '/':
             base_url = base_url[:-1]
@@ -235,7 +224,7 @@ class Slide(models.Model):
                 record.embed_code = False
 
     @api.onchange('url')
-    def on_change_url(self):
+    def _on_change_url(self):
         self.ensure_one()
         if self.url:
             res = self._parse_document_url(self.url)
@@ -250,6 +239,7 @@ class Slide(models.Model):
     @api.multi
     @api.depends('name')
     def _compute_website_url(self):
+        # TDE FIXME: clena this link.tracker strange stuff
         super(Slide, self)._compute_website_url()
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for slide in self:
@@ -296,9 +286,6 @@ class Slide(models.Model):
             for key, value in doc_data.items():
                 values.setdefault(key, value)
 
-        if 'image' in values:
-            tools.image_resize_images(values, return_large=True)
-
         slide = super(Slide, self).create(values)
 
         if slide.website_published:
@@ -312,14 +299,15 @@ class Slide(models.Model):
             for key, value in doc_data.items():
                 values.setdefault(key, value)
 
-        if 'image' in values:
-            tools.image_resize_images(values, return_large=True)
-
         res = super(Slide, self).write(values)
         if values.get('website_published'):
             self.date_published = datetime.datetime.now()
             self._post_publication()
         return res
+
+    # ---------------------------------------------------------
+    # Mail/Rating
+    # ---------------------------------------------------------
 
     @api.multi
     def get_access_action(self, access_uid=None):
@@ -335,10 +323,6 @@ class Slide(models.Model):
             }
         return super(Slide, self).get_access_action(access_uid)
 
-    # ---------------------------------------------------------
-    # Business Methods
-    # ---------------------------------------------------------
-
     @api.multi
     def _notify_get_groups(self, message, groups):
         """ Add access button to everyone if the document is active. """
@@ -350,7 +334,12 @@ class Slide(models.Model):
 
         return groups
 
-    def get_related_slides(self, limit=20):
+    # ---------------------------------------------------------
+    # Business Methods
+    # ---------------------------------------------------------
+
+    def _get_related_slides(self, limit=20):
+        # TDE FIXME: should build a smarter domain
         domain = request.website.website_domain()
         domain += [('website_published', '=', True), ('id', '!=', self.id)]
         if self.category_id:
@@ -358,7 +347,8 @@ class Slide(models.Model):
         for record in self.search(domain, limit=limit):
             yield record
 
-    def get_most_viewed_slides(self, limit=20):
+    def _get_most_viewed_slides(self, limit=20):
+        # TDE FIXME: should build a smarter domain
         domain = request.website.website_domain()
         domain += [('website_published', '=', True), ('id', '!=', self.id)]
         for record in self.search(domain, limit=limit, order='total_views desc'):
@@ -387,10 +377,13 @@ class Slide(models.Model):
             self.write({'access_token': self._default_access_token()})
         return self._sign_token(partner_id)
 
-    @api.one
-    def send_share_email(self, email):
+    def _send_share_email(self, email):
+        # TDE FIXME: template to check
+        mail_ids = []
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        return self.channel_id.share_template_id.with_context(email=email, base_url=base_url).send_mail(self.id, notif_layout='mail.mail_notification_light')
+        for record in self:
+            mail_ids.append(self.channel_id.share_template_id.with_context(email=email, base_url=base_url).send_mail(record.id, notif_layout='mail.mail_notification_light'))
+        return mail_ids
 
     def action_like(self):
         self.check_access_rights('read')

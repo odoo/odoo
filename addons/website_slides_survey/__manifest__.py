@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': "Course certifications",
+    'name': "Course Certifications",
     'summary': 'Add certification capabilities to your courses',
     'description': """This module lets you use the full power of certifications within your courses.""",
     'category': 'Hidden',
-    'version': '0.1',
+    'version': '1.0',
     'depends': ['website_slides', 'website_survey'],
     'installable': True,
     'auto_install': True,

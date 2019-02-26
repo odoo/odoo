@@ -5,18 +5,14 @@
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
                 <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
-                <t t-if="o.move_lines and o.move_lines[0].partner_id" name="partner_header">
+                <t t-set="partner" t-value="o.partner_id or (o.move_lines and o.move_lines[0].partner_id) or False"/>
+                <t t-if="partner" name="partner_header">
                     <t t-set="address">
-                        <div t-field="o.move_lines[0].partner_id"
+                        <div t-esc="partner"
                         t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
                    </t>
                 </t>
-                <t t-if="not (o.move_lines and o.move_lines[0].partner_id) and o.partner_id" name="partner_header">
-                    <t t-set="address">
-                        <div t-field="o.partner_id"
-                        t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
-                    </t>
-                </t>
+
                 <div class="page">
                     <h2>
                         <span t-field="o.name"/>

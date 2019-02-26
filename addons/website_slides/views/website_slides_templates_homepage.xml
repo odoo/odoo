@@ -4,84 +4,94 @@
 <!-- Channels home template -->
 <template id='courses_home' name="Odoo Courses Homepage">
     <t t-call="website.layout">
-        <t t-call="website_slides.courses_header">
-            <t t-set="header_title" t-value="'Reach new heights'"/>
-            <t t-set="header_subtitle" t-value="'Start your online course today !'"/>
-            <t t-set="header_text" t-value="'Skill up and have an impact! Your business career starts here. Time to start a course.'"/>
-            <t t-set="header_cta_url" t-value="'slides'"/>
-            <t t-set="header_cta_title" t-value="'Pick a course'"/>
-        </t>
-        <div class="wrap">
-            <div class="container mt16 o_wslides_home_nav">
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="wrap o_wslides_wrap">
+            <section class="s_banner overflow-hidden bg-900" style="background-image: url(&quot;/website_slides/static/src/img/banner_default.svg&quot;); background-size: cover; background-position: 55% 65%">
+                <div class="container align-items-center d-flex mb-5 mt-lg-5 pt-lg-4 pb-lg-1">
+                    <div>
+                        <h1 class="display-3 mb-0">Reach new heights</h1>
+                        <h2 class="mb-4">Start your online course today !</h2>
+                        <div class="row mt-1 mb-3">
+                            <div class="col-lg-4">
+                                <p>Skill up and have an impact! Your business career starts here. Time to start a course.</p>
+                            </div>
+                            <div class="col-lg-3">
+                                <a href="slides/all" class="btn btn-primary btn-lg">Pick a course</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="container mt16 o_wslides_home_nav position-relative">
+                <nav class="navbar navbar-expand-md navbar-light shadow-sm" style="background: white!important">
                     <button class="navbar-toggler" type="button"
                         data-toggle="collapse" data-target="#navbarSlidesHomepage"
                         aria-controls="navbarSlidesHomepage" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+                        <span class="navbar-toggler-icon"/>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSlidesHomepage">
-                        <a class="navbar-brand" href="#"></a>
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item o_wslides_home_all_slides">
-                                <h4><a class="nav-link" href="/slides/all"><i class="fa fa-rocket"/> All courses</a></h4>
-                            </li>
-                            <li class="nav-item ml16">
-                                <h4><a class="nav-link" href="/slides/all"><i class="fa fa-file"/> My courses</a></h4>
-                            </li>
-                        </ul>
+                        <div class="navbar-nav">
+                            <a class="nav-link nav-link mr-md-2 o_wslides_home_all_slides" href="/slides/all"><i class="fa fa-graduation-cap mr-1"/>All courses</a>
+                        </div>
+                        <div class="navbar-nav o_wslides_nav_navbar_right">
+                            <t t-if="is_public_user">
+                                <a class="nav-link nav-link" href="/web/login?redirect=/slides/all?my=1"><i class="fa fa-file mr-1"/>My courses</a>
+                            </t><t t-else="">
+                                <a class="nav-link nav-link" href="/slides/all?my=1"><i class="fa fa-file mr-1"/>My courses</a>
+                            </t>
+                        </div>
                     </div>
                 </nav>
             </div>
-            <div class="container mt16 o_wslides_home_main">
+            <div class="container o_wslides_home_main">
                 <div class="row">
-                    <div class="col-md-9">
+                    <div class="col-lg-9 pr-lg-5">
                         <t t-if="channels_my">
                             <t t-set="void_count" t-value="3 - len(channels_my[:3])"/>
-                            <div class="o_wslides_home_content_section">
-                                <div class="row mt16 o_wslides_home_content_section_title align-items-center">
+                            <div class="o_wslides_home_content_section mb-5">
+                                <div class="row o_wslides_home_content_section_title align-items-center">
                                     <div class="col">
                                         <a href="slides/all" class="float-right">View all</a>
-                                        <h3><i class="fa fa-certificate"/> Complete latest courses</h3>
-                                        <hr/>
+                                        <h5 class="m-0">Complete latest courses</h5>
+                                        <hr class="mt-2"/>
                                     </div>
                                 </div>
-                                <div class="row o_wslides_row mt8">
+                                <div class="row o_wslides_row mx-n2 mt8">
                                     <t t-foreach="channels_my[:3]" t-as="channel">
-                                        <div class="col-md-4 col-sm-6 col-xs-12" t-call="website_slides.course_card"/>
+                                        <div class="col-md-4 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1" t-call="website_slides.course_card"/>
                                     </t>
                                 </div>
                             </div>
                         </t>
-                        <div class="o_wslides_home_content_section">
-                            <div class="row mt16 o_wslides_home_content_section_title align-items-center">
+                        <div class="o_wslides_home_content_section mb-5">
+                            <div class="row o_wslides_home_content_section_title align-items-center">
                                 <div class="col">
                                     <a href="slides/all" class="float-right">View all</a>
-                                    <h3><i class="fa fa-fire"/> Most popular courses</h3>
-                                    <hr/>
+                                    <h5 class="m-0">Most popular courses</h5>
+                                    <hr class="mt-2"/>
                                 </div>
                             </div>
-                            <div class="row o_wslides_row mt8">
+                            <div class="row o_wslides_row mx-n2 mt8">
                                 <t t-foreach="channels_popular[:3]" t-as="channel">
-                                    <div class="col-md-4 col-sm-6 col-xs-12" t-call="website_slides.course_card"/>
+                                    <div class="col-md-4 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1" t-call="website_slides.course_card"/>
                                 </t>
                             </div>
                         </div>
-                        <div class="o_wslides_home_content_section">
-                            <div class="row mt16 o_wslides_home_content_section_title align-items-center">
+                        <div class="o_wslides_home_content_section mb-5">
+                            <div class="row o_wslides_home_content_section_title align-items-center">
                                 <div class="col">
                                     <a href="slides/all" class="float-right">View all</a>
-                                    <h3><i class="fa fa-plus-square"/> Newest courses</h3>
-                                    <hr/>
+                                    <h5 class="m-0">Newest courses</h5>
+                                    <hr class="mt-2"/>
                                 </div>
                             </div>
-                            <div class="row o_wslides_row mt8">
+                            <div class="row o_wslides_row mx-n2 mt8">
                                 <t t-foreach="channels_newest[:3]" t-as="channel">
-                                    <div class="col-md-4 col-sm-6 col-xs-12" t-call="website_slides.course_card"/>
+                                    <div class="col-md-4 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1" t-call="website_slides.course_card"/>
                                 </t>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-lg-3">
                         <t t-if="is_public_user">
                             <t t-call="website_slides.slides_home_achievements_small"/>
                             <t t-call="website_slides.slides_home_users_small"/>
@@ -94,28 +104,40 @@
                     </div>
                 </div>
             </div>
+            <section class="s_banner bg-900" style="background-image: url(&quot;/website/static/src/img/backgrounds/people.jpg&quot;); background-size: cover; background-position: 65% 55%">
+                <div class="container py-5">
+                    <h1 class="display-3 mb-0">Meet the people who transformed their company</h1>
+                    <h2 class="mb-4">Nobody gave me a real text so instead of a lorem ipsum I put that one.</h2>
+                    <div class="row mt-1 mb-3">
+                        <div class="col-lg-4">
+                            <p>Nobody gave me a real text so instead of a lorem ipsum I put that one.</p>
+                        </div>
+                        <div class="col-lg-3">
+                            <a href="/profile/users" class="btn btn-primary btn-lg">Go meet them</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
-        <t t-call="website_slides.courses_footer">
-            <t t-set="footer_title" t-value="'Meet the people who transformed their company'"/>
-            <t t-set="footer_text" t-value="'Nobody gave me a real text so instead of a lorem ipsum I put that one.'"/>
-            <t t-set="footer_cta_url" t-value="'slides'"/>
-            <t t-set="footer_cta_title" t-value="'Go meet them'"/>
-        </t>
     </t>
 </template>
 
 <!-- Channel all/main template -->
 <template id='courses_all' name="Odoo All Courses">
     <t t-call="website.layout">
-        <t t-call="website_slides.courses_header">
-            <t t-set="header_title" t-value="'All Courses'"/>
-            <t t-set="header_subtitle" t-value="'Start your online course today !'"/>
-        </t>
-        <div class="wrap">
-            <div class="container mt16 o_wslides_home_nav">
+        <div class="wrap o_wslides_wrap">
+            <section class="s_banner bg-900" style="background-image: url(&quot;/website_slides/static/src/img/banner_default_all.svg&quot;); background-size: cover; background-position: 80% 20%">
+                <div class="container py-5">
+                    <h1 class="display-3 mb-0"><t t-if="search_my">My Courses</t><t t-else="">All Courses</t></h1>
+                    <h3 class="mb-4">Start your online course today !</h3>
+                </div>
+            </section>
+            <div class="container mt16 o_wslides_home_nav position-relative">
                 <!-- Navbar dynamically composed using displayed channel tag groups. -->
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <a class="navbar-brand" t-att-href="'/slides?%s' % keep_query('debug')"><i class="fa fa-chevron-left"/></a>
+                <nav class="navbar navbar-expand-md navbar-light shadow-sm" style="background: white!important">
+                    <div class="navbar-nav border-right pr-3">
+                        <a class="nav-link nav-item" t-att-href="'/slides?%s' % keep_query('debug')"><i class="fa fa-chevron-left"/></a>
+                    </div>
                     <button class="navbar-toggler" type="button"
                         data-toggle="collapse" data-target="#navbarTagGroups"
                         aria-controls="navbarTagGroups" aria-expanded="false" aria-label="Toggle navigation">
@@ -123,15 +145,15 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarTagGroups">
                         <t t-set="search_tag_groups" t-value="search_tags.mapped('group_id')"/>
-                        <ul class="navbar-nav mr-auto">
+                        <ul class="navbar-nav flex-grow-1">
                             <t t-foreach="tag_groups" t-as="tag_group">
                                 <li t-att-class="'nav-item dropdown ml16 %s' % ('active' if tag_group in search_tag_groups else '')">
-                                    <h4><a class="nav-link dropdown-toggle"
+                                    <a class="nav-link dropdown-toggle"
                                         href="/slides/all"
                                         t-att-data-target="'#navToogleTagGroup%s' % tag_group.id"
                                         role="button" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false"
-                                        t-esc="tag_group.name"/></h4>
+                                        t-esc="tag_group.name"/>
                                     <div class="dropdown-menu" t-att-id="'navToogleTagGroup%s' % tag_group.id">
                                         <t t-foreach="tag_group.tag_ids" t-as="tag">
                                             <a t-att-class="'dropdown-item %s' % ('active' if tag in search_tags else '')"
@@ -141,19 +163,29 @@
                                     </div>
                                 </li>
                             </t>
+                            <!-- karma / profile -->
+                            <li class="nav-item ml-auto" t-if="not is_public_user">
+                                <a t-att-href="'/profile/user/%s' % user.id" class="nav-link mr-2"
+                                    role="button" title="My Profile">
+                                    <i class="fa fa-diamond"/> <t t-esc="user_id.karma"/>
+                                </a>
+                            </li>
+                            <!-- clear filtering -->
+                            <li class="nav-item" t-if="search_slide_type or search_my or search_tags or search_channel_tag_id">
+                                <a t-att-href="'/slides/all?%s' % keep_query('debug')" class="nav-link mr-2"
+                                    role="button" title="Clear filters">
+                                    <i class="fa fa-eraser"/>
+                                </a>
+                            </li>
                         </ul>
-                        <!-- karma / profile -->
-                        <a t-if="not is_public_user" t-att-href="'/profile/user/%s' % user.id" class="font-weight-bold mr-3">
-                            <i class="fa fa-diamond"/> <t t-esc="user_id.karma"/>
-                        </a>
                         <!-- search box -->
-                        <form method="GET" class="form-inline justify-content-center">
+                        <form method="GET" class="form-inline o_wslides_nav_navbar_right">
                             <div class="input-group">
                                 <input type="search" name="search" class="form-control"
                                     placeholder="Search something" aria-label="Search"
                                     t-att-value="search_term"/>
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-success oe_search_button" type="submit" aria-label="Search" title="Search">
+                                    <button class="btn border oe_search_button" type="submit" aria-label="Search" title="Search">
                                         <i class="fa fa-search"/>
                                     </button>
                                 </div>
@@ -162,127 +194,62 @@
                     </div>
                 </nav>
             </div>
-            <div class="container mt16 o_wslides_home_main">
-                <t t-if="search_term and not channels_layouted">
-                    <div class="row">
-                        <div class="col">
-                            <p class="alert alert-info">No channel was found matching your search <t t-esc="search_term"/>.</p>
+            <div class="container o_wslides_home_main pb-5">
+                <div t-if="search_term and not channels" class="alert alert-info mb-5">
+                    No channel was found matching your search <code><t t-esc="search_term"/></code>.
+                </div>
+                <div t-else="" class="row mx-n2">
+                    <t t-foreach="channels" t-as="channel">
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 px-2 d-flex flex-grow-1" t-call="website_slides.course_card"/>
+                    </t>
+                </div>
+            </div>
+
+            <section class="s_banner bg-900" style="background-image: url(&quot;/website/static/src/img/backgrounds/people.jpg&quot;); background-size: cover; background-position: 65% 55%">
+                <div class="container py-5">
+                    <h1 class="display-3 mb-0">Meet the people who transformed their company</h1>
+                    <h2 class="mb-4">Nobody gave me a real text so instead of a lorem ipsum I put that one.</h2>
+                    <div class="row mt-1 mb-3">
+                        <div class="col-lg-4">
+                            <p>Nobody gave me a real text so instead of a lorem ipsum I put that one.</p>
+                        </div>
+                        <div class="col-lg-3">
+                            <a href="/profile/users" class="btn btn-primary btn-lg">Go meet them</a>
                         </div>
                     </div>
-                </t>
-                <t t-foreach="channels_layouted" t-as="channels_row">
-                    <t t-set="missing" t-value="0"/>
-                    <div class="card-deck mb32">
-                        <t t-foreach="channels_row" t-as="channel">
-                            <t t-if="channel">
-                                <t t-call="website_slides.course_card"/>
-                            </t>
-                            <t t-else="">
-                                <t t-set="missing" t-value="missing + 1"/>
-                            </t>
-                        </t>
-                        <t t-if="missing">
-                            <div t-att-class="'col-%s' % (missing * 3)"/>
-                        </t>
-                    </div>
-                </t>
-            </div>
+                </div>
+            </section>
         </div>
-        <t t-call="website_slides.courses_footer">
-            <t t-set="footer_title" t-value="'Meet the people who transformed their company'"/>
-            <t t-set="footer_text" t-value="'Nobody gave me a real text so instead of a lorem ipsum I put that one.'"/>
-            <t t-set="footer_cta_url" t-value="'slides'"/>
-            <t t-set="footer_cta_title" t-value="'Go meet them'"/>
-        </t>
     </t>
 </template>
 
-<template id="courses_header">
-    <section class="s_cover parallax bg-black-50 pt40 pb40 o_wslides_home_header" data-scroll-background-ratio="0" style="background-image: none;">
-        <span class="s_parallax_bg oe_img_bg oe_custom_bg" style="background-image: url(&quot;/website_slides/static/src/img/channel_banner_moutain.jpg&quot;); background-position: 52.1% 17.69%;"></span>
-        <div class="container">
-            <div class="row s_nb_column_fixed">
-                <div class="s_title pt0 col-lg-12" data-name="Title">
-                    <h1 class="s_title_small_caps" style="font-size: 62px; text-align: left;"><t t-esc="header_title"/></h1>
-                    <h4 t-if="header_subtitle" class="s_title_small_caps" style="font-size: 34px; text-align: left;"><t t-esc="header_subtitle"/></h4>
-                </div>
-            </div>
-            <div class="row s_nb_column_fixed">
-                <div t-if="header_text" class="col-lg-3 s_text pt16 pb16" data-name="Text">
-                    <p class="lead" style="text-align: left;"><t t-esc="header_text"/></p>
-                </div>
-                <div t-if="header_cta_title" class="col-lg-3 s_btn text-center pt16 pb16" data-name="Buttons">
-                    <a t-att-href="header_cta_url"
-                        class="btn btn-primary o_default_snippet_text text_small_caps"><t t-esc="header_cta_title"/></a>
-                </div>
-            </div>
-        </div>
-    </section>
-</template>
-
-<template id="courses_footer">
-    <section class="s_cover parallax bg-black-50 pt40 pb40 o_wslides_home_footer mt16" data-scroll-background-ratio="0" style="background-image: none;">
-        <span class="s_parallax_bg oe_img_bg oe_custom_bg" style="background-image: url(&quot;/website/static/src/img/backgrounds/people.jpg&quot;); background-position: 50.11% 29.1%;"></span>
-        <div class="container">
-            <div class="row s_nb_column_fixed">
-                <div class="col-lg-12 s_title" data-name="Title">
-                    <h1 class="s_title_small_caps" style="font-size: 40px; text-align: left;"><t t-esc="footer_title"/></h1>
-                    <h4 t-if="footer_subtitle" class="s_title_small_caps" style="font-size: 26px; text-align: left;"><t t-esc="footer_subtitle"/></h4>
-                </div>
-            </div>
-            <div class="row s_nb_column_fixed">
-                <div t-if="footer_text" class="col-lg-3 s_text pt16 pb16" data-name="Text">
-                    <p class="lead o_default_snippet_text" style="text-align: left;"><t t-esc="footer_text"/></p>
-                </div>
-                <div t-if="footer_cta_title" class="col-lg-3 s_btn text-center pt16 pb16" data-name="Buttons">
-                    <a t-att-href="footer_cta_url"
-                        class="btn btn-primary o_default_snippet_text text_small_caps"><t t-esc="footer_cta_title"/></a>
-                </div>
-            </div>
-        </div>
-    </section>
-</template>
-
 <template id='course_card' name="Course Card">
-    <div class="card o_wslides_course_card">
-        <img class="card-img-top img-fuild"
-            style="max-height: 160px;"
-            t-att-src="'/web/image/slide.channel/%s/image_large' % channel.id if channel.image else '/website_slides/static/src/img/channel-default.jpg'"
-            t-att-alt="channel.name"/>
+    <div class="card w-100 o_wslides_course_card mb-4">
+        <t t-set="course_image" t-value="'/web/image/slide.channel/%s/image_large' % channel.id"/>
+        <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name">
+            <div class="card-img-top" t-attf-style="padding-top: 50%; background-image: url(#{course_image}); background-size: cover; background-position:center"/>
+        </a>
         <div class="card-body">
-            <h5 class="card-title" t-att-title="channel.name">
-                <a t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
-            </h5>
-            <div class="card-text">
-                <div class="text-muted oe_no_empty" t-field="channel.description"/>
-                <div t-if="channel.tag_ids">
+            <a class="card-title h5" t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
+            <div class="card-text mt-1">
+                <div class="font-weight-light oe_no_empty" t-field="channel.description"/>
+                <div t-if="channel.tag_ids" class="border-top mt-2 pt-1">
                     <t t-foreach="channel.tag_ids" t-as="tag">
-                        <a t-att-href="'/slides/all?channel_tag_id=%s' % tag.id" class="badge badge-secondary">
-                            <t t-esc="tag.name"/>
-                        </a>
+                        <a t-att-href="'/slides/all?channel_tag_id=%s' % tag.id" class="badge badge-light" t-esc="tag.name"/>
                     </t>
                 </div>
             </div>
         </div>
-        <div class="card-footer">
-            <div class="row justify-content-between align-items-center">
-                <small class="text-muted col-3">
-                    <t t-call="website_slides.slides_misc_float_time">
-                        <t t-set="value" t-value="channel.total_time"/>
-                    </t>
-                </small>
-                <t t-if="channel.is_member">
-                    <div class="col">
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{channel.completion}%;">
-                                <!-- <span><t t-esc="channel.completion"/>%</span> -->
-                            </div>
-                        </div>
-                    </div>
+        <div class="card-footer border-top-0 text-600">
+            <div class="d-flex justify-content-between align-items-center small">
+                <span class="font-weight-bold" t-field="channel.total_time" t-options='{"widget": "float_time"}'/>
+                <t t-if="channel.is_member and channel.completed">
+                    <span class="badge badge-pill badge-success pull-right"><i class="fa fa-check"/> Completed</span>
                 </t>
-                <t t-else="">
-                    <small class="text-muted col-5"><span t-esc="channel.total_slides"/> steps</small>
-                </t>
+                <div t-elif="channel.is_member" class="progress w-50">
+                    <div class="progress-bar" role="progressbar" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{channel.completion}%;"/>
+                </div>
+                <t t-else=""><span class="font-weight-bold" t-esc="channel.total_slides"/> steps</t>
             </div>
         </div>
     </div>
@@ -290,13 +257,11 @@
 
 <template id='slides_home_achievements_small' name="Latest Achievements">
     <div class="o_wslides_home_aside">
-        <div class="row mt16 o_wslides_home_aside_title">
+        <div class="row o_wslides_home_aside_title">
             <div class="col">
-                <a href="slides" class="text-muted float-right">
-                    <small class="float-right">View all</small>
-                </a>
-                <h3>Latest achievements</h3>
-                <hr/>
+                <a href="/slides" class="float-right">View all</a>
+                <h5 class="m-0">Latest achievements</h5>
+                <hr class="mt-2"/>
             </div>
         </div>
         <div class="row">
@@ -327,13 +292,11 @@
 
 <template id='slides_home_users_small' name="Latest Users">
     <div class="o_wslides_home_aside">
-        <div class="row mt16 o_wslides_home_aside_title">
+        <div class="row o_wslides_home_aside_title">
             <div class="col">
-                <a href="slides" class="text-muted float-right">
-                    <small class="float-right">View all</small>
-                </a>
-                <h3>Heroes of the week</h3>
-                <hr/>
+                <a href="/profile/users" class="float-right">View all</a>
+                <h5 class="m-0">Heroes of the week</h5>
+                <hr class="mt-2"/>
             </div>
         </div>
         <div class="row">
@@ -370,41 +333,47 @@
 
 <template id='slides_home_user_profile_small' name="User Profile">
     <div class="o_wslides_home_aside">
-        <div class="row mt16 o_wslides_home_aside_title align-items-center">
-            <div class="col-12">
-                <t t-call="website_slides.slides_misc_user_image"/>
-                <a t-att-href="'/profile/user/%s' % user.id" class="float-right">Edit</a>
-                <h4 t-esc="user.name" class="font-weight-bold"/>
-                <hr/>
+        <div class="o_wslides_home_aside_title">
+            <div class="d-flex align-items-center">
+                <t t-call="website_slides.slides_misc_user_image">
+                    <t t-set="img_class" t-value="'rounded-circle mr-1'"/>
+                    <t t-set="img_style" t-value="'height: 22px'"/>
+                </t>
+                <h5 t-esc="user.name" class="d-flex flex-grow-1 mb-0"/>
+                <a t-att-href="'/profile/user/%s' % user.id">Edit</a>
             </div>
-            <div class="col-12 mt8">
-                <span class="font-weight-bold text-muted">Current rank:</span>
-                <a href="/profile/ranks" class="float-right" t-field="user.rank_id"/>
-                <t t-call="website_profile.profile_next_rank_card"/>
-                <div t-field="user.next_rank_id.description_motivational"/>
+        </div>
+        <hr class="mt-2"/>
+        <div class="mt8">
+            <div class="d-flex align-items-center">
+                <span class="font-weight-bold text-muted mr-2">Current rank:</span>
+                <img t-attf-src="/web/image/gamification.karma.rank/#{user.rank_id.id}/image_small" height="16" alt="" class="mr-1"/>
+                <a href="/profile/ranks" t-field="user.rank_id"/>
             </div>
+            <div class="font-weight-bold text-muted mt-1">Next rank:</div>
+            <t t-call="website_profile.profile_next_rank_card">
+                <t t-set="bg_class">bg-200</t>
+                <t t-set="img_max_width">50%</t>
+            </t>
+            <div t-field="user.next_rank_id.description_motivational"/>
         </div>
     </div>
 </template>
 
 <template id='slides_home_user_achievements_small' name="User Achievements">
-    <div class="o_wslides_home_aside mt16">
+    <div class="o_wslides_home_aside mb-2">
         <t t-foreach="challenges" t-as="challenge">
             <t t-set="challenge_done" t-value="challenge in challenges_done if challenges_done else False"/>
-            <div class="row no-gutters mt8 align-items-center">
-                <div class="col-3">
-                    <img t-att-class="'rounded-circle float-left %s' % 'image-muted' if not challenge_done else ''"
-                        style="max-height: 36px;"
-                        t-att-src="'/web/image/gamification.badge/%s/image_medium' % challenge.reward_id.id"
-                        t-att-alt="challenge.reward_id.name"/>
-                </div>
-                <div class="col-7">
-                    <span t-att-class="'font-weight-bold text_small_caps %s' % 'text-muted' if not challenge_done else ''" t-esc="challenge.reward_id.name"/><br/>
+            <div t-attf-class="d-flex mt-3 align-items-center #{'o_wslides_entry_muted' if not challenge_done else ''}">
+                <img class="mr-2"
+                    style="max-height: 36px;"
+                    t-att-src="'/web/image/gamification.badge/%s/image_medium' % challenge.reward_id.id"
+                    t-att-alt="challenge.reward_id.name"/>
+                <div class="flex-grow-1">
+                    <b class="text_small_caps" t-esc="challenge.reward_id.name"/><br/>
                     <span class="text-muted" t-esc="challenge.reward_id.description"/>
                 </div>
-                <div class="col-2" t-if="challenge_done">
-                    <i class="fa fa-check float-right" aria-label="Done" title="Done" role="img"></i>
-                </div>
+                <i t-if="challenge_done" class="fa fa-check" aria-label="Done" title="Done" role="img"></i>
             </div>
         </t>
     </div>
@@ -415,15 +384,6 @@
         t-att-style="img_style if img_style else 'max-height: 32px;'"
         t-att-src="'/profile/avatar/%s?field=image_medium' % user.id"
         t-att-alt="user.name"/>
-</template>
-
-<template id='slides_misc_float_time' name="Float Time">
-    <t t-set="hours" t-value="int(value)"/>
-    <t t-set="minuts" t-value="int(60.0 * (value - int(value)))"/>
-    <span t-esc="hours"/> hr
-    <t t-if="minuts">
-        <span t-esc="minuts"/> mins
-    </t>
 </template>
 
 </data></odoo>

@@ -586,10 +586,18 @@ QUnit.test('grouped preview for needaction messages linked to same document', fu
     messagingMenu.destroy();
 });
 
-QUnit.test("messaging menu widget: channel seen notification", function ( assert ) {
+QUnit.test("messaging menu widget: channel seen notification", function (assert) {
     assert.expect(4);
 
-    this.data.initMessaging.channel_slots.channel_channel[0].message_unread_counter = 1;
+    this.data.initMessaging.channel_slots = {
+        channel_direct_message: [{
+            id: 1,
+            channel_type: "chat",
+            direct_partner: [{ id: 2, name: 'Someone', im_status: '' }],
+            name: 'DM',
+            message_unread_counter: 1,
+        }],
+    };
 
     var messagingMenu = new MessagingMenu();
     testUtils.mock.addMockEnvironment(messagingMenu, {
@@ -605,7 +613,7 @@ QUnit.test("messaging menu widget: channel seen notification", function ( assert
         "should have correct messaging menu counter (1 unread message in channel)");
     assert.strictEqual(messagingMenu.$('.o_preview_counter').text().replace(/\s/g, ''),
         '(1)',
-        "should display 1 unread message on general channel preview");
+        "should display 1 unread message on DM channel preview");
 
     // Simulate received channel seen notification
     var message = {
@@ -621,7 +629,51 @@ QUnit.test("messaging menu widget: channel seen notification", function ( assert
     assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '0',
         "should no longer have a messaging menu counter (no unread message in channel)");
     assert.strictEqual(messagingMenu.$('.o_preview_counter').text().replace(/\s/g, ''), '',
-        "should no longer display unread message on general channel preview");
+        "should no longer display unread message on DM channel preview");
+
+    messagingMenu.destroy();
+});
+
+QUnit.test("messaging menu widget: no traceback when receiving channel_fetched notification with blank thread window", function (assert) {
+    assert.expect(3);
+
+    this.data.initMessaging.channel_slots = {
+        channel_direct_message: [{
+            id: 1,
+            channel_type: "chat",
+            direct_partner: [{ id: 2, name: 'Someone', im_status: '' }],
+            name: 'DM',
+            message_unread_counter: 1,
+        }],
+    };
+
+    var messagingMenu = new MessagingMenu();
+    testUtils.mock.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+        session: { partner_id: 3 },
+    });
+
+    messagingMenu.appendTo($('#qunit-fixture'));
+    messagingMenu.$('.dropdown-toggle').click();
+    assert.containsOnce(messagingMenu, '.o_new_message',
+        "should have button to open blank thread window");
+
+    testUtils.dom.click(messagingMenu.$('.o_new_message'));
+    var $threadWindow = $('.o_thread_window');
+    assert.strictEqual($threadWindow.length, 1, "should have an open thread window");
+    assert.ok($threadWindow.hasClass('o_thread_less'), "should be a blank thread window");
+
+    // Simulate received channel fetched notification
+    var message = {
+        info: 'channel_fetched',
+        last_message_id: 1,
+        partner_id: 2,
+    };
+    var notifications = [
+        [['myDB', 'mail.channel', 1], message]
+    ];
+    messagingMenu.call('bus_service', 'trigger', 'notification', notifications);
 
     messagingMenu.destroy();
 });

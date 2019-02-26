@@ -237,7 +237,7 @@ var PivotModel = AbstractModel.extend({
                             [
                                 this.data.timeRangeDescription.toString(),
                                 this.data.comparisonTimeRangeDescription.toString(),
-                                'Variation'
+                                _t('Variation')
                             ],
                             makeMeasure
                         )
@@ -443,8 +443,10 @@ var PivotModel = AbstractModel.extend({
                 self._updateMainGroupBys(old_row, self.data.main_row);
             }
 
-            self._updateTree(old_col.root, self.data.main_col.root);
-            self._updateMainGroupBys(old_col, self.data.main_col);
+            if (!('pivot_column_groupby' in (params.context || {}))) {
+                self._updateTree(old_col.root, self.data.main_col.root);
+                self._updateMainGroupBys(old_col, self.data.main_col);
+            }
         });
     },
     /**

@@ -1,10 +1,11 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, fields, api
 from odoo.osv.expression import AND
 from odoo.tools import float_compare
 from datetime import datetime
 
+from odoo import models, fields, api
+from odoo.addons.resource.models.resource_mixin import timezone_datetime
 
 class ResourceCalendar(models.Model):
     _inherit = 'resource.calendar'
@@ -78,7 +79,7 @@ class ResourceCalendarLeave(models.Model):
 class ResourceMixin(models.AbstractModel):
     _inherit = "resource.mixin"
 
-    def get_benefit_days_data(self, benefit_type, from_datetime, to_datetime, calendar=None):
+    def _get_benefit_days_data(self, benefit_type, from_datetime, to_datetime, calendar=None):
         """
             By default the resource calendar is used, but it can be
             changed using the `calendar` argument.
@@ -94,8 +95,8 @@ class ResourceMixin(models.AbstractModel):
         domain = [('benefit_type_id', 'in', benefit_type_ids)]
 
         # naive datetimes are made explicit in UTC
-        from_datetime = self._timezone_datetime(from_datetime)
-        to_datetime = self._timezone_datetime(to_datetime)
+        from_datetime = timezone_datetime(from_datetime)
+        to_datetime = timezone_datetime(to_datetime)
 
         day_total = self._get_day_total(from_datetime, to_datetime, calendar, resource)
         # actual hours per day

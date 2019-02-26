@@ -64,12 +64,11 @@ class AccountInvoice(models.Model):
         with Form(self_ctx, view='account.invoice_supplier_form') as invoice_form:
 
             # Partner (first step to avoid warning 'Warning! You must first select a partner.').
-            elements = tree.xpath('//ram:SellerTradeParty/ram:Name', namespaces=tree.nsmap)
-            partner_name = elements and elements[0].text
-
             elements = tree.xpath('//ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID', namespaces=tree.nsmap)
             partner = elements and self.env['res.partner'].search([('vat', '=', elements[0].text)], limit=1)
             if not partner:
+                elements = tree.xpath('//ram:SellerTradeParty/ram:Name', namespaces=tree.nsmap)
+                partner_name = elements and elements[0].text
                 partner = elements and self.env['res.partner'].search([('name', 'ilike', partner_name)], limit=1)
             if not partner:
                 elements = tree.xpath('//ram:SellerTradeParty//ram:URIID[@schemeID=\'SMTP\']', namespaces=tree.nsmap)
@@ -161,19 +160,19 @@ class AccountInvoice(models.Model):
                                 if product:
                                     invoice_line_form.product_id = product
 
-                        # Price Unit.
-                        line_elements = element.xpath('.//ram:GrossPriceProductTradePrice/ram:ChargeAmount', namespaces=tree.nsmap)
-                        if line_elements:
-                            invoice_line_form.price_unit = float(line_elements[0].text)
-                        else:
-                            line_elements = element.xpath('.//ram:NetPriceProductTradePrice/ram:ChargeAmount', namespaces=tree.nsmap)
-                            if line_elements:
-                                invoice_line_form.price_unit = float(line_elements[0].text)
-
                         # Quantity.
                         line_elements = element.xpath('.//ram:SpecifiedLineTradeDelivery/ram:BilledQuantity', namespaces=tree.nsmap)
                         if line_elements:
                             invoice_line_form.quantity = float(line_elements[0].text) * refund_sign
+
+                        # Price Unit.
+                        line_elements = element.xpath('.//ram:GrossPriceProductTradePrice/ram:ChargeAmount', namespaces=tree.nsmap)
+                        if line_elements:
+                            invoice_line_form.price_unit = float(line_elements[0].text) / invoice_line_form.quantity
+                        else:
+                            line_elements = element.xpath('.//ram:NetPriceProductTradePrice/ram:ChargeAmount', namespaces=tree.nsmap)
+                            if line_elements:
+                                invoice_line_form.price_unit = float(line_elements[0].text) / invoice_line_form.quantity
 
                         # Discount.
                         line_elements = element.xpath('.//ram:AppliedTradeAllowanceCharge/ram:CalculationPercent', namespaces=tree.nsmap)

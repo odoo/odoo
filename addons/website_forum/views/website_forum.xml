@@ -706,9 +706,13 @@
                     <span t-field="question.content" class="oe_no_empty"/>
 
                     <div>
-                        <div class="btn-group">
+                        <div class="btn-group mb8">
                             <a t-attf-class="btn btn-outline-primary #{not question.can_answer and 'karma_required text-muted' or ''}" t-att-data-karma="question.forum_id.karma_answer"
-                                href="#post_reply"><i class=" fa fa-reply"/> <b>Reply</b></a>
+                                href="#post_reply"><i class="fa fa-reply"/> <b>Reply</b>
+                            </a>
+                            <a t-attf-class="btn btn-outline-primary #{not question.can_comment and 'karma_required text-muted' or ''}" t-att-data-karma="question.karma_comment" t-att-data-toggle="question.can_comment and 'collapse' or None"
+                                t-attf-href="#comment#{ question._name.replace('.','') + '-' + str(question.id) }"><i class=" fa fa-comment-o"/> <b>Comment</b>
+                            </a>
                             <a href="javascript:void(0)" class="oe_social_share btn btn-outline-primary"
                                 t-attf-data-hashtags="#question"><i class="fa fa-share-alt"/> <b>Share</b>
                             </a>
@@ -756,15 +760,14 @@
                                 <t t-set="icon" t-value="'fa-check'"/>
                                 <t t-set="karma" t-value="not question.can_moderate and question.forum_id.karma_moderate or 0"/>
                             </t>
-                            <a t-if="question.active" href="#"  t-call="website_forum.link_button">
+                            <t t-if="question.active" href="#" t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/flag'"/>
                                 <t t-set="title">Flag</t>
                                 <t t-set="inDropdown" t-value="False"/>
                                 <t t-set="icon" t-value="not question.can_flag and 'fa-flag-o' or 'fa-flag'"/>
                                 <t t-set="karma" t-value="not question.can_flag and question.forum_id.karma_flag or 0"/>
                                 <t t-set="classes" t-value="'flag'"/>
-
-                            </a>
+                            </t>
                         </div>
                     </div>
 
@@ -963,14 +966,14 @@
                                 <t t-set="inDropdown" t-value="True"/>
                                 <t t-set="icon" t-value="'fa-trash-o text-primary'"/>
                                 <t t-set="classes" t-value="'comment_delete border-bottom'"/>
-                                <t t-set="karma" t-value="not answer.can_unlink and answer.karma_unlink or 0"/>
+                                <t t-set="karma" t-value="not object.can_unlink and answer.karma_unlink or 0"/>
                             </t>
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) +  '/convert_to_answer'"/>
                                 <t t-set="label">Convert as a answer</t>
                                 <t t-set="inDropdown" t-value="True"/>
                                 <t t-set="icon" t-value="'fa-magic text-primary'"/>
-                                <t t-set="karma" t-value="not answer.can_comment_convert and answer.karma_comment_convert or 0"/>
+                                <t t-set="karma" t-value="not object.can_comment_convert and answer.karma_comment_convert or 0"/>
                             </t>
                         </div>
                     </div>

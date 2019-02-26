@@ -3,7 +3,7 @@
     <t t-extend="website.slides.fullscreen">
         <t t-jquery=".o_wslides_fullscreen_content" t-operation="append">
             <div class="o_wslides_fullscreen_certification" t-if="slide.slide_type == 'certification'">
-                <a t-att-href="'/slides/slide/' + slide.slug" target="new">Pass Certification</a>
+                <a class="btn btn-primary" t-att-href="'/slides/slide/' + slide.slug" target="new"><i class="fa fa-trophy"/> Pass Certification</a>
             </div>
         </t>
     </t>

@@ -108,7 +108,6 @@ QUnit.test('note activity menu widget: create note from activity menu', function
     // creating quick note with date
     testUtils.dom.click(activityMenu.$('.o_note_show'));
     activityMenu.$('input.o_note_input').val("New Note");
-    testUtils.dom.click(activityMenu.$('.o_note_set_datetime'));
     testUtils.dom.click(activityMenu.$(".o_note_save"));
     assert.strictEqual(activityMenu.$('.o_notification_counter').text(), '2',
         "should increment activity notification counter after creating a second note");

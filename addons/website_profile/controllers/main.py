@@ -36,7 +36,6 @@ class WebsiteProfile(http.Controller):
         content = base64.b64encode(image)
         dictheaders = dict(headers) if headers else {}
         dictheaders['Content-Type'] = 'image/png'
-        headers = list(dictheaders.items())
         if not (width or height):
             suffix = field.split('_')[-1] if '_' in field else 'large'
             if suffix in ('small', 'medium', 'large', 'big'):
@@ -45,6 +44,9 @@ class WebsiteProfile(http.Controller):
 
     def _check_user_profile_access(self, user_id):
         user_sudo = request.env['res.users'].sudo().browse(user_id)
+        # User can access - no matter what - his own profile
+        if user_sudo.id == request.env.user.id:
+            return user_sudo
         if user_sudo.karma == 0 or not user_sudo.website_published or \
             (user_sudo.id != request.session.uid and request.env.user.karma < request.website.karma_profile_min):
             return False

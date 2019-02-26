@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from datetime import datetime, date
 
 
 class HrPayslipEmployees(models.TransientModel):
@@ -24,8 +23,8 @@ class HrPayslipEmployees(models.TransientModel):
     def compute_sheet(self):
         self.ensure_one()
         if not self.env.context.get('active_id'):
-            from_date = datetime.strptime(self.env.context.get('default_date_start'), '%Y-%m-%d')
-            end_date = datetime.strptime(self.env.context.get('default_date_end'), '%Y-%m-%d')
+            from_date = fields.Date.to_date(self.env.context.get('default_date_start'))
+            end_date = fields.Date.to_date(self.env.context.get('default_date_end'))
             payslip_run = self.env['hr.payslip.run'].create({
                 'name': from_date.strftime('%B %Y'),
                 'date_start': from_date,

@@ -510,12 +510,12 @@
                         </div>
                         <div class="col-md text-md-right">
                             <div class="d-inline-block">
-                                <small class="mr-2"><b>Stage:</b></small>
-                                <div t-foreach="stages" t-as="stage" class="float-right">
+                                <small class="mr-2 mt-1 float-left"><b>Stage:</b></small>
+                                <div t-foreach="stages[::-1]" t-as="stage" class="float-left">
+                                    <i t-if="not stage_first" class="fa fa-chevron-right ml-2 mr-1 small" style="opacity: 0.5"/>
                                     <button type="button" t-att-data="stage.id" t-att-opp="opportunity.id" t-attf-class="btn btn-sm px-2 opp-stage-button #{'btn-secondary' if opportunity.stage_id.name != stage.name else 'btn-primary disabled'}">
                                         <span t-field="stage.name"/>
                                     </button>
-                                    <i t-if="not stage_first" class="fa fa-chevron-right ml-1 mr-2 small" style="opacity: 0.5"/>
                                 </div>
                             </div>
                         </div>

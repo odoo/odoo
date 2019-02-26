@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo><data noupdate="0">
 
+    <!-- CHANNEL 0: Basics of Gardening -->
+    <!-- ================================================== -->
     <record id="slide_slide_demo_0_0" model="slide.slide">
         <field name="name">Know-How Summary</field>
         <field name="datas" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
@@ -10,11 +12,14 @@
         <field name="category_id" ref="website_slides.slide_category_demo_0_0"/>
         <field name="website_published" eval="True"/>
         <field name="is_preview" eval="True"/>
-        <field name="public_views">40</field>
+        <field name="public_views">10</field>
+        <field name="completion_time">2.5</field>
         <field name="tag_ids" eval="[(4, ref('website_slides.slide_tag_demo_tools')), (4, ref('website_slides.slide_tag_demo_howto'))]"/>
         <field name="description">A summary of know-how: how and what.</field>
     </record>
 
+    <!-- CHANNEL 1: Taking care of Trees -->
+    <!-- ================================================== -->
     <record id="slide_slide_demo_1_0" model="slide.slide">
         <field name="name">Tree Infographic</field>
         <field name="image" type="base64" file="website_slides/static/src/img/slide_demo_tree_infographic_1.jpg"/>
@@ -24,7 +29,8 @@
         <field name="website_published" eval="True"/>
         <field name="is_preview" eval="True"/>
         <field name="public_views">5</field>
-        <field name="tag_ids" eval="[(4, ref('website_slides.slide_tag_demo_colorfull'))]"/>
+        <field name="completion_time">0.5</field>
+        <field name="tag_ids" eval="[(4, ref('website_slides.slide_tag_demo_colorful'))]"/>
         <field name="description">Just some basics Tree Infographic.</field>
     </record>
     <record id="slide_slide_demo_1_1" model="slide.slide">
@@ -34,9 +40,9 @@
         <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
         <field name="category_id" ref="website_slides.slide_category_demo_1_0"/>
         <field name="website_published" eval="True"/>
-        <field name="is_preview" eval="True"/>
-        <field name="public_views">10</field>
-        <field name="tag_ids" eval="[(4, ref('website_slides.slide_tag_demo_colorfull'))]"/>
+        <field name="is_preview" eval="False"/>
+        <field name="public_views">5</field>
+        <field name="tag_ids" eval="[(4, ref('website_slides.slide_tag_demo_colorful'))]"/>
         <field name="description">Just some basics Interesting Tree Facts.</field>
     </record>
     <record id="slide_slide_demo_1_2" model="slide.slide">
@@ -47,8 +53,8 @@
         <field name="category_id" ref="website_slides.slide_category_demo_1_0"/>
         <field name="website_published" eval="True"/>
         <field name="is_preview" eval="False"/>
-        <field name="public_views">15</field>
-        <field name="tag_ids" eval="[(5, 0)]"/>
+        <field name="public_views">10</field>
+        <field name="tag_ids" eval="[(4, ref('website_slides.slide_tag_demo_colorful')), (4, ref('website_slides.slide_tag_demo_theory'))]"/>
         <field name="description">Just some basics Energy Efficiency Facts.</field>
     </record>
     <record id="slide_slide_demo_1_3" model="slide.slide">
@@ -126,6 +132,71 @@
         <field name="description">A summary of know-how: how and what.</field>
     </record>
 
+    <!-- CHANNEL 2: Trees, Wood and Garden -->
+    <!-- ================================================== -->
+    <record id="slide_slide_demo_2_0" model="slide.slide">
+        <field name="name">Main Trees Categories</field>
+        <field name="datas" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
+        <field name="image" type="base64" file="website_slides/static/src/img/slide_demo_tree_img_1.jpg"/>
+        <field name="slide_type">presentation</field>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
+        <field name="category_id" ref="website_slides.slide_category_demo_2_0"/>
+        <field name="website_published" eval="True"/>
+        <field name="is_preview" eval="False"/>
+        <field name="public_views">0</field>
+        <field name="tag_ids" eval="[(4, ref('website_slides.slide_tag_demo_howto'))]"/>
+        <field name="description">A summary of know-how: how and what.</field>
+    </record>
+    <record id="slide_slide_demo_2_1" model="slide.slide">
+        <field name="name">A Mighty Forest from Ages</field>
+        <field name="image" type="base64" file="website_slides/static/src/img/slide_demo_tree_img_1.jpg"/>
+        <field name="slide_type">webpage</field>
+        <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
+        <field name="category_id" ref="website_slides.slide_category_demo_2_0"/>
+        <field name="html_content" type="html">
+<section class="s_cover parallax bg-black-50 pt16 pb16" data-scroll-background-ratio="0" style="background-image: none;">
+    <span class="s_parallax_bg oe_img_bg oe_custom_bg" style="background-image: url('/website_slides/static/src/img/slide_demo_tree_img_1.jpg'); background-position: 50% 0;"></span>
+    <div class="container">
+        <div class="row s_nb_column_fixed">
+            <div class="col-lg-12 s_title">
+                <h1 class="s_title_thin o_default_snippet_text" style="font-size: 62px; text-align: center;">Catchy Headline</h1>
+            </div>
+            <div class="col-lg-12 s_text pt16 pb16">
+                <p class="lead o_default_snippet_text" style="text-align: center;">Write one or two paragraphs describing your product, services or a specific feature.<br/> To be successful your content needs to be useful to your readers.</p>
+            </div>
+            <div class="col-lg-12 s_btn text-center pt16 pb16">
+                <a href="/aboutus" class="btn btn-delta rounded-circle o_default_snippet_text">About us</a>
+                <a href="/contactus" class="btn btn-primary rounded-circle o_default_snippet_text">Contact us</a>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="s_text_image pt32 pb32">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 pt16 pb16">
+                <img src="/website_slides/static/src/img/slide_demo_tree_img_2.jpg" class="img img-fluid mx-auto" alt="Odoo • Image and Text"/>
+            </div>
+            <div class="col-lg-6 pt16 pb16">
+                <h2 class="o_default_snippet_text">Section Subtitle</h2>
+                <p class="o_default_snippet_text">Write one or two paragraphs describing your product or services. <br/>To be successful your content needs to be useful to your readers.</p>
+                <p class="o_default_snippet_text">Start with the customer – find out what they want and give it to them.</p>
+                <div class="s_btn text-left pt16 pb16">
+                    <a href="#" class="btn btn-outline-primary o_default_snippet_text">Discover more</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section></field>
+        <field name="website_published" eval="True"/>
+        <field name="is_preview" eval="False"/>
+        <field name="public_views">0</field>
+        <field name="tag_ids" eval="[(4, ref('website_slides.slide_tag_demo_theory'))]"/>
+        <field name="description">Mighty forest just don't appear in a few weeks. Learn how time made our forests mighty and mysterious.</field>
+    </record>
+
+    <!-- CHANNEL 2: Trees, Wood and Garden -->
+    <!-- ================================================== -->
     <record id="slide_slide_demo_5_0" model="slide.slide">
         <field name="name">How to find quality wood</field>
         <field name="url">https://www.youtube.com/watch?v=5WMqwTnZ-qs</field>

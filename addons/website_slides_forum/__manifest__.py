@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Forum on course',
+    'name': 'Forum on Courses',
     'category': 'Hidden',
     'version': '1.0',
     'summary': 'Allows to link forum on a course',

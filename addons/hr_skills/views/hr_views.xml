@@ -49,7 +49,7 @@
                             <!-- This field uses a custom tree view rendered by the 'hr_resume' widget.
                                 Adding fields in the tree arch below makes them accessible to the widget
                             -->
-                            <field class="" nolabel="1" name="resume_line_ids" widget="hr_resume">
+                            <field mode="tree" nolabel="1" name="resume_line_ids" widget="hr_resume">
                                 <tree>
                                     <field name="line_type_id"/>
                                     <field name="name"/>
@@ -62,7 +62,7 @@
                         </div>
                         <div class="col-lg-4 o_group_skills">
                             <separator string="Skills"/>
-                            <field nolabel="1" name="employee_skill_ids"  widget="hr_skills">
+                            <field mode="tree" nolabel="1" name="employee_skill_ids"  widget="hr_skills">
                                 <tree>
                                     <field name="skill_type_id" invisible="1"/>
                                     <field name="skill_id"/>
@@ -89,7 +89,7 @@
                             <!-- This field uses a custom tree view rendered by the 'hr_resume' widget.
                                 Adding fields in the tree arch below makes them accessible to the widget
                             -->
-                            <field class="" nolabel="1" name="resume_line_ids" widget="hr_resume">
+                            <field mode="tree" nolabel="1" name="resume_line_ids" widget="hr_resume">
                                 <tree>
                                     <field name="line_type_id"/>
                                     <field name="name"/>
@@ -102,7 +102,7 @@
                         </div>
                         <div class="col-lg-4 o_group_skills">
                             <separator string="Skills"/>
-                            <field nolabel="1" name="employee_skill_ids"  widget="hr_skills">
+                            <field mode="tree" nolabel="1" name="employee_skill_ids"  widget="hr_skills">
                                 <tree>
                                     <field name="skill_type_id" invisible="1"/>
                                     <field name="skill_id"/>

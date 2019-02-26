@@ -53,8 +53,8 @@ class ResPartner(models.Model):
             the url state components (menu_id, id, view_type) """
 
         res = dict.fromkeys(self.ids, False)
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for partner in self:
+            base_url = partner.get_base_url()
             # when required, make sure the partner has a valid signup token
             if self.env.context.get('signup_valid') and not partner.user_ids:
                 partner.sudo().signup_prepare()
