@@ -25,9 +25,7 @@
                                 <span class="row">Score : <b t-field="certificate.quizz_score"/>%</span>
                                 <div class="row">
                                     <a role="button"
-                                        t-att-data-survey_id="certificate.survey_id.id"
-                                        class="o_wslides_survey_download_certification"
-                                        href="#">
+                                        t-att-href="'/survey/%s/get_certification' % certificate.survey_id.id">
                                         <i class="fa fa-download"/>
                                     </a>
                                 </div>
