@@ -129,6 +129,7 @@
                     <field name='sequence' widget='handle'/>
                     <field name="name"/>
                     <field name="type"/>
+                    <field name="journal_group_ids" widget="many2many_tags"/>
                     <field name="belongs_to_company" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
@@ -173,6 +174,34 @@
                 </search>
             </field>
         </record>
+        <record id="view_account_journal_group_tree" model="ir.ui.view">
+            <field name="name">account.journal.group.tree</field>
+            <field name="model">account.journal.group</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="sequence"  widget="handle"/>
+                    <field name="name"/>
+                    <field name="account_journal_ids" widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_account_journal_group_form" model="ir.ui.view">
+            <field name="name">account.journal.group.form</field>
+            <field name="model">account.journal.group</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Journal Groups">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="account_journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="sequence"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
         <record id="view_account_journal_form" model="ir.ui.view">
             <field name="name">account.journal.form</field>
             <field name="model">account.journal</field>
@@ -192,6 +221,7 @@
                         <group>
                             <group>
                                 <field name="type"/>
+                                <field name="journal_group_ids" widget="many2many_tags" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" options="{'no_create': True}"/>
                             </group>
                             <group>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -408,6 +438,19 @@
             </field>
         </record>
         <menuitem action="action_account_journal_form" id="menu_action_account_journal_form" parent="account_account_menu" groups="account.group_account_manager"/>
+
+        <record id="action_account_journal_group_list" model="ir.actions.act_window">
+            <field name="name">Journal Groups</field>
+            <field name="res_model">account.journal.group</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a journal group
+              </p><p>
+                Journal group are used in reporting to display relevant data together.
+              </p>
+            </field>
+        </record>
+        <menuitem action="action_account_journal_group_list" id="menu_action_account_journal_group_list" parent="account_account_menu"/>
 
         <act_window
            id="act_account_journal_2_account_bank_statement"
