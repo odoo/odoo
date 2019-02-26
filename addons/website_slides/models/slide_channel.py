@@ -46,15 +46,22 @@ class ChannelUsersRelation(models.Model):
             record.completion = math.ceil(100.0 * slide_done / slide_total)
 
     def _write(self, values):
+        partner_karma = False
         if 'completion' in values and values['completion'] >= 100:
             values['completed'] = True
-            result = super(ChannelUsersRelation, self)._write(values)
-            partner_has_completed = {channel_partner.partner_id.id: channel_partner.channel_id for channel_partner in self}
-            users = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_has_completed.keys()))])
+            incomplete_channel_partners = self.filtered(lambda cp: not cp.completed)
+            partner_karma = dict.fromkeys(incomplete_channel_partners.mapped('partner_id').ids, 0)
+            for channel_partner in incomplete_channel_partners:
+                partner_karma[channel_partner.partner_id.id] += channel_partner.channel_id.karma_gen_channel_finish
+            partner_karma = {partner_id: karma_to_add
+                             for partner_id, karma_to_add in partner_karma.items() if karma_to_add > 0}
+
+        result = super(ChannelUsersRelation, self)._write(values)
+
+        if partner_karma:
+            users = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_karma.keys()))])
             for user in users:
-                users.add_karma(partner_has_completed[user.partner_id.id].karma_gen_channel_finish)
-        else:
-            result = super(ChannelUsersRelation, self)._write(values)
+                users.add_karma(partner_karma[user.partner_id.id])
         return result
 
 
@@ -146,7 +153,6 @@ class Channel(models.Model):
     can_upload = fields.Boolean('Can Upload', compute='_compute_can_upload')
     # karma generation
     karma_gen_slide_vote = fields.Integer(string='Lesson voted', default=1)
-    karma_gen_channel_share = fields.Integer(string='Course shared', default=2)
     karma_gen_channel_rank = fields.Integer(string='Course ranked', default=5)
     karma_gen_channel_finish = fields.Integer(string='Course finished', default=10)
     # TODO DBE : Add karma based action rules (like in forum)
