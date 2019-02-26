@@ -17,6 +17,7 @@ var ControlPanelController = mvc.Controller.extend({
         activate_time_range: '_onActivateTimeRange',
         autocompletion_filter: '_onAutoCompletionFilter',
         reload: '_onReload',
+        reset: '_onReset',
     },
 
     /**
@@ -237,6 +238,15 @@ var ControlPanelController = mvc.Controller.extend({
     _onReload: function (ev) {
         ev.stopPropagation();
         this.trigger_up('search', this.model.getQuery());
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onReset: function (ev) {
+        ev.stopPropagation();
+        var state = this.model.get();
+        this.renderer.updateState(state);
     },
 });
 
