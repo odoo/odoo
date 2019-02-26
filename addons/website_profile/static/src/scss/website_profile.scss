@@ -294,6 +294,41 @@ $bronze: #eea91e;
     }
 }
 
+// Pager
+.o_wprofile_pager {
+    font-weight:  bold;
+    li {
+        &.active {
+            border-radius:  50%;
+            background-color: #00A09E;
+            a {
+                color: #FFFFFF !important;
+            }
+        }
+        a {
+            color: #6c757d !important;
+            border: 0px !important;
+            background-color: transparent !important;
+            transition-duration: 0.3s;
+            &:hover {
+                color: #00A09E !important;
+            }
+        }
+        &.o_wprofile_pager_arrow a {
+            color: #00A09E !important;
+            &:hover {
+                transform: scaleX(1.50) scaleY(1.50);
+            }
+        }
+        &.o_wprofile_pager_arrow.disabled a {
+            color: #6c757d !important;
+        }
+        .page-link:focus {
+            box-shadow: 0 0 0 0;
+        }
+    }
+}
+
 // Badges
 .badge-gold {
     color: $gold;
