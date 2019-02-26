@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Slides',
-    'version': '1.0',
+    'name': 'eLearning',
+    'version': '2.0',
     'sequence': 145,
-    'summary': 'Publish videos, slides and documents',
+    'summary': 'Create online Courses',
     'website': 'https://www.odoo.com/page/slides',
     'category': 'Website',
     'description': """
-Share and Publish Videos, Presentations and Documents'
-======================================================
+Create Online Courses
+=====================
 
- * Website Application
- * Channel Management
- * Filters and Tagging
- * Statistics of Presentation
- * Channel Subscription
- * Supported document types : PDF, images, YouTube videos and Google Drive documents)
+Featuring
+
+ * Integrated course and lesson management
+ * Fullscreen navigation
+ * Support Youtube videos, Google documents, PDF, images, web pages
+ * Test knowledge with quizzes
+ * Filter and Tag
+ * Statistics
 """,
     'depends': [
         'website',
@@ -25,16 +27,18 @@ Share and Publish Videos, Presentations and Documents'
     'data': [
         'views/assets.xml',
         'views/res_config_settings_views.xml',
-        'views/website_slides_templates_homepage.xml',
-        'views/website_slides_templates.xml',
-        'views/website_slides_embed_templates.xml',
         'views/slide_slide_views.xml',
         'views/slide_channel_partner_views.xml',
         'views/slide_channel_views.xml',
         'views/slide_channel_tag_views.xml',
-        'views/slide_channel_invite_views.xml',
         'views/website_slides_menu_views.xml',
+        'views/website_slides_templates_homepage.xml',
+        'views/website_slides_templates_course.xml',
+        'views/website_slides_templates_lesson.xml',
+        'views/website_slides_templates_lesson_embed.xml',
         'views/website_slides_templates_profile.xml',
+        'views/website_slides_templates_utils.xml',
+        'wizard/slide_channel_invite_views.xml',
         'data/ir_data.xml',
         'data/gamification_data.xml',
         'data/mail_data.xml',

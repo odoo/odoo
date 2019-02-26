@@ -3093,22 +3093,6 @@ var keyboardTestsBackspace = [{
         },
     },
     {
-        name: "in complex-dom (empty-td (td before) -> 2x SHIFT-ENTER): 3x BACKSPACE",
-        content: '<table class="table table-bordered"><tbody><tr><td><p>dom not to edit</p></td><td><p><br><br><br></p></td></tr></tbody></table>',
-        steps: [{
-            start: 'p:eq(1)->3',
-            key: 'BACKSPACE',
-        }, {
-            key: 'BACKSPACE',
-        }, {
-            key: 'BACKSPACE',
-        }],
-        test: {
-            content: '<table class="table table-bordered"><tbody><tr><td><p>dom not to edit</p></td><td><p><br></p></td></tr></tbody></table>',
-            start: "p:eq(1):contents()[0]->0",
-        },
-    },
-    {
         name: "in complex-dom (empty-td (td before) -> 2x SHIFT-ENTER): 3x BACKSPACE -> 'a'",
         content: '<table class="table table-bordered"><tbody><tr><td><p>dom not to edit</p></td><td><p><br><br><br></p></td></tr></tbody></table>',
         steps: [{
@@ -3124,6 +3108,55 @@ var keyboardTestsBackspace = [{
         test: {
             content: '<table class="table table-bordered"><tbody><tr><td><p>dom not to edit</p></td><td><p>a</p></td></tr></tbody></table>',
             start: "p:eq(1):contents()[0]->1",
+        },
+    },
+    {
+        name: "in h1: BACKSPACE on full selection -> 'a'",
+        content: '<h1>dom to delete</h1>',
+        steps: [{
+            start: 'h1:contents()[0]->0',
+            end: 'h1:contents()[0]->13',
+            key: 'BACKSPACE',
+        }, {
+            key: 'a',
+        }],
+        test: {
+            content: '<h1>a</h1>',
+            start: "h1:contents()[0]->1",
+        },
+    },
+    {
+        name: "in h1: BACKSPACE on full selection -> BACKSPACE -> 'a'",
+        content: '<h1>dom to delete</h1>',
+        steps: [{
+            start: 'h1:contents()[0]->0',
+            end: 'h1:contents()[0]->13',
+            key: 'BACKSPACE',
+        }, {
+            key: 'BACKSPACE',
+        }, {
+            key: 'a',
+        }],
+        test: {
+            content: '<p>a</p>',
+            start: "p:contents()[0]->1",
+        },
+    },
+    {
+        name: "in h1: BACKSPACE on full selection -> DELETE -> 'a'",
+        content: '<h1>dom to delete</h1>',
+        steps: [{
+            start: 'h1:contents()[0]->0',
+            end: 'h1:contents()[0]->13',
+            key: 'BACKSPACE',
+        }, {
+            key: 'DELETE',
+        }, {
+            key: 'a',
+        }],
+        test: {
+            content: '<h1>a</h1>',
+            start: "h1:contents()[0]->1",
         },
     },
 

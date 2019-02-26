@@ -120,6 +120,73 @@ $bronze: #eea91e;
     }
 }
 
+/// Progress Circle
+.o_wprofile_progress_circle {
+    position: relative;
+
+    $circle-size: 220px;
+    $circle-background: rgba(black, 0.1);
+    $circle-color: theme-color('primary');
+    $inset-size: $circle-size - 20;
+    $transition-length: 1s;
+
+    .o_progress_circle_container, .o_pc, .o_pc div {
+        @include size($circle-size);
+    }
+
+    .o_pc_overlay, .o_pc, .o_pc div {
+        border-radius: 50%;
+    }
+
+    .o_progress_circle_container {
+        position: relative;
+        margin: 0 auto;
+        background-color: inherit;
+    }
+
+    .o_pc_overlay {
+        $tmp-gap: ($circle-size - $inset-size)/2;
+        @include o-position-absolute($tmp-gap, $left: $tmp-gap);
+        @include size($inset-size);
+
+        background-color: inherit;
+    }
+
+    .o_pc {
+        background-color: $circle-background;
+
+        div {
+            position: absolute;
+            -webkit-backface-visibility: hidden;
+            transition: transform $transition-length;
+
+            &.o_pc_slice {
+                clip: rect(0px, $circle-size, $circle-size, $circle-size/2);
+
+                .o_pc_fill  {
+                    clip: rect(0px, $circle-size/2, $circle-size, 0px);
+                    background-color: $circle-color;
+                }
+            }
+        }
+
+        $i: 0;
+        $increment: 180deg / 100;
+        @while $i <= 100 {
+            &[data-progress='#{$i}'] {
+                .o_pc_slice.full, .o_pc_fill {
+                    transform: rotate($increment * $i);
+                }
+                .o_pc_fill.o_pc_bar {
+                    transform: rotate($increment * $i * 2);
+                }
+                $i: $i + 1;
+            }
+        }
+    }
+}
+
+
 .o_wprofile_next_rank_card {
     div {
         text-align: center;

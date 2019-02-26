@@ -437,7 +437,7 @@ class HolidaysRequest(models.Model):
         """ Returns a float equals to the timedelta between two dates given as string."""
         if employee_id:
             employee = self.env['hr.employee'].browse(employee_id)
-            return employee.get_work_days_data(date_from, date_to)['days']
+            return employee._get_work_days_data(date_from, date_to)['days']
 
         today_hours = self.env.user.company_id.resource_calendar_id.get_work_hours_count(
             datetime.combine(date_from.date(), time.min),
@@ -568,12 +568,15 @@ class HolidaysRequest(models.Model):
 
     @api.multi
     def _create_resource_leave(self):
-        """ This method will create entry in resource calendar time off object at the time of holidays validated """
+        """ This method will create entry in resource calendar time off object at the time of holidays validated
+        :returns: created `resource.calendar.leaves`
+        """
+        vals_list = []
         for leave in self:
             date_from = fields.Datetime.from_string(leave.date_from)
             date_to = fields.Datetime.from_string(leave.date_to)
 
-            self.env['resource.calendar.leaves'].create({
+            vals_list.append({
                 'name': leave.name,
                 'date_from': fields.Datetime.to_string(date_from),
                 'holiday_id': leave.id,
@@ -582,7 +585,7 @@ class HolidaysRequest(models.Model):
                 'calendar_id': leave.employee_id.resource_calendar_id.id,
                 'time_type': leave.holiday_status_id.time_type,
             })
-        return True
+        return self.env['resource.calendar.leaves'].create(vals_list)
 
     @api.multi
     def _remove_resource_leave(self):
@@ -634,7 +637,7 @@ class HolidaysRequest(models.Model):
             'request_date_from': self.date_from,
             'request_date_to': self.date_to,
             'notes': self.notes,
-            'number_of_days': employee.get_work_days_data(self.date_from, self.date_to)['days'],
+            'number_of_days': employee._get_work_days_data(self.date_from, self.date_to)['days'],
             'parent_id': self.id,
             'employee_id': employee.id
         }

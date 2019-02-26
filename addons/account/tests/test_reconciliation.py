@@ -530,6 +530,14 @@ class TestReconciliation(AccountingTestCase):
             self.diff_income_account.id: {'debit': 0.0, 'credit': 3.27, 'amount_currency': -5, 'currency_id': self.currency_usd_id},
             self.account_rcv.id: {'debit': 0.0, 'credit': 52.33, 'amount_currency': -80, 'currency_id': self.currency_usd_id},
         }
+
+        payments = bank_stmt_aml.mapped('payment_id')
+        # creation and reconciliation of the over-amount statement
+        # has created an another payment
+        self.assertEqual(len(payments), 2)
+        # Check amount of second, automatically created payment
+        self.assertEqual((payments - payment).amount, 5)
+
         for aml in bank_stmt_aml:
             line = lines[aml.account_id.id]
             if type(line) == list:
