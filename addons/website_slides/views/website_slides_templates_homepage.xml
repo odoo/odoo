@@ -360,7 +360,7 @@
         <div t-if="user.rank_id" class="d-flex align-items-center">
             <span class="font-weight-bold text-muted mr-2">Current rank:</span>
             <img t-attf-src="/web/image/gamification.karma.rank/#{user.rank_id.id}/image_small" height="16" alt="" class="mr-1"/>
-            <a href="/profile/ranks" t-field="user.rank_id"/>
+            <a href="/profile/ranks_badges" t-field="user.rank_id"/>
         </div>
         <t t-if="user.next_rank_id">
             <div class="font-weight-bold text-muted mt-1">Next rank:</div>
