@@ -455,12 +455,12 @@
         <div class="card-footer border-top-0 text-600">
             <div class="d-flex align-items-center small">
                 <span class="font-weight-bold mr-auto" t-field="slide.completion_time" t-options='{"widget": "float_time"}'/>
-                <div class="o_wslides_like mr-2">
-                    <span class="o_wslides_like_up" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
+                <div class="o_wslides_js_slide_like mr-2">
+                    <span class="o_wslides_js_slide_like_up" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
                         <i class="fa fa-thumbs-up fa-1x" role="img" aria-label="Likes" title="Likes"></i>
                         <span t-esc="slide.likes"/>
                     </span>
-                    <span class="o_wslides_like_down" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
+                    <span class="o_wslides_js_slide_like_down" tabindex="0" data-toggle="popover" t-att-data-slide-id="slide.id">
                         <i class="fa fa-thumbs-down fa-1x" role="img" aria-label="Dislikes" title="Dislikes"></i>
                         <span t-esc="slide.dislikes"/>
                     </span>

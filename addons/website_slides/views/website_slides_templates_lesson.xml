@@ -190,9 +190,9 @@
 
                                 <!-- LikeButton widget -->
                                 <div t-if="slide.channel_id.channel_type == 'documentation' and slide.channel_id.allow_comment" class="text-muted mt4">
-                                    <div class="float-right mb16 text-right o_wslides_like">
+                                    <div class="float-right mb16 text-right o_wslides_js_slide_like">
                                         <span
-                                            class="o_wslides_like_up"
+                                            class="o_wslides_js_slide_like_up"
                                             t-att-data-slide-id="slide.id"
                                             tabindex="0"
                                             data-toggle="popover">
@@ -200,7 +200,7 @@
                                             <span t-esc="slide.likes"/>
                                         </span>
                                         <span
-                                            class="o_wslides_like_down"
+                                            class="o_wslides_js_slide_like_down"
                                             t-att-data-slide-id="slide.id"
                                             tabindex="0"
                                             data-toggle="popover">
