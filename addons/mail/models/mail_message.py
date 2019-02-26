@@ -63,6 +63,7 @@ class Message(models.Model):
              "message, comment for other messages such as user replies",
         oldname='type')
     subtype_id = fields.Many2one('mail.message.subtype', 'Subtype', ondelete='set null', index=True)
+    internal = fields.Boolean("Internal only", related="subtype_id.internal", stored=False)
     mail_activity_type_id = fields.Many2one(
         'mail.activity.type', 'Mail Activity Type',
         index=True, ondelete='set null')

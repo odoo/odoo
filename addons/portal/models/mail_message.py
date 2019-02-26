@@ -11,7 +11,7 @@ class MailMessage(models.Model):
     def portal_message_format(self):
         return self._portal_message_format([
             'id', 'body', 'date', 'author_id', 'email_from',  # base message fields
-            'message_type', 'subtype_id', 'subject',  # message specific
+            'message_type', 'subtype_id', 'internal', 'subject',  # message specific
             'model', 'res_id', 'record_name',  # document related
         ])
 
