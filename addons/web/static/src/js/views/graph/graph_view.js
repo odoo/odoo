@@ -22,13 +22,8 @@ var GROUPABLE_TYPES =
 var GraphView = AbstractView.extend({
     display_name: _lt('Graph'),
     icon: 'fa-bar-chart',
-    cssLibs: [
-        '/web/static/lib/nvd3/nv.d3.css'
-    ],
     jsLibs: [
-        '/web/static/lib/nvd3/d3.v3.js',
-        '/web/static/lib/nvd3/nv.d3.js',
-        '/web/static/src/js/libs/nvd3.js'
+        '/web/static/lib/Chart/Chart.js',
     ],
     config: {
         Model: GraphModel,
@@ -80,7 +75,6 @@ var GraphView = AbstractView.extend({
         this.controllerParams.measures = measures;
         this.controllerParams.groupableFields = groupableFields;
         this.rendererParams.fields = this.fields;
-        this.rendererParams.stacked = this.arch.attrs.stacked !== "False";
         this.rendererParams.title = this.arch.attrs.title; // TODO: use attrs.string instead
 
         this.loadParams.mode = this.arch.attrs.type || 'bar';
@@ -88,6 +82,7 @@ var GraphView = AbstractView.extend({
         this.loadParams.groupBys = groupBys;
         this.loadParams.fields = this.fields;
         this.loadParams.comparisonDomain = params.comparisonDomain;
+        this.loadParams.stacked = this.arch.attrs.stacked !== "False";
     },
 });
 

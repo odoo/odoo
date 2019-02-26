@@ -5,82 +5,64 @@ var fieldUtils = require('web.field_utils');
 var Class = require('web.Class');
 
 var DateClasses = Class.extend({
-    init: function (dateSets, interval) {
-        // dateSets are assumed pairwise disjoint and ordered naturally.
-        // at least one of them is non empty.
-
-        // we complete the first inhabited dateSet. Its elements will be
-        // the default representatives for the classes.
-        this._maximalLength = 1;
-        this._referenceIndex = null;
+    /**
+     * This small class offers a light API to manage equivalence classes of
+     * dates. Two dates in different dateSets are declared equivalent when
+     * their indexes are equal.
+     *
+     * @param  {Array[]} dateSets, a list of list of dates
+     */
+    init: function (dateSets) {
+        // At least one dateSet must be non empty.
+        // The completion of the first inhabited dateSet will serve as a reference set.
+        // The reference set elements will be the default representatives for the classes.
+        this.dateSets = dateSets;
+        this.referenceIndex = null;
         for (var i = 0; i < dateSets.length; i++) {
             var dateSet = dateSets[i];
-            if (dateSet.length && this._referenceIndex === null) {
-                this._referenceIndex = i;
-            }
-            if (dateSet.length > this._maximalLength) {
-                this._maximalLength = dateSet.length;
+            if (dateSet.length && this.referenceIndex === null) {
+                this.referenceIndex = i;
             }
         }
-        this._referenceSet = this._contructReferenceSet(dateSets[this._referenceIndex], interval);
-        this._dateClasses = this._constructDateClasses(dateSets);
     },
 
     //----------------------------------------------------------------------
     // Public
     //----------------------------------------------------------------------
 
-    representative: function (date, index) {
-        index = index || this._referenceIndex;
-        return this._dateClass(date)[index];
-    },
-
-    //----------------------------------------------------------------------
-    // Private
-    //----------------------------------------------------------------------
-
     /**
-     * @param {moment[]} dateSet, ordered dateSet
-     * @param {number} num, indicates number of dates to add
-     * @param {string} interval, determines time interval between two added dates
-     * @returns {function}
+     * Returns the index of a date in a given datesetIndex. This can be considered
+     * as the date class itself.
+     *
+     * @param  {number} datesetIndex
+     * @param  {string} date
+     * @return {number}
      */
-    _contructReferenceSet: function (dateSet, interval) {
-        var additionalDates = [];
-        var dateSetLength = dateSet.length;
-        var diff = this._maximalLength - dateSetLength;
-        var lastDate = dateSet[dateSetLength - 1];
-        for (var i = 0; i < diff; i++) {
-            var date = moment(lastDate).add(i + 1, interval).format('DD MMM YYYY');
-            additionalDates.push(date);
-        }
-        return dateSet.concat(additionalDates);
+    dateClass: function (datesetIndex, date) {
+        return this.dateSets[datesetIndex].indexOf(date);
     },
-    _constructDateClasses: function (dateSets) {
-        var dateClasses = [];
-        for (var index = 0; index < this._maximalLength; index++) {
-            var dateClass = [];
-            for (var j = 0; j < dateSets.length; j++) {
-                var dateSet = j=== this._referenceIndex ? this._referenceSet : dateSets[j];
-                if (index < dateSet.length) {
-                    dateClass.push(dateSet[index]);
-                } else {
-                    dateClass.push(undefined);
-                }
-            }
-            dateClasses.push(dateClass);
-        }
-        return dateClasses;
+    /**
+     * returns the dates occuring in a given class
+     *
+     * @param  {number} dateClass
+     * @return {string[]}
+     */
+    dateClassMembers: function (dateClass) {
+        return _.uniq(_.compact(this.dateSets.map(function (dateSet) {
+            return dateSet[dateClass];
+        })));
     },
-    _dateClass: function (date) {
-        var dateClass;
-        for (var i = 0; i < this._dateClasses.length; i++) {
-            dateClass = this._dateClasses[i];
-            if (_.contains(dateClass, date)) {
-                break;
-            }
-        }
-        return dateClass;
+    /**
+     * return the representative of a date class from a date set specified by an
+     * index.
+     *
+     * @param  {number} dateClass
+     * @param  {number} [index]
+     * @return {string}
+     */
+    representative: function (dateClass, index) {
+        index = index === undefined ? this.referenceIndex : index;
+        return this.dateSets[index][dateClass];
     },
 });
 /**
