@@ -407,7 +407,9 @@ class Slide(models.Model):
             ('slide_id', 'in', self.ids),
             ('partner_id', '=', self.env.user.partner_id.id)
         ])
-        new_slides = self_sudo - slide_partners.mapped('slide_id')
+        slide_id = slide_partners.mapped('slide_id')
+        new_slides = self_sudo - slide_id
+        channel = slide_id.channel_id
 
         for slide_partner in slide_partners:
             if upvote:
@@ -421,7 +423,10 @@ class Slide(models.Model):
             new_slide.write({
                 'slide_partner_ids': [(0, 0, {'vote': new_vote, 'partner_id': self.env.user.partner_id.id})]
             })
-            self.env.user.add_karma(new_slide.channel_id.karma_gen_slide_vote)
+        if new_vote != 0:
+            self.env.user.add_karma(channel.karma_gen_slide_vote)
+        else:
+            self.env.user.add_karma(-channel.karma_gen_slide_vote)
 
     def action_set_viewed(self):
         if not all(slide.channel_id.is_member for slide in self):

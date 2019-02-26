@@ -46,7 +46,7 @@ class ChannelUsersRelation(models.Model):
             record.completion = math.ceil(100.0 * slide_done / slide_total)
 
     def _write(self, values):
-        if 'completion' in values and values['completion'] >= 100:
+        if 'completion' in values and values['completion'] >= 100 and not self.completed:
             values['completed'] = True
             result = super(ChannelUsersRelation, self)._write(values)
             partner_has_completed = {channel_partner.partner_id.id: channel_partner.channel_id for channel_partner in self}
@@ -146,7 +146,6 @@ class Channel(models.Model):
     can_upload = fields.Boolean('Can Upload', compute='_compute_can_upload')
     # karma generation
     karma_gen_slide_vote = fields.Integer(string='Lesson voted', default=1)
-    karma_gen_channel_share = fields.Integer(string='Course shared', default=2)
     karma_gen_channel_rank = fields.Integer(string='Course ranked', default=5)
     karma_gen_channel_finish = fields.Integer(string='Course finished', default=10)
     # TODO DBE : Add karma based action rules (like in forum)
@@ -372,24 +371,39 @@ class Channel(models.Model):
 
         Returns the added 'slide.channel.partner's (! as sudo !)
         """
-        to_join = self._filter_add_members(target_partners, **member_values)
-        if to_join:
-            existing = self.env['slide.channel.partner'].sudo().search([
-                ('channel_id', 'in', self.ids),
-                ('partner_id', 'in', target_partners.ids)
-            ])
-            existing_map = dict((cid, list()) for cid in self.ids)
-            for item in existing:
-                existing_map[item.channel_id.id].append(item.partner_id.id)
+        target_partners = self._filter_target_members(target_partners, **member_values)
+        if target_partners:
+            to_join = self._filter_add_members(target_partners, **member_values)
+            if to_join:
+                existing = self.env['slide.channel.partner'].sudo().search([
+                    ('channel_id', 'in', self.ids),
+                    ('partner_id', 'in', target_partners.ids)
+                ])
+                existing_map = dict((cid, list()) for cid in self.ids)
+                for item in existing:
+                    existing_map[item.channel_id.id].append(item.partner_id.id)
 
-            to_create_values = [
-                dict(channel_id=channel.id, partner_id=partner.id, **member_values)
-                for channel in to_join
-                for partner in target_partners if partner.id not in existing_map[channel.id]
-            ]
-            slide_partners_sudo = self.env['slide.channel.partner'].sudo().create(to_create_values)
-            return slide_partners_sudo
+                to_create_values = [
+                    dict(channel_id=channel.id, partner_id=partner.id, **member_values)
+                    for channel in to_join
+                    for partner in target_partners if partner.id not in existing_map[channel.id]
+                ]
+                slide_partners_sudo = self.env['slide.channel.partner'].sudo().create(to_create_values)
+                return slide_partners_sudo
         return self.env['slide.channel.partner'].sudo()
+
+    def _filter_target_members(self, target_partners, **member_values):
+        filtered_target_partner_ids = []
+        public_users = self.env['res.users'].sudo()
+        public_groups = self.env.ref("base.group_public", raise_if_not_found=False)
+        if public_groups:
+            public_users = public_groups.sudo().with_context(active_test=False).mapped("users")
+        for target_partner in target_partners:
+            is_public = target_partner.sudo().with_context(active_test=False).user_ids in public_users if public_users else False
+            if not is_public:
+                filtered_target_partner_ids.append(target_partner.id)
+        target_partners = target_partners.filtered(lambda partner: partner.id in filtered_target_partner_ids)
+        return target_partners
 
     def _filter_add_members(self, target_partners, **member_values):
         allowed = self.filtered(lambda channel: channel.enroll == 'public')
