@@ -6,7 +6,7 @@ from psycopg2 import OperationalError, Error
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools.float_utils import float_compare, float_is_zero
+from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 import logging
 
@@ -18,9 +18,40 @@ class StockQuant(models.Model):
     _description = 'Quants'
     _rec_name = 'product_id'
 
+    def _default_location_id(self):
+        if self.env.context.get('active_model') == 'product.template' or self.env.context.get('active_model') == 'product.product':
+            if not self.env['res.users'].has_group('stock.group_stock_multi_locations'):
+                company_user = self.env.user.company_id
+                warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
+                if warehouse:
+                    return warehouse.lot_stock_id.id
+                else:
+                    raise UserError(_('You must define a warehouse for the company: %s.') % (company_user.name,))
+
+    def _default_product_id(self):
+        if self.env.context.get('active_model') == 'product.template':
+            product_template = self.env['product.template'].browse(self.env.context.get('active_id'))
+            if product_template.exists() and product_template.product_variant_count == 1:
+                return product_template.product_variant_id
+        elif self.env.context.get('active_model') == 'product.product':
+            return self.env.context.get('active_id')
+
+    def _domain_location_id(self):
+        company_user = self.env.user.company_id.id
+        return ['&',
+                ('company_id', '=', company_user),
+                ('usage', 'in', ['internal', 'inventory', 'production', 'transit'])]
+
+    def _domain_product_id(self):
+        domain = [('type', '=', 'product')]
+        if self.env.context.get('active_model') == 'product.template':
+            domain = ['&', ('product_tmpl_id', '=', self.env.context.get('active_id'))] + domain
+        return domain
+
     product_id = fields.Many2one(
         'product.product', 'Product',
-        ondelete='restrict', readonly=True, required=True)
+        default=_default_product_id, domain=_domain_product_id,
+        ondelete='restrict', required=True)
     # so user can filter on template in webclient
     product_tmpl_id = fields.Many2one(
         'product.template', string='Product Template',
@@ -32,7 +63,8 @@ class StockQuant(models.Model):
         string='Company', store=True, readonly=True)
     location_id = fields.Many2one(
         'stock.location', 'Location',
-        auto_join=True, ondelete='restrict', readonly=True, required=True)
+        default=_default_location_id, domain=_domain_location_id,
+        auto_join=True, ondelete='restrict', required=True)
     lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial Number',
         ondelete='restrict', readonly=True)
@@ -45,13 +77,15 @@ class StockQuant(models.Model):
     quantity = fields.Float(
         'Quantity',
         help='Quantity of products in this quant, in the default unit of measure of the product',
-        readonly=True, required=True, oldname='qty')
+        readonly=True, oldname='qty')
+    inventory_quantity = fields.Float('Inventoried Quantity')
     reserved_quantity = fields.Float(
         'Reserved Quantity',
         default=0.0,
         help='Quantity of reserved products in this quant, in the default unit of measure of the product',
-        readonly=True, required=True)
+        readonly=True)
     in_date = fields.Datetime('Incoming Date', readonly=True)
+    tracking = fields.Selection(related='product_id.tracking', readonly=True)
 
     def action_view_stock_moves(self):
         self.ensure_one()
@@ -88,6 +122,30 @@ class StockQuant(models.Model):
     @api.one
     def _compute_name(self):
         self.name = '%s: %s%s' % (self.lot_id.name or self.product_id.code or '', self.quantity, self.product_id.uom_id.name)
+
+    def _get_inventory_move_values(self, location_id, location_dest_id, quantity):
+        self.ensure_one()
+        move_line_vals = {
+            'product_id': self.product_id.id,
+            'product_uom_id': self.product_uom_id.id,
+            'qty_done': quantity,
+            'location_id': location_id.id,
+            'location_dest_id': location_dest_id.id,
+            'company_id': self.company_id.id
+        }
+        if self.tracking != 'none':
+            move_line_vals['lot_id'] = self.lot_id.id
+        return {
+            'name': _('Product Quantity Updated'),
+            'product_id': self.product_id.id,
+            'product_uom': self.product_uom_id.id,
+            'product_uom_qty': quantity,
+            'company_id': self.company_id.id,
+            'state': 'confirmed',
+            'location_id': location_id.id,
+            'location_dest_id': location_dest_id.id,
+            'move_line_ids': [(0, 0, move_line_vals)]
+        }
 
     @api.model
     def _get_removal_strategy(self, product_id, location_id):
@@ -180,6 +238,37 @@ class StockQuant(models.Model):
             else:
                 return sum([available_quantity for available_quantity in availaible_quantities.values() if float_compare(available_quantity, 0, precision_rounding=rounding) > 0])
 
+    @api.onchange('location_id', 'product_id', 'lot_id', 'package_id', 'owner_id')
+    def _onchange_location_or_product_id(self):
+        for quant in self:
+            if quant.product_id and quant.location_id and (quant.tracking == 'none' or quant.lot_id):
+                domain = [
+                    ('location_id', '=', quant.location_id.id),
+                    ('product_id', '=', quant.product_id.id),
+                    ('lot_id', '=', quant.lot_id.id),
+                    ('package_id', '=', quant.package_id.id),
+                    ('owner_id', '=', quant.owner_id.id),
+                ]
+                already_existing_quant = self.env['stock.quant'].search(domain)
+                if already_existing_quant.exists():
+                    if self.tracking != 'none':
+                        raise UserError(_("A quant for this product with this "
+                        "Serial/Lot number and at this location already exists."
+                        " You must modify the already existing quant instead of"
+                        " creating a new one."))
+                    else:
+                        quant.update({
+                            'quantity': already_existing_quant.quantity,
+                            'reserved_quantity': already_existing_quant.reserved_quantity})
+                elif quant.quantity or quant.reserved_quantity:
+                    quant.update({'quantity': 0, 'reserved_quantity': 0})
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        for quant in self:
+            if quant.lot_id and quant.tracking == 'none':
+                quant.lot_id = None
+
     @api.model
     def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None):
         """ Increase or decrease `reserved_quantity` of a set of quants for a given set of
@@ -214,9 +303,10 @@ class StockQuant(models.Model):
             try:
                 with self._cr.savepoint():
                     self._cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE NOWAIT", [quant.id], log_exceptions=False)
-                    quant.write({
+                    quant.with_context(dont_create_inventory_line=True).write({
                         'quantity': quant.quantity + quantity,
                         'in_date': in_date,
+                        'inventory_quantity': quant.quantity + quantity,
                     })
                     break
             except OperationalError as e:
@@ -225,10 +315,11 @@ class StockQuant(models.Model):
                 else:
                     raise
         else:
-            self.create({
+            self.with_context(dont_create_inventory_line=True).create({
                 'product_id': product_id.id,
                 'location_id': location_id.id,
                 'quantity': quantity,
+                'inventory_quantity': quantity,
                 'lot_id': lot_id and lot_id.id,
                 'package_id': package_id and package_id.id,
                 'owner_id': owner_id and owner_id.id,
@@ -340,6 +431,46 @@ class StockQuant(models.Model):
     def _quant_tasks(self):
         self._merge_quants()
         self._unlink_zero_quants()
+
+    def write(self, vals):
+        if 'inventory_quantity' in vals and not self.env.context.get('dont_create_inventory_line'):
+            for quant in self:
+                rounding = quant.product_id.uom_id.rounding
+                diff = float_round(vals['inventory_quantity'] - quant.quantity, precision_rounding=rounding)
+                diff_float_compared = float_compare(diff, 0, precision_rounding=rounding)
+                if diff_float_compared == 0:
+                    continue
+                elif diff_float_compared > 0:
+                    move = self.env['stock.move'].create(self._get_inventory_move_values(self.product_id.property_stock_inventory, self.location_id, diff))
+                    move._action_done()
+                else:
+                    move = self.env['stock.move'].create(self._get_inventory_move_values(self.location_id, self.product_id.property_stock_inventory, -1 * diff))
+                    move._action_done()
+            vals.pop('inventory_quantity')
+        return super(StockQuant, self).write(vals)
+
+    @api.model
+    def create(self, vals):
+        if 'inventory_quantity' in vals and not self.env.context.get('dont_create_inventory_line'):
+            if 'product_id' in vals:
+                product = self.env['product.product'].browse(vals['product_id'])
+            else:
+                product = self._default_product_id()
+            location = self.env['stock.location'].browse(vals['location_id'])
+            lot_id = self.env['stock.production.lot'].browse(vals.get('lot_id'))
+            package_id = self.env['stock.quant.package'].browse(vals.get('package_id'))
+            owner_id = self.env['res.partner'].browse(vals.get('owner_id'))
+            similar = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+            if similar:
+                similar.write({'inventory_quantity': vals['inventory_quantity']})
+                return similar
+            else:
+                vals2 = dict(vals)
+                vals2.pop('inventory_quantity')
+                quant = super(StockQuant, self).create(vals2)
+                quant.write({'inventory_quantity': vals['inventory_quantity']})
+                return quant
+        return super(StockQuant, self).create(vals)
 
 
 class QuantPackage(models.Model):

@@ -58,5 +58,9 @@ class ProductionLot(models.Model):
     def action_lot_open_quants(self):
         self.env['stock.quant']._quant_tasks()
         action = self.env.ref('stock.lot_open_quants').read()[0]
-        action['context'] = {'search_default_lot_id': self.id}
+        context = {'search_default_lot_id': self.id}
+        if self.product_id:
+            context['default_product_id'] = self.product_id.id
+            context['single_product'] = True
+        action['context'] = context
         return action

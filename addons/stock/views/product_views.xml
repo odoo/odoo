@@ -172,7 +172,6 @@
             <field name="arch" type="xml">
                 <sheet position="before">
                     <header>
-                        <button name="action_update_quantity_on_hand" string="Update Qty On Hand" type="object" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                         <button string="Replenish" type="action"
                             name="%(action_product_replenish)d"
                             context="{'default_product_id': id}"
@@ -198,10 +197,6 @@
             <field name="arch" type="xml">
                 <data>
                     <header position="inside">
-                        <button string="Update Qty On Hand"
-                            type="object"
-                            name="action_update_quantity_on_hand"
-                            attrs="{'invisible': [('type', '!=', 'product')]}"/>
                         <button string="Replenish" type="action"
                             name="%(action_product_replenish)d"
                             context="{'default_product_id': id}"
@@ -289,7 +284,6 @@
             <field name="arch" type="xml">
                 <data>
                     <header position="inside" >
-                        <button name="action_update_quantity_on_hand" string="Update Qty On Hand" type="object" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                         <button string="Replenish" type="action"
                             name="%(action_product_replenish)d"
                             context="{'default_product_tmpl_id': id}"
@@ -300,7 +294,8 @@
                         <button type="object"
                             name="action_open_quants"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
-                            class="oe_stat_button" icon="fa-building-o">
+                            class="oe_stat_button" icon="fa-building-o"
+                            context="{'single_product': product_variant_count == 1}">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value" widget="statinfo">
                                     <field name="qty_available" widget="statinfo" nolabel="1" class="mr4"/>
