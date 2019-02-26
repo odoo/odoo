@@ -1,34 +1,58 @@
 <templates id="template" xml:space="preserve">
     <t t-name="website.slides.fullscreen">
-            <div t-if="slide.slide_type == 'video' &amp;&amp; !showMiniQuiz" class="player embed-responsive embed-responsive-16by9 embed-responsive-item">
-                <iframe id="youtube-player" t-att-src="embed_url" allowFullScreen="true" frameborder="0" enablejsapi="1" autoplay="1" allow="autoplay"></iframe>
+            <div t-if="widget.get('slide').slide_type == 'video' &amp;&amp; !widget.get('slide').goToQuiz" class="player embed-responsive embed-responsive-16by9 embed-responsive-item">
+                <iframe id="youtube-player" t-att-src="widget.get('slide').embed_code" allowFullScreen="true" frameborder="0" enablejsapi="1" autoplay="1" allow="autoplay"></iframe>
             </div>
-            <div t-if="['presentation', 'document'].indexOf(slide.slide_type) !== -1 &amp;&amp; !showMiniQuiz" class="embed-responsive embed-responsive-4by3 embed-responsive-item ">
-                <iframe t-att-src="embed_url" class="o_wslides_iframe_viewer" allowFullScreen="true" height="315" width="420" frameborder="0"></iframe>
+            <div t-if="['presentation', 'document'].indexOf(widget.get('slide').slide_type) !== -1 &amp;&amp; !widget.get('slide').goToQuiz" class="embed-responsive embed-responsive-4by3 embed-responsive-item ">
+                <iframe t-att-src="widget.get('slide').embed_code" class="o_wslides_iframe_viewer" allowFullScreen="true" height="315" width="420" frameborder="0"></iframe>
             </div>
-            <div style="width:100%;height:100%;text-align:center;" t-if="slide.slide_type == 'infographic' &amp;&amp; !showMiniQuiz">
-                <img t-attf-src="/web/image/slide.slide/#{slide.id}/image" class="img-fluid" style="height: 100%" alt="Slide image"/>
+            <div style="width:100%;height:100%;text-align:center;" t-if="widget.get('slide').slide_type == 'infographic' &amp;&amp; !widget.get('slide').goToQuiz">
+                <img t-att-src="'/web/image/slide.slide/'+ widget.get('slide').id +'/image'" class="img-fluid" style="height: 100%" alt="Slide image"/>
             </div>
-            <div t-if="(slide.slide_type == 'quiz' || showMiniQuiz) &amp;&amp; questions " class="o_wslides_fs_quiz">
+            <div t-if="(widget.get('slide').slide_type == 'quiz' || widget.get('slide').goToQuiz) &amp;&amp; questions " class="o_wslides_fs_quiz">
                 <div>
                     <t t-call="website.slide.quiz"/>
                     <div id="quiz_buttons" class="container">
                         <button t-if="!slide.done" class="btn btn-primary submit-quiz" >Check your answers</button>
-                        <button t-if="embed_url" class="btn btn-primary back-to-video" >Watch again</button>
-                        <button t-if="slide.done &amp;&amp; nextSlide" class="btn btn-primary next-slide" >Continue</button>
+                        <button t-if="widget.embed_url" class="btn btn-primary back-to-video" >Watch again</button>
+                        <button t-if="widget.get('slide').done &amp;&amp; nextSlide" class="btn btn-primary next-slide" >Continue</button>
                     </div>
                 </div>
             </div>
-            <div t-if="slide.slide_type == 'webpage'" class="o_wslides_fs_webpage">
+            <div t-if="widget.get('slide').slide_type == 'webpage'" class="o_wslides_fs_webpage">
                     <div class="o_wslides_fs_webpage_content container"/>
             </div>
         <div class="o_wslides_fs_content"/>
     </t>
 
+    <t t-name="website.slides.fullscreen.video">
+        <div class="player embed-responsive embed-responsive-16by9 embed-responsive-item">
+            <iframe id="youtube-player" t-att-src="widget.get('slide').embed_code" allowFullScreen="true" frameborder="0" enablejsapi="1" autoplay="1" allow="autoplay"></iframe>
+        </div>
+    </t>
+
+    <t t-name="website.slides.fullscreen.presentation">
+        <div class="embed-responsive embed-responsive-4by3 embed-responsive-item ">
+            <iframe t-att-src="widget.get('slide').embed_code" class="o_wslides_iframe_viewer" allowFullScreen="true" height="315" width="420" frameborder="0"></iframe>
+        </div>
+    </t>
+
+    <t t-name="website.slides.fullscreen.infographic">
+        <div style="width:100%;height:100%;text-align:center;" t-if="widget.get('slide').slide_type == 'infographic' &amp;&amp; !widget.get('slide').goToQuiz">
+            <img t-att-src="'/web/image/slide.slide/'+ widget.get('slide').id +'/image'" class="img-fluid" style="height: 100%" alt="Slide image"/>
+        </div>
+    </t>
+
+    <t t-name="website.slides.fullscreen.webpage">
+        <div class="o_wslides_fs_webpage">
+            <div class="o_wslides_fs_webpage_content container"/>
+        </div>
+    </t>
+
     <t t-name="website.slide.quiz">
         <div class="container quiz-questions">
             <t t-set="i" t-value="1"/>
-            <t t-foreach="questions" t-as="question">
+            <t t-foreach="widget.get('slide').quiz.questions" t-as="question">
                 <t t-set="j" t-value="0"/>
                 <div class="o_wslides_quiz_question">
                     <div>
@@ -38,7 +62,7 @@
                         </div>
                         <ul class="o_wslides_quiz_question_answers">
                             <t t-foreach="question.answers" t-as="answer">
-                                <li t-attf-id="answer#{answer.id}" t-att-question_id="question.id" t-att-class="(slide.done &amp;&amp; answer.correct) ? 'o_wslides_quiz_answer o_wslides_quiz_good_answer': slide.done ? 'o_wslides_quiz_answer o_wslides_quiz_ignored_answer' : 'o_wslides_quiz_answer'">
+                                <li t-attf-id="answer#{answer.id}" t-att-question_id="question.id" t-att-class="(widget.get('slide').done &amp;&amp; answer.correct) ? 'o_wslides_quiz_answer o_wslides_quiz_good_answer': widget.get('slide').done ? 'o_wslides_quiz_answer o_wslides_quiz_ignored_answer' : 'o_wslides_quiz_answer'">
                                     <label class="o_wslides_quiz_radio_box">
                                         <input t-att-answer_id="answer.id" type="radio" t-att-name="question.id" t-att-question_id="question.id" t-att-value="answer.id" t-att-checked="(slide.done &amp;&amp; answer.correct) ? 'checked' : undefined" t-att-disabled="slide.done"/>
                                         <span t-if="!(slide.done &amp;&amp; answer.correct)"/>
@@ -53,17 +77,6 @@
                 </div>
                 <t t-set="i" t-value="i+1"/>
             </t>
-        </div>
-    </t>
-
-    <t t-name="website.course.player.infos">
-        <div class="text-box">
-            <h1><t t-esc="slide.name"/></h1>
-            <a t-att-href="url" class="oe_js_show_comments">Show comments</a>
-        </div>
-        <div>
-            <button class="oe_js_slide_full_screen btn btn-secondary">Full Screen</button>
-            <button t-att-current_slide_id="slide.id" class="btn btn-primary oe_js_slide_completed">Mark as completed<i class="fa fa-check-circle ml-1"></i></button>
         </div>
     </t>
 

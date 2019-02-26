@@ -14,7 +14,17 @@
                 <div>
                     <a id="fullscreen_sidebar_button" href="#" class="active o_wslides_fs_toggle_sidebar"><i class="fa fa-bars"></i>Lessons</a>
                     <a class="o_wslides_small_screen" t-attf-href="/slides/slide/#{slug(slide)}" target="new"><i class="fa fa-pencil"></i>write a review</a>
-                    <div class="o_wslides_fs_slide_title"/>
+                    <div class="o_wslides_fs_slide_title">
+                        <t>
+                            <i t-if="slide.slide_type == 'document'" class="fa fa-file-pdf-o mr-2"></i>
+                            <i t-if="slide.slide_type == 'infographic'" class="fa fa-file-picture-o mr-2"></i>
+                            <i t-if="slide.slide_type == 'video'" class="fa fa-play-circle mr-2"></i>
+                            <i t-if="slide.slide_type == 'link'" class="fa fa-file-code-o mr-2"></i>
+                            <i t-if="slide.slide_type == 'webpage'" class="fa fa-file-text mr-2"></i>
+                            <i t-if="slide.slide_type == 'quiz'" class="fa fa-question-circle mr-2 text"></i>
+                            <span class="o_wslides_fs_slide_title_span" t-esc="slide.name"/>
+                        </t>
+                    </div>
                 </div>
                 <div>
                     <a t-attf-href="/slides/">back to courses</a>
@@ -31,8 +41,7 @@
                                 <div class="o_wslides_slide_fs_progress_box">
                                     <div class="progress o_wslides_fs_sidebar_progressbar">
                                         <div class="progress-bar" role="progressbar"
-                                            t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100"
-                                            t-att-style="'width: %s' % (slide.channel_id.completion)"/>
+                                            t-attf-style="width: #{slide.channel_id.completion}%"/>
                                     </div>
                                     <div><span class="o_wslides_progress_percentage" t-esc="slide.channel_id.completion"/>%</div>
                                 </div>
@@ -68,16 +77,14 @@
         </a>
         <ul class="o_wslides_fs_sidebar_section_slides collapse show p-0 m-0" t-att-id="('collapse-%s') % (category.id if category else 0)" >
             <t t-foreach="category_slide_ids" t-as="course_slide">
-                <!-- AWA FIXME: remove that index crap but right now fullscreen JS uses it too much -->
-                <t t-set="i" t-value="list(slide.channel_id.slide_ids).index(course_slide)"/>
-                <li t-att-index="i" t-att-data-slide-id="course_slide.id" t-attf-class="#{'active' if slide.id == course_slide.id else ''}">
+                <li t-att-slide_id="course_slide.id" t-attf-class="#{'active' if slide.id == course_slide.id else ''}">
                     <span>
                         <span class="o_wslides_top_line"></span>
                         <i t-attf-id="check-#{course_slide.id}" t-if="not course_slide.id in user_progress or not user_progress[course_slide.id].completed" class="check-done fa fa-circle-thin"></i>
                         <i t-attf-id="check-#{course_slide.id}" t-if="course_slide.id in user_progress and user_progress[course_slide.id].completed" class="check-done o_wslides_slide_completed fa fa-check-circle"></i>
                         <span class="o_wslides_bottom_line"></span>
                     </span>
-                    <a t-att-index="i" t-att-data-slide-id="course_slide.id">
+                    <a>
                         <div t-attf-index="#{i}"
                             t-att-data-slug="slug(course_slide)"
                             t-att-data-done="course_slide.id in user_progress and user_progress[course_slide.id].completed"
@@ -108,7 +115,7 @@
                     <span>
                         <span class="o_wslides_fs_full_line"/>
                     </span>
-                    <span class="o_wslides_fs_slide_quiz" t-att-index="i"><i class="fa fa-flag-checkered"></i>Quiz: <span t-esc="course_slide.name"/></span>
+                    <span class="o_wslides_fs_slide_quiz"  t-att-data-slide_id="course_slide.id"><i class="fa fa-flag-checkered"></i>Quiz: <span t-esc="course_slide.name"/></span>
                 </li>
             </t>
         </ul>
