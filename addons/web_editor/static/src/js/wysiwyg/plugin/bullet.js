@@ -165,10 +165,10 @@ var BulletPlugin = AbstractPlugin.extend({
             // convert ul <-> ol
 
             var ul;
+            $(ol).removeClass('o_checklist');
             if (sorted === 'checklist' && current === "ul") {
                 ul = ol;
             } else if (sorted === 'ul' && current === 'checklist') {
-                $(ol).removeClass('o_checklist');
                 ul = ol;
             } else {
                 ul = this.document.createElement(sorted === "ol" ? "ol" : "ul");
