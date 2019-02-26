@@ -43,13 +43,38 @@ class AccountMove(models.Model):
         return result
 
     @api.multi
-    @api.depends('line_ids.debit', 'line_ids.credit')
+    @api.depends('line_ids.debit', 'line_ids.credit', 'line_ids.amount_currency', 'line_ids.currency_id')
     def _amount_compute(self):
         for move in self:
             total = 0.0
-            for line in move.line_ids:
+            total_currency = 0.0
+            currency_id = move.line_ids and move.line_ids[0].currency_id.id or False
+            for line in move.line_ids.filtered(lambda l: l.debit):
                 total += line.debit
-            move.amount = total
+                if currency_id and line.currency_id.id == currency_id:
+                    total_currency += line.amount_currency
+                elif currency_id:
+                    currency_id = False
+
+            if currency_id and total_currency:
+                move.amount = total_currency
+                move.currency_id = currency_id
+            else:
+                move.currency_id = move.company_id.currency_id or self.env.user.company_id.currency_id
+                move.amount = total
+
+    @api.multi
+    def _set_amount(self):
+        for move in self:
+            if len(move.line_ids) == 2 and move.amount != 0:
+                amount_in_company_currency = move.amount
+                if move.currency_id and move.currency_id != move.company_id.currency_id:
+                    amount_in_company_currency = move.currency_id._convert(move.amount, move.company_id.currency_id, move.company_id, move.date)
+                    for line in move.line_ids:
+                        line.amount_currency = line.debit and move.amount or -move.amount
+                for line in move.with_context(check_move_validity=False).line_ids:
+                    line.debit = line.debit and amount_in_company_currency or 0.0
+                    line.credit = line.credit and amount_in_company_currency or 0.0
 
     @api.depends('line_ids.debit', 'line_ids.credit', 'line_ids.matched_debit_ids.amount', 'line_ids.matched_credit_ids.amount', 'line_ids.account_id.user_type_id.type')
     def _compute_matched_percentage(self):
@@ -88,11 +113,6 @@ class AccountMove(models.Model):
             return [('id', 'in', rmi.ids)]
         return [('id', '=', False)]
 
-    @api.one
-    @api.depends('company_id')
-    def _compute_currency(self):
-        self.currency_id = self.company_id.currency_id or self.env.user.company_id.currency_id
-
     @api.multi
     def _get_default_journal(self):
         if self.env.context.get('default_journal_type'):
@@ -117,7 +137,6 @@ class AccountMove(models.Model):
     ref = fields.Char(string='Reference', copy=False)
     date = fields.Date(required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'posted': [('readonly', True)]}, default=_get_default_journal)
-    currency_id = fields.Many2one('res.currency', compute='_compute_currency', store=True, string="Currency")
     state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status',
       required=True, readonly=True, copy=False, default='draft',
       help='All manually created new journal entries are usually in the status \'Unposted\', '
@@ -128,7 +147,8 @@ class AccountMove(models.Model):
     line_ids = fields.One2many('account.move.line', 'move_id', string='Journal Items',
         states={'posted': [('readonly', True)]}, copy=True)
     partner_id = fields.Many2one('res.partner', compute='_compute_partner_id', string="Partner", store=True, readonly=True)
-    amount = fields.Monetary(compute='_amount_compute', store=True)
+    amount = fields.Monetary(compute='_amount_compute', inverse="_set_amount", store=True)
+    currency_id = fields.Many2one('res.currency', compute='_amount_compute', store=True, string="Currency")
     narration = fields.Text(string='Internal Note')
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True)
     matched_percentage = fields.Float('Percentage Matched', compute='_compute_matched_percentage', digits=0, store=True, readonly=True, help="Technical field used in cash basis method")
@@ -140,13 +160,12 @@ class AccountMove(models.Model):
         string='Tax Cash Basis Entry of',
         help="Technical field used to keep track of the tax cash basis reconciliation. "
         "This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
-    auto_reverse = fields.Boolean(string='Reverse Automatically', default=False, help='If this checkbox is ticked, this entry will be automatically reversed at the reversal date you defined.')
-    reverse_date = fields.Date(string='Reversal Date', help='Date of the reverse accounting entry.')
+    auto_post = fields.Boolean(string='Post Automatically', default=False, help='If this checkbox is ticked, this entry will be automatically posted at its date.')
     reverse_entry_id = fields.Many2one('account.move', String="Reverse entry", store=True, readonly=True)
     to_check = fields.Boolean(string='To Check', default=False, help='If this checkbox is ticked, it means that the user was not sure of all the related informations at the time of the creation of the move and that the move needs to be checked again.')
     tax_type_domain = fields.Char(store=False, help='Technical field used to have a dynamic taxes domain on the form view.')
 
-    @api.constrains('line_ids', 'journal_id', 'auto_reverse', 'reverse_date')
+    @api.constrains('line_ids', 'journal_id')
     def _validate_move_modification(self):
         if 'posted' in self.mapped('line_ids.payment_id.state'):
             raise ValidationError(_("You cannot modify a journal entry linked to a posted payment."))
@@ -315,6 +334,9 @@ class AccountMove(models.Model):
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
         self.mapped('line_ids').create_analytic_lines()
         for move in self:
+            if move.auto_post and move.date > fields.Date.today():
+                raise UserError(_("This move is configured to be auto-posted on {}".format(move.date.strftime(self.env['res.lang']._lang_get(self.env.user.lang).date_format))))
+
             if move.name == '/':
                 new_name = False
                 journal = move.journal_id
@@ -417,14 +439,14 @@ class AccountMove(models.Model):
         return True
 
     @api.multi
-    def _reverse_move(self, date=None, journal_id=None, auto=False):
+    def _reverse_move(self, date=None, journal_id=None):
         self.ensure_one()
         with self.env.norecompute():
             reversed_move = self.copy(default={
                 'date': date,
                 'journal_id': journal_id.id if journal_id else self.journal_id.id,
-                'ref': (_('Automatic reversal of: %s') if auto else _('Reversal of: %s')) % (self.name),
-                'auto_reverse': False})
+                'ref': _('Reversal of: %s') % (self.name),
+            })
             for acm_line in reversed_move.line_ids.with_context(check_move_validity=False):
                 acm_line.write({
                     'debit': acm_line.credit,
@@ -436,16 +458,14 @@ class AccountMove(models.Model):
         return reversed_move
 
     @api.multi
-    def reverse_moves(self, date=None, journal_id=None, auto=False):
+    def reverse_moves(self, date=None, journal_id=None):
         date = date or fields.Date.today()
         reversed_moves = self.env['account.move']
         for ac_move in self:
             #unreconcile all lines reversed
             aml = ac_move.line_ids.filtered(lambda x: x.account_id.reconcile or x.account_id.internal_type == 'liquidity')
             aml.remove_move_reconcile()
-            reversed_move = ac_move._reverse_move(date=date,
-                                                  journal_id=journal_id,
-                                                  auto=auto)
+            reversed_move = ac_move._reverse_move(date=date, journal_id=journal_id)
             reversed_moves |= reversed_move
             #reconcile together the reconcilable (or the liquidity aml) and their newly created counterpart
             for account in set([x.account_id for x in aml]):
@@ -476,18 +496,17 @@ class AccountMove(models.Model):
         return action
 
     @api.model
-    def _run_reverses_entries(self):
-        ''' This method is called from a cron job. '''
+    def _run_post_draft_to_post(self):
+        ''' This method is called from a cron job.
+        It is used to post entries such as those created by the module
+        account_asset.
+        '''
         records = self.search([
-            ('state', '=', 'posted'),
-            ('auto_reverse', '=', True),
-            ('reverse_date', '<=', fields.Date.today()),
-            ('reverse_entry_id', '=', False)])
-        for move in records:
-            date = None
-            if move.reverse_date and (not self.env.user.company_id.period_lock_date or move.reverse_date > self.env.user.company_id.period_lock_date):
-                date = move.reverse_date
-            move.reverse_moves(date=date, auto=True)
+            ('state', '=', 'draft'),
+            ('date', '<=', fields.Date.today()),
+            ('auto_post', '=', True),
+        ])
+        records.post()
 
     @api.multi
     def action_view_reverse_entry(self):
