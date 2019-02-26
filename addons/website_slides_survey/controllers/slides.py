@@ -59,8 +59,8 @@ class WebsiteSlides(WebsiteSlides):
 
     # All Users Page
     # ---------------------------------------------------
-    def _prepare_all_users_values(self, user, position):
-        result = super(WebsiteSlides, self)._prepare_all_users_values(user, position)
+    def _prepare_all_users_values(self, user):
+        result = super(WebsiteSlides, self)._prepare_all_users_values(user)
         result.update({
             'certification_count': len(self._get_user_certificates(user))
         })

@@ -213,9 +213,40 @@ $bronze: #eea91e;
 }
 
 // All Users Page
+.o_wprofile_all_users_nav {
+    margin: auto;
+    background: linear-gradient(90deg, #875A7B 20%, #62495B 80%) !important;
+    a {
+        color: #FFFFFF;
+    }
+    nav {
+        .breadcrumb-item::before {
+            font-weight: bold;
+            color: #FFFFFF;
+            opacity: 0.8;
+        }
+        .breadcrumb-item {
+            a {
+                font-weight: bold;
+                color: #FFFFFF;
+                opacity: 0.8;
+                transition: opacity linear .3s;
+            }
+            &.active {
+                a {
+                    opacity: 1.0;
+                }
+            }
+        }
+        ol {
+            background-color: transparent;
+        }
+    }
+}
+
 .o_wprofile_all_users_header {
     margin: auto;
-    background-color: #875A7B !important;
+    background: linear-gradient(90deg, #875A7B 20%, #62495B 80%) !important;
     > div:first-child {
         margin: auto;
         width: 100%;
