@@ -82,21 +82,13 @@ tour.register('website_reset_password', {
         trigger: '.o_data_cell:contains("Password reset"):eq(0)',
     },
     {
-        content: "check page has an iframe",
-        trigger: 'iframe body',
-        run: function () {
-            var content = $('iframe').contents()[0];
-            console.log(content && new XMLSerializer().serializeToString(content));
-        },
-    },
-    {
-        content: "check iframe has the button",
-        trigger: 'iframe a:contains("Change password")',
+        content: "check email has the button",
+        trigger: 'div.oe_form_field_html[name="body_html"] a:contains("Change password")',
         run: function () {},
     },
     {
         content: "check the URL is correct too",
-        trigger: 'iframe a:contains("Change password")[href^="http://my-test-domain.com"]',
+        trigger: 'div.oe_form_field_html[name="body_html"] a:contains("Change password")[href^="http://my-test-domain.com"]',
         run: function () {
             // reset the domain of the websites, go to users page
             return rpc.query({
@@ -131,9 +123,9 @@ tour.register('website_reset_password', {
     },
     {
         content: "check the link has the current host, save the link, logout",
-        trigger: 'iframe a:contains("Change password")[href^="' + currentDomain + '"]',
+        trigger: 'div.oe_form_field_html[name="body_html"] a:contains("Change password")[href^="' + currentDomain + '"]',
         run: function () {
-            var link = $('iframe').contents().find('a:contains("Change password")').attr('href');
+            var link = $('div.oe_form_field_html[name="body_html"] a:contains("Change password")').attr('href');
             localStorage.setItem(resetLinkKey, link);
             window.location.href = "/web/session/logout?redirect=/";
         },

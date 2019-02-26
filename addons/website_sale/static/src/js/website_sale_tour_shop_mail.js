@@ -87,8 +87,8 @@ tour.register('shop_mail', {
     },
     {
         content: "check it's the correct email, and the URL is correct too",
-        trigger: 'iframe p:contains("Here is"):contains("the order")',
-        extra_trigger: 'iframe a[href^="http://my-test-domain.com"]',
+        trigger: 'div.oe_form_field_html[name="body_html"] p:contains("Here is"):contains("the order")',
+        extra_trigger: 'div.oe_form_field_html[name="body_html"] a[href^="http://my-test-domain.com"]',
     },
 ]);
 });
