@@ -14,6 +14,7 @@ import uuid
 import itertools
 from dateutil.relativedelta import relativedelta
 from functools import partial
+from difflib import HtmlDiff
 from operator import itemgetter
 
 import json
@@ -1475,3 +1476,78 @@ actual arch.
                 view._check_xml()
             except Exception as e:
                 self.raise_view_error("Can't validate view:\n%s" % e, view.id)
+
+
+class ResetViewArchWizard(models.TransientModel):
+    """ A wizard to reset views architecture. """
+    _name = "reset.view.arch.wizard"
+    _description = "Reset View Architecture Wizard"
+
+    def _default_view_id(self):
+        view_id = self._context.get('active_model') == 'ir.ui.view' and self._context.get('active_id') or []
+        return view_id
+
+    view_id = fields.Many2one('ir.ui.view', string='View', default=_default_view_id)
+    view_name = fields.Char(related='view_id.name', string='View Name')
+    arch_diff = fields.Html(string='Architecture Diff', compute='_compute_arch_diff', readonly=True, sanitize_tags=False)
+    reset_mode = fields.Selection([
+        ('soft', 'Restore previous version (soft reset).'),
+        ('hard', 'Reset to file version (hard reset).')
+    ], string='Reset Mode', default='soft', required=True, help="You might want to try a soft reset first.")
+
+    @api.one
+    @api.depends('reset_mode', 'view_id')
+    def _compute_arch_diff(self):
+        ''' Return the differences between the current view arch and either its
+        previous or initial arch, depending of `reset_mode` (soft/hard).
+        The diff will be returned in an HTML table like on github.com.
+        '''
+        def handle_style(html_diff):
+            ''' The HtmlDiff lib will add some usefull classes on the DOM to
+            identify elements. Simply replace those classes by BS4 ones.
+            For the table to fit the modal width, some custom style is needed.
+            '''
+            to_replace = {
+                'diff_header': 'diff_header bg-600 text-center align-top px-2',
+                'diff_next': 'd-none',
+                'diff_add': 'bg-success',
+                'diff_chg': 'bg-warning',
+                'diff_sub': 'bg-danger',
+                'nowrap': '',
+            }
+            for old, new in to_replace.items():
+                html_diff = html_diff.replace(old, new)
+            html_diff += '''
+                <style>
+                    table.diff { width: 100%; }
+                    table.diff .diff_header { white-space: nowrap; }
+                    table.diff th.diff_header { width: 50%; }
+                    table.diff td { word-break: break-all; }
+                </style>
+            '''
+            return html_diff
+
+        soft = self.reset_mode == 'soft'
+        arch_to_compare = False
+        if soft:
+            arch_to_compare = self.view_id.arch_prev
+        elif not soft and self.view_id.arch_fs:
+            arch_to_compare = self.view_id.with_context(read_arch_from_file=True).arch
+
+        diff = False
+        if arch_to_compare:
+            diff = HtmlDiff(tabsize=2).make_table(
+                arch_to_compare.splitlines(),
+                self.view_id.arch.splitlines(),
+                _("Previous Arch") if soft else _("File Arch"),
+                _("Current Arch"),
+                context=True,  # Show only diff lines, not all the code
+            )
+            diff = handle_style(diff)
+        self.arch_diff = diff
+
+    @api.multi
+    def reset_view_button(self):
+        self.ensure_one()
+        self.view_id.reset_arch(self.reset_mode)
+        return {'type': 'ir.actions.act_window_close'}
