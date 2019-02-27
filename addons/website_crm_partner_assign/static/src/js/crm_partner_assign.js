@@ -1,11 +1,11 @@
 odoo.define('crm.partner_assign', function (require) {
 'use strict';
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimations.registry.crmPartnerAssign = sAnimations.Class.extend({
+publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     selector: '#wrapwrap:has(.interested_partner_assign_form, .desinterested_partner_assign_form, .opp-stage-button, .new_opp_form)',
-    read_events: {
+    events: {
         'click .interested_partner_assign_confirm': '_onInterestedPartnerAssignConfirm',
         'click .desinterested_partner_assign_confirm': '_onDesinterestedPartnerAssignConfirm',
         'click .opp-stage-button': '_onOppStageButtonClick',

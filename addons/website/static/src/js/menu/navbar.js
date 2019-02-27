@@ -1,24 +1,24 @@
 odoo.define('website.navbar', function (require) {
 'use strict';
 
-var rootWidget = require('web_editor.root_widget');
+var publicWidget = require('web.public.widget');
 var concurrency = require('web.concurrency');
 var Widget = require('web.Widget');
-var websiteRootData = require('website.WebsiteRoot');
+var websiteRootData = require('website.root');
 
-var websiteNavbarRegistry = new rootWidget.RootWidgetRegistry();
+var websiteNavbarRegistry = new publicWidget.RootWidgetRegistry();
 
-var WebsiteNavbar = rootWidget.RootWidget.extend({
-    events: _.extend({}, rootWidget.RootWidget.prototype.events || {}, {
+var WebsiteNavbar = publicWidget.RootWidget.extend({
+    events: _.extend({}, publicWidget.RootWidget.prototype.events || {}, {
         'click [data-action]': '_onActionMenuClick',
         'mouseover > ul > li.dropdown:not(.show)': '_onMenuHovered',
         'click .o_mobile_menu_toggle': '_onMobileMenuToggleClick',
     }),
-    custom_events: _.extend({}, rootWidget.RootWidget.prototype.custom_events || {}, {
-        action_demand: '_onActionDemand',
-        edit_mode: '_onEditMode',
-        readonly_mode: '_onReadonlyMode',
-        ready_to_save: '_onSave',
+    custom_events: _.extend({}, publicWidget.RootWidget.prototype.custom_events || {}, {
+        'action_demand': '_onActionDemand',
+        'edit_mode': '_onEditMode',
+        'readonly_mode': '_onReadonlyMode',
+        'ready_to_save': '_onSave',
     }),
 
     /**

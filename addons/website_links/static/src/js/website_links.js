@@ -2,12 +2,11 @@ odoo.define('website_links.website_links', function (require) {
 'use strict';
 
 var core = require('web.core');
-var Widget = require('web.Widget');
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
 var _t = core._t;
 
-var SelectBox = Widget.extend({
+var SelectBox = publicWidget.Widget.extend({
     xmlDependencies: ['/website_links/static/src/xml/recent_link.xml'],
     events: {
         'change': '_onChange',
@@ -105,7 +104,7 @@ var SelectBox = Widget.extend({
     },
 });
 
-var RecentLinkBox = Widget.extend({
+var RecentLinkBox = publicWidget.Widget.extend({
     template: 'website_links.RecentLink',
     events: {
         'click .btn_shorten_url_clipboard': '_toggleCopyButton',
@@ -278,7 +277,7 @@ var RecentLinkBox = Widget.extend({
     },
 });
 
-var RecentLinks = Widget.extend({
+var RecentLinks = publicWidget.Widget.extend({
 
     //--------------------------------------------------------------------------
     // Private
@@ -337,9 +336,9 @@ var RecentLinks = Widget.extend({
     },
 });
 
-sAnimations.registry.websiteLinks = sAnimations.Class.extend({
+publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
     selector: '.o_website_links_create_tracked_url',
-    read_events: {
+    events: {
         'click #filter-newest-links': '_onFilterNewestLinksClick',
         'click #filter-most-clicked-links': '_onFilterMostClickedLinksClick',
         'click #filter-recently-used-links': '_onFilterRecentlyUsedLinksClick',

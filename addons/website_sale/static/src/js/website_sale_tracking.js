@@ -1,10 +1,10 @@
 odoo.define('website_sale.tracking', function (require) {
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimations.registry.websiteSaleTracking = sAnimations.Class.extend({
+publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
-    read_events: {
+    events: {
         'click form[action="/shop/cart/update"] a.a-submit': '_onAddProductIntoCart',
         'click a[href="/shop/checkout"]': '_onCheckoutStart',
         'click div.oe_cart a[href^="/web?redirect"][href$="/shop/checkout"]': '_onCustomerSignin',
@@ -17,10 +17,6 @@ sAnimations.registry.websiteSaleTracking = sAnimations.Class.extend({
      */
     start: function () {
         var self = this;
-        var def = this._super.apply(this, arguments);
-        if (this.editableMode) {
-            return def;
-        }
 
         // Watching a product
         if (this.$el.is('#product_detail')) {
@@ -50,7 +46,7 @@ sAnimations.registry.websiteSaleTracking = sAnimations.Class.extend({
             });
         }
 
-        return def;
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -61,7 +57,7 @@ sAnimations.registry.websiteSaleTracking = sAnimations.Class.extend({
      * @private
      */
     _trackGA: function () {
-        websiteGA = window.ga || function () {};
+        var websiteGA = window.ga || function () {};
         websiteGA.apply(this, arguments);
     },
     /**
@@ -114,5 +110,4 @@ sAnimations.registry.websiteSaleTracking = sAnimations.Class.extend({
         this._vpv('/stats/ecom/order_payment/' + method);
     },
 });
-
 });

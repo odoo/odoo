@@ -2,10 +2,12 @@ odoo.define('mass_mailing.website_integration', function (require) {
 "use strict";
 
 var utils = require('web.utils');
-var sAnimation = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimation.registry.subscribe = sAnimation.Class.extend({
+publicWidget.registry.subscribe = publicWidget.Widget.extend({
     selector: ".js_subscribe",
+    disabledInEditableMode: false,
+
     start: function () {
         var self = this;
 
@@ -63,8 +65,10 @@ sAnimation.registry.subscribe = sAnimation.Class.extend({
     },
 });
 
-sAnimation.registry.newsletter_popup = sAnimation.Class.extend({
+publicWidget.registry.newsletter_popup = publicWidget.Widget.extend({
     selector: ".o_newsletter_popup",
+    disabledInEditableMode: false,
+
     start: function () {
         var self = this;
 

@@ -1,12 +1,8 @@
-odoo.define('portal.chatter', function(require) {
+odoo.define('portal.chatter', function (require) {
 'use strict';
 
-var base = require('web_editor.base');
-var ajax = require('web.ajax');
 var core = require('web.core');
-var dom = require('web.dom');
-var Widget = require('web.Widget');
-var rpc = require('web.rpc');
+var publicWidget = require('web.public.widget');
 var time = require('web.time');
 
 var qweb = core.qweb;
@@ -18,12 +14,17 @@ var _t = core._t;
  * Display the composer (according to access right)
  *
  */
-var PortalComposer = Widget.extend({
+var PortalComposer = publicWidget.Widget.extend({
     template: 'portal.Composer',
+    xmlDependencies: ['/portal/static/src/xml/portal_chatter.xml'],
     events: {
-        'click .o_portal_chatter_composer_btn': '_onSubmitButtonClick',
+        'click .o_portal_chatter_composer_btn': 'async _onSubmitButtonClick',
     },
-    init: function(parent, options){
+
+    /**
+     * @constructor
+     */
+    init: function (parent, options) {
         this._super.apply(this, arguments);
         this.options = _.defaults(options || {}, {
             'allow_composer': true,
@@ -33,12 +34,12 @@ var PortalComposer = Widget.extend({
             'res_model': false,
             'res_id': false,
         });
-
-        // TODO simplify this using the 'async' keyword in the events
-        // property definition as soon as this widget is converted in
-        // frontend widget.
-        this._onSubmitButtonClick = dom.makeButtonHandler(this._onSubmitButtonClick);
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
     /**
      * @private
      */
@@ -56,20 +57,23 @@ var PortalComposer = Widget.extend({
  * - Display chatter: pager, total message, composer (according to access right)
  * - Provider API to filter displayed messages
  */
-var PortalChatter = Widget.extend({
+var PortalChatter = publicWidget.Widget.extend({
     template: 'portal.Chatter',
+    xmlDependencies: ['/portal/static/src/xml/portal_chatter.xml'],
     events: {
         "click .o_portal_chatter_pager_btn": '_onClickPager',
     },
-    xmlDependencies: ['/portal/static/src/xml/portal_chatter.xml'],
 
-    init: function(parent, options){
+    /**
+     * @constructor
+     */
+    init: function (parent, options) {
         var self = this;
         this.options = {};
         this._super.apply(this, arguments);
 
         // underscorize the camelcased option keys
-        _.each(options, function(val, key) {
+        _.each(options, function (val, key) {
             self.options[_.str.underscored(key)] = val;
         });
         // set default options
@@ -92,22 +96,16 @@ var PortalChatter = Widget.extend({
         this.set('message_count', this.options['message_count']);
         this.set('pager', {});
         this.set('domain', this.options['domain']);
-        this._current_page = this.options['pager_start'];
+        this._currentPage = this.options['pager_start'];
     },
-    willStart: function(){
-        var self = this;
-        // load qweb template and init data
+    /**
+     * @override
+     */
+    willStart: function () {
         return $.when(
-            rpc.query({
-                route: '/mail/chatter_init',
-                params: this._messageFetchPrepareParams()
-            }),
             this._super.apply(this, arguments),
-        ).then(function(result){
-            self.result = result;
-            self.options = _.extend(self.options, self.result['options'] || {});
-            return result;
-        });
+            this._chatterInit()
+        );
     },
     /**
      * @override
@@ -115,9 +113,9 @@ var PortalChatter = Widget.extend({
     start: function () {
         // bind events
         this.on("change:messages", this, this._renderMessages);
-        this.on("change:message_count", this, function(){
+        this.on("change:message_count", this, function () {
             this._renderMessageCount();
-            this.set('pager', this._pager(this._current_page));
+            this.set('pager', this._pager(this._currentPage));
         });
         this.on("change:pager", this, this._renderPager);
         this.on("change:domain", this, this._onChangeDomain);
@@ -149,12 +147,12 @@ var PortalChatter = Widget.extend({
      * @param {Array} domain
      * @returns {Deferred}
      */
-    messageFetch: function(domain){
+    messageFetch: function (domain) {
         var self = this;
-        return rpc.query({
+        return this._rpc({
             route: '/mail/chatter_fetch',
-            params: self._messageFetchPrepareParams()
-        }).then(function(result){
+            params: self._messageFetchPrepareParams(),
+        }).then(function (result) {
             self.set('messages', self.preprocessMessages(result['messages']));
             self.set('message_count', result['message_count']);
         });
@@ -165,8 +163,8 @@ var PortalChatter = Widget.extend({
      * @param {Array<Object>}
      * @returns {Array}
      */
-    preprocessMessages: function(messages){
-        _.each(messages, function(m){
+    preprocessMessages: function (messages) {
+        _.each(messages, function (m) {
             m['author_avatar_url'] = _.str.sprintf('/web/image/%s/%s/author_avatar/50x50', 'mail.message', m.id);
             m['published_date_str'] = _.str.sprintf(_t('Published on %s'), moment(time.str_to_datetime(m.date)).format('MMMM Do YYYY, h:mm:ss a'));
         });
@@ -178,32 +176,47 @@ var PortalChatter = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @private
+     * @returns {Deferred}
+     */
+    _chatterInit: function () {
+        var self = this;
+        return this._rpc({
+            route: '/mail/chatter_init',
+            params: this._messageFetchPrepareParams()
+        }).then(function (result) {
+            self.result = result;
+            self.options = _.extend(self.options, self.result['options'] || {});
+            return result;
+        });
+    },
+    /**
      * Change the current page by refreshing current domain
      *
      * @private
      * @param {Number} page
      * @param {Array} domain
      */
-    _changeCurrentPage: function(page, domain){
-        this._current_page = page;
+    _changeCurrentPage: function (page, domain) {
+        this._currentPage = page;
         var d = domain ? domain : _.clone(this.get('domain'));
         this.set('domain', d); // trigger fetch message
     },
-    _messageFetchPrepareParams: function(){
+    _messageFetchPrepareParams: function () {
         var self = this;
         var data = {
             'res_model': this.options['res_model'],
             'res_id': this.options['res_id'],
             'limit': this.options['pager_step'],
-            'offset': (this._current_page-1) * this.options['pager_step'],
+            'offset': (this._currentPage - 1) * this.options['pager_step'],
             'allow_composer': this.options['allow_composer'],
         };
         // add token field to allow to post comment without being logged
-        if(self.options['token']){
+        if (self.options['token']) {
             data['token'] = self.options['token'];
         }
         // add domain
-        if(this.get('domain')){
+        if (this.get('domain')) {
             data['domain'] = this.get('domain');
         }
         return data;
@@ -215,34 +228,34 @@ var PortalChatter = Widget.extend({
      * @param {Number} page
      * @returns {Object}
      */
-    _pager: function(page){
-        var page = page || 1;
+    _pager: function (page) {
+        page = page || 1;
         var total = this.get('message_count');
         var scope = this.options['pager_scope'];
         var step = this.options['pager_step'];
 
         // Compute Pager
-        var page_count = Math.ceil(parseFloat(total) / step);
+        var pageCount = Math.ceil(parseFloat(total) / step);
 
-        var page = Math.max(1, Math.min(parseInt(page), page_count));
+        page = Math.max(1, Math.min(parseInt(page), pageCount));
         scope -= 1;
 
-        var pmin = Math.max(page - parseInt(Math.floor(scope/2)), 1);
-        var pmax = Math.min(pmin + scope, page_count);
+        var pmin = Math.max(page - parseInt(Math.floor(scope / 2)), 1);
+        var pmax = Math.min(pmin + scope, pageCount);
 
-        if(pmax - scope > 0){
+        if (pmax - scope > 0) {
             pmin = pmax - scope;
-        }else{
+        } else {
             pmin = 1;
         }
 
         var pages = [];
-        _.each(_.range(pmin, pmax+1), function(index){
+        _.each(_.range(pmin, pmax + 1), function (index) {
             pages.push(index);
         });
 
         return {
-            "page_count": page_count,
+            "page_count": pageCount,
             "offset": (page - 1) * step,
             "page": page,
             "page_start": pmin,
@@ -252,13 +265,13 @@ var PortalChatter = Widget.extend({
             "pages": pages
         };
     },
-    _renderMessages: function(){
+    _renderMessages: function () {
         this.$('.o_portal_chatter_messages').html(qweb.render("portal.chatter_messages", {widget: this}));
     },
-    _renderMessageCount: function(){
+    _renderMessageCount: function () {
         this.$('.o_message_counter').replaceWith(qweb.render("portal.chatter_message_count", {widget: this}));
     },
-    _renderPager: function(){
+    _renderPager: function () {
         this.$('.o_portal_chatter_pager').replaceWith(qweb.render("portal.pager", {widget: this}));
     },
 
@@ -266,10 +279,10 @@ var PortalChatter = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
-    _onChangeDomain: function(){
+    _onChangeDomain: function () {
         var self = this;
-        this.messageFetch().then(function(){
-            var p = self._current_page;
+        this.messageFetch().then(function () {
+            var p = self._currentPage;
             self.set('pager', self._pager(p));
         });
     },
@@ -277,24 +290,29 @@ var PortalChatter = Widget.extend({
      * @private
      * @param {MouseEvent} event
      */
-    _onClickPager: function(ev){
+    _onClickPager: function (ev) {
         ev.preventDefault();
         var page = $(ev.currentTarget).data('page');
         this._changeCurrentPage(page);
     },
 });
 
-base.ready().then(function () {
-    $('.o_portal_chatter').each(function (index) {
-        var $elem = $(this);
-        var mail_thread = new PortalChatter(null, $elem.data());
-        mail_thread.appendTo($elem);
-    });
+publicWidget.registry.portalChatter = publicWidget.Widget.extend({
+    selector: '.o_portal_chatter',
+
+    /**
+     * @override
+     */
+    start: function () {
+        var defs = [this._super.apply(this, arguments)];
+        var chatter = new PortalChatter(this, this.$el.data());
+        defs.push(chatter.appendTo(this.$el));
+        return $.when.apply($, defs);
+    },
 });
 
 return {
     PortalComposer: PortalComposer,
     PortalChatter: PortalChatter,
 };
-
 });

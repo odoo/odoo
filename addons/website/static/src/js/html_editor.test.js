@@ -2,12 +2,10 @@ odoo.define('website.test.html_editor', function (require) {
 'use strict';
 
 var tour = require('web_tour.tour');
-var base = require('web_editor.base');
 
 tour.register('html_editor_multiple_templates', {
     test: true,
     url: '/aboutus',
-    wait_for: base.ready(),
 },
     [
         // 1. Edit the page through Edit Mode, it will COW the view
@@ -77,7 +75,6 @@ tour.register('html_editor_multiple_templates', {
 tour.register('test_html_editor_scss', {
     test: true,
     url: '/aboutus',
-    wait_for: base.ready(),
 },
     [
         // 1. Open Html Editor and select a scss file

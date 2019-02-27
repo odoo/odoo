@@ -4,7 +4,7 @@ odoo.define('sale.ProductConfiguratorFormRenderer', function (require) {
 var FormRenderer = require('web.FormRenderer');
 var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
 
-var ProductConfiguratorFormRenderer = FormRenderer.extend(ProductConfiguratorMixin ,{
+var ProductConfiguratorFormRenderer = FormRenderer.extend(ProductConfiguratorMixin, {
     /**
      * @override
      */

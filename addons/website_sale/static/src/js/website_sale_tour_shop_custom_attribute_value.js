@@ -2,12 +2,10 @@ odoo.define("website_sale.tour_shop_custom_attribute_value", function (require) 
     "use strict";
 
     var tour = require("web_tour.tour");
-    var base = require("web_editor.base");
 
     tour.register("shop_custom_attribute_value", {
         url: "/shop?search=Customizable Desk",
         test: true,
-        wait_for: base.ready()
     }, [{
         content: "click on Customizable Desk",
         trigger: '.oe_product_cart a:contains("Customizable Desk")',

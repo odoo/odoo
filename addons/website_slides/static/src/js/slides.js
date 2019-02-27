@@ -1,13 +1,11 @@
 odoo.define('website_slides.slides', function (require) {
 'use strict';
 
+var publicWidget = require('web.public.widget');
 var time = require('web.time');
-var sAnimations = require('website.content.snippets.animation');
 
-sAnimations.registry.websiteSlides = sAnimations.Class.extend({
+publicWidget.registry.websiteSlides = publicWidget.Widget.extend({
     selector: '#wrapwrap',
-    read_events: {
-    },
 
     /**
      * @override
@@ -34,7 +32,7 @@ sAnimations.registry.websiteSlides = sAnimations.Class.extend({
     },
 });
 
-return sAnimations.registry.websiteSlides;
+return publicWidget.registry.websiteSlides;
 
 });
 
@@ -43,11 +41,10 @@ return sAnimations.registry.websiteSlides;
 odoo.define('website_slides.slides_embed', function (require) {
 'use strict';
 
-var Widget = require('web.Widget');
+var publicWidget = require('web.public.widget');
 require('website_slides.slides');
-var sAnimations = require('website.content.snippets.animation');
 
-var SlideSocialEmbed = Widget.extend({
+var SlideSocialEmbed = publicWidget.Widget.extend({
     events: {
         'change input': '_onChangePage',
     },
@@ -94,7 +91,7 @@ var SlideSocialEmbed = Widget.extend({
     },
 });
 
-sAnimations.registry.websiteSlidesEmbed = sAnimations.Class.extend({
+publicWidget.registry.websiteSlidesEmbed = publicWidget.Widget.extend({
     selector: '#wrapwrap',
 
     /**

@@ -1,10 +1,11 @@
 odoo.define('website_mail_channel.snippet', function (require) {
 'use strict';
 
-var sAnimation = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimation.registry.follow_alias = sAnimation.Class.extend({
+publicWidget.registry.follow_alias = publicWidget.Widget.extend({
     selector: ".js_follow_alias",
+    disabledInEditableMode: false,
     start: function () {
         var self = this;
         this.is_user = false;

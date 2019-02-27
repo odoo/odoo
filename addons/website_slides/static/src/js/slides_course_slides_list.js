@@ -1,11 +1,11 @@
 odoo.define('website_slides.slideslist', function (require) {
     'use strict';
-    var sAnimations = require('website.content.snippets.animation');
-    var Widget = require('web.Widget');
+
+    var publicWidget = require('web.public.widget');
 
     var SlideUpload = require('website_slides.upload_modal');
 
-    var List = Widget.extend({
+    var List = publicWidget.Widget.extend({
         init: function (el){
             this._super.apply(this,arguments);
             this.draggedElement = undefined;
@@ -236,7 +236,7 @@ odoo.define('website_slides.slideslist', function (require) {
         }
     })
 
-    sAnimations.registry.websiteSlidesCourseSlidesList = Widget.extend({
+    publicWidget.registry.websiteSlidesCourseSlidesList = publicWidget.Widget.extend({
         selector: '.oe_js_course_slides_list',
         xmlDependencies: ['/website_slides/static/src/xml/website_slides_upload.xml'],
         init: function (el){
