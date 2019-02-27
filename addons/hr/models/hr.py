@@ -388,6 +388,12 @@ class Department(models.Model):
     note = fields.Text('Note')
     color = fields.Integer('Color Index')
 
+    @api.multi
+    def name_get(self):
+        if not self.env.context.get('hierarchical_naming', True):
+            return [(record.id, record.name) for record in self]
+        return super(Department, self).name_get()
+
     @api.depends('name', 'parent_id.complete_name')
     def _compute_complete_name(self):
         for department in self:
