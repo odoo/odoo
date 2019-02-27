@@ -479,12 +479,14 @@
 </template>
 
 <template id="slide_icon">
-    <i t-if="slide.slide_type == 'document'" class="fa fa-file-pdf-o mr-2 text-muted"></i>
-    <i t-if="slide.slide_type == 'infographic'" class="fa fa-file-picture-o mr-2 text-muted"></i>
-    <i t-if="slide.slide_type == 'video'" class="fa fa-play-circle mr-2 text-muted"></i>
-    <i t-if="slide.slide_type == 'link'" class="fa fa-file-code-o mr-2 text-muted"></i>
-    <i t-if="slide.slide_type == 'webpage'" class="fa fa-file-text mr-2 text-muted"></i>
-    <i t-if="slide.slide_type == 'quiz'" class="fa fa-question-circle mr-2 text-muted"></i>
+    <t t-set="icon_class" t-value="icon_class if icon_class else 'mr-2 text-muted'"/>
+    <i t-if="slide.slide_type == 'document'" t-att-class="'fa fa-file-pdf-o %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'presentation'" t-att-class="'fa fa-file-pdf-o %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'infographic'" t-att-class="'fa fa-file-picture-o %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'video'" t-att-class="'fa fa-play-circle %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'link'" t-att-class="'fa fa-file-code-o %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'webpage'" t-att-class="'fa fa-file-text %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'quiz'" t-att-class="'fa fa-question-circle %s' % icon_class"></i>
 </template>
 
 </data></odoo>
