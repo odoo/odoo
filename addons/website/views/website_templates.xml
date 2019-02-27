@@ -1027,6 +1027,11 @@
             <script type="text/javascript" src="/web/static/lib/bootstrap/js/util.js"/>
             <script type="text/javascript" src="/web/static/lib/bootstrap/js/collapse.js"/>
             <script type="text/javascript" src="/web/static/lib/bootstrap/js/modal.js"/>
+            <style>
+                html {
+                    font-size: 14px;
+                }
+            </style>
 
             <t t-if='views'>
                 <script>
@@ -1061,13 +1066,17 @@
                     <form role="form">
                         <div class="modal-content">
                             <header class="modal-header">
-                                <h3 class="modal-title">Reset templates</h3>
+                                <h4 class="modal-title">Reset templates</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                             </header>
                             <main class="modal-body">
                                 <div class="form-group row mb0">
-                                    <label for="page-name" class="col-md-9 col-form-label">
+                                    <label for="page-name" class="col-md-12 col-form-label">
                                         <p>The selected templates will be reset to their factory settings.</p>
+                                    </label>
+                                </div>
+                                <div class="form-group row mb0">
+                                    <label for="page-name" class="col-md-9 col-form-label">
                                         <p>Type '<i class="confirm_word">yes</i>' in the box below if you want to confirm.</p>
                                     </label>
                                     <div class="col-md-3 mt16">
@@ -1099,7 +1108,7 @@
                 </header>
                 <main>
                     <div class="oe_structure">
-                        <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
+                        <h2 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h2>
                     </div>
                     <div class="container" t-if="views and editable">
                         <div class="alert alert-danger" t-if="debug" role="alert">
