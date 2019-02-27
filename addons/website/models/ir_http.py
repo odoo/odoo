@@ -281,10 +281,6 @@ class Http(models.AbstractModel):
                                     values['views'] = View._views_get(exception_template).filtered(
                                         lambda v: line in v.arch
                                     )
-                        # Keep only views that we can reset
-                        values['views'] = values['views'].filtered(
-                            lambda view: view._get_original_view().arch_fs or 'oe_structure' in view.key
-                        )
                         # Needed to show reset template on translated pages (`_prepare_qcontext` will set it for main lang)
                         values['editable'] = request.uid and request.website.is_publisher()
                 elif code == 403:
