@@ -27,7 +27,7 @@ class MailThread(models.AbstractModel):
     def message_post_send_sms(self, sms_message, numbers=None, partners=None, note_msg=None, log_error=False):
         """ Send an SMS text message and post an internal note in the chatter if successfull
             :param sms_message: plaintext message to send by sms
-            :param partners: the numbers to send to, if none are given it will take those
+            :param numbers: the numbers to send to, if none are given it will take those
                                 from partners or _get_default_sms_recipients
             :param partners: the recipients partners, if none are given it will take those
                                 from _get_default_sms_recipients, this argument
@@ -40,7 +40,7 @@ class MailThread(models.AbstractModel):
                 partners = self._get_default_sms_recipients()
 
                 # Collect numbers, we will consider the message to be sent if at least one number can be found
-                numbers = list(set([i.mobile for i in partners if i.mobile]))
+                numbers = list(set([i.mobile or i.phone for i in partners if i.mobile or i.phone]))
 
         if numbers:
             try:
@@ -48,12 +48,12 @@ class MailThread(models.AbstractModel):
                 mail_message = note_msg or _('SMS message sent: %s') % sms_message
 
             except InsufficientCreditError as e:
-                if not log_error:
-                    raise e
+                # if not log_error:
+                #     raise e
                 mail_message = _('Insufficient credit, unable to send SMS message: %s') % sms_message
         else:
             mail_message = _('No mobile number defined, unable to send SMS message: %s') % sms_message
 
         for thread in self:
-            thread.message_post(body=mail_message)
+            thread.message_post(body=mail_message, message_type='sms')
         return False

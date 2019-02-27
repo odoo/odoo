@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sms_resend" model="ir.ui.view">
+        <field name="name">sms.resend.form</field>
+        <field name="model">sms.resend</field>
+        <field name="arch" type="xml">
+            <form>
+                <p>The mobile number is either missing or in the wrong format (E.164 international format is required).<br/>
+                    Update the mobile number here and re-send the SMS text message.
+                </p>
+                <group>
+                    <group>
+                        <field name="partner_name" />
+                    </group>
+                    <group>
+                        <field name="number" />
+                    </group>
+                </group>
+                <footer>
+                    <button string="RE-SEND SMS" type="object" name="update_number_save" class="btn-primary"/>
+                    <button string="Cancel SMS" type="object" name="update_number_cancel" class="btn-secondary"/>
+                    <button string="Close" special='cancel' class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="sms_resend_action" model="ir.actions.act_window">
+        <field name="name">Failed SMS</field>
+        <field name="res_model">sms.resend</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

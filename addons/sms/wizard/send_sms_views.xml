@@ -8,8 +8,15 @@
             <form string="Send an SMS">
                 <sheet>
                     <group>
-                        <field name="recipients"/>
                         <field name="message" widget="sms_widget"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="sendto" readonly="True"/>
+                        </group>
+                        <group>
+                            <field name="template"/>
+                        </group>
                     </group>
                 </sheet>
                 <footer>
@@ -33,7 +40,7 @@
 
     <!-- Add action entry in the Action Menu for Partners -->
     <act_window id="send_sms_action"
-        name="Send SMS"
+        name="Send SMS Text Message"
         src_model="res.partner"
         res_model="sms.send_sms"
         view_type="form"
