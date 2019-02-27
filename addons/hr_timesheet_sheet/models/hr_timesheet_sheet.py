@@ -46,7 +46,7 @@ class HrTimesheetSheet(models.Model):
 
     name = fields.Char(string="Note", states={'confirm': [('readonly', True)], 'done': [('readonly', True)]})
     employee_id = fields.Many2one('hr.employee', string='Employee', default=_default_employee, required=True)
-    user_id = fields.Many2one('res.users', related='employee_id.user_id', string='User', store=True, readonly=True)
+    user_id = fields.Many2one('res.users', related='employee_id.user_id', string='User', store=True, readonly=True, compute_sudo=True)
     date_from = fields.Date(string='Date From', default=_default_date_from, required=True,
         index=True, readonly=True, states={'new': [('readonly', False)]})
     date_to = fields.Date(string='Date To', default=_default_date_to, required=True,
