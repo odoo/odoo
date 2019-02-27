@@ -3,6 +3,10 @@
 // Those will affect the way bootstrap is generated wherever bootstrap is used
 //------------------------------------------------------------------------------
 
+// This variable must be defined here instead of bootstrap overridden files
+// otherwise we will have deprecation messages for assets_common generation
+$enable-deprecation-messages: false !default;
+
 // Override color-yiq function to handle the alpha component of colors and
 // automatic threshold
 @function color-yiq($color, $dark: $yiq-text-dark, $light: $yiq-text-light, $background: $body-bg, $cross-mix: true) {

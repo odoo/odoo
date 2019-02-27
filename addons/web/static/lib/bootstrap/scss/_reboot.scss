@@ -46,7 +46,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 body {
   margin: 0; // 1
   font-family: $font-family-base;
-  font-size: $font-size-base;
+  @include font-size($font-size-base);
   font-weight: $font-weight-base;
   line-height: $line-height-base;
   color: $body-color;
@@ -155,7 +155,7 @@ strong {
 }
 
 small {
-  font-size: 80%; // Add the correct font size in all browsers
+  @include font-size(80%); // Add the correct font size in all browsers
 }
 
 //
@@ -166,7 +166,7 @@ small {
 sub,
 sup {
   position: relative;
-  font-size: 75%;
+  @include font-size(75%);
   line-height: 0;
   vertical-align: baseline;
 }
@@ -220,7 +220,7 @@ code,
 kbd,
 samp {
   font-family: $font-family-monospace;
-  font-size: 1em; // Correct the odd `em` font sizing in all browsers.
+  @include font-size(1em); // Correct the odd `em` font sizing in all browsers.
 }
 
 pre {
@@ -297,6 +297,7 @@ label {
 //
 // Details at https://github.com/twbs/bootstrap/issues/24093
 button {
+  // stylelint-disable-next-line property-blacklist
   border-radius: 0;
 }
 
@@ -316,7 +317,7 @@ optgroup,
 textarea {
   margin: 0; // Remove the margin in Firefox and Safari
   font-family: inherit;
-  font-size: inherit;
+  @include font-size(inherit);
   line-height: inherit;
 }
 
@@ -330,6 +331,14 @@ select {
   text-transform: none; // Remove the inheritance of text transform in Firefox
 }
 
+// Remove the inheritance of word-wrap in Safari.
+//
+// Details at https://github.com/twbs/bootstrap/issues/24990
+select {
+  word-wrap: normal;
+}
+
+
 // 1. Prevent a WebKit bug where (2) destroys native `audio` and `video`
 //    controls in Android 4.
 // 2. Correct the inability to style clickable types in iOS and Safari.
@@ -338,6 +347,18 @@ button,
 [type="reset"],
 [type="submit"] {
   -webkit-appearance: button; // 2
+}
+
+// Opinionated: add "hand" cursor to non-disabled button elements.
+@if $enable-pointer-cursor-for-buttons {
+  button,
+  [type="button"],
+  [type="reset"],
+  [type="submit"] {
+    &:not(:disabled) {
+      cursor: pointer;
+    }
+  }
 }
 
 // Remove inner border and padding from Firefox, but don't restore the outline like Normalize.
@@ -395,7 +416,7 @@ legend {
   max-width: 100%; // 1
   padding: 0;
   margin-bottom: .5rem;
-  font-size: 1.5rem;
+  @include font-size(1.5rem);
   line-height: inherit;
   color: inherit; // 2
   white-space: normal; // 1
@@ -421,7 +442,7 @@ progress {
 }
 
 //
-// Remove the inner padding and cancel buttons in Chrome and Safari on macOS.
+// Remove the inner padding in Chrome and Safari on macOS.
 //
 
 [type="search"]::-webkit-search-decoration {
