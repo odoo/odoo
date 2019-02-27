@@ -64,3 +64,12 @@ class SaleOrderLine(models.Model):
     @api.onchange('event_ticket_id')
     def _onchange_event_ticket_id(self):
         self.price_unit = (self.event_id.company_id or self.env.user.company_id).currency_id.compute(self.event_ticket_id.price, self.order_id.currency_id)
+
+    @api.multi
+    @api.onchange('product_id')
+    def product_id_change(self):
+        super(SaleOrderLine, self).product_id_change()
+        self.event_id = None
+        self.event_ticket_id = None
+        if self.product_id.event_ok:
+            self.price_unit = 0.0
