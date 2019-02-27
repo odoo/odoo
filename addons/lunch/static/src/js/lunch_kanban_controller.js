@@ -67,7 +67,23 @@ var LunchKanbanController = KanbanController.extend({
             },
         }).then(function (data) {
             self.widgetData = data;
-            self.model._updateLocation(data.user_location[0]);
+            return self.model._updateLocation(data.user_location[0]);
+        });
+    },
+    /**
+     * Renders and appends the lunch banner widget.
+     *
+     * @private
+     */
+    _renderLunchKanbanWidget: function () {
+        var self = this;
+        if (this.widget) {
+            this.widget.destroy();
+        }
+        this.widgetData.wallet = parseFloat(this.widgetData.wallet).toFixed(2);
+        this.widget = new LunchKanbanWidget(this, _.extend(this.widgetData, {edit: this.editMode}));
+        return this.widget.appendTo(document.createDocumentFragment()).then(function () {
+            self.$('.o_lunch_kanban').prepend(self.widget.$el);
         });
     },
     _showPaymentDialog: function (title) {
@@ -89,19 +105,8 @@ var LunchKanbanController = KanbanController.extend({
      * @private
      */
     _update: function () {
-        var self = this;
-
-        var def = this._fetchWidgetData().then(function () {
-            if (self.widget) {
-                self.widget.destroy();
-            }
-            self.widgetData.wallet = parseFloat(self.widgetData.wallet).toFixed(2);
-            self.widget = new LunchKanbanWidget(self, _.extend(self.widgetData, {edit: self.editMode}));
-            return self.widget.appendTo(document.createDocumentFragment()).then(function () {
-                self.$('.o_lunch_kanban').prepend(self.widget.$el);
-            });
-        });
-        return $.when(def, this._super.apply(self, arguments));
+        var def = this._fetchWidgetData().then(this._renderLunchKanbanWidget.bind(this));
+        return $.when(def, this._super.apply(this, arguments));
     },
     /**
      * Override to add the location domain (coming from the lunchKanbanWidget)
