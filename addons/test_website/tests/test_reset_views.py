@@ -23,7 +23,7 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
         self.authenticate("admin", "admin")
         resp = self.url_open(page)
         self.assertEqual(resp.status_code, 500, "Waiting 500")
-        self.assertTrue('<button id="reset_templates_button"' in resp.text)
+        self.assertTrue('<button data-mode="soft" class="reset_templates_button' in resp.text)
         data = {'templates': [self.find_template(resp)], 'redirect': page}
         resp = self.url_open('/website/reset_templates', data)
         self.assertEqual(resp.status_code, 200, "Waiting 200")
