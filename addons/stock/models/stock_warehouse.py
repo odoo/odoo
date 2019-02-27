@@ -9,6 +9,7 @@ from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.osv import expression
 
 import logging
 
@@ -936,10 +937,22 @@ class Orderpoint(models.Model):
     lead_type = fields.Selection(
         [('net', 'Day(s) to get the products'), ('supplier', 'Day(s) to purchase')], 'Lead Type',
         required=True, default='supplier')
+    allowed_location_ids = fields.One2many(comodel_name='stock.location', compute='_compute_allowed_location_ids')
 
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
     ]
+
+    @api.depends('warehouse_id')
+    def _compute_allowed_location_ids(self):
+        loc_domain = [('usage', 'in', ('internal', 'view'))]
+        # We want to keep only the locations
+        #  - strictly belonging to our warehouse
+        #  - not belonging to any warehouses
+        other_warehouses = self.env['stock.warehouse'].search([('id', '!=', self.warehouse_id.id)])
+        for view_location_id in other_warehouses.mapped('view_location_id'):
+            loc_domain = expression.AND([loc_domain, ['!', ('id', 'child_of', view_location_id.id)]])
+        self.allowed_location_ids = self.env['stock.location'].search(loc_domain)
 
     def _quantity_in_progress(self):
         """Return Quantities that are not yet in virtual stock but should be deduced from orderpoint rule
