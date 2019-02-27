@@ -434,7 +434,7 @@ class Survey(models.Model):
     def action_send_survey(self):
         """ Open a window to compose an email, pre-filled with the survey message """
         # Ensure that this survey has at least one page with at least one question.
-        if not self.page_ids or not [page.question_ids for page in self.page_ids if page.question_ids]:
+        if (not self.page_ids and self.questions_layout != 'page_per_question') or not self.question_ids:
             raise UserError(_('You cannot send an invitation for a survey that has no questions.'))
 
         if self.stage_id.closed:
