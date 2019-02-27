@@ -36,7 +36,7 @@ QUnit.module('widgets', {
 
 
     QUnit.test('exporting all data in list view', function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         var blockUI = framework.blockUI;
         var unblockUI = framework.unblockUI;
@@ -89,6 +89,7 @@ QUnit.module('widgets', {
             session: {
                 get_file: function (params) {
                     assert.step(params.url);
+                    assert.deepEqual(JSON.parse(params.data.data).ids, [1]);
                     params.complete();
                 },
             },

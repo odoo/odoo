@@ -275,7 +275,7 @@ var DataExport = Dialog.extend({
         waitFor.push(got_fields);
 
         waitFor.push(this.getParent().getActiveDomain().then(function (domain) {
-            if (domain === undefined) {
+            if (domain === undefined || !domain.length) {
                 self.ids_to_export = self.getParent().getSelectedIds();
                 self.domain = self.record.domain;
             } else {
