@@ -347,12 +347,11 @@ class PurchaseOrderLine(models.Model):
 
     @api.multi
     def _create_stock_moves(self, picking):
-        moves = self.env['stock.move']
-        done = self.env['stock.move'].browse()
+        values = []
         for line in self:
             for val in line._prepare_stock_moves(picking):
-                done += moves.create(val)
-        return done
+                values.append(val)
+        return self.env['stock.move'].create(values)
 
     def _update_received_qty(self):
         for line in self:
