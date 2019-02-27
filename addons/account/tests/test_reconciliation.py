@@ -776,6 +776,47 @@ class TestReconciliation(AccountingTestCase):
         credit_aml.with_context(invoice_id=inv.id).remove_move_reconcile()
         self.assertAlmostEquals(inv.residual, 111)
 
+    def test_revert_in_invoice_move(self):
+        company = self.env.ref('base.main_company')
+        company.tax_cash_basis_journal_id = self.cash_basis_journal
+        company.tax_exibility = True
+        invoice = self.create_invoice(
+            type='in_invoice', invoice_amount=50,
+            currency_id=self.currency_usd_id)
+        invoice.journal_id.update_posted = True
+        invoice.action_cancel()
+        invoice.state = 'draft'
+        invoice.invoice_line_ids.write({
+            'invoice_line_tax_ids': [(6, 0, [self.tax_cash_basis.id])]})
+        invoice.compute_taxes()
+        invoice.action_invoice_open()
+        reversed_move_list = invoice.move_id.reverse_moves()
+        self.assertEqual(len(reversed_move_list), 1)
+
+    def test_revert_out_invoice_move(self):
+        company = self.env.ref('base.main_company')
+        company.tax_cash_basis_journal_id = self.cash_basis_journal
+        company.tax_exibility = True
+        tax_cash_basis_sale = self.tax_cash_basis.copy({
+            'type_tax_use': 'sale',
+            'account_id': self.tax_final_account.id,
+            'cash_basis_account_id': self.tax_waiting_account.id,
+        })
+        self.tax_final_account.reconcile = True
+        invoice = self.create_invoice(
+            type='out_invoice', invoice_amount=50,
+            currency_id=self.currency_usd_id)
+        invoice.journal_id.update_posted = True
+        invoice.action_cancel()
+        invoice.state = 'draft'
+        invoice.invoice_line_ids.write({
+            'invoice_line_tax_ids': [(6, 0, [tax_cash_basis_sale.id])]})
+        invoice.compute_taxes()
+        invoice.action_invoice_open()
+        reversed_move_list = invoice.move_id.reverse_moves()
+        self.assertEqual(len(reversed_move_list), 1)
+
+
     def test_revert_payment_and_reconcile(self):
         payment = self.env['account.payment'].create({
             'payment_method_id': self.inbound_payment_method.id,
