@@ -58,6 +58,7 @@ class AccountInvoice(models.Model):
         super(AccountInvoice, self).invoice_validate()
         for invoice in self:
             if invoice.company_id.country_id != self.env.ref('base.it'):
+                invoice.l10n_it_send_state = None
                 continue
             if invoice.type == 'in_invoice' or invoice.type == 'in_refund':
                 invoice.l10n_it_send_state = "other"
