@@ -4,7 +4,7 @@
         <record model="ir.ui.view" id="ir_mail_server_form">
             <field name="model">ir.mail_server</field>
             <field name="arch" type="xml">
-                <form string="Outgoing Mail Servers">
+                <form string="Email Gateways for Outgoing Messages">
                   <sheet>
                     <group col="4">
                         <field name="name"/>
@@ -28,7 +28,7 @@
         <record model="ir.ui.view" id="ir_mail_server_list">
             <field name="model">ir.mail_server</field>
             <field name="arch" type="xml">
-                <tree string="Outgoing Mail Servers">
+                <tree string="Email Gateways for Outgoing Messages">
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="smtp_host"/>
@@ -40,7 +40,7 @@
         <record id="view_ir_mail_server_search" model="ir.ui.view">
             <field name="model">ir.mail_server</field>
             <field name="arch" type="xml">
-                <search string="Outgoing Mail Servers">
+                <search string="Email Gateways for Outgoing Messages">
                     <field name="name"
                         filter_domain="['|', '|', ('name','ilike',self), ('smtp_host','ilike',self), ('smtp_user','ilike',self)]"
                         string="Outgoing Mail Server"/>
@@ -49,7 +49,7 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="action_ir_mail_server_list">
-            <field name="name">Outgoing Mail Servers</field>
+            <field name="name">Email Gateways for Outgoing Messages</field>
             <field name="res_model">ir.mail_server</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

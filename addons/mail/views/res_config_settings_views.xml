@@ -23,16 +23,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" title="Using your own email server is required to send/receive emails in Community and Enterprise versions. Online users already benefit from a ready-to-use email server (@mycompany.odoo.com).">
-                            <div class="o_setting_left_pane">
-                                <field name="external_email_server_default"/>
-                            </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box" title="Using your own email server is required to send/receive emails in Community and Enterprise versions. Online users already benefit from a ready-to-use email server (@mycompany.odoo.com).">
                             <div class="o_setting_right_pane">
-                                <label for="external_email_server_default"/>
-                                <div class="text-muted" id="external_email_server_default">
-                                    Use your own email servers
+                                <div>
+                                    <strong>Email Servers</strong>
                                 </div>
-                                <div class="content-group"  attrs="{'invisible': [('external_email_server_default', '=', False)]}">
+                                <div class="text-muted">
+                                    Configure the email gateways
+                                </div>
+                                <div class="content-group">
                                     <div class="row mt16" id="mail_alias_domain">
                                         <label for="alias_domain" class="col-lg-3 o_light_label"/>
                                         <field name="alias_domain" placeholder="mycompany.odoo.com"/>

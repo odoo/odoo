@@ -73,7 +73,7 @@
             <field name="name">fetchmail.server.search</field>
             <field name="model">fetchmail.server</field>
             <field name="arch" type="xml">
-                <search string="Search Incoming Mail Servers">
+                <search string="Search Email Gateways for Incoming Messages">
                     <field name="name" string="Incoming Mail Server"/>
                     <filter string="IMAP" name="imap" domain="[('server_type','=','imap')]" help="Server type IMAP."/>
                     <filter string="POP" name="pop" domain="[('server_type','=','pop')]" help="Server type POP."/>
@@ -84,7 +84,7 @@
         </record>
 
         <record id="action_email_server_tree" model="ir.actions.act_window">
-            <field name="name">Incoming Mail Servers</field>
+            <field name="name">Email Gateways for Incoming Messages</field>
             <field name="res_model">fetchmail.server</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -96,7 +96,7 @@
             parent="base.menu_email"
             id="menu_action_fetchmail_server_tree"
             action="action_email_server_tree"
-            name="Incoming Mail Servers"
+            name="Email Gateways for Incoming Messages"
             sequence="14"
             groups="base.group_no_one"
         />

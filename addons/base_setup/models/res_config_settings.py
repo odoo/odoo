@@ -15,10 +15,6 @@ class ResConfigSettings(models.TransientModel):
         "Default Access Rights",
         config_parameter='base_setup.default_user_rights',
         oldname='default_user_rights')
-    external_email_server_default = fields.Boolean(
-        "External Email Servers",
-        config_parameter='base_setup.default_external_email_server',
-        oldname='default_external_email_server')
     module_base_import = fields.Boolean("Allow users to import data from CSV/XLS/XLSX/ODS files")
     module_google_calendar = fields.Boolean(
         string='Allow the users to synchronize their calendar  with Google Calendar')
