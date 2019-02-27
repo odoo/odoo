@@ -338,7 +338,7 @@ class Channel(models.Model):
     def action_channel_invite(self):
         self.ensure_one()
 
-        if self.visibility != 'invite':
+        if self.enroll != 'invite':
             raise UserError(_("You cannot send invitations for channels that are not set as 'invite'."))
 
         template = self.env.ref('website_slides.mail_template_slide_channel_invite', raise_if_not_found=False)

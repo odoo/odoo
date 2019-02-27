@@ -1,0 +1,118 @@
+<?xml version="1.0" ?>
+<odoo><data>
+
+<!-- Slide template for the fullscreen mode -->
+<template id="slide_fullscreen" name="Fullscreen">
+    <t t-call="website.layout">
+        <div class="o_wslides_fs_main"
+            t-att-data-user-id="user.id"
+            t-att-data-course-name="slide.channel_id.name"
+            t-att-data-course-id="slide.channel_id.id"
+            t-att-data-course-slug="slug(slide.channel_id)"
+            t-att-data-slide-id="slide.id">
+            <div class="o_wslides_slide_fs_header">
+                <div>
+                    <a id="fullscreen_sidebar_button" href="#" class="active o_wslides_fs_toggle_sidebar"><i class="fa fa-bars"></i>Lessons</a>
+                    <a class="o_wslides_small_screen" t-attf-href="/slides/slide/#{slug(slide)}" target="new"><i class="fa fa-pencil"></i>write a review</a>
+                    <div class="o_wslides_fs_slide_title"/>
+                </div>
+                <div>
+                    <a t-attf-href="/slides/">back to courses</a>
+                </div>
+            </div>
+            <div class="o_wslides_fs_container">
+                <div class="o_wslides_fs_sidebar">
+                    <ul>
+                        <li>
+                            <div class="o_wslides_fs_sidebar_header">
+                                <a t-attf-href="/slides/#{slug(slide.channel_id)}">
+                                    <span t-field="slide.channel_id.name"/>
+                                </a>
+                                <div class="o_wslides_slide_fs_progress_box">
+                                    <div class="progress o_wslides_fs_sidebar_progressbar">
+                                        <div class="progress-bar" role="progressbar"
+                                            t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100"
+                                            t-att-style="'width: %s' % (slide.channel_id.completion)"/>
+                                    </div>
+                                    <div><span class="o_wslides_progress_percentage" t-esc="slide.channel_id.completion"/>%</div>
+                                </div>
+                            </div>
+                        </li>
+                        <t t-if="uncategorized_slides" t-call="website_slides.slide_fullscreen_sidebar_category">
+                            <t t-set="category_slide_ids" t-value="uncategorized_slides" />
+                        </t>
+                        <t t-foreach="slide.channel_id.category_ids" t-as="category">
+                            <t t-call="website_slides.slide_fullscreen_sidebar_category">
+                                <t t-set="category_slide_ids" t-value="category.slide_ids" />
+                            </t>
+                        </t>
+                    </ul>
+                </div>
+                <div class="o_wslides_fs_player"/>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="slide_fullscreen_sidebar_category" name="Slides category template for fullscreen view side bar">
+    <div class="o_wslides_fs_sidebar_section">
+        <a data-toggle="collapse" t-att-href="('#collapse-%s') % (category.id if category else 0)" role="button" aria-expanded="true" t-att-aria-controls="('collapse-%s') % (category.id if category else 0)">
+            <li>
+                <t t-if="category">
+                    <span t-field="category.name"/>
+                </t>
+                <t t-else="">
+                    <span>Uncategorized</span>
+                </t>
+            </li>
+        </a>
+        <ul class="o_wslides_fs_sidebar_section_slides collapse show p-0 m-0" t-att-id="('collapse-%s') % (category.id if category else 0)" >
+            <t t-foreach="category_slide_ids" t-as="course_slide">
+                <!-- AWA FIXME: remove that index crap but right now fullscreen JS uses it too much -->
+                <t t-set="i" t-value="list(slide.channel_id.slide_ids).index(course_slide)"/>
+                <li t-att-index="i" t-att-data-slide-id="course_slide.id" t-attf-class="#{'active' if slide.id == course_slide.id else ''}">
+                    <span>
+                        <span class="o_wslides_top_line"></span>
+                        <i t-attf-id="check-#{course_slide.id}" t-if="not course_slide.id in user_progress or not user_progress[course_slide.id].completed" class="check-done fa fa-circle-thin"></i>
+                        <i t-attf-id="check-#{course_slide.id}" t-if="course_slide.id in user_progress and user_progress[course_slide.id].completed" class="check-done o_wslides_slide_completed fa fa-check-circle"></i>
+                        <span class="o_wslides_bottom_line"></span>
+                    </span>
+                    <a t-att-index="i" t-att-data-slide-id="course_slide.id">
+                        <div t-attf-index="#{i}"
+                            t-att-data-slug="slug(course_slide)"
+                            t-att-data-done="course_slide.id in user_progress and user_progress[course_slide.id].completed"
+                            t-att-data-id="course_slide.id"
+                            t-att-data-name="course_slide.name"
+                            t-attf-data-has_quiz="#{True if course_slide.question_ids else False}"
+                            t-att-data-slide_type="course_slide.slide_type"
+                            t-att-data-embed_code="course_slide.embed_code"
+                            t-attf-class="o_wslides_fs_sidebar_slide_tab #{'active' if slide.id == course_slide.id else ''} d-flex justify-content-between">
+                            <div>
+                                <t t-call="website_slides.slide_icon">
+                                    <t t-set="slide" t-value="course_slide" />
+                                </t>
+                                <t t-esc="course_slide.name"/>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <t t-if="course_slide.link_ids" t-foreach="course_slide.link_ids" t-as="link">
+                    <li>
+                        <span>
+                            <span class="o_wslides_fs_full_line"/>
+                        </span>
+                        <a class="o_wslides_fs_slide_link" t-att-href="link.link" target="new"><i class="fa fa-link"></i><span t-esc="link.name"/></a>
+                    </li>
+                </t>
+                <li t-att-index="i" t-if="course_slide.question_ids and not course_slide.slide_type =='quiz'">
+                    <span>
+                        <span class="o_wslides_fs_full_line"/>
+                    </span>
+                    <span class="o_wslides_fs_slide_quiz" t-att-index="i"><i class="fa fa-flag-checkered"></i>Quiz: <span t-esc="course_slide.name"/></span>
+                </li>
+            </t>
+        </ul>
+    </div>
+</template>
+
+</data></odoo>

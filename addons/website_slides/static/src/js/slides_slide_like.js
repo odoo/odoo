@@ -1,18 +1,17 @@
-odoo.define('website_slides.slides_like', function (require) {
+odoo.define('website_slides.slides.slide.like', function (require) {
 'use strict';
 
 var core = require('web.core');
 var Widget = require('web.Widget');
-var localStorage = require('web.local_storage');
 var sAnimations = require('website.content.snippets.animation');
 require('website_slides.slides');
 
 var _t = core._t;
 
-var LikeButton = Widget.extend({
+var SlideLikeWidget = Widget.extend({
     events: {
-        'click .o_wslides_like_up': '_onClickUp',
-        'click .o_wslides_like_down': '_onClickDown',
+        'click .o_wslides_js_slide_like_up': '_onClickUp',
+        'click .o_wslides_js_slide_like_down': '_onClickDown',
     },
 
     //--------------------------------------------------------------------------
@@ -53,8 +52,8 @@ var LikeButton = Widget.extend({
             },
         }).then(function (data) {
             if (! data.error) {
-                self.$el.find('span.o_wslides_like_up span').text(data.likes);
-                self.$el.find('span.o_wslides_like_down span').text(data.dislikes);
+                self.$el.find('span.o_wslides_js_slide_like_up span').text(data.likes);
+                self.$el.find('span.o_wslides_js_slide_like_down span').text(data.dislikes);
             } else {
                 if (data.error === 'public_user') {
                     self._popoverAlert(self.$el, _.str.sprintf(_t('Please <a href="/web/login?redirect=%s">login</a> to vote this slide'), (document.URL)));
@@ -67,18 +66,18 @@ var LikeButton = Widget.extend({
         });
     },
 
-    _onClickUp: function (event) {
-        var slideId = $(event.currentTarget).data('slide-id');
+    _onClickUp: function (ev) {
+        var slideId = $(ev.currentTarget).data('slide-id');
         return this._onClick(slideId, 'like');
     },
 
-    _onClickDown: function (event) {
-        var slideId = $(event.currentTarget).data('slide-id');
+    _onClickDown: function (ev) {
+        var slideId = $(ev.currentTarget).data('slide-id');
         return this._onClick(slideId, 'dislike');
     },
 });
 
-sAnimations.registry.websiteSlidesLike = sAnimations.Class.extend({
+sAnimations.registry.websiteSlidesSlideLike = sAnimations.Class.extend({
     selector: '#wrapwrap',
 
     /**
@@ -88,10 +87,16 @@ sAnimations.registry.websiteSlidesLike = sAnimations.Class.extend({
     start: function () {
         var self = this;
         var defs = [this._super.apply(this, arguments)];
-        $('.o_wslides_like').each(function () {
-            defs.push(new LikeButton(self).attachTo($(this)));
+        $('.o_wslides_js_slide_like').each(function () {
+            defs.push(new SlideLikeWidget(self).attachTo($(this)));
         });
         return $.when.apply($, defs);
     },
 });
+
+return {
+    slideLikeWidget: SlideLikeWidget,
+    websiteSlidesSlideLike: sAnimations.registry.websiteSlidesSlideLike
+};
+
 });
