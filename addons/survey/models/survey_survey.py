@@ -70,6 +70,7 @@ class Survey(models.Model):
     invite_count = fields.Integer("Invite", compute="_compute_survey_statistic")
     answer_count = fields.Integer("Started", compute="_compute_survey_statistic")
     answer_done_count = fields.Integer("Completed", compute="_compute_survey_statistic")
+    certified_count = fields.Integer("Certified", compute="_compute_certified_count")
 
     # scoring and certification fields
     scoring_type = fields.Selection([
@@ -118,6 +119,22 @@ class Survey(models.Model):
 
         for survey in self:
             survey.update(stat[survey.id])
+
+    @api.depends('certificate', 'user_input_ids.quizz_passed', 'user_input_ids.test_entry')
+    def _compute_certified_count(self):
+        stat = dict((cid, 0) for cid in self.ids)
+        certificate_surveys = self.filtered(lambda survey: survey.certificate)
+        if certificate_surveys:
+            read_group_res = self.env['survey.user_input'].read_group(
+                [('survey_id', 'in', certificate_surveys.ids), ('test_entry', '!=', True), ('quizz_passed', '=', True)],
+                [],
+                ['survey_id']
+            )
+            for item in read_group_res:
+                stat[item['survey_id'][0]] += item['survey_id_count']
+
+        for survey in self:
+            survey.certified_count = stat.get(survey.id, 0)
 
     def _compute_survey_url(self):
         """ Computes a public URL for the survey """
@@ -500,6 +517,16 @@ class Survey(models.Model):
         ctx = dict(self.env.context)
         ctx.update({'search_default_survey_id': self.ids[0],
                     'search_default_completed': 1})
+        action['context'] = ctx
+        return action
+
+    @api.multi
+    def action_survey_user_input_certified(self):
+        action_rec = self.env.ref('survey.action_survey_user_input_notest')
+        action = action_rec.read()[0]
+        ctx = dict(self.env.context)
+        ctx.update({'search_default_survey_id': self.ids[0],
+                    'search_default_quizz_passed': 1})
         action['context'] = ctx
         return action
 
