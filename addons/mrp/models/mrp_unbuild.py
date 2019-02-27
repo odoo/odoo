@@ -108,70 +108,80 @@ class MrpUnbuild(models.Model):
             if self.mo_id.state != 'done':
                 raise UserError(_('You cannot unbuild a undone manufacturing order.'))
 
-        consume_move = self._generate_consume_moves()[0]
+        consume_moves = self._generate_consume_moves()
+        consume_moves._action_confirm()
         produce_moves = self._generate_produce_moves()
+
+        finished_move = consume_moves.filtered(lambda m: m.product_id == self.product_id)
+        consume_moves -= finished_move
 
         if any(produce_move.has_tracking != 'none' and not self.mo_id for produce_move in produce_moves):
             raise UserError(_('Some of your components are tracked, you have to specify a manufacturing order in order to retrieve the correct components.'))
 
-        if consume_move.has_tracking != 'none':
+        if any(consume_move.has_tracking != 'none' and not self.mo_id for consume_move in consume_moves):
+            raise UserError(_('Some of your byproducts are tracked, you have to specify a manufacturing order in order to retrieve the correct byproducts.'))
+
+        if finished_move.has_tracking != 'none':
             self.env['stock.move.line'].create({
-                'move_id': consume_move.id,
+                'move_id': finished_move.id,
                 'lot_id': self.lot_id.id,
-                'qty_done': consume_move.product_uom_qty,
-                'product_id': consume_move.product_id.id,
-                'product_uom_id': consume_move.product_uom.id,
-                'location_id': consume_move.location_id.id,
-                'location_dest_id': consume_move.location_dest_id.id,
+                'qty_done': finished_move.product_uom_qty,
+                'product_id': finished_move.product_id.id,
+                'product_uom_id': finished_move.product_uom.id,
+                'location_id': finished_move.location_id.id,
+                'location_dest_id': finished_move.location_dest_id.id,
             })
         else:
-            consume_move.quantity_done = consume_move.product_uom_qty
-        consume_move._action_done()
+            finished_move.quantity_done = finished_move.product_uom_qty
 
         # TODO: Will fail if user do more than one unbuild with lot on the same MO. Need to check what other unbuild has aready took
-        for produce_move in produce_moves:
-            if produce_move.has_tracking != 'none':
-                original_move = self.mo_id.move_raw_ids.filtered(lambda move: move.product_id == produce_move.product_id)
-                needed_quantity = produce_move.product_qty
-                for move_lines in original_move.mapped('move_line_ids').filtered(lambda ml: ml.lot_produced_id == self.lot_id):
+        for move in produce_moves | consume_moves:
+            if move.has_tracking != 'none':
+                original_move = move in produce_moves and self.mo_id.move_raw_ids or self.mo_id.move_finished_ids
+                original_move = original_move.filtered(lambda move: move.product_id == move.product_id)
+                needed_quantity = move.product_qty
+                moves_lines = original_move.mapped('move_line_ids')
+                if move in produce_moves:
+                    moves_lines = moves_lines.filtered(lambda ml: ml.lot_produced_id == self.lot_id)
+                for move_line in moves_lines:
                     # Iterate over all move_lines until we unbuilded the correct quantity.
-                    taken_quantity = min(needed_quantity, move_lines.qty_done)
+                    taken_quantity = min(needed_quantity, move_line.qty_done)
                     if taken_quantity:
                         self.env['stock.move.line'].create({
-                            'move_id': produce_move.id,
-                            'lot_id': move_lines.lot_id.id,
+                            'move_id': move.id,
+                            'lot_id': move_line.lot_id.id,
                             'qty_done': taken_quantity,
-                            'product_id': produce_move.product_id.id,
-                            'product_uom_id': move_lines.product_uom_id.id,
-                            'location_id': produce_move.location_id.id,
-                            'location_dest_id': produce_move.location_dest_id.id,
+                            'product_id': move.product_id.id,
+                            'product_uom_id': move_line.product_uom_id.id,
+                            'location_id': move.location_id.id,
+                            'location_dest_id': move.location_dest_id.id,
                         })
                         needed_quantity -= taken_quantity
             else:
-                produce_move.quantity_done = produce_move.product_uom_qty
+                move.quantity_done = move.product_uom_qty
+
+        finished_move._action_done()
+        consume_moves._action_done()
         produce_moves._action_done()
         produced_move_line_ids = produce_moves.mapped('move_line_ids').filtered(lambda ml: ml.qty_done > 0)
-        consume_move.move_line_ids.write({'produce_line_ids': [(6, 0, produced_move_line_ids.ids)]})
+        consume_moves.mapped('move_line_ids').write({'produce_line_ids': [(6, 0, produced_move_line_ids.ids)]})
 
         return self.write({'state': 'done'})
 
     def _generate_consume_moves(self):
         moves = self.env['stock.move']
         for unbuild in self:
-            move = self.env['stock.move'].create({
-                'name': unbuild.name,
-                'date': unbuild.create_date,
-                'product_id': unbuild.product_id.id,
-                'product_uom': unbuild.product_uom_id.id,
-                'product_uom_qty': unbuild.product_qty,
-                'location_id': unbuild.location_id.id,
-                'location_dest_id': unbuild.product_id.property_stock_production.id,
-                'warehouse_id': unbuild.location_id.get_warehouse().id,
-                'origin': unbuild.name,
-                'consume_unbuild_id': unbuild.id,
-            })
-            move._action_confirm()
-            moves += move
+            if unbuild.mo_id:
+                finished_moves = unbuild.mo_id.move_finished_ids.filtered(lambda move: move.state == 'done')
+                factor = unbuild.product_qty / unbuild.mo_id.product_uom_id._compute_quantity(unbuild.mo_id.product_qty, unbuild.product_uom_id)
+                for finished_move in finished_moves:
+                    moves += unbuild._generate_move_from_existing_move(finished_move, factor)
+            else:
+                factor = unbuild.product_uom_id._compute_quantity(unbuild.product_qty, unbuild.bom_id.product_uom_id) / unbuild.bom_id.product_qty
+                moves += unbuild._generate_move_from_bom_line(self.product_id, self.product_uom_id, unbuild.product_qty * factor)
+                for byproduct in unbuild.bom_id.sub_products:
+                    quantity = byproduct.product_qty * factor
+                    moves += unbuild._generate_move_from_bom_line(byproduct.product_id, byproduct.product_uom_id, quantity, subproduct_id=byproduct.id)
         return moves
 
     def _generate_produce_moves(self):
@@ -181,39 +191,40 @@ class MrpUnbuild(models.Model):
                 raw_moves = unbuild.mo_id.move_raw_ids.filtered(lambda move: move.state == 'done')
                 factor = unbuild.product_qty / unbuild.mo_id.product_uom_id._compute_quantity(unbuild.mo_id.product_qty, unbuild.product_uom_id)
                 for raw_move in raw_moves:
-                    moves += unbuild._generate_move_from_raw_moves(raw_move, factor)
+                    moves += unbuild._generate_move_from_existing_move(raw_move, factor)
             else:
                 factor = unbuild.product_uom_id._compute_quantity(unbuild.product_qty, unbuild.bom_id.product_uom_id) / unbuild.bom_id.product_qty
                 boms, lines = unbuild.bom_id.explode(unbuild.product_id, factor, picking_type=unbuild.bom_id.picking_type_id)
                 for line, line_data in lines:
-                    moves += unbuild._generate_move_from_bom_line(line, line_data['qty'])
+                    moves += unbuild._generate_move_from_bom_line(line.product_id, line.product_uom_id, line_data['qty'], bom_line_id=line.id)
         return moves
 
-    def _generate_move_from_raw_moves(self, raw_move, factor):
+    def _generate_move_from_existing_move(self, move, factor):
         return self.env['stock.move'].create({
             'name': self.name,
             'date': self.create_date,
-            'product_id': raw_move.product_id.id,
-            'product_uom_qty': raw_move.product_uom_qty * factor,
-            'product_uom': raw_move.product_uom.id,
+            'product_id': move.product_id.id,
+            'product_uom_qty': move.product_uom_qty * factor,
+            'product_uom': move.product_uom.id,
             'procure_method': 'make_to_stock',
             'location_dest_id': self.location_dest_id.id,
-            'location_id': raw_move.location_dest_id.id,
+            'location_id': move.location_dest_id.id,
             'warehouse_id': self.location_dest_id.get_warehouse().id,
             'unbuild_id': self.id,
         })
 
-    def _generate_move_from_bom_line(self, bom_line, quantity):
+    def _generate_move_from_bom_line(self, product, product_uom, quantity, bom_line_id=False, subproduct_id=False):
         return self.env['stock.move'].create({
             'name': self.name,
             'date': self.create_date,
-            'bom_line_id': bom_line.id,
-            'product_id': bom_line.product_id.id,
+            'bom_line_id': bom_line_id,
+            'subproduct_id': subproduct_id,
+            'product_id': product.id,
             'product_uom_qty': quantity,
-            'product_uom': bom_line.product_uom_id.id,
+            'product_uom': product_uom.id,
             'procure_method': 'make_to_stock',
             'location_dest_id': self.location_dest_id.id,
-            'location_id': self.product_id.property_stock_production.id,
+            'location_id': product.property_stock_production.id,
             'warehouse_id': self.location_dest_id.get_warehouse().id,
             'unbuild_id': self.id,
         })
