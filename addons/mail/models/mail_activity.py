@@ -259,6 +259,12 @@ class MailActivity(models.Model):
                     activity.user_id.display_name)
             else:
                 try:
+                    target_user = activity.user_id
+                    target_record = self.env[activity.res_model].browse(activity.res_id)
+                    if hasattr(target_record, 'company_id') and (
+                        target_record.company_id != target_user.company_id and (
+                            len(target_user.company_ids) > 1)):
+                        return  # in that case we skip the check, assuming it would fail because of the company
                     model.browse(activity.res_id).check_access_rule('read')
                 except exceptions.AccessError:
                     raise exceptions.UserError(

@@ -78,7 +78,7 @@ msgstr ""
 "<div>\n"
 "    Gerb. ${object.name},<br/>\n"
 "    Dėkojame jums už užklausą.<br/>\n"
-"    Štai jūsų ženklelis įvykiui ${object.event_id.name}.<br/>\n"
+"    Štai jūsų ženklelis renginiui ${object.event_id.name}.<br/>\n"
 "    Jei turite klausimų, praneškite mums.\n"
 "    <br/><br/>\n"
 "    Ačiū,<br/>\n"
@@ -93,8 +93,8 @@ msgid ""
 "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the"
 " event or change the dates on which it is held.)</em>"
 msgstr ""
-"<em>(Chamber Works pasilieka teisę įvykį atšaukti, pervadinti arba pakeisti "
-"jo vietą<br>arba pakeisti laiką, kuriuo jis vyks.)</em>"
+"<em>(Chamber Works pasilieka teisę renginį atšaukti, pervadinti arba "
+"pakeisti jo vietą<br>arba pakeisti laiką, kuriuo jis vyks.)</em>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -155,8 +155,8 @@ msgid ""
 "<span class=\"o_form_label\">Warning: This Event has not reached its Minimum"
 " Registration Limit. Are you sure you want to confirm it?</span>"
 msgstr ""
-"<span class=\"o_form_label\">Įspėjimas: šis įvykis nepasiekė savo minimalaus"
-" registracijos limito. Ar tikrai norite jį patvirtinti?</span>"
+"<span class=\"o_form_label\">Įspėjimas: šis renginys nepasiekė savo "
+"minimalaus registracijos limito. Ar tikrai norite jį patvirtinti?</span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -428,7 +428,7 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <div>\n"
 "                        Sveiki, ${object.name or ''},<br/>\n"
-"                        Džiaugiamės galėdami patvirtinti jūsų registraciją į įvykį\n"
+"                        Džiaugiamės galėdami patvirtinti jūsų registraciją į renginį\n"
 "                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
@@ -438,7 +438,7 @@ msgstr ""
 "                    </div>\n"
 "                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "                    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">Peržiūrėti įvykį</a><br/>\n"
+"                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">Peržiūrėti renginį</a><br/>\n"
 "                    </div>\n"
 "                    % endif\n"
 "                    <div>\n"
@@ -520,7 +520,7 @@ msgstr ""
 "                % if object.event_id.organizer_id:\n"
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <div>\n"
-"                        <span style=\"font-weight:300;margin:10px 0px\">Turite klausimų apie įvykį?</span>\n"
+"                        <span style=\"font-weight:300;margin:10px 0px\">Turite klausimų apie renginį?</span>\n"
 "                        <div>Susisiekite su organizatoriumi:</div>\n"
 "                        <ul>\n"
 "                            <li>${object.event_id.organizer_id.name}</li>\n"
@@ -538,7 +538,7 @@ msgstr ""
 "                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                        <tr>\n"
 "                            <td style=\"padding:25px 0px;\">\n"
-"                                <strong>Pridėti įvykį į kalnedorių</strong>\n"
+"                                <strong>Pridėti renginį į kalnedorių</strong>\n"
 "                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text=${object.event_id.name}&amp;dates=${date_begin}/${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
 "                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&amp;summary=${object.event_id.name}&amp;dtstart=${date_begin}&amp;dtend=${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Outlook</a>\n"
 "                                <a href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title=${object.event_id.name}&amp;in_loc=${location}&amp;st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&amp;et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
@@ -812,7 +812,7 @@ msgstr ""
 "                    </div>\n"
 "                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "                    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">Žiūrėti įvykį</a><br/>\n"
+"                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">Žiūrėti renginį</a><br/>\n"
 "                    </div>\n"
 "                    % endif\n"
 "                    <div>\n"
@@ -985,7 +985,7 @@ msgstr "Pridėti naują dalyvį"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid "Add a new event"
-msgstr "Pridėti naują įvykį"
+msgstr "Pridėti naują renginį"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1002,7 +1002,7 @@ msgstr "Po kiekvienos registracijos"
 #: selection:event.mail,interval_type:0
 #: selection:event.type.mail,interval_type:0
 msgid "After the event"
-msgstr "Po įvykio"
+msgstr "Po renginio"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1015,7 +1015,7 @@ msgid ""
 "Are you sure you want to cancel this event? All the linked attendees will be"
 " cancelled as well."
 msgstr ""
-"Ar tikrai norite atšaukti šį įvykį? Visi susieti dalyviai taip pat bus "
+"Ar tikrai norite atšaukti šį renginį? Visi susieti dalyviai taip pat bus "
 "atšaukti."
 
 #. module: event
@@ -1050,7 +1050,7 @@ msgstr "Dalyvavimo data"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Attended the Event"
-msgstr "Dalyvavo įvykyje"
+msgstr "Dalyvavo renginyje"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__registration_id
@@ -1123,7 +1123,7 @@ msgstr "Brūkšninis kodas"
 #: selection:event.mail,interval_type:0
 #: selection:event.type.mail,interval_type:0
 msgid "Before the event"
-msgstr "Prieš įvykį"
+msgstr "Prieš renginį"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1158,7 +1158,7 @@ msgstr "Atšaukti"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Cancel Event"
-msgstr "Atšaukti įvykį"
+msgstr "Atšaukti renginį"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1231,7 +1231,7 @@ msgstr "Vis tiek patvirtinti"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Confirm Event"
-msgstr "Patvirtinti įvykį"
+msgstr "Patvirtinti renginį"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
@@ -1253,7 +1253,7 @@ msgstr "Patvirtinti dalyviai"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Confirmed events"
-msgstr "Patvirtinti įvykiai"
+msgstr "Patvirtinti renginiai"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -1426,24 +1426,24 @@ msgstr "Aptikta pabaigos data"
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_pivot
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event"
-msgstr "Įvykis"
+msgstr "Renginys"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "Event Automated Mailing"
-msgstr "Automatiniai įvykio laiškai"
+msgstr "Automatiniai renginio laiškai"
 
 #. module: event
 #: model:ir.actions.report,name:event.report_event_event_badge
 msgid "Event Badge"
-msgstr "Įvykio ženklelis"
+msgstr "Renginio ženklelis"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Event Categories"
-msgstr "Įvykio kategorijos"
+msgstr "Renginio kategorijos"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -1452,49 +1452,49 @@ msgstr "Įvykio kategorijos"
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_tree
 msgid "Event Category"
-msgstr "Įvykio kategorija"
+msgstr "Renginio kategorija"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.model,name:event.model_event_confirm
 #: model_terms:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Event Confirmation"
-msgstr "Įvykio patvirtinimas"
+msgstr "Renginio patvirtinimas"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_end_date
 msgid "Event End Date"
-msgstr "Įvykio pabaigos data"
+msgstr "Renginio pabaigos data"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Event Information"
-msgstr "Įvykio informacija"
+msgstr "Renginio informacija"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_logo
 msgid "Event Logo"
-msgstr "Įvykio logotipas"
+msgstr "Renginio logotipas"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Event Mail Scheduler"
-msgstr "Įvykio laiškų planuoklis"
+msgstr "Renginio laiškų planuoklis"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_tree
 msgid "Event Mail Schedulers"
-msgstr "Įvykio laiškų planuokliai"
+msgstr "Renginio laiškų planuokliai"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Event Name"
-msgstr "Įvykio pavadinimas"
+msgstr "Renginio pavadinimas"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_calendar
 msgid "Event Organization"
-msgstr "Įvykio organizavimas"
+msgstr "Renginio organizavimas"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -1502,7 +1502,7 @@ msgstr "Įvykio organizavimas"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Registration"
-msgstr "Įvykio registracija"
+msgstr "Renginio registracija"
 
 #. module: event
 #: code:addons/event/models/event_mail.py:143
@@ -1521,8 +1521,8 @@ msgid ""
 "                              - or the responsible of the event,\n"
 "                              - or the last writer of the template."
 msgstr ""
-"Įvykių planuoklis:\n"
-"                              - Įvykis: %s (%s)\n"
+"Renginių planuoklis:\n"
+"                              - Renginys: %s (%s)\n"
 "                              - Suplanuotas: %s\n"
 "                              - Šablonas: %s (%s)\n"
 "\n"
@@ -1530,27 +1530,27 @@ msgstr ""
 "                              - %s\n"
 "\n"
 "                            Gavote šį laišką, nes jūs esate\n"
-"                              - įvykio organizatorius,\n"
-"                              - atsakingas už įvykį,\n"
+"                              - renginio organizatorius,\n"
+"                              - atsakingas už renginį,\n"
 "                              - paskutinis redagavęs šabloną."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Start Date"
-msgstr "Įvykio pradžios data"
+msgstr "Renginio pradžios data"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__event_type_id
 msgid "Event Type"
-msgstr "Įvykio tipas"
+msgstr "Renginio tipas"
 
 #. module: event
 #: model:ir.actions.server,name:event.event_mail_scheduler_ir_actions_server
 #: model:ir.cron,cron_name:event.event_mail_scheduler
 #: model:ir.cron,name:event.event_mail_scheduler
 msgid "Event: Mail Scheduler"
-msgstr "Įvykis: pašto planuoklis"
+msgstr "Renginys: pašto planuoklis"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
@@ -1564,17 +1564,17 @@ msgstr "Įvykis: pašto planuoklis"
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Events"
-msgstr "Įvykiai"
+msgstr "Renginiai"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_event_action_pivot
 msgid "Events Analysis"
-msgstr "Įvykio analizė"
+msgstr "Renginio analizė"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
-msgstr "Įvykių pašto planuokliai"
+msgstr "Renginių pašto planuokliai"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
@@ -1582,7 +1582,7 @@ msgid ""
 "Events and registrations will automatically be confirmed\n"
 "                                            upon creation, easing the flow for simple events."
 msgstr ""
-"Įvykiai ir registracijos bus automatiškai patvirtintos\n"
+"Renginiai ir registracijos bus automatiškai patvirtintos\n"
 "po sukūrimo, kad palengvintų paprastų įvykių procesus."
 
 #. module: event
@@ -1591,13 +1591,13 @@ msgid ""
 "Events and registrations will automatically be confirmed upon creation, "
 "easing the flow for simple events."
 msgstr ""
-"Įvykiai ir registracijos bus automatiškai patvirtintos po sukūrimo, kad "
-"palengvintų paprastų įvykių procesus."
+"Renginiai ir registracijos bus automatiškai patvirtintos po sukūrimo, kad "
+"palengvintų paprastų renginių procesus."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Events in New state"
-msgstr "Įvykiai naujoje būsenoje"
+msgstr "Renginiai naujojoje būsenoje"
 
 #. module: event
 #: model:event.type,name:event.event_type_1
@@ -1617,7 +1617,7 @@ msgstr "Planuojami dalyviai"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Finish Event"
-msgstr "Pabaigti įvykį"
+msgstr "Pabaigti renginį"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_follower_ids
@@ -1648,7 +1648,7 @@ msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
 msgstr ""
-"Kiekvienam įvykiui galite nustatyti rezervuojamu vietų maksimumą (dalyvių "
+"Kiekvienam renginiui galite nustatyti rezervuojamu vietų maksimumą (dalyvių "
 "kiekį), viršijus šį skaičių, registracijos nebus priimamos."
 
 #. module: event
@@ -1658,9 +1658,9 @@ msgid ""
 "attendees), if it does not reach the mentioned registrations the event can "
 "not be confirmed (keep 0 to ignore this rule)"
 msgstr ""
-"Kiekvienam įvykiui galite nustatyti rezervuojamu vietų minimumą (dalyvių "
-"kiekį), jei šis registracijų skaičius nebus pasiektas, įvykio nebus galima "
-"patvirtinti (palikite \"0\", jei norite nepaisyti šios taisyklės)."
+"Kiekvienam renginiui galite nustatyti rezervuojamu vietų minimumą (dalyvių "
+"kiekį), jei šis registracijų skaičius nebus pasiektas, renginio nebus galima"
+" patvirtinti (palikite \"0\", jei norite nepaisyti šios taisyklės)."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1745,10 +1745,10 @@ msgid ""
 " status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
-"Jei įvykis yra sukurtas, jo būsena yra \"juodraštis\". Jei įvykis yra "
+"Jei renginys yra sukurtas, jo būsena yra \"juodraštis\". Jei renginys yra "
 "patvirtintas konkrečiomis datomis, jo būsena nustatoma kaip "
-"\"patvirtintas\". Jei įvykis baigiasi, jo būsena nustatoma kaip "
-"\"Atliktas\". Jei įvykis yra atšauktas, jo būsena yra nustatoma kaip "
+"\"patvirtintas\". Jei renginys baigiasi, jo būsena nustatoma kaip "
+"\"Atliktas\". Jei renginys yra atšauktas, jo būsena yra nustatoma kaip "
 "\"atšauktas\"."
 
 #. module: event
@@ -1803,13 +1803,13 @@ msgstr "Yra sekėjas"
 #: model:ir.model.fields,help:event.field_event_type__default_registration_max
 msgid "It will select this default maximum value when you choose this event"
 msgstr ""
-"Kai pasirenkate šį įvykį, tai parinks šią numatytąją maksimalią reikšmę"
+"Kai pasirenkate šį renginį, tai parinks šią numatytąją maksimalią reikšmę"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__default_registration_min
 msgid "It will select this default minimum value when you choose this event"
 msgstr ""
-"Kai pasirenkate šį įvykį, tai parinks šią numatytąją minimalią reikšmę"
+"Kai pasirenkate šį renginį, tai parinks šią numatytąją minimalią reikšmę"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__color
@@ -1915,7 +1915,7 @@ msgstr "Laiškas išsiųstas"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_sent
 msgid "Mail Sent on Event"
-msgstr "Laiškas išsiųstas įvykiui"
+msgstr "Laiškas išsiųstas renginiui"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_main_attachment_id
@@ -1991,7 +1991,7 @@ msgstr "Mėnesis (-iai)"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "My Events"
-msgstr "Mano įvykiai"
+msgstr "Mano renginiai"
 
 #. module: event
 #: code:addons/event/models/event.py:263
@@ -2003,7 +2003,7 @@ msgstr "Daugiau galimų vietų nėra."
 #: code:addons/event/models/event.py:369
 #, python-format
 msgid "No more seats available for this event."
-msgstr "Daugiau galimų vietų šiam įvykiui nėra."
+msgstr "Daugiau galimų vietų šiam renginiui nėra."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
@@ -2030,7 +2030,7 @@ msgstr "Klaidų skaičius"
 #. module: event
 #: model:ir.model.fields,help:event.field_res_partner__event_count
 msgid "Number of events the partner has participated."
-msgstr "Kiekis įvykių, kuriuose dalyvavo partneris."
+msgstr "Kiekis renginių, kuriuose dalyvavo partneris."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
@@ -2071,12 +2071,12 @@ msgstr "Prisijungęs"
 #: model:ir.model.fields,field_description:event.field_event_type__is_online
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Online Event"
-msgstr "Įvykis internetu"
+msgstr "Renginys internetu"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Online Events"
-msgstr "Nuotoliniai įvykiai"
+msgstr "Nuotoliniai renginiai"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_sale
@@ -2089,7 +2089,7 @@ msgid ""
 "Online events like webinars do not require a specific location\n"
 "                                            and are hosted online."
 msgstr ""
-"Įvykiai internetu, tokie kaip vebinarai, nereikalauja konkrečios\n"
+"Renginiai internetu, tokie kaip vebinarai, nereikalauja konkrečios\n"
 " vietos ir vyksta internete."
 
 #. module: event
@@ -2098,8 +2098,8 @@ msgid ""
 "Online events like webinars do not require a specific location and are "
 "hosted online."
 msgstr ""
-"Įvykiai internetu, tokie kaip vebinarai, nereikalauja konkrečios vietos ir "
-"vyksta internete."
+"Renginiai internetu, tokie kaip vebinarai, nereikalauja konkrečios vietos ir"
+" vyksta internete."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
@@ -2142,7 +2142,7 @@ msgstr "Telefonas"
 #. module: event
 #: model:event.type,name:event.event_type_data_physical
 msgid "Physical Event"
-msgstr "Fizinis įvykis"
+msgstr "Fizinis renginys"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2181,7 +2181,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Register with this event"
-msgstr "Registruotis su šiuo įvykiu"
+msgstr "Registruotis su šiuo renginiu"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2270,7 +2270,7 @@ msgid ""
 "Schedule and organize your events efficiently:\n"
 "                track registrations and participations, automate the confirmation emails, sell tickets, etc."
 msgstr ""
-"Planuokite ir organizuokite savo įvykius efektyviai:\n"
+"Planuokite ir organizuokite savo renginius efektyviai:\n"
 "sekite registracijas ir dalyvavimą, automatizuokite patvirtinimo laiškus, parduokite bilietus ir t.t."
 
 #. module: event
@@ -2366,8 +2366,8 @@ msgid ""
 "There are already attendees who attended this event. Please reset it to "
 "draft if you want to cancel this event."
 msgstr ""
-"Jau yra dalyvių, kurie dalyvauja šiame įvykyje. Jei norite atšaukti šį "
-"įvykį, atstatykite jį į juodraštį."
+"Jau yra dalyvių, kurie dalyvauja šiame renginyje. Jei norite atšaukti šį "
+"renginį, atstatykite jį į juodraštį."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2523,7 +2523,7 @@ msgstr "Matomumas"
 #: code:addons/event/models/event_mail.py:130
 #, python-format
 msgid "WARNING: Event Scheduler Error for event: %s"
-msgstr "ĮSPĖJIMAS: Įvykio planuoklio klaida įvykiui: %s"
+msgstr "ĮSPĖJIMAS: Renginio planuoklio klaida renginiui: %s"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2555,13 +2555,13 @@ msgstr "Darbų eigos"
 #: code:addons/event/models/event.py:426
 #, python-format
 msgid "You must wait the event confirmation before doing this action."
-msgstr "Prieš atliekant šį veiksmą, turite sulaukti įvykio patvirtinimo."
+msgstr "Prieš atliekant šį veiksmą, turite sulaukti renginio patvirtinimo."
 
 #. module: event
 #: code:addons/event/models/event.py:428
 #, python-format
 msgid "You must wait the event starting day before doing this action."
-msgstr "Prieš atliekant šį veiksmą, turite sulaukti įvykio pradžios dienos."
+msgstr "Prieš atliekant šį veiksmą, turite sulaukti renginio pradžios dienos."
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge

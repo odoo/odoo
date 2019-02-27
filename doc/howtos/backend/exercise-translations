@@ -48,7 +48,7 @@ diff --git a/openacademy/models.py b/openacademy/models.py
                  },
              }
  
-@@ -135,4 +135,4 @@ class Session(models.Model):
+@@ -132,4 +132,4 @@ class Session(models.Model):
      def _check_instructor_not_in_attendees(self):
          for r in self:
              if r.instructor_id and r.instructor_id in r.attendee_ids:

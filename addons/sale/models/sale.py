@@ -320,7 +320,7 @@ class SaleOrder(models.Model):
             'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
-            'user_id': self.partner_id.user_id.id or self.env.uid
+            'user_id': self.partner_id.user_id.id or self.partner_id.commercial_partner_id.user_id.id or self.env.uid
         }
         if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env.user.company_id.sale_note:
             values['note'] = self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note
@@ -656,6 +656,10 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_done(self):
+        tx = self.sudo().transaction_ids.get_last_transaction()
+        if tx and tx.state == 'pending' and tx.acquirer_id.provider == 'transfer':
+            tx._set_transaction_done()
+            tx.write({'is_processed': True})
         return self.write({'state': 'done'})
 
     @api.multi
