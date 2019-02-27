@@ -1,11 +1,11 @@
 odoo.define('website_blog.website_blog', function (require) {
 'use strict';
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimations.registry.websiteBlog = sAnimations.Class.extend({
+publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     selector: '.website_blog',
-    read_events: {
+    events: {
         'click .cover_footer': '_onNextBlogClick',
         'click a[href^="#blog_content"]': '_onContentAnchorClick',
         'click .o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete': '_onShareArticle',

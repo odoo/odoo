@@ -1,12 +1,12 @@
 odoo.define('website_slides.quiz', function (require) {
     'use strict';
-    var sAnimations = require('website.content.snippets.animation');
+
+    var publicWidget = require('web.public.widget');
     var core = require('web.core');
-    var Widget = require('web.Widget');
 
     var QWeb = core.qweb;
 
-    var Quiz= Widget.extend({
+    var Quiz= publicWidget.Widget.extend({
          /**
         * @override
         * @param {Object} el
@@ -169,7 +169,7 @@ odoo.define('website_slides.quiz', function (require) {
         },
 });
 
-    sAnimations.registry.websiteSlidesQuizNoFullscreen = Widget.extend({
+    publicWidget.registry.websiteSlidesQuizNoFullscreen = publicWidget.Widget.extend({
         selector: '.o_w_slides_quiz_no_fullscreen',
         xmlDependencies: ['/website_slides/static/src/xml/website_slides_fullscreen.xml'],
         init: function (el){

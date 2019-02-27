@@ -1,13 +1,9 @@
 odoo.define('website_slides.delete.slide', function (require) {
+    'use strict';
 
-    var sAnimations = require('website.content.snippets.animation');
-    var core = require('web.core');
-    var Widget = require('web.Widget');
+    var publicWidget = require('web.public.widget');
 
-    var _t = core._t;
-    var QWeb = core.qweb;
-
-    var DeleteSlideDialog = Widget.extend({
+    var DeleteSlideDialog = publicWidget.Widget.extend({
         template: 'website.slide.delete.slide',
         events: {
             'hidden.bs.modal': 'destroy',
@@ -56,10 +52,10 @@ odoo.define('website_slides.delete.slide', function (require) {
         }
     });
 
-    sAnimations.registry.websiteSlidesDeleteSlide = sAnimations.Class.extend({
+    publicWidget.registry.websiteSlidesDeleteSlide = publicWidget.Widget.extend({
         selector: '.oe_slide_js_delete_slide',
         xmlDependencies: ['/website_slides/static/src/xml/website_slides_upload.xml'],
-        read_events: {
+        events: {
             'click': '_onDeleteSlideClick',
         },
 
@@ -85,4 +81,4 @@ odoo.define('website_slides.delete.slide', function (require) {
         },
     });
     return DeleteSlideDialog;
-    });
+});

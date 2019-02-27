@@ -1,13 +1,9 @@
 odoo.define('website_slides.add.section', function (require) {
     'use strict';
 
-    var sAnimations = require('website.content.snippets.animation');
-    var core = require('web.core');
-    var Widget = require('web.Widget');
+    var publicWidget = require('web.public.widget');
 
-    var _t = core._t;
-
-    var SectionDialog = Widget.extend({
+    var SectionDialog = publicWidget.Widget.extend({
         template: 'website.slide.add.section',
         events: {
             'hidden.bs.modal': 'destroy',
@@ -106,10 +102,10 @@ odoo.define('website_slides.add.section', function (require) {
 
     });
 
-    sAnimations.registry.websiteSlidesSection = sAnimations.Class.extend({
+    publicWidget.registry.websiteSlidesSection = publicWidget.Widget.extend({
         selector: '.oe_slide_js_add_section',
         xmlDependencies: ['/website_slides/static/src/xml/website_slides_upload.xml'],
-        read_events: {
+        events: {
             'click': '_onAddSectionClick',
         },
 
@@ -145,4 +141,4 @@ odoo.define('website_slides.add.section', function (require) {
             this._openDialog($(ev.currentTarget).attr('channel_id'));
         },
     });
-    });
+});

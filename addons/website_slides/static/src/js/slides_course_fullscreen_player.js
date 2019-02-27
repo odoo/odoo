@@ -2,8 +2,8 @@ var onYouTubeIframeAPIReady;
 
 odoo.define('website_slides.fullscreen', function (require) {
     'use strict';
-    var sAnimations = require('website.content.snippets.animation');
-    var Widget = require('web.Widget');
+
+    var publicWidget = require('web.public.widget');
     var core = require('web.core');
     var QWeb = core.qweb;
 
@@ -16,7 +16,7 @@ odoo.define('website_slides.fullscreen', function (require) {
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 
-    var Fullscreen = Widget.extend({
+    var Fullscreen = publicWidget.Widget.extend({
         /**
         * @override
         * @param {Object} el
@@ -105,7 +105,7 @@ odoo.define('website_slides.fullscreen', function (require) {
             try{
                 self._setupYoutubePlayer();
             }
-            catch {
+            catch (e) {
                 onYouTubeIframeAPIReady = function(){
                     var self = this;
                     self._setupYoutubePlayer();
@@ -409,7 +409,7 @@ odoo.define('website_slides.fullscreen', function (require) {
         },
     })
 
-    sAnimations.registry.websiteSlidesFullscreenPlayer = Widget.extend({
+    publicWidget.registry.websiteSlidesFullscreenPlayer = publicWidget.Widget.extend({
         selector: '.oe_js_course_slide',
         xmlDependencies: ['/website_slides/static/src/xml/website_slides_fullscreen.xml'],
         init: function(el){

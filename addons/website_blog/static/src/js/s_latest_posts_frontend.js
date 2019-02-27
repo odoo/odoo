@@ -2,12 +2,13 @@ odoo.define('website_blog.s_latest_posts_frontend', function (require) {
 'use strict';
 
 var core = require('web.core');
-var sAnimation = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
 var _t = core._t;
 
-sAnimation.registry.js_get_posts = sAnimation.Class.extend({
+publicWidget.registry.js_get_posts = publicWidget.Widget.extend({
     selector : '.js_get_posts',
+    disabledInEditableMode: false,
 
     /**
      * @override

@@ -2,10 +2,9 @@ odoo.define('website_sale_comparison.comparison', function (require) {
 'use strict';
 
 var core = require('web.core');
+var publicWidget = require('web.public.widget');
 var utils = require('web.utils');
-var Widget = require('web.Widget');
 var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
-var sAnimations = require('website.content.snippets.animation');
 var website_sale_utils = require('website_sale.utils');
 
 var qweb = core.qweb;
@@ -14,7 +13,7 @@ var _t = core._t;
 // ProductConfiguratorMixin events are overridden on purpose here
 // to avoid registering them more than once since they are already registered
 // in website_sale.js
-var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
+var ProductComparison = publicWidget.Widget.extend(ProductConfiguratorMixin, {
     xmlDependencies: ['/website_sale_comparison/static/src/xml/comparison.xml'],
 
     template: 'product_comparison_template',
@@ -235,9 +234,9 @@ var ProductComparison = Widget.extend(ProductConfiguratorMixin, {
     },
 });
 
-sAnimations.registry.ProductComparison = sAnimations.Class.extend({
+publicWidget.registry.ProductComparison = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
-    read_events: {
+    events: {
         'click .o_add_compare, .o_add_compare_dyn': '_onClickAddCompare',
         'click #o_comparelist_table tr': '_onClickComparelistTr',
     },
@@ -247,10 +246,6 @@ sAnimations.registry.ProductComparison = sAnimations.Class.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        if (this.editableMode) {
-            return def;
-        }
-
         this.productComparison = new ProductComparison(this);
         return $.when(def, this.productComparison.appendTo(this.$el));
     },

@@ -1,15 +1,15 @@
 odoo.define('website_sale.cart', function (require) {
 'use strict';
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 var core = require('web.core');
 var _t = core._t;
 
 var timeout;
 
-sAnimations.registry.websiteSaleCartLink = sAnimations.Class.extend({
+publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
     selector: '#top_menu a[href$="/shop/cart"]',
-    read_events: {
+    events: {
         'mouseenter': '_onMouseEnter',
         'mouseleave': '_onMouseLeave',
     },
@@ -18,11 +18,6 @@ sAnimations.registry.websiteSaleCartLink = sAnimations.Class.extend({
      * @override
      */
     start: function () {
-        var def = this._super.apply(this, arguments);
-        if (this.editableMode) {
-            return def;
-        }
-
         this.$el.popover({
             trigger: 'manual',
             animation: true,
@@ -34,7 +29,7 @@ sAnimations.registry.websiteSaleCartLink = sAnimations.Class.extend({
             placement: 'auto',
             template: '<div class="popover mycart-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
         });
-        return def;
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -85,11 +80,11 @@ sAnimations.registry.websiteSaleCartLink = sAnimations.Class.extend({
 odoo.define('website_sale.website_sale_category', function (require) {
 'use strict';
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimations.registry.websiteSaleCategory = sAnimations.Class.extend({
+publicWidget.registry.websiteSaleCategory = publicWidget.Widget.extend({
     selector: '#o_shop_collapse_category',
-    read_events: {
+    events: {
         'click .fa-chevron-right': '_onOpenClick',
         'click .fa-chevron-down': '_onCloseClick',
     },
@@ -123,18 +118,15 @@ sAnimations.registry.websiteSaleCategory = sAnimations.Class.extend({
 odoo.define('website_sale.website_sale', function (require) {
 'use strict';
 
-var utils = require('web.utils');
-var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
 var core = require('web.core');
 var config = require('web.config');
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
+var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
 require("website.content.zoomodoo");
 
-var _t = core._t;
-
-sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorMixin, {
+publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(ProductConfiguratorMixin, {
     selector: '.oe_website_sale',
-    read_events: {
+    events: _.extend({}, ProductConfiguratorMixin.events || {}, {
         'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
         'mouseup .js_publish': '_onMouseupPublish',
         'touchend .js_publish': '_onMouseupPublish',
@@ -152,7 +144,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         'change #shipping_use_same': '_onChangeShippingUseSame',
         'click .toggle_summary': '_onToggleSummary',
         'click input.js_product_change': 'onChangeVariant',
-    },
+    }),
 
     /**
      * @constructor
@@ -170,9 +162,6 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        if (this.editableMode) {
-            return def;
-        }
 
         _.each(this.$('div.js_product'), function (product) {
             $('input.js_product_change', product).first().trigger('change');
@@ -411,7 +400,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
                 $carousel.carousel(0);
                 this._startZoom();
                 // fix issue with carousel height
-                this.trigger_up('animation_start_demand', {$target: $carousel});
+                this.trigger_up('widgets_start_request', {$target: $carousel});
             }
         }
         else { // compatibility 12.0
@@ -607,10 +596,9 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
     },
 });
 
-
-sAnimations.registry.websiteSaleCart = sAnimations.Class.extend({
+publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
     selector: '.oe_website_sale .oe_cart',
-    read_events: {
+    events: {
         'click .js_change_shipping': '_onClickChangeShipping',
         'click .js_edit_address': '_onClickEditAddress',
         'click .js_delete_product': '_onClickDeleteProduct',

@@ -1,10 +1,9 @@
 odoo.define('website_slides.sidebar', function (require) {
     'use strict';
-    var sAnimations = require('website.content.snippets.animation');
-    var core = require('web.core');
-    var Widget = require('web.Widget');
 
-    var SideBar = Widget.extend({
+    var publicWidget = require('web.public.widget');
+
+    var SideBar = publicWidget.Widget.extend({
         init: function (el){
             this._super.apply(this,arguments);
         },
@@ -19,7 +18,7 @@ odoo.define('website_slides.sidebar', function (require) {
         },
     });
 
-    sAnimations.registry.websiteSlidesSidebarList = Widget.extend({
+    publicWidget.registry.websiteSlidesSidebarList = publicWidget.Widget.extend({
         selector: '.o_wslides_fullscreen_toggle_sidebar',
         // xmlDependencies: ['/website_slides/static/src/xml/website_slides.xml'],
         init: function (el){
