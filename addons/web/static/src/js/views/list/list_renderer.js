@@ -551,15 +551,15 @@ var ListRenderer = BasicRenderer.extend({
     _renderAddColumnOption: function (nodes) {
         var self = this;
         var $th = $('<th>', {
-            class: 'o_add_column text-center dropdown dropdown',
+            class: 'o_add_column text-center dropdown',
         });
 
         var $a = $("<a>", {
-            'class': "dropdown-toggle text-dark",
-            "href": "#",
+            class: "dropdown-toggle text-dark",
+            href: "#",
+            role: "button",
             'data-toggle': "dropdown",
-            'role': "button",
-            "aria-expanded": "false",
+            'aria-expanded': false,
         });
         $("<i class='fa fa-ellipsis-v'></i>").appendTo($a);
         var $div = $("<div>", {

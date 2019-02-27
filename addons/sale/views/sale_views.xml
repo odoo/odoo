@@ -178,14 +178,14 @@
                 <tree string="Sales Orders" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Order Number"/>
-                    <field name="confirmation_date" string="Confirmation Date" optional="True"/>
+                    <field name="confirmation_date" string="Confirmation Date"/>
                     <field name="commitment_date" groups="sale.group_sale_order_dates"/>
                     <field name="expected_date" groups="sale.group_sale_order_dates"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
-                    <field name="amount_total" sum="Total Tax Included" widget="monetary" optional="True"/>
-                    <field name="currency_id" invisible="1" optional="True"/>
-                    <field name="invoice_status" invisible="1" optional="True"/>
+                    <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="invoice_status" invisible="1"/>
                     <field name="state" invisible="1"/>
                 </tree>
             </field>
@@ -407,7 +407,6 @@
                                             'required': [('display_type', '=', False)],
                                         }"
                                         force_save="1"
-                                        optional="True"
                                         context="{
                                             'partner_id': parent.partner_id,
                                             'quantity': product_uom_qty,
@@ -424,7 +423,6 @@
                                     <field
                                         name="product_uom_qty"
                                         string="Ordered Qty"
-                                        optional="True"
                                         context="{
                                             'partner_id': parent.partner_id,
                                             'quantity': product_uom_qty,
@@ -435,7 +433,6 @@
                                     />
                                     <field
                                         name="qty_delivered"
-                                        optional="True"
                                         attrs="{
                                             'column_invisible': [('parent.state', 'not in', ['sale', 'done'])],
                                             'readonly': [('qty_delivered_method', '!=', 'manual')]
@@ -445,14 +442,12 @@
                                     <field name="qty_delivered_method" invisible="1"/>
                                     <field
                                         name="qty_invoiced"
-                                        optional="True"
                                         attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"
                                     />
                                     <field name="qty_to_invoice" invisible="1"/>
                                     <field
                                         name="product_uom"
                                         force_save="1"
-                                        optional="True"
                                         attrs="{
                                             'readonly': [('state', 'in', ('sale','done', 'cancel'))],
                                             'required': [('display_type', '=', False)],
@@ -463,18 +458,15 @@
                                     />
                                     <field
                                         name="analytic_tag_ids"
-                                        optional="True"
                                         groups="analytic.group_analytic_tags"
                                         widget="many2many_tags"
                                     />
                                     <field
                                         name="price_unit"
-                                        optional="True"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
                                     />
                                     <field
                                         name="tax_id"
-                                        optional="True"
                                         widget="many2many_tags"
                                         options="{'no_create': True}"
                                         domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
@@ -482,11 +474,11 @@
                                     />
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>
-                                    <field name="price_total" optional="True" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
-                                    <field name="state" optional="True" invisible="1"/>
-                                    <field name="invoice_status" optional="True" invisible="1"/>
-                                    <field name="customer_lead" optional="True" invisible="1"/>
-                                    <field name="currency_id" optional="True" invisible="1"/>
+                                    <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="invoice_status" invisible="1"/>
+                                    <field name="customer_lead" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
                                     <field name="price_tax" invisible="1"/>
                                 </tree>
                                 <kanban class="o_kanban_mobile">
