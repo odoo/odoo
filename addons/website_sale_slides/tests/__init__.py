@@ -2,3 +2,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import test_course_purchase_flow
+from . import test_sale_slides_ui
