@@ -3,7 +3,7 @@
     <data>
         <template id="slide_icon_inherit_survey" inherit_id="website_slides.slide_icon">
             <xpath expr="//i[last()]" position="after">
-                <i t-if="slide.slide_type == 'certification'" class="fa fa-trophy mr-2 text-muted"></i>
+                <i t-if="slide.slide_type == 'certification'" t-att-class="'fa fa-trophy %s' % icon_class"></i>
             </xpath>
         </template>
     </data>
