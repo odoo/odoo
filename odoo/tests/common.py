@@ -734,7 +734,13 @@ class ChromeBrowser():
                 if res.get('result', {}).get('result').get('subtype', '') == 'error':
                     self._logger.error("Running code returned an error")
                     return False
-            elif res and res.get('method') == 'Runtime.consoleAPICalled' and res.get('params', {}).get('type') in ('log', 'error', 'trace'):
+            elif res and res.get('method') == 'Runtime.exceptionThrown':
+                exception_details = res.get('params', {}).get('exceptionDetails', {})
+                self._logger.error(exception_details)
+                self.take_screenshot()
+                self._save_screencast()
+                return False
+            elif res and res.get('method') in 'Runtime.consoleAPICalled' and res.get('params', {}).get('type') in ('log', 'error', 'trace'):
                 logs = res.get('params', {}).get('args')
                 log_type = res.get('params', {}).get('type')
                 content = " ".join([str(log.get('value', '')) for log in logs])
