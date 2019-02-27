@@ -104,7 +104,7 @@ class Survey(models.Model):
 
     @api.depends('user_input_ids.state', 'user_input_ids.test_entry')
     def _compute_survey_statistic(self):
-        stat = dict.fromkeys(self.ids, {'invite_count': 0, 'answer_count': 0, 'answer_done_count': 0})
+        stat = dict((cid, dict(invite_count=0, answer_count=0, answer_done_count=0)) for cid in self.ids)
         UserInput = self.env['survey.user_input']
         base_domain = ['&', ('survey_id', 'in', self.ids), ('test_entry', '!=', True)]
 
