@@ -146,7 +146,7 @@ class Base(models.AbstractModel):
             fields.append(parent_name)
         return {
             'parent_field': parent_name,
-            'values': Comodel.search_read([], fields),
+            'values': Comodel.with_context(hierarchical_naming=False).search_read([], fields),
         }
 
     @api.model
