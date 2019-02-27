@@ -126,7 +126,7 @@ var SnippetOption = Widget.extend({
      * @param {jQuery} $li - the related DOMElement option
      */
     selectClass: function (previewMode, value, $li) {
-        var $group = $li && $li.closest('.dropdown-submenu');
+        var $group = $li && $li.parents('.dropdown-submenu').last();
         if (!$group || !$group.length) {
             $group = this.$el;
         }
@@ -288,13 +288,29 @@ var SnippetOption = Widget.extend({
             })
             .addClass('active');
 
-        _processSelectClassElements(this.$el);
+        // Get submenus which are not inside submenus
+        var $submenus = this.$el.find('.dropdown-submenu')
+            .addBack('.dropdown-submenu')
+            .not('.dropdown-submenu .dropdown-submenu');
 
-        function _processSelectClassElements($el) {
+        // Add unique active class for each submenu active item
+        _.each($submenus, function (submenu) {
+            var $elements = _getSelectClassElements($(submenu));
+            _processSelectClassElements($elements);
+        });
+
+        // Add unique active class for out-of-submenu active item
+        var $externalElements = _getSelectClassElements(this.$el)
+            .not('.dropdown-submenu *, .dropdown-submenu');
+        _processSelectClassElements($externalElements);
+
+        function _getSelectClassElements($el) {
+            return $el.find('[data-select-class]')
+                .addBack('[data-select-class]');
+        }
+        function _processSelectClassElements($elements) {
             var maxNbClasses = -1;
-            $el.find('[data-select-class]')
-                .addBack('[data-select-class]')
-                .removeClass('active')
+            $elements.removeClass('active')
                 .filter(function () {
                     var className = $(this).data('selectClass');
                     var nbClasses = className ? className.split(' ').length : 0;
