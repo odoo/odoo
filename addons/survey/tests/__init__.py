@@ -10,3 +10,4 @@ from . import test_survey_security
 from . import test_survey_randomize
 from . import test_survey_ui
 from . import test_survey_compute_pages_questions
+from . import test_certification_badge
