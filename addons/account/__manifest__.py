@@ -26,6 +26,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_payment_view.xml',
         'wizard/account_unreconcile_view.xml',
         'wizard/account_move_reversal_view.xml',
+        'views/account_move_views.xml',
         'views/account_view.xml',
         'views/account_report.xml',
         'data/mail_template_data.xml',
