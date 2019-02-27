@@ -601,17 +601,6 @@ class AccountMoveLine(models.Model):
         for record in self.filtered('move_id'):
             record.parent_state = record.move_id.state
 
-    @api.one
-    @api.depends('move_id.line_ids')
-    def _get_counterpart(self):
-        counterpart = set()
-        for line in self.move_id.line_ids:
-            if (line.account_id.code != self.account_id.code):
-                counterpart.add(line.account_id.code)
-        if len(counterpart) > 2:
-            counterpart = list(counterpart)[0:2] + ["..."]
-        self.counterpart = ",".join(counterpart)
-
     name = fields.Char(string="Label")
     quantity = fields.Float(digits=dp.get_precision('Product Unit of Measure'),
         help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports.")
@@ -665,7 +654,6 @@ class AccountMoveLine(models.Model):
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', index=True)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     company_id = fields.Many2one('res.company', related='account_id.company_id', string='Company', store=True, readonly=True)
-    counterpart = fields.Char("Counterpart", compute='_get_counterpart', help="Compute the counter part accounts of this journal item for this journal entry. This can be needed in reports.")
 
     # TODO: put the invoice link and partner_id on the account_move
     invoice_id = fields.Many2one('account.invoice', oldname="invoice")
