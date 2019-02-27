@@ -2,6 +2,7 @@ odoo.define('lunch.lunchKanbanTests', function (require) {
 "use strict";
 
 var LunchKanbanView = require('lunch.LunchKanbanView');
+var LunchKanbanWidget = require('lunch.LunchKanbanWidget');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
@@ -217,6 +218,41 @@ QUnit.module('Views', {
         assert.strictEqual(select.length, 1, 'There should be a user selection field');
 
         lunchKanban.destroy();
+    });
+
+    QUnit.module('LunchKanbanWidget');
+
+    QUnit.test('Rpc calls should be performed after the init()', function (assert) {
+        assert.expect(2);
+
+        var parent = testUtils.createParent({});
+
+        var widget = new LunchKanbanWidget(parent, {
+            user_location: [1, 'hello'],
+        });
+
+        testUtils.mock.addMockEnvironment(widget, {
+            data: {},
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id') {
+                    assert.ok('should perform xmlid_to_res_id RPC call in the willStart()');
+                    assert.deepEqual(args, {
+                        args: [],
+                        kwargs: {
+                            xmlid: "base.group_portal",
+                        },
+                        method: "xmlid_to_res_id",
+                        model: "ir.model.data",
+                    }, 'should have the right parameters for xmlid_to_res_id RPC call');
+                    return $.when();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        widget.appendTo($("#qunit-fixture"));
+
+        parent.destroy();
     });
 });
 
