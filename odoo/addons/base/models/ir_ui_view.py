@@ -205,10 +205,16 @@ class View(models.Model):
                              ('kanban', 'Kanban'),
                              ('search', 'Search'),
                              ('qweb', 'QWeb')], string='View Type')
-    arch = fields.Text(compute='_compute_arch', inverse='_inverse_arch', string='View Architecture', nodrop=True)
-    arch_base = fields.Text(compute='_compute_arch_base', inverse='_inverse_arch_base', string='Base View Architecture')
-    arch_db = fields.Text(string='Arch Blob', translate=xml_translate, oldname='arch')
-    arch_fs = fields.Char(string='Arch Filename')
+    arch = fields.Text(compute='_compute_arch', inverse='_inverse_arch', string='View Architecture',
+                       help="""This field should be used when accessing view arch. It will use translation.
+                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode.""")
+    arch_base = fields.Text(compute='_compute_arch_base', inverse='_inverse_arch_base', string='Base View Architecture',
+                            help="This field is the same as `arch` field without translations")
+    arch_db = fields.Text(string='Arch Blob', translate=xml_translate, oldname='arch',
+                          help="This field stores the view arch.")
+    arch_fs = fields.Char(string='Arch Filename', help="""File from where the view originates.
+                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode.
+                                                          Modifying the view arch will empty this field.""")
     inherit_id = fields.Many2one('ir.ui.view', string='Inherited View', ondelete='restrict', index=True)
     inherit_children_ids = fields.One2many('ir.ui.view', 'inherit_id', string='Views which inherit from this one')
     field_parent = fields.Char(string='Child Field')
