@@ -296,23 +296,11 @@ class Website(Home):
         This method is typically useful to reset specific views. In that case we
         read the XML file from the generic view.
         """
+        mode = kwargs.get('mode', 'soft')
         templates = request.httprequest.form.getlist('templates')
-        for temp_id in templates:
-            view = request.env['ir.ui.view'].browse(int(temp_id))
-            if 'oe_structure' in view.key:
-                # Particular xpathing view created in edit mode
-                view.unlink()
-                continue
-            xml_view = view._get_original_view()  # view might already be the xml_view
-            if xml_view.arch_fs:
-                view_file_arch = xml_view.with_context(read_arch_from_file=True).arch
-                # Deactivate COW to not fix a generic view by creating a specific
-                view.with_context(website_id=None).arch_db = view_file_arch
-                if view == xml_view:
-                    view.model_data_id.write({
-                        'noupdate': False
-                    })
-
+        views = request.env['ir.ui.view'].browse([int(view_id) for view_id in templates])
+        # Deactivate COW to not fix a generic view by creating a specific
+        views.with_context(website_id=None).reset_arch(mode)
         return request.redirect(redirect)
 
     @http.route(['/website/publish'], type='json', auth="public", website=True)

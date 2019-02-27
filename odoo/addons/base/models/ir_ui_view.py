@@ -213,8 +213,10 @@ class View(models.Model):
     arch_db = fields.Text(string='Arch Blob', translate=xml_translate, oldname='arch',
                           help="This field stores the view arch.")
     arch_fs = fields.Char(string='Arch Filename', help="""File from where the view originates.
-                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode.
-                                                          Modifying the view arch will empty this field.""")
+                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode.""")
+    arch_updated = fields.Boolean(string='Modified Architecture')
+    arch_prev = fields.Text(string='Previous View Architecture', help="""This field will save the current `arch_db` before writing on it.
+                                                                         Useful to (soft) reset a broken view.""")
     inherit_id = fields.Many2one('ir.ui.view', string='Inherited View', ondelete='restrict', index=True)
     inherit_children_ids = fields.One2many('ir.ui.view', 'inherit_id', string='Views which inherit from this one')
     field_parent = fields.Char(string='Child Field')
@@ -244,7 +246,7 @@ actual arch.
 * if False, the view currently does not extend its parent but can be enabled
          """)
 
-    @api.depends('arch_db', 'arch_fs')
+    @api.depends('arch_db', 'arch_fs', 'arch_updated')
     def _compute_arch(self):
         def resolve_external_ids(arch_fs, view_xml_id):
             def replacer(m):
@@ -257,7 +259,9 @@ actual arch.
         for view in self:
             arch_fs = None
             xml_id = view.xml_id or view.key
-            if (self._context.get('read_arch_from_file') or 'xml' in config['dev_mode']) and view.arch_fs and xml_id:
+            read_file = self._context.get('read_arch_from_file') or \
+                ('xml' in config['dev_mode'] and not view.arch_updated)
+            if read_file and view.arch_fs and xml_id:
                 # It is safe to split on / herebelow because arch_fs is explicitely stored with '/'
                 fullpath = get_resource_path(*view.arch_fs.split('/'))
                 if fullpath:
@@ -278,6 +282,7 @@ actual arch.
                 path_info = get_resource_from_path(self._context['install_filename'])
                 if path_info:
                     data['arch_fs'] = '/'.join(path_info[0:2])
+                    data['arch_updated'] = False
             view.write(data)
 
     @api.depends('arch')
@@ -289,6 +294,18 @@ actual arch.
     def _inverse_arch_base(self):
         for view, view_wo_lang in zip(self, self.with_context(lang=None)):
             view_wo_lang.arch = view.arch_base
+
+    @api.multi
+    def reset_arch(self, mode='soft'):
+        for view in self:
+            arch = False
+            if mode == 'soft':
+                arch = view.arch_prev
+            elif mode == 'hard' and view.arch_fs:
+                arch = view.with_context(read_arch_from_file=True).arch
+            if arch:
+                # Don't save current arch in previous since we reset, this arch is probably broken
+                view.with_context(no_save_prev=True).write({'arch_db': arch})
 
     @api.depends('write_date')
     def _compute_model_data_id(self):
@@ -428,6 +445,8 @@ actual arch.
                     values['key'] = "%s.gen_key_%s" % (values.get('model'), str(uuid.uuid4())[:6])
             if not values.get('name'):
                 values['name'] = "%s %s" % (values.get('model'), values['type'])
+            # Create might be called with either `arch` (xml files), `arch_base` (form view) or `arch_db`.
+            values['arch_prev'] = values.get('arch_base') or values.get('arch_db') or values.get('arch')
             values.update(self._compute_defaults(values))
 
         self.clear_caches()
@@ -435,10 +454,10 @@ actual arch.
 
     @api.multi
     def write(self, vals):
-        # If view is modified we remove the arch_fs information thus activating the arch_db
-        # version. An `init` of the view will restore the arch_fs for the --dev mode
+        # Keep track if view was modified. That will be useful for the --dev mode
+        # to prefer modified arch over file arch.
         if ('arch' in vals or 'arch_base' in vals) and 'install_filename' not in self._context:
-            vals['arch_fs'] = False
+            vals['arch_updated'] = True
 
         # drop the corresponding view customizations (used for dashboards for example), otherwise
         # not all users would see the updated views
@@ -447,6 +466,8 @@ actual arch.
             custom_view.unlink()
 
         self.clear_caches()
+        if 'arch_db' in vals and not self.env.context.get('no_save_prev'):
+            vals['arch_prev'] = self.arch_db
         return super(View, self).write(self._compute_defaults(vals))
 
     def unlink(self):

@@ -1036,8 +1036,9 @@
             <t t-if='views'>
                 <script>
                     $(document).ready(function() {
-                        var button = $('#reset_templates_button');
+                        var button = $('.reset_templates_button');
                         button.click(function() {
+                            $('#reset_templates_mode').val($(this).data('mode'));
                             var dialog = $('#reset_template_confirmation').modal('show');
                             var input = dialog.find('input[type="text"]').val('').focus();
                             var dialog_form = dialog.find('form');
@@ -1121,14 +1122,13 @@
                                         <label>
                                             <input type="checkbox" name="templates" t-att-value="view.id" t-att-checked="'checked' if view_first else None"/>
                                             <t t-esc="view.name"/>
-                                            <span t-if="not view._get_original_view()" class="text-danger">
-                                                (!!! This view will be removed )
-                                            </span>
                                         </label>
                                     </li>
                                 </ul>
                                 <input type="hidden" name="redirect" t-att-value="request.httprequest.path"/>
-                                <button id="reset_templates_button">Reset selected templates</button>
+                                <input type="hidden" id="reset_templates_mode" name="mode"/>
+                                <button data-mode="soft" class="reset_templates_button btn btn-info">Restore previous version (soft reset).</button>
+                                <button data-mode="hard" class="reset_templates_button btn btn-outline-danger">Reset to initial version (hard reset).</button>
                             </form>
                         </div>
                     </div>
