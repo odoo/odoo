@@ -32,6 +32,18 @@
         <field name="name">Export VAT 0%</field>
         <field name="applicability">taxes</field>
     </record>
+    <record id="tag_ae_09" model="account.account.tag">
+        <field name="name">Reverse Charge TVA -5%(sales)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_ae_10" model="account.account.tag">
+        <field name="name">Reverse Charge TVA -5%(purchase)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_ae_11" model="account.account.tag">
+        <field name="name">Tourist Refund scheme 5%</field>
+        <field name="applicability">taxes</field>
+    </record>
 
     <!-- account.tax.template -->
     <record id="uae_sale_tax_exempted" model="account.tax.template">
@@ -79,6 +91,36 @@
         <field name="tag_ids" eval="[(6,0,[ref('tag_ae_08')])]"/>
         <field name="chart_template_id" ref="uae_chart_template_standard"/>
     </record>
+    <record id="uae_sale_tax_reverse_charge_5" model="account.tax.template">
+        <field name="name">Reverse Charge TVA -5%(Sale)</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount">-5.0</field>
+        <field name="amount_type">percent</field>
+        <field name="refund_account_id" ref="uae_account_3726"/>
+        <field name="account_id" ref="uae_account_3726"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_09')])]"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+    </record>
+    <record id="uae_sale_tax_reverse_charge" model="account.tax.template">
+        <field name="name">Reverse Charge Provision</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">0.0</field>
+        <field name="amount_type">group</field>
+        <field name="description">Supplies subject to reverse charge provisions</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('uae_sale_tax_reverse_charge_5'), ref('uae_sale_tax_5')])]"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+    </record>
+    <record id="uae_sale_tax_tourist_refund" model="account.tax.template">
+        <field name="name">Tourist Refund scheme 5%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">5.0</field>
+        <field name="amount_type">percent</field>
+        <field name="description">Tax Refunds provided to Tourists under the Tax Refunds for Tourists Scheme</field>
+        <field name="refund_account_id" ref="uae_account_3726"/>
+        <field name="account_id" ref="uae_account_3726"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_11')])]"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+    </record>
     <!-- purchase taxes -->
     <record id="uae_purchase_tax_exempted" model="account.tax.template">
         <field name="name">Exempted Tax</field>
@@ -123,6 +165,25 @@
         <field name="amount_type">percent</field>
         <field name="description">Import Tax</field>
         <field name="tag_ids" eval="[(6,0,[ref('tag_ae_07')])]"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+    </record>
+    <record id="uae_purchase_tax_reverse_charge_5" model="account.tax.template">
+        <field name="name">Reverse Charge TVA -5%(Purchase)</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount">-5.0</field>
+        <field name="amount_type">percent</field>
+        <field name="refund_account_id" ref="uae_account_3726"/>
+        <field name="account_id" ref="uae_account_3726"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_10')])]"/>
+        <field name="chart_template_id" ref="uae_chart_template_standard"/>
+    </record>
+    <record id="uae_purchase_tax_reverse_charge" model="account.tax.template">
+        <field name="name">Reverse Charge Provision</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">0.0</field>
+        <field name="amount_type">group</field>
+        <field name="description">Supplies subject to reverse charge provisions</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('uae_purchase_tax_reverse_charge_5'), ref('uae_purchase_tax_5')])]"/>
         <field name="chart_template_id" ref="uae_chart_template_standard"/>
     </record>
 </odoo>
