@@ -87,11 +87,20 @@ class AccountChartTemplate(models.Model):
         return self.process_translations(langs, field, in_ids, out_ids)
 
     def _get_template_from_model(self, company_id, model):
+        """ Find the records and their matching template """
+        # genereated records have an external id with the format <company id>_<template id>
         out_data = self.env['ir.model.data'].search([('model', '=', model), ('name', '=like', str(company_id)+'\_%')])
-        out_ids = self.env[model].search([('id', 'in', out_data.mapped('res_id'))], order='id')
+        out_ids = self.env[model].browse(out_data.mapped('res_id'))
+
+        # templates and records may have been created in a different order
+        # reorder them based on external id names
         in_xml_id_names = [xml_id.partition(str(company_id) + '_')[-1] for xml_id in out_data.mapped('name')]
-        in_xml_ids = self.env['ir.model.data'].search([('model', '=', model+'.template'), ('name', 'in', in_xml_id_names)])
-        in_ids = self.env[model+'.template'].search([('id', 'in', in_xml_ids.mapped('res_id'))], order='id')
+        in_xml_id_names = {name: index for index, name in enumerate(in_xml_id_names)}
+
+        in_xml_ids = self.env['ir.model.data'].search([('model', '=', model+'.template'), ('name', 'in', list(in_xml_id_names))])
+        in_xml_ids = in_xml_ids.sorted(key=lambda x: in_xml_id_names[x.name])
+
+        in_ids = self.env[model+'.template'].browse(in_xml_ids.mapped('res_id'))
         return (in_ids, out_ids)
 
 class BaseLanguageInstall(models.TransientModel):
