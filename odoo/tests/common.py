@@ -1167,8 +1167,11 @@ class Form(object):
         # pre-resolve modifiers & bind to arch toplevel
         modifiers = fvg['modifiers'] = {}
         contexts = fvg['contexts'] = {}
+        order = fvg['fields_ordered'] = []
         for f in fvg['tree'].xpath('//field[not(ancestor::field)]'):
             fname = f.get('name')
+            order.append(fname)
+
             modifiers[fname] = {
                 modifier: domain if isinstance(domain, bool) else normalize_domain(domain)
                 for modifier, domain in json.loads(f.get('modifiers', '{}')).items()
@@ -1216,7 +1219,8 @@ class Form(object):
 
         # on creation, every field is considered changed by the client
         # apparently
-        self._perform_onchange(list(vals.keys() - {'id'}))
+        # and fields should be sent in view order, not whatever fields_view_get['fields'].keys() is
+        self._perform_onchange(self._view['fields_ordered'])
 
     def _init_from_values(self, values):
         self._values.update(

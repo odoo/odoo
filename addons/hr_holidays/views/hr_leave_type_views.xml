@@ -39,8 +39,8 @@
                             options='{"terminology": "archive"}'/>
                         </button>
                     </div>
-                    <div class="oe_title">  
-                        <h1><field name="name"/></h1>   
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
                     </div>
                     <group>
                         <group name="description" string="Options">
@@ -49,8 +49,7 @@
                             <field name="sequence" groups="base.group_no_one"/>
                         </group>
                         <group name="validation" string="Validation">
-                            <field name="validation_type" widget="radio" invisible="1"/>
-                            <field name="double_validation"/>
+                            <field name="validation_type" widget="radio"/>
                         </group>
                         <group name="visibility" string="Allocation">
                             <field name="allocation_type" widget="radio" force_save="1"/>
@@ -111,8 +110,7 @@
                 <field name="display_name"/>
                 <field name="code"/>
                 <field name="allocation_type"/>
-                <field name="validation_type" invisible="1"/>
-                <field name="double_validation"/>
+                <field name="validation_type"/>
                 <field name="validity_start"/>
                 <field name="validity_stop"/>
             </tree>

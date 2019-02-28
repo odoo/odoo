@@ -70,14 +70,6 @@ class HolidaysType(models.Model):
         ('hr', 'Payroll Officer'),
         ('manager', 'Team Leader'),
         ('both', 'Team Leader and Payroll Officer')], default='hr', string='Validation')
-    # TODO: remove me in master, the behavior is exactly the same if you choose 'hr' or 'manager'
-    # in the validation_type field. This field is used only to hide this possibility to the user
-    # to avoid misunderstandings. This field and its corresponding's functions must be removed once
-    # the functional part is implemented.
-    double_validation = fields.Boolean(string='Apply Double Validation',
-        compute='_compute_validation_type', inverse='_inverse_validation_type',
-        help="When selected, the Allocation/Leave Requests for this type require a second validation to be approved.")
-    
     allocation_type = fields.Selection([
         ('no', 'No Allocation Needed'),
         ('fixed_allocation', 'Free Allocation Request'),
@@ -98,25 +90,6 @@ class HolidaysType(models.Model):
     unpaid = fields.Boolean('Is Unpaid', default=False)
     leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
     allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave_allocation', raise_if_not_found=False))
-
-    # TODO: remove me in master
-    @api.depends('validation_type')
-    def _compute_validation_type(self):
-        for holiday_type in self:
-            if holiday_type.validation_type == 'both':
-                holiday_type.double_validation = True
-            else:
-                holiday_type.double_validation = False
-
-    # TODO: remove me in master
-    def _inverse_validation_type(self):
-        for holiday_type in self:
-            if holiday_type.double_validation == True:
-                holiday_type.validation_type = 'both'
-            else:
-                #IF to preserve the information (hr or manager)
-                if holiday_type.validation_type == 'both':
-                    holiday_type.validation_type = 'hr'
 
     @api.multi
     @api.constrains('validity_start', 'validity_stop')

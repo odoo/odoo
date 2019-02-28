@@ -30,7 +30,7 @@
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
-                <filter string="My Department Time Off" name="department" domain="[('department_id.member_ids.user_id', '=', uid)]" help="My Department Time Off"/>
+                <filter string="My Department Time Off" name="department" domain="['|', ('department_id.member_ids.user_id', '=', uid), ('employee_id.user_id', '=', uid)]" help="My Department Time Off"/>
                 <filter string="People I Manage" name="managed_people" domain="[('employee_id.parent_id.user_id', '=', uid)]" help="Time off of people you are manager of"/>
                 <filter string="My Team Time Off" name="my_team_leaves" domain="[('employee_id.leave_manager_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_team_leader" help="Time off of Your Team Members"/>
                 <filter string="My Time Off" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
@@ -367,7 +367,7 @@
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
         <field name="view_mode">calendar</field>
-        <field name="context">{'search_default_year': 1, 'search_default_group_employee': 1, 'search_default_managed_people': 1, 'search_default_my_leaves': 1}</field>
+        <field name="context">{'search_default_year': 1, 'search_default_group_employee': 1, 'search_default_managed_people': 1, 'search_default_managed_people': 1, 'search_default_my_team_leaves': 1}</field>
         <field name="domain">[('holiday_type','=','employee'), ('state', '!=', 'refuse')]</field>
         <field name="search_view_id" ref="view_hr_holidays_filter"/>
         <field name="view_id" ref="hr_leave_view_calendar"/>
@@ -382,7 +382,7 @@
 
     <menuitem
         id="menu_hr_holidays_dashboard"
-        name="Overview"
+        name="My Team"
         parent="menu_hr_holidays_root"
         sequence="1"
         action="action_hr_holidays_dashboard"
@@ -521,7 +521,8 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form,calendar,activity</field>
         <field name="context">{
-            'search_default_department':1,
+            'search_default_managed_people': 1,
+            'search_default_my_team_leaves': 1
             'search_default_approve':1}
         </field>
         <field name="domain">[]</field>

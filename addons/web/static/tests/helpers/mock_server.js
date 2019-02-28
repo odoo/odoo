@@ -705,8 +705,8 @@ var MockServer = Class.extend({
         var result = _.map(records, function (record) {
             return [record.id, record.display_name];
         });
-        if (args.limit) {
-            return result.slice(0, args.limit);
+        if (_kwargs.limit) {
+            return result.slice(0, _kwargs.limit);
         }
         return result;
     },

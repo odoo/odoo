@@ -694,6 +694,7 @@ var BasicComposer = Widget.extend({
      * @param {Event} ev
      */
     _onEmojiImageClick: function (ev) {
+        ev.preventDefault();
         var cursorPosition = this.getSelectionPositions();
         var inputVal = this.$input.val();
         var leftSubstring = inputVal.substring(0, cursorPosition.start);
