@@ -30,7 +30,7 @@ var SlideUploadDialog = Dialog.extend({
         this._setup();
 
         this.channelID = parseInt(options.channelId, 10);
-        this.defaultCategoryID = parseInt(options.categoryId,10)
+        this.defaultCategoryID = parseInt(options.categoryId,10);
         this.canUpload = options.canUpload === 'True';
         this.canPublish = options.canPublish === 'True';
 
@@ -182,8 +182,8 @@ var SlideUploadDialog = Dialog.extend({
         } else if (state !== '_upload') { // no button when uploading
             if (this.canUpload) {
                 if (this.canPublish) {
-                    btnList.push({text: _t("Save as Draft"), classes: 'o_w_slide_upload', click: this._onClickFormSubmit.bind(this)});
                     btnList.push({text: _t("Publish"), classes: 'btn-primary o_w_slide_upload o_w_slide_upload_published', click: this._onClickFormSubmit.bind(this)});
+                    btnList.push({text: _t("Save as Draft"), classes: 'o_w_slide_upload', click: this._onClickFormSubmit.bind(this)});
                 } else {
                     btnList.push({text: _t("Save as Draft"), classes: 'btn-primary o_w_slide_upload', click: this._onClickFormSubmit.bind(this)});
                 }
@@ -213,7 +213,7 @@ var SlideUploadDialog = Dialog.extend({
             result['tag_ids'] = tagValues;
         }
         // category
-        if(!self.defaultCategoryID){
+        if (!self.defaultCategoryID){
             var categoryValue = this.$('#category_id').select2('data');
             if (categoryValue && categoryValue.create) {
                 result['category_id'] = [0, {'name': categoryValue.text}];
@@ -311,25 +311,6 @@ var SlideUploadDialog = Dialog.extend({
 
         return values;
     },
-    _reorderSlidesSequence: function(){
-        var self = this;
-        var slidesElement = $('li.content-slide');
-        var slides = [];
-        for(var i = 0; i < slidesElement.length;i++){
-            slides.push({
-                id: parseInt($(slidesElement[i]).attr('slide_id')),
-                category_id: parseInt($(slidesElement[i]).attr('category_id')),
-                sequence: i
-            })
-        }
-        self._rpc({
-            route: '/slides/resequence_slides',
-            params: {
-                slides_data: slides
-            }
-        }).then(function(){
-        })
-    },
     /**
      * Init the data relative to the support slide type to upload
      *
@@ -339,7 +320,7 @@ var SlideUploadDialog = Dialog.extend({
         this.slide_type_data = {
             presentation: {
                 icon: 'fa-file-pdf-o',
-                label: _t('Presentation (PDF)'),
+                label: _t('Presentation'),
                 template: 'website.slide.upload.modal.presentation',
             },
             webpage: {
@@ -539,12 +520,6 @@ var SlideUploadDialog = Dialog.extend({
                     self.set('state', oldType);
                     self._alertDisplay(data.error);
                 } else {
-                    //Quick and really dirty fix for reordering issues
-                    if(data.channel_type == 'training' && self.categoryID){
-                        var categoryElement = $('ul[category_id='+self.categoryID+']');
-                        $('<li hidden class="content-slide" slide_id="'+data.slide_id+'" category_id="'+self.categoryID+'">temp</li>').appendTo(categoryElement)
-                        self._reorderSlidesSequence();
-                    }
                     window.location = data.url;
                 }
             });
@@ -560,7 +535,7 @@ var SlideUploadDialog = Dialog.extend({
 });
 
 publicWidget.registry.websiteSlidesUpload = publicWidget.Widget.extend({
-    selector: '.oe_slide_js_upload',
+    selector: '.o_wslides_js_slide_upload',
     xmlDependencies: ['/website_slides/static/src/xml/website_slides_upload.xml'],
     events: {
         'click': '_onUploadClick',
@@ -595,6 +570,7 @@ publicWidget.registry.websiteSlidesUpload = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onUploadClick: function (ev) {
+        ev.preventDefault();
         this._openDialog($(ev.currentTarget));
     },
 });

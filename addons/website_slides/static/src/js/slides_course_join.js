@@ -1,4 +1,4 @@
-odoo.define('website_slides.slides_join_channel', function (require) {
+odoo.define('website_slides.course.join.widget', function (require) {
 'use strict';
 
 var core = require('web.core');
@@ -7,9 +7,9 @@ require('website_slides.slides');
 
 var _t = core._t;
 
-var JoinChannelButton = publicWidget.Widget.extend({
+var CourseJoinWidget = publicWidget.extend({
     events: {
-        'click .o_wslides_join_channel_link': '_onClickJoin',
+        'click .o_wslides_js_course_join_link': '_onClickJoin',
     },
 
     //--------------------------------------------------------------------------
@@ -64,17 +64,27 @@ var JoinChannelButton = publicWidget.Widget.extend({
     },
 });
 
-publicWidget.registry.websiteSlidesJoinChannel = publicWidget.Widget.extend({
-    selector: '#wrapwrap',
+publicWidget.registry.websiteSlidesCourseJoin = publicWidget.Widget.extend({
+    selector: '.o_wslides_wrap',
 
     /**
      * @override
      * @param {Object} parent
      */
     start: function () {
+        var self = this;
         var defs = [this._super.apply(this, arguments)];
-        defs.push(new JoinChannelButton(this).attachTo($('.o_wslides_join_channel')));
+        $('.o_wslides_js_course_join').each(function () {
+            defs.push(new CourseJoinWidget(self).attachTo($(this)));
+        });
         return $.when.apply($, defs);
     },
 });
+
+
+return {
+    courseJoinWidget: CourseJoinWidget,
+    websiteSlidesCourseJoin: publicWidget.registry.websiteSlidesCourseJoin
+};
+
 });
