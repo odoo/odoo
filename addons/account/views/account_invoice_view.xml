@@ -655,6 +655,7 @@
                 <search string="Search Invoice">
                     <field name="number" string="Invoice" filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('reference', 'ilike', self), ('partner_id', 'child_of', self)]"/>
                     <filter domain="[('user_id','=',uid)]" name="myinvoices" help="My Invoices"/>
+                    <field name="journal_id"/>
                     <separator/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
                     <filter name="unpaid" string="Open" domain="[('state', '=', 'open')]"/>

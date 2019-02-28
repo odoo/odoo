@@ -25,19 +25,23 @@ QUnit.module('Dashboard', {
                     display_name: {string: "Displayed name", type: "char", searchable: true},
                     foo: {string: "Foo", type: "char", default: "My little Foo Value", searchable: true},
                     bar: {string: "Bar", type: "boolean"},
+                    int_field: {string: "Integer field", type: "integer"},
                 },
                 records: [{
                     id: 1,
                     display_name: "first record",
                     foo: "yop",
+                    int_field: 3,
                 }, {
                     id: 2,
                     display_name: "second record",
                     foo: "lalala",
+                    int_field: 5,
                 }, {
                     id: 4,
                     display_name: "aaa",
                     foo: "abc",
+                    int_field: 2,
                 }],
             },
         };
@@ -859,4 +863,47 @@ QUnit.test("Dashboard should use correct groupby", function (assert) {
 
     form.destroy();
 });
+
+QUnit.test('click on a cell of pivot view inside dashboard', function (assert) {
+    assert.expect(3);
+
+    var form = createView({
+        View: BoardView,
+        model: 'board',
+        data: this.data,
+        arch: '<form>' +
+                '<board style="2-1">' +
+                    '<column>' +
+                        '<action view_mode="pivot" string="ABC" name="51"></action>' +
+                    '</column>' +
+                '</board>' +
+            '</form>',
+        mockRPC: function (route) {
+            if (route === '/web/action/load') {
+                return $.when({
+                    res_model: 'partner',
+                    views: [[4, 'pivot']],
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+        archs: {
+            'partner,4,pivot': '<pivot><field name="int_field" type="measure"/></pivot>',
+        },
+        intercepts: {
+            do_action: function () {
+                assert.step('do action');
+            },
+        },
+    });
+
+    assert.verifySteps([]);
+
+    testUtils.dom.click(form.$('.o_pivot .o_pivot_cell_value'));
+
+    assert.verifySteps(['do action']);
+
+    form.destroy();
+});
+
 });

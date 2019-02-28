@@ -9,20 +9,20 @@
             <div style="width:100%;height:100%;text-align:center;" t-if="slide.slide_type == 'infographic' &amp;&amp; !showMiniQuiz">
                 <img t-attf-src="/web/image/slide.slide/#{slide.id}/image" class="img-fluid" style="height: 100%" alt="Slide image"/>
             </div>
-            <div t-if="(slide.slide_type == 'quiz' || showMiniQuiz) &amp;&amp; questions " class="o_wslides_fullscreen_quiz">
+            <div t-if="(slide.slide_type == 'quiz' || showMiniQuiz) &amp;&amp; questions " class="o_wslides_fs_quiz">
                 <div>
                     <t t-call="website.slide.quiz"/>
-                    <div class="container">
+                    <div id="quiz_buttons" class="container">
                         <button t-if="!slide.done" class="btn btn-primary submit-quiz" >Check your answers</button>
                         <button t-if="embed_url" class="btn btn-primary back-to-video" >Watch again</button>
                         <button t-if="slide.done &amp;&amp; nextSlide" class="btn btn-primary next-slide" >Continue</button>
                     </div>
                 </div>
             </div>
-            <div t-if="slide.slide_type == 'webpage'" class="o_wslides_fullscreen_webpage">
-                    <div class="o_wslides_fullscreen_webpage_content container"/>
+            <div t-if="slide.slide_type == 'webpage'" class="o_wslides_fs_webpage">
+                    <div class="o_wslides_fs_webpage_content container"/>
             </div>
-        <div class="o_wslides_fullscreen_content"/>
+        <div class="o_wslides_fs_content"/>
     </t>
 
     <t t-name="website.slide.quiz">
@@ -76,17 +76,17 @@
                 <div class="o_wslides_quiz_success_modal_close"><i class="fa fa-times"></i></div>
                 <h1>Amazing!</h1>
                 <div class="o_wslides_quiz_success_xp">
-                    <p>You gained <span t-esc="data.points"/> !</p>
+                    <p>You gained <span t-esc="data.points"/> points!</p>
                     <div class="o_wslides_quiz_success_progress_bar">
-                        <div class="o_wslides_quiz_success_progress_gauge"/>
+                        <div class="o_wslides_quiz_success_progress_gauge" t-att-style="'width:'+data.user.progress_bar_percentage+'%'"/>
                     </div>
                     <div class="o_wslides_quiz_success_progress_bounds">
-                        <span>600</span>
-                        <span>1000</span>
+                        <span t-esc="data.user.lower_bound"/>
+                        <span t-esc="data.user.upper_bound"/>
                     </div>
                 </div>
                 <div class="o_wslides_quiz_success_reward"></div>
-                <div class="o_wslides_quiz_success_button">
+                <div t-if="nextSlide" class="o_wslides_quiz_success_button">
                     <a class="next-slide">Next &gt;</a>
                 </div>
             </div>
@@ -101,7 +101,7 @@
             <i t-if="slide.slide_type == 'link'" class="fa fa-file-code-o mr-2"></i>
             <i t-if="slide.slide_type == 'webpage'" class="fa fa-file-text mr-2"></i>
             <i t-if="slide.slide_type == 'quiz'" class="fa fa-question-circle mr-2 text"></i>
-            <span class="o_wslides_fullscreen_slide_title_span" t-esc="slide.name"/>
+            <span class="o_wslides_fs_slide_title_span" t-esc="slide.name"/>
         </t>
         <t t-else="">
             <span><i class="fa fa-flag-checkered"></i>Quiz: <span t-esc="slide.name"/></span>

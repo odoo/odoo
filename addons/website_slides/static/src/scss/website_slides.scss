@@ -1,13 +1,7 @@
 // FIXME may be useless (check initial code here: https://github.com/odoo/odoo/blob/51be5bbfb38db784cb3406877cc0e8806b1bf55a/addons/website_slides/static/src/less/website_slides.less#L1)
 $nav-tabs-border-color: #dddddd !default;
 $body-bg: #FFFFFF !default;
-$link-color: theme-color('primary') !default;
 $MAX-Z-INDEX : 2147483647 !default;
-
-@mixin top-covered-image {
-    object-fit: cover;
-    object-position: top;
-}
 
 
 // Common to new slides pages
@@ -20,39 +14,33 @@ $MAX-Z-INDEX : 2147483647 !default;
     padding: 0px 32px 0px 32px;
 }
 
-div .o_wslides_home_nav {
-    top: -40px;
-
-    @include media-breakpoint-up(md) {
-        font-size: 1rem;
-
-        .o_wslides_nav_navbar_right {
-            margin-left: auto;
-            padding-left: $spacer;
-            border-left: 1px solid $border-color;
-        }
-    }
-}
-
 .o_wslides_wrap {
     background-color: desaturate(map-get($grays, "200"), 80%);
 
-    .o_wslides_course_card {
-        border-width: 0 0 3px 0;
+    .o_wslides_home_nav {
+        top: -40px;
+
+        @include media-breakpoint-up(md) {
+            font-size: 1rem;
+
+            .o_wslides_nav_navbar_right {
+                padding-left: $spacer;
+                margin-left: auto;
+                border-left: 1px solid $border-color;
+            }
+        }
     }
 
+    .o_wslides_course_card,
     .o_wslides_lesson_card {
         border-width: 0 0 3px 0;
     }
 
-    // responsive card-deck like
-    // .row.o_wslides_row > div[class*='col-'] {
-        // display: flex;
-        // flex:1 0 auto;
-        // .card {
-            // width:100%;
-        // }
-    // }
+    .o_wslides_js_slide_like_up,
+    .o_wslides_js_slide_like_down {
+        cursor: pointer;
+        color: $link-color;
+    }
 
     // tools
     // ****************************************
@@ -63,10 +51,6 @@ div .o_wslides_home_nav {
 
     .o_wslides_entry_muted {
         opacity: 0.5;
-    }
-    img.o_wslides_img_center_crop {
-        object-fit: cover;
-        object-position: center;
     }
 
     .o_wslides_home_circled {
@@ -83,10 +67,12 @@ div .o_wslides_home_nav {
         overflow: visible;
         margin-bottom: 0em;
         height: 4px;
+
         .progress-bar {
             background-color: #00A09D;
             position: relative;
             border-radius: 4px;
+
             span {
                 background-color: #00A09D;
                 position: absolute;
@@ -97,6 +83,7 @@ div .o_wslides_home_nav {
                 right: -1.4em;
                 border-radius: 2px;
             }
+
             span:after {
                 bottom: 100%;
                 left: 50%;
@@ -119,27 +106,14 @@ div .o_wslides_home_nav {
 // New home page
 // **************************************************
 
-div .o_wslides_home_nav {
-    top: -40px;
-
-    @include media-breakpoint-up(md) {
-        font-size: 1rem;
-
-         .o_wslides_nav_navbar_right {
-            margin-left: auto;
-            padding-left: $spacer;
-            border-left: 1px solid $border-color;
-        }
-    }
-}
-
-div .o_wslides_home_main {
+.o_wslides_home_main {
     .o_wslides_home_aside {
         .fa-check {
             color: #00A09D;
             font-size: 1.2em;
         }
     }
+
     .o_wprofile_next_rank_card {
         background-color: transparent !important;
     }
@@ -192,6 +166,7 @@ div .o_wslides_home_main {
     border-bottom: 48px solid #66445e;
 
     .o_wslides_course_header_container {
+        position: relative;
         top: 48px;
         padding-top: 0px;
 
@@ -219,7 +194,6 @@ div .o_wslides_home_main {
                         height: 48px;
                         font-weight: bold;
                         padding-top: 12px;
-                        border-left: 2px solid #875A7B;
                         text-align: center;
                         width: 120px;
                         &:hover {
@@ -240,18 +214,6 @@ div .o_wslides_home_main {
 }
 
 .o_wslides_course_main {
-    margin: auto;
-    background-color: #f2f2f2;
-
-    .o_wslides_course_content_main {
-        h3 {
-            font-size: 1.4em;
-        }
-
-        h4 {
-            font-size: 1.3em;
-        }
-
         .o_wslides_course_content_aside {
             max-width: 286px;
             .bg-white {
@@ -263,12 +225,53 @@ div .o_wslides_home_main {
                     padding-right: 15px;
                  }
             }
+        }
+}
 
-            .o_wslides_course_aside_line {
+// Slides list reordering widget
+.o_wslides_slides_list {
+    padding: 0;
+
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .o_wslides_slide_list_category_container {
+        margin: 0;
+        background-color: #ddd;
+        display: flex;
+        list-style: none;
+        font-size: 1.05rem;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .o_wslides_slides_list_slide {
+        &.o_not_editable {
+            height: 0px;
+        }
+
+        &:nth-child(odd) {
+            background-color: #f6f6f6;
+        }
+
+        &:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .o_wslides_slides_list_slide_controls {
+            i:hover {
+                color: $primary !important;
+                cursor: pointer;
             }
         }
     }
 }
+
+
+// New lesson page
+// **************************************************
+
 
 // Old brol to clean someday
 // **************************************************
@@ -292,9 +295,10 @@ div .o_wslides_home_main {
 }
 
 .oe_slides_apart_small {
-    @include top-covered-image;
     height: 60px;
     width: 90px;
+    object-fit: cover;
+    object-position: top;
 }
 
 .oe_slides_statistics_title {
@@ -304,11 +308,6 @@ div .o_wslides_home_main {
 .oe_slides_transcript {
     overflow-y: auto;
     max-height: 500px;
-}
-
-.o_wslides_like_up, .o_wslides_like_down {
-    cursor: pointer;
-    color: $link-color;
 }
 
 // Thumbnails

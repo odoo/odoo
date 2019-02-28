@@ -120,7 +120,6 @@ var BoardController = FormController.extend({
 
 var BoardRenderer = FormRenderer.extend({
     custom_events: _.extend({}, FormRenderer.prototype.custom_events, {
-        do_action: '_onDoAction',
         update_filters: '_onUpdateFilters',
         switch_view: '_onSwitchView',
     }),

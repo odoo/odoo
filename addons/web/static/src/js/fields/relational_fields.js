@@ -107,6 +107,7 @@ var FieldMany2One = AbstractField.extend({
         'click': '_onClick',
     }),
     AUTOCOMPLETE_DELAY: 200,
+    SEARCH_MORE_LIMIT: 320,
 
     /**
      * @override
@@ -501,18 +502,33 @@ var FieldMany2One = AbstractField.extend({
                     values.push({
                         label: _t("Search More..."),
                         action: function () {
-                            self._rpc({
+                            var prom;
+                            if (search_val !== '') {
+                                prom = self._rpc({
                                     model: self.field.relation,
                                     method: 'name_search',
                                     kwargs: {
                                         name: search_val,
                                         args: domain,
                                         operator: "ilike",
-                                        limit: 160,
+                                        limit: self.SEARCH_MORE_LIMIT,
                                         context: context,
                                     },
-                                })
-                                .then(self._searchCreatePopup.bind(self, "search"));
+                                });
+                            }
+                            $.when(prom).then(function (results) {
+                                var dynamicFilters;
+                                if (results) {
+                                    var ids = _.map(results, function (x) {
+                                        return x[0];
+                                    });
+                                    dynamicFilters = [{
+                                        description: _.str.sprintf(_t('Quick search: %s'), search_val),
+                                        domain: [['id', 'in', ids]],
+                                    }];
+                                }
+                                self._searchCreatePopup("search", false, {}, dynamicFilters);
+                            });
                         },
                         classname: 'o_m2o_dropdown_option',
                     });
@@ -555,19 +571,25 @@ var FieldMany2One = AbstractField.extend({
     /**
      * all search/create popup handling
      *
+     * TODO: ids argument is no longer used, remove it in master (as well as
+     * initial_ids param of the dialog)
+     *
      * @private
      * @param {any} view
      * @param {any} ids
      * @param {any} context
+     * @param {Object[]} [dynamicFilters=[]] filters to add to the search view
+     *   in the dialog (each filter has keys 'description' and 'domain')
      */
-    _searchCreatePopup: function (view, ids, context) {
+    _searchCreatePopup: function (view, ids, context, dynamicFilters) {
         var self = this;
         return new dialogs.SelectCreateDialog(this, _.extend({}, this.nodeOptions, {
             res_model: this.field.relation,
             domain: this.record.getDomain({fieldName: this.name}),
             context: _.extend({}, this.record.getContext(this.recordParams), context || {}),
+            dynamicFilters: dynamicFilters || [],
             title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + this.string,
-            initial_ids: ids ? _.map(ids, function (x) { return x[0]; }) : undefined,
+            initial_ids: ids,
             initial_view: view,
             disable_multiple_selection: true,
             no_create: !self.can_create,

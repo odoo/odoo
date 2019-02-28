@@ -507,6 +507,8 @@ class HolidaysRequest(models.Model):
         holiday = super(HolidaysRequest, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
         if not self._context.get('leave_fast_create'):
             holiday.add_follower(employee_id)
+            if holiday.validation_type == 'hr':
+                holiday.message_subscribe(partner_ids=(holiday.employee_id.parent_id.user_id.partner_id | holiday.employee_id.leave_manager_id.partner_id).ids)
             if employee_id:
                 holiday._onchange_employee_id()
             if 'number_of_days' not in values and ('date_from' in values or 'date_to' in values):
@@ -515,7 +517,7 @@ class HolidaysRequest(models.Model):
                 holiday.sudo().action_validate()
                 holiday.message_subscribe(partner_ids=[holiday._get_responsible_for_approval().partner_id.id])
                 holiday.sudo().message_post(body=_("The time off has been automatically approved"), subtype="mt_comment") # Message from OdooBot (sudo)
-            if not self._context.get('import_file'):
+            elif not self._context.get('import_file'):
                 holiday.activity_update()
         return holiday
 
@@ -719,7 +721,7 @@ class HolidaysRequest(models.Model):
         employee_requests = self.filtered(lambda hol: hol.holiday_type == 'employee')
         employee_requests._validate_leave_request()
         if not self.env.context.get('leave_fast_create'):
-            employee_requests.activity_update()
+            employee_requests.filtered(lambda holiday: holiday.validation_type != 'no_validation').activity_update()
         return True
 
     @api.multi
@@ -746,48 +748,69 @@ class HolidaysRequest(models.Model):
         """ Check if target state is achievable. """
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         is_team_leader = self.env.user.has_group('hr_holidays.group_hr_holidays_team_leader')
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_manager')
+
+        # FIXME This is probably handled by hr_leave_allocation_rule_employee_update ir.rule
+        if state in ['refuse', 'validate1', 'validate'] and not is_team_leader:
+            raise UserError(_('Only a Team Leader, Time Off Officer or Manager can approve or refuse time off requests.'))
+
         for holiday in self:
             val_type = holiday.holiday_status_id.validation_type
-            if state == 'confirm':
-                continue
 
-            if state == 'draft':
-                if holiday.employee_id != current_employee and not is_manager:
-                    raise UserError(_('Only a Time Off Manager can reset other people time off.'))
-                continue
+            if not is_manager:
+                if state == 'confirm':
+                    continue
+                elif state == 'draft':
+                    if holiday.employee_id != current_employee:
+                        raise UserError(_('Only a Time Off Manager can reset other people time off.'))
+                else:
+                    # use ir.rule based first access check: department, members, ... (see security.xml)
+                    holiday.check_access_rule('write')
 
-            if not is_team_leader:
-                raise UserError(_('Only a Team Leader, Time Off Officer or Manager can approve or refuse time off requests.'))
+                    # FIXME Should probably be handled via ir.rule
+                    # This handles states validate1 validate and refuse
+                    if holiday.employee_id == current_employee:
+                        raise UserError(_('Only a Time Off Manager can approve its own requests.'))
 
-            if is_team_leader:
-                # use ir.rule based first access check: department, members, ... (see security.xml)
-                holiday.check_access_rule('write')
+                    if (state == 'validate1' and val_type == 'both') or (state == 'validate' and val_type == 'manager') and holiday.holiday_type == 'employee':
+                        manager = holiday.employee_id.parent_id or holiday.employee_id.department_id.manager_id
+                        team_leader = holiday.employee_id.leave_manager_id
+                        error = False
 
-            if holiday.employee_id == current_employee and not is_manager:
-                raise UserError(_('Only a Time Off Manager can approve its own requests.'))
+                        if not manager and not team_leader:
+                            error = not is_officer
+                        else:
+                            error = (not (manager and manager == current_employee) and not (team_leader and team_leader == self.env.user))
 
-            if (state == 'validate1' and val_type == 'both') or (state == 'validate' and val_type == 'manager'):
-                manager = holiday.employee_id.parent_id or holiday.employee_id.department_id.manager_id
-                if (manager and manager != current_employee) and not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
-                    raise UserError(_('You must be either %s\'s manager or Time Off Manager to approve this time off') % (holiday.employee_id.name))
+                        if error:
+                            raise UserError(_('You must be either %s\'s manager or Time Off Manager to approve this time off') % (holiday.employee_id.name))
 
-            if state == 'validate' and val_type == 'both':
-                if not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
-                    raise UserError(_('Only an Time Off Manager can apply the second approval on time off requests.'))
+                    if state == 'validate' and val_type == 'both':
+                        raise UserError(_('Only an Time Off Manager can apply the second approval on time off requests.'))
 
     # ------------------------------------------------------------
     # Activity methods
     # ------------------------------------------------------------
 
     def _get_responsible_for_approval(self):
-        if self.state == 'confirm' and self.employee_id.leave_manager_id and self.employee_id.leave_manager_id.has_group('hr_holidays.group_hr_holidays_team_leader'):
-            return self.employee_id.leave_manager_id
-        elif self.state == 'confirm' and self.employee_id.parent_id.user_id and self.employee_id.parent_id.user_id.has_group('hr_holidays.group_hr_holidays_team_leader'):
-            return self.employee_id.parent_id.user_id
-        elif self.department_id.manager_id.user_id:
-            return self.department_id.manager_id.user_id
-        return self.env.user
+        self.ensure_one()
+        responsible = self.env.user
+
+        if self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
+            responsible = self.env['res.users'].search([
+                ('company_id', '=', self.employee_id.company_id.id),
+                ('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id)
+            ], limit=1)
+        elif self.state == 'confirm' or (self.state == 'validate' and self.validation_type == 'no_validation'):
+            if self.employee_id.leave_manager_id and self.employee_id.leave_manager_id.has_group('hr_holidays.group_hr_holidays_team_leader'):
+                responsible = self.employee_id.leave_manager_id
+            elif self.employee_id.parent_id.user_id and self.employee_id.parent_id.user_id.has_group('hr_holidays.group_hr_holidays_team_leader'):
+                responsible = self.employee_id.parent_id.user_id
+            elif self.department_id.manager_id.user_id:
+                responsible = self.department_id.manager_id.user_id
+
+        return responsible
 
     def activity_update(self):
         to_clean, to_do = self.env['hr.leave'], self.env['hr.leave']
@@ -838,7 +861,7 @@ class HolidaysRequest(models.Model):
             ref_action = self._notify_get_action_link('controller', controller='/leave/refuse')
             hr_actions += [{'url': ref_action, 'title': _('Refuse')}]
 
-        holiday_user_group_id = self.env.ref('hr_holidays.group_hr_holidays_user').id
+        holiday_user_group_id = self.env.ref('hr_holidays.group_hr_holidays_team_leader').id
         new_group = (
             'group_hr_holidays_user', lambda pdata: pdata['type'] == 'user' and holiday_user_group_id in pdata['groups'], {
                 'actions': hr_actions,

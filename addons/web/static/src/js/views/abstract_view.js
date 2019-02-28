@@ -78,6 +78,8 @@ var AbstractView = Factory.extend({
      * @param {string} [params.controllerState]
      * @param {string} [params.displayName]
      * @param {Array[]} [params.domain=[]]
+     * @param {Object[]} [params.dynamicFilters] transmitted to the
+     *   ControlPanelView
      * @param {number[]} [params.ids]
      * @param {boolean} [params.isEmbedded=false]
      * @param {Object} [params.searchQuery={}]
@@ -165,6 +167,7 @@ var AbstractView = Factory.extend({
         this.controlPanelParams = {
             action: action,
             activateDefaultFavorite: params.activateDefaultFavorite,
+            dynamicFilters: params.dynamicFilters,
             breadcrumbs: params.breadcrumbs,
             context: this.loadParams.context,
             domain: this.loadParams.domain,

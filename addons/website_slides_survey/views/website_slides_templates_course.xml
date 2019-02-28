@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="slide_icon_inherit_survey" inherit_id="website_slides.slide_icon">
+            <xpath expr="//i[last()]" position="after">
+                <i t-if="slide.slide_type == 'certification'" class="fa fa-trophy mr-2 text-muted"></i>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -8,71 +8,44 @@
             <t t-call="website_slides.course_nav">
                 <t t-set="channel" t-value="slide.channel_id"/>
             </t>
-            <div class="slide-header">
-                <div class="slide-header-container">
-                    <div class="slide-header-box">
+            <div class="o_wslides_slide_header">
+                <div class="o_wslides_slide_header_container">
+                    <div class="o_wslides_slide_header_box">
                         <a t-attf-href="/slides/#{slug(slide.channel_id)}" t-field="slide.channel_id.name"/>
+
                         <div t-if="slide.channel_id.channel_type == 'training'" class="d-flex align-items-end">
-                            <div class="course-progress-bar">
-                                <div class="progress-gauge m-0 oe_slide_js_progress_bar" t-attf-channel_completion="#{slide.channel_id.completion}"/>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar"
+                                    t-att-aria-valuenow="slide.channel_id.completion" aria-valuemin="0" aria-valuemax="100"
+                                    t-att-style="'width: %s' % (slide.channel_id.completion)"/>
                             </div>
                             <i class="fa fa-trophy ml-2 mb-0 p-0" style="font-size:1.8rem; color: #cdcdcd;"></i>
                         </div>
                     </div>
                 </div>
             </div>
-            <div t-if="slide.channel_id.channel_type == 'training'" class="sidebar-list oe_js_side_bar_list slide-content-list">
-                <ul class="slide-list">
+            <div t-if="slide.channel_id.channel_type == 'training'" class="o_wslides_slide_content_list">
+                <ul class="o_wslides_slide_list">
                     <li>
-                        <div class="slide-content-list-header">
+                        <div class="o_wslides_slide_content_list_header">
                             Course content
                         </div>
                     </li>
                     <t t-set="i" t-value="0"/>
+                    <t t-if="uncategorized_slides" t-call="website_slides.slide_detail_list_category_view">
+                        <t t-set="category_slide_ids" t-value="uncategorized_slides" />
+                    </t>
                     <t t-foreach="slide.channel_id.category_ids" t-as="category">
-                        <a data-toggle="collapse" t-attf-href="#collapse-#{category.id}" role="button" aria-expanded="false" t-attf-aria-controls="collapse-#{category.id}">
-                            <li class="slide-content-list-section">
-                                <span t-field="category.name"/>
-                            </li>
-                        </a>
-                        <ul class="collapse p-0 m-0" t-attf-id="collapse-#{category.id}" >
-                            <t t-foreach="category.slide_ids" t-as="course_slide">
-                                <li class="slide-content-list-slide">
-                                    <a t-attf-href="/slides/slide/#{slug(course_slide)}" t-att-index="i" t-att-slide_id="course_slide.id">
-                                        <div  t-attf-index="#{i}" t-attf-slide_id="#{course_slide.id}"  t-attf-class="#{'active' if slide.id == course_slide.id else ''} d-flex justify-content-between">
-                                            <div>
-                                                <i t-if="course_slide.slide_type == 'presentation'" class="fa fa-file-pdf-o mr-2 text-muted"></i>
-                                                <i t-if="course_slide.slide_type == 'infographic'" class="fa fa-file-picture-o mr-2 text-muted"></i>
-                                                <i t-if="course_slide.slide_type == 'video'" class="fa fa-play-circle mr-2 text-muted"></i>
-                                                <i t-if="course_slide.slide_type == 'link'" class="fa fa-file-code-o mr-2 text-muted"></i>
-                                                <i t-if="course_slide.slide_type == 'webpage'" class="fa fa-file-text mr-2 text-muted"></i>
-                                                <i t-if="course_slide.slide_type == 'quiz'" class="fa fa-question-circle mr-2 text-muted"></i>
-                                                <t t-esc="course_slide.name"/>
-                                            </div>
-                                            <div class="content-slide-controls mr-2">
-                                                <i t-attf-id="check-#{course_slide.id}" t-if="course_slide.id in user_progress and not user_progress[course_slide.id].completed" class="check-done fa fa-check-circle text-muted mr-1"></i>
-                                                <i t-attf-id="check-#{course_slide.id}" t-if="course_slide.id in user_progress and user_progress[course_slide.id].completed" class="check-done text-primary fa fa-check-circle mr-1"></i>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <ul t-if="course_slide.link_ids" class="list-group slide-resources">
-                                        <t t-foreach="course_slide.link_ids" t-as="resource">
-                                            <a t-attf-href="#{resource.link}" target="new">
-                                                <li><div class="slide-resource"><i class="fa fa-link"></i><span t-field="resource.link"/></div></li>
-                                            </a>
-                                        </t>
-                                    </ul>
-                                </li>
-                                <t t-set="i" t-value="i+1"/>
-                            </t>
-                        </ul>
+                        <t t-call="website_slides.slide_detail_list_category_view">
+                            <t t-set="category_slide_ids" t-value="category.slide_ids"/>
+                        </t>
                     </t>
                 </ul>
             </div>
-            <div class="slide-header-container d-flex justify-content-between mt-4 mb-3">
-                <div class="slide-title">
+            <div class="o_wslides_slide_header_container d-flex justify-content-between mt-4 mb-3">
+                <div class="o_wslides_slide_title">
                     <h1 t-field="slide.name"/>
-                    <span t-if="slide.question_ids" t-attf-class="slide-points ml-2 #{'quiz-points-won' if slide.id in user_progress and user_progress[slide.id].completed else ''}">
+                    <span t-if="slide.question_ids" t-attf-class="o_wslides_slide_points ml-2 #{'quiz-points-won' if slide.id in user_progress and user_progress[slide.id].completed else ''}">
                         <span t-if="slide.id in user_progress and user_progress[slide.id].quiz_attempts_count == 0" id="quiz-points" t-esc="slide.quiz_first_attempt_reward"/>
                         <span t-if="slide.id in user_progress and user_progress[slide.id].quiz_attempts_count == 1" id="quiz-points" t-esc="slide.quiz_second_attempt_reward"/>
                         <span t-if="slide.id in user_progress and user_progress[slide.id].quiz_attempts_count == 2" id="quiz-points" t-esc="slide.quiz_third_attempt_reward"/>
@@ -80,18 +53,20 @@
                         points
                     </span>
                 </div>
-                <div class="course-nav-links">
+                <div>
                     <t t-if="previous_slide">
-                        <a class="slide-button" t-attf-href="/slides/slide/#{previous_slide}">Prev</a>
+                        <a class="o_wslides_slide_button" t-attf-href="/slides/slide/#{previous_slide}">Prev</a>
                     </t>
-                    <a t-if="slide.slide_type in ('webpage', 'video', 'document', 'iconographic') and not slide.question_ids and (slide.id in user_progress and  not user_progress[slide.id].completed)" t-attf-href="/slide/completed/#{slide.id}?next_slide=#{next_slide}&amp;course=#{slug(slide.channel_id)}" class="slide-button-done">Set Done</a>
+                    <a t-if="slide.slide_type in ('webpage', 'video', 'document', 'iconographic') and not slide.question_ids and (slide.id in user_progress and  not user_progress[slide.id].completed)" 
+                        t-att-href="'/slides/slide/%s/set_completed?%s' % (slide.id, 'next_slide=%s' % next_slide if next_slide else '')"
+                        class="o_wslides_slide_button_done">Set Done</a>
                     <t t-if="next_slide">
-                        <a class="slide-button" t-attf-href="/slides/slide/#{next_slide}">Next</a>
+                        <a class="o_wslides_slide_button" t-attf-href="/slides/slide/#{next_slide}">Next</a>
                     </t>
-                    <a t-if="slide.channel_id.channel_type == 'training'" t-attf-href="/slides/slide/#{slug(slide)}?fullscreen=1" class="slide-button-fullscreen ml-2"><i class="fa fa-desktop mr-2"></i>fullscreen</a>
+                    <a t-if="slide.channel_id.channel_type == 'training'" t-attf-href="/slides/slide/#{slug(slide)}?fullscreen=1" class="o_wslides_slide_button_fullscreen ml-2"><i class="fa fa-desktop mr-2"></i>fullscreen</a>
                 </div>
             </div>
-        <div class="slide-header-container mt16">
+        <div class="o_wslides_slide_header_container mt16">
             <div class="row">
                 <div style="width:100%;">
                     <div class="o_w_slides_slide_detail_container" style="width: 100%;">
@@ -108,7 +83,7 @@
                             <div t-field="slide.html_content"/>
                         </div>
                         <div t-if="slide.question_ids">
-                            <div class=".o_wslides_fullscreen_quiz o_w_slides_quiz_no_fullscreen mt-2"
+                            <div class=".o_wslides_fs_quiz o_w_slides_quiz_no_fullscreen mt-2"
                                 t-attf-slide_id="#{slide.id}"
                                 t-attf-slide_done="#{slide.id in user_progress and user_progress[slide.id].completed}"
                                 t-attf-nb_attempts="#{user_progress[slide.id].quiz_attempts_count if slide.id in user_progress else ''}"
@@ -218,9 +193,9 @@
 
                                 <!-- LikeButton widget -->
                                 <div t-if="slide.channel_id.channel_type == 'documentation' and slide.channel_id.allow_comment" class="text-muted mt4">
-                                    <div class="float-right mb16 text-right o_wslides_like">
+                                    <div class="float-right mb16 text-right o_wslides_js_slide_like">
                                         <span
-                                            class="o_wslides_like_up"
+                                            class="o_wslides_js_slide_like_up"
                                             t-att-data-slide-id="slide.id"
                                             tabindex="0"
                                             data-toggle="popover">
@@ -228,7 +203,7 @@
                                             <span t-esc="slide.likes"/>
                                         </span>
                                         <span
-                                            class="o_wslides_like_down"
+                                            class="o_wslides_js_slide_like_down"
                                             t-att-data-slide-id="slide.id"
                                             tabindex="0"
                                             data-toggle="popover">
@@ -444,102 +419,45 @@
     </t>
 </template>
 
-<!-- Slide template for the fullscreen mode -->
-<template id="slide_fullscreen" name="Fullscreen">
-    <t t-call="website.layout">
-        <div class="o_wslides">
-            <div class="o_wslides_slide_fullscreen_header">
-                <div>
-                    <a id="fullscreen_sidebar_button" href="#" class="active o_wslides_fullscreen_toggle_sidebar"><i class="fa fa-bars"></i>Lessons</a>
-                    <a class="o_wslides_small_screen" t-attf-href="/slides/slide/#{slug(slide)}" target="new"><i class="fa fa-pencil"></i>write a review</a>
-                    <div class="o_wslides_fullscreen_slide_title"/>
-                </div>
-                <div>
-                    <a t-attf-href="/slides/">back to courses</a>
-                </div>
-            </div>
-            <div class="o_wslides_fullscreen_container">
-                <div class="oe_js_side_bar_list o_wslides_fullscreen_sidebar">
-                    <ul>
-                        <li>
-                            <div class="o_wslides_fullscreen_sidebar_header">
-                                <a t-attf-href="/slides/#{slug(slide.channel_id)}">
-                                    <span t-field="slide.channel_id.name"/>
-                                </a>
-                                <div class="o_wslides_slide_fullscreen_progress_box">
-                                    <div class="o_wslides_fullscreen_sidebar_progressbar">
-                                        <div class="o_wslides_fullscreen_sidebar_progress_gauge oe_slide_js_progress_bar" t-attf-channel_completion="#{slide.channel_id.completion}"/>
-                                    </div>
-                                    <span><span class="o_wslides_progress_percentage" t-esc="slide.channel_id.completion"/>%</span>
-                                </div>
-                            </div>
-                        </li>
-                        <t t-set="i" t-value="0"/>
-                        <t t-foreach="slide.channel_id.category_ids" t-as="category">
-                            <div class="o_wslides_fullscreen_sidebar_section">
-                                <a data-toggle="collapse" t-attf-href="#collapse-#{category.id}" role="button" aria-expanded="true" t-attf-aria-controls="collapse-#{category.id}">
-                                    <li class="o_wslides_fullscreen_sidebar_section_tab">
-                                        <span t-field="category.name"/>
-                                    </li>
-                                </a>
-                                <ul class="o_wslides_fullscreen_sidebar_section_slides collapsed p-0 m-0" t-attf-id="collapse-#{category.id}" >
-                                    <t t-foreach="category.slide_ids" t-as="course_slide">
-                                        <li t-att-index="i" t-att-slide_id="course_slide.id" t-attf-class="#{'active' if slide.id == course_slide.id else ''}">
-                                            <span class="o_wslides_fullscreen_slide_tab_line">
-                                                <span class="o_wslides_top_line"></span>
-                                                <i t-attf-id="check-#{course_slide.id}" t-if="not course_slide.id in user_progress or not user_progress[course_slide.id].completed" class="check-done fa fa-circle-thin"></i>
-                                                <i t-attf-id="check-#{course_slide.id}" t-if="course_slide.id in user_progress and user_progress[course_slide.id].completed" class="check-done o_wslides_slide_completed fa fa-check-circle"></i>
-                                                <span class="o_wslides_bottom_line"></span>
-                                            </span>
-                                            <a t-att-index="i" t-att-slide_id="course_slide.id">
-                                                <div t-attf-index="#{i}"
-                                                    t-attf-slide_slug="#{slug(course_slide)}"
-                                                    t-attf-done="#{course_slide.id in user_progress and user_progress[course_slide.id].completed}"
-                                                    t-attf-slide_id="#{course_slide.id}"
-                                                    t-attf-slide_name="#{course_slide.name}"
-                                                    t-attf-quiz="#{True if course_slide.question_ids else False}"
-                                                    t-attf-slide_type="#{course_slide.slide_type}"
-                                                    t-attf-slide_embed_code="#{course_slide.embed_code}"
-                                                    t-attf-class="o_wslides_fullscreen_sidebar_slide_tab #{'active' if slide.id == course_slide.id else ''} d-flex justify-content-between">
-                                                    <div>
-                                                        <i t-if="course_slide.slide_type == 'document'" class="fa fa-file-pdf-o mr-2 text-muted"></i>
-                                                        <i t-if="course_slide.slide_type == 'infographic'" class="fa fa-file-picture-o mr-2 text-muted"></i>
-                                                        <i t-if="course_slide.slide_type == 'video'" class="fa fa-play-circle mr-2 text-muted"></i>
-                                                        <i t-if="course_slide.slide_type == 'link'" class="fa fa-file-code-o mr-2 text-muted"></i>
-                                                        <i t-if="course_slide.slide_type == 'webpage'" class="fa fa-file-text mr-2 text-muted"></i>
-                                                        <i t-if="course_slide.slide_type == 'quiz'" class="fa fa-question-circle mr-2 text-muted"></i>
-                                                        <i t-if="course_slide.slide_type == 'certification'" class="fa fa-trophy mr-2 text-muted"></i>
-                                                        <t t-esc="course_slide.name"/>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <t t-if="course_slide.link_ids" t-foreach="course_slide.link_ids" t-as="link">
-                                            <li>
-                                                <span class="o_wslides_fullscreen_slide_tab_line">
-                                                    <span class="o_wslides_full_line"/>
-                                                </span>
-                                                <a class="o_wslides_slide_link" t-att-href="link.link" target="new"><i class="fa fa-link"></i><span t-esc="link.name"/></a>
-                                            </li>
-                                        </t>
-                                        <li t-att-index="i" t-if="course_slide.question_ids and not course_slide.slide_type =='quiz'">
-                                            <span class="o_wslides_fullscreen_slide_tab_line">
-                                                <span class="o_wslides_full_line"/>
-                                            </span>
-                                            <span class="o_wslides_slide_quiz" t-att-index="i"><i class="fa fa-flag-checkered"></i>Quiz: <span t-esc="course_slide.name"/></span>
-                                        </li>
-                                        <t t-set="i" t-value="i+1"/>
-                                    </t>
-                                </ul>
-                            </div>
-                        </t>
-                    </ul>
-                </div>
-                <div class="oe_js_course_slide" t-attf-user_id="#{user.id}" t-attf-course_name="#{slide.channel_id.name}" t-attf-course_id="#{slide.channel_id.id}" t-attf-course_slug="#{slug(slide.channel_id)}" t-attf-slide_id="#{slide.id}"/>
-                <div class="o_wslides_fullscreen_player"/>
-            </div>
-        </div>
-    </t>
+<template id="slide_detail_list_category_view" name="Category item for the slide detailed view list">
+    <a data-toggle="collapse" t-att-href="('#collapse-%s') % (category.id if category else 0)" role="button" aria-expanded="true" t-att-aria-controls="('collapse-%s') % (category.id if category else 0)">
+        <li class="o_wslides_slide_content_list_section">
+            <t t-if="category">
+                <span t-field="category.name"/>
+            </t>
+            <t t-else="">
+                <span>Uncategorized</span>
+            </t>
+        </li>
+    </a>
+    <ul class="collapse show p-0 m-0" t-att-id="('collapse-%s') % (category.id if category else 0)" >
+        <t t-foreach="category_slide_ids" t-as="course_slide">
+            <li class="o_wslides_slide_content_list_slide">
+                <a t-attf-href="/slides/slide/#{slug(course_slide)}" t-att-index="i" t-att-slide_id="course_slide.id">
+                    <div  t-attf-index="#{i}" t-attf-slide_id="#{course_slide.id}"  t-attf-class="#{'active' if slide.id == course_slide.id else ''} d-flex justify-content-between">
+                        <div>
+                            <t t-call="website_slides.slide_icon">
+                                <t t-set="slide" t-value="course_slide" />
+                            </t>
+                            <t t-esc="course_slide.name"/>
+                        </div>
+                        <div class="o_wslides_slides_list_slide_controls mr-2">
+                            <i t-attf-id="check-#{course_slide.id}" t-if="course_slide.id in user_progress and not user_progress[course_slide.id].completed" class="check-done fa fa-check-circle text-muted mr-1"></i>
+                            <i t-attf-id="check-#{course_slide.id}" t-if="course_slide.id in user_progress and user_progress[course_slide.id].completed" class="check-done text-primary fa fa-check-circle mr-1"></i>
+                        </div>
+                    </div>
+                </a>
+                <ul t-if="course_slide.link_ids" class="list-group">
+                    <t t-foreach="course_slide.link_ids" t-as="resource">
+                        <a t-attf-href="#{resource.link}" target="new">
+                            <li><div><i class="fa fa-link"></i><span t-field="resource.link"/></div></li>
+                        </a>
+                    </t>
+                </ul>
+            </li>
+            <t t-set="i" t-value="i+1"/>
+        </t>
+    </ul>
 </template>
 
 <!-- Slide sub-template: display an item in a list of related slides (Related, Most Viewed, ...) -->

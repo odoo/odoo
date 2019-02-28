@@ -1,251 +1,143 @@
-odoo.define('website_slides.slideslist', function (require) {
-    'use strict';
+odoo.define('website_slides.course.slides.list', function (require) {
+'use strict';
 
-    var publicWidget = require('web.public.widget');
+var publicWidget = require('web.public.widget');
 
-    var SlideUpload = require('website_slides.upload_modal');
+publicWidget.registry.websiteSlidesCourseSlidesList = publicWidget.Widget.extend({
+    selector: '.o_wslides_slides_list',
+    xmlDependencies: ['/website_slides/static/src/xml/website_slides_upload.xml'],
 
-    var List = publicWidget.Widget.extend({
-        init: function (el){
-            this._super.apply(this,arguments);
-            this.draggedElement = undefined;
-            this.dropTarget = undefined;
-            this.slideCount = undefined;
-            this.slides = [];
-            this.categories = [];
-        },
-        start: function (){
-            this._super.apply(this,arguments);
-            this.slideCount = $('li.content-slide').length;
-            //Change links HREF to fullscreen mode for SEO
-            var links = $(".link-to-slide");
-            for (var i = 0; i < links.length; i++){
-                $(links[i]).attr('href', $(links[i]).attr('href') + "?fullscreen=1");
-            }
-            this._bindEvents();
-        },
-        _bindEvents: function (){
-            var self = this;
-            $('.slide-draggable').each(function (){
-               self._addSlideDragAndDropHandlers($(this));
-            });
-            $('.section-draggable').each(function (){
-                self._addSectionDragAndDropHandlers($(this));
-            });
-            $('.course-section').each(function (){
-                self._addDropSlideOnSectionHandler($(this));
-            });
-        },
-        _unbind: function (className){
-            $("."+className).each(function (){
-                $(this).unbind();
-            });
-        },
-        _unbindAll: function (){
-            this._unbind('slide-draggable');
-            this._unbind('section-draggable');
-            this._unbind('course-section');
-        },
-        _getSlides: function (){
-            var self = this;
-            var slides = $('li.content-slide');
-            for(var i = 0; i < slides.length;i++){
-                var slide = $(slides[i]);
-                self.slides.push({
-                    id: parseInt(slide.attr('slide_id')),
-                    category_id: parseInt(slide.attr('category_id')),
-                    sequence: i
-                });
-            }
-        },
-        _getCategories: function (){
-            var self = this;
-            self.categories = [];
-            var categories = $('.course-section');
-            for (var i = 0; i < categories.length;i++){
-                var category = $(categories[i]);
-                self.categories.push(parseInt(category.attr('category_id')));
-            }
-        },
-        _addDropSlideOnSectionHandler: function (target){
-            var self = this;
-            target.on('drop', function (ev){
-                if (ev.preventDefault){
-                    ev.preventDefault();
-                }
-                self.dropTarget = $(ev.currentTarget);
-                self.draggedElement[0].parentNode.removeChild(self.draggedElement[0]);
-                $('ul[category_id='+target.attr('category_id')+']').append(self.draggedElement)
-                self._addSlideDragAndDropHandlers(self.draggedElement);
-                self._reorderSlides();
-            });
-            target.on('dragover', function (ev){
-                if(ev.preventDefault){
-                    ev.preventDefault();
-                }
-            });
-        },
-        _addSlideDragAndDropHandlers: function (target){
-            var self = this;
-            target.on('dragstart', function (ev){
-                $('.section-draggable').removeClass('hold')
-                self._unbind('section-draggable');
-                ev.originalEvent.dataTransfer.effectAllowed = 'move';
-                ev.originalEvent.dataTransfer.setData('text/html', this.outerHTML);
-                self.draggedElement = target;
-                self.draggedElement.addClass('hold');
-            });
-            target.on('dragover', function (ev){
-                if ($(ev.currentTarget) !== self.draggedElement){
-                    if (ev.preventDefault){
-                        ev.preventDefault();
-                    }
-                    target.addClass('slide-hovered');
-                }
-            });
-            target.on('dragleave', function (ev){
-                if (ev.preventDefault){
-                    ev.preventDefault();
-                }
-                target.removeClass('slide-hovered');
-            });
-            target.on('drop', function (ev){
-                if (self.draggedElement.hasClass('slide-draggable') && target.hasClass('slide-draggable')){
-                    if (ev.preventDefault){
-                        ev.preventDefault();
-                    }
-                    target.removeClass('slide-hovered');
-                    target.removeClass('hold');
-                    if (target !== self.draggedElement){
-                        self.dropTarget = $(ev.currentTarget);
-                        self.draggedElement[0].parentNode.removeChild(self.draggedElement[0]);
-                        var dropHTML = ev.originalEvent.dataTransfer.getData('text/html');
-                        target[0].insertAdjacentHTML('beforebegin',dropHTML);
-                        self.draggedElement = $(target[0].previousSibling);
-                        self._reorderSlides();
-                    }
-                    self._unbindAll();
-                    self._bindEvents();
-                }
-            });
-            target.on('dragend', function (ev){
-                if (ev.preventDefault){
-                    ev.preventDefault();
-                }
-                target.removeClass('slide-hovered');
-                target.removeClass('hold');
-            });
-        },
-        _addSectionDragAndDropHandlers: function(target){
-            var self = this;
-            target.on('dragstart', function (ev){
-                self._unbind('slide-draggable');
-                self._unbind('course-section');
-                ev.originalEvent.dataTransfer.effectAllowed = 'move';
-                ev.originalEvent.dataTransfer.setData('text/html', this.outerHTML);
-                self.draggedElement = target;
-                self.draggedElement.addClass('hold');
-            });
-            target.on('dragover', function (ev){
-                if (target.hasClass('section-draggable') && self.draggedElement.hasClass('section-draggable')){
-                    if (ev.preventDefault){
-                        ev.preventDefault();
-                    }
-                    target.addClass('slide-hovered');
-                }
-            });
-            target.on('dragleave', function (ev){
-                if (ev.preventDefault){
-                    ev.preventDefault();
-                }
-                target.removeClass('slide-hovered');
-            });
-            target.on('drop', function (ev){
-                if(ev.preventDefault){
-                    ev.preventDefault();
-                }
-                if(self.draggedElement.hasClass('section-draggable')  && target.hasClass('section-draggable')){
-                    target.removeClass('slide-hovered');
-                    target.removeClass('hold');
-                    self.dropTarget = $(ev.currentTarget);
-                    if(target !== self.draggedElement && $(ev.currentTarget).hasClass('section-draggable')){
-                        self.draggedElement[0].parentNode.removeChild(self.draggedElement[0]);
-                        var dropHTML = ev.originalEvent.dataTransfer.getData('text/html');
-                        target[0].insertAdjacentHTML('beforebegin',dropHTML);
-                        self.draggedElement = $(target[0].previousSibling);
-                        self._reorderCategories();
-                        self._reorderSlides();
-                        self._rebindUploadButton(self.draggedElement.attr('category_id'));
-                    }
-                    self._unbindAll();
-                    self._bindEvents();
-                }
-            });
-            target.on('dragend', function (ev){
-                if (ev.preventDefault){
-                    ev.preventDefault();
-                }
-                target.removeClass('slide-hovered');
-                target.removeClass('hold');
-            });
-        },
-        _reorderCategories: function (){
-            var self = this;
-            self._getCategories();
-            self._rpc({
-                route: '/web/dataset/resequence',
-                params: {
-                    model: "slide.category",
-                    ids: self.categories
-                }
-            }).then(function (){
-                self._resetCategoriesIndex();
-            });
-        },
-        _resetCategoriesIndex: function (){
-            var categoriesIndexes = $('.section-index')
-            for (var i = 0; i < categoriesIndexes.length; i++){
-                $(categoriesIndexes[i]).text(i+1)
-            }
-        },
-        _reorderSlides: function(){
-            var self = this;
-            // In case the slide was transfered to another section
-            if (self.draggedElement.hasClass('slide-draggable')){
-                self.draggedElement.attr('category_id', parseInt(self.dropTarget.attr('category_id')))
-            }
-            self.slides = [];
-            self._getSlides();
-            self._rpc({
-                route: "/slides/resequence_slides",
-                params: {
-                    slides_data: self.slides
-                }
-            }).then(function(){
-            });
-        },
-        _rebindUploadButton: function(categoryID){
-            var self = this;
-            this.$('.oe_slide_js_upload[data-category-id='+categoryID+']').click(function(ev){
-                ev.preventDefault();
-                var data = $(ev.currentTarget).data();
-                var dialog = new SlideUpload.SlideUploadDialog(self, data);
-                dialog.appendTo(document.body);
-                dialog.open();
-            })
-        }
-    })
+    start: function () {
+        this._super.apply(this,arguments);
 
-    publicWidget.registry.websiteSlidesCourseSlidesList = publicWidget.Widget.extend({
-        selector: '.oe_js_course_slides_list',
-        xmlDependencies: ['/website_slides/static/src/xml/website_slides_upload.xml'],
-        init: function (el){
-            this._super.apply(this, arguments);
-        },
-        start: function (){
-            this._super.apply(this, arguments);
-            var list = new List(this);
-            list.appendTo(".oe_js_course_slides_list");
-        }
-    });
+        this.channelId = this.$el.data('channelId');
+
+        this._updateHref();
+        this._bindSortable();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------,
+
+    /**
+     * Bind the sortable jQuery widget to both
+     * - course sections
+     * - course slides
+     *
+     * @private
+     */
+    _bindSortable: function () {
+        this.$('ul.o_wslides_slides_list_container').sortable({
+            handle: '.fa-arrows',
+            stop: this._reorderCategories.bind(this),
+            items: '.o_wslides_slide_list_category'
+        });
+
+        this.$('.o_wslides_slides_list_container ul').sortable({
+            handle: '.fa-arrows',
+            connectWith: '.o_wslides_slides_list_container ul',
+            stop: this._reorderSlides.bind(this),
+            items: '.o_wslides_slides_list_slide:not(.o_wslides_empty_category)'
+        });
+    },
+
+    /**
+     * This method will check that a section is empty/not empty
+     * when the slides are reordered and show/hide the
+     * "Empty category" placeholder.
+     *
+     * @private
+     */
+    _checkForEmptySections: function (){
+        this.$('.o_wslides_slides_list_container ul').each(function (){
+            var $emptyCategory = $(this).find('.o_wslides_empty_category');
+            if ($(this).find('li.o_wslides_slides_list_slide[data-slide-id]').length === 0) {
+                $emptyCategory.removeClass('d-none').addClass('d-flex');
+            } else {
+                $emptyCategory.addClass('d-none').removeClass('d-flex');
+            }
+        });
+    },
+
+    _getCategories: function (){
+        var categories = [];
+        this.$('.o_wslides_js_category').each(function (){
+            categories.push(parseInt($(this).data('categoryId')));
+        });
+        return categories;
+    },
+
+    /**
+     * Returns a slides dict in the form:
+     * {slide_id: {'sequence': slide_sequence, 'category_id': slide.category_id.id}}
+     *
+     *
+     * (Uncategorized slides don't have the category_id key)
+     *
+     * @private
+     */
+    _getSlides: function (){
+        var slides = {};
+        this.$('li.o_wslides_slides_list_slide[data-slide-id]').each(function (index){
+            var $slide = $(this);
+            var values = {
+                sequence: index
+            };
+
+            var categoryId = $slide.closest('.o_wslides_slide_list_category').data('categoryId');
+            if (typeof categoryId !== typeof undefined && categoryId !== false) {
+                values.category_id = categoryId;
+            }
+
+            slides[$slide.data('slideId')] = values;
+        });
+
+        return slides;
+    },
+
+    _reorderCategories: function (){
+        var self = this;
+        self._rpc({
+            route: '/web/dataset/resequence',
+            params: {
+                model: "slide.category",
+                ids: self._getCategories()
+            }
+        });
+    },
+
+    _reorderSlides: function (){
+        this._checkForEmptySections();
+
+        this._rpc({
+            route: "/slides/channel/resequence",
+            params: {
+                channel_id: this.channelId,
+                slides_data: this._getSlides()
+            }
+        });
+    },
+
+    /**
+     * Change links href to fullscreen mode for SEO.
+     *
+     * Specifications demand that links are generated (xml) without the "fullscreen"
+     * parameter for SEO purposes.
+     *
+     * This method then adds the parameter as soon as the page is loaded.
+     *
+     * @private
+     */
+    _updateHref: function () {
+        this.$(".o_wslides_slides_list_slide_link").each(function (){
+            var href = $(this).attr('href');
+            var operator = href.indexOf('?') !== -1 ? '&' : '?';
+            $(this).attr('href', href + operator + "fullscreen=1");
+        });
+    }
+});
+
+return publicWidget.registry.websiteSlidesCourseSlidesList;
+
 });
