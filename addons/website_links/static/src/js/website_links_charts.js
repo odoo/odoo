@@ -183,6 +183,7 @@ sAnimations.registry.websiteLinksCharts = sAnimations.Class.extend({
                 $('#all_time_charts').prepend(_t("There is no data to show"));
                 $('#last_month_charts').prepend(_t("There is no data to show"));
                 $('#last_week_charts').prepend(_t("There is no data to show"));
+                return;
             }
 
             var formattedClicksByDay = {};
