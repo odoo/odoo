@@ -63,6 +63,14 @@ class StockScrap(models.Model):
     def onchange_product_id(self):
         if self.product_id:
             self.product_uom_id = self.product_id.uom_id.id
+            # Check if we can get a more precise location instead of
+            # the default location (a location corresponding to where the
+            # reserved product is stored)
+            if self.picking_id:
+                for move_line in self.picking_id.move_line_ids:
+                    if move_line.product_id == self.product_id:
+                        self.location_id = move_line.location_id
+                        break
 
     @api.model
     def create(self, vals):
