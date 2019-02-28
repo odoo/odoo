@@ -19,8 +19,9 @@ _logger = logging.getLogger(__name__)
 
 
 class WebsiteSlides(WebsiteProfile):
-    _slides_per_page = 12
-    _slides_per_list = 20
+    SLIDES_PER_PAGE = 12
+    SLIDES_PER_ASIDE = 20
+    SLIDES_PER_CATEGORY = 4
     _channel_order_by_criterion = {
         'vote': 'total_votes desc',
         'view': 'total_views desc',
@@ -64,8 +65,8 @@ class WebsiteSlides(WebsiteProfile):
         return True
 
     def _get_slide_detail(self, slide):
-        most_viewed_slides = slide._get_most_viewed_slides(self._slides_per_list)
-        related_slides = slide._get_related_slides(self._slides_per_list)
+        most_viewed_slides = slide._get_most_viewed_slides(self.SLIDES_PER_ASIDE)
+        related_slides = slide._get_related_slides(self.SLIDES_PER_ASIDE)
         values = {
             'slide': slide,
             'most_viewed_slides': most_viewed_slides,
@@ -90,11 +91,40 @@ class WebsiteSlides(WebsiteProfile):
         possible_points = [slide.quiz_first_attempt_reward,slide.quiz_second_attempt_reward,slide.quiz_third_attempt_reward, slide.quiz_fourth_attempt_reward]
         return possible_points[attempt_count] if attempt_count < len(possible_points) else possible_points[-1]
 
+    # CHANNEL UTILITIES
+    # --------------------------------------------------
+
     def _get_user_progress(self, channel):
-        user_progress = { slide_partner.slide_id.id: slide_partner for slide_partner in request.env['slide.slide.partner'].sudo().search([('channel_id', '=', channel.id),('partner_id', '=', request.env.user.partner_id.id)])}
+        user_progress = {
+            slide_partner.slide_id.id: slide_partner
+            for slide_partner in request.env['slide.slide.partner'].sudo().search([
+                ('channel_id', '=', channel.id),
+                ('partner_id', '=', request.env.user.partner_id.id)
+            ])
+        }
         return {
             'user_progress': user_progress
         }
+
+    def _get_channel_progress(self, channel):
+        """ Replacement to user_progress. Both may exist in some transient state. """
+        slides = request.env['slide.slide'].sudo().search([('channel_id', '=', channel.id)])
+        channel_progress = dict((sid, dict()) for sid in slides.ids)
+        if not request.env.user._is_public() and channel.is_member:
+            slide_partners = request.env['slide.slide.partner'].sudo().search([
+                ('channel_id', '=', channel.id),
+                ('partner_id', '=', request.env.user.partner_id.id)
+            ])
+            for slide_partner in slide_partners:
+                channel_progress[slide_partner.slide_id.id].update(slide_partner.read()[0])
+                if slide_partner.slide_id.question_ids:
+                    gains = [slide_partner.slide_id.quiz_first_attempt_reward,
+                             slide_partner.slide_id.quiz_second_attempt_reward,
+                             slide_partner.slide_id.quiz_third_attempt_reward,
+                             slide_partner.slide_id.quiz_fourth_attempt_reward]
+                    channel_progress[slide_partner.slide_id.id]['quiz_gain'] = gains[slide_partner.quiz_attempts_count] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
+
+        return channel_progress
 
     def _extract_channel_tag_search(self, **post):
         tags = request.env['slide.channel.tag']
@@ -132,9 +162,6 @@ class WebsiteSlides(WebsiteProfile):
         if my:
             domain = expression.AND([domain, [('partner_ids', '=', request.env.user.partner_id.id)]])
         return domain
-
-    def _prepare_channel_values(self, **kwargs):
-        return dict(**kwargs)
 
     # --------------------------------------------------
     # MAIN / SEARCH
@@ -245,11 +272,6 @@ class WebsiteSlides(WebsiteProfile):
             raise werkzeug.exceptions.NotFound()
 
         domain = [('channel_id', '=', channel.id)]
-        if not channel.can_publish:
-            domain = expression.AND([
-                domain,
-                ['&', ('website_published', '=', True), ('channel_id.website_published', '=', True)]
-            ])
 
         pager_url = "/slides/%s" % (channel.id)
         pager_args = {}
@@ -278,13 +300,16 @@ class WebsiteSlides(WebsiteProfile):
                 pager_url += "?slide_type=%s" % slide_type
 
         # sorting criterion
-        actual_sorting = sorting if sorting and sorting in request.env['slide.slide']._order_by_strategy else channel.promote_strategy
+        if channel.channel_type == 'documentation':
+            actual_sorting = sorting if sorting and sorting in request.env['slide.slide']._order_by_strategy else channel.promote_strategy
+        else:
+            actual_sorting = 'sequence'
         order = request.env['slide.slide']._order_by_strategy[actual_sorting]
         pager_args['sorting'] = actual_sorting
 
         pager_count = request.env['slide.slide'].sudo().search_count(domain)
         pager = request.website.pager(url=pager_url, total=pager_count, page=page,
-                                      step=self._slides_per_page, scope=self._slides_per_page,
+                                      step=self.SLIDES_PER_PAGE, scope=self.SLIDES_PER_PAGE,
                                       url_args=pager_args)
 
         values = {
@@ -323,24 +348,47 @@ class WebsiteSlides(WebsiteProfile):
                 'last_rating_value': last_message_data.get('rating_value'),
             })
 
-        # Display uncategorized slides
-        # fetch slides; done as sudo because we want to display all of them but
-        # unreachable ones won't be clickable (+ slide controller will crash anyway)
+        # fetch slides and handle uncategorized slides; done as sudo because we want to display all
+        # of them but unreachable ones won't be clickable (+ slide controller will crash anyway)
+        # documentation mode may display less slides than content by category but overhead of
+        # computation is reasonable
         if not category and not uncategorized:
             category_data = []
-            for category in request.env['slide.slide'].sudo().read_group(domain, ['category_id'], ['category_id']):
-                category_id, name = category.get('category_id') or (False, _('Uncategorized'))
-                slides_sudo = request.env['slide.slide'].sudo().search(category['__domain'], limit=4, offset=0, order=order)
+            all_categories = request.env['slide.category'].search([('channel_id', '=', channel.id)])
+            all_slides = request.env['slide.slide'].sudo().search(domain, order=order)
+
+            uncategorized_slides = all_slides.filtered(lambda slide: not slide.category_id)
+            displayed_slides = uncategorized_slides
+            if channel.channel_type == 'documentation':
+                displayed_slides = uncategorized_slides[:self.SLIDES_PER_CATEGORY]
+            if channel.channel_type == 'training' or displayed_slides:
                 category_data.append({
-                    'id': category_id,
-                    'name': name,
-                    'slug_name': slug((category_id, name)) if category_id else name,
-                    'total_slides': category['category_id_count'],
-                    'slides': slides_sudo,
+                    'category': False, 'id': False,
+                    'name':  _('Uncategorized'), 'slug_name':  _('Uncategorized'),
+                    'total_slides': len(uncategorized_slides),
+                    'slides': displayed_slides,
+                })
+            for category in all_categories:
+                category_slides = all_slides.filtered(lambda slide: slide.category_id == category)
+                displayed_slides = category_slides
+                if channel.channel_type == 'documentation':
+                    displayed_slides = category_slides[:self.SLIDES_PER_CATEGORY]
+                    if not displayed_slides:
+                        continue
+                category_data.append({
+                    'id': category.id,
+                    'name': category.name,
+                    'slug_name': slug(category),
+                    'total_slides': len(category_slides),
+                    'slides': displayed_slides,
                 })
         elif uncategorized:
-            slides_sudo = request.env['slide.slide'].sudo().search(domain, limit=self._slides_per_page, offset=pager['offset'], order=order)
+            if channel.channel_type == 'documentation':
+                slides_sudo = request.env['slide.slide'].sudo().search(domain, limit=self.SLIDES_PER_PAGE, offset=pager['offset'], order=order)
+            else:
+                slides_sudo = request.env['slide.slide'].sudo().search(domain, order=order)
             category_data = [{
+                'category': False,
                 'id': False,
                 'name':  _('Uncategorized'),
                 'slug_name':  _('Uncategorized'),
@@ -348,34 +396,23 @@ class WebsiteSlides(WebsiteProfile):
                 'slides': slides_sudo,
             }]
         else:
-            slides_sudo = request.env['slide.slide'].sudo().search(domain, limit=self._slides_per_page, offset=pager['offset'], order=order)
+            if channel.channel_type == 'documentation':
+                slides_sudo = request.env['slide.slide'].sudo().search(domain, limit=self.SLIDES_PER_PAGE, offset=pager['offset'], order=order)
+            else:
+                slides_sudo = request.env['slide.slide'].sudo().search(domain, order=order)
             category_data = [{
+                'category': category,
                 'id': category.id,
                 'name': category.name,
                 'slug_name': slug(category),
                 'total_slides': len(slides_sudo),
                 'slides': slides_sudo,
             }]
-
-        # post slide-fetch computation: promoted, user completion (separated because sudo-ed)
-        if not request.website.is_public_user() and channel.is_member:
-            displayed_slide_ids = list(set(sid for item in category_data for sid in item['slides'].ids))
-            done_slide_ids = request.env['slide.slide.partner'].sudo().search([
-                ('slide_id', 'in', displayed_slide_ids),
-                ('partner_id', '=', request.env.user.partner_id.id),
-                ('completed', '=', True)
-            ]).mapped('slide_id').ids
-        else:
-            done_slide_ids = []
-        values['done_slide_ids'] = done_slide_ids
         values['slide_promoted'] = request.env['slide.slide'].sudo().search(domain, limit=1, order=order)
         values['category_data'] = category_data
+        values['channel_progress'] = self._get_channel_progress(channel)
 
         values = self._prepare_additional_channel_values(values, **kw)
-
-        if channel.channel_type == "training":
-            values.update(self._get_user_progress(channel))
-            values['uncategorized_slides'] = channel.slide_ids.filtered(lambda slide: not slide.category_id)
 
         return request.render('website_slides.course_main', values)
 
