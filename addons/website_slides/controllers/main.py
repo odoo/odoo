@@ -776,7 +776,7 @@ class WebsiteSlides(WebsiteProfile):
         try:
             slide = request.env['slide.slide'].browse(slide_id)
             if is_embedded:
-                request.env['slide.embed'].sudo().add_embed_url(slide.id, referrer_url)
+                request.env['slide.embed'].sudo()._add_embed_url(slide.id, referrer_url)
             values = self._get_slide_detail(slide)
             values['page'] = page
             values['is_embedded'] = is_embedded
