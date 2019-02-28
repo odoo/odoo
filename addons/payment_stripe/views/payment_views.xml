@@ -9,7 +9,12 @@
                 <group attrs="{'invisible': [('provider', '!=', 'stripe')]}">
                     <field name="stripe_secret_key" password="True"/>
                     <field name="stripe_publishable_key" password="True"/>
-                    <field name="payment_method_ids" widget="many2many_tags" attrs="{'invisible': [('payment_flow', '=', 's2s')]}"  options="{'no_create': True, 'no_open': True}"/>
+                    <field name="payment_method_ids" attrs="{'invisible': [('payment_flow', '=', 's2s')]}" options="{'no_create': True, 'no_open': True}">
+                        <tree>
+                            <field name="name"/>
+                            <field name="country_ids" widget="many2many_tags"/>
+                        </tree>
+                    </field>
                 </group>
             </xpath>
             <xpath expr='//group[@name="acquirer_config"]' position='after'>

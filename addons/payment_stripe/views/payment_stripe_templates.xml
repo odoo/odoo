@@ -16,7 +16,6 @@
         <input type='hidden' name='email' t-att-value='email'/>
         <input type='hidden' name='city' t-att-value='city'/>
         <input type='hidden' name='country' t-att-value='country'/>
-        <input type="hidden" name='return_url' t-att-value='return_url'/>
         <input type="hidden" name='reference' t-att-value='reference'/>
         <input type="hidden" name='city' t-att-value='city'/>
         <input type="hidden" name='line1' t-att-value='line1'/>
@@ -28,8 +27,8 @@
     </template>
 
     <template id="stripe_form_type" inherit_id="payment.payment_tokens_list">
-        <xpath expr="//span[hasclass('payment_icon_name')]" position="after">
-            <t t-if="acq.provider == 'stripe'">
+        <xpath expr="//span[hasclass('payment_option_name')]" position="after">
+            <t t-if="acq.provider == 'stripe' and acq.payment_flow == 'form'">
                 <t t-set="partner_country_id" t-value="acq.env['res.partner'].browse(partner_id).sudo().country_id.id"/>
                 <div class="pull-right ml-4">
                     <select class="form-control stripe_payment_type d-none">

@@ -9,7 +9,7 @@ odoo.define('payment_stripe.stripe', function(require) {
 
     require('web.dom_ready');
     if (!$('.o_payment_form').length) {
-        return $.Deferred().reject("DOM doesn't contain '.o_payment_form'");
+        return Promise.reject("DOM doesn't contain '.o_payment_form'");
     }
 
     var observer = new MutationObserver(function(mutations, observer) {

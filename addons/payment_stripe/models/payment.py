@@ -55,11 +55,9 @@ class PaymentAcquirerStripe(models.Model):
             'email': tx_values.get('partner_email'),
             'name': tx_values.get('partner_name'),
             'reference': tx_values.get('reference'),
-            'return_url': tx_values.get('return_url'),
             'redirect_url': urls.url_join(base_url, '/payment/stripe/return?acquirer_id=' + str(self.id)),
         }
 
-        temp_stripe_tx_values['returndata'] = stripe_tx_values.pop('return_url', '')
         stripe_tx_values.update(temp_stripe_tx_values)
         return stripe_tx_values
 
@@ -113,6 +111,20 @@ class PaymentTransactionStripe(models.Model):
     _inherit = 'payment.transaction'
 
     stripe_payment_type = fields.Char(string='Stripe Payment Type', groups='base.group_user')
+
+    def form_feedback(self, data, acquirer_name):
+        if data.get('source') and data.get('acquirer_id') and acquirer_name == 'stripe':
+            acquirer = self.env['payment.acquirer'].browse(int(data.get('acquirer_id')))
+            url = '%s/sources/%s' % (acquirer.get_stripe_url(), data.get('source'))
+            headers = {'AUTHORIZATION': 'Bearer %s' % acquirer.stripe_secret_key}
+            resp = requests.post(url, headers=headers)
+            data = resp.json()
+            if data.get('status') == 'chargeable':
+                TX = self.search([('reference', '=', data.get('metadata', {}).get('reference'))])
+                data = TX._create_stripe_charge(source=data.get('id'))
+                data = data.get('source') or data
+            _logger.info('Stripe: entering form_feedback with post data %s' % pprint.pformat(data))
+        return super(PaymentTransactionStripe, self).form_feedback(data, acquirer_name)
 
     def _create_stripe_charge(self, acquirer_ref=None, tokenid=None, email=None, source=None):
         api_url_charge = '%s/charges' % (self.acquirer_id._get_stripe_api_url())
@@ -329,6 +341,7 @@ class PaymentTokenStripe(models.Model):
 
 class PaymentMethodStripe(models.Model):
     _name = 'stripe.payment.method'
+    _description = 'Stripe Payment Method'
 
     name = fields.Char(string="Payment Name")
     country_ids = fields.Many2many('res.country', string="Country")

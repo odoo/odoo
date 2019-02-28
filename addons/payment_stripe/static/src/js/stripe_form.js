@@ -14,7 +14,7 @@ payment.include({
 
     radioClickEvent: function (ev) {
         this._super.apply(this, arguments);
-        if (ev.currentTarget.dataset.provider == 'stripe') {
+        if ($('.o_payment_form').find('input[type="radio"]:checked').length && $('.o_payment_form').find('input[type="radio"]:checked').data().provider == 'stripe') {
             this.$el.find('.stripe_payment_type').removeClass('d-none');
         } else {
             this.$el.find('.stripe_payment_type').addClass('d-none');
