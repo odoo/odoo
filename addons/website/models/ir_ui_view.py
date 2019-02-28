@@ -286,7 +286,7 @@ class View(models.Model):
         """
         self.ensure_one()
         domain = [('key', '=', self.key), ('model_data_id', '!=', None)]
-        return self.search(domain, limit=1)  # Useless limit has multiple xmlid should not be possible
+        return self.with_context(active_test=False).search(domain, limit=1)  # Useless limit has multiple xmlid should not be possible
 
     @api.multi
     def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
