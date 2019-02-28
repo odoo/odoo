@@ -499,9 +499,10 @@
                     <group>
                         <field name="cashbox_lines_ids" nolabel="1">
                             <tree editable="bottom">
-                                <field name="coin_value"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="coin_value" widget="monetary"/>
                                 <field name="number"/>
-                                <field name="subtotal" sum="Total"/>
+                                <field name="subtotal" sum="Total" widget="monetary"/>
                             </tree>
                         </field>
                     </group>
