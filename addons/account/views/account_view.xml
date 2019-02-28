@@ -280,6 +280,10 @@
                                         <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
                                         <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
                                     </group>
+                                    <group string="Invoice References" attrs="{'invisible': [('type', '!=', 'sale')]}">
+                                        <field name="invoice_reference_type"/>
+                                        <field name="invoice_reference_model" attrs="{'invisible': [('invoice_reference_type', '=', 'none')]}"/>
+                                    </group>
                                     <group string="Accounting App Options">
                                         <field name="profit_account_id" options="{'no_create': True}" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
                                         <field name="loss_account_id" options="{'no_create': True}" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
