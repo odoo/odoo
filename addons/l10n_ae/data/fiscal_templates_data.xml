@@ -57,19 +57,18 @@
 
         <record id="account_fiscal_position_non_uae_countries" model="account.fiscal.position.template">
             <field name="name">Fiscal Position for Non-UAE Countries</field>
-            <!-- <field name="is_taxcloud" eval="True"/> -->
             <field name="auto_apply" eval="True"/>
             <field name="country_group_id" ref="group_non_uae_countries"/>
             <field name="chart_template_id" ref="uae_chart_template_standard"/>
         </record>
         <record id="acccount_fiscal_position_tax_non_uae_01" model="account.fiscal.position.tax.template">
-            <field name="tax_src_id" ref="uae_sale_tax_5_template"/>
-            <field name="tax_dest_id" ref="uae_sale_tax_0_template"/>
+            <field name="tax_src_id" ref="uae_sale_tax_5"/>
+            <field name="tax_dest_id" ref="uae_sale_tax_0"/>
             <field name="position_id" ref="account_fiscal_position_non_uae_countries"/>
         </record>
         <record id="acccount_fiscal_position_tax_non_uae_02" model="account.fiscal.position.tax.template">
-            <field name="tax_src_id" ref="uae_tax_5_template"/>
-            <field name="tax_dest_id" ref="uae_purchase_tax_0_template"/>
+            <field name="tax_src_id" ref="uae_sale_tax_5"/>
+            <field name="tax_dest_id" ref="uae_purchase_tax_0"/>
             <field name="position_id" ref="account_fiscal_position_non_uae_countries"/>
         </record>
 </odoo>
