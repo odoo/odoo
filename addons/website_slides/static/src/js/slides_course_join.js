@@ -7,7 +7,7 @@ require('website_slides.slides');
 
 var _t = core._t;
 
-var CourseJoinWidget = publicWidget.extend({
+var CourseJoinWidget = publicWidget.Widget.extend({
     events: {
         'click .o_wslides_js_course_join_link': '_onClickJoin',
     },
