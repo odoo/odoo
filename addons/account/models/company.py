@@ -31,9 +31,6 @@ MONTH_SELECTION = [
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    def _get_invoice_reference_types(self):
-        return [('invoice_number', _('Based on Invoice Number')), ('partner', _('Based on Customer'))]
-
     #TODO check all the options/fields are in the views (settings + company form view)
     fiscalyear_last_day = fields.Integer(default=31, required=True)
     fiscalyear_last_month = fields.Selection(MONTH_SELECTION, default='12', required=True)
@@ -80,8 +77,6 @@ Best Regards,'''))
 
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
-    invoice_reference_type = fields.Selection(string='Default Communication Type', selection='_get_invoice_reference_types',
-                                              default='invoice_number', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
 
     qr_code = fields.Boolean(string='Display SEPA QR code')
 

@@ -79,8 +79,6 @@ class ResConfigSettings(models.TransientModel):
     module_snailmail_account = fields.Boolean(string="Snailmail")
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', readonly=False)
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal", readonly=False)
-    invoice_reference_type = fields.Selection(string='Communication',
-        related='company_id.invoice_reference_type', help='Default Reference Type on Invoices.', readonly=False)
     account_bank_reconciliation_start = fields.Date(string="Bank Reconciliation Threshold",
         related='company_id.account_bank_reconciliation_start', readonly=False,
         help="""The bank reconciliation widget won't ask to reconcile payments older than this date.

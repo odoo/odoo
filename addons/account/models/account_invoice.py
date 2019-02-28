@@ -5,6 +5,8 @@ import json
 import re
 import uuid
 from functools import partial
+from stdnum.iso7064 import mod_97_10
+from itertools import zip_longest
 
 from lxml import etree
 
@@ -424,24 +426,66 @@ class AccountInvoice(models.Model):
                     invoice.invoice_icon = '#'
             invoice.vendor_display_name = vendor_display_name
 
+    def _get_reference_euro_invoice(self):
+        """ This computes the reference based on the RF Creditor Reference.
+            The data of the reference is the database id number of the invoice.
+            For instance, if an invoice is issued with id 43, the check number
+            is 07 so the reference will be 'RF07 43'.
+        """
+        self.ensure_one()
+        base = self.id
+        check_digits = mod_97_10.calc_check_digits('{}RF'.format(base))
+        reference = 'RF{} {}'.format(check_digits, " ".join(["".join(x) for x in zip_longest(*[iter(str(base))]*4, fillvalue="")]))
+        return reference
+
+    def _get_reference_euro_partner(self):
+        """ This computes the reference based on the RF Creditor Reference.
+            The data of the reference is the user defined reference of the
+            partner or the database id number of the parter.
+            For instance, if an invoice is issued for the partner with internal
+            reference 'food buyer 654', the digits will be extracted and used as
+            the data. This will lead to a check number equal to 00 and the
+            reference will be 'RF00 654'.
+            If no reference is set for the partner, its id in the database will
+            be used.
+        """
+        self.ensure_one()
+        partner_ref = self.partner_id.ref
+        partner_ref_nr = re.sub('\D', '', partner_ref or '')[-21:] or str(self.partner_id.id)[-21:]
+        partner_ref_nr = partner_ref_nr[-21:]
+        check_digits = mod_97_10.calc_check_digits('{}RF'.format(partner_ref_nr))
+        reference = 'RF{} {}'.format(check_digits, " ".join(["".join(x) for x in zip_longest(*[iter(partner_ref_nr)]*4, fillvalue="")]))
+        return reference
+
+    def _get_reference_odoo_invoice(self):
+        """ This computes the reference based on the Odoo format.
+            We simply return the number of the invoice, defined on the journal
+            sequence.
+        """
+        self.ensure_one()
+        return self.number
+
+    def _get_reference_odoo_partner(self):
+        """ This computes the reference based on the Odoo format.
+            The data used is the reference set on the partner or its database
+            id otherwise. For instance if the reference of the customer is
+            'dumb customer 97', the reference will be 'CUST/dumb customer 97'.
+        """
+        ref = self.partner_id.ref or str(self.partner_id.id)
+        prefix = _('CUST')
+        return '%s/%s' % (prefix, ref)
+
     @api.multi
     def _get_computed_reference(self):
         self.ensure_one()
-        if self.company_id.invoice_reference_type == 'invoice_number':
-            seq_suffix = self.journal_id.sequence_id.suffix or ''
-            regex_number = '.*?([0-9]+)%s$' % seq_suffix
-            exact_match = re.match(regex_number, self.number)
-            if exact_match:
-                identification_number = int(exact_match.group(1))
-            else:
-                ran_num = str(uuid.uuid4().int)
-                identification_number = int(ran_num[:5] + ran_num[-5:])
-            prefix = self.number
+        if self.journal_id.invoice_reference_type == 'none':
+            return ''
         else:
-            #self.company_id.invoice_reference_type == 'partner'
-            identification_number = self.partner_id.id
-            prefix = 'CUST'
-        return '%s/%s' % (prefix, str(identification_number % 97).rjust(2, '0'))
+            ref_function = getattr(self, '_get_reference_{}_{}'.format(self.journal_id.invoice_reference_model, self.journal_id.invoice_reference_type))
+            if ref_function:
+                return ref_function()
+            else:
+                raise UserError(_('The combination of reference model and reference type on the journal is not implemented'))
 
     # Load all Vendor Bill lines
     @api.onchange('vendor_bill_id')
@@ -632,7 +676,7 @@ class AccountInvoice(models.Model):
             return self.env.ref('account.account_invoices').report_action(self)
         else:
             return self.env.ref('account.account_invoices_without_payment').report_action(self)
-    
+
     @api.multi
     def action_reconcile_to_check(self, params):
         self.ensure_one()
@@ -1830,7 +1874,7 @@ class AccountInvoiceLine(models.Model):
             self_lang = self
             if part.lang:
                 self_lang = self.with_context(lang=part.lang)
-   
+
             product = self_lang.product_id
             account = self.get_invoice_line_account(type, product, fpos, company)
             if account:
