@@ -193,8 +193,8 @@ class StockMove(models.Model):
         if self.state == 'done':
             self.availability = self.product_qty
         else:
-            quants = self.env['stock.quant'].search([('location_id', 'child_of', self.location_id.id), ('product_id', '=', self.product_id.id), ('reservation_id', '=', False)])
-            self.availability = min(self.product_qty, sum(quants.mapped('qty')))
+            qty_tot = self.env['stock.quant'].read_group([('location_id', 'child_of', self.location_id.id), ('product_id', '=', self.product_id.id), ('reservation_id', '=', False)], ['qty'], [])[0]
+            self.availability = min(self.product_qty, qty_tot['qty'] or 0)
 
     @api.multi
     def _compute_string_qty_information(self):
