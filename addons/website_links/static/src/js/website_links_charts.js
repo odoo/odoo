@@ -197,27 +197,27 @@ sAnimations.registry.websiteLinksCharts = sAnimations.Class.extend({
 
             // Process all time line chart data
             var now = moment();
-            self.charts.all_time_bar = new BarChart(beginDate, now, formattedClicksByDay);
+            self.charts.all_time_bar = new BarChart(this, beginDate, now, formattedClicksByDay);
             self.charts.all_time_bar.attachTo($('#all_time_clicks_chart'));
 
             // Process month line chart data
             beginDate = moment().subtract(30, 'days');
-            self.charts.last_month_bar = new BarChart(beginDate, now, formattedClicksByDay);
+            self.charts.last_month_bar = new BarChart(this, beginDate, now, formattedClicksByDay);
             self.charts.last_month_bar.attachTo($('#last_month_clicks_chart'));
 
             // Process week line chart data
             beginDate = moment().subtract(7, 'days');
-            self.charts.last_week_bar = new BarChart(beginDate, now, formattedClicksByDay);
+            self.charts.last_week_bar = new BarChart(this, beginDate, now, formattedClicksByDay);
             self.charts.last_week_bar.attachTo($('#last_week_clicks_chart'));
 
             // Process pie charts
-            self.charts.all_time_pie = new PieChart(_clicksByCountry);
+            self.charts.all_time_pie = new PieChart(this, _clicksByCountry);
             self.charts.all_time_pie.attachTo($('#all_time_countries_charts'));
 
-            self.charts.last_month_pie = new PieChart(_lastMonthClicksByCountry);
+            self.charts.last_month_pie = new PieChart(this, _lastMonthClicksByCountry);
             self.charts.last_month_pie.attachTo($('#last_month_countries_charts'));
 
-            self.charts.last_week_pie = new PieChart(_lastWeekClicksByCountry);
+            self.charts.last_week_pie = new PieChart(this, _lastWeekClicksByCountry);
             self.charts.last_week_pie.attachTo($('#last_week_countries_charts'));
 
             var rowWidth = $('#all_time_countries_charts').parent().width();
@@ -305,7 +305,11 @@ sAnimations.registry.websiteLinksCharts = sAnimations.Class.extend({
     _onGraphTabClick: function (ev) {
         ev.preventDefault();
         $('.graph-tabs li a').tab('show');
-        _.chain(this.charts).pluck('chart').invoke('update'); // Force NVD3 to redraw the chart
+
+        setTimeout(function () {
+            // Force NVD3 to redraw the chart
+            window.dispatchEvent(new Event('resize'));
+        }, 0);
     },
     /**
      * @private
