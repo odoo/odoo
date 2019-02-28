@@ -125,15 +125,16 @@ function clickM2OItem(fieldName, searchText) {
  * - click to open the dropdown
  * - enter a search string in the input
  * - wait for the selection
- * - click on the active menuitem
+ * - click on the requested menuitem, or the active one by default
  *
  * Example:
- *    testUtils.fields.many2one.searchAndClickM2OItem('partner_id', 'George');
+ *    testUtils.fields.many2one.searchAndClickM2OItem('partner_id', {search: 'George'});
  *
  * @param {string} fieldName
  * @param {[Object]} options
  * @param {[string]} options.selector
  * @param {[string]} options.search
+ * @param {[string]} options.item
  * @returns {Promise}
  */
 function searchAndClickM2OItem(fieldName, options) {
@@ -156,7 +157,11 @@ function searchAndClickM2OItem(fieldName, options) {
     }
 
     return $.when(def).then(function () {
-        clickM2OHighlightedItem(fieldName, options.selector);
+        if (options.item) {
+            clickM2OItem(fieldName, options.item);
+        } else {
+            clickM2OHighlightedItem(fieldName, options.selector);
+        }
     });
 }
 return {
