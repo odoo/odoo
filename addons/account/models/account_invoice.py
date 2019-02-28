@@ -879,7 +879,7 @@ class AccountInvoice(models.Model):
             date_invoice = fields.Date.context_today(self)
         if self.payment_term_id:
             pterm = self.payment_term_id
-            pterm_list = pterm.with_context(currency_id=self.company_id.currency_id.id).compute(value=1, date_ref=date_invoice)[0]
+            pterm_list = pterm.with_context(currency_id=self.company_id.currency_id.id).compute(value=1, date_ref=date_invoice)
             self.date_due = max(line[0] for line in pterm_list)
         elif self.date_due and (date_invoice > self.date_due):
             self.date_due = date_invoice
@@ -1251,7 +1251,7 @@ class AccountInvoice(models.Model):
 
             name = inv.name or ''
             if inv.payment_term_id:
-                totlines = inv.payment_term_id.with_context(currency_id=company_currency.id).compute(total, inv.date_invoice)[0]
+                totlines = inv.payment_term_id.with_context(currency_id=company_currency.id).compute(total, inv.date_invoice)
                 res_amount_currency = total_currency
                 for i, t in enumerate(totlines):
                     if inv.currency_id != company_currency:

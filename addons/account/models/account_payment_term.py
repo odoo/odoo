@@ -23,17 +23,18 @@ class AccountPaymentTerm(models.Model):
     sequence = fields.Integer(required=True, default=10)
 
     @api.constrains('line_ids')
-    @api.one
     def _check_lines(self):
-        payment_term_lines = self.line_ids.sorted()
-        if payment_term_lines and payment_term_lines[-1].value != 'balance':
-            raise ValidationError(_('The last line of a Payment Term should have the Balance type.'))
-        lines = self.line_ids.filtered(lambda r: r.value == 'balance')
-        if len(lines) > 1:
-            raise ValidationError(_('A Payment Term should have only one line of type Balance.'))
+        for terms in self:
+            payment_term_lines = terms.line_ids.sorted()
+            if payment_term_lines and payment_term_lines[-1].value != 'balance':
+                raise ValidationError(_('The last line of a Payment Term should have the Balance type.'))
+            lines = terms.line_ids.filtered(lambda r: r.value == 'balance')
+            if len(lines) > 1:
+                raise ValidationError(_('A Payment Term should have only one line of type Balance.'))
 
-    @api.one
+    @api.multi
     def compute(self, value, date_ref=False):
+        self.ensure_one()
         date_ref = date_ref or fields.Date.today()
         amount = value
         sign = value < 0 and -1 or 1
@@ -71,10 +72,11 @@ class AccountPaymentTerm(models.Model):
 
     @api.multi
     def unlink(self):
-        if self.env['account.invoice'].search([('payment_term_id', 'in', self.ids)]):
-            raise UserError(_('You can not delete payment terms as other records still reference it. However, you can archive it.'))
-        property_recs = self.env['ir.property'].search([('value_reference', 'in', ['account.payment.term,%s'%payment_term.id for payment_term in self])])
-        property_recs.unlink()
+        for terms in self:
+            if self.env['account.invoice'].search([('payment_term_id', 'in', terms.ids)]):
+                raise UserError(_('You can not delete payment terms as other records still reference it. However, you can archive it.'))
+            property_recs = self.env['ir.property'].search([('value_reference', 'in', ['account.payment.term,%s'%payment_term.id for payment_term in terms])])
+            property_recs.unlink()
         return super(AccountPaymentTerm, self).unlink()
 
 
@@ -102,19 +104,19 @@ class AccountPaymentTermLine(models.Model):
     payment_id = fields.Many2one('account.payment.term', string='Payment Terms', required=True, index=True, ondelete='cascade')
     sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of payment terms lines.")
 
-    @api.one
     @api.constrains('value', 'value_amount')
     def _check_percent(self):
-        if self.value == 'percent' and (self.value_amount < 0.0 or self.value_amount > 100.0):
-            raise ValidationError(_('Percentages on the Payment Terms lines must be between 0 and 100.'))
+        for term_line in self:
+            if term_line.value == 'percent' and (term_line.value_amount < 0.0 or term_line.value_amount > 100.0):
+                raise ValidationError(_('Percentages on the Payment Terms lines must be between 0 and 100.'))
 
-    @api.one
     @api.constrains('days')
     def _check_days(self):
-        if self.option in ('day_following_month', 'day_current_month') and self.days <= 0:
-            raise ValidationError(_("The day of the month used for this term must be stricly positive."))
-        elif self.days < 0:
-            raise ValidationError(_("The number of days used for a payment term cannot be negative."))
+        for term_line in self:
+            if term_line.option in ('day_following_month', 'day_current_month') and term_line.days <= 0:
+                raise ValidationError(_("The day of the month used for this term must be stricly positive."))
+            elif term_line.days < 0:
+                raise ValidationError(_("The number of days used for a payment term cannot be negative."))
 
     @api.onchange('option')
     def _onchange_option(self):
