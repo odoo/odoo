@@ -53,8 +53,12 @@ tour.register('website_links_tour', {
         },
         // 3. Check that counter got incremented and charts are correctly displayed
         {
+            content: "filter recently used links",
+            trigger: '#filter-recently-used-links',
+        },
+        {
             content: "visit link stats page",
-            trigger: '#o_website_links_recent_links a:containsExact("Stats"):first()',
+            trigger: '#o_website_links_recent_links a:containsExact("Stats"):first',
         },
         {
             content: "check click number and ensure graphs are initialized",

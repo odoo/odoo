@@ -1,13 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
-import unittest
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
 
-    @unittest.skip("Race condition on runbot or on local with Docker. Merging the test skipped for history purpose as the tour has been reviewed.")
     def test_01_test_ui(self):
         self.env['link.tracker'].create({
             'campaign_id': 2,
