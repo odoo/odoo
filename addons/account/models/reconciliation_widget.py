@@ -455,21 +455,12 @@ class AccountReconciliation(models.AbstractModel):
             ('payment_id', '<>', False)
         ]
 
-        # Black lines = unreconciled & (not linked to a payment or open balance created by statement
-        domain_matching = [('reconciled', '=', False)]
-        if partner_id:
-            domain_matching = expression.AND([
-                domain_matching,
-                [('account_id.internal_type', 'in', ['payable', 'receivable'])]
-            ])
-        else:
-            # TODO : find out what use case this permits (match a check payment, registered on a journal whose account type is other instead of liquidity)
-            domain_matching = expression.AND([
-                domain_matching,
-                [('account_id.reconcile', '=', True)]
-            ])
+        # default domain matching
+        domain_matching = expression.AND([
+            [('reconciled', '=', False)],
+            [('account_id.reconcile', '=', True)]
+        ])
 
-        # Let's add what applies to both
         domain = expression.OR([domain_reconciliation, domain_matching])
         if partner_id:
             domain = expression.AND([domain, [('partner_id', '=', partner_id)]])
