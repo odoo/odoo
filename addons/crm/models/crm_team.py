@@ -31,7 +31,10 @@ class Team(models.Model):
         compute='_compute_overdue_opportunities',
         string='Overdue Opportunities Revenues')
 
-    alias_user_id = fields.Many2one(domain=lambda self: [
+    # Since we are in a _inherits case, this is not an override
+    # but a plain definition of a field
+    # So we need to reset the property related of that field
+    alias_user_id = fields.Many2one('res.users', related='alias_id.alias_user_id', inherited=True, domain=lambda self: [
         ('groups_id', 'in', self.env.ref('sales_team.group_sale_salesman_all_leads').id)])
 
     def _compute_unassigned_leads_count(self):
