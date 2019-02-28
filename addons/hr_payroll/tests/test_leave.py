@@ -21,11 +21,11 @@ class TestPayrollLeave(TestPayslipBase):
             'number_of_days': 1,
         })
 
-    def test_resource_leave_has_benefit_type(self):
+    def test_resource_leave_has_work_entry_type(self):
         leave = self.create_leave()
 
         resource_leave = leave._create_resource_leave()
-        self.assertEqual(resource_leave.benefit_type_id, self.leave_type.benefit_type_id, "it should have the corresponding benefit type")
+        self.assertEqual(resource_leave.work_entry_type_id, self.leave_type.work_entry_type_id, "it should have the corresponding work_entry type")
 
     def test_resource_leave_in_contract_calendar(self):
         other_calendar = self.env['resource.calendar'].create({'name': 'New calendar'})
@@ -36,7 +36,7 @@ class TestPayrollLeave(TestPayslipBase):
 
         resource_leave = leave._create_resource_leave()
         self.assertEqual(len(resource_leave), 1, "it should have created only one resource leave")
-        self.assertEqual(resource_leave.benefit_type_id, self.leave_type.benefit_type_id, "it should have the corresponding benefit type")
+        self.assertEqual(resource_leave.work_entry_type_id, self.leave_type.work_entry_type_id, "it should have the corresponding work_entry type")
 
     def test_resource_leave_different_calendars(self):
         other_calendar = self.env['resource.calendar'].create({'name': 'New calendar'})
@@ -50,4 +50,4 @@ class TestPayrollLeave(TestPayslipBase):
         leave = self.create_leave()
         resource_leave = leave._create_resource_leave()
         self.assertEqual(len(resource_leave), 2, "it should have created one resource leave per calendar")
-        self.assertEqual(resource_leave.mapped('benefit_type_id'), self.leave_type.benefit_type_id, "they should have the corresponding benefit type")
+        self.assertEqual(resource_leave.mapped('work_entry_type_id'), self.leave_type.work_entry_type_id, "they should have the corresponding work_entry type")

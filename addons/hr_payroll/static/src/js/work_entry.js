@@ -1,4 +1,4 @@
-odoo.define('hr_payroll.benefit.view_custo', function(require) {
+odoo.define('hr_payroll.work_entry.view_custo', function(require) {
     'use strict';
 
     var core = require('web.core');
@@ -9,29 +9,29 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
     var CalendarView = require('web.CalendarView');
     var viewRegistry = require('web.view_registry');
     var _t = core._t;
-    var BenefitCalendarController = CalendarController.extend({
+    var WorkEntryCalendarController = CalendarController.extend({
 
         events: {
-            'click .btn-benefit-generate': '_onGenerateBenefits',
-            'click .btn-benefit-validate': '_onValidateBenefits',
+            'click .btn-work_entry-generate': '_onGenerateWorkEntries',
+            'click .btn-work_entry-validate': '_onValidateWorkEntries',
             'click .btn-payslip-generate': '_onGeneratePayslips',
         },
 
         update: function () {
             var self = this;
             return this._super.apply(this, arguments).then(function () {
-                self._renderBenefitButtons();
+                self._renderWorkEntryButtons();
             });
         },
 
-        _renderBenefitButton: function (text, event_class) {
-            var $button = $('<button class="btn btn-primary btn-benefit" type="button" />');
+        _renderWorkEntryButton: function (text, event_class) {
+            var $button = $('<button class="btn btn-primary btn-work_entry" type="button" />');
             $button.text(text).addClass(event_class);
             this.$buttons.find('.o_calendar_button_month').after($button);
         },
 
-        _renderBenefitButtons: function () {
-            if (this.modelName !== "hr.benefit") {
+        _renderWorkEntryButtons: function () {
+            if (this.modelName !== "hr.work.entry") {
                 return;
             }
 
@@ -39,22 +39,22 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
             this.lastDay = this.model.data.target_date.clone().endOf('month').toDate();
             this.events = this._checkDataInRange(this.firstDay, this.lastDay, this.model.data.data);
             var is_validated = this._checkValidation(this.events);
-            this.$buttons.find('.btn-benefit').remove();
+            this.$buttons.find('.btn-work_entry').remove();
             if (this.events.length === 0) {
-                this._renderBenefitButton(_t("Generate Benefits"), 'btn-benefit-generate');
+                this._renderWorkEntryButton(_t("Generate Work entries"), 'btn-work_entry-generate');
             }
             if (is_validated && this.events.length !== 0) {
-                this._renderBenefitButton(_t("Generate Payslips"), 'btn-payslip-generate');
+                this._renderWorkEntryButton(_t("Generate Payslips"), 'btn-payslip-generate');
             }
             else if (!is_validated) {
-                this._renderBenefitButton(_t("Validate Benefits"), 'btn-benefit-validate');
+                this._renderWorkEntryButton(_t("Validate Work entries"), 'btn-work_entry-validate');
             }
         },
 
         _onGeneratePayslips: function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            this.do_action('hr_payroll.action_generate_payslips_from_benefits', {
+            this.do_action('hr_payroll.action_generate_payslips_from_work_entries', {
                 additional_context: {
                     default_date_start: time.datetime_to_str(this.firstDay),
                     default_date_end: time.datetime_to_str(this.lastDay),
@@ -62,12 +62,12 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
             });
         },
 
-        _onValidateBenefits: function (e) {
+        _onValidateWorkEntries: function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
             var self = this;
             this._rpc({
-                model: 'hr.benefit',
+                model: 'hr.work.entry',
                 method: 'action_validate',
                 args: [_.map(this.events, function (event) { return event.record.id; })],
             }).then(function () {
@@ -75,13 +75,13 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
             });
         },
 
-        _onGenerateBenefits: function (e) {
+        _onGenerateWorkEntries: function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
             var self = this;
             this._rpc({
                 model: 'hr.employee',
-                method: 'generate_benefit',
+                method: 'generate_work_entry',
                 args: [time.datetime_to_str(this.firstDay), time.datetime_to_str(this.lastDay)],
             }).then(function () {
                 self.reload();
@@ -105,13 +105,13 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
 
         renderButtons: function () {
             this._super.apply(this, arguments);
-            this._renderBenefitButtons();
+            this._renderWorkEntryButtons();
         },
     });
 
-    var BenefitCalendarModel = CalendarModel.extend({
+    var WorkEntryCalendarModel = CalendarModel.extend({
          /**
-          * Display everybody's benefits if no employee filter exists
+          * Display everybody's work_entries if no employee filter exists
           * @private
           * @override
           * @param {any} filter
@@ -123,7 +123,7 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
                 var all_filter = filters[filters.length - 1];
 
                 if (all_filter) {
-                    all_filter.label = _t("Everybody's benefits");
+                    all_filter.label = _t("Everybody's Work Entries");
 
                     if (filter.write_model && filter.filters.length <= 1 && all_filter.active === undefined) {
                         filter.all = true;
@@ -135,14 +135,14 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
         }
     });
 
-    var BenefitCalendarView = CalendarView.extend({
+    var WorkEntryCalendarView = CalendarView.extend({
         config: _.extend({}, CalendarView.prototype.config, {
-            Controller: BenefitCalendarController,
-            Model: BenefitCalendarModel,
+            Controller: WorkEntryCalendarController,
+            Model: WorkEntryCalendarModel,
             Renderer: CalendarRenderer,
         }),
     });
 
-    viewRegistry.add('benefits_calendar', BenefitCalendarView);
+    viewRegistry.add('work_entries_calendar', WorkEntryCalendarView);
 
 });

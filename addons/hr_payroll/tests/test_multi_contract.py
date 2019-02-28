@@ -51,7 +51,7 @@ class TestPayslipMultiContract(TestPayslipContractBase):
             'date_to': datetime.strptime('2015-11-20 18:00:00', '%Y-%m-%d %H:%M:%S'),
             'resource_id': self.richard_emp.resource_id.id,
             'calendar_id': self.calendar_35h.id,
-            'benefit_type_id': self.benefit_type_leave.id,
+            'work_entry_type_id': self.work_entry_type_leave.id,
             'time_type': 'leave',
         })
         payslip = self.env['hr.payslip'].create({

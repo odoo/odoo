@@ -161,15 +161,15 @@ class HrPayslip(models.Model):
 
             calendar = contract.resource_calendar_id
 
-            benefit_types = self.env['hr.benefit.type'].search([('code', '!=', False)])
-            for benefit_type in benefit_types:
-                hours = contract.employee_id._get_benefit_days_data(benefit_type, day_from, day_to, calendar=calendar)['hours']
+            work_entry_types = self.env['hr.work.entry.type'].search([('code', '!=', False)])
+            for work_entry_type in work_entry_types:
+                hours = contract.employee_id._get_work_entry_days_data(work_entry_type, day_from, day_to, calendar=calendar)['hours']
                 if hours:
                     line = {
-                        'name': benefit_type.name,
-                        'sequence': benefit_type.sequence,
-                        'code': benefit_type.code,
-                        'number_of_days': hours / calendar.hours_per_day, # n_days returned by benefit_days_data doesn't make sense for extra work
+                        'name': work_entry_type.name,
+                        'sequence': work_entry_type.sequence,
+                        'code': work_entry_type.code,
+                        'number_of_days': hours / calendar.hours_per_day, # n_days returned by work_entry_days_data doesn't make sense for extra work
                         'number_of_hours': hours,
                     }
                     res.append(line)

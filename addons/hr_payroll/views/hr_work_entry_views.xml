@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="hr_benefit_action" model="ir.actions.act_window">
-        <field name="name">Benefit</field>
-        <field name="res_model">hr.benefit</field>
+    <record id="hr_work_entry_action" model="ir.actions.act_window">
+        <field name="name">Work Entry</field>
+        <field name="res_model">hr.work.entry</field>
         <field name="view_type">form</field>
         <field name="view_mode">calendar,gantt,tree,form,pivot</field>
     </record>
 
-    <record id="hr_benefit_gantt" model="ir.ui.view">
-        <field name="name">hr.benefit.gantt</field>
-        <field name="model">hr.benefit</field>
+    <record id="hr_work_entry_gantt" model="ir.ui.view">
+        <field name="name">hr.work.entry.gantt</field>
+        <field name="model">hr.work.entry</field>
         <field name="arch" type="xml">
-            <gantt string="Benefit"
+            <gantt string="Work Entry"
                    date_start="date_start"
                    date_stop="date_stop"
-                   color="benefit_type_id"
+                   color="work_entry_type_id"
                    default_group_by='employee_id'
                    decoration-secondary="state == 'validated'"
                    decoration-warning="display_warning">
@@ -27,22 +27,22 @@
         </field>
     </record>
 
-    <record id="hr_benefit_calendar" model="ir.ui.view">
-        <field name="name">hr.benefit.calendar</field>
-        <field name="model">hr.benefit</field>
+    <record id="hr_work_entry_calendar" model="ir.ui.view">
+        <field name="name">hr.work.entry.calendar</field>
+        <field name="model">hr.work.entry</field>
         <field name="arch" type="xml">
-            <calendar string="Benefit"
-                js_class="benefits_calendar"
+            <calendar string="Work Entry"
+                js_class="work_entries_calendar"
                 date_start="date_start"
                 date_stop="date_stop"
                 mode="month"
                 quick_add="False"
-                color="benefit_type_id"
+                color="work_entry_type_id"
                 event_limit="5">
                 <field name="state" invisible="1"/>
                 <field name="display_warning" invisible="1"/>
                 <!-- Sidebar favorites filters -->
-                <field name="employee_id" write_model="hr.user.benefit.employee" write_field="employee_id" avatar_field="image_small"/>
+                <field name="employee_id" write_model="hr.user.work.entry.employee" write_field="employee_id" avatar_field="image_small"/>
                 <templates>
                     <t t-name="calendar-box">
                         <t t-set="color" t-value="widget.getColor(event.color_index)"/>
@@ -66,42 +66,42 @@
         </field>
     </record>
 
-    <record id="hr_benefit_form" model="ir.ui.view">
-        <field name="name">hr.benefit.form</field>
-        <field name="model">hr.benefit</field>
+    <record id="hr_work_entry_form" model="ir.ui.view">
+        <field name="name">hr.work.entry.form</field>
+        <field name="model">hr.work.entry</field>
         <field name="arch" type="xml">
-            <form string="Benefit" >
+            <form string="Work Entry" >
                 <header>
                     <field name="display_warning" invisible="1"/>
                     <field name="leave_id" invisible="1"/>
-                    <button string="Go To Conflicting Leave" name="action_leave" type="object" attrs="{'invisible': ['|', '|', '!',('display_warning', '=', True), ('leave_id', '=', False), ('benefit_type_id', '=', False)]}"/>
+                    <button string="Go To Conflicting Leave" name="action_leave" type="object" attrs="{'invisible': ['|', '|', '!',('display_warning', '=', True), ('leave_id', '=', False), ('work_entry_type_id', '=', False)]}"/>
                     <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
                     <div attrs="{'invisible': [('display_warning', '=', False)]}">
-                        <div class="alert alert-warning" role="alert" attrs="{'invisible': ['!', ('benefit_type_id', '=', False)]}">
-                            This benefit cannot be validated.  The benefit type is undefined.
+                        <div class="alert alert-warning" role="alert" attrs="{'invisible': ['!', ('work_entry_type_id', '=', False)]}">
+                            This work entry cannot be validated.  The work_entry type is undefined.
                         </div>
-                        <div attrs="{'invisible': [('benefit_type_id', '=', False)]}">
+                        <div attrs="{'invisible': [('work_entry_type_id', '=', False)]}">
                             <div class="alert alert-warning" role="alert" attrs="{'invisible': [('leave_id', '=', False)]}">
-                                This benefit cannot be validated.  There is a leave to approve (or refuse) at the same time.
+                                This work entry cannot be validated.  There is a leave to approve (or refuse) at the same time.
                             </div>
                             <div class="alert alert-warning" role="alert" attrs="{'invisible': ['!', ('leave_id', '=', False)]}">
-                                This benefit cannot be validated. It is conflicting with at least one benefit. <br/>
-                                Two benefits of the same employee cannot overlap at the same time.
+                                This work entry cannot be validated. It is conflicting with at least one work_entry. <br/>
+                                Two work_entries of the same employee cannot overlap at the same time.
                             </div>
                         </div>
                     </div>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Benefit Name" attrs="{'readonly': [('state', '=', 'validated')]}"/>
+                            <field name="name" placeholder="Work Entry Name" attrs="{'readonly': [('state', '=', 'validated')]}"/>
                         </h1>
                     </div>
                     <group>
                         <group>
                             <field name="employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
                             <field name="contract_id" readonly="1"/>
-                            <field name="benefit_type_id" attrs="{'readonly': [('state', '=', 'validated')]}" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="work_entry_type_id" attrs="{'readonly': [('state', '=', 'validated')]}" options="{'no_create': True, 'no_open': True}"/>
                             <field name="leave_id" attrs="{'invisible': [('leave_id', '=', False)]}"/>
                         </group>
                         <group>
@@ -118,13 +118,13 @@
         </field>
     </record>
 
-    <record id="hr_benefit_tree" model="ir.ui.view">
-        <field name="name">hr.benefit.tree</field>
-        <field name="model">hr.benefit</field>
+    <record id="hr_work_entry_tree" model="ir.ui.view">
+        <field name="name">hr.work.entry.tree</field>
+        <field name="model">hr.work.entry</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
-                <field name="benefit_type_id"/>
+                <field name="work_entry_type_id"/>
                 <field name="duration"/>
                 <field name="state"/>
                 <field name="date_start" string="Beginning"/>
@@ -133,31 +133,31 @@
         </field>
     </record>
 
-    <record id="view_hr_benefit_filter" model="ir.ui.view">
-        <field name="name">hr.benefit.filter</field>
-        <field name="model">hr.benefit</field>
+    <record id="view_hr_work_entry_filter" model="ir.ui.view">
+        <field name="name">hr.work.entry.filter</field>
+        <field name="model">hr.work.entry</field>
         <field name="arch" type="xml">
-            <search string="Search Benefit">
+            <search string="Search Work Entry">
                 <field name="employee_id"/>
                 <field name="name"/>
-                <filter string="My Benefits" domain="[('employee_id.user_id','=',uid)]" name="my_benefits"/>
-                <filter string="With error" domain="[('display_warning','=', True)]" name="benefits_error"/>
+                <filter string="My Work Entries" domain="[('employee_id.user_id','=',uid)]" name="my_work_entries"/>
+                <filter string="With error" domain="[('display_warning','=', True)]" name="work_entries_error"/>
                 <filter name="date_filter" string="Date" date="date_start"/>
                 <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
-                <filter name="group_benefit_type" string="Type" context="{'group_by':'benefit_type_id'}"/>
+                <filter name="group_work_entry_type" string="Type" context="{'group_by':'work_entry_type_id'}"/>
             </search>
         </field>
     </record>
 
-    <record id="hr_benefit_type_form" model="ir.ui.view">
-        <field name="name">hr.benefit.type.form</field>
-        <field name="model">hr.benefit.type</field>
+    <record id="hr_work_entry_type_form" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.form</field>
+        <field name="model">hr.work.entry.type</field>
         <field name="arch" type="xml">
-            <form string="Benefit Type" >
+            <form string="Work Entry Type" >
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Benefit Type Name"/>
+                            <field name="name" placeholder="Work Entry Type Name"/>
                         </h1>
                     </div>
                     <group>
@@ -174,7 +174,7 @@
         </field>
     </record>
 
-    <record model="ir.actions.server" id="action_generate_payslips_from_benefits">
+    <record model="ir.actions.server" id="action_generate_payslips_from_work_entries">
             <field name="name">Generate payslips</field>
             <field name="model_id" ref="model_hr_payslip_employees"/>
             <field name="binding_model_id" ref="model_hr_payslip_employees" />
@@ -184,9 +184,9 @@
             </field>
         </record>
 
-    <record id="action_view_hr_benefit_type" model="ir.actions.act_window">
-        <field name="name">Benefit Types</field>
-        <field name="res_model">hr.benefit.type</field>
+    <record id="action_view_hr_work_entry_type" model="ir.actions.act_window">
+        <field name="name">Work Entry Types</field>
+        <field name="res_model">hr.work.entry.type</field>
         <field name="view_mode">tree,kanban,form</field>
     </record>
 

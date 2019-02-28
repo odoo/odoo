@@ -38,7 +38,7 @@ class HrPayslipEmployees(models.TransientModel):
 
         payslips = self.env['hr.payslip']
         Payslip = self.env['hr.payslip']
-        for employee in self.employee_ids.filtered(lambda e: not e.has_non_validated_benefits(payslip_run.date_start, payslip_run.date_end)):
+        for employee in self.employee_ids.filtered(lambda e: not e.has_non_validated_work_entries(payslip_run.date_start, payslip_run.date_end)):
             values = Payslip.default_get(Payslip.fields_get())
             values.update({
                 'employee_id': employee.id,

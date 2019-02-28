@@ -38,9 +38,9 @@
         <field name="groups" eval="[(4, ref('hr_payroll.group_hr_payroll_manager'))]"/>
     </record>
 
-    <record id="hr_benefit_validated" model="ir.rule">
-        <field name="name">hr.benefit: only non validated benefits updated</field>
-        <field name="model_id" ref="model_hr_benefit"/>
+    <record id="hr_work_entry_validated" model="ir.rule">
+        <field name="name">hr.work.entry: only non validated work_entries updated</field>
+        <field name="model_id" ref="model_hr_work_entry"/>
         <field name="domain_force">[('state', '!=', 'validated')]</field>
         <field name="groups" eval="[(4, ref('hr_payroll.group_hr_payroll_manager'))]"/>
         <field name="perm_create" eval="0"/>
@@ -49,9 +49,9 @@
         <field name="perm_read" eval="0"/>
     </record>
 
-    <record id="hr_user_benefit_employee" model="ir.rule">
-        <field name="name">Benefits/Employee calendar filter: only self</field>
-        <field name="model_id" ref="model_hr_user_benefit_employee"/>
+    <record id="hr_user_work_entry_employee" model="ir.rule">
+        <field name="name">Work entries/Employee calendar filter: only self</field>
+        <field name="model_id" ref="model_hr_user_work_entry_employee"/>
         <field name="domain_force">[('user_id', '=', user.id)]</field>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         <field name="perm_create" eval="1"/>
@@ -81,9 +81,9 @@
         <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
     </record>
 
-    <record id="ir_rule_hr_benefit_multi_company" model="ir.rule">
+    <record id="ir_rule_hr_work_entry_multi_company" model="ir.rule">
         <field name="name">HR Payslip: Multi Company</field>
-        <field name="model_id" ref="model_hr_benefit"/>
+        <field name="model_id" ref="model_hr_work_entry"/>
         <field name="global" eval="True"/>
         <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
     </record>

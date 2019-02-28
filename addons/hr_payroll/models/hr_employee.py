@@ -23,8 +23,8 @@ class HrEmployee(models.Model):
         for employee in self:
             employee.payslip_count = len(employee.slip_ids)
 
-    def has_non_validated_benefits(self, date_from, date_to):
-        return bool(self.env['hr.benefit'].search_count([
+    def has_non_validated_work_entries(self, date_from, date_to):
+        return bool(self.env['hr.work.entry'].search_count([
             ('employee_id', 'in', self.ids),
             ('date_start', '<=', date_to),
             ('date_stop', '>=', date_from),
@@ -40,13 +40,13 @@ class HrEmployee(models.Model):
         return res
 
     @api.model
-    def generate_benefit(self, date_start, date_stop):
+    def generate_work_entry(self, date_start, date_stop):
         def _format_datetime(date):
             fmt = '%Y-%m-%d %H:%M:%S'
             date = datetime.strptime(date, fmt) if isinstance(date, str) else date
             return date.replace(tzinfo=pytz.utc) if not date.tzinfo else date
 
-        attendance_type = self.env.ref('hr_payroll.benefit_type_attendance')
+        attendance_type = self.env.ref('hr_payroll.work_entry_type_attendance')
         vals_list = []
 
         date_start = _format_datetime(date_start)
@@ -71,28 +71,28 @@ class HrEmployee(models.Model):
             global_leaves = employee.resource_calendar_id.global_leave_ids
 
             employee_leaves = (emp_leaves | global_leaves).mapped('holiday_id')
-            vals_list.extend(employee_leaves._get_benefits_values())
+            vals_list.extend(employee_leaves._get_work_entries_values())
 
             for contract in contracts:
 
-                date_start_benefits = max(date_start, datetime.combine(contract.date_start, datetime.min.time()).replace(tzinfo=pytz.utc))
-                date_stop_benefits = min(date_stop, datetime.combine(contract.date_end or datetime.max.date(), datetime.max.time()).replace(tzinfo=pytz.utc))
+                date_start_work_entries = max(date_start, datetime.combine(contract.date_start, datetime.min.time()).replace(tzinfo=pytz.utc))
+                date_stop_work_entries = min(date_stop, datetime.combine(contract.date_end or datetime.max.date(), datetime.max.time()).replace(tzinfo=pytz.utc))
 
                 calendar = contract.resource_calendar_id
                 resource = employee.resource_id
-                attendances = calendar._work_intervals(date_start_benefits, date_stop_benefits, resource=resource)
+                attendances = calendar._work_intervals(date_start_work_entries, date_stop_work_entries, resource=resource)
                 # Attendances
                 for interval in attendances:
-                    benefit_type_id = interval[2].mapped('benefit_type_id')[:1] or attendance_type
+                    work_entry_type_id = interval[2].mapped('work_entry_type_id')[:1] or attendance_type
                     vals_list += [{
-                        'name': "%s: %s" % (benefit_type_id.name, employee.name),
+                        'name': "%s: %s" % (work_entry_type_id.name, employee.name),
                         'date_start': interval[0].astimezone(pytz.utc),
                         'date_stop': interval[1].astimezone(pytz.utc),
-                        'benefit_type_id': benefit_type_id.id,
+                        'work_entry_type_id': work_entry_type_id.id,
                         'employee_id': employee.id,
                         'contract_id': contract.id,
                         'state': 'confirmed',
                     }]
 
-        new_benefits = self.env['hr.benefit']._safe_duplicate_create(vals_list, date_start, date_stop)
-        new_benefits._compute_conflicts_leaves_to_approve()
+        new_work_entries = self.env['hr.work.entry']._safe_duplicate_create(vals_list, date_start, date_stop)
+        new_work_entries._compute_conflicts_leaves_to_approve()
