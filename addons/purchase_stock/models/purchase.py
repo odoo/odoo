@@ -369,4 +369,9 @@ class PurchaseOrderLine(models.Model):
         """ This function purpose is to be override with the purpose to forbide _run_buy  method
         to merge a new po line in an existing one.
         """
+        # In case several reordering rules apply to the same product (e.g. with different
+        # locations), we do not merge the PO lines. Indeed, since orderpoint_id is a Many2one, the
+        # information of only one RR can be kept on a PO line.
+        if self.orderpoint_id != values.get('orderpoint_id'):
+            return False
         return True
