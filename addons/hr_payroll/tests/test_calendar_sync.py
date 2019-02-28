@@ -23,7 +23,7 @@ class TestPayslipCalendars(TestPayslipContractBase):
                 'date_to': end,
                 'resource_id': resource.id if resource else None,
                 'calendar_id': self.richard_emp.resource_calendar_id.id,
-                'benefit_type_id': self.benefit_type_leave.id,
+                'work_entry_type_id': self.work_entry_type_leave.id,
                 'time_type': 'leave',
             })
 

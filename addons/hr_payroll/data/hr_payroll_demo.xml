@@ -141,59 +141,59 @@
             <field name="state">open</field>
         </record>
 
-        <!-- Benefits -->
-        <record id="benefit_type_home_working" model="hr.benefit.type">
+        <!-- Work entries -->
+        <record id="work_entry_type_home_working" model="hr.work.entry.type">
             <field name="name">Home Working</field>
             <field name="code">WORK200</field>
             <field name="color">2</field>
         </record>
 
-        <record id="benefit_type_extra_hours" model="hr.benefit.type">
+        <record id="work_entry_type_extra_hours" model="hr.work.entry.type">
             <field name="name">Extra hours</field>
             <field name="code">WORK300</field>
             <field name="color">2</field>
         </record>
 
-        <record id="benefit_type_long_leave" model="hr.benefit.type">
+        <record id="work_entry_type_long_leave" model="hr.work.entry.type">
             <field name="name">Long Term Time Off</field>
             <field name="code">LEAVE200</field>
             <field name="is_leave">True</field>
             <field name="color">4</field>
         </record>
 
-        <record id="benefit_type_unpaid_leave" model="hr.benefit.type">
+        <record id="work_entry_type_unpaid_leave" model="hr.work.entry.type">
             <field name="name">Unpaid Time Off</field>
             <field name="code">LEAVE300</field>
             <field name="is_leave">True</field>
             <field name="color">5</field>
         </record>
 
-        <record id="benefit_type_sick_leave" model="hr.benefit.type">
+        <record id="work_entry_type_sick_leave" model="hr.work.entry.type">
             <field name="name">Sick Time Off</field>
             <field name="code">LEAVE400</field>
             <field name="is_leave">True</field>
             <field name="color">5</field>
         </record>
 
-        <!-- add benefit type to leave type -->
+        <!-- add work_entry type to leave type -->
         <record id="hr_holidays.holiday_status_sl" model="hr.leave.type">
-            <field name="benefit_type_id" ref="benefit_type_sick_leave"></field>
+            <field name="work_entry_type_id" ref="work_entry_type_sick_leave"></field>
         </record>
 
         <record id="hr_holidays.holiday_status_unpaid" model="hr.leave.type">
-            <field name="benefit_type_id" ref="benefit_type_unpaid_leave"></field>
+            <field name="work_entry_type_id" ref="work_entry_type_unpaid_leave"></field>
         </record>
 
         <record id="hr_holidays.holiday_status_hw" model="hr.leave.type">
-            <field name="benefit_type_id" ref="benefit_type_home_working"></field>
+            <field name="work_entry_type_id" ref="work_entry_type_home_working"></field>
         </record>
 
         <record id="hr_holidays.holiday_status_cl" model="hr.leave.type">
-            <field name="benefit_type_id" ref="benefit_type_leave"></field>
+            <field name="work_entry_type_id" ref="work_entry_type_leave"></field>
         </record>
 
         <record id="hr_holidays.holiday_status_comp" model="hr.leave.type">
-            <field name="benefit_type_id" ref="benefit_type_leave"></field>
+            <field name="work_entry_type_id" ref="work_entry_type_leave"></field>
         </record>
 
 </odoo>

@@ -38,9 +38,9 @@
         <!-- TODO add filter-->
 
     <menuitem
-        id="hr_menu_benefit_menu"
-        name="Benefits"
-        action="hr_benefit_action"
+        id="hr_menu_work_entry_menu"
+        name="Work Entries"
+        action="hr_work_entry_action"
         parent="menu_hr_payroll_salary_computation"
         sequence="25"/>
 
@@ -68,17 +68,17 @@
         action="action_hr_payroll_configuration"
         groups="base.group_system"/>
 
-    <!-- Benefits Configuration -->
+    <!-- Work entries Configuration -->
     <menuitem
-        id="menu_hr_benefit_confirguration"
-        name="Benefits"
+        id="menu_hr_work_entry_confirguration"
+        name="Work Entries"
         parent="menu_hr_payroll_configuration"
         sequence="50"
     />
     <menuitem
-        id="menu_hr_benefit_type_view"
-        action="action_view_hr_benefit_type"
-        parent="menu_hr_benefit_confirguration"
+        id="menu_hr_work_entry_type_view"
+        action="action_view_hr_work_entry_type"
+        parent="menu_hr_work_entry_confirguration"
     />
 
     <!-- Salary Configuration -->

@@ -13,9 +13,9 @@ from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
 
 
-class HrBenefit(models.Model):
-    _name = 'hr.benefit'
-    _description = 'hr.benefit'
+class HrWorkEnrty(models.Model):
+    _name = 'hr.work.entry'
+    _description = 'hr.work.entry'
     _order = 'display_warning desc,state,date_start'
 
     name = fields.Char(required=True)
@@ -25,8 +25,8 @@ class HrBenefit(models.Model):
     date_stop = fields.Datetime(string='To')
     duration = fields.Float(compute='_compute_duration', inverse='_inverse_duration', store=True, string="Period")
     contract_id = fields.Many2one('hr.contract', string="Contract", required=True)
-    benefit_type_id = fields.Many2one('hr.benefit.type')
-    color = fields.Integer(related='benefit_type_id.color', readonly=True)
+    work_entry_type_id = fields.Many2one('hr.work.entry.type')
+    color = fields.Integer(related='work_entry_type_id.color', readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
@@ -39,9 +39,9 @@ class HrBenefit(models.Model):
         default=lambda self: self.env['res.company']._company_default_get())
 
     _sql_constraints = [
-        ('_unique', 'unique (date_start, date_stop, employee_id, benefit_type_id)', "Benefit already exists for this attendance"),
-        ('_benefit_has_end', 'check (date_stop IS NOT NULL OR duration <> 0)', 'Benefit must end. Please define an end date or a duration.'),
-        ('_benefit_start_before_end', 'check (date_stop is null OR (date_stop > date_start))', 'Starting time should be before end time.')
+        ('_unique', 'unique (date_start, date_stop, employee_id, work_entry_type_id)', "Work entry already exists for this attendance"),
+        ('_work_entry_has_end', 'check (date_stop IS NOT NULL OR duration <> 0)', 'Work entry must end. Please define an end date or a duration.'),
+        ('_work_entry_start_before_end', 'check (date_stop is null OR (date_stop > date_start))', 'Starting time should be before end time.')
     ]
 
     @api.onchange('duration')
@@ -56,13 +56,13 @@ class HrBenefit(models.Model):
 
     @api.depends('date_stop', 'date_start')
     def _compute_duration(self):
-        for benefit in self:
-            benefit.duration = benefit._get_duration(benefit.date_start, benefit.date_stop)
+        for work_entry in self:
+            work_entry.duration = work_entry._get_duration(work_entry.date_start, work_entry.date_stop)
 
     def _inverse_duration(self):
-        for benefit in self:
-            if benefit.date_start and benefit.duration:
-                benefit.date_stop = benefit.date_start + relativedelta(hours=benefit.duration)
+        for work_entry in self:
+            if work_entry.date_start and work_entry.duration:
+                work_entry.date_stop = work_entry.date_start + relativedelta(hours=work_entry.duration)
 
     def write(self, vals):
         if 'state' in vals:
@@ -71,28 +71,28 @@ class HrBenefit(models.Model):
             if vals['state'] == 'cancelled':
                 vals['active'] = False
                 self.mapped('leave_id').action_refuse()
-        return super(HrBenefit, self).write(vals)
+        return super(HrWorkEnrty, self).write(vals)
 
     @api.multi
     def _check_if_error(self):
         if not self:
             return False
-        undefined_type = self.filtered(lambda b: not b.benefit_type_id)
+        undefined_type = self.filtered(lambda b: not b.work_entry_type_id)
         undefined_type.write({'display_warning': True})
-        conflict = self._mark_conflicting_benefits(min(self.mapped('date_start')), max(self.mapped('date_stop')))
+        conflict = self._mark_conflicting_work_entries(min(self.mapped('date_start')), max(self.mapped('date_stop')))
         conflict_with_leaves = self._compute_conflicts_leaves_to_approve()
         return undefined_type or conflict or conflict_with_leaves
 
     @api.model
-    def _mark_conflicting_benefits(self, start, stop):
+    def _mark_conflicting_work_entries(self, start, stop):
         conflict = False
         domain = [
             ('date_start', '<', stop),
             ('date_stop', '>', start),
         ]
         benefs = self.search(domain)
-        benefits_by_employee = itertools.groupby(benefs, lambda b: b.employee_id)
-        for employee, benefs in benefits_by_employee:
+        work_entries_by_employee = itertools.groupby(benefs, lambda b: b.employee_id)
+        for employee, benefs in work_entries_by_employee:
             intervals = Intervals(intervals=((b.date_start, b.date_stop, b) for b in benefs))
             for interval in intervals:
                 if len(interval[2]) > 1:
@@ -107,9 +107,9 @@ class HrBenefit(models.Model):
 
         query = """
             SELECT
-                b.id AS benefit_id,
+                b.id AS work_entry_id,
                 l.id AS leave_id
-            FROM hr_benefit b
+            FROM hr_work_entry b
             INNER JOIN hr_leave l ON b.employee_id = l.employee_id
             WHERE
                 b.id IN %s AND
@@ -120,7 +120,7 @@ class HrBenefit(models.Model):
         self.env.cr.execute(query, [tuple(self.ids)])
         conflicts = self.env.cr.dictfetchall()
         for res in conflicts:
-            self.browse(res.get('benefit_id')).write({
+            self.browse(res.get('work_entry_id')).write({
                 'display_warning': True,
                 'leave_id': res.get('leave_id')
             })
@@ -128,22 +128,22 @@ class HrBenefit(models.Model):
 
     def _safe_duplicate_create(self, vals_list, date_start, date_stop):
         """
-        Create benefits between date_start and date_stop according to vals_list.
-        Skip the values in vals_list if a benefit already exists for the given
-        date_start, date_stop, employee_id, benefit_type_id
+        Create work_entries between date_start and date_stop according to vals_list.
+        Skip the values in vals_list if a work_entry already exists for the given
+        date_start, date_stop, employee_id, work_entry_type_id
         :return: new record id if it didn't exist.
         """
         # The search_read should be fast as date_start and date_stop are indexed from the
         # unique sql constraint
         month_recs = self.search_read([('date_start', '>=', date_start), ('date_stop', '<=', date_stop)],
-                                      ['employee_id', 'date_start', 'date_stop', 'benefit_type_id'])
+                                      ['employee_id', 'date_start', 'date_stop', 'work_entry_type_id'])
         existing_entries = {(
             r['date_start'],
             r['date_stop'],
             r['employee_id'][0],
-            r['benefit_type_id'][0] if r['benefit_type_id'] else False,
+            r['work_entry_type_id'][0] if r['work_entry_type_id'] else False,
         ) for r in month_recs}
-        new_vals = [v for v in vals_list if (v['date_start'].replace(tzinfo=None), v['date_stop'].replace(tzinfo=None), v['employee_id'], v['benefit_type_id']) not in existing_entries]
+        new_vals = [v for v in vals_list if (v['date_start'].replace(tzinfo=None), v['date_stop'].replace(tzinfo=None), v['employee_id'], v['work_entry_type_id']) not in existing_entries]
         # Remove duplicates from vals_list, shouldn't be necessary from saas-12.2
         unique_new_vals = set()
         for values in new_vals:
@@ -164,7 +164,7 @@ class HrBenefit(models.Model):
 
     def _split_by_day(self):
         """
-        Split the benefit by days and unlink the original benefit.
+        Split the work_entry by days and unlink the original work_entry.
         @return recordset
         """
         def _split_range_by_day(start, end):
@@ -181,66 +181,66 @@ class HrBenefit(models.Model):
             # filter to avoid dummy intervals starting and ending at the same time
             return [(start, end) for start, end in days if start != end]
 
-        new_benefits = self.env['hr.benefit']
-        benefits_to_unlink = self.env['hr.benefit']
+        new_work_entries = self.env['hr.work.entry']
+        work_entries_to_unlink = self.env['hr.work.entry']
 
-        for benefit in self:
-            if benefit.date_start.date() == benefit.date_stop.date():
-                new_benefits |= benefit
+        for work_entry in self:
+            if work_entry.date_start.date() == work_entry.date_stop.date():
+                new_work_entries |= work_entry
             else:
-                tz = pytz.timezone(benefit.employee_id.tz)
-                benefit_start, benefit_stop = tz.localize(benefit.date_start), tz.localize(benefit.date_stop)
+                tz = pytz.timezone(work_entry.employee_id.tz)
+                work_entry_start, work_entry_stop = tz.localize(work_entry.date_start), tz.localize(work_entry.date_stop)
                 values = {
-                    'name': benefit.name,
-                    'employee_id': benefit.employee_id.id,
-                    'benefit_type_id': benefit.benefit_type_id.id,
-                    'contract_id': benefit.contract_id.id,
+                    'name': work_entry.name,
+                    'employee_id': work_entry.employee_id.id,
+                    'work_entry_type_id': work_entry.work_entry_type_id.id,
+                    'contract_id': work_entry.contract_id.id,
                 }
-                benefit_state = benefit.state
-                benefits_to_unlink |= benefit
-                for start, stop in _split_range_by_day(benefit_start, benefit_stop):
+                work_entry_state = work_entry.state
+                work_entries_to_unlink |= work_entry
+                for start, stop in _split_range_by_day(work_entry_start, work_entry_stop):
                     values['date_start'] = start.astimezone(pytz.utc)
                     values['date_stop'] = stop.astimezone(pytz.utc)
-                    new_benefit = self.create(values)
-                    # Write the state after the creation due to the ir.rule on benefit state
-                    new_benefit.state = benefit_state
-                    new_benefits |= new_benefit
+                    new_work_entry = self.create(values)
+                    # Write the state after the creation due to the ir.rule on work_entry state
+                    new_work_entry.state = work_entry_state
+                    new_work_entries |= new_work_entry
 
-        benefits_to_unlink.unlink()
-        return new_benefits
+        work_entries_to_unlink.unlink()
+        return new_work_entries
 
     @api.multi
     def _duplicate_to_calendar(self):
         """
-            Duplicate data to keep the complexity in benefit and not mess up payroll, etc.
+            Duplicate data to keep the complexity in work_entry and not mess up payroll, etc.
         """
-        attendance_type = self.env.ref('hr_payroll.benefit_type_attendance')
-        attendance_benefits = self.filtered(lambda b:
-            not b.benefit_type_id.is_leave and
-            # Normal benefit are global to all employees -> avoid duplicating it
-            not b.benefit_type_id == attendance_type)
-        leave_benefits = self.filtered(lambda b: b.benefit_type_id.is_leave)
+        attendance_type = self.env.ref('hr_payroll.work_entry_type_attendance')
+        attendance_work_entries = self.filtered(lambda b:
+            not b.work_entry_type_id.is_leave and
+            # Normal work_entry are global to all employees -> avoid duplicating it
+            not b.work_entry_type_id == attendance_type)
+        leave_work_entries = self.filtered(lambda b: b.work_entry_type_id.is_leave)
 
-        benefits_to_duplicate = self.env['hr.benefit']
-        for benefit in attendance_benefits:
-            benefit = benefit._split_by_day()
-            benefits_to_duplicate |= benefit
+        work_entries_to_duplicate = self.env['hr.work.entry']
+        for work_entry in attendance_work_entries:
+            work_entry = work_entry._split_by_day()
+            work_entries_to_duplicate |= work_entry
 
-        benefits_to_duplicate._duplicate_to_calendar_attendance()
-        leave_benefits._duplicate_to_calendar_leave()
+        work_entries_to_duplicate._duplicate_to_calendar_attendance()
+        leave_work_entries._duplicate_to_calendar_leave()
 
     @api.multi
     def _duplicate_to_calendar_leave(self):
         vals_list = []
-        for benefit in self:
-            if not benefit.leave_id:
+        for work_entry in self:
+            if not work_entry.leave_id:
                 vals_list += [{
-                    'name': benefit.name,
-                    'date_from': benefit.date_start,
-                    'date_to': benefit.date_stop,
-                    'calendar_id': benefit.employee_id.resource_calendar_id.id,
-                    'resource_id': benefit.employee_id.resource_id.id,
-                    'benefit_type_id': benefit.benefit_type_id.id,
+                    'name': work_entry.name,
+                    'date_from': work_entry.date_start,
+                    'date_to': work_entry.date_stop,
+                    'calendar_id': work_entry.employee_id.resource_calendar_id.id,
+                    'resource_id': work_entry.employee_id.resource_id.id,
+                    'work_entry_type_id': work_entry.work_entry_type_id.id,
                 }]
         if vals_list:
             self.env['resource.calendar.leaves'].create(vals_list)
@@ -248,47 +248,47 @@ class HrBenefit(models.Model):
     @api.multi
     def _duplicate_to_calendar_attendance(self):
         mapped_data = {
-            benefit: [
-                pytz.utc.localize(benefit.date_start).astimezone(pytz.timezone(benefit.employee_id.tz)), # Start date
-                pytz.utc.localize(benefit.date_stop).astimezone(pytz.timezone(benefit.employee_id.tz)) # End date
-            ] for benefit in self
+            work_entry: [
+                pytz.utc.localize(work_entry.date_start).astimezone(pytz.timezone(work_entry.employee_id.tz)), # Start date
+                pytz.utc.localize(work_entry.date_stop).astimezone(pytz.timezone(work_entry.employee_id.tz)) # End date
+            ] for work_entry in self
         }
 
         if any(data[0].date() != data[1].date() for data in mapped_data.values()):
-            raise ValidationError(_("You can't validate a benefit that covers several days."))
+            raise ValidationError(_("You can't validate a work_entry that covers several days."))
 
         vals_list = []
-        for benefit in self:
-            start, end = mapped_data.get(benefit)
+        for work_entry in self:
+            start, end = mapped_data.get(work_entry)
 
             vals_list += [{
-                'name': benefit.name,
+                'name': work_entry.name,
                 'dayofweek': str(start.weekday()),
                 'date_from': start.date(),
                 'date_to': end.date(),
                 'hour_from': start.hour + start.minute / 60,
                 'hour_to': end.hour + end.minute / 60,
-                'calendar_id': benefit.contract_id.resource_calendar_id.id,
+                'calendar_id': work_entry.contract_id.resource_calendar_id.id,
                 'day_period': 'morning' if end.hour <= 12 else 'afternoon',
-                'resource_id': benefit.employee_id.resource_id.id,
-                'benefit_type_id': benefit.benefit_type_id.id,
+                'resource_id': work_entry.employee_id.resource_id.id,
+                'work_entry_type_id': work_entry.work_entry_type_id.id,
             }]
         self.env['resource.calendar.attendance'].create(vals_list)
 
     @api.multi
     def action_validate(self):
-        benefits = self.filtered(lambda benefit: benefit.state != 'validated')
-        benefits.write({'display_warning': False})
-        if not benefits._check_if_error():
-            benefits.write({'state': 'validated'})
-            benefits._duplicate_to_calendar()
+        work_entries = self.filtered(lambda work_entry: work_entry.state != 'validated')
+        work_entries.write({'display_warning': False})
+        if not work_entries._check_if_error():
+            work_entries.write({'state': 'validated'})
+            work_entries._duplicate_to_calendar()
             return True
         return False
 
 
-class HrBenefitType(models.Model):
-    _name = 'hr.benefit.type'
-    _description = 'hr.benefit.type'
+class HrWorkEnrtyType(models.Model):
+    _name = 'hr.work.entry.type'
+    _description = 'hr.work.entry.type'
 
     name = fields.Char(required=True)
     code = fields.Char()
@@ -296,14 +296,14 @@ class HrBenefitType(models.Model):
     sequence = fields.Integer(default=25)
     active = fields.Boolean(
         'Active', default=True,
-        help="If the active field is set to false, it will allow you to hide the benefit type without removing it.")
+        help="If the active field is set to false, it will allow you to hide the work entry type without removing it.")
     is_leave = fields.Boolean(default=False, string="Leave")
 
 class Contacts(models.Model):
     """ Personnal calendar filter """
 
-    _name = 'hr.user.benefit.employee'
-    _description = 'Benefits Employees'
+    _name = 'hr.user.work.entry.employee'
+    _description = 'Work Entries Employees'
 
     user_id = fields.Many2one('res.users', 'Me', required=True, default=lambda self: self.env.user)
     employee_id = fields.Many2one('hr.employee', 'Employee', required=True)
