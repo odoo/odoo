@@ -58,9 +58,13 @@ class StockHistory(models.Model):
                 stock_histories_by_group[key] += [line['id']]
 
             histories_dict = {}
-            not_real_cost_method_products = self.env['product.product'].browse(
-                record['product_id'] for record in stock_history_data.values()
-            ).filtered(lambda product: product.cost_method != 'real')
+            product_no_prefetch = self.env['product.product'].with_context(prefetch_fields=False)
+            product_ids = set([])
+            stock_history_product_ids = (record['product_id'] for record in stock_history_data.values())
+            for product in product_no_prefetch.browse(stock_history_product_ids):
+                if product.cost_method != 'real':
+                    product_ids.add(product.id)
+            not_real_cost_method_products = product_no_prefetch.browse(product_ids)
             if not_real_cost_method_products:
                 self._cr.execute("""SELECT DISTINCT ON (product_id, company_id) product_id, company_id, cost
                     FROM product_price_history
@@ -77,7 +81,7 @@ class StockHistory(models.Model):
                 for stock_history in self.env['stock.history'].browse(stock_histories_by_group[key]):
                     history_data = stock_history_data[stock_history.id]
                     product_id = history_data['product_id']
-                    if self.env['product.product'].browse(product_id).cost_method == 'real':
+                    if product_no_prefetch.browse(product_id).cost_method == 'real':
                         price = history_data['price_unit_on_quant']
                     else:
                         price = histories_dict.get((product_id, history_data['company_id']), 0.0)
