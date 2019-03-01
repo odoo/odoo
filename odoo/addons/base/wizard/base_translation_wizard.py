@@ -30,8 +30,7 @@ class TranslationWizard(models.TransientModel):
         field = self.env.context['field']
         record = self.env[model].with_context(lang='en_US').browse(recordID)
 
-        domain = ['&', '&', ('res_id', '=', recordID), ('name', '=like', model + ',%'),
-                    ('lang', '!=', self.env.context.get('lang'))]
+        domain = ['&', ('res_id', '=', recordID), ('name', '=like', model + ',%'),]
 
         def make_domain(fld, rec):
             name = "%s,%s" % (fld.model_name, fld.name)
@@ -68,6 +67,7 @@ class TranslationWizard(models.TransientModel):
                             ('name', 'ilike', "%s,%s," % (fld.model_name, fld.name))]
                 except AccessError:
                     pass
+        domain += [('lang', '!=', self.env.context.get('lang'))]
         return domain
 
     @api.multi
@@ -80,8 +80,8 @@ class TranslationLines(models.TransientModel):
     _description = "Translation Lines"
 
     translation_wizard_id = fields.Many2one('translation.field.wizard')
-    ir_translation_id = fields.Many2one('ir.translation', 'Translation')
-    value = fields.Text(related="ir_translation_id.value", string='Translation Value', store=True, readonly=False)
+    ir_translation_id = fields.Many2one('ir.translation', 'Translation ref')
+    value = fields.Text(related="ir_translation_id.value", string='Translation', store=True, readonly=False)
     lang = fields.Selection(selection='_get_languages', string='Language', validate=False)
 
     @api.model
