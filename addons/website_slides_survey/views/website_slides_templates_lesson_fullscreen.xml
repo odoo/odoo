@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="slide_fullscreen_sidebar_category_inherit_survey" inherit_id="website_slides.slide_fullscreen_sidebar_category">
+            <xpath t-if="course_slide.slide_type == 'certification'" expr="//div[@id='o_wslides_fs_sidebar_slide_tab']" position="attributes">
+                <attribute  name="t-att-data-certification_url">
+                    course_slide.action_get_slide_survey_url(course_slide)
+                </attribute>
+            </xpath>
+        </template>
+    </data>
+</odoo>

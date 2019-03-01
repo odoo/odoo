@@ -16,6 +16,7 @@
         'views/website_slides_templates_course.xml',
         'views/website_slides_templates.xml',
         'views/website_slides_templates_homepage.xml',
+        'views/website_slides_templates_lesson_fullscreen.xml',
         'views/survey_templates.xml',
         'views/website_profile.xml',
         'data/gamification_data.xml',

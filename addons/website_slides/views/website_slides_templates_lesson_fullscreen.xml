@@ -78,7 +78,9 @@
                         <span class="o_wslides_bottom_line"></span>
                     </span>
                     <a t-att-index="i" t-att-data-slide-id="course_slide.id">
-                        <div t-attf-index="#{i}"
+                        <div
+                            id="o_wslides_fs_sidebar_slide_tab"
+                            t-attf-index="#{i}"
                             t-att-data-slug="slug(course_slide)"
                             t-att-data-done="course_slide.id in user_progress and user_progress[course_slide.id].completed"
                             t-att-data-id="course_slide.id"
