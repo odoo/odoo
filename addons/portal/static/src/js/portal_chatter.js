@@ -102,7 +102,7 @@ var PortalChatter = Widget.extend({
                 route: '/mail/chatter_init',
                 params: this._messageFetchPrepareParams()
             }),
-            this._super.apply(this, arguments),
+            this._super.apply(this, arguments)
         ).then(function(result){
             self.result = result;
             self.options = _.extend(self.options, self.result['options'] || {});
