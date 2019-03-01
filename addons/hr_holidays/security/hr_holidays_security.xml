@@ -124,6 +124,16 @@
         <field name="groups" eval="[(4, ref('group_hr_holidays_manager'))]"/>
     </record>
 
+    <record id="hr_leave_allocation_rule_team_leader" model="ir.rule">
+        <field name="name">Allocations: Team Leader: read employee's allocations in his team</field>
+        <field name="model_id" ref="model_hr_leave_allocation"/>
+        <field name="domain_force">[('employee_id.leave_manager_id', '=' , user.id)]</field>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4, ref('hr_holidays.group_hr_holidays_team_leader'))]"/>
+    </record>
+
     <record id="resource_leaves_team_leader" model="ir.rule">
         <field name="name">Time Off Resources: Approver</field>
         <field name="model_id" ref="model_resource_calendar_leaves"/>
