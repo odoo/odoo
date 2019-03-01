@@ -6,8 +6,8 @@ echo -n "Enter the version for this release: "
 read ver
 
 if [ ! $ver ]; then
-    echo "Invalid version."
-    exit
+	echo "Invalid version."
+	exit
 fi
 
 name="select2"
@@ -20,7 +20,7 @@ branch="build-$ver"
 curbranch=`git branch | grep "*" | sed "s/* //"`
 timestamp=$(date)
 tokens="s/@@ver@@/$ver/g;s/\@@timestamp@@/$timestamp/g"
-remote="github"
+remote="origin"
 
 echo "Pulling from origin"
 
@@ -59,9 +59,9 @@ cat LICENSE | sed "$tokens" >> "$mini"
 echo "*/" >> "$mini"
 
 curl -s \
-    --data-urlencode "js_code@$js" \
-    http://marijnhaverbeke.nl/uglifyjs \
-    >> "$mini"
+	--data-urlencode "js_code@$js" \
+	http://marijnhaverbeke.nl/uglifyjs \
+	>> "$mini"
 
 git add "$mini"
 
