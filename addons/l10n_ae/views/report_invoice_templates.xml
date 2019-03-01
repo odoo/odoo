@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//p[@name='payment_term']" position="after">
+            <p t-if="o.env.ref('l10n_ae.gcc_countries_group') in o.partner_id.country_id.country_group_ids">
+                Supply between <b>United Arad Emirates</b> and <b><span t-field="o.partner_id.country_id.name"/></b>
+            </p>
+        </xpath>
+        <xpath expr="//h2" position="replace">
+            <h2>
+                <t t-if="o.env.ref('l10n_ae.gcc_countries_group') in o.partner_id.country_id.country_group_ids">
+                    <span t-if="o.type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')">Tax Invoice</span>
+                    <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Tax Invoice</span>
+                    <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Tax Invoice</span>
+                </t>
+                <t t-else="">
+                    <span t-if="o.type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')">Invoice</span>
+                    <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
+                    <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+                </t>
+                <span t-if="o.type == 'out_refund'">Credit Note</span>
+                <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
+                <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
+                <span t-field="o.number"/>
+            </h2>
+        </xpath>
+    </template>
+</odoo>
