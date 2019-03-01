@@ -185,6 +185,7 @@ class CustomerPortal(CustomerPortal):
             values['pms'] = request.env['payment.token'].search(
                 [('partner_id', '=', order_sudo.partner_id.id),
                 ('acquirer_id', 'in', acquirers.filtered(lambda acq: acq.payment_flow == 's2s').ids)])
+            values['acq_extra_fees'] = acquirers.get_acquirer_extra_fees(order_sudo.amount_total, order_sudo.currency_id, order_sudo.partner_id.country_id.id)
 
         if order_sudo.state in ('draft', 'sent', 'cancel'):
             history = request.session.get('my_quotations_history', [])

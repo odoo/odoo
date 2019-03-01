@@ -63,6 +63,12 @@
                                        t-att-checked="acquirers_count==1 and pms_count==0 or acquirers[0] == acq"/>
                             </t>
                             <span class="payment_option_name" t-esc="acq.name"/>
+                            <t t-if="acq_extra_fees and acq_extra_fees.get(acq)">
+                                <span class="badge badge-pill badge-secondary"> + <t t-esc="acq_extra_fees[acq]" t-options='{"widget": "monetary", "display_currency": acq_extra_fees["currency_id"]}'/> Fee </span>
+                            </t>
+                            <t t-elif="acq.fees_active">
+                                <small class="text-muted">(Some fees may apply)</small>
+                            </t>
                         </label>
                         <ul class="float-right list-inline payment_icon_list">
                             <t t-set="i" t-value="0"/>
