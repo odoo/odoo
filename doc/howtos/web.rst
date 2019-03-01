@@ -1544,10 +1544,10 @@ Exercises
                 local.HomePage = instance.Widget.extend({
                     template: "HomePage",
                     start: function () {
-                        return $.when(
+                        return Promise.all([
                             new local.PetToysList(this).appendTo(this.$('.oe_petstore_homepage_left')),
                             new local.MessageOfTheDay(this).appendTo(this.$('.oe_petstore_homepage_right'))
-                        );
+                        ]);
                     }
                 });
                 instance.web.client_actions.add('petstore.homepage', 'instance.oepetstore.HomePage');
