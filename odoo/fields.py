@@ -2646,7 +2646,7 @@ class Many2many(_RelationalMulti):
             query = """
                 CREATE TABLE "{rel}" ("{id1}" INTEGER NOT NULL,
                                       "{id2}" INTEGER NOT NULL,
-                                      UNIQUE("{id1}","{id2}"));
+                                      PRIMARY KEY("{id1}","{id2}"));
                 COMMENT ON TABLE "{rel}" IS %s;
                 CREATE INDEX ON "{rel}" ("{id1}");
                 CREATE INDEX ON "{rel}" ("{id2}")
