@@ -368,7 +368,7 @@ class TestLeavesRights(TestHrHolidaysBase):
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_validation_team_leader_other(self):
-        """ Team Leader validates its employee's leave only"""
+        """ Team Leader validates its employee's allocations only"""
         self.leave_type.write({'allocation_type': 'fixed'})
         self.env['hr.leave.allocation'].create({
             'holiday_status_id': self.leave_type.id,
@@ -380,7 +380,7 @@ class TestLeavesRights(TestHrHolidaysBase):
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_validation_team_leader(self):
-        """ Team Leader validates its employee's leave"""
+        """ Team Leader validates its employee's allocations"""
         self.leave_type.write({'allocation_type': 'fixed'})
 
         # set the team leader
