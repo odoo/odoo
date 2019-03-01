@@ -612,13 +612,14 @@ class MailThread(models.AbstractModel):
         for col_name, col_info in tracked_fields.items():
             initial_value = initial[col_name]
             new_value = self[col_name]
+            company_id = col_info.get('company_dependent') and self.env.company.id or False
 
             if new_value != initial_value and (new_value or initial_value):  # because browse null != False
                 tracking_sequence = getattr(self._fields[col_name], 'tracking',
                                             getattr(self._fields[col_name], 'track_sequence', 100))  # backward compatibility with old parameter name
                 if tracking_sequence is True:
                     tracking_sequence = 100
-                tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, tracking_sequence)
+                tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, tracking_sequence, company_id)
                 if tracking:
                     tracking_value_ids.append([0, 0, tracking])
                 changes.add(col_name)

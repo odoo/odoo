@@ -35,6 +35,7 @@ class MailTracking(models.Model):
     mail_message_id = fields.Many2one('mail.message', 'Message ID', required=True, index=True, ondelete='cascade')
 
     tracking_sequence = fields.Integer('Tracking field sequence', readonly=1, default=100, oldname='track_sequence')
+    company_id = fields.Many2one('res.company', 'Company')
 
     def _compute_field_groups(self):
         for tracking in self:
@@ -43,9 +44,9 @@ class MailTracking(models.Model):
             tracking.field_groups = field.groups
 
     @api.model
-    def create_tracking_values(self, initial_value, new_value, col_name, col_info, tracking_sequence):
+    def create_tracking_values(self, initial_value, new_value, col_name, col_info, tracking_sequence, company_id):
         tracked = True
-        values = {'field': col_name, 'field_desc': col_info['string'], 'field_type': col_info['type'], 'tracking_sequence': tracking_sequence}
+        values = {'field': col_name, 'field_desc': col_info['string'], 'field_type': col_info['type'], 'tracking_sequence': tracking_sequence, 'company_id': company_id}
 
         if col_info['type'] in ['integer', 'float', 'char', 'text', 'datetime', 'monetary']:
             values.update({

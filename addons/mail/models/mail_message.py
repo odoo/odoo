@@ -347,7 +347,7 @@ class Message(models.Model):
         }) for attachment in attachments_data)
 
         # 3. Tracking values
-        tracking_values = self.env['mail.tracking.value'].sudo().search([('mail_message_id', 'in', message_ids)])
+        tracking_values = self.env['mail.tracking.value'].sudo().search(['&', ('mail_message_id', 'in', message_ids), '|', ('company_id', '=', False), ('company_id', '=', self.env.company.id)])
         message_to_tracking = dict()
         tracking_tree = dict.fromkeys(tracking_values.ids, False)
         for tracking in tracking_values:
@@ -360,6 +360,7 @@ class Message(models.Model):
                     'old_value': tracking.get_old_display_value()[0],
                     'new_value': tracking.get_new_display_value()[0],
                     'field_type': tracking.field_type,
+                    'company_id': tracking.company_id.id
                 }
 
         # 4. Update message dictionaries

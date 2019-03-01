@@ -177,3 +177,22 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
             ('name', '=', 'email_from')])
         ir_model_field.with_context(_force_unlink=True).unlink()
         self.assertEqual(len(record_sudo.message_ids.tracking_value_ids), 0)
+
+    def test_company_dependent_tracking(self):
+        """ test overriding a property field """
+        record = self.env['mail.test.track'].create({
+            'name': 'Test',
+        })
+        # tracking with userA & company A
+        record.write({'tracking_true': "Test Tracking True"})
+        tracking_before = record.message_ids.message_format()[0]['tracking_value_ids']
+        self.assertEqual(len(tracking_before), 1)
+        self.assertEqual(tracking_before[0]['new_value'], "Test Tracking True")
+        self.assertTrue(tracking_before, "should have tracking values")
+
+        # tracking with userA & company B
+        company = self.env['res.company'].create({'name': 'Test Company'})
+        self.env.user.write({'company_id': company.id})
+        tracking_after = record.message_ids.message_format()[0]['tracking_value_ids']
+        self.assertEqual(len(tracking_after), 0)
+        self.assertFalse(tracking_after, "should not have tracking values")
