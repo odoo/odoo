@@ -35,25 +35,33 @@ class MailThread(models.AbstractModel):
             :param note_msg: message to log in the chatter, if none is given a default one
                              containing the sms_message is logged
         """
+        if not partners:
+            partners = self._get_default_sms_recipients()
+
         if not numbers:
-            if not partners:
-                partners = self._get_default_sms_recipients()
 
-                # Collect numbers, we will consider the message to be sent if at least one number can be found
-                numbers = list(set([i.mobile or i.phone for i in partners if i.mobile or i.phone]))
+            # Collect numbers, we will consider the message to be sent if at least one number can be found
+            numbers = list(set([i.mobile or i.phone for i in partners if i.mobile or i.phone]))
 
-        if numbers:
-            try:
-                self.env['sms.api']._send_sms(numbers, sms_message)
-                mail_message = note_msg or _('SMS message sent: %s') % sms_message
+        # if numbers:
+        #     try:
+        #         self.env['sms.api']._send_sms(numbers, sms_message)
+        #         mail_message = note_msg or _('SMS message sent: %s') % sms_message
+        #
+        #     except InsufficientCreditError as e:
+        #         # if not log_error:
+        #         #     raise e
+        #         mail_message = _('Insufficient credit, unable to send SMS message: %s') % sms_message
+        # else:
+        #     mail_message = _('No mobile number defined, unable to send SMS message: %s') % sms_message
 
-            except InsufficientCreditError as e:
-                # if not log_error:
-                #     raise e
-                mail_message = _('Insufficient credit, unable to send SMS message: %s') % sms_message
-        else:
-            mail_message = _('No mobile number defined, unable to send SMS message: %s') % sms_message
-
+        mail_message = note_msg or sms_message
         for thread in self:
-            thread.message_post(body=mail_message, message_type='sms')
+            message_id = thread.message_post(body=mail_message, message_type='sms')
+
+            sms = self.env['sms.sms'].create({
+                'user_id': self.env.user.id,
+            })
+            sms.send_sms()
+
         return False

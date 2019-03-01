@@ -31,32 +31,10 @@ class SendSMS(models.TransientModel):
     sendto = fields.Text('Send to')
     template = fields.Many2one('mail.template', 'Template')
 
-    def _phone_get_country(self, partner):
-        if 'country_id' in partner:
-            return partner.country_id
-        return self.env.user.company_id.country_id
-
-    def _sms_sanitization(self, partner, field_name):
-        number = partner[field_name]
-        if number and _sms_phonenumbers_lib_imported:
-            country = self._phone_get_country(partner)
-            country_code = country.code if country else None
-            try:
-                phone_nbr = phonenumbers.parse(number, region=country_code, keep_raw_input=True)
-            except phonenumbers.phonenumberutil.NumberParseException:
-                raise UserError('Number %s must be in international format (E.164).'
-                                'Make sure you correctly set the country code and have the right number of digits.' % (number))
-            if not phonenumbers.is_possible_number(phone_nbr) or not phonenumbers.is_valid_number(phone_nbr):
-                return number
-            phone_fmt = phonenumbers.PhoneNumberFormat.INTERNATIONAL
-            return phonenumbers.format_number(phone_nbr, phone_fmt).replace(' ', '')
-        else:
-            return number
-
     def _get_records(self, model):
-        if self.env.context.get('active_domain'):
-            records = model.search(self.env.context.get('active_domain'))
-        elif self.env.context.get('active_ids'):
+        # if self.env.context.get('active_domain'):
+        #     records = model.search(self.env.context.get('active_domain'))
+        if self.env.context.get('active_ids'):
             records = model.browse(self.env.context.get('active_ids', []))
         else:
             records = model.browse(self.env.context.get('active_id', []))
@@ -74,46 +52,38 @@ class SendSMS(models.TransientModel):
             partners = records._get_default_sms_recipients()
             phone_numbers = []
             no_phone_partners = []
-            partner_numbers = []
             for partner in partners:
-                # number = self._sms_sanitization(partner, self.env.context.get('field_name') or 'mobile' if partner.mobile else 'phone')
-                number = partner[self.env.context.get('field_name') or 'mobile' if partner.mobile else 'phone']
+                number = partner[self.env.context.get('field_name')] or partner['mobile'] or partner['phone']
                 if number:
-                    phone_numbers.append(number)
-                    partner_numbers.append((partner.name, number))
+                    phone_numbers.append((partner.name, number))
                 else:
                     no_phone_partners.append(partner.name)
+
             if len(partners) and no_phone_partners:
-                if len(no_phone_partners) == 1:
+                if len(partners) == 1:
                     raise UserError(_('No number found on the contact.\n'
                                       'Please set one on the contact and try again.'))
                 else:
                     raise UserError(_('No number found for the following contacts:\n%s') % '\n'.join(sorted(no_phone_partners)))
 
-            sendto = map(lambda partner_number: '%s - %s' % partner_number, sorted(partner_numbers))
-            result['sendto'] = '\n'.join(sendto)
-            result['recipients'] = ', '.join(phone_numbers)
+            result['sendto'] = '\n'.join(map(lambda x: '%s - %s' % x, sorted(phone_numbers)))
+            result['recipients'] = ', '.join(map(lambda x: x[1], phone_numbers))
+
         return result
 
     def action_send_sms(self):
+        numbers = self.recipients.split(',')
+
         active_model = self.env.context.get('active_model')
         model = self.env[active_model]
         records = self._get_records(model)
 
-        for partner in records:
-            message_id = partner.message_post(body=self.message, message_type='sms')
-            number = self._sms_sanitization(partner, self.env.context.get('field_name') or 'mobile' if partner.mobile else 'phone')
-            sms = self.env['sms.sms'].create({
-                'user_id': self.env.user.id,
-                'partner_id': partner.id,
-                'number': number,
-                'body': self.message,
-                'message_id': message_id.id,
-            })
-            sms.send_sms()
+        partners = records._get_default_sms_recipients()
 
-        # if getattr(records, 'message_post_send_sms'):
-        #     records.message_post_send_sms(self.message, numbers=numbers)
-        # else:
-        #     self.env['sms.api']._send_sms(numbers, self.message)
+        if getattr(records, 'message_post_send_sms'):
+            records.message_post_send_sms(self.message, numbers, partners)
+        else:
+            self.env['sms.api']._send_sms(numbers, self.message)
+
+
         return True

@@ -34,7 +34,7 @@ class Sms(models.Model):
     _description = 'SMS'
 
     user_id = fields.Many2one('res.users', 'Sent by')
-    partner_id = fields.Many2one('res.partner', 'Recipient', required=True)
+    partner_id = fields.Many2one('res.partner', 'Recipient')
     number = fields.Char('Number', required=True)
 
     body = fields.Text(required=True)
