@@ -66,6 +66,7 @@ class TranslationWizard(models.TransientModel):
                         domain += expression.OR([[('name', '=',  "%s,%s" % (fld.model_name, fld.name))], [('name', 'ilike', "%s,%s," % (fld.model_name, fld.name))]])
                 except AccessError:
                     pass
+        domain += [('lang', '!=', self.env.context.get('lang'))]
         return domain
 
     @api.multi
