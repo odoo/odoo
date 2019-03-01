@@ -315,7 +315,7 @@ class IrFieldsConverter(models.AbstractModel):
             action['res_model'] = 'ir.model.data'
             action['domain'] = [('model', '=', field.comodel_name)]
 
-        RelatedModel = self.env[field.comodel_name]
+        RelatedModel = self.env[field.comodel_name].sudo(active_test=False)
         if subfield == '.id':
             field_type = _(u"database id")
             try: tentative_id = int(value)
