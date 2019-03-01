@@ -126,6 +126,12 @@ class Website(Website):
                 views = [v for v in views if v['id'] != view_product_variants.id]
         return views
 
+    @http.route()
+    def toggle_switchable_view(self, view_key):
+        super(Website, self).toggle_switchable_view(view_key)
+        if view_key in ('website_sale.products_list_view', 'website_sale.add_grid_or_list_option'):
+            request.session.pop('website_sale_shop_layout_mode', None)
+
 
 class WebsiteSale(http.Controller):
 
@@ -268,6 +274,13 @@ class WebsiteSale(http.Controller):
 
         compute_currency = self._get_compute_currency(pricelist, products[:1])
 
+        layout_mode = request.session.get('website_sale_shop_layout_mode')
+        if not layout_mode:
+            if request.website.viewref('website_sale.products_list_view').active:
+                layout_mode = 'list'
+            else:
+                layout_mode = 'grid'
+
         values = {
             'search': search,
             'category': category,
@@ -287,6 +300,7 @@ class WebsiteSale(http.Controller):
             'keep': keep,
             'parent_category_ids': parent_category_ids,
             'search_categories_ids': search_categories and search_categories.ids,
+            'layout_mode': layout_mode,
         }
         if category:
             values['main_object'] = category
@@ -474,6 +488,11 @@ class WebsiteSale(http.Controller):
                 price, to_currency, order.company_id, fields.Date.today()),
         })
         return value
+
+    @http.route('/shop/save_shop_layout_mode', type='json', auth='public', website=True)
+    def save_shop_layout_mode(self, layout_mode):
+        assert layout_mode in ('grid', 'list'), "Invalid shop layout mode"
+        request.session['website_sale_shop_layout_mode'] = layout_mode
 
     # ------------------------------------------------------
     # Checkout
