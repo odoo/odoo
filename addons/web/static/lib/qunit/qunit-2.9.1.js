@@ -1247,6 +1247,7 @@
 
   var LISTENERS = Object.create(null);
   var SUPPORTED_EVENTS = ["runStart", "suiteStart", "testStart", "assertion", "testEnd", "suiteEnd", "runEnd"];
+  SUPPORTED_EVENTS.push("OdooAfterTestHook"); // Odoo customization
 
   /**
    * Emits an event with the specified data to all currently registered listeners.
@@ -3139,6 +3140,8 @@
   		} else if (this.expected === null && !this.assertions.length) {
   			this.pushFailure("Expected at least one assertion, but none were run - call " + "expect(0) to accept zero assertions.", this.stack);
   		}
+
+        emit("OdooAfterTestHook"); // Odoo customization
 
   		var i,
   		    module = this.module,
