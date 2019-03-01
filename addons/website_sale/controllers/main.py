@@ -788,10 +788,6 @@ class WebsiteSale(http.Controller):
     # ------------------------------------------------------
 
     def _get_shop_payment_values(self, order, **kwargs):
-        shipping_partner_id = False
-        if order:
-            shipping_partner_id = order.partner_shipping_id.id or order.partner_invoice_id.id
-
         values = dict(
             website_sale_order=order,
             errors=[],
@@ -816,6 +812,8 @@ class WebsiteSale(http.Controller):
             [('partner_id', '=', order.partner_id.id),
             ('acquirer_id', 'in', acquirers.ids)])
 
+        if order:
+            values['acq_extra_fees'] = acquirers.get_acquirer_extra_fees(order.amount_total, order.currency_id, order.partner_id.country_id.id)
         return values
 
     @http.route(['/shop/payment'], type='http', auth="public", website=True)

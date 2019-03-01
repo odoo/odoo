@@ -297,6 +297,19 @@ class PaymentAcquirer(models.Model):
         return True
 
     @api.multi
+    def get_acquirer_extra_fees(self, amount, currency_id, country_id):
+        extra_fees = {
+            'currency_id': currency_id
+        }
+        acquirers = self.filtered(lambda x: x.fees_active)
+        for acq in acquirers:
+            custom_method_name = '%s_compute_fees' % acq.provider
+            if hasattr(acq, custom_method_name):
+                fees = getattr(acq, custom_method_name)(amount, currency_id, country_id)
+                extra_fees[acq] = fees
+        return extra_fees
+
+    @api.multi
     def get_form_action_url(self):
         """ Returns the form action URL, for form-based acquirer implementations. """
         if hasattr(self, '%s_get_form_action_url' % self.provider):
