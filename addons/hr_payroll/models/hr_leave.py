@@ -53,7 +53,7 @@ class HrLeave(models.Model):
 
         for leave in self.filtered(lambda l: l.employee_id):
 
-            contract = leave.employee_id._get_contracts(leave.date_from, leave.date_to, states=['open', 'pending', 'close'])
+            contract = leave.employee_id.sudo()._get_contracts(leave.date_from, leave.date_to, states=['open', 'pending', 'close'])
             if contract and contract.resource_calendar_id != leave.employee_id.resource_calendar_id:
                 resource_leave_values += [{
                     'name': leave.name,
