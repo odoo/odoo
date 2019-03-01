@@ -21,6 +21,11 @@ class PickingType(models.Model):
     _description = "Picking Type"
     _order = 'sequence, id'
 
+    def _default_show_operations(self):
+        return self.user_has_groups('stock.group_production_lot,'
+                                    'stock.group_stock_multi_locations,'
+                                    'stock.group_tracking_lot')
+
     name = fields.Char('Operation Type', required=True, translate=True)
     color = fields.Integer('Color')
     sequence = fields.Integer('Sequence', help="Used to order the 'All Operations' kanban view")
@@ -45,7 +50,7 @@ class PickingType(models.Model):
         'Use Existing Lots/Serial Numbers', default=True,
         help="If this is checked, you will be able to choose the Lots/Serial Numbers. You can also decide to not put lots in this operation type.  This means it will create stock with no lot or not put a restriction on the lot taken. ")
     show_operations = fields.Boolean(
-        'Show Detailed Operations', default=False,
+        'Show Detailed Operations', default=_default_show_operations,
         help="If this checkbox is ticked, the pickings lines will represent detailed stock operations. If not, the picking lines will represent an aggregate of detailed stock operations.")
     show_reserved = fields.Boolean(
         'Show Reserved', default=True, help="If this checkbox is ticked, Odoo will show which products are reserved (lot/serial number, source location, source package).")
