@@ -3,15 +3,17 @@
 # * mail
 # 
 # Translators:
-# Collex100, 2016
 # Viktor Pogrebniak <vp@aifil.ru>, 2016
+# Collex100, 2017
+# Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
-"PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>, 2016\n"
+"PO-Revision-Date: 2016-09-07 09:22+0000\n"
+"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -155,8 +157,8 @@ msgstr ""
 "            style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:10px 0;\">\n"
 "        % if ctx.get('subtype') and ctx.get('subtype').internal:\n"
 "        <span style=\"background-color: #f2dede; padding: 5px;\">\n"
-"            <strong>Internal note</strong>: replies are not sent to followers.\n"
-"        </span>\n"
+"            <strong>Внутренняя заметка</strong>: ответы не рассылаются последователям.\n"
+"</span>\n"
 "        % endif\n"
 "    </td>\n"
 "</tr>\n"
@@ -281,6 +283,9 @@ msgid ""
 "href=\"#\" class=\"o_channel_redirect\" data-oe-"
 "id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">%(author)s пригласил %(new_partner)s to "
+"<a href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:550

@@ -776,6 +776,12 @@ msgid ""
 "    * The new lock date for advisors must be set after the previous lock date.\n"
 "    "
 msgstr ""
+"\n"
+"Kilit tarihini geri alınamaz duruma getirin:\n"
+"\n"
+"* Müşavir için kullanıcıdan daha katı şartlar tanımlayamazsınız. Ayrıca, kullanıcı kilit tarihi müşavirden daha önceki zamana ayarlanmış olmalı.\n"
+"* Henüz bitmemiş bir dönemi kilitleyemezsiniz. Ayrıca, müşavirler için kilit tarihi, geçmiş ayın son gününden önce olmalı.\n"
+"* Müşavirler için yeni kilit tarihi, son kilit tarihinden daha sonra olmak zorundadır."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -3143,6 +3149,8 @@ msgid ""
 "Move the cash basis lines to another account.\n"
 "    "
 msgstr ""
+"\n"
+"Gerçekleşme esası satırlarını diğer hesaba taşıyın."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nz
@@ -5994,7 +6002,7 @@ msgstr "%b - Kısaltılmış ay adı."
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%d - Day of the month [01,31].\""
-msgstr ""
+msgstr "%d - Ayın günleri [01,31].\""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -6009,7 +6017,7 @@ msgstr "%m - Ay numarası [01,12].\""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%p - Equivalent of either AM or PM.\""
-msgstr ""
+msgstr "%p - AM yada PM'ye eşit.\""
 
 #. module: base
 #: code:addons/base/ir/ir_filters.py:36
@@ -6067,7 +6075,7 @@ msgstr "'%s' alan için geçerli bir tarih görünmüyor '%%(field)s'"
 #: code:addons/base/ir/ir_fields.py:239
 #, python-format
 msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
-msgstr ""
+msgstr "'%s' alan için geçerli bir tarih görünmüyor'%%(alan)lar'"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:176
@@ -6162,7 +6170,7 @@ msgstr "-Bu Modülü başka bir modüle bağımlı değildir."
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "1. %b, %B         ==&gt; Dec, December"
-msgstr ""
+msgstr "1. %b, %B         ==&gt; Ara, Aralık"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -6176,7 +6184,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "2. %a ,%A         ==&gt; Fri, Friday"
-msgstr ""
+msgstr "2. %a ,%A         ==&gt; Cuma, Cuma"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -6188,7 +6196,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "3. %y, %Y         ==&gt; 08, 2008"
-msgstr ""
+msgstr "3. %y, %Y         ==&gt; 08, 2008"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -6202,22 +6210,22 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "4. %d, %m         ==&gt; 05, 12"
-msgstr ""
+msgstr "4. %d, %m         ==&gt; 05, 12"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "5. %H:%M:%S      ==&gt; 18:25:20"
-msgstr ""
+msgstr "5. %H:%M:%S      ==&gt; 18:25:20"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "6. %I:%M:%S %p  ==&gt; 06:25:20 PM"
-msgstr ""
+msgstr "6. %I:%M:%S %p  ==&gt; 06:25:20 PM"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "7. %j              ==&gt; 340"
-msgstr ""
+msgstr "7. %j              ==&gt; 340"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -6227,7 +6235,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "9. %w              ==&gt; 5 ( Friday is the 6th day)"
-msgstr ""
+msgstr "9. %w              ==&gt; 5 ( Cuma 6.gündür)"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
@@ -6247,19 +6255,19 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>datetime</code> (Python module)"
-msgstr ""
+msgstr "<code>tarihsaat</code> (Python modül)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>dateutil</code> (Python module)"
-msgstr ""
+msgstr "<code>dateutil</code> (Python modül)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>self</code> (the set of records to compute)"
-msgstr ""
+msgstr "<code>self</code> (hesaplanacak kayıtlar kümesi)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -6290,7 +6298,7 @@ msgstr "<strong>Grup</strong>"
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Idx</strong>"
-msgstr ""
+msgstr "<strong>Idx</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -6320,17 +6328,17 @@ msgstr "<strong>Raporlar :</strong>"
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Ro</strong>"
-msgstr ""
+msgstr "<strong>Ro</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Rq</strong>"
-msgstr ""
+msgstr "<strong>Rq</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Seq</strong>"
-msgstr ""
+msgstr "<strong>Seq</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -6338,41 +6346,43 @@ msgid ""
 "<strong>This operation will permanently erase all data currently stored by "
 "the modules!</strong>"
 msgstr ""
+"<strong>Bu işlem modül tarafından depolanan tüm verileri kalıcı olarak "
+"silecektir!</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Tr</strong>"
-msgstr ""
+msgstr "<strong>Tr</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Type</strong>"
-msgstr ""
+msgstr "<strong>Tür</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>View :</strong>"
-msgstr ""
+msgstr "<strong>Görüntü :</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>XML ID</strong>"
-msgstr ""
+msgstr "<strong>XML ID</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<u><strong>Fields</strong></u>"
-msgstr ""
+msgstr "<u><strong>Alanlar</strong></u>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<u><strong>Security</strong></u>"
-msgstr ""
+msgstr "<u><strong>Güvenlik</strong></u>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<u><strong>Views</strong></u>"
-msgstr ""
+msgstr "<u><strong>Görünümler</strong></u>"
 
 #. module: base
 #: code:addons/models.py:3234
@@ -6858,7 +6868,7 @@ msgstr "Ekle RML Üstbilgisi"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_cash_basis_base_account
 msgid "Add a custom account to handle base amount lines"
-msgstr ""
+msgstr "Temel miktar satırlarını ele almak için özel bir hesap ekleyin"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode
@@ -7126,6 +7136,8 @@ msgid ""
 "Also you will find here all the related documents and download it by "
 "clicking on any individual document."
 msgstr ""
+"Ayrıca burada tüm ilişkili dokümanları bulacaksınız ve tıklayarak herhangi "
+"bir belgeyi bireysel olarak indirebilirsiniz."
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:378
@@ -7134,6 +7146,8 @@ msgid ""
 "Ambiguous specification for field '%(field)s', only provide one of name, "
 "external id or database id"
 msgstr ""
+"'%(field)s' alanı için belirsiz özelleştirme, sadece bir isim, dış id yada "
+"veri tabanı id sağlar"
 
 #. module: base
 #: model:res.country,name:base.as
@@ -8367,7 +8381,7 @@ msgstr "Özelleştirilmiş bir görünüm oluşturmak için tıklayınız"
 #. module: base
 #: model:ir.actions.act_window,help:base.action_attachment
 msgid "Click here to create new documents."
-msgstr ""
+msgstr "Yeni belge oluşturmak için buraya tıklayın."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -8448,6 +8462,13 @@ msgid ""
 "\n"
 "Modules time, datetime, dateutil are available."
 msgstr ""
+"Alanın değerini hesaplama kodu.\n"
+"'kendi' kayıt kümesini yineleyin ve alanlara değer atayın:\n"
+"\n"
+"    kişisel kayıt için:\n"
+"        record['size'] = len(record.name)\n"
+"\n"
+"Modules time, datetime, dateutil mevcut."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad
@@ -8647,6 +8668,7 @@ msgstr "Hesapla"
 #: model:ir.module.module,summary:base.module_website_sale_taxcloud_delivery
 msgid "Compute taxes with TaxCloud after online delivery computation."
 msgstr ""
+"Çevrimiçi teslimat hesaplamasından sonra vergileri TaxCloud ile hesaplayın."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -8654,6 +8676,9 @@ msgid ""
 "Computed fields are defined with the fields\n"
 "                                                <strong>Dependencies</strong> and <strong>Compute</strong>."
 msgstr ""
+"Hesaplanmış alanlar \n"
+"                                                <strong>Bağlılıklar</strong> ve <strong>Hesaplama</strong>\n"
+"alanları ile birlikte tanımlanmış."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -8661,6 +8686,9 @@ msgid ""
 "Computed fields are defined with the fields\n"
 "                                    <strong>Dependencies</strong> and <strong>Compute</strong>."
 msgstr ""
+"Hesaplanmış alanlar\n"
+"                                    <strong>Bağlılıklar </strong> ve <strong>Hesaplama</strong>\n"
+"alanları ile birlikte tanımlanmış."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_condition
@@ -8749,6 +8777,8 @@ msgid ""
 "Connection Test Failed! Here is what we got instead:\n"
 " %s"
 msgstr ""
+"Bağlantı Testi Başarısız! : Onun yerine buna sahibiz:\n"
+" %s"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:189
@@ -12320,6 +12350,8 @@ msgid ""
 "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
 "or a date_delay"
 msgstr ""
+"%siçin Takvim Görünümü oluşturmak için yetersiz alan, bir date_stop yada bir"
+" date_delay eşleşmiyor"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -12461,7 +12493,7 @@ msgstr "Eylem tanımındaki geçersiz model adı %r"
 #: code:addons/base/ir/ir_ui_view.py:573
 #, python-format
 msgid "Invalid position attribute: '%s'"
-msgstr ""
+msgstr "Geçersiz konum özelliği: '%s'"
 
 #. module: base
 #: code:addons/base/ir/ir_sequence.py:193
@@ -12540,7 +12572,7 @@ msgstr "İrlanda"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_lock
 msgid "Irreversible Lock Date"
-msgstr ""
+msgstr "Değiştirilemez Kilit Tarihi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_is_company
@@ -12723,7 +12755,7 @@ msgstr "Kontni načrt za gospodarske družbe"
 #. module: base
 #: model:res.country,name:base.xk
 msgid "Kosovo"
-msgstr ""
+msgstr "Kosovo"
 
 #. module: base
 #: model:res.country,name:base.kw
@@ -13515,7 +13547,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:491
 #, python-format
 msgid "Many2one %s on model %s does not exist!"
-msgstr ""
+msgstr "Many2one %s on model %s does not exist!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_relation
@@ -13807,7 +13839,7 @@ msgstr "Model"
 #: code:addons/base/ir/ir_model.py:404
 #, python-format
 msgid "Model %s does not exist"
-msgstr ""
+msgstr "Model %s yok"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:550
@@ -13973,6 +14005,8 @@ msgid ""
 "Module loading %s failed: file %s could not be processed:\n"
 " %s"
 msgstr ""
+"Modül yükleme %s başarsız: dosya%s işlenemedi:\n"
+" %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_module
@@ -14275,7 +14309,7 @@ msgstr "Niue"
 #: code:addons/models.py:1400
 #, python-format
 msgid "No default view of type '%s' could be found !"
-msgstr ""
+msgstr "Varsayılan tür görünümü '%s' bulunamadı !"
 
 #. module: base
 #: selection:ir.sequence,implementation:0
@@ -14286,7 +14320,7 @@ msgstr "Boşluk Yok"
 #: code:addons/fields.py:2132
 #, python-format
 msgid "No inverse field %r found for %r"
-msgstr ""
+msgstr " %r bunlar için %r ters alanlar bulunamadı"
 
 #. module: base
 #: code:addons/base/module/wizard/base_update_translations.py:33
@@ -14313,13 +14347,13 @@ msgstr "Güncellenemez"
 #: code:addons/base/ir/ir_model.py:340
 #, python-format
 msgid "Non-relational field %r in dependency %r"
-msgstr ""
+msgstr "İlişkisi olmayan alanlar %r bağımlılığında %r"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:297
 #, python-format
 msgid "Non-relational field name '%s' in related field '%s'"
-msgstr ""
+msgstr "İlişkisi olmayan alan adı '%s' ilgili alan '%s'"
 
 #. module: base
 #: selection:ir.mail_server,smtp_encryption:0
@@ -14614,6 +14648,13 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Yalnızca bu görünüm diğerinden devir alınırsa uygulanır (inherit_id False / Null değil).\n"
+"\n"
+"* eğer uzantı (varsayılan), bu görünüm gerekirse en yakın birincil görünüm\n"
+"aranır (via inherit_id), daha sonra bu görünüm modeliyle devralınan tüm görünümler uygulanır.\n"
+"* birincil ise, en yakın ana görünüm tam olarak çözülür\n"
+" (bundan farklı bir model kullanılıyor olsa bile), daha sonra bu görüşün devralma özellikleri\n"
+"(<xpath/>) uygulanır, ve sonuç, bu görünümün asıl arch gibi kullanılır.\n"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:885
@@ -14742,6 +14783,8 @@ msgid ""
 "Other features are accessible through <code>self</code>, like\n"
 "                                                <code>self.env</code>, etc."
 msgstr ""
+"Diğer özelliklere bu yollarla erişebilirsiniz <code>self</code>, like\n"
+"                                                <code>self.env</code>, etc."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -14749,6 +14792,8 @@ msgid ""
 "Other features are accessible through <code>self</code>, like\n"
 "                                    <code>self.env</code>, etc."
 msgstr ""
+"Diğer özelliklere bu yollarla erişebilirsiniz <code>self</code>, like\n"
+"                                    <code>self.env</code>, etc."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_ir_mail_server_search
@@ -15168,7 +15213,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:405
 #, python-format
 msgid "Please specify a valid model for the object relation"
-msgstr ""
+msgstr "Lütfen nesne ilişkisi için geçerli bir model belirtin"
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:799
@@ -15392,13 +15437,13 @@ msgstr "Kişisel Adres"
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_partner_view_form_private
 msgid "Private Address Form"
-msgstr ""
+msgstr "Özel Adres Formu"
 
 #. module: base
 #: code:addons/models.py:107
 #, python-format
 msgid "Private methods (such as %s) cannot be called remotely."
-msgstr ""
+msgstr "Özel methodlar (gibi %s) uzaktan aranamaz."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_procurement
@@ -15862,13 +15907,13 @@ msgstr "İlgili Sunucu Eylemi"
 #: code:addons/base/ir/ir_model.py:309
 #, python-format
 msgid "Related field '%s' does not have comodel '%s'"
-msgstr ""
+msgstr "İlgili alanlar '%s' ortak alanlara sahip değil '%s'"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:307
 #, python-format
 msgid "Related field '%s' does not have type '%s'"
-msgstr ""
+msgstr "İlgili alanlar '%s' türe sahip değil '%s'"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_wkf_field_id
@@ -16930,7 +16975,7 @@ msgstr "Sırala"
 #: code:addons/models.py:4134
 #, python-format
 msgid "Sorting field %s not found on model %s"
-msgstr ""
+msgstr "Sıralama alanı %s model üzerinde bulunamadı%s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_transition_act_from
@@ -17264,7 +17309,7 @@ msgstr "Tedarik argümanları"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bootswatch
 msgid "Support for Bootswatch themes in master"
-msgstr ""
+msgstr "Ana sayfadaki Bootswatch temalarına destek"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_issue
@@ -17465,7 +17510,7 @@ msgstr "Hedef Pencere"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_cash_basis_base_account
 msgid "Tax Cash Basis Edit Base Account"
-msgstr ""
+msgstr "Gerçekleşme Esasına Göre Vergi Düzenleme Temel Hesabı"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_vat
@@ -17632,6 +17677,10 @@ msgid ""
 " 1,06,500; [1,2,-1] will represent it to be 106,50,0;[3] will represent it "
 "as 106,500. Provided ',' as the thousand separator in each case."
 msgstr ""
+"Ayraç Formatı [, n] gibi olmalıdır, burada 0 <n: Birim basamağından "
+"başlayarak. -1 ayrımı sona erdirir. Örneğin. [3,2, -1] 106500 1,06,500 "
+"olacaktır; [1,2, -1] 106,50,0 olarak; [3] 106,500 olarak görünecek. Her "
+"durumda bin ayırıcı olarak ',' sağlanmıştır."
 
 #. module: base
 #: code:addons/base/res/res_lang.py:66
@@ -17642,6 +17691,10 @@ msgid ""
 " 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as"
 " 106,500. Provided as the thousand separator in each case."
 msgstr ""
+"Ayraç Formatı [, n] gibi olmalıdır, burada 0 <n: Birim basamağından "
+"başlayarak. -1 ayrımı sona erdirir. Örneğin. [3,2, -1] 106500 1,06,500 "
+"olacaktır; [1,2, -1] 106,50,0 olarak; [3] 106,500 olarak görünecek. Her "
+"durumda bin ayırıcı olarak ',' sağlanmıştır."
 
 #. module: base
 #: code:addons/base/module/module.py:666
@@ -17649,7 +17702,7 @@ msgstr ""
 msgid ""
 "The `%s` module appears to be unavailable at the moment, please try again "
 "later."
-msgstr ""
+msgstr "Bu `%s` modüle şuanda erişilemiyor, lütfen daha sonra tekrar deneyin."
 
 #. module: base
 #: code:addons/base/module/module.py:511
@@ -17732,7 +17785,7 @@ msgstr "Hedef aktivite"
 #: code:addons/base/ir/ir_model.py:438
 #, python-format
 msgid "The field '%s' cannot be removed because the field '%s' depends on it."
-msgstr ""
+msgstr "Alan '%s' değiştirilemez, çünkü alan '%s' ona bağlı."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -17742,6 +17795,9 @@ msgid ""
 "                                                the field must be assigned to each record with a dictionary-like\n"
 "                                                assignment."
 msgstr ""
+"Alan <strong>Hesaplama</strong> bir kayıt kümesindeki alanın değerini hesaplayan \n"
+"Python kodudur. Alanın değeri,\n"
+" sözlük benzeri bir atama ile her kayda atanmalıdır."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -17751,6 +17807,9 @@ msgid ""
 "                                    the field must be assigned to each record with a dictionary-like\n"
 "                                    assignment."
 msgstr ""
+"Alan <strong>Hesaplama</strong> bir kayıt kümesindeki alanın değerini hesaplayan \n"
+"Python kodudur. Alanın değeri,\n"
+" sözlük benzeri bir atama ile her kayda atanmalıdır."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -17761,6 +17820,9 @@ msgid ""
 "                                                fields accessible through other relational fields, for instance\n"
 "                                                <code>partner_id.company_id.name</code>."
 msgstr ""
+"Alan <strong>Bağımlılıklar</strong> geçerli alanın bağlı olduğu \n"
+"alanları listeler.Bu, alan adlarının virgül ile ayrıldığı bir liste, <code>isim, beden</code>gibi. Ayrıca, diğer ilişkisel alanlardan erişilebilen alanlara da bakabilirsiniz, örneğin\n"
+"                                                <code>partner_id.company_id.name</code>."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -17771,6 +17833,9 @@ msgid ""
 "                                    fields accessible through other relational fields, for instance\n"
 "                                    <code>partner_id.company_id.name</code>."
 msgstr ""
+"Alan <strong>Bağımlılıklar</strong> geçerli alanın bağlı olduğu \n"
+"alanları listeler.Bu, alan adlarının virgül ile ayrıldığı bir liste, <code>isim, beden</code>gibi. Ayrıca, diğer ilişkisel alanlardan erişilebilen alanlara da bakabilirsiniz, örneğin\n"
+"                                                <code>partner_id.company_id.name</code>."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_wkf_field_id
@@ -17783,7 +17848,7 @@ msgstr ""
 #: code:addons/base/module/wizard/base_module_upgrade.py:69
 #, python-format
 msgid "The following modules are not installed or unknown: %s"
-msgstr ""
+msgstr "Sıradaki modüller kurulmadı yada bilinmiyor: %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_name
@@ -18010,7 +18075,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:419
 #, python-format
 msgid "The table %r if used for other, possibly incompatible fields."
-msgstr ""
+msgstr "Tablo %r diğeri için kullanıldıysa, muhtemelen uyumsuz alanlardır."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_model
@@ -18090,6 +18155,9 @@ msgid ""
 "This file was generated using the universal <strong>Unicode/UTF-8</strong> file encoding, please be sure to view and edit\n"
 "                           using the same encoding."
 msgstr ""
+"Bu dosya evrensel <strong>Unicode/UTF-8</strong> dosya kodlaması "
+"kullanılarak oluşturuldu, lütfen aynı kodlamayı kullanarak "
+"görüntülediğinizden ve düzenlediğinizden emin olun"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_views
@@ -18138,6 +18206,9 @@ msgid ""
 "This module ensures that when delivery price is computed online, and taxes are computed with TaxCloud, the tax computation is done correctly on both the order and delivery.\n"
 "    "
 msgstr ""
+"Bu modül, teslimat fiyatı çevrimiçi olarak hesaplandığında ve vergiler "
+"TaxCloud ile hesaplandığında, vergi hesaplamasının hem sipariş hem de "
+"teslimatta doğru yapılmasını sağlar."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -18712,13 +18783,13 @@ msgstr "Alma sırasında bilinmeyen bir hata oluştu:"
 #: code:addons/base/ir/ir_model.py:364
 #, python-format
 msgid "Unknown field %r in dependency %r"
-msgstr ""
+msgstr "Bilinmeyen alan %r bağımlılıkta %r"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:321
 #, python-format
 msgid "Unknown field name '%s' in related field '%s'"
-msgstr ""
+msgstr "Bilinmeyen dosya adı '%s' ilişkili alan'%s'"
 
 #. module: base
 #: code:addons/report_sxw.py:370
@@ -18903,7 +18974,7 @@ msgstr "Sisteme giriş için kullanılmış"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_sequence
 msgid "Used to order Companies in the company switcher"
-msgstr ""
+msgstr "Used to order Companies in the company switcher"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_type
@@ -19567,6 +19638,8 @@ msgid ""
 "When subsequences per date range are used, you can prefix variables with 'range_'\n"
 "                                to use the beginning of the range instead of the current date, e.g. %(range_year)s instead of %(year)s."
 msgstr ""
+"Tarih aralığı başına alt sıralama kullanıldığında, geçerli tarih yerine aralığın başlangıcını kullanmak için değişkenleri 'range_' \n"
+"ile önekleyebilirsiniz, örnek; %(range_year)s yerine %(year)s."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_wkf_transition_signal
@@ -19918,6 +19991,8 @@ msgid ""
 "You try to upgrade the module %s that depends on the module: %s.\n"
 "But this module is not available in your system."
 msgstr ""
+"Modülü %s bağlı olan modül üzerinde güncellemeye çalışıyorsunuz: %s.\n"
+"Ancak bu modül sisteminizde mevcut değil."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_simple_form
