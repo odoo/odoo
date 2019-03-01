@@ -4,10 +4,12 @@
 import hashlib
 import hmac
 import logging
+import lxml
 import random
 import re
 import threading
 from ast import literal_eval
+from base64 import b64encode
 
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import UserError
@@ -25,6 +27,10 @@ MASS_MAILING_BUSINESS_MODELS = [
     'mail.mass_mailing.list',
 ]
 EMAIL_PATTERN = '([^ ,;<@]+@[^> ,;]+)'
+
+# Syntax of the data URL Scheme: https://tools.ietf.org/html/rfc2397#section-3
+# Used to find inline images
+image_re = re.compile(r"data:(image/[A-Za-z]+);base64,(.*)")
 
 
 class MassMailingTag(models.Model):
@@ -660,6 +666,53 @@ class MassMailing(models.Model):
                 record_lists = opt_out_records.filtered(lambda rec: rec.contact_id.id == record.id)
                 if len(record_lists) > 0:
                     record.sudo().message_post(body=_(message % ', '.join(str(list.name) for list in record_lists.mapped('list_id'))))
+
+    @api.model
+    def create(self, values):
+        if values.get('body_html'):
+            values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
+        return super(MassMailing, self).create(values)
+
+    def write(self, values):
+        if values.get('body_html'):
+            values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
+        return super(MassMailing, self).write(values)
+
+    def _convert_inline_images_to_urls(self, body_html):
+        """
+        Find inline base64 encoded images, make an attachement out of
+        them and replace the inline image with an url to the attachement.
+        """
+
+        def _image_to_url(b64image: bytes):
+            """Store an image in an attachement and returns an url"""
+            attachment = self.env['ir.attachment'].create({
+                'name': "cropped_image",
+                'datas': b64image,
+                'datas_fname': "cropped_image_mailing_{}".format(self.id),
+                'type': 'binary',})
+
+            attachment.generate_access_token()
+
+            return '/web/image/%s?access_token=%s' % (
+                attachment.id, attachment.access_token)
+
+
+        modified = False
+        root = lxml.html.fromstring(body_html)
+        for node in root.iter('img'):
+            match = image_re.match(node.attrib.get('src', ''))
+            if match:
+                mime = match.group(1)  # unsed
+                image = match.group(2).encode()  # base64 image as bytes
+
+                node.attrib['src'] = _image_to_url(image)
+                modified = True
+
+        if modified:
+            return lxml.html.tostring(root)
+
+        return body_html
 
     #------------------------------------------------------
     # Views & Actions
