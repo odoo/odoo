@@ -1,13 +1,13 @@
 /*!
-  * Bootstrap dropdown.js v4.2.1 (https://getbootstrap.com/)
-  * Copyright 2011-2018 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+  * Bootstrap dropdown.js v4.3.1 (https://getbootstrap.com/)
+  * Copyright 2011-2019 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
   */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('jquery'), require('popper.js'), require('./util.js')) :
   typeof define === 'function' && define.amd ? define(['jquery', 'popper.js', './util.js'], factory) :
-  (global.Dropdown = factory(global.jQuery,global.Popper,global.Util));
-}(this, (function ($,Popper,Util) { 'use strict';
+  (global = global || self, global.Dropdown = factory(global.jQuery, global.Popper, global.Util));
+}(this, function ($, Popper, Util) { 'use strict';
 
   $ = $ && $.hasOwnProperty('default') ? $['default'] : $;
   Popper = Popper && Popper.hasOwnProperty('default') ? Popper['default'] : Popper;
@@ -70,7 +70,7 @@
    */
 
   var NAME = 'dropdown';
-  var VERSION = '4.2.1';
+  var VERSION = '4.3.1';
   var DATA_KEY = 'bs.dropdown';
   var EVENT_KEY = "." + DATA_KEY;
   var DATA_API_KEY = '.data-api';
@@ -299,8 +299,8 @@
       if (this._popper !== null) {
         this._popper.scheduleUpdate();
       }
-    }; // Private
-
+    } // Private
+    ;
 
     _proto._addEventListeners = function _addEventListeners() {
       var _this = this;
@@ -356,24 +356,28 @@
       return $(this._element).closest('.navbar').length > 0;
     };
 
-    _proto._getPopperConfig = function _getPopperConfig() {
+    _proto._getOffset = function _getOffset() {
       var _this2 = this;
 
-      var offsetConf = {};
+      var offset = {};
 
       if (typeof this._config.offset === 'function') {
-        offsetConf.fn = function (data) {
-          data.offsets = _objectSpread({}, data.offsets, _this2._config.offset(data.offsets) || {});
+        offset.fn = function (data) {
+          data.offsets = _objectSpread({}, data.offsets, _this2._config.offset(data.offsets, _this2._element) || {});
           return data;
         };
       } else {
-        offsetConf.offset = this._config.offset;
+        offset.offset = this._config.offset;
       }
 
+      return offset;
+    };
+
+    _proto._getPopperConfig = function _getPopperConfig() {
       var popperConfig = {
         placement: this._getPlacement(),
         modifiers: {
-          offset: offsetConf,
+          offset: this._getOffset(),
           flip: {
             enabled: this._config.flip
           },
@@ -391,8 +395,8 @@
       }
 
       return popperConfig;
-    }; // Static
-
+    } // Static
+    ;
 
     Dropdown._jQueryInterface = function _jQueryInterface(config) {
       return this.each(function () {
@@ -476,8 +480,8 @@
       }
 
       return parent || element.parentNode;
-    }; // eslint-disable-next-line complexity
-
+    } // eslint-disable-next-line complexity
+    ;
 
     Dropdown._dataApiKeydownHandler = function _dataApiKeydownHandler(event) {
       // If not input/textarea:
@@ -587,4 +591,4 @@
 
   return Dropdown;
 
-})));
+}));

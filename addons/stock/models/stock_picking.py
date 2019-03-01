@@ -651,7 +651,7 @@ class Picking(models.Model):
                                 move_ids_without_package |= move
                         else:
                             move_ids_without_package |= move
-            picking.move_ids_without_package = move_ids_without_package.filtered(lambda ml: ml.scrapped == False)
+            picking.move_ids_without_package = move_ids_without_package.filtered(lambda move: move.picking_type_id == picking.picking_type_id)
 
     def _set_move_without_package(self):
         self.move_lines |= self.move_ids_without_package

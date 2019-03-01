@@ -404,6 +404,8 @@ class Partner(models.Model):
             field = self._fields[fname]
             if field.type == 'many2one':
                 values[fname] = self[fname].id
+                if fname == 'company_id' and not self[fname].id:
+                    values.pop('company_id')
             elif field.type == 'one2many':
                 raise AssertionError(_('One2Many fields cannot be synchronized as part of `commercial_fields` or `address fields`'))
             elif field.type == 'many2many':
@@ -430,7 +432,7 @@ class Partner(models.Model):
         partners that aren't `commercial entities` themselves, and will be
         delegated to the parent `commercial entity`. The list is meant to be
         extended by inheriting classes. """
-        return ['vat', 'credit_limit']
+        return ['vat', 'credit_limit', 'company_id']
 
     @api.multi
     def _commercial_sync_from_company(self):
@@ -869,6 +871,12 @@ class Partner(models.Model):
     @api.multi
     def _get_country_name(self):
         return self.country_id.name or ''
+
+    @api.multi
+    def get_base_url(self):
+        """Get the base URL for the current partner."""
+        self.ensure_one()
+        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
 
 class ResPartnerIndustry(models.Model):

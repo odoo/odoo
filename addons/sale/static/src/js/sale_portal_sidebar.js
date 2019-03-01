@@ -1,43 +1,25 @@
-odoo.define('sale.SalePortalSidebar.instance', function (require) {
-"use strict";
-
-require('web.dom_ready');
-var SalePortalSidebar = require('sale.SalePortalSidebar');
-
-if (!$('.o_portal_sale_sidebar').length) {
-    return $.Deferred().reject("DOM doesn't contain '.o_portal_sale_sidebar'");
-}
-
-var $spyWatch = $('body[data-target=".navspy"]'),
-    sale_portal_sidebar = new SalePortalSidebar($spyWatch);
-
-return sale_portal_sidebar.attachTo($('.o_portal_sale_sidebar')).then(function () {
-    return sale_portal_sidebar;
-});
-});
-
-//==============================================================================
-
 odoo.define('sale.SalePortalSidebar', function (require) {
-"use strict";
+'use strict';
 
+var publicWidget = require('web.public.widget');
 var PortalSidebar = require('portal.PortalSidebar');
 
-var SalePortalSidebar = PortalSidebar.extend({
+publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
+    selector: '.o_portal_sale_sidebar',
+
     /**
-     * @override
-     * @param {Object} $watched_selector
+     * @constructor
      */
-    init: function ($watched_selector) {
+    init: function (parent, options) {
         this._super.apply(this, arguments);
         this.authorizedTextTag = ['em', 'b', 'i', 'u'];
-        this.spyWatched = $watched_selector;
+        this.spyWatched = $('body[data-target=".navspy"]');
     },
     /**
      * @override
      */
     start: function () {
-        this._super.apply(this, arguments);
+        var def = this._super.apply(this, arguments);
         var $spyWatcheElement = this.$el.find('[data-id="portal_sidebar"]');
         this._setElementId($spyWatcheElement);
         // Nav Menu ScrollSpy
@@ -47,6 +29,7 @@ var SalePortalSidebar = PortalSidebar.extend({
             this.$('#o_sale_portal_paynow').trigger('click');
             $.bbq.removeState('allow_payment');
         }
+        return def;
     },
 
     //--------------------------------------------------------------------------
@@ -129,6 +112,4 @@ var SalePortalSidebar = PortalSidebar.extend({
         return rawText.join(' ');
     },
 });
-
-return SalePortalSidebar;
 });

@@ -1,16 +1,16 @@
 odoo.define('website_sale_wishlist.wishlist', function (require) {
 "use strict";
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 var wSaleUtils = require('website_sale.utils');
 var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
 
 // ProductConfiguratorMixin events are overridden on purpose here
 // to avoid registering them more than once since they are already registered
 // in website_sale.js
-sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfiguratorMixin, {
+publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(ProductConfiguratorMixin, {
     selector: '.oe_website_sale',
-    read_events: {
+    events: {
         'click #my_wish': '_onClickMyWish',
         'click .o_add_wishlist, .o_add_wishlist_dyn': '_onClickAddWish',
         'change input.product_id': '_onChangeVariant',
@@ -18,7 +18,6 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfigura
         'click .wishlist-section .o_wish_rm': '_onClickWishRemove',
         'click .wishlist-section .o_wish_add': '_onClickWishAdd',
     },
-    events: sAnimations.Class.events,
 
     /**
      * @constructor
@@ -36,9 +35,6 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfigura
     willStart: function () {
         var self = this;
         var def = this._super.apply(this, arguments);
-        if (this.editableMode) {
-            return def;
-        }
 
         var wishDef = $.get('/shop/wishlist', {
             count: 1,
@@ -56,9 +52,6 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfigura
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        if (this.editableMode) {
-            return def;
-        }
 
         this._updateWishlistView();
         // trigger change on only one input

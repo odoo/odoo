@@ -2,17 +2,18 @@ odoo.define('website_sale_options.website_sale', function (require) {
 'use strict';
 
 var core = require('web.core');
-var _t = core._t;
+var publicWidget = require('web.public.widget');
 var OptionalProductsModal = require('sale.OptionalProductsModal');
-var sAnimations = require('website.content.snippets.animation');
 var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
 require('website_sale.website_sale');
 
-sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfiguratorMixin, {
+var _t = core._t;
+
+publicWidget.registry.WebsiteSaleOptions = publicWidget.Widget.extend(ProductConfiguratorMixin, {
     selector: '.oe_website_sale',
-    read_events: {
+    events: _.extend({}, ProductConfiguratorMixin.events || {}, {
         'click #add_to_cart, #products_grid .product_price .a-submit': 'async _onClickAdd',
-    },
+    }),
 
     /**
      * @constructor
@@ -186,7 +187,5 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
         });
     },
 });
-
-return sAnimations.registry.WebsiteSaleOptions;
-
+return publicWidget.registry.WebsiteSaleOptions;
 });

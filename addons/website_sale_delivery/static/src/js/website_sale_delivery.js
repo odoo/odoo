@@ -2,13 +2,15 @@ odoo.define('website_sale_delivery.checkout', function (require) {
 'use strict';
 
 var core = require('web.core');
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
 var _t = core._t;
+var concurrency = require('web.concurrency');
+var dp = new concurrency.DropPrevious();
 
-sAnimations.registry.websiteSaleDelivery = sAnimations.Class.extend({
+publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
-    read_events: {
+    events: {
         'change select[name="shipping_id"]': '_onSetAddress',
         'click #delivery_carrier .o_delivery_carrier_select': '_onCarrierClick',
     },
@@ -89,12 +91,12 @@ sAnimations.registry.websiteSaleDelivery = sAnimations.Class.extend({
         $payButton.prop('disabled', true);
         $payButton.data('disabled_reasons', $payButton.data('disabled_reasons') || {});
         $payButton.data('disabled_reasons').carrier_selection = true;
-        this._rpc({
+        dp.add(this._rpc({
             route: '/shop/update_carrier',
             params: {
                 carrier_id: $radio.val(),
             },
-        }).then(this._handleCarrierUpdateResult.bind(this));
+        })).then(this._handleCarrierUpdateResult.bind(this));
     },
     /**
      * @private

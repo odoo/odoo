@@ -18,13 +18,14 @@ class HrLeave(models.Model):
     _inherit = 'hr.leave'
 
     @api.multi
-    def copy_to_benefits(self):
+    def _get_benefits_values(self):
+        vals_list = []
         for leave in self:
             contract = leave.employee_id._get_contracts(leave.date_from, leave.date_to, states=['open', 'pending', 'close'])
             start = max(leave.date_from, datetime.combine(contract.date_start, datetime.min.time()))
             end = min(leave.date_to, datetime.combine(contract.date_end or date.max, datetime.max.time()))
             benefit_type = leave.holiday_status_id.benefit_type_id
-            self.env['hr.benefit'].safe_duplicate_create({
+            vals_list += [{
                 'name': "%s%s" % (benefit_type.name + ": " if benefit_type else "", leave.employee_id.name),
                 'date_start': start,
                 'date_stop': end,
@@ -34,7 +35,8 @@ class HrLeave(models.Model):
                 'leave_id': leave.id,
                 'state': 'confirmed',
                 'contract_id': contract.id,
-            })
+            }]
+        return vals_list
 
     @api.multi
     def _create_resource_leave(self):
@@ -43,7 +45,10 @@ class HrLeave(models.Model):
         This is needed in order to compute the correct number of hours/days of the leave
         according to the contract's calender.
         """
-        super(HrLeave, self)._create_resource_leave()
+        resource_leaves = super(HrLeave, self)._create_resource_leave()
+        for resource_leave in resource_leaves:
+            resource_leave.benefit_type_id = resource_leave.holiday_id.holiday_status_id.benefit_type_id.id
+
         resource_leave_values = []
 
         for leave in self.filtered(lambda l: l.employee_id):
@@ -61,8 +66,7 @@ class HrLeave(models.Model):
                     'calendar_id': contract.resource_calendar_id.id,
                 }]
 
-        self.env['resource.calendar.leaves'].create(resource_leave_values)
-        return True
+        return resource_leaves | self.env['resource.calendar.leaves'].create(resource_leave_values)
 
     @api.constrains('date_from', 'date_to')
     def _check_contracts(self):
@@ -101,7 +105,7 @@ class HrLeave(models.Model):
         """
         benefits = self.env['hr.benefit'].search([('leave_id', 'in', self.ids)])
         if benefits:
-            self.copy_to_benefits()
+            vals_list = self._get_benefits_values()
             # create new benefits where the leave does not cover the full benefit
             benefits_intervals = Intervals(intervals=[(b.date_start, b.date_stop, b) for b in benefits])
             leave_intervals = Intervals(intervals=[(l.date_from, l.date_to, l) for l in self])
@@ -116,7 +120,7 @@ class HrLeave(models.Model):
                 benefit_start = interval[0] + relativedelta(seconds=1) if leave.date_to == interval[0] else interval[0]
                 benefit_stop = interval[1] - relativedelta(seconds=1) if leave.date_from == interval[1] else interval[1]
 
-                self.env['hr.benefit'].safe_duplicate_create({
+                vals_list += [{
                     'name': "%s: %s" % (benefit_type.name, employee.name),
                     'date_start': benefit_start,
                     'date_stop': benefit_stop,
@@ -124,7 +128,11 @@ class HrLeave(models.Model):
                     'contract_id': benefit.contract_id.id,
                     'employee_id': employee.id,
                     'state': 'confirmed',
-                })
+                }]
+
+            date_start = min(benefits.mapped('date_start'))
+            date_stop = max(benefits.mapped('date_stop'))
+            self.env['hr.benefit']._safe_duplicate_create(vals_list, date_start, date_stop)
             benefits.unlink()
             return True
         return False
@@ -132,13 +140,13 @@ class HrLeave(models.Model):
     @api.multi
     def action_validate(self):
         super(HrLeave, self).action_validate()
-        self._cancel_benefit_conflict() # delete preexisting conflicting benefits
+        self.sudo()._cancel_benefit_conflict()  # delete preexisting conflicting benefits
         return True
 
     @api.multi
     def action_refuse(self):
         super(HrLeave, self).action_refuse()
-        benefits = self.env['hr.benefit'].search([('leave_id', 'in', self.ids)])
+        benefits = self.env['hr.benefit'].sudo().search([('leave_id', 'in', self.ids)])
         benefits.write({'display_warning': False, 'active': False})
         return True
 
@@ -155,7 +163,7 @@ class HrLeave(models.Model):
             # Use sudo otherwise base users can't compute number of days
             contracts = employee.sudo()._get_contracts(date_from, date_to, states=['incoming', 'open', 'pending'])
             calendar = contracts[:1].resource_calendar_id if contracts else None # Note: if len(contracts)>1, the leave creation will crash because of unicity constaint
-            return employee.get_work_days_data(date_from, date_to, calendar=calendar)['days']
+            return employee._get_work_days_data(date_from, date_to, calendar=calendar)['days']
 
         return days
 

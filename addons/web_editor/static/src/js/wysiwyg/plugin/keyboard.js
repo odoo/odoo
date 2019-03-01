@@ -42,7 +42,6 @@ var KeyboardPlugin = AbstractPlugin.extend({
         range = direction === 'prev' ? this._insertInvisibleCharAfterSingleBR(range) : range;
         range = this._rerangeOutOfBR(range, direction);
         range = this._cleanRangeAfterDeletion(range);
-        range = this._replaceEmptyParentWithEmptyP(range);
         return range;
     },
     /**
@@ -219,8 +218,15 @@ var KeyboardPlugin = AbstractPlugin.extend({
      * @returns {Boolean} true if case handled
      */
     _handleDeletion: function (direction) {
-        var didDeleteNodes = this.context.invoke('HelperPlugin.deleteSelection')
         var range = this.context.invoke('editor.createRange');
+        range = direction === 'prev' && this._replaceEmptyParentWithEmptyP(range);
+        if (range) {
+            range = this._afterDeletion(range, direction);
+            range.select();
+            return true;
+        }
+        var didDeleteNodes = this.context.invoke('HelperPlugin.deleteSelection');
+        range = this.context.invoke('editor.createRange');
         var wasOnStartOfBR = direction === 'prev' && !range.so && range.sc.tagName === 'BR';
 
         this._removeNextEmptyUnbreakable(range.sc);
@@ -837,23 +843,27 @@ var KeyboardPlugin = AbstractPlugin.extend({
      *
      * @private
      * @param {Object} range
-     * @returns {Object} range
+     * @returns {Object|undefined} range
      */
     _replaceEmptyParentWithEmptyP: function (range) {
-        if (range.sc === this.editable || range.sc.parentNode === this.editable) {
-            return range;
+        var node = range.sc.childElementCount === 1 && range.sc.firstChild.tagName === 'BR' ? range.sc.firstChild : range.sc;
+        if (node === this.editable || !node.parentNode || node.parentNode === this.editable) {
+            return;
         }
-        var node = dom.isVoid(range.sc) && range.sc.parentNode ? range.sc.parentNode : range.sc;
-        var parentOnlyHasNode = node.parentNode && this.context.invoke('HelperPlugin.onlyContains', node.parentNode, node);
-        if (dom.isEmpty(node) && node.tagName !== 'LI' && parentOnlyHasNode) {
+        if (
+            dom.isEmpty(node) &&
+            this.context.invoke('HelperPlugin.onlyContains', node.parentNode, node) &&
+            ['LI', 'P'].indexOf(node.parentNode.tagName) === -1
+        ) {
             var emptyP = this.document.createElement('p');
             var br = this.document.createElement('br');
             $(emptyP).append(br);
-            $(node).before(emptyP).remove();
+            $(node.parentNode).before(emptyP).remove();
             range.sc = range.ec = br;
             range.so = range.eo = 0;
+            return range.collapse(true);
         }
-        return range;
+        return;
     },
     /**
      * Replace all leading space from a text node with one non-breakable space.

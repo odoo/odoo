@@ -288,7 +288,8 @@
                                     attrs="{'invisible': [('state', '!=', 'object_create')], 'required': [('state', '=', 'object_create')]}"/>
                                 <field name="crud_model_name" invisible="1"/>
                                 <field name="link_field_id"
-                                    domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name), ('ttype', 'in', ['many2one'])]"
+                                    domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name),
+                                    ('ttype', 'in', ['many2one', 'one2many', 'many2many'])]"
                                     attrs="{'invisible': [('state', '!=', 'object_create')]}"/>
                             </group>
                         </group>

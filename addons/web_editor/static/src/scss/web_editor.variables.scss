@@ -117,9 +117,16 @@ $o-checklist-before-size: 13px;
         color: #555;
         background-color: #fff;
         border-radius: 0;
+
         &.is-invalid {
             border-color: $danger;
         }
+    }
+    .input-group .form-control {
+        height: auto;
+    }
+    .input-group-text {
+        background-color: #e9ecef;
     }
 
     .was-validated {
@@ -143,10 +150,14 @@ $o-checklist-before-size: 13px;
         border-radius: 0;
         background-color: $o-we-color-paper;
 
+        .modal-header {
+            border-bottom-color: #e9ecef;
+        }
         .modal-body {
             background-color: white;
         }
         .modal-footer {
+            border-top-color: #e9ecef;
             text-align: left;
         }
     }
@@ -154,23 +165,23 @@ $o-checklist-before-size: 13px;
 
 @mixin o-w-preserve-tabs {
     .nav-tabs {
-        border-bottom: 1px solid gray('200');
+        border-bottom: 1px solid #e9ecef;
 
         > li  {
             > a {
                 line-height: 1.5;
                 color: $o-we-color-light;
-                &:hover {
-                    border-color: gray('200');
-                }
-            }
 
-            &.active > a {
-                &, &:hover, &:focus {
-                    color: $o-we-color-normal;
-                    background-color: $o-we-color-paper;
-                    border-color: gray('200');
-                    border-bottom-color: transparent;
+                &:hover {
+                    border-color: #dee2e6;
+                }
+
+                &.active {
+                    &, &:hover, &:focus {
+                        color: $o-we-color-normal;
+                        background-color: $o-we-color-paper;
+                        border-color: #dee2e6 #dee2e6 #FFFFFF;
+                    }
                 }
             }
         }
@@ -182,7 +193,7 @@ $o-checklist-before-size: 13px;
         border-radius: 0;
         font-weight: normal;
         text-transform: none;
-        @include button-size(.375rem, .75rem, 1rem, 1.5, 0);
+        @include button-size(.375rem, .75rem, 0.875rem, 1.5, 0);
 
         &.btn-primary {
             @include button-variant($o-brand-primary, $o-brand-primary);
@@ -206,13 +217,6 @@ $o-checklist-before-size: 13px;
         }
         &.btn-danger {
             @include button-variant($o-we-color-danger, $o-we-color-danger);
-        }
-
-        &.btn-lg {
-            @include button-size(.5rem, 1rem, 1.25rem, 1.5, 0);
-        }
-        &.btn-sm {
-            @include button-size(.25rem, .5rem, .875rem, 1.5, 0);
         }
     }
 }

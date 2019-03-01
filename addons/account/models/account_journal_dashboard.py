@@ -392,12 +392,11 @@ class account_journal(models.Model):
             'journal_type': self.type,
             'default_journal_id': self.id,
             'default_type': invoice_type,
-            'type': invoice_type
+            'type': invoice_type,
+            'search_default_journal_id': self.id,
         })
 
         [action] = self.env.ref('account.%s' % action_name).read()
-        if not self.env.context.get('use_domain'):
-            ctx['search_default_journal_id'] = self.id
         action['context'] = ctx
         action['domain'] = self._context.get('use_domain', [])
         account_invoice_filter = self.env.ref('account.view_account_invoice_filter', False)

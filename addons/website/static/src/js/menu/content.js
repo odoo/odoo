@@ -7,7 +7,7 @@ var Dialog = require('web.Dialog');
 var time = require('web.time');
 var weWidgets = require('wysiwyg.widgets');
 var websiteNavbarData = require('website.navbar');
-var websiteRootData = require('website.WebsiteRoot');
+var websiteRootData = require('website.root');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -406,7 +406,7 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
     save: function () {
         var $e = this.$('#o_link_dialog_label_input');
         if (!$e.val() || !$e[0].checkValidity()) {
-            $e.closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid')
+            $e.closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
             $e.focus();
             return;
         }

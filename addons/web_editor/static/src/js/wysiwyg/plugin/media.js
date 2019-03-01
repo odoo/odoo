@@ -151,6 +151,9 @@ var MediaPlugin = AbstractPlugin.extend({
      * @param {Object} data contains the media to insert
      */
     insertMedia: function (previous, data) {
+        if (!data.media) {
+            return;
+        }
         var newMedia = data.media;
         this._wrapCommand(function () {
             this.$editable.focus();

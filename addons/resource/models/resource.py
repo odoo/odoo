@@ -11,6 +11,7 @@ from pytz import timezone, utc
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
+from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 
 # Default hour per day value. The one should
@@ -211,10 +212,10 @@ class ResourceCalendar(models.Model):
 
         resource_ids = [resource.id, False] if resource else [False]
         domain = domain if domain is not None else []
-        domain = domain + [
+        domain = expression.AND([domain, [
             ('calendar_id', '=', self.id),
             ('resource_id', 'in', resource_ids),
-        ]
+        ]])
 
         # express all dates and times in the resource's timezone
         tz = timezone((resource or self).tz)

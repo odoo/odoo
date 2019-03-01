@@ -21,6 +21,7 @@ var CHART_TYPES = ['pie', 'bar', 'line'];
 
 // hide top legend when too many items for device size
 var MAX_LEGEND_LENGTH = 25 * (Math.max(1, config.device.size_class));
+var SPLIT_THRESHOLD = config.device.isMobile ? Infinity : 20;
 
 return AbstractRenderer.extend({
     className: "o_graph_renderer",
@@ -145,9 +146,11 @@ return AbstractRenderer.extend({
         if (this.state.groupedBy.length === 0) {
             data = [{
                 values: [{
-                    x: measure,
+                    x: _t('Total'),
                     y: this.state.data[0].value}],
-                key: measure
+                key: this.state.timeRangeDescription ?
+                        this.state.timeRangeDescription:
+                        measure,
             }];
         } else if (this.state.groupedBy.length === 1) {
             values = this.state.data.map(function (datapt, index) {
@@ -155,7 +158,9 @@ return AbstractRenderer.extend({
             });
             data.push({
                 values: values,
-                key: measure,
+                key: this.state.timeRangeDescription ?
+                        this.state.timeRangeDescription:
+                        measure,
             });
             if (this.state.comparisonData) {
                 values = this.state.comparisonData.map(function (datapt, index) {
@@ -163,7 +168,9 @@ return AbstractRenderer.extend({
                 });
                 data.push({
                     values: values,
-                    key: measure + ' (compare)',
+                    key: this.state.comparisonTimeRangeDescription ?
+                        this.state.comparisonTimeRangeDescription:
+                        measure,
                     color: '#ff7f0e',
                 });
             }
@@ -174,12 +181,12 @@ return AbstractRenderer.extend({
             values = {};
             for (var i = 0; i < this.state.data.length; i++) {
                 label = this.state.data[i].labels[0];
-                serie = this.state.data[i].labels[1];
+                serie = this.state.data[i].labels.slice(1).join("/");
                 value = this.state.data[i].value;
                 if ((!xlabels.length) || (xlabels[xlabels.length-1] !== label)) {
                     xlabels.push(label);
                 }
-                series.push(this.state.data[i].labels[1]);
+                series.push(serie);
                 if (!(serie in values)) {values[serie] = {};}
                 values[serie][label] = this.state.data[i].value;
             }
@@ -234,6 +241,24 @@ return AbstractRenderer.extend({
             var measure_field = self.state.fields[self.measure];
             return field_utils.format.float(d, {
                 digits: measure_field && measure_field.digits || [69, 2],
+            });
+        });
+
+        chart.tooltip.contentGenerator(function (data) {
+            var lines = data.series.map(function (serie) {
+                var label = data.value;
+                if (self.state.groupedBy.length > 1 || self.isComparison) {
+                    label = label + "/" + serie.key;
+                }
+                return {
+                    color: serie.color,
+                    label: label,
+                    value: serie.value,
+                };
+            });
+            return qweb.render("web.Chart.Tooltip", {
+                title: self.state.fields[self.state.measure].string,
+                lines: lines,
             });
         });
 
@@ -330,6 +355,17 @@ return AbstractRenderer.extend({
           showLabels: all_zero ? false: true,
         });
 
+        chart.tooltip.contentGenerator(function (data) {
+            return qweb.render("web.Chart.Tooltip", {
+                title: self.state.fields[self.state.measure].string,
+                lines : [{
+                    color: data.color,
+                    label: data.data.x,
+                    value: data.data.y,
+                }],
+            });
+        });
+
         chart(svg);
         return chart;
     },
@@ -362,7 +398,9 @@ return AbstractRenderer.extend({
             data.push({
                     area: true,
                     values: values,
-                    key: measure,
+                    key: this.state.timeRangeDescription ?
+                        this.state.timeRangeDescription:
+                        measure,
                 });
             if (this.state.comparisonData && this.state.comparisonData.length > 0) {
                 values = this.state.comparisonData.map(function (datapt, index) {
@@ -370,17 +408,19 @@ return AbstractRenderer.extend({
                 });
                 data.push({
                     values: values,
-                    key: measure + ' (compare)',
+                    key: this.state.comparisonTimeRangeDescription ?
+                        this.state.comparisonTimeRangeDescription:
+                        measure,
                     color: '#ff7f0e',
                 });
             }
 
-            for (i = 0; i < graphData.length; i++) {
+            for (var i = 0; i < graphData.length; i++) {
                 ticksLabels.push(graphData[i].labels);
             }
             if (this.state.comparisonData && this.state.comparisonData.length > this.state.data.length) {
                 var diff = this.state.comparisonData.length - this.state.data.length;
-                var length = self.state.data.length
+                var length = self.state.data.length;
                 var diffTime = 0;
                 if (length < self.state.data.length) {
                     var date1 = moment(self.state.data[length - 1].labels[0]);
@@ -403,7 +443,7 @@ return AbstractRenderer.extend({
                     ticksLabels.push(tickLabel);
                     tick++;
                 }
-                serie = graphData[i].labels[1];
+                serie = graphData[i].labels.slice(1).join("/");
                 if (!data_dict[serie]) {
                     data_dict[serie] = {
                         values: [],
@@ -417,7 +457,11 @@ return AbstractRenderer.extend({
             }
         }
 
-        var $svgContainer = $('<div/>', {class: 'o_graph_svg_container'});
+        var $svgContainer = $('<div/>', { class: 'o_graph_svg_container'});
+        // Split the tooltip into columns for large data because some portion goes out off the screen.
+        if (data.length >= SPLIT_THRESHOLD) {
+            $svgContainer.addClass('o_tooltip_split_in_columns');
+        }
         this.$el.append($svgContainer);
         var svg = d3.select($svgContainer[0]).append('svg');
         svg.datum(data);
@@ -446,6 +490,24 @@ return AbstractRenderer.extend({
             });
         chart.yAxis.tickPadding(5);
         chart.yAxis.orient("right");
+
+        chart.interactiveLayer.tooltip.contentGenerator(function (data) {
+            var lines = data.series.map(function (serie) {
+                var label = ticksLabels[data.value];
+                if (self.state.groupedBy.length > 1 || self.isComparison) {
+                    label = label + "/" + serie.key;
+                }
+                return {
+                    color: serie.color,
+                    label: label,
+                    value: serie.value,
+                };
+            });
+            return qweb.render("web.Chart.Tooltip", {
+                title: self.state.fields[self.state.measure].string,
+                lines: lines,
+            });
+        });
 
         chart(svg);
 
@@ -493,8 +555,7 @@ return AbstractRenderer.extend({
 
         if (this.state.mode === 'pie' && this.isComparison) {
             // Render graph title
-            var timeRangeMenuData = this.state.context.timeRangeMenuData;
-            var chartTitle = this.title + ' (' + timeRangeMenuData.timeRangeDescription + ')';
+            var chartTitle = this.title + ' (' + this.state.timeRangeDescription + ')';
             this.$('.o_graph_svg_container').last().prepend($('<label/>', {
                 text: chartTitle,
             }));
@@ -502,7 +563,7 @@ return AbstractRenderer.extend({
             // Instantiate comparison graph
             var comparisonChart = this['_render' + _.str.capitalize(this.state.mode) + 'Chart'](this.state.comparisonData);
             // Render comparison graph title
-            var comparisonChartTitle = this.title + ' (' + timeRangeMenuData.comparisonTimeRangeDescription + ')';
+            var comparisonChartTitle = this.title + ' (' + this.state.comparisonTimeRangeDescription + ')';
             this.$('.o_graph_svg_container').last().prepend($('<label/>', {
                 text: comparisonChartTitle,
             }));

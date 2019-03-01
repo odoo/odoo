@@ -2,12 +2,10 @@ odoo.define('website_forum.tour_forum_question', function (require) {
     'use strict';
 
     var tour = require("web_tour.tour");
-    var base = require("web_editor.base");
 
     tour.register('forum_question', {
         test: true,
         url: '/forum/help-1',
-        wait_for: base.ready(),
     }, [{
         content: "Ask the question in this forum by clicking on the button.",
         trigger: '.btn-lg.btn-block',

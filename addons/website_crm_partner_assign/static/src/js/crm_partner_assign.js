@@ -1,11 +1,11 @@
 odoo.define('crm.partner_assign', function (require) {
 'use strict';
 
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
-sAnimations.registry.crmPartnerAssign = sAnimations.Class.extend({
+publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     selector: '#wrapwrap:has(.interested_partner_assign_form, .desinterested_partner_assign_form, .opp-stage-button, .new_opp_form)',
-    read_events: {
+    events: {
         'click .interested_partner_assign_confirm': '_onInterestedPartnerAssignConfirm',
         'click .desinterested_partner_assign_confirm': '_onDesinterestedPartnerAssignConfirm',
         'click .opp-stage-button': '_onOppStageButtonClick',
@@ -13,7 +13,7 @@ sAnimations.registry.crmPartnerAssign = sAnimations.Class.extend({
         'click .edit_contact_confirm': '_onEditContactConfirm',
         'click .new_opp_confirm': '_onNewOppConfirm',
         'click .edit_opp_confirm': '_onEditOppConfirm',
-        'change .edit_opp_form .next_activity': '_onEditOppConfirm',
+        'change .edit_opp_form .next_activity': '_onEditOppForm',
         'click div.input-group span.fa-calendar': '_onCalendarIconClick',
     },
 

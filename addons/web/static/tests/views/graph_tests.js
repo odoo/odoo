@@ -179,15 +179,36 @@ QUnit.module('Views', {
             model: 'foo',
             data: this.data,
             arch: '<graph type="line"><field name="foo" /></graph>',
-            groupBy: ['product_id', 'bar'],
+            groupBy: ['product_id', 'bar', 'color_id'],
         });
 
         assert.strictEqual(graph.$('.nv-x text:contains(xphone)').length, 1,
             "should contain a text element with product xphone on X axis");
         assert.strictEqual(graph.$('.nv-x text:contains(xpad)').length, 1,
             "should contain a text element with product xpad on X axis");
-        assert.strictEqual(graph.$('text:contains(true)').length, 1,
-            "should have an entry for each value of field 'bar' in the legend");
+        assert.strictEqual(graph.$('text.nv-legend-text:contains(true)').length, 2,
+            "should have an entry for each value of field 'bar' and 'color_id' in the legend");
+
+        graph.destroy();
+    });
+
+    QUnit.test('displaying bar chart data with multiple groupbys', function (assert) {
+        assert.expect(3);
+
+        var graph = createView({
+            View: GraphView,
+            model: 'foo',
+            data: this.data,
+            arch: '<graph type="bar"><field name="foo" /></graph>',
+            groupBy: ['product_id', 'bar', 'color_id'],
+        });
+
+        assert.containsOnce(graph, '.nv-x text:contains(xphone)',
+            "should contain a text element with product xphone on X axis");
+        assert.containsOnce(graph, '.nv-x text:contains(xpad)',
+            "should contain a text element with product xpad on X axis");
+        assert.containsOnce(graph, 'text.nv-legend-text:contains(true/red)',
+            "should have an entry for each value of field 'bar' and 'color_id' in the legend");
 
         graph.destroy();
     });

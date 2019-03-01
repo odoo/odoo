@@ -91,7 +91,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     commitChanges: function () {
         var self = this;
-        if (!this.wysiwyg) {
+        if (this.mode == "readonly") {
             return this._super();
         }
         var _super = this._super.bind(this);

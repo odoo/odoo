@@ -74,6 +74,7 @@ class Product(models.Model):
     nbr_reordering_rules = fields.Integer('Reordering Rules', compute='_compute_nbr_reordering_rules')
     reordering_min_qty = fields.Float(compute='_compute_nbr_reordering_rules')
     reordering_max_qty = fields.Float(compute='_compute_nbr_reordering_rules')
+    putaway_rule_ids = fields.One2many('stock.putaway.rule', 'product_id', 'Putaway Rules')
 
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
     def _compute_quantities(self):
@@ -272,7 +273,9 @@ class Product(models.Model):
 
         # TODO: Still optimization possible when searching virtual quantities
         ids = []
-        for product in self.with_context(prefetch_fields=False).search([]):
+        # Order the search on `id` to prevent the default order on the product name which slows
+        # down the search because of the join on the translation table to get the translated names.
+        for product in self.with_context(prefetch_fields=False).search([], order='id'):
             if OPERATORS[operator](product[field], value):
                 ids.append(product.id)
         return [('id', 'in', ids)]
@@ -369,6 +372,15 @@ class Product(models.Model):
         action = self.env.ref('stock.stock_move_line_action').read()[0]
         action['domain'] = [('product_id', '=', self.id)]
         return action
+
+    def action_view_related_putaway_rules(self):
+        self.ensure_one()
+        domain = [
+            '|',
+                ('product_id', '=', self.id),
+                ('category_id', '=', self.product_tmpl_id.categ_id.id),
+        ]
+        return self.env['product.template']._get_action_view_related_putaway_rules(domain)
 
     def action_open_product_lot(self):
         self.ensure_one()
@@ -505,6 +517,17 @@ class ProductTemplate(models.Model):
             }
         return prod_available
 
+    @api.model
+    def _get_action_view_related_putaway_rules(self, domain):
+        return {
+            'name': _('Putaway Rules'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.putaway.rule',
+            'view_type': 'list',
+            'view_mode': 'list',
+            'domain': domain,
+        }
+
     def _search_qty_available(self, operator, value):
         domain = [('qty_available', operator, value)]
         product_variant_ids = self.env['product.product'].search(domain)
@@ -593,6 +616,15 @@ class ProductTemplate(models.Model):
         action['context'] = {'search_default_internal_loc': 1}
         return action
 
+    def action_view_related_putaway_rules(self):
+        self.ensure_one()
+        domain = [
+            '|',
+                ('product_id.product_tmpl_id', '=', self.id),
+                ('category_id', '=', self.categ_id.id),
+        ]
+        return self._get_action_view_related_putaway_rules(domain)
+
     def action_view_orderpoints(self):
         products = self.mapped('product_variant_ids')
         action = self.env.ref('stock.product_open_orderpoint').read()[0]
@@ -632,6 +664,7 @@ class ProductCategory(models.Model):
     total_route_ids = fields.Many2many(
         'stock.location.route', string='Total routes', compute='_compute_total_route_ids',
         readonly=True)
+    putaway_rule_ids = fields.One2many('stock.putaway.rule', 'category_id', 'Putaway Rules')
 
     @api.one
     def _compute_total_route_ids(self):

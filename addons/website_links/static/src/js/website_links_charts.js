@@ -2,12 +2,11 @@ odoo.define('website_links.charts', function (require) {
 'use strict';
 
 var core = require('web.core');
-var Widget = require('web.Widget');
-var sAnimations = require('website.content.snippets.animation');
+var publicWidget = require('web.public.widget');
 
 var _t = core._t;
 
-var BarChart = Widget.extend({
+var BarChart = publicWidget.Widget.extend({
     /**
      * @constructor
      * @param {Object} parent
@@ -102,7 +101,7 @@ var BarChart = Widget.extend({
     },
 });
 
-var PieChart = Widget.extend({
+var PieChart = publicWidget.Widget.extend({
     /**
      * @override
      * @param {Object} parent
@@ -148,9 +147,9 @@ var PieChart = Widget.extend({
     },
 });
 
-sAnimations.registry.websiteLinksCharts = sAnimations.Class.extend({
+publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
     selector: '.o_website_links_chart',
-    read_events: {
+    events: {
         'click .graph-tabs li a': '_onGraphTabClick',
         'click .copy-to-clipboard': '_onCopyToClipboardClick',
     },
