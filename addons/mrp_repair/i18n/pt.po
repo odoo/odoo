@@ -3,18 +3,21 @@
 # * mrp_repair
 # 
 # Translators:
-# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016
 # Daniel C Santos <dcs@thinkopensolutions.pt>, 2016
-# Manuela Silva <manuela.silva@sky.com>, 2016
+# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
+# Martin Trigaux, 2016
+# Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016
+# MS <manuelarodsilva@gmail.com>, 2017
+# Diogo Fonseca <dsf@thinkopensolutions.pt>, 2018
+# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:55+0000\n"
-"PO-Revision-Date: 2016-11-14 15:55+0000\n"
-"Last-Translator: Manuela Silva <manuela.silva@sky.com>, 2016\n"
+"PO-Revision-Date: 2016-09-07 09:23+0000\n"
+"Last-Translator: Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2019\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,12 +74,12 @@ msgstr "<strong>Linha(s) de Operação</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Printing Date:</strong>"
-msgstr ""
+msgstr "<strong>Data de Impressão:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Product to Repair:</strong>"
-msgstr ""
+msgstr "<strong>Produto para reparar:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -101,12 +104,12 @@ msgstr "Adicionar"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Add internal notes..."
-msgstr ""
+msgstr "Adicionar notas internas..."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Add quotation notes..."
-msgstr ""
+msgstr "Adicionar notas de cotação..."
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -151,7 +154,7 @@ msgstr "Cancelado"
 #: code:addons/mrp_repair/models/mrp_repair.py:221
 #, python-format
 msgid "Cannot cancel completed repairs."
-msgstr ""
+msgstr "Não é possível cancelar reparações completas."
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
@@ -437,7 +440,7 @@ msgstr "Movimento"
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_move_id
 msgid "Move created by the repair order"
-msgstr ""
+msgstr "Movimento criado pela ordem de reparo"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -610,7 +613,7 @@ msgstr "Ordem de Reparação"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Repair Order #:"
-msgstr ""
+msgstr "Ordem de reparação"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_repair_id
@@ -695,7 +698,7 @@ msgstr "Ordens de reparação"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "Procurar  Ordens de Reparo"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -774,6 +777,8 @@ msgid ""
 "                order to know if whether the repair should be invoiced to the\n"
 "                customer or not."
 msgstr ""
+"A ordem de reparação usa a data da garantia no Número de Série de\n"
+"modo a saber se a reparação deve ser faturada ao cliente ou não."
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
@@ -858,7 +863,7 @@ msgstr "Aviso"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_guarantee_limit
 msgid "Warranty Expiration"
-msgstr ""
+msgstr "Fim da Garantia"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair

@@ -3,32 +3,33 @@
 # * sale
 # 
 # Translators:
-# Martin Trigaux, 2016
-# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
-# Mustafa Rawi <mustafa@cubexco.com>, 2016
-# Ahmed AL-Haddad <ahmed@utech-sa.com>, 2016
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
-# Ghaith Gammar <g.gammar@saharaifs.net>, 2016
-# Mohammed Albasha <m.albasha.ma@gmail.com>, 2016
-# amrnegm <amrnegm.01@gmail.com>, 2016
-# hoxhe Aits <hoxhe0@gmail.com>, 2016
-# Akram Alfusayal <akram_ma@hotmail.com>, 2016
 # hamza tayseer atieh <hamza.atieh@minervadata.com>, 2016
+# Akram Alfusayal <akram_ma@hotmail.com>, 2016
+# Mohammed Albasha <m.albasha.ma@gmail.com>, 2016
 # Ali zuaby <ali@zuaby.net>, 2016
+# hoxhe Aits <hoxhe0@gmail.com>, 2016
 # Fahad Alqahtani <fahad@cloudland.sa>, 2016
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
+# Ahmed AL-Haddad <ahmed@utech-sa.com>, 2016
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
+# Martin Trigaux, 2016
+# amrnegm <amrnegm.01@gmail.com>, 2016
 # Hossam Esam <hossamesam17@gmail.com>, 2016
 # Khalid Aljahil <khalid@tarkeeb.sa>, 2016
-# Shaima Safar <shaima.safar@open-inside.com>, 2017
+# Ghaith Gammar <g.gammar@saharaifs.net>, 2017
 # Islam Eldeeb <islameldeb@gmail.com>, 2017
 # Yihya Hugirat <hugirat@gmail.com>, 2017
+# Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Osoul <baruni@osoul.ly>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-08 13:18+0000\n"
-"PO-Revision-Date: 2018-03-08 13:18+0000\n"
-"Last-Translator: Osoul <baruni@osoul.ly>, 2018\n"
+"PO-Revision-Date: 2016-09-07 09:28+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,6 +119,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}${object.state == 'draft' and "
 "'_draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_مسودّة' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -125,6 +128,8 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${object.state in ('draft', 'sent') and 'عرض "
+"مبدئي' or 'أمر مبيعات'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_data_notification_email_sale_order
@@ -1985,13 +1990,13 @@ msgstr ""
 #: model:res.groups,comment:sale.group_show_price_total
 #: selection:sale.config.settings,sale_show_tax:0
 msgid "Show line subtotals with taxes included (B2C)"
-msgstr ""
+msgstr "عرض إجمالي بند السعر شامل الضرائب"
 
 #. module: sale
 #: model:res.groups,comment:sale.group_show_price_subtotal
 #: selection:sale.config.settings,sale_show_tax:0
 msgid "Show line subtotals without taxes (B2B)"
-msgstr ""
+msgstr "عرض إجمالي بند السعر غير شامل الضريبة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_pricelist
@@ -2071,12 +2076,12 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_subtotal
 msgid "Tax display B2B"
-msgstr ""
+msgstr "عرض إجمالي بند السعر غير شامل الضريبة"
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_total
 msgid "Tax display B2C"
-msgstr ""
+msgstr "عرض إجمالي بند السعر شامل الضريبة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_tax
