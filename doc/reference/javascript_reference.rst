@@ -879,7 +879,7 @@ Here is an example on how this event system could be used:
             this.counter = new Counter(this);
             this.counter.on('valuechange', this, this._onValueChange);
             var def = this.counter.appendTo(this.$el);
-            return $.when(def, this._super.apply(this, arguments);
+            return Promise.all([def, this._super.apply(this, arguments)]);
         },
         _onValueChange: function (val) {
             // do something with val
@@ -1500,15 +1500,15 @@ order.
 
     - type: setting the input type (*text* by default, can be set on *number*)
 
-    On edit mode, the field is rendered as an input with the HTML attribute type 
-    setted on *number* (so user can benefit the native support, especially on 
+    On edit mode, the field is rendered as an input with the HTML attribute type
+    setted on *number* (so user can benefit the native support, especially on
     mobile). In this case, the default formatting is disabled to avoid incompability.
 
     .. code-block:: xml
 
         <field name="int_value" options='{"type": "number"}'/>
 
-    - step: set the step to the value up and down when the user click on buttons 
+    - step: set the step to the value up and down when the user click on buttons
         (only for input of type number, 1 by default)
 
     .. code-block:: xml
@@ -1532,15 +1532,15 @@ order.
 
     - type: setting the input type (*text* by default, can be set on *number*)
 
-    On edit mode, the field is rendered as an input with the HTML attribute type 
-    setted on *number* (so user can benefit the native support, especially on 
+    On edit mode, the field is rendered as an input with the HTML attribute type
+    setted on *number* (so user can benefit the native support, especially on
     mobile). In this case, the default formatting is disabled to avoid incompability.
 
     .. code-block:: xml
 
         <field name="int_value" options='{"type": "number"}'/>
 
-    - step: set the step to the value up and down when the user click on buttons 
+    - step: set the step to the value up and down when the user click on buttons
         (only for input of type number, 1 by default)
 
     .. code-block:: xml
