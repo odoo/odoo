@@ -215,7 +215,7 @@
                     </div>
                     <div class="row o_wsale_products_main_row">
                         <div t-if="enable_left_column" id="products_grid_before" class="col-lg-3"/>
-                        <div id="products_grid" class="col">
+                        <div id="products_grid" t-attf-class="col #{'o_wsale_layout_list' if layout_mode == 'list' else ''}">
                             <t t-if="category">
                                 <t t-set='editor_msg'>Drag building blocks here to customize the header for "<t t-esc='category.name'/>" category.</t>
                                 <div class="mb16" id="category_header" t-att-data-editor-message="editor_msg" t-field="category.website_description"/>
@@ -308,11 +308,11 @@
     <template id="add_grid_or_list_option" inherit_id="website_sale.products" active="True" customize_show="True" name="Grid or List button">
         <xpath expr="//div[hasclass('products_pager')]/t[@t-call][last()]" position="after">
             <div class="btn-group btn-group-toggle mt-2 ml-md-2 d-none d-sm-inline-flex o_wsale_apply_layout" data-toggle="buttons">
-                <label class="btn btn-secondary fa fa-th-large o_wsale_apply_grid" title="Grid">
-                    <input type="radio" name="wsale_products_layout"/>
+                <label t-attf-class="btn btn-secondary #{'active' if layout_mode != 'list' else None} fa fa-th-large o_wsale_apply_grid" title="Grid">
+                    <input type="radio" name="wsale_products_layout" t-att-checked="'checked' if layout_mode != 'list' else None"/>
                 </label>
-                <label class="btn btn-secondary fa fa-th-list o_wsale_apply_list" title="List">
-                    <input type="radio" name="wsale_products_layout"/>
+                <label t-attf-class="btn btn-secondary #{'active' if layout_mode == 'list' else None} fa fa-th-list o_wsale_apply_list" title="List">
+                    <input type="radio" name="wsale_products_layout" t-att-checked="'checked' if layout_mode == 'list' else None"/>
                 </label>
             </div>
         </xpath>
@@ -435,8 +435,9 @@
     </template>
 
     <template id="products_list_view" inherit_id="website_sale.products" active="False" customize_show="True" name="List View (by default)">
-        <xpath expr="//div[@id='products_grid']" position="attributes">
-            <attribute name="class" add="o_wsale_layout_list" separator=" "/>
+        <xpath expr="//div[@id='products_grid']" position="after">
+            <!-- Nothing to do, this view is only meant to allow the server -->
+            <!-- to know if the list view layout should be used -->
         </xpath>
     </template>
 
