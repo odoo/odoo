@@ -62,6 +62,13 @@ class SaleOrder(models.Model):
             'discount': option.discount,
         }
 
+    def update_prices(self):
+        self.ensure_one()
+        res = super().update_prices()
+        for line in self.sale_order_option_ids:
+            line.price_unit = self.pricelist_id.get_product_price(line.product_id, line.quantity, self.partner_id, uom_id=line.uom_id.id)
+        return res
+
     @api.onchange('sale_order_template_id')
     def onchange_sale_order_template_id(self):
         if not self.sale_order_template_id:
