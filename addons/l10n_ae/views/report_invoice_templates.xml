@@ -5,9 +5,18 @@
             <p t-if="o.env.ref('l10n_ae.gcc_countries_group') in o.partner_id.country_id.country_group_ids">
                 Supply between <b>United Arad Emirates</b> and <b><span t-field="o.partner_id.country_id.name"/></b>
             </p>
-            <p t-if="o.env.ref('l10n_ae.gcc_countries_group') in o.partner_id.country_id.country_group_ids and o.currency_id != o.env.ref('base.AED')">
-                Exchange Rate: <t t-esc="o.l10n_ae_invoice_rate" t-options='{"widget": "float", "precision": 6}'/>
-            </p>
+        </xpath>
+        <xpath expr="//div[@id='informations']" position="inside">
+            <t t-if="o.env.ref('l10n_ae.gcc_countries_group') in o.partner_id.country_id.country_group_ids and o.currency_id != o.env.ref('base.AED')">
+                <div name="l10n_ae_amount_tax_signed" class="col-auto mw-100 mb-2" t-if="o.reference">
+                    <strong>Tax Amount in AED:</strong>
+                    <p class="m-0" t-esc="o.l10n_ae_amount_tax_signed" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
+                </div>
+                <div name="exchange_rate" class="col-auto mw-100 mb-2" t-if="o.reference">
+                    <strong>Exchange Rate:</strong>
+                    <p class="m-0" t-esc="o.l10n_ae_invoice_rate" t-options='{"widget": "float", "precision": 6}'/>
+                </div>
+            </t>
         </xpath>
         <xpath expr="//h2" position="replace">
             <h2>
