@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="crm_lead_form_send_sms_form_view" model="ir.ui.view">
+        <field name="name">crm.lead.form.opportunity.send.sms</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_address_phone']" position="replace">
+                <label for="partner_address_phone"
+                       class="oe_inline"
+                       string="Phone"
+                       attrs="{'invisible':[('partner_address_phone', '==', False)]}"
+                />
+                <div class="o_row" attrs="{'invisible':[('partner_address_phone', '==', False)]}">
+                    <field name="partner_address_phone"
+                           readonly="1"
+                           widget="phone"/>
+                    <button type="object"
+                            name="action_send_sms"
+                            class="btn-sm btn-link mb4 fa fa-comment"
+                            aria-label="Send SMS Text Message"
+                            title="Send SMS Text Message"
+                            context="{'field_name': 'partner_address_phone'}"/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='phone']" position="replace">
+                <label for="phone"
+                       class="oe_inline"
+                       attrs="{'invisible':[('partner_address_phone', '!=', False)]}"
+                />
+                <div class="o_row" attrs="{'invisible':[('partner_address_phone', '!=', False)]}">
+                    <field name="phone"
+                           readonly="1"
+                           widget="phone"/>
+                    <button type="object"
+                            name="action_send_sms"
+                            class="btn-sm btn-link mb4 fa fa-comment"
+                            aria-label="Send SMS Text Message"
+                            title="Send SMS Text Message"
+                            attrs="{'invisible':[('phone', '==', False)]}"
+                            context="{'field_name': 'phone'}"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Add action entry in the Action Menu for Leads -->
+    <act_window id="crm_send_sms_action"
+        name="Send SMS Text Message"
+        src_model="crm.lead"
+        res_model="sms.send_sms"
+        view_type="form"
+        view_mode="form"
+        key2="client_action_multi"
+        target="new"/>
+
+</odoo>
