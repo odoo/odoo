@@ -3,14 +3,16 @@
 # * maintenance
 # 
 # Translators:
-# Эдуард Манятовский <manyatovskiy@gmail.com>, 2016
+# Collex100, 2017
+# Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:28+0000\n"
-"PO-Revision-Date: 2017-06-23 13:28+0000\n"
-"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2016\n"
+"PO-Revision-Date: 2016-09-07 09:22+0000\n"
+"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,7 +68,7 @@ msgstr ""
 #: model:maintenance.equipment,name:maintenance.equipment_computer3
 #: model:maintenance.equipment,name:maintenance.equipment_computer5
 msgid "Acer Laptop"
-msgstr "Acer Laptop"
+msgstr "Ноутбук Acer"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_active
@@ -76,7 +78,7 @@ msgstr "Активно"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_id
 msgid "Alias"
-msgstr "Альяс"
+msgstr "Псевдоним"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_contact
@@ -96,7 +98,7 @@ msgstr "Псевдоним домена"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_model_id
 msgid "Aliased Model"
-msgstr "Модель алиаса"
+msgstr "Псевдонимная модель"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -288,7 +290,7 @@ msgstr "Дата следующего профилактического обс�
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_request_date
 msgid "Date requested for the maintenance to happen"
-msgstr ""
+msgstr "Дата, запрошенная для проведения технического обслуживания"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_schedule_date
@@ -296,11 +298,13 @@ msgid ""
 "Date the maintenance team plans the maintenance.  It should not differ much "
 "from the Request Date. "
 msgstr ""
+"Планируемая дата технического обслуживания группой техобслуживания.  Она не "
+"должна сильно отличаться от даты запроса. "
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_close_date
 msgid "Date the maintenance was finished. "
-msgstr ""
+msgstr "Дата окончания работ по техническому обслуживанию. "
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_period
@@ -366,7 +370,7 @@ msgid ""
 "Email alias for this equipment category. New emails will automatically "
 "create new maintenance request for this equipment category."
 msgstr ""
-"Алиас электронной почты для этой категории оборудования. Новые письма "
+"Псевдоним электронной почты для этой категории оборудования. Новые письма "
 "автоматически создают новый запрос на обслуживание для этой категории "
 "оборудования."
 
@@ -451,7 +455,7 @@ msgstr "Принтер HP Inkjet"
 #: model:maintenance.equipment,name:maintenance.equipment_computer11
 #: model:maintenance.equipment,name:maintenance.equipment_computer9
 msgid "HP Laptop"
-msgstr "HP Laptop"
+msgstr "Ноутбук HP"
 
 #. module: maintenance
 #: selection:maintenance.request,priority:0
@@ -729,7 +733,7 @@ msgstr "Родительская модель"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "Parent Record Thread ID"
+msgstr "ID потока родительской записи"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_parent_model_id

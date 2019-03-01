@@ -3,26 +3,28 @@
 # * fleet
 # 
 # Translators:
-# Martin Trigaux, 2016
-# Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2016
-# p_amoruso <p.amoruso@elvenstudio.it>, 2016
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
-# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
-# Paolo Valier, 2016
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2016
 # Giuseppe Castellani <giuseppecastellani@gmail.com>, 2016
-# Simone Bernini <simone@aperturelabs.it>, 2016
+# Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2016
 # Davide Corio <enlightx@gmail.com>, 2016
 # Alberto Vincenzi <alberto.vincenzi@gmail.com>, 2016
+# Simone Bernini <simone@aperturelabs.it>, 2016
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
+# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
+# p_amoruso <p.amoruso@elvenstudio.it>, 2016
 # Giovanni Perteghella <giovanni@perteghella.org>, 2016
+# Martin Trigaux, 2017
 # Franco Tampieri <franco@tampieri.info>, 2017
+# Paolo Valier, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:28+0000\n"
-"PO-Revision-Date: 2017-06-23 13:28+0000\n"
-"Last-Translator: Franco Tampieri <franco@tampieri.info>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:19+0000\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -209,7 +211,7 @@ msgstr "Emissioni di CO2 del veicolo"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_1
 msgid "Calculation Benefit In Kind"
-msgstr ""
+msgstr "Calcolo dei benefici in natura"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_14
@@ -453,7 +455,7 @@ msgstr "Spesa da pagare solo una volta, alla creazione del contratto"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_cost_subtype_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_cost_subtype_id
 msgid "Cost type purchased with this cost"
-msgstr ""
+msgstr "Tipo di spesa"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_count
@@ -485,6 +487,9 @@ msgid ""
 "Create a new contract automatically with all the same informations except "
 "for the date that will start at the end of current contract"
 msgstr ""
+"Creare automaticamente un nuovo contratto con tutte le stesse informazioni "
+"ad eccezione della data di inizio che corrisponderà alla data di fine del "
+"contratto in corso."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type_create_uid
@@ -647,7 +652,7 @@ msgstr "Auto Dipendente"
 #: code:addons/fleet/models/fleet.py:37
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
-msgstr ""
+msgstr "È vietato azzerare il contachilometri di un veicolo."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_18
@@ -672,12 +677,12 @@ msgstr "Sostituzione cinghia di distribuzione"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_13
 msgid "Entry into service tax"
-msgstr ""
+msgstr "Bollo auto"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_21
 msgid "Exhaust Manifold Replacement"
-msgstr ""
+msgstr "Sostituzione collettore di scarico"
 
 #. module: fleet
 #: model:ir.module.category,name:fleet.module_fleet_category
@@ -860,7 +865,7 @@ msgstr "ID"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_29
 msgid "Ignition Coil Replacement"
-msgstr ""
+msgstr "Sostituzione bobina di accensione"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,state:0
@@ -908,7 +913,7 @@ msgstr "Informazioni su un veicolo"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_30
 msgid "Intake Manifold Gasket Replacement"
-msgstr ""
+msgstr "Sostituzione guarnizione del collettore di aspirazione"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -924,7 +929,7 @@ msgstr "Riferimento fattura"
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_junior
 msgid "Junior"
-msgstr ""
+msgstr "Junior"
 
 #. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
@@ -1000,7 +1005,7 @@ msgstr "Targa"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_license_plate
 msgid "License plate number of the vehicle (i = plate number for a car)"
-msgstr ""
+msgstr "Numero di targa del veicolo"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_liter
@@ -1282,6 +1287,8 @@ msgid ""
 "Odoo helps you managing the costs for your different vehicles\n"
 "          Costs are generally created from services and contract and appears here."
 msgstr ""
+"Odoo aiuta a gestire i costi dei diversi veicoli\n"
+"          I costi sono generalmente creati da servizi e contratti e appaiono qui."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_action
@@ -1305,7 +1312,7 @@ msgstr "Sostituzione Pompa Olio"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_omnium
 msgid "Omnium"
-msgstr ""
+msgstr "Omnium"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_16
@@ -1347,7 +1354,7 @@ msgstr "Costo padre del costo attuale"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_purchaser_id
 msgid "Person to which the contract is signed for"
-msgstr ""
+msgstr "Persona manzionata sul contratto"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_power
@@ -1357,12 +1364,12 @@ msgstr "Potenza"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_35
 msgid "Power Steering Hose Replacement"
-msgstr ""
+msgstr "Sostituzione tubo del servosterzo"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_36
 msgid "Power Steering Pump Replacement"
-msgstr ""
+msgstr "Sostituzione pompa del servosterzo"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_power
@@ -1474,7 +1481,7 @@ msgstr "Rotazione pneumatici"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_40
 msgid "Rotor Replacement"
-msgstr ""
+msgstr "Sostituzione rotore"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_seats
@@ -1484,12 +1491,12 @@ msgstr "Numero di posti"
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_sedan
 msgid "Sedan"
-msgstr ""
+msgstr "Berlina"
 
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_senior
 msgid "Senior"
-msgstr ""
+msgstr "Senior"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_sequence
@@ -1534,7 +1541,7 @@ msgstr "Costi servizi per mese"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Services Details"
-msgstr ""
+msgstr "Dettagli intervenzioni"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services
@@ -1568,6 +1575,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"Logo di piccole dimensioni del marchio. Automaticamente ridimensionato come "
+"immagine di 64x64px, conservando le proporzioni iniziali. Uilizzare questo "
+"campo ovunque sia richiesta una piccola immagine."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_6
@@ -1582,7 +1592,7 @@ msgstr "Sostituzione Candele"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_42
 msgid "Starter Replacement"
-msgstr ""
+msgstr "Sostituzione motorino di avviamento"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2915
@@ -1651,6 +1661,8 @@ msgid ""
 "Thanks to the different filters, Odoo can only print the effective\n"
 "          costs, sort them by type and by vehicle."
 msgstr ""
+"Grazie ai diversi filtri, Odoo può stampare solo i costi\n"
+"          effettivi, ordinandoli per tipo e per veicolo."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_43
@@ -1714,7 +1726,7 @@ msgstr ""
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_18
 msgid "Touring Assistance"
-msgstr ""
+msgstr "Touring Assistance"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_transmission
@@ -1724,7 +1736,7 @@ msgstr "Trasmissione"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_47
 msgid "Transmission Filter Replacement"
-msgstr ""
+msgstr "Sostituzione filtro del cambio"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_48
@@ -1951,12 +1963,13 @@ msgstr "Sostituzione tergicristalli"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Write here all other information relative to this contract"
-msgstr ""
+msgstr "Scrivere qui tutte le altre informazioni relative a questo contratto"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_notes
 msgid "Write here all supplementary information relative to this contract"
 msgstr ""
+"Scrivere qui tutte le informazioni supplementari relative a questo contratto"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form

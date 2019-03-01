@@ -3,23 +3,25 @@
 # * web_editor
 # 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
 # Matus Krnac <matus.krnac@gmail.com>, 2017
+# Martin Trigaux, 2017
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Jan Prokop, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:55+0000\n"
-"PO-Revision-Date: 2016-11-14 15:55+0000\n"
-"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:30+0000\n"
+"Last-Translator: Jan Prokop, 2019\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sk\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: web_editor
 #. openerp-web
@@ -68,7 +70,7 @@ msgstr ""
 #. module: web_editor
 #: model:ir.ui.view,arch_db:web_editor.snippets
 msgid "<i class=\"fa fa-th-large\"/> First Panel"
-msgstr ""
+msgstr "<i class=\"fa fa-th-large\"/> Prvý panel"
 
 #. module: web_editor
 #. openerp-web
@@ -94,7 +96,7 @@ msgstr "Pridajte URL obrázku"
 #. module: web_editor
 #: model:ir.ui.view,arch_db:web_editor.snippets
 msgid "Add blocks"
-msgstr ""
+msgstr "Pridať blok"
 
 #. module: web_editor
 #. openerp-web
@@ -134,7 +136,7 @@ msgstr "Alternatívne nahratie"
 #: code:addons/web_editor/static/src/xml/editor.xml:335
 #, python-format
 msgid "Assign a focal point that will always be visible"
-msgstr ""
+msgstr "Priraďte ohnisko, ktoré bude vždy viditeľné"
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_ir_attachment_local_url
@@ -168,42 +170,42 @@ msgstr "Farba pozadia"
 #: code:addons/web_editor/static/src/js/snippets.options.js:667
 #, python-format
 msgid "Background Image Sizing"
-msgstr ""
+msgstr "Veľkosť obrázku pozadia"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/editor.xml:374
 #, python-format
 msgid "Background height"
-msgstr ""
+msgstr "Výška pozadia"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/editor.xml:384
 #, python-format
 msgid "Background position"
-msgstr ""
+msgstr "Pozícia na pozadí"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/editor.xml:406
 #, python-format
 msgid "Background repeat"
-msgstr ""
+msgstr "Opakovanie pozadia"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/editor.xml:362
 #, python-format
 msgid "Background size"
-msgstr ""
+msgstr "Veľkosť pozadia"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/editor.xml:365
 #, python-format
 msgid "Background width"
-msgstr ""
+msgstr "Šírka pozadia"
 
 #. module: web_editor
 #. openerp-web
@@ -227,7 +229,7 @@ msgstr "Čierna"
 #: code:addons/web_editor/static/src/js/snippets.editor.js:804
 #, python-format
 msgid "Block"
-msgstr ""
+msgstr "Blok"
 
 #. module: web_editor
 #. openerp-web
@@ -255,7 +257,7 @@ msgstr "Stred"
 #: code:addons/web_editor/static/src/js/widgets.js:53
 #, python-format
 msgid "Change media description and tooltip"
-msgstr ""
+msgstr "Zmeniť popis média a pomôcku"
 
 #. module: web_editor
 #. openerp-web
@@ -299,14 +301,14 @@ msgstr "Stĺpec"
 #: code:addons/web_editor/static/src/js/rte.summernote.js:66
 #, python-format
 msgid "Common colors"
-msgstr ""
+msgstr "Bežné farby"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/editor.xml:330
 #, python-format
 msgid "Contain"
-msgstr ""
+msgstr "Obsahuje"
 
 #. module: web_editor
 #. openerp-web
@@ -360,7 +362,7 @@ msgstr "Predvolený"
 #: code:addons/web_editor/static/src/xml/editor.xml:407
 #, python-format
 msgid "Define if/how the background image will be repeated"
-msgstr ""
+msgstr "Definuje či/ako sa bude opakovať obrázok pozadia"
 
 #. module: web_editor
 #: model:ir.ui.view,arch_db:web_editor.colorpicker
@@ -409,7 +411,7 @@ msgstr "Štýl dokumentu"
 #: code:addons/web_editor/static/src/js/rte.summernote.js:827
 #, python-format
 msgid "Double-click to edit"
-msgstr ""
+msgstr "Dvojklik pre editáciu"
 
 #. module: web_editor
 #. openerp-web
@@ -478,7 +480,7 @@ msgstr "Extra malé"
 #: code:addons/web_editor/static/src/js/rte.summernote.js:864
 #, python-format
 msgid "File / Image"
-msgstr ""
+msgstr "Súbor / obrázok"
 
 #. module: web_editor
 #. openerp-web
@@ -513,7 +515,7 @@ msgstr "Float vpravo"
 #: code:addons/web_editor/static/src/js/rte.summernote.js:933
 #, python-format
 msgid "Font Color"
-msgstr ""
+msgstr "Farba fontu"
 
 #. module: web_editor
 #. openerp-web
@@ -632,7 +634,7 @@ msgstr "Pomoc"
 #: code:addons/web_editor/static/src/xml/editor.xml:387
 #, python-format
 msgid "Horizontal"
-msgstr ""
+msgstr "Vodorovne"
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub_id
@@ -647,6 +649,8 @@ msgid ""
 "If you discard the current edition, all unsaved changes will be lost. You "
 "can cancel to return to the edition mode."
 msgstr ""
+"Ak zahodíte súčasnú edíciu, stratia sa všetky neuložené zmeny. Môžete "
+"vystúpiť pre návrat do editačného módu."
 
 #. module: web_editor
 #. openerp-web
@@ -816,7 +820,7 @@ msgstr "Ďalší →"
 #: code:addons/web_editor/static/src/xml/editor.xml:409
 #, python-format
 msgid "No repeat"
-msgstr ""
+msgstr "Neopakovať"
 
 #. module: web_editor
 #. openerp-web
@@ -975,21 +979,21 @@ msgstr "Opakovať"
 #: code:addons/web_editor/static/src/xml/editor.xml:410
 #, python-format
 msgid "Repeat both"
-msgstr ""
+msgstr "Opakovať oba"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/editor.xml:411
 #, python-format
 msgid "Repeat x"
-msgstr ""
+msgstr "Opakovať x"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/editor.xml:412
 #, python-format
 msgid "Repeat y"
-msgstr ""
+msgstr "Opakovať y"
 
 #. module: web_editor
 #. openerp-web
@@ -1068,7 +1072,7 @@ msgstr "Vyhľadať kontakt"
 #: code:addons/web_editor/static/src/xml/snippets.xml:30
 #, python-format
 msgid "Select Parent Container"
-msgstr ""
+msgstr "Vybrať rodičovský kontajner"
 
 #. module: web_editor
 #. openerp-web
@@ -1103,7 +1107,7 @@ msgstr "Nastaviť video URL"
 #: code:addons/web_editor/static/src/xml/editor.xml:385
 #, python-format
 msgid "Set the starting position of the background image."
-msgstr ""
+msgstr "Zadajte štartovaciu pozíciu obrázku pozadia"
 
 #. module: web_editor
 #. openerp-web
@@ -1120,6 +1124,7 @@ msgid ""
 "Sets the width and height of the background image in percent of the parent "
 "element."
 msgstr ""
+"Nastavte šírku a výšku obrázku pozadia ako percentá z rodičovského prvku."
 
 #. module: web_editor
 #. openerp-web
@@ -1238,7 +1243,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/js/rte.summernote.js:58
 #, python-format
 msgid "Theme colors"
-msgstr ""
+msgstr "Farby témy"
 
 #. module: web_editor
 #. openerp-web
@@ -1260,7 +1265,7 @@ msgstr "K akému URL by mal ísť tento odkaz?"
 #: code:addons/web_editor/static/src/xml/editor.xml:40
 #, python-format
 msgid "Tooltip"
-msgstr ""
+msgstr "Pomôcka"
 
 #. module: web_editor
 #. openerp-web
@@ -1317,7 +1322,7 @@ msgstr "Nezoradený zoznam"
 #: code:addons/web_editor/static/src/xml/editor.xml:96
 #, python-format
 msgid "Upload an image"
-msgstr ""
+msgstr "Nahrajte obrázok"
 
 #. module: web_editor
 #. openerp-web
@@ -1338,7 +1343,7 @@ msgstr "Nahrávanie..."
 #: code:addons/web_editor/static/src/xml/editor.xml:396
 #, python-format
 msgid "Vertical"
-msgstr ""
+msgstr "Zvisle"
 
 #. module: web_editor
 #. openerp-web
@@ -1404,7 +1409,7 @@ msgstr "XI"
 #: code:addons/web_editor/static/src/xml/editor.xml:399
 #, python-format
 msgid "auto"
-msgstr ""
+msgstr "auto"
 
 #. module: web_editor
 #. openerp-web

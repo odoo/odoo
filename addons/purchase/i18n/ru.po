@@ -3,17 +3,19 @@
 # * purchase
 # 
 # Translators:
-# Collex100, 2016
-# Sergey Vilizhanin <sv@grimmette.ru>, 2017
+# Collex100, 2017
+# Sergey Vilizhanin, 2017
 # Viktor Pogrebniak <vp@aifil.ru>, 2017
 # sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
+# Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: sergeiruzkiicode <sergei.ruzki@icode.by>, 2018\n"
+"PO-Revision-Date: 2016-09-07 09:27+0000\n"
+"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,15 +56,15 @@ msgstr ""
 "    ${object.partner_id.name}\n"
 "% endif\n"
 ",</p><p>\n"
-"Сдесь есть a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} <strong>${object.name}</strong>\n"
+"Здесь есть ${object.state in ('draft', 'sent') and 'запрос цен' or 'подтверждение заказа на покупку'} <strong>${object.name}</strong>\n"
 "% if object.partner_ref:\n"
-"    with reference: ${object.partner_ref}\n"
+"    с учетом: ${object.partner_ref}\n"
 "% endif\n"
 "% if object.origin:\n"
-"    (RFQ origin: ${object.origin})\n"
+"    (Источник запроса цены: ${object.origin})\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
-"from ${object.company_id.name}.\n"
+"на сумму <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"из ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
 "<p>Если у вас есть какие-либо вопросы, не стесняйтесь обращаться к нам.</p>\n"
@@ -99,15 +101,15 @@ msgstr ""
 "% endif\n"
 ",</p>\n"
 "<p>\n"
-"Пожалуйста надите вложение <strong>${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} ${object.name}</strong>\n"
+"Пожалуйста найдите вложение <strong>${object.state in ('draft', 'sent') and 'запрос цен' or 'подтверждение заказа на покупку'} ${object.name}</strong>\n"
 "% if object.partner_ref:\n"
-"    with reference: ${object.partner_ref}\n"
+"    с учетом: ${object.partner_ref}\n"
 "% endif\n"
 "% if object.origin:\n"
-"    (RFQ origin: ${object.origin})\n"
+"    (Источник запроса цены: ${object.origin})\n"
 "% endif\n"
-"amounting <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
-"from ${object.company_id.name}.\n"
+"сумма <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"из ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
 "<p>Вы можете ответить на это письмо, если у вас есть вопросы.</p>\n"
@@ -128,7 +130,7 @@ msgstr ""
 #: code:addons/purchase/models/stock.py:87
 #, python-format
 msgid " Buy"
-msgstr "Покупка"
+msgstr " Покупка"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_count
@@ -297,7 +299,7 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_account_config_settings_group_analytic_account_for_purchases
 msgid "Allows you to specify an analytic account on purchase order lines."
 msgstr ""
-"Разрешить использование аналитических счетов в позициях заказов на закупку"
+"Разрешить использование аналитических счетов в позициях заказов на закупку."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -340,7 +342,7 @@ msgstr "Аналитический учет закупок"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
 msgid "Apply"
-msgstr "Применить "
+msgstr "Применить"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_date_approve
@@ -379,7 +381,7 @@ msgstr "Средняя цена"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_invoice_lines
 msgid "Bill Lines"
-msgstr "строки счёта"
+msgstr "Cтроки счёта"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_qty_invoiced
@@ -390,7 +392,7 @@ msgstr "Кол-во по счёту"
 #: code:addons/purchase/models/purchase.py:581
 #, python-format
 msgid "Billed Quantity"
-msgstr ""
+msgstr "Выставленное количество"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
@@ -688,7 +690,7 @@ msgstr "Черновик запроса цены"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_dest_address_id
 msgid "Drop Ship Address"
-msgstr "Адрес Дроп-Шиппинг доставки:"
+msgstr "Адрес Дроп-Шиппинг доставки"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_module_stock_dropshipping
@@ -1411,7 +1413,7 @@ msgstr "Полученное кол-во"
 #: code:addons/purchase/models/purchase.py:580
 #, python-format
 msgid "Received Quantity"
-msgstr ""
+msgstr "Полученное количество"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_open_picking
@@ -1628,6 +1630,8 @@ msgid ""
 "The ordered quantity has been decreased. Do not forget to take it into "
 "account on your bills and receipts."
 msgstr ""
+"Заказанное количество было уменьшено. Не забудьте учесть это в своих счетах "
+"и квитанциях."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
@@ -1913,7 +1917,7 @@ msgstr "Счета от поставщиков"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 msgid "Vendor Bills."
-msgstr "Счета Поставщиков"
+msgstr "Счета Поставщиков."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_manage_vendor_price

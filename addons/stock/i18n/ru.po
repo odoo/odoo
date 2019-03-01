@@ -5,6 +5,7 @@
 # Translators:
 # Collex100, 2017
 # Victor Safronovich <vsafronovich@suvit.ru>, 2018
+# Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2016-09-07 09:29+0000\n"
-"Last-Translator: Victor Safronovich <vsafronovich@suvit.ru>, 2018\n"
+"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,9 @@ msgid ""
 "\n"
 "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
 msgstr ""
+"\n"
+"\n"
+"%s --> ед.изм. продукта %s (%s) - ед.изм. перемещения %s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:231
@@ -37,6 +41,9 @@ msgid ""
 "\n"
 "Blocking: %s"
 msgstr ""
+"\n"
+"\n"
+"Блокировка: %s"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
@@ -3532,7 +3539,7 @@ msgstr "Связанные Кванты"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "List view of lines"
-msgstr ""
+msgstr "Вид списка строк"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
@@ -4475,7 +4482,7 @@ msgstr "Выход"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_wh_output_stock_loc_id
 msgid "Output Location"
-msgstr "Locations"
+msgstr "Местоположение выхода"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_partner_id
@@ -5246,7 +5253,7 @@ msgstr "Количество"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_qty_done_uom_ordered
 msgid "Quantity Done"
-msgstr ""
+msgstr "Количество выполнено"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -5274,12 +5281,12 @@ msgstr "Количество не может быть отрицательным
 #: code:addons/stock/models/stock_move.py:394
 #, python-format
 msgid "Quantity decreased!"
-msgstr ""
+msgstr "Количество уменьшилось!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_qty_done_uom_ordered
 msgid "Quantity done in UOM ordered"
-msgstr ""
+msgstr "Выполненное количество в ед.изм. заказа"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_availability
@@ -5438,7 +5445,7 @@ msgstr "Полученное кол-во"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Recheck Availability"
-msgstr ""
+msgstr "Перепроверить доступность"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -5828,7 +5835,7 @@ msgstr "Искать инвентаризацию"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_inventory_line_search
 msgid "Search Inventory Lines"
-msgstr ""
+msgstr "Поиск строк инвентаризации"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
@@ -6513,7 +6520,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:795
 #, python-format
 msgid "The pick is already validated"
-msgstr ""
+msgstr "Выбор уже подтвержден"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
@@ -7681,7 +7688,7 @@ msgstr "Вы не можете удалить отходы которые дел
 #: code:addons/stock/models/stock_inventory.py:103
 #, python-format
 msgid "You cannot delete a validated inventory adjustement."
-msgstr ""
+msgstr "Нельзя удалить проверенную корректировку запасов."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:374
@@ -7846,6 +7853,8 @@ msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
 msgstr ""
+"У вас все еще есть некоторые активные правила переупорядочивания на этом "
+"продукте. Сначала архивируйте или удалите их."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:226
