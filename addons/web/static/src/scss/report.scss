@@ -36,7 +36,7 @@ div.address.row {
 }
 
 /* margin-top does not work on first visible element of page */
-body > *:first-child::before {
+body:not([onload="subst()"]) > *:first-child::before {
     content: '\00a0';
     display: block;
     height: 1px;
