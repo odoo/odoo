@@ -547,10 +547,10 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def _write(self, vals):
-        pre_not_reconciled = self.filtered(lambda invoice: not invoice.reconciled)
+        pre_not_reconciled = self.search([('id', 'in', self.ids), ('reconciled', '=', False)])
         pre_reconciled = self - pre_not_reconciled
         res = super(AccountInvoice, self)._write(vals)
-        reconciled = self.filtered(lambda invoice: invoice.reconciled)
+        reconciled = self.search([('id', 'in', self.ids), ('reconciled', '=', True)])
         not_reconciled = self - reconciled
         (reconciled & pre_reconciled).filtered(lambda invoice: invoice.state == 'open').action_invoice_paid()
         (not_reconciled & pre_not_reconciled).filtered(lambda invoice: invoice.state in ('in_payment', 'paid')).action_invoice_re_open()
@@ -1746,7 +1746,7 @@ class AccountInvoiceLine(models.Model):
             self_lang = self
             if part.lang:
                 self_lang = self.with_context(lang=part.lang)
-   
+
             product = self_lang.product_id
             account = self.get_invoice_line_account(type, product, fpos, company)
             if account:
