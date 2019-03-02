@@ -3,6 +3,7 @@
 # * mail
 # 
 # Translators:
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # Bohdan Lisnenko, 2015-2016
 # Bohdan Lisnenko, 2016
 # ТАрас <tratatuta@i.ua>, 2016
@@ -11,14 +12,14 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2018-04-27 14:40+0000\n"
-"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>\n"
+"PO-Revision-Date: 2019-03-01 12:26+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: mail
 #: model:mail.template,body_html:mail.mail_template_data_notification_email_default
@@ -1557,7 +1558,7 @@ msgstr "Майстер запрошень"
 #. module: mail
 #: selection:mail.channel,public:0
 msgid "Invited people only"
-msgstr "Запросити тільки людей"
+msgstr "Тільки запрошені люди"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_is_follower
@@ -2276,13 +2277,13 @@ msgid ""
 "email. If not set, the english version will be used. This should usually be "
 "a placeholder expression that provides the appropriate language, e.g. "
 "${object.partner_id.lang}."
-msgstr ""
+msgstr "Необов'язкова мова перекладу (ISO-код) для вибору при надсиланні електронного листа. Якщо не встановлено, буде використано англійську версію. Це, як правило, має бути виразом заповнювача, який забезпечує відповідну мову, наприклад, $ {object.partner_id.lang}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_null_value
 #: model:ir.model.fields,help:mail.field_mail_template_null_value
 msgid "Optional value to use if the target field is empty"
-msgstr ""
+msgstr "Необов'язкове значення для використання, якщо цільове поле порожнє"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
@@ -2377,7 +2378,7 @@ msgstr "Профіль партнера"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_partner_opt_out_search
 msgid "Partners that did not ask not to be included in mass mailing campaigns"
-msgstr ""
+msgstr "Партнери, які не просили не бути включеними в масові кампанії"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_needaction_partner_ids
@@ -2391,7 +2392,7 @@ msgstr "Партнер, що потребує дії"
 #: model:ir.model.fields,help:mail.field_mail_mail_auto_delete
 #: model:ir.model.fields,help:mail.field_mail_template_auto_delete
 msgid "Permanently delete this email after sending it, to save space"
-msgstr ""
+msgstr "Назавжди видаліть це повідомлення після надсилання, щоб заощадити місце"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image
@@ -2448,7 +2449,7 @@ msgid ""
 "Policy to receive emails for new messages pushed to your personal Inbox:\n"
 "- Never: no emails are sent\n"
 "- All Messages: for every notification you receive in your Inbox"
-msgstr ""
+msgstr "Політика для отримання електронних листів для нових повідомлень, що надсилаються до вашої особистої папки \"Вхідні\":\n- Ніколи: не надсилаються електронні листи\n- Усі повідомлення: для кожного сповіщення, яке ви отримуєте в папці \"Вхідні\""
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -2529,7 +2530,7 @@ msgstr "Посилання"
 #: model:ir.model.fields,field_description:mail.field_mail_message_res_id
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_res_id
 msgid "Related Document ID"
-msgstr ""
+msgstr "ID відповідного документа"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_model
@@ -2560,7 +2561,7 @@ msgstr "Поле зв'язку"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove the contextual action to use this template on related documents"
-msgstr ""
+msgstr "Видаліть контекстну дію, щоб використовувати цей шаблон у відповідних документах"
 
 #. module: mail
 #. openerp-web
@@ -2667,7 +2668,7 @@ msgstr "Пошук груп"
 msgid ""
 "Select target field from the related document model.\n"
 "If it is a relationship field you will be able to select a target field at the destination of the relationship."
-msgstr ""
+msgstr "Виберіть цільове поле з відповідної моделі документа.\nЯкщо це поле відносин, ви зможете обрати цільове поле в пункті призначення."
 
 #. module: mail
 #: selection:mail.channel,public:0
@@ -2725,7 +2726,7 @@ msgstr "Надіслати повідомлення через ел. прошт�
 msgid ""
 "Sender address (placeholders may be used here). If not set, the default "
 "value will be the author's email alias if configured, or email address."
-msgstr ""
+msgstr "Адреса відправника (заповнювачі можуть бути використані тут). Якщо не встановлено, значення за замовчуванням буде псевдонімом автора електронної пошти, якщо його налаштовано, або адресу електронної пошти."
 
 #. module: mail
 #. openerp-web
@@ -2785,7 +2786,7 @@ msgstr "Дія бічної панелі"
 msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
-msgstr ""
+msgstr "Дія на бічній панелі, щоби зробити цей шаблон доступним для записів відповідної моделі документів"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_ref_ir_value
@@ -2929,7 +2930,7 @@ msgstr "Шаблони"
 msgid ""
 "The email address associated with this group. New emails received will "
 "automatically create new topics."
-msgstr ""
+msgstr "Електронна адреса, пов'язана з цією групою. Нові отримані електронні листи будуть автоматично створювати нові теми."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
@@ -2992,7 +2993,7 @@ msgstr ""
 msgid ""
 "The values displayed hereunder are informative. When sending the email, the values\n"
 "                                will be taken from the email template."
-msgstr ""
+msgstr "Значення, наведені нижче, є інформативними. При відправленні повідомлення електронної пошти, цінність\nбуде взято із шаблону електронної пошти."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_image
@@ -3138,7 +3139,7 @@ msgstr "Відписатися"
 #: sql_constraint:mail.alias:0
 msgid ""
 "Unfortunately this email alias is already used, please choose a unique one"
-msgstr ""
+msgstr "На жаль, цей псевдонім електронної пошти вже використовується, будь ласка, виберіть унікальний"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_message_unread
@@ -3224,7 +3225,7 @@ msgstr "Використовувати шаблон"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_sequence
 msgid "Used to order subtypes."
-msgstr ""
+msgstr "Використовується для замовлення підтипів."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -3252,7 +3253,7 @@ msgstr "Перегляд"
 msgid ""
 "Warning! \n"
 " If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove this follower ?"
-msgstr ""
+msgstr "УВАГА!\nЯкщо ви видалите підписника, йому не буде повідомлено про будь-який електронний лист чи обговорення в цьому документі. Ви дійсно хочете вилучити цього підписника?"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_sub_model_object_field
@@ -3260,7 +3261,7 @@ msgstr ""
 msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
-msgstr ""
+msgstr "Коли поле відносин вибирається як перше поле, це поле дозволяє вибрати цільове поле в межах моделі цільового документа (субмодель)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_sub_object
@@ -3268,12 +3269,12 @@ msgstr ""
 msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
-msgstr ""
+msgstr "Коли поле взаємодії вибирається як перше поле, в цьому полі відображається модель документа, до якої відноситься зв'язок."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_is_log
 msgid "Whether the message is an internal note (comment mode only)"
-msgstr ""
+msgstr "Чи повідомлення є внутрішньою нотаткою (лише для режиму коментарів)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -3315,7 +3316,7 @@ msgstr "Ви можете позначити будь яке повідомле�
 msgid ""
 "You cannot create a new user from here.\n"
 " To create new user please go to configuration panel."
-msgstr ""
+msgstr "Ви не можете створити нового користувача звідси.\nЩоб створити нового користувача, перейдіть на панель налаштування."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:125
@@ -3323,7 +3324,7 @@ msgstr ""
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
-msgstr ""
+msgstr "Ви не можете видалити ці групи, тому що інші групи потрібні для всієї групи компаній."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:315
@@ -3346,7 +3347,7 @@ msgstr "Вас запрошено до:"
 msgid ""
 "You may attach files to this template, to be added to all emails created "
 "from this template"
-msgstr ""
+msgstr "Ви можете долучити файли до цього шаблону, щоб вони додавалися до всіх листів, створених за цим шаблоном"
 
 #. module: mail
 #. openerp-web
@@ -3360,7 +3361,7 @@ msgstr "Ви відписалися від <b>%s</b>."
 msgid ""
 "Your template does not defined the email address of the sender. Please "
 "update your template."
-msgstr ""
+msgstr "Ваш шаблон не визначає адресу електронної пошти відправника. Будь ласка, оновіть свій шаблон."
 
 #. module: mail
 #: code:addons/mail/models/ir_actions.py:32
@@ -3433,7 +3434,7 @@ msgstr "згадування позначені як прочитані"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_general_configuration_mail_alias_domain
 msgid "mycompany.odoo.com"
-msgstr ""
+msgstr "mycompany.odoo.com"
 
 #. module: mail
 #. openerp-web
@@ -3458,7 +3459,7 @@ msgstr "publisher_warranty.contract"
 #. module: mail
 #: model:mail.channel,name:mail.channel_3
 msgid "rd"
-msgstr ""
+msgstr "rd"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
