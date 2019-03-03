@@ -41,12 +41,8 @@ msgstr "# Verkooporders"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
-msgid ""
-"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
-msgstr ""
-"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
+msgid "${(object.name or '').replace('/','_')}"
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -530,6 +526,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Pay"
 msgstr "Accepteer &amp; Betaal"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Accept and sign online"
+msgstr "Accepteer en onderteken online"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -1471,6 +1472,11 @@ msgid "Forbidden values on non-accountable sale order line"
 msgstr "Ontbrekende verplichte velden op niet facturabele verkooporderregel."
 
 #. module: sale
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "Free sign up"
+msgstr "Gratis registratie"
+
+#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
 msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
@@ -1743,7 +1749,7 @@ msgstr "Te factureren regels"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines (deduct down payments)"
-msgstr "Factureerbare regels (trek aanbetalingen af)"
+msgstr "Facturabele regels (trek aanbetalingen af)"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -1806,6 +1812,12 @@ msgid "Invoicing"
 msgstr "Facturatie"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Invoicing Address"
+msgstr "Factuuradres"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
 msgid "Invoicing Policy"
@@ -2210,6 +2222,11 @@ msgid "Office chairs can harm your floor: protect it."
 msgstr "Kantoorstoelen kunnen uw vloer beschadigingen: Bescherm deze."
 
 #. module: sale
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "On invitation"
+msgstr "Op uitnodiging"
+
+#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 #: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -2470,6 +2487,11 @@ msgstr "Betaal nu"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay now"
 msgstr "Betaal nu"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Pay online"
+msgstr "Betaal online"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3274,6 +3296,14 @@ msgid "Sell and purchase products in different units of measure"
 msgstr "Verkoop en koop producten in verschillende maateenheden"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
+msgstr ""
+"Verkoop digitale producten - bied downloadbare inhoud aan op uw "
+"klantenportaal"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr "Verkoop producten per meervoud van eenheid # per verpakking"
@@ -3407,6 +3437,11 @@ msgstr "Toon prijs & korting aan klant"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show standard terms &amp; conditions on orders"
 msgstr "Toon standaard de algemene voorwaarden op orders"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Sign and pay online"
+msgstr "Accepteer en betaal online"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
@@ -3756,7 +3791,7 @@ msgid ""
 "There is no invoiceable line. If a product has a Delivered quantities "
 "invoicing policy, please make sure that a quantity has been delivered."
 msgstr ""
-"Er is geen factureerbare regel. Als een product een factureringsbeleid "
+"Er is geen facturabele regel. Als een product een factureringsbeleid "
 "Geleverde hoeveelheden heeft, moet u ervoor zorgen dat een hoeveelheid is "
 "geleverd."
 

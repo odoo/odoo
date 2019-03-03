@@ -315,6 +315,11 @@ msgid ""
 "                        documents to your project.\n"
 "                    </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        I documenti sono allegati alle attività e ai problemi del tuo progetto.</p><p>\n"
+"                        Invia messaggi o registra note interne con allegati per collegare\n"
+"                        documenti al tuo progetto.\n"
+"                    </p>"
 
 #. module: project
 #: code:addons/project/models/project.py:149
@@ -564,6 +569,9 @@ msgid ""
 "                                You can define here labels that will be displayed for the state instead\n"
 "                                of the default labels."
 msgstr ""
+"In ogni fase i dipendenti possono bloccare o rendere l'attività/il problema pronto per la fase successiva.\n"
+"                                È possibile definire qui le etichette che verranno visualizzate per lo stato invece\n"
+"                                delle etichette predefinite."
 
 #. module: project
 #. openerp-web
@@ -601,6 +609,9 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Modificare automaticamente lo stato kanban quando il cliente formula un commento per questa fase.\n"
+" * Un commento positivo da parte del cliente aggiornerà lo stato kanban a \"pronto per la nuova fase\" (punto verde).\n"
+" * Un commento negativo imposterà lo stato kanban su \"bloccato\" (punto rosso).\n"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -613,7 +624,7 @@ msgstr "Media"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:35
 #, python-format
 msgid "Backlog"
-msgstr ""
+msgstr "Arretrato"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -770,6 +781,10 @@ msgid ""
 "designs to the task, so that information flow from designers to the workers "
 "who print the t-shirt. Organize priorities amongst orders %s using the icon."
 msgstr ""
+"Comunicare con i clienti sull'attività utilizzando la posta elettronica. "
+"Allegare i disegni del logo all'attività, in modo che le informazioni "
+"scorrano dai designer ai lavoratori che stampano le magliette. Organizzare "
+"le priorità tra gli ordini %s utilizzando l'icona."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -1006,6 +1021,10 @@ msgid ""
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
 msgstr ""
+"Definire le fasi che verranno utilizzate nel progetto dalla\n"
+"                creazione dell'attività fino alla chiusura dell'attività o del problema.\n"
+"                Utilizzerai queste fasi per tenere traccia dei progressi nella\n"
+"                risoluzione di un'attività o di un problema."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1051,7 +1070,7 @@ msgstr "Digest"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:38
 #, python-format
 msgid "Digital Marketing"
-msgstr ""
+msgstr "Marketing digitale"
 
 #. module: project
 #. openerp-web
@@ -1121,13 +1140,15 @@ msgid ""
 "Edit project's stages and set an email template on the stages on which you "
 "want to activate the rating."
 msgstr ""
+"Modificare le fasi del progetto e impostare un modello di email sulle fasi "
+"in cui si desidera attivare la valutazione."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:39
 #, python-format
 msgid "Editing"
-msgstr ""
+msgstr "Modifica"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_from
@@ -1360,6 +1381,12 @@ msgid ""
 "   if website is activated, portal users may see project, tasks or issues followed by\n"
 "   them or by someone of their company\n"
 msgstr ""
+"Determina la visibilità delle attività o dei problemi che dipendono dal progetto in corso:\n"
+"- Solo su invito: i dipendenti vedono solo i progetti, le attività o i problemi che seguono;\n"
+"- Visibile da tutti i dipendenti: i dipendenti possono vedere tutti i progetti, le attività e i problemi;\n"
+"- Visibile dai seguenti clienti: i dipendenti vedono tutto;\n"
+"   se il sito web è attivato, gli utenti del portale possono vedere i progetti, le attività e i problemi che loro o un utente\n"
+"   appartenente alla loro azienda seguono.\n"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1375,12 +1402,17 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Come conoscere l'opinione di un cliente?\n"
+"- Valutazione quando si verifica un cambiamento di fase: una email viene inviata quando un'attività o un problema cambia di fase\n"
+"- Valutazione periodica: una email viene inviata regolarmente\n"
+"\n"
+"Non dimenticare di configurare i modelli di email per le fasi in cui si desidera avere un commento del cliente."
 
 #. module: project
 #: code:addons/project/models/project.py:808
 #, python-format
 msgid "I take it"
-msgstr ""
+msgstr "Me ne occupo io"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__id
@@ -1431,6 +1463,8 @@ msgid ""
 "If set an email will be sent to the customer when the task or issue reaches "
 "this step."
 msgstr ""
+"Se questa opzione è attiva, una email verrà inviata al cliente quando "
+"l'attività o il problema raggiunge questa fase."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -1439,6 +1473,9 @@ msgid ""
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
 msgstr ""
+"Se questa opzione è attivata e se il progetto è configurato per una "
+"\"Valutazione quando si verifica un cambiamento di fase\", una email verrà "
+"inviata al cliente quando l'attività raggiungerà questa fase. "
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -1562,7 +1599,7 @@ msgstr "Stato Kanban"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__kanban_state_label
 msgid "Kanban State Label"
-msgstr ""
+msgstr "Etichetta di stato kanban"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_done
@@ -1609,7 +1646,7 @@ msgstr "Ultimo aggiornamento fase"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
 msgid "Last Updated On"
-msgstr ""
+msgstr "Ultimo aggiornamento il"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__write_uid
@@ -1752,7 +1789,7 @@ msgstr "I miei Preferiti"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Followed Tasks"
-msgstr "Le mie attività seguite"
+msgstr "Attività seguite"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -1979,7 +2016,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
 msgid "Open Tasks"
-msgstr ""
+msgstr "Aprire attività"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_force_thread_id
@@ -2029,6 +2066,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Sostituire il valore predefinito visualizzato per lo stato \"bloccato\" "
+"nella selezione kanban, quando l'attività o il problema è in questa fase."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_done
@@ -2037,6 +2076,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Sostituire il valore predefinito visualizzato per lo stato \"completato\" "
+"nella selezione kanban, quando l'attività o il problema è in questa fase."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_normal
@@ -2045,6 +2086,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Sostituire il valore predefinito visualizzato per lo stato \"normale\" nella"
+" selezione kanban, quando l'attività o il problema è in questa fase."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_user_id
@@ -2056,7 +2099,7 @@ msgstr "Proprietario"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:64
 #, python-format
 msgid "Page Ideas"
-msgstr ""
+msgstr "Idee di pagina"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_model_id
@@ -2093,6 +2136,8 @@ msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
 msgstr ""
+"Percentuale di valutazioni positive negli ultimi 30 giorni. I dettagli delle"
+" valutazioni possono essere visualizzati nel menu Altro."
 
 #. module: project
 #: selection:project.project,rating_status:0
@@ -2364,7 +2409,7 @@ msgstr "Motivo della valutazione"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of ${object.name}"
-msgstr ""
+msgstr "Ricevimento di ${object.name}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_force_thread_id
@@ -2567,7 +2612,7 @@ msgstr "Sviluppo di software"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:29
 #, python-format
 msgid "Specifications"
-msgstr ""
+msgstr "Specificazioni"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2911,19 +2956,19 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
 msgid "There are no projects."
-msgstr "Non c'è nessun progetto."
+msgstr "Nessun progetto."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
-msgstr "Non c'è nessuna attività."
+msgstr "Nessuna attività."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/xml/project.xml:11
 #, python-format
 msgid "There is no available image to be set as cover."
-msgstr "Non c'è nessuna immagine disponibile per la copertina."
+msgstr "Nessuna immagine disponibile per la copertina."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
@@ -2950,14 +2995,14 @@ msgstr "Queste persone riceveranno email."
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:51
 #, python-format
 msgid "This Month"
-msgstr "Questo Mese"
+msgstr "Questo mese"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:51
 #, python-format
 msgid "This Week"
-msgstr "Questa Settimana"
+msgstr "Questa settimana"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree

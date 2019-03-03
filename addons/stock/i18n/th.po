@@ -12,7 +12,7 @@
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
 # Tapakorn Kittirudeekul <bossmonfire@gmail.com>, 2018
 # monchai7 <montchye@gmail.com>, 2018
-# Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2018
+# Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2018\n"
+"Last-Translator: Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2019\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -594,7 +594,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "As soon as possible"
-msgstr ""
+msgstr "เร็วที่สุดเท่าที่จะทำได้"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -871,7 +871,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Check Availability"
-msgstr ""
+msgstr "สำรองสินค้า"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_packages
@@ -2326,7 +2326,7 @@ msgstr "การขนส่งขาเข้า"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Initial Demand"
-msgstr ""
+msgstr "ความต้องการเริ่มต้น"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:444
@@ -4295,7 +4295,7 @@ msgstr ""
 #. module: stock
 #: sql_constraint:stock.warehouse.orderpoint:0
 msgid "Qty Multiple must be greater than or equal to zero."
-msgstr ""
+msgstr "จำนวน multiple ต้องมากกว่าหรือเท่ากับ 0"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:445
@@ -4667,12 +4667,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree
 #: selection:stock.package_level,state:0
 msgid "Reserved"
-msgstr ""
+msgstr "สำรองแล้ว"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__reserved_quantity
 msgid "Reserved Quantity"
-msgstr ""
+msgstr "ปริมาณที่สำรองไว้"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__module_procurement_jit
@@ -5069,7 +5069,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_type
 msgid "Shipping Policy"
-msgstr ""
+msgstr "นโยบายการจัดส่ง"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5124,7 +5124,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_reserved
 msgid "Show Reserved"
-msgstr ""
+msgstr "แสดงสำรอง"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__show_resupply
@@ -5613,6 +5613,8 @@ msgid ""
 "The procurement quantity will be rounded up to this multiple.  If it is 0, "
 "the exact quantity will be used."
 msgstr ""
+"จำนวนจัดซื้อจะถูกปัดขึ้นเพื่อให้หารด้วยจำนวน multiple ลงตัว หากเป็น 0 "
+"จะไม่มีการปัดขึ้น"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -6430,7 +6432,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "When all products are ready"
-msgstr ""
+msgstr "เมื่อสินค้าทุกอย่างพร้อม"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable

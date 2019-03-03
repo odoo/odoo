@@ -16,8 +16,8 @@
 # Niccolò Lubello <nlubello@gmail.com>, 2018
 # efraimbiffi <eab@odoo.com>, 2018
 # Martin Trigaux, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Léonie Bouchat <lbo@odoo.com>, 2019
 # Paolo Valier, 2019
 # 
 msgid ""
@@ -1005,9 +1005,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
-"Pagamento manuale: puoi essere pagato in contanti, con assegni o con qualsiasi altro metodo esterno a Odoo.\n"
-"Pagamento elettronico: Puoi essere pagato automaticamente tramite un metodo di pagamento che richiede una transazione su una carta registrata dal cliente al momento dell'acquisto o della registrazione online (gettone di pagamento).\n"
-"Deposito Raggruppato: Incassa più assegni clienti contemporaneamente generando un deposito raggruppato da inviare alla tua banca. Quando inserisci l'estratto conto in Odoo, puoi riconciliare la transazione e il deposito raggruppato. Attiva questa opzione nelle impostazioni. "
+"Manuale: incasso contante, assegno o altro metodo al di fuori di Odoo.\n"
+"Elettronico: incasso automatico attraverso un sistema di pagamento. Viene richiesta una transazione su una carta salvata dal cliente durante un acquisto o una sottoscrizione (token di pagamento).\n"
+"Versamento raggruppato: raccolta di vari assegni cliente e generazione di un unico versamento da inviare alla banca. Durante l'elaborazione degli estratti conto in Odoo si consiglia di riconciliare la transazione con il versamento raggruppato. Abilitare questa opzione nelle impostazioni."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_medium
@@ -1021,6 +1021,9 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"Immagine del fornitore, di dimensione media, automaticamente ridimensionata "
+"a 128x128 px con rapporto di forma conservato. Usare questo campo nelle "
+"viste modulo o in alcune viste kanban."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state_message
@@ -1059,6 +1062,8 @@ msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
 msgstr ""
+"Messaggio visualizzato se l'ordine viene effettuato con successo dopo "
+"l'elaborazione del pagamento."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pending_msg
@@ -1066,6 +1071,8 @@ msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
 msgstr ""
+"Messaggio visualizzato se l'ordine è in attesa dopo l'elaborazione del "
+"pagamento."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -1129,7 +1136,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:310
 #, python-format
 msgid "No payment method selected"
-msgstr ""
+msgstr "Nessun metodo di pagamento selezionato"
 
 #. module: payment
 #: selection:res.company,payment_acquirer_onboarding_state:0
@@ -1458,7 +1465,7 @@ msgstr "Selezionare un metodo di pagamento."
 #: code:addons/payment/static/src/js/payment_form.js:311
 #, python-format
 msgid "Please select the option to add a new payment method."
-msgstr ""
+msgstr "Selezionare per aggiungere un nuovo metodo di pagamento."
 
 #. module: payment
 #: model_terms:payment.acquirer,post_msg:payment.payment_acquirer_custom

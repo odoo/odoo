@@ -57,14 +57,14 @@ msgstr "${(object.name or '').replace('/','-')}"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "${object.company_id.name} Factuur (Ref ${object.number or 'nvt'})"
+msgstr "${object.company_id.name} Factuur (Ref ${object.number or 'n/b'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} Betalingsbewijs (Ref ${object.name or 'nvt' })"
+"${object.company_id.name} Betalingsbewijs (Ref ${object.name or 'n/b' })"
 
 #. module: account
 #: code:addons/account/models/account.py:937

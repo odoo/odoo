@@ -3,11 +3,11 @@
 # * sale_stock
 # 
 # Translators:
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2018
 # Martin Trigaux, 2018
 # nasaaskii <nasaaskii@gmail.com>, 2018
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
 # Otgonbayar.A <gobi.mn@gmail.com>, 2018
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Otgonbayar.A <gobi.mn@gmail.com>, 2018\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,7 +90,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
 msgid "<span class=\"o_stat_text\">Sold</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Зарагдсан</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -117,6 +117,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Барааны хэрэглэгчийн гарт хүргэсэн тоо хэмжээг тооцоолох аргыг дараах байдлаар тохируулж болно:\n"
+"  - Гараар: захиалгын мөр дээр хүргэсэн тоог гараар хөтлөх\n"
+"  - Зардлын тайлангаас тооцох: хүргэсэн тоо нь батлагдсан зардлын тайлангаас тодорхойлогдох\n"
+"  - Цагийн хуудас: захиалгын мөрт холбогдсон төслийн даалгаврын нийт зарцуулсан цагаар хэмжигдэх\n"
+"  - Барааны хөдөлгөөн: агуулахын баримт батлагдах үед хүргэсэн тоо автоматаар хөтлөгдөх\n"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -126,7 +131,7 @@ msgstr "Борлуулалтын Дараах"
 #. module: sale_stock
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Зардлын тайлангаас тооцох"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -156,7 +161,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Тохируулга"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -207,13 +212,13 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr ""
+msgstr "Борлуулалтын захиалганд тохиосон саатал:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s):"
-msgstr ""
+msgstr "Саатал:"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
@@ -296,7 +301,7 @@ msgstr "Гараар"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Manual actions may be needed."
-msgstr ""
+msgstr "Гар ажиллагаа шаардагдаж магадгүй."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
@@ -322,12 +327,12 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Хүргэгдсэн тоог хөтлөх арга"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "Худалдан авалтын орлогыг огноог төлөвлөхдөө нөөц хоногийг"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:280
@@ -415,7 +420,7 @@ msgstr "Борлуулалтын захиалгын тоо"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Analysis Report"
-msgstr ""
+msgstr "Борлуулалтын шинжилгээ тайлан"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
@@ -481,7 +486,7 @@ msgstr "Тээвэрлэлтийн Бодлого"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
 msgid "Sold in the last 365 days"
-msgstr ""
+msgstr "Сүүлийн 365 хоногт зарагдсан"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -497,7 +502,7 @@ msgstr "Барааны Хөдөлгөөнүүд"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Агуулахын дүрэм"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
@@ -507,7 +512,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "Агуулахын дүрмийн тайлан"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -585,7 +590,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "cancelled"
-msgstr ""
+msgstr "цуцлагдсан"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -601,7 +606,7 @@ msgstr "ын"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "ordered instead of"
-msgstr ""
+msgstr "оронд нь захиалагдсан"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking

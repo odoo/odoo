@@ -6,6 +6,7 @@
 # prassanna john paul augustin <prasaugus@gmail.com>, 2019
 # Abul Hassan M I <miabulhassan@gmail.com>, 2019
 # Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>, 2019
+# Alagappan Karthikeyan <me@karthik.sg>, 2019
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>, 2019\n"
+"Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
 "Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,9 +34,7 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
-msgid ""
-"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
+msgid "${(object.name or '').replace('/','_')}"
 msgstr ""
 
 #. module: sale
@@ -460,9 +459,14 @@ msgid "Accept &amp; Pay"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Accept and sign online"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "அணுகல் எச்சரிக்கை"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__qty_delivered_method
@@ -477,7 +481,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__acc_number
 msgid "Account Number"
-msgstr ""
+msgstr "கணக்கு எண்"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__deposit_account_id
@@ -487,7 +491,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "செயல் தேவை"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_ids
@@ -513,7 +517,7 @@ msgstr "சேர்"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a note"
-msgstr ""
+msgstr "ஒரு குறிப்பைச் சேர்க்கவும்"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -583,7 +587,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__analytic_account_id
 msgid "Analytic Account"
-msgstr ""
+msgstr "பகுப்பாய்வு கணக்கு"
 
 #. module: sale
 #: selection:sale.order.line,qty_delivered_method:0
@@ -598,7 +602,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_tag_ids
 msgid "Analytic Tags"
-msgstr ""
+msgstr "பகுப்பாய்வு குறிச்சொற்கள்"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_line_ids
@@ -632,7 +636,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "இணைப்பு எண்ணிக்கை"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__attribute_value_id
@@ -725,7 +729,7 @@ msgstr "ரத்து"
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "ரத்து"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -770,12 +774,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Close"
-msgstr ""
+msgstr "நெருக்கமான"
 
 #. module: sale
 #: selection:res.company,sale_quotation_onboarding_state:0
 msgid "Closed"
-msgstr ""
+msgstr "மூடப்பட்ட"
 
 #. module: sale
 #: selection:product.attribute,type:0
@@ -791,7 +795,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_payment_acquirer__so_reference_type
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Communication"
-msgstr ""
+msgstr "தொடர்பாடல்"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
@@ -845,7 +849,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "கட்டமைப்பு அமைப்புகள்"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_config
@@ -857,7 +861,7 @@ msgstr "கட்டமைப்பு"
 #: code:addons/sale/static/src/js/product_configurator_controller.js:125
 #, python-format
 msgid "Configure"
-msgstr ""
+msgstr "கட்டமைக்கவும்"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -880,7 +884,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Confirm"
-msgstr ""
+msgstr "உறுதிப்படுத்தவும்"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
@@ -974,7 +978,7 @@ msgstr ""
 #. module: sale
 #: model:product.attribute.value,name:sale.product_attribute_value_7
 msgid "Custom"
-msgstr ""
+msgstr "விருப்ப"
 
 #. module: sale
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
@@ -993,7 +997,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Customer"
-msgstr ""
+msgstr "வாடிக்கையாளர்"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__auth_signup_uninvited
@@ -1250,14 +1254,14 @@ msgstr "காட்சி பெயர்"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
 msgid "Display Type"
-msgstr ""
+msgstr "காட்சி வகை"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_order_confirmation_state:0
 #: selection:res.company,sale_onboarding_sample_quotation_state:0
 #: selection:res.company,sale_quotation_onboarding_state:0
 msgid "Done"
-msgstr ""
+msgstr "முடிந்தது"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:87
@@ -1321,7 +1325,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
 msgid "Expected Date"
-msgstr ""
+msgstr "எதிர்பார்க்கப்படுகிறது தேதி"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_template__expense_policy
@@ -1355,21 +1359,26 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "பின்பற்றுபவர்கள்"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "பின்தொடர்பவர்கள் (சேனல்கள்)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "பின்பற்றுபவர்கள் (பங்குதாரர்கள்)"
 
 #. module: sale
 #: sql_constraint:sale.order.line:0
 msgid "Forbidden values on non-accountable sale order line"
+msgstr ""
+
+#. module: sale
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "Free sign up"
 msgstr ""
 
 #. module: sale
@@ -1418,7 +1427,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Group By"
-msgstr ""
+msgstr "மூலம் குழு"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_value__html_color
@@ -1461,17 +1470,17 @@ msgstr "ID"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "சோதனை செய்தால் புதிய செய்திகளுக்கு உங்கள் கவனம் தேவை."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "சரிபார்க்கப்பட்டால், புதிய செய்திகளுக்கு உங்கள் கவனம் தேவை."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "சரிபார்க்கப்பட்டால், சில செய்திகளுக்கு ஒரு பிழை ஏற்பட்டது."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1487,6 +1496,8 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
+"எங்கள் சேவையகத்தில் உங்கள் கட்டண தகவலை நாங்கள் சேமித்தால், சந்தா செலுத்தும் "
+"தானாகவே மாறும்."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_image
@@ -1495,6 +1506,9 @@ msgid ""
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
 msgstr ""
+"தயாரிப்பு மாறுபாட்டின் படம் (தவறானால் தயாரிப்பு வகைகளின் பெரிய அளவிலான "
+"படம்). இது 1024x1024px படமாக தானாக மறுஅளவாக்குகிறது, அதே போல காப்பீட்டு "
+"விகிதம் பாதுகாக்கப்படுகிறது."
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:89
@@ -1575,7 +1589,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "விலைப்பட்டியல் வரி"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_lines
@@ -1690,6 +1704,12 @@ msgid "Invoicing"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Invoicing Address"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
 msgid "Invoicing Policy"
@@ -1718,7 +1738,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "பின்பற்றுபவர்"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_downpayment
@@ -1848,7 +1868,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "முக்கிய இணைப்பு"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1868,7 +1888,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Manual"
-msgstr ""
+msgstr "கையேடு"
 
 #. module: sale
 #: selection:product.template,service_type:0
@@ -1891,7 +1911,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "செய்தி வழங்கல் பிழை"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn_msg
@@ -1906,12 +1926,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "செய்திகள்"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__manual_name
 msgid "Method"
-msgstr ""
+msgstr "செய்முறை"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_method
@@ -1965,7 +1985,7 @@ msgstr ""
 #: selection:sale.report,state:0
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "புதிய"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
@@ -1990,7 +2010,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "No"
-msgstr ""
+msgstr "இல்லை"
 
 #. module: sale
 #: selection:product.template,sale_line_warn:0
@@ -2024,7 +2044,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: selection:sale.order.line,display_type:0
 msgid "Note"
-msgstr ""
+msgstr "குறிப்பு"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -2035,7 +2055,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "செயல்கள் எண்ணிக்கை"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__customer_lead
@@ -2047,17 +2067,17 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "பிழை எண்ணிக்கை"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "நடவடிக்கை தேவைப்படும் செய்திகளின் எண்ணிக்கை"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "விநியோக பிழை கொண்ட செய்திகளின் எண்ணிக்கை"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_count
@@ -2072,11 +2092,16 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "படிக்காத செய்திகளின் எண்ணிக்கை"
 
 #. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
 msgid "Office chairs can harm your floor: protect it."
+msgstr ""
+
+#. module: sale
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "On invitation"
 msgstr ""
 
 #. module: sale
@@ -2310,7 +2335,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:277
 #, python-format
 msgid "Pay & Confirm"
-msgstr ""
+msgstr "பணம் செலுத்து & உறுதிப்படுத்துக"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2321,17 +2346,22 @@ msgstr ""
 #: code:addons/sale/models/payment.py:160
 #, python-format
 msgid "Pay Now"
-msgstr ""
+msgstr "இப்போது செலுத்த"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay now"
+msgstr "இப்போது செலுத்த"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Pay online"
 msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay with"
-msgstr ""
+msgstr "பணம் செலுத்துங்கள்"
 
 #. module: sale
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
@@ -2377,7 +2407,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__payment_method
 msgid "Payment Method"
-msgstr ""
+msgstr "கொடுப்பனவு முறை"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__reference
@@ -2392,7 +2422,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "செலுத்துதல் பரிவர்த்தனை"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -2436,7 +2466,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Posted"
-msgstr ""
+msgstr "வெளியிட்டது"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2513,7 +2543,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Print"
-msgstr ""
+msgstr "அச்சு"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
@@ -2563,7 +2593,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_report__categ_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Product Category"
-msgstr ""
+msgstr "தயாரிப்பு வகை"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_image
@@ -2571,7 +2601,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure_optional_products
 msgid "Product Image"
-msgstr ""
+msgstr "தயாரிப்பு படம்"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__product_qty
@@ -2771,7 +2801,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:104
 #, python-format
 msgid "Reference"
-msgstr ""
+msgstr "குறிப்பு"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
@@ -2798,7 +2828,7 @@ msgstr ""
 #: model:ir.ui.menu,name:sale.menu_sale_report
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reporting"
-msgstr ""
+msgstr "அறிக்கையிடல்"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_signature
@@ -2883,7 +2913,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Sales"
-msgstr ""
+msgstr "விற்பனை"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -2945,7 +2975,7 @@ msgstr ""
 #: model:ir.model,name:sale.model_sale_order_line
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn
 msgid "Sales Order Line"
-msgstr ""
+msgstr "விற்பனை வரிசை வரிசை"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line__sale_line_ids
@@ -3081,7 +3111,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order.line,display_type:0
 msgid "Section"
-msgstr ""
+msgstr "பிரிவு"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3113,10 +3143,19 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"\"எச்சரிக்கை\" விருப்பத்தைத் தேர்ந்தெடுப்பது, செய்தியுடன் பயனரை அறிவிக்கும்,"
+" \"தடுப்பு செய்தி\" என்பதைத் தேர்ந்தெடுப்பதன் மூலம் ஒரு விதிவிலக்கு எறிந்து,"
+" ஓட்டம் தடுக்கும். செய்தி அடுத்த துறையில் எழுதப்பட வேண்டும்."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
 msgstr ""
 
 #. module: sale
@@ -3234,6 +3273,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
+"அடுத்த நடவடிக்கை தேதி இன்றைய தினம் கொண்டிருக்கும் எல்லா பதிவுகளையும் காட்டுக"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3248,6 +3288,11 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show standard terms &amp; conditions on orders"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Sign and pay online"
 msgstr ""
 
 #. module: sale
@@ -3293,7 +3338,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__origin
 msgid "Source Document"
-msgstr ""
+msgstr "மூல ஆவணம்"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_product_email_template
@@ -3327,7 +3372,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_report__state
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Status"
-msgstr ""
+msgstr "நிலைமை"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_state
@@ -3397,7 +3442,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "UX நோக்கம் தொழில்நுட்ப துறை."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3670,7 +3715,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,activity_state:0
 msgid "Today"
-msgstr ""
+msgstr "இன்று"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -3686,7 +3731,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Total"
-msgstr ""
+msgstr "மொத்த"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
@@ -3713,7 +3758,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__transaction_ids
 msgid "Transactions"
-msgstr ""
+msgstr "பரிவர்த்தனைகள்"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute__type
@@ -3758,7 +3803,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Unit of Measure"
-msgstr ""
+msgstr "அளவீட்டு அலகு"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_categ_form_action
@@ -3790,12 +3835,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_unread
 msgid "Unread Messages"
-msgstr ""
+msgstr "படிக்காத செய்திகள்"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "படிக்காத செய்திகள்"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_untaxed
@@ -3892,7 +3937,7 @@ msgstr ""
 #: selection:product.template,sale_line_warn:0
 #: selection:res.partner,sale_warn:0
 msgid "Warning"
-msgstr ""
+msgstr "எச்சரிக்கை"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1417
@@ -3914,12 +3959,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "இணைய செய்திகள்"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "வலைத்தள தகவல்தொடர்பு வரலாறு"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -4058,3 +4103,4 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__amount_by_group
 msgid "type: [(name, amount, base, formated amount, formated base)]"
 msgstr ""
+"வகை: [(பெயர், தொகை, அடிப்படை, வடிவமைக்கப்பட்ட அளவு, வடிவமைக்கப்பட்ட தளம்)]"

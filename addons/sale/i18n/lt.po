@@ -12,11 +12,11 @@
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Arminas Grigonis <arminas@versada.lt>, 2018
-# Silvija Butko <silvija.butko@gmail.com>, 2018
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2018
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2018
 # Eimantas <eimantas@focusate.eu>, 2018
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2019
+# Silvija Butko <silvija.butko@gmail.com>, 2019
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2019
 # Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # 
 msgid ""
@@ -45,12 +45,8 @@ msgstr "# pardavimo užsakymų"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
-msgid ""
-"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
-msgstr ""
-"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
+msgid "${(object.name or '').replace('/','_')}"
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -527,6 +523,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Pay"
 msgstr "Sutikti ir pasirašyti"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Accept and sign online"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -1473,6 +1474,11 @@ msgid "Forbidden values on non-accountable sale order line"
 msgstr "Neleistinos reikšmės neapmokestinamo pardavimo užsakymo eilutėje"
 
 #. module: sale
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "Free sign up"
+msgstr "Nemokama registracija"
+
+#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
 msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
@@ -1810,6 +1816,12 @@ msgid "Invoicing"
 msgstr "Sąskaitos pateikimas"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Invoicing Address"
+msgstr "Sąskaitos faktūros adresas"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
 msgid "Invoicing Policy"
@@ -2211,6 +2223,11 @@ msgid "Office chairs can harm your floor: protect it."
 msgstr "Biuro kėdės gali pažeisti jūsų grindis, apsaugokite jas."
 
 #. module: sale
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "On invitation"
+msgstr "Su pakvietimu"
+
+#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 #: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -2470,6 +2487,11 @@ msgstr "Apmokėti dabar"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay now"
 msgstr "Apmokėti dabar"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Pay online"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3272,6 +3294,14 @@ msgid "Sell and purchase products in different units of measure"
 msgstr "Parduoti ir pirkti produktus skirtingais matavimo vienetais"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
+msgstr ""
+"Parduokite skaitmeninius produktus - suteikite atsisiunčiamą turinį savo "
+"klientų portale"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr "Parduoti produktus po kelis vienetus pakuotėje"
@@ -3406,6 +3436,11 @@ msgstr "Rodyti galutinę kainą ir nuolaidą klientui"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show standard terms &amp; conditions on orders"
 msgstr "Rodyti standartines sąlygas užsakymuose"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Sign and pay online"
+msgstr ""
 
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
