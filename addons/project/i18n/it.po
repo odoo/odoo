@@ -1075,6 +1075,9 @@ msgid ""
 "                                You can define here labels that will be displayed for the state instead\n"
 "                                of the default labels."
 msgstr ""
+"In ogni fase i dipendenti possono bloccare o rendere l'attività/il problema pronto per la fase successiva.\n"
+"                                È possibile definire qui le etichette che verranno visualizzate per lo stato invece\n"
+"                                delle etichette predefinite."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
@@ -1112,7 +1115,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:64
 #, python-format
 msgid "Backlog"
-msgstr ""
+msgstr "Arretrato"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_balance
@@ -1596,6 +1599,10 @@ msgid ""
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
 msgstr ""
+"Definire le fasi che verranno utilizzate nel progetto dalla\n"
+"                creazione dell'attività fino alla chiusura dell'attività o del problema.\n"
+"                Utilizzerai queste fasi per tenere traccia dei progressi nella\n"
+"                risoluzione di un'attività o di un problema."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
@@ -2037,6 +2044,12 @@ msgid ""
 "   if website is activated, portal users may see project, tasks or issues followed by\n"
 "   them or by someone of their company\n"
 msgstr ""
+"Determina la visibilità delle attività o dei problemi che dipendono dal progetto in corso:\n"
+"- Solo su invito: i dipendenti vedono solo i progetti, le attività o i problemi che seguono;\n"
+"- Visibile da tutti i dipendenti: i dipendenti possono vedere tutti i progetti, le attività e i problemi;\n"
+"- Visibile dai seguenti clienti: i dipendenti vedono tutto;\n"
+"   se il sito web è attivato, gli utenti del portale possono vedere i progetti, le attività e i problemi che loro o un utente\n"
+"   appartenente alla loro azienda seguono.\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
@@ -2047,7 +2060,7 @@ msgstr "Ore"
 #: code:addons/project/models/project.py:745
 #, python-format
 msgid "I take it"
-msgstr ""
+msgstr "Me ne occupo io"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_id
@@ -2105,6 +2118,8 @@ msgid ""
 "If set an email will be sent to the customer when the task or issue reaches "
 "this step."
 msgstr ""
+"Se questa opzione è attiva, una email verrà inviata al cliente quando "
+"l'attività raggiunge questa fase."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_active
@@ -2731,6 +2746,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Sostituire il valore predefinito visualizzato per lo stato \"bloccato\" "
+"nella selezione kanban, quando l'attività o il problema è in questa fase."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_done
@@ -2739,6 +2756,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Sostituire il valore predefinito visualizzato per lo stato \"completato\" "
+"nella selezione kanban, quando l'attività o il problema è in questa fase."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_normal
@@ -2747,6 +2766,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Sostituire il valore predefinito visualizzato per lo stato \"normale\" nella"
+" selezione kanban, quando l'attività o il problema è in questa fase."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_user_id
@@ -3033,7 +3054,7 @@ msgstr ""
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of ${object.name}"
-msgstr ""
+msgstr "Ricevimento di ${object.name}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
