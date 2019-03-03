@@ -3,34 +3,36 @@
 # * account_asset
 # 
 # Translators:
-# Gab_Odoo <gab@odoo.com>, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Martin Trigaux, 2017
 # Jan Meyer, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# Ralf Hilgenstock <rh@dialoge.info>, 2017
 # Niki Waibel, 2017
-# Renzo Meister, 2017
-# JackTheHunter <Maximilian.N98@gmail.com>, 2017
-# Anja Funk <anja.funk@afimage.de>, 2017
-# Rudolf Schnapka <rs@techno-flex.de>, 2017
-# Wolfgang Taferner, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
 # Dejan Dinic, 2017
 # Fabian Liesch <fabian.liesch@gmail.com>, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
+# Anja Funk <anja.funk@afimage.de>, 2017
+# Felix Schubert <felix.schubert@go-erp.com>, 2017
+# Renzo Meister, 2017
 # Philipp Hug <philipp@hug.cx>, 2017
+# Rudolf Schnapka <rs@techno-flex.de>, 2017
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
+# Wolfgang Taferner, 2017
+# JackTheHunter <Maximilian.N98@gmail.com>, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2017
+# Gab_Odoo <gab@odoo.com>, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# Martin Trigaux, 2017
 # Bülent Tiknas <btiknas@googlemail.com>, 2017
-# Katharina Moritz <kmo@e2f.com>, 2018
 # e2f <projects@e2f.com>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:14+0000\n"
+"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -130,7 +132,7 @@ msgstr "Betrag"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_depreciation_value
 msgid "Amount of Depreciation Lines"
-msgstr "Betrag der Abschreibungszeilen"
+msgstr "Summe der Abschreibungszeilen"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_value
@@ -167,7 +169,7 @@ msgstr "Anlagenkategorie"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
 msgid "Asset Durations to Modify"
-msgstr "Lebensdauer der Anlage verändern"
+msgstr "Abschreibungsdauer der Anlage verändern"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
@@ -221,7 +223,7 @@ msgstr "Anlage erzeugt"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
 msgid "Asset depreciation line"
-msgstr "Abschreibungszeilen der Anlage"
+msgstr "Abschreibungszeile der Anlage"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:318
@@ -275,17 +277,17 @@ msgstr "Anlagengüter - Entwurf und Offen"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Assets in draft state"
-msgstr "Anlagen im Entwurf"
+msgstr "Abschreibungen im Entwurf"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Assets in running state"
-msgstr "Anlage 'aktiv'"
+msgstr "aktive Abschreibungen"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_open_asset
 msgid "Auto-confirm Assets"
-msgstr "Anlagen automatisch bestätigen"
+msgstr "Abschreibungen automatisch bestätigen"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -311,8 +313,8 @@ msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
 msgstr ""
-"Aktivieren, wenn die Anlage dieser Kategorie automatisch mit der Verbuchung "
-"der Rechnung bestätigt werden soll."
+"Aktivieren, wenn die Abschreibung einer Anlage in dieser Kategorie "
+"automatisch mit der Verbuchung der Rechnung bestätigt werden soll."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_group_entries
@@ -357,7 +359,7 @@ msgstr ""
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
 msgid "Close"
-msgstr "Schließen"
+msgstr "Abschliessen"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
@@ -381,7 +383,7 @@ msgstr "Berechnungsmethode"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
 msgid "Compute Asset"
-msgstr "Anlagen berechnen"
+msgstr "Abschreibung berechnen"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
