@@ -4,10 +4,9 @@
 # 
 # Translators:
 # Otgonbayar.A <gobi.mn@gmail.com>, 2018
-# Purevsuren Demberel <purevsurento@gmail.com>, 2018
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
 # Onii Onii <onii0223@yahoo.com>, 2018
 # Martin Trigaux, 2019
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
 # 
 msgid ""
@@ -32,16 +31,12 @@ msgstr "# Мөрийн тоо"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr ""
+msgstr "# Борлуулалтын захиалгын тоо"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
-msgid ""
-"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
+msgid "${(object.name or '').replace('/','_')}"
 msgstr ""
-"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -49,8 +44,8 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+"${object.company_id.name} ${object.state in ('draft', 'sent') and 'Үнийн "
+"санал' or 'Захиалга'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -78,14 +73,14 @@ msgstr "&amp;times;"
 #: model:product.product,description_sale:sale.product_product_4f
 #: model:product.template,description_sale:sale.product_product_4e_product_template
 msgid "160x80cm, with large legs."
-msgstr ""
+msgstr "160x80cm, том хөлтэй."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:70
 #, python-format
 msgid "<b>Print this quotation to preview it.</b>"
-msgstr ""
+msgstr "<b>Үнийн саналыг хэвлэх байдлаар харах.</b>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
@@ -115,26 +110,54 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
+"        Хүндэт ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Бид танд\n"
+"        % if ctx.get('proforma')\n"
+"            pro-forma нэхэмжлэл бүхий хавсралтын хамтаар,\n"
+"        % else\n"
+"            ${doc_name} <strong>${object.name}</strong> баримтын хамтаар,\n"
+"        % endif\n"
+"        % if object.origin:\n"
+"            (эх баримт: ${object.origin} )\n"
+"        % endif\n"
+"        <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> үнийн дүнтэй захиалгыг\n"
+"        ${object.company_id.name} компаниас хүргүүлж байна.\n"
+"        <br/><br/>\n"
+"        Хэрэв танд ямар нэг асуулт байвал эргэлзэх зүйлгүйгээр бидэнд хандана уу.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-check\"/> Accept &amp; Sign"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/> Зөвшөөрөх &amp; Гарын үсэг зурах"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-clock-o\" aria-title=\"Dates\" title=\"Dates\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" aria-title=\"Огноо\" title=\"Огноо\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Contact us to get a new quotation."
 msgstr ""
+"<i class=\"fa fa-comment\"/>Шинэ үнийн санал авахын тулд бидэнтэй холбоо "
+"барина уу."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Contact us to get the final version."
 msgstr ""
+"<i class=\"fa fa-comment\"/> Эцсийн хувилбар бүхий үнийн санал авахын тулд "
+"бидэндтэй холбогдоорой."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -144,7 +167,7 @@ msgstr "<i class=\"fa fa-comment\"/> Санал хүсэлт"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Send message"
-msgstr ""
+msgstr "<i class=\"fa fa-comment\"/> Зурвас илгээх"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -152,36 +175,40 @@ msgid ""
 "<i class=\"fa fa-download mr-1\" role=\"img\" aria-label=\"Download\" "
 "title=\"Download\"/>"
 msgstr ""
+"<i class=\"fa fa-download mr-1\" role=\"img\" aria-label=\"Татаж авах\" "
+"title=\"Татаж авах\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-download\"/> Download"
-msgstr ""
+msgstr "<i class=\"fa fa-download\"/> Татаж авах"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" title=\"Done\"/>Done"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Дууссан\" "
+"title=\"Дууссан\"/>Дууссан"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Төлөгдсөн</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Төлбөр хүлээж буй</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Хугацаа дууссан"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-remove\"/> Cancelled"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-remove\"/> Цуцлагдсан"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_lead_partner_kanban_view
@@ -189,6 +216,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
 "title=\"Sales orders\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Борлуулалтын "
+"захиалга\" title=\"Борлуулалтын захиалга\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -198,7 +227,7 @@ msgstr "<i class=\"fa fa-print\"/> Хэвлэх"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.optional_product_items
 msgid "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Add to cart"
-msgstr ""
+msgstr "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Сагсанд хийх"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -209,11 +238,13 @@ msgstr "<i class=\"fa fa-times\"/> Татгалзах"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">This offer expires in</b></small>"
 msgstr ""
+"<small><b class=\"text-muted\">Энэхүү үнийн саналын хүчинтэй хугацаа "
+"нь</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
-msgstr ""
+msgstr "<small><b class=\"text-muted\">Таны давуу тал</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -221,6 +252,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">Борлуулалтын захиалга #</span>\n"
+"                            <span class=\"d-block d-md-none\">Дугаар.</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -229,6 +262,10 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Энд байх утгууд нь "
+"компанитайгаа уялдаж хадгалагдана.\" aria-label=\"Энд байх утгууд нь "
+"компанитайгаа уялдаж хадгалагдана.\" groups=\"base.group_multi_company\" "
+"role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -236,17 +273,19 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Энд байх утгууд нь "
+"компанитайгаа уялдаж хадгалагдана.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Down Payments</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Урьдчилсан төлбөр</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "<span class=\"o_stat_text\">Sold</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Зарагдсан</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -254,77 +293,83 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Дүн</span>\n"
+"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Нийт үнэ</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>Accepted on the behalf of:</span>"
-msgstr ""
+msgstr "<span>Нэрийн өмнөөс хүлээн зөвшөөрөгдсөн:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By paying this proposal, I agree to the following terms:</span>"
 msgstr ""
+"<span>Энэхүү саналыг төлөхдөө би дараах нөхцөлийг хүлээн зөвшөөрч "
+"байна:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By signing this proposal, I agree to the following terms:</span>"
 msgstr ""
+"<span>Энэхүү саналд гарын үсэг зурахдаа би дараах нөхцөлийг хүлээн зөвшөөрч "
+"байна:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<span>Disc.(%)</span>"
-msgstr ""
+msgstr "<span>Хөнг.(%)</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Discount</span>"
-msgstr ""
+msgstr "<span>Хөнгөлөлт</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>For an amount of:</span>"
-msgstr ""
+msgstr "<span>Үнийн дүн:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<span>Pro-Forma Invoice # </span>"
-msgstr ""
+msgstr "<span>Pro-Forma Нэхэмжлэл # </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>With payment terms:</span>"
-msgstr ""
+msgstr "<span>Дагалдах төлбөрийн нөхцөл:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Invoices</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">Нэхэмжлэл</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Invoicing Address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">Нэхэмжлэх хаяг</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Shipping Address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">Хүргэх хаяг</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"mr16\">Subtotal</strong>"
-msgstr ""
+msgstr "<strong class=\"mr16\">Нийлбэр</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong class=\"text-muted\">Your Contact</strong>"
-msgstr ""
+msgstr "<strong class=\"text-muted\">Таны хаяг</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Date Ordered:</strong>"
-msgstr "<strong>Захиалгын Огноо:</strong>"
+msgstr "<strong>Захиалсан огноо:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -335,22 +380,22 @@ msgstr "<strong>Огноо:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Expiration Date:</strong>"
-msgstr "<strong>Дуусах Огноо:</strong>"
+msgstr "<strong>Хүчинтэй огноо:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>Санхүүгийн Харгалзааны Тэмдэглэл:</strong>"
+msgstr "<strong>Татварын үзүүлэлтийн тайлбар:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Payment Terms:</strong>"
-msgstr "<strong>Төлбөрийн Нөхцөл:</strong>"
+msgstr "<strong>Төлбөрийн нөхцөл:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Quotation Date:</strong>"
-msgstr "<strong>Үнийн саналын Огноо:</strong>"
+msgstr "<strong>Үнийн саналын огноо:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -366,7 +411,7 @@ msgstr "Хүргэх хаяг:"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Signature</strong>"
-msgstr ""
+msgstr "<strong>Гарын үсэг</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -377,22 +422,22 @@ msgstr "<strong>Дэд дүн</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>Thank You!</strong><br/>"
-msgstr ""
+msgstr "<strong>Баярлалаа!</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This is a draft quotation.</strong>"
-msgstr ""
+msgstr "<strong>Энэ бол ноорог үнийн санал.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This offer expired!</strong>"
-msgstr ""
+msgstr "<strong>Энэ санал хүчингүй болсон!</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This quotation has been canceled.</strong>"
-msgstr ""
+msgstr "<strong>Энэ үнийн санал цуцлагдсан.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure_optional_products
@@ -414,13 +459,13 @@ msgstr "<strong>Таны код:</strong>"
 #: code:addons/sale/models/sale.py:811
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr ""
+msgstr "%s төлбөрийн хэрэгсэлд зориулсан журнал тодорхойлогдох ёстой."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:804
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
-msgstr ""
+msgstr "Гүйлгээ үүсгэхэд төлбөрийн хэрэгсэл шаардлагатай."
 
 #. module: sale
 #: selection:res.config.settings,sale_pricelist_setting:0
@@ -432,7 +477,7 @@ msgstr "Бараа тутамд нэг борлуулах үнэ"
 #, python-format
 msgid ""
 "A transaction can't be linked to sales orders having different currencies."
-msgstr ""
+msgstr "Гүйлгээг ялгаатай валютын борлуулалтын захиалгатай холбох боломжгүй."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:780
@@ -440,6 +485,7 @@ msgstr ""
 msgid ""
 "A transaction can't be linked to sales orders having different partners."
 msgstr ""
+"Гүйлгээг ялгаатай харилцагчийн борлуулалтын захиалгатай холбох боломжгүй."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -448,12 +494,16 @@ msgid ""
 "                where you want to sell extra hours to the customer\n"
 "                because the initial hours have already been used."
 msgstr ""
+"Нэгэн төрлийн жишээ бол үйлчилгээний цагийн хөлсийг урьдчилан төлөх тохиолдол,\n"
+"                хэрэв таны эхний төлөвлөсөн цаг аль хэдий нь зарцуулагдсан бол\n"
+"                та үйлчилүүлэгчид нэмэлт цаг зарахыг хүснэ."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
 msgstr ""
-"Бүтээгдэхүүн эсвэл захиалагч (Борлуулалт) дээр анхааруулга тохируулж болно."
+"Анхааруулга мессеж нь бараа эсвэл харилцагчийн Борлуулалт хэсэгт "
+"тохируулагдах боломжтой."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -461,16 +511,24 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
+"Энэ бол борлуулалтын захиалга дээр савлагааны төрөл сонгох боломж бөгөөд "
+"захиалгын тоо хэмжээ нь савлагаанд багтах тоонд бүхлээр хуваагдаж байхыг "
+"шаардах болно."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Pay"
+msgstr "Зөвшөөрөх &amp; Төлөх"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Accept and sign online"
 msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Хандалтын анхааруулга"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__qty_delivered_method
@@ -481,6 +539,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Барааны хэрэглэгчийн гарт хүргэсэн тоо хэмжээг тооцоолох аргыг дараах байдлаар тохируулж болно:\n"
+"  - Гараар: захиалгын мөр дээр хүргэсэн тоог гараар хөтлөх\n"
+"  - Зардлын тайлангаас тооцох: хүргэсэн тоо нь батлагдсан зардлын тайлангаас тодорхойлогдох\n"
+"  - Цагийн хуудас: захиалгын мөрт холбогдсон төслийн даалгаврын нийт зарцуулсан цагаар хэмжигдэх\n"
+"  - Барааны хөдөлгөөн: агуулахын баримт батлагдах үед хүргэсэн тоо автоматаар хөтлөгдөх\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__acc_number
@@ -495,7 +558,7 @@ msgstr "Хадгаламжид ашигласан данс"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
 msgid "Action Needed"
-msgstr "Үйлдэл Шаардлагатай"
+msgstr "Үйлдэл шаардагдсан"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_ids
@@ -505,13 +568,13 @@ msgstr "Ажилбар"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_state
 msgid "Activity State"
-msgstr "Ажилбарын Төлөв"
+msgstr "Ажилбарын төлөв"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_type_action_config_sale
 #: model:ir.ui.menu,name:sale.sale_menu_config_activity_type
 msgid "Activity Types"
-msgstr ""
+msgstr "Ажилбарын төрөл"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_product_configurator_view_form
@@ -521,23 +584,23 @@ msgstr "Нэмэх"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a note"
-msgstr ""
+msgstr "Тэмдэглэл нэмэх"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a product"
-msgstr ""
+msgstr "Бараа нэмэх"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a section"
-msgstr ""
+msgstr "Бүлэг нэмэх"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure_optional_products
 msgid "Add one"
-msgstr ""
+msgstr "Нэгийг нэмэх"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice__comment
@@ -547,7 +610,7 @@ msgstr "Нэмэлт мэдээлэл"
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr "Борлуулалтын Захиалга дахь Хаягууд"
+msgstr "Борлуулалтын захиалга дээр хаяг ашиглах"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:165
@@ -559,19 +622,19 @@ msgstr "Урьдчилгаа: %s"
 #: model:ir.model.fields,help:sale.field_product_attribute_value__is_custom
 #: model:ir.model.fields,help:sale.field_product_template_attribute_value__is_custom
 msgid "Allow users to input custom values for this attribute value"
-msgstr ""
+msgstr "Энэ аттрибутад зориулж хэрэглэгч өөрийн утгыг оруулахыг зөвшөөрөх"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
 msgstr ""
-"Захиалгыг батлахаас өмнө үйлчлүүлэгчид урьдчилгаа нэхэмжлэл илгээх боломж "
-"нээгдэнэ"
+"Захиалгыг батлахаас өмнө харилцагч руу pro-forma нэхэмжлэл илгээхийг "
+"зөвшөөрөх"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr ""
+msgstr "Pro-forma нэхэмжлэл илгээхийг зөвшөөрөх"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -581,12 +644,12 @@ msgstr "Дүн"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_undiscounted
 msgid "Amount Before Discount"
-msgstr "Хөнгөлөлтөөс өмнөх дүн"
+msgstr "Хөнгөлөлт хасаагүй дүн"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
 msgid "Amount of quotations to invoice"
-msgstr ""
+msgstr "Нэхэмжилвэл зохих үнийн дүн"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__analytic_account_id
@@ -598,22 +661,22 @@ msgstr "Шинжилгээний данс"
 #. module: sale
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Зардлын тайлангаас тооцох"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Шинжилгээний Мөр"
+msgstr "Шинжилгээний мөр"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_tag_ids
 msgid "Analytic Tags"
-msgstr "Шинжилгээний Пайзууд"
+msgstr "Шинжилгээний пайз"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_line_ids
 msgid "Analytic lines"
-msgstr "Шинжилгээний мөрүүд"
+msgstr "Шинжилгээний мөр"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_quotation_layout_form
@@ -626,6 +689,9 @@ msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
 msgstr ""
+"Борлуулалтын захиалга дээр гараар хөнгөлөлт оруулах эсвэл үнийн хүснэгтээр "
+"хөнгөлөлт бодож оруулах (үнийн хүснэгтийн тохируулга дээр идэвхижүүлэх "
+"сонголт)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -633,6 +699,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Та хянагдсан гүйлгээг буцаах гэж байгаадаа итгэлтэй байна уу? Энэ үйлдлийг "
+"хийсний дараа болиулах боломжгүй."
 
 #. module: sale
 #: selection:product.template,expense_policy:0
@@ -642,7 +710,7 @@ msgstr "Өртөгөөр"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Хавсралтын тоо"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__attribute_value_id
@@ -652,27 +720,27 @@ msgstr "Шинж"
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_value
 msgid "Attribute Value"
-msgstr ""
+msgstr "Шинжийн утга"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Attributes"
-msgstr "Хувилбарууд"
+msgstr "Шинжүүд"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "Хянагдсан гүйлгээ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__automatic_invoice
 msgid "Automatic Invoice"
-msgstr ""
+msgstr "Автомат нэхэмжлэл"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure_optional_products
 msgid "Available Options:"
-msgstr ""
+msgstr "Боломжит сонголтууд:"
 
 #. module: sale
 #. openerp-web
@@ -684,21 +752,21 @@ msgstr "Буцах"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__journal_name
 msgid "Bank Name"
-msgstr "Банкны Нэр"
+msgstr "Банкны нэр"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:14
 #: selection:payment.acquirer,so_reference_type:0
 #, python-format
 msgid "Based on Customer ID"
-msgstr ""
+msgstr "Харилцагчийн ID-д тулгуурлах"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:13
 #: selection:payment.acquirer,so_reference_type:0
 #, python-format
 msgid "Based on Document Reference"
-msgstr ""
+msgstr "Баримтын дугаарт тулгуурлах"
 
 #. module: sale
 #: model:product.template.attribute.value,name:sale.product_template_attribute_value_5
@@ -709,7 +777,7 @@ msgstr "Хар"
 #: selection:product.template,sale_line_warn:0
 #: selection:res.partner,sale_warn:0
 msgid "Blocking Message"
-msgstr "Хориглох Мессеж"
+msgstr "Хориглох мессеж"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -718,11 +786,15 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
+"Хоёр төрлийн хөнгөлөлтийн програмаар борлуулалтаа дэмжээрэй: урамшуулал ба "
+"купон код. Тодорхой нөхцөл болзол тохируулах боломжтой (бараа, харилцагч, "
+"худалдан авах доод үнийн дүн, цаг хугацаа). Шагнал нь хөнгөлөлт (% эсвэл "
+"мөнгөн дүн) эсвэл үнэгүй бараа байж болно."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_updatable
 msgid "Can Edit Product"
-msgstr "Бараа Засаж Болно"
+msgstr "Барааг засаж болно"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -754,23 +826,28 @@ msgid ""
 "confirming orders straight away. This will add specific action buttons to "
 "your dashboard."
 msgstr ""
+"Хэрэв та захиалгыг батлахаасаа өмнө үнийн саналаа харилцагч руу илгээхийг "
+"хүсвэл үүнийг сонго. Ингэснээр таны хянах самбарт тодорхой үйлдэл бүхий "
+"товчууд нэмэгдэнэ."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__use_invoices
 msgid "Check this box to set an invoicing target for this Sales Team."
 msgstr ""
+"Борлуулалтын баг бүрт борлуулалтын төлөвлөгөө бүхий дүн хөтлөхийг хүсвэл "
+"үүнийг сонго."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Choose how to confirm quotations and get paid."
-msgstr ""
+msgstr "Үнийн санал хэрхэн батлагдаж хэрхэн төлөгдөх аргыг сонгоно уу."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:41
 #, python-format
 msgid "Click here to add some products or services to your quotation."
-msgstr ""
+msgstr "Энд дарж өөрийн үнийн саналд бараа болон үйлчилгээ нэмнэ үү."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -795,7 +872,7 @@ msgstr "Өнгө"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__commitment_date
 msgid "Commitment Date"
-msgstr "Амласан Огноо"
+msgstr "Хүлээж буй огноо"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_acquirer__so_reference_type
@@ -825,7 +902,7 @@ msgstr "DHL-н хүргэлт болон хүргэлтийн өртгийг т�
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr ""
+msgstr "Easypost-н хүргэлт болон хүргэлтийн өртгийг тооцох"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -855,7 +932,7 @@ msgstr "Захиалгын хүргэлтийн өртөг тооцох"
 #. module: sale
 #: model:ir.model,name:sale.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Тохируулга"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_config
@@ -872,17 +949,19 @@ msgstr "Тохируулга"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Configure a product"
-msgstr ""
+msgstr "Бараа тохируулах"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_quotation_layout
 msgid "Configure your document layout"
-msgstr ""
+msgstr "Баримтын хэв загварыг тохируулах"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Configure your products with variants and select optional products"
 msgstr ""
+"Бараа болон барааны загвараа тодорхойлохоос гадна нэмж санал болгох "
+"бараануудаа тохируулна"
 
 #. module: sale
 #. openerp-web
@@ -895,7 +974,7 @@ msgstr "Батлах"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Confirmation &amp; Payment"
-msgstr ""
+msgstr "Баталгаажилт &amp; Төлбөр"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__confirmation_date
@@ -903,13 +982,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 msgid "Confirmation Date"
-msgstr "Баталгаажсан Огноо"
+msgstr "Баталгаажсан огноо"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Contact"
-msgstr "Холбох хаяг"
+msgstr "Холбоо барих хаяг"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__dashboard_graph_model
@@ -919,17 +998,17 @@ msgstr "Агуулга"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_coupon
 msgid "Coupons & Promotions"
-msgstr ""
+msgstr "Купон & Урамшуулал"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Invoices"
-msgstr "Нэхэмжлэл Үүсгэх"
+msgstr "Нэхэмжлэл үүсгэх"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
 msgid "Create a new product"
-msgstr ""
+msgstr "Шинэ бараа бүртгэх"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -939,12 +1018,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Create a new quotation, the first step of a new sale!"
-msgstr ""
+msgstr "Шинэ үнийн санал бүртгэх, шинэ борлуулалт хийх эхний алхам!"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoices"
-msgstr "Нэхэмжлэл Үүсгээд Харах"
+msgstr "Нэхэмжлэл үүсгэх, нээж харах"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__create_uid
@@ -963,12 +1042,12 @@ msgstr "Үүсгэгч"
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__create_date
 #: model:ir.model.fields,field_description:sale.field_sale_product_configurator__create_date
 msgid "Created on"
-msgstr "Үүсгэсэн"
+msgstr "Үүсгэсэн огноо"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__create_date
 msgid "Creation Date"
-msgstr "Үүсгэсэн Огноо"
+msgstr "Үүсгэсэн огноо"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__currency_id
@@ -989,12 +1068,12 @@ msgstr "Өөриймшүүлсэн"
 #. module: sale
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Custom payment instructions"
-msgstr ""
+msgstr "Өөрийн төлбөрийн заавар"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__custom_value
 msgid "Custom value"
-msgstr ""
+msgstr "Өөрийн утга"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_id
@@ -1008,38 +1087,38 @@ msgstr "Захиалагч"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__auth_signup_uninvited
 msgid "Customer Account"
-msgstr ""
+msgstr "Захиалагчийн данс"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_sale_delivery_address
 msgid "Customer Addresses"
-msgstr "Захиалагчийн Хаяг"
+msgstr "Захиалагчийн хаяг"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__country_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Customer Country"
-msgstr ""
+msgstr "Захиалагч улс"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__commercial_partner_id
 msgid "Customer Entity"
-msgstr ""
+msgstr "Захиалагч байгууллага"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "Захиалагчийн хандах URL"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__client_order_ref
 msgid "Customer Reference"
-msgstr "Захиалагчийн Код"
+msgstr "Захиалагчийн код"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_taxes_id
 msgid "Customer Taxes"
-msgstr "Захиалагчийн Татварууд"
+msgstr "Захиалагчийн татвар"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.res_partner_menu
@@ -1051,7 +1130,7 @@ msgstr "Захиалагчид"
 #: model:product.product,name:sale.product_product_4f
 #: model:product.template,name:sale.product_product_4e_product_template
 msgid "Customizable Desk"
-msgstr ""
+msgstr "Өөрчлөх боломжтой ширээ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -1061,12 +1140,12 @@ msgstr "Өөриймшүүлэх"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Customize the look of your quotations."
-msgstr ""
+msgstr "Үнийн саналынхаа харагдацыг өөрлөх"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Connector"
-msgstr ""
+msgstr "DHL холболт"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
@@ -1077,7 +1156,7 @@ msgstr "Огноо"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__date_order
 msgid "Date Order"
-msgstr "Захиалгын Огноо"
+msgstr "Захиалгын огноо"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__create_date
@@ -1097,18 +1176,18 @@ msgstr "Огноо:"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Default Limit:"
-msgstr ""
+msgstr "Үндсэн хязгаарлалт:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__use_quotation_validity_days
 msgid "Default Quotation Validity"
-msgstr ""
+msgstr "Үнийн саналын хүчинтэй хугацаа"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__quotation_validity_days
 msgid "Default Quotation Validity (Days)"
-msgstr ""
+msgstr "Үнийн саналын хүчинтэй хугацаа (Өдрөөр)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__use_sale_note
@@ -1118,22 +1197,22 @@ msgstr "Үндсэн Худалдааны нөхцөл & шалгуур"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_note
 msgid "Default Terms and Conditions"
-msgstr "Үндсэн нөхцөл"
+msgstr "Үндсэн худалдааны нөхцөл, шалгуур"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__deposit_default_product_id
 msgid "Default product used for payment advances"
-msgstr "Төлбөрийн урьдчилгаанд хэрэглэгдэх үндсэн бүтээгдэхүүн"
+msgstr "Төлбөрийн урьдчилгааг төлөөлөх бараа"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Deliver Content by Email"
-msgstr ""
+msgstr "Дижитал агуулга имэйлдэх"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_manual
 msgid "Delivered Manually"
-msgstr ""
+msgstr "Хүргэгдсэн тоог гараар"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1060
@@ -1141,7 +1220,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Delivered Quantity"
-msgstr "Хүргэгдсэн Тоо хэмжээ"
+msgstr "Хүргэгдсэн тоо хэмжээ"
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
@@ -1152,17 +1231,17 @@ msgstr "Хүргэсэн тоо хэмжээ"
 #: model:ir.model.fields,field_description:sale.field_account_invoice__partner_shipping_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_shipping_id
 msgid "Delivery Address"
-msgstr "Хүргэх Хаяг"
+msgstr "Хүргэлтийн хаяг"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_sale_order_dates
 msgid "Delivery Date"
-msgstr "Хүргэлтийн Огноо"
+msgstr "Хүргэлтийн огноо"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__customer_lead
 msgid "Delivery Lead Time"
-msgstr "Хүргэлтийн Урьтал Хугацаа"
+msgstr "Хүргэлтийн урьтал хугацаа"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_invoice__partner_shipping_id
@@ -1180,6 +1259,9 @@ msgid ""
 "Delivery date you can promise to the customer, computed from product lead "
 "times and from the shipping policy of the order."
 msgstr ""
+"Хүргэлтийн огноо бол таны захиалагчид амлалт өгөх огноо бөгөөд барааны "
+"урьтал хугацаа болон захиалгын хүргэлтийн бодлого дээр үндэслэн "
+"тооцоологдоно."
 
 #. module: sale
 #: model:product.product,name:sale.advance_product_0
@@ -1190,7 +1272,7 @@ msgstr "Хадгаламж"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
 msgid "Deposit Product"
-msgstr "Хадгаламжийн Бараа"
+msgstr "Хадгаламжийн бараа"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__name
@@ -1202,7 +1284,7 @@ msgstr "Тодорхойлолт"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Details"
-msgstr "Задаргаа"
+msgstr "Дэлгэрэнгүй"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
@@ -1212,7 +1294,7 @@ msgstr "Дижитал Агуулга"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
 msgid "Discount %"
-msgstr ""
+msgstr "Хөнгөлөлт %"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__discount
@@ -1222,27 +1304,27 @@ msgstr "Хөнгөлөлт (%)"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount_amount
 msgid "Discount Amount"
-msgstr ""
+msgstr "Хөнгөлөлтийн дүн"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_pricelist__discount_policy
 msgid "Discount Policy"
-msgstr "Хөнгөлөлтийн Дүрэм"
+msgstr "Хөнгөлөлтийн бодлого"
 
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
 msgid "Discount included in the price"
-msgstr "Үнийн дүнд багтсан хөнгөлөлт"
+msgstr "Хөнгөлөлт нэгж үнэд шингэсэн байх"
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr "Мөрүүд дахь хөнгөлөлт"
+msgstr "Мөр дээрх хөнгөлөлт"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_discount_per_so_line
 msgid "Discounts"
-msgstr "Хөнгөлөлтүүд"
+msgstr "Хөнгөлөлт"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__display_name
@@ -1255,12 +1337,12 @@ msgstr "Хөнгөлөлтүүд"
 #: model:ir.model.fields,field_description:sale.field_sale_product_configurator__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_report__display_name
 msgid "Display Name"
-msgstr "Дэлгэцийн Нэр"
+msgstr "Дэлгэрэнгүй нэр"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
 msgid "Display Type"
-msgstr ""
+msgstr "Харагдацын төрөл"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_order_confirmation_state:0
@@ -1273,17 +1355,17 @@ msgstr "Дууссан"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:87
 #, python-format
 msgid "Down Payment"
-msgstr "Урьдчилгаа Төлбөр"
+msgstr "Урьдчилгаа төлбөр"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount
 msgid "Down Payment Amount"
-msgstr "Урьдчилгаа Төлбөрийн Дүн"
+msgstr "Урьдчилгаа төлбөрийн Дүн"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
 msgid "Down Payment Product"
-msgstr "Урьдчилгаа Төлбөрийн Бараа"
+msgstr "Урьдчилгаа төлбөр төлөөлөх бараа"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1307,6 +1389,9 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
+"Борлуулалтын захиалгаас нэхэмжлэл үүсгэх үед урьдчилгаа төлбөр ашиглагдана. "
+"Борлуулалтын захиалгыг хуулбарлах үед урьдчилгааны мэдээлэл дагаж "
+"хуулбарлагдахгүй."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1316,22 +1401,22 @@ msgstr "Татах"
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Draft Quotation"
-msgstr "Ноорог Үнийн санал"
+msgstr "Ноорог үнийн санал"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr ""
+msgstr "Easypost холболт"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__template_id
 msgid "Email Template"
-msgstr "Э-мэйл үлгэр"
+msgstr "Имэйл загвар"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
 msgid "Expected Date"
-msgstr "Төлөвлөгөөт Огноо"
+msgstr "Таамагласан огноо"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_template__expense_policy
@@ -1340,11 +1425,14 @@ msgid ""
 " a validated expense can be re-invoice to a customer at its cost or sales "
 "price."
 msgstr ""
+"Зардал болон нийлүүлэгчийн нэхэмжлэл нь захиалагч руу дахин нэхэмжлэгдэх "
+"боломжтой. Үүнийг сонгосноор зардлын тайланг баталгаажуулах үед захиалагч "
+"руу зардлын өртөгөөр эсвэл тогтмол үнээр нэхэмжлэгдэх боломжтой."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr "Өргөтгөсөн Шүүлтүүр"
+msgstr "Өргөтгөсөн шүүлт"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1034
@@ -1355,12 +1443,12 @@ msgstr "%s-тэй нэмэлт мөр"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
 msgid "FedEx Connector"
-msgstr ""
+msgstr "FedEx холболт"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
 msgid "Fiscal Position"
-msgstr "Санхүүгийн Харгалзаа"
+msgstr "Татварын үзүүлэлт"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -1380,6 +1468,11 @@ msgstr "Дагагчид (Харилцагчид)"
 #. module: sale
 #: sql_constraint:sale.order.line:0
 msgid "Forbidden values on non-accountable sale order line"
+msgstr "Борлуулалтын захиалгын мөр дээрх мэдээлэл дутуу байна"
+
+#. module: sale
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "Free sign up"
 msgstr ""
 
 #. module: sale
@@ -1389,43 +1482,43 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"Энэ тайлангаас захиалагчдийн нэхэмжилсэн дүнгийн тоймыг харах боломжтой. "
-"Хайлтын багажийг ашиглан өөрийн шаардлагад нийцүүлэн энэ нэхэмжлэлийн "
-"шинжилгээний тайланг өөриймшүүлэх боломжтой."
+"Энэ тайлангаас та захиалагч руу нэхэмжлэгдсэн үнийн хураангуйг харах "
+"боломжтой. Хайлтын талбарыг ашиглан өөрийн шаардлагад нийцүүлэн энэхүү "
+"нэхэмжлэлийн шинжилгээний тайланг өөриймшүүлэх боломжтой."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Fully Invoiced"
-msgstr "Бүрэн Нэхэмжилсэн"
+msgstr "Бүрэн нэхэмжилсэн"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Future Activities"
-msgstr "Ирээдүйн Үйл ажиллагаанууд"
+msgstr "Ирээдүйн ажилбар"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
-msgstr ""
+msgstr "Онлайн төлбөр батлагдахад нэхэмжлэл автоматаар бүртгэгдэнэ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Get warnings in orders for products or customers"
 msgstr ""
-"Захиалга бичих явцад бараа болон харилцагчаас хамаарсан анхааруулга мэдээлэл"
-" гарч ирэх шийдэл"
+"Захиалга бичих явцад бараа болон захиалагчаас хамаарсан анхааруулга мэдээлэл"
+" харуулах"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Grant discounts on sales order lines"
-msgstr ""
+msgstr "Борлуулалтын захиалгын мөр дээр хөнгөлөлтийн хувь оруулах"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__weight
 msgid "Gross Weight"
-msgstr "Бохир Жин"
+msgstr "Нийт жин"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
@@ -1449,16 +1542,19 @@ msgid ""
 "        specific HTML color index (e.g. #ff0000) to display the color if the\n"
 "        attribute type is 'Color'."
 msgstr ""
+"Хэрэв шинжийн төрөл нь 'Өнгө' бол\n"
+"        Энд та тодорхой төрлийн HTML өнгөний \n"
+"        индекс (ж.ш. #ff0000) оруулах боломжтой."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_template__hide_expense_policy
 msgid "Hide Expense Policy"
-msgstr ""
+msgstr "Зардлын бодлогыг нуух"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_payment_acquirer_wizard
 msgid "How your customers can confirm an order"
-msgstr ""
+msgstr "Танай захиалагч хэрхэн захиалгаа баталгаажуулах"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__id
@@ -1476,14 +1572,13 @@ msgstr "ID"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
-"Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг "
-"шаардана."
+msgstr "Үүнийг сонговол таныг шинэ зурвасуудад анхаарал хандуулахыг шаардана."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
+msgstr ""
+"Үүнийг сонговол, таныг шинэ зурвасуудад анхаарал хандуулахыг шаардана."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error
@@ -1496,8 +1591,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
-"Хэрэв борлуулалт нь түгжигдсэн бол дахиж өөрчлөх боломжгүй. Гэсэн хэдий ч "
-"нэхэмжлэх эсвэл хүргэх боломжтой хэвээр байна."
+"Хэрэв борлуулалт нь түгжигдсэн бол дахин өөрчлөх боломжгүй. Гэсэн хэдий ч "
+"нэхэмжлэх эсвэл хүргэх хийх боломжтой хэвээр байна."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:280
@@ -1506,8 +1601,8 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
-"Хэрэв бид таны төлбөрийн мэдээллийг өөрсдийн сервер дээр хадгалвал, "
-"захиалгын төлбөр автоматаар хийгдэх болно."
+"Хэрэв бид таны төлбөрийн мэдээллийг өөрсдийн сервер дээр хадгалвал, энэ "
+"үйлчилгээний төлбөр автоматаар нэхэмжлэгдэнэ."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_image
@@ -1516,21 +1611,20 @@ msgid ""
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
 msgstr ""
-"Барааны хувилбарын зураг (Хэрэв худал бол барааны үлгэрийн том хэмжээтэй "
-"зураг). Энэ автоматаар хэмжээ 1024x1024px хэмжээтэй болох бөгөөд харьцаа нь "
-"хадгалагдана."
+"Барааны хувилбарын зураг (Том хэмжээтэй зурагт хамаарахгүй). Автоматаар "
+"хэмжээ нь 1024x1024px харьцаатайгаар хөрвөж хадгалагдана."
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:89
 #, python-format
 msgid "Import Template for Products"
-msgstr ""
+msgstr "Барааны загвар импортлох"
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:92
 #, python-format
 msgid "Import Template for Products (with several prices)"
-msgstr ""
+msgstr "Барааны загвар импортлох (хэд хэдэн үнэтэйгээр)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1540,7 +1634,7 @@ msgstr "татвар орсон)"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_account_id
 msgid "Income Account"
-msgstr "Орлогын Данс"
+msgstr "Орлогын данс"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1551,19 +1645,19 @@ msgstr "Энд өөрийн худалдааны нөхцөл & тавигдах
 #: code:addons/sale/controllers/portal.py:198
 #, python-format
 msgid "Invalid order"
-msgstr ""
+msgstr "Буруу захиалга"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:794
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
+msgstr "Буруу token олдлоо! Token гаргагч %s != %s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:797
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "Буруу token олдлоо! Token гаргагч %s != %s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice
@@ -1579,22 +1673,22 @@ msgstr "Нэахэмжлэл %s төлөгдсөн"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_invoice_id
 msgid "Invoice Address"
-msgstr "Нэхэмжлэлийн Хаяг"
+msgstr "Нэхэмжлэлийн хаяг"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
 msgid "Invoice Confirmed"
-msgstr "Нэхэмжлэл Батлагдсан"
+msgstr "Нэхэмжлэл батлагдсан"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_count
 msgid "Invoice Count"
-msgstr ""
+msgstr "Нэхэмжлэл баримтын тоо"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_created
 msgid "Invoice Created"
-msgstr "Нэхэмжлэл Үүсгэгдсэн"
+msgstr "Нэхэмжлэл үүссэн огноо"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_line
@@ -1614,13 +1708,13 @@ msgstr "Нэхэмжлэл"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
-msgstr "Борлуулалтын Захиалгын Нэхэмжлэл"
+msgstr "Борлуулалтын нэхэмжлэл"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_status
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_status
 msgid "Invoice Status"
-msgstr "Нэхэмжлэлийн Төлөв"
+msgstr "Нэхэмжлэлийн төлөв"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__partner_invoice_id
@@ -1634,19 +1728,19 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
-"Тухайн сарын нэхэмжлэлийн орлого. Энэ нь энэ сард борлуулалтын багийн "
-"нэхэмжилсэн хэмжээ юм. Үүнийг канбан харагдац дээр одоогийн ба зорилтот "
-"орлогын өсөлтийн харьцааг тооцоолоход ашигладаг."
+"Тухайн сарын нэхэмжлэлийн орлого. Энэ бол тухайн сарийн борлуулалтын сувгаас"
+" бүртгэгдсэн нэхэмжлэлийн дүн юм. Энэ дүн нь канбан харагдац дээр одоогийн "
+"орлого болон зорилтот орлогыг харьцуулан харуулахад ашиглагдана."
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
 msgid "Invoice what is delivered"
-msgstr "Хүргэсэн тоо хэмжээг нэхэмжлэх"
+msgstr "Хүргэлтэнд суурилсан нэхэмжлэл"
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
 msgid "Invoice what is ordered"
-msgstr ""
+msgstr "Захиалганд суурилсан нэхэмжлэл"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1669,12 +1763,12 @@ msgstr "Нэхэмжилсэн"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Invoiced Quantity"
-msgstr "Нэхэмжилсэн Тоо хэмжээ"
+msgstr "Нэхэмжилсэн тоо хэмжээ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
 msgid "Invoiced This Month"
-msgstr "Энэ Сард Нэхэмжилсэн"
+msgstr "Энэ сард нэхэмжилсэн"
 
 #. module: sale
 #: selection:crm.team,dashboard_graph_model:0
@@ -1683,17 +1777,17 @@ msgstr "Энэ Сард Нэхэмжилсэн"
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
-msgstr "Нэхэмжлэлүүд"
+msgstr "Нэхэмжлэл"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
 msgid "Invoices Analysis"
-msgstr "Нэхэмжлэлийн Шинжилгээ"
+msgstr "Нэхэмжлэлийн шинжилгээ"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr "Нэхэмжлэлийн Статистик"
+msgstr "Нэхэмжлэлийн статистик"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -1701,14 +1795,14 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
-"Нэхэмжлэлийг ноорог төлөвтэйгээр үүсгэх болно, тэгсэнээр та батлахааса\n"
-"                        өмнө хянах боломжтой юм."
+"Нэхэмжлэлийг ноорог төлөвтэйгээр үүсгэх болно, улмаар та\n"
+"                        тэдгээрийг батлахаасаа өмнө шалгах боломжтой юм."
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:96
 #, python-format
 msgid "Invoices: Untaxed Total"
-msgstr "Нэхэмжлэл: Татваргүй Нийт дүн"
+msgstr "Нэхэмжлэл: Татваргүй дүн"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -1716,18 +1810,24 @@ msgstr "Нэхэмжлэл: Татваргүй Нийт дүн"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
-msgstr "Нэхэмжлэх"
+msgstr "Нэхэмжлэл"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Invoicing Address"
+msgstr "Нэхэмжлэх Хаяг"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
 msgid "Invoicing Policy"
-msgstr "Нэхэмжлэх Бодлого"
+msgstr "Нэхэмжлэх бодлого"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced_target
 msgid "Invoicing Target"
-msgstr "Нэхэмжлэлийн Зорилго"
+msgstr "Зорилтот нэхэмжлэлийн дүн"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1737,7 +1837,7 @@ msgstr "Нэхэмжлэх Хаяг"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing and Shipping Address"
-msgstr ""
+msgstr "Нэхэмжлэх болон хүргах хаягууд"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1758,23 +1858,25 @@ msgstr "Урьдчилгаа төлбөр эсэх"
 #: model:ir.model.fields,field_description:sale.field_product_attribute_value__is_custom
 #: model:ir.model.fields,field_description:sale.field_product_template_attribute_value__is_custom
 msgid "Is custom value"
-msgstr ""
+msgstr "Өөриймшүүлсэн утга эсэх"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_expense
 msgid "Is expense"
-msgstr ""
+msgstr "Зардал эсэх"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__is_expired
 msgid "Is expired"
-msgstr "Хугацаа дууссан эсэх"
+msgstr "Хүчингүй эсэх"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_expense
 msgid ""
 "Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
+"Хэрэв борлуулалтын захиалгын мөр нь зардалын тайлан эсвэл нийлүүлэгчийн "
+"нэхэмжлэлээс үүдэлтэй байвал утга нь TRUE байх болно"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1083
@@ -1783,12 +1885,14 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"Түгжигдсэн захиалгын хувьд дараах талбаруудыг засварлах хориотой:\n"
+"%s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:667
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
-msgstr ""
+msgstr "Дараах төлвүүдэд байх захиалгыг батлах боломжгүй: %s"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_order_confirmation_state:0
@@ -1800,7 +1904,7 @@ msgstr "Дөнгөж дууссан"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
 msgid "Last 365 Days"
-msgstr ""
+msgstr "Сүүлийн 365 хоног"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value____last_update
@@ -1813,7 +1917,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_product_configurator____last_update
 #: model:ir.model.fields,field_description:sale.field_sale_report____last_update
 msgid "Last Modified on"
-msgstr "Сүүлийн засвар хийсэн огноо"
+msgstr "Сүүлд зассан огноо"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__write_uid
@@ -1823,7 +1927,7 @@ msgstr "Сүүлийн засвар хийсэн огноо"
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_product_configurator__write_uid
 msgid "Last Updated by"
-msgstr "Сүүлийн засвар хийсэн"
+msgstr "Сүүлд зассан этгээд"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__write_date
@@ -1833,17 +1937,18 @@ msgstr "Сүүлийн засвар хийсэн"
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__write_date
 #: model:ir.model.fields,field_description:sale.field_sale_product_configurator__write_date
 msgid "Last Updated on"
-msgstr "Сүүлийн засвар хийсэн огноо"
+msgstr "Сүүлд зассан огноо"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Late Activities"
-msgstr "Хожимдсон Үйл ажиллагаанууд"
+msgstr "Хоцорсон ажилбар"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
 msgstr ""
+"Таны харилцагчидад системд нэвтэрч өөрсдийн баримтаа харах боломжыг олгох"
 
 #. module: sale
 #. openerp-web
@@ -1853,6 +1958,8 @@ msgid ""
 "Let's create a new quotation.<br/><i>Note that colored buttons usually point"
 " to the next logical actions.</i>"
 msgstr ""
+"Шинэ үнийн санал үүсгэе.<br/><i>Өнгийн товчлуурууд танд дараагийн хийх логик"
+" үйлдэлийг зааж өгнө.</i>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1862,7 +1969,7 @@ msgstr "Түгжих"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__auto_done_setting
 msgid "Lock Confirmed Sales"
-msgstr ""
+msgstr "Батлагдсан борлуулалтын захиалгыг түгжих"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1882,17 +1989,17 @@ msgstr "Үндсэн хавсралт"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage delivery dates from sales orders"
-msgstr ""
+msgstr "Борлуулалтын захиалга дээрээс хүргэлтийн огноог удирдах"
 
 #. module: sale
 #: model:res.groups,name:sale.group_sale_order_dates
 msgid "Manage delivery dates from sales orders."
-msgstr ""
+msgstr "Борлуулалтын захиалга дээрээс хүргэлтийн огноог удирдах."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage promotion &amp; coupon programs"
-msgstr ""
+msgstr "Урамшуулал &amp; купон програмыг удирдах"
 
 #. module: sale
 #: selection:sale.order.line,qty_delivered_method:0
@@ -1902,7 +2009,7 @@ msgstr "Гараар"
 #. module: sale
 #: selection:product.template,service_type:0
 msgid "Manually set quantities on order"
-msgstr "Захиалга дээр тоог гараар тохируулах"
+msgstr "Захиалга дээр тоо хэмжээг гараар тохируулах"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_template__service_type
@@ -1911,29 +2018,29 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"Захиалга дээр тоо хэмжээг гараар оруулах: Шинжилгээний данс үүсгэхгүйгээр гараар оруулсан тоо хэмжээн дээр суурилсан нэхэмжлэл.\n"
-"Гэрээ дээрх Цагийн хуудсууд: Холбоотой цагийн хуудас дээр хянасан цагууд дээр суурилсан нэхэмжлэл.\n"
-"Даалгавар үүсгээд цагийг хянах: Борлуулалтын захиалга батлах даалгавар үүсгээд ажлын цагуудыг хянах."
+"Захиалга дээр тоо хэмжээг гараар оруулах: Нэхэмжлэл үүсэхдээ шинжилгээний данс үүсгэхгүйгээр гараар оруулсан тоо хэмжээнд суурилна.\n"
+"Төслийн цагийн хуудас: Нэхэмжлэл үүсэхдээ холбогдох цагийн хуудас дээр бүртгэгдсэн цаг дээр суурилна.\n"
+"Даалгавар үүсгэж цагийг хянах: Борлуулалтын захиалга батлахад даалгавар үүсгэх бөгөөд тухайн даалгавар дээр ажилласан цагыг хянана."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_margin
 msgid "Margins"
-msgstr "Бохир ашигууд"
+msgstr "Бохир ашиг"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Алдаа үүссэн талаарх мессеж"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn_msg
 msgid "Message for Sales Order"
-msgstr "Борлуулалтын Захиалгын Зурвасууд"
+msgstr "Борлуулалтын захиалгын зурвасууд"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn_msg
 msgid "Message for Sales Order Line"
-msgstr "Борлуулалтын Захиалгын Мөрийн Зурвасууд"
+msgstr "Борлуулалтын захиалгын мөрийн зурвасууд"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_ids
@@ -1943,38 +2050,40 @@ msgstr "Зурвасууд"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__manual_name
 msgid "Method"
-msgstr "Метод"
+msgstr "Арга"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Хүргэгдсэн тоог хөтлөх арга"
 
 #. module: sale
 #: sql_constraint:sale.order.line:0
 msgid "Missing required fields on accountable sale order line."
 msgstr ""
+"Нэхэмжлэх боломжтой захиалгын мөр дээрх зарим заавал байх ёстой мэдээлэл "
+"дутуу байна"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__multi_sales_price
 msgid "Multiple Sales Prices per Product"
-msgstr "Бараа тутамд олон борлуулах үнэ"
+msgstr "Нэг бараанд олон борлуулах үнэ"
 
 #. module: sale
 #: selection:res.config.settings,multi_sales_price_method:0
 #: selection:res.config.settings,sale_pricelist_setting:0
 msgid "Multiple prices per product (e.g. customer segments, currencies)"
-msgstr "Захиалагчийн сегмент, валют, г.м. бүрт олон үнэ"
+msgstr "Нэг бараанд олон борлуулах үнэ (ж.ш. Захиалагчийн ангилал, валют г.м)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Activities"
-msgstr "Миний Үйл ажиллагаанууд"
+msgstr "Миний ажилбар"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Orders"
-msgstr "Миний Захиалгууд"
+msgstr "Миний захиалга"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -1984,12 +2093,12 @@ msgstr "Миний үнийн саналууд"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "My Sales Order Lines"
-msgstr "Миний Борлуулалтын Захиалгын Мөрүүд"
+msgstr "Миний борлуулалтын захиалгын мөрүүд"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__signed_by
 msgid "Name of the person that signed the SO."
-msgstr ""
+msgstr "БЗ-г баталгаажуулсан хүний нэр."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:131 code:addons/sale/models/sale.py:367
@@ -2002,7 +2111,7 @@ msgstr "Шинэ"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
-msgstr "Шинэ Үнийн санал"
+msgstr "Шинэ үнийн санал"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
@@ -2012,7 +2121,7 @@ msgstr "Дараагийн ажилбарын эцсийн огноо"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_summary
 msgid "Next Activity Summary"
-msgstr "Дараагийн Ажилбарын Хураангуй"
+msgstr "Дараагийн ажилбарын гарчиг"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_id
@@ -2033,17 +2142,17 @@ msgstr "Мессеж байхгүй"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "No longer edit orders once confirmed"
-msgstr ""
+msgstr "Захиалгыг батласны дараа засварлах боломжгүй болно"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "No orders to invoice found"
-msgstr ""
+msgstr "Нэхэмжлэвэл зохих захиалга олдсонгүй"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found"
-msgstr ""
+msgstr "Дутуу нэхэмжилсэн захиалга олдсонгүй"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_order_confirmation_state:0
@@ -2075,7 +2184,7 @@ msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
 msgstr ""
-"Захиалга баталгаажсан болон барааг захиалагчид хүргэхийн хоорондын ялгавар "
+"Захиалга баталгаажсанаас хойш захиалагчийн гарт хүргэлт очих хүртэлх "
 "хоногийн тоо"
 
 #. module: sale
@@ -2096,12 +2205,12 @@ msgstr "Алдааны мэдэгдэл бүхий зурвасын тоо"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_count
 msgid "Number of quotations to invoice"
-msgstr "Нэхэмжлэх үнийн саналын тоо"
+msgstr "Нэхэмжлэвэл зохих үнийн саналын тоо"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sales_to_invoice_count
 msgid "Number of sales to invoice"
-msgstr "Нэхэмжлэх борлуулалтын тоо"
+msgstr "Нэхэмжлэвэл зохих борлуулалтын тоо"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_unread_counter
@@ -2111,6 +2220,11 @@ msgstr "Уншаагүй зурвасын тоо"
 #. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
 msgid "Office chairs can harm your floor: protect it."
+msgstr "Оффисын сандал таны шалыг гэмтээж болно: сэргийлнэ үү."
+
+#. module: sale
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "On invitation"
 msgstr ""
 
 #. module: sale
@@ -2123,6 +2237,8 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales "
 "order.<br> You will be able to create an invoice and collect the payment."
 msgstr ""
+"Үнийн санал захиалагчаар баталгаажвал борлуулалтын захиалга болж "
+"хувирна.<br> Улмаар та нэхэмжлэл үүсгэх, төлбөр цуглуулах боломжтой болно."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -2130,6 +2246,8 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
+"Үнийн санал баталгаажвал борлуулалтын захиалга болж хувирна.<br> Улмаар та "
+"нэхэмжлэл үүсгэх, төлбөр цуглуулах боломжтой болно."
 
 #. module: sale
 #. openerp-web
@@ -2137,21 +2255,22 @@ msgstr ""
 #, python-format
 msgid "Once your quotation is ready, you can save, print or send it by email."
 msgstr ""
-"Үнийн санал бэлэн болохоор хадгалж, хэвлэж эсвэл имэйлээр илгээж болно."
+"Үнийн санал бэлэн болсон бол та хадгалах, хэвлэх болон имэйлээр илгээх "
+"боломжтой."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_pay
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_payment
 msgid "Online Payment"
-msgstr ""
+msgstr "Онлайн төлбөр"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_signature
 msgid "Online Signature"
-msgstr ""
+msgstr "Онлайн гарын үсэг"
 
 #. module: sale
 #. openerp-web
@@ -2163,12 +2282,12 @@ msgstr "Зөвхөн бүхэл тоо байх ёстой."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.optional_product_items
 msgid "Option not available"
-msgstr ""
+msgstr "Одоогоор сонголт алга"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_template__optional_product_ids
 msgid "Optional Products"
-msgstr "Нэмэлт Бүтээгдэхүүнүүд"
+msgstr "Нэмэлт санал болгох бараа"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_template__optional_product_ids
@@ -2176,9 +2295,9 @@ msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
-"Захиалагчийг \"Сагс руу нэмэх\" дээр дарах болгонд нэмэлт бараануудыг санал "
-"болгоно (давуулж зарах бодлого, ж.нь. компьютерийн хувьд: баталгаа, програм "
-"хангамж, г.м)."
+"Захиалагч барааг \"Сагсанд нэмэх\" үед нэмэлт бараануудыг санал болгоно (энэ"
+" бол дагалдуулж зарах стратеги юм, ж.нь. компьютерийн хувьд: баталгаат "
+"хугацаа, програм хангамж, г.м)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
@@ -2199,7 +2318,7 @@ msgstr "Захиалга #"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__count
 msgid "Order Count"
-msgstr ""
+msgstr "Захиалгын баримтын тоо"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:51
@@ -2214,18 +2333,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #, python-format
 msgid "Order Date"
-msgstr "Захиалгын Огноо"
+msgstr "Захиалгын огноо"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Order Lines"
-msgstr "Захиалгын Мөрүүд"
+msgstr "Захиалгын мөрүүд"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 msgid "Order Number"
-msgstr "Захиалгын Дугаар"
+msgstr "Захиалгын дугаар"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__name
@@ -2233,39 +2352,39 @@ msgstr "Захиалгын Дугаар"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__order_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__name
 msgid "Order Reference"
-msgstr "Захиалгын Дугаар"
+msgstr "Захиалгын дугаар"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__state
 msgid "Order Status"
-msgstr "Захиалгын Төлөв"
+msgstr "Захиалгын төлөв"
 
 #. module: sale
 #: model:mail.activity.type,name:sale.mail_act_sale_upsell
 msgid "Order Upsell"
-msgstr ""
+msgstr "Дутуу нэхэмжлэгдсэн захиалга"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:201
 #, python-format
 msgid "Order is not in a state requiring customer signature."
-msgstr ""
+msgstr "Захиалга нь захиалагчийн гарын үсгийг шаардах төлөвт шилжээгүй байна."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:215
 #, python-format
 msgid "Order signed by %s"
-msgstr "Захиалга дээр гарын үсэг зурсан %s"
+msgstr "Гарын үсэг зурсан %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Order to Invoice"
-msgstr "Нэхэмжлэх Захиалга"
+msgstr "Нэхэмжлэвэл зохих захиалга"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Qty"
-msgstr "Захиалсан Тоо хэмжээ"
+msgstr "Захиалсан тоо"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1057
@@ -2273,7 +2392,7 @@ msgstr "Захиалсан Тоо хэмжээ"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Ordered Quantity"
-msgstr "Захиалсан Тоо хэмжээ"
+msgstr "Захиалсан тоо хэмжээ"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_template__invoice_policy
@@ -2281,6 +2400,8 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
+"Захиалсан тоо: Захиалагчийн захиалсан тоогоор нэхэмжилнэ.\n"
+"Хүргэгдсэн тоо: Захиалагчид хүргэгдсэн тоогоор нэхэмжилнэ."
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
@@ -2298,13 +2419,13 @@ msgstr "Захиалгууд"
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Orders to Invoice"
-msgstr "Нэхэмжлэх Захиалгууд"
+msgstr "Нэхэмжилвэл зохих захиалга"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr "Илүү борлуулах захиалга"
+msgstr "Дутуу нэхэмжилсэн захиалга"
 
 #. module: sale
 #. openerp-web
@@ -2313,6 +2434,8 @@ msgstr "Илүү борлуулах захиалга"
 #, python-format
 msgid "Organize your sales activities with the <b>Sales Management app</b>."
 msgstr ""
+"Та өөрийн борлуулалтын үйл ажиллагааг <b>Sales Management app</b>-р "
+"зохиомжлоорой."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2327,7 +2450,7 @@ msgstr "Хугацаа хэтэрсэн"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "Урьдчилсан Нэхэмжлэл"
+msgstr "Урьдчилсан нэхэмжлэл"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -2342,18 +2465,18 @@ msgstr "Харилцагч"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__country_id
 msgid "Partner Country"
-msgstr "Харилцагч Улс"
+msgstr "Харилцагч улс"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:277
 #, python-format
 msgid "Pay & Confirm"
-msgstr "Төлөөд Батлах"
+msgstr "Төлөх & Батлах"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay &amp; Confirm"
-msgstr ""
+msgstr "Төлөх &amp; Батлах"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:160
@@ -2364,53 +2487,58 @@ msgstr "Одоо төлөх"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay now"
+msgstr "Одоо төлөх"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Pay online"
 msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay with"
-msgstr ""
+msgstr "Төлөх"
 
 #. module: sale
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with PayPal"
-msgstr ""
+msgstr "PayPal-р төлөх"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with another payment acquirer"
-msgstr ""
+msgstr "Бусад төлбөрийн хэрэгслээр төлөх"
 
 #. module: sale
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with credit card (via Stripe)"
-msgstr ""
+msgstr "Кредит картаар төлөх (Stripe-ээр)"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_email_account
 msgid "PayPal Email ID"
-msgstr ""
+msgstr "PayPal Email ID"
 
 #. module: sale
 #: model:ir.model,name:sale.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Төлбөрийн эквайрер"
+msgstr "Төлбөрийн хэрэгсэл"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Payment Acquirers"
-msgstr "Худалдаг авагчийн Төлбөр"
+msgstr "Төлбөрийн хэрэгсэл"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr ""
+msgstr "Төлбөрийн заавар"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__payment_method
@@ -2420,12 +2548,12 @@ msgstr "Төлбөрийн хэлбэр"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__reference
 msgid "Payment Ref."
-msgstr ""
+msgstr "Төлбөрийн дугаар."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__payment_term_id
 msgid "Payment Terms"
-msgstr "Төлбөрийн Нөхцөл"
+msgstr "Төлбөрийн нөхцөл"
 
 #. module: sale
 #: model:ir.model,name:sale.model_payment_transaction
@@ -2435,12 +2563,12 @@ msgstr "Төлбөрийн гүйлгээ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
 msgid "Paypal Merchant ID"
-msgstr "Paypal Худалдагчийн ID"
+msgstr "Paypal Мерчант ID"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "Paypal PDT Token"
-msgstr ""
+msgstr "Paypal PDT Token"
 
 #. module: sale
 #: selection:crm.team,dashboard_graph_model:0
@@ -2466,13 +2594,13 @@ msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
 "category: \"%s\"."
 msgstr ""
-"Энэ бараанд орлогын данс тодорхойлно уу: \"%s\" (id:%d) - эсвэл төрөлд нь: "
+"Энэ бараанд орлогын данс тодорхойлно уу: \"%s\" (id:%d) - эсвэл ангилалд: "
 "\"%s\"."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "Гаднаас хандах URL"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -2492,27 +2620,27 @@ msgstr "Үнэ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce
 msgid "Price Reduce"
-msgstr "Үнийг Бууруулах"
+msgstr "Эцсийн үнэ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr "Үнийг Бууруулах Татвар ороогүй"
+msgstr "Эцсийн үнэ татваргүй"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr "Үнийг Бууруулах Татвар орсон"
+msgstr "Эцсийн үнэ татвартай"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__price_subtotal
 msgid "Price Subtotal"
-msgstr "Дэд дүн"
+msgstr "Үнийн дүн"
 
 #. module: sale
 #: selection:res.config.settings,sale_pricelist_setting:0
 msgid "Price computed from formulas (discounts, margins, roundings)"
-msgstr ""
+msgstr "Үнийг томьёоллоор тогтоох (хөнгөлөлт, бүхэлчлэл, тоймчлол)"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_pricelist
@@ -2526,7 +2654,7 @@ msgstr "Үнийн хүснэгт"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "Pricelist for current sales order."
-msgstr "Идэвхтэй борлуулалтын захиалгын Үнийн хүснэгт."
+msgstr "Тухайн борлуулалтын захиалгын үнийн хүснэгт."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__sale_pricelist_setting
@@ -2538,12 +2666,12 @@ msgstr "Үнийн хүснэгт"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__multi_sales_price_method
 msgid "Pricelists Method"
-msgstr ""
+msgstr "Үнийн хүснэгтийн хэлбэр"
 
 #. module: sale
 #: selection:res.config.settings,multi_sales_price_method:0
 msgid "Prices computed from formulas (discounts, margins, roundings)"
-msgstr ""
+msgstr "Үнийг томьёоллоор тогтоох (хөнгөлөлт, бүхэлчлэл, тоймчлол)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2559,12 +2687,12 @@ msgstr "Хэвлэх"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr "Урьдчилсан Нэхэмжлэл"
+msgstr "Урьдчилсан нэхэмжлэл"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro-forma Invoices"
-msgstr "Урьдчилсан нэхэмжлэхүүд"
+msgstr "Урьдчилсан нэхэмжлэл"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -2582,17 +2710,17 @@ msgstr "Бараа"
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute
 msgid "Product Attribute"
-msgstr "Барааны Шинж чанар"
+msgstr "Барааны шинж"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr ""
+msgstr "Барааны шинжийн өөрчилсөн утга"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template_attribute_value
 msgid "Product Attribute Value"
-msgstr "Барааны онцлогийн утга"
+msgstr "Барааны шинжийн утга"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2604,7 +2732,7 @@ msgstr "Барааны каталоги"
 #: model:ir.model.fields,field_description:sale.field_sale_report__categ_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Product Category"
-msgstr "Барааны Ангилал"
+msgstr "Барааны ангилал"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_image
@@ -2612,39 +2740,39 @@ msgstr "Барааны Ангилал"
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure_optional_products
 msgid "Product Image"
-msgstr "Бүтээгдэхүүний Зураг"
+msgstr "Барааны зураг"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__product_qty
 msgid "Product Quantity"
-msgstr "Барааны Тоо хэмжээ"
+msgstr "Барааны тоо хэмжээ"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__product_tmpl_id
 msgid "Product Template"
-msgstr "Барааны үлгэр"
+msgstr "Барааны загвар"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_id
 msgid "Product Variant"
-msgstr "Барааны Хувилбар"
+msgstr "Барааны хувилбар"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product
 #: model:ir.ui.menu,name:sale.menu_products
 msgid "Product Variants"
-msgstr "Барааны Хувилбар"
+msgstr "Барааны хувилбар"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
 msgid "Product attribute values that do not create variants"
-msgstr ""
+msgstr "Барааны хувилбар үүсгэдэггүй шинж чанарын утгууд"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
-msgstr ""
+msgstr "Урьдчилгаа төлбөрийг төлөөлөх бараа"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
@@ -2658,32 +2786,32 @@ msgstr "Бараанууд"
 #. module: sale
 #: model:ir.model,name:sale.model_report_sale_report_saleproforma
 msgid "Proforma Report"
-msgstr ""
+msgstr "Урьдчилсан тайлан"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Qty"
-msgstr "Тоо хэмжээ"
+msgstr "Тоо"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_delivered
 msgid "Qty Delivered"
-msgstr "Хүргэгдсэн Тоо хэмжээ"
+msgstr "Хүргэгдсэн тоо"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_invoiced
 msgid "Qty Invoiced"
-msgstr "Нэхэмжилсэн Тоо хэмжээ"
+msgstr "Нэхэмжлэгдсэн тоо"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_qty
 msgid "Qty Ordered"
-msgstr "Захиалсан Тоо хэмжээ"
+msgstr "Захиалагдсан тоо"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_invoice
 msgid "Qty To Invoice"
-msgstr "Нэхэмжлэх Тоо Хэмжээ"
+msgstr "Нэхэмжилвэл зохих тоо"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2725,32 +2853,34 @@ msgstr "Үнийн санал / Захиалга"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Quotation Date"
-msgstr "Үнийн саналын Огноо"
+msgstr "Үнийн саналын огноо"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Quotation Layout"
-msgstr ""
+msgstr "Үнийн саналын загвар"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Quotation Number"
-msgstr "Үнийн саналын Дугаар"
+msgstr "Үнийн саналын дугаар"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Quotation Sent"
-msgstr "Үнийн санал Илгээгдсэн"
+msgstr "Үнийн санал илгээгдсэн"
 
 #. module: sale
 #: sql_constraint:res.company:0
 msgid "Quotation Validity is required and must be greater than 0."
 msgstr ""
+"Үнийн саналын хүчинтэй хугацаа заавал шаардагдах бөгөөд 0-ээс их утгатай "
+"байна."
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr "Зөвшөөрсөн Үнийн санал"
+msgstr "Үнийн санал батлагдсан"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
@@ -2785,7 +2915,7 @@ msgstr "Үнийн саналууд"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations &amp; Orders"
-msgstr "Үнийн саналууд, Захиалгууд"
+msgstr "Үнийн санал &amp; Захиалга"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -2800,12 +2930,12 @@ msgstr "Үнийн саналууд болон Борлуулалтууд"
 #. module: sale
 #: selection:product.attribute,type:0
 msgid "Radio"
-msgstr "Радио"
+msgstr "Сонголтууд"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_template__expense_policy
 msgid "Re-Invoice Policy"
-msgstr ""
+msgstr "Дахин нэхэмжлэх бодлого"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:52
@@ -2817,23 +2947,23 @@ msgstr "Дугаар"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request."
-msgstr "Энэ борлуулалтын захиалгыг үүсгэсэн сурвалж баримт."
+msgstr "Уг борлуулалтын захиалгын холбогдох анхан шатны баримтын дугаар."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Reject This Quotation"
-msgstr ""
+msgstr "Энэ үнийн саналыг татгалзах"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__remaining_validity_days
 msgid "Remaining Validity Days"
-msgstr ""
+msgstr "Үлдэж буй хүчинтэй хоног"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure_optional_products
 msgid "Remove one"
-msgstr ""
+msgstr "Нэгийг хасах"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report
@@ -2847,11 +2977,12 @@ msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
 msgstr ""
+"Захиалагч руу захиалгыг онлайн гарын үсгээр батлагаажуулах хүсэлт илгээх."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online payment to confirm orders"
-msgstr ""
+msgstr "Захиалгыг баталгаажуулахын тулд онлайн төлбөр төлөх хүсэлт илгээх"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_payment
@@ -2859,22 +2990,23 @@ msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
 msgstr ""
+"Захиалагч руу захиалгыг онлайн төлбөрөөр батлагаажуулах хүсэлт илгээх."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online signature to confirm orders"
-msgstr ""
+msgstr "Захиалгыг баталгаажуулахын тулд онлайн гарын үсэг зурах хүсэлт илгээх"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:359
 #, python-format
 msgid "Requested date is too soon."
-msgstr ""
+msgstr "Амласан огноо хэтэрхий эрт байна"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_user_id
 msgid "Responsible User"
-msgstr "Хариуцагч хэрэглэгч"
+msgstr "Хариуцсан хэрэглэгч"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
@@ -2884,37 +3016,37 @@ msgstr "Борлуулах захиалга"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
 msgid "Sale Order Count"
-msgstr ""
+msgstr "Борлуулалтын баримтын тоо"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
 msgid "Sale Order Warnings"
-msgstr ""
+msgstr "Борлуулалтын захиалгын санамж"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_acquirer_onboarding_wizard
 msgid "Sale Payment acquire onboarding wizard"
-msgstr ""
+msgstr "Борлуулалтын төлбөрийн хэрэгсэл визард дээр хэрэгжинэ"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_product_configurator
 msgid "Sale Product Configurator"
-msgstr ""
+msgstr "Тохируулдаг бараа борлуулах"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sale Warnings"
-msgstr ""
+msgstr "Борлуулалтын анхааруулга"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr ""
+msgstr "Борлуулалтанд хэрэглэгдэх төлбөрийн хэрэгсэл"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__sale_order_line_id
 msgid "Sale order line"
-msgstr ""
+msgstr "Борлуулалтын захиалгын мөр"
 
 #. module: sale
 #: selection:crm.team,dashboard_graph_model:0
@@ -2929,7 +3061,7 @@ msgstr "Борлуулалт"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr "Борлуулалтын Урьдчилгаа Төлбөрийн Нэхэмжлэл"
+msgstr "Борлуулалтын урьдчилгаа төлбөрийн нэхэмжлэл"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_all
@@ -2938,27 +3070,27 @@ msgstr "Борлуулалтын Урьдчилгаа Төлбөрийн Нэх�
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_pivot
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Sales Analysis"
-msgstr "Борлуулалтын Шинжилгээ"
+msgstr "Борлуулалтын шинжилгээ"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
 msgid "Sales Analysis Report"
-msgstr ""
+msgstr "Борлуулалтын шинжилгээ тайлан"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_team
 msgid "Sales Channels"
-msgstr "Борлуулалтын Сувгууд"
+msgstr "Борлуулалтын сувгууд"
 
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Sales Done"
-msgstr "Хийгдсэн Борлуулалтууд"
+msgstr "Дууссан борлуулалт"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Sales Information"
-msgstr "Борлуулалтын Мэдээлэл"
+msgstr "Борлуулалтын мэдээлэл"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:262
@@ -2968,49 +3100,49 @@ msgstr "Борлуулалтын Мэдээлэл"
 #: selection:sale.order,state:0 selection:sale.report,state:0
 #, python-format
 msgid "Sales Order"
-msgstr "Борлуулалтын Захиалга"
+msgstr "Борлуулалтын захиалга"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr "Борлуулалтын захиалга Батлагдсан"
+msgstr "Борлуулалтын захиалга батлагдсан"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__so_line
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
 msgid "Sales Order Item"
-msgstr ""
+msgstr "Борлуулалтын захиалгын мөр"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn
 msgid "Sales Order Line"
-msgstr "Борлуулалтын Захиалгын Мөр"
+msgstr "Борлуулалтын захиалгын мөр"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line__sale_line_ids
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Sales Order Lines"
-msgstr "Борлуулалтын Захиалгын Мөрүүд"
+msgstr "Борлуулалтын захиалгын мөр"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines ready to be invoiced"
-msgstr "Нэхэмжлэхэд бэлэн Борлуулалтын Захиалгын Мөрүүд"
+msgstr "Нэхэмжлэхэд бэлэн борлуулалтын мөрүүд"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr "Миний борлуулалтын захиалгад холбогдсон борлуулалтын захиалгын мөрүүд"
+msgstr "Миний борлуулалтын захиалгад холбогдсон борлуулалтын мөрүүд"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:133
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
 msgid "Sales Order(s)"
-msgstr ""
+msgstr "Борлуулалтын захиалга"
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:102
@@ -3031,7 +3163,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_order_pivot
 #, python-format
 msgid "Sales Orders"
-msgstr "Борлуулалтын Захиалгууд"
+msgstr "Борлуулалтын захиалга"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice__team_id
@@ -3056,34 +3188,34 @@ msgstr "Борлуулалтын баг"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn
 msgid "Sales Warnings"
-msgstr ""
+msgstr "Борлуулалтын анхааруулга"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.report_all_channels_sales_action
 msgid "Sales by Channel"
-msgstr ""
+msgstr "Борлуулалт сувгаар"
 
 #. module: sale
 #: model:ir.model,name:sale.model_report_all_channels_sales
 msgid "Sales by Channel (All in One)"
-msgstr ""
+msgstr "Борлуулалт сувгаар (Бүгд нэг дор)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
 #: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
 msgid "Sales by Channel Analysis"
-msgstr ""
+msgstr "Сувгаарх борлуулалтын шинжилгээ"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "Sales price"
-msgstr "Борлуулах Үнэ"
+msgstr "Борлуулах үнэ"
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:94
 #, python-format
 msgid "Sales: Untaxed Total"
-msgstr "Борлуулалт: Татваргүй Нийт дүн"
+msgstr "Борлуулалт: Татваргүй нийт"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__user_id
@@ -3100,39 +3232,39 @@ msgstr "Борлуулагч"
 #: code:addons/sale/models/res_company.py:60
 #, python-format
 msgid "Sample Order Line"
-msgstr ""
+msgstr "Жишээ борлуулалтын мөр"
 
 #. module: sale
 #: code:addons/sale/models/res_company.py:57
 #, python-format
 msgid "Sample Product"
-msgstr ""
+msgstr "Жишээ бараа"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Sample Quotation"
-msgstr ""
+msgstr "Жишээ үнийн санал"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Search Sales Order"
-msgstr "Борлуулалтын Захиалга Хайх"
+msgstr "Борлуулалтын захиалга хайх"
 
 #. module: sale
 #: selection:sale.order.line,display_type:0
 msgid "Section"
-msgstr "Хэсэг"
+msgstr "Бүлэг"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Section Name (eg. Products, Services)"
-msgstr ""
+msgstr "Бүлгийн нэр (жш: Бараа, Үйлчилгээ)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_token
 msgid "Security Token"
-msgstr "Аюулгүй байдлын Тасалбар"
+msgstr "Нууцлалын токен"
 
 #. module: sale
 #: selection:product.attribute,type:0
@@ -3144,7 +3276,7 @@ msgstr "Сонгох"
 #: code:addons/sale/static/src/js/tour.js:46
 #, python-format
 msgid "Select a product, or create a new one on the fly."
-msgstr ""
+msgstr "Бараа сонго, эсвэл шинийг үүсгэж ашигла."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_template__sale_line_warn
@@ -3154,39 +3286,49 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"\"Анхааруулга\" сонголтыг сонгосноор хэрэглэгчид мессеж анхааруулагдах "
-"болно. \"Хориглох Мессеж\"-г сонгосноор алдааг өгч урсгалыг зогсоох болно. "
-"Мессеж нь дараагийн талбарт бичигдэх ёстой."
+"\"Анхааруулга\" сонголтыг сонгосноор хэрэглэгчид мессеж харуулах болно. "
+"\"Хориглох Мессеж\"-г сонгосноор мессеж харуулаад зогсохгүй тухайн үйлдэл, "
+"урсгалыг хорих болно. Мессеж нь доорх талбарт бичигдэх ёстой."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
+msgstr "Худалдан авах болон борлуулахдаа ялгаатай хэмжих нэгж ашиглах"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
 msgstr ""
+"Тоон сүлжээний бараа худалдах - захиалагчийнхаа порталыг татаж авах "
+"боломжтой зүйлээр хангах"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr ""
+"Барааг борлуулахдаа хайрцагны савлагааны тоонд бүхлээр хуваагдах тоо хэмжээг"
+" ашиглана"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr "Урьдчилсан Нэхэмжлэл Илгээх"
+msgstr "Урьдчилсан нэхэмжлэл илгээх"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is paid"
-msgstr ""
+msgstr "Нэхэмжлэл төлөгдөх үед тухайн бараатай холбоотой онцгой имэйл илгээх"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Send a quotation to test the customer portal."
-msgstr ""
+msgstr "Харилцагчийн хандах боломжыг шалгах зорилгоор үнийн санал илгээх."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_sample_quotation
 msgid "Send a sample quotation."
-msgstr ""
+msgstr "Жишээ үнийн санал илгээх."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3196,7 +3338,7 @@ msgstr "Имэйлээр илгээх"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Send sample"
-msgstr ""
+msgstr "Жишээ илгээх"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3205,6 +3347,10 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Sales tab)."
 msgstr ""
+"Хэрэв та бараатай холбоотой онцгой мэдээлэл, агуулгыг (заавар, дүрэм, "
+"холбоос, медиа г.м) бусдад хуваалцахыг хүсвэл имэйл илгээлт нь танд туслах "
+"болно. Барааны дэлгэрэнгүй мэдээллийн Борлуулалт хэсэгт имэйл загвар үүсгэж "
+"тохируулах боломжтой."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -3214,12 +3360,12 @@ msgstr "Дараалал"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__use_invoices
 msgid "Set Invoicing Target"
-msgstr ""
+msgstr "Нэхэмжлэлийн зорилтот дүнг тохируулах"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set a default validity on your quotations"
-msgstr ""
+msgstr "Үнийн саналын тогтмол хүчинтэй хугацааг тохируулах"
 
 #. module: sale
 #. openerp-web
@@ -3231,19 +3377,17 @@ msgstr "Нэхэмжлэлийн зорилго тохируулах:"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr ""
+msgstr "Нэг бараанд олон үнэ тохируулах, автомат хөнгөлөлт г.м"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Set payments"
-msgstr ""
+msgstr "Төлбөр тохируулах"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set specific billing and shipping addresses"
-msgstr ""
-"Захиалганд ялгаатай төлбөр нэхэмжлэх хаяг болон хүргэлтийн хаяг сонгож "
-"ашиглах боломж"
+msgstr "Захиалганд тусгайлан нэхэмжлэх хаяг болон хүргэлтийн хаяг сонгох"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3269,22 +3413,22 @@ msgstr "Хүргэлт"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
 msgid "Shipping Costs"
-msgstr "Хүргэлтийн Зардал"
+msgstr "Хүргэлтийн өртөг"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Shipping Information"
-msgstr "Хүргэлтийн Мэдээлэл"
+msgstr "Хүргэлтийн мэдээлэл"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Show all records which has next action date is before today"
-msgstr "Өнөөдрөөс өмнө дараагийн арга хэмжээг товлосон бүх рекордыг харуулах"
+msgstr "Өнөөдрөөс өмнө гүйцэтгэх ёстой байсан ажилбаруудыг харах"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show margins on orders"
-msgstr "Захиалгын дэлгэцэнд бохир ашиг харах"
+msgstr "Захиалгын дэлгэцэнд бохир ашиг харуулах"
 
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
@@ -3295,14 +3439,19 @@ msgstr "Нийтийн үнэ, хөнгөлөлтийг захиалагчид �
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show standard terms &amp; conditions on orders"
 msgstr ""
-"Захиалга үүсгэхэд автоматаар тавигдах худалдааны нөхцөл шалгуур бүхий "
-"текстэн мэдээлэл"
+"Захиалга үүсгэхэд автоматаар тавигдах худалдааны нөхцөл, шалгуур бүхий "
+"мэдээлэл"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Sign and pay online"
+msgstr ""
 
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
 #: selection:sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Sign online"
-msgstr ""
+msgstr "Онлайн гарын үсэг"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signature
@@ -3314,39 +3463,39 @@ msgstr "Гарын үсэг"
 #: code:addons/sale/controllers/portal.py:203
 #, python-format
 msgid "Signature is missing."
-msgstr "Гарын үсэг байхгүй."
+msgstr "Гарын үсэг дутуу."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__signature
 msgid "Signature received through the portal."
-msgstr ""
+msgstr "Гарын үсэг порталаар хүргэгдэж ирсэн."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_by
 msgid "Signed by"
-msgstr ""
+msgstr "Гарын үсэг зурсан"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sales_count
 #: model:ir.model.fields,field_description:sale.field_product_template__sales_count
 msgid "Sold"
-msgstr ""
+msgstr "Зарагдсан"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "Sold in the last 365 days"
-msgstr ""
+msgstr "Сүүлийн 365 хоногт зарагдсан"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__origin
 msgid "Source Document"
-msgstr "Эх Баримт"
+msgstr "Эх баримт"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_product_email_template
 msgid "Specific Email"
-msgstr "Тусгай Имэйл"
+msgstr "Тусгай имэйл"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:53
@@ -3358,17 +3507,17 @@ msgstr "Үе шат"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
 msgid "State of the onboarding confirmation order step"
-msgstr ""
+msgstr "Борлуулалтын төлбөрийн хэрэгсэл тохируулалтын явцын төлөв"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
 msgid "State of the onboarding sample quotation step"
-msgstr ""
+msgstr "Борлуулалтын үнийн саналын загвар тохируулалтын явцын төлөв"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
 msgid "State of the sale onboarding panel"
-msgstr ""
+msgstr "Борлуулалтын тохируулалтын явцын төлөв"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -3385,17 +3534,21 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Ажилбаруудын төлөв байдал\n"
+"Хоцорсон: Гүйцэтгэх огноо нь аль хэдий нь өнгөрсөн\n"
+"Өнөөдөр: Өнөөдөр гүйцэтгэх ёстой\n"
+"Төлөвлөгдсөн: Ирээдүйд гүйцэтгэх ажилбарууд"
 
 #. module: sale
 #: model:product.template.attribute.value,name:sale.product_template_attribute_value_3
 #: model:product.template.attribute.value,name:sale.product_template_attribute_value_4
 msgid "Steel"
-msgstr ""
+msgstr "Төмөр"
 
 #. module: sale
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Stock Moves"
-msgstr "Барааны Хөдөлгөөнүүд"
+msgstr "Барааны хөдөлгөөн"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
@@ -3405,17 +3558,17 @@ msgstr "Stripe"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "Stripe Publishable Key"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "Stripe Secret Key"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_subtotal
 msgid "Subtotal"
-msgstr "Дэд дүн"
+msgstr "Үнийн дүн"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced_target
@@ -3423,13 +3576,13 @@ msgid ""
 "Target of invoice revenue for the current month. This is the amount the "
 "sales channel estimates to be able to invoice this month."
 msgstr ""
-"Энэ сарын нэхэмжлэлийн орлогын зорилт. Энэ нь борлуулалтын багийн энэ сард "
-"нэхэмжилж чадна гэж бодож байгаа дүн."
+"Энэ сарын нэхэмжлэлийн орлогын зорилт. Энэ бол тухайн сард уг борлуулалтын "
+"баг буюу сувгаар нэхэмжилж чадна төлөвлөж буй дүн."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_by_group
 msgid "Tax amount by group"
-msgstr ""
+msgstr "Татварын дүн бүлгээр"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -3437,7 +3590,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Taxes"
-msgstr "Татварууд"
+msgstr "Татвар"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__deposit_taxes_id
@@ -3447,7 +3600,7 @@ msgstr "Хадгаламжийн татвар"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "UX зорилготой техникийн талбар"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3455,23 +3608,23 @@ msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
-"Та яагаад энэ үнийн саналыг татгалзаж буйгаа тайлбарлана уу, энэ нь биднийг "
-"үйлчилгээгээ сайжруулахад туслах болно."
+"Та яагаад энэ үнийн саналаас татгалзаж буй шалтгаанаа бичнэ үү., энэ нь "
+"биднийг үйлчилгээгээ сайжруулахад тус болно."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__sale_note
 msgid "Terms & Conditions"
-msgstr "Заалтууд & Нөхцөлүүд"
+msgstr "Худалдааны нөхцөл & шалгуур"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Terms &amp; Conditions"
-msgstr "Нэр томъёо &amp; Нөхцөл"
+msgstr "Худалдааны нөхцөл &amp; шалгуур"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__note
 msgid "Terms and conditions"
-msgstr "Заалтууд болон нөхцөлүүд"
+msgstr "Худалдааны нөхцөл ба шалгуур"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3479,6 +3632,8 @@ msgid ""
 "Terms and conditions... (note: you can setup default ones in the "
 "Configuration menu)"
 msgstr ""
+"Худалдааны нөхцөл ба шалгуур... (жич: Тохиргооны цэс рүү очиж байнга "
+"ашиглагдах утгыг тохируулах боломжтой)"
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:116
@@ -3487,6 +3642,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"%s борлуулалтын захиалга цуцлагдсан байна. Борлуулалтын захиалга цуцлагдсан "
+"тул та холбогдох %s шинжилгээний дансанд зардал бүртгэх боломжгүй."
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:115
@@ -3496,6 +3653,9 @@ msgid ""
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
 msgstr ""
+"%s борлуулалтын захиалга түгжигдсэн байна. Борлуулалтын захиалга түгжигдсэн "
+"үед холбогдох %s шинжилгээний дансанд зардал бүртгэх боломжгүй. Та шинээр "
+"борлуулалтын захиалга бүртгээд уг шинжилгээний данстай холбож ашиглана уу."
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:111
@@ -3504,11 +3664,14 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
 msgstr ""
+"Борлуулалтын захиалга %s батлагдаагүй байна. Тиймээс уг захиалгатай "
+"холбоотой %s шинжилгээний дансанд зардал бүртгэхийн тул эхлээд борлуулалтын "
+"захиалгаа батлах шаардлагатай."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The amount to be invoiced in advance, taxes excluded."
-msgstr "Урьдчилан нэхэмжлэх үнэ, татвар ороогүй."
+msgstr "Урьчилсан нэхэмжлэлийн дүнд татвар шингэхгүй."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__analytic_account_id
@@ -3522,11 +3685,13 @@ msgid ""
 "The commitment date is sooner than the expected date.You may be unable to "
 "honor the commitment date."
 msgstr ""
+"Захиалагчийн хүлээж буй огноо нь таамагласан огноогоос эрт байна. Та уг "
+"захиалагчийн хүлээлтийн огноог биелүүлж чадахгүйд хүрч болзошгүй."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__dashboard_graph_model
 msgid "The graph this channel will display in the Dashboard.\n"
-msgstr ""
+msgstr "Уг сувгийн граффик нь Хянах самбар дээр харагдах болно.\n"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -3535,6 +3700,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment acquirer.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"Төлбөрийн хэрэгсэлээр гүйлгээ хийгдэж батлагдмагц нэхэмжлэл автоматаар бүртгэгдэх бөгөөд харилцагч портал хандалт хийж нэхэмжлэлээ харж болно.\n"
+"Төлбөрийн хэрэгсэл дээр тохируулагдсан журналд төлбөрийн гүйлгээ бүртгэгдэх бөгөөд нэхэмжлэл нь төлсөн төлөвт шилжсэн байх болно.\n"
+"Энэ горим танд захиалга хүргэгдэхээс өмнө эцсийн нэхэмжлэл бүртгэгдэх байх урсгалыг санал болгоно."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3542,11 +3710,13 @@ msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
 msgstr ""
+"Бохир ашиг бол борлуулалтын нийт үнийн дүнгээс борлуулсан барааны өртөгийн "
+"дүнг хассан ялгавар юм."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
-msgstr ""
+msgstr "Уг борлуулалтын захиалгын төлбөрийн харилцаа."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:154
@@ -3555,8 +3725,8 @@ msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
-"Урьдчилгаа төлбөрийг нэхэмжлэхэд хэрэглэгдсэн бараа нь 'Үйлчилгээ' төрөлтэй "
-"байх ёстой. Өөр бараа хэрэглэнэ үү эсвэл энэ барааг шинэчлэнэ үү."
+"Урьдчилгаа нэхэмжлэлд хэрэглэгдэх бараа нь 'Үйлчилгээ' төрөлтэй байх ёстой. "
+"Өөр бараа ашиглах эсвэл энэ барааг зөв болгож засварлана уу."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:152
@@ -3566,32 +3736,32 @@ msgid ""
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
 msgstr ""
-"Урьдчилгаа төлбөрийг нэхэмжлэхэд хэрэглэгдсэн барааны нэхэмжлэлийн дүрэм нь "
-"\"Захиалсан тоо хэмжээ\" гэж тохируулагдсан байх ёстой. Депозит нэхэмжлэл "
-"үүсгэхийн тулд депозит барааг шинэчлэнэ үү."
+"Урьдчилгаа төлбөрийг нэхэмжлэхэд хэрэглэгдсэн барааны нэхэмжлэх бодлого нь "
+"\"Захиалсан тоо хэмжээ\" утгаар байх ёстой. Урьдчилгаа барааг зөв болгож "
+"засварлана уу."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__currency_rate
 msgid ""
 "The rate of the currency to the currency of rate 1 applicable at the date of"
 " the order"
-msgstr ""
+msgstr "Захиалгын огноонд харгалзах захиалгын валютын ханш"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:80
 #, python-format
 msgid "The value of the down payment amount must be positive."
-msgstr "Урьдчилгаа төлбөрийн хэмжээ эерэг тоо байх ёстой."
+msgstr "Урьдчилгаа төлбөрийн хэмжээ нэмэх тоо байх ёстой."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no orders for your account."
-msgstr "Одоогоор таны бүртгэлд захиалга алга."
+msgstr "Одоогоор таны бүртгэлд ямар нэг захиалга алга."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
-msgstr "Одоогоор таны бүртгэлд үнийн санал алга."
+msgstr "Одоогоор таны бүртгэлд ямар нэг үнийн санал алга."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3600,6 +3770,9 @@ msgid ""
 "must be set in the Sales tab of the product detail form. 2) Price computed "
 "from formulas: must be set in the pricelist form."
 msgstr ""
+"Үнийн хүснэгтийн зохион байгуулах хоёр арга зам бий: 1) Нэг бараанд олон үнэ"
+" зохиох: барааны дэлгэрэнгүй мэдээллийн Борлуулалт ТАБ дээр тохируулагдана. "
+"2) Томьёоллоор үнэ бодох: Үнийн хүснэгтийн мэдээлэл дээр тохируулна."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:76
@@ -3608,8 +3781,8 @@ msgid ""
 "There is no income account defined for this product: \"%s\". You may have to"
 " install a chart of account from Accounting app, settings menu."
 msgstr ""
-"Энэ бараа дээр орлогын данс тохируулагдаагүй байна: \"%s\". Нягтлан бодох "
-"бүртгэлийн модулийн тохиргоо цэсээс дансны график суулгана уу."
+"Энэ барааны хувьд орлогын данс тохируулагдаагүй байна: \"%s\". Нягтлан бодох"
+" бүртгэлийн модулийн тохиргоо цэсээс дансны жагсаалт сонгон суулгана уу."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:549 code:addons/sale/models/sale.py:553
@@ -3618,6 +3791,9 @@ msgid ""
 "There is no invoiceable line. If a product has a Delivered quantities "
 "invoicing policy, please make sure that a quantity has been delivered."
 msgstr ""
+"Нэхэмжилвэл зохих мөр алга. Хэрэв бараа тань \"Хүргэгдсэн тоогоор\" "
+"нэхэмжлэгдэх бодлоготой бол тоо хэмжээ нь үнэхээр хүргэгдсэн эсэхийг "
+"нягтална уу."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -3625,11 +3801,13 @@ msgid ""
 "These are orders with products invoiced based on ordered quantities,\n"
 "                in the case you have delivered more than what was ordered."
 msgstr ""
+"Хэрэв та захиалсан тоо хэмжээнээс илүү хэмжээгээр хүргэлт хийсэн бол,\n"
+"                танд захиалсан тоогоор нэхэмжлэгдсэн захиалгууд байсаар байна."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure
 msgid "This combination does not exist."
-msgstr ""
+msgstr "Энэ зохимж байхгүй байна."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3637,6 +3815,8 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
+"Энэ утга нь шинээр бараа бүртгэх бүрт ашиглагдана. Энэ утгыг барааны "
+"дэлгэрэнгүй форм дээр өөрчлөх боломжтой."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__commitment_date
@@ -3644,6 +3824,9 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
+"Энэ бол захиалагчид хүргэж өгөхөөр амласан огноо болно. Хэрэв энэ огноог "
+"тохируулвал хүргэлтийн баримт барааны урьтал хугацаанаас илүүтэй энэ "
+"огноогоор төлөвлөгдөнө."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3653,11 +3836,14 @@ msgid ""
 "product deliveries on your own: expected date, commitment date, effective "
 "date."
 msgstr ""
+"Энэ сонголт нь танд борлуулалтын захиалгын хүргэлтийг төлөвлөхөд илүү "
+"зориулсан илүү олон нэмэлт талбаруудыг олгоно: товлосон огноо, захиалагчийн "
+"хүлээж буй огноо, хэрэгжсэн огноо."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_configurator_configure
 msgid "This product has no valid combination."
-msgstr ""
+msgstr "Энэ бараанд боломжит зохимж алга."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -3684,11 +3870,11 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"Энэ тайлан нь үнийн саналууд дээр шинжилгээг хийдэг. Шинжилгээ нь "
-"борлуулалтын орлогыг шалгаж түүнийг төрөл бүрийн шүүлтүүрээр (борлуулалтын "
-"ажилтан, харилцагч, бараа, гм) эрэмбэлдэг. Энэ тайланг нэхэмжлэгдээгүй "
-"борлуулалтыг шинжлэхдээ ашиглана. Хэрэв та өөрийн эргэцийг шинжлэх хүсвэл "
-"Санхүү модулийн Нэхэмжлэлийн Шинжилгээ тайланг хэрэглэх нь зохимжтой."
+"Энэ тайлан нь үнийн саналууд дээр шинжилгээ хийдэг. Шинжилгээ нь "
+"борлуулалтын орлогыг шалгаж түүнийг олон төрлийн үзүүлэлтээр (борлуулалтын "
+"ажилтан, харилцагч, бараа, гм) эрэмбэлдэг. Мөн нэхэмжлэгдээгүй борлуулалт "
+"байгаа эсэхийг энэ тайлан хэлж өгнө. Хэрэв та өөрийн эргэцийг мэдэхийг "
+"хүсвэл Санхүү модулийн Нэхэмжлэлийн Шинжилгээ тайланг хэрэглэх нь зохимжтой."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -3699,12 +3885,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"Энэ тайлан нь борлуулалтын захиалга дээр шинжилгээг гүйцэтгэдэг. Шинжилгээ "
-"нь борлуулалтын орлогыг шалгаад түүнийгээ төрөл бүрийн шүүлтүүрээр "
-"(борлуулалтын ажилтан, харилцагч, бараа, гм) эрэмбэлдэг. Энэ тайланг "
-"нэхэмжлэгдээгүй борлуулалтыг шинжлэхдээ ашиглана. Хэрэв та өөрийн эргэцийг "
-"шинжлэх хүсвэл Санхүү модулийн Нэхэмжлэлийн Шинжилгээ тайланг хэрэглэх нь "
-"зохимжтой."
+"Энэ тайлан нь борлуулалтын захиалга дэрэ тулгуурлан шинжилгээ хийж үзүүлнэ. "
+"Шинжилгээ нь борлуулалтын орлогын түвшинг олон төрлийн үзүүлэлтээр "
+"(борлуулалтын ажилтан, харилцагч, бараа, гм) бүлэглэж харуулна. Мөн энэ "
+"тайлан нэхэмжлэгдээгүй борлуулалтын дүнг харуулна. Хэрэв та өөрийн эргэцийг "
+"шинжилгээ хийхийг хүсвэл Санхүү модулийн Нэхэмжлэлийн Шинжилгээ тайланг "
+"хэрэглэх нь зохимжтой."
 
 #. module: sale
 #: selection:sale.order.line,qty_delivered_method:0
@@ -3715,6 +3901,8 @@ msgstr "Цагийн хуудас"
 #: selection:product.template,service_type:0
 msgid "Timesheets on project (one fare per SO/Project)"
 msgstr ""
+"Төсөл дээрх цагийн хуудас (Төсөл/Борлуулалт бүрийн цагийн үнэ өөр байх "
+"боломжтой)"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -3723,17 +3911,17 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "To Invoice"
-msgstr "Нэхэмжлэх"
+msgstr "Нэхэмжлэх ёстой"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
 msgid "To Invoice Quantity"
-msgstr ""
+msgstr "Нэхэмжлэх тоо хэмжээ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
-msgstr ""
+msgstr "Дутуу нэхэмжлэгдсэн"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3742,6 +3930,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"Захиалагчдыг B2B портал хандалтанд урихыг хүсвэл аль нэг захиалагчийн "
+"мэдээлэл рүү ороод эсвэл жагсаалтаас хэд хэдийг сонгоод *Үйлдэл* цэс доторх "
+"'Портал хандалтын удирдлага' сонголтыг сонгоно уу."
 
 #. module: sale
 #: selection:sale.order,activity_state:0
@@ -3751,7 +3942,7 @@ msgstr "Өнөөдөр"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Today Activities"
-msgstr "Өнөөдрийн Ажилбарууд"
+msgstr "Өнөөдрийн ажилбар"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__price_total
@@ -3768,23 +3959,23 @@ msgstr "Нийт"
 #: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Total Price"
-msgstr "Нийт Үнэ"
+msgstr "Нийт үнэ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_tax
 msgid "Total Tax"
-msgstr ""
+msgstr "Нийт татвар"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Total Tax Included"
-msgstr "Татвартай Нийлбэр"
+msgstr "Татвартай нийт дүн"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_template__service_type
 msgid "Track Service"
-msgstr "Үйлчилгээг Хянах"
+msgstr "Үйлчилгээ үзүүлэх төрөл"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__transaction_ids
@@ -3799,17 +3990,17 @@ msgstr "Төрөл"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__type_name
 msgid "Type Name"
-msgstr ""
+msgstr "Төрлийн нэр"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
 msgid "UPS Connector"
-msgstr ""
+msgstr "UPS холболт"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps
 msgid "USPS Connector"
-msgstr ""
+msgstr "USPS холболт"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:734
@@ -3822,7 +4013,7 @@ msgstr "Ангилагдаагүй"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Unit Price"
-msgstr "Нэгж Үнэ"
+msgstr "Нэгж үнэ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3839,7 +4030,7 @@ msgstr "Хэмжих нэгж"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_categ_form_action
 msgid "Unit of Measure Categories"
-msgstr "Хэмжих нэгжийн Ангилалууд"
+msgstr "Хэмжих нэгжийн ангилал"
 
 #. module: sale
 #: model:product.product,uom_name:sale.advance_product_0
@@ -3866,7 +4057,7 @@ msgstr "Түгжээг цуцлах"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_unread
 msgid "Unread Messages"
-msgstr "Уншаагүй Зурвасууд"
+msgstr "Уншаагүй зурвас"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_unread_counter
@@ -3876,28 +4067,28 @@ msgstr "Уншаагүй зурвасын тоолуур"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Татваргүй Дүн"
+msgstr "Татваргүй дүн"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr ""
+msgstr "Нэхэмжилсэн татваргүй дүн"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr ""
+msgstr "Нэхэмжлэх ёстой татваргүй дүн"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced
 msgid "Untaxed Invoiced Amount"
-msgstr ""
+msgstr "Нэхэмжилсэн татваргүй дүн"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
 msgid "Untaxed Total"
-msgstr "Татваргүй Нийт дүн"
+msgstr "Татваргүй дүн"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:402
@@ -3906,19 +4097,21 @@ msgid ""
 "Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a"
 " href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
 msgstr ""
+"Дутуу нэхэмжилсэн: <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> "
+"захиалагч: <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Upselling Opportunity"
-msgstr "Нэмэлт борлуулалтын Боломж"
+msgstr "Давуулан борлуулах боломж"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:75
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to preceeding screens</b>."
-msgstr "<b>Өмнөх дэлгэцүүд рүү буцахын</b> тулд линкийн мөрийг ашиглана уу."
+msgstr "<b>Өмнөх дэлгэцүүд</b>рүү буцахын тулд буцах холбоосыг ашиглана уу."
 
 #. module: sale
 #. openerp-web
@@ -3932,12 +4125,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
 msgid "User entered custom product attribute values"
-msgstr ""
+msgstr "Хэрэглэгч өөрийн барааны шинжийн өөрчилсөн утга"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "Valid Until"
-msgstr "Хүртэл Хүчинтэй"
+msgstr "Хүртэл хүчинтэй"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3955,11 +4148,13 @@ msgid ""
 "Validity date of the quotation, after this date, the customer won't be able "
 "to validate the quotation online."
 msgstr ""
+"Үнийн саналын хүчинтэй хугацаа, энэ хугацаа өнгөрвөл захиалагч уг үнийн "
+"саналыг онлайнаар баталгаажуулах боломжгүйд хүрнэ."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Void Transaction"
-msgstr "Хоосон Гүйлгээ"
+msgstr "Гүйлгээ буцаалт"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__volume
@@ -3981,7 +4176,7 @@ msgstr "%s-д зориулсан анхааруулга"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Warning on the Sales Order"
-msgstr "Борлуулалтын захиалга дээрх Анхааруулга"
+msgstr "Борлуулалтын захиалга дээрх анхааруулга"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -3992,7 +4187,7 @@ msgstr "Энэ барааг борлуулах үеийн сануулга"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
 msgid "Website Messages"
-msgstr "Вебсайтын зурвасууд"
+msgstr "Вебсайтын зурвас"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__website_message_ids
@@ -4007,7 +4202,7 @@ msgstr "Юуг нэхэмжилмээр байна?"
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
 msgid "Wire Transfer"
-msgstr "Wire Transfer"
+msgstr "Утсаар захиалах гүйлгээ"
 
 #. module: sale
 #. openerp-web
@@ -4031,6 +4226,7 @@ msgstr "Буруу утга оруулсан байна!"
 #: model:ir.model.fields,help:sale.field_sale_order_line__order_partner_id
 msgid "You can find a customer by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Та захиалагчыг Нэр, ТТД, Имэйл, дотоод код зэргээр хайж олох боломжтой."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:268
@@ -4039,6 +4235,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"Та илгээгдсэн үнийн санал эсвэл батлагдсан захиалгыг устгах боломжгүй. Та "
+"эхлээд үүнийг цуцлах шаардлагатай."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1491
@@ -4047,6 +4245,8 @@ msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
 "You should rather set the quantity to 0."
 msgstr ""
+"Захиалга батлагдсаны дараа захиалгын мөрийг хасах боломжгүй.\n"
+"Тэгэхийн оронд тоо хэмжээг нь 0 болгож болно."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -4054,6 +4254,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "                or check every order and invoice them one by one."
 msgstr ""
+"Та бүх захиалгыг сонгоод багцаар нь нэхэмжлэл үүсгэх боломжтой,<br>\n"
+"                эсвэл захиалга тус бүрээр нь нэг бүрчлэн нэхэмжлэл үүсгэж болно."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_acquirer__so_reference_type
@@ -4062,6 +4264,9 @@ msgid ""
 " communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
+"Та энд тухайн захиалгын харилцаа холбооны төрлийг тодорхойлох боломжтой. "
+"Захиалагчыг төлбөрийн төлөх оролдлого хийх үед түүнд харилцаа холбооны "
+"мэдээллийг харуулна."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -4069,36 +4274,40 @@ msgid ""
 "You must define a product for everything you purchase,\n"
 "                    whether it's a physical product, a consumable or services."
 msgstr ""
+"Та худалдаж авах боломжтой бүхий л барааг бүртгэх шаардлагатай,\n"
+"                    жишээ нь биет бараа материал, хангамж, ажил үйлчилгээ."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your feedback..."
-msgstr ""
+msgstr "Таны санал хүсэлт..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been confirmed."
-msgstr ""
+msgstr "Таны захиалга батлагдлаа."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed but still needs to be paid to be confirmed."
 msgstr ""
+"Та захиалга дээр гарын үсэг зурагдсан, гэвч баталгаажуулахын тулд төлбөр "
+"төлөгдөх шаардлагатай."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed."
-msgstr ""
+msgstr "Таны захиалга дээр гарын үсэг зурагдлаа."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order is not in a state to be rejected."
-msgstr ""
+msgstr "Та захиалга татгалзах үйлдэл хийх боломжгүй төлөвт байна."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr ""
+msgstr "bpost холболт"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4131,9 +4340,9 @@ msgstr "кг"
 #: code:addons/sale/models/sale.py:106
 #, python-format
 msgid "sale order"
-msgstr ""
+msgstr "борлуулалт"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__amount_by_group
 msgid "type: [(name, amount, base, formated amount, formated base)]"
-msgstr ""
+msgstr "төрөл: [(нэр, дүн, суурь үнэ, хэлбэржсэн дүн, хэлбэржсэн суурь үнэ)]"

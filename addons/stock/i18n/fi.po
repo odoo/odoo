@@ -882,7 +882,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Check Availability"
-msgstr ""
+msgstr "Tarkista saatavuus"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_packages
@@ -1157,6 +1157,9 @@ msgid ""
 "                        products later. Do not create a backorder if you will not\n"
 "                        process the remaining products."
 msgstr ""
+"Luo jälkitoimitus, jos tulet käsittelemään loput tuotteista\n"
+"                        myöhemmin. Älä luo jälkitoimitusta, jos et käsittele\n"
+"                         enää loppuja tuotteista."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
@@ -2801,7 +2804,7 @@ msgstr "Yliaikaiset toiminnot"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr ""
+msgstr "Myöh. siirrot"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days
@@ -4497,7 +4500,7 @@ msgstr "Todellinen määrä"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_qty
 msgid "Real Reserved Quantity"
-msgstr ""
+msgstr "Todellinen varattu määrä"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__reception_route_id
@@ -4702,12 +4705,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree
 #: selection:stock.package_level,state:0
 msgid "Reserved"
-msgstr ""
+msgstr "Varattu"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__reserved_quantity
 msgid "Reserved Quantity"
-msgstr ""
+msgstr "Varattu määrä"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__module_procurement_jit
@@ -5158,7 +5161,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_reserved
 msgid "Show Reserved"
-msgstr ""
+msgstr "Näytä varatut"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__show_resupply
@@ -5586,6 +5589,8 @@ msgid ""
 "The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has"
 " been created."
 msgstr ""
+"Jälkitoimitus <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> on "
+"luotu."
 
 #. module: stock
 #: sql_constraint:stock.location:0
@@ -5905,7 +5910,7 @@ msgstr "Tehtävät"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Process"
-msgstr ""
+msgstr "Tehtävänä"
 
 #. module: stock
 #: selection:stock.picking,activity_state:0
@@ -6766,11 +6771,13 @@ msgid ""
 "You have not recorded <i>done</i> quantities yet, by clicking on <i>apply</i>\n"
 "                        Odoo will process all the <i>reserved</i> quantities."
 msgstr ""
+"Et ole kirjannut käsiteltyjä <i>Valmis</i> määriä vielä. Painamalla <i>Käytä ja siirrä</i>,\n"
+"                        Odoo prosessoi koko keräilyn <i>Varattu</i> määrillä."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
-msgstr ""
+msgstr "Olet käsittelemässä vähemmän tuotteita kuin alkuperäinen tarve on."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_overprocessed_transfer
@@ -6778,6 +6785,8 @@ msgid ""
 "You have processed more than what was initially\n"
 "                    planned for the product"
 msgstr ""
+"Olet käsittelemässä enemmän tuotteita\n"
+"                    kuin alkuperäinen tarve on."
 
 #. module: stock
 #: code:addons/stock/models/product.py:307
