@@ -155,6 +155,7 @@ class PaymentAcquirerOgone(models.Model):
             'return_url': ogone_tx_values.pop('return_url', False)
         }
         temp_ogone_tx_values = {
+            'TP': '%s/ogone.htm' % (base_url),
             'PSPID': self.ogone_pspid,
             'ORDERID': values['reference'],
             'AMOUNT': float_repr(float_round(values['amount'], 2) * 100, 0),

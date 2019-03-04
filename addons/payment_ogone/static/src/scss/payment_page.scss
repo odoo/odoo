@@ -1,0 +1,68 @@
+.navbar-default {
+    background-color: #875A7B;
+    height: 54px;
+ }
+.header-default {
+    background-color: #f6f9f9;
+    height: 60px;
+}
+.footer-default {
+    background-color: #f6f9f9;
+    color: gray; 
+}
+.body-default {
+    background-color: #fcfcfc;
+}
+table {
+    td {
+        &.ncolinput {
+            @extend .input-group;
+            width: 60%;
+            small {
+                @extend .input-group;
+                input, select {
+                    @extend .form-control;
+                    width: 40%
+                }
+            }
+        }
+        font-family: sans-serif;
+        font-weight: bold;
+        &.ncolh1 {
+            small {
+                font-size: medium;
+                font-weight: bold;
+            }
+        }
+        &.ncoltxtl {
+            font-size: medium;
+        }
+        &.ncoltxtl2 {
+           font-size: large;
+        }
+        &.ncoltxtr {
+            small{
+                font-size: small;
+                font-weight: bold;
+            }
+        }
+        &.ncolline1 {
+            small {
+                font-size: small;
+            }
+        }
+        &.ncollogoc {
+            form {
+                small {
+                    margin-left: 25px;
+                }
+            }
+        }
+    }
+}
+input {
+    &.ncol {
+        @extend .btn;
+        @extend .btn-primary; 
+    }
+}

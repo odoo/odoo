@@ -5,6 +5,7 @@
             <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
             <!-- seller -->
             <input type="hidden" name='PSPID' t-att-value='PSPID'/>
+            <input type="hidden" name='TP' t-att-value='TP'/>
             <input type="hidden" name='ORDERID' t-att-value='ORDERID'/>
             <!-- cart -->
             <input type="hidden" name='AMOUNT' t-att-value='AMOUNT or "0.0"'/>
@@ -57,6 +58,38 @@
                     <input type="text" name="cc_cvc" id="cc_cvc" class="form-control" maxlength="4" placeholder="CVC" data-is-required="true"/>
                 </div>
             </div>
+        </template>
+        <!-- Custom Payment Template -->
+        <template id="payment_ogone.checkout_template" name="Ogone">&lt;!DOCTYPE html&gt;
+            <html t-att="html_data or {}">
+                <head>
+                    <meta charset="utf-8"/>
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+                    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/> 
+                    <title t-esc="name or 'Pay securely with Odoo using Ogone'"/>
+                    <t t-call-assets="web.assets_frontend" t-js="false"/>
+                    <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/web/static/src/img/favicon.ico'"/>
+                </head>
+                <body class="body-default">
+                    <nav class="navbar navbar-expand-sm navbar-default"></nav>
+                    <nav class="navbar navbar-expand-sm header-default">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <img t-att-src="'/web/binary/company_logo'"/>
+                            </li>
+                        </ul>
+                    </nav>
+                    $$$PAYMENT ZONE$$$
+                    <footer class="container-fluid footer-default">
+                        <p>Copyright © Odoo</p>
+                    </footer>
+                </body>
+            </html>
+        </template>
+        <template id="assets_frontend_ogone" inherit_id="portal.assets_frontend" name="payment_page assets frontend">
+            <xpath expr="//link[last()]" position="after">
+                <link rel="stylesheet" type="text/scss" href="/payment_ogone/static/src/scss/payment_page.scss"/>
+            </xpath>
         </template>
     </data>
 </odoo>
