@@ -220,6 +220,10 @@ msgid ""
 "attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
 "groups=\"base.group_user\"/>"
 msgstr ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"Tento mail"
+" je na čiernej listine pre hromadné posielanie\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
 
 #. module: mail
 #. openerp-web
@@ -561,7 +565,7 @@ msgstr "Pridať"
 #: code:addons/mail/static/src/xml/chatter.xml:30
 #, python-format
 msgid "Add Attachments"
-msgstr ""
+msgstr "Pridaj prílohy"
 
 #. module: mail
 #. openerp-web
@@ -1715,7 +1719,7 @@ msgstr "Diskusie"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel
 msgid "Discussion Channel"
-msgstr ""
+msgstr "Diskusný kanál"
 
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_comment
@@ -1785,7 +1789,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/chatter.js:498
 #, python-format
 msgid "Do you really want to delete %s?"
-msgstr ""
+msgstr "Naozaj chcete zmazať%s?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -3059,13 +3063,13 @@ msgstr "Protokol"
 #: code:addons/mail/static/src/xml/chatter.xml:89
 #, python-format
 msgid "Log a note. Followers will not be notified."
-msgstr "Pridať poznámku. Sledujúci nebudú notifikovaný."
+msgstr "Pridať poznámku. Sledujúci nebudú notifikovaní."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Log a note..."
-msgstr ""
+msgstr "Pridať poznámku..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -3082,7 +3086,7 @@ msgstr "Pridať internú poznámku"
 #: code:addons/mail/static/src/xml/chatter.xml:89
 #, python-format
 msgid "Log note"
-msgstr "Poznámka logu"
+msgstr "Pridať poznámku"
 
 #. module: mail
 #. openerp-web
@@ -5240,12 +5244,12 @@ msgstr ""
 #. module: mail
 #: sql_constraint:mail.moderation:0
 msgid "The email address must be unique per channel !"
-msgstr ""
+msgstr "Mailová adresa musí byť unikátna v rámci kanála!"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
-msgstr ""
+msgstr "Mail zaslaný"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__substitution
@@ -5471,6 +5475,8 @@ msgid ""
 "Try to add some activity on records, or make sure that\n"
 "                there is no active filter in the search bar."
 msgstr ""
+"Skúste pridať nejaké záznamy, alebo sa uistite, že je nie je žiadny aktívny "
+"filter vo vyhľadávaní."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__message_type
@@ -5531,7 +5537,7 @@ msgstr ""
 #: code:addons/mail/models/mail_message.py:34
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
-msgstr ""
+msgstr "Nemožno odoslať email, prosím nastavte emailovú adresu odosielateľa."
 
 #. module: mail
 #. openerp-web
@@ -5950,6 +5956,8 @@ msgstr "Ste administrátorom tohto kanála. Naozaj sa chcete odhlásiť?"
 msgid ""
 "You can mark any message as 'starred', and it shows up in this mailbox."
 msgstr ""
+"Akúkoľvek správu môžete označiť ako 'obľúbenú', tá sa potom zobrazí v tejto "
+"mailovej schránke."
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:87

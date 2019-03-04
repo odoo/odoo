@@ -363,7 +363,7 @@ msgstr "<span class=\"o_form_label\">Metoda zaokrouhlování</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "<span class=\"o_form_label\">of the month</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">měsíce</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -376,6 +376,8 @@ msgid ""
 "<span class=\"text-muted\">Only journals not yet linked to a bank account "
 "are proposed</span>"
 msgstr ""
+"<span class=\"text-muted\">Jsou navrženy pouze peněžní deníky, které ještě "
+"nejsou propojeny s bankovním účtem</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -427,7 +429,7 @@ msgstr "<span>Komu</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount Paid</span>"
-msgstr ""
+msgstr "<span>Částka vyplacená</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -442,12 +444,12 @@ msgstr "<span>Popis</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Disc.(%)</span>"
-msgstr ""
+msgstr "<span>Disc.(%)</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Import Bills</span>"
-msgstr ""
+msgstr "<span>Importovat účty</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -530,6 +532,8 @@ msgid ""
 "<strong class=\"text-center\">Scan me with your banking "
 "app.</strong><br/><br/>"
 msgstr ""
+"<strong class=\"text-center\">Prozkoumat vaší bankovní "
+"aplikací</strong><br/><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -718,6 +722,10 @@ msgid ""
 "posted. Those will be posted automatically after performing the bank "
 "reconciliation."
 msgstr ""
+"Položka platebního deníku vygenerovaná v deníku nakonfigurovaném k účtování "
+"příspěvků pouze v případě, že jsou platby spárovány s bankovním výpisem, "
+"nelze je ručně odeslat. Ty budou zaslány automaticky po provedení bankovního"
+" odsouhlasení."
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:681
@@ -750,7 +758,7 @@ msgstr "Vybraný řádek dokladu byl již vyrovnán pohybem účtu."
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only one time on same taxes."
-msgstr ""
+msgstr "Daňovou fiskální pozici lze definovat pouze jednou na stejné daně."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -1297,6 +1305,9 @@ msgid ""
 " with their mobile banking application. EPC QR codes are used by many "
 "European banks to process SEPA payments."
 msgstr ""
+"Přidejte do faktur EPC QR kód tak, aby zákazníci mohli platit okamžitě se "
+"svou aplikací pro mobilní bankovnictví. EPC QR kódy jsou používány mnoha "
+"evropskými bankami pro zpracování plateb SEPA."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3321,7 +3332,7 @@ msgstr "Vytvořit model"
 #. module: account
 #: selection:account.setup.bank.manual.config,create_or_link_option:0
 msgid "Create new journal"
-msgstr ""
+msgstr "Vytvořit nový deník"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
@@ -9559,7 +9570,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "TaxCloud"
-msgstr ""
+msgstr "TaxCloud"
 
 #. module: account
 #: selection:account.account.tag,applicability:0
