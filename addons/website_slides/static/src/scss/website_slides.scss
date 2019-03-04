@@ -142,40 +142,25 @@ $o-wslides-fs-side-width: 300px;
 // **************************************************
 
 .o_wslides_course_nav {
-    margin: auto;
-    background: linear-gradient(150deg, #875A7B 20%, #62495B 80%) !important;
-    opacity: 0.95;
+    @include o-position-absolute(0,0,auto,0);
+    border-width: 1px 0;
 
-    a {
-        color: #FFFFFF;
+    &, .o_wslides_course_nav_search {
+        background-color: rgba(white, 0.05);
+        border-color: rgba(white, 0.1);
+        border-style: solid;
     }
 
-    small a {
-        color: #000000;
+    .o_wslides_course_nav_search {
+        border-width: 0 1px;
     }
 
-    nav {
-        .breadcrumb-item::before {
-            font-weight: bold;
-            color: #FFFFFF;
-            opacity: 0.8;
-        }
-        .breadcrumb-item {
-            a {
-                font-weight: bold;
-                color: #FFFFFF;
-                opacity: 0.8;
-                transition: opacity linear .3s;
-            }
-            &.active {
-                a {
-                    opacity: 1.0;
-                }
-            }
-        }
-        ol {
-            background-color: transparent;
-        }
+    .breadcrumb-item.active a, .breadcrumb-item a:hover {
+        color: white;
+    }
+
+    .breadcrumb-item a, .breadcrumb-item + .breadcrumb-item::before {
+        color: rgba(white, 0.8);
     }
 }
 
