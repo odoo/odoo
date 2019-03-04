@@ -24,21 +24,22 @@ class SlidePartnerRelation(models.Model):
     _table = 'slide_slide_partner'
 
     slide_id = fields.Many2one('slide.slide', ondelete="cascade", index=True, required=True)
-    channel_id = fields.Many2one('slide.channel', string="Channel", related="slide_id.channel_id", store=True, index=True)
-    partner_id = fields.Many2one('res.partner', index=True, required=True)
+    channel_id = fields.Many2one(
+        'slide.channel', string="Channel",
+        related="slide_id.channel_id", store=True, index=True, ondelete='cascade')
+    partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     vote = fields.Integer('Vote', default=0)
     completed = fields.Boolean('Completed')
-
-    quiz_attempts_count = fields.Integer(string="Number of times this user attempted the quiz")
+    quiz_attempts_count = fields.Integer('Quiz attempts count', default=0)
 
 
 class SlideLink(models.Model):
     _name = 'slide.slide.link'
     _description = "External URL for a particular slide"
 
-    slide_id = fields.Many2one('slide.slide', required=True)
+    slide_id = fields.Many2one('slide.slide', required=True, ondelete='cascade')
     name = fields.Char('Title', required=True)
-    link = fields.Char("External Link", required=True)
+    link = fields.Char('External Link', required=True)
 
 
 class EmbeddedSlide(models.Model):
@@ -51,8 +52,10 @@ class EmbeddedSlide(models.Model):
     url = fields.Char('Third Party Website URL', required=True)
     count_views = fields.Integer('# Views', default=1)
 
-    def add_embed_url(self, slide_id, url):
+    def _add_embed_url(self, slide_id, url):
         baseurl = urls.url_parse(url).netloc
+        if not baseurl:
+            return 0
         embeds = self.search([('url', '=', baseurl), ('slide_id', '=', int(slide_id))], limit=1)
         if embeds:
             embeds.count_views += 1
@@ -85,6 +88,7 @@ class Slide(models.Model):
     _description = 'Slides'
     _mail_post_access = 'read'
     _order_by_strategy = {
+        'sequence': 'category_sequence asc, sequence asc',
         'most_viewed': 'total_views desc',
         'most_voted': 'likes desc',
         'latest': 'date_published desc',
