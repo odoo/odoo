@@ -129,6 +129,8 @@ Running the server
     * ``(i)p(u)db``: start the chosen python debugger in the code when an
       unexpected error is raised before logging and returning the error.
 
+    .. warning:: ``all`` and ``xml`` option prevents the translations to be completely loaded.
+
 .. _reference/cmdline/server/database:
 
 database
