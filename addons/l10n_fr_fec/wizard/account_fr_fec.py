@@ -77,6 +77,27 @@ class AccountFrFec(models.TransientModel):
         listrow = list(row)
         return listrow
 
+    def _get_company_legal_data(self, company):
+        """
+        Dom-Tom are excluded from the EU's fiscal territory
+        Those regions do not have SIREN
+        sources:
+            https://www.service-public.fr/professionnels-entreprises/vosdroits/F23570
+            http://www.douane.gouv.fr/articles/a11024-tva-dans-les-dom
+        """
+        dom_tom_group = self.env.ref('l10n_fr.dom-tom')
+        is_dom_tom = company.country_id.code in dom_tom_group.country_ids.mapped('code')
+        if not is_dom_tom and not company.vat:
+            raise Warning(
+                _("Missing VAT number for company %s") % company.name)
+        if not is_dom_tom and company.vat[0:2] != 'FR':
+            raise Warning(
+                _("FEC is for French companies only !"))
+
+        return {
+            'siren': company.vat[4:13] if not is_dom_tom else '',
+        }
+
     @api.multi
     def generate_fec(self):
         self.ensure_one()
@@ -88,6 +109,9 @@ class AccountFrFec(models.TransientModel):
         # 2) CSV files are easier to read/use for a regular accountant.
         # So it will be easier for the accountant to check the file before
         # sending it to the fiscal administration
+        company = self.env.user.company_id
+        company_legal_data = self._get_company_legal_data(company)
+
         header = [
             u'JournalCode',    # 0
             u'JournalLib',     # 1
@@ -110,14 +134,6 @@ class AccountFrFec(models.TransientModel):
             ]
 
         rows_to_write = [header]
-        company = self.env.user.company_id
-        if not company.vat:
-            raise Warning(
-                _("Missing VAT number for company %s") % company.name)
-        if company.vat[0:2] != 'FR':
-            raise Warning(
-                _("FEC is for French companies only !"))
-
         # INITIAL BALANCE
         unaffected_earnings_xml_ref = self.env.ref('account.data_unaffected_earnings')
         unaffected_earnings_line = True  # used to make sure that we add the unaffected earning initial balance only once
@@ -331,7 +347,6 @@ class AccountFrFec(models.TransientModel):
             rows_to_write.append(list(row))
 
         fecvalue = self._csv_write_rows(rows_to_write)
-        siren = company.vat[4:13]
         end_date = self.date_to.replace('-', '')
         suffix = ''
         if self.export_type == "nonofficial":
@@ -340,7 +355,7 @@ class AccountFrFec(models.TransientModel):
         self.write({
             'fec_data': base64.encodestring(fecvalue),
             # Filename = <siren>FECYYYYMMDD where YYYMMDD is the closing date
-            'filename': '%sFEC%s%s.csv' % (siren, end_date, suffix),
+            'filename': '%sFEC%s%s.csv' % (company_legal_data['siren'], end_date, suffix),
             })
 
         action = {
