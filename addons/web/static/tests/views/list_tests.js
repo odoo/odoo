@@ -12,6 +12,7 @@ var NotificationService = require('web.NotificationService');
 var testUtils = require('web.test_utils');
 var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
+var concurrency = require('web.concurrency');
 
 var createView = testUtils.createView;
 
@@ -59,12 +60,23 @@ QUnit.module('Views', {
                      m2o: 1, m2m: [1], amount: 0},
                 ]
             },
-            bar: {
-                fields: {},
+            foo2: {
+                fields: {
+                    bar: {string:"Bar", type: "char"},
+                    o2m: {string: "O2M field", type: "one2many", relation: "foo"},
+                },
                 records: [
-                    {id: 1, display_name: "Value 1"},
-                    {id: 2, display_name: "Value 2"},
-                    {id: 3, display_name: "Value 3"},
+                    {id: 1, o2m: [1, 2], bar: "hello"},
+                ]
+            },
+            bar: {
+                fields: {
+                    email: {string:"email", type:"char"}
+                },
+                records: [
+                    {id: 1, display_name: "Value 1", email: "hi@hello.com"},
+                    {id: 2, display_name: "Value 2", email: "hi2@hello.com"},
+                    {id: 3, display_name: "Value 3", email: "hi3@hello.com"},
                 ]
             },
             res_currency: {
@@ -2711,6 +2723,30 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('inputs are disabled when unselecting rows', async function (assert) {
+      assert.expect(1);
+
+      var list = await createView({
+          View: ListView,
+          model: 'foo',
+          data: this.data,
+          arch: '<tree editable="bottom"><field name="foo"/></tree>',
+          mockRPC: function (route, args) {
+              if (args.method === 'write') {
+                  assert.strictEqual($input.prop('disabled'), true,
+                      "input should be disabled");
+              }
+              return this._super.apply(this, arguments);
+          },
+      });
+
+      await testUtils.dom.click(list.$('td:contains(gnap)'));
+      var $input = list.$('tr.o_selected_row input[name="foo"]');
+      await testUtils.fields.editInput($input, 'lemon');
+      await testUtils.fields.triggerKeydown($input, 'tab');
+      list.destroy();
+    });
+
     QUnit.test('navigation with tab and readonly field (no modification)', async function (assert) {
         // This test makes sure that if we have 2 cells in a row, the first in
         // edit mode, and the second one readonly, then if we press TAB when the
@@ -2962,24 +2998,246 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('navigation: not moving down with keydown', async function (assert) {
+    QUnit.test('navigation: moving down with keydown (editable list bottom not one2many)', async function (assert) {
+        assert.expect(24);
+
+        this.data.foo.records.pop(); //4th record has no reference field set and we want to make the reference field required
+        this.data.foo.records.pop(); //3rd record has no many2many field set and we want to make the many2many field required
+        this.data.foo.records.push({
+            id: 4,
+            foo: "blip",
+            int_field: -5,
+            m2o: 1,
+            m2m: [1],
+            reference: 'res_currency,1',
+        });
+        
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:   '<tree editable="bottom">'+
+                        '<field name="foo" required="True"/>'+
+                        '<field name="m2o" required="True"/>'+
+                        '<field name="m2m" required="True" widget="many2many_tags"/>'+
+                        '<field name="int_field"/>'+
+                        '<field name="reference" required="True"/>'+
+                    '</tree>',
+        });
+
+        await testUtils.dom.click(list.$('td:contains(9)')); 
+        assert.hasClass(list.$('tr.o_data_row:eq(1)'),'o_selected_row',
+            "2nd row should be selected");
+        await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row input[name="int_field"]'), 'down');
+        await concurrency.delay(0);
+        assert.hasClass(list.$('tr.o_data_row:eq(2)'),'o_selected_row',
+            "3rd row should be selected");
+        assert.strictEqual(list.$('tr.o_selected_row input[name="int_field"]')[0], document.activeElement, 
+            "int_field should have focus");
+        assert.strictEqual(list.$('tr.o_selected_row input[name="foo"]').val(),"blip", 
+            "actual line should have foo = 'blip'");
+        assert.strictEqual(list.$('tr.o_selected_row input[name="int_field"]').val(),"-5", 
+            "actual line should have int_field = '-4'");
+        assert.strictEqual(list.$('tr.o_selected_row div[name="m2m"] span.o_badge_text').text(),"Value 1", 
+            "actual line should have tag = 'Value 1'");
+        assert.containsOnce(list, 'tr.o_selected_row input[name="foo"].o_required_modifier',
+            "the foo widget should have been marked required");
+        assert.containsOnce(list, 'tr.o_selected_row div[name="m2o"].o_required_modifier',
+            "the m2o widget should have been marked required");
+        assert.containsOnce(list, 'tr.o_selected_row div[name="m2m"].o_required_modifier',
+            "the m2m widget should have been marked required");
+        assert.containsOnce(list, 'tr.o_selected_row input[name="int_field"]:not(.o_required_modifier)',
+            "the int_field widget should not have been marked required");
+        assert.containsOnce(list, 'tr.o_selected_row div[name="reference"].o_required_modifier',
+            "the reference widget should have been marked required");
+        await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row input[name="int_field"]'), 'down');
+        await concurrency.delay(0);
+        assert.hasClass(list.$('tr.o_data_row:eq(3)'),'o_selected_row',
+            "4th row (newly created) should be selected");
+        assert.strictEqual(list.$('tr.o_selected_row input[name="int_field"]')[0], document.activeElement, 
+            "int_field should have focus");
+        assert.strictEqual(list.$('tr.o_selected_row input[name="foo"]').val(),"blip", 
+            "new line should have foo = blip");
+        assert.strictEqual(list.$('tr.o_selected_row input[name="int_field"]').val(),"0", 
+            "new line should have int_field = 0");
+        assert.strictEqual(list.$('tr.o_selected_row div[name="m2m"] span.o_badge_text').text(),"Value 1", 
+            "new line should have tag = 'Value 1'");
+        //value of selected row difficult to obtain so we look at the previous row:
+        assert.strictEqual(list.$('tr.o_data_row:eq(2) td:eq(2)').text(),"Value 1", 
+            "previous line should have m2o = Value 1");
+        assert.strictEqual(list.$('tr.o_data_row:eq(2) td:eq(5)').text(),"USD", 
+            "previous line should have reference = USD");
+        await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row input[name="int_field"]'), 'down');
+        await concurrency.delay(0);
+        assert.hasClass(list.$('tr.o_data_row:eq(4)'),'o_selected_row',
+            "5th row (newly created) should be selected");
+        assert.strictEqual(list.$('tr.o_selected_row input[name="int_field"]')[0], 
+            document.activeElement, "int_field should have focus");
+        assert.strictEqual(list.$('tr.o_data_row:eq(3) td:eq(1)').text(),"blip", 
+            "previous line should have foo = blip");  //check box in first td
+        assert.strictEqual(list.$('tr.o_data_row:eq(3) td:eq(2)').text(),"Value 1", 
+            "previous line should have m2o = Value 1 (b)"); //check box in first td
+        assert.strictEqual(list.$('tr.o_data_row:eq(3) td:eq(5)').text(),"USD", 
+            "previous line should have reference = USD");
+        assert.strictEqual(list.$('tr.o_selected_row input[name="foo"]').val(),
+            "blip", "new line should have foo = blip");
+        list.destroy();
+    });
+
+    QUnit.test('navigation: moving down with keydown (editable list top not one2many)', async function (assert) {
         assert.expect(2);
 
         var list = await createView({
             View: ListView,
             model: 'foo',
             data: this.data,
-            arch: '<tree editable="bottom"><field name="foo"/></tree>',
+            arch:   '<tree editable="top">'+
+                        '<field name="foo" required="True"/>'+
+                        '<field name="m2o" required="True"/>'+
+                        '<field name="int_field"/>'+
+                    '</tree>',
         });
 
-        await testUtils.dom.click(list.$('td:contains(yop)'));
-        assert.hasClass(list.$('tr.o_data_row:eq(0)'),'o_selected_row',
-            "1st row should be selected");
-        await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row input[name="foo"]'), 'down');
-        assert.hasClass(list.$('tr.o_data_row:eq(0)'),'o_selected_row',
-            "1st row should still be selected");
+        await testUtils.dom.click(list.$('td:contains(-4)')); //int_field=-4 and foo=blip and m2o: 1 (Value 1)
+        assert.hasClass(list.$('tr.o_data_row:eq(3)'),'o_selected_row',"4th row should be selected");
+        await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row input[name="int_field"]'), 'down');
+        assert.hasClass(list.$('tr.o_data_row:eq(3)'),'o_selected_row',"4th row should still be selected (no new line created)");
         list.destroy();
     });
+
+    QUnit.test('navigation: moving down with keydown (editable list with several pages)', async function (assert) {
+        assert.expect(6);
+        
+        for (var i = 0; i < 40; i++) {
+            this.data.foo.records.push({
+                id: 4,
+                foo: "blip",
+                int_field: -5,
+                m2o: 1,
+                m2m: [1],
+                reference: 'res_currency,1',
+            });
+            this.data.foo.records.push({
+                id: 4,
+                foo: "yop",
+                int_field: -5,
+                m2o: 1,
+                m2m: [1],
+                reference: 'res_currency,1',
+            });
+        }
+        
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:   '<tree editable="bottom">'+
+                        '<field name="foo" required="True"/>'+
+                        '<field name="m2m" required="True"/>'+
+                        '<field name="int_field"/>'+
+                    '</tree>',
+        });
+
+        await testUtils.dom.click(list.$('tr.o_data_row:eq(78) td:contains(-5)')); //previous of last row of first page 
+        assert.strictEqual(list.$('tr.o_selected_row input[name="foo"]').val(),"blip", "actual line should have foo = 'blip'");
+        assert.hasClass(list.$('tr.o_data_row:eq(78)'),'o_selected_row',"79th row should be selected");
+        await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row input[name="int_field"]'), 'down');
+        assert.hasClass(list.$('tr.o_data_row:eq(79)'),'o_selected_row',"80th row should be selected");
+        assert.strictEqual(list.$('tr.o_selected_row input[name="foo"]').val(),"yop", "actual line should have foo = 'yop'");
+        await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row input[name="int_field"]'), 'down');
+        assert.hasClass(list.$('tr.o_data_row:eq(80)'),'o_selected_row',"81th row should be selected");
+        assert.strictEqual(list.$('tr.o_selected_row input[name="foo"]').val(),"yop", "actual line should have foo = 'yop'");
+        list.destroy();
+    });
+
+    QUnit.test('navigation: moving down with keydown (editable list one2many)', async function (assert) {
+        assert.expect(29);
+        var arch = '<form string="One2Many">' +
+                        '<field name="o2m">' +
+                            '<tree editable="bottom">' +
+                                '<field name="foo" required="True"/>' +
+                                '<field name="m2o" required="True"/>' +
+                                '<field name="m2m" required="True" widget="many2many_tags"/>' +
+                                '<field name="reference" required="True"/>' +
+                                '<field name="int_field"/>' +
+                            '</tree>' +
+                            '<form/>' +
+                        '</field>' +
+                    '</form>';
+        var list = await createView({
+            viewOptions: { mode: 'edit' },
+            View: FormView,
+            model: 'foo2',
+            data: this.data,
+            arch: arch, 
+            res_id: 1,
+        });
+        await testUtils.dom.click(list.$('td:contains(yop)')); //foo=blip, m2o=value2, m2m=value1-value2-value3, reference=USD, int_field=9
+        assert.hasClass(list.$('tr.o_data_row:eq(0)'),'o_selected_row',"1st row should be selected");
+        await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row input[name="foo"]'), 'down'); 
+        await concurrency.delay(0);
+        assert.hasClass(list.$('tr.o_data_row:eq(1)'),'o_selected_row',"2nd row should be selected");
+        assert.strictEqual(list.$('tr.o_selected_row input[name="foo"]')[0], document.activeElement, "foo should have focus");
+        assert.strictEqual(list.$('tr.o_selected_row input[name="foo"]').val(),"blip", "actual line should have foo = 'blip'");
+        assert.strictEqual(list.$('tr.o_selected_row div[name="m2m"] span.o_badge_text:eq(0)').text(),"Value 1", "actual line should have first tag = 'Value 1'");
+        assert.strictEqual(list.$('tr.o_selected_row div[name="m2m"] span.o_badge_text:eq(1)').text(),"Value 2", "actual line should have second tag = 'Value 2'");
+        assert.strictEqual(list.$('tr.o_selected_row div[name="m2m"] span.o_badge_text:eq(2)').text(),"Value 3", "actual line should have second tag = 'Value 3'");
+        assert.containsOnce(list, 'tr.o_selected_row input[name="foo"].o_required_modifier',
+            "the foo widget should have been marked required");
+        assert.containsOnce(list, 'tr.o_selected_row div[name="m2o"].o_required_modifier',
+            "the m2o widget should have been marked required");
+        assert.containsOnce(list, 'tr.o_selected_row div[name="m2m"].o_required_modifier',
+            "the m2m widget should have been marked required");
+        assert.containsOnce(list, 'tr.o_selected_row input[name="int_field"]:not(.o_required_modifier)',
+            "the int_field widget should not have been marked required");
+        assert.containsOnce(list, 'tr.o_selected_row div[name="reference"].o_required_modifier',
+            "the reference widget should have been marked required");
+        await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row input[name="foo"]'), 'down'); 
+        await concurrency.delay(0);
+        assert.hasClass(list.$('tr.o_data_row:eq(2)'),'o_selected_row',"3rd row (newly created) should be selected");
+        assert.strictEqual(list.$('tr.o_selected_row input[name="foo"]')[0], document.activeElement, "foo should have focus");
+        assert.strictEqual(list.$('tr.o_data_row:eq(1) td:eq(1)').text(),"Value 2", "previous line should have m2o = Value 2");
+        assert.strictEqual(list.$('tr.o_data_row:eq(1) td:eq(3)').text(),"USD", "previous line should have reference = USD");
+        assert.strictEqual(list.$('tr.o_selected_row input[name="foo"]').val(),"blip", "new line should have foo = blip");
+        assert.strictEqual(list.$('tr.o_selected_row input[name="int_field"]').val(),"0", "new line should have int_field = 0");
+        assert.strictEqual(list.$('tr.o_selected_row div[name="m2m"] span.o_badge_text:eq(0)').text(),"Value 1", "actual line should have first tag = 'Value 1'");
+        assert.strictEqual(list.$('tr.o_selected_row div[name="m2m"] span.o_badge_text:eq(1)').text(),"Value 2", "actual line should have second tag = 'Value 2'");
+        assert.strictEqual(list.$('tr.o_selected_row div[name="m2m"] span.o_badge_text:eq(2)').text(),"Value 3", "actual line should have second tag = 'Value 3'");
+        await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row input[name="foo"]'), 'down'); 
+        await concurrency.delay(0);
+        assert.hasClass(list.$('tr.o_data_row:eq(3)'),'o_selected_row',"4th row (newly created) should be selected");
+        assert.strictEqual(list.$('tr.o_selected_row input[name="foo"]')[0], document.activeElement, "foo should have focus");
+        assert.strictEqual(list.$('tr.o_selected_row input[name="foo"]').val(),"blip", "new line should have foo = blip");
+        assert.strictEqual(list.$('tr.o_selected_row div[name="m2m"] span.o_badge_text:eq(0)').text(),"Value 1", "actual line should have first tag = 'Value 1'");
+        assert.strictEqual(list.$('tr.o_selected_row div[name="m2m"] span.o_badge_text:eq(1)').text(),"Value 2", "actual line should have second tag = 'Value 2'");
+        assert.strictEqual(list.$('tr.o_selected_row div[name="m2m"] span.o_badge_text:eq(2)').text(),"Value 3", "actual line should have second tag = 'Value 3'");
+        assert.strictEqual(list.$('tr.o_data_row:eq(2) td:eq(1)').text(),"Value 2", "previous line should have m2o = Value 2");
+        assert.strictEqual(list.$('tr.o_data_row:eq(2) td:eq(3)').text(),"USD", "previous line should have reference = USD");
+        list.destroy();
+    });
+
+    QUnit.test('navigation: moving down with keydown (inside many2one)', async function (assert) {
+        assert.expect(4);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo" required="True"/><field name="m2o" required="True"/><field name="int_field"/></tree>',
+        });
+
+        await testUtils.dom.click(list.$('tr.o_data_row:eq(3) td:contains(Value 1)')); //int_field=-4 and foo=blip and m2o: 1 (Value 1)
+        assert.hasClass(list.$('tr.o_data_row:eq(3)'),'o_selected_row',
+            "4th row should be selected");
+        assert.strictEqual(list.$('tr.o_selected_row input[name="foo"]').val(),"blip", "actual line should have foo = 'blip'");
+        assert.containsOnce(list, 'tr.o_selected_row div[name="m2o"].o_required_modifier',
+            "the m2o widget should have been marked required");
+        await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row input[name="m2o"]'), 'down');
+        assert.hasClass(list.$('tr.o_data_row:eq(3)'),'o_selected_row',
+            "3rd row should still be selected");
+        list.destroy();
+    });
+
 
     QUnit.test('navigation: moving right with keydown from text field does not move the focus', async function (assert) {
         assert.expect(6);
@@ -3682,8 +3940,8 @@ QUnit.module('Views', {
         this.data.foo.records.push({
             id: 5,
             reference: 'res_currency,2',
-        });
 
+        });
         var list = await createView({
             View: ListView,
             model: 'foo',

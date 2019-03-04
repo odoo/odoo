@@ -235,6 +235,7 @@ var ListController = BasicController.extend({
      *
      * @todo make record creation a basic controller feature
      * @private
+     * @returns {Promise}
      */
     _addRecord: function () {
         var self = this;
@@ -245,9 +246,9 @@ var ListController = BasicController.extend({
             });
         }).then(function (recordID) {
             var state = self.model.get(self.handle);
-            self.renderer.updateState(state, {})
+            return self.renderer.updateState(state, {})
                 .then(function () {
-                    self.renderer.editRecord(recordID);
+                    return self.renderer.editRecord(recordID);
                 }).then(self._updatePager.bind(self));
         }).then(this._enableButtons.bind(this)).guardedCatch(this._enableButtons.bind(this));
     },
@@ -407,9 +408,14 @@ var ListController = BasicController.extend({
      * @param {OdooEvent} ev
      */
     _onAddRecord: function (ev) {
+        var self = this;
         ev.stopPropagation();
         if (this.activeActions.create) {
-            this._addRecord();
+            this._addRecord().then(function() {
+                if (ev.data.fillRequiredWithRecord) {
+                    self.renderer.fillRequiredFields(ev.data.fillRequiredWithRecord, ev.data.currentFieldIndex);
+                }
+            })        
         } else if (ev.data.onFail) {
             ev.data.onFail();
         }

@@ -488,6 +488,7 @@ var AbstractField = Widget.extend({
                 doNotSetDirty: options && options.doNotSetDirty,
                 notifyChange: !options || options.notifyChange !== false,
                 allowWarning: options && options.allowWarning,
+                fillRequiredNewLine: options && options.fillRequiredNewLine,
                 onSuccess: resolve,
                 onFailure: reject,
             });
@@ -530,16 +531,22 @@ var AbstractField = Widget.extend({
                 this.trigger_up('navigation_move', {direction: 'cancel', originalEvent: ev});
                 break;
             case $.ui.keyCode.UP:
-                ev.stopPropagation();
-                this.trigger_up('navigation_move', {direction: 'up'});
+                var event = this.trigger_up('navigation_move', {direction: 'up'});
+                if (event.is_stopped()) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                }
                 break;
             case $.ui.keyCode.RIGHT:
                 ev.stopPropagation();
                 this.trigger_up('navigation_move', {direction: 'right'});
                 break;
             case $.ui.keyCode.DOWN:
-                ev.stopPropagation();
-                this.trigger_up('navigation_move', {direction: 'down'});
+                var event = this.trigger_up('navigation_move', {direction: 'down'});
+                if (event.is_stopped()) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                }
                 break;
             case $.ui.keyCode.LEFT:
                 ev.stopPropagation();

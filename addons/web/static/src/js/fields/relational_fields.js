@@ -911,7 +911,7 @@ var FieldX2Many = AbstractField.extend({
            if (_.isEqual(this.currentColInvisibleFields, newEval)) {
                return Promise.resolve();
            }
-        } else if (ev && ev.target === this && ev.data.changes && this.view.arch.tag === 'tree') {
+        } else if (ev && ev.target === this && ev.data.changes && this.view && this.view.arch.tag === 'tree') {
             var command = ev.data.changes[this.name];
             // Here, we only consider 'UPDATE' commands with data, which occur
             // with editable list view. In order to keep the current line in
@@ -1543,10 +1543,13 @@ var FieldOne2Many = FieldX2Many.extend({
                     if (data.onSuccess){
                         data.onSuccess();
                     }
+                }).then(function() {
+                    if (data.fillRequiredWithRecord) {
+                        return self.renderer.fillRequiredFields(data.fillRequiredWithRecord, data.currentFieldIndex);
+                    }
                 }).guardedCatch(function() {
                     self.creatingRecord = false;
                 })
-                ;
             }
         } else {
             this._openFormDialog({
@@ -1936,7 +1939,7 @@ var FieldMany2ManyTags = AbstractField.extend({
     reset: function (record, event) {
         var self = this;
         return this._super.apply(this, arguments).then(function(){
-            if (event && event.target === self) {
+            if (event && event.target === self && !event.data.fillRequiredNewLine) {
                 self.activate();
             }
         });
@@ -1950,12 +1953,12 @@ var FieldMany2ManyTags = AbstractField.extend({
      * @private
      * @param {any} data
      */
-    _addTag: function (data) {
+    _addTag: function (data, options) {
         if (!_.contains(this.value.res_ids, data.id)) {
             this._setValue({
                 operation: 'ADD_M2M',
-                ids: data
-            });
+                ids: data,
+            }, {fillRequiredNewLine: options.fillRequiredNewLine || false });
         }
     },
     /**
@@ -2043,13 +2046,14 @@ var FieldMany2ManyTags = AbstractField.extend({
      * @param {OdooEvent} ev
      */
     _onFieldChanged: function (ev) {
-        if (ev.target !== this.many2one) {
+        if (ev.target !== this.many2one && ev.data.fillRequiredFirstTrigger === undefined) {
             return;
         }
         ev.stopPropagation();
         var newValue = ev.data.changes[this.name];
+        var fillRequired = ev.data.fillRequiredNewLine || false;
         if (newValue) {
-            this._addTag(newValue);
+            this._addTag(newValue, {fillRequiredNewLine: fillRequired});
             this.many2one.reinitialize(false);
         }
     },

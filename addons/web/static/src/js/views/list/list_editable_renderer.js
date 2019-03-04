@@ -15,6 +15,7 @@ var core = require('web.core');
 var dom = require('web.dom');
 var ListRenderer = require('web.ListRenderer');
 var utils = require('web.utils');
+var concurrency = require('web.concurrency');
 
 var _t = core._t;
 
@@ -254,7 +255,62 @@ ListRenderer.include({
      */
     editRecord: function (recordID) {
         var rowIndex = _.findIndex(this.state.data, {id: recordID});
-        this._selectCell(rowIndex, 0);
+        return this._selectCell(rowIndex, 0);
+    },
+    /**
+     * Fill the required fields of an empty row with the values of lastRecord; then assure the field of 
+     * index currentFieldIndex is focused;
+     * @param {*} lastRecord 
+     * @param {*} currentFieldIndex 
+     * @returns {Promise}
+     */
+    fillRequiredFields: function (lastRecord, currentFieldIndex) {
+        var currentRecord = this.state.data[this.currentRow];
+        var currentRowID = currentRecord.id;
+        var requiredWidgets = [];
+        this.allFieldWidgets[currentRowID].forEach(function(currentWidget, index, list){
+            if (currentWidget.attrs.modifiers.required) {
+                var name = currentWidget.name;
+                currentRecord.data[name] = lastRecord.data[name];
+                requiredWidgets.push(currentWidget);
+            }
+        });
+        requiredWidgets.forEach(function (widget) {
+            var changes = {};
+            var name = widget.name;
+            var widget_changes = lastRecord.data[name];
+            if (widget_changes.data) {
+                if (Array.isArray(widget_changes.data)) { //many2many fields
+                    var first_array = widget_changes.data;
+                    var final_array = []; 
+                    for (var elem in first_array) {
+                        final_array.push(first_array[elem].data)
+                    }
+                    changes[name] = final_array; 
+                }
+                else { //other relational fields
+                    changes[name] = widget_changes.data; 
+                    if (widget.field.type === "reference") {
+                       changes[name]['model'] = widget_changes.model;
+                    }
+                }
+            } else {
+                changes[name] = widget_changes;
+            }
+            widget.reset(currentRecord);
+            widget.trigger_up('field_changed', {
+                dataPointID: widget.dataPointID,
+                changes: changes,
+                viewType: widget.viewType,
+                fillRequiredNewLine: true,
+                fillRequiredFirstTrigger: true,
+            });
+        })
+        var self = this;
+        if (currentFieldIndex !== undefined) {
+            return self._selectCell(self.currentRow, currentFieldIndex, {force: true});
+        } 
+        return Promise.resolve();
     },
     /**
      * Returns the recordID associated to the line which is currently in edition
@@ -875,7 +931,36 @@ ListRenderer.include({
     _onNavigationMove: function (ev) {
         var self = this;
         ev.stopPropagation(); // stop the event, the action is done by this renderer
+        var currentRowID, currentWidget, currentRecord;
+        var moveUpDown = false;
+        var self = this;
+        if (this.currentRow !== null) {
+            currentRecord = this.state.data[this.currentRow]
+            currentRowID = currentRecord.id;
+            currentWidget = this.allFieldWidgets[currentRowID][this.currentFieldIndex];
+            moveUpDown = true;
+        }
         switch (ev.data.direction) {
+            case "up":
+                if (moveUpDown && this.currentRow > 0) {
+                    this._selectCell(this.currentRow - 1, this.currentFieldIndex);
+                }
+                break;
+            case "down":
+                if (moveUpDown) {
+                    if (this.currentRow < this.state.data.length - 1) {
+                        this._selectCell(this.currentRow + 1, this.currentFieldIndex);
+                    } else if (this.editable === "bottom") {
+                        var currentFieldIndex = this.currentFieldIndex;
+                        this.unselectRow().then(function() {
+                            self.trigger_up("add_record", {
+                            fillRequiredWithRecord: currentRecord,
+                            currentFieldIndex: currentFieldIndex
+                            }); 
+                        });
+                    }
+                }
+                break;
             case 'previous':
                 if (this.currentFieldIndex > 0) {
                     this._selectCell(this.currentRow, this.currentFieldIndex - 1, {wrap: false})
