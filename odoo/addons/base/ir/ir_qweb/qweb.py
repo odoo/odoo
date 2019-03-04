@@ -31,6 +31,8 @@ try:
 except ImportError:
     astor = None
 
+from odoo.tools.parse_version import parse_version
+
 unsafe_eval = eval
 
 _logger = logging.getLogger(__name__)
@@ -176,7 +178,7 @@ class QWebException(Exception):
         return str(self)
 
 # Avoid DeprecationWarning while still remaining compatible with werkzeug pre-0.9
-escape = (lambda text: _escape(text, quote=True)) if getattr(werkzeug, '__version__', '0.0') < '0.9.0' else _escape
+escape = (lambda text: _escape(text, quote=True)) if parse_version(getattr(werkzeug, '__version__', '0.0')) < parse_version('0.9.0') else _escape
 
 def foreach_iterator(base_ctx, enum, name):
     ctx = base_ctx.copy()

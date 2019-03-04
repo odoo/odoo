@@ -10,7 +10,7 @@ class GamificationBadgeUserWizard(models.TransientModel):
 
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
     user_id = fields.Many2one('res.users', string='User',
-        related='employee_id.user_id', store=True, readonly=True)
+        related='employee_id.user_id', store=True, readonly=True, compute_sudo=True)
 
     # TODO 12.0/master remove this hack by changing the model
     @api.model
