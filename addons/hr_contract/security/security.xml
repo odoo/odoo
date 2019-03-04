@@ -9,6 +9,7 @@
         <record id="hr_contract.group_hr_contract_manager" model="res.groups">
             <field name="name">Administrator</field>
             <field name="category_id" ref="base.module_category_human_resources_contracts"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
