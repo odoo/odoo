@@ -21,9 +21,6 @@
             <field name="numbercall">-1</field>
         </record>
 
-    </data>
-
-
         <!-- Task-related subtypes for messaging / Chatter -->
         <record id="mt_task_new" model="mail.message.subtype">
             <field name="name">Task Created</field>
@@ -97,6 +94,7 @@
             <field name="parent_id" eval="ref('mt_task_rating')"/>
             <field name="relation_field">project_id</field>
         </record>
+    </data>
 
     <data noupdate="1">
 
