@@ -44,6 +44,13 @@
                             <field name="survey_id"/>
                             <field name="create_date"/>
                             <field name="input_type"/>
+                            <field name="is_attempts_limited" invisible="1"/>
+                            <label for="attempt_number" string="Attempt n°" attrs="{'invisible': ['|', ('is_attempts_limited', '=', False), '|', ('test_entry', '=', True), ('state', '!=', 'done')]}"/>
+                            <div attrs="{'invisible': ['|', ('is_attempts_limited', '=', False), '|', ('test_entry', '=', True), ('state', '!=', 'done')]}">
+                                <field name="attempt_number" nolabel="1"/>
+                                 / 
+                                <field name="attempts_limit" nolabel="1" />
+                            </div>
                             <field name="token" groups="base.group_no_one"/>
                         </group>
                         <group>
@@ -80,6 +87,7 @@
                 <field name="partner_id"/>
                 <field name="email"/>
                 <field name="input_type" groups="base.group_no_one"/>
+                <field name="attempt_number" />
                 <field name="state"/>
                 <field name="test_entry" invisible="True"/>
                 <field name="quizz_passed"/>
