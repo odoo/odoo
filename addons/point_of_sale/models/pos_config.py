@@ -175,6 +175,10 @@ class PosConfig(models.Model):
     is_posbox = fields.Boolean("PosBox")
     is_header_or_footer = fields.Boolean("Header & Footer")
     module_pos_hr = fields.Boolean(help="Show employee login screen")
+    amount_authorized_diff = fields.Float('Amount Authorized Difference',
+        help="This field depicts the maximum difference allowed between the ending balance and the theoretical cash when "
+             "closing a session, for non-POS managers. If this maximum is reached, the user will have an error message at "
+             "the closing of his session saying that he needs to contact his manager.")
 
     def _compute_is_installed_account_accountant(self):
         account_accountant = self.env['ir.module.module'].sudo().search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])

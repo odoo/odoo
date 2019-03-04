@@ -343,8 +343,12 @@
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('cash_control', '=', False)]}">
                                     <div class="row mt16">
-                                        <label string="Default Opening" for="proxy_ip" class="col-lg-3 o_light_label" />
+                                        <label string="Default Opening" for="proxy_ip" class="col-lg-4 o_light_label" />
                                         <field name="default_cashbox_lines_ids" widget="many2many_tags" context="{'form_view_ref': 'point_of_sale.account_cashbox_line_view_form'}"/>
+                                    </div>
+                                    <div class="row">
+                                        <label for="amount_authorized_diff" class="col-lg-4 o_light_label" />
+                                        <field name="amount_authorized_diff"/>
                                     </div>
                                     <div>
                                         <button type="action" name="%(account_cashbox_line_action)d" string="Opening/Closing Values" class="btn-link" icon="fa-arrow-right"/>

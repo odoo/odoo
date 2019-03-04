@@ -71,12 +71,16 @@
         <record id="view_account_journal_pos_user_form" model="ir.ui.view">
             <field name="name">POS Journal</field>
             <field name="model">account.journal</field>
-            <field name="inherit_id" ref="point_of_sale.view_account_journal_pos_user_form"></field>
+            <field name="inherit_id" ref="account.view_account_journal_form"></field>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='amount_authorized']" position="after">
-                    <group  attrs="{'invisible': [('type', '!=', 'bank')]}">
-                        <field name="pos_mercury_config_id"/>
-                    </group>
+                <xpath expr="//notebook[last()]" position="inside">
+                    <page string="Point of Sale" attrs="{'invisible': [('journal_user', '=', False)]}">
+                        <group>
+                            <group  attrs="{'invisible': [('type', '!=', 'bank')]}">
+                                <field name="pos_mercury_config_id"/>
+                            </group>
+                        </group>
+                    </page>
                 </xpath>
             </field>
         </record>
