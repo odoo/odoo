@@ -759,18 +759,18 @@ class MrpProduction(models.Model):
     def _check_lots(self):
         # Check that the raw materials were consumed for lots that we have produced.
         if self.product_id.tracking != 'none':
-            finished_lots = set(self.finished_move_line_ids.mapped('lot_id'))
-            raw_finished_lots = set(self.move_raw_ids.mapped('move_line_ids.lot_produced_id'))
-            if not (raw_finished_lots <= finished_lots):
+            finished_lots = self.finished_move_line_ids.mapped('lot_id')
+            raw_finished_lots = self.move_raw_ids.mapped('move_line_ids.lot_produced_ids')
+            if (raw_finished_lots - finished_lots):
                 lots_short = raw_finished_lots - finished_lots
                 error_msg = _(
                     'Some raw materials have been consumed for a lot/serial number that has not been produced. '
                     'Unlock the MO and click on the components lines to correct it.\n'
                     'List of the components:\n'
                 )
-                move_lines = self.move_raw_ids.mapped('move_line_ids').filtered(lambda x: x.lot_produced_id in lots_short)
+                move_lines = self.move_raw_ids.mapped('move_line_ids').filtered(lambda ml: lots_short & ml.lot_produced_ids)
                 for ml in move_lines:
-                    error_msg += ml.product_id.display_name + ' (' + ml.lot_produced_id.name +')\n'
+                    error_msg += ml.product_id.display_name + ' (' + (lots_short & ml.lot_produced_ids).mapped('name') + ')\n'
                 raise UserError(error_msg)
 
     @api.multi
@@ -823,16 +823,16 @@ class MrpProduction(models.Model):
             moves_to_do._action_done()
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done') - moves_not_to_do
             order._cal_price(moves_to_do)
-            moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done','cancel'))
+            moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             moves_to_finish._action_done()
             order.action_assign()
             consume_move_lines = moves_to_do.mapped('move_line_ids')
             for moveline in moves_to_finish.mapped('move_line_ids'):
-                if moveline.product_id == order.product_id and moveline.move_id.has_tracking != 'none':
-                    if any([not ml.lot_produced_id for ml in consume_move_lines]):
+                if moveline.move_id.has_tracking != 'none' and moveline.product_id == order.product_id or moveline.lot_id in consume_move_lines.mapped('lot_produced_ids'):
+                    if any([not ml.lot_produced_ids for ml in consume_move_lines]):
                         raise UserError(_('You can not consume without telling for which lot you consumed it'))
-                    # Link all movelines in the consumed with same lot_produced_id false or the correct lot_produced_id
-                    filtered_lines = consume_move_lines.filtered(lambda x: x.lot_produced_id == moveline.lot_id)
+                    # Link all movelines in the consumed with same lot_produced_ids false or the correct lot_produced_ids
+                    filtered_lines = consume_move_lines.filtered(lambda ml: moveline.lot_id in ml.lot_produced_ids)
                     moveline.write({'consume_line_ids': [(6, 0, [x for x in filtered_lines.ids])]})
                 else:
                     # Link with everything
