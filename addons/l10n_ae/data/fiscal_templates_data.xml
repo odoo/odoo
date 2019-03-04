@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="account_fiscal_position_uae_countries" model="account.fiscal.position.template">
-        <field name="name">Fiscal Position for UAE Countries</field>
+        <field name="name">UAE</field>
         <field name="auto_apply" eval="True"/>
         <field name="sequence" eval="1"/>
         <field name="country_id" ref="base.ae"/>
@@ -9,7 +9,7 @@
     </record>
 
     <record id="account_fiscal_position_non_uae_countries" model="account.fiscal.position.template">
-        <field name="name">Fiscal Position for Non-UAE Countries</field>
+        <field name="name">Non-UAE</field>
         <field name="auto_apply" eval="True"/>
         <field name="chart_template_id" ref="uae_chart_template_standard"/>
     </record>
