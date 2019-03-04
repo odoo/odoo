@@ -174,7 +174,7 @@ class Holidays(models.Model):
     payslip_status = fields.Boolean('Reported in last payslips',
         help='Green this button when the leave has been taken into account in the payslip.')
     report_note = fields.Text('HR Comments')
-    user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, store=True, default=lambda self: self.env.uid, readonly=True)
+    user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, compute_sudo=True, store=True, default=lambda self: self.env.uid, readonly=True)
     date_from = fields.Datetime('Start Date', readonly=True, index=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
     date_to = fields.Datetime('End Date', readonly=True, copy=False,

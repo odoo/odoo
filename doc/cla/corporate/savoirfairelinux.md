@@ -22,6 +22,7 @@ Quentin Lavallée-Bourdeau quentin.lavallee@savoirfairelinux.com https://github.
 Rim Ben Dhaou rim.bendhaou@savoirfairelinux.com https://github.com/rimbendhaou
 Yasmine El Mrini yasmine.elmrini@savoirfairelinux.com https://github.com/yasmineelmrini
 Luis Garcia Ruiz luis.garcia@savoirfairelinux.com https://github.com/eilst
+Dimitar Apostolov dimitar.apostolov@savoirfairelinux.com https://github.com/dapostolov-sfl
 Jérome Boisvert-Chouinard jerome.boisvertchouinard@savoirfairelinux.com https://github.com/jbchouinard (up to 2017-10-17)
 Julie Moussu julie.mousse@savoirfairelinux.com https://github.com/JulieSFL (up to 2017-10-17)
 Pierre Lamarche pierre.lamarche@savoirfairelinux.com https://github.com/plamarche (up to 2017-10-17)
