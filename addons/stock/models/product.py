@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
+from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 from datetime import datetime
 import operator as py_operator
@@ -370,6 +371,15 @@ class Product(models.Model):
     def action_view_routes(self):
         return self.mapped('product_tmpl_id').action_view_routes()
 
+    @api.model
+    def search(self, domain=None, *args, **kwargs):
+        # ONLY FOR 10.0 UP TO SAAS-15
+        # ignore dummy fields used for search context²
+        for index in range(len(domain or [])):
+            if domain[index][0] in ('location_id', 'warehouse_id'):
+                domain[index] = expression.TRUE_LEAF
+        return super(Product, self).search(domain, *args, **kwargs)
+
     @api.multi
     def write(self, values):
         res = super(Product, self).write(values)
@@ -506,6 +516,15 @@ class ProductTemplate(models.Model):
     @api.onchange('tracking')
     def onchange_tracking(self):
         return self.mapped('product_variant_ids').onchange_tracking()
+
+    @api.model
+    def search(self, domain=None, *args, **kwargs):
+        # ONLY FOR 10.0 UP TO SAAS-15
+        # ignore dummy fields used for search context
+        for index in range(len(domain or [])):
+            if domain[index][0] in ('location_id', 'warehouse_id'):
+                domain[index] = expression.TRUE_LEAF
+        return super(ProductTemplate, self).search(domain, *args, **kwargs)
 
     @api.multi
     def write(self, vals):
