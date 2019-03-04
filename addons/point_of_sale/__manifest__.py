@@ -18,6 +18,7 @@
         'wizard/pos_details.xml',
         'wizard/pos_open_statement.xml',
         'wizard/pos_payment.xml',
+        'wizard/pos_order_ticket.xml',
         'views/pos_templates.xml',
         'views/point_of_sale_template.xml',
         'views/point_of_sale_report.xml',
@@ -47,6 +48,9 @@
     ],
     'installable': True,
     'application': True,
-    'qweb': ['static/src/xml/pos.xml'],
+    'qweb': [
+        'static/src/xml/pos.xml',
+        'static/src/xml/pos_order_reprint.xml',
+    ],
     'website': 'https://www.odoo.com/page/point-of-sale-shop',
 }

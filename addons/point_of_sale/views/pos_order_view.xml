@@ -11,6 +11,7 @@
                             attrs="{'invisible': ['|', ('invoice_group', '=', False), ('state','!=','paid')]}"/>
                     <button name="refund" string="Return Products" type="object"
                         attrs="{'invisible':[('state','=','draft')]}"/>
+                    <button name="%(pos_order_ticket_action)d" string="Print Ticket" type="action" context="{'default_pos_order_id': active_id}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" />
                 </header>
                 <sheet>
