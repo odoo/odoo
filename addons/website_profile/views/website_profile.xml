@@ -254,16 +254,18 @@
     <template id="user_badges" name="User Bagdes">
         <div t-if="user.badge_ids" class="row mx-n1">
             <div class="col px-1 mb-2 col-xl-4" t-foreach="user.badge_ids" t-as="badge">
-                <div class="card">
-                    <div class="card-body p-2 pr-3">
-                        <div class="media align-items-center">
-                            <img height="38" t-attf-src="/web/image/gamification.badge/#{badge.badge_id.id}/image_small" class="mr-2"/>
-                            <div class="media-body text-nowrap">
-                                <h6 class="my-0" t-field="badge.badge_id.name"/>
+                <t t-if="badge.badge_id.website_published">
+                    <div class="card">
+                        <div class="card-body p-2 pr-3">
+                            <div class="media align-items-center">
+                                <img height="38" t-attf-src="/web/image/gamification.badge/#{badge.badge_id.id}/image_small" class="mr-2"/>
+                                <div class="media-body text-nowrap">
+                                    <h6 class="my-0" t-field="badge.badge_id.name"/>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </t>
             </div>
         </div>
         <div class="mb-3" t-if="not user.badge_ids">
