@@ -6,20 +6,18 @@
         <field name="inherit_id" ref="l10n_be_hr_payroll.hr_contract_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='transport_mode_car']" position="after">
-                <field name="new_car" invisible="1"/>
-                <label for="car_id" attrs="{'invisible': [('transport_mode_car', '=', False)]}" name="car_id_label"/>
-                <div attrs="{'invisible': [('transport_mode_car', '=', False)]}" name="car_id_div">
+                <label for="car_id" string="Company Car" attrs="{'invisible': [('transport_mode_car', '=', False)]}" name="car_id_label" groups="fleet.fleet_group_manager"/>
+                <div attrs="{'invisible': [('transport_mode_car', '=', False)]}" name="car_id_div" groups="fleet.fleet_group_manager">
                     <field name="car_id" nolabel="1"/>
                     <field name="available_cars_amount" invisible="1"/>
                 </div>
-                <field name="new_car_model_id" invisible="1"/>
                 <field name="max_unused_cars" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='car_atn']" position="after">
                 <field name="company_car_total_depreciated_cost" invisible="1"/>
             </xpath>
             <group name="yearly_advantages" position="after">
-                <group string="Company Car" attrs="{'invisible': [('car_id', '=', False)]}">
+                <group string="Company Car" attrs="{'invisible': [('car_id', '=', False)]}" groups="fleet.fleet_group_manager">
                     <field name="acquisition_date"/>
                     <field name="car_value"/>
                     <field name="fuel_type"/>

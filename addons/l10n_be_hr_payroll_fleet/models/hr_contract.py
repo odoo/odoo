@@ -8,8 +8,9 @@ class HrContract(models.Model):
     _inherit = 'hr.contract'
 
     car_id = fields.Many2one('fleet.vehicle', string='Company Car',
-        default=lambda self: self.env['fleet.vehicle'].search([('driver_id', '=', self.employee_id.address_home_id.id)], limit=1),
+        default=lambda self: self.env['fleet.vehicle'].sudo().search([('driver_id', '=', self.employee_id.address_home_id.id)], limit=1),
         tracking=True,
+        groups="fleet.fleet_group_manager",
         help="Employee's company car.")
     car_atn = fields.Float(compute='_compute_car_atn_and_costs', string='ATN Company Car', store=True, compute_sudo=True)
     company_car_total_depreciated_cost = fields.Float(compute='_compute_car_atn_and_costs', store=True, compute_sudo=True)
@@ -18,13 +19,14 @@ class HrContract(models.Model):
     # YTI: Check if could be removed
     new_car_model_id = fields.Many2one('fleet.vehicle.model', string="Model", domain=lambda self: self._get_possible_model_domain())
     max_unused_cars = fields.Integer(compute='_compute_max_unused_cars')
-    acquisition_date = fields.Date(related='car_id.acquisition_date', readonly=False)
-    car_value = fields.Float(related="car_id.car_value", readonly=False)
-    fuel_type = fields.Selection(related="car_id.fuel_type", readonly=False)
-    co2 = fields.Float(related="car_id.co2", readonly=False)
-    driver_id = fields.Many2one('res.partner', related="car_id.driver_id", readonly=False)
-    car_open_contracts_count = fields.Integer(compute='_compute_car_open_contracts_count')
+    acquisition_date = fields.Date(related='car_id.acquisition_date', readonly=False, groups="fleet.fleet_group_manager")
+    car_value = fields.Float(related="car_id.car_value", readonly=False, groups="fleet.fleet_group_manager")
+    fuel_type = fields.Selection(related="car_id.fuel_type", readonly=False, groups="fleet.fleet_group_manager")
+    co2 = fields.Float(related="car_id.co2", readonly=False, groups="fleet.fleet_group_manager")
+    driver_id = fields.Many2one('res.partner', related="car_id.driver_id", readonly=False, groups="fleet.fleet_group_manager")
+    car_open_contracts_count = fields.Integer(compute='_compute_car_open_contracts_count', groups="fleet.fleet_group_manager")
     recurring_cost_amount_depreciated = fields.Float(
+        groups="fleet.fleet_group_manager",
         compute='_compute_recurring_cost_amount_depreciated',
         inverse="_inverse_recurring_cost_amount_depreciated")
 
@@ -65,7 +67,7 @@ class HrContract(models.Model):
     @api.depends('name')
     def _compute_available_cars_amount(self):
         for contract in self:
-            contract.available_cars_amount = self.env['fleet.vehicle'].search_count([('driver_id', '=', False)])
+            contract.available_cars_amount = self.env['fleet.vehicle'].sudo().search_count([('driver_id', '=', False)])
 
     @api.depends('name')
     def _compute_max_unused_cars(self):
