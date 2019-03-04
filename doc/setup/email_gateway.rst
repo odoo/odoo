@@ -21,7 +21,9 @@ For Postfix
 In you alias config (/etc/aliases):
 
 .. code-block:: text
-email@address: "|/odoo-directory/addons/mail/static/scripts/odoo-mailgate.py -d <database-name> -u <userid> -p <password>"
+
+	email@address: "|/odoo-directory/addons/mail/static/scripts/odoo-mailgate.py -d <database-name> -u <userid> -p <password>"
+
 .. note:: Resources
     - `Postfix <http://www.postfix.org/documentation.html>`
     - `Postfix aliases <http://www.postfix.org/aliases.5.html>`
@@ -31,7 +33,9 @@ email@address: "|/odoo-directory/addons/mail/static/scripts/odoo-mailgate.py -d 
 For Exim
 --------
 .. code-block:: text
- *: |/odoo-directory/addons/mail/static/scripts/odoo-mailgate.py -d <database-name> -u <userid> -p <password>
+
+	*: |/odoo-directory/addons/mail/static/scripts/odoo-mailgate.py -d <database-name> -u <userid> -p <password>
+
 .. note:: Resources
     - `Exim <https://www.exim.org/docs.html>`
 
