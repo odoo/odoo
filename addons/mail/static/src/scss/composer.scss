@@ -310,6 +310,11 @@ $o-mail-attachment-margin: 5px;
         border-radius: 2px;
         padding: 4px 6px 0 4px;
         background-color: rgba(black, 0.05);
+
+        .o_attachment_delete_cross {
+            float: right;
+            cursor: pointer;
+        }
     }
 
     &.o_attachment_editable .o_attachment_wrap  {
@@ -439,6 +444,7 @@ $o-mail-attachment-margin: 5px;
 
             .o_attachment_delete_cross {
                 color: white;
+                float: none;
             }
 
             .o_attachment_download {
