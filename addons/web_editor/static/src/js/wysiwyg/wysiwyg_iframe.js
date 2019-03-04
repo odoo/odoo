@@ -13,6 +13,8 @@ $.fn.summernote = function () {
     var summernote = this[0].ownerDocument.defaultView._fnSummenoteSlave || _fnSummernoteMaster;
     return summernote.apply(this, arguments);
 };
+window._fnSummernoteMaster = $.fn.summernote;
+window._summernoteMaster = _summernoteMaster;
 
 /**
  * Add option (inIframe) to load Wysiwyg in an iframe.
