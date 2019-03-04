@@ -25,12 +25,13 @@ var BaseSettingRenderer = FormRenderer.extend({
     },
 
     start: function () {
-        this._super.apply(this, arguments);
+        var prom = this._super.apply(this, arguments);
         if (config.device.isMobile) {
             core.bus.on("DOM_updated", this, function () {
                 this._moveToTab(this.currentIndex || this._currentAppIndex());
             });
         }
+        return prom;
     },
 
     /**
@@ -281,15 +282,16 @@ var BaseSettingRenderer = FormRenderer.extend({
     },
 
     _render: function () {
-        var res = this._super.apply(this, arguments);
-        this._initModules();
-        this._renderLeftPanel();
-        this._initSearch();
-        this.$('.o_statusbar_buttons').addClass('d-none');
-        if (config.device.isMobile) {
-            this._enableSwipe();
-        }
-        return res;
+        var self = this;
+        return this._super.apply(this, arguments).then(function() {
+            self._initModules();
+            self._renderLeftPanel();
+            self._initSearch();
+            self.$('.o_statusbar_buttons').addClass('d-none');
+            if (config.device.isMobile) {
+                self._enableSwipe();
+            }
+        });
     },
 
     _renderLeftPanel: function () {

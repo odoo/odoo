@@ -31,7 +31,7 @@ QUnit.module('mobile_base_settings_tests', {
 
     QUnit.module('BaseSettings Mobile');
 
-    QUnit.test('swipe settings in mobile', function (assert) {
+    QUnit.test('swipe settings in mobile', async function (assert) {
         assert.expect(2);
 
         // mimic touchSwipe library's swipe method
@@ -42,7 +42,7 @@ QUnit.module('mobile_base_settings_tests', {
             swipeRight = params.swipeRight;
         };
 
-        var form = createView({
+        var form = await createView({
             View: BaseSettingsView,
             model: 'project',
             data: this.data,
