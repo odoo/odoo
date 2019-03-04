@@ -5,6 +5,7 @@ var rootWidget = require('web_editor.root_widget');
 var concurrency = require('web.concurrency');
 var Widget = require('web.Widget');
 var websiteRootData = require('website.WebsiteRoot');
+var dom = require('web.dom');
 
 var websiteNavbarRegistry = new rootWidget.RootWidgetRegistry();
 
@@ -35,6 +36,23 @@ var WebsiteNavbar = rootWidget.RootWidget.extend({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             self._widgetDefs[0].resolve();
+
+            var $menuToHide = self.$el.find('.o_menu_sections');
+            var $appSwitcher = self.$el.find('.fa.fa-th.o_menu_toggle');
+            var $brandMenu = self.$el.find('.o_menu_brand');
+            var $systray = self.$el.find('.o_menu_systray');
+
+            if ($menuToHide.length && $appSwitcher.length && $brandMenu.length && $systray.length) {
+                var visibleSpace = $appSwitcher.outerWidth(true) + $brandMenu.outerWidth(true) + $systray.outerWidth(true);
+
+                dom.initAutoMoreMenu($menuToHide, {
+                    maxWidth: function () {
+                        return self.$el.width() - visibleSpace;
+                    },
+                    sizeClass: 'SM',
+                });
+            }
+
         });
     },
 
