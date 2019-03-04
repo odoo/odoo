@@ -6,9 +6,9 @@
     <div class="o_wslides_course_nav">
         <div class="container">
             <div class="row align-items-center justify-content-between">
-                <!-- nav -->
-                <nav aria-label="breadcrumb" class="col-md-6 col-xs-12">
-                    <ol class="breadcrumb">
+                <!-- Desktop Mode -->
+                <nav aria-label="breadcrumb" class="col d-none d-md-flex">
+                    <ol class="breadcrumb bg-transparent mb-0 pl-0 py-0">
                         <li class="breadcrumb-item">
                             <a href="/slides">Home</a>
                         </li>
@@ -29,33 +29,84 @@
                         </li>
                     </ol>
                 </nav>
-                <div class="col-md-6 col-xs-12 d-flex flex-row align-items-center justify-content-end">
+
+                <div class="col d-none d-md-flex flex-row align-items-center justify-content-end">
                     <!-- karma / profile -->
-                    <a t-if="not is_public_user" t-att-href="'/profile/user/%s?channel_id=%s' % (user.id, channel.id)" class="font-weight-bold mr-3">
+                    <a t-if="not is_public_user" t-att-href="'/profile/user/%s?channel_id=%s' % (user.id, channel.id)" class="btn btn-link text-white text-nowrap">
                         <i class="fa fa-diamond" /> <t t-esc="user_id.karma"/>
                     </a>
+                    <!-- sort / filter -->
+                    <div class="dropdown ml-1">
+                        <button class="btn btn-link text-white dropdown-toggle" type="button" id="slidesChannelDropdownSort"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <t t-if="sorting == 'most_voted'">Most Voted</t>
+                            <t t-elif="sorting == 'most_viewed'">Most Viewed</t>
+                            <t t-else="">Newest</t>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="slidesChannelDropdownSort" role="menu">
+                            <h6 class="dropdown-header">Sort by</h6>
+                            <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', 'slide_type', sorting='latest'))"
+                                t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'latest' else '')">Newest</a>
+                            <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', 'slide_type', sorting='most_voted'))"
+                                t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'most_voted' else '')">Most Voted</a>
+                            <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', 'slide_type', sorting='most_viewed'))"
+                                t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'most_viewed' else '')">Most Viewed</a>
+                        </div>
+                    </div>
                     <!-- search -->
                     <form t-attf-action="/slides/#{slug(channel)}" role="search" method="get">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="search" t-attf-placeholder="Search in #{channel.name}" t-att-value="search"/>
-                            <span class="input-group-append">
-                                <button class="btn btn-primary" type="submit" aria-label="Search" title="Search">
+                        <div class="input-group o_wslides_course_nav_search ml-1 position-relative">
+                            <span class="input-group-prepend">
+                                <button class="btn btn-link text-white rounded-0 pr-1" type="submit" aria-label="Search" title="Search">
                                     <i class="fa fa-search"></i>
                                 </button>
                             </span>
+                            <input type="text" class="form-control border-0 rounded-0 bg-transparent text-white" name="search" t-attf-placeholder="Search in #{channel.name}" t-att-value="search"/>
                         </div>
                     </form>
-                    <!-- sort / filter -->
-                    <small class="dropdown float-right ml-3">
-                        <h6 class="m-0">
-                            <button class="btn btn-primary dropdown-toggle" type="button" id="slidesChannelDropdownSort"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <t t-if="sorting == 'most_voted'">Most Voted</t>
-                                <t t-elif="sorting == 'most_viewed'">Most Viewed</t>
-                                <t t-else="">Newest</t>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="slidesChannelDropdownSort" role="menu">
-                                <div role="separator" class="dropdown-header">Sort by</div>
+                </div>
+
+                <!-- Mobile Mode -->
+                <div class="col d-md-none py-1">
+                    <div class="btn-group w-100 position-relative" role="group" aria-label="Mobile sub-nav">
+                        <div class="btn-group w-100">
+                            <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nav</a>
+
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/slides">Home</a>
+                                <a t-att-class="'dropdown-item %s' % ('active' if not search_category and not search_tag and not search_slide_type else '')" t-att-href="'/slides/%s' % slug(channel)">
+                                    &#9492;<span class="ml-1" t-esc="channel.name"/>
+                                </a>
+                                <a class="dropdown-item active" t-att-aria-current="'page' and search_category" t-if="search_category" t-att-href="'/slides/%s/category/%s' % (slug(channel), slug(search_category))">
+                                    &#9492;<span class="ml-1" t-esc="search_category.name"/>
+                                </a>
+                                <a class="dropdown-item active" t-att-aria-current="'page' and search_tag" t-if="search_tag" t-att-href="'/slides/%s/tag/%s' % (slug(channel), slug(search_tag))">
+                                    &#9492;<span class="ml-1" t-esc="search_tag.name"/>
+                                </a>
+                                <a class="dropdown-item active" t-att-aria-current="'page' and search_uncategorized" t-if="search_uncategorized" t-att-href="'/slides/%s?search_uncategorized=1' % (slug(channel))">
+                                    &#9492;<span class="ml-1">Uncategorized</span>
+                                </a>
+                                <a class="dropdown-item active" t-att-aria-current="'page' and search_slide_type" t-if="search_slide_type" t-att-href="'/slides/%s?slide_type=%s' % (slug(channel), search_slide_type)">
+                                    &#9492;<span class="ml-1" t-esc="slide_types[search_slide_type]"/>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="btn-group ml-1 position-static">
+                            <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i>Search and sort</a>
+                            <div class="dropdown-menu dropdown-menu-right w-100" style="right: 10px;">
+                                <form class="px-4 py-3" t-attf-action="/slides/#{slug(channel)}" role="search" method="get">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="search" t-attf-placeholder="Search in #{channel.name}" t-att-value="search"/>
+                                        <span class="input-group-append">
+                                            <button class="btn btn-primary" type="submit" aria-label="Search" title="Search">
+                                                <i class="fa fa-search"/>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </form>
+                                <div class="dropdown-divider"/>
+                                <h6 class="dropdown-header">Sort by:</h6>
                                 <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', 'slide_type', sorting='latest'))"
                                     t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'latest' else '')">Newest</a>
                                 <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', 'slide_type', sorting='most_voted'))"
@@ -63,8 +114,8 @@
                                 <a role="menuitem" t-att-href="'/slides/%s?%s' % (slug(channel), keep_query('debug', 'slide_type', sorting='most_viewed'))"
                                     t-att-class="'dropdown-item %s' % ('active' if sorting and sorting == 'most_viewed' else '')">Most Viewed</a>
                             </div>
-                        </h6>
-                    </small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -81,9 +132,9 @@
     <t t-call="website.layout">
         <div class="wrap o_wslides_wrap">
             <t t-set="main_object" t-value="channel"/>
-            <t t-call="website_slides.course_nav"/>
 
-            <div class="o_wslides_course_header">
+            <div class="o_wslides_course_header position-relative pt-5">
+                <t t-call="website_slides.course_nav"/>
                 <div class="container o_wslides_course_header_container">
                     <div class="row align-items-end d-flex">
                         <div class="col-md-4 d-none d-sm-block o_wslides_course_header_aside">
