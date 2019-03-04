@@ -298,6 +298,8 @@ class HrBenefitType(models.Model):
         'Active', default=True,
         help="If the active field is set to false, it will allow you to hide the benefit type without removing it.")
     is_leave = fields.Boolean(default=False, string="Leave")
+    leave_type_ids = fields.One2many('hr.leave.type', 'benefit_type_id', string='Leave Type')
+
 
 class Contacts(models.Model):
     """ Personnal calendar filter """
