@@ -12,7 +12,7 @@ class StockMoveLine(models.Model):
 
     workorder_id = fields.Many2one('mrp.workorder', 'Work Order')
     production_id = fields.Many2one('mrp.production', 'Production Order')
-    lot_produced_id = fields.Many2one('stock.production.lot', 'Finished Lot/Serial Number')
+    lot_produced_ids = fields.Many2many('stock.production.lot', string='Finished Lot/Serial Number')
     lot_produced_qty = fields.Float(
         'Quantity Finished Product', digits=dp.get_precision('Product Unit of Measure'),
         help="Informative, not used in matching")
@@ -32,7 +32,7 @@ class StockMoveLine(models.Model):
 
     def _reservation_is_updatable(self, quantity, reserved_quant):
         self.ensure_one()
-        if self.lot_produced_id:
+        if self.lot_produced_ids:
             ml_remaining_qty = self.qty_done - self.product_uom_qty
             ml_remaining_qty = self.product_uom_id._compute_quantity(ml_remaining_qty, self.product_id.uom_id, rounding_method="HALF-UP")
             if float_compare(ml_remaining_qty, quantity, precision_rounding=self.product_id.uom_id.rounding) < 0:
@@ -44,8 +44,8 @@ class StockMoveLine(models.Model):
         for move_line in self:
             if move_line.move_id.production_id and 'lot_id' in vals:
                 move_line.production_id.move_raw_ids.mapped('move_line_ids')\
-                    .filtered(lambda r: not r.done_move and r.lot_produced_id == move_line.lot_id)\
-                    .write({'lot_produced_id': vals['lot_id']})
+                    .filtered(lambda r: not r.done_move and move_line.lot_id in r.lot_produced_ids)\
+                    .write({'lot_produced_ids': [(4, vals['lot_id'])]})
             production = move_line.move_id.production_id or move_line.move_id.raw_material_production_id
             if production and move_line.state == 'done' and any(field in vals for field in ('lot_id', 'location_id', 'qty_done')):
                 move_line._log_message(production, move_line, 'mrp.track_production_move_template', vals)
