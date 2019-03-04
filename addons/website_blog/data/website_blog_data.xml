@@ -31,6 +31,14 @@
             <field name="type">url</field>
             <field name="url">/website_blog/static/src/img/demo/blog_post_cover_2.jpg</field>
         </record>
+
+        <!-- Blog-related subtypes for messaging / Chatter -->
+        <record id="mt_blog_blog_published" model="mail.message.subtype">
+            <field name="name">Published Post</field>
+            <field name="res_model">blog.blog</field>
+            <field name="default" eval="True"/>
+            <field name="description">Published Post</field>
+        </record>
     </data>
 
     <data>
@@ -44,14 +52,6 @@
         <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_open_website"/>
             <field name="state">open</field>
-        </record>
-
-        <!-- Blog-related subtypes for messaging / Chatter -->
-        <record id="mt_blog_blog_published" model="mail.message.subtype">
-            <field name="name">Published Post</field>
-            <field name="res_model">blog.blog</field>
-            <field name="default" eval="True"/>
-            <field name="description">Published Post</field>
         </record>
 
     </data>
