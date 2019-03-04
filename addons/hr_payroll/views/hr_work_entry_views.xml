@@ -163,10 +163,11 @@
                     <group>
                         <group>
                             <field name="code"/>
+                            <field name="sequence"/>
                         </group>
                         <group>
                             <field name="is_leave"/>
-                            <field name="sequence"/>
+                            <field name="leave_type_ids" widget="many2many_tags" attrs="{'invisible': [('is_leave', '=', False)]}"/>
                         </group>
                     </group>
                 </sheet>

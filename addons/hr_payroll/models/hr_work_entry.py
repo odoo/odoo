@@ -286,7 +286,7 @@ class HrWorkEnrty(models.Model):
         return False
 
 
-class HrWorkEnrtyType(models.Model):
+class HrWorkEntryType(models.Model):
     _name = 'hr.work.entry.type'
     _description = 'hr.work.entry.type'
 
@@ -298,6 +298,8 @@ class HrWorkEnrtyType(models.Model):
         'Active', default=True,
         help="If the active field is set to false, it will allow you to hide the work entry type without removing it.")
     is_leave = fields.Boolean(default=False, string="Leave")
+    leave_type_ids = fields.One2many('hr.leave.type', 'work_entry_type_id', string='Leave Type')
+
 
 class Contacts(models.Model):
     """ Personnal calendar filter """
