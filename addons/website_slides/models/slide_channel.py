@@ -280,8 +280,8 @@ class Channel(models.Model):
 
     @api.model
     def create(self, vals):
-        # Ensure creator is member of its channel it is easier for him to manage it
-        if not vals.get('channel_partner_ids'):
+        # Ensure creator is member of its channel it is easier for him to manage it (unless it is odoobot)
+        if not vals.get('channel_partner_ids') and not self.env.user._is_superuser():
             vals['channel_partner_ids'] = [(0, 0, {
                 'partner_id': self.env.user.partner_id.id
             })]

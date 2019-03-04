@@ -1,122 +1,80 @@
-$gold: #ffcc00;
-$silver: #cccccc;
-$bronze: #eea91e;
+$owprofile-color-bg: desaturate(map-get($grays, "200"), 80%);
+$owprofile-tabs-height: 37px;
 
-.o_wprofile_container {
-    margin: auto;
-    width: 100%;
-    max-width: 1140px;
-    padding: 32px 32px 0px 32px;
+.o_wprofile_wrap {
+    background-color: $owprofile-color-bg;
+}
+
+.o_wprofile_gradient {
+    background-image: linear-gradient(120deg, #875A7B, darken(#875A7B, 10%));
+}
+
+.o_wprofile_pict {
+    @include size(30%);
+    border-radius: 100%;
+    padding-top: 30%;
+    background-size: cover;
+    background-position: center;
+
+    @include media-breakpoint-up(md)  {
+        @include size(100%);
+        border-radius: 0;
+        padding-top: 100%;
+    }
 }
 
 .o_wprofile_header {
-    margin: auto;
-    background-color: #875A7B !important;
-    border-bottom: 48px solid #66445e;
-    .o_wprofile_header_container {
-        top: 48px;
-        padding-top: 0px;
-        .o_wprofile_id {
-            font-size: 16px;
-            .o_wprofile_id_info {
-                margin-right: 36px;
-            }
-        }
-        .o_wprofile_pict {
-            .o_wprofile_photo {
-                width: 100%;
-                max-width: 256px;
-            }
+    @include media-breakpoint-up(md)  {
+        &:before {
+            content: "";
+            @include o-position-absolute(auto, 0, 0, 0);
+            height: $owprofile-tabs-height;
+            background: rgba(black, 0.2);
         }
     }
 }
 
-.o_wprofile_navtabs_container {
-    .o_wprofile_nav_tabs {
-        border-bottom: 0px;
-    }
-    .o_wprofile_navlink {
-        color: white;
-        border-radius: 0px;
-        height: 48px;
-        font-weight: bold;
-        padding-top: 12px;
-        border-left: 2px solid #875A7B;
-        text-align: center;
-        width: 120px;
-        &:hover {
-            border: 0px;
-            border-radius: 0px;
-            background-color: #875A7B;
+.o_wprofile_nav_tabs {
+    @include media-breakpoint-up(md)  {
+        margin-top: $owprofile-tabs-height * -1;
+        border-bottom: 0;
+
+        .nav-link {
+            border-radius: 0;
+            border-width: 0 1px;
+            @include o-hover-text-color(rgba(white, 0.8), white);
+
+            &, &:hover {
+                border-color: #875A7B;
+                background: transparent;
+            }
+
+            &.active {
+                color: $headings-color;
+                background: $owprofile-color-bg;
+                border-color: $owprofile-color-bg;
+            }
         }
     }
-    .o_wprofile_navlink.active {
-        color: #212529;
-        background-color: #f2f2f2;
-        border: 0px;
-    }
-}
 
-.o_wprofile_content {
-    margin: auto;
-    background-color: #f2f2f2 !important;
-    .o_wprofile_content_container{
-        position: relative;
-        top: -80px;
-        .o_wprofile_detail {
-            .o_wprofile_content_abstract {
-                top: 1px;
-                width: 256px;
-                max-width: 256px;
-                margin-left: 15px;
-                table {
-                    width: 100%;
-                    tr {
-                        line-height: 32px;
-                    }
-                    th {
-                        font-weight: normal;
-                    }
-                }
-                .o_wprofile_rank {
-                    background-color: white;
-                }
-                .o_wprofile_abstract_info {
-                    background-color: white;
-                }
-            }
-            .o_wprofile_content_detail {
-                h4 {
-                    border-bottom: 1px solid lightgrey;
-                    color: grey;
-                    margin-bottom: 16px;
-                }
-                .o_user_badges {
-                    padding: 8px;
-                    div {
-                        padding: 8px;
-                    }
-                    img {
-                        width: 48px;
-                        height: 48px;
-                    }
-                }
-            }
+    @include media-breakpoint-only(xs) {
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        li {
+            white-space: nowrap;
         }
     }
 }
 
-// Rank
-.o_wprofile_ranks_presentation {
-    background-color: lightgray;
-    .o_wprofile_rank_tile {
-        width: 20%;
-        div {
-            text-align:center;
-            img {
-                height: 128px;
-            }
-        }
+.o_wprofile_tabs_content {
+    @include media-breakpoint-down(sm) {
+        background-color: $nav-tabs-link-active-bg;
+        padding:0 ($grid-gutter-width * 0.5);
+    }
+
+    @include media-breakpoint-only(xs) {
+        margin: 0 ($grid-gutter-width * -0.5);
     }
 }
 
@@ -124,203 +82,63 @@ $bronze: #eea91e;
 .o_wprofile_progress_circle {
     position: relative;
 
-    $circle-size: 220px;
-    $circle-background: rgba(black, 0.1);
-    $circle-color: theme-color('primary');
-    $inset-size: $circle-size - 20;
-    $transition-length: 1s;
+    svg.o_pc_circular_chart {
+        display: block;
+        max-width: 100%;
 
-    .o_progress_circle_container, .o_pc, .o_pc div {
-        @include size($circle-size);
-    }
+        .o_pc_circle_bg, .o_pc_circle {
+            fill: none;
+            stroke-width: 1.5px;
+            stroke-linecap: round;
+        }
 
-    .o_pc_overlay, .o_pc, .o_pc div {
-        border-radius: 50%;
-    }
+        .o_pc_circle_bg {
+            stroke: rgba(black, 0.1);
+        }
 
-    .o_progress_circle_container {
-        position: relative;
-        margin: 0 auto;
-        background-color: inherit;
+        .o_pc_circle {
+            animation: progress 1s ease-out forwards;
+        }
+
+        #gradient {
+          --o-pc-color-stop-1: lighten(theme-color('primary'), 10%);
+          --o-pc-color-stop-2: theme-color('primary');
+        }
     }
 
     .o_pc_overlay {
-        $tmp-gap: ($circle-size - $inset-size)/2;
-        @include o-position-absolute($tmp-gap, $left: $tmp-gap);
-        @include size($inset-size);
-
-        background-color: inherit;
+        @include o-position-absolute(0,0,0,0);
     }
 
-    .o_pc {
-        background-color: $circle-background;
-
-        div {
-            position: absolute;
-            -webkit-backface-visibility: hidden;
-            transition: transform $transition-length;
-
-            &.o_pc_slice {
-                clip: rect(0px, $circle-size, $circle-size, $circle-size/2);
-
-                .o_pc_fill  {
-                    clip: rect(0px, $circle-size/2, $circle-size, 0px);
-                    background-color: $circle-color;
-                }
-            }
-        }
-
-        $i: 0;
-        $increment: 180deg / 100;
-        @while $i <= 100 {
-            &[data-progress='#{$i}'] {
-                .o_pc_slice.full, .o_pc_fill {
-                    transform: rotate($increment * $i);
-                }
-                .o_pc_fill.o_pc_bar {
-                    transform: rotate($increment * $i * 2);
-                }
-                $i: $i + 1;
-            }
+    @keyframes progress {
+        0% {
+            stroke-dasharray: 0 100;
         }
     }
-}
-
-
-.o_wprofile_next_rank_card {
-    div {
-        text-align: center;
-        img {
-            width: 128px;
-            height: 128px;
-        }
-    }
-    .o_wprofile_next_rank_progress {
-        background-color: lightgray;
-        .o_wprofile_next_rank_progress_bar {
-            background-color: #00A09D !important;
-        }
-    }
-}
-
-// Edit Profile button
-.o_wprofile_edit {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    padding-left: 16px;
-    padding-right: 16px;
 }
 
 // All Users Page
 .o_wprofile_all_users_header {
-    margin: auto;
-    background-color: #875A7B !important;
-    > div:first-child {
-        margin: auto;
-        width: 100%;
-        max-width: 1140px;
-        padding: 32px 32px 0px 32px;
-        color: white;
-        top: 48px;
-        padding-top: 0px;
-        height: 250px;
+    @include media-breakpoint-up(sm)  {
+        min-height: 200px;
+        margin-bottom: -60px;
     }
 }
 
-.o_wprofile_all_user_content {
-    position: relative;
-    top: -140px;
-    .o_wprofile_all_user_card_top3 {
-        cursor: pointer;
-        height: 325px;
-        text-align: center;
-        border-radius: 0px;
-        border: 0px;
-        .card-body {
-            padding-left: 0px;
-            padding-right: 0px;
-            > div:first-child {
-                margin-bottom: -40px;
-                div {
-                    position: relative;
-                    margin: auto;
-                    right: -35px;
-                    bottom: 55px;
-                    width: 45px;
-                    padding: 12px 0px 12px 0px;
-                    border-radius: 50%;
-                }
-                .o_wprofile_top3_first {
-                    background-color: $gold;
-                }
-                .o_wprofile_top3_second {
-                    background-color: $silver;
-                }
-                .o_wprofile_top3_third {
-                    background-color: $bronze;
-                }
-            }
-            :nth-child(4) {
-                position: absolute;
-                bottom: 0px;
-                width: 100%;
-                margin: auto;
-                border-top: 1px solid lightgrey;
-                div {
-                    padding: 4% 0% 4% 0%;
-                    border-radius: 0px;
-                }
-            }
-        }
-    }
-    .o_wprofile_all_users_card {
-        cursor: pointer;
-        border-radius: 0px;
-        border: 0px;
-        padding: 8px 15px 8px 15px;
-        > div > div:first-child > div > div:nth-child(3) {
-            padding-top: 12px;
-            padding-bottom: 12px;
-        }
-        > div > div:first-child > div > div:nth-child(2) {
-            padding: 0px;
-            width: 80px;
-        }
-        > div > div:first-child > div > div:first-child {
-            padding: 5% 0px 5% 16px;
-            width: 60px;
-        }
+.o_wprofile_top3_card_footer div {
+    border-color: $border-color;
+    border-style: solid;
+    border-width: 1px 0;
+    margin-top: -1px;
+
+    + div {
+        border-left-width: 1px;
+        margin-left: -1px;
     }
 }
 
-// Badges
-.badge-gold {
-    color: $gold;
-}
-.bg-gold {
-    background-color: $gold;
-}
-
-.badge-silver {
-    color: $silver;
-}
-.bg-silver {
-    background-color: $silver;
-}
-
-.badge-bronze {
-    color: $bronze;
-}
-.bg-bronze {
-    background-color: $bronze;
-}
 
 // Other stuffs
-.o_wprofile_bb_grey {
-    border-bottom: 2px solid lightgrey !important;
-}
-
 .country_flag {
     display: inline-block;
     margin-left: 2px;
@@ -328,11 +146,7 @@ $bronze: #eea91e;
     width: auto !important;
 }
 
-.o_wprofile_img_small {
-    width: 64px;
-    height: 64px;
-}
-.o_wprofile_img_medium {
-    width: 96px;
-    height: 96px;
+// Tools
+.o_wprofile_pointer {
+    cursor: pointer;
 }
