@@ -20,7 +20,7 @@ except ImportError:
 
 import logging
 
-from odoo.tools import parse_version
+from odoo.tools.parse_version import parse_version
 
 unsafe_eval = eval
 
