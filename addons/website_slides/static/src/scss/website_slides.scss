@@ -53,16 +53,6 @@ $MAX-Z-INDEX : 2147483647 !default;
         opacity: 0.5;
     }
 
-    .o_wslides_home_circled {
-        border-radius: 50%;
-        width: 1.2em;
-        height: 1.2em;
-        padding: 0.25em 0.5em 0.25em 0.5em;
-        border: 0.2em solid #666;
-        text-align: center;
-        box-sizing: initial;
-    }
-
     .progress {
         overflow: visible;
         margin-bottom: 0em;
@@ -107,15 +97,15 @@ $MAX-Z-INDEX : 2147483647 !default;
 // **************************************************
 
 .o_wslides_home_main {
-    .o_wslides_home_aside {
-        .fa-check {
-            color: #00A09D;
-            font-size: 1.2em;
-        }
-    }
-
     .o_wprofile_next_rank_card {
         background-color: transparent !important;
+    }
+
+    .o_wslides_home_aside_loggedin {
+        @include media-breakpoint-up(lg) {
+            background: none;
+            border: none;
+        }
     }
 }
 
