@@ -96,6 +96,8 @@ class IrRule(models.Model):
                 group_domains.append(dom)
 
         # combine global domains and group domains
+        if not group_domains:
+            return expression.AND(global_domains)
         return expression.AND(global_domains + [expression.OR(group_domains)])
 
     @api.model
