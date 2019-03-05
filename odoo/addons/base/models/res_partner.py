@@ -162,6 +162,7 @@ class Partner(models.Model):
     user_id = fields.Many2one('res.users', string='Salesperson',
       help='The internal user in charge of this contact.')
     vat = fields.Char(string='Tax ID', help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
+    same_vat_partner = fields.Html(string='Partner with same TIN', compute='_compute_same_vat_partner', store=False)  # this needs to be a html and not a m2o because the link needs to be created for unexisting records and the framework doenst manage that
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
     website = fields.Char('Website Link')
     comment = fields.Text(string='Notes')
@@ -260,6 +261,19 @@ class Partner(models.Model):
     def _compute_partner_share(self):
         for partner in self:
             partner.partner_share = not partner.user_ids or not any(not user.share for user in partner.user_ids)
+
+    @api.depends('vat')
+    def _compute_same_vat_partner(self):
+        for partner in self:
+            partner_id = partner.id
+            if isinstance(partner_id, models.NewId):
+                # deal with onchange(), which is always called on a single record
+                partner_id = self._origin.id
+            domain = [('vat', '=', partner.vat)]
+            if partner_id:
+                domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
+            same_vat_partner = self.env['res.partner'].search(domain, limit=1)
+            partner.same_vat_partner = partner.vat and not partner.parent_id and same_vat_partner and "<a href='/web#id={}&model=res.partner' target='_blank'>{}</a>".format(same_vat_partner.id, same_vat_partner.name) or False
 
     @api.depends(lambda self: self._display_address_depends())
     def _compute_contact_address(self):
