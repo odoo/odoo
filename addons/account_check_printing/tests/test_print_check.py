@@ -17,7 +17,7 @@ class TestPrintCheck(AccountingTestCase):
 
         self.invoice_model = self.env['account.invoice']
         self.invoice_line_model = self.env['account.invoice.line']
-        self.register_payments_model = self.env['account.register.payments']
+        self.payment_model = self.env['account.payment']
 
         self.partner_axelor = self.env.ref("base.res_partner_2")
         self.product = self.env.ref("product.product_product_4")
@@ -49,14 +49,12 @@ class TestPrintCheck(AccountingTestCase):
         return invoice
 
     def create_payment(self, invoices):
-        register_payments = self.register_payments_model.with_context({
-            'active_model': 'account.invoice',
-            'active_ids': invoices.ids
-        }).create({
+        default_dict = self.payment_model.with_context(active_model='account.invoice', active_ids=invoices.ids).default_get(self.payment_model.fields_get_keys())
+        register_payments = self.payment_model.new({**default_dict, **{
             'payment_date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal.id,
             'payment_method_id': self.payment_method_check.id,
-        })
+        }})
         register_payments.create_payments()
         return self.env['account.payment'].search([], order="id desc", limit=1)
 

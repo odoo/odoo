@@ -8,7 +8,7 @@ class TestPayment(AccountingTestCase):
 
     def setUp(self):
         super(TestPayment, self).setUp()
-        self.register_payments_model = self.env['account.register.payments'].with_context(active_model='account.invoice')
+        self.register_payments_model = self.env['account.payment'].with_context(active_model='account.invoice')
         self.payment_model = self.env['account.payment']
         self.invoice_model = self.env['account.invoice']
         self.invoice_line_model = self.env['account.invoice.line']
@@ -86,12 +86,14 @@ class TestPayment(AccountingTestCase):
         inv_1 = self.create_invoice(amount=100, currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
         inv_2 = self.create_invoice(amount=200, currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
 
-        ctx = {'active_model': 'account.invoice', 'active_ids': [inv_1.id, inv_2.id]}
-        register_payments = self.register_payments_model.with_context(ctx).create({
+        ids = [inv_1.id, inv_2.id]
+        default_dict = self.payment_model.with_context(active_model='account.invoice', active_ids=ids).default_get(self.payment_model.fields_get_keys())
+        register_payments = self.payment_model.new({**default_dict, **{
             'payment_date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
-        })
+            'group_invoices': True,
+        }})
         register_payments.create_payments()
         payment = self.payment_model.search([], order="id desc", limit=1)
 
@@ -164,12 +166,13 @@ class TestPayment(AccountingTestCase):
         inv_4 = self.create_invoice(amount=50, partner=self.partner_agrolait.id, type='in_invoice')
 
         ids = [inv_1.id, inv_2.id, inv_3.id, inv_4.id]
-        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
+        default_dict = self.payment_model.with_context(active_model='account.invoice', active_ids=ids).default_get(self.payment_model.fields_get_keys())
+        register_payments = self.payment_model.new({**default_dict, **{
             'payment_date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
             'group_invoices': True,
-        })
+        }})
         register_payments.create_payments()
         payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
 
@@ -220,11 +223,12 @@ class TestPayment(AccountingTestCase):
         # Test Customer Invoice
         inv_1 = self.create_invoice(amount=600)
         ids = [inv_1.id]
-        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
+        default_dict = self.payment_model.with_context(active_model='account.invoice', active_ids=ids).default_get(self.payment_model.fields_get_keys())
+        register_payments = self.payment_model.new({**default_dict, **{
             'payment_date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
-        })
+        }})
 
         # Perform the partial payment by setting the amount at 550 instead of 600
         register_payments.amount = 550
@@ -245,11 +249,12 @@ class TestPayment(AccountingTestCase):
         # Test Vendor Bill
         inv_2 = self.create_invoice(amount=500, type='in_invoice', partner=self.partner_china_exp.id)
         ids = [inv_2.id]
-        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
+        default_dict = self.payment_model.with_context(active_model='account.invoice', active_ids=ids).default_get(self.payment_model.fields_get_keys())
+        register_payments = self.payment_model.new({**default_dict, **{
             'payment_date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
-        })
+        }})
 
         # Perform the partial payment by setting the amount at 300 instead of 500
         register_payments.amount = 300
@@ -281,12 +286,13 @@ class TestPayment(AccountingTestCase):
         inv_3 = self.create_invoice(amount=300, account_id=account_receivable_id_2)
 
         ids = [inv_1.id, inv_2.id, inv_3.id]
-        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
+        default_dict = self.payment_model.with_context(active_model='account.invoice', active_ids=ids).default_get(self.payment_model.fields_get_keys())
+        register_payments = self.payment_model.new({**default_dict, **{
             'payment_date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
             'group_invoices': True,
-        })
+        }})
         register_payments.create_payments()
         payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
 
@@ -330,24 +336,26 @@ class TestPayment(AccountingTestCase):
 
         # When grouping invoices, we should have one payment per receivable account
         ids1 = [inv_1.id, inv_2.id, inv_3.id, inv_4.id]
-        register_payments1 = self.register_payments_model.with_context(active_ids=ids1).create({
+        default_dict = self.payment_model.with_context(active_model='account.invoice', active_ids=ids1).default_get(self.payment_model.fields_get_keys())
+        register_payments1 = self.payment_model.new({**default_dict, **{
             'payment_date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
             'group_invoices': True,
-        })
+        }})
         register_payments1.create_payments()
         payment_ids1 = self.payment_model.search([('invoice_ids', 'in', ids1)], order="id desc")
         self.assertEqual(len(payment_ids1), 3, "3 payments should have been created, one fo each (partner, receivable account).")
 
         # When not grouping, we should have one payment per invoice
         ids2 = [inv_5.id, inv_6.id, inv_7.id, inv_8.id]
-        register_payments2 = self.register_payments_model.with_context(active_ids=ids2).create({
+        default_dict = self.payment_model.with_context(active_model='account.invoice', active_ids=ids2).default_get(self.payment_model.fields_get_keys())
+        register_payments2 = self.payment_model.new({**default_dict, **{
             'payment_date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
             'group_invoices': False,
-        })
+        }})
         register_payments2.create_payments()
         payment_ids2 = self.payment_model.search([('invoice_ids', 'in', ids2)], order="id desc")
         self.assertEqual(len(payment_ids2), 4, "Not grouping payments should always create a distinct payment per invoice.")
@@ -601,7 +609,9 @@ class TestPayment(AccountingTestCase):
         inv2 = inv1.copy()
         inv2.action_invoice_open()
 
-        batch_payment = self.env['account.register.payments'].with_context(active_ids=(inv1 + inv2).ids).create({
+        ids = (inv1 + inv2).ids
+        default_dict = self.payment_model.with_context(active_model='account.invoice', active_ids=ids).default_get(self.payment_model.fields_get_keys())
+        batch_payment = self.payment_model.new({**default_dict, **{
             'amount': 70,
             'partner_id': inv1.partner_id.id,
             'journal_id': self.bank_journal_usd.id,
@@ -611,10 +621,11 @@ class TestPayment(AccountingTestCase):
             'payment_type': 'inbound',
             'payment_method_id': self.payment_method_manual_in.id,
             'writeoff_account_id': self.account_revenue.id,
-            'writeoff_label': "why can't we live together"})
+            'writeoff_label': "why can't we live together",
+            'group_invoices': True}})
 
-        payment_id = batch_payment.create_payments()['res_id']
-        payment_id = self.env['account.payment'].browse(payment_id)
+        batch_payment.create_payments()
+        payment_id = self.env['account.payment'].search([('invoice_ids', 'in', ids)], order="id desc")
 
         self.assertEqual(inv1.state, 'paid')
         self.assertEqual(inv2.state, 'paid')
