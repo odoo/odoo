@@ -7,6 +7,7 @@ from odoo import models, api, _, fields
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, safe_eval
 from odoo.tools.misc import formatLang
+import random
 
 class account_journal(models.Model):
     _inherit = "account.journal"
@@ -55,8 +56,7 @@ class account_journal(models.Model):
 
         #starting point of the graph is the last statement
         last_stmt = BankStatement.search([('journal_id', '=', self.id), ('date', '<=', today.strftime(DF))], order='date desc, id desc', limit=1)
-        if not last_stmt:
-            last_stmt = BankStatement.search([('journal_id', '=', self.id), ('date', '<=', last_month.strftime(DF))], order='date desc, id desc', limit=1)
+
         last_balance = last_stmt and last_stmt.balance_end_real or 0
         data.append(build_graph_data(today, last_balance))
 
@@ -74,9 +74,10 @@ class account_journal(models.Model):
                         ORDER BY l.date desc
                         """
         self.env.cr.execute(query, (self.id, last_month, today))
-        for val in self.env.cr.dictfetchall():
+        query_result = self.env.cr.dictfetchall()
+        for val in query_result:
             date = val['date']
-            if val['date'] != today.strftime(DF):  # make sure the last point in the graph is today
+            if date != today.strftime(DF):  # make sure the last point in the graph is today
                 data[:0] = [build_graph_data(date, amount)]
             amount -= val['amount']
 
@@ -86,7 +87,15 @@ class account_journal(models.Model):
 
         [graph_title, graph_key] = self._graph_title_and_key()
         color = '#875A7B' if 'e' in version else '#7c7bad'
-        return [{'values': data, 'title': graph_title, 'key': graph_key, 'area': True, 'color': color}]
+
+        is_sample_data = not last_stmt and len(query_result) == 0
+        if is_sample_data:
+            data = []
+            for i in range(30, 0, -5):
+                current_date = today + timedelta(days=-i)
+                data.append(build_graph_data(current_date, random.randint(-5, 15)))
+
+        return [{'values': data, 'title': graph_title, 'key': graph_key, 'area': True, 'color': color, 'is_sample_data': is_sample_data}]
 
     @api.multi
     def get_bar_graph_datas(self):
@@ -125,12 +134,22 @@ class account_journal(models.Model):
 
         self.env.cr.execute(query, query_args)
         query_results = self.env.cr.dictfetchall()
+        is_sample_data = True
         for index in range(0, len(query_results)):
             if query_results[index].get('aggr_date') != None:
+                is_sample_data = False
                 data[index]['value'] = query_results[index].get('total')
 
         [graph_title, graph_key] = self._graph_title_and_key()
-        return [{'values': data, 'title': graph_title, 'key': graph_key}]
+
+        if is_sample_data:
+            for index in range(0, len(query_results)):
+                data[index]['type'] = 'o_sample_data'
+                # we use unrealistic values for the sample data
+                data[index]['value'] = random.randint(0, 20)
+                graph_key = _('Sample data')
+
+        return [{'values': data, 'title': graph_title, 'key': graph_key, 'is_sample_data': is_sample_data}]
 
     def _get_bar_graph_select_query(self):
         """
@@ -198,6 +217,9 @@ class account_journal(models.Model):
             (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency, curr_cache=curr_cache)
 
         difference = currency.round(last_balance-account_sum) + 0.0
+
+        is_sample_data = self.kanban_dashboard_graph and any(data.get('is_sample_data', False) for data in json.loads(self.kanban_dashboard_graph))
+
         return {
             'number_to_check': number_to_check,
             'to_check_balance': formatLang(self.env, to_check_balance, currency_obj=currency),
@@ -214,6 +236,7 @@ class account_journal(models.Model):
             'currency_id': currency.id,
             'bank_statements_source': self.bank_statements_source,
             'title': title,
+            'is_sample_data': is_sample_data,
         }
 
     def _get_open_bills_to_pay_query(self):
