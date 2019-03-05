@@ -6,35 +6,46 @@
                 Supply between <b>United Arad Emirates</b> and <b><span t-field="o.partner_id.country_id.name"/></b>
             </p>
         </xpath>
-        <xpath expr="//div[@id='informations']" position="inside">
-            <t t-if="o.env.ref('l10n_ae.gcc_countries_group') in o.partner_id.country_id.country_group_ids and o.currency_id != o.env.ref('base.AED') and o.company_id.country_id.code == 'AE'">
-                <div name="l10n_ae_amount_tax_signed" class="col-auto mw-100 mb-2" t-if="o.l10n_ae_amount_tax_signed">
-                    <strong>Tax Amount in AED:</strong>
-                    <p class="m-0" t-esc="o.l10n_ae_amount_tax_signed" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
-                </div>
-                <div name="exchange_rate" class="col-auto mw-100 mb-2" t-if="o.l10n_ae_invoice_rate">
-                    <strong>Exchange Rate:</strong>
-                    <p class="m-0" t-esc="o.l10n_ae_invoice_rate" t-options='{"widget": "float", "precision": 6}'/>
-                </div>
-            </t>
-        </xpath>
         <xpath expr="//h2" position="replace">
             <h2>
                 <t t-if="o.env.ref('l10n_ae.gcc_countries_group') in o.partner_id.country_id.country_group_ids and o.company_id.country_id.code == 'AE'">
                     <span t-if="o.type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')">Tax Invoice</span>
                     <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Tax Invoice</span>
                     <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Tax Invoice</span>
+                    <span t-if="o.type == 'out_refund'">Tax Credit Note</span>
+                    <span t-if="o.type == 'in_refund'">Tax Vendor Credit Note</span>
+                    <span t-if="o.type == 'in_invoice'">Tax Vendor Bill</span>
                 </t>
                 <t t-else="">
                     <span t-if="o.type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')">Invoice</span>
                     <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
                     <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+                    <span t-if="o.type == 'out_refund'">Credit Note</span>
+                    <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
+                    <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
                 </t>
-                <span t-if="o.type == 'out_refund'">Credit Note</span>
-                <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
-                <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
                 <span t-field="o.number"/>
             </h2>
+        </xpath>
+        <xpath expr="//div[hasclass('clearfix')]" position="after">
+            <div t-if="o.currency_id != o.env.ref('base.AED') and o.company_id.country_id.code == 'AE'" id="aed_amounts" class="row mt32 mb32">
+                <div name="exchange_rate" class="col-auto mw-100 mb-2" t-if="o.l10n_ae_invoice_rate">
+                    <strong>Exchange Rate</strong>
+                    <p class="m-0" t-esc="o.l10n_ae_invoice_rate" t-options='{"widget": "float", "precision": 6}'/>
+                </div>
+                <div name="aed_subtotal" class="col-auto mw-100 mb-2" t-if="o.amount_untaxed_signed">
+                    <strong>Subtotal(AED)</strong>
+                    <p class="m-0" t-esc="o.amount_untaxed_signed" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
+                </div>
+                <div name="aed_vat_amount" class="col-auto mw-100 mb-2" t-if="o.l10n_ae_amount_tax_signed">
+                    <strong>VAT Amount(AED)</strong>
+                    <p class="m-0" t-esc="o.l10n_ae_amount_tax_signed" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
+                </div>
+                <div name="aed_total" class="col-auto mw-100 mb-2" t-if="o.amount_total_company_signed">
+                    <strong>Total(AED)</strong>
+                    <p class="m-0" t-esc="o.amount_total_company_signed" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
+                </div>
+            </div>
         </xpath>
     </template>
 </odoo>
