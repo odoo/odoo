@@ -42,28 +42,30 @@
             <field name="model">account.setup.bank.manual.config</field>
             <field name="arch" type="xml">
                 <form>
+                    <field name="num_journals_without_account" invisible="1"/>
+                    <field name="journal_id" invisible="1"/>
+                    <field name="linked_journal_id" invisible="1"/>
                     <sheet>
-                         <field name="create_or_link_option" widget="radio" options="{'horizontal': true}"/>
-                        <group attrs="{'invisible': [('create_or_link_option','!=','link')]}">
-                           <group>
-                            <field name="linked_journal_id" attrs="{'required': [('create_or_link_option','=','link')]}" domain="[('type','=','bank'), ('bank_account_id', '=', False)]"/>
-                          </group>
-                          <group>
-                               <span class="text-muted">Only journals not yet linked to a bank account are proposed</span>
-                           </group>
-                        </group>
-                        <div attrs="{'invisible': [('create_or_link_option', '=', 'link')]}" class="oe_title">
+                        <div class="oe_title">
                             <h1><field name="new_journal_name" placeholder="e.g Checking account" class="oe_inline"/></h1>
                         </div>
                         <group>
                             <group>
                                 <field name="acc_number" placeholder="e.g BE15001559627230"/>
                                 <field name="bank_id" placeholder="e.g Bank of America"/>
-                                <field name="new_journal_code" attrs="{'invisible': [('create_or_link_option', '=', 'link')]}"/>
+                                <field name="new_journal_code"/>
                             </group>
                             <group>
                                 <field name="related_acc_type" attrs="{'invisible': [('acc_number','=',False)]}"/>
                             </group>
+                        </group>
+                        <group attrs="{'invisible': [('num_journals_without_account', '&lt;', 2)]}">
+                           <group>
+                            <field name="linked_journal_id" attrs="{'required': [('num_journals_without_account','!=',0)]}" domain="[('type','=','bank'), ('bank_account_id', '=', False)]"/>
+                          </group>
+                          <group>
+                               <span class="text-muted">Only journals not yet linked to a bank account are proposed</span>
+                           </group>
                         </group>
                     </sheet>
                     <footer>
