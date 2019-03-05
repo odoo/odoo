@@ -2,12 +2,10 @@ odoo.define('test_website.reset_views', function (require) {
 'use strict';
 
 var tour = require("web_tour.tour");
-var base = require("web_editor.base");
 
 tour.register('test_reset_page_view_complete_flow_part1', {
     test: true,
     url: '/test_page_view',
-    wait_for: base.ready()
 },
     [
         // 1. Edit the page through Edit Mode, it will COW the view
@@ -56,7 +54,6 @@ tour.register('test_reset_page_view_complete_flow_part1', {
 tour.register('test_reset_page_view_complete_flow_part2', {
     test: true,
     url: '/test_page_view',
-    wait_for: base.ready()
 },
     [
         {
