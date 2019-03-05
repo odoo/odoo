@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Layout and common templates -->
+    <template id="_assets_primary_variables" inherit_id="website._assets_primary_variables">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/website_sale/static/src/scss/primary_variables.scss"/>
+        </xpath>
+    </template>
+
     <template id="assets_backend" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_video_field_preview.js"></script>
@@ -234,8 +239,7 @@
                                                     <td t-att-colspan="td_product['x'] != 1 and td_product['x']"
                                                         t-att-rowspan="td_product['y'] != 1 and td_product['y']"
                                                         t-attf-class="oe_product #{td_product['class']}">
-                                                        <div t-attf-class="o_wsale_product_grid_filler"
-                                                            t-attf-style="padding-top: #{'%.2f' % (100 * td_product['y'] / td_product['x'])}%;"/>
+                                                        <div t-attf-class="o_wsale_product_grid_filler o_wsale_product_grid_filler_#{td_product['x']}_#{td_product['y']}"/>
                                                         <t t-call="website_sale.products_item">
                                                             <t t-set="product_image_big" t-value="td_product['x'] + td_product['y'] &gt; 2"/>
                                                         </t>
