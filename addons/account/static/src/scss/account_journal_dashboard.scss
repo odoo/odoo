@@ -36,6 +36,10 @@
             width: 450px;
         }
     }
+
+    .o_sample_data_label {
+        @include o-position-absolute($bottom: 25%, $right: 0);
+    }
 }
 
 // Style for the widget "dashboard_graph"
@@ -105,8 +109,17 @@
                         opacity: 0.5;
                         fill: $o-brand-primary !important;
                     }
+                    g.o_sample_data {
+                        opacity: 0.1;
+                        fill: gray !important;
+                    }
                 }
             }
         }
     }
+}
+
+.o_sample_data .o_dashboard_graph.o_graph_linechart > svg g.nv-linesWrap g.nv-group.nv-series-0 {
+    fill: gray !important;
+    opacity: 0.1;
 }
