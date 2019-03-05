@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!--
+    Modification to display name of stock moves
+    when having sales installed, if name potentially informative
+    about products customization
+  -->
+
+  <record id="stock_move_view_form_inherit_mrp" model="ir.ui.view">
+    <field name="name">stock.move.mrp.form.inherit.sale.mrp</field>
+    <field name="model">stock.move</field>
+    <field name="inherit_id" ref="stock.view_move_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='name']" position="attributes">
+        <attribute name="invisible" />
+        <attribute name="attrs">
+          {
+            'invisible' : ['|',('sale_line_id','=',False),('not is_name_informative')]
+          }
+        </attribute>
+      </xpath>
+      <field name="date_expected" position="after">
+        <field name="sale_line_id"/>
+      </field>
+    </field>
+  </record>
+
+  <record id="mrp_production_view_form_inherit_mrp" model="ir.ui.view">
+    <field name="name">mrp.production.form.inherit.sale.mrp</field>
+    <field name="model">mrp.production</field>
+    <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet/group['production']/group[@name='specifications']/field[@name='product_id']" position="after">
+        <field name="product_customization" attrs="{'invisible':[('product_customization','=','')]}"/>
+      </xpath>
+    </field>
+  </record>
+
+</odoo>
