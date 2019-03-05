@@ -45,7 +45,7 @@
     <record id="hr_leave_rule_team_leader_update" model="ir.rule">
         <field name="name">Leaves: Team Leader: write on employee's leaves in his team</field>
         <field name="model_id" ref="model_hr_leave"/>
-        <field name="domain_force">[('employee_id.leave_manager_id', '=' , user.id)]</field>
+        <field name="domain_force">['|', ('employee_id.leave_manager_id', '=' , user.id), ('employee_id.parent_id.user_id', '=' , user.id)]</field>
         <field name="perm_read" eval="False"/>
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
