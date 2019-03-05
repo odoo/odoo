@@ -253,9 +253,6 @@ class StockRule(models.Model):
                 'res_model_id': self.env.ref('product.model_product_template').id,
             })
 
-    def _make_po_get_domain(self, company_id, values, partner):
-        return ()
-
 
 class ProcurementGroup(models.Model):
     """
