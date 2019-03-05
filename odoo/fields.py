@@ -840,12 +840,14 @@ class Field(MetaField('DummyField', (object,), {})):
 
     ############################################################################
     #
-    # Read from/write to database
+    # Alternatively stored fields: if fields don't have a `column_type` (not
+    # stored as regular db columns) they go through a read/create/write
+    # protocol instead
     #
 
     def read(self, records):
         """ Read the value of ``self`` on ``records``, and store it in cache. """
-        return NotImplementedError("Method read() undefined on %s" % self)
+        raise NotImplementedError("Method read() undefined on %s" % self)
 
     def create(self, record_values):
         """ Write the value of ``self`` on the given records, which have just
@@ -1952,8 +1954,10 @@ class Binary(Field):
             ('res_id', 'in', records.ids),
         ]
         # Note: the 'bin_size' flag is handled by the field 'datas' itself
-        data = {att.res_id: att.datas
-                for att in records.env['ir.attachment'].sudo().search(domain)}
+        data = {
+            att.res_id: att.datas
+            for att in records.env['ir.attachment'].sudo().search(domain)
+        }
         cache = records.env.cache
         for record in records:
             cache.set(record, self, data.get(record.id, False))
