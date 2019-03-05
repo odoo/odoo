@@ -342,17 +342,19 @@
 
 <template id='slides_home_user_profile_small' name="User Profile">
     <div class="o_wslides_home_aside">
-        <div class="d-flex align-items-center">
+        <div t-if="user.rank_id" class="d-flex align-items-center">
             <span class="font-weight-bold text-muted mr-2">Current rank:</span>
             <img t-attf-src="/web/image/gamification.karma.rank/#{user.rank_id.id}/image_small" height="16" alt="" class="mr-1"/>
             <a href="/profile/ranks" t-field="user.rank_id"/>
         </div>
-        <div class="font-weight-bold text-muted mt-1">Next rank:</div>
-        <t t-call="website_profile.profile_next_rank_card">
-            <t t-set="bg_class">bg-200</t>
-            <t t-set="img_max_width">50%</t>
+        <t t-if="user.next_rank_id">
+            <div class="font-weight-bold text-muted mt-1">Next rank:</div>
+            <t t-call="website_profile.profile_next_rank_card">
+                <t t-set="bg_class">bg-200</t>
+                <t t-set="img_max_width">50%</t>
+            </t>
+            <div t-field="user.next_rank_id.description_motivational"/>
         </t>
-        <div t-field="user.next_rank_id.description_motivational"/>
     </div>
 </template>
 
