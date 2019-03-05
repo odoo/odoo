@@ -419,6 +419,7 @@ class AccountReconciliation(models.AbstractModel):
 
     def _str_domain_for_mv_line(self, search_str):
         return [
+            '|', ('account_id.code', 'ilike', search_str),
             '|', ('move_id.name', 'ilike', search_str),
             '|', ('move_id.ref', 'ilike', search_str),
             '|', ('date_maturity', 'like', search_str),
