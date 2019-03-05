@@ -30,30 +30,14 @@
                 />
                 <field name="event_ok" invisible="1"/>
             </xpath>
+            <xpath expr="//field[@name='order_line']//tree//field[@name='product_id']" position="attributes">
+                <attribute name="widget">event_configurator</attribute>
+                <attribute name="options">{'no_open': True}</attribute>
+            </xpath>
             <xpath expr="//field[@name='order_line']//tree//field[@name='product_id']" position="after">
-                <field
-                    name="event_id"
-                    domain="[
-                        ('event_ticket_ids.product_id','=', product_id),
-                        ('date_end','&gt;=',time.strftime('%Y-%m-%d 00:00:00'))
-                    ]"
-                    attrs="{'invisible': [('event_ok', '=', False)], 'required': [('event_ok', '!=', False)]}"
-                    options="{'no_open': True, 'no_create': True}"
-                />
-                <field
-                    name="event_ticket_id"
-                    domain="[
-                        ('event_id', '=', event_id),
-                        ('product_id','=',product_id),
-                        '|', ('seats_availability', '=', 'unlimited'), ('seats_available', '>', 0)
-                    ]"
-                    attrs="{
-                        'invisible': ['|', ('event_ok', '=', False), ('event_id', '=', False)],
-                        'required': [('event_ok', '!=', False), ('event_id', '!=', False)],
-                    }"
-                    options="{'no_open': True, 'no_create': True}"
-                />
-                <field name="event_ok" invisible="1"/>
+                <field name="event_ok" invisible="1" />
+                <field name="event_id" invisible="1" />
+                <field name="event_ticket_id" invisible="1" />
             </xpath>
         </field>
     </record>
