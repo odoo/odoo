@@ -73,8 +73,9 @@ class SaleOrderLine(models.Model):
     @api.multi
     @api.onchange('product_id')
     def product_id_change(self):
-        super(SaleOrderLine, self).product_id_change()
+        result = super(SaleOrderLine, self).product_id_change()
         self.event_id = None
         self.event_ticket_id = None
         if self.product_id.event_ok:
             self.price_unit = 0.0
+        return result
