@@ -8,7 +8,7 @@ declaration.
 
 Signed,
 
-Goran Kliska goran.kliska@decod.io https://github.com/gkliska
+Goran Kliska goran.kliska@decod.io https://github.com/decodio-applications
 
 List of contributors:
 
