@@ -388,7 +388,7 @@ class MailTemplate(models.Model):
         records_company = None
         if self._context.get('tpl_partners_only') and self.model and results and 'company_id' in self.env[self.model]._fields:
             records = self.env[self.model].browse(results.keys()).read(['company_id'])
-            records_company = {rec['id']: rec['company_id'][0] for rec in records}
+            records_company = {rec['id']: (rec['company_id'][0] if rec['company_id'] else None) for rec in records}
 
         for res_id, values in results.items():
             partner_ids = values.get('partner_ids', list())
