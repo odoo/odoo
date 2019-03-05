@@ -33,6 +33,15 @@
         <field name="partner_id" ref="base.partner_demo"/>
         <field name="vote">1</field>
     </record>
+    <record id="slide_channel_0_partner_demo_portal" model="slide.channel.partner">
+        <field name="channel_id" ref="website_slides.channel_public"/>
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+    </record>
+    <record id="slide_slide_0_0_partner_demo_portal" model="slide.slide.partner">
+        <field name="slide_id" ref="website_slides.slide_slide_demo_0_0"/>
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+        <field name="vote">1</field>
+    </record>
 
 
     <!-- CHANNEL 1: Taking care of Trees -->
@@ -54,26 +63,40 @@
     <record id="slide_slide_1_2_partner_admin" model="slide.slide.partner">
         <field name="slide_id" ref="website_slides.slide_slide_demo_1_2"/>
         <field name="partner_id" ref="base.partner_admin"/>
+        <field name="vote">1</field>
         <field name="completed" eval="True"/>
     </record>
-    <record id="slide_slide_1_4_partner_admin" model="slide.slide.partner">
-        <field name="slide_id" ref="website_slides.slide_slide_demo_1_4"/>
+    <record id="slide_slide_1_3_partner_admin" model="slide.slide.partner">
+        <field name="slide_id" ref="website_slides.slide_slide_demo_1_3"/>
         <field name="partner_id" ref="base.partner_admin"/>
-        <field name="quiz_attempts_count">2</field>
+        <field name="vote">1</field>
         <field name="completed" eval="True"/>
     </record>
     <record id="slide_channel_1_partner_demo" model="slide.channel.partner">
         <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
         <field name="partner_id" ref="base.partner_demo"/>
     </record>
-    <record id="slide_slide_1_0_partner_demo_portal" model="slide.slide.partner">
+    <record id="slide_slide_1_0_partner_demo" model="slide.slide.partner">
         <field name="slide_id" ref="website_slides.slide_slide_demo_1_0"/>
-        <field name="partner_id" ref="base.partner_demo_portal"/>
+        <field name="partner_id" ref="base.partner_demo"/>
+        <field name="vote">1</field>
         <field name="completed" eval="True"/>
+    </record>
+    <record id="slide_slide_1_1_partner_demo" model="slide.slide.partner">
+        <field name="slide_id" ref="website_slides.slide_slide_demo_1_1"/>
+        <field name="partner_id" ref="base.partner_demo"/>
+        <field name="vote">1</field>
     </record>
     <record id="slide_channel_1_partner_demo_portal" model="slide.channel.partner">
         <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
         <field name="partner_id" ref="base.partner_demo_portal"/>
+        <field name="completed" eval="True"/>
+    </record>
+    <record id="slide_slide_1_0_partner_demo" model="slide.slide.partner">
+        <field name="slide_id" ref="website_slides.slide_slide_demo_1_0"/>
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+        <field name="vote">1</field>
+        <field name="completed" eval="True"/>
     </record>
 
     <record id="message_channel_1_admin" model="mail.message">
@@ -128,6 +151,7 @@
         <field name="message_id" ref="website_slides.message_channel_1_portal"/>
     </record>
 
+
     <!-- CHANNEL 2: Trees, Wood and Garden -->
     <!-- ================================================== -->
     <record id="slide_channel_2_partner_admin" model="slide.channel.partner">
@@ -138,7 +162,6 @@
         <field name="slide_id" ref="website_slides.slide_slide_demo_2_0"/>
         <field name="partner_id" ref="base.partner_admin"/>
         <field name="vote">1</field>
-        <field name="completed" eval="True"/>
     </record>
     <record id="slide_slide_2_1_partner_admin" model="slide.slide.partner">
         <field name="slide_id" ref="website_slides.slide_slide_demo_2_1"/>
