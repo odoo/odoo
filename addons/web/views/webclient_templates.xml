@@ -321,8 +321,8 @@
                 <div class="form-group field-password">
                     <label for="password" class="control-label">Password</label>
                     <input type="password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
+                    <p class="caps-lock-message" style="display:none; color:red; float:right;">Caps Lock is ON.</p>
                 </div>
-
                 <p class="alert alert-danger" t-if="error">
                     <t t-esc="error"/>
                 </p>
@@ -335,6 +335,29 @@
                     <button type="submit" class="btn btn-primary">Log in</button>
                 </div>
             </form>
+            <script type="text/javascript">
+                odoo.define('capsLockNotifcation', function (require) {
+                    var utils = require('web.utils');
+                    $(function() {
+                        $('#password').keypress(utils.capsLockNotifcation);
+                        
+                        $(document).keyup(function(e) {
+                            // If "caps lock" is pressed, display the warning text
+                            if (e.originalEvent.getModifierState) {
+                                if (e.originalEvent.getModifierState("CapsLock"))
+                                    $('.caps-lock-message').show();
+                                else
+                                    $('.caps-lock-message').hide();
+                            }
+                        });
+                    });
+
+                    return  {
+                        utils: utils,
+                    };
+                });
+                
+            </script>
         </t>
     </template>
 

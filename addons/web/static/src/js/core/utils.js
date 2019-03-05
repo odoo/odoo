@@ -521,7 +521,18 @@ var utils = {
       });
       return Object.freeze(obj);
     },
-
+    /*
+    * Notify user if the Caps lock is ON.
+    * Used only in the Login page.
+    */
+    capsLockNotifcation: function(e) {    
+        var kc = e.keyCode ? e.keyCode : e.which;
+        var sk = e.shiftKey ? e.shiftKey : ((kc == 16) ? true : false);
+        if (((kc >= 65 && kc <= 90) && !sk) || ((kc >= 97 && kc <= 122) && sk))
+            $('.caps-lock-message').show();
+        else
+            $('.caps-lock-message').hide();
+    }
 };
 
 return utils;
