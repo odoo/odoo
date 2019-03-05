@@ -68,26 +68,42 @@ class WebsiteSlides(WebsiteProfile):
         return True
 
     def _get_slide_detail(self, slide):
-        most_viewed_slides = slide._get_most_viewed_slides(self.SLIDES_PER_ASIDE)
-        related_slides = slide._get_related_slides(self.SLIDES_PER_ASIDE)
+        if slide.channel_id.channel_type == 'documentation':
+            most_viewed_slides = slide._get_most_viewed_slides(self.SLIDES_PER_ASIDE)
+            related_slides = slide._get_related_slides(self.SLIDES_PER_ASIDE)
+            uncategorized_slides = request.env['slide.slide']
+        else:
+            most_viewed_slides, related_slides = request.env['slide.slide'], request.env['slide.slide']
+            uncategorized_slides = slide.channel_id.slide_ids.filtered(lambda slide: not slide.category_id)
+
+        channel_slides_ids = slide.channel_id.slide_ids.ids
+        slide_index = channel_slides_ids.index(slide.id)
+        previous_slide = slide.channel_id.slide_ids[slide_index-1] if slide_index > 0 else None
+        next_slide = slide.channel_id.slide_ids[slide_index+1] if slide_index < len(channel_slides_ids) - 1 else None
+
         values = {
+            # slide
             'slide': slide,
             'most_viewed_slides': most_viewed_slides,
             'related_slides': related_slides,
+            'previous_slide': previous_slide,
+            'next_slide': next_slide,
+            'uncategorized_slides': uncategorized_slides,
+            # user
             'user': request.env.user,
+            'user_progress': self._get_user_progress(slide.channel_id)['user_progress'],
             'is_public_user': request.website.is_public_user(),
+            # rating and comments
             'comments': slide.website_message_ids or [],
-            'user_progress': {}
         }
-        if slide.channel_id.channel_type == "training":
-            channel_slides_ids = slide.channel_id.slide_ids.ids
-            slide_index = channel_slides_ids.index(slide.id)
-            previous_slide = slide.channel_id.slide_ids[slide_index-1] if slide_index > 0 else None
-            next_slide = slide.channel_id.slide_ids[slide_index+1] if slide_index < len(channel_slides_ids) - 1 else None
+
+        # allow rating and comments
+        if slide.channel_id.allow_comment:
             values.update({
-                'previous_slide': slug(previous_slide) if previous_slide else "",
-                'next_slide': slug(next_slide) if next_slide else ""
+                'message_post_hash': slide._generate_signed_token(request.env.user.partner_id.id),
+                'message_post_pid': request.env.user.partner_id.id,
             })
+
         return values
 
     def _get_quiz_points(self, slide, attempt_count):
@@ -494,21 +510,12 @@ class WebsiteSlides(WebsiteProfile):
     def slide_view(self, slide, **kwargs):
         if not slide.channel_id.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
+        self._set_viewed_slide(slide)
 
-        self._set_viewed_slide(slide)
         values = self._get_slide_detail(slide)
-        # allow rating and comments
-        if slide.channel_id.allow_comment:
-            values.update({
-                'message_post_hash': slide._generate_signed_token(request.env.user.partner_id.id),
-                'message_post_pid': request.env.user.partner_id.id,
-            })
-        self._set_viewed_slide(slide)
-        if slide.channel_id.channel_type == "training":
-            values.update(self._get_user_progress(slide.channel_id))
-            values['uncategorized_slides'] = slide.channel_id.slide_ids.filtered(lambda slide: not slide.category_id)
-            if 'fullscreen' in kwargs:
-                return request.render("website_slides.slide_fullscreen", values)
+
+        if 'fullscreen' in kwargs:
+            return request.render("website_slides.slide_fullscreen", values)
         return request.render("website_slides.slide_detail_view", values)
 
     @http.route('''/slides/slide/<model("slide.slide"):slide>/pdf_content''',
