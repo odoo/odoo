@@ -117,7 +117,7 @@
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
                 <form string="Register Payment">
-                    <header attrs="{'invisible': [('invoice_number', '!=', 0)]}">
+                    <header>
                         <button name="post" class="oe_highlight" states="draft" string="Confirm" type="object"/>
                         <button name="action_draft" class="oe_highlight" states="cancelled" string="Set To Draft" type="object"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted,reconciled,cancelled"/>
@@ -144,16 +144,13 @@
                         </div>
                         <group>
                             <field name="invoice_ids" invisible="1"/>
-                            <field name="invoice_number" invisible="1"/>
-                            <field name="multi" invisible="1"/>
-                            <group attrs="{'invisible': [('invoice_number', '!=', 0)]}">
+                            <group name="partner_group">
                                 <field name="payment_type" widget="radio"/>
                                 <field name="partner_type" widget="selection" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}"/>
                                 <field name="partner_id" attrs="{'required': [('state', '=', 'draft'), ('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}" context="{'default_is_company': True, 'default_supplier': payment_type == 'outbound', 'default_customer': payment_type == 'inbound'}"/>
                             </group>
                             <group name="right_column">
                                 <field name="payment_date"/>
-                                <field name="group_invoices" attrs="{'invisible': ['|', ('invoice_number', '==', 0), ('invoice_number', '==', 1)]}"/>
                                 <field name="show_communication_field" invisible="1"/>
                                 <field name="communication" attrs="{'invisible': [('show_communication_field', '=', False)]}"/>
                                 <p colspan="2" attrs="{'invisible': [('show_communication_field', '=', True)]}">Memo will be computed from invoices</p>
@@ -161,10 +158,10 @@
                             <group>
                                 <label for="amount"/>
                                 <div name="amount_div" class="o_row">
-                                    <field name="amount" attrs="{'readonly': [('multi', '=', True)]}"/>
+                                    <field name="amount"/>
                                     <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                                 </div>
-                                <field name="journal_id" widget="selection" attrs="{'invisible': [('amount', '=', 0), ('invoice_number', '!=', 0)]}"/>
+                                <field name="journal_id" widget="selection" attrs="{'invisible': [('amount', '=', 0)]}"/>
                                 <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')]}"/>
                                 <field name="hide_payment_method" invisible="1"/>
                                 <field name="payment_method_id" string=" " widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)]}"/>
@@ -194,11 +191,40 @@
                         <field name="activity_ids" widget="mail_activity"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_payment_form_multi" model="ir.ui.view">
+            <field name="name">account.payment.form.multi</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <field name="invoice_ids" position="after">
+                    <field name="invoice_number" invisible="1"/>
+                    <field name="multi" invisible="1"/>
+                </field>
+                <field name="payment_date" position="after">
+                    <field name="group_invoices" attrs="{'invisible': ['|', ('invoice_number', '==', 0), ('invoice_number', '==', 1)]}"/>
+                </field>
+                <field name="amount" position="attributes">
+                    <attribute name="attrs">{'readonly': [('multi', '=', True)]}</attribute>
+                </field>
+                <field name="journal_id" position="attributes">
+                    <attribute name="attrs">{'invisible': [('amount', '=', 0), ('invoice_number', '!=', 0)]}</attribute>
+                </field>
+                <xpath expr="//header" position="attributes">
+                    <attribute name="attrs">{'invisible': [('invoice_number', '!=', 0)]}</attribute>
+                </xpath>
+                <xpath expr="//group[@name='partner_group']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('invoice_number', '!=', 0)]}</attribute>
+                </xpath>
+                <xpath expr="/form" position="inside">
                     <footer attrs="{'invisible': [('invoice_number', '==', 0)]}">
                         <button string='Validate' name="create_payments" type="object" class="btn-primary"/>
                         <button string="Cancel" class="btn-secondary" special="cancel"/>
                     </footer>
-                </form>
+                </xpath>
             </field>
         </record>
 

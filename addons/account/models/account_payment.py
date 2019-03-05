@@ -97,48 +97,6 @@ class account_payment(models.Model):
     partner_bank_account_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account", readonly=True, states={'draft': [('readonly', False)]})
     show_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be displayed or not in the payments form views')
 
-    @api.model
-    def default_get(self, fields):
-        rec = super(account_payment, self).default_get(fields)
-        active_ids = self._context.get('active_ids')
-        active_model = self._context.get('active_model')
-
-        # Check for selected invoices ids
-        if not active_ids or active_model != 'account.invoice':
-            return rec
-
-        invoices = self.env['account.invoice'].browse(active_ids)
-
-        # Check all invoices are open
-        if any(invoice.state != 'open' for invoice in invoices):
-            raise UserError(_("You can only register payments for open invoices"))
-        # Check all invoices have the same currency
-        if any(inv.currency_id != invoices[0].currency_id for inv in invoices):
-            raise UserError(_("In order to pay multiple invoices at once, they must use the same currency."))
-
-        # Look if we are mixin multiple commercial_partner or customer invoices with vendor bills
-        multi = any(inv.commercial_partner_id != invoices[0].commercial_partner_id
-                    or MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type]
-                    or inv.account_id != invoices[0].account_id
-                    or inv.partner_bank_id != invoices[0].partner_bank_id
-                    for inv in invoices)
-
-        currency = invoices[0].currency_id
-
-        total_amount = self._compute_payment_amount(invoices=invoices, currency=currency)
-
-        rec.update({
-            'amount': abs(total_amount),
-            'currency_id': currency.id,
-            'payment_type': total_amount > 0 and 'inbound' or 'outbound',
-            'partner_id': False if multi else invoices[0].commercial_partner_id.id,
-            'partner_type': False if multi else MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
-            'communication': ' '.join([ref for ref in invoices.mapped('reference') if ref]),
-            'invoice_ids': [(6, 0, invoices.ids)],
-            'multi': multi,
-        })
-        return rec
-
     @api.one
     @api.constrains('amount')
     def _check_amount(self):
@@ -154,7 +112,7 @@ class account_payment(models.Model):
         """ Computes if the destination bank account must be displayed in the payment form view. By default, it
         won't be displayed but some modules might change that, depending on the payment type."""
         for payment in self:
-            payment.show_partner_bank_account = payment.payment_method_code in self._get_method_codes_using_bank_account() and not self.multi
+            payment.show_partner_bank_account = payment.payment_method_code in self._get_method_codes_using_bank_account()
 
     @api.multi
     @api.depends('payment_type', 'journal_id')
@@ -391,18 +349,6 @@ class account_payment(models.Model):
                                              record.move_line_ids.mapped('matched_credit_ids.credit_move_id.invoice_id'))
             record.has_invoices = bool(record.reconciled_invoice_ids)
 
-    @api.model
-    def create(self, vals):
-        rslt = super(account_payment, self).create(vals)
-        # When a payment is created by the multi payments wizard in 'multi' mode,
-        # its partner_bank_account_id will never be displayed, and hence stay empty,
-        # even if the payment method requires it. This condition ensures we set
-        # the first (and thus most prioritary) account of the partner in this field
-        # in that situation.
-        if not rslt.partner_bank_account_id and rslt.show_partner_bank_account and rslt.partner_id.bank_ids:
-            rslt.partner_bank_account_id = rslt.partner_id.bank_ids[0]
-        return rslt
-
     @api.multi
     def action_register_payment(self):
         active_ids = self.env.context.get('active_ids')
@@ -539,7 +485,7 @@ class account_payment(models.Model):
         triggered on invoice form by the "Register Payment" button.
         """
         if any(len(record.invoice_ids) != 1 for record in self):
-            # For multiple invoices, there is account.register.payments wizard
+            # For multiple invoices, there is create_payments method
             raise UserError(_("This method should only be called to process a single invoice's payment."))
         res = self.post()
         self.mapped('payment_transaction_id').filtered(lambda x: x.state == 'done' and not x.is_processed)._post_process_after_done()
@@ -711,6 +657,58 @@ class payment_register(models.Model):
     multi = fields.Boolean(string='Multi', compute='_compute_multi', help='Technical field indicating if the user selected invoices from multiple partners or from different types.')
     group_invoices = fields.Boolean(string="Group Invoices", store=False, help='If enabled, groups invoices by commercial partner, invoice account, type and recipient bank account in the generated payments. If disabled, a distinct payment will be generated for each invoice.')
     invoice_number = fields.Integer(compute="_compute_invoice_number")
+
+    @api.model
+    def create(self, vals):
+        rslt = super(account_payment, self).create(vals)
+        # When a payment is created by the multi payments wizard in 'multi' mode,
+        # its partner_bank_account_id will never be displayed, and hence stay empty,
+        # even if the payment method requires it. This condition ensures we set
+        # the first (and thus most prioritary) account of the partner in this field
+        # in that situation.
+        if not rslt.partner_bank_account_id and rslt.show_partner_bank_account and rslt.partner_id.bank_ids:
+            rslt.partner_bank_account_id = rslt.partner_id.bank_ids[0]
+        return rslt
+
+    @api.model
+    def default_get(self, fields):
+        rec = super(account_payment, self).default_get(fields)
+        active_ids = self._context.get('active_ids')
+        active_model = self._context.get('active_model')
+
+        # Check for selected invoices ids
+        if not active_ids or active_model != 'account.invoice':
+            return rec
+
+        invoices = self.env['account.invoice'].browse(active_ids)
+
+        # Check all invoices are open
+        if any(invoice.state != 'open' for invoice in invoices):
+            raise UserError(_("You can only register payments for open invoices"))
+        # Check all invoices have the same currency
+        if any(inv.currency_id != invoices[0].currency_id for inv in invoices):
+            raise UserError(_("In order to pay multiple invoices at once, they must use the same currency."))
+
+        currency = invoices[0].currency_id
+
+        total_amount = self._compute_payment_amount(invoices=invoices, currency=currency)
+
+        rec.update({
+            'amount': abs(total_amount),
+            'currency_id': currency.id,
+            'payment_type': total_amount > 0 and 'inbound' or 'outbound',
+            'partner_id': False if self.multi else invoices[0].commercial_partner_id.id,
+            'partner_type': False if self.multi else MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
+            'communication': ' '.join([ref for ref in invoices.mapped('reference') if ref]),
+            'invoice_ids': [(6, 0, invoices.ids)],
+        })
+        return rec
+
+    @api.depends('payment_method_code')
+    def _compute_show_partner_bank(self):
+        super(payment_register, self)._compute_show_partner_bank()
+        for payment in self:
+            payment.show_partner_bank_account = payment.show_partner_bank_account and not self.multi
 
     @api.depends('invoice_ids')
     def _compute_multi(self):
