@@ -150,5 +150,25 @@ tour.register('rte_translator', {
 }, {
     content: "check bis: placeholder translation",
     trigger: 'input[placeholder="test french placeholder"]',
+}, {
+    content: "Open customize menu",
+    trigger: "#customize-menu > .dropdown-toggle",
+}, {
+    content: "Open HTML editor",
+    trigger: "[data-action='ace']",
+}, {
+    content: "Check that the editor is not showing translated content (1)",
+    trigger: '.ace_text-layer .ace_line:contains("an HTML")',
+    run: function (actions) {
+        var lineEscapedText = $(this.$anchor.text()).text();
+        if (lineEscapedText !== "&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty") {
+            console.error('The HTML editor should display the correct untranslated content');
+            $('body').addClass('rte_translator_error');
+        }
+    },
+}, {
+    content: "Check that the editor is not showing translated content (2)",
+    trigger: 'body:not(.rte_translator_error)',
+    run: function () {},
 }]);
 });
