@@ -29,13 +29,14 @@ class SendSMS(models.TransientModel):
     recipients = fields.Char('Recipients', required=True)
     message = fields.Text('Message', required=True)
     sendto = fields.Text('Send to')
-    template = fields.Many2one('mail.template', 'Template')
+    #template = fields.Many2one('mail.template', 'Template')
+    template = fields.Char(string='Template', default='Not implemented yet', readonly=True)
 
     def _get_records(self, model):
-        # if self.env.context.get('active_domain'):
-        #     records = model.search(self.env.context.get('active_domain'))
         if self.env.context.get('active_ids'):
             records = model.browse(self.env.context.get('active_ids', []))
+        elif self.env.context.get('active_domain'):
+            records = model.search(self.env.context.get('active_domain'))
         else:
             records = model.browse(self.env.context.get('active_id', []))
         return records
@@ -44,16 +45,24 @@ class SendSMS(models.TransientModel):
     def default_get(self, fields):
         result = super(SendSMS, self).default_get(fields)
 
+        result['recipients'] = self.env.context.get('default_recipients')
+        result['message'] = self.env.context.get('default_message')
+        result['sendto'] = self.env.context.get('default_sendto')
+
+        if result['recipients'] and result['sendto']:
+            return result
+
         active_model = self.env.context.get('active_model')
         model = self.env[active_model]
-
         records = self._get_records(model)
-        if getattr(records, '_get_default_sms_recipients') and not self.env.context.get('default_recipients'):
+
+        if getattr(records, '_get_default_sms_recipients'):
             partners = records._get_default_sms_recipients()
+
             phone_numbers = []
             no_phone_partners = []
             for partner in partners:
-                number = partner[self.env.context.get('field_name')] or partner['mobile'] or partner['phone']
+                number = partner[self.env.context.get('field_name')] if self.env.context.get('field_name') else partner['mobile'] or partner['phone']
                 if number:
                     phone_numbers.append((partner.name, number))
                 else:
@@ -84,6 +93,4 @@ class SendSMS(models.TransientModel):
             records.message_post_send_sms(self.message, numbers, partners)
         else:
             self.env['sms.api']._send_sms(numbers, self.message)
-
-
         return True

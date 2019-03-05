@@ -19,8 +19,8 @@ class ResendSms(models.TransientModel):
         rec = super(ResendSms, self).default_get(fields)
         sms_id = self.env['sms.sms'].browse(self.env.context.get('sms_id'))
         rec.update({
-            'partner_id': sms_id.partner_id.id,
-            'partner_name': sms_id.partner_id.name,
+            'partner_id': sms_id.partner_id.id if sms_id.partner_id else False,
+            'partner_name': sms_id.partner_id.name if sms_id.partner_id else False,
             'sms_id': sms_id.id,
             'number': sms_id.number,
         })
@@ -32,6 +32,7 @@ class ResendSms(models.TransientModel):
 
     @api.multi
     def update_number_save(self):
-        self.partner_id.write({'mobile': self.number})
+        if self.partner_id:
+            self.partner_id.write({'mobile': self.number})
         self.sms_id.write({'number': self.number})
         self.sms_id.send_sms()
