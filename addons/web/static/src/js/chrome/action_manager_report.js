@@ -36,17 +36,33 @@ ActionManager.include({
     //--------------------------------------------------------------------------
 
     /**
+     * Map report types to ir.actions.report.report_type field values
+     *
+     * @param {string} type
+     * @returns {string} equivalent report_type
+     */
+
+    _mapReportType: function (type) {
+        return "qweb-" + type;
+    },
+
+    /**
      * Downloads a PDF report for the given url. It blocks the UI during the
      * report generation and download.
      *
      * @param {string} url
+     * @param {string} type
      * @returns {Deferred} resolved when the report has been downloaded ;
      *   rejected if something went wrong during the report generation
      */
-    _downloadReport: function (url) {
+    _downloadReport: function (url, type) {
         framework.blockUI();
         var def = $.Deferred();
-        var type = 'qweb-' + url.split('/')[2];
+        if (_.isUndefined(type)) {
+            // If type wasn't specified, fallback to previous behavior.
+            type = url.split('/')[2];
+        }
+        type = this._mapReportType(type);
         var blocked = !session.get_file({
             url: '/report/download',
             data: {
@@ -82,7 +98,7 @@ ActionManager.include({
     _triggerDownload: function (action, options, type){
         var self = this;
         var reportUrls = this._makeReportUrls(action);
-        return this._downloadReport(reportUrls[type]).then(function () {
+        return this._downloadReport(reportUrls[type], type).then(function () {
             if (action.close_on_report_download) {
                 var closeAction = { type: 'ir.actions.act_window_close' };
                 return self.doAction(closeAction, _.pick(options, 'on_close'));

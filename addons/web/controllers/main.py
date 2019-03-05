@@ -1565,6 +1565,26 @@ class Apps(http.Controller):
 
 class ReportController(http.Controller):
 
+    def _response_headers(self, converter, lenght=None):
+        """
+        Returns the appropriate headers based on converter and lenght
+
+        :param string converter: report converter
+        :param int lenght: report size/lenght
+        :return: List with the headers to be used
+        :rtype: list
+        """
+        headers = []
+        if converter == 'pdf':
+            headers = [('Content-Type', 'application/pdf')]
+        elif converter == 'text':
+            headers = [('Content-Type', 'text/plain')]
+
+        if lenght and converter != "html":
+            headers.append(('Content-Length', lenght))
+
+        return headers
+
     #------------------------------------------------------
     # Report controllers
     #------------------------------------------------------
@@ -1587,19 +1607,12 @@ class ReportController(http.Controller):
             if data['context'].get('lang'):
                 del data['context']['lang']
             context.update(data['context'])
-        if converter == 'html':
-            html = report.with_context(context).render_qweb_html(docids, data=data)[0]
-            return request.make_response(html)
-        elif converter == 'pdf':
-            pdf = report.with_context(context).render_qweb_pdf(docids, data=data)[0]
-            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
-            return request.make_response(pdf, headers=pdfhttpheaders)
-        elif converter == 'text':
-            text = report.with_context(context).render_qweb_text(docids, data=data)[0]
-            texthttpheaders = [('Content-Type', 'text/plain'), ('Content-Length', len(text))]
-            return request.make_response(text, headers=texthttpheaders)
-        else:
+        result = report.with_context(context).render(docids, data=data)
+        if result is None:
             raise werkzeug.exceptions.HTTPException(description='Converter %s not implemented.' % converter)
+        result = result[0]
+        headers = self._response_headers(converter, len(result))
+        return request.make_response(result, headers=headers)
 
     #------------------------------------------------------
     # Misc. route utils
@@ -1625,6 +1638,27 @@ class ReportController(http.Controller):
 
         return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
 
+    def _report_download_info(self, rtype):
+        """
+        Get report information used on /report/download
+
+        :param string rtype: Report type
+        :return: report converter, extension and url pattern
+        :rtype: tuple
+        """
+        converter = extension = pattern = None
+        if rtype == "qweb-pdf":
+            converter = "pdf"
+            extension = "pdf"
+            pattern = "/report/pdf/"
+        elif rtype == "qweb-text":
+            converter = "text"
+            extension = "txt"
+            pattern = "/report/text/"
+
+        return converter, extension, pattern
+
+
     @http.route(['/report/download'], type='http', auth="user")
     def report_download(self, data, token):
         """This function is used by 'action_manager_report.js' in order to trigger the download of
@@ -1637,11 +1671,9 @@ class ReportController(http.Controller):
         requestcontent = json.loads(data)
         url, type = requestcontent[0], requestcontent[1]
         try:
-            if type in ['qweb-pdf', 'qweb-text']:
-                converter = 'pdf' if type == 'qweb-pdf' else 'text'
-                extension = 'pdf' if type == 'qweb-pdf' else 'txt'
-
-                pattern = '/report/pdf/' if type == 'qweb-pdf' else '/report/text/'
+            info = self._report_download_info(type)
+            if all(info):
+                converter, extension, pattern = info
                 reportname = url.split(pattern)[1].split('?')[0]
 
                 docids = None
