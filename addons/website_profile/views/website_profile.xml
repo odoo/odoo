@@ -178,8 +178,8 @@
                             </div>
                             <button class="btn btn-sm d-md-none bg-white border" type="button" data-toggle="collapse" data-target="#o_wprofile_sidebar_collapse" aria-expanded="false" aria-controls="o_wprofile_sidebar_collapse">More info</button>
                         </div>
-                        <div t-if="user.rank_id" class="collapse d-md-block" id="o_wprofile_sidebar_collapse">
-                            <div class="mb-3">
+                        <div class="collapse d-md-block" id="o_wprofile_sidebar_collapse">
+                            <div t-if="user.next_rank_id" class="mb-3">
                                 <small class="font-weight-bold mt-1">Next rank:</small>
                                 <t t-call="website_profile.profile_next_rank_card">
                                     <t t-set="img_max_width">40%</t>
@@ -228,9 +228,14 @@
     </template>
 
     <template id="profile_next_rank_card" name="Profile Next Rank Card">
-        <div class="o_wprofile_progress_circle">
+        <div t-if="user.next_rank_id" class="o_wprofile_progress_circle">
             <svg viewBox="0 0 36 36" class="o_pc_circular_chart">
-                <t t-set="user_points" t-value="int(100*(user.karma - user.rank_id.karma_min)/(user.next_rank_id.karma_min - user.rank_id.karma_min))"/>
+                <t t-if="(user.next_rank_id.karma_min - user.rank_id.karma_min) > 0">
+                    <t t-set="user_points" t-value="int(100*(user.karma - user.rank_id.karma_min)/(user.next_rank_id.karma_min - user.rank_id.karma_min))"/>
+                </t>
+                <t t-else="">
+                    <t t-set="user_points" t-value="0"/>
+                </t>
                 <path class="o_pc_circle_bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                 <path class="o_pc_circle" t-attf-stroke-dasharray="#{user_points}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke="url(#gradient)" />
                 <linearGradient id="gradient">
