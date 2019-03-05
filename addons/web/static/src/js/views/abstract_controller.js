@@ -243,7 +243,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
                     return;
                 }
                 self.renderer.setLocalState(localState);
-                return self._update(state);
+                return self._update(state, params);
             });
         });
     },
@@ -399,12 +399,15 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      *
      * @private
      * @param {Object} state the state given by the model
+     * @param {Object} [params]
+     * @param {Object[]} [params.breadcrumbs]
      * @returns {Deferred}
      */
-    _update: function () {
+    _update: function (state, params) {
         // AAB: update the control panel -> this will be moved elsewhere at some point
         var cpContent = _.extend({}, this.controlPanelElements);
         this.updateControlPanel({
+            breadcrumbs: params && params.breadcrumbs,
             cp_content: cpContent,
             title: this.getTitle(),
         });
