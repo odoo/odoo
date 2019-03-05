@@ -2276,7 +2276,7 @@ QUnit.module('ActionManager', {
     });
 
     QUnit.test('breadcrumbs are updated when switching between views', function (assert) {
-        assert.expect(10);
+        assert.expect(15);
 
         var actionManager = createActionManager({
             actions: this.actions,
@@ -2297,6 +2297,20 @@ QUnit.module('ActionManager', {
         assert.strictEqual($('.o_control_panel .breadcrumb-item').text(), 'Partners',
             "breadcrumbs should still display the display_name of the action");
 
+        // open a record in form view
+        testUtils.dom.click(actionManager.$('.o_kanban_view .o_kanban_record:first'));
+        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 2,
+            "there should be two controllers in the breadcrumbs");
+        assert.strictEqual($('.o_control_panel .breadcrumb-item:last').text(), 'First record',
+            "breadcrumbs should contain the display_name of the opened record");
+
+        // go back to kanban view using the breadcrumbs
+        testUtils.dom.click($('.o_control_panel .breadcrumb a'));
+        assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 1,
+            "there should be one controller in the breadcrumbs");
+        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(), 'Partners',
+            "breadcrumbs should display the display_name of the action");
+
         // switch back to list view
         testUtils.dom.click($('.o_control_panel .o_cp_switch_list'));
         assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 1,
@@ -2313,6 +2327,8 @@ QUnit.module('ActionManager', {
 
         // go back to list view using the breadcrumbs
         testUtils.dom.click($('.o_control_panel .breadcrumb a'));
+        assert.containsOnce(actionManager, '.o_list_view',
+            "should be back on list view");
         assert.strictEqual($('.o_control_panel .breadcrumb-item').length, 1,
             "there should be one controller in the breadcrumbs");
         assert.strictEqual($('.o_control_panel .breadcrumb-item').text(), 'Partners',
