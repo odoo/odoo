@@ -3187,7 +3187,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if hasattr(field, 'selection') and val:
                     self._check_selection_field_value(name, val)
                 if field.column_type:
-                    if single_lang or not (has_trans and field.translate):
+                    if single_lang or not (has_trans and field.translate is True):
                         # val is not a translation: update the table
                         val = field.convert_to_column(val, self, vals)
                         updates.append((name, field.column_format, val))
