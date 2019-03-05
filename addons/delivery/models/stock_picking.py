@@ -37,28 +37,6 @@ class StockQuantPackage(models.Model):
     shipping_weight = fields.Float(string='Shipping Weight', help="Total weight of the package.")
 
 
-class StockMoveLine(models.Model):
-    _inherit = 'stock.move.line'
-
-    @api.multi
-    def manage_package_type(self):
-        self.ensure_one()
-        view_id = self.env.ref('delivery.choose_delivery_package_view_form').id
-        return {
-            'name': _('Package Details'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'choose.delivery.package',
-            'view_id': view_id,
-            'views': [(view_id, 'form')],
-            'target': 'new',
-            'context': {
-                'default_stock_quant_package_id': self.result_package_id.id,
-                'current_package_carrier_type': self.picking_id.carrier_id.delivery_type if self.picking_id.carrier_id.delivery_type not in ['base_on_rule', 'fixed'] else 'none',
-                }
-        }
-
-
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
@@ -135,28 +113,34 @@ class StockPicking(models.Model):
         return res
 
     @api.multi
-    def put_in_pack(self):
-        res = super(StockPicking, self).put_in_pack()
-        if isinstance(res, dict) and res.get('type'):
-            return res
-        if self.carrier_id and self.carrier_id.delivery_type not in ['base_on_rule', 'fixed']:
-            view_id = self.env.ref('delivery.choose_delivery_package_view_form').id
-            return {
-                'name': _('Package Details'),
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'res_model': 'choose.delivery.package',
-                'view_id': view_id,
-                'views': [(view_id, 'form')],
-                'target': 'new',
-                'context': dict(
-                    self.env.context,
-                    current_package_carrier_type=self.carrier_id.delivery_type,
-                    default_stock_quant_package_id=res.id
-                ),
-            }
+    def _pre_put_in_pack_hook(self, move_line_ids):
+        res = super(StockPicking, self)._pre_put_in_pack_hook(move_line_ids)
+        if not res:
+            if self.carrier_id:
+                return self._set_delivery_packaging()
         else:
             return res
+
+    def _set_delivery_packaging(self):
+        """ This method returns an action allowing to set the product packaging and the shipping weight
+         on the stock.quant.package.
+        """
+        self.ensure_one()
+        view_id = self.env.ref('delivery.choose_delivery_package_view_form').id
+        return {
+            'name': _('Package Details'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'choose.delivery.package',
+            'view_id': view_id,
+            'views': [(view_id, 'form')],
+            'target': 'new',
+            'context': dict(
+                self.env.context,
+                current_package_carrier_type=self.carrier_id.delivery_type,
+                default_picking_id=self.id
+            ),
+        }
 
     @api.multi
     def action_send_confirmation_email(self):
