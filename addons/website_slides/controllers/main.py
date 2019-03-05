@@ -37,6 +37,9 @@ class WebsiteSlides(WebsiteProfile):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
+    # SLIDE UTILITIES
+    # --------------------------------------------------
+
     def _fetch_slide(self, slide_id):
         slide = request.env['slide.slide'].browse(int(slide_id)).exists()
         if not slide:
@@ -164,7 +167,7 @@ class WebsiteSlides(WebsiteProfile):
         return domain
 
     # --------------------------------------------------
-    # MAIN / SEARCH
+    # SLIDE.CHANNEL MAIN / SEARCH
     # --------------------------------------------------
 
     @http.route('/slides', type='http', auth="public", website=True)
@@ -416,7 +419,10 @@ class WebsiteSlides(WebsiteProfile):
 
         return request.render('website_slides.course_main', values)
 
-    @http.route(['/slides/channel/add'], type='http', auth='user', methods=['POST'], website=True)
+    # SLIDE.CHANNEL UTILS
+    # --------------------------------------------------
+
+    @http.route('/slides/channel/add', type='http', auth='user', methods=['POST'], website=True)
     def slide_channel_create(self, *args, **kw):
         channel = request.env['slide.channel'].create(self._slide_channel_prepare_values(**kw))
         return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
@@ -437,8 +443,51 @@ class WebsiteSlides(WebsiteProfile):
             'allow_comment': bool(kw.get('allow_comment')),
         }
 
+    @http.route('/slides/channel/enroll', type='http', auth='public', website=True)
+    def slide_channel_join_http(self, channel_id):
+        # TDE FIXME: why 2 routes ?
+        if not request.website.is_public_user():
+            channel = request.env['slide.channel'].browse(int(channel_id))
+            channel.action_add_member()
+        return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
+
+    @http.route(['/slides/channel/join'], type='json', auth='public', website=True)
+    def slide_channel_join(self, channel_id):
+        if request.website.is_public_user():
+            return {'error': 'public_user'}
+        success = request.env['slide.channel'].browse(channel_id).action_add_member()
+        if not success:
+            return {'error': 'join_done'}
+        return success
+
+    @http.route('/slides/channel/resequence', type="json", website=True, auth="user")
+    def resequence_slides(self, channel_id, slides_data):
+        """" Reorder the slides within the channel by reassigning their 'sequence' field.
+        This method also handles slides that are put in a new category (or uncategorized). """
+        channel = request.env['slide.channel'].browse(int(channel_id))
+        if not channel.can_publish:
+            return {'error': 'Only the publishers of the channel can edit it'}
+
+        slides = request.env['slide.slide'].search([
+            ('id', 'in', [int(key) for key in slides_data.keys()]),
+            ('channel_id', '=', channel.id)
+        ])
+
+        for slide in slides:
+            slide_key = str(slide.id)
+            slide.sequence = slides_data[slide_key]['sequence']
+            slide.category_id = slides_data[slide_key]['category_id'] if 'category_id' in slides_data[slide_key] else False
+
+    @http.route(['/slides/channel/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
+    def slide_channel_tag_search_read(self, fields, domain):
+        can_create = request.env['slide.channel.tag'].check_access_rights('create', raise_exception=False)
+        return {
+            'read_results': request.env['slide.channel.tag'].search_read(domain, fields),
+            'can_create': can_create,
+        }
+
     # --------------------------------------------------
-    # SLIDE.SLIDE CONTOLLERS
+    # SLIDE.SLIDE MAIN / SEARCH
     # --------------------------------------------------
 
     @http.route('''/slides/slide/<model("slide.slide", "[('website_id', 'in', (False, current_website_id))]"):slide>''', type='http', auth="public", website=True)
@@ -500,6 +549,9 @@ class WebsiteSlides(WebsiteProfile):
         response.status_code = status
         return response
 
+    # SLIDE.SLIDE UTILS
+    # --------------------------------------------------
+
     @http.route('/slide/html_content/get', type="json", auth="public", website=True)
     def get_html_content(self, slide_id):
         slide = request.env['slide.slide'].browse(slide_id)
@@ -507,7 +559,61 @@ class WebsiteSlides(WebsiteProfile):
             'html_content': slide.html_content
         }
 
-    #SLIDE QUIZ CONTROLLERS
+    @http.route('/slides/slide/<model("slide.slide"):slide>/set_completed', website=True, type="http", auth="user")
+    def slide_set_completed_and_redirect(self, slide, next_slide=None):
+        self._set_completed_slide(slide)
+        return werkzeug.utils.redirect("/slides/slide/%s" % (next_slide if next_slide else slide.id))
+
+    @http.route('/slides/slide/set_completed', website=True, type="json", auth="public")
+    def slide_set_completed(self, slide_id):
+        if request.website.is_public_user():
+            return {'error': 'public_user'}
+        fetch_res = self._fetch_slide(slide_id)
+        if fetch_res.get('error'):
+            return fetch_res
+        self._set_completed_slide(fetch_res['slide'])
+        return {
+            'channel_completion': fetch_res['slide'].channel_id.completion
+        }
+
+    @http.route('/slides/slide/like', type='json', auth="public", website=True)
+    def slide_like(self, slide_id, upvote):
+        if request.website.is_public_user():
+            return {'error': 'public_user'}
+        slide_partners = request.env['slide.slide.partner'].sudo().search([
+            ('slide_id', '=', slide_id),
+            ('partner_id', '=', request.env.user.partner_id.id)
+        ])
+        if (upvote and slide_partners.vote == 1) or (not upvote and slide_partners.vote == -1):
+            return {'error': 'vote_done'}
+        slide = request.env['slide.slide'].browse(int(slide_id))
+        if upvote:
+            slide.action_like()
+        else:
+            slide.action_dislike()
+        slide.invalidate_cache()
+        return slide.read(['likes', 'dislikes', 'user_vote'])[0]
+
+    @http.route('/slides/slide/archive', type='json', auth='user', website=True)
+    def slide_archive(self, slide_id):
+        """ This route allows channel publishers to archive slides.
+        It has to be done in sudo mode since only website_publishers can write on slides in ACLs """
+        slide = request.env['slide.slide'].browse(int(slide_id))
+        if slide.channel_id.can_publish:
+            slide.sudo().active = False
+            return True
+
+        return False
+
+    @http.route(['/slides/slide/send_share_email'], type='json', auth='user', website=True)
+    def slide_send_share_email(self, slide_id, email):
+        slide = request.env['slide.slide'].browse(int(slide_id))
+        result = slide._send_share_email(email)
+        return result
+
+    # --------------------------------------------------
+    # QUIZZ SECTION
+    # --------------------------------------------------
 
     @http.route('/slide/quiz/get', type="json", auth="public", website=True)
     def get_quiz(self, **kw):
@@ -574,62 +680,6 @@ class WebsiteSlides(WebsiteProfile):
         }
 
     # --------------------------------------------------
-    # SLIDE.SLIDE TOOLS CONTOLLERS
-    # --------------------------------------------------
-
-    @http.route('/slides/slide/<model("slide.slide"):slide>/set_completed', website=True, type="http", auth="user")
-    def slide_set_completed_and_redirect(self, slide, next_slide=None):
-        self._set_completed_slide(slide)
-        return werkzeug.utils.redirect("/slides/slide/%s" % (next_slide if next_slide else slide.id))
-
-    @http.route('/slides/slide/set_completed', website=True, type="json", auth="public")
-    def slide_set_completed(self, slide_id):
-        if request.website.is_public_user():
-            return {'error': 'public_user'}
-        fetch_res = self._fetch_slide(slide_id)
-        if fetch_res.get('error'):
-            return fetch_res
-        self._set_completed_slide(fetch_res['slide'])
-        return {
-            'channel_completion': fetch_res['slide'].channel_id.completion
-        }
-
-    @http.route('/slides/slide/like', type='json', auth="public", website=True)
-    def slide_like(self, slide_id, upvote):
-        if request.website.is_public_user():
-            return {'error': 'public_user'}
-        slide_partners = request.env['slide.slide.partner'].sudo().search([
-            ('slide_id', '=', slide_id),
-            ('partner_id', '=', request.env.user.partner_id.id)
-        ])
-        if (upvote and slide_partners.vote == 1) or (not upvote and slide_partners.vote == -1):
-            return {'error': 'vote_done'}
-        slide = request.env['slide.slide'].browse(int(slide_id))
-        if upvote:
-            slide.action_like()
-        else:
-            slide.action_dislike()
-        slide.invalidate_cache()
-        return slide.read(['likes', 'dislikes', 'user_vote'])[0]
-
-    @http.route('/slides/slide/archive', type='json', auth='user', website=True)
-    def slide_archive(self, slide_id):
-        """ This route allows channel publishers to archive slides.
-        It has to be done in sudo mode since only website_publishers can write on slides in ACLs """
-        slide = request.env['slide.slide'].browse(int(slide_id))
-        if slide.channel_id.can_publish:
-            slide.sudo().active = False
-            return True
-
-        return False
-
-    @http.route(['/slides/slide/send_share_email'], type='json', auth='user', website=True)
-    def slide_send_share_email(self, slide_id, email):
-        slide = request.env['slide.slide'].browse(int(slide_id))
-        result = slide._send_share_email(email)
-        return result
-
-    # --------------------------------------------------
     # CATEGORY MANAGEMENT
     # --------------------------------------------------
 
@@ -663,43 +713,8 @@ class WebsiteSlides(WebsiteProfile):
         return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
 
     # --------------------------------------------------
-    # TOOLS
+    # SLIDE.UPLOAD
     # --------------------------------------------------
-
-    @http.route(['/slides/channel/enroll'], type='http', auth='public', website=True)
-    def slide_channel_join_http(self, channel_id):
-        # TDE FIXME: why 2 routes ?
-        if not request.website.is_public_user():
-            channel = request.env['slide.channel'].browse(int(channel_id))
-            channel.action_add_member()
-        return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
-
-    @http.route(['/slides/channel/join'], type='json', auth='public', website=True)
-    def slide_channel_join(self, channel_id):
-        if request.website.is_public_user():
-            return {'error': 'public_user'}
-        success = request.env['slide.channel'].browse(channel_id).action_add_member()
-        if not success:
-            return {'error': 'join_done'}
-        return success
-
-    @http.route('/slides/channel/resequence', type="json", website=True, auth="user")
-    def resequence_slides(self, channel_id, slides_data):
-        """" Reorder the slides within the channel by reassigning their 'sequence' field.
-        This method also handles slides that are put in a new category (or uncategorized). """
-        channel = request.env['slide.channel'].browse(int(channel_id))
-        if not channel.can_publish:
-            return {'error': 'Only the publishers of the channel can edit it'}
-
-        slides = request.env['slide.slide'].search([
-            ('id', 'in', [int(key) for key in slides_data.keys()]),
-            ('channel_id', '=', channel.id)
-        ])
-
-        for slide in slides:
-            slide_key = str(slide.id)
-            slide.sequence = slides_data[slide_key]['sequence']
-            slide.category_id = slides_data[slide_key]['category_id'] if 'category_id' in slides_data[slide_key] else False
 
     @http.route(['/slides/prepare_preview'], type='json', auth='user', methods=['POST'], website=True)
     def prepare_preview(self, **data):
@@ -780,14 +795,6 @@ class WebsiteSlides(WebsiteProfile):
         return ['name', 'url', 'tag_ids', 'slide_type', 'channel_id', 'is_preview',
             'mime_type', 'datas', 'description', 'image', 'index_content', 'website_published']
 
-    @http.route(['/slides/channel/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
-    def slide_channel_tag_search_read(self, fields, domain):
-        can_create = request.env['slide.channel.tag'].check_access_rights('create', raise_exception=False)
-        return {
-            'read_results': request.env['slide.channel.tag'].search_read(domain, fields),
-            'can_create': can_create,
-        }
-
     @http.route(['/slides/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_tag_search_read(self, fields, domain):
         can_create = request.env['slide.tag'].check_access_rights('create', raise_exception=False)
@@ -799,6 +806,7 @@ class WebsiteSlides(WebsiteProfile):
     # --------------------------------------------------
     # EMBED IN THIRD PARTY WEBSITES
     # --------------------------------------------------
+
     @http.route('/slides/embed/<int:slide_id>', type='http', auth='public', website=True, sitemap=False)
     def slides_embed(self, slide_id, page="1", **kw):
         # Note : don't use the 'model' in the route (use 'slide_id'), otherwise if public cannot access the embedded
