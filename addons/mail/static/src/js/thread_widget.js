@@ -475,7 +475,7 @@ var ThreadWidget = Widget.extend({
                     return message.getID() === messageID;
                 });
                 return QWeb.render('mail.widget.Thread.Message.MailTooltip', {
-                    data: message.getCustomerEmailData()
+                    data: message.hasCustomerEmailData() ? message.getCustomerEmailData() : [],
                 });
             },
         });
