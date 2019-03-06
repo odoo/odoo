@@ -2,11 +2,110 @@ odoo.define('web_editor.test_utils', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
+var MockServer = require('web.MockServer');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 var Wysiwyg = require('web_editor.wysiwyg');
 var options = require('web_editor.snippets.options');
 
+
+MockServer.include({
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     * @returns {Promise}
+     */
+    _performRpc: function (route, args) {
+        if (args.model === "ir.ui.view") {
+            if (args.method === 'read_template' && args.args[0] === "web_editor.colorpicker") {
+                var template = '<templates><t t-name="web_editor.colorpicker">' +
+                        '<colorpicker>' +
+                        '    <div class="o_colorpicker_section" data-name="theme" data-display="Theme Colors" data-icon-class="fa fa-flask">' +
+                        '        <button data-color="alpha"></button>' +
+                        '        <button data-color="beta"></button>' +
+                        '        <button data-color="gamma"></button>' +
+                        '        <button data-color="delta"></button>' +
+                        '        <button data-color="epsilon"></button>' +
+                        '    </div>' +
+                        '    <div class="o_colorpicker_section" data-name="transparent_grayscale" data-display="Transparent Colors" data-icon-class="fa fa-eye-slash">' +
+                        '        <button class="o_btn_transparent"></button>' +
+                        '        <button data-color="black-25"></button>' +
+                        '        <button data-color="black-50"></button>' +
+                        '        <button data-color="black-75"></button>' +
+                        '        <button data-color="white-25"></button>' +
+                        '        <button data-color="white-50"></button>' +
+                        '        <button data-color="white-75"></button>' +
+                        '    </div>' +
+                        '    <div class="o_colorpicker_section" data-name="common" data-display="Common Colors" data-icon-class="fa fa-paint-brush"></div>' +
+                        '</colorpicker>' +
+                        '</t></templates>';
+                return Promise.resolve(template);
+            }
+            if (args.method === 'render_template' && args.args[0] === "web_editor.snippets") {
+                var template = '<h2 id="snippets_menu">Add blocks</h2>' +
+                        '<div id="o_scroll">' +
+                        '    <div id="snippet_structure" class="o_panel">' +
+                        '        <div class="o_panel_header">' +
+                        '            <i class="fa fa-th-large"></i> First Panel' +
+                        '        </div>' +
+                        '        <div class="o_panel_body">' +
+                        '            <div name="Separator" data-oe-type="snippet" data-oe-thumbnail="/website/static/src/img/snippets_thumbs/s_separator.png">' +
+                        '                <div class="s_hr pt32 pb32">' +
+                        '                    <hr class="s_hr_1px s_hr_solid w-100 mx-auto"/>' +
+                        '                </div>' +
+                        '            </div>' +
+                        '            <div name="Content" data-oe-type="snippet" data-oe-thumbnail="/website/static/src/img/snippets_thumbs/s_text_block.png">' +
+                        '                <section name="Content+Options" class="test_option_all pt32 pb32" data-oe-type="snippet" data-oe-thumbnail="/website/static/src/img/snippets_thumbs/s_text_block.png">' +
+                        '                    <div class="container">' +
+                        '                        <div class="row">' +
+                        '                            <div class="col-lg-10 offset-lg-1 pt32 pb32">' +
+                        '                                <h2>Title</h2>' +
+                        '                                 <p class="lead o_default_snippet_text">Content</p>' +
+                        '                             </div>' +
+                        '                         </div>' +
+                        '                     </div>' +
+                        '                </section>' +
+                        '            </div>' +
+                        '        </div>' +
+                        '    </div>' +
+                        '</div>' +
+                        '<div id="snippet_options" class="d-none">' +
+                        '    <div data-js="many2one" data-selector="[data-oe-many2one-model]:not([data-oe-readonly])" data-no-check="true"></div>' +
+                        '    <div data-js="content" data-selector=".s_hr, .test_option_all" ' +
+                        'data-drop-in=".note-editable" data-drop-near="p, h1, h2, h3, blockquote, .s_hr"></div>' +
+                        '    <div data-js="sizing_y" data-selector=".s_hr, .test_option_all"></div>' +
+                        '    <div data-js="colorpicker" data-selector=".test_option_all">' +
+                        '       <div class="dropdown-submenu">' +
+                        '           <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Background Color</a>' +
+                        '           <div class="dropdown-menu" role="menu"/>' +
+                        '       </div>' +
+                        '    </div>' +
+                        '    <div data-js="background" data-selector=".test_option_all">' +
+                        '       <a tabindex="-1" href="#" class="dropdown-item" data-choose-image="true" data-no-preview="true"><i class="fa fa-picture-o"/>Background Image</a>' +
+                        '    </div>' +
+                        '    <div data-js="option_test" data-selector=".s_hr">' +
+                        '        <div class="dropdown-submenu">' +
+                        '            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-arrows-v"/>Alignment</a>' +
+                        '            <div class="dropdown-menu" role="menu">' +
+                        '                <a href="#" class="dropdown-item" data-select-class="align-items-start">Top</a>' +
+                        '                <a href="#" class="dropdown-item" data-select-class="align-items-center">Middle</a>' +
+                        '                <a href="#" class="dropdown-item" data-select-class="align-items-end">Bottom</a>' +
+                        '                <div class="dropdown-divider"/>' +
+                        '                <a href="#" class="dropdown-item" data-select-class="align-items-stretch">Equal height</a>' +
+                        '            </div>' +
+                        '        </div>' +
+                        '    </div>' +
+                        '</div>';
+                return Promise.resolve(template);
+            }
+        }
+        return this._super.apply(this, arguments);
+    },
+});
 
 /**
  * Options with animation and edition for test.
@@ -94,13 +193,13 @@ function patch() {
     testUtils.mock.patch(ajax, {
         loadAsset: function (xmlId) {
             if (xmlId === 'template.assets') {
-                return $.when({
+                return Promise.resolve({
                     cssLibs: [],
                     cssContents: ['body {background-color: red;}']
                 });
             }
             if (xmlId === 'template.assets_all_style') {
-                return $.when({
+                return Promise.resolve({
                     cssLibs: $('link[href]:not([type="image/x-icon"])').map(function () {
                         return $(this).attr('href');
                     }).get(),
@@ -275,7 +374,7 @@ function wysiwygData(data) {
 
 /**
  * Create the wysiwyg instance for test (contains patch, usefull ir.ui.view, snippets).
- * 
+ *
  * @param {object} params
  */
 function createWysiwyg(params) {
@@ -308,7 +407,7 @@ function createWysiwyg(params) {
     }
     return wysiwyg.attachTo($textarea).then(function () {
         if (wysiwygOptions.snippets) {
-            var defSnippets = $.Deferred();
+            var defSnippets = testUtils.makeTestPromise();
             testUtils.mock.intercept(wysiwyg, "snippets_loaded", function () {
                 defSnippets.resolve(wysiwyg);
             });
@@ -355,7 +454,7 @@ _.each(_.range(40, 127), function (keyCode) {
 
 /**
  * Perform a series of tests (`keyboardTests`) for using keyboard inputs.
- * 
+ *
  * @see wysiwyg_keyboard_tests.js
  * @see wysiwyg_tests.js
  *
@@ -450,14 +549,14 @@ var testKeyboard = function ($editable, assert, keyboardTests, addTests) {
         return point;
     }
 
-    var defPollTest = $.when();
+    var defPollTest = Promise.resolve();
 
     function pollTest(test) {
-        var def = $.when();
+        var def = Promise.resolve();
         $editable.data('wysiwyg').setValue(test.content);
 
         function poll(step) {
-            var def = $.Deferred();
+            var def = testUtils.makeTestPromise();
             if (step.start) {
                 selectText(step.start, step.end);
                 if (!Wysiwyg.getRange($editable[0])) {
@@ -600,7 +699,7 @@ var testKeyboard = function ($editable, assert, keyboardTests, addTests) {
 
 /**
  * Select a node in the dom with is offset.
- * 
+ *
  * @param {String} startSelector
  * @param {String} endSelector
  * @param {jQuery} $editable
@@ -668,6 +767,8 @@ return {
     testKeyboard: testKeyboard,
     select: select,
     keydown: keydown,
+    patch: patch,
+    unpatch: unpatch,
 };
 
 
