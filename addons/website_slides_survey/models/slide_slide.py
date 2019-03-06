@@ -20,6 +20,19 @@ class SlidePartnerRelation(models.Model):
         for record in self:
             record.survey_quizz_passed = record in passed_slide_partners
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('survey_quizz_passed'):
+                vals['completed'] = True
+        return super(SlidePartnerRelation, self).create(vals_list)
+
+    @api.multi
+    def _write(self, vals):
+        if vals.get('survey_quizz_passed'):
+            vals['completed'] = True
+        return super(SlidePartnerRelation, self)._write(vals)
+
 
 class Slide(models.Model):
     _inherit = 'slide.slide'
