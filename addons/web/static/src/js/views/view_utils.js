@@ -63,7 +63,7 @@ var viewUtils = {
      */
     renderButtonFromNode: function (node, options) {
         var btnOptions = {
-            attrs: _.omit(node.attrs, 'icon', 'string', 'type', 'attrs', 'modifiers', 'options'),
+            attrs: _.omit(node.attrs, 'icon', 'string', 'type', 'attrs', 'modifiers', 'options', 'effect'),
             icon: node.attrs.icon,
         };
         if (options && options.extraClass) {

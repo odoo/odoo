@@ -49,11 +49,11 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
      */
     willStart: function () {
         // TODO would be even greater to wait for localeDef only when necessary
-        return $.when(
+        return Promise.all([
             this._super.apply(this, arguments),
             session.is_bound,
             localeDef
-        );
+        ]);
     },
     /**
      * @override
@@ -82,7 +82,7 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
             $('input, textarea').placeholder();
         }
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 
     //--------------------------------------------------------------------------
@@ -193,9 +193,9 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
                 self.publicWidgets.push(widget);
                 return widget.attachTo($(el));
             });
-            return $.when.apply($, defs);
+            return Promise.all(defs);
         });
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * Destroys all registered widget instances. Website would need this before
@@ -259,8 +259,8 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
      */
     _onWidgetsStartRequest: function (ev) {
         this._startWidgets(ev.data.$target, ev.data.options)
-            .done(ev.data.onSuccess)
-            .fail(ev.data.onFailure);
+            .then(ev.data.onSuccess)
+            .guardedCatch(ev.data.onFailure);
     },
     /**
      * Called when the root is notified that the public widgets have to be

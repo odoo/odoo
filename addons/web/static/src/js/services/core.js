@@ -13,15 +13,15 @@ var translation = require('web.translation');
  *
  * @type Boolean
  */
-var bus = new Bus ();
+var bus = new Bus();
 
-_.each('click,dblclick,keydown,keypress,keyup'.split(','), function(evtype) {
-    $('html').on(evtype, function(ev) {
+_.each('click,dblclick,keydown,keypress,keyup'.split(','), function (evtype) {
+    $('html').on(evtype, function (ev) {
         bus.trigger(evtype, ev);
     });
 });
-_.each('resize,scroll'.split(','), function(evtype) {
-    $(window).on(evtype, function(ev) {
+_.each('resize,scroll'.split(','), function (evtype) {
+    $(window).on(evtype, function (ev) {
         bus.trigger(evtype, ev);
     });
 });
@@ -37,7 +37,7 @@ return {
     _lt: translation._lt,
 
     // registries
-    action_registry : new Registry(),
+    action_registry: new Registry(),
     crash_registry: new Registry(),
     serviceRegistry: new Registry(),
     /**

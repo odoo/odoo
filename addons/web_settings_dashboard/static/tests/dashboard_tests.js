@@ -8,7 +8,7 @@ var Widget = require('web.Widget');
 
 var Dashboard = webSettingsDashboard.Dashboard;
 
-function createDashboard(params) {
+async function createDashboard (params) {
     var widget = new Widget();
     // action content not used in tests apparently
     var action = {};
@@ -23,17 +23,14 @@ function createDashboard(params) {
         widget.destroy();
     };
 
-    if (params.debug) {
-        dashboard.appendTo($('body'));
-    } else {
-        dashboard.appendTo($('#qunit-fixture'));
-    }
+    var target = params.debug ? $('body') : $('#qunit-fixture');
+    await dashboard.appendTo(target);
 
     return dashboard;
 }
 
 QUnit.module('settings_dashboard', function () {
-    QUnit.test('Dashboard: Invite new user', function (assert) {
+    QUnit.test('Dashboard: Invite new user', async function (assert) {
         assert.expect(4);
 
         var dashboardData = {
@@ -41,10 +38,10 @@ QUnit.module('settings_dashboard', function () {
             pending_counts: 0,
             pending_users: [],
         };
-        var dashboard = createDashboard({
+        var dashboard = await createDashboard({
             mockRPC: function (route, args) {
                 if (route === '/web_settings_dashboard/data') {
-                    return $.when({
+                    return Promise.resolve({
                         share: {},
                         users_info: dashboardData,
                     });
@@ -52,23 +49,22 @@ QUnit.module('settings_dashboard', function () {
                 if (route === '/web/dataset/call_kw/res.users/web_dashboard_create_users') {
                     dashboardData.pending_counts++;
                     dashboardData.pending_users.push([5, args.args[0][0]]);
-                    return $.when(true);
+                    return Promise.resolve(true);
                 }
                 return this._super.apply(this, arguments);
             },
         });
 
         // add email to invite
-        dashboard.$('.o_user_emails').val('lagan@odoo.com').trigger($.Event('keydown', {
-            which: $.ui.keyCode.ENTER,
-        }));
+        await testUtils.fields.editInput(dashboard.$('.o_user_emails'), 'lagan@odoo.com');
+        await testUtils.fields.triggerKeydown(dashboard.$('.o_user_emails'), 'enter');
         assert.strictEqual(dashboard.$('.o_badge_text').text().trim(), 'lagan@odoo.com',
             'should generate a badge with provided email');
         assert.strictEqual(dashboard.$('.o_user_emails').val(), '',
             'input should have been cleared');
 
         // send invitation
-        testUtils.dom.click(dashboard.$('.o_web_settings_dashboard_invite'));
+        await testUtils.dom.click(dashboard.$('.o_web_settings_dashboard_invite'));
         assert.strictEqual(dashboard.$('.o_web_settings_dashboard_user').text().trim(), 'lagan@odoo.com',
             'should have created a badge in pending invitations');
         assert.containsNone(dashboard, '.o_badge_text',
@@ -77,13 +73,13 @@ QUnit.module('settings_dashboard', function () {
         dashboard.destroy();
     });
 
-    QUnit.test('Dashboard: Invite new user (warnings)', function (assert) {
+    QUnit.test('Dashboard: Invite new user (warnings)', async function (assert) {
         assert.expect(8);
 
-        var dashboard = createDashboard({
+        var dashboard = await createDashboard({
             mockRPC: function (route) {
                 if (route === '/web_settings_dashboard/data') {
-                    return $.when({
+                    return Promise.resolve({
                         share: {},
                         users_info: {
                             active_users: 4,
@@ -104,9 +100,8 @@ QUnit.module('settings_dashboard', function () {
         });
 
         // enter an invalid email address to invite
-        dashboard.$('.o_user_emails').val('x@y').trigger($.Event('keydown', {
-            which: $.ui.keyCode.ENTER,
-        }));
+        await testUtils.fields.editInput(dashboard.$('.o_user_emails'), 'x@y');
+        await testUtils.fields.triggerKeydown(dashboard.$('.o_user_emails'), 'enter');
         assert.containsNone(dashboard, '.o_badge_text',
             'should not have generated any badge');
         assert.strictEqual(dashboard.$('.o_user_emails').val(), 'x@y',
@@ -114,25 +109,24 @@ QUnit.module('settings_dashboard', function () {
         assert.verifySteps(['warning']);
 
         // enter an already pending address
-        dashboard.$('.o_user_emails').val('xyz@odoo.com').trigger($.Event('keydown', {
-            which: $.ui.keyCode.ENTER,
-        }));
+        await testUtils.fields.editInput(dashboard.$('.o_user_emails'), 'xyz@odoo.com');
+        await testUtils.fields.triggerKeydown(dashboard.$('.o_user_emails'), 'enter');
         assert.containsNone(dashboard, '.o_badge_text',
             'should not have generated any badge');
         assert.strictEqual(dashboard.$('.o_user_emails').val(), 'xyz@odoo.com',
             'input should not have been cleared');
-        assert.verifySteps(['warning', 'warning']);
+        assert.verifySteps(['warning']);
 
         dashboard.destroy();
     });
 
-    QUnit.test('Dashboard: Invite a list of users', function (assert) {
+    QUnit.test('Dashboard: Invite a list of users', async function (assert) {
         assert.expect(2);
 
-        var dashboard = createDashboard({
+        var dashboard = await createDashboard({
             mockRPC: function (route) {
                 if (route === '/web_settings_dashboard/data') {
-                    return $.when({
+                    return Promise.resolve({
                         share: {},
                         users_info: {
                             active_users: 4,
@@ -147,9 +141,8 @@ QUnit.module('settings_dashboard', function () {
 
         // simulate a copy paste of multiple email addresses
         var emails = ['a@odoo.com', 'b@odoo.com', 'c@odoo.com', 'd@odoo.com'];
-        dashboard.$('.o_user_emails').val(emails.join(' ')).trigger($.Event('keydown', {
-            which: $.ui.keyCode.ENTER,
-        }));
+        await testUtils.fields.editInput(dashboard.$('.o_user_emails'), emails.join(' '));
+        await testUtils.fields.triggerKeydown(dashboard.$('.o_user_emails'), 'enter');
         assert.containsN(dashboard, '.o_badge_text', 4,
             'should have generated 4 badges');
         assert.strictEqual(dashboard.$('.o_user_emails').val(), '',
@@ -158,13 +151,13 @@ QUnit.module('settings_dashboard', function () {
         dashboard.destroy();
     });
 
-    QUnit.test('Dashboard: Invite a list of users (with warnings)', function (assert) {
+    QUnit.test('Dashboard: Invite a list of users (with warnings)', async function (assert) {
         assert.expect(5);
 
-        var dashboard = createDashboard({
+        var dashboard = await createDashboard({
             mockRPC: function (route) {
                 if (route === '/web_settings_dashboard/data') {
-                    return $.when({
+                    return Promise.resolve({
                         share: {},
                         users_info: {
                             active_users: 4,
@@ -186,9 +179,8 @@ QUnit.module('settings_dashboard', function () {
 
         // simulate a copy paste of multiple email addresses
         var emails = ['a@odoo.com', 'b@odoo.com', 'x@y', 'd@odoo.com'];
-        dashboard.$('.o_user_emails').val(emails.join(' ')).trigger($.Event('keydown', {
-            which: $.ui.keyCode.ENTER,
-        }));
+        await testUtils.fields.editInput(dashboard.$('.o_user_emails'), emails.join(' '));
+        await testUtils.fields.triggerKeydown(dashboard.$('.o_user_emails'), 'enter');
         assert.containsOnce(dashboard, '.o_badge_text',
             'should have generated 1 badge');
         assert.strictEqual(dashboard.$('.o_user_emails').val(), '',
@@ -198,14 +190,14 @@ QUnit.module('settings_dashboard', function () {
         dashboard.destroy();
     });
 
-    QUnit.test('Prevent default behaviour when clicking on load translation', function (assert) {
+    QUnit.test('Prevent default behaviour when clicking on load translation', async function (assert) {
         assert.expect(3);
 
-        var dashboard = createDashboard({
+        var dashboard = await createDashboard({
             dashboards: ['translations'],
             mockRPC: function (route, args) {
                 if (route === '/web_settings_dashboard/data') {
-                    return $.when();
+                    return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
             },
@@ -227,21 +219,21 @@ QUnit.module('settings_dashboard', function () {
             ev.preventDefault();
         });
 
-        testUtils.dom.click($loadTranslation);
+        await testUtils.dom.click($loadTranslation);
 
         $(document.body).off('click.o_test');
 
         dashboard.destroy();
     });
 
-    QUnit.test('Prevent default behaviour when clicking on set up company', function (assert) {
+    QUnit.test('Prevent default behaviour when clicking on set up company', async function (assert) {
         assert.expect(3);
 
-        var dashboard = createDashboard({
+        var dashboard = await createDashboard({
             dashboards: ['company'],
             mockRPC: function (route, args) {
                 if (route === '/web_settings_dashboard/data') {
-                    return $.when({
+                    return Promise.resolve({
                         company: {
                             company_name: 'MyCompany'
                         }
@@ -267,26 +259,26 @@ QUnit.module('settings_dashboard', function () {
             ev.preventDefault();
         });
 
-        testUtils.dom.click($setupCompany);
+        await testUtils.dom.click($setupCompany);
 
         $(document.body).off('click.o_test');
 
         dashboard.destroy();
     });
 
-    QUnit.test('Prevent default behaviour when clicking on browse apps', function (assert) {
+    QUnit.test('Prevent default behaviour when clicking on browse apps', async function (assert) {
         assert.expect(3);
 
-        var dashboard = createDashboard({
+        var dashboard = await createDashboard({
             dashboards: ['apps'],
             mockRPC: function (route, args) {
                 if (route === '/web_settings_dashboard/data') {
-                    return $.when({
+                    return Promise.resolve({
                         apps: {},
                     });
                 }
                 if (args.method === 'get_account_url') {
-                    return $.when('fakeURL');
+                    return Promise.resolve('fakeURL');
                 }
                 return this._super.apply(this, arguments);
             },
@@ -308,7 +300,7 @@ QUnit.module('settings_dashboard', function () {
         assert.strictEqual($browseAppsButton.length, 1,
             "should have button to browse apps");
 
-        testUtils.dom.click($browseAppsButton);
+        await testUtils.dom.click($browseAppsButton);
 
         $(document.body).off('click.o_test');
         dashboard.destroy();

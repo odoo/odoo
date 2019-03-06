@@ -94,14 +94,12 @@ var ProductConfiguratorFormController = FormController.extend({
         ];
 
         var productId = parseInt($modal.find(productSelector.join(', ')).first().val(), 10);
-        var productReady = this.renderer.selectOrCreateProduct(
+        this.renderer.selectOrCreateProduct(
             $modal,
             productId,
             $modal.find('.product_template_id').val(),
             false
-        );
-
-        productReady.done(function (productId) {
+        ).then(function (productId) {
             $modal.find(productSelector.join(', ')).val(productId);
 
             var variantValues = self

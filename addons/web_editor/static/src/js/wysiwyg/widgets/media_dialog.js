@@ -127,7 +127,7 @@ var MediaDialog = Dialog.extend({
             defs.push(this.videoDialog.appendTo(this.$("#editor-media-video")));
         }
 
-        return $.when.apply($, defs).then(function () {
+        return Promise.all(defs).then(function () {
             self._setActive(self.active);
         });
     },
@@ -143,7 +143,7 @@ var MediaDialog = Dialog.extend({
         var self = this;
         var _super = this._super;
         var args = arguments;
-        return $.when(this.active.save()).then(function (data) {
+        return Promise.resolve(this.active.save()).then(function (data) {
             self.final_data = data;
             // In the case of multi images selection we suppose this was not to
             // replace an old media, so we only retrieve the images and save.

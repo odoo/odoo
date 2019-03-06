@@ -75,15 +75,17 @@ var EditorMenu = Widget.extend({
      */
     cancel: function (reload) {
         var self = this;
-        var def = $.Deferred();
-        if (!this.wysiwyg.isDirty()) {
-            def.resolve();
-        } else {
-            var confirm = Dialog.confirm(this, _t("If you discard the current edition, all unsaved changes will be lost. You can cancel to return to the edition mode."), {
-                confirm_callback: def.resolve.bind(def),
-            });
-            confirm.on('closed', def, def.reject);
-        }
+        var def = new Promise(function (resolve, reject) {
+            if (!self.wysiwyg.isDirty()) {
+                resolve();
+            } else {
+                var confirm = Dialog.confirm(self, _t("If you discard the current edition, all unsaved changes will be lost. You can cancel to return to the edition mode."), {
+                    confirm_callback: resolve,
+                });
+                confirm.on('closed', self, reject);
+            }
+        });
+
         return def.then(function () {
             self.trigger_up('edition_will_stopped');
             var $wrapwrap = $('#wrapwrap');
@@ -110,10 +112,10 @@ var EditorMenu = Widget.extend({
     save: function (reload) {
         var self = this;
         this.trigger_up('edition_will_stopped');
-        return this.wysiwyg.save().then(function (dirty) {
+        return this.wysiwyg.save().then(function (result) {
             var $wrapwrap = $('#wrapwrap');
             self.editable($wrapwrap).removeClass('o_editable');
-            if (dirty && reload !== false) {
+            if (result.isDirty && reload !== false) {
                 // remove top padding because the connected bar is not visible
                 $('body').removeClass('o_connected_user');
                 return self._reload();
@@ -180,7 +182,7 @@ var EditorMenu = Widget.extend({
         this.$el.hide();
         window.location.hash = 'scrollTop=' + window.document.body.scrollTop;
         window.location.reload(true);
-        return $.Deferred();
+        return new Promise(function () {});
     },
 
     //--------------------------------------------------------------------------

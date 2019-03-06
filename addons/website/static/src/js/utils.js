@@ -17,7 +17,7 @@ function loadAnchors(url) {
     if (url !== window.location.pathname && url[0] !== '#') {
         def = $.get(window.location.origin + url);
     } else {
-        def = $.when(document.body.outerHTML);
+        def = Promise.resolve(document.body.outerHTML);
     }
     return def.then(function (response) {
         return _.map($(response).find('[id][data-anchor=true]'), function (el) {
@@ -69,13 +69,14 @@ function onceAllImagesLoaded($element) {
         if (img.complete) {
             return; // Already loaded
         }
-        var def = $.Deferred();
-        $(img).one('load', function () {
-            def.resolve();
+        var def = new Promise(function (resolve, reject) {
+            $(img).one('load', function () {
+                resolve();
+            });
         });
         return def;
     });
-    return $.when.apply($, defs);
+    return Promise.all(defs);
 }
 
 /**
@@ -109,7 +110,7 @@ function prompt(options, _qweb) {
      * @param {String} [options.textarea] tell the modal to use a textarea field, the given value will be the field title
      * @param {String} [options.select] tell the modal to use a select box, the given value will be the field title
      * @param {Object} [options.default=''] default value of the field
-     * @param {Function} [options.init] optional function that takes the `field` (enhanced with a fillWith() method) and the `dialog` as parameters [can return a deferred]
+     * @param {Function} [options.init] optional function that takes the `field` (enhanced with a fillWith() method) and the `dialog` as parameters [can return a promise]
      */
     if (typeof options === 'string') {
         options = {
@@ -133,51 +134,51 @@ function prompt(options, _qweb) {
     options.field_type = type;
     options.field_name = options.field_name || options[type];
 
-    var def = $.Deferred();
-
-    $.when(xmlDef).then(function () {
-        var dialog = $(qweb.render(_qweb, options)).appendTo('body');
-        options.$dialog = dialog;
-        var field = dialog.find(options.field_type).first();
-        field.val(options['default']); // dict notation for IE<9
-        field.fillWith = function (data) {
-            if (field.is('select')) {
-                var select = field[0];
-                data.forEach(function (item) {
-                    select.options[select.options.length] = new window.Option(item[1], item[0]);
-                });
-            } else {
-                field.val(data);
-            }
-        };
-        var init = options.init(field, dialog);
-        $.when(init).then(function (fill) {
-            if (fill) {
-                field.fillWith(fill);
-            }
-            dialog.modal('show');
-            field.focus();
-            dialog.on('click', '.btn-primary', function () {
+    var def = new Promise(function (resolve, reject) {
+        Promise.resolve(xmlDef).then(function () {
+            var dialog = $(qweb.render(_qweb, options)).appendTo('body');
+            options.$dialog = dialog;
+            var field = dialog.find(options.field_type).first();
+            field.val(options['default']); // dict notation for IE<9
+            field.fillWith = function (data) {
+                if (field.is('select')) {
+                    var select = field[0];
+                    data.forEach(function (item) {
+                        select.options[select.options.length] = new window.Option(item[1], item[0]);
+                    });
+                } else {
+                    field.val(data);
+                }
+            };
+            var init = options.init(field, dialog);
+            Promise.resolve(init).then(function (fill) {
+                if (fill) {
+                    field.fillWith(fill);
+                }
+                dialog.modal('show');
+                field.focus();
+                dialog.on('click', '.btn-primary', function () {
                     var backdrop = $('.modal-backdrop');
-                def.resolve(field.val(), field, dialog);
-                dialog.modal('hide').remove();
+                    resolve({ val: field.val(), field: field, dialog: dialog });
+                    dialog.modal('hide').remove();
+                        backdrop.remove();
+                });
+            });
+            dialog.on('hidden.bs.modal', function () {
+                    var backdrop = $('.modal-backdrop');
+                reject();
+                dialog.remove();
                     backdrop.remove();
             });
+            if (field.is('input[type="text"], select')) {
+                field.keypress(function (e) {
+                    if (e.which === 13) {
+                        e.preventDefault();
+                        dialog.find('.btn-primary').trigger('click');
+                    }
+                });
+            }
         });
-        dialog.on('hidden.bs.modal', function () {
-                var backdrop = $('.modal-backdrop');
-            def.reject();
-            dialog.remove();
-                backdrop.remove();
-        });
-        if (field.is('input[type="text"], select')) {
-            field.keypress(function (e) {
-                if (e.which === 13) {
-                    e.preventDefault();
-                    dialog.find('.btn-primary').trigger('click');
-                }
-            });
-        }
     });
 
     return def;

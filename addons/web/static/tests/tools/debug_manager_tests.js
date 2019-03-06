@@ -8,7 +8,7 @@ var createDebugManager = testUtils.createDebugManager;
 
 QUnit.module('DebugManager', {}, function () {
 
-    QUnit.test("list: edit view menu item", function (assert) {
+    QUnit.test("list: edit view menu item", async function (assert) {
         assert.expect(3);
 
         var debugManager = createDebugManager();
@@ -28,7 +28,8 @@ QUnit.module('DebugManager', {}, function () {
         var view = {
             viewType: "list",
         };
-        debugManager.update('action', action, view);
+        await testUtils.nextTick();
+        await debugManager.update('action', action, view);
 
         var $editView = debugManager.$('a[data-action=edit][data-model="ir.ui.view"]');
         assert.strictEqual($editView.length, 1, "should have edit view menu item");
@@ -39,7 +40,7 @@ QUnit.module('DebugManager', {}, function () {
         debugManager.destroy();
     });
 
-    QUnit.test("form: Manage Attachments option", function (assert) {
+    QUnit.test("form: Manage Attachments option", async function (assert) {
         assert.expect(3);
 
         var debugManager = createDebugManager({
@@ -59,8 +60,7 @@ QUnit.module('DebugManager', {}, function () {
                 },
             },
         });
-
-        debugManager.appendTo($('#qunit-fixture'));
+        await debugManager.appendTo($('#qunit-fixture'));
 
         // Simulate update debug manager from web client
         var action = {
@@ -79,19 +79,19 @@ QUnit.module('DebugManager', {}, function () {
                 return [5];
             },
         };
-        debugManager.update('action', action, view);
+        await debugManager.update('action', action, view);
 
         var $attachmentMenu = debugManager.$('a[data-action=get_attachments]');
         assert.strictEqual($attachmentMenu.length, 1, "should have Manage Attachments menu item");
         assert.strictEqual($attachmentMenu.text().trim(), "Manage Attachments",
             "should have correct menu item text");
-        testUtils.dom.click(debugManager.$('> a')); // open dropdown
-        testUtils.dom.click($attachmentMenu);
+        await testUtils.dom.click(debugManager.$('> a')); // open dropdown
+        await testUtils.dom.click($attachmentMenu);
 
         debugManager.destroy();
     });
 
-    QUnit.test("Debug: Set defaults with right model", function (assert) {
+    QUnit.test("Debug: Set defaults with right model", async function (assert) {
         assert.expect(2);
 
         /*  Click on debug > set default,
@@ -115,7 +115,7 @@ QUnit.module('DebugManager', {}, function () {
             },
         };
 
-        var form = testUtils.createView({
+        var form = await testUtils.createView({
             View: FormView,
             model: 'partner',
             data: data,
@@ -132,13 +132,13 @@ QUnit.module('DebugManager', {}, function () {
                 if (route == "/web/dataset/call_kw/ir.default/set") {
                     assert.deepEqual(args.args, ["partner", "foo", "yop", true, true, false],
                         'Model, field, value and booleans for current user/company should have been passed');
-                    return $.when();
+                    return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
             }
         });
 
-        debugManager.appendTo($('#qunit-fixture'));
+        await debugManager.appendTo($('#qunit-fixture'));
 
         // Simulate update debug manager from web client
         var action = {
@@ -155,18 +155,18 @@ QUnit.module('DebugManager', {}, function () {
         };
 
         // We are all set
-        debugManager.update('action', action, form);
+        await debugManager.update('action', action, form);
 
         // click on set_defaults dropdown
-        testUtils.dom.click(debugManager.$('> a')); // open dropdown
-        testUtils.dom.click(debugManager.$('a[data-action="set_defaults"]'));
+        await testUtils.dom.click(debugManager.$('> a')); // open dropdown
+        await testUtils.dom.click(debugManager.$('a[data-action="set_defaults"]'));
         var $modal = $('.modal-content');
         assert.strictEqual($modal.length, 1, 'One modal present');
 
         $modal.find('select[id=formview_default_fields] option[value=foo]').prop('selected', true);
 
         // Save
-        testUtils.dom.click($modal.find('.modal-footer button').eq(1));
+        await testUtils.dom.click($modal.find('.modal-footer button').eq(1));
 
         form.destroy();
         debugManager.destroy();

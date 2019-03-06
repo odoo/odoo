@@ -34,7 +34,7 @@ var FieldOrgChart = AbstractField.extend({
      *
      * @private
      * @param {integer} employee_id
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _getOrgData: function (employee_id) {
         var self = this;
@@ -52,7 +52,7 @@ var FieldOrgChart = AbstractField.extend({
      *
      * @private
      * @param {integer} employee_id
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _getSubordinatesData: function (employee_id, type) {
         return this.dm.add(this._rpc({
@@ -134,7 +134,7 @@ var FieldOrgChart = AbstractField.extend({
      *
      * @private
      * @param {MouseEvent} event
-     * @returns {Deferred} action loaded
+     * @returns {Promise} action loaded
      */
     _onEmployeeRedirect: function (event) {
         event.preventDefault();
@@ -154,7 +154,7 @@ var FieldOrgChart = AbstractField.extend({
      *
      * @private
      * @param {MouseEvent} event
-     * @returns {Deferred} action loaded
+     * @returns {Promise} action loaded
      */
     _onEmployeeSubRedirect: function (event) {
         event.preventDefault();

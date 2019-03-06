@@ -91,12 +91,12 @@ odoo.define('sale.product.configurator.tests', function (require) {
                     }
                 }
             };
-        }
+        },
     }, function (){
-        QUnit.test('click on "Configure a product" and check for form loading', function (assert) {
+        QUnit.test('click on "Configure a product" and check for form loading', async function (assert) {
             assert.expect(2);
 
-            var form = createView({
+            var form = await createView({
                 View: FormView,
                 model: 'sale_order',
                 data: this.data,
@@ -104,25 +104,26 @@ odoo.define('sale.product.configurator.tests', function (require) {
                     mockRPC: function (route) {
                         if (route === '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id') {
                             assert.ok(true);
-                            return $.Deferred().then(_.constant(1));
+                            return Promise.resolve(1);
                         }
                         return this._super.apply(this, arguments);
                     },
             });
 
-            assert.strictEqual(form.$("a:contains('Configure a product')").length, 1);
+            assert.containsOnce(form, "a:contains('Configure a product')");
 
-            testUtils.dom.click(form.$("a:contains('Configure a product')"));
+            await testUtils.dom.click(form.$("a:contains('Configure a product')"));
+            form.destroy();
         });
 
-        QUnit.test('trigger_up the "add_record" event and checks that rows are correctly added to the list', function (assert) {
+        QUnit.test('trigger_up the "add_record" event and checks that rows are correctly added to the list', async function (assert) {
             assert.expect(1);
 
-            var form = createView({
+            var form = await createView({
                 View: FormView,
                 model: 'sale_order',
                 data: this.data,
-                arch: getArch()
+                arch: getArch(),
             });
 
             var list = form.renderer.allFieldWidgets[form.handle][1];
@@ -132,14 +133,16 @@ odoo.define('sale.product.configurator.tests', function (require) {
                 forceEditable: "bottom" ,
                 allowWarning: true
             });
+            await testUtils.nextTick();
 
-            assert.strictEqual(list.$("tr.o_data_row").length, 2);
+            assert.containsN(list, "tr.o_data_row", 2);
+            form.destroy();
         });
 
-        QUnit.test('Select a product in the list and check for template loading', function (assert){
+        QUnit.test('Select a product in the list and check for template loading', async function (assert){
             assert.expect(1);
 
-            var product_configurator_form = createView({
+            var product_configurator_form = await createView({
                 View: ProductConfiguratorFormView,
                 model: 'sale_product_configurator',
                 data: this.data,
@@ -156,13 +159,14 @@ odoo.define('sale.product.configurator.tests', function (require) {
                     mockRPC: function (route) {
                         if (route === '/product_configurator/configure') {
                             assert.ok(true);
-                            return $.Deferred().then(_.constant(1));
+                            return Promise.resolve('<div>plop</div>');
                         }
                         return this._super.apply(this, arguments);
                     }
             });
-            testUtils.dom.click(product_configurator_form.$('.o_input'));
-            testUtils.dom.click($("ul.ui-autocomplete li a:contains('Customizable Desk')").mouseenter());
+            await testUtils.dom.click(product_configurator_form.$('.o_input'));
+            await testUtils.dom.click($("ul.ui-autocomplete li a:contains('Customizable Desk')").mouseenter());
+            product_configurator_form.destroy();
         });
     });
 });

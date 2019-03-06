@@ -6,9 +6,10 @@ var session = require('web.session');
 var tour = require('web_tour.tour');
 var Wysiwyg = require('web_editor.wysiwyg.root');
 
-var domReady = $.Deferred();
-$(domReady.resolve.bind(domReady));
-var ready = $.when(domReady, session.is_bound, ajax.loadXML());
+var domReady = new Promise(function (resolve) {
+    $(resolve);
+});
+var ready = Promise.all([domReady, session.is_bound, ajax.loadXML()]);
 
 tour.register('rte_translator', {
     test: true,

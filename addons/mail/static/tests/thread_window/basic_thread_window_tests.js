@@ -55,7 +55,7 @@ QUnit.module('Basic', {
     },
 });
 
-QUnit.test('basic rendering thread window', function (assert) {
+QUnit.test('basic rendering thread window', async function (assert) {
     assert.expect(10);
 
     var parent = this.createParent({
@@ -63,9 +63,13 @@ QUnit.test('basic rendering thread window', function (assert) {
         services: this.services,
     });
 
+    await testUtils.nextTick();
     // detach channel 1, so that it opens corresponding thread window.
-    parent.call('mail_service', 'getChannel', 1).detach();
+    var result = parent.call('mail_service', 'getChannel', 1);
+    await testUtils.nextTick();
+    result.detach();
 
+    await testUtils.nextTick();
     var $threadWindow = $('.o_thread_window');
     assert.strictEqual($threadWindow.length, 1,
         "thread window should be open");
@@ -98,7 +102,7 @@ QUnit.test('basic rendering thread window', function (assert) {
     parent.destroy();
 });
 
-QUnit.test('close thread window using ESCAPE key', function (assert) {
+QUnit.test('close thread window using ESCAPE key', async function (assert) {
     assert.expect(5);
 
     var parent = this.createParent({
@@ -107,28 +111,31 @@ QUnit.test('close thread window using ESCAPE key', function (assert) {
         mockRPC: function (route, args) {
             if (args.method === 'channel_fold') {
                 assert.ok(true, "should call channel_fold");
-                return $.when();
+                return Promise.resolve();
             }
             return this._super.apply(this, arguments);
         },
     });
+    await testUtils.nextTick();
 
     // get channel instance to link to thread window
     var channel = parent.call('mail_service', 'getChannel', 1);
+    await testUtils.nextTick();
     assert.ok(channel, "there should exist a channel locally with ID 1");
 
     channel.detach();
+    await testUtils.nextTick();
     assert.strictEqual($('.o_thread_window').length, 1,
         "there should be a thread window that is opened");
 
     // focus on the thread window and press ESCAPE
-    testUtils.dom.click($('.o_thread_window .o_composer_text_field'));
+    await testUtils.dom.click($('.o_thread_window .o_composer_text_field'));
     assert.strictEqual(document.activeElement,
         $('.o_thread_window .o_composer_text_field')[0],
         "thread window's input should now be focused");
 
     var upKeyEvent = $.Event( "keyup", { which: 27 });
-    $('.o_thread_window .o_composer_text_field').trigger(upKeyEvent);
+    await testUtils.dom.triggerEvents($('.o_thread_window .o_composer_text_field'), [upKeyEvent]);
 
     assert.strictEqual($('.o_thread_window').length, 0,
         "the thread window should be closed");
@@ -136,7 +143,7 @@ QUnit.test('close thread window using ESCAPE key', function (assert) {
     parent.destroy();
 });
 
-QUnit.test('thread window\'s input can still be focused when the UI is blocked', function (assert) {
+QUnit.test('thread window\'s input can still be focused when the UI is blocked', async function (assert) {
     assert.expect(2);
 
     var parent = this.createParent({
@@ -147,11 +154,13 @@ QUnit.test('thread window\'s input can still be focused when the UI is blocked',
     var $dom = $('#qunit-fixture');
 
     // get channel instance to link to thread window
+    await testUtils.nextTick();
     var channel = parent.call('mail_service', 'getChannel', 1);
+    await testUtils.nextTick();
     channel.detach();
-
+    await testUtils.nextTick();
     var $input = $('<input/>', {type: 'text'}).appendTo($dom);
-    testUtils.dom.click($input.focus());
+    await testUtils.dom.click($input.focus());
     assert.strictEqual(document.activeElement, $input[0],
         "fake input should be focused");
 
@@ -160,16 +169,17 @@ QUnit.test('thread window\'s input can still be focused when the UI is blocked',
     // makes no sense, this test is just about
     // making sure that the code which forces the
     // focus on click is not removed
-    testUtils.dom.click($('.o_thread_window .o_composer_text_field'));
+    await testUtils.dom.click($('.o_thread_window .o_composer_text_field'));
     assert.strictEqual(document.activeElement,
         $('.o_thread_window .o_composer_text_field')[0],
         "thread window's input should now be focused");
 
     framework.unblockUI();
     parent.destroy();
+    $input.remove();
 });
 
-QUnit.test('emoji popover should open correctly in thread windows', function (assert) {
+QUnit.test('emoji popover should open correctly in thread windows', async function (assert) {
     assert.expect(1);
 
     var parent = this.createParent({
@@ -178,23 +188,20 @@ QUnit.test('emoji popover should open correctly in thread windows', function (as
     });
 
     // get channel instance to link to thread window
+    await testUtils.nextTick();
     var channel = parent.call('mail_service', 'getChannel', 1);
+    await testUtils.nextTick();
     channel.detach();
-
+    await testUtils.nextTick();
     var $emojiButton = $('.o_composer_button_emoji');
-    testUtils.dom.click($emojiButton.trigger('focusin').focus());
+    await testUtils.dom.click($emojiButton.trigger('focusin').focus());
     var $popover = $('.o_mail_emoji_container');
 
-    var done = assert.async();
-    // Async is needed as the popover focusout hiding is deferred
-    setTimeout(function () {
-        assert.ok($popover.is(':visible'), "emoji popover should have stayed opened");
-        parent.destroy();
-        done();
-    }, 0);
+    assert.ok($popover.is(':visible'), "emoji popover should have stayed opened");
+    parent.destroy();
 });
 
-QUnit.test('do not increase unread counter when receiving message with myself as author', function (assert) {
+QUnit.test('do not increase unread counter when receiving message with myself as author', async function (assert) {
     assert.expect(4);
 
     var parent = this.createParent({
@@ -204,9 +211,11 @@ QUnit.test('do not increase unread counter when receiving message with myself as
     });
 
     // get channel instance to link to thread window
+    await testUtils.nextTick();
     var channel = parent.call('mail_service', 'getChannel', 1);
+    await testUtils.nextTick();
     channel.detach();
-
+    await testUtils.nextTick();
     var threadWindowHeaderText = $('.o_thread_window_header').text().replace(/\s/g, "");
 
     assert.strictEqual(threadWindowHeaderText, "#general",
@@ -226,6 +235,7 @@ QUnit.test('do not increase unread counter when receiving message with myself as
     var notification = [[false, 'mail.channel', 1], messageData];
     parent.call('bus_service', 'trigger', 'notification', [notification]);
 
+    await testUtils.nextTick();
     threadWindowHeaderText = $('.o_thread_window_header').text().replace(/\s/g, "");
 
     assert.strictEqual(threadWindowHeaderText, "#general",
@@ -236,7 +246,7 @@ QUnit.test('do not increase unread counter when receiving message with myself as
     parent.destroy();
 });
 
-QUnit.test('do not increment unread counter with focus on thread window', function (assert) {
+QUnit.test('do not increment unread counter with focus on thread window', async function (assert) {
     // 'hard' focus means that the user has clicked on the thread window in
     // order to set the focus on it.
     assert.expect(2);
@@ -248,14 +258,17 @@ QUnit.test('do not increment unread counter with focus on thread window', functi
     });
 
     // get channel instance to link to thread window
+    await testUtils.nextTick();
     var channel = parent.call('mail_service', 'getChannel', 1);
+    await testUtils.nextTick();
     channel.detach();
+    await testUtils.nextTick();
 
     assert.strictEqual(channel.getUnreadCounter(), 0,
         "thread should have unread counter to 0 initially");
 
     // hard focus on thread window composer
-    testUtils.dom.click($('.o_composer_text_field'));
+    await testUtils.dom.click($('.o_composer_text_field'));
 
     // simulate receiving message from someone else
     var messageData = {
@@ -268,6 +281,7 @@ QUnit.test('do not increment unread counter with focus on thread window', functi
     };
     var notification = [[false, 'mail.channel', 1], messageData];
     parent.call('bus_service', 'trigger', 'notification', [notification]);
+    await testUtils.nextTick();
 
     assert.strictEqual(channel.getUnreadCounter(), 0,
         "thread should not have incremented its unread counter after receiving the message");
@@ -275,7 +289,7 @@ QUnit.test('do not increment unread counter with focus on thread window', functi
     parent.destroy();
 });
 
-QUnit.test('do not mark as read the newly open thread window from received message', function (assert) {
+QUnit.test('do not mark as read the newly open thread window from received message', async function (assert) {
     assert.expect(5);
 
     this.data['mail.channel'] = {
@@ -315,7 +329,7 @@ QUnit.test('do not mark as read the newly open thread window from received messa
             if (args.method === 'channel_join_and_get_info') {
                 this.data['mail.channel'].records[0].state = 'open';
                 this.data['mail.channel'].records[0].is_minimized = true;
-                return $.when(this.data['mail.channel'].records[0]);
+                return Promise.resolve(this.data['mail.channel'].records[0]);
             }
             return this._super.apply(this, arguments);
         },
@@ -338,7 +352,7 @@ QUnit.test('do not mark as read the newly open thread window from received messa
     // a new message from a new channel.
     this.data['mail.channel'].records[0].message_unread_counter++;
     parent.call('bus_service', 'trigger', 'notification', [notification]);
-
+    await testUtils.nextTick();
     var $threadWindow = $('.o_thread_window');
     assert.strictEqual($threadWindow.length, 1,
         "a thread window should be open after receiving a new message on a new DM chat");
@@ -347,14 +361,14 @@ QUnit.test('do not mark as read the newly open thread window from received messa
     assert.strictEqual($threadWindow.find('.o_thread_window_title').text().replace(/\s/g, ''), '#DM(1)',
         "open DM chat window should have one unread message");
 
-    testUtils.dom.click($threadWindow.find('.o_thread_composer'));
+    await testUtils.dom.click($threadWindow.find('.o_thread_composer'));
     assert.strictEqual($threadWindow.find('.o_thread_window_title').text().replace(/\s/g, ''), '#DM',
         "open DM chat window should have message marked as read on composer focus");
 
     parent.destroy();
 });
 
-QUnit.test('show document link of message linked to a document', function (assert) {
+QUnit.test('show document link of message linked to a document', async function (assert) {
     assert.expect(6);
 
     this.data['mail.channel'] = {
@@ -410,8 +424,11 @@ QUnit.test('show document link of message linked to a document', function (asser
         "no thread window should be open initially");
 
     // get channel instance to link to thread window
+    await testUtils.nextTick();
     var channel = parent.call('mail_service', 'getChannel', 2);
+    await testUtils.nextTick();
     channel.detach();
+    await testUtils.nextTick();
 
     var $threadWindow = $('.o_thread_window');
     assert.strictEqual($threadWindow.length, 1,
@@ -429,7 +446,7 @@ QUnit.test('show document link of message linked to a document', function (asser
     parent.destroy();
 });
 
-QUnit.test('do not autofocus chat window on receiving new direct message', function (assert) {
+QUnit.test('do not autofocus chat window on receiving new direct message', async function (assert) {
     // Receiving a message doesn't make other input loose focus
     assert.expect(3);
 
@@ -473,7 +490,7 @@ QUnit.test('do not autofocus chat window on receiving new direct message', funct
         }],
     };
 
-    var form = testUtils.createView({
+    var form = await testUtils.createView({
         View: FormView,
         model: 'partner',
         data: this.data,
@@ -487,7 +504,7 @@ QUnit.test('do not autofocus chat window on receiving new direct message', funct
         },
         mockRPC: function (route, args) {
             if (args.method === 'channel_join_and_get_info') {
-                return $.when(this.data['mail.channel'].records[0]);
+                return Promise.resolve(this.data['mail.channel'].records[0]);
             }
             return this._super.apply(this, arguments);
         }
@@ -512,7 +529,7 @@ QUnit.test('do not autofocus chat window on receiving new direct message', funct
     this.data['mail.message'].records.push(messageData);
     var notification = [[false, 'mail.channel', 2], messageData];
     form.call('bus_service', 'trigger', 'notification', [notification]);
-
+    await testUtils.nextTick();
     assert.ok($('.o_thread_window.o_in_home_menu').length,
         'Chat window is opened');
 
@@ -522,7 +539,7 @@ QUnit.test('do not autofocus chat window on receiving new direct message', funct
     form.destroy();
 });
 
-QUnit.test('do not auto-focus chat window on receiving new message from new DM', function (assert) {
+QUnit.test('do not auto-focus chat window on receiving new message from new DM', async function (assert) {
     assert.expect(10);
 
     var self = this;
@@ -564,7 +581,7 @@ QUnit.test('do not auto-focus chat window on receiving new message from new DM',
         session: { partner_id: 3 },
         mockRPC: function (route, args) {
             if (args.method === 'channel_join_and_get_info') {
-                return $.when(_.extend({}, self.data['mail.channel'].records[0], { info: 'join' }));
+                return Promise.resolve(_.extend({}, self.data['mail.channel'].records[0], { info: 'join' }));
             }
             if (args.method === 'channel_minimize') {
                 _.extend(self.data['mail.channel'].records[0], {
@@ -594,6 +611,7 @@ QUnit.test('do not auto-focus chat window on receiving new message from new DM',
     this.data['mail.message'].records.push(messageData);
     var notification = [[false, 'mail.channel', 2], messageData];
     parent.call('bus_service', 'trigger', 'notification', [notification]);
+    await testUtils.nextTick();
 
     assert.strictEqual($('.o_thread_window').length, 1,
         "should have DM window open");
@@ -610,6 +628,7 @@ QUnit.test('do not auto-focus chat window on receiving new message from new DM',
     });
     notification = [[false, 'res.partner', 3], dmInfo];
     parent.call('bus_service', 'trigger', 'notification', [notification]);
+    await testUtils.nextTick();
 
     assert.strictEqual($('.o_thread_window').length, 1,
         "should still have DM window open after receiving DM info from polling");
@@ -621,6 +640,7 @@ QUnit.test('do not auto-focus chat window on receiving new message from new DM',
     // simulate receiving detached DM notification (cross-tab synchronization)
     notification = [[false, 'res.partner', 3], self.data['mail.channel'].records[0]];
     parent.call('bus_service', 'trigger', 'notification', [notification]);
+    await testUtils.nextTick();
 
     assert.strictEqual($('.o_thread_window').length, 1,
         "should still have DM open after receiving detached info from polling");
@@ -632,7 +652,7 @@ QUnit.test('do not auto-focus chat window on receiving new message from new DM',
     parent.destroy();
 });
 
-QUnit.test('out-of-office status in thread window', function (assert) {
+QUnit.test('out-of-office status in thread window', async function (assert) {
     assert.expect(1);
     this.data = {
         'mail.message': {
@@ -655,8 +675,13 @@ QUnit.test('out-of-office status in thread window', function (assert) {
         data: this.data,
         services: this.services,
     });
+    await testUtils.nextTick();
+
     // detach channel 1, so that it opens corresponding thread window.
-    parent.call('mail_service', 'getChannel', 1).detach();
+    var channel = parent.call('mail_service', 'getChannel', 1);
+    await testUtils.nextTick();
+    channel.detach();
+    await testUtils.nextTick();
 
     var $threadWindow = $('.o_thread_window');
     assert.containsOnce($threadWindow, '.o_out_of_office_text');
@@ -664,7 +689,7 @@ QUnit.test('out-of-office status in thread window', function (assert) {
     parent.destroy();
 });
 
-QUnit.test('no out-of-office status in thread window', function (assert) {
+QUnit.test('no out-of-office status in thread window', async function (assert) {
     assert.expect(1);
     this.data = {
         'mail.message': {
@@ -687,11 +712,17 @@ QUnit.test('no out-of-office status in thread window', function (assert) {
         data: this.data,
         services: this.services,
     });
+    await testUtils.nextTick();
+
     // detach channel 1, so that it opens corresponding thread window.
-    parent.call('mail_service', 'getChannel', 1).detach();
+    var channel = parent.call('mail_service', 'getChannel', 1);
+    await testUtils.nextTick();
+    channel.detach();
+    await testUtils.nextTick();
 
     var $threadWindow = $('.o_thread_window');
     assert.containsNone($threadWindow, '.o_out_of_office_text');
+
     parent.destroy();
 });
 

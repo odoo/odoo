@@ -54,7 +54,7 @@ odoo.define('hr.employee_chat', function (require) {
                     dmChat = self.call('mail_service', 'getChannel', dmChatId);
                     dmChat.detach();
                 });
-                $.when(def);
+                Promise.resolve(def);
             }
         },
     });

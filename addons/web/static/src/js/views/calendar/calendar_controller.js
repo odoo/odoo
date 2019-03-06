@@ -143,7 +143,7 @@ var CalendarController = AbstractController.extend({
      *
      * @private
      * @param {string} to either 'prev', 'next' or 'today'
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _move: function (to) {
         this.model[to]();
@@ -153,7 +153,7 @@ var CalendarController = AbstractController.extend({
      * @private
      * @param {Object} record
      * @param {integer} record.id
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _updateRecord: function (record) {
         return this.model.updateRecord(record).then(this.reload.bind(this, {}));
@@ -388,18 +388,18 @@ var CalendarController = AbstractController.extend({
                 self.quick.destroy();
                 self.quick = null;
                 self.reload();
+                self.quickCreating = false;
             })
-            .fail(function (error, errorEvent) {
+            .guardedCatch(function (result) {
+                var errorEvent = result.event;
                 // This will occurs if there are some more fields required
                 // Preventdefaulting the error event will prevent the traceback window
                 errorEvent.preventDefault();
                 event.data.options.disableQuickCreate = true;
                 event.data.data.on_save = self.quick.destroy.bind(self.quick);
                 self._onOpenCreate(event.data);
-            })
-            .always(function () {
                 self.quickCreating = false;
-            });
+            })
     },
     /**
      * Called when we want to open or close the sidebar.

@@ -62,7 +62,7 @@ MailManager.include({
      * Overrides to filter out the Support channel from the previews.
      *
      * @override
-     * @returns {$.Promise<Object[]>} list of valid objects for mail.Preview
+     * @returns {Promise<Object[]>} list of valid objects for mail.Preview
      *   template
      */
     getChannelPreviews: function () {
@@ -97,7 +97,7 @@ MailManager.include({
      *
      * @param {string} [channelState='open'] state of the Support
      *   channel (see CHANNEL_STATES for accepted values)
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     startSupportLivechat: function (channelState) {
         var self = this;
@@ -130,15 +130,15 @@ MailManager.include({
                 self.supportChannelUUID = channel.uuid;
 
                 // add the channel to the MailManager
-                self._addChannel(_.extend(channel, {
+                return self._addChannel(_.extend(channel, {
                     id: channel.uuid,
                     is_minimized: _.contains(['open', 'folded'], channelState),
                     state: channelState,
-                }));
-
-                // display an automatic message in the channel
-                var supportChannel = self.getChannel(channel.uuid);
-                supportChannel.addDefaultMessage();
+                })).then(function () {
+                    // display an automatic message in the channel
+                    var supportChannel = self.getChannel(channel.uuid);
+                    supportChannel.addDefaultMessage();
+                });
             } else {
                 // the channel has already been added to the MailManager, so
                 // simply re-open it
@@ -149,7 +149,7 @@ MailManager.include({
                     channel.fold(channelState === 'folded');
                 }
             }
-        }).fail(function () {
+        }).guardedCatch(function () {
             self.do_warn(_t("The Support server can't be reached."));
         });
     },

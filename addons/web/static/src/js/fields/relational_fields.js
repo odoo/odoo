@@ -171,11 +171,11 @@ var FieldMany2One = AbstractField.extend({
      * is saved.
      *
      * @override
-     * @returns {Deferred} resolved as soon as there is no longer record being
+     * @returns {Promise} resolved as soon as there is no longer record being
      *   (quick) created
      */
     commitChanges: function () {
-        return $.when(this.createDef);
+        return Promise.resolve(this.createDef);
     },
     /**
      * @override
@@ -208,7 +208,7 @@ var FieldMany2One = AbstractField.extend({
             this.isDirty = false;
         }
         if (this.isDirty) {
-            return $.when();
+            return Promise.resolve();
         } else {
             return this._render();
         }
@@ -257,9 +257,9 @@ var FieldMany2One = AbstractField.extend({
                     if (!source.validation || source.validation.call(self, req.term)) {
                         source.loading = true;
 
-                        // Wrap the returned value of the source.method with $.when.
+                        // Wrap the returned value of the source.method with a promise
                         // So event if the returned value is not async, it will work
-                        $.when(source.method.call(self, req.term)).then(function (results) {
+                        Promise.resolve(source.method.call(self, req.term)).then(function (results) {
                             source.results = results;
                             source.loading = false;
                             resp(self._concatenateAutocompleteResults());
@@ -366,49 +366,55 @@ var FieldMany2One = AbstractField.extend({
     /**
      * @private
      * @param {string} name
-     * @returns {Deferred} resolved after the name_create or when the slowcreate
+     * @returns {Promise} resolved after the name_create or when the slowcreate
      *                     modal is closed.
      */
     _quickCreate: function (name) {
         var self = this;
-        var def = $.Deferred();
-        this.createDef = this.createDef || $.Deferred();
-        // called when the record has been quick created, or when the dialog has
-        // been closed (in the case of a 'slow' create), meaning that the job is
-        // done
-        var createDone = function () {
-            def.resolve();
-            self.createDef.resolve();
-            self.createDef = undefined;
-        };
-        // called if the quick create is disabled on this many2one, or if the
-        // quick creation failed (probably because there are mandatory fields on
-        // the model)
-        var slowCreate = function () {
-            var dialog = self._searchCreatePopup("form", false, self._createContext(name));
-            dialog.on('closed', self, createDone);
-        };
-        if (this.nodeOptions.quick_create) {
-            var nameCreateDef = this._rpc({
-                model: this.field.relation,
-                method: 'name_create',
-                args: [name],
-                context: this.record.getContext(this.recordParams),
-            }).fail(function (error, ev) {
-                ev.preventDefault();
-                slowCreate();
+        var createDone;
+
+        var def = new Promise(function (resolve, reject) {
+            self.createDef = new Promise(function (innerResolve) {
+                // called when the record has been quick created, or when the dialog has
+                // been closed (in the case of a 'slow' create), meaning that the job is
+                // done
+                createDone = function () {
+                    innerResolve();
+                    resolve();
+                    self.createDef = undefined;
+                };
             });
-            this.dp.add(nameCreateDef)
-                .then(function (result) {
-                    if (self.mode === "edit") {
-                        self.reinitialize({id: result[0], display_name: result[1]});
-                    }
-                    createDone();
-                })
-                .fail(def.reject.bind(def));
-        } else {
-            slowCreate();
-        }
+
+            // called if the quick create is disabled on this many2one, or if the
+            // quick creation failed (probably because there are mandatory fields on
+            // the model)
+            var slowCreate = function () {
+                var dialog = self._searchCreatePopup("form", false, self._createContext(name));
+                dialog.on('closed', self, createDone);
+            };
+            if (self.nodeOptions.quick_create) {
+                var nameCreateDef = self._rpc({
+                    model: self.field.relation,
+                    method: 'name_create',
+                    args: [name],
+                    context: self.record.getContext(self.recordParams),
+                }).guardedCatch(function (reason) {
+                    reason.event.preventDefault();
+                    slowCreate();
+                });
+                self.dp.add(nameCreateDef)
+                    .then(function (result) {
+                        if (self.mode === "edit") {
+                            self.reinitialize({id: result[0], display_name: result[1]});
+                        }
+                        createDone();
+                    })
+                    .guardedCatch(reject);
+            } else {
+                slowCreate();
+            }
+        });
+
         return def;
     },
     /**
@@ -456,35 +462,32 @@ var FieldMany2One = AbstractField.extend({
      *
      * @private
      * @param {string} search_val
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _search: function (search_val) {
         var self = this;
-        var def = $.Deferred();
-        this.orderer.add(def);
+        var def = new Promise(function (resolve, reject) {
+            var context = self.record.getContext(self.recordParams);
+            var domain = self.record.getDomain(self.recordParams);
 
-        var context = this.record.getContext(this.recordParams);
-        var domain = this.record.getDomain(this.recordParams);
+            // Add the additionalContext
+            _.extend(context, self.additionalContext);
 
-        // Add the additionalContext
-        _.extend(context, this.additionalContext);
+            var blacklisted_ids = self._getSearchBlacklist();
+            if (blacklisted_ids.length > 0) {
+                domain.push(['id', 'not in', blacklisted_ids]);
+            }
 
-        var blacklisted_ids = this._getSearchBlacklist();
-        if (blacklisted_ids.length > 0) {
-            domain.push(['id', 'not in', blacklisted_ids]);
-        }
-
-        this._rpc({
-            model: this.field.relation,
-            method: "name_search",
-            kwargs: {
-                name: search_val,
-                args: domain,
-                operator: "ilike",
-                limit: this.limit + 1,
-                context: context,
-            }})
-            .then(function (result) {
+            self._rpc({
+                model: self.field.relation,
+                method: "name_search",
+                kwargs: {
+                    name: search_val,
+                    args: domain,
+                    operator: "ilike",
+                    limit: self.limit + 1,
+                    context: context,
+                }}).then(function (result) {
                 // possible selections for the m2o
                 var values = _.map(result, function (x) {
                     x[1] = self._getDisplayName(x[1]);
@@ -516,7 +519,7 @@ var FieldMany2One = AbstractField.extend({
                                     },
                                 });
                             }
-                            $.when(prom).then(function (results) {
+                            Promise.resolve(prom).then(function (results) {
                                 var dynamicFilters;
                                 if (results) {
                                     var ids = _.map(results, function (x) {
@@ -563,9 +566,10 @@ var FieldMany2One = AbstractField.extend({
                     });
                 }
 
-                def.resolve(values);
+                resolve(values);
             });
-
+        });
+        this.orderer.add(def);
         return def;
     },
     /**
@@ -670,8 +674,9 @@ var FieldMany2One = AbstractField.extend({
                     readonly: !self.can_write,
                     on_saved: function (record, changed) {
                         if (changed) {
-                            self._setValue(self.value.data, {forceChange: true});
-                            self.trigger_up('reload', {db_id: self.value.id});
+                            self._setValue(self.value.data, {forceChange: true}).then(function() {
+                                self.trigger_up('reload', {db_id: self.value.id});
+                            });
                         }
                     },
                 }).open();
@@ -868,14 +873,14 @@ var FieldX2Many = AbstractField.extend({
      * user if he wants to discard it if necessary.
      *
      * @override
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     commitChanges: function () {
         var self = this;
         var inEditionRecordID =
-            this.renderer
-            && this.renderer.viewType === "list"
-            && this.renderer.getEditableRecordID();
+            this.renderer &&
+            this.renderer.viewType === "list" &&
+            this.renderer.getEditableRecordID();
         if (inEditionRecordID) {
             return this.renderer.commitChanges(inEditionRecordID).then(function () {
                 return self._saveLine(inEditionRecordID);
@@ -894,7 +899,7 @@ var FieldX2Many = AbstractField.extend({
      * @param {Object} record
      * @param {OdooEvent} [ev] an event that triggered the reset action
      * @param {Boolean} [fieldChanged] if true, the widget field has changed
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     reset: function (record, ev, fieldChanged) {
         // If 'fieldChanged' is false, it means that the reset was triggered by
@@ -904,7 +909,7 @@ var FieldX2Many = AbstractField.extend({
         if (!fieldChanged) {
            var newEval = this._evalColumnInvisibleFields();
            if (_.isEqual(this.currentColInvisibleFields, newEval)) {
-               return $.when();
+               return Promise.resolve();
            }
         } else if (ev && ev.target === this && ev.data.changes && this.view.arch.tag === 'tree') {
             var command = ev.data.changes[this.name];
@@ -994,17 +999,20 @@ var FieldX2Many = AbstractField.extend({
      *
      * @override
      * @private
-     * @returns {Deferred|undefined}
+     * @returns {Promise|undefined}
      */
     _render: function () {
+        var self = this;
         if (!this.view) {
             return this._super();
         }
         if (this.renderer) {
             this.currentColInvisibleFields = this._evalColumnInvisibleFields();
-            this.renderer.updateState(this.value, {'columnInvisibleFields': this.currentColInvisibleFields});
-            this.pager.updateState({ size: this.value.count });
-            return $.when();
+            return this.renderer.updateState(this.value, {
+                columnInvisibleFields: this.currentColInvisibleFields,
+            }).then(function () {
+                self.pager.updateState({ size: self.value.count });
+            });
         }
         var arch = this.view.arch;
         var viewType;
@@ -1050,11 +1058,11 @@ var FieldX2Many = AbstractField.extend({
      * Prepends the control panel's $el to this widget's $el.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _renderControlPanel: function () {
         if (!this.view) {
-            return $.when();
+            return Promise.resolve();
         }
         var self = this;
         var defs = [];
@@ -1072,7 +1080,7 @@ var FieldX2Many = AbstractField.extend({
             validate: function () {
                 var isList = self.view.arch.tag === 'tree';
                 // TODO: we should have some common method in the basic renderer...
-                return isList ? self.renderer.unselectRow() : $.when();
+                return isList ? self.renderer.unselectRow() : Promise.resolve();
             },
         });
         this.pager.on('pager_changed', this, function (new_state) {
@@ -1089,7 +1097,7 @@ var FieldX2Many = AbstractField.extend({
         this._renderButtons();
         defs.push(this.pager.appendTo($('<div>'))); // start the pager
         defs.push(cpDef);
-        return $.when.apply($, defs).then(function () {
+        return Promise.all(defs).then(function () {
             self._controlPanel.updateContents({
                 cp_content: {
                     $buttons: self.$buttons,
@@ -1123,24 +1131,24 @@ var FieldX2Many = AbstractField.extend({
      *
      * @private
      * @param {string} recordID
-     * @returns {Deferred} resolved if the line was properly saved or discarded.
+     * @returns {Promise} resolved if the line was properly saved or discarded.
      *                     rejected if the line could not be saved and the user
      *                     did not agree to discard.
      */
     _saveLine: function (recordID) {
         var self = this;
-        var def = $.Deferred();
-        var fieldNames = this.renderer.canBeSaved(recordID);
-        if (fieldNames.length) {
-            this.trigger_up('discard_changes', {
-                recordID: recordID,
-                onSuccess: def.resolve.bind(def),
-                onFailure: def.reject.bind(def),
-            });
-        } else {
-            this.renderer.setRowMode(recordID, 'readonly').done(def.resolve.bind(def));
-        }
-        return def.then(function () {
+        return new Promise(function (resolve, reject) {
+            var fieldNames = self.renderer.canBeSaved(recordID);
+            if (fieldNames.length) {
+                self.trigger_up('discard_changes', {
+                    recordID: recordID,
+                    onSuccess: resolve,
+                    onFailure: reject,
+                });
+            } else {
+                self.renderer.setRowMode(recordID, 'readonly').then(resolve);
+            }
+        }).then(function () {
             self.pager.updateState({ size: self.value.count });
             var newEval = self._evalColumnInvisibleFields();
             if (!_.isEqual(self.currentColInvisibleFields, newEval)) {
@@ -1233,7 +1241,7 @@ var FieldX2Many = AbstractField.extend({
         this.trigger_up('edited_list', { id: this.value.id });
         var editedRecord = this.value.data[ev.data.index];
         this.renderer.setRowMode(editedRecord.id, 'edit')
-            .done(ev.data.onSuccess);
+            .then(ev.data.onSuccess);
     },
     /**
      * Updates the given record with the changes.
@@ -1260,11 +1268,11 @@ var FieldX2Many = AbstractField.extend({
                 operation: 'UPDATE',
                 id: ev.data.dataPointID,
                 data: changes,
-            }).done(function () {
+            }).then(function () {
                 if (ev.data.onSuccess) {
                     ev.data.onSuccess();
                 }
-            }).fail(function () {
+            }).guardedCatch(function () {
                 if (ev.data.onFailure) {
                     ev.data.onFailure();
                 }
@@ -1332,8 +1340,8 @@ var FieldX2Many = AbstractField.extend({
             self.trigger_up('mutexify', {
                 action: function () {
                     return self._saveLine(ev.data.recordID)
-                        .done(ev.data.onSuccess)
-                        .fail(ev.data.onFailure);
+                        .then(ev.data.onSuccess)
+                        .guardedCatch(ev.data.onFailure);
                 },
             });
         });
@@ -1361,18 +1369,20 @@ var FieldX2Many = AbstractField.extend({
                 notifyChange: false,
             });
         });
-        $.when.apply($, defs).then(function () {
+        Promise.all(defs).then(function () {
+            function always() {
+                self.trigger_up('toggle_column_order', {
+                    id: self.value.id,
+                    name: event.data.handleField,
+                });
+            }
+
             // trigger only once the onchange for parent record
             self._setValue({
                 operation: 'UPDATE',
                 id: rowID,
                 data: _.object([event.data.handleField], [event.data.offset + rowIDs.length]),
-            }).always(function () {
-                self.trigger_up('toggle_column_order', {
-                    id: self.value.id,
-                    name: event.data.handleField,
-                });
-            });
+            }).then(always).guardedCatch(always);
         });
     },
     /**
@@ -1418,7 +1428,7 @@ var FieldOne2Many = FieldX2Many.extend({
      * @override
      * @param {Object} record
      * @param {OdooEvent} [ev] an event that triggered the reset action
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     reset: function (record, ev) {
         var self = this;
@@ -1527,13 +1537,16 @@ var FieldOne2Many = FieldX2Many.extend({
                     context: data.context,
                 }, {
                     allowWarning: data.allowWarning
-                }).always(function () {
+                }).then(function () {
                     self.creatingRecord = false;
-                }).done(function (){
+                }).then(function (){
                     if (data.onSuccess){
                         data.onSuccess();
                     }
-                });
+                }).guardedCatch(function() {
+                    self.creatingRecord = false;
+                })
+                ;
             }
         } else {
             this._openFormDialog({
@@ -1646,8 +1659,10 @@ var FieldMany2Many = FieldX2Many.extend({
             domain: this.record.getDomain(this.recordParams),
             fields_view: this.attrs.views && this.attrs.views.form,
             on_saved: function () {
-                self._setValue({operation: 'TRIGGER_ONCHANGE'}, {forceChange: true});
-                self.trigger_up('reload', {db_id: ev.data.id});
+                self._setValue({operation: 'TRIGGER_ONCHANGE'}, {forceChange: true})
+                    .then(function () {
+                        self.trigger_up('reload', {db_id: ev.data.id});
+                    });
             },
             on_remove: function () {
                 self._setValue({operation: 'FORGET', ids: [ev.data.id]});
@@ -1918,10 +1933,12 @@ var FieldMany2ManyTags = AbstractField.extend({
      * @override
      */
     reset: function (record, event) {
-        this._super.apply(this, arguments);
-        if (event && event.target === this) {
-            this.activate();
-        }
+        var self = this;
+        return this._super.apply(this, arguments).then(function(){
+            if (event && event.target === self) {
+                self.activate();
+            }
+        });
     },
 
     //--------------------------------------------------------------------------

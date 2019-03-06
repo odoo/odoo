@@ -182,7 +182,7 @@ MailManager.include({
                 resModel: resModel,
             });
         }
-        this._super.apply(this, arguments);
+        return this._super.apply(this, arguments);
     },
     /**
      * Updates the thread windows related to document threads.

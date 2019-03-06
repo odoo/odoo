@@ -84,27 +84,27 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      */
     session_init: function () {
         var self = this;
-        var def = this.session_reload();
+        var prom = this.session_reload();
 
         if (this.is_frontend) {
-            return def.then(function () {
+            return prom.then(function () {
                 return self.load_translations();
             });
         }
 
-        return def.then(function () {
+        return prom.then(function () {
             var modules = self.module_list.join(',');
-            var deferred = self.load_qweb(modules);
+            var promise = self.load_qweb(modules);
             if (self.session_is_valid()) {
-                return deferred.then(function () { return self.load_modules(); });
+                return promise.then(function () { return self.load_modules(); });
             }
-            return $.when(
-                    deferred,
+            return Promise.all([
+                    promise,
                     self.rpc('/web/webclient/bootstrap_translations', {mods: self.module_list})
                         .then(function (trans) {
                             _t.database.set_bundle(trans);
                         })
-            );
+                    ]);
         });
     },
     session_is_valid: function () {
@@ -119,7 +119,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      */
     session_authenticate: function () {
         var self = this;
-        return $.when(this._session_authenticate.apply(this, arguments)).then(function () {
+        return Promise.resolve(this._session_authenticate.apply(this, arguments)).then(function () {
             return self.load_modules();
         });
     },
@@ -131,7 +131,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         var params = {db: db, login: login, password: password};
         return this.rpc("/web/session/authenticate", params).then(function (result) {
             if (!result.uid) {
-                return $.Deferred().reject();
+                return Promise.reject();
             }
             _.extend(self, result);
         });
@@ -142,7 +142,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     },
     user_has_group: function (group) {
         if (!this.uid) {
-            return $.when(false);
+            return Promise.resolve(false);
         }
         var def = this._groups_def[group];
         if (!def) {
@@ -196,22 +196,24 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         var to_load = _.difference(modules, self.module_list).join(',');
         this.module_list = all_modules;
 
-        var loaded = $.when(self.load_translations());
+        var loaded = Promise.resolve(self.load_translations());
         var locale = "/web/webclient/locale/" + self.user_context.lang || 'en_US';
         var file_list = [ locale ];
         if(to_load.length) {
-            loaded = $.when(
+            loaded = Promise.all([
                 loaded,
-                self.rpc('/web/webclient/csslist', {mods: to_load}).done(self.load_css.bind(self)),
+                self.rpc('/web/webclient/csslist', {mods: to_load})
+                    .then(self.load_css.bind(self)),
                 self.load_qweb(to_load),
-                self.rpc('/web/webclient/jslist', {mods: to_load}).done(function (files) {
-                    file_list = file_list.concat(files);
-                })
-            );
+                self.rpc('/web/webclient/jslist', {mods: to_load})
+                    .then(function (files) {
+                        file_list = file_list.concat(files);
+                    })
+            ]);
         }
         return loaded.then(function () {
             return self.load_js(file_list);
-        }).done(function () {
+        }).then(function () {
             self.on_modules_loaded();
             self.trigger('module_loaded');
        });
@@ -227,24 +229,24 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     },
     load_js: function (files) {
         var self = this;
-        var d = $.Deferred();
-        if (files.length !== 0) {
-            var file = files.shift();
-            var url = self.url(file, null);
-            ajax.loadJS(url).done(d.resolve);
-        } else {
-            d.resolve();
-        }
-        return d;
+        return new Promise(function (resolve, reject) {
+            if (files.length !== 0) {
+                var file = files.shift();
+                var url = self.url(file, null);
+                ajax.loadJS(url).then(resolve);
+            } else {
+                resolve();
+            }
+        });
     },
     load_qweb: function (mods) {
-        this.qweb_mutex.exec(function () {
+        var lock = this.qweb_mutex.exec(function () {
             return $.get('/web/webclient/qweb?mods=' + mods).then(function (doc) {
                 if (!doc) { return; }
                 qweb.add_template(doc);
             });
         });
-        return this.qweb_mutex.def;
+        return lock;
     },
     on_modules_loaded: function () {
         var openerp = window.openerp;
@@ -276,12 +278,12 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * (re)loads the content of a session: db name, username, user id, session
      * context and status of the support contract
      *
-     * @returns {$.Deferred} deferred indicating the session is done reloading
+     * @returns {Promise} promise indicating the session is done reloading
      */
     session_reload: function () {
         var result = _.extend({}, window.odoo.session_info);
         _.extend(this, result);
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * Executes an RPC call, registering the provided callbacks.
@@ -293,7 +295,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * @param {String} url RPC endpoint
      * @param {Object} params call parameters
      * @param {Object} options additional options for rpc call
-     * @returns {jQuery.Deferred} jquery-provided ajax deferred
+     * @returns {Promise}
      */
     rpc: function (url, params, options) {
         var self = this;

@@ -11,6 +11,7 @@ odoo.define('web.test_utils_modal', function (require) {
  */
 
 var core = require('web.core');
+var concurrency = require('web.concurrency');
 
 /**
  * Click on a button in the footer of a modal (which contains a given string).
@@ -25,6 +26,7 @@ function clickButton(text) {
         throw new Error(`Found ${$button.length} button(s) containing '${text}'`);
     }
     $button.click();
+    return concurrency.delay(0);
 }
 
 return {

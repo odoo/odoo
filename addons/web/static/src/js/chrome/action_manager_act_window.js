@@ -144,7 +144,7 @@ ActionManager.include({
      * @param {integer} [options.index=0] the controller's index in the stack
      * @param {boolean} [options.lazy=false] set to true to differ the
      *   initialization of the controller's widget
-     * @returns {Deferred<Object>} resolved with the created controller
+     * @returns {Promise<Object>} resolved with the created controller
      */
     _createViewController: function (action, viewType, viewOptions, options) {
         var self = this;
@@ -153,7 +153,7 @@ ActionManager.include({
             // the requested view type isn't specified in the action (e.g.
             // action with list view only, user clicks on a row in the list, it
             // tries to switch to form view)
-            return $.Deferred().reject();
+            return Promise.reject();
         }
 
         options = options || {};
@@ -186,26 +186,31 @@ ActionManager.include({
                 // communication with trigger_up
                 controllerID: controllerID,
             });
+            var rejection;
             var view = new viewDescr.Widget(viewDescr.fieldsView, viewOptions);
-            var def = $.Deferred();
-            action.controllers[viewType] = def;
-            view.getController(this).then(function (widget) {
-                if (def.state() === 'rejected') {
-                    // the deferred has been rejected meanwhile, meaning that
-                    // the action has been removed, so simply destroy the widget
-                    widget.destroy();
-                } else {
-                    controller.widget = widget;
-                    def.resolve(controller);
-                }
-            }).fail(def.reject.bind(def));
-            def.fail(function () {
+            var def = new Promise(function (resolve, reject) {
+                rejection = reject;
+                view.getController(self).then(function (widget) {
+                    if (def.rejected) {
+                        // the promise has been rejected meanwhile, meaning that
+                        // the action has been removed, so simply destroy the widget
+                        widget.destroy();
+                    } else {
+                        controller.widget = widget;
+                        resolve(controller);
+                    }
+                }).guardedCatch(reject);
+            });
+            // Need to define an reject property to call it into _destroyWindowAction
+            def.reject = rejection;
+            def.guardedCatch(function () {
+                def.rejected = true;
                 delete self.controllers[controllerID];
             });
+            action.controllers[viewType] = def;
         } else {
-            action.controllers[viewType] = $.Deferred().resolve(controller);
+            action.controllers[viewType] = Promise.resolve(controller);
         }
-
         return action.controllers[viewType];
     },
     /**
@@ -217,18 +222,22 @@ ActionManager.include({
      */
     _destroyWindowAction: function (action) {
         var self = this;
-        _.each(action.controllers, function (controllerDef) {
+        for (var c in action.controllers) {
+            var controllerDef = action.controllers[c];
             controllerDef.then(function (controller) {
                 delete self.controllers[controller.jsID];
                 if (controller.widget) {
                     controller.widget.destroy();
                 }
             });
-            // reject the deferred if it is not yet resolved, so that the
-            // controller is correctly destroyed as soon as it is ready, and
-            // its reference is removed
-            controllerDef.reject();
-        });
+            // If controllerDef is not resolved yet, reject it so that the
+            // controller will be correctly destroyed as soon as it'll be ready,
+            // and its reference will be removed. Lazy-loaded controllers do
+            // not have a reject function on their promise
+            if (controllerDef.reject) {
+                controllerDef.reject();
+            }
+        }
     },
     /**
      * Executes actions of type 'ir.actions.act_window'.
@@ -239,13 +248,13 @@ ActionManager.include({
      * @param {Object} options @see doAction for details
      * @param {integer} [options.resID] the current res ID
      * @param {string} [options.viewType] the view to open
-     * @returns {Deferred} resolved when the action is appended to the DOM
+     * @returns {Promise} resolved when the action is appended to the DOM
      */
     _executeWindowAction: function (action, options) {
         var self = this;
         return this.dp.add(this._loadViews(action)).then(function (fieldsViews) {
             var views = self._generateActionViews(action, fieldsViews);
-            action._views = action.views;  // save the initial attribute
+            action._views = action.views; // save the initial attribute
             action.views = views;
             action.controlPanelFieldsView = fieldsViews.search;
             action.controllers = {};
@@ -285,7 +294,7 @@ ActionManager.include({
                         self.controllerStack.push(lazyLoadedController.jsID);
                     });
             }
-            return self.dp.add($.when(lazyViewDef))
+            return self.dp.add(Promise.resolve(lazyViewDef))
                 .then(function () {
                     var viewOptions = {
                         controllerState: options.controllerState,
@@ -300,7 +309,7 @@ ActionManager.include({
                     action.controllerID = controller.jsID;
                     return self._executeAction(action, options);
                 })
-                .fail(self._destroyWindowAction.bind(self, action));
+                .guardedCatch(self._destroyWindowAction.bind(self, action));
         });
     },
     /**
@@ -389,7 +398,7 @@ ActionManager.include({
      *
      * @private
      * @param {Object} action
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _loadViews: function (action) {
         var inDialog = action.target === 'new';
@@ -443,11 +452,11 @@ ActionManager.include({
             return this.clearUncommittedChanges().then(function () {
                 // AAB: this will be done directly in AbstractAction's restore
                 // function
-                var def;
+                var def = Promise.resolve();
                 if (action.on_reverse_breadcrumb) {
                     def = action.on_reverse_breadcrumb();
                 }
-                return $.when(def).then(function () {
+                return Promise.resolve(def).then(function () {
                     return self._switchController(action, controller.viewType);
                 });
             });
@@ -461,14 +470,14 @@ ActionManager.include({
      * @private
      * @param {Object} controller the controller to switch to
      * @param {Object} [viewOptions]
-     * @return {Deferred} resolved when the new controller is in the DOM
+     * @return {Promise} resolved when the new controller is in the DOM
      */
     _switchController: function (action, viewType, viewOptions) {
         var self = this;
         var view = _.findWhere(action.views, {type: viewType});
         if (!view) {
             // can't switch to an unknown view
-            return $.Deferred().reject();
+            return Promise.reject();
         }
         var currentController = this.getCurrentController();
         var index;
@@ -519,28 +528,30 @@ ActionManager.include({
         };
 
         var controllerDef = action.controllers[viewType];
-        if (!controllerDef || controllerDef.state() === 'rejected') {
-            // if the controllerDef is rejected, it probably means that the js
-            // code or the requests made to the server crashed.  In that case,
-            // if we reuse the same deferred, then the switch to the view is
-            // definitely blocked.  We want to use a new controller, even though
-            // it is very likely that it will recrash again.  At least, it will
-            // give more feedback to the user, and it could happen that one
-            // record crashes, but not another.
-            controllerDef = newController();
-        } else {
+        if (controllerDef) {
             controllerDef = controllerDef.then(function (controller) {
                 if (!controller.widget) {
                     // lazy loaded -> load it now (with same jsID)
                     return newController(controller.jsID);
                 } else {
-                    return $.when(controller.widget.willRestore()).then(function () {
+                    return Promise.resolve(controller.widget.willRestore()).then(function () {
                         return controller.widget.reload(viewOptions).then(function () {
                             return controller;
                         });
                     });
                 }
+            }, function () {
+                // if the controllerDef is rejected, it probably means that the js
+                // code or the requests made to the server crashed.  In that case,
+                // if we reuse the same promise, then the switch to the view is
+                // definitely blocked.  We want to use a new controller, even though
+                // it is very likely that it will recrash again.  At least, it will
+                // give more feedback to the user, and it could happen that one
+                // record crashes, but not another.
+                return newController();
             });
+        } else {
+            controllerDef = newController();
         }
 
         return this.dp.add(controllerDef).then(function (controller) {
@@ -577,11 +588,11 @@ ActionManager.include({
         var env = ev.data.env;
         var context = new Context(env.context, actionData.context || {});
         var recordID = env.currentID || null; // pyUtils handles null value, not undefined
-        var def = $.Deferred();
+        var def;
 
         // determine the action to execute according to the actionData
         if (actionData.special) {
-            def = $.when({type: 'ir.actions.act_window_close', infos: 'special'});
+            def = Promise.resolve({type: 'ir.actions.act_window_close', infos: 'special'});
         } else if (actionData.type === 'object') {
             // call a Python Object method, which may return an action to execute
             var args = recordID ? [[recordID]] : [env.resIDs];
@@ -611,13 +622,15 @@ ActionManager.include({
                 active_ids: env.resIDs,
                 active_id: recordID,
             }));
+        } else {
+            def = new Promise(function () {});
         }
 
         // use the DropPrevious to prevent from executing the handler if another
         // request (doAction, switchView...) has been done meanwhile ; execute
         // the fail handler if the 'call_button' or 'loadAction' failed but not
         // if the request failed due to the DropPrevious,
-        def.fail(ev.data.on_fail);
+        def.guardedCatch(ev.data.on_fail);
         this.dp.add(def).then(function (action) {
             // show effect if button have effect attribute
             // rainbowman can be displayed from two places: from attribute on a button or from python

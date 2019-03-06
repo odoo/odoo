@@ -13,11 +13,11 @@ odoo.define('website_form.animation', function (require) {
         selector: '.s_website_form',
 
         willStart: function () {
-            var def;
+            var prom;
             if (!$.fn.datetimepicker) {
-                def = ajax.loadJS("/web/static/lib/tempusdominus/tempusdominus.js");
+                prom = ajax.loadJS("/web/static/lib/tempusdominus/tempusdominus.js");
             }
-            return $.when(this._super.apply(this, arguments), def);
+            return Promise.all([this._super.apply(this, arguments), prom]);
         },
 
         start: function (editable_mode) {
@@ -117,7 +117,7 @@ odoo.define('website_form.animation', function (require) {
             // Post form and handle result
             ajax.post(this.$target.attr('action') + (this.$target.data('force_action')||this.$target.data('model_name')), form_values)
             .then(function (result_data) {
-                result_data = $.parseJSON(result_data);
+                result_data = JSON.parse(result_data);
                 if (!result_data.id) {
                     // Failure, the server didn't return the created record ID
                     self.update_status('error');
@@ -139,7 +139,7 @@ odoo.define('website_form.animation', function (require) {
                     self.$target[0].reset();
                 }
             })
-            .fail(function (result_data){
+            .guardedCatch(function (){
                 self.update_status('error');
             });
         },
@@ -238,7 +238,7 @@ odoo.define('website_form.animation', function (require) {
                 this.$target.find('.o_website_form_send').on('click',function (e) {self.send(e);}).removeClass('disabled');
             }
             var $result = this.$('#o_website_form_result');
-            this.templates_loaded.done(function () {
+            this.templates_loaded.then(function () {
                 $result.replaceWith(qweb.render("website_form.status_" + status));
             });
         },

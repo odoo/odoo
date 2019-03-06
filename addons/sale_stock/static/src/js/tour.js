@@ -37,7 +37,9 @@ odoo.define("sale_stock.tour", function (require) {
 
     // Check if sale_management is installed since sale_stock is adding an extra
     // step to add to SO (not enough inventory)
-    if ('sale.product_configurator_pricelist_tour' in odoo.__DEBUG__.services) {
+    // This works under 2 assumptions: this file must be after the file defining
+    // the tour in the assets, and the module defining the tour must be sync
+    if ('sale.product_configurator_pricelist_tour' in odoo.__DEBUG__.factories) {
         var steps = tour.tours.sale_product_configurator_pricelist_tour.steps;
         for (var k=0; k<steps.length; k++) {
             if (steps[k].content === "add to SO") {

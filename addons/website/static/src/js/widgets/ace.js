@@ -63,9 +63,9 @@ var WebsiteAceEditor = AceEditor.extend({
                     }
                 }).bind(this)));
             }
-            return $.when.apply($, defs).then((function () {
+            return Promise.all(defs).then((function () {
                 window.location.reload();
-                return $.Deferred();
+                return new Promise(function() { });
             }));
         }).bind(this));
     },
@@ -75,7 +75,7 @@ var WebsiteAceEditor = AceEditor.extend({
     _resetResource: function () {
         return this._super.apply(this, arguments).then((function () {
             window.location.reload();
-            return $.Deferred();
+            return new Promise(function () {});
         }).bind(this));
     },
     /**

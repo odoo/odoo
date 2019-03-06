@@ -59,7 +59,7 @@ var Mailbox = SearchableThread.extend({
      * channel, only keep the lastest message of this document/channel in the
      * previews.
      *
-     * @returns {$.Promise<Object[]>}
+     * @returns {Promise<Object[]>}
      */
     getMessagePreviews: function () {
         var self = this;
@@ -119,7 +119,7 @@ var Mailbox = SearchableThread.extend({
      * makes only sense for 'Inbox'.
      *
      * @param  {Array} domain
-     * @return {$.Promise} resolved when all messages have been marked as read
+     * @return {Promise} resolved when all messages have been marked as read
      *   on the server
      */
     markAllMessagesAsRead: function (domain) {
@@ -133,7 +133,7 @@ var Mailbox = SearchableThread.extend({
                 },
             });
         }
-        return $.when();
+        return Promise.resolve();
     },
 
     //--------------------------------------------------------------------------

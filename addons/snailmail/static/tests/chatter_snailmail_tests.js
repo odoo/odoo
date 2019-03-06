@@ -101,13 +101,13 @@ QUnit.module('Chatter', {
     }
 });
 
-QUnit.test('Sent', function (assert) {
+QUnit.test('Sent', async function (assert) {
     assert.expect(7);
 
     this.data['mail.message'].records[0].snailmail_status = 'sent';
     this.data['mail.message'].records[0].snailmail_error = false;
 
-    var form = createView({
+    var form = await createView({
         View: FormView,
         model: 'account.invoice',
         res_id: 1,
@@ -131,18 +131,18 @@ QUnit.test('Sent', function (assert) {
     assert.ok($('.o_thread_tooltip_snailmail:contains("Sent")').length,
         "Tooltip should show correct text");
 
-    testUtils.dom.click(form.$('.o_thread_message_snailmail_sent'));
+    await testUtils.dom.click(form.$('.o_thread_message_snailmail_sent'));
     assert.containsNone($('.modal'), "No modal should open on click");
 
     form.destroy();
 });
 
-QUnit.test('Canceled', function (assert) {
+QUnit.test('Canceled', async function (assert) {
     assert.expect(7);
 
     this.data['mail.message'].records[0].snailmail_status = 'canceled';
 
-    var form = createView({
+    var form = await createView({
         View: FormView,
         model: 'account.invoice',
         res_id: 1,
@@ -166,19 +166,19 @@ QUnit.test('Canceled', function (assert) {
     assert.ok($('.o_thread_tooltip_snailmail:contains("Canceled")').length,
         "Tooltip should show correct text");
 
-    testUtils.dom.click(form.$('.o_thread_message_snailmail_canceled'));
+    await testUtils.dom.click(form.$('.o_thread_message_snailmail_canceled'));
     assert.containsNone($('.modal'), "No modal should open on click");
 
     form.destroy();
 });
 
-QUnit.test('Pending', function (assert) {
+QUnit.test('Pending', async function (assert) {
     assert.expect(7);
 
     this.data['mail.message'].records[0].snailmail_status = 'pending';
     this.data['mail.message'].records[0].snailmail_error = false;
 
-    var form = createView({
+    var form = await createView({
         View: FormView,
         model: 'account.invoice',
         res_id: 1,
@@ -202,19 +202,19 @@ QUnit.test('Pending', function (assert) {
     assert.ok($('.o_thread_tooltip_snailmail:contains("Awaiting Dispatch")').length,
         "Tooltip should show correct text");
 
-    testUtils.dom.click(form.$('.o_thread_message_snailmail_pending'));
+    await testUtils.dom.click(form.$('.o_thread_message_snailmail_pending'));
     assert.containsNone($('.modal'), "No modal should open on click");
 
     form.destroy();
 });
 
-QUnit.test('No Price Available', function (assert) {
+QUnit.test('No Price Available', async function (assert) {
     assert.expect(11);
 
     this.data['mail.message'].records[0].snailmail_status = 'no_price_available';
     this.data['mail.message'].records[0].snailmail_error = true;
 
-    var form = createView({
+    var form = await createView({
         View: FormView,
         model: 'account.invoice',
         res_id: 1,
@@ -224,7 +224,7 @@ QUnit.test('No Price Available', function (assert) {
         mockRPC: function (route, args) {
             if (args.method === 'cancel_letter' && args.model === 'mail.message' && args.args[0][0] === 11) {
                 assert.step(args.method);
-                return $.when();
+                return Promise.resolve();
             }
             return this._super.apply(this, arguments);
         }
@@ -245,24 +245,24 @@ QUnit.test('No Price Available', function (assert) {
     assert.ok($('.o_thread_tooltip_snailmail:contains("Error")').length,
         "Tooltip should show correct text");
 
-    testUtils.dom.click(form.$('.o_thread_message_snailmail_no_price_available'));
+    await testUtils.dom.click(form.$('.o_thread_message_snailmail_no_price_available'));
     var $modal = $('.modal');
     assert.ok($modal.length, "A modal should open on click");
 
     assert.containsOnce($modal, 'button:contains("Cancel letter")',
         "Modal should have a 'Cancel letter' button");
     var $cancelButton = $('.modal').find('button:contains("Cancel letter")');
-    testUtils.dom.click($cancelButton);
+    await testUtils.dom.click($cancelButton);
     assert.notOk($('.modal').length,
         "The modal should be closed after click on 'Cancel letter'");
 
-    assert.verifySteps(['cancel_letter'], 
+    assert.verifySteps(['cancel_letter'],
         "Should have made a RPC call to 'cancel_letter'");
 
     form.destroy();
 });
 
-QUnit.test('Format Error', function (assert) {
+QUnit.test('Format Error', async function (assert) {
     assert.expect(8);
 
     this.data['mail.message'].records[0].snailmail_status = 'format_error';
@@ -274,7 +274,7 @@ QUnit.test('Format Error', function (assert) {
         },
     });
 
-    var form = createView({
+    var form = await createView({
         View: FormView,
         model: 'account.invoice',
         res_id: 1,
@@ -284,7 +284,7 @@ QUnit.test('Format Error', function (assert) {
         mockRPC: function (route, args) {
             if (args.method === 'cancel_letter' && args.model === 'mail.message' && args.args[0][0] === 11) {
                 assert.step(args.method);
-                return $.when();
+                return Promise.resolve();
             }
             return this._super.apply(this, arguments);
         }
@@ -305,20 +305,20 @@ QUnit.test('Format Error', function (assert) {
     assert.ok($('.o_thread_tooltip_snailmail:contains("Error")').length,
         "Tooltip should show correct text");
 
-    testUtils.dom.click(form.$('.o_thread_message_snailmail_format_error'));
+    await testUtils.dom.click(form.$('.o_thread_message_snailmail_format_error'));
     assert.verifySteps(['do_action'], "'do_action' should have been called");
 
     form.destroy();
     testUtils.mock.unpatch(ThreadWidget);
 });
 
-QUnit.test('Credit Error', function (assert) {
+QUnit.test('Credit Error', async function (assert) {
     assert.expect(14);
 
     this.data['mail.message'].records[0].snailmail_status = 'credit_error';
     this.data['mail.message'].records[0].snailmail_error = true;
 
-    var form = createView({
+    var form = await createView({
         View: FormView,
         model: 'account.invoice',
         res_id: 1,
@@ -329,11 +329,11 @@ QUnit.test('Credit Error', function (assert) {
             if (args.model === 'mail.message') {
                 if ((args.method === 'cancel_letter' && args.args[0][0] === 11) || args.method === 'send_letter') {
                     assert.step(args.method);
-                    return $.when();
+                    return Promise.resolve();
                 }
             }
             if (args.method === 'get_credits_url' && args.model === 'iap.account') {
-                return $.when('credits_url');
+                return Promise.resolve('credits_url');
             }
             return this._super.apply(this, arguments);
         }
@@ -354,39 +354,39 @@ QUnit.test('Credit Error', function (assert) {
     assert.ok($('.o_thread_tooltip_snailmail:contains("Error")').length,
         "Tooltip should show correct text");
 
-    testUtils.dom.click(form.$('.o_thread_message_snailmail_credit_error'));
+    await testUtils.dom.click(form.$('.o_thread_message_snailmail_credit_error'));
     var $modal = $('.modal');
     assert.ok($modal.length, "A modal should open on click");
 
     assert.containsOnce($modal, 'button:contains("Re-send letter")',
         "Modal should have a 'Re-send letter' button");
     var $resendButton = $('.modal').find('button:contains("Re-send letter")');
-    testUtils.dom.click($resendButton);
+    await testUtils.dom.click($resendButton);
     assert.notOk($('.modal').length,
         "The modal should be closed after click on 'Re-send letter'");
 
-    testUtils.dom.click(form.$('.o_thread_message_snailmail_credit_error'));
+    await testUtils.dom.click(form.$('.o_thread_message_snailmail_credit_error'));
 
     assert.containsOnce($modal, 'button:contains("Cancel letter")',
         "Modal should have a 'Cancel letter' button");
     var $cancelButton = $('.modal').find('button:contains("Cancel letter")');
-    testUtils.dom.click($cancelButton);
+    await testUtils.dom.click($cancelButton);
     assert.containsNone($('.modal'),
         "The modal should be closed after click on 'Cancel letter'");
 
-    assert.verifySteps(['send_letter', 'cancel_letter'], 
+    assert.verifySteps(['send_letter', 'cancel_letter'],
         "Should have made RPC calls to 'send_letter' and 'cancel_letter'");
 
     form.destroy();
 });
 
-QUnit.test('Trial Error', function (assert) {
+QUnit.test('Trial Error', async function (assert) {
     assert.expect(14);
 
     this.data['mail.message'].records[0].snailmail_status = 'trial_error';
     this.data['mail.message'].records[0].snailmail_error = true;
 
-    var form = createView({
+    var form = await createView({
         View: FormView,
         model: 'account.invoice',
         res_id: 1,
@@ -397,11 +397,11 @@ QUnit.test('Trial Error', function (assert) {
             if (args.model === 'mail.message') {
                 if ((args.method === 'cancel_letter' && args.args[0][0] === 11) || args.method === 'send_letter') {
                     assert.step(args.method);
-                    return $.when();
+                    return Promise.resolve();
                 }
             }
             if (args.method === 'get_credits_url' && args.model === 'iap.account') {
-                return $.when('credits_url');
+                return Promise.resolve('credits_url');
             }
             return this._super.apply(this, arguments);
         }
@@ -422,34 +422,34 @@ QUnit.test('Trial Error', function (assert) {
     assert.ok($('.o_thread_tooltip_snailmail:contains("Error")').length,
         "Tooltip should show correct text");
 
-    testUtils.dom.click(form.$('.o_thread_message_snailmail_trial_error'));
+    await testUtils.dom.click(form.$('.o_thread_message_snailmail_trial_error'));
     var $modal = $('.modal');
     assert.ok($modal.length, "A modal should open on click");
 
     assert.containsOnce($modal, 'button:contains("Re-send letter")',
         "Modal should have a 'Re-send letter' button");
     var $resendButton = $('.modal').find('button:contains("Re-send letter")');
-    testUtils.dom.click($resendButton);
+    await testUtils.dom.click($resendButton);
     assert.containsNone($('.modal'),
         "The modal should be closed after click on 'Re-send letter'");
 
-    testUtils.dom.click(form.$('.o_thread_message_snailmail_trial_error'));
+    await testUtils.dom.click(form.$('.o_thread_message_snailmail_trial_error'));
 
     $modal = $('.modal');
     assert.containsOnce($modal, 'button:contains("Cancel letter")',
         "Modal should have a 'Cancel letter' button");
     var $cancelButton = $modal.find('button:contains("Cancel letter")');
-    testUtils.dom.click($cancelButton);
+    await testUtils.dom.click($cancelButton);
     assert.containsNone($('.modal'),
         "The modal should be closed after click on 'Cancel letter'");
 
-    assert.verifySteps(['send_letter', 'cancel_letter'], 
+    assert.verifySteps(['send_letter', 'cancel_letter'],
         "Should have made RPC calls to 'send_letter' and 'cancel_letter'");
 
     form.destroy();
 });
 
-QUnit.test('Missing Required Fields', function (assert) {
+QUnit.test('Missing Required Fields', async function (assert) {
     assert.expect(8);
 
     this.data['mail.message'].records[0].snailmail_status = 'missing_required_fields';
@@ -461,7 +461,7 @@ QUnit.test('Missing Required Fields', function (assert) {
         },
     });
 
-    var form = createView({
+    var form = await createView({
         View: FormView,
         model: 'account.invoice',
         res_id: 1,
@@ -470,7 +470,7 @@ QUnit.test('Missing Required Fields', function (assert) {
         arch: getArch(),
         mockRPC: function (route, args) {
             if (args.model === 'snailmail.letter' && args.method === 'search') {
-                return $.when([2]);
+                return Promise.resolve([2]);
             }
             return this._super.apply(this, arguments);
         }
@@ -491,7 +491,7 @@ QUnit.test('Missing Required Fields', function (assert) {
     assert.ok($('.o_thread_tooltip_snailmail:contains("Error")').length,
         "Tooltip should show correct text");
 
-    testUtils.dom.click(form.$('.o_thread_message_snailmail_missing_required_fields'));
+    await testUtils.dom.click(form.$('.o_thread_message_snailmail_missing_required_fields'));
     assert.verifySteps(['do_action'], "'do_action' should have been called");
 
     form.destroy();

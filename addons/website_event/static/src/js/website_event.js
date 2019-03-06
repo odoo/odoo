@@ -36,7 +36,7 @@ var EventRegistrationForm = Widget.extend({
             $('<div class="alert alert-info"/>')
                 .text(_t('Please select at least one ticket.'))
                 .insertAfter('#registration_form table');
-            return $.Deferred();
+            return new Promise(function () {});
         } else {
             $button.attr('disabled', true);
             return ajax.jsonRpc($form.attr('action'), 'call', post).then(function (modal) {
@@ -65,7 +65,7 @@ publicWidget.registry.EventRegistrationFormInstance = publicWidget.Widget.extend
     start: function () {
         var def = this._super.apply(this, arguments);
         var instance = new EventRegistrationForm(this);
-        return $.when(def, instance.appendTo(this.$el));
+        return Promise.all([def, instance.appendTo(this.$el)]);
     },
 });
 

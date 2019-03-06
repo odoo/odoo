@@ -45,7 +45,7 @@ var db = {
             {id: 99, display_name: "partner 99", image: 'ZZZ', customer: true},
         ],
         mark_as_reconciled: function () {
-            return $.when();
+            return Promise.resolve();
         },
     },
     'account.account': {
@@ -72,7 +72,7 @@ var db = {
             {id: 504, code: 504, name: "504 Account", company_id: 1},
         ],
         mark_as_reconciled: function () {
-            return $.when();
+            return Promise.resolve();
         },
     },
     'account.tax': {
@@ -93,7 +93,7 @@ var db = {
             var tax = _.find(db['account.tax'].records, {'id': args[0][0]});
             var amount = args[1];
             var tax_base = tax.price_include ? amount*100/(100+tax.amount) : amount;
-            return $.when({
+            return Promise.resolve({
                 "base": amount,
                 "taxes": [{
                     'id': tax.id,
@@ -193,7 +193,7 @@ var db = {
     'account.reconciliation.widget': {
         fields: {},
         auto_reconcile: function () {
-            return $.when(Datas.used.auto_reconciliation);
+            return Promise.resolve(Datas.used.auto_reconciliation);
         },
         process_bank_statement_line: function (args) {
             var datas = args[1];
@@ -206,7 +206,7 @@ var db = {
                     return ids.indexOf(mv_line.id) === -1;
                 });
             }
-            return $.when();
+            return Promise.resolve();
         },
         get_move_lines_for_bank_statement_line: function (args) {
             var partner_id = args.splice(1, 1)[0];
@@ -224,7 +224,7 @@ var db = {
                     return line;
                 })
                 .slice(0, options.params.limitMoveLines);
-            return $.when(lines);
+            return Promise.resolve(lines);
         },
         get_bank_statement_line_data: function (args) {
             var ids = args[0];
@@ -233,12 +233,12 @@ var db = {
                 value_max: ids.length,
                 lines: _.filter(Datas.used.data_widget, function (w) {return _.contains(ids, w.st_line.id);})
             };
-            return $.when(results);
+            return Promise.resolve(results);
         },
         get_bank_statement_data: function () {
             var results = Datas.used.data_preprocess;
             results.lines = _.filter(Datas.used.data_widget, function (w) {return _.contains(results.st_lines_ids, w.st_line.id);});
-            return $.when(results);
+            return Promise.resolve(results);
         },
         get_move_lines_for_manual_reconciliation: function (args) {
             var excluded_ids = args.splice(2, 1)[0];
@@ -255,14 +255,14 @@ var db = {
                     return line;
                 })
                 .slice(0, options.params.limitMoveLines);
-            return $.when(lines);
+            return Promise.resolve(lines);
         },
         get_all_data_for_manual_reconciliation: function (args) {
             var key = JSON.stringify(args);
             if (!Datas.used.data_for_manual_reconciliation_widget[key]) {
                 throw new Error("Unknown parameters for get_all_data_for_manual_reconciliation: '"+ key + "'");
             }
-            return $.when(Datas.used.data_for_manual_reconciliation_widget[key]);
+            return Promise.resolve(Datas.used.data_for_manual_reconciliation_widget[key]);
         },
         process_move_lines: function (args) {
             var datas = args[0];
@@ -274,7 +274,7 @@ var db = {
                     });
                 }
             }
-            return $.when();
+            return Promise.resolve();
         },
     }
 };
@@ -595,15 +595,15 @@ QUnit.module('account', {
 }, function () {
     QUnit.module('Reconciliation');
 
-    QUnit.test('Reconciliation basic rendering', function (assert) {
+    QUnit.test('Reconciliation basic rendering', async function (assert) {
         assert.expect(11);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
         testUtils.mock.addMockEnvironment(clientAction, {
             'data': this.params.data,
         });
-        clientAction.appendTo($('#qunit-fixture'));
-
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
         var widget = clientAction.widgets[0];
 
         assert.hasClass(widget.$el,'o_reconciliation_line', "should instance of widget reconciliation");
@@ -617,18 +617,18 @@ QUnit.module('account', {
         assert.containsN(clientAction, '[data-mode="inactive"]', 3, "should be as 'inactive' mode by default");
         assert.strictEqual(widget.$el.data('mode'), 'match', "the first one should automatically switch to match mode");
 
-        widget.$('.accounting_view thead td:first').trigger('click');
+        await testUtils.dom.click(widget.$('.accounting_view thead td:first'));
         assert.strictEqual(widget.$el.data('mode'), 'inactive', "should switch to 'inactive' mode");
 
-        widget.$('.accounting_view tfoot td:first').trigger('click');
+        await testUtils.dom.click(widget.$('.accounting_view tfoot td:first'));
         assert.strictEqual(widget.$el.data('mode'), 'create', "should switch to 'create' mode");
-        widget.$('.accounting_view tfoot td:first').trigger('click');
+        await testUtils.dom.click(widget.$('.accounting_view tfoot td:first'));
         assert.strictEqual(widget.$el.data('mode'), 'match', "should switch to 'match' mode");
 
         clientAction.destroy();
     });
 
-    QUnit.test('Reconciliation fields', function (assert) {
+    QUnit.test('Reconciliation fields', async function (assert) {
         assert.expect(6);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
@@ -644,13 +644,14 @@ QUnit.module('account', {
                 }
             },
         });
-        clientAction.appendTo($('#qunit-fixture'));
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
 
         var widget = clientAction.widgets[0];
 
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Agrolait", "the partner many2one should display agrolait");
         assert.strictEqual(clientAction.widgets[2].$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
-        widget.$('.accounting_view tfoot td:first').trigger('click');
+        await testUtils.dom.click(widget.$('.accounting_view tfoot td:first'));
         assert.containsN(widget, '.create input.o_input', 8,
             "create panel should contain 8 fields (account_id, tax_id, journal_id, analytic_account_id, analytic_tag_ids, label, amount, date)");
         assert.containsN(widget, '.create .create_account_id .o_required_modifier, .create .create_label .o_required_modifier, .create .create_amount .o_required_modifier', 3,
@@ -663,7 +664,7 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-    QUnit.test('Reconciliation basic data', function (assert) {
+    QUnit.test('Reconciliation basic data', async function (assert) {
         assert.expect(17);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
@@ -680,7 +681,8 @@ QUnit.module('account', {
             },
         });
 
-        clientAction.appendTo($('#qunit-fixture'));
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
         var widget = clientAction.widgets[0];
 
         assert.containsN(widget, '.mv_line', 2, "should display 2 account move lines");
@@ -689,7 +691,7 @@ QUnit.module('account', {
             "should display 4 account move lines who contains the account_code, due_date, label and the credit");
         assert.strictEqual(widget.$('.mv_line .cell_right:contains(".")').length, 2, "should display only the credit account move lines (hide the debit)");
 
-        clientAction.widgets[1].$('.accounting_view thead td:first').trigger('click');
+        await testUtils.dom.click(clientAction.widgets[1].$('.accounting_view thead td:first'));
         assert.containsN(clientAction.widgets[1], '.mv_line', 5, "should display 5 account move lines");
         assert.strictEqual(clientAction.widgets[1].$('.mv_line .cell_right:contains(".")').length, 3, "should display only the credit account move lines (hide the debit)");
         assert.containsN(clientAction.widgets[1], '.mv_line.already_reconciled', 3, "should display 3 already reconciled account move lines");
@@ -701,7 +703,7 @@ QUnit.module('account', {
         // load more
         assert.ok(clientAction.widgets[1].$('.match div.load-more a:visible').length, "should display the 'load more' button");
         assert.equal(clientAction.widgets[1].$('.match div.load-more span').text(), 3, "should display 3 items remaining");
-        clientAction.widgets[1].$('.match div.load-more a').trigger('click');
+        await testUtils.dom.click(clientAction.widgets[1].$('.match div.load-more a'));
         assert.containsN(clientAction.widgets[1], '.mv_line', 8, "should load 3 more records");
         assert.notOk(clientAction.widgets[1].$('.match div.load-more a:visible').length, "should not display the 'load more' button anymore");
 
@@ -709,14 +711,14 @@ QUnit.module('account', {
         assert.ok(clientAction.widgets[1].$('caption .text-danger:visible').length, "should display the 'Select a partner or choose a counterpart' message");
         assert.ok(clientAction.widgets[2].$('caption button.btn-primary:visible').length, "should display the 'Reconcile' button");
 
-        clientAction.widgets[3].$('.accounting_view thead td:first').trigger('click');
+        await testUtils.dom.click(clientAction.widgets[3].$('.accounting_view thead td:first'));
         assert.strictEqual(clientAction.widgets[3].$el.data('mode'), 'create', "should switch to 'create' mode instead 'match' mode when 'match' mode is empty");
 
         // open the first line
-        widget.$('.accounting_view thead td:first').trigger('click');
+        await testUtils.dom.click(widget.$('.accounting_view thead td:first'));
         // select propositions
-        widget.$('.match .cell_account_code:first').trigger('click');
-        widget.$('.match .cell_account_code:first').trigger('click');
+        await testUtils.dom.click( widget.$('.match .cell_account_code:first'));
+        await testUtils.dom.click(widget.$('.match .cell_account_code:first'));
 
         testUtils.mock.intercept(clientAction, 'call_service', function (event) {
             assert.deepEqual(event.data.args[1].args,
@@ -736,18 +738,18 @@ QUnit.module('account', {
                                                                 }],
                                     payment_aml_ids: [], new_aml_dicts: []}]],
                 "Should call process_bank_statement_line with ids");
-            var def = $.Deferred();
+            var def = testUtils.makeTestPromise();
             def.abort = function () {};
             event.data.callback(def);
         });
 
         // click on reconcile button
-        widget.$('button.o_reconcile:not(:hidden)').trigger('click');
+        await testUtils.dom.click( widget.$('button.o_reconcile:not(:hidden)'));
 
         clientAction.destroy();
     });
 
-    QUnit.test('Reconciliation validate without proposition', function (assert) {
+    QUnit.test('Reconciliation validate without proposition', async function (assert) {
         assert.expect(1);
         // Test added to prevent this issue happening again: https://github.com/odoo/odoo/commit/3549688b21eb65e16b9c3f2b6462eb8d8b52cd47
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
@@ -763,8 +765,8 @@ QUnit.module('account', {
                 }
             },
         });
-
-        clientAction.appendTo($('#qunit-fixture'));
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
 
         var widget = clientAction.widgets[0];
         // Ensure that when we validate a line without any selection, it is the same
@@ -781,17 +783,18 @@ QUnit.module('account', {
                                         analytic_tag_ids: [[6, null, []]]
                                     }]}]],
                 "Should call process_bank_statement_line with ids");
-            var def = $.Deferred();
+            var def = testUtils.makeTestPromise();
             def.abort = function () {};
             event.data.callback(def);
         });
 
         // click on validate button
-        widget.$('button.o_validate:not(:hidden)').trigger('click');
+        await testUtils.dom.click(widget.$('button.o_validate:not(:hidden)'));
+
         clientAction.destroy();
     });
 
-    QUnit.test('Reconciliation validate with proposition', function (assert) {
+    QUnit.test('Reconciliation validate with proposition', async function (assert) {
         assert.expect(1);
         // Test added to check this functionality: https://github.com/odoo/odoo/commit/2f3b469dee6f18cbccce1cdf2a81cfe57960c533
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
@@ -808,14 +811,16 @@ QUnit.module('account', {
             },
         });
 
-        clientAction.appendTo($('#qunit-fixture'));
-
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
         var widget = clientAction.widgets[0];
         // Add a line as proposition
         // open the first line
-        widget.$('.accounting_view thead td:first').trigger('click');
+        await testUtils.dom.click(widget.$('.accounting_view thead td:first'),{allowInvisible:true});
+        await testUtils.nextTick();
         // select propositions
-        widget.$('.match .cell_account_code:first').trigger('click');
+        await testUtils.dom.click(widget.$('.match .cell_account_code:first'),{allowInvisible:true});
+        await testUtils.nextTick();
 
         // Ensure that when we validate a line with propositions and that there is a remaining balance
         // We also create a line which is the open balance.
@@ -837,17 +842,17 @@ QUnit.module('account', {
                                         name: 'SAJ/2014/002 and SAJ/2014/003 : Open balance'
                                     }]}]],
                 "Should call process_bank_statement_line with ids");
-            var def = $.Deferred();
+            var def = testUtils.makeTestPromise();
             def.abort = function () {};
             event.data.callback(def);
         });
 
         // click on validate button
-        widget.$('button.o_validate:not(:hidden)').trigger('click');
+        await testUtils.dom.click(widget.$('button.o_validate:not(:hidden)'));
         clientAction.destroy();
     });
 
-    QUnit.test('Reconciliation partial', function (assert) {
+    QUnit.test('Reconciliation partial [REQUIRE FOCUS]', async function (assert) {
         assert.expect(9);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
@@ -887,40 +892,40 @@ QUnit.module('account', {
             },
         });
 
-        clientAction.appendTo($('#qunit-fixture'));
-
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
         var widget = clientAction.widgets[0];
 
-        widget.$('.match .cell_account_code:first').trigger('click');
+        await testUtils.dom.click(widget.$('.match .cell_account_code:first'));
         assert.equal( widget.$('.cell_right .edit_amount').length, 1, "should display the edition pencil");
 
         widget = clientAction.widgets[1];
 
-        widget.$('.accounting_view thead td:first').trigger('click');
+        await testUtils.dom.click(widget.$('.accounting_view thead td:first'));
         assert.strictEqual(widget.$('.match .mv_line[data-line-id=114] .cell_account_code:first()').length, 1, 'Should have line')
-        widget.$('.match .mv_line[data-line-id=114] .cell_account_code').trigger('click');
+        await testUtils.dom.click(widget.$('.match .mv_line[data-line-id=114] .cell_account_code'));
 
         assert.equal( widget.$('.accounting_view tbody .cell_left .edit_amount').length, 1, "should display the edition pencil");
 
         // The partner has been set automatically, remove it.
-        widget.$('.o_input_dropdown input').trigger('click');
-        widget.$('.o_input_dropdown input').val('').trigger('keyup').trigger('blur');
+        await testUtils.dom.click(widget.$('.o_input_dropdown input'));
+        await testUtils.fields.editAndTrigger(widget.$('.o_input_dropdown input'),'',['keyup','blur']);
 
         assert.strictEqual(widget.$('button.btn-primary:visible').length, 0, "should display the reconcile model buttons");
         assert.strictEqual(widget.$('.text-danger:visible').length, 1, "should display counterpart alert");
-        widget.$('.accounting_view .cell_left .edit_amount').trigger('click');
+        await testUtils.dom.click(widget.$('.accounting_view .cell_left .edit_amount'));
         assert.strictEqual(widget.$('.accounting_view .cell_left .edit_amount_input:not(.d-none)').length, 1, "should display the input field to edit amount");
         // Edit amount
-        widget.$('.accounting_view .cell_left .edit_amount_input:not(.d-none)').val('32.58').trigger('blur');
+        await testUtils.fields.editAndTrigger(widget.$('.accounting_view .cell_left .edit_amount_input:not(.d-none)'),'32.58',['change','blur']);
         assert.strictEqual(widget.$('.accounting_view .cell_left .line_amount').text().replace(/[\n\r\s]+/g, ' '), " $ 10000.00 $ 32.58 ", "should display previous amount and new amount")
 
         assert.strictEqual(widget.$('button.btn-primary:visible').length, 1, "should display the reconcile button");
-        widget.$('button.btn-primary:visible').trigger('click');
+        await testUtils.dom.click(widget.$('button.btn-primary:visible'));
 
         clientAction.destroy();
     });
 
-    QUnit.test('Reconciliation title', function (assert) {
+    QUnit.test('Reconciliation title', async function (assert) {
         assert.expect(6);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
@@ -928,13 +933,13 @@ QUnit.module('account', {
             'data': this.params.data,
         });
 
-        clientAction.appendTo($('#qunit-fixture'));
-
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
         assert.strictEqual(clientAction.$('h1.statement_name:visible').text(), "BNK/2014/001", "Should display the statement name");
-        clientAction.$('h1.statement_name').trigger('click');
+        await testUtils.dom.click(clientAction.$('h1.statement_name'));
         assert.containsNone(clientAction, 'h1.statement_name:visible', "Should hide the statement name title to edit the content");
         assert.containsOnce(clientAction, 'h1.statement_name_edition:visible', "Should show the edition field of statement name");
-        testUtils.fields.editAndTrigger(clientAction.$('h1.statement_name_edition input'), 'BNK/2014/001-BB', ['input', 'blur']);
+        await testUtils.fields.editAndTrigger(clientAction.$('h1.statement_name_edition input'), 'BNK/2014/001-BB', ['input', 'blur']);
         assert.containsNone(clientAction, 'h1.statement_name_edition:visible', "Should hide the edition field of statement name");
         assert.containsOnce(clientAction, 'h1.statement_name:visible', "Should show the statement name");
         assert.strictEqual(clientAction.$('h1.statement_name:visible').text(), "BNK/2014/001-BB", "Should update the statement name");
@@ -942,7 +947,7 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-    QUnit.test('Reconciliation currencies', function (assert) {
+    QUnit.test('Reconciliation currencies', async function (assert) {
         assert.expect(2);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
@@ -961,13 +966,14 @@ QUnit.module('account', {
                 grouping: [3,0],
             }
         });
-        clientAction.appendTo($('#qunit-fixture'));
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
 
         var widget = clientAction.widgets[0];
 
         assert.strictEqual(clientAction.$('.accounting_view tfoot .cell_right, .accounting_view tfoot .cell_left').text().replace(/[\n\r\s]+/g, ' '),
             "$ 1,175.00$ 32.58$ 2,000.00", "should display the different amounts with the currency");
-        widget.$('.accounting_view thead .mv_line td:first').trigger('click');
+        // await testUtils.dom.click(widget.$('.accounting_view thead .mv_line td:first'));
 
         assert.strictEqual(clientAction.$('.accounting_view tbody').text().replace(/[\n\r\s]+/g, ' '),
             " 101200 2017-02-07 INV/2017/0012 $ 650.00 ", "should display the created reconciliation line with the currency");
@@ -975,7 +981,7 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-    QUnit.test('Reconciliation change partner', function (assert) {
+    QUnit.test('Reconciliation change partner', async function (assert) {
         assert.expect(17);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
@@ -990,51 +996,57 @@ QUnit.module('account', {
             },
         });
 
-        clientAction.appendTo($('#qunit-fixture'));
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
         var widget = clientAction.widgets[0];
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Agrolait", "the partner many2one should display agrolait");
         assert.containsN(widget, '.match table tr', 2, "agrolait should have 2 propositions for reconciliation");
 
         // Adding the two propositions
         // This is in order to try that after changing partner the propositions are emptied
-        widget.$('.match .cell_account_code:first').trigger('click');
-        widget.$('.match .cell_account_code:first').trigger('click');
+        await testUtils.dom.click(widget.$('.match .cell_account_code:first'));
+        await testUtils.dom.click(widget.$('.match .cell_account_code:first'));
         assert.containsN(widget, '.accounting_view tbody tr', 2, "Both proposition should be selected");
 
         // Similate changing partner to one that does not have propositions to see if create mode is open after
-        widget.$('.o_input_dropdown input').trigger('click');
+        await testUtils.dom.click(widget.$('.o_input_dropdown input'));
         $('.ui-autocomplete .ui-menu-item a:contains(partner 1)').trigger('mouseenter').trigger('click');
+        await testUtils.nextTick();
         clientAction._onAction({target: widget, name: 'change_partner', data: {data: {display_name: 'partner 1', id: 1}}, stopped: false});
+        await testUtils.nextTick();
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "partner 1", "the partner many2one should display partner 1");
         assert.containsNone(widget, '.match table tr.mv_line', "partner 1 should have 0 propositions for reconciliation");
         assert.strictEqual(widget.$el.data('mode'), 'create', "widget should be in create mode");
 
         // Simulate changing partner
-        widget.$('.o_input_dropdown input').trigger('click');
+        await testUtils.dom.clickFirst(widget.$('.o_input_dropdown input'));
         $('.ui-autocomplete .ui-menu-item a:contains(Camptocamp)').trigger('mouseenter').trigger('click');
         clientAction._onAction({target: widget, name: 'change_partner', data: {data: {display_name: 'Camptocamp', id: 12}}, stopped: false});
+        await testUtils.nextTick();
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
         assert.containsN(widget, '.match table tr.mv_line', 3, "camptocamp should have 3 propositions for reconciliation");
 
         // Simulate changing partner with SelectCreateDialog
         widget = clientAction.widgets[1];
         assert.strictEqual($('.modal').length, 0, "shouldn't have any opened modal");
-        widget.$('.o_input_dropdown input').trigger('click');
+        await testUtils.dom.click(widget.$('.o_input_dropdown input'));
         $('.ui-autocomplete .ui-menu-item a:contains(Search More):eq(1)').trigger('mouseenter').trigger('click');
+        await testUtils.nextTick();
         assert.strictEqual($('.modal').length, 1, "should open a SelectCreateDialog");
-        testUtils.dom.click($('.modal table.o_list_view td:contains(Camptocamp)'));
+        await testUtils.dom.click($('.modal table.o_list_view td:contains(Camptocamp)'));
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
 
         widget = clientAction.widgets[2];
-        widget.$('.accounting_view thead td:first').trigger('click');
-        widget.$('.accounting_view .mv_line .cell_label').trigger('click');
+        await testUtils.dom.click(widget.$('.accounting_view thead td:first'));
+        await testUtils.dom.click(widget.$('.accounting_view .mv_line .cell_label'));
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display agrolait");
         assert.containsN(widget, '.match table tr', 3, "Camptocamp should have 3 propositions for reconciliation");
         assert.notOk(widget.$('.match div.load-more a:visible').length, "should not display the load more button");
 
         // Simulate remove partner
-        widget.$('.o_input_dropdown input').trigger('click');
-        widget.$('.o_input_dropdown input').val('').trigger('keyup').trigger('blur');
+        await testUtils.dom.click(widget.$('.o_input_dropdown input'));
+        await testUtils.fields.editAndTrigger(widget.$('.o_input_dropdown input'),'',['keyup','blur']);
+
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "", "the partner many2one should be empty");
         assert.containsN(widget, '.match table tr.mv_line', 5, "should have 5 propositions for reconciliation if partner is false");
         assert.ok(widget.$('.match div.load-more a:visible').length, "should display the load more button");
@@ -1042,7 +1054,7 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-    QUnit.test('Reconciliation create line', function (assert) {
+    QUnit.test('Reconciliation create line', async function (assert) {
         assert.expect(23);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
@@ -1059,7 +1071,8 @@ QUnit.module('account', {
                 }
             },
         });
-        clientAction.appendTo($('#qunit-fixture'));
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
 
         assert.strictEqual(clientAction.$('.accounting_view tfoot .cell_right, .accounting_view tfoot .cell_left').text().replace(/[$, ]+/g, ''), " 1175.00 32.58 2000.00", "should display the open balance values");
 
@@ -1067,9 +1080,10 @@ QUnit.module('account', {
 
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), 'Open balance', "should display 'Open Balance' line with the rest to reconcile");
 
-        widget.$('.accounting_view tfoot td:first').trigger('click');
-        widget.$('.create .create_account_id input').trigger('click');
+        await testUtils.dom.click(widget.$('.accounting_view tfoot td:first'));
+        await testUtils.dom.click(widget.$('.create .create_account_id input'));
         $('.ui-autocomplete .ui-menu-item a:contains(101200 Account Receivable)').trigger('mouseenter').trigger('click');
+        await testUtils.nextTick();
 
         assert.notOk(widget.$('.accounting_view tfoot .cell_label').text(), "should not display 'Open Balance' line because the rest to reconcile is null");
         assert.containsOnce(widget, '.accounting_view tbody tr', "should have only the created reconcile line");
@@ -1082,16 +1096,16 @@ QUnit.module('account', {
                 '{"type":"ir.actions.act_window","res_model":"account.reconcile.model","views":[[false,"form"]],"target":"current"}',
                 "should open the reconcile model form view");
         });
-        widget.$('.create .reconcile_model_create').trigger('click');
+        await testUtils.dom.click(widget.$('.create .reconcile_model_create'),{allowInvisible:true});
 
         testUtils.mock.intercept(clientAction, 'do_action', function (event) {
             assert.strictEqual(JSON.stringify(event.data.action),
                 '{"type":"ir.actions.act_window","res_model":"account.reconcile.model","views":[[false,"list"],[false,"form"]],"view_type":"list","view_mode":"list","target":"current"}',
                 "should open the reconcile model list view");
         });
-        widget.$('.create .reconcile_model_edit').trigger('click');
+        await testUtils.dom.click(widget.$('.create .reconcile_model_edit'),{allowInvisible:true});
 
-        testUtils.fields.editInput(widget.$('.create .create_amount input'), '1100.00');
+        await testUtils.fields.editInput(widget.$('.create .create_amount input'), '1100.00');
 
         assert.strictEqual(widget.$('.accounting_view tbody .cell_right').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '), "$ 1100.00", "should display the value 1100.00 in right column");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_right').text(), "$ 75.00", "should display 'Open Balance' line because the rest to reconcile is 75.00");
@@ -1100,11 +1114,12 @@ QUnit.module('account', {
             "the new line should be update the amout");
         assert.ok(widget.$('caption button.btn-secondary:visible').length, "should display the 'validate' button");
 
-        widget.$('.create .add_line').trigger('click').trigger('click');
-        testUtils.fields.editInput(widget.$('.create .create_amount input'), '-100');
-        widget.$('.create .create_account_id input').trigger('click');
+        await testUtils.dom.click(widget.$('.create .add_line'),{allowInvisible:true});
+        await testUtils.fields.editInput(widget.$('.create .create_amount input'), '-100');
+        await testUtils.dom.click(widget.$('.create .create_account_id input'));
         $('.ui-autocomplete .ui-menu-item a:contains(101000 Current Assets)').trigger('mouseenter').trigger('click');
-        testUtils.fields.editInput(widget.$('.create .create_label input'), 'test0');
+        await testUtils.nextTick();
+        await testUtils.fields.editInput(widget.$('.create .create_label input'), 'test0');
 
         assert.strictEqual(widget.$('.accounting_view tbody .cell_left:last').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '), "$ 100.00", "should display the value 100.00 in left column");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open Balance'");
@@ -1113,15 +1128,16 @@ QUnit.module('account', {
         assert.strictEqual(widget.$('.accounting_view tbody tr:eq(1)').text().replace(/[\n\r\s$,]+/g, ' '), " 101000 New test0 100.00 ",
             "the new line should have the selected account, name and amout");
 
-        widget.$('.accounting_view tfoot td:first').trigger('click');
-        widget.$('.accounting_view tfoot td:first').trigger('click');
+        await testUtils.dom.click(widget.$('.accounting_view tfoot td:first'));
+        await testUtils.dom.click(widget.$('.accounting_view tfoot td:first'));
 
         assert.strictEqual(widget.$('.create .create_amount input').val(), "175.00", "should have '175.00' as default amount value");
 
-        testUtils.fields.editInput(widget.$('.create .create_amount input'), '200');
+        await testUtils.fields.editInput(widget.$('.create .create_amount input'), '200');
         widget.$('.create .create_account_id input').trigger('click');
         $('.ui-autocomplete .ui-menu-item a:contains(101000 Current Assets)').trigger('mouseenter').trigger('click');
-        testUtils.fields.editInput(widget.$('.create .create_label input'), 'test1');
+        await testUtils.nextTick();
+        await testUtils.fields.editInput(widget.$('.create .create_label input'), 'test1');
 
         assert.strictEqual(widget.$('.accounting_view tbody .cell_right:last').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '), "$ 200.00", "should display the value 200.00 in left column");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open balance'");
@@ -1131,11 +1147,11 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-    QUnit.test('Reconciliation create line (many2one test)', function (assert) {
+    QUnit.test('Reconciliation create line (many2one test)', async function (assert) {
         assert.expect(5);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
-        var def = $.Deferred();
+        var def = testUtils.makeTestPromise();
 
         testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
@@ -1160,33 +1176,37 @@ QUnit.module('account', {
             },
         });
 
-        clientAction.prependTo($('#qunit-fixture'));
+        await clientAction.prependTo($('#qunit-fixture'));
+        await testUtils.nextTick();
 
         var widget = clientAction.widgets[0];
 
         // open the first line in write-off mode
-        widget.$('.accounting_view tfoot td:first').trigger('click');
+        await testUtils.dom.click(widget.$('.accounting_view tfoot td:first'));
 
         // select an account with the many2one (drop down)
-        widget.$('.create .create_account_id input').trigger('click');
+        await testUtils.dom.click(widget.$('.create .create_account_id input'));
         $('.ui-autocomplete .ui-menu-item a:contains(101200)').trigger('mouseenter').trigger('click');
+        await testUtils.nextTick();
         assert.strictEqual(widget.$('.create .create_account_id input').val(), "101200 Account Receivable", "Display the selected account");
         assert.strictEqual(widget.$('tbody:first .cell_account_code').text(), "101200", "Display the code of the selected account");
 
         // use the many2one select dialog to change the account
-        widget.$('.create .create_account_id input').trigger('click');
+        await testUtils.dom.click(widget.$('.create .create_account_id input'));
         $('.ui-autocomplete .ui-menu-item a:contains(Search)').trigger('mouseenter').trigger('click');
+        await testUtils.nextTick();
         // select the account who does not appear in the drop drown
-        testUtils.dom.click($('.modal tr.o_data_row:contains(502)'));
+        await testUtils.dom.click($('.modal tr.o_data_row:contains(502)'));
         assert.strictEqual(widget.$('.create .create_account_id input').val(), "101200 Account Receivable", "Selected account does not change");
         // wait the name_get to render the changes
         def.resolve();
+        await testUtils.nextTick();
         assert.strictEqual(widget.$('.create .create_account_id input').val(), "502 Account", "Display the selected account");
         assert.strictEqual(widget.$('tbody:first .cell_account_code').text(), "502", "Display the code of the selected account");
         clientAction.destroy();
     });
 
-    QUnit.test('Reconciliation create line with taxes', function (assert) {
+    QUnit.test('Reconciliation create line with taxes', async function (assert) {
         assert.expect(13);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
@@ -1203,23 +1223,26 @@ QUnit.module('account', {
                 }
             },
         });
-        clientAction.appendTo($('#qunit-fixture'));
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
 
         var widget = clientAction.widgets[0];
 
-        widget.$('.accounting_view tfoot td:first').trigger('click');
-        widget.$('.create .create_account_id input').trigger('click');
+        await testUtils.dom.click(widget.$('.accounting_view tfoot td:first'));
+        await testUtils.dom.click(widget.$('.create .create_account_id input'));
         $('.ui-autocomplete .ui-menu-item a:contains(101000 Current Assets)').trigger('mouseenter').trigger('click');
-        testUtils.fields.editInput(widget.$('.create .create_label input'), 'test1');
-        testUtils.fields.editInput(widget.$('.create .create_amount input'), '1100');
+        await testUtils.nextTick();
+        await testUtils.fields.editInput(widget.$('.create .create_label input'), 'test1');
+        await testUtils.fields.editInput(widget.$('.create .create_amount input'), '1100');
 
         assert.strictEqual(widget.$('.accounting_view tbody .cell_right:last').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '), "$ 1100.00", "should display the value 1100.00 in left column");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open Balance'");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_right').text(), "$\u00a075.00", "should display 'Open Balance' with 75.00 in right column");
         assert.containsOnce(widget, '.accounting_view tbody tr', "should have 1 created reconcile lines");
 
-        widget.$('.create .create_tax_id input').trigger('click');
+        await testUtils.dom.click(widget.$('.create .create_tax_id input'));
         $('.ui-autocomplete .ui-menu-item a:contains(10.00%)').trigger('mouseenter').trigger('click');
+        await testUtils.nextTick();
 
         assert.strictEqual(widget.$('.accounting_view tbody .cell_right').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '), "$ 1000.00 $ 100.00", "should have 2 created reconcile lines with right column values");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open Balance'");
@@ -1227,8 +1250,9 @@ QUnit.module('account', {
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_left').text(), "", "should display 'Open Balance' without any value in left column");
         assert.containsN(widget, '.accounting_view tbody tr', 2, "should have 2 created reconcile lines");
 
-        widget.$('.create .create_tax_id input').trigger('click');
+        await testUtils.dom.click(widget.$('.create .create_tax_id input'));
         $('.ui-autocomplete .ui-menu-item a:contains(20.00%)').trigger('mouseenter').trigger('click');
+        await testUtils.nextTick();
 
         assert.strictEqual(widget.$('.accounting_view tbody .cell_right').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '), "$ 1100.00 $ 220.00", "should have 2 created reconcile lines with right column values");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open balance'");
@@ -1238,7 +1262,7 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-    QUnit.test('Reconciliation create line from reconciliation model', function (assert) {
+    QUnit.test('Reconciliation create line from reconciliation model', async function (assert) {
         assert.expect(6);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
@@ -1246,32 +1270,33 @@ QUnit.module('account', {
         testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
         });
-        clientAction.appendTo($('#qunit-fixture'));
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
 
         var widget = clientAction.widgets[0];
 
-        widget.$('.accounting_view tfoot td:first').trigger('click');
-        widget.$('.create .quick_add button:contains(ATOS)').trigger('click');
+        await testUtils.dom.click(widget.$('.accounting_view tfoot td:first'));
+        await testUtils.dom.click(widget.$('.create .quick_add button:contains(ATOS)'));
 
         assert.strictEqual(widget.$('.accounting_view tbody .cell_label, .accounting_view tbody .cell_right').text().replace(/[\n\r\s$,]+/g, ' '),
-            " ATOS Banque 1145.62 Tax 20.00% 229.12 ATOS Frais 26.71 Tax 10.00% include 2.67 ", "should display 4 lines");
+            " ATOS Banque 1145.62 ATOS Frais 26.71 Tax 20.00% 229.12 Tax 10.00% include 2.67 ", "should display 4 lines");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label, .accounting_view tfoot .cell_left').text().replace(/[\n\r\s$,]+/g, ' '),
             "Open balance229.12", "should display the 'Open balance' line with value in left column");
 
-        testUtils.fields.editInput(widget.$('.create .create_amount input'), '100');
+        await testUtils.fields.editAndTrigger(widget.$('.create .create_amount input'), '100',['input']);
 
         assert.strictEqual(widget.$('.accounting_view tbody').text().replace(/[\n\r\s$,]+/g, ' '),
-            " 101120 New ATOS Banque 1075.00 101120 New Tax 20.00% 215.00 101130 New ATOS Frais 90.91 101300 New Tax 10.00% include 9.09 ",
+            " 101120 New ATOS Banque 1075.00 101130 New ATOS Frais 90.91 101120 New Tax 20.00% 215.00 101300 New Tax 10.00% include 9.09 ",
             "should update the value of the 4 lines (because the line must have 100% of the value)");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label, .accounting_view tfoot .cell_left').text().replace(/[\n\r\s$,]+/g, ' '),
             "Open balance215.00", "should change the 'Open balance' line because the 20.00% tax is not an include tax");
 
-        widget.$('.accounting_view tbody .cell_account_code:first').trigger('click');
-        widget.$('.accounting_view tbody .cell_label:first').trigger('click');
+        await testUtils.dom.click(widget.$('.accounting_view tbody .cell_account_code:first'));
+        await testUtils.dom.click(widget.$('.accounting_view tbody .cell_label:first'));
 
         assert.strictEqual(widget.$('.accounting_view tbody').text().replace(/[\n\r\s$,]+/g, ' '), "", "should removed every line");
 
-        widget.$('.create .quick_add button:contains(Double)').trigger('click');
+        await testUtils.dom.click(widget.$('.create .quick_add button:contains(Double)'));
 
         assert.strictEqual(widget.$('.accounting_view tbody').text().replace(/[\n\r\s$,]+/g, ' '),
             " 101120 New Double Banque 1145.62 101130 New Double Frais 29.38 ",
@@ -1280,7 +1305,7 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-    QUnit.test('Reconciliation manual', function (assert) {
+    QUnit.test('Reconciliation manual', async function (assert) {
         assert.expect(13);
 
         var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
@@ -1289,7 +1314,8 @@ QUnit.module('account', {
             data: this.params.data,
             session: this.params.session,
         });
-        clientAction.appendTo($('#qunit-fixture'));
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
 
         assert.strictEqual(clientAction.$('.accounting_view:first thead').text().replace(/[\n\r\s]+/g, ' '),
             " 101000 Current AssetsLast Reconciliation: 2017-02-16 101000 ",
@@ -1298,7 +1324,7 @@ QUnit.module('account', {
         assert.containsN(clientAction, '.accounting_view:first tbody tr', 2, "should have 2 propositions");
         assert.containsOnce(clientAction, '.accounting_view:first .o_reconcile:visible', "should display the reconcile button");
 
-        clientAction.$('.accounting_view:first .o_reconcile:visible').trigger('click');
+        await testUtils.dom.click(clientAction.$('.accounting_view:first .o_reconcile:visible'));
 
         assert.strictEqual(clientAction.$('.accounting_view:first thead').text().replace(/[\n\r\s]+/g, ' '),
             " Agrolait 101200 ",
@@ -1311,19 +1337,19 @@ QUnit.module('account', {
 
         assert.containsOnce(clientAction, '.accounting_view:first .o_no_valid:visible', "should display the skip button");
 
-        clientAction.$('.accounting_view:eq(1) thead td:first').trigger('click');
-        clientAction.$('.o_reconciliation_line:eq(1) [data-line-id="21"] .cell_label').trigger('click');
-        clientAction.$('.o_reconciliation_line:eq(1) [data-line-id="22"] .cell_label').trigger('click');
+        await testUtils.dom.click(clientAction.$('.accounting_view:eq(1) thead td:first'));
+        await testUtils.dom.click(clientAction.$('.o_reconciliation_line:eq(1) [data-line-id="21"] .cell_label'));
+        await testUtils.dom.click(clientAction.$('.o_reconciliation_line:eq(1) [data-line-id="22"] .cell_label'));
 
         assert.strictEqual(clientAction.$('.o_reconciliation_line:eq(1) tfoot tr').length, 0, "should not display the 'Write-off' line because the balance is null in Euro");
         assert.strictEqual(clientAction.$('.o_reconciliation_line:eq(1) .o_reconcile:visible').length, 1, "should display 'Reconcile' button in green");
 
-        clientAction.$('.o_reconciliation_line:eq(1) .o_reconcile:visible').trigger('click');
+        await testUtils.dom.click(clientAction.$('.o_reconciliation_line:eq(1) .o_reconcile:visible'));
 
         assert.containsOnce(clientAction, '.o_reconciliation_line[data-mode!="inactive"]', "should have only one line open");
 
-        clientAction.$('.o_reconciliation_line:eq(1) [data-line-id="23"] .cell_label').trigger('click');
-        clientAction.$('.o_reconciliation_line:eq(1) [data-line-id="24"] .cell_label').trigger('click');
+        await testUtils.dom.click(clientAction.$('.o_reconciliation_line:eq(1) [data-line-id="23"] .cell_label'));
+        await testUtils.dom.click(clientAction.$('.o_reconciliation_line:eq(1) [data-line-id="24"] .cell_label'));
 
         assert.strictEqual(clientAction.$('.o_reconciliation_line:eq(1) tfoot tr').length, 1, "should display the 'Write-off' line because the balance is not null in Euro");
         assert.strictEqual(clientAction.$('.o_reconciliation_line:eq(1) .o_validate:visible').length, 1, "should display 'Reconcile' button");
@@ -1331,7 +1357,7 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-    QUnit.test('Reconciliation: Payment < inv1 + inv2(partial)', function (assert) {
+    QUnit.test('Reconciliation: Payment < inv1 + inv2(partial)', async function (assert) {
         assert.expect(3);
 
         /*
@@ -1388,34 +1414,35 @@ QUnit.module('account', {
                 }
             },
         });
-        clientAction.appendTo($('#qunit-fixture'));
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
 
         // The first reconciliation "line" is where it happens
         var widget = clientAction.widgets[0];
 
         // Add first invoice to reconcile fully
-        widget.$('.match .cell_account_code:first').trigger('click');
+        await testUtils.dom.click(widget.$('.match .cell_account_code:first'));
         assert.ok( widget.$('.cell_right .edit_amount').length,
             "should display the pencil to edit amount");
 
         // Add second invoice to reconcile partially
-        widget.$('.match .cell_account_code:first').trigger('click');
+        await testUtils.dom.click( widget.$('.match .cell_account_code:first'));
 
         // Edit amount on last invoice
-        testUtils.dom.click(widget.$('.edit_amount:last()'));
-        widget.$('.edit_amount_input:last()').val('525').trigger('blur');
+        await testUtils.dom.click(widget.$('.edit_amount:last()'));
+        await testUtils.fields.editAndTrigger(widget.$('.edit_amount_input:last()'),'525',['blur']);
 
         var $buttonReconcile = widget.$('button.o_reconcile:not(hidden)');
 
         assert.equal($buttonReconcile.length, 1,
             'The reconcile button must be visible');
 
-        testUtils.dom.click($buttonReconcile);
+        await testUtils.dom.click($buttonReconcile);
 
         clientAction.destroy();
     });
 
-    QUnit.test('Reconciliation: payment and 2 partials', function (assert) {
+    QUnit.test('Reconciliation: payment and 2 partials', async function (assert) {
         assert.expect(6);
 
         /*
@@ -1486,19 +1513,20 @@ QUnit.module('account', {
                 }
             },
         });
-        clientAction.appendTo($('#qunit-fixture'));
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
 
         // The first reconciliation "line" is where it happens
         var widget = clientAction.widgets[0];
 
         // Add first invoice
         // There should be the opportunity to reconcile partially
-        widget.$('.match .cell_account_code:first').trigger('click');
+        await testUtils.dom.click(widget.$('.match .cell_account_code:first'));
         assert.ok(widget.$('.cell_right .edit_amount').length,
             "should display the pencil to edit amount");
 
         // Add second invoice
-        widget.$('.match .cell_account_code:first').trigger('click');
+        await testUtils.dom.click(widget.$('.match .cell_account_code:first'));
         assert.ok(widget.$('.cell_right .edit_amount').length,
             "should display the pencil to edit amount");
 
@@ -1510,20 +1538,20 @@ QUnit.module('account', {
         assert.equal(writeOffCreate.find('input[name=amount]').val(), -1225,
             'The right amount should be proposed for the write-off');
 
-        testUtils.dom.click(writeOffCreate.find('.create_account_id input.ui-autocomplete-input'));
-        testUtils.dom.click($('ul.ui-autocomplete li a:first'));
+        await testUtils.dom.click(writeOffCreate.find('.create_account_id input.ui-autocomplete-input'));
+        await testUtils.dom.click($('ul.ui-autocomplete li a:first'));
 
         var $buttonReconcile = widget.$('button.o_reconcile:not(hidden)');
 
         assert.equal($buttonReconcile.length, 1,
             'The reconcile button must be visible');
 
-        testUtils.dom.click($buttonReconcile);
+        await testUtils.dom.click($buttonReconcile);
 
         clientAction.destroy();
     });
 
-    QUnit.test('Reconciliation: partial payment of 2 invoices with one payment', function (assert) {
+    QUnit.test('Reconciliation: partial payment of 2 invoices with one payment [REQUIRE FOCUS]', async function (assert) {
         assert.expect(4);
 
         /*
@@ -1549,7 +1577,7 @@ QUnit.module('account', {
              amount_str: "$ 1200.00", debit: 1200.0, account_code: "101200", ref: "", already_paid: false};
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
             mockRPC: function (route, args) {
                 if (args.method === 'process_bank_statement_line') {
@@ -1588,39 +1616,40 @@ QUnit.module('account', {
                 }
             },
         });
-        clientAction.appendTo($('#qunit-fixture'));
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
 
         // The first reconciliation "line" is where it happens
         var widget = clientAction.widgets[0];
 
         // Add first invoice
         // There should be the opportunity to reconcile partially
-        widget.$('.match .cell_account_code:first').trigger('click');
+        await testUtils.dom.click(widget.$('.match .cell_account_code:first'));
         assert.ok(widget.$('.cell_right .edit_amount').length,
             "should display the pencil to edit amount");
 
         // Add second invoice
-        widget.$('.match .cell_account_code:first').trigger('click');
+        await testUtils.dom.click(widget.$('.match .cell_account_code:first'));
         assert.ok(widget.$('.cell_right .edit_amount').length,
             "should display the pencil to edit amount");
 
         // Edit invoice first amount
-        widget.$('.edit_amount:first()').trigger('click');
-        widget.$('.edit_amount_input:first()').val('500').trigger('blur');
+        await testUtils.dom.click(widget.$('.edit_amount:first()'));
+        await testUtils.fields.editAndTrigger(widget.$('.edit_amount_input:first()'),'500',['blur']);
         // Edit invoice second amount
         var $buttonReconcile = widget.$('button.o_reconcile:not(hidden)');
-        widget.$('.edit_amount:last()').trigger('click');
-        widget.$('.edit_amount_input:last()').val('675').trigger('blur');
+        await testUtils.dom.click(widget.$('.edit_amount:last()'));
+        await testUtils.fields.editAndTrigger(widget.$('.edit_amount_input:last()'),'675',['blur']);
 
         assert.equal($buttonReconcile.length, 1,
             'The reconcile button must be visible');
 
-        $buttonReconcile.click();
+        await testUtils.dom.click($buttonReconcile,{allowInvisible:true});
 
         clientAction.destroy();
     });
 
-    QUnit.test('Manual Reconciliation: remove a prop to attain balance and reconcile', function (assert) {
+    QUnit.test('Manual Reconciliation: remove a prop to attain balance and reconcile', async function (assert) {
         assert.expect(5);
 
         // tweak the data to fit our needs
@@ -1659,18 +1688,18 @@ QUnit.module('account', {
             },
         });
 
-        clientAction.appendTo($('#qunit-fixture'));
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
 
         // The first reconciliation "line" is where it happens
         var widget = clientAction.widgets[0];
 
         // Add first prop
-        widget.$('.match .cell_account_code:first').trigger('click');
+        await testUtils.dom.click(widget.$('.match .cell_account_code:first'));
         assert.equal( widget.$('.cell_right .edit_amount').length, 0, "should not display the pencil to edit amount");
 
         // Add second prop
-        widget.$('.match .cell_account_code:first').trigger('click');
-
+        await testUtils.dom.click(widget.$('.match .cell_account_code:first'));
         // Check that a create form is here
         var writeOffCreate = widget.$('div.create');
 
@@ -1681,18 +1710,18 @@ QUnit.module('account', {
             'The right amount should be proposed for the write-off');
 
         // remove the first line, the other two will balance one another
-        testUtils.dom.click(widget.$('tr[data-line-id="999"] td:first'));
+        await testUtils.dom.click(widget.$('tr[data-line-id="999"] td:first'));
 
         var $buttonReconcile = widget.$('button.o_reconcile:not(hidden)');
         assert.equal($buttonReconcile.length, 1,
             'The reconcile button must be visible');
 
-        testUtils.dom.click($buttonReconcile);
+        await testUtils.dom.click($buttonReconcile);
 
         clientAction.destroy();
     });
 
-    QUnit.test('Manual Reconciliation: No lines for account', function (assert) {
+    QUnit.test('Manual Reconciliation: No lines for account', async function (assert) {
         assert.expect(2);
 
         var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
@@ -1709,7 +1738,8 @@ QUnit.module('account', {
             },
         });
 
-        clientAction.appendTo($('#qunit-fixture'));
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
 
         // The second reconciliation "line" is where it happens
         var widget = clientAction.widgets[1];
@@ -1719,7 +1749,7 @@ QUnit.module('account', {
         assert.notOk('data-line-id' in emptyLine.getAttributes(),
             'Empty line should be empty');
 
-        testUtils.dom.click(emptyLine.find('td:first'));
+        await testUtils.dom.click(emptyLine.find('td:first'));
 
         // Check that a create form is here
         var writeOffCreate = widget.$('div.create .create_account_id');
@@ -1730,12 +1760,12 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-    QUnit.test('Tax on account receivable', function(assert){
+    QUnit.test('Tax on account receivable', async function(assert){
         assert.expect(21);
 
         this.params.data_for_manual_reconciliation_widget['[[],null]'].accounts = [];
         var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
-        testUtils.addMockEnvironment(clientAction, {
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.params.data,
             session: {},
             mockRPC: function(route, args) {
@@ -1745,21 +1775,21 @@ QUnit.module('account', {
                         // to get the available values for the droplists.
                         case 'account.account':
                             assert.step("Account");
-                            return $.when(
+                            return Promise.resolve(
                                 _.map(this.data[args.model].records, function (record) {
                                     return [record.id, record.name];
                                 })
                             );
                         case 'account.tax':
                             assert.step("Tax");
-                            return $.when(
+                            return Promise.resolve(
                                 _.map(this.data[args.model].records, function (record) {
                                     return [record.id, record.display_name];
                                 })
                             );
                         case 'account.journal':
                             assert.step("Journal");
-                            return $.when(
+                            return Promise.resolve(
                                 _.map(this.data[args.model].records, function (record) {
                                     return [record.id, record.display_name];
                                 })
@@ -1790,41 +1820,40 @@ QUnit.module('account', {
                 return this._super.apply(this, arguments);
             }
         });
-        
-        clientAction.appendTo($('#qunit-fixture'));
+
+        await clientAction.appendTo($('#qunit-fixture'));
+        await testUtils.nextTick();
 
         var widget = clientAction.widgets[0];
 
         // Select invoice of 1k$, payment of 1k$ and payment of 180$
         var $tableToReconcile = widget.$('.match');
-        _.each([6, 19, 21], function(id) {
-            $tableToReconcile.find('tr.mv_line[data-line-id='+id+']:first td:first-child').click();
+        var defs = _.map([6, 19, 21], function(id) {
+            return testUtils.dom.click($tableToReconcile.find('tr.mv_line[data-line-id='+id+']:first td:first-child'));
         });
-        
+        await Promise.all(defs);
         assert.verifySteps([], "No rpc done");
 
         // Store the money in excess to the "account receivable" account with 20% taxes
-        widget.$("table tfoot tr td:first").click();
+        await testUtils.dom.click(widget.$("table tfoot tr td:first"));
         var $reconcileForm = widget.$(".create");
-        $reconcileForm.find('.create_account_id input').click();
-        $('.ui-autocomplete .ui-menu-item a:contains(101200 Account Receivable)')
-            .trigger('mouseover')
-            .trigger('click');
+        await testUtils.dom.click($reconcileForm.find('.create_account_id input'));
+        $('.ui-autocomplete .ui-menu-item a:contains(101200 Account Receivable)').trigger('mouseover').trigger('click');
+        await testUtils.nextTick();
         assert.verifySteps(["Account"], "Account rpc done");
 
-        $reconcileForm.find('.create_tax_id input').click();
-        $('.ui-autocomplete .ui-menu-item a:contains(Tax 20.00%)')
-            .trigger('mouseover')
-            .trigger('click');
-        assert.verifySteps(["Account", "Tax"], "Tax rpc done");
+        await testUtils.dom.click($reconcileForm.find('.create_tax_id input'));
+        $('.ui-autocomplete .ui-menu-item a:contains(Tax 20.00%)').trigger('mouseover').trigger('click');
+        await testUtils.nextTick();
+        assert.verifySteps(["Tax"], "Tax rpc done");
 
-        $reconcileForm.find('.create_journal_id input').click();
-        $('.ui-autocomplete .ui-menu-item a:contains(company 1 journal)')
-            .trigger('mouseover')
-            .trigger('click');
-        $reconcileForm.find('.create_label input').val('dummy text').trigger('input');
-        assert.verifySteps(["Account", "Tax", "Journal"], "Journal rpc done");
-        
+        await testUtils.dom.click($reconcileForm.find('.create_journal_id input'),{allowInvisible:true});
+        $('.ui-autocomplete .ui-menu-item a:contains(company 1 journal)').trigger('mouseover').trigger('click');
+        await testUtils.nextTick();
+        await testUtils.fields.editAndTrigger($reconcileForm.find('.create_label input'),'dummy text','input');
+        await testUtils.dom.click($reconcileForm.find('.create_label input'));
+        assert.verifySteps(["Journal"], "Journal rpc done");
+
         // Verify the two (gift + tax) lines were added to the list
         var $newLines = widget.$('tr.mv_line[data-line-id^=createLine]');
         var idx = ($($($newLines[0]).find("td")[3]).text().trim() === "dummy text") ? 0 : 1;
@@ -1854,13 +1883,13 @@ QUnit.module('account', {
             "Tax line has the correct right amount");
 
         // Reconcile
-        widget.$("button.o_reconcile.btn.btn-primary:first").click();
+        await testUtils.dom.click(widget.$("button.o_reconcile.btn.btn-primary:first"));
         assert.ok(true, "No error in reconciliation");
 
         clientAction.destroy();
     });
-    
-    QUnit.test('Reconcile temporarily and ask to check', function(assert){
+
+    QUnit.test('Reconcile temporarily and ask to check', async function(assert){
         assert.expect(4);
         this.params.options.context['to_check'] = true;
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
@@ -1877,22 +1906,24 @@ QUnit.module('account', {
                 }
             },
         });
-        clientAction.appendTo($('#qunit-fixture'));
+        await clientAction.appendTo($('#qunit-fixture'));
+        // await clientAction.appendTo(document.body);   // for debug purpose
         var widget = clientAction.widgets[0];
 
         // Add a line as proposition
         // open the first line
-        widget.$('.accounting_view tfoot td.cell_label').click()
+        await testUtils.dom.click(widget.$('.accounting_view tfoot td.cell_label'));
 
         var $reconcileForm = widget.$(".create");
-        $reconcileForm.find('.create_account_id input').val('499001 Suspense Account').keydown().keyup()
-        $reconcileForm.find('.create_account_id input').click();
+        $reconcileForm.find('.create_account_id input').val('499001 Suspense Account').keydown().keyup();
+        await testUtils.dom.click($reconcileForm.find('.create_account_id input'));
         $('.ui-autocomplete .ui-menu-item a:contains(499001 Suspense Account)')
             .trigger('mouseover')
             .trigger('click');
-        
+        await testUtils.nextTick();
+
         assert.equal($("button.o_validate.btn.btn-secondary.text-warning:first").length, 0, "should not display reconcile button in orange");
-        $reconcileForm.find('.create_to_check input').click()
+        await testUtils.dom.click($reconcileForm.find('.create_to_check input'));
         assert.equal($("button.o_validate.btn.btn-secondary.text-warning:first").length, 1, "should display reconcile button in orange");
 
         testUtils.mock.intercept(clientAction, 'call_service', function (event) {
@@ -1909,12 +1940,12 @@ QUnit.module('account', {
                         to_check: true,
                 }]],
                 "Should call process_bank_statement_line with to_check set to true");
-            var def = $.Deferred();
+            var def = testUtils.makeTestPromise();
             def.abort = function () {};
             event.data.callback(def);
         });
 
-        widget.$("button.o_reconcile.btn.btn-primary:first").click();
+        await testUtils.dom.click(widget.$("button.o_reconcile.btn.btn-primary:first"), {allowInvisible: true});
         assert.ok(true, "No error in reconciliation");
 
         clientAction.destroy();

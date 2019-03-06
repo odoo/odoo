@@ -84,7 +84,7 @@ var FormController = BasicController.extend({
      * @todo make record creation a basic controller feature
      * @param {string} [parentID] if given, the parentID will be used as parent
      *                            for the new record.
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     createRecord: function (parentID) {
         var self = this;
@@ -165,20 +165,23 @@ var FormController = BasicController.extend({
      * @override method from BasicController
      * @param {jQueryElement} $node
      * @param {Object} options
+     * @returns {Promise}
      */
     renderPager: function ($node, options) {
         options = _.extend({}, options, {
             validate: this.canBeDiscarded.bind(this),
         });
-        this._super($node, options);
+        return this._super($node, options);
     },
     /**
      * Instantiate and render the sidebar if a sidebar is requested
      * Sets this.sidebar
      * @param {jQuery} [$node] a jQuery node where the sidebar should be
      *   inserted
+     * @return {Promise}
      **/
     renderSidebar: function ($node) {
+        var self = this;
         if (this.hasSidebar) {
             var otherItems = [];
             if (this.is_action_enabled('delete')) {
@@ -203,11 +206,12 @@ var FormController = BasicController.extend({
                 },
                 actions: _.extend(this.toolbarActions, {other: otherItems}),
             });
-            this.sidebar.appendTo($node);
-
-            // Show or hide the sidebar according to the view mode
-            this._updateSidebar();
+            return this.sidebar.appendTo($node).then(function() {
+                 // Show or hide the sidebar according to the view mode
+                self._updateSidebar();
+            });
         }
+        return Promise.resolve();
     },
     /**
      * Show a warning message if the user modified a translated field.  For each
@@ -296,7 +300,7 @@ var FormController = BasicController.extend({
      * @private
      * @override method from field manager mixin
      * @param {string} id - id of the previously changed record
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _confirmSave: function (id) {
         if (id === this.handle) {
@@ -393,14 +397,19 @@ var FormController = BasicController.extend({
      * @override
      * @private
      * @param {Object} state
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _update: function () {
-        var title = this.getTitle();
-        this._setTitle(title);
-        this._updateButtons();
-        this._updateSidebar();
-        return this._super.apply(this, arguments).then(this.autofocus.bind(this));
+        var self = this;
+
+        return this._super.apply(this, arguments).then(function() {
+            var title = self.getTitle();
+            self._setTitle(title);
+            self._updateButtons();
+            self._updateSidebar();
+
+            self.autofocus();
+        });
     },
     /**
      * @private
@@ -470,13 +479,11 @@ var FormController = BasicController.extend({
         }
         var attrs = ev.data.attrs;
         if (attrs.confirm) {
-            var d = $.Deferred();
-            Dialog.confirm(this, attrs.confirm, {
-                confirm_callback: saveAndExecuteAction,
-            }).on("closed", null, function () {
-                d.resolve();
+            def = new Promise(function (resolve, reject) {
+                Dialog.confirm(this, attrs.confirm, {
+                    confirm_callback: saveAndExecuteAction,
+                }).on("closed", null, resolve);
             });
-            def = d.promise();
         } else if (attrs.special === 'cancel') {
             def = this._callButtonAction(attrs, ev.data.record);
         } else if (!attrs.special || attrs.special === 'save') {
@@ -484,7 +491,7 @@ var FormController = BasicController.extend({
             def = saveAndExecuteAction();
         }
 
-        def.always(this._enableButtons.bind(this));
+        def.then(this._enableButtons.bind(this)).guardedCatch(this._enableButtons.bind(this));
     },
     /**
      * Called when the user wants to create a new record -> @see createRecord
@@ -659,9 +666,7 @@ var FormController = BasicController.extend({
         ev.stopPropagation(); // Prevent x2m lines to be auto-saved
         var self = this;
         this._disableButtons();
-        this.saveRecord().always(function () {
-            self._enableButtons();
-        });
+        this.saveRecord().then(this._enableButtons.bind(this)).guardedCatch(this._enableButtons.bind(this));
     },
     /**
      * Called when user swipes left. Move to next record.

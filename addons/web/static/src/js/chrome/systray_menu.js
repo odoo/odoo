@@ -16,20 +16,19 @@ var SystrayMenu = Widget.extend({
         this._super(parent);
         this.items = [];
         this.widgets = [];
-        this.load = $.Deferred();
     },
     /**
      * @override
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     start: function () {
         var self = this;
         self._super.apply(this, arguments);
         self._loadItems();
-        $.when.apply($, self.items).always(function () {
-            self.load.resolve();
+
+        return new Promise(function (resolve, reject) {
+            Promise.all(self.items).then(resolve).guardedCatch(resolve);
         });
-        return self.load;
     },
 
     //--------------------------------------------------------------------------

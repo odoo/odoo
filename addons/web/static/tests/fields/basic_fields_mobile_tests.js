@@ -53,10 +53,10 @@ QUnit.module('basic_fields', {
 
     QUnit.module('PhoneWidget');
 
-    QUnit.test('phone field in form view on extra small screens', function (assert) {
+    QUnit.test('phone field in form view on extra small screens', async function (assert) {
         assert.expect(7);
 
-        var form = createView({
+        var form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -79,17 +79,17 @@ QUnit.module('basic_fields', {
             "should have proper tel prefix");
 
         // switch to edit mode and check the result
-        testUtils.form.clickEdit(form);
+        await testUtils.form.clickEdit(form);
         assert.containsOnce(form, 'input[type="text"].o_field_widget',
             "should have an int for the phone field");
         assert.strictEqual(form.$('input[type="text"].o_field_widget').val(), 'yop',
             "input should contain field value in edit mode");
 
         // change value in edit mode
-        testUtils.fields.editInput(form.$('input[type="text"].o_field_widget'), 'new');
+        await testUtils.fields.editInput(form.$('input[type="text"].o_field_widget'), 'new');
 
         // save
-        testUtils.form.clickSave(form);
+        await testUtils.form.clickSave(form);
         $phoneLink = form.$('a.o_form_uri.o_field_widget');
         assert.strictEqual($phoneLink.text(), 'new',
             "new value should be displayed properly");
@@ -99,10 +99,10 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('phone field in editable list view on extra small screens', function (assert) {
+    QUnit.test('phone field in editable list view on extra small screens', async function (assert) {
         assert.expect(10);
 
-        var list = createView({
+        var list = await createView({
             View: ListView,
             model: 'partner',
             data: this.data,
@@ -122,14 +122,14 @@ QUnit.module('basic_fields', {
 
         // Edit a line and check the result
         var $cell = list.$('tbody td:not(.o_list_record_selector)').first();
-        testUtils.dom.click($cell);
+        await testUtils.dom.click($cell);
         assert.hasClass($cell.parent(),'o_selected_row', 'should be set as edit mode');
         assert.strictEqual($cell.find('input').val(), 'yop',
             'should have the corect value in internal input');
-        testUtils.fields.editInput($cell.find('input'), 'new');
+        await testUtils.fields.editInput($cell.find('input'), 'new');
 
         // save
-        testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
         $cell = list.$('tbody td:not(.o_list_record_selector)').first();
         assert.doesNotHaveClass($cell.parent(), 'o_selected_row', 'should not be in edit mode anymore');
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'new',
@@ -143,10 +143,10 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
-    QUnit.test('phone field does not allow html injections', function (assert) {
+    QUnit.test('phone field does not allow html injections', async function (assert) {
         assert.expect(1);
 
-        var form = createView({
+        var form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -164,10 +164,10 @@ QUnit.module('basic_fields', {
         });
 
         var val = '<script>throw Error();</script><script>throw Error();</script>';
-        testUtils.fields.editInput(form.$('input.o_field_widget[name="foo"]'), val);
+        await testUtils.fields.editInput(form.$('input.o_field_widget[name="foo"]'), val);
 
         // save
-        testUtils.form.clickSave(form);
+        await testUtils.form.clickSave(form);
         assert.strictEqual(form.$('.o_field_widget').text(), val,
             "value should have been correctly escaped");
 

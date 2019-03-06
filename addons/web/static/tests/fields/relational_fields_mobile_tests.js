@@ -52,11 +52,11 @@ QUnit.module('relational_fields', {
 
     QUnit.module('FieldOne2Many');
 
-    QUnit.test('one2many kanban: deletion in mobile', function (assert) {
+    QUnit.test('one2many kanban: deletion in mobile', async function (assert) {
         assert.expect(9);
 
         this.data.partner.records[0].p = [1, 2];
-        var form = createView({
+        var form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -94,7 +94,7 @@ QUnit.module('relational_fields', {
         assert.containsNone(form, '.o_field_one2many .o-kanban-button-new',
             '"Create" button should not be visible in readonly');
 
-        testUtils.form.clickEdit(form);
+        await testUtils.form.clickEdit(form);
 
         assert.containsOnce(form, '.o_field_one2many .o-kanban-button-new',
             '"Create" button should be visible in edit');
@@ -102,16 +102,16 @@ QUnit.module('relational_fields', {
             "should have 2 records");
 
         // open and delete record
-        testUtils.dom.click(form.$('.oe_kanban_global_click').first());
+        await testUtils.dom.click(form.$('.oe_kanban_global_click').first());
         assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 1,
             'there should be a Remove button in the modal footer');
-        testUtils.dom.click($('.modal .modal-footer .o_btn_remove'));
+        await testUtils.dom.click($('.modal .modal-footer .o_btn_remove'));
         assert.strictEqual($('.o_modal').length, 0, "there shoul be no more modal");
         assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 1,
             'should contain 1 records');
 
         // save and check that the correct command has been generated
-        testUtils.form.clickSave(form);
+        await testUtils.form.clickSave(form);
         form.destroy();
     });
 });

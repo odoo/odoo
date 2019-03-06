@@ -332,7 +332,7 @@ var RatingPopupComposer = publicWidget.Widget.extend({
         this._composer = new PortalComposer(this, this.options);
         defs.push(this._composer.replace(this.$('.o_portal_chatter_composer')));
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 });
 
@@ -344,10 +344,10 @@ publicWidget.registry.RatingPopupComposer = publicWidget.Widget.extend({
      */
     start: function () {
         var ratingPopup = new RatingPopupComposer(this, this.$el.data());
-        return $.when(
+        return Promise.all([
             this._super.apply(this, arguments),
             ratingPopup.appendTo(this.$el)
-        );
+        ]);
     },
 });
 });

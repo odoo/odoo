@@ -24,10 +24,10 @@ QUnit.module('base_settings_tests', {
 
     QUnit.module('BaseSetting');
 
-    QUnit.test('change setting on nav bar click in base settings', function (assert) {
+    QUnit.test('change setting on nav bar click in base settings', async function (assert) {
         assert.expect(4);
 
-        var form = createView({
+        var form = await createView({
             View: BaseSettingsView,
             model: 'project',
             data: this.data,
@@ -78,14 +78,14 @@ QUnit.module('base_settings_tests', {
 
         assert.hasAttrValue(form.$('.selected'), 'data-key',"crm","crm setting selected");
         assert.isVisible(form.$(".settings .app_settings_block"), "project settings show");
-        form.$('.searchInput').val('b').trigger('keyup');
+        await testUtils.fields.editAndTrigger(form.$('.searchInput'), 'b', 'keyup');
         assert.strictEqual($('.highlighter').html(),"B","b word hilited");
-        form.$('.searchInput').val('bx').trigger('keyup');
+        await testUtils.fields.editAndTrigger(form.$('.searchInput'), 'bx', 'keyup');
         assert.isVisible(form.$('.notFound'), "record not found message shown");
         form.destroy();
     });
 
-    QUnit.test('settings views does not read existing id when coming back in breadcrumbs', function (assert) {
+    QUnit.test('settings views does not read existing id when coming back in breadcrumbs', async function (assert) {
         assert.expect(8);
 
         var actions = [{
@@ -111,7 +111,7 @@ QUnit.module('base_settings_tests', {
             'project,false,search': '<search></search>',
         };
 
-        var actionManager = createActionManager({
+        var actionManager = await createActionManager({
             actions: actions,
             archs: archs,
             data: this.data,
@@ -123,9 +123,10 @@ QUnit.module('base_settings_tests', {
             },
         });
 
-        actionManager.doAction(1);
-        testUtils.dom.click(actionManager.$('button[name="4"]'));
-        testUtils.dom.click($('.o_control_panel .breadcrumb-item a'));
+        await actionManager.doAction(1);
+        await testUtils.nextTick();
+        await testUtils.dom.click(actionManager.$('button[name="4"]'));
+        await testUtils.dom.click($('.o_control_panel .breadcrumb-item a'));
         assert.hasClass(actionManager.$('.o_form_view'), 'o_form_editable');
         assert.verifySteps([
             'load_views', // initial setting action
@@ -140,10 +141,10 @@ QUnit.module('base_settings_tests', {
         actionManager.destroy();
     });
 
-    QUnit.test('settings view does not display other settings after reload', function (assert) {
+    QUnit.test('settings view does not display other settings after reload', async function (assert) {
         assert.expect(2);
 
-        var form = createView({
+        var form = await createView({
             View: BaseSettingsView,
             model: 'project',
             data: this.data,
@@ -173,15 +174,15 @@ QUnit.module('base_settings_tests', {
         });
 
         assert.strictEqual(form.$('.app_settings_block').text().replace(/\s/g,''), 'CRMcrmtab');
-        form.reload();
+        await form.reload();
         assert.strictEqual(form.$('.app_settings_block').text().replace(/\s/g,''), 'CRMcrmtab');
         form.destroy();
     });
 
-    QUnit.test('settings view shows statusbar buttons only if there are changes to save', function (assert) {
+    QUnit.test('settings view shows statusbar buttons only if there are changes to save', async function (assert) {
         assert.expect(5);
 
-        var form = createView({
+        var form = await createView({
             View: BaseSettingsView,
             model: 'project',
             data: this.data,
@@ -208,7 +209,7 @@ QUnit.module('base_settings_tests', {
 
         assert.containsNone(form, '.o_field_boolean input:checked', "checkbox should not be checked");
         assert.hasClass(form.$('.o_statusbar_buttons'), 'd-none', "statusbar buttons should not be shown");
-        testUtils.dom.click(form.$("input[type='checkbox']"));
+        await testUtils.dom.click(form.$("input[type='checkbox']"));
         assert.strictEqual(form.$('.o_field_boolean input:checked').length, 1,"checkbox should be checked");
         assert.isVisible(form.$('.o_statusbar_buttons'), "statusbar buttons should be shown");
         form.destroy();

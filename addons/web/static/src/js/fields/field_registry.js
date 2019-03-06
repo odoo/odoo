@@ -6,7 +6,7 @@ var Registry = require('web.Registry');
 return new Registry();
 });
 
-odoo.define('web._field_registry', function(require) {
+odoo.define('web._field_registry', function (require) {
 "use strict";
 
 var AbstractField = require('web.AbstractField');

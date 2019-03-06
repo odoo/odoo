@@ -250,9 +250,10 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQueryElement} a jquery element <tbody>
      */
     _renderBody: function () {
+        var self = this;
         var $rows = this._renderRows();
         while ($rows.length < 4) {
-            $rows.push(this._renderEmptyRow());
+            $rows.push(self._renderEmptyRow());
         }
         return $('<tbody>').append($rows);
     },
@@ -306,7 +307,6 @@ var ListRenderer = BasicRenderer.extend({
         }
         if (node.attrs.widget || (options && options.renderWidgets)) {
             var $el = this._renderFieldWidget(node, record, _.pick(options, 'mode'));
-            this._handleAttributes($el, node);
             return $td.append($el);
         }
         var name = node.attrs.name;
@@ -395,7 +395,7 @@ var ListRenderer = BasicRenderer.extend({
      *
      * @private
      * @param {Object} group
-     * @returns {JQueryElement} the pager's $el
+     * @returns {jQueryElement} the pager's $el
      */
     _renderGroupPager: function (group) {
         var pager = new Pager(this, group.count, group.offset + 1, group.limit);
@@ -416,9 +416,14 @@ var ListRenderer = BasicRenderer.extend({
         // register the pager so that it can be destroyed on next rendering
         this.pagers.push(pager);
 
-        var fragment = document.createDocumentFragment();
-        pager.appendTo(fragment); // starts the pager
-        return pager.$el;
+        var pagerProm = pager._widgetRenderAndInsert(function () {}); // start the pager
+        this.defs.push(pagerProm);
+        var $el =  $('<div>');
+        pagerProm.then(function () {
+            $el.replaceWith(pager.$el);
+        });
+
+        return $el;
     },
     /**
      * Render the row that represent a group
@@ -514,10 +519,9 @@ var ListRenderer = BasicRenderer.extend({
      * with the name of each fields
      *
      * @private
-     * @param {boolean} isGrouped
      * @returns {jQueryElement} a <thead> element
      */
-    _renderHeader: function (isGrouped) {
+    _renderHeader: function () {
         var $tr = $('<tr>')
             .append(_.map(this.columns, this._renderHeaderCell.bind(this)));
         if (this.hasSelectors) {
@@ -585,11 +589,9 @@ var ListRenderer = BasicRenderer.extend({
      */
     _renderRow: function (record) {
         var self = this;
-        this.defs = []; // TODO maybe wait for those somewhere ?
-        var $cells = _.map(this.columns, function (node, index) {
+        var $cells = this.columns.map(function (node, index) {
             return self._renderBodyCell(record, node, index, { mode: 'readonly' });
         });
-        delete this.defs;
 
         var $tr = $('<tr/>', { class: 'o_data_row' })
             .data('id', record.id)
@@ -608,7 +610,7 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQueryElement[]} a list of <tr>
      */
     _renderRows: function () {
-        return _.map(this.state.data, this._renderRow.bind(this));
+        return this.state.data.map(this._renderRow.bind(this));
     },
     /**
      * A 'selector' is the small checkbox on the left of a record in a list
@@ -638,52 +640,60 @@ var ListRenderer = BasicRenderer.extend({
      *
      * @override
      * @private
-     * returns {Deferred} this deferred is resolved immediately
+     * @returns {Promise} resolved when the view has been rendered
      */
     _renderView: function () {
         var self = this;
 
-        this.$el
-            .removeClass('table-responsive')
-            .empty();
-
-        // destroy the previously instantiated pagers, if any
-        _.invoke(this.pagers, 'destroy');
+        var oldPagers = this.pagers;
         this.pagers = [];
 
-        var displayNoContentHelper = !this._hasContent() && !!this.noContentHelp;
         // display the no content helper if there is no data to display
+        var displayNoContentHelper = !this._hasContent() && !!this.noContentHelp;
         if (displayNoContentHelper) {
+            // destroy the previously instantiated pagers, if any
+            _.invoke(oldPagers, 'destroy');
+
+            this.$el.removeClass('table-responsive');
             this.$el.html(this._renderNoContentHelper());
-            return this._super();
+            return this._super.apply(this, arguments);
         }
 
-        var $table = $('<table>').addClass('o_list_view table table-sm table-hover table-striped');
-        this.$el.addClass('table-responsive')
-            .append($table);
+        var orderedBy = this.state.orderedBy;
+        this.hasHandle = orderedBy.length === 0 || orderedBy[0].name === this.handleField;
         this._computeAggregates();
+
+        var $table = $('<table>').addClass('o_list_view table table-sm table-hover table-striped');
         $table.toggleClass('o_list_view_grouped', this.isGrouped);
         $table.toggleClass('o_list_view_ungrouped', !this.isGrouped);
-        this.hasHandle = this.state.orderedBy.length === 0 ||
-            this.state.orderedBy[0].name === this.handleField;
+        var defs = [];
+        this.defs = defs;
         if (this.isGrouped) {
-            $table
-                .append(this._renderHeader(true))
-                .append(this._renderGroups(this.state.data))
-                .append(this._renderFooter());
+            $table.append(this._renderHeader());
+            $table.append(this._renderGroups(this.state.data));
+            $table.append(this._renderFooter());
+
         } else {
-            $table
-                .append(this._renderHeader())
-                .append(this._renderBody())
-                .append(this._renderFooter());
+            $table.append(this._renderHeader());
+            $table.append(this._renderBody());
+            $table.append(this._renderFooter());
         }
-        if (this.selection.length) {
-            var $checked_rows = this.$('tr').filter(function (index, el) {
-                return _.contains(self.selection, $(el).data('id'));
-            });
-            $checked_rows.find('.o_list_record_selector input').prop('checked', true);
-        }
-        return this._super();
+        delete this.defs;
+
+        var prom = Promise.all(defs).then(function () {
+            // destroy the previously instantiated pagers, if any
+            _.invoke(oldPagers, 'destroy');
+
+            self.$el.addClass('table-responsive').html($table);
+
+            if (self.selection.length) {
+                var $checked_rows = self.$('tr').filter(function (index, el) {
+                    return _.contains(self.selection, $(el).data('id'));
+                });
+                $checked_rows.find('.o_list_record_selector input').prop('checked', true);
+            }
+        });
+        return Promise.all([this._super.apply(this, arguments), prom]);
     },
     /**
      * Each line can be decorated according to a few simple rules. The arch

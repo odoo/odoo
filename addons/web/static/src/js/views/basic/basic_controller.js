@@ -41,11 +41,11 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         // savingDef is used to ensure that we always wait for pending save
         // operations to complete before checking if there are changes to
         // discard when discardChanges is called
-        this.savingDef = $.when();
+        this.savingDef = Promise.resolve();
     },
     /**
      * @override
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     start: function () {
         // add classname to reflect the (absence of) access rights (used to
@@ -66,24 +66,27 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *
      * @override
      * @param {string} [recordID] - default to main recordID
-     * @returns {Deferred<boolean>}
+     * @returns {Promise<boolean>}
      *          resolved if can be discarded, a boolean value is given to tells
      *          if there is something to discard or not
      *          rejected otherwise
      */
     canBeDiscarded: function (recordID) {
+        var self = this;
         if (!this.isDirty(recordID)) {
-            return $.when(false);
+            return Promise.resolve(false);
         }
 
         var message = _t("The record has been modified, your changes will be discarded. Do you want to proceed?");
-        var def = $.Deferred();
-        var dialog = Dialog.confirm(this, message, {
-            title: _t("Warning"),
-            confirm_callback: def.resolve.bind(def, true),
-            cancel_callback: def.reject.bind(def),
+        var def;
+        def = new Promise(function (resolve, reject) {
+            var dialog = Dialog.confirm(self, message, {
+                title: _t("Warning"),
+                confirm_callback: resolve.bind(self, true),
+                cancel_callback: reject,
+            });
+            dialog.on('closed', def, reject);
         });
-        dialog.on('closed', def, def.reject);
         return def;
     },
     /**
@@ -114,7 +117,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @see _.discardChanges
      */
     discardChanges: function (recordID, options) {
-        return $.when(this.mutex.getUnlockedDef(), this.savingDef)
+        return Promise.all([this.mutex.getUnlockedDef(), this.savingDef])
             .then(this._discardChanges.bind(this, recordID || this.handle, options));
     },
     /**
@@ -144,6 +147,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @override
      */
     renderPager: function ($node, options) {
+        var self = this;
         var data = this.model.get(this.handle, {raw: true});
         this.pager = new Pager(this, data.count, data.offset + 1, data.limit, options);
 
@@ -161,19 +165,21 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 })
                 .then(this.pager.enable.bind(this.pager));
         });
-        this.pager.appendTo($node);
-        this._updatePager();  // to force proper visibility
+        return this.pager.appendTo($node).then(function() {
+            self._updatePager();  // to force proper visibility
+        });
     },
     /**
      * Saves the record whose ID is given if necessary (@see _saveRecord).
      *
      * @param {string} [recordID] - default to main recordID
      * @param {Object} [options]
-     * @returns {Deferred}
+     * @returns {Promise}
      *        Resolved with the list of field names (whose value has been modified)
      *        Rejected if the record can't be saved
      */
     saveRecord: function (recordID, options) {
+        var self = this;
         // Some field widgets can't detect (all) their changes immediately or
         // may have to validate them before notifying them, so we ask them to
         // commit their current value before saving. This has to be done outside
@@ -187,23 +193,22 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         // user if some discarding has to be made). This operation must also be
         // mutex-protected as commitChanges function of x2m has to be aware of
         // all final changes made to a row.
-        var self = this;
-        var savingDef = $.Deferred();
-        this.savingDef = savingDef;
-
-        return this.mutex.getUnlockedDef()
+        var unlockedMutex = this.mutex.getUnlockedDef()
             .then(function () {
                 return self.renderer.commitChanges(recordID || self.handle);
             })
             .then(function () {
                 return self.mutex.exec(self._saveRecord.bind(self, recordID, options));
-            })
-            .then(savingDef.resolve.bind(savingDef))
-            .fail(savingDef.resolve.bind(savingDef));
+            });
+        this.savingDef = new Promise(function (resolve) {
+            unlockedMutex.then(resolve).guardedCatch(resolve);
+        });
+
+        return unlockedMutex;
     },
     /**
      * @override
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     update: function (params, options) {
         var self = this;
@@ -267,31 +272,32 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @private
      * @param {Object} attrs the attrs of the button clicked
      * @param {Object} [record] the current state of the view
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _callButtonAction: function (attrs, record) {
         var self = this;
-        var def = $.Deferred();
-        var reload = function () {
-            return self.isDestroyed() ? $.when() : self.reload();
-        };
-        record = record || this.model.get(this.handle);
+        var def = new Promise(function (resolve, reject) {
+            var reload = function () {
+                return self.isDestroyed() ? Promise.resolve() : self.reload();
+            };
+            record = record || self.model.get(self.handle);
 
-        this.trigger_up('execute_action', {
-            action_data: _.extend({}, attrs, {
-                context: record.getContext({additionalContext: attrs.context || {}}),
-            }),
-            env: {
-                context: record.getContext(),
-                currentID: record.data.id,
-                model: record.model,
-                resIDs: record.res_ids,
-            },
-            on_success: def.resolve.bind(def),
-            on_fail: function () {
-                self.update({}, {reload: false}).always(def.reject.bind(def));
-            },
-            on_closed: reload,
+            self.trigger_up('execute_action', {
+                action_data: _.extend({}, attrs, {
+                    context: record.getContext({additionalContext: attrs.context || {}}),
+                }),
+                env: {
+                    context: record.getContext(),
+                    currentID: record.data.id,
+                    model: record.model,
+                    resIDs: record.res_ids,
+                },
+                on_success: resolve,
+                on_fail: function () {
+                    self.update({}, {reload: false}).then(reject).guardedCatch(reject);
+                },
+                on_closed: reload,
+            });
         });
         return this.alive(def);
     },
@@ -305,7 +311,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @param {string} id - the id of one of the view's records
      * @param {string[]} fields - the changed fields
      * @param {OdooEvent} e - the event that triggered the change
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _confirmChange: function (id, fields, e) {
         if (e.name === 'discard_changes' && e.target.reset) {
@@ -364,7 +370,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *        the new record to be in edit mode too, but the view manager calls
      *        this function as the URL changes...) @todo get rid of this when
      *        the webclient/action_manager's hashchange mechanism is improved.
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _discardChanges: function (recordID, options) {
         var self = this;
@@ -459,7 +465,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @param {boolean} [options.savePoint=false]
      *        if true, the record will only be 'locally' saved: its changes
      *        will move from the _changes key to the data key
-     * @returns {Deferred}
+     * @returns {Promise}
      *        Resolved with the list of field names (whose value has been modified)
      *        Rejected if the record can't be saved
      */
@@ -490,7 +496,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             }
             return saveDef;
         } else {
-            return $.Deferred().reject(); // Cannot be saved
+            return Promise.reject("SaveRecord: this.canBeSave is false"); // Cannot be saved
         }
     },
     /**
@@ -501,7 +507,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @private
      * @param {string} mode - 'readonly' or 'edit'
      * @param {string} [recordID]
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _setMode: function (mode, recordID) {
         if ((recordID || this.handle) === this.handle) {
@@ -511,7 +517,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 core.bus.trigger('DOM_updated');
             });
         }
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * Helper method, to get the current environment variables from the model
@@ -564,14 +570,14 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         ev.stopPropagation();
         var recordID = ev.data.recordID;
         this._discardChanges(recordID)
-            .done(function () {
+            .then(function () {
                 // TODO this will tell the renderer to rerender the widget that
                 // asked for the discard but will unfortunately lose the click
                 // made on another row if any
                 self._confirmChange(recordID, [ev.data.fieldName], ev)
-                    .always(ev.data.onSuccess);
+                    .then(ev.data.onSuccess).guardedCatch(ev.data.onSuccess);
             })
-            .fail(ev.data.onFailure);
+            .guardedCatch(ev.data.onFailure);
     },
     /**
      * Forces to save directly the changes if the controller is in readonly,

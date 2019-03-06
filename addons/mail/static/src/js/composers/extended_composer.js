@@ -102,7 +102,7 @@ var ExtendedComposer = BasicComposer.extend({
     /**
      * @override
      * @private
-     * @returns {$.Deferred}
+     * @returns {Promise}
      */
     _preprocessMessage: function () {
         var self = this;

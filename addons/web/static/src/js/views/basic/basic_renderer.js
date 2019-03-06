@@ -61,13 +61,13 @@ var BasicRenderer = AbstractRenderer.extend({
      * before notifying them).
      *
      * @param {string} recordID
-     * @return {Deferred}
+     * @return {Promise}
      */
     commitChanges: function (recordID) {
         var defs = _.map(this.allFieldWidgets[recordID], function (widget) {
             return widget.commitChanges();
         });
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * Updates the internal state of the renderer to the new state. By default,
@@ -86,7 +86,7 @@ var BasicRenderer = AbstractRenderer.extend({
      * @param {string} id
      * @param {string[]} fields
      * @param {OdooEvent} ev
-     * @returns {Deferred<AbstractField[]>} resolved with the list of widgets
+     * @returns {Promise<AbstractField[]>} resolved with the list of widgets
      *                                      that have been reset
      */
     confirmChange: function (state, id, fields, ev) {
@@ -118,7 +118,7 @@ var BasicRenderer = AbstractRenderer.extend({
         // state before evaluation
         defs.push(this._updateAllModifiers(record));
 
-        return $.when.apply($, defs).then(function () {
+        return Promise.all(defs).then(function () {
             return resetWidgets;
         });
     },
@@ -295,7 +295,7 @@ var BasicRenderer = AbstractRenderer.extend({
      *
      * @private
      * @param {AbstractField} widget
-     * @returns {boolean|Deferred<boolean>} @see AbstractField.isValid
+     * @returns {boolean|Promise<boolean>} @see AbstractField.isValid
      */
     _canWidgetBeSaved: function (widget) {
         var modifiers = this._getEvaluatedModifiers(widget.__node, widget.record);
@@ -386,6 +386,7 @@ var BasicRenderer = AbstractRenderer.extend({
      * @param {Object} node the attrs coming from the arch
      */
     _postProcessField: function (widget, node) {
+        this._handleAttributes(widget.$el, node);
     },
     /**
      * Registers or updates the modifiers data associated to the given node.
@@ -503,7 +504,7 @@ var BasicRenderer = AbstractRenderer.extend({
      * Render the view
      *
      * @override
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _render: function () {
         var oldAllFieldWidgets = this.allFieldWidgets;
@@ -520,7 +521,7 @@ var BasicRenderer = AbstractRenderer.extend({
     /**
      * Instantiates the appropriate AbstractField specialization for the given
      * node and prepares its rendering and addition to the DOM. Indeed, the
-     * rendering of the widget will be started and the associated deferred will
+     * rendering of the widget will be started and the associated promise will
      * be added to the 'defs' attribute. This is supposed to be created and
      * deleted by the calling code if necessary.
      *
@@ -559,28 +560,31 @@ var BasicRenderer = AbstractRenderer.extend({
 
         widget.__node = node; // TODO get rid of this if possible one day
 
-        // Prepare widget rendering and save the related deferred
+        // Prepare widget rendering and save the related promise
         var def = widget._widgetRenderAndInsert(function () {});
-        var async = def.state() === 'pending';
-        var $el = async ? $('<div>') : widget.$el;
-        if (async) {
-            this.defs.push(def);
-        }
+        var $el = $('<div>');
+
+        this.defs.push(def);
 
         // Update the modifiers registration by associating the widget and by
         // giving the modifiers options now (as the potential callback is
         // associated to new widget)
         var self = this;
         def.then(function () {
-            if (async) {
-                $el.replaceWith(widget.$el);
-            }
+            // when the caller of renderFieldWidget uses something like
+            // this.renderFieldWidget(...).addClass(...), the class is added on
+            // the temporary div and not on the actual element that will be
+            // rendered. As we do not return a promise and some callers cannot
+            // wait for this.defs, we copy those attributes to the final element.
+            widget.$el.attr($el.getAttributes());
+
+            $el.replaceWith(widget.$el);
             self._registerModifiers(node, record, widget, {
                 callback: function (element, modifiers, record) {
                     element.$el.toggleClass('o_field_empty', !!(
-                        record.data.id
-                        && (modifiers.readonly || mode === 'readonly')
-                        && !element.widget.isSet()
+                        record.data.id &&
+                        (modifiers.readonly || mode === 'readonly') &&
+                        !element.widget.isSet()
                     ));
                 },
                 keepBaseMode: !!options.keepBaseMode,
@@ -618,10 +622,10 @@ var BasicRenderer = AbstractRenderer.extend({
      * possible.
      *
      * @abstract
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _renderView: function () {
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * Instantiate custom widgets
@@ -637,22 +641,17 @@ var BasicRenderer = AbstractRenderer.extend({
 
         this.widgets.push(widget);
 
-        // Prepare widget rendering and save the related deferred
+        // Prepare widget rendering and save the related promise
         var def = widget._widgetRenderAndInsert(function () {});
-        var async = def.state() === 'pending';
-        if (async) {
-            this.defs.push(def);
-        }
-        var $el = async ? $('<div>') : widget.$el;
+        this.defs.push(def);
+        var $el = $('<div>');
 
         var self = this;
         def.then(function () {
             self._handleAttributes(widget.$el, node);
             self._registerModifiers(node, record, widget);
             widget.$el.addClass('o_widget');
-            if (async) {
-                $el.replaceWith(widget.$el);
-            }
+            $el.replaceWith(widget.$el);
         });
 
         return $el;
@@ -709,7 +708,7 @@ var BasicRenderer = AbstractRenderer.extend({
      *
      * @private
      * @param {Object} record
-     * @returns {Deferred} resolved once finished
+     * @returns {Promise} resolved once finished
      */
     _updateAllModifiers: function (record) {
         var self = this;
@@ -722,7 +721,7 @@ var BasicRenderer = AbstractRenderer.extend({
         });
         delete this.defs;
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 
     //--------------------------------------------------------------------------

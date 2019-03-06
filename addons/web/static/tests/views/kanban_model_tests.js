@@ -57,12 +57,13 @@ QUnit.module('Views', {
             openGroupByDefault: true,
             viewType: 'kanban',
         };
-    }
+    },
 }, function () {
 
     QUnit.module('KanbanModel');
 
-    QUnit.test('load grouped + add a new group', function (assert) {
+    QUnit.test('load grouped + add a new group', async function (assert) {
+        var done = assert.async();
         assert.expect(22);
 
         var calledRoutes = {};
@@ -84,7 +85,7 @@ QUnit.module('Views', {
             fieldNames: ['foo'],
         });
 
-        model.load(params).then(function (resultID) {
+        model.load(params).then(async function (resultID) {
             // various checks on the load result
             var state = model.get(resultID);
             assert.ok(_.isEqual(state.groupedBy, ['product_id']), 'should be grouped by "product_id"');
@@ -102,7 +103,7 @@ QUnit.module('Views', {
             assert.strictEqual(xphoneGroup.limit, 40, 'limit in a group should be 40');
 
             // add a new group
-            model.createGroup('xpod', resultID);
+            await model.createGroup('xpod', resultID);
             state = model.get(resultID);
             assert.strictEqual(state.data.length, 3, 'should now have 3 groups');
             assert.strictEqual(state.count, 2, 'there are still 2 records');
@@ -123,10 +124,12 @@ QUnit.module('Views', {
             assert.strictEqual(nbSearchRead, 2, 'should have done 2 search_read');
             assert.strictEqual(nbNameCreate, 1, 'should have done 1 name_create');
             model.destroy();
+            done();
         });
     });
 
-    QUnit.test('archive/restore a column', function (assert) {
+    QUnit.test('archive/restore a column', async function (assert) {
+        var done = assert.async();
         assert.expect(4);
 
         var model = createModel({
@@ -139,7 +142,7 @@ QUnit.module('Views', {
             fieldNames: ['foo'],
         });
 
-        model.load(params).then(function (resultID) {
+        model.load(params).then(async function (resultID) {
             var state = model.get(resultID);
             var xphoneGroup = _.findWhere(state.data, {res_id: 37});
             var xpadGroup = _.findWhere(state.data, {res_id: 41});
@@ -148,17 +151,19 @@ QUnit.module('Views', {
 
             // archive the column 'xphone'
             var recordIDs = _.pluck(xphoneGroup.data, 'id');
-            model.toggleActive(recordIDs, false, xphoneGroup.id);
+            await model.toggleActive(recordIDs, false, xphoneGroup.id);
             state = model.get(resultID);
             xphoneGroup = _.findWhere(state.data, {res_id: 37});
             assert.strictEqual(xphoneGroup.count, 0, 'xphone group has no record anymore');
             xpadGroup = _.findWhere(state.data, {res_id: 41});
             assert.strictEqual(xpadGroup.count, 1, 'xpad group still has one record');
             model.destroy();
+            done();
         });
     });
 
-    QUnit.test('kanban model does not allow nested groups', function (assert) {
+    QUnit.test('kanban model does not allow nested groups', async function (assert) {
+        var done = assert.async();
         assert.expect(2);
 
         var model = createModel({
@@ -185,10 +190,11 @@ QUnit.module('Views', {
                 "the second level of groupBy should have been removed");
 
             model.destroy();
+            done();
         });
     });
 
-    QUnit.test('resequence columns and records', function (assert) {
+    QUnit.test('resequence columns and records', async function (assert) {
         var done = assert.async();
         assert.expect(8);
 
@@ -252,7 +258,8 @@ QUnit.module('Views', {
             });
     });
 
-    QUnit.test('add record to group', function (assert) {
+    QUnit.test('add record to group', async function (assert) {
+        var done = assert.async();
         assert.expect(8);
 
         var self = this;
@@ -289,9 +296,11 @@ QUnit.module('Views', {
                 assert.strictEqual(state.data[0].data[0].data.foo, 'new record',
                     "new record should have been fetched");
             });
-        });
+        }).then(function() {
+            model.destroy();
+            done();
+        })
 
-        model.destroy();
     });
 });
 

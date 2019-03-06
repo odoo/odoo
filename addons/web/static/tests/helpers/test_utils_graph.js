@@ -18,7 +18,7 @@ odoo.define('web.test_utils_graph', function () {
  * @param {[Object]} params given to the controller reload method
  */
 function reload(graph, params) {
-    graph.reload(params);
+    return graph.reload(params);
 }
 
 return {

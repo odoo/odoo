@@ -16,7 +16,6 @@ gui.Gui.include({
     select_employee: function(options) {
         options = options || {};
         var self = this;
-        var def  = new $.Deferred();
 
         var list = [];
         this.pos.employees.forEach(function(employee) {
@@ -28,15 +27,19 @@ gui.Gui.include({
             }
         });
 
-        this.show_popup('selection', {
-            title: options.title || _t('Select User'),
-            list: list,
-            confirm: function(employee){ def.resolve(employee); },
-            cancel: function(){ def.reject(); },
-            is_selected: function(employee){ return employee === self.pos.get_cashier(); },
+        var prom = new Promise(function (resolve, reject) {
+            this.show_popup('selection', {
+                title: options.title || _t('Select User'),
+                list: list,
+                confirm: resolve,
+                cancel: reject,
+                is_selected: function (employee) {
+                    return employee === self.pos.get_cashier();
+                },
+            });
         });
 
-        return def.then(function(employee){
+        return prom.then(function (employee) {
             return self.ask_password(employee.pin).then(function(){
                 return employee;
             });
@@ -44,27 +47,28 @@ gui.Gui.include({
     },
     // Ask for a password, and checks if it this
     // the same as specified by the function call.
-    // returns a deferred that resolves on success,
+    // Returns a promise that resolves on success,
     // fails on failure.
     ask_password: function(password) {
         var self = this;
-        var ret = new $.Deferred();
-        if (password) {
-            this.show_popup('password',{
-                'title': _t('Password ?'),
-                confirm: function(pw) {
-                    if (pw !== password) {
-                        self.show_popup('error',_t('Incorrect Password'));
-                        ret.reject();
-                    } else {
-                        ret.resolve();
-                    }
-                },
-            });
-        } else {
-            ret.resolve();
-        }
-        return ret;
+        var prom = new Promise(function (resolve, reject) {
+            if (password) {
+                self.show_popup('password',{
+                    'title': _t('Password ?'),
+                    confirm: function (pw) {
+                        if (pw !== password) {
+                            self.show_popup('error', _t('Incorrect Password'));
+                            reject();
+                        } else {
+                            resolve();
+                        }
+                    },
+                });
+            } else {
+                resolve();
+            }
+        });
+        return prom;
     },
 });
 });

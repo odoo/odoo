@@ -8,14 +8,14 @@ var Widget = require('web.Widget');
 QUnit.module('chrome', {}, function () {
     QUnit.module('UserMenu');
 
-    QUnit.test('basic rendering', function (assert) {
+    QUnit.test('basic rendering', async function (assert) {
         assert.expect(3);
 
         var parent = new Widget();
 
         testUtils.mock.addMockEnvironment(parent, {});
         var userMenu = new UserMenu(parent);
-        userMenu.appendTo($('body'));
+        await userMenu.appendTo($('body'));
 
         assert.strictEqual($('.o_user_menu').length, 1,
             "should have a user menu in the DOM");

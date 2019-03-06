@@ -129,7 +129,7 @@ var SignatureForm = publicWidget.Widget.extend({
                     window.location.reload();
                 }
                 // no resolve if we reload the page
-                return $.Deferred();
+                return new Promise(function () { });
             }
         });
     },
@@ -180,10 +180,10 @@ publicWidget.registry.SignatureForm = publicWidget.Widget.extend({
             }
         });
 
-        return $.when(
+        return Promise.all([
             this._super.apply(this, arguments),
             form.appendTo(this.$el)
-        );
+        ]);
     },
 });
 
