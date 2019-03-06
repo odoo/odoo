@@ -67,7 +67,7 @@ publicWidget.registry.websiteSlidesShare = publicWidget.Widget.extend({
                 self._updateStatistics(key, self.slideURL);
             });
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 
     //--------------------------------------------------------------------------

@@ -97,14 +97,14 @@ WebsiteNewMenu.include({
      * and redirects the user to this channel.
      *
      * @private
-     * @returns {Deferred} Unresolved if there is a redirection
+     * @returns {Promise} Unresolved if there is a redirection
      */
      _createNewSlideChannel: function () {
-        var def = $.Deferred();
-        var dialog = new ChannelCreateDialog(this, {});
-        dialog.open();
-        dialog.on('closed', this, function() {
-            def.resolve();
+        var self = this;
+        var def = new Promise(function (resolve) {
+            var dialog = new ChannelCreateDialog(self, {});
+            dialog.open();
+            dialog.on('closed', self, resolve);
         });
         return def;
      },

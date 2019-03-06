@@ -4,7 +4,7 @@
  * a slide/video/document. This code can depend on pdf.js, JQuery and Bootstrap
  * (see website_slides.slide_embed_assets bundle, in website_slides_embed.xml)
  */
-$(document).ready(function () {
+$(function () {
 
     if ($('#PDFViewer') && $('#PDFViewerCanvas')) { // check if presentation only
 
