@@ -99,7 +99,7 @@ var CropImageDialog = Dialog.extend({
                 _.extend(self.imageData, res);
             }));
         }
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * @override

@@ -11,22 +11,22 @@ var WysiwygRegistry = Registry.extend({
         this._super();
         this._jobs = [];
         this._xmlDependencies = [];
-        this._def = $.when();
+        this._loadingDef = Promise.resolve();
     },
     start: function (wysiwyg) {
-        var defs = [this._def];
         var fn;
+        var defs = [this._loadingDef];
         while ((fn = this._jobs.shift())) {
             defs.push(fn(wysiwyg));
         }
+
         var xmlPath;
         while ((xmlPath = this._xmlDependencies.shift())) {
             defs.push(ajax.loadXML(xmlPath, core.qweb));
         }
-        if (defs.length !== 1) {
-            this._def = $.when.apply($, defs);
-        }
-        return this._def.state() === 'resolved' ? $.when() : this._def;
+
+        this._loadingDef = Promise.all(defs);
+        return this._loadingDef;
     },
     addJob: function (job) {
         this._jobs.push(job);

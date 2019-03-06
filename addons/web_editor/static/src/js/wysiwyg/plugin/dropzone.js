@@ -30,7 +30,7 @@ var DropzonePlugin = Plugins.dropzone.extend({
      * Clean up then drops HTML or plain text into the editor.
      *
      * @private
-     * @param {String} html 
+     * @param {String} html
      * @param {Boolean} textOnly true to allow only dropping plain text
      */
     _dropHTML: function (html, textOnly) {
@@ -80,24 +80,25 @@ var DropzonePlugin = Plugins.dropzone.extend({
             spinners.push(spinner);
 
             // save images as attachments
-            var def = $.Deferred();
-            defs.push(def);
-            // Get image's Base64 string
-            var reader = new FileReader();
-            reader.addEventListener('load', function (e) {
-                self._uploadImage(e.target.result, file.name).then(function (attachment) {
-                    // Make the HTML
-                    var image = self.document.createElement('img');
-                    image.setAttribute('style', 'width: 100%;');
-                    image.src = '/web/content/' + attachment.id + '/' + attachment.name;
-                    image.alt = attachment.name;
-                    $(spinner).replaceWith(image);
-                    images.push(image);
-                    def.resolve(image);
-                    $(image).trigger('dropped');
+            var def = new Promise(function (resolve) {
+                // Get image's Base64 string
+                var reader = new FileReader();
+                reader.addEventListener('load', function (e) {
+                    self._uploadImage(e.target.result, file.name).then(function (attachment) {
+                        // Make the HTML
+                        var image = self.document.createElement('img');
+                        image.setAttribute('style', 'width: 100%;');
+                        image.src = '/web/content/' + attachment.id + '/' + attachment.name;
+                        image.alt = attachment.name;
+                        $(spinner).replaceWith(image);
+                        images.push(image);
+                        resolve(image);
+                        $(image).trigger('dropped');
+                    });
                 });
+                reader.readAsDataURL(file);
             });
-            reader.readAsDataURL(file);
+            defs.push(def);
         });
 
         this.trigger_up('drop_images', {
@@ -105,16 +106,17 @@ var DropzonePlugin = Plugins.dropzone.extend({
             promises: defs,
         });
 
-        $.when.apply($, defs).then(function () {
+        Promise.all(defs).then(function () {
             var defs = [];
             $(images).each(function () {
                 if (!this.height) {
-                    var def = $.Deferred();
+                    var def = new Promise(function (resolve) {
+                        $(this).one('load error abort', resolve);
+                    });
                     defs.push(def);
-                    $(this).one('load error abort', def.resolve.bind(def));
                 }
             });
-            $.when.apply($, defs).then(function () {
+            Promise.all(defs).then(function () {
                 if (images.length === 1) {
                     range = self.context.invoke('editor.setRange', _.last(images), 0);
                     range.select();

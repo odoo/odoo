@@ -121,7 +121,7 @@ Wysiwyg.include({
         }
         var defs = [];
         this.trigger_up('ready_to_save', {defs: defs});
-        return $.when.apply($, defs)
+        return Promise.all(defs)
             .then(this.snippets.cleanForSave.bind(this.snippets))
             .then(this._super.bind(this));
     },

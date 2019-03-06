@@ -108,7 +108,7 @@ var LinkDialog = Dialog.extend({
             var $url = this.$('input[name="url"]');
             $url.closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
             $url.focus();
-            return $.Deferred().reject();
+            return Promise.reject();
         }
         this.data.text = data.label;
         this.data.url = data.url;
