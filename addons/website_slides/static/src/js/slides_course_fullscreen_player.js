@@ -201,7 +201,7 @@ odoo.define('website_slides.fullscreen', function (require) {
          */
         _fetchQuiz: function (){
             var self = this;
-            self._rpc({
+            return self._rpc({
                 route:"/slide/quiz/get",
                 params: {
                     'slide_id': self.slide.id
@@ -215,8 +215,8 @@ odoo.define('website_slides.fullscreen', function (require) {
         },
         _fetchHtmlContent: function (){
             var self = this;
-            self._rpc({
-                route:"/slide/html_content/get",
+            return self._rpc({
+                route: 'slides/slide/get_html_content',
                 params: {
                     'slide_id': self.slide.id
                 }
@@ -234,7 +234,7 @@ odoo.define('website_slides.fullscreen', function (require) {
          */
         _setSlideStateAsDone: function (){
             var self = this;
-            self._rpc({
+            return self._rpc({
                 route: '/slides/slide/set_completed',
                 params: {
                     slide_id: self.slide.id,
