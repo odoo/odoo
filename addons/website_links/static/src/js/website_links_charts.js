@@ -177,7 +177,13 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
 
         this.animating_copy = false;
 
-        return $.when.apply($, defs).then(function (_totalClicks, _clicksByDay, _clicksByCountry, _lastWeekClicksByCountry, _lastMonthClicksByCountry) {
+        return Promise.all(defs).then(function (results) {
+            var _totalClicks = results[0];
+            var _clicksByDay = results[1];
+            var _clicksByCountry = results[2];
+            var _lastWeekClicksByCountry = results[3];
+            var _lastMonthClicksByCountry = results[4];
+
             if (!_totalClicks) {
                 $('#all_time_charts').prepend(_t("There is no data to show"));
                 $('#last_month_charts').prepend(_t("There is no data to show"));
