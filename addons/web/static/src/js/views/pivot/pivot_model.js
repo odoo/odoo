@@ -274,12 +274,10 @@ var PivotModel = AbstractModel.extend({
                 // if we don't have the key 'groupBy' in params.  In that case,
                 // we want to have the full open state for the groupbys.
                 self._updateTree(old_row.root, self.data.main_row.root);
-                self._updateMainGroupBys(old_row, self.data.main_row);
             }
 
             if (!('pivot_column_groupby' in (params.context || {}))) {
                 self._updateTree(old_col.root, self.data.main_col.root);
-                self._updateMainGroupBys(old_col, self.data.main_col);
             }
         });
     },
@@ -710,19 +708,6 @@ var PivotModel = AbstractModel.extend({
         for (var i = 0; i < root.children.length; i++) {
             this._traverseTree(root.children[i], f, arg1, arg2, arg3);
         }
-    },
-    /**
-     * Updates the groupBys that the main[row | col] holds
-     *
-     * @private
-     * @param {Object} old: The main abstract header before reload
-     * @param {Object} main: The main abstract header after reload
-     *
-     */
-    _updateMainGroupBys: function (old, main) {
-        var new_groupby_length = this._getHeaderDepth(main.root) - 1;
-        main.root.groupbys = old.root.groupbys;
-        main.root.groupbys.splice(new_groupby_length);
     },
     /**
      * @param {Object} old_tree
