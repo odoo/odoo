@@ -588,8 +588,8 @@ class AccountBankStatementLine(models.Model):
 
             # Create The payment
             payment = self.env['account.payment']
+            partner_id = self.partner_id or (aml_dict.get('move_line') and aml_dict['move_line'].partner_id) or self.env['res.partner']
             if abs(total)>0.00001:
-                partner_id = self.partner_id and self.partner_id.id or False
                 partner_type = False
                 if partner_id and len(account_types) == 1:
                     partner_type = 'customer' if account_types == receivable_account_type else 'supplier'
@@ -604,7 +604,7 @@ class AccountBankStatementLine(models.Model):
                 payment = self.env['account.payment'].create({
                     'payment_method_id': payment_methods and payment_methods[0].id or False,
                     'payment_type': total >0 and 'inbound' or 'outbound',
-                    'partner_id': self.partner_id and self.partner_id.id or False,
+                    'partner_id': partner_id.id,
                     'partner_type': partner_type,
                     'journal_id': self.statement_id.journal_id.id,
                     'payment_date': self.date,

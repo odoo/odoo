@@ -8,6 +8,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 
 from odoo import api, exceptions, fields, models, _
+from odoo.tools import pycompat
 
 class SignupError(Exception):
     pass
@@ -27,16 +28,16 @@ class ResPartner(models.Model):
     signup_token = fields.Char(copy=False, groups="base.group_erp_manager")
     signup_type = fields.Char(string='Signup Token Type', copy=False, groups="base.group_erp_manager")
     signup_expiration = fields.Datetime(copy=False, groups="base.group_erp_manager")
-    signup_valid = fields.Boolean(compute='_compute_signup_valid', compute_sudo=True, string='Signup Token is Valid')
+    signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid')
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
 
     @api.multi
     @api.depends('signup_token', 'signup_expiration')
     def _compute_signup_valid(self):
         dt = now()
-        for partner in self:
-            partner.signup_valid = bool(partner.signup_token) and \
-            (not partner.signup_expiration or dt <= partner.signup_expiration)
+        for partner, partner_sudo in pycompat.izip(self, self.sudo()):
+            partner.signup_valid = bool(partner_sudo.signup_token) and \
+            (not partner_sudo.signup_expiration or dt <= partner_sudo.signup_expiration)
 
     @api.multi
     def _compute_signup_url(self):

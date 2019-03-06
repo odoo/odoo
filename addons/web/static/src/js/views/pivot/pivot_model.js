@@ -986,13 +986,13 @@ var PivotModel = AbstractModel.extend({
         });
 
         var index = 0;
-        var rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys;
+        var rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys.slice();
+        this.data.groupedBy = rowGroupBys;
         var colGroupBys = this.data.colGroupBys;
         var dataPoint, row, col, attrs, cell_value;
         var main_row_header, main_col_header;
         var groupBys;
         var m;
-
 
         for (var i = 0; i < rowGroupBys.length + 1; i++) {
             for (var j = 0; j < colGroupBys.length + 1; j++) {
@@ -1129,8 +1129,8 @@ var PivotModel = AbstractModel.extend({
      */
     _updateMainGroupBys: function (old, main) {
         var new_groupby_length = this._getHeaderDepth(main.root) - 1;
-        var new_groupby_list = old.root.groupbys.slice(0, new_groupby_length);
-        main.root.groupbys = new_groupby_list;
+        main.root.groupbys = old.root.groupbys;
+        main.root.groupbys.splice(new_groupby_length);
     },
     /**
      * @param {Object} old_tree

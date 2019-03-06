@@ -241,7 +241,7 @@ var FieldMany2One = AbstractField.extend({
     _bindAutoComplete: function () {
         var self = this;
         // avoid ignoring autocomplete="off" by obfuscating placeholder, see #30439
-        if (this.$input.attr('placeholder')) {
+        if ($.browser.chrome && this.$input.attr('placeholder')) {
             this.$input.attr('placeholder', function (index, val) {
                 return val.split('').join('\ufeff');
             });
