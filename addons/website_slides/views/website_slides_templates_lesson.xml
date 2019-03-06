@@ -8,6 +8,7 @@
             <t t-call="website_slides.course_nav">
                 <t t-set="channel" t-value="slide.channel_id"/>
             </t>
+        <div class="wrap o_wslides_wrap">
             <div class="o_wslides_slide_header">
                 <div class="o_wslides_slide_header_container">
                     <div class="o_wslides_slide_header_box">
@@ -55,13 +56,13 @@
                 </div>
                 <div>
                     <t t-if="previous_slide">
-                        <a class="o_wslides_slide_button" t-attf-href="/slides/slide/#{previous_slide}">Prev</a>
+                        <a class="o_wslides_slide_button" t-attf-href="/slides/slide/#{slug(previous_slide)}">Prev</a>
                     </t>
                     <a t-if="slide.slide_type in ('webpage', 'video', 'document', 'iconographic') and not slide.question_ids and (slide.id in user_progress and  not user_progress[slide.id].completed)" 
-                        t-att-href="'/slides/slide/%s/set_completed?%s' % (slide.id, 'next_slide=%s' % next_slide if next_slide else '')"
+                        t-att-href="'/slides/slide/%s/set_completed?%s' % (slide.id, 'next_slide=%s' % next_slide.id if next_slide else '')"
                         class="o_wslides_slide_button_done">Set Done</a>
                     <t t-if="next_slide">
-                        <a class="o_wslides_slide_button" t-attf-href="/slides/slide/#{next_slide}">Next</a>
+                        <a class="o_wslides_slide_button" t-attf-href="/slides/slide/#{slug(next_slide)}">Next</a>
                     </t>
                     <a t-if="slide.channel_id.channel_type == 'training'" t-attf-href="/slides/slide/#{slug(slide)}?fullscreen=1" class="o_wslides_slide_button_fullscreen ml-2"><i class="fa fa-desktop mr-2"></i>fullscreen</a>
                 </div>
@@ -415,6 +416,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </t>
 </template>
