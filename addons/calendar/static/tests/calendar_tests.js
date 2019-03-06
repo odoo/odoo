@@ -33,10 +33,10 @@ QUnit.module('calendar', {
         };
     },
 }, function () {
-    QUnit.test("many2manyattendee widget: basic rendering", function (assert) {
+    QUnit.test("many2manyattendee widget: basic rendering", async function (assert) {
         assert.expect(9);
 
-        var form = createView({
+        var form = await createView({
             View: FormView,
             model: 'event',
             data: this.data,
@@ -53,7 +53,7 @@ QUnit.module('calendar', {
                         "the partner ids should be passed as argument");
                     assert.strictEqual(args.args[1], 14,
                         "the event id should be passed as argument");
-                    return $.when([
+                    return Promise.resolve([
                         [1, "Jesus", "accepted", 0],
                         [2, "Mahomet", "needsAction", 0],
                     ]);
