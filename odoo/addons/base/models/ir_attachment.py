@@ -288,7 +288,7 @@ class IrAttachment(models.Model):
     name = fields.Char('Name', required=True)
     datas_fname = fields.Char('Filename')
     description = fields.Text('Description')
-    res_name = fields.Char('Resource Name', compute='_compute_res_name', store=True)
+    res_name = fields.Char('Resource Name', compute='_compute_res_name')
     res_model = fields.Char('Resource Model', readonly=True, help="The database object this attachment will be attached to.")
     res_model_name = fields.Char(compute='_compute_res_model_name', store=True, index=True)
     res_field = fields.Char('Resource Field', readonly=True)
