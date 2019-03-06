@@ -77,6 +77,7 @@ class ResConfigSettings(models.TransientModel):
     module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
     module_account_invoice_extract = fields.Boolean(string="Bill Digitalization")
     module_snailmail_account = fields.Boolean(string="Snailmail")
+    module_account_non_deductible = fields.Boolean(string="Non deductible Expenses")
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', readonly=False)
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal", readonly=False)
     invoice_reference_type = fields.Selection(string='Communication',
