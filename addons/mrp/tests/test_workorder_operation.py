@@ -10,7 +10,9 @@ from odoo.exceptions import ValidationError, UserError
 class TestWorkOrderProcess(TestMrpCommon):
     def full_availability(self):
         """set full availability for all calendars"""
-        self.env['resource.calendar'].search([]).write({'attendance_ids': [
+        calendar = self.env['resource.calendar'].search([])
+        calendar.write({'attendance_ids': [(5, 0, 0)]})
+        calendar.write({'attendance_ids': [
             (0, 0, {'name': 'Monday', 'dayofweek': '0', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
             (0, 0, {'name': 'Tuesday', 'dayofweek': '1', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),
             (0, 0, {'name': 'Wednesday', 'dayofweek': '2', 'hour_from': 0, 'hour_to': 24, 'day_period': 'morning'}),

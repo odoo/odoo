@@ -202,7 +202,7 @@ class TestCalendar(TestResourceCommon):
 
         # no timezone given should be converted to UTC
         # Should equal to a leave between 2018/04/03 10:00:00 and 2018/04/04 10:00:00
-        self.env['resource.calendar.leaves'].create({
+        leave = self.env['resource.calendar.leaves'].create({
             'name': 'no timezone',
             'calendar_id': self.calendar_patel.id,
             'resource_id': False,
@@ -221,6 +221,61 @@ class TestCalendar(TestResourceCommon):
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.patel.tz),
         )
         self.assertEqual(hours, 0)
+
+        leave.unlink()
+
+        # 2 weeks calendar week 1
+        hours = self.calendar_jules.get_work_hours_count(
+            datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jules.tz),
+            datetime_tz(2018, 4, 6, 23, 59, 59, tzinfo=self.jules.tz),
+        )
+        self.assertEqual(hours, 30)
+
+        # 2 weeks calendar week 1
+        hours = self.calendar_jules.get_work_hours_count(
+            datetime_tz(2018, 4, 16, 0, 0, 0, tzinfo=self.jules.tz),
+            datetime_tz(2018, 4, 20, 23, 59, 59, tzinfo=self.jules.tz),
+        )
+        self.assertEqual(hours, 30)
+
+        # 2 weeks calendar week 2
+        hours = self.calendar_jules.get_work_hours_count(
+            datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),
+            datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.jules.tz),
+        )
+        self.assertEqual(hours, 16)
+
+        # 2 weeks calendar week 2, leave during a day where he doesn't work this week
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'Leave Jules week 2',
+            'calendar_id': self.calendar_jules.id,
+            'resource_id': False,
+            'date_from': datetime_str(2018, 4, 11, 4, 0, 0, tzinfo=self.jules.tz),
+            'date_to': datetime_str(2018, 4, 13, 4, 0, 0, tzinfo=self.jules.tz),
+        })
+
+        hours = self.calendar_jules.get_work_hours_count(
+            datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),
+            datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.jules.tz),
+        )
+        self.assertEqual(hours, 16)
+
+        leave.unlink()
+
+        # 2 weeks calendar week 2, leave during a day where he works this week
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'Leave Jules week 2',
+            'calendar_id': self.calendar_jules.id,
+            'resource_id': False,
+            'date_from': datetime_str(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),
+            'date_to': datetime_str(2018, 4, 9, 23, 59, 0, tzinfo=self.jules.tz),
+        })
+
+        hours = self.calendar_jules.get_work_hours_count(
+            datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),
+            datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.jules.tz),
+        )
+        self.assertEqual(hours, 8)
 
         leave.unlink()
 
@@ -802,6 +857,32 @@ class TestTimezones(TestResourceCommon):
             datetime_tz(2018, 4, 13, 16, 0, 0, tzinfo=self.tz4),
         )
         self.assertEqual(data, {'days': 5, 'hours': 40})
+
+        # Jules with 2 weeks calendar
+        # 02-04-2018 00:00:00 - 6-04-2018 23:59:59
+        data = self.jules._get_work_days_data(
+            datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jules.tz),
+            datetime_tz(2018, 4, 6, 23, 59, 59, tzinfo=self.jules.tz),
+        )
+        self.assertEqual(data, {'days': 4, 'hours': 30})
+
+        # Jules with 2 weeks calendar
+        # 02-04-2018 00:00:00 - 14-04-2018 23:59:59
+        data = self.jules._get_work_days_data(
+            datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jules.tz),
+            datetime_tz(2018, 4, 14, 23, 59, 59, tzinfo=self.jules.tz),
+        )
+        self.assertEqual(data, {'days': 6, 'hours': 46})
+
+        # Jules with 2 weeks calendar
+        # 12-29-2014 00:00:00 - 27-12-2019 23:59:59 => 261 weeks
+        # 130 weeks type 1: 131*4 = 524 days and 131*30 = 3930 hours
+        # 131 weeks type 2: 130*2 = 260 days and 130*16 = 2080 hours
+        data = self.jules._get_work_days_data(
+            datetime_tz(2014, 12, 29, 0, 0, 0, tzinfo=self.jules.tz),
+            datetime_tz(2019, 12, 27, 23, 59, 59, tzinfo=self.jules.tz),
+        )
+        self.assertEqual(data, {'days': 784, 'hours': 6010})
 
     def test_leave_data(self):
         self.env['resource.calendar.leaves'].create({

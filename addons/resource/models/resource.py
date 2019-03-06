@@ -3,7 +3,8 @@
 
 import math
 from datetime import datetime, time, timedelta
-from dateutil.rrule import rrule, DAILY
+from dateutil.relativedelta import relativedelta
+from dateutil.rrule import rrule, DAILY, WEEKLY
 from functools import partial
 from itertools import chain
 from pytz import timezone, utc
@@ -13,6 +14,7 @@ from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round
+from odoo.tools import date_utils
 
 # Default hour per day value. The one should
 # only be used when the one from the calendar
@@ -185,19 +187,126 @@ class ResourceCalendar(models.Model):
         _tz_get, string='Timezone', required=True,
         default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC',
         help="This field is used in order to define in which timezone the resources will work.")
+    two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
+    two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
 
+    @api.depends('two_weeks_calendar')
+    def _compute_two_weeks_explanation(self):
+        today = fields.Date.today()
+        week_type = _("odd") if int(math.floor((today.toordinal() - 1) / 7) % 2) else _("even")
+        first_day = date_utils.start_of(today, 'week')
+        last_day = date_utils.end_of(today, 'week')
+        self.two_weeks_explanation = "This week (from %s to %s) is an %s week." % (first_day, last_day, week_type)
 
     def _get_global_attendances(self):
-        return self.attendance_ids.filtered(lambda attendance: not attendance.date_from and not attendance.date_to and not attendance.resource_id)
+        return self.attendance_ids.filtered(lambda attendance:
+            not attendance.date_from and not attendance.date_to
+            and not attendance.resource_id and not attendance.display_type)
 
-    @api.onchange('attendance_ids')
-    def _onchange_hours_per_day(self):
-        attendances = self._get_global_attendances()
+    def _compute_hours_per_day(self, attendances):
+        if not attendances:
+            return 0
+
         hour_count = 0.0
         for attendance in attendances:
             hour_count += attendance.hour_to - attendance.hour_from
-        if attendances:
-            self.hours_per_day = float_round(hour_count / float(len(set(attendances.mapped('dayofweek')))), precision_digits=2)
+
+        if self.two_weeks_calendar:
+            number_of_days = len(set(attendances.filtered(lambda cal: cal.week_type == '1').mapped('dayofweek')))
+            number_of_days += len(set(attendances.filtered(lambda cal: cal.week_type == '0').mapped('dayofweek')))
+        else:
+            number_of_days = len(set(attendances.mapped('dayofweek')))
+
+        return float_round(hour_count / float(number_of_days), precision_digits=2)
+
+    @api.onchange('attendance_ids', 'two_weeks_calendar')
+    def _onchange_hours_per_day(self):
+        attendances = self._get_global_attendances()
+        self.hours_per_day = self._compute_hours_per_day(attendances)
+
+    def switch_calendar_type(self):
+        if not self.two_weeks_calendar:
+            self.attendance_ids.unlink()
+            self.attendance_ids = [
+                (0, 0, {
+                    'name': 'Even week',
+                    'dayofweek': '0',
+                    'sequence': '0',
+                    'hour_from': 0,
+                    'day_period': 'morning',
+                    'week_type': '0',
+                    'hour_to': 0,
+                    'display_type':
+                    'line_section'}),
+                (0, 0, {
+                    'name': 'Odd week',
+                    'dayofweek': '0',
+                    'sequence': '25',
+                    'hour_from': 0,
+                    'day_period':
+                    'morning',
+                    'week_type': '1',
+                    'hour_to': 0,
+                    'display_type': 'line_section'}),
+            ]
+
+            self.two_weeks_calendar = True
+            default_attendance = self.default_get('attendance_ids')['attendance_ids']
+            for idx, att in enumerate(default_attendance):
+                att[2]["week_type"] = '0'
+                att[2]["sequence"] = idx + 1
+            self.attendance_ids = default_attendance
+            for idx, att in enumerate(default_attendance):
+                att[2]["week_type"] = '1'
+                att[2]["sequence"] = idx + 26
+            self.attendance_ids = default_attendance
+        else:
+            self.two_weeks_calendar = False
+            self.attendance_ids.unlink()
+            self.attendance_ids = self.default_get('attendance_ids')['attendance_ids']
+        self._onchange_hours_per_day()
+
+    @api.onchange('attendance_ids')
+    def _onchange_attendance_ids(self):
+        if not self.two_weeks_calendar:
+            return
+
+        even_week_seq = self.attendance_ids.filtered(lambda att: att.display_type == 'line_section' and att.week_type == '0')
+        odd_week_seq = self.attendance_ids.filtered(lambda att: att.display_type == 'line_section' and att.week_type == '1')
+        if len(even_week_seq) != 1 or len(odd_week_seq) != 1:
+            raise ValidationError(_("You can't delete section between weeks."))
+
+        even_week_seq = even_week_seq.sequence
+        odd_week_seq = odd_week_seq.sequence
+
+        for line in self.attendance_ids.filtered(lambda att: att.display_type is False):
+            if even_week_seq > odd_week_seq:
+                line.week_type = '1' if even_week_seq > line.sequence else '0'
+            else:
+                line.week_type = '0' if odd_week_seq > line.sequence else '1'
+
+    def _check_overlap(self, attendance_ids):
+        """ attendance_ids correspond to attendance of a week,
+            will check for each day of week that there are no superimpose. """
+        result = []
+        for attendance in attendance_ids.filtered(lambda att: not att.date_from and not att.date_to):
+            # 0.000001 is added to each start hour to avoid to detect two contiguous intervals as superimposing.
+            # Indeed Intervals function will join 2 intervals with the start and stop hour corresponding.
+            result.append((int(attendance.dayofweek) * 24 + attendance.hour_from + 0.000001, int(attendance.dayofweek) * 24 + attendance.hour_to, attendance))
+
+        if len(Intervals(result)) != len(result):
+            raise ValidationError(_("Attendances can't overlap."))
+
+    @api.constrains('attendance_ids')
+    def _check_attendance(self):
+        # Avoid superimpose in attendance
+        for calendar in self:
+            attendance_ids = calendar.attendance_ids.filtered(lambda attendance: not attendance.resource_id and attendance.display_type is False)
+            if calendar.two_weeks_calendar:
+                calendar._check_overlap(attendance_ids.filtered(lambda attendance: attendance.week_type == '0'))
+                calendar._check_overlap(attendance_ids.filtered(lambda attendance: attendance.week_type == '1'))
+            else:
+                calendar._check_overlap(attendance_ids)
 
     # --------------------------------------------------
     # Computation API
@@ -214,6 +323,7 @@ class ResourceCalendar(models.Model):
         domain = expression.AND([domain, [
             ('calendar_id', '=', self.id),
             ('resource_id', 'in', resource_ids),
+            ('display_type', '=', False),
         ]])
 
         # express all dates and times in the resource's timezone
@@ -230,9 +340,20 @@ class ResourceCalendar(models.Model):
             until = end_dt.date()
             if attendance.date_to:
                 until = min(until, attendance.date_to)
+            if attendance.week_type:
+                start_week_type = int(math.floor((start.toordinal()-1)/7) % 2)
+                if start_week_type != int(attendance.week_type):
+                    # start must be the week of the attendance
+                    # if it's not the case, we must remove one week
+                    start = start + relativedelta(weeks=-1)
             weekday = int(attendance.dayofweek)
 
-            for day in rrule(DAILY, start, until=until, byweekday=weekday):
+            if self.two_weeks_calendar and attendance.week_type:
+                days = rrule(WEEKLY, start, interval=2, until=until, byweekday=weekday)
+            else:
+                days = rrule(DAILY, start, until=until, byweekday=weekday)
+
+            for day in days:
                 # attendance hours are interpreted in the resource's timezone
                 dt0 = tz.localize(combine(day, float_to_time(attendance.hour_from)))
                 dt1 = tz.localize(combine(day, float_to_time(attendance.hour_to)))
@@ -396,7 +517,7 @@ class ResourceCalendar(models.Model):
 class ResourceCalendarAttendance(models.Model):
     _name = "resource.calendar.attendance"
     _description = "Work Detail"
-    _order = 'dayofweek, hour_from'
+    _order = 'week_type, dayofweek, hour_from'
 
     name = fields.Char(required=True)
     dayofweek = fields.Selection([
@@ -417,6 +538,15 @@ class ResourceCalendarAttendance(models.Model):
     calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, ondelete='cascade')
     day_period = fields.Selection([('morning', 'Morning'), ('afternoon', 'Afternoon')], required=True, default='morning')
     resource_id = fields.Many2one('resource.resource', 'Resource')
+    week_type = fields.Selection([
+        ('1', 'Odd week'),
+        ('0', 'Even week')
+        ], 'Week Even/Odd', default=False)
+    two_weeks_calendar = fields.Boolean("Calendar in 2 weeks mode", related='calendar_id.two_weeks_calendar')
+    display_type = fields.Selection([
+        ('line_section', "Section")], default=False, help="Technical field for UX purpose.")
+    sequence = fields.Integer(default=10,
+        help="Gives the sequence of this line when displaying the resource calendar.")
 
     @api.onchange('hour_from', 'hour_to')
     def _onchange_hours(self):
