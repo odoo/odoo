@@ -66,7 +66,7 @@ sOptions.registry.js_get_posts_selectBlog = sOptions.Class.extend({
             });
         });
 
-        return $.when(this._super.apply(this, arguments), def);
+        return Promise.all([this._super.apply(this, arguments), def]);
     },
 
     //--------------------------------------------------------------------------
