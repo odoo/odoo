@@ -127,12 +127,12 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
                 object: $data.data('object'),
             },
         })
-        .done(function (result) {
+        .then(function (result) {
             $data.toggleClass("css_unpublished css_published");
             $data.find('input').prop("checked", result);
             $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
         })
-        .fail(function (err, data) {
+        .guardedCatch(function (err, data) {
             return new Dialog(self, {
                 title: data.data ? data.data.arguments[0] : "",
                 $content: $('<div/>', {

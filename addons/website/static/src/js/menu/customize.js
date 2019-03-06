@@ -45,7 +45,7 @@ var CustomizeMenu = Widget.extend({
      *
      * @private
      * @param {integer} viewID
-     * @returns {Deferred}
+     * @returns {Promise}
      *          Unresolved if the customization succeeded as the page will be
      *          reloaded.
      *          Rejected otherwise.
@@ -57,7 +57,7 @@ var CustomizeMenu = Widget.extend({
             args: [[viewID]],
         }).then(function () {
             window.location.reload();
-            return $.Deferred();
+            return new Promise(function () {});
         });
     },
     /**
@@ -65,11 +65,11 @@ var CustomizeMenu = Widget.extend({
      * the current page and shows them as switchable elements in the menu.
      *
      * @private
-     * @return {Deferred}
+     * @return {Promise}
      */
     _loadCustomizeOptions: function () {
         if (this.__customizeOptionsLoaded) {
-            return $.when();
+            return Promise.resolve();
         }
         this.__customizeOptionsLoaded = true;
 
@@ -169,18 +169,20 @@ var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * which are used by the current page.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _launchAce: function () {
-        var def = $.Deferred();
-        this.trigger_up('action_demand', {
-            actionName: 'close_all_widgets',
-            onSuccess: def.resolve.bind(def),
+        var self = this;
+        var prom = new Promise(function (resolve, reject) {
+            self.trigger_up('action_demand', {
+                actionName: 'close_all_widgets',
+                onSuccess: resolve,
+            });
         });
-        return def.then((function () {
-            if (this.globalEditor) {
-                this.globalEditor.do_show();
-                return $.when();
+        prom.then(function () {
+            if (self.globalEditor) {
+                self.globalEditor.do_show();
+                return Promise.resolve();
             } else {
                 var currentHash = window.location.hash;
                 var indexOfView = currentHash.indexOf("?res=");
@@ -193,16 +195,18 @@ var AceEditorMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                     }
                 }
 
-                this.globalEditor = new WebsiteAceEditor(this, $(document.documentElement).data('view-xmlid'), {
+                self.globalEditor = new WebsiteAceEditor(self, $(document.documentElement).data('view-xmlid'), {
                     initialResID: initialResID,
                     defaultBundlesRestriction: [
                         "web.assets_frontend",
                         "website.assets_frontend",
                     ],
                 });
-                return this.globalEditor.appendTo(document.body);
+                return self.globalEditor.appendTo(document.body);
             }
-        }).bind(this));
+        });
+
+        return prom;
     },
 });
 

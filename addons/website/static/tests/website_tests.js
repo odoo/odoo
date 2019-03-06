@@ -24,10 +24,10 @@ QUnit.module('website', {
         };
     },
 }, function () {
-    QUnit.test("widget website button: display false value", function (assert) {
+    QUnit.test("widget website button: display false value", async function (assert) {
         assert.expect(2);
 
-        var form = createView({
+        var form = await createView({
             View: FormView,
             model: 'blog_post',
             data: this.data,
@@ -49,10 +49,10 @@ QUnit.module('website', {
         assert.containsOnce(form, selector, "there should be one text in red");
         form.destroy();
     });
-    QUnit.test("widget website button: display true value", function (assert) {
+    QUnit.test("widget website button: display true value", async function (assert) {
         assert.expect(2);
 
-        var form = createView({
+        var form = await createView({
             View: FormView,
             model: 'blog_post',
             data: this.data,
