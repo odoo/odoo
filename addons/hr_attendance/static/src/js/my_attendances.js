@@ -25,7 +25,7 @@ var MyAttendances = AbstractAction.extend({
                 self.employee = res.length && res[0];
             });
 
-        return $.when(def, this._super.apply(this, arguments));
+        return Promise.all([def, this._super.apply(this, arguments)]);
     },
 
     update_attendance: function () {
