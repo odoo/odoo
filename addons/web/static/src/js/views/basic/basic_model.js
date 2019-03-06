@@ -1347,7 +1347,7 @@ var BasicModel = AbstractModel.extend({
         for (var fieldName in changes) {
             field = record.fields[fieldName];
             if (field.type === 'one2many' || field.type === 'many2many') {
-                defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName], options.viewType, options.allowWarning));
+                defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName], options));
             } else if (field.type === 'many2one' || field.type === 'reference') {
                 defs.push(this._applyX2OneChange(record, fieldName, changes[fieldName]));
             } else {
@@ -1677,14 +1677,15 @@ var BasicModel = AbstractModel.extend({
      * @param {string} fieldName
      * @param {Object} command A command object.  It should have a 'operation'
      *   key.  For example, it looks like {operation: ADD, id: 'partner_1'}
-     * @param {string} [viewType] current viewType. If not set, we will assume
+     * @param {Object} [options]
+     * @param {string} [options.viewType] current viewType. If not set, we will assume
      *   main viewType from the record
-     * @param {boolean} [allowWarning=false] if true, change
+     * @param {boolean} [options.allowWarning=false] if true, change
      *   operation can complete, even if a warning is raised
      *   (only supported by the 'CREATE' command.operation)
      * @returns {Promise}
      */
-    _applyX2ManyChange: function (record, fieldName, command, viewType, allowWarning) {
+    _applyX2ManyChange: function (record, fieldName, command, options) {
         if (command.operation === 'TRIGGER_ONCHANGE') {
             // the purpose of this operation is to trigger an onchange RPC, so
             // there is no need to apply any change on the record (the changes
@@ -1697,7 +1698,8 @@ var BasicModel = AbstractModel.extend({
         var localID = (record._changes && record._changes[fieldName]) || record.data[fieldName];
         var list = this.localData[localID];
         var field = record.fields[fieldName];
-        var fieldInfo = record.fieldsInfo[viewType || record.viewType][fieldName];
+        var viewType = (options && options.viewType) || record.viewType;
+        var fieldInfo = record.fieldsInfo[viewType][fieldName];
         var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
         var def, rec;
         var defs = [];
@@ -1776,12 +1778,12 @@ var BasicModel = AbstractModel.extend({
                 }
                 break;
             case 'CREATE':
-                var options = {
+                var createOptions = _.extend({
                     context: command.context,
-                    position: command.position,
-                    allowWarning: allowWarning
-                };
-                def = this._addX2ManyDefaultRecord(list, options).then(function (ids) {
+                    position: command.position
+                }, options || {});
+
+                def = this._addX2ManyDefaultRecord(list, createOptions).then(function (ids) {
                     _.each(ids, function(id){
                         if (command.position === 'bottom' && list.orderedResIDs && list.orderedResIDs.length >= list.limit) {
                             list.tempLimitIncrement = (list.tempLimitIncrement || 0) + 1;
@@ -1822,6 +1824,17 @@ var BasicModel = AbstractModel.extend({
                     list._changes.push({operation: operation, id: id});
                 });
                 break;
+            case 'DELETE_ALL':
+                // first remove all pending 'ADD' operations
+                list._changes = _.reject(list._changes, function (change) {
+                    return change.operation === 'ADD';
+                });
+
+                // then apply 'DELETE' on existing records
+                return this._applyX2ManyChange(record, fieldName, {
+                    operation: 'DELETE',
+                    ids: list.res_ids
+                }, options);
             case 'REPLACE_WITH':
                 // this is certainly not optimal... and not sure that it is
                 // correct if some ids are added and some other are removed
@@ -1836,7 +1849,7 @@ var BasicModel = AbstractModel.extend({
                     addDef = this._applyX2ManyChange(record, fieldName, {
                         operation: 'ADD_M2M',
                         ids: values
-                    }, viewType);
+                    }, options);
                 }
                 if (removedIds.length) {
                     var listData = _.map(list.data, function (localId) {
@@ -1850,9 +1863,20 @@ var BasicModel = AbstractModel.extend({
                             }
                             return _.findWhere(listData, {res_id: resID}).id;
                         }),
-                    }, viewType);
+                    }, options);
                 }
                 return Promise.all([addDef, removedDef]);
+            case 'MULTI':
+                // allows batching multiple operations
+                _.each(command.commands, function (innerCommand){
+                    defs.push(self._applyX2ManyChange(
+                        record,
+                        fieldName,
+                        innerCommand,
+                        options
+                    ));
+                });
+                break;
         }
 
         return Promise.all(defs).then(function () {
@@ -1911,7 +1935,10 @@ var BasicModel = AbstractModel.extend({
                 case 'FORGET':
                 case 'DELETE':
                     list.count--;
-                    list.res_ids = _.without(list.res_ids, relRecord.res_id);
+                    // FIXME awa: there is no "relRecord" for o2m field
+                    // seems like using change.id does the trick -> check with framework JS
+                    var deletedResID = relRecord ? relRecord.res_id : change.id;
+                    list.res_ids = _.without(list.res_ids, deletedResID);
                     break;
                 case 'REMOVE_ALL':
                     list.count = 0;

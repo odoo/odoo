@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import http, fields
+from odoo import http
 from odoo.http import request
 
 
@@ -13,6 +13,12 @@ class ProductConfiguratorController(http.Controller):
         to_currency = product_template.currency_id
         pricelist = self._get_pricelist(pricelist_id)
 
+        product_combination = False
+        attribute_value_ids = set(kw.get('product_template_attribute_value_ids', []))
+        attribute_value_ids |= set(kw.get('product_no_variant_attribute_value_ids', []))
+        if attribute_value_ids:
+            product_combination = request.env['product.template.attribute.value'].browse(attribute_value_ids)
+
         if pricelist:
             product_template = product_template.with_context(pricelist=pricelist.id, partner=request.env.user.partner_id)
             to_currency = pricelist.currency_id
@@ -23,6 +29,7 @@ class ProductConfiguratorController(http.Controller):
             'to_currency': to_currency,
             'pricelist': pricelist,
             'add_qty': add_qty,
+            'product_combination': product_combination
         })
 
     @http.route(['/sale_product_configurator/show_optional_products'], type='json', auth="user", methods=['POST'])

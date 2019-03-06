@@ -19,25 +19,26 @@ tour.register('sale_product_configurator_tour', {
     trigger: ".o_list_button_add",
     extra_trigger: ".o_sale_order"
 }, {
-    trigger: "a:contains('Configure a product')",
+    trigger: "a:contains('Add a product')",
 }, {
-    trigger: '.o_product_configurator .o_input_dropdown input',
-    run: 'click'
+    trigger: 'div[name="product_template_id"] input',
+    run: function (){
+        var $input = $('div[name="product_template_id"] input');
+        $input.click();
+        $input.val('Custo');
+        // fake keydown to trigger search
+        var keyDownEvent = jQuery.Event("keydown");
+        keyDownEvent.which = 42;
+        $input.trigger(keyDownEvent);
+    }
 }, {
-    trigger: 'li a:contains("Customizable Desk")',
-    in_modal: false,
-    extra_trigger: 'ul.ui-autocomplete',
+    trigger: 'ul.ui-autocomplete a:contains("Customizable Desk")',
     run: 'click'
 }, {
     trigger: '.configurator_container span:contains("Steel")',
     run: function () {
         $('input.product_id').change(function () {
-            var request_count = 0;
-            if ($('.o_sale_product_configurator_add').attr('request_count')) {
-                request_count = parseInt($('.o_sale_product_configurator_add').attr('request_count'));
-            }
-            request_count++;
-            $('.o_sale_product_configurator_add').attr('request_count', request_count);
+            $('.o_sale_product_configurator_add').attr('request_count', 1);
         });
     }
 }, {
@@ -47,11 +48,7 @@ tour.register('sale_product_configurator_tour', {
     trigger: 'span.oe_currency_value:contains("800.40")',
     run: function (){} // check updated price
 }, {
-    trigger: 'input[data-value_name="Black"]'
-}, {
-    trigger: 'input[data-value_name="White"]'
-}, {
-    trigger: '.o_sale_product_configurator_add[request_count="3"]',
+    trigger: '.o_sale_product_configurator_add[request_count="1"]',
     run: function (){} // used to sync with "get_combination_info" completion
 }, {
     trigger: '.o_sale_product_configurator_add:not(.disabled)'

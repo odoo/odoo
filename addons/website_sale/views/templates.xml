@@ -418,8 +418,8 @@
 
     <template id="product" name="Product">
 
-        <t t-set="first_possible_combination" t-value="product._get_first_possible_combination()"/>
-        <t t-set="combination_info" t-value="product._get_combination_info(first_possible_combination, add_qty=add_qty or 1, pricelist=pricelist)"/>
+        <t t-set="combination" t-value="product._get_first_possible_combination()"/>
+        <t t-set="combination_info" t-value="product._get_combination_info(combination, add_qty=add_qty or 1, pricelist=pricelist)"/>
         <t t-set="product_variant" t-value="product.env['product.product'].browse(combination_info['product_id'])"/>
 
         <t t-call="website.layout">
@@ -462,7 +462,7 @@
                                     <t t-placeholder="select">
                                         <input type="hidden" class="product_id" name="product_id" t-att-value="product_variant.id" />
                                         <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="product.id" />
-                                        <t t-if="first_possible_combination" t-call="sale.variants">
+                                        <t t-if="combination" t-call="sale.variants">
                                             <t t-set="ul_class" t-value="'flex-column'" />
                                             <t t-set="parent_combination" t-value="None" />
                                         </t>

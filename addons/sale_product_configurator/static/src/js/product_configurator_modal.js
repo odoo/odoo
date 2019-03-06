@@ -12,30 +12,23 @@ var optionalProductsMap = {};
 var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixin, {
     events:  _.extend({}, Dialog.prototype.events, ProductConfiguratorMixin.events, {
         'click a.js_add, a.js_remove': '_onAddOrRemoveOption',
-        'change .in_cart.main_product input.js_quantity': '_onChangeQuantity'
+        'change .in_cart.main_product input.js_quantity': '_onChangeQuantity',
+        'change .js_raw_price': '_computePriceTotal'
     }),
     /**
      * Initializes the optional products modal
-     *
-     * If the "isWebsite" param is true, will also disable the following events:
-     * - change [data-attribute_exclusions]
-     * - click button.js_add_cart_json
-     *
-     * This has to be done because those events are already registered at the "website_sale"
-     * component level.
-     * This modal is part of the form that has these events registered and we
-     * want to avoid duplicates.
      *
      * @override
      * @param {$.Element} parent The parent container
      * @param {Object} params
      * @param {integer} params.pricelistId
-     * @param {boolean} params.isWebsite If we're on a web shop page, we need some
-     *   custom behavior
      * @param {string} params.okButtonText The text to apply on the "ok" button, typically
-     * "Add" for the sale order and "Proceed to checkout" on the web shop
+     *   "Add" for the sale order and "Proceed to checkout" on the web shop
      * @param {string} params.cancelButtonText same as "params.okButtonText" but
      *   for the cancel button
+     * @param {integer} params.previousModalHeight used to configure a min height on the modal-content.
+     *   This parameter is provided by the product configurator to "cover" its modal by making
+     *   this one big enough. This way the user can't see multiple buttons (which can be confusing).
      * @param {Object} params.rootProduct The root product of the optional products window
      * @param {integer} params.rootProduct.product_id
      * @param {integer} params.rootProduct.quantity
@@ -65,13 +58,19 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
         this.rootProduct = params.rootProduct;
         this.container = parent;
         this.pricelistId = params.pricelistId;
-        this.isWebsite = params.isWebsite;
-        this.dialogClass = 'oe_optional_products_modal' + (params.isWebsite ? ' oe_website_sale' : '');
-
-        if (this.isWebsite) {
-            delete this.events['click button.js_add_cart_json'];
-        }
+        this.previousModalHeight = params.previousModalHeight;
+        this.dialogClass = 'oe_optional_products_modal';
         this._productImageField = 'image_medium';
+
+        // reset any previously populated properties maps
+        productNameMap = {};
+        optionalProductsMap = {};
+
+        this._opened.then(function () {
+            if (self.previousModalHeight) {
+                self.$el.closest('.modal-content').css('min-height', self.previousModalHeight + 'px');
+            }
+        });
     },
      /**
      * @override
@@ -188,6 +187,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
             var noVariantAttributeValues = self.getNoVariantAttributeValues($(this));
             products.push({
                 product_id: parseInt($item.find('input.product_id').val()),
+                product_template_id: parseInt($item.find('input.product_template_id').val()),
                 quantity: quantity,
                 product_custom_attribute_values: productCustomVariantValues,
                 no_variant_attribute_values: noVariantAttributeValues
@@ -283,7 +283,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
             self._onRemoveOption($modal, $parent ,productTemplateId);
         }
 
-        self.computePriceTotal();
+        self._computePriceTotal();
     },
 
     /**
@@ -470,11 +470,38 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
 
         this.rootProduct.quantity = qty;
 
-        if (!this.isWebsite){
+        if (this._triggerPriceUpdateOnChangeQuantity()){
             this.onChangeAddQuantity(ev);
         }
 
         this.trigger('update_quantity', qty);
+    },
+
+    /**
+     * When a product is added or when the quantity is changed,
+     * we need to refresh the total price row
+     */
+    _computePriceTotal: function () {
+        if (this.$modal.find('.js_price_total').length){
+            var price = 0;
+            var quantity = parseInt(this.$modal.find('input[name="add_qty"]').first().val());
+            this.$modal.find('.js_product.in_cart').each(function (){
+                price += parseFloat($(this).find('.js_raw_price').html()) * quantity;
+            });
+
+            this.$modal.find('.js_price_total .oe_currency_value').text(
+                this._priceToStr(parseFloat(price))
+            );
+        }
+    },
+
+    /**
+     * Extension point for website_sale
+     *
+     * @private
+     */
+    _triggerPriceUpdateOnChangeQuantity: function () {
+        return true;
     }
 });
 

@@ -40,17 +40,20 @@ tour.STEPS.SHOW_APPS_MENU_ITEM,
     trigger: 'div.o_with_button[name="pricelist_id"]',
     run: function () {},
 }, {
-    content: "open product configurator",
-    trigger: 'a:contains("Configure a product")',
+    trigger: "a:contains('Add a product')"
 }, {
-    content: "open product selector",
-    trigger: '.o_product_configurator .o_input_dropdown input',
+    trigger: 'div[name="product_template_id"] input',
+    run: function (){
+        var $input = $('div[name="product_template_id"] input');
+        $input.click();
+        $input.val('Custo');
+        var keyDownEvent = jQuery.Event("keydown");
+        keyDownEvent.which = 42;
+        $input.trigger(keyDownEvent);
+    }
+}, {
+    trigger: 'ul.ui-autocomplete a:contains("Customizable Desk")',
     run: 'click'
-}, {
-    content: "select desk",
-    trigger: 'li a:contains("Customizable Desk")',
-    in_modal: false,
-    extra_trigger: 'ul.ui-autocomplete',
 }, {
     content: "check price is correct (USD)",
     trigger: 'span.oe_currency_value:contains("750.00")',
