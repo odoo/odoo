@@ -2,12 +2,12 @@ odoo.define('lunch.LunchKanbanWidget', function (require) {
 "use strict";
 
 var core = require('web.core');
-var field_registry = require('web.field_registry');
+var relationalFields = require('web.relational_fields');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
 var _t = core._t;
-var FieldMany2One = field_registry.get('many2one');
+var FieldMany2One = relationalFields.FieldMany2One;
 
 
 var LunchMany2One = FieldMany2One.extend({

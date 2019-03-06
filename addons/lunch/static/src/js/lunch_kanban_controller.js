@@ -103,7 +103,7 @@ var LunchKanbanController = KanbanController.extend({
                 self.$('.o_lunch_kanban').prepend(self.widget.$el);
             });
         });
-        return $.when(def, this._super.apply(self, arguments));
+        return Promise.all([def, this._super.apply(self, arguments)]);
     },
     /**
      * Override to add the location domain (coming from the lunchKanbanWidget)
