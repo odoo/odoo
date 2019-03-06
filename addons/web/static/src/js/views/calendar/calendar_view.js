@@ -107,11 +107,6 @@ var CalendarView = AbstractView.extend({
                 }
                 filters[fieldName].avatar_model = fields[fieldName].relation;
             }
-            // If the 'color' field is included into the popover content, add the
-            // 'isCalendarField' flag to style it properly
-            if (displayFields[fieldName]) {
-                displayFields[fieldName].isCalendarField = true;
-            }
         }
 
         if (_.isEmpty(displayFields)) {
@@ -145,6 +140,8 @@ var CalendarView = AbstractView.extend({
 
         this.rendererParams.displayFields = displayFields;
         this.rendererParams.model = viewInfo.model;
+        this.rendererParams.hideDate = utils.toBoolElse(attrs.hide_date || '', false);
+        this.rendererParams.hideTime = utils.toBoolElse(attrs.hide_time || '', false);
 
         this.loadParams.fieldNames = _.uniq(fieldNames);
         this.loadParams.mapping = mapping;

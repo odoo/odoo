@@ -183,6 +183,8 @@ return AbstractRenderer.extend(StandaloneFieldManagerMixin, {
         this.displayFields = params.displayFields;
         this.filters = [];
         this.color_map = {};
+        this.hideDate = params.hideDate;
+        this.hideTime = params.hideTime;
     },
     /**
      * @override
@@ -600,53 +602,65 @@ return AbstractRenderer.extend(StandaloneFieldManagerMixin, {
      * @returns {string} The popover template
      */
     _getEventPopoverTemplate: function (eventData) {
-        var qwebContext = {
-            event: eventData,
+        var context = {
+            hideDate: this.hideDate,
+            hideTime: this.hideTime,
+            color: this.getColor(eventData.color_index),
+            eventTime: {},
+            eventDate: {},
             fields: this.state.fields,
-            format: this._format.bind(this),
-            record: eventData.record,
-            widget: this,
+            displayFields: this.displayFields,
+
+            // event: eventData,
+            // format: this._format.bind(this),
+            // record: eventData.record,
+            // widget: this,
         };
 
+        // TODO: Refactor date & time logic
         var start = moment(eventData.r_start || eventData.start);
         var end = moment(eventData.r_end || eventData.end);
         var isSameDayEvent = start.clone().add(1, 'minute').isSame(end.clone().subtract(1, 'minute'), 'day');
 
-        // Do not display timing if the event occur across multiple days. Otherwise use user's timing preferences
-        if (!eventData.record.allday && isSameDayEvent) {
-            // Fetch user's preferences
-            var dbTimeFormat = _t.database.parameters.time_format.search('%H') != -1 ? 'HH:mm': 'hh:mm a';
-
-            qwebContext.displayTime = start.clone().format(dbTimeFormat) + ' - ' + end.clone().format(dbTimeFormat);
-
-            // Calculate duration and format text
-            var durationHours = moment.duration(end.diff(start)).hours();
-            var durationHoursKey = (durationHours === 1) ? 'h' : 'hh';
-            var durationMinutes = moment.duration(end.diff(start)).minutes();
-            var durationMinutesKey = (durationMinutes === 1) ? 'm' : 'mm';
-
-            var localeData = moment.localeData(); // i18n for 'hours' and "minutes" strings
-            qwebContext.displayTimeDuration = (durationHours > 0 ? localeData.relativeTime(durationHours, true, durationHoursKey) : '')
-                         + (durationHours > 0 && durationMinutes > 0 ? ', ' : '')
-                         + (durationMinutes > 0 ? localeData.relativeTime(durationMinutes, true, durationMinutesKey) : '');
+        if (!this.hideTime) {
+            // Do not display timing if the event occur across multiple days. Otherwise use user's timing preferences
+            if (!eventData.record.allday && isSameDayEvent) {
+                // Fetch user's preferences
+                var dbTimeFormat = _t.database.parameters.time_format.search('%H') != -1 ? 'HH:mm': 'hh:mm a';
+    
+                context.eventTime.time = start.clone().format(dbTimeFormat) + ' - ' + end.clone().format(dbTimeFormat);
+    
+                // Calculate duration and format text
+                var durationHours = moment.duration(end.diff(start)).hours();
+                var durationHoursKey = (durationHours === 1) ? 'h' : 'hh';
+                var durationMinutes = moment.duration(end.diff(start)).minutes();
+                var durationMinutesKey = (durationMinutes === 1) ? 'm' : 'mm';
+    
+                var localeData = moment.localeData(); // i18n for 'hours' and "minutes" strings
+                context.eventTime.duration = (durationHours > 0 ? localeData.relativeTime(durationHours, true, durationHoursKey) : '')
+                             + (durationHours > 0 && durationMinutes > 0 ? ', ' : '')
+                             + (durationMinutes > 0 ? localeData.relativeTime(durationMinutes, true, durationMinutesKey) : '');
+            }
         }
 
-        if (!isSameDayEvent && start.clone().isSame(end, 'month')) {
-            // Simplify date-range if an event occurs into the same month (eg. '4-5 August 2019')
-            qwebContext.displayDate = start.clone().format('MMMM D') + '-' + end.clone().format('D, YYYY');
-        } else {
-            qwebContext.displayDate = isSameDayEvent ? start.clone().format('dddd, LL') : start.clone().format('LL') + ' - ' + end.clone().format('LL');
+        if (!this.hideDate) {
+            if (!isSameDayEvent && start.clone().isSame(end, 'month')) {
+                // Simplify date-range if an event occurs into the same month (eg. '4-5 August 2019')
+                context.eventDate.date = start.clone().format('MMMM D') + '-' + end.clone().format('D, YYYY');
+            } else {
+                context.eventDate.date = isSameDayEvent ? start.clone().format('dddd, LL') : start.clone().format('LL') + ' - ' + end.clone().format('LL');
+            }
+    
+            if (eventData.record.allday && isSameDayEvent) {
+                context.eventDate.duration = _t("All day");
+            } else if (eventData.record.allday && !isSameDayEvent) {
+                var daysLocaleData = moment.localeData();
+                var days = moment.duration(end.diff(start)).days();
+                context.eventDate.duration = daysLocaleData.relativeTime(days, true, 'dd');
+            }
         }
 
-        if (eventData.record.allday && isSameDayEvent) {
-            qwebContext.displayDateDuration = _t("All day");
-        } else if (eventData.record.allday && !isSameDayEvent) {
-            var daysLocaleData = moment.localeData();
-            var days = moment.duration(end.diff(start)).days();
-            qwebContext.displayDateDuration = daysLocaleData.relativeTime(days, true, 'dd');
-        }
-
-        return qweb.render('CalendarView.event.popover', qwebContext);
+        return qweb.render('CalendarView.event.popover', context);
     },
     /**
      * Render event popover
