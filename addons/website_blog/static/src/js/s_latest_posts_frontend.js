@@ -28,40 +28,43 @@ publicWidget.registry.js_get_posts = publicWidget.Widget.extend({
             domain.push(['blog_id', '=', parseInt(blogID)]);
         }
 
-        var def = $.Deferred();
-        this._rpc({
-            route: '/blog/render_latest_posts',
-            params: {
-                template: template,
-                domain: domain,
-                limit: limit,
-            },
-        }).then(function (posts) {
-            var $posts = $(posts).filter('.s_latest_posts_post');
-            if (!$posts.length) {
-                self.$target.append($('<div/>', {class: 'col-md-6 offset-md-3'})
+        var prom = new Promise(function (resolve) {
+            self._rpc({
+                route: '/blog/render_latest_posts',
+                params: {
+                    template: template,
+                    domain: domain,
+                    limit: limit,
+                },
+            }).then(function (posts) {
+                var $posts = $(posts).filter('.s_latest_posts_post');
+                if (!$posts.length) {
+                    self.$target.append($('<div/>', {class: 'col-md-6 offset-md-3'})
                     .append($('<div/>', {
                         class: 'alert alert-warning alert-dismissible text-center',
                         text: _t("No blog post was found. Make sure your posts are published."),
                     })));
-                return;
-            }
+                    return;
+                }
 
-            if (loading && loading === true) {
-                // Perform an intro animation
-                self._showLoading($posts);
-            } else {
-                self.$target.html($posts);
-            }
-        }, function (e) {
-            if (self.editableMode) {
-                self.$target.append($('<p/>', {
-                    class: 'text-danger',
-                    text: _t("An error occured with this latest posts block. If the problem persists, please consider deleting it and adding a new one"),
-                }));
-            }
-        }).always(def.resolve.bind(def));
-        return $.when(this._super.apply(this, arguments), def);
+                if (loading && loading === true) {
+                    // Perform an intro animation
+                    self._showLoading($posts);
+                } else {
+                    self.$target.html($posts);
+                }
+                resolve();
+            }).guardedCatch(function () {
+                if (self.editableMode) {
+                    self.$target.append($('<p/>', {
+                        class: 'text-danger',
+                        text: _t("An error occured with this latest posts block. If the problem persists, please consider deleting it and adding a new one"),
+                    }));
+                }
+                resolve();
+            });
+        });
+        return Promise.all([this._super.apply(this, arguments), prom]);
     },
     /**
      * @override
@@ -126,7 +129,7 @@ publicWidget.registry.js_get_posts = publicWidget.Widget.extend({
                 $progress.hide();
             }, 5000);
 
-            $dummyImg.load(function () {
+            $dummyImg.on('load', function () {
                 $bar.css('width', '100%').attr('aria-valuenow', '100');
                 setTimeout(function () {
                     $post.removeClass('js-loading');
