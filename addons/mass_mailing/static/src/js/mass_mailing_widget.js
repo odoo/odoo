@@ -54,8 +54,8 @@ var MassMailingFieldHtml = FieldHtml.extend({
 
         var $editable = this.wysiwyg.getEditable();
 
-        return this.wysiwyg.save().then(function (isDirty) {
-            self._isDirty = isDirty;
+        return this.wysiwyg.save().then(function (result) {
+            self._isDirty = result.isDirty;
 
             convertInline.attachmentThumbnailToLinkImg($editable);
             convertInline.fontToImg($editable);
