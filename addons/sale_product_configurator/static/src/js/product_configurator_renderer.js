@@ -19,6 +19,8 @@ var ProductConfiguratorFormRenderer = FormRenderer.extend(ProductConfiguratorMix
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             self.$el.append($('<div>', {class: 'configurator_container'}));
+            self.renderConfigurator(self.configuratorHtml);
+            self._checkMode();
         });
     },
 
@@ -46,6 +48,67 @@ var ProductConfiguratorFormRenderer = FormRenderer.extend(ProductConfiguratorMix
         $configuratorHtml.appendTo($configuratorContainer);
 
         this.triggerVariantChange($configuratorContainer);
+        this._applyCustomValues();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * If the configuratorMode in the given context is 'edit', we need to
+     * hide the regular 'Add' button to replace it with an 'EDIT' button.
+     *
+     * If the configuratorMode is set to 'options', we will directly open the
+     * options modal.
+     *
+     * @private
+     */
+    _checkMode: function () {
+        if (this.state.context.configuratorMode === 'edit') {
+            this.$('.o_sale_product_configurator_add').hide();
+            this.$('.o_sale_product_configurator_edit').css('display', 'inline-block');
+        } else if (this.state.context.configuratorMode === 'options') {
+            this.trigger_up('handle_add');
+        }
+    },
+
+    /**
+     * Will fill the custom values input based on the provided initial configuration.
+     *
+     * @private
+     */
+    _applyCustomValues: function () {
+        var self = this;
+        var customValueIds = this.state.data.product_custom_attribute_value_ids;
+        if (customValueIds) {
+            _.each(customValueIds.data, function (customValue) {
+                if (customValue.data.custom_value) {
+                    var attributeValueId = customValue.data.attribute_value_id.data.id;
+                    var $input = self._findRelatedAttributeValueInput(attributeValueId);
+                    $input
+                        .closest('li[data-attribute_id]')
+                        .find('.variant_custom_value')
+                        .val(customValue.data.custom_value);
+                }
+            });
+        }
+    },
+
+    /**
+     * Find the $.Element input/select related to that product.attribute.value
+     *
+     * @param {integer} attributeValueId
+     *
+     * @private
+     */
+    _findRelatedAttributeValueInput: function (attributeValueId) {
+        var selectors = [
+            'ul.js_add_cart_variants input[data-value_id="' + attributeValueId + '"]',
+            'ul.js_add_cart_variants option[data-value_id="' + attributeValueId + '"]'
+        ];
+
+        return this.$(selectors.join(', '));
     }
 });
 

@@ -13,30 +13,10 @@ var ProductConfiguratorMixin = {
         'click button.js_add_cart_json': 'onClickAddCartJSON',
         'change [data-attribute_exclusions]': 'onChangeVariant'
     },
-    isSelectedVariantAllowed: true,
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
-
-    /**
-     * When a product is added or when the quantity is changed,
-     * we need to refresh the total price row
-     * TODO awa: add a container context to avoid global selectors ?
-     */
-    computePriceTotal: function () {
-        if ($('.js_price_total').length){
-            var price = 0;
-            $('.js_product.in_cart').each(function (){
-                var quantity = parseInt($('input[name="add_qty"]').first().val());
-                price += parseFloat($(this).find('.js_raw_price').html()) * quantity;
-            });
-
-            $('.js_price_total .oe_currency_value').html(
-                this._priceToStr(parseFloat(price))
-            );
-        }
-    },
 
     /**
      * When a variant is changed, this will check:
@@ -45,14 +25,27 @@ var ProductConfiguratorMixin = {
      * - The display name of the product ("Customizable desk (White, Steel)")
      * - The new total price
      * - The need of adding a "custom value" input
+     *   If the custom value is the only available value
+     *   (defined by its data 'is_single_and_custom'),
+     *   the custom value will have it's own input & label
+     *
+     * 'change' events triggered by the user entered custom values are ignored since they
+     * are not relevant
      *
      * @param {MouseEvent} ev
+     * @param {$.Element} [params.$container] force the used container
      */
-    onChangeVariant: function (ev) {
+    onChangeVariant: function (ev, params) {
         var self = this;
 
+        if ($(ev.target).hasClass('variant_custom_value')) {
+            return;
+        }
+
         var $component;
-        if ($(ev.currentTarget).closest('form').length > 0){
+        if (params && params.$container) {
+            $component = params.$container;
+        } else if ($(ev.currentTarget).closest('form').length > 0){
             $component = $(ev.currentTarget).closest('form');
         } else if ($(ev.currentTarget).closest('.oe_optional_products_modal').length > 0){
             $component = $(ev.currentTarget).closest('.oe_optional_products_modal');
@@ -99,7 +92,7 @@ var ProductConfiguratorMixin = {
         }
 
         if ($variantContainer) {
-            if ($customInput && $customInput.data('is_custom')) {
+            if ($customInput && $customInput.data('is_custom') === 'True') {
                 var attributeValueId = $customInput.data('value_id');
                 var attributeValueName = $customInput.data('value_name');
 
@@ -120,7 +113,7 @@ var ProductConfiguratorMixin = {
                     var isRadioInput = $target.is('input[type=radio]') &&
                         $target.closest('label.css_attribute_color').length === 0;
 
-                    if (isRadioInput) {
+                    if (isRadioInput && $customInput.data('is_single_and_custom') !== 'True') {
                         $input.addClass('custom_value_radio');
                         $target.closest('div').after($input);
                     } else {
@@ -128,6 +121,7 @@ var ProductConfiguratorMixin = {
                             html: attributeValueName + ': ',
                             class: 'variant_custom_value_label'
                         });
+                        $input.addClass('custom_value_own_line');
                         $variantContainer.append($label).append($input);
                     }
                 }
@@ -442,7 +436,6 @@ var ProductConfiguratorMixin = {
             disable = true;
         }
 
-        this.isSelectedVariantAllowed = !disable;
         $parent.toggleClass('css_not_available', disable);
         $parent.find("#add_to_cart").toggleClass('disabled', disable);
         $parent
@@ -545,10 +538,16 @@ var ProductConfiguratorMixin = {
         ];
 
         // update images only when changing product
-        if (combination.product_id !== this.last_product_id) {
+        // or when either ids are 'false', meaning dynamic products.
+        // Dynamic products don't have images BUT they may have invalid
+        // combinations that need to disable the image.
+        if (!combination.product_id ||
+            !this.last_product_id ||
+            combination.product_id !== this.last_product_id) {
             this.last_product_id = combination.product_id;
             self._updateProductImage(
                 $parent.closest(rootComponentSelectors.join(', ')),
+                combination.display_image,
                 combination.product_id,
                 combination.product_template_id,
                 combination.carousel
@@ -569,9 +568,9 @@ var ProductConfiguratorMixin = {
         $parent
             .find('.js_raw_price')
             .first()
-            .html(combination.price);
+            .html(combination.price)
+            .trigger('change');
 
-        this.computePriceTotal();
         this.handleCustomValues($(ev.target));
     },
 
@@ -599,10 +598,12 @@ var ProductConfiguratorMixin = {
      *
      * @private
      * @param {$.Element} $productContainer
+     * @param {boolean} displayImage will hide the image if true. It will use the 'invisible' class
+     *   instead of d-none to prevent layout change
      * @param {integer} product_id
      * @param {integer} productTemplateId
      */
-    _updateProductImage: function ($productContainer, productId, productTemplateId) {
+    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId) {
         var model = productId ? 'product.product' : 'product.template';
         var modelId = productId || productTemplateId;
         var imageUrl = '/web/image/{0}/{1}/' + (this._productImageField ? this._productImageField : 'image');
@@ -618,7 +619,12 @@ var ProductConfiguratorMixin = {
         ];
 
         var $img = $productContainer.find(imagesSelectors.join(', '));
-        $img.attr('src', imageSrc);
+
+        if (displayImage) {
+            $img.removeClass('invisible').attr('src', imageSrc);
+        } else {
+            $img.addClass('invisible');
+        }
     },
 
     /**
@@ -636,20 +642,13 @@ var ProductConfiguratorMixin = {
     },
 
     /**
-     * Website behavior is slightly different from backend so we append
-     * "_website" to URLs to lead to a different route
-     *
-     * TODO this should be overriden in website_sale instead.
+     * Extension point for website_sale
      *
      * @private
      * @param {string} uri The uri to adapt
      */
     _getUri: function (uri) {
-        if (this.isWebsite) {
-            return uri + '_website';
-        } else {
-            return uri;
-        }
+        return uri;
     }
 };
 

@@ -10,55 +10,59 @@
     <template id="configure" name="Configure">
         <div class="js_product main_product">
 
-            <t t-set="first_possible_combination" t-value="product._get_first_possible_combination()"/>
-            <t t-set="combination_info" t-value="product._get_combination_info(first_possible_combination, add_qty=add_qty or 1, pricelist=pricelist)"/>
+            <t t-set="combination" t-value="product_combination if product_combination else product._get_first_possible_combination()"/>
+            <t t-set="combination_info" t-value="product._get_combination_info(combination, add_qty=add_qty or 1, pricelist=pricelist)"/>
             <t t-set="product_variant" t-value="product.env['product.product'].browse(combination_info['product_id'])"/>
 
             <input type="hidden" class="product_template_id" t-att-value="product.id"/>
             <input type="hidden" class="product_id" t-attf-name="product_id" t-att-value="product_variant.id"/>
             <div class="col-lg-12 text-center mt-5">
-                <div class="col-lg-5 d-inline-block align-top text-left">
-                    <img t-if="product_variant" t-att-src="'/web/image/product.product/%s/image' % product_variant.id" class="d-block product_detail_img" alt="Product Image"/>
-                    <img t-else="" t-att-src="'/web/image/product.template/%s/image' % product.id" class="d-block product_detail_img" alt="Product Image"/>
-                </div>
-                <div class="col-lg-1 d-inline-block"></div>
-                <div t-if="product._is_add_to_cart_possible()" class="col-lg-5 d-inline-block text-left">
-                    <t t-if="first_possible_combination" t-call="sale.variants">
-                        <t t-set="parent_combination" t-value="None"/>
-                    </t>
-                    <h2>
-                        <span t-attf-class="text-danger oe_default_price oe_striked_price {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
-                            t-esc="combination_info['list_price']"
-                            t-options='{
-                                "widget": "monetary",
-                                "display_currency": (pricelist or product).currency_id
-                            }'/>
-                        <span class="oe_price product_id mt-3" style="white-space: nowrap;"
-                            t-att-data-product-id="product.id"
-                            t-esc="combination_info['price']"
-                            t-options='{
-                                "widget": "monetary",
-                                "display_currency": (pricelist or product).currency_id
-                            }'/>
-                    </h2>
-                    <div class="css_quantity input-group oe_website_spinner">
-                        <div class="input-group-prepend">
-                            <button t-attf-href="#" class="btn btn-primary js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
-                                <i class="fa fa-minus"></i>
-                            </button>
+                <t t-if="product._is_add_to_cart_possible()">
+                    <div class="col-lg-5 d-inline-block text-left">
+                        <t t-if="combination" t-call="sale.variants">
+                            <t t-set="parent_combination" t-value="None"/>
+                        </t>
+                        <h2>
+                            <span t-attf-class="text-danger oe_default_price oe_striked_price {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                                t-esc="combination_info['list_price']"
+                                t-options='{
+                                    "widget": "monetary",
+                                    "display_currency": (pricelist or product).currency_id
+                                }'/>
+                            <span class="oe_price product_id mt-3" style="white-space: nowrap;"
+                                t-att-data-product-id="product.id"
+                                t-esc="combination_info['price']"
+                                t-options='{
+                                    "widget": "monetary",
+                                    "display_currency": (pricelist or product).currency_id
+                                }'/>
+                        </h2>
+                        <div class="css_quantity input-group oe_website_spinner">
+                            <div class="input-group-prepend">
+                                <button t-attf-href="#" class="btn btn-primary js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <input type="text" class="js_quantity form-control quantity" data-min="1" name="add_qty" t-att-value="add_qty or 1"/>
+                            <div class="input-group-append">
+                                <button t-attf-href="#" class="btn btn-primary float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
                         </div>
-                        <input type="text" class="js_quantity form-control quantity" data-min="1" name="add_qty" t-att-value="add_qty or 1"/>
-                        <div class="input-group-append">
-                            <button t-attf-href="#" class="btn btn-primary float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        </div>
+                        <p class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
                     </div>
-                    <p class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
-                </div>
-                <div t-else="" class="col-lg-5 d-inline-block text-left">
-                    <p class="alert alert-warning">This product has no valid combination.</p>
-                </div>
+                    <div class="col-lg-1 d-inline-block"></div>
+                    <div class="col-lg-5 d-inline-block align-top text-left">
+                        <img t-if="product_variant" t-att-src="'/web/image/product.product/%s/image' % product_variant.id" class="d-block product_detail_img" alt="Product Image"/>
+                        <img t-else="" t-att-src="'/web/image/product.template/%s/image' % product.id" class="d-block product_detail_img" alt="Product Image"/>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="col-lg-5 d-inline-block text-left">
+                        <p class="alert alert-warning">This product has no valid combination.</p>
+                    </div>
+                </t>
             </div>
         </div>
     </template>
@@ -151,10 +155,10 @@
     <!-- modal: optional products -->
     <template id="optional_product_items">
         <t t-foreach="product.optional_product_ids" t-as="product">
-            <t t-set="first_possible_combination" t-value="product._get_first_possible_combination(parent_combination)"/>
+            <t t-set="combination" t-value="product._get_first_possible_combination(parent_combination)"/>
             <t t-if="product._is_add_to_cart_possible(parent_combination)">
 
-                <t t-set="combination_info" t-value="product._get_combination_info(first_possible_combination, add_qty=add_qty or 1, pricelist=pricelist)"/>
+                <t t-set="combination_info" t-value="product._get_combination_info(combination, add_qty=add_qty or 1, pricelist=pricelist)"/>
                 <t t-set="product_variant" t-value="product.env['product.product'].browse(combination_info['product_id'])"/>
 
                 <tr class="js_product">

@@ -7,7 +7,7 @@ import odoo.tests
 @odoo.tests.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
     def test_01_product_configurator(self):
-        # To be able to test the product configurator, admin user must have access to "variants and options" feature, so we give him the right group for that
+        # To be able to test the product configurator, admin user must have access to "variants" feature, so we give him the right group for that
         self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
 
         self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_product_configurator_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_product_configurator_tour.ready", login="admin")
@@ -76,7 +76,7 @@ class TestUi(odoo.tests.HttpCase):
         self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_product_configurator_advanced_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_product_configurator_advanced_tour.ready", login="admin")
 
     def test_03_product_configurator_edition(self):
-        # To be able to test the product configurator, admin user must have access to "variants and options" feature, so we give him the right group for that
+        # To be able to test the product configurator, admin user must have access to "variants" feature, so we give him the right group for that
         self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
 
         self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_product_configurator_edition_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_product_configurator_edition_tour.ready", login="admin")
@@ -157,3 +157,17 @@ class TestUi(odoo.tests.HttpCase):
             })
 
         self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_product_configurator_pricelist_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_product_configurator_pricelist_tour.ready", login="admin")
+
+    def test_06_product_configurator_optional_products(self):
+        """The goal of this test is to check that the product configurator
+        window opens correctly and lets you select optional products even
+        if the main product does not have variants.
+        """
+
+        # add an optional product to the office chair for test purposes
+        office_chair = self.env.ref('product.product_product_12')
+        office_chair.update({
+            'optional_product_ids': [(6, 0, [self.env.ref('sale_product_configurator.product_product_1_product_template').id])]
+        })
+
+        self.phantom_js("/web", "odoo.__DEBUG__.services['web_tour.tour'].run('sale_product_configurator_optional_products_tour')", "odoo.__DEBUG__.services['web_tour.tour'].tours.sale_product_configurator_optional_products_tour.ready", login="admin")

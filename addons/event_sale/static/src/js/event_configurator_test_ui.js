@@ -27,7 +27,8 @@ tour.register('event_configurator_tour', {
         var keyDownEvent = jQuery.Event("keydown");
         keyDownEvent.which = 42;
         $input.trigger(keyDownEvent);
-    }
+    },
+    id: 'product_selection_step'
 }, {
     trigger: 'ul.ui-autocomplete a:contains("EVENT")',
     run: 'click'

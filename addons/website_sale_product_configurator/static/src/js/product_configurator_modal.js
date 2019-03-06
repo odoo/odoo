@@ -25,11 +25,17 @@ OptionalProductsModal.include({
         this.isWebsite = params.isWebsite;
 
         if (this.isWebsite) {
-            delete this.events['change [data-attribute_exclusions]'];
             delete this.events['click button.js_add_cart_json'];
         }
 
         this.dialogClass = 'oe_optional_products_modal' + (params.isWebsite ? ' oe_website_sale' : '');
+    },
+    /**
+     * @override
+     * @private
+     */
+    _triggerPriceUpdateOnChangeQuantity: function () {
+        return !this.isWebsite;
     }
 });
 

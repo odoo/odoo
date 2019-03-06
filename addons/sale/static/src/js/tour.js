@@ -39,18 +39,23 @@ tour.register('sale_tour', {
     content: _t("Click here to add some products or services to your quotation."),
     position: "bottom",
 }, {
-    trigger: ".o_form_editable .o_field_many2one[name='product_id'] input",
+    trigger: ".o_field_widget[name=product_id] input, .o_field_widget[name=product_template_id] input",
     extra_trigger: ".o_sale_order",
     content: _t("Select a product, or create a new one on the fly."),
     position: "right",
     run: function (actions) {
-        actions.text("DESK0001", this.$anchor.find("input"));
+        actions.text("DESK0001", this.$anchor.find('input'));
+        // fake keydown to trigger search
+        var keyDownEvent = jQuery.Event("keydown");
+        keyDownEvent.which = 42;
+        this.$anchor.trigger(keyDownEvent);
         var $descriptionElement = $('.o_form_editable textarea[name="name"]');
         // when description changes, we know the product has been created
         $descriptionElement.change(function () {
             $descriptionElement.addClass('product_creation_success');
         });
-    }
+    },
+    id: 'product_selection_step'
 }, {
     trigger: '.o_m2o_dropdown_option a:contains("DESK0001")'
 }, {
