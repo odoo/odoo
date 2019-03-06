@@ -3,9 +3,9 @@
     <template id="website_slides_forum_header" inherit_id="website_forum.header">
         <xpath expr="//div[hasclass('container')]" position="before">
             <t t-if="forum.slide_channel_id">
-                <div class="row" style="background-color: #66445e; height:  48px;">
-                    <div class="container o_wprofile_navtabs_container">
-                        <ul class="nav nav-tabs o_wprofile_nav_tabs" role="tablist" id="profile_extra_info_tablist">
+                <div class="row o_wforum_elearning_navtabs_container">
+                    <div class="container">
+                        <ul class="nav nav-tabs o_wprofile_nav_tabs mt-0 flex-nowrap" role="tablist" id="profile_extra_info_tablist">
                             <li class="nav-item">
                                 <a t-att-href="'/slides/%s%s?%s' % (slug(forum.slide_channel_id), '/%s' % slug(category) if category else '', keep_query('debug'))"
                                     t-att-class="'nav-link o_wprofile_navlink'" style="border-left: 0px">
