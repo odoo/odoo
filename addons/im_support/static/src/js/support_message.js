@@ -51,10 +51,10 @@ var SupportMessage = Message.extend({
      * channel (which are records on the Support database).
      *
      * @override
-     * @returns {$.Promise}
+     * @returns {Promise}
      */
     toggleStarStatus: function () {
-        return $.when();
+        return Promise.resolve();
     },
 });
 
