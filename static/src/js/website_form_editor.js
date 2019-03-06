@@ -58,30 +58,25 @@ odoo.define('website_form_editor', function (require) {
             return self.$modal;
         },
 
-        // Return the fields deferred if we already issued a model
+        // Return the fields promise if we already issued a model
         // fields fetch request, or issue said request.
         fields: function () {
-            return this.fields_deferred || this.fetch_model_fields();
+            return this.fields_promise || this.fetch_model_fields();
         },
 
         fetch_model_fields: function () {
-            var self = this;
-            this.fields_deferred = new $.Deferred();
-            this._rpc({
+            return this._rpc({
                 model: "ir.model",
                 method: "get_authorized_fields",
                 args: [this.$target.closest('form').attr('data-model_name')],
             }).then(function (fields) {
                 // The get_fields function doesn't return the name
                 // in the field dict since it uses it has the key
-                _.map(fields, function (field, field_name){
+                _.each(fields, function (field, field_name) {
                     field.name = field_name;
-                    return field;
                 });
-
-                self.fields_deferred.resolve(fields);
+                return fields;
             });
-            return this.fields_deferred;
         },
 
         // Choose a model modal
@@ -264,22 +259,20 @@ odoo.define('website_form_editor', function (require) {
 
         append_field: function (field) {
             var self = this;
-            this.render_field(field).done(function (field){
+            this.render_field(field).then(function (field){
                 self.$target.find(".form-group:has('.o_website_form_send')").before(field);
             });
         },
 
         render_field: function (field) {
-            var field_rendered = $.Deferred();
-
             // Convert the required boolean to a value directly usable
             // in qweb js to avoid duplicating this in the templates
             field.required = field.required ? 1 : null;
 
             // Fetch possible values for relation fields
-            var fetch_field_relation = $.Deferred();
+            var fieldRelationProm;
             if (field.relation && field.relation !== 'ir.attachment') {
-                this._rpc({
+                fieldRelationProm = this._rpc({
                     model: field.relation,
                     method: 'search_read',
                     args: [
@@ -288,20 +281,14 @@ odoo.define('website_form_editor', function (require) {
                     ],
                 }).then(function (records) {
                     field.records = records;
-                    fetch_field_relation.resolve();
                 });
             }
-            else {
-                fetch_field_relation.resolve();
-            }
 
-            fetch_field_relation.done(function () {
+            return Promise.resolve(fieldRelationProm).then(function () {
                 var $content = $(qweb.render("website_form_editor.field_" + field.type, {field: field}));
                 $content.find('label:not(:has(span)), label span').addClass('o_fake_editable').attr('contentEditable', true);
-                field_rendered.resolve($content);
+                return $content;
             });
-
-            return field_rendered;
         },
 
         onBuilt: function () {
