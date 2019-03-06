@@ -1559,12 +1559,14 @@ class AccountInvoice(models.Model):
             fmt = partial(formatLang, invoice.with_context(lang=invoice.partner_id.lang).env, currency_obj=currency)
             res = {}
             for line in invoice.tax_line_ids:
-                res.setdefault(line.tax_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                res[line.tax_id.tax_group_id]['amount'] += line.amount_total
-                res[line.tax_id.tax_group_id]['base'] += line.base
-            res = sorted(res.items(), key=lambda l: l[0].sequence)
+                tax = line.tax_id
+                group_key = (tax.tax_group_id, tax.amount_type, tax.amount)
+                res.setdefault(group_key, {'base': 0.0, 'amount': 0.0})
+                res[group_key]['amount'] += line.amount_total
+                res[group_key]['base'] += line.base
+            res = sorted(res.items(), key=lambda l: l[0][0].sequence)
             invoice.amount_by_group = [(
-                r[0].name, r[1]['amount'], r[1]['base'],
+                r[0][0].name, r[1]['amount'], r[1]['base'],
                 fmt(r[1]['amount']), fmt(r[1]['base']),
                 len(res),
             ) for r in res]
