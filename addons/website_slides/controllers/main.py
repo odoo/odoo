@@ -52,7 +52,7 @@ class WebsiteSlides(WebsiteProfile):
         return {'slide': slide}
 
     def _set_viewed_slide(self, slide):
-        if request.env.user._is_public() or slide.is_preview or not slide.channel_id.is_member:
+        if request.env.user._is_public() or not slide.website_published or not slide.channel_id.is_member:
             viewed_slides = request.session.setdefault('viewed_slides', list())
             if slide.id not in viewed_slides:
                 slide.sudo().public_views += 1
