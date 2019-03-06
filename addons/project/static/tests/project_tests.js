@@ -70,9 +70,9 @@ QUnit.module('project', {
 }, function () {
     QUnit.module('image test');
 
-    QUnit.test('cover_image_test', function (assert) {
+    QUnit.test('cover_image_test', async function (assert) {
         assert.expect(6);
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'project.task',
             data: this.data,
@@ -98,7 +98,7 @@ QUnit.module('project', {
                 '</kanban>',
             mockRPC: function(route, args) {
                 if (args.model === 'ir.attachment' && args.method === 'search_read') {
-                    return $.when([{
+                    return Promise.resolve([{
                         id: 1,
                         name: "1.png"
                     },{
@@ -107,29 +107,30 @@ QUnit.module('project', {
                     }]);
                 }
                 if (args.model === 'project.task' && args.method === 'write') {
-                    assert.step(args.args[0][0]);
+                    assert.step(String(args.args[0][0]));
                     return this._super(route, args);
                 }
                 return this._super(route, args);
             },
         });
 
-        testUtils.dom.click(kanban.$('.o_dropdown_kanban:first > a.dropdown-toggle'));
-        testUtils.dom.click(kanban.$('.o_dropdown_kanban:first [data-type=set_cover]'));
+        await testUtils.dom.click(kanban.$('.o_dropdown_kanban:first > a.dropdown-toggle'));
+        await testUtils.dom.click(kanban.$('.o_dropdown_kanban:first [data-type=set_cover]'));
         assert.containsNone(kanban, 'img', "Initially there is no image.");
         // single click on image, and confirm
-        testUtils.dom.click($('.modal').find("img[data-id='1']"));
-        testUtils.dom.click($('.modal-footer .btn-primary'));
+        await testUtils.dom.click($('.modal').find("img[data-id='1']"));
+        await testUtils.dom.click($('.modal-footer .btn-primary'));
         assert.containsOnce(kanban, 'img[data-src*="/web/image/1"]');
 
-        testUtils.dom.click(kanban.$('.o_dropdown_kanban:nth(1) > a.dropdown-toggle'));
-        testUtils.dom.click(kanban.$('.o_dropdown_kanban:nth(1) [data-type=set_cover]'));
+        await testUtils.dom.click(kanban.$('.o_dropdown_kanban:nth(1) > a.dropdown-toggle'));
+        await testUtils.dom.click(kanban.$('.o_dropdown_kanban:nth(1) [data-type=set_cover]'));
         // double click on image
         $('.modal').find("img[data-id='2']").dblclick();
+        await testUtils.nextTick();
         assert.containsOnce(kanban, 'img[data-src*="/web/image/2"]');
 
         // verify writes on both kanban records
-        assert.verifySteps([1, 2]);
+        assert.verifySteps(['1', '2']);
 
         kanban.destroy();
     });
