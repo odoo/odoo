@@ -69,7 +69,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         if (this.model.context && this.model.context.args && this.model.context.args.search) {
             this.$('.reconciliation_search_input').val(self.model.context.args.search);
         }
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * @override
@@ -322,7 +322,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             'toggle': 'popover'
         });
         var def2 = this._super.apply(this, arguments);
-        return $.when(def1, def2);
+        return Promise.all([def1, def2]);
     },
 
     //--------------------------------------------------------------------------
@@ -419,41 +419,44 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
 
         // create form
         if (state.createForm) {
+            var createPromise;
             if (!this.fields.account_id) {
-                this._renderCreate(state);
+                createPromise = this._renderCreate(state);
             }
-            var data = this.model.get(this.handleCreateRecord).data;
-            this.model.notifyChanges(this.handleCreateRecord, state.createForm).then(function () {
-                // FIXME can't it directly written REPLACE_WITH ids=state.createForm.analytic_tag_ids
-                self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'REPLACE_WITH', ids: []}}).then(function (){
-                    var defs = [];
-                    _.each(state.createForm.analytic_tag_ids, function (tag) {
-                        defs.push(self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'ADD_M2M', ids: tag}}));
-                    });
-                    $.when.apply($, defs).then(function () {
-                        var record = self.model.get(self.handleCreateRecord);
-                        _.each(self.fields, function (field, fieldName) {
-                            if (self._avoidFieldUpdate[fieldName]) return;
-                            if (fieldName === "partner_id") return;
-                            if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
-                                field.reset(record);
-                            }
-                            if (fieldName === 'tax_id') {
-                                if (!state.createForm[fieldName] || state.createForm[fieldName].amount_type === "group") {
-                                    $('.create_force_tax_included').addClass('d-none');
+            Promise.resolve(createPromise).then(function(){
+                var data = self.model.get(self.handleCreateRecord).data;
+                self.model.notifyChanges(self.handleCreateRecord, state.createForm).then(function () {
+                    // FIXME can't it directly written REPLACE_WITH ids=state.createForm.analytic_tag_ids
+                    self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'REPLACE_WITH', ids: []}}).then(function (){
+                        var defs = [];
+                        _.each(state.createForm.analytic_tag_ids, function (tag) {
+                            defs.push(self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'ADD_M2M', ids: tag}}));
+                        });
+                        Promise.all(defs).then(function () {
+                            var record = self.model.get(self.handleCreateRecord);
+                            _.each(self.fields, function (field, fieldName) {
+                                if (self._avoidFieldUpdate[fieldName]) return;
+                                if (fieldName === "partner_id") return;
+                                if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
+                                    field.reset(record);
                                 }
-                                else {
-                                    $('.create_force_tax_included').removeClass('d-none');
+                                if (fieldName === 'tax_id') {
+                                    if (!state.createForm[fieldName] || state.createForm[fieldName].amount_type === "group") {
+                                        $('.create_force_tax_included').addClass('d-none');
+                                    }
+                                    else {
+                                        $('.create_force_tax_included').removeClass('d-none');
+                                    }
                                 }
-                            } 
+                            });
                         });
                     });
                 });
+                if(state.createForm.tax_id){
+                    // Set the 'Tax Include' field editable or not depending of the 'price_include' value.
+                    self.$('.create_force_tax_included input').attr('disabled', state.createForm.tax_id.price_include);
+                }
             });
-            if(state.createForm.tax_id){
-                // Set the 'Tax Include' field editable or not depending of the 'price_include' value.
-                this.$('.create_force_tax_included input').attr('disabled', state.createForm.tax_id.price_include);
-            }
         }
         this.$('.create .add_line').toggle(!!state.balance.amount_currency);
     },
@@ -511,10 +514,11 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      *
      * @private
      * @param {object} state - statement line
+     * @returns {Promise}
      */
     _renderCreate: function (state) {
         var self = this;
-        this.model.makeRecord('account.bank.statement.line', [{
+        return this.model.makeRecord('account.bank.statement.line', [{
             relation: 'account.account',
             type: 'many2one',
             name: 'account_id',
@@ -583,7 +587,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
 
             self.fields.amount = new basic_fields.FieldFloat(self,
                 'amount', record, {mode: 'edit'});
-            
+
             self.fields.date = new basic_fields.FieldDate(self,
                 'date', record, {mode: 'edit'});
 
@@ -597,13 +601,13 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.fields.tax_id.appendTo($create.find('.create_tax_id .o_td_field'));
             self.fields.analytic_account_id.appendTo($create.find('.create_analytic_account_id .o_td_field'));
             self.fields.analytic_tag_ids.appendTo($create.find('.create_analytic_tag_ids .o_td_field'));
-            self.fields.force_tax_included.appendTo($create.find('.create_force_tax_included .o_td_field'))
+            self.fields.force_tax_included.appendTo($create.find('.create_force_tax_included .o_td_field'));
             self.fields.label.appendTo($create.find('.create_label .o_td_field'))
                 .then(addRequiredStyle.bind(self, self.fields.label));
             self.fields.amount.appendTo($create.find('.create_amount .o_td_field'))
                 .then(addRequiredStyle.bind(self, self.fields.amount));
-            self.fields.date.appendTo($create.find('.create_date .o_td_field'))
-            self.fields.to_check.appendTo($create.find('.create_to_check .o_td_field'))
+            self.fields.date.appendTo($create.find('.create_date .o_td_field'));
+            self.fields.to_check.appendTo($create.find('.create_to_check .o_td_field'));
             self.$('.create').append($create);
 
             function addRequiredStyle(widget) {
@@ -628,7 +632,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             res_model: 'account.reconcile.model',
             views: [[false, 'form']],
             target: 'current'
-        }, 
+        },
         {
             on_reverse_breadcrumb: function() {self.trigger_up('reload');},
         });
@@ -836,11 +840,11 @@ var ManualLineRenderer = LineRenderer.extend({
      * @override
      * @param {string} handle
      * @param {number} proposition id (move line id)
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     removeProposition: function (handle, id) {
         if (!id) {
-            return $.when();
+            return Promise.resolve();
         }
         return this._super(handle, id);
     },
@@ -879,7 +883,7 @@ var ManualLineRenderer = LineRenderer.extend({
                 defs.push(def);
             }
 
-            return $.when.apply($, defs).then(function () {
+            return Promise.all(defs).then(function () {
                 if (!self.fields.title_account_id) {
                     return self.fields.partner_id.prependTo(self.$('.accounting_view thead td:eq(1) span:first'));
                 } else {
@@ -909,10 +913,11 @@ var ManualLineRenderer = LineRenderer.extend({
      * @override
      */
     _renderCreate: function (state) {
-        this._super(state);
+        var parentPromise = this._super(state);
         this.$('.create .create_journal_id').show();
-        this.$('.create .create_date').removeClass('d-none')
+        this.$('.create .create_date').removeClass('d-none');
         this.$('.create .create_journal_id .o_input').addClass('o_required_modifier');
+        return parentPromise;
     },
 
 });
