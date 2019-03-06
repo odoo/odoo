@@ -34,7 +34,7 @@ tour.register('shop_mail', {
                     'domain': "https://domain-not-used.fr",
                 }],
             });
-            $.when(def1, def2).then(function (data) {
+            Promise.all([def1, def2]).then(function (data) {
                 window.location.href = '/shop?search=Acoustic Bloc Screens';
             });
         },
