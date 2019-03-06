@@ -4,7 +4,7 @@ odoo.define('google_calendar.calendar_tests', function (require) {
 var CalendarView = require('web.CalendarView');
 var testUtils = require('web.test_utils');
 
-var createAsyncView = testUtils.createAsyncView;
+var createCalendarView = testUtils.createCalendarView;
 
 var initialDate = new Date("2016-12-12T08:00:00Z");
 
@@ -27,11 +27,11 @@ QUnit.module('Google Calendar', {
                     type: {string: "type", type: "integer"},
                 },
                 records: [
-                    {id: 5, user_id: 4, partner_id: 4, name: "event 1", start: "2016-12-13 15:55:05", stop: "2016-12-15 18:55:05", allday: false, partner_ids: [], type: 2},
-                    {id: 6, user_id: 4, partner_id: 4, name: "event 2", start: "2016-12-18 08:00:00", stop: "2016-12-18 09:00:00", allday: false, partner_ids: [], type: 3}
+                    {id: 5, user_id: 4, partner_id: 4, name: "event 1", start: "2016-12-13 15:55:05", stop: "2016-12-15 18:55:05", allday: false, partner_ids: [], type: 2},
+                    {id: 6, user_id: 4, partner_id: 4, name: "event 2", start: "2016-12-18 08:00:00", stop: "2016-12-18 09:00:00", allday: false, partner_ids: [], type: 3}
                 ],
                 check_access_rights: function () {
-                    return $.when(true);
+                    return Promise.resolve(true);
                 }
             },
             user: {
@@ -69,11 +69,10 @@ QUnit.module('Google Calendar', {
     }
 }, function () {
 
-    QUnit.test('sync google calendar', function (assert) {
+    QUnit.test('sync google calendar', async function (assert) {
         assert.expect(6);
-        var done = assert.async();
 
-        createAsyncView({
+        var calendar = await createCalendarView({
             View: CalendarView,
             model: 'calendar.event',
             data: this.data,
@@ -93,30 +92,27 @@ QUnit.module('Google Calendar', {
                     this.data['calendar.event'].records.push(
                         {id: 7, user_id: 4, partner_id: 4, name: "event from google calendar", start: "2016-12-28 15:55:05", stop: "2016-12-29 18:55:05", allday: false, partner_ids: [], type: 2}
                     );
-                    return $.when({status: 'need_refresh'});
+                    return Promise.resolve({status: 'need_refresh'});
                 } else if (route === '/web/dataset/call_kw/calendar.event/search_read') {
                     assert.step(route);
                 }
                 return this._super.apply(this, arguments);
             },
-        }).then(function (calendar) {
-            assert.containsN(calendar, '.fc-event', 2, "should display 2 events on the month");
-
-            var $sidebar = calendar.$('.o_calendar_sidebar');
-
-            testUtils.dom.click(calendar.$('.o_google_sync_button'));
-
-            assert.verifySteps([
-                '/web/dataset/call_kw/calendar.event/search_read',
-                '/google_calendar/sync_data',
-                '/web/dataset/call_kw/calendar.event/search_read',
-            ], 'should do a search_read before and after the call to sync_data');
-
-            assert.containsN(calendar, '.fc-event', 3, "should now display 3 events on the month");
-
-            calendar.destroy();
-            done();
         });
+
+        assert.containsN(calendar, '.fc-event', 2, "should display 2 events on the month");
+
+        await testUtils.dom.click(calendar.$('.o_google_sync_button'));
+
+        assert.verifySteps([
+            '/web/dataset/call_kw/calendar.event/search_read',
+            '/google_calendar/sync_data',
+            '/web/dataset/call_kw/calendar.event/search_read',
+        ], 'should do a search_read before and after the call to sync_data');
+
+        assert.containsN(calendar, '.fc-event', 3, "should now display 3 events on the month");
+
+        calendar.destroy();
     });
 });
 });
