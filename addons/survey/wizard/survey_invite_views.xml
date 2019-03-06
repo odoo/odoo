@@ -12,7 +12,7 @@
                             <field name="survey_users_login_required" invisible="1"/>
                             <field name="survey_id" readonly="context.get('default_survey_id')"/>
                             <field name="existing_mode" widget="radio" invisible="1" />
-                            <field name="survey_url" label="Public share URL" readonly="1" widget="CopyClipboardText"
+                            <field name="survey_url" label="Public share URL" readonly="1" widget="CopyClipboardChar"
                                  attrs="{'invisible':[('survey_access_mode', '!=', 'public')]}"
                                  class="mb16"/>
                             <field name="partner_ids"

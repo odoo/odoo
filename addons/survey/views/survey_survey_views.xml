@@ -41,9 +41,9 @@
                     <group>
                         <group>
                             <field name="access_mode"/>
-                            <field name="public_url" readonly="1" 
+                            <field name="public_url" readonly="1"
                                 attrs="{'invisible': [('access_mode', '!=', 'public')]}"
-                                widget="CopyClipboardText"/>
+                                widget="CopyClipboardChar"/>
                             <field name="category" invisible="1"/>
                         </group>
                     </group>
