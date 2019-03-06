@@ -97,10 +97,7 @@ var KanbanColumn = Widget.extend({
         this.$header = this.$('.o_kanban_header');
 
         for (var i = 0; i < this.data_records.length; i++) {
-            var def = this._addRecord(this.data_records[i]);
-            if (def.state() === 'pending') {
-                defs.push(def);
-            }
+            defs.push(this._addRecord(this.data_records[i]));
         }
 
         if (!config.device.isMobile) {
@@ -170,7 +167,7 @@ var KanbanColumn = Widget.extend({
             this.$('.o_kanban_load_more').html(QWeb.render('KanbanView.LoadMore', {widget: this}));
         }
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * Called when a record has been quick created, as a new column is rendered
@@ -193,7 +190,7 @@ var KanbanColumn = Widget.extend({
     /**
      * Adds the quick create record to the top of the column.
      *
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     addQuickCreate: function () {
         if (this.folded) {
@@ -205,7 +202,7 @@ var KanbanColumn = Widget.extend({
         }
 
         if (this.quickCreateWidget) {
-            return $.Deferred().reject();
+            return Promise.reject();
         }
         this.trigger_up('close_quick_create'); // close other quick create widgets
         this.trigger_up('start_quick_create');
@@ -245,7 +242,7 @@ var KanbanColumn = Widget.extend({
      * @param {Object} [options]
      * @param {string} [options.position]
      *        'before' to add at the top, add at the bottom by default
-     * @return {Deferred}
+     * @return {Promise}
      */
     _addRecord: function (recordState, options) {
         var record = new this.KanbanRecord(this, recordState, this.record_options);

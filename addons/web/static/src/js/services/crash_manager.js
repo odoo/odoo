@@ -65,7 +65,7 @@ var CrashManager = core.Class.extend({
             ajax.jsonRpc('/web/webclient/version_info', 'call', {}, {shadow:true}).then(function () {
                 core.bus.trigger('connection_restored');
                 self.isConnected = true;
-            }).fail(function () {
+            }).guardedCatch(function () {
                 // exponential backoff, with some jitter
                 delay = (delay * 1.5) + 500*Math.random();
                 setTimeout(checkConnection, delay);

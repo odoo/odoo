@@ -353,7 +353,7 @@ QUnit.module('Views', {
                 search_disable_custom_filters: true,
             },
         });
-        testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
+        await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
         assert.containsOnce(controlPanel, '.o_menu_item a:contains("A")');
         assert.containsNone(controlPanel, '.o_menu_item a:contains("B")');
 
@@ -371,8 +371,8 @@ QUnit.module('Views', {
             data: this.data,
             searchMenuTypes: ['filter'],
         });
-        testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
-        testUtils.dom.click($('.o_menu_item a'));
+        await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
+        await testUtils.dom.click($('.o_menu_item a'));
         assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').text().trim(), 'A',
             'should have a facet with A');
 
@@ -381,14 +381,16 @@ QUnit.module('Views', {
             which: $.ui.keyCode.BACKSPACE,
             keyCode: $.ui.keyCode.BACKSPACE,
         }));
+        await testUtils.nextTick();
         assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').length, 0,
-            'there should be no facet');
+        'there should be no facet');
 
         // delete nothing (should not crash)
         controlPanel.$('input.o_searchview_input').trigger($.Event('keydown', {
             which: $.ui.keyCode.BACKSPACE,
             keyCode: $.ui.keyCode.BACKSPACE,
         }));
+        await testUtils.nextTick();
 
         controlPanel.destroy();
     });
@@ -409,7 +411,7 @@ QUnit.module('Views', {
                 search_disable_custom_filters: true,
             },
         });
-        testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
+        await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
         assert.containsOnce(controlPanel, '.o_menu_item a:contains("A")');
         assert.containsNone(controlPanel, '.o_menu_item a:contains("B")');
 

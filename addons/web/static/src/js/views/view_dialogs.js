@@ -128,7 +128,7 @@ var FormViewDialog = ViewDialog.extend({
                     text: (multi_select ? _t("Save & Close") : _t("Save")),
                     classes: "btn-primary",
                     click: function () {
-                        this._save().then(self.close.bind(self));
+                        self._save().then(self.close.bind(self));
                     }
                 });
 
@@ -137,7 +137,7 @@ var FormViewDialog = ViewDialog.extend({
                         text: _t("Save & New"),
                         classes: "btn-primary",
                         click: function () {
-                            this._save()
+                            self._save()
                                 .then(self.form_view.createRecord.bind(self.form_view, self.parentID))
                                 .then(function () {
                                     if (!self.deletable) {
@@ -183,7 +183,7 @@ var FormViewDialog = ViewDialog.extend({
         var FormView = view_registry.get('form');
         var fields_view_def;
         if (this.options.fields_view) {
-            fields_view_def = $.when(this.options.fields_view);
+            fields_view_def = Promise.resolve(this.options.fields_view);
         } else {
             fields_view_def = this.loadFieldView(this.res_model, this.context, this.options.view_id, 'form');
         }
@@ -213,9 +213,9 @@ var FormViewDialog = ViewDialog.extend({
             if (self.recordID && self.shouldSaveLocally) {
                 self.model.save(self.recordID, {savePoint: true});
             }
-            self.form_view.appendTo(fragment)
+            return self.form_view.appendTo(fragment)
                 .then(function () {
-                    self.opened().always(function () {
+                    self.opened().then(function () {
                         var $buttons = $('<div>');
                         self.form_view.renderButtons($buttons);
                         if ($buttons.children().length) {
@@ -226,7 +226,7 @@ var FormViewDialog = ViewDialog.extend({
                             in_DOM: true,
                         });
                     });
-                    _super();
+                    return _super();
                 });
         });
 
@@ -255,7 +255,7 @@ var FormViewDialog = ViewDialog.extend({
 
     /**
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _save: function () {
         var self = this;
@@ -332,7 +332,7 @@ var SelectCreateDialog = ViewDialog.extend({
         }
         var self = this;
         var _super = this._super.bind(this);
-        this.loadViews(this.res_model, this.context, [[false, 'list'], [false, 'search']], {})
+        return this.loadViews(this.res_model, this.context, [[false, 'list'], [false, 'search']], {})
             .then(this.setup.bind(this))
             .then(function (fragment) {
                 self.opened().then(function () {
@@ -342,9 +342,8 @@ var SelectCreateDialog = ViewDialog.extend({
                     });
                     self.set_buttons(self.__buttons);
                 });
-                _super();
+                return _super();
             });
-        return this;
     },
 
     setup: function (fieldsViews) {

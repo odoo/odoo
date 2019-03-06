@@ -59,10 +59,10 @@ QUnit.module('Views', {
 
     QUnit.module('SearchPanel in Kanban views');
 
-    QUnit.test('basic rendering', function (assert) {
+    QUnit.test('basic rendering', async function (assert) {
         assert.expect(17);
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -115,10 +115,10 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('sections with custom icon and color', function (assert) {
+    QUnit.test('sections with custom icon and color', async function (assert) {
         assert.expect(4);
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -144,12 +144,12 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('sections with attr invisible="1" are ignored', function (assert) {
+    QUnit.test('sections with attr invisible="1" are ignored', async function (assert) {
         // 'groups' attributes are converted server-side into invisible="1" when the user doesn't
         // belong to the given group
         assert.expect(4);
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -181,10 +181,10 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('categories and filters order is kept', function (assert) {
+    QUnit.test('categories and filters order is kept', async function (assert) {
         assert.expect(4);
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -214,10 +214,10 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('specify active category value in context', function (assert) {
+    QUnit.test('specify active category value in context', async function (assert) {
         assert.expect(1);
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -248,10 +248,10 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('use category (on many2one) to refine search', function (assert) {
+    QUnit.test('use category (on many2one) to refine search', async function (assert) {
         assert.expect(14);
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -276,21 +276,21 @@ QUnit.module('Views', {
         });
 
         // select 'asustek'
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
 
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:nth(1) .active');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 2);
 
         // select 'agrolait'
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(2) header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(2) header'));
 
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:nth(2) .active');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
         // select 'All'
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:first header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:first header'));
 
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:first .active');
@@ -306,10 +306,10 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('use category (on selection) to refine search', function (assert) {
+    QUnit.test('use category (on selection) to refine search', async function (assert) {
         assert.expect(14);
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -333,21 +333,21 @@ QUnit.module('Views', {
         });
 
         // select 'abc'
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
 
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:nth(1) .active');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
         // select 'ghi'
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(3) header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(3) header'));
 
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:nth(3) .active');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 2);
 
         // select 'All' again
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:first header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:first header'));
 
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:first .active');
@@ -363,7 +363,7 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('store and retrieve active category value', function (assert) {
+    QUnit.test('store and retrieve active category value', async function (assert) {
         assert.expect(8);
 
         var Storage = RamStorage.extend({
@@ -380,7 +380,7 @@ QUnit.module('Views', {
         });
 
         var expectedActiveId = 3;
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -412,7 +412,7 @@ QUnit.module('Views', {
 
         // select 'agrolait'
         expectedActiveId = 5;
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(2) header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(2) header'));
 
         assert.verifySteps([
             'getItem searchpanel_partner_company_id',
@@ -422,8 +422,8 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('retrieved category value does not exist', function (assert) {
-        assert.expect(5);
+    QUnit.test('retrieved category value does not exist', async function (assert) {
+        assert.expect(6);
 
         var Storage = RamStorage.extend({
             getItem: function (key) {
@@ -435,7 +435,7 @@ QUnit.module('Views', {
             storage: new Storage(),
         });
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -465,13 +465,15 @@ QUnit.module('Views', {
         assert.containsOnce(kanban, '.o_search_panel_category_value:first .active');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 4);
 
+        assert.verifySteps(['getItem searchpanel_partner_company_id']);
+
         kanban.destroy();
     });
 
-    QUnit.test('use two categories to refine search', function (assert) {
+    QUnit.test('use two categories to refine search', async function (assert) {
         assert.expect(14);
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -500,23 +502,23 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 3);
 
         // select 'asustek'
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value[data-id=3] header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value[data-id=3] header'));
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 2);
 
         // select 'abc'
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value[data-id=abc] header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value[data-id=abc] header'));
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
         // select 'ghi'
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value[data-id=ghi] header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value[data-id=ghi] header'));
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
         // select 'All' in first category (company_id)
-        testUtils.dom.click(kanban.$('.o_search_panel_section:first .o_search_panel_category_value:first header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_section:first .o_search_panel_category_value:first header'));
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
         // select 'All' in second category (state)
-        testUtils.dom.click(kanban.$('.o_search_panel_section:nth(1) .o_search_panel_category_value:first header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_section:nth(1) .o_search_panel_category_value:first header'));
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 3);
 
         assert.verifySteps([
@@ -531,14 +533,14 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('category with parent_field', function (assert) {
+    QUnit.test('category with parent_field', async function (assert) {
         assert.expect(24);
 
         this.data.company.records.push({id: 40, name: 'child company 1', parent_id: 5});
         this.data.company.records.push({id: 41, name: 'child company 2', parent_id: 5});
         this.data.partner.records[1].company_id = 40;
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -569,7 +571,7 @@ QUnit.module('Views', {
         assert.containsOnce(kanban, '.o_search_panel_category_value .o_toggle_fold');
 
         // unfold parent category
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value .o_toggle_fold'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value .o_toggle_fold'));
 
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:first .active');
@@ -578,21 +580,21 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_search_panel_category_value .o_search_panel_category_value', 2);
 
         // click on first child company
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value .o_search_panel_category_value:first header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value .o_search_panel_category_value:first header'));
 
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value .o_search_panel_category_value:first .active');
         assert.containsOnce(kanban, '.o_kanban_record:not(.o_kanban_ghost)');
 
         // click on parent company
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(2) > header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(2) > header'));
 
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:nth(2) .active');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
         // fold category with children
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value .o_toggle_fold'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value .o_toggle_fold'));
 
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:nth(2) .active');
@@ -608,14 +610,14 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('can (un)fold parent category values', function (assert) {
+    QUnit.test('can (un)fold parent category values', async function (assert) {
         assert.expect(7);
 
         this.data.company.records.push({id: 40, name: 'child company 1', parent_id: 5});
         this.data.company.records.push({id: 41, name: 'child company 2', parent_id: 5});
         this.data.partner.records[1].company_id = 40;
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -639,13 +641,13 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_search_panel_category_value', 3);
 
         // unfold agrolait
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold'));
         assert.hasClass(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold'), 'fa-caret-down',
             "'agrolait' should be open");
         assert.containsN(kanban, '.o_search_panel_category_value', 5);
 
         // fold agrolait
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold'));
         assert.hasClass(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold'), 'fa-caret-left',
             "'agrolait' should be folded");
         assert.containsN(kanban, '.o_search_panel_category_value', 3);
@@ -653,14 +655,14 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('fold status is kept at reload', function (assert) {
+    QUnit.test('fold status is kept at reload', async function (assert) {
         assert.expect(4);
 
         this.data.company.records.push({id: 40, name: 'child company 1', parent_id: 5});
         this.data.company.records.push({id: 41, name: 'child company 2', parent_id: 5});
         this.data.partner.records[1].company_id = 40;
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -678,12 +680,12 @@ QUnit.module('Views', {
         });
 
         // unfold agrolait
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold'));
         assert.hasClass(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold'), 'fa-caret-down',
             "'agrolait' should be open");
         assert.containsN(kanban, '.o_search_panel_category_value', 5);
 
-        kanban.reload({});
+        await kanban.reload({});
 
         assert.hasClass(kanban.$('.o_search_panel_category_value:contains(agrolait) .o_toggle_fold'), 'fa-caret-down',
             "'agrolait' should be open");
@@ -692,11 +694,11 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('concurrency: delayed search_reads', function (assert) {
+    QUnit.test('concurrency: delayed search_reads', async function (assert) {
         assert.expect(19);
 
         var def;
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -704,7 +706,7 @@ QUnit.module('Views', {
                 var result = this._super.apply(this, arguments);
                 if (route === '/web/dataset/search_read') {
                     assert.step(JSON.stringify(args.domain));
-                    return $.when(def).then(_.constant(result));
+                    return Promise.resolve(def).then(_.constant(result));
                 }
                 return result;
             },
@@ -728,9 +730,9 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 3);
 
         // select 'asustek' (delay the reload)
-        def = $.Deferred();
+        def = testUtils.makeTestPromise();
         var asustekDef = def;
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
 
         // 'asustek' should be selected, but there should still be 3 records
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
@@ -738,9 +740,9 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 3);
 
         // select 'agrolait' (delay the reload)
-        def = $.Deferred();
+        def = testUtils.makeTestPromise();
         var agrolaitDef = def;
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(2) header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(2) header'));
 
         // 'agrolait' should be selected, but there should still be 3 records
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
@@ -749,12 +751,14 @@ QUnit.module('Views', {
 
         // unlock asustek search (should be ignored, so there should still be 3 records)
         asustekDef.resolve();
+        await testUtils.nextTick();
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:nth(2) .active');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 3);
 
         // unlock agrolait search, there should now be 1 record
         agrolaitDef.resolve();
+        await testUtils.nextTick();
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:nth(2) .active');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 1);
@@ -768,18 +772,18 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('concurrency: misordered get_filters', function (assert) {
+    QUnit.test('concurrency: misordered get_filters', async function (assert) {
         assert.expect(15);
 
         var def;
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
             mockRPC: function (route, args) {
                 var result = this._super.apply(this, arguments);
                 if (args.method === 'search_panel_select_multi_range') {
-                    return $.when(def).then(_.constant(result));
+                    return Promise.resolve(def).then(_.constant(result));
                 }
                 return result;
             },
@@ -803,9 +807,9 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 4);
 
         // select 'abc' (delay the reload)
-        def = $.Deferred();
+        def = testUtils.makeTestPromise();
         var abcDef = def;
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
 
         // 'All' should still be selected, and there should still be 4 records
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
@@ -813,9 +817,9 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 4);
 
         // select 'ghi' (delay the reload)
-        def = $.Deferred();
+        def = testUtils.makeTestPromise();
         var ghiDef = def;
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(3) header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(3) header'));
 
         // 'All' should still be selected, and there should still be 4 records
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
@@ -824,12 +828,14 @@ QUnit.module('Views', {
 
         // unlock ghi search
         ghiDef.resolve();
+        await testUtils.nextTick();
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:nth(3) .active');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 2);
 
         // unlock abc search (should be ignored)
         abcDef.resolve();
+        await testUtils.nextTick();
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:nth(3) .active');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 2);
@@ -837,18 +843,18 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('concurrency: delayed get_filter', function (assert) {
+    QUnit.test('concurrency: delayed get_filter', async function (assert) {
         assert.expect(3);
 
         var def;
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
             mockRPC: function (route, args) {
                 var result = this._super.apply(this, arguments);
                 if (args.method === 'search_panel_select_multi_range') {
-                    return $.when(def).then(_.constant(result));
+                    return Promise.resolve(def).then(_.constant(result));
                 }
                 return result;
             },
@@ -868,22 +874,24 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 4);
 
         // trigger a reload and delay the get_filter
-        def = $.Deferred();
+        def = testUtils.makeTestPromise();
         kanban.reload({domain: [['id', '=', 1]]});
+        await testUtils.nextTick();
 
         assert.containsN(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 4);
 
         def.resolve();
+        await testUtils.nextTick();
 
         assert.containsOnce(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)');
 
         kanban.destroy();
     });
 
-    QUnit.test('use filter (on many2one) to refine search', function (assert) {
+    QUnit.test('use filter (on many2one) to refine search', async function (assert) {
         assert.expect(32);
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -927,7 +935,7 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 3);
 
         // check 'asustek'
-        testUtils.dom.click(kanban.$('.o_search_panel_filter_value:first input'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_filter_value:first input'));
 
         assert.containsOnce(kanban, '.o_search_panel_filter_value input:checked');
         assert.strictEqual(kanban.$('.o_search_panel_filter_value').text().replace(/\s/g, ''),
@@ -935,7 +943,7 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 2);
 
         // check 'agrolait'
-        testUtils.dom.click(kanban.$('.o_search_panel_filter_value:nth(1) input'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_filter_value:nth(1) input'));
 
         assert.containsN(kanban, '.o_search_panel_filter_value input:checked', 2);
         assert.strictEqual(kanban.$('.o_search_panel_filter_value').text().replace(/\s/g, ''),
@@ -943,7 +951,7 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 3);
 
         // uncheck 'asustek'
-        testUtils.dom.click(kanban.$('.o_search_panel_filter_value:first input'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_filter_value:first input'));
 
         assert.containsOnce(kanban, '.o_search_panel_filter_value input:checked');
         assert.strictEqual(kanban.$('.o_search_panel_filter_value').text().replace(/\s/g, ''),
@@ -951,7 +959,7 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 1);
 
         // uncheck 'agrolait'
-        testUtils.dom.click(kanban.$('.o_search_panel_filter_value:nth(1) input'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_filter_value:nth(1) input'));
 
         assert.containsNone(kanban, '.o_search_panel_filter_value input:checked');
         assert.strictEqual(kanban.$('.o_search_panel_filter_value').text().replace(/\s/g, ''),
@@ -963,26 +971,26 @@ QUnit.module('Views', {
             '[]',
             '[["bar","=",true]]',
             // 'asustek' checked
-            '[["bar","=",true],["company_id","in",[3]]]',
             '[["company_id","in",[3]]]',
+            '[["bar","=",true],["company_id","in",[3]]]',
             // 'asustek' and 'agrolait' checked
-            '[["bar","=",true],["company_id","in",[3,5]]]',
             '[["company_id","in",[3,5]]]',
+            '[["bar","=",true],["company_id","in",[3,5]]]',
             // 'agrolait' checked
-            '[["bar","=",true],["company_id","in",[5]]]',
             '[["company_id","in",[5]]]',
+            '[["bar","=",true],["company_id","in",[5]]]',
             // nothing checked
-            '[["bar","=",true]]',
             '[]',
+            '[["bar","=",true]]',
         ]);
 
         kanban.destroy();
     });
 
-    QUnit.test('use filter (on selection) to refine search', function (assert) {
+    QUnit.test('use filter (on selection) to refine search', async function (assert) {
         assert.expect(32);
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -1026,7 +1034,7 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 3);
 
         // check 'abc'
-        testUtils.dom.click(kanban.$('.o_search_panel_filter_value:first input'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_filter_value:first input'));
 
         assert.containsOnce(kanban, '.o_search_panel_filter_value input:checked');
         assert.strictEqual(kanban.$('.o_search_panel_filter_value').text().replace(/\s/g, ''),
@@ -1034,7 +1042,7 @@ QUnit.module('Views', {
         assert.containsOnce(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 1);
 
         // check 'def'
-        testUtils.dom.click(kanban.$('.o_search_panel_filter_value:nth(1) input'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_filter_value:nth(1) input'));
 
         assert.containsN(kanban, '.o_search_panel_filter_value input:checked', 2);
         assert.strictEqual(kanban.$('.o_search_panel_filter_value').text().replace(/\s/g, ''),
@@ -1042,7 +1050,7 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 2);
 
         // uncheck 'abc'
-        testUtils.dom.click(kanban.$('.o_search_panel_filter_value:first input'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_filter_value:first input'));
 
         assert.containsOnce(kanban, '.o_search_panel_filter_value input:checked');
         assert.strictEqual(kanban.$('.o_search_panel_filter_value').text().replace(/\s/g, ''),
@@ -1050,7 +1058,7 @@ QUnit.module('Views', {
         assert.containsOnce(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)');
 
         // uncheck 'def'
-        testUtils.dom.click(kanban.$('.o_search_panel_filter_value:nth(1) input'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_filter_value:nth(1) input'));
 
         assert.containsNone(kanban, '.o_search_panel_filter_value input:checked');
         assert.strictEqual(kanban.$('.o_search_panel_filter_value').text().replace(/\s/g, ''),
@@ -1062,26 +1070,26 @@ QUnit.module('Views', {
             '[]',
             '[["bar","=",true]]',
             // 'asustek' checked
-            '[["bar","=",true],["state","in",["abc"]]]',
             '[["state","in",["abc"]]]',
+            '[["bar","=",true],["state","in",["abc"]]]',
             // 'asustek' and 'agrolait' checked
-            '[["bar","=",true],["state","in",["abc","def"]]]',
             '[["state","in",["abc","def"]]]',
+            '[["bar","=",true],["state","in",["abc","def"]]]',
             // 'agrolait' checked
-            '[["bar","=",true],["state","in",["def"]]]',
             '[["state","in",["def"]]]',
+            '[["bar","=",true],["state","in",["def"]]]',
             // nothing checked
-            '[["bar","=",true]]',
             '[]',
+            '[["bar","=",true]]',
         ]);
 
         kanban.destroy();
     });
 
-    QUnit.test('only reload filters when domains change', function (assert) {
+    QUnit.test('only reload filters when domains change', async function (assert) {
         assert.expect(11);
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -1112,47 +1120,37 @@ QUnit.module('Views', {
         ]);
 
         // go to page 2 (the domain doesn't change, so the filters should not be reloaded)
-        testUtils.dom.click(kanban.$('.o_pager_next'));
+        await testUtils.dom.click(kanban.$('.o_pager_next'));
 
         assert.verifySteps([
-            'search_panel_select_multi_range',
-            '/web/dataset/search_read',
             '/web/dataset/search_read',
         ]);
 
         // reload with another domain, so the filters should be reloaded
-        kanban.reload({domain: [['id', '<', 5]]});
+        await kanban.reload({domain: [['id', '<', 5]]});
 
         assert.verifySteps([
             'search_panel_select_multi_range',
             '/web/dataset/search_read',
-            '/web/dataset/search_read',
-            '/web/dataset/search_read',
-            'search_panel_select_multi_range',
         ]);
 
         // change category value, so the filters should be reloaded
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
 
         assert.verifySteps([
             'search_panel_select_multi_range',
             '/web/dataset/search_read',
-            '/web/dataset/search_read',
-            '/web/dataset/search_read',
-            'search_panel_select_multi_range',
-            '/web/dataset/search_read',
-            'search_panel_select_multi_range',
         ]);
 
         kanban.destroy();
     });
 
-    QUnit.test('filter with groupby', function (assert) {
+    QUnit.test('filter with groupby', async function (assert) {
         assert.expect(42);
 
         this.data.company.records.push({id: 11, name: 'camptocamp', category_id: 7});
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -1200,7 +1198,7 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 3);
 
         // check 'asustek'
-        testUtils.dom.click(kanban.$('.o_search_panel_filter_value:first input'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_filter_value:first input'));
 
         assert.containsOnce(kanban, '.o_search_panel_filter_value input:checked');
         var firstGroupCheckbox = kanban.$('.o_search_panel_filter_group:first > div > input').get(0);
@@ -1211,7 +1209,7 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 2);
 
         // check 'agrolait'
-        testUtils.dom.click(kanban.$('.o_search_panel_filter_value:nth(1) input'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_filter_value:nth(1) input'));
 
         assert.containsN(kanban, '.o_search_panel_filter_value input:checked', 2);
         var secondGroupCheckbox = kanban.$('.o_search_panel_filter_group:nth(1) > div > input').get(0);
@@ -1224,7 +1222,7 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 0);
 
         // check 'camptocamp'
-        testUtils.dom.click(kanban.$('.o_search_panel_filter_value:nth(2) input'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_filter_value:nth(2) input'));
 
         assert.containsN(kanban, '.o_search_panel_filter_value input:checked', 3);
         secondGroupCheckbox = kanban.$('.o_search_panel_filter_group:nth(1) > div > input').get(0);
@@ -1237,7 +1235,7 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 0);
 
         // uncheck second group
-        testUtils.dom.click(kanban.$('.o_search_panel_filter_group:nth(1) > div > input'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_filter_group:nth(1) > div > input'));
 
         assert.containsOnce(kanban, '.o_search_panel_filter_value input:checked');
         secondGroupCheckbox = kanban.$('.o_search_panel_filter_group:nth(1) > div > input').get(0);
@@ -1254,28 +1252,28 @@ QUnit.module('Views', {
             '[]',
             '[["bar","=",true]]',
             // 'asustek' checked
-            '[["bar","=",true],["company_id","in",[3]]]',
             '[["company_id","in",[3]]]',
+            '[["bar","=",true],["company_id","in",[3]]]',
             // 'asustek' and 'agrolait' checked
-            '[["bar","=",true],["company_id","in",[3]],["company_id","in",[5]]]',
             '[["company_id","in",[3]],["company_id","in",[5]]]',
+            '[["bar","=",true],["company_id","in",[3]],["company_id","in",[5]]]',
             // 'asustek', 'agrolait' and 'camptocamp' checked
-            '[["bar","=",true],["company_id","in",[3]],["company_id","in",[5,11]]]',
             '[["company_id","in",[3]],["company_id","in",[5,11]]]',
+            '[["bar","=",true],["company_id","in",[3]],["company_id","in",[5,11]]]',
             // 'asustek' checked
-            '[["bar","=",true],["company_id","in",[3]]]',
             '[["company_id","in",[3]]]',
+            '[["bar","=",true],["company_id","in",[3]]]',
         ]);
 
         kanban.destroy();
     });
 
-    QUnit.test('filter with domain', function (assert) {
+    QUnit.test('filter with domain', async function (assert) {
         assert.expect(3);
 
         this.data.company.records.push({id: 40, name: 'child company 1', parent_id: 3});
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -1313,12 +1311,12 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('(un)fold filter group', function (assert) {
+    QUnit.test('(un)fold filter group', async function (assert) {
         assert.expect(13);
 
         this.data.company.records.push({id: 11, name: 'camptocamp', category_id: 7});
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -1340,13 +1338,13 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_search_panel_filter_value', 3);
 
         // check 'agrolait'
-        testUtils.dom.click(kanban.$('.o_search_panel_filter_value:nth(1) input'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_filter_value:nth(1) input'));
         var secondGroupCheckbox = kanban.$('.o_search_panel_filter_group:nth(1) > div > input').get(0);
         assert.strictEqual(secondGroupCheckbox.indeterminate, true);
         assert.hasAttrValue(kanban.$('.o_search_panel_filter_value:nth(1) input'), 'checked', 'checked');
 
         // fold second group
-        testUtils.dom.click(kanban.$('.o_search_panel_filter_group:nth(1) .o_toggle_fold'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_filter_group:nth(1) .o_toggle_fold'));
 
         assert.containsN(kanban, '.o_search_panel_filter_group', 2);
         assert.containsOnce(kanban, '.o_search_panel_filter_value');
@@ -1354,13 +1352,13 @@ QUnit.module('Views', {
         assert.strictEqual(secondGroupCheckbox.indeterminate, true);
 
         // fold first group
-        testUtils.dom.click(kanban.$('.o_search_panel_filter_group:first .o_toggle_fold'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_filter_group:first .o_toggle_fold'));
 
         assert.containsN(kanban, '.o_search_panel_filter_group', 2);
         assert.containsNone(kanban, '.o_search_panel_filter_value');
 
         // unfold second group
-        testUtils.dom.click(kanban.$('.o_search_panel_filter_group:nth(1) .o_toggle_fold'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_filter_group:nth(1) .o_toggle_fold'));
 
         assert.containsN(kanban, '.o_search_panel_filter_group', 2);
         assert.containsN(kanban, '.o_search_panel_filter_value', 2);
@@ -1371,10 +1369,10 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('filter with domain depending on category', function (assert) {
+    QUnit.test('filter with domain depending on category', async function (assert) {
         assert.expect(22);
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -1408,7 +1406,7 @@ QUnit.module('Views', {
         });
 
         // select 'gold' category
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
 
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:nth(1) .active');
@@ -1417,7 +1415,7 @@ QUnit.module('Views', {
             "asustek1");
 
         // select 'silver' category
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(2) header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(2) header'));
 
         assert.containsOnce(kanban, '.o_search_panel_category_value:nth(2) .active');
         assert.containsOnce(kanban, '.o_search_panel_filter_value');
@@ -1425,7 +1423,7 @@ QUnit.module('Views', {
             "agrolait2");
 
         // select All
-        testUtils.dom.click(kanban.$('.o_search_panel_category_value:first header'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:first header'));
 
         assert.containsOnce(kanban, '.o_search_panel_category_value:first .active');
         assert.containsNone(kanban, '.o_search_panel_filter_value');
@@ -1444,14 +1442,14 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('specify active filter values in context', function (assert) {
+    QUnit.test('specify active filter values in context', async function (assert) {
         assert.expect(4);
 
         var expectedDomain = [
             ['company_id', 'in', [5]],
             ['state', 'in', ['abc', 'ghi']],
         ];
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -1483,17 +1481,17 @@ QUnit.module('Views', {
 
         // manually untick a default value
         expectedDomain = [['state', 'in', ['abc', 'ghi']]];
-        testUtils.dom.click(kanban.$('.o_search_panel_filter:first .o_search_panel_filter_value:nth(1) input'));
+        await testUtils.dom.click(kanban.$('.o_search_panel_filter:first .o_search_panel_filter_value:nth(1) input'));
 
         assert.containsN(kanban, '.o_search_panel_filter_value input:checked', 2);
 
         kanban.destroy();
     });
 
-    QUnit.test('retrieved filter value from context does not exist', function (assert) {
+    QUnit.test('retrieved filter value from context does not exist', async function (assert) {
         assert.expect(1);
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -1522,12 +1520,12 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('filter with groupby and default values in context', function (assert) {
+    QUnit.test('filter with groupby and default values in context', async function (assert) {
         assert.expect(2);
 
         this.data.company.records.push({id: 11, name: 'camptocamp', category_id: 7});
 
-        var kanban = createView({
+        var kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,

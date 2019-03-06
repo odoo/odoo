@@ -86,7 +86,7 @@ var ControlPanelRenderer = Renderer.extend({
 
         var superDef = this._super.apply(this, arguments);
         var searchDef = this._renderSearch();
-        return $.when(superDef, searchDef).then(function () {
+        return Promise.all([superDef, searchDef]).then(function () {
             self._setSearchMenusVisibility();
         });
     },
@@ -148,7 +148,7 @@ var ControlPanelRenderer = Renderer.extend({
      * Update the state of the renderer state. It retriggers a full rerendering.
      *
      * @param {Object} state
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     updateState: function (state) {
         this.state = state;
@@ -261,7 +261,7 @@ var ControlPanelRenderer = Renderer.extend({
      * Renderer the search bar and the search menus
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _renderSearch: function () {
         var defs = [];
@@ -274,11 +274,11 @@ var ControlPanelRenderer = Renderer.extend({
         if (this.withSearchBar) {
             defs.push(this._renderSearchBar());
         }
-        return $.when(this, defs).then(this._focusSearchInput.bind(this));
+        return Promise.all(defs).then(this._focusSearchInput.bind(this));
     },
     /**
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _renderSearchBar: function () {
         // TODO: might need a reload instead of a destroy/instantiate
@@ -315,7 +315,7 @@ var ControlPanelRenderer = Renderer.extend({
      *
      * @private
      * @param {string} menuType
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _setupMenu: function (menuType) {
         var Menu;
@@ -345,7 +345,7 @@ var ControlPanelRenderer = Renderer.extend({
      * Instantiate the search menu determined by this.searchMenuTypes.
      *
      * @private
-     * @returns {Deferred[]}
+     * @returns {Promise[]}
      */
     _setupMenus: function () {
         this.$subMenus = this._getSubMenusPlace();

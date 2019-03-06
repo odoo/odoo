@@ -52,7 +52,6 @@ QUnit.module('Views', {
             },
         };
     },
-
 }, function () {
 
     QUnit.module('view_dialogs');
@@ -64,7 +63,7 @@ QUnit.module('Views', {
         return widget;
     }
 
-    QUnit.test('formviewdialog buttons in footer are positioned properly', function (assert) {
+    QUnit.test('formviewdialog buttons in footer are positioned properly', async function (assert) {
         assert.expect(2);
 
         var parent = createParent({
@@ -84,6 +83,7 @@ QUnit.module('Views', {
             res_model: 'partner',
             res_id: 1,
         }).open();
+        await testUtils.nextTick();
 
         assert.notOk($('.modal-body button').length,
             "should not have any button in body");
@@ -92,7 +92,7 @@ QUnit.module('Views', {
         parent.destroy();
     });
 
-    QUnit.test('formviewdialog buttons in footer are not duplicated', function (assert) {
+    QUnit.test('formviewdialog buttons in footer are not duplicated', async function (assert) {
         assert.expect(2);
         this.data.partner.fields.poney_ids = {string: "Poneys", type: "one2many", relation: 'partner'};
         this.data.partner.records[0].poney_ids = [];
@@ -112,22 +112,20 @@ QUnit.module('Views', {
             res_model: 'partner',
             res_id: 1,
         }).open();
+        await testUtils.nextTick();
 
         assert.strictEqual($('.modal button.btn-primary').length, 1,
             "should have 1 buttons in modal");
 
-        testUtils.dom.click($('.o_field_x2many_list_row_add a'));
-        $('input.o_input').trigger($.Event('keydown', {
-            which: $.ui.keyCode.ESCAPE,
-            keyCode: $.ui.keyCode.ESCAPE,
-        }));
+        await testUtils.dom.click($('.o_field_x2many_list_row_add a'));
+        await testUtils.fields.triggerKeydown($('input.o_input'), 'escape');
 
         assert.strictEqual($('.modal button.btn-primary').length, 1,
             "should still have 1 buttons in modal");
         parent.destroy();
     });
 
-    QUnit.test('SelectCreateDialog use domain, group_by and search default', function (assert) {
+    QUnit.test('SelectCreateDialog use domain, group_by and search default', async function (assert) {
         assert.expect(3);
 
         var search = 0;
@@ -183,7 +181,8 @@ QUnit.module('Views', {
             },
         });
 
-        var dialog = new dialogs.SelectCreateDialog(parent, {
+        var dialog;
+        new dialogs.SelectCreateDialog(parent, {
             no_create: true,
             readonly: true,
             res_model: 'partner',
@@ -192,15 +191,18 @@ QUnit.module('Views', {
                 search_default_groupby_bar: true,
                 search_default_foo: 'piou',
             },
-        }).open();
+        }).open().then(function (result) {
+            dialog = result;
+        });
+        await testUtils.nextTick();
 
-        testUtils.dom.click(dialog.$('.o_searchview_facet:contains(groupby_bar) .o_facet_remove'));
-        testUtils.dom.click(dialog.$('.o_searchview_facet .o_facet_remove'));
+        await testUtils.dom.click(dialog.$('.o_searchview_facet:contains(groupby_bar) .o_facet_remove'));
+        await testUtils.dom.click(dialog.$('.o_searchview_facet .o_facet_remove'));
 
         parent.destroy();
     });
 
-    QUnit.test('SelectCreateDialog correctly evaluates domains', function (assert) {
+    QUnit.test('SelectCreateDialog correctly evaluates domains', async function (assert) {
         assert.expect(1);
 
         var parent = createParent({
@@ -234,11 +236,12 @@ QUnit.module('Views', {
             res_model: 'partner',
             domain: "[['id', '=', uid]]",
         }).open();
+        await testUtils.nextTick();
 
         parent.destroy();
     });
 
-    QUnit.test('SelectCreateDialog list view in readonly', function (assert) {
+    QUnit.test('SelectCreateDialog list view in readonly', async function (assert) {
         assert.expect(1);
 
         var parent = createParent({
@@ -254,12 +257,16 @@ QUnit.module('Views', {
             },
         });
 
-        var dialog = new dialogs.SelectCreateDialog(parent, {
+        var dialog;
+        new dialogs.SelectCreateDialog(parent, {
             res_model: 'partner',
-        }).open();
+        }).open().then(function (result) {
+            dialog = result;
+        });
+        await testUtils.nextTick();
 
         // click on the first row to see if the list is editable
-        testUtils.dom.click(dialog.$('.o_list_view tbody tr:first td:not(.o_list_record_selector):first'));
+        await testUtils.dom.click(dialog.$('.o_list_view tbody tr:first td:not(.o_list_record_selector):first'));
 
         assert.equal(dialog.$('.o_list_view tbody tr:first td:not(.o_list_record_selector):first input').length, 0,
             "list view should not be editable in a SelectCreateDialog");
@@ -267,10 +274,10 @@ QUnit.module('Views', {
         parent.destroy();
     });
 
-    QUnit.test('SelectCreateDialog cascade x2many in create mode', function (assert) {
+    QUnit.test('SelectCreateDialog cascade x2many in create mode', async function (assert) {
         assert.expect(5);
 
-        var form = createView({
+        var form = await createView({
             View: FormView,
             model: 'product',
             data: this.data,
@@ -310,31 +317,31 @@ QUnit.module('Views', {
 
             mockRPC: function(route, args) {
                 if (route === '/web/dataset/call_kw/partner/get_formview_id') {
-                    return $.when(false);
+                    return Promise.resolve(false);
                 }
                 if (route === '/web/dataset/call_kw/instrument/get_formview_id') {
-                    return $.when(false);
+                    return Promise.resolve(false);
                 }
                 if (route === '/web/dataset/call_kw/instrument/create') {
                     assert.deepEqual(args.args, [{badassery: [[6, false, [1]]], name: false}],
                         'The method create should have been called with the right arguments');
-                    return $.when(false);
+                    return Promise.resolve(false);
                 }
                 return this._super(route, args);
             },
         });
 
-        testUtils.form.clickEdit(form);
-        testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
-        testUtils.dom.click(form.$('.o_field_widget .o_field_many2one[name=instrument] input'));
-        testUtils.dom.click($('ul.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content li.o_m2o_dropdown_option').first());
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        await testUtils.dom.click(form.$('.o_field_widget .o_field_many2one[name=instrument] input'));
+        await testUtils.dom.click($('ul.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content li.o_m2o_dropdown_option').first());
 
         var $modal = $('.modal-lg');
 
         assert.equal($modal.length, 1,
             'There should be one modal');
 
-        testUtils.dom.click($modal.find('.o_field_x2many_list_row_add a'));
+        await testUtils.dom.click($modal.find('.o_field_x2many_list_row_add a'));
 
         var $modals = $('.modal-lg');
 
@@ -342,9 +349,9 @@ QUnit.module('Views', {
             'There should be two modals');
 
         var $second_modal = $modals.not($modal);
-        testUtils.dom.click($second_modal.find('.o_list_view.table.table-sm.table-striped.o_list_view_ungrouped .o_data_row input[type=checkbox]'));
+        await testUtils.dom.click($second_modal.find('.o_list_view.table.table-sm.table-striped.o_list_view_ungrouped .o_data_row input[type=checkbox]'));
 
-        testUtils.dom.click($second_modal.find('.o_select_button'));
+        await testUtils.dom.click($second_modal.find('.o_select_button'));
 
         $modal = $('.modal-lg');
 
@@ -354,18 +361,18 @@ QUnit.module('Views', {
         assert.equal($modal.find('.o_data_cell').text(), 'Awsome',
             'There should be one item in the list of the modal');
 
-        testUtils.dom.click($modal.find('.btn.btn-primary'));
+        await testUtils.dom.click($modal.find('.btn.btn-primary'));
 
         form.destroy();
     });
 
-    QUnit.test('Form dialog and subview with _view_ref contexts', function (assert) {
+    QUnit.test('Form dialog and subview with _view_ref contexts', async function (assert) {
         assert.expect(2);
 
         this.data.instrument.records = [{id: 1, name: 'Tromblon', badassery: [1]}];
         this.data.partner.records[0].instrument = 1;
 
-        var form = createView({
+        var form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -390,7 +397,7 @@ QUnit.module('Views', {
 
             mockRPC: function(route, args) {
                 if (args.method === 'get_formview_id') {
-                    return $.when(false);
+                    return Promise.resolve(false);
                 }
                 return this._super(route, args);
             },
@@ -410,11 +417,11 @@ QUnit.module('Views', {
             },
         });
 
-        form.$('.o_field_widget[name="instrument"] button.o_external_button').click();
+        await testUtils.dom.click(form.$('.o_field_widget[name="instrument"] button.o_external_button'));
         form.destroy();
     });
 
-    QUnit.test('SelectCreateDialog: save current search', function (assert) {
+    QUnit.test('SelectCreateDialog: save current search', async function (assert) {
         assert.expect(4);
 
         testUtils.mock.patch(ListController, {
@@ -451,32 +458,34 @@ QUnit.module('Views', {
             },
         });
 
-        var dialog = new dialogs.SelectCreateDialog(parent, {
+        var dialog;
+        new dialogs.SelectCreateDialog(parent, {
             context: {shouldNotBeInFilterContext: false},
             res_model: 'partner',
-        }).open();
+        }).open().then(function (result) {
+            dialog = result;
+        });
+        await testUtils.nextTick();
 
-        assert.containsN(dialog, '.o_data_row', 3,
-            "should contain 3 records");
+        assert.containsN(dialog, '.o_data_row', 3, "should contain 3 records");
 
         // filter on bar
-        testUtils.dom.click(dialog.$('.o_dropdown_toggler_btn:contains(Filters)'));
-        testUtils.dom.click(dialog.$('.o_filters_menu a:contains(Bar)'));
+        await testUtils.dom.click(dialog.$('.o_dropdown_toggler_btn:contains(Filters)'));
+        await testUtils.dom.click(dialog.$('.o_filters_menu a:contains(Bar)'));
 
-        assert.containsN(dialog, '.o_data_row', 2,
-            "should contain 2 records");
+        assert.containsN(dialog, '.o_data_row', 2, "should contain 2 records");
 
         // save filter
-        testUtils.dom.click(dialog.$('.o_dropdown_toggler_btn:contains(Favorites)'));
-        testUtils.dom.click(dialog.$('.o_add_favorite'));
-        dialog.$('.o_favorite_name input[type=text]').val('some name'); // name the filter
-        testUtils.dom.click(dialog.$('.o_save_favorite button'));
+        await testUtils.dom.click(dialog.$('.o_dropdown_toggler_btn:contains(Favorites)'));
+        await testUtils.dom.click(dialog.$('.o_add_favorite'));
+        await testUtils.fields.editInput(dialog.$('.o_favorite_name input[type=text]'), 'some name'); // name the filter
+        await testUtils.dom.click(dialog.$('.o_save_favorite button'));
 
         testUtils.mock.unpatch(ListController);
         parent.destroy();
     });
 
-    QUnit.test('propagate can_create onto the search popup o2m', function (assert) {
+    QUnit.test('propagate can_create onto the search popup o2m', async function (assert) {
         assert.expect(3);
 
         this.data.instrument.records = [
@@ -490,7 +499,7 @@ QUnit.module('Views', {
             {id: 8, name: 'Tromblon8'},
         ];
 
-        var form = createView({
+        var form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -513,18 +522,19 @@ QUnit.module('Views', {
 
             mockRPC: function(route, args) {
                 if (args.method === 'get_formview_id') {
-                    return $.when(false);
+                    return Promise.resolve(false);
                 }
                 return this._super(route, args);
             },
         });
 
-        form.$('.o_field_widget[name="instrument"] .o_input').click();
+        await testUtils.dom.click(form.$('.o_field_widget[name="instrument"] .o_input'));
 
         assert.notOk($('.ui-autocomplete a:contains(Create and Edit)').length,
             'Create and edit not present in dropdown');
 
-        $('.ui-autocomplete a:contains(Search More)').trigger('mouseenter').trigger('click');
+        await testUtils.dom.triggerEvents($('.ui-autocomplete a:contains(Search More)'),
+            ['mouseenter', 'click']);
 
         var $modal = $('.modal-dialog.modal-lg');
 

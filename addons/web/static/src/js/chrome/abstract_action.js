@@ -104,7 +104,7 @@ var AbstractAction = Widget.extend(ActionMixin, {
                         };
                     });
             }
-            return $.when(def).then(function () {
+            return Promise.resolve(def).then(function () {
                 var controlPanelView = new self.config.ControlPanelView(params);
                 return controlPanelView.getController(self).then(function (controlPanel) {
                     self._controlPanel = controlPanel;
@@ -112,7 +112,7 @@ var AbstractAction = Widget.extend(ActionMixin, {
                 });
             });
         }
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * @override

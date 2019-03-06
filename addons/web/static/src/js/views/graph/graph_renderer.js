@@ -99,7 +99,7 @@ return AbstractRenderer.extend({
      *
      * @override
      * @private
-     * @returns {Deferred} The _super deferred is actually resolved immediately
+     * @returns {Promise} The _super promise is actually resolved immediately
      */
     _render: function () {
         if (this.to_remove) {

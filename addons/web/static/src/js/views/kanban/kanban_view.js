@@ -139,7 +139,7 @@ var KanbanView = BasicView.extend({
     /**
      * @private
      * @param {Widget} parent
-     * @returns {$.Promise} resolved when the searchPanel is ready
+     * @returns {Promise} resolved when the searchPanel is ready
      */
     _createSearchPanel: function (parent) {
         var self = this;

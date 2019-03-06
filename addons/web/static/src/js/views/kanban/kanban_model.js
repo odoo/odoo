@@ -20,7 +20,7 @@ var KanbanModel = BasicModel.extend({
      *
      * @param {string} groupID localID of the group
      * @param {integer} resId id of the record
-     * @returns {Deferred<string>} resolves to the local id of the new record
+     * @returns {Promise<string>} resolves to the local id of the new record
      */
     addRecordToGroup: function (groupID, resId) {
         var self = this;
@@ -52,7 +52,7 @@ var KanbanModel = BasicModel.extend({
      *
      * @param {string} name
      * @param {string} parentID localID of the parent of the group
-     * @returns {Deferred<string>} resolves to the local id of the new group
+     * @returns {Promise<string>} resolves to the local id of the new group
      */
     createGroup: function (name, parentID) {
         var self = this;
@@ -60,7 +60,7 @@ var KanbanModel = BasicModel.extend({
         var groupBy = parent.groupedBy[0];
         var groupByField = parent.fields[groupBy];
         if (!groupByField || groupByField.type !== 'many2one') {
-            return $.Deferred().reject(); // only supported when grouped on m2o
+            return Promise.reject(); // only supported when grouped on m2o
         }
         return this._rpc({
                 model: groupByField.relation,
@@ -99,7 +99,7 @@ var KanbanModel = BasicModel.extend({
      *
      * @param {string} groupID
      * @param {Object} values
-     * @returns {Deferred} resolved with the local id of the created record
+     * @returns {Promise} resolved with the local id of the created record
      */
     createRecordInGroup: function (groupID, values) {
         var self = this;
@@ -187,7 +187,7 @@ var KanbanModel = BasicModel.extend({
      * Opens a given group and loads its <limit> first records
      *
      * @param {string} groupID
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     loadColumnRecords: function (groupID) {
         var dataPoint = this.localData[groupID];
@@ -198,7 +198,7 @@ var KanbanModel = BasicModel.extend({
      * Load more records in a group.
      *
      * @param {string} groupID localID of the group
-     * @returns {Deferred<string>} resolves to the localID of the group
+     * @returns {Promise<string>} resolves to the localID of the group
      */
     loadMore: function (groupID) {
         var group = this.localData[groupID];
@@ -213,7 +213,7 @@ var KanbanModel = BasicModel.extend({
      * @param {string} recordID localID of the record
      * @param {string} groupID localID of the new group of the record
      * @param {string} parentID localID of the parent
-     * @returns {Deferred<string[]>} resolves to a pair [oldGroupID, newGroupID]
+     * @returns {Promise<string[]>} resolves to a pair [oldGroupID, newGroupID]
      */
     moveRecord: function (recordID, groupID, parentID) {
         var self = this;
@@ -330,7 +330,7 @@ var KanbanModel = BasicModel.extend({
     /**
      * @private
      * @param {Object} dataPoint
-     * @returns {Deferred<Object>}
+     * @returns {Promise<Object>}
      */
     _readProgressBarGroup: function (list, options) {
         var self = this;
@@ -345,7 +345,8 @@ var KanbanModel = BasicModel.extend({
                 context: list.context,
             },
         });
-        return $.when(groupsDef, progressBarDef).then(function (a, data) {
+        return Promise.all([groupsDef, progressBarDef]).then(function (results) {
+            var data = results[1];
             _.each(list.data, function (groupID) {
                 var group = self.localData[groupID];
                 group.progressBarValues = _.extend({
@@ -365,13 +366,13 @@ var KanbanModel = BasicModel.extend({
      *
      * @private
      * @param {Object} list a list of groups
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _readTooltipFields: function (list) {
         var self = this;
         var groupedByField = list.fields[list.groupedBy[0].split(':')[0]];
         if (groupedByField.type !== 'many2one') {
-            return $.when();
+            return Promise.resolve();
         }
         var groupIds = _.reduce(list.data, function (groupIds, id) {
             var res_id = self.get(id, {raw: true}).res_id;
@@ -400,16 +401,16 @@ var KanbanModel = BasicModel.extend({
                 });
             });
         }
-        return $.when();
+        return Promise.resolve();
     },
     /**
-     * Reloads all progressbar data. This is done after given deferred and
-     * insures that the given deferred's result is not lost.
+     * Reloads all progressbar data. This is done after given promise and
+     * insures that the given promise's result is not lost.
      *
      * @private
      * @param {string} recordID
-     * @param {Deferred} def
-     * @returns {Deferred}
+     * @param {Promise} def
+     * @returns {Promise}
      */
     _reloadProgressBarGroupFromRecord: function (recordID, def) {
         var element = this.localData[recordID];

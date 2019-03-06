@@ -11,7 +11,7 @@ return {
      *
      * @param {Object} params @see buildQuery for a description
      * @param {Object} options
-     * @returns {Deferred<any>}
+     * @returns {Promise<any>}
      */
     query: function (params, options) {
         var query = this.buildQuery(params);
