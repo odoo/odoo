@@ -217,15 +217,15 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Click on Form snippet",
             trigger:  ".s_website_form[data-model_name]",
+        },
+        {
+            content:  "Click on Customize",
+            trigger:  ".oe_overlay_options [title='Customize']",
             run:      function (actions) {
                 actions.auto();
                 // I didn't find any other way to make that submenu element appear
                 $(".oe_options .dropdown-submenu .dropdown-menu").css("display", "block");
             }
-        },
-        {
-            content:  "Click on Customize",
-            trigger:  ".oe_overlay_options [title='Customize']"
         },
         {
             content:  "Click on Multiple Checkboxes in menu Add a custom field",
