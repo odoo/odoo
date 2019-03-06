@@ -209,7 +209,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                         else {
                             checked_radio.value = data.id; // set the radio value to the new card id
                             form.submit();
-                            return $.Deferred();
+                            return new Promise(function () {});
                         }
                     }
                     // if the server has returned false, we display an error
@@ -228,7 +228,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                     $(button).attr('disabled', false);
                     $(button).children('.fa').addClass('fa-plus-circle');
                     $(button).find('span.o_loader').remove();
-                }).fail(function (error, event) {
+                }).guardedCatch(function (error) {
                     // if the rpc fails, pretty obvious
                     $(button).attr('disabled', false);
                     $(button).children('.fa').addClass('fa-plus-circle');
@@ -274,7 +274,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                             $(newForm).find('input[data-remove-me]').remove(); // remove all the input that should be removed
                             if(action_url) {
                                 newForm.submit(); // and finally submit the form
-                                return $.Deferred();
+                                return new Promise(function () {});
                             }
                         }
                         else {
@@ -283,7 +283,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                                 _t("We are not able to redirect you to the payment form.")
                             );
                         }
-                    }).fail(function (error, event) {
+                    }).guardedCatch(function (error) {
                         self.displayError(
                             _t('Server Error'),
                             _t("We are not able to redirect you to the payment form. ") +
@@ -301,7 +301,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             }
             else {  // if the user is using an old payment then we just submit the form
                 form.submit();
-                return $.Deferred();
+                return new Promise(function () {});
             }
         }
         else {
@@ -408,7 +408,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                 $(button).attr('disabled', false);
                 $(button).children('.fa').addClass('fa-plus-circle');
                 $(button).find('span.o_loader').remove();
-            }).fail(function (error, event) {
+            }).guardedCatch(function (error) {
                 // if the rpc fails, pretty obvious
                 $(button).attr('disabled', false);
                 $(button).children('.fa').addClass('fa-plus-circle');
