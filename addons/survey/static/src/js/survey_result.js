@@ -4,7 +4,7 @@ odoo.define('survey.result', function (require) {
 require('web.dom_ready');
 
 if(!$('.js_surveyresult').length) {
-    return $.Deferred().reject("DOM doesn't contain '.js_surveyresult'");
+    return Promise.reject("DOM doesn't contain '.js_surveyresult'");
 }
 
     //Script For Pagination

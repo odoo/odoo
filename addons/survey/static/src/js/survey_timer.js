@@ -4,20 +4,20 @@ odoo.define('survey.timer', function (require) {
 require('web.dom_ready');
 
 if (!$('.js_survey_timer').length) {
-    return $.Deferred().reject("DOM doesn't contain '.js_survey_timer'");
+    return Promise.reject("DOM doesn't contain '.js_survey_timer'");
 }
 
 var $parent = $('.js_survey_timer');
 var timeLimitMinutes = parseInt($parent.data('time_limit_minutes'));
 
 if (timeLimitMinutes <= 0) {
-    return $.Deferred().reject("Timer is not positive");
+    return Promise.reject("Timer is not positive");
 }
 
 var countDownDate = moment.utc($parent.data('timer')).add(timeLimitMinutes, 'minutes');
 
 if (countDownDate.diff(moment.utc(), 'seconds') < 0) {
-    return $.Deferred().reject("Timer is already finished");
+    return Promise.reject("Timer is already finished");
 }
 
 var formatTime = function (time) {

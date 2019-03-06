@@ -15,7 +15,7 @@ var _t = core._t;
 var the_form = $('.js_surveyform');
 
 if(!the_form.length) {
-    return $.Deferred().reject("DOM doesn't contain '.js_surveyform'");
+    return Promise.reject("DOM doesn't contain '.js_surveyform'");
 }
 
     var prefill_controller = the_form.attr("data-prefill");
