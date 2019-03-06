@@ -37,7 +37,7 @@ var SelectBox = publicWidget.Widget.extend({
                 return {id: val.id, text: val.name};
             });
         }));
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * @override
@@ -376,7 +376,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
 
         $('[data-toggle="tooltip"]').tooltip();
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 
     //--------------------------------------------------------------------------
