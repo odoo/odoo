@@ -86,7 +86,7 @@ var MediaPlugin = AbstractPlugin.extend({
      * @param {Node} target
      */
     update: function (target) {
-        if (!target) {
+        if (!target || !dom.isMedia(target)) {
             return;
         }
         if (!this.options.displayPopover(target)) {
