@@ -25,18 +25,18 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      * @private
      * @param {jQuery} $btn
      * @param {function} callback
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _buttonExec: function ($btn, callback) {
         // TODO remove once the automatic system which does this lands in master
         $btn.prop('disabled', true);
-        return callback.call(this).fail(function () {
+        return callback.call(this).guardedCatch(function () {
             $btn.prop('disabled', false);
         });
     },
     /**
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _confirmInterestedPartner: function () {
         return this._rpc({
@@ -52,7 +52,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     },
     /**
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _confirmDesinterestedPartner: function () {
         return this._rpc({
@@ -71,7 +71,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     /**
      * @private
      * @param {}
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _changeOppStage: function (leadID, stageID) {
         return this._rpc({
@@ -87,7 +87,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     },
     /**
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _editContact: function () {
         return this._rpc({
@@ -111,7 +111,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     },
     /**
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _createOpportunity: function () {
         return this._rpc({
@@ -126,7 +126,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
             if (response.errors) {
                 $('#new-opp-dialog .alert').remove();
                 $('#new-opp-dialog div:first').prepend('<div class="alert alert-danger">' + response.errors + '</div>');
-                return $.Deferred().reject(response);
+                return Promise.reject(response);
             } else {
                 window.location = '/my/opportunity/' + response.id;
             }
@@ -134,7 +134,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     },
     /**
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _editOpportunity: function () {
         return this._rpc({
