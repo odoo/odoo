@@ -3,6 +3,7 @@
 
 from . import test_account_customer_invoice
 from . import test_account_move_closed_period
+from . import test_account_move_tax_lock_date
 from . import test_account_supplier_invoice
 from . import test_account_validate_account_move
 from . import test_account_invoice_rounding

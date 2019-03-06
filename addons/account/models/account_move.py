@@ -62,13 +62,13 @@ class AccountMove(models.Model):
                 move.matched_percentage = 1.0
             else:
                 move.matched_percentage = total_reconciled / total_amount
-                
+
     @api.multi
     @api.depends('line_ids.reconcile_model_id')
     def _compute_reconcile_model(self):
         for move in self:
             move.reconcile_model_id = move.line_ids.mapped('reconcile_model_id')
-    
+
     @api.model
     @api.depends('reconcile_model_id')
     def _search_reconcile_model(self, operator, operand):
@@ -689,6 +689,22 @@ class AccountMoveLine(models.Model):
         return rec
 
     @api.multi
+    @api.constrains('tax_ids', 'tax_line_id')
+    def _check_tax_lock_date1(self):
+        for line in self:
+            if line.date <= (line.company_id.tax_lock_date or date.min):
+                raise ValidationError(_("The operation is refused as it would impact an already issued tax statement. " +
+                "Please change the journal entry date or the tax lock date set in the settings ({}) to proceed").format(line.company_id.tax_lock_date or date.min))
+
+    @api.multi
+    @api.constrains('credit', 'debit', 'date')
+    def _check_tax_lock_date2(self):
+        for line in self:
+            if (line.tax_ids or line.tax_line_id) and line.date <= (line.company_id.tax_lock_date or date.min):
+                raise ValidationError(_("The operation is refused as it would impact an already issued tax statement. " +
+                "Please change the journal entry date or the tax lock date set in the settings ({}) to proceed").format(line.company_id.tax_lock_date or date.min))
+
+    @api.multi
     @api.constrains('currency_id', 'account_id')
     def _check_currency(self):
         for line in self:
@@ -1174,6 +1190,7 @@ class AccountMoveLine(models.Model):
     @api.multi
     def unlink(self):
         self._update_check()
+        self._check_tax_lock_date2()
         move_ids = set()
         for line in self:
             if line.move_id.id not in move_ids:
@@ -1222,8 +1239,6 @@ class AccountMoveLine(models.Model):
         move_ids = set()
         for line in self:
             err_msg = _('Move name (id): %s (%s)') % (line.move_id.name, str(line.move_id.id))
-            if line.move_id.state != 'draft':
-                raise UserError(_('You cannot do this modification on a posted journal entry, you can just change some non legal fields. You must revert the journal entry to cancel it.\n%s.') % err_msg)
             if line.reconciled and not (line.debit == 0 and line.credit == 0):
                 raise UserError(_('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
             if line.move_id.id not in move_ids:
