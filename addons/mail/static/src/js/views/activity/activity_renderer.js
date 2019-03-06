@@ -5,8 +5,8 @@ var AbstractRenderer = require('web.AbstractRenderer');
 var core = require('web.core');
 var field_registry = require('web.field_registry');
 
-var QWeb = core.qweb;
 var _t = core._t;
+var QWeb = core.qweb;
 
 var ActivityRenderer = AbstractRenderer.extend({
     className: 'o_activity_view',
@@ -125,21 +125,22 @@ var ActivityRenderer = AbstractRenderer.extend({
             };
             var KanbanActivity = field_registry.get('kanban_activity');
             var widget = new KanbanActivity(self, "activity_ids", record, {});
-            widget.appendTo($td);
-            // replace clock by closest deadline
-            var $date = $('<div>');
-            var formated_date = moment(activity_group.o_closest_deadline).format('ll');
-            var current_year = (new Date()).getFullYear();
-            if (formated_date.endsWith(current_year)) { // Dummy logic to remove year (only if current year), we will maybe need to improve it
-                formated_date = formated_date.slice(0, -4);
-                formated_date = formated_date.replace(/( |,)*$/g, "");
-            }
-            $date
-                .text(formated_date)
-                .addClass('o_closest_deadline');
-            $td.find('a')
-                .empty()
-                .append($date);
+            widget.appendTo($td).then(function() {
+                // replace clock by closest deadline
+                var $date = $('<div>');
+                var formated_date = moment(activity_group.o_closest_deadline).format('ll');
+                var current_year = (new Date()).getFullYear();
+                if (formated_date.endsWith(current_year)) { // Dummy logic to remove year (only if current year), we will maybe need to improve it
+                    formated_date = formated_date.slice(0, -4);
+                    formated_date = formated_date.replace(/( |,)*$/g, "");
+                }
+                $date
+                    .text(formated_date)
+                    .addClass('o_closest_deadline');
+                $td.find('a')
+                    .empty()
+                    .append($date);
+            });
             return $td;
         });
         var $tr = $('<tr/>', {class: 'o_data_row'})

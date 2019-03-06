@@ -511,7 +511,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @see {mail.Manager.Notification} for the receipt of 'toggle_star'
      *   notification after this rpc.
      *
-     * @return {$.Promise}
+     * @return {Promise}
      */
     toggleStarStatus: function () {
         return this._rpc({

@@ -57,7 +57,7 @@ var ThreadField = AbstractField.extend({
         var def1 = this._threadWidget.appendTo(this.$el);
         var def2 = this._super.apply(this, arguments);
 
-        return this.alive($.when(def1, def2)).then(function () {
+        return this.alive(Promise.all([def1, def2])).then(function () {
             // unwrap the thread to remove an unnecessary level on div
             self.setElement(self._threadWidget.$el);
             var mailBus = self.call('mail_service', 'getMailBus');
@@ -86,7 +86,7 @@ var ThreadField = AbstractField.extend({
     /**
      * @param  {Object} message
      * @param  {integer[]} message.partner_ids
-     * @return {$.Promise}
+     * @return {Promise}
      */
     postMessage: function (message) {
         var self = this;
@@ -95,9 +95,9 @@ var ThreadField = AbstractField.extend({
                 if (message.partner_ids.length) {
                     self.trigger_up('reload_mail_fields', { followers: true });
                 }
-            })
-            .fail(function () {
+            }).guardedCatch(function () {
                 self.do_notify(_t("Sending Error"), _t("Your message has not been sent."));
+                return Promise.reject();
             });
     },
 
@@ -109,7 +109,7 @@ var ThreadField = AbstractField.extend({
      * @private
      * @param {Object} [options]
      * @param {boolean} [options.forceFetch]
-     * @return {$.Deferred}
+     * @return {Promise}
      */
     _fetchAndRenderThread: function (options) {
         var self = this;
@@ -117,7 +117,7 @@ var ThreadField = AbstractField.extend({
             var thread = new CreateModeDocumentThread();
             options = { isCreateMode: true };
             self._threadWidget.render(thread, options);
-            return $.when();
+            return Promise.resolve();
         } else {
             var fetchDef = this.dp.add(this._documentThread.fetchMessages(options));
             return fetchDef.then(function () {
@@ -134,7 +134,7 @@ var ThreadField = AbstractField.extend({
     /**
      * @override
      * @private
-     * @returns {$.Deferred}
+     * @returns {Promise}
      */
     _render: function () {
         return this._fetchAndRenderThread();

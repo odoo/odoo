@@ -95,7 +95,7 @@ var AbstractThreadWindow = Widget.extend({
         var def = this._threadWidget.replace(this.$('.o_thread_window_content')).then(function () {
             self._threadWidget.$el.on('scroll', self, self._debouncedOnScroll);
         });
-        return $.when(this._super(), def);
+        return Promise.all([this._super(), def]);
     },
     /**
      * @override

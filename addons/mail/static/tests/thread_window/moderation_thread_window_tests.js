@@ -84,7 +84,7 @@ QUnit.module('Moderation', {
     },
 });
 
-QUnit.test('moderator: moderated channel with pending moderation message', function (assert) {
+QUnit.test('moderator: moderated channel with pending moderation message', async function (assert) {
     assert.expect(5);
 
     this.data.initMessaging = {
@@ -114,9 +114,10 @@ QUnit.test('moderator: moderated channel with pending moderation message', funct
         data: this.data,
         services: this.services,
     });
-
+    await testUtils.nextTick();
     // detach channel 1, so that it opens corresponding thread window.
     parent.call('mail_service', 'getChannel', 1).detach();
+    await testUtils.nextTick();
 
     assert.strictEqual($('.o_thread_message ').length, 1,
         "should display a message in the thread window");

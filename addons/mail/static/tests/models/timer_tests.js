@@ -1,31 +1,27 @@
 odoo.define('mail.model.TimerTests', function (require) {
 "use strict";
 
+var testUtils = require("web.test_utils");
 var Timer = require('mail.model.Timer');
 
 QUnit.module('mail', {}, function () {
 QUnit.module('model', {}, function () {
 QUnit.module('Timer');
 
-QUnit.test('start()', function (assert) {
-    var done = assert.async();
+QUnit.test('start()', async function (assert) {
     assert.expect(2);
 
-    var def = $.Deferred();
-    var func = function () {
-        def.resolve();
-    };
+    var prom = testUtils.makeTestPromise();
     var t = new Timer({
         duration: 0,
-        onTimeout: func,
+        onTimeout: prom.resolve,
     });
 
     assert.verifySteps([], "should not have called the function");
 
     t.start();
-    def.then(function () {
+    await prom.then(function () {
         assert.ok(true, "should have called the function");
-        done();
     });
 });
 
@@ -51,11 +47,10 @@ QUnit.test('clear()', function (assert) {
     }, 0);
 });
 
-QUnit.test('reset()', function (assert) {
-    var done = assert.async();
+QUnit.test('reset()', async function (assert) {
     assert.expect(4);
 
-    var def = $.Deferred();
+    var prom = testUtils.makeTestPromise();
     var func = function () {
         assert.step('function_called');
     };
@@ -67,19 +62,17 @@ QUnit.test('reset()', function (assert) {
     t.start();
 
     // Called after 1st timer timeout
+    await testUtils.nextTick();
+    assert.verifySteps(['function_called'], "should have called the function once");
+    t.reset();
+    // Called after 2nd timer timeout
     setTimeout(function () {
-        assert.verifySteps(['function_called'], "should have called the function once");
-        t.reset();
-        // Called after 2nd timer timeout
-        setTimeout(function () {
-            def.resolve();
-        }, 0);
+        prom.resolve();
     }, 0);
 
-    def.then(function () {
-        assert.verifySteps(['function_called', 'function_called'],
+    await prom.then(function () {
+        assert.verifySteps(['function_called'],
             "should have called the function twice (2nd time from reset)");
-        done();
     });
 });
 

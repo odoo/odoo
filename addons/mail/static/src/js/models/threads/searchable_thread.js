@@ -49,7 +49,7 @@ var SearchableThread = Thread.extend({
         }
         var cache = this._getCache(domain);
         if (cache.loaded) {
-            return $.when(cache.messages);
+            return Promise.all(cache.messages);
         } else {
             return this._fetchMessages(domain);
         }
@@ -159,7 +159,7 @@ var SearchableThread = Thread.extend({
      * @private
      * @param  {Array} [pDomain] filter on the messages of the channel
      * @param  {boolean} [loadMore] Whether it should load more message
-     * @return {$.Promise<mail.model.Message[]>} resolved with list of messages
+     * @return {Promise<mail.model.Message[]>} resolved with list of messages
      */
     _fetchMessages: function (pDomain, loadMore) {
         var self = this;

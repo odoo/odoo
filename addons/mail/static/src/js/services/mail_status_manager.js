@@ -81,7 +81,7 @@ MailManager.include({
         var self = this;
         var partnerIDs = data.partnerIDs;
         if (_.isEmpty(partnerIDs)) {
-            return $.when();
+            return Promise.resolve();
         }
         return this._rpc({
             model: 'res.partner',

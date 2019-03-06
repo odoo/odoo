@@ -76,7 +76,7 @@ QUnit.module('ActivityMenu', {
         }
     });
 
-QUnit.test('activity menu widget: menu with no records', function (assert) {
+QUnit.test('activity menu widget: menu with no records', async function (assert) {
     assert.expect(1);
 
     var activityMenu = new ActivityMenu();
@@ -84,17 +84,18 @@ QUnit.test('activity menu widget: menu with no records', function (assert) {
             services: this.services,
             mockRPC: function (route, args) {
                 if (args.method === 'systray_get_activities') {
-                    return $.when([]);
+                    return Promise.resolve([]);
                 }
                 return this._super(route, args);
             },
         });
-    activityMenu.appendTo($('#qunit-fixture'));
-    assert.hasClass(activityMenu.$('.o_no_activity'),'o_no_activity', "should not have instance of widget");
+    await activityMenu.appendTo($('#qunit-fixture'));
+    await testUtils.nextTick();
+    assert.containsOnce(activityMenu, '.o_no_activity');
     activityMenu.destroy();
 });
 
-QUnit.test('activity menu widget: activity menu with 3 records', function (assert) {
+QUnit.test('activity menu widget: activity menu with 3 records', async function (assert) {
     assert.expect(10);
     var self = this;
     var activityMenu = new ActivityMenu();
@@ -102,12 +103,13 @@ QUnit.test('activity menu widget: activity menu with 3 records', function (asser
         services: this.services,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
-                return $.when(self.data['mail.activity.menu']['records']);
+                return Promise.resolve(self.data['mail.activity.menu']['records']);
             }
             return this._super(route, args);
         },
     });
-    activityMenu.appendTo($('#qunit-fixture'));
+    await activityMenu.appendTo($('#qunit-fixture'));
+    await testUtils.nextTick();
     assert.hasClass(activityMenu.$el, 'o_mail_systray_item', 'should be the instance of widget');
     // the assertion below has not been replace because there are includes of ActivityMenu that modify the length.
     assert.ok(activityMenu.$('.o_mail_preview').length);
@@ -123,34 +125,34 @@ QUnit.test('activity menu widget: activity menu with 3 records', function (asser
     context = {
         search_default_activities_overdue: 1,
     };
-    testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
+    await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
     assert.hasClass(activityMenu.$el, 'show', 'ActivityMenu should be open');
-    testUtils.dom.click(activityMenu.$(".o_activity_filter_button[data-model_name='Issue'][data-filter='overdue']"));
+    await testUtils.dom.click(activityMenu.$(".o_activity_filter_button[data-model_name='Issue'][data-filter='overdue']"));
     assert.doesNotHaveClass(activityMenu.$el, 'show', 'ActivityMenu should be closed');
     // case 2: click on "today"
     context = {
         search_default_activities_today: 1,
     };
-    testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
-    testUtils.dom.click(activityMenu.$(".o_activity_filter_button[data-model_name='Issue'][data-filter='today']"));
+    await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
+    await testUtils.dom.click(activityMenu.$(".o_activity_filter_button[data-model_name='Issue'][data-filter='today']"));
     // case 3: click on "future"
     context = {
         search_default_activities_upcoming_all: 1,
     };
-    testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
-    testUtils.dom.click(activityMenu.$(".o_activity_filter_button[data-model_name='Issue'][data-filter='upcoming_all']"));
+    await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
+    await testUtils.dom.click(activityMenu.$(".o_activity_filter_button[data-model_name='Issue'][data-filter='upcoming_all']"));
     // case 4: click anywere else
     context = {
         search_default_activities_overdue: 1,
         search_default_activities_today: 1,
     };
-    testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
-    testUtils.dom.click(activityMenu.$(".o_mail_systray_dropdown_items > div[data-model_name='Issue']"));
+    await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
+    await testUtils.dom.click(activityMenu.$(".o_mail_systray_dropdown_items > div[data-model_name='Issue']"));
 
     activityMenu.destroy();
 });
 
-QUnit.test('activity menu widget: activity view icon', function (assert) {
+QUnit.test('activity menu widget: activity view icon', async function (assert) {
     assert.expect(10);
     var self = this;
     var activityMenu = new ActivityMenu();
@@ -158,12 +160,13 @@ QUnit.test('activity menu widget: activity view icon', function (assert) {
         services: this.services,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
-                return $.when(self.data['mail.activity.menu'].records);
+                return Promise.resolve(self.data['mail.activity.menu'].records);
             }
             return this._super(route, args);
         },
     });
-    activityMenu.appendTo($('#qunit-fixture'));
+    await activityMenu.appendTo($('#qunit-fixture'));
+    await testUtils.nextTick();
     assert.containsN(activityMenu, '.o_mail_activity_action', 2,
                        "widget should have 2 activity view icons");
 
@@ -189,11 +192,11 @@ QUnit.test('activity menu widget: activity view icon', function (assert) {
     }, true);
 
     // click on the "Issue" activity icon
-    testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
-    testUtils.dom.click(activityMenu.$(".o_mail_activity_action[data-model_name='Issue']"));
+    await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
+    await testUtils.dom.click(activityMenu.$(".o_mail_activity_action[data-model_name='Issue']"));
 
     // click on the "Note" activity icon
-    testUtils.dom.click(activityMenu.$(".o_mail_activity_action[data-model_name='Note']"));
+    await testUtils.dom.click(activityMenu.$(".o_mail_activity_action[data-model_name='Note']"));
 
     assert.verifySteps([
         'do_action:Issue',

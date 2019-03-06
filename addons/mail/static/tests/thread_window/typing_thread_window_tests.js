@@ -40,7 +40,7 @@ QUnit.module('Typing', {
          * @param {integer} params.partnerID
          * @param {Widget} params.widget a widget that can call the bus_service
          */
-        this.simulateIsTyping = function (params) {
+        this.simulateIsTyping = async function (params) {
             var typingData = {
                 info: 'typing_status',
                 partner_id: params.partnerID,
@@ -48,6 +48,7 @@ QUnit.module('Typing', {
             };
             var notification = [[false, 'mail.channel', params.channelID], typingData];
             params.widget.call('bus_service', 'trigger', 'notification', [notification]);
+            await testUtils.nextMicrotaskTick();
         };
 
         this.createParent = function (params) {
@@ -72,7 +73,7 @@ QUnit.module('Typing', {
     },
 });
 
-QUnit.test('receive typing notification', function (assert) {
+QUnit.test('receive typing notification', async function (assert) {
     assert.expect(4);
 
     var parent = this.createParent({
@@ -82,22 +83,24 @@ QUnit.test('receive typing notification', function (assert) {
             // when receiving an 'is typing' notification, fetch the list of
             // members of this channel if we haven't done yet.
             if (args.method === 'channel_fetch_listeners') {
-                return $.when([
+                return Promise.resolve([
                     { id: 42, name: "Someone" },
                 ]);
             }
             return this._super.apply(this, arguments);
         },
     });
+    await testUtils.nextTick();
 
     // detach channel 1, so that it opens corresponding thread window.
     parent.call('mail_service', 'getChannel', 1).detach();
+    await testUtils.nextTick();
 
     var $threadWindow = $('.o_thread_window');
     assert.containsNone($threadWindow, '.o_mail_thread_typing_icon',
         "should not display an icon that someone is typing something on this thread");
 
-    this.simulateIsTyping({
+    await this.simulateIsTyping({
         channelID: 1,
         isTyping: true,
         partnerID: 42,
@@ -110,7 +113,7 @@ QUnit.test('receive typing notification', function (assert) {
         "Someone is typing...",
         "should display someone is typing something on hover of this icon");
 
-    this.simulateIsTyping({
+    await this.simulateIsTyping({
         channelID: 1,
         isTyping: false,
         partnerID: 42,

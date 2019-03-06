@@ -55,14 +55,14 @@ var Followers = AbstractField.extend({
         // note: the rendering of this widget is asynchronous as it needs to
         // fetch the details of the followers, but it performs a first rendering
         // synchronously (_displayGeneric), and updates its rendering once it
-        // has fetched the required data, so this function doesn't return a deferred
+        // has fetched the required data, so this function doesn't return a promise
         // as we don't want to wait to the data to be loaded to display the widget
         var self = this;
         var fetch_def = this.dp.add(this._readFollowers());
 
         concurrency.rejectAfter(concurrency.delay(0), fetch_def).then(this._displayGeneric.bind(this));
 
-        fetch_def.then(function () {
+        return fetch_def.then(function () {
             self._displayButtons();
             self._displayFollowers(self.followers);
             if (self.subtypes) { // current user is follower
@@ -203,7 +203,7 @@ var Followers = AbstractField.extend({
                     params: { follower_ids: missing_ids, res_model: this.model }
                 });
         }
-        return $.when(def).then(function (results) {
+        return Promise.resolve(def).then(function (results) {
             if (results) {
                 self.followers = _.uniq(results.followers.concat(self.followers), 'id');
                 if (results.subtypes) { //read_followers will return False if current user is not in the list
@@ -241,27 +241,27 @@ var Followers = AbstractField.extend({
      */
     _unfollow: function (ids) {
         var self = this;
-        var def = $.Deferred();
-        var text = _t("Warning! \n If you remove a follower, he won't be notified of any email or discussion on this document.\n Do you really want to remove this follower ?");
-        Dialog.confirm(this, text, {
-            confirm_callback: function () {
-                var args = [
-                    [self.res_id],
-                    ids.partner_ids,
-                    ids.channel_ids,
-                    {}, // FIXME
-                ];
-                self._rpc({
+        return new Promise(function (resolve, reject) {
+            var text = _t("Warning! \n If you remove a follower, he won't be notified of any email or discussion on this document.\n Do you really want to remove this follower ?");
+            Dialog.confirm(this, text, {
+                confirm_callback: function () {
+                    var args = [
+                        [self.res_id],
+                        ids.partner_ids,
+                        ids.channel_ids,
+                        {}, // FIXME
+                    ];
+                    self._rpc({
                         model: self.model,
                         method: 'message_unsubscribe',
                         args: args
                     })
                     .then(self._reload.bind(self));
-                def.resolve();
-            },
-            cancel_callback: def.reject.bind(def),
+                    resolve();
+                },
+                cancel_callback: reject,
+            });
         });
-        return def;
     },
     _updateSubscription: function (event, followerID, isChannel) {
         var ids = {};
@@ -290,7 +290,7 @@ var Followers = AbstractField.extend({
 
         // If no more subtype followed, unsubscribe the follower
         if (!checklist.length) {
-            this._unfollow(ids).fail(function () {
+            this._unfollow(ids).guardedCatch(function () {
                 $(event.currentTarget).find('input').addBack('input').prop('checked', true);
             });
         } else {

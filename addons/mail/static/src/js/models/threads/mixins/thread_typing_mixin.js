@@ -239,11 +239,11 @@ var ThreadTypingMixin = {
      * @private
      * @param {Object} params
      * @param {boolean} params.typing whether we are typing something or not
-     * @returns {$.Promise} resolved if the server is notified, rejected
+     * @returns {Promise} resolved if the server is notified, rejected
      *   otherwise
      */
     _notifyMyselfTyping: function (params) {
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * Warn views that the list of users that are currently typing on this
