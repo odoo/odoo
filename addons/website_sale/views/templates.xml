@@ -65,15 +65,32 @@
         </xpath>
     </template>
 
+    <!-- Products Search Bar input-group template -->
+    <template id="website_sale_products_search_box" inherit_id="website.website_search_box" primary="True">
+        <xpath expr="//input[@name='search']" position="attributes">
+            <attribute name="data-limit">5</attribute>
+            <attribute name="data-display-description">true</attribute>
+            <attribute name="data-display-price">true</attribute>
+            <attribute name="data-display-image">true</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('input-group')]" position="replace">
+            <form t-attf-class="o_wsale_products_searchbar_form #{_classes}" t-att-action="action if action else '/shop'" method="get">
+                <t>$0</t>
+                <input name="order" type="hidden" class="o_wsale_search_order_by" value=""/>
+                <t t-raw="0"/>
+            </form>
+        </xpath>
+    </template>
+
     <template id="search" name="Search Box">
-        <form t-att-action="keep('/shop'+ ('/category/'+slug(category)) if category else None, search=0)" method="get" t-att-class="_classes">
+        <t t-call="website_sale.website_sale_products_search_box">
+            <t t-set="action" t-value="keep('/shop'+ ('/category/'+slug(category)) if category else None, search=0)"/>
             <t t-if="attrib_values">
                 <t t-foreach="attrib_values" t-as="a">
                     <input type="hidden" name="attrib" t-att-value="'%s-%s' % (a[0], a[1])" />
                 </t>
             </t>
-            <t t-call="website.website_search_box" />
-        </form>
+        </t>
     </template>
 
     <template id="search count" inherit_id="website.website_search_box" active="False" customize_show="True" name="Show # found">
@@ -189,9 +206,7 @@
                 <div class="oe_structure" id="oe_structure_website_sale_products_1"/>
                 <div class="container py-2 oe_website_sale">
                     <div class="products_pager form-inline justify-content-center">
-                        <t t-call="website_sale.search">
-                            <t t-set="_classes">o_website_sale_search</t>
-                        </t>
+                        <t t-call="website_sale.search"/>
                         <t t-call="website_sale.pricelist_list">
                             <t t-set="_classes">ml-2</t>
                         </t>
@@ -1694,5 +1709,4 @@
             </div>
         </div>
     </template>
-
 </odoo>

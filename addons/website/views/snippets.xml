@@ -893,11 +893,13 @@
 <template id="external_snippets" inherit_id="website.snippets" priority="8">
     <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
         <t t-install="website_twitter" string="Twitter Scroller" t-thumbnail="/website/static/src/img/snippets_thumbs/s_twitter_scroll.png"/>
+        <t id="s_products_searchbar" t-install="website_sale" string="Products Search" t-thumbnail="/website/static/src/img/snippets_thumbs/s_products_searchbar.png"/>
     </xpath>
     <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
         <t t-install="website_event" string="Local Events" t-thumbnail="/website/static/src/img/snippets_thumbs/s_local_events.png"/>
         <t t-install="website_mail_channel" string="Discussion Group" t-thumbnail="/website/static/src/img/snippets_thumbs/s_button_channel_subscribe.png"/>
         <t t-install="mass_mailing" string="Newsletter" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.png"/>
+        <t id="s_products_searchbar_input" t-install="website_sale" string="Products Search Input" t-thumbnail="/website/static/src/img/snippets_thumbs/s_products_searchbar.png"/>
     </xpath>
 </template>
 

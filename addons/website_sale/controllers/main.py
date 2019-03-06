@@ -157,18 +157,24 @@ class WebsiteSale(http.Controller):
     def _get_search_order(self, post):
         # OrderBy will be parsed in orm and so no direct sql injection
         # id is added to be sure that order is a unique sort key
-        return 'is_published desc,%s , id desc' % post.get('order', 'website_sequence desc')
+        order = post.get('order') or 'website_sequence desc'
+        return 'is_published desc, %s, id desc' % order
 
-    def _get_search_domain(self, search, category, attrib_values):
-        domain = request.website.sale_product_domain()
+    def _get_search_domain(self, search, category, attrib_values, search_in_description=True):
+        domains = [request.website.sale_product_domain()]
         if search:
             for srch in search.split(" "):
-                domain += [
-                    '|', '|', '|', ('name', 'ilike', srch), ('description', 'ilike', srch),
-                    ('description_sale', 'ilike', srch), ('product_variant_ids.default_code', 'ilike', srch)]
+                subdomains = [
+                    [('name', 'ilike', srch)],
+                    [('product_variant_ids.default_code', 'ilike', srch)]
+                ]
+                if search_in_description:
+                    subdomains.append([('description', 'ilike', srch)])
+                    subdomains.append([('description_sale', 'ilike', srch)])
+                domains.append(expression.OR(subdomains))
 
         if category:
-            domain += [('public_categ_ids', 'child_of', int(category))]
+            domains.append([('public_categ_ids', 'child_of', int(category))])
 
         if attrib_values:
             attrib = None
@@ -180,13 +186,13 @@ class WebsiteSale(http.Controller):
                 elif value[0] == attrib:
                     ids.append(value[1])
                 else:
-                    domain += [('attribute_line_ids.value_ids', 'in', ids)]
+                    domains.append([('attribute_line_ids.value_ids', 'in', ids)])
                     attrib = value[0]
                     ids = [value[1]]
             if attrib:
-                domain += [('attribute_line_ids.value_ids', 'in', ids)]
+                domains.append([('attribute_line_ids.value_ids', 'in', ids)])
 
-        return domain
+        return expression.AND(domains)
 
     @http.route([
         '''/shop''',
@@ -1114,3 +1120,75 @@ class WebsiteSale(http.Controller):
         lang = request.env['res.lang']._lang_get(request.env.context.get('lang') or 'en_US')
         return lang.format(fmt, currency.round(amount), grouping=True, monetary=True)\
             .replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
+
+    # --------------------------------------------------------------------------
+    # Products Search Bar
+    # --------------------------------------------------------------------------
+
+    @http.route('/shop/products/autocomplete', type='json', auth='public', website=True)
+    def products_autocomplete(self, term, options={}, **kwargs):
+        """
+        Returns list of products according to the term and product options
+
+        Params:
+            term (str): search term written by the user
+            options (dict)
+                - 'limit' (int), default to 5: number of products to consider
+                - 'display_description' (bool), default to True
+                - 'display_price' (bool), default to True
+                - 'order' (str)
+                - 'max_nb_chars' (int): max number of characters for the
+                                        description if returned
+
+        Returns:
+            dict (or False if no result)
+                - 'products' (list): products (only their needed field values)
+                        note: the prices will be strings properly formatted and
+                        already containing the currency
+                - 'products_count' (int): the number of products in the database
+                        that matched the search query
+        """
+        ProductTemplate = request.env['product.template']
+
+        display_description = options.get('display_description', True)
+        display_price = options.get('display_price', True)
+        order = self._get_search_order(options)
+        max_nb_chars = options.get('max_nb_chars', 999)
+
+        category = options.get('category')
+        attrib_values = options.get('attrib_values')
+
+        domain = self._get_search_domain(term, category, attrib_values, display_description)
+        products = ProductTemplate.search(
+            domain,
+            limit=min(20, options.get('limit', 5)),
+            order=order
+        )
+
+        fields = ['id', 'name', 'website_url']
+        if display_description:
+            fields.append('description_sale')
+
+        res = {
+            'products': products.read(fields),
+            'products_count': ProductTemplate.search_count(domain),
+        }
+
+        if display_description:
+            for res_product in res['products']:
+                desc = res_product['description_sale']
+                if desc and len(desc) > max_nb_chars:
+                    res_product['description_sale'] = "%s..." % desc[:(max_nb_chars - 3)]
+
+        if display_price:
+            FieldMonetary = request.env['ir.qweb.field.monetary']
+            monetary_options = {
+                'display_currency': request.website.get_current_pricelist().currency_id,
+            }
+            for res_product, product in zip(res['products'], products):
+                combination_info = product._get_combination_info(only_template=True)
+                res_product.update(combination_info)
+                res_product['list_price'] = FieldMonetary.value_to_html(res_product['list_price'], monetary_options)
+                res_product['price'] = FieldMonetary.value_to_html(res_product['price'], monetary_options)
+
+        return res
