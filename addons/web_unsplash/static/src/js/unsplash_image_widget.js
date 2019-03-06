@@ -112,18 +112,20 @@ widgetsMedia.ImageWidget.include({
         }
 
         this._unsplash.query = needle;
+
+        var always = function () {
+            if (!noRender) {
+                self._renderImages();
+                self._adaptLoadMore();
+            }
+        };
         return this.unsplashAPI.getImages(needle, this.IMAGES_DISPLAYED_TOTAL).then(function (res) {
             self._unsplash.isMaxed = res.isMaxed;
             self._unsplash.records = res.images;
             self._unsplash.error = false;
         }, function (err) {
             self._unsplash.error = err;
-        }).always(function () {
-            if (!noRender) {
-                self._renderImages();
-                self._adaptLoadMore();
-            }
-        });
+        }).then(always).guardedCatch(always);
     },
 
     //--------------------------------------------------------------------------
