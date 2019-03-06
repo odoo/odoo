@@ -45,13 +45,13 @@ QUnit.module('Dashboard', {
                 }],
             },
         };
-    }
+    },
 });
 
-QUnit.test('dashboard basic rendering', function (assert) {
+QUnit.test('dashboard basic rendering', async function (assert) {
     assert.expect(4);
 
-    var form = createView({
+    var form = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
@@ -64,7 +64,7 @@ QUnit.test('dashboard basic rendering', function (assert) {
 
     form.destroy();
 
-    form = createView({
+    form = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
@@ -84,10 +84,10 @@ QUnit.test('dashboard basic rendering', function (assert) {
     form.destroy();
 });
 
-QUnit.test('display the no content helper', function (assert) {
+QUnit.test('display the no content helper', async function (assert) {
     assert.expect(1);
 
-    var form = createView({
+    var form = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
@@ -108,10 +108,10 @@ QUnit.test('display the no content helper', function (assert) {
     form.destroy();
 });
 
-QUnit.test('basic functionality, with one sub action', function (assert) {
+QUnit.test('basic functionality, with one sub action', async function (assert) {
     assert.expect(25);
 
-    var form = createView({
+    var form = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
@@ -125,7 +125,7 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
         mockRPC: function (route, args) {
             if (route === '/web/action/load') {
                 assert.step('load action');
-                return $.when({
+                return Promise.resolve({
                     res_model: 'partner',
                     views: [[4, 'list']],
                 });
@@ -135,7 +135,7 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
             }
             if (route === '/web/view/edit_custom') {
                 assert.step('edit custom');
-                return $.when(true);
+                return Promise.resolve(true);
             }
             return this._super.apply(this, arguments);
         },
@@ -158,24 +158,24 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
 
     assert.ok(form.$('.oe_content').is(':visible'), "content is visible");
 
-    testUtils.dom.click(form.$('.oe_fold'));
+    await testUtils.dom.click(form.$('.oe_fold'));
 
     assert.notOk(form.$('.oe_content').is(':visible'), "content is no longer visible");
 
-    testUtils.dom.click(form.$('.oe_fold'));
+    await testUtils.dom.click(form.$('.oe_fold'));
 
     assert.ok(form.$('.oe_content').is(':visible'), "content is visible again");
     assert.verifySteps(['load action', 'edit custom', 'edit custom']);
 
     assert.strictEqual($('.modal').length, 0, "should have no modal open");
 
-    testUtils.dom.click(form.$('button.oe_dashboard_link_change_layout'));
+    await testUtils.dom.click(form.$('button.oe_dashboard_link_change_layout'));
 
     assert.strictEqual($('.modal').length, 1, "should have opened a modal");
     assert.strictEqual($('.modal li[data-layout="2-1"] i.oe_dashboard_selected_layout').length, 1,
         "should mark currently selected layout");
 
-    testUtils.dom.click($('.modal .oe_dashboard_layout_selector li[data-layout="1-1"]'));
+    await testUtils.dom.click($('.modal .oe_dashboard_layout_selector li[data-layout="1-1"]'));
 
     assert.strictEqual($('.modal').length, 0, "should have no modal open");
     assert.containsOnce(form, 'table.oe_dashboard[data-layout="1-1"]',
@@ -183,24 +183,24 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
 
 
     assert.containsOnce(form, '.oe_action', "should have one displayed action");
-    testUtils.dom.click(form.$('span.oe_close'));
+    await testUtils.dom.click(form.$('span.oe_close'));
 
     assert.strictEqual($('.modal').length, 1, "should have opened a modal");
 
     // confirm the close operation
-    testUtils.dom.click($('.modal button.btn-primary'));
+    await testUtils.dom.click($('.modal button.btn-primary'));
 
     assert.strictEqual($('.modal').length, 0, "should have no modal open");
     assert.containsNone(form, '.oe_action', "should have no displayed action");
 
-    assert.verifySteps(['load action', 'edit custom', 'edit custom', 'edit custom', 'edit custom']);
+    assert.verifySteps(['edit custom', 'edit custom']);
     form.destroy();
 });
 
-QUnit.test('views in the dashboard do not have a control panel', function (assert) {
+QUnit.test('views in the dashboard do not have a control panel', async function (assert) {
     assert.expect(2);
 
-    var form = createView({
+    var form = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
@@ -213,7 +213,7 @@ QUnit.test('views in the dashboard do not have a control panel', function (asser
             '</form>',
         mockRPC: function (route) {
             if (route === '/web/action/load') {
-                return $.when({
+                return Promise.resolve({
                     res_model: 'partner',
                     views: [[4, 'list'], [5, 'form']],
                 });
@@ -232,7 +232,7 @@ QUnit.test('views in the dashboard do not have a control panel', function (asser
     form.destroy();
 });
 
-QUnit.test('can render an action without view_mode attribute', function (assert) {
+QUnit.test('can render an action without view_mode attribute', async function (assert) {
     // The view_mode attribute is automatically set to the 'action' nodes when
     // the action is added to the dashboard using the 'Add to dashboard' button
     // in the searchview. However, other dashboard views can be written by hand
@@ -242,7 +242,7 @@ QUnit.test('can render an action without view_mode attribute', function (assert)
     // first view of the action can be used, by default.
     assert.expect(3);
 
-    var form = createView({
+    var form = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
@@ -259,10 +259,10 @@ QUnit.test('can render an action without view_mode attribute', function (assert)
         },
         mockRPC: function (route, args) {
             if (route === '/board/static/src/img/layout_1-1-1.png') {
-                return $.when();
+                return Promise.resolve();
             }
             if (route === '/web/action/load') {
-                return $.when({
+                return Promise.resolve({
                     context: '{"b": 2}',
                     domain: '[["foo", "=", "yop"]]',
                     res_model: 'partner',
@@ -287,12 +287,12 @@ QUnit.test('can render an action without view_mode attribute', function (assert)
     form.destroy();
 });
 
-QUnit.test('can sort a sub list', function (assert) {
+QUnit.test('can sort a sub list', async function (assert) {
     assert.expect(2);
 
     this.data.partner.fields.foo.sortable = true;
 
-    var form = createView({
+    var form = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
@@ -305,7 +305,7 @@ QUnit.test('can sort a sub list', function (assert) {
             '</form>',
         mockRPC: function (route) {
             if (route === '/web/action/load') {
-                return $.when({
+                return Promise.resolve({
                     res_model: 'partner',
                     views: [[4, 'list']],
                 });
@@ -321,17 +321,17 @@ QUnit.test('can sort a sub list', function (assert) {
     assert.strictEqual($('tr.o_data_row').text(), 'yoplalalaabc',
         "should have correct initial data");
 
-    testUtils.dom.click(form.$('th.o_column_sortable:contains(Foo)'));
+    await testUtils.dom.click(form.$('th.o_column_sortable:contains(Foo)'));
 
     assert.strictEqual($('tr.o_data_row').text(), 'abclalalayop',
         "data should have been sorted");
     form.destroy();
 });
 
-QUnit.test('can open a record', function (assert) {
+QUnit.test('can open a record', async function (assert) {
     assert.expect(1);
 
-    var form = createView({
+    var form = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
@@ -344,7 +344,7 @@ QUnit.test('can open a record', function (assert) {
             '</form>',
         mockRPC: function (route) {
             if (route === '/web/action/load') {
-                return $.when({
+                return Promise.resolve({
                     res_model: 'partner',
                     views: [[4, 'list']],
                 });
@@ -367,14 +367,14 @@ QUnit.test('can open a record', function (assert) {
         },
     });
 
-    testUtils.dom.click(form.$('tr.o_data_row td:contains(yop)'));
+    await testUtils.dom.click(form.$('tr.o_data_row td:contains(yop)'));
     form.destroy();
 });
 
-QUnit.test('can open record using action form view', function (assert) {
+QUnit.test('can open record using action form view', async function (assert) {
     assert.expect(1);
 
-    var form = createView({
+    var form = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
@@ -387,7 +387,7 @@ QUnit.test('can open record using action form view', function (assert) {
             '</form>',
         mockRPC: function (route) {
             if (route === '/web/action/load') {
-                return $.when({
+                return Promise.resolve({
                     res_model: 'partner',
                     views: [[4, 'list'], [5, 'form']],
                 });
@@ -412,14 +412,14 @@ QUnit.test('can open record using action form view', function (assert) {
         },
     });
 
-    testUtils.dom.click(form.$('tr.o_data_row td:contains(yop)'));
+    await testUtils.dom.click(form.$('tr.o_data_row td:contains(yop)'));
     form.destroy();
 });
 
-QUnit.test('can drag and drop a view', function (assert) {
-    assert.expect(4);
+QUnit.test('can drag and drop a view', async function (assert) {
+    assert.expect(5);
 
-    var form = createView({
+    var form = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
@@ -432,14 +432,14 @@ QUnit.test('can drag and drop a view', function (assert) {
             '</form>',
         mockRPC: function (route) {
             if (route === '/web/action/load') {
-                return $.when({
+                return Promise.resolve({
                     res_model: 'partner',
                     views: [[4, 'list']],
                 });
             }
             if (route === '/web/view/edit_custom') {
                 assert.step('edit custom');
-                return $.when(true);
+                return Promise.resolve(true);
             }
             return this._super.apply(this, arguments);
         },
@@ -452,20 +452,21 @@ QUnit.test('can drag and drop a view', function (assert) {
     assert.containsOnce(form, 'td.index_0 .oe_action',
         "initial action is in column 0");
 
-    testUtils.dom.dragAndDrop(form.$('.oe_dashboard_column.index_0 .oe_header'),
+    await testUtils.dom.dragAndDrop(form.$('.oe_dashboard_column.index_0 .oe_header'),
         form.$('.oe_dashboard_column.index_1'));
     assert.containsNone(form, 'td.index_0 .oe_action',
         "initial action is not in column 0");
     assert.containsOnce(form, 'td.index_1 .oe_action',
         "initial action is in in column 1");
+    assert.verifySteps(['edit custom']);
 
     form.destroy();
 });
 
-QUnit.test('twice the same action in a dashboard', function (assert) {
+QUnit.test('twice the same action in a dashboard', async function (assert) {
     assert.expect(2);
 
-    var form = createView({
+    var form = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
@@ -479,14 +480,14 @@ QUnit.test('twice the same action in a dashboard', function (assert) {
             '</form>',
         mockRPC: function (route) {
             if (route === '/web/action/load') {
-                return $.when({
+                return Promise.resolve({
                     res_model: 'partner',
                     views: [[4, 'list'],[5, 'kanban']],
                 });
             }
             if (route === '/web/view/edit_custom') {
                 assert.step('edit custom');
-                return $.when(true);
+                return Promise.resolve(true);
             }
             return this._super.apply(this, arguments);
         },
@@ -510,10 +511,10 @@ QUnit.test('twice the same action in a dashboard', function (assert) {
     form.destroy();
 });
 
-QUnit.test('non-existing action in a dashboard', function (assert) {
+QUnit.test('non-existing action in a dashboard', async function (assert) {
     assert.expect(1);
 
-    var form = createView({
+    var form = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
@@ -531,11 +532,11 @@ QUnit.test('non-existing action in a dashboard', function (assert) {
         },
         mockRPC: function (route) {
             if (route === '/board/static/src/img/layout_1-1-1.png') {
-                return $.when();
+                return Promise.resolve();
             }
             if (route === '/web/action/load') {
                 // server answer if the action doesn't exist anymore
-                return $.when(false);
+                return Promise.resolve(false);
             }
             return this._super.apply(this, arguments);
         },
@@ -547,10 +548,10 @@ QUnit.test('non-existing action in a dashboard', function (assert) {
     form.destroy();
 });
 
-QUnit.test('clicking on a kanban\'s button should trigger the action', function (assert) {
+QUnit.test('clicking on a kanban\'s button should trigger the action', async function (assert) {
     assert.expect(2);
 
-    var form = createView({
+    var form = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
@@ -582,24 +583,24 @@ QUnit.test('clicking on a kanban\'s button should trigger the action', function 
 
         mockRPC: function (route) {
             if (route === '/board/static/src/img/layout_1-1-1.png') {
-                return $.when();
+                return Promise.resolve();
             }
             if (route === '/web/action/load') {
-                return $.when({res_model: 'partner', view_mode: 'kanban', views: [[false, 'kanban']]});
+                return Promise.resolve({res_model: 'partner', view_mode: 'kanban', views: [[false, 'kanban']]});
             }
             if (route === '/web/dataset/search_read') {
-                return $.when({records: [{foo: 'aqualung'}]});
+                return Promise.resolve({records: [{foo: 'aqualung'}]});
             }
             return this._super.apply(this, arguments);
         }
     });
 
-    testUtils.dom.click(form.$('.o_kanban_test').find('button:first'));
+    await testUtils.dom.click(form.$('.o_kanban_test').find('button:first'));
 
     form.destroy();
 });
 
-QUnit.test('subviews are aware of attach in or detach from the DOM', function (assert) {
+QUnit.test('subviews are aware of attach in or detach from the DOM', async function (assert) {
     assert.expect(2);
 
     // patch list renderer `on_attach_callback` for the test only
@@ -609,7 +610,7 @@ QUnit.test('subviews are aware of attach in or detach from the DOM', function (a
         }
     });
 
-    var form = createView({
+    var form = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
@@ -622,7 +623,7 @@ QUnit.test('subviews are aware of attach in or detach from the DOM', function (a
             '</form>',
         mockRPC: function (route) {
             if (route === '/web/action/load') {
-                return $.when({
+                return Promise.resolve({
                     res_model: 'partner',
                     views: [[4, 'list']],
                 });
@@ -643,7 +644,7 @@ QUnit.test('subviews are aware of attach in or detach from the DOM', function (a
     form.destroy();
 });
 
-QUnit.test('dashboard intercepts custom events triggered by sub controllers', function (assert) {
+QUnit.test('dashboard intercepts custom events triggered by sub controllers', async function (assert) {
     assert.expect(1);
 
     // we patch the ListController to force it to trigger the custom events that
@@ -654,7 +655,7 @@ QUnit.test('dashboard intercepts custom events triggered by sub controllers', fu
         },
     });
 
-    var board = createView({
+    var board = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
@@ -667,7 +668,7 @@ QUnit.test('dashboard intercepts custom events triggered by sub controllers', fu
             '</form>',
         mockRPC: function (route) {
             if (route === '/web/action/load') {
-                return $.when({res_model: 'partner', views: [[false, 'list']]});
+                return Promise.resolve({res_model: 'partner', views: [[false, 'list']]});
             }
             return this._super.apply(this, arguments);
         },
@@ -685,10 +686,10 @@ QUnit.test('dashboard intercepts custom events triggered by sub controllers', fu
     board.destroy();
 });
 
-QUnit.test('save actions to dashboard', function (assert) {
+QUnit.test('save actions to dashboard', async function (assert) {
     assert.expect(3);
 
-    var actionManager = createActionManager({
+    var actionManager = await createActionManager({
         data: this.data,
         archs: {
             'partner,false,list': '<list><field name="foo"/></list>',
@@ -700,13 +701,13 @@ QUnit.test('save actions to dashboard', function (assert) {
                     "should save the correct action");
                 assert.strictEqual(args.view_mode, 'list',
                     "should save the correct view type");
-                return $.when(true);
+                return Promise.resolve(true);
             }
             return this._super.apply(this, arguments);
         },
     });
 
-    actionManager.doAction({
+    await actionManager.doAction({
         id: 1,
         res_model: 'partner',
         type: 'ir.actions.act_window',
@@ -717,19 +718,19 @@ QUnit.test('save actions to dashboard', function (assert) {
         "should display the list view");
 
     // add this action to dashboard
-    testUtils.dom.click($('.o_search_options .o_dropdown button:contains(Favorites)'));
-    testUtils.dom.click($('.o_add_to_board.o_menu_header'));
+    await testUtils.dom.click($('.o_search_options .o_dropdown button:contains(Favorites)'));
+    await testUtils.dom.click($('.o_add_to_board.o_menu_header'));
     testUtils.fields.editInput($('input.o_add_to_board_input'), 'a name');
-    testUtils.dom.click($('.o_add_to_board_confirm_button'));
+    await testUtils.dom.click($('.o_add_to_board_confirm_button'));
 
     actionManager.destroy();
 });
 
-QUnit.test('save two searches to dashboard', function (assert) {
+QUnit.test('save two searches to dashboard', async function (assert) {
     // the second search saved should not be influenced by the first
     assert.expect(2);
 
-    var actionManager = createActionManager({
+    var actionManager = await createActionManager({
         data: this.data,
         archs: {
             'partner,false,list': '<list><field name="foo"/></list>',
@@ -747,13 +748,13 @@ QUnit.test('save two searches to dashboard', function (assert) {
                 }
 
                 filter_count += 1;
-                return $.when(true);
+                return Promise.resolve(true);
             }
             return this._super.apply(this, arguments);
         },
     });
 
-    actionManager.doAction({
+    await actionManager.doAction({
         id: 1,
         res_model: 'partner',
         type: 'ir.actions.act_window',
@@ -762,33 +763,33 @@ QUnit.test('save two searches to dashboard', function (assert) {
 
     var filter_count = 0;
     // Add a first filter
-    testUtils.dom.click(actionManager.$('.o_filters_menu_button'));
-    testUtils.dom.click(actionManager.$('.o_add_custom_filter'));
+    await testUtils.dom.click(actionManager.$('.o_filters_menu_button'));
+    await testUtils.dom.click(actionManager.$('.o_add_custom_filter'));
     actionManager.$('.o_searchview_extended_prop_value .o_input').val('a');
-    testUtils.dom.click(actionManager.$('.o_apply_filter'));
+    await testUtils.dom.click(actionManager.$('.o_apply_filter'));
     // Add it to dashboard
-    testUtils.dom.click(actionManager.$('.o_favorites_menu_button'));
-    testUtils.dom.click(actionManager.$('.o_add_to_board'));
-    testUtils.dom.click(actionManager.$('.o_add_to_board_confirm_button'));
+    await testUtils.dom.click(actionManager.$('.o_favorites_menu_button'));
+    await testUtils.dom.click(actionManager.$('.o_add_to_board'));
+    await testUtils.dom.click(actionManager.$('.o_add_to_board_confirm_button'));
     // Remove it
-    testUtils.dom.click(actionManager.$('.o_facet_remove'));
+    await testUtils.dom.click(actionManager.$('.o_facet_remove'));
 
     // Add the second filter
-    testUtils.dom.click(actionManager.$('.o_filters_menu_button'));
-    testUtils.dom.click(actionManager.$('.o_add_custom_filter'));
+    await testUtils.dom.click(actionManager.$('.o_filters_menu_button'));
+    await testUtils.dom.click(actionManager.$('.o_add_custom_filter'));
     actionManager.$('.o_searchview_extended_prop_value .o_input').val('b');
-    testUtils.dom.click(actionManager.$('.o_apply_filter'));
+    await testUtils.dom.click(actionManager.$('.o_apply_filter'));
     // Add it to dashboard
-    testUtils.dom.click(actionManager.$('.o_favorites_menu_button'));
-    testUtils.dom.click(actionManager.$('.o_add_to_board'));
-    testUtils.dom.click(actionManager.$('.o_add_to_board_confirm_button'));
+    await testUtils.dom.click(actionManager.$('.o_favorites_menu_button'));
+    await testUtils.dom.click(actionManager.$('.o_add_to_board'));
+    await testUtils.dom.click(actionManager.$('.o_add_to_board_confirm_button'));
 
     actionManager.destroy();
 });
 
-QUnit.test("Views should be loaded in the user's language", function (assert) {
+QUnit.test("Views should be loaded in the user's language", async function (assert) {
     assert.expect(2);
-    var form = createView({
+    var form = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
@@ -810,7 +811,7 @@ QUnit.test("Views should be loaded in the user's language", function (assert) {
                     'The data should be loaded with the correct context');
             }
             if (route === '/web/action/load') {
-                return $.when({
+                return Promise.resolve({
                     res_model: 'partner',
                     views: [[4, 'list']],
                 });
@@ -826,9 +827,9 @@ QUnit.test("Views should be loaded in the user's language", function (assert) {
     form.destroy();
 });
 
-QUnit.test("Dashboard should use correct groupby", function (assert) {
+QUnit.test("Dashboard should use correct groupby", async function (assert) {
     assert.expect(1);
-    var form = createView({
+    var form = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
@@ -845,7 +846,7 @@ QUnit.test("Dashboard should use correct groupby", function (assert) {
                     'user defined groupby should have precedence on action groupby');
             }
             if (route === '/web/action/load') {
-                return $.when({
+                return Promise.resolve({
                     res_model: 'partner',
                     context: {
                         group_by: 'some_field',
@@ -864,10 +865,10 @@ QUnit.test("Dashboard should use correct groupby", function (assert) {
     form.destroy();
 });
 
-QUnit.test('click on a cell of pivot view inside dashboard', function (assert) {
+QUnit.test('click on a cell of pivot view inside dashboard', async function (assert) {
     assert.expect(3);
 
-    var form = createView({
+    var form = await createView({
         View: BoardView,
         model: 'board',
         data: this.data,
@@ -880,7 +881,7 @@ QUnit.test('click on a cell of pivot view inside dashboard', function (assert) {
             '</form>',
         mockRPC: function (route) {
             if (route === '/web/action/load') {
-                return $.when({
+                return Promise.resolve({
                     res_model: 'partner',
                     views: [[4, 'pivot']],
                 });
@@ -899,7 +900,7 @@ QUnit.test('click on a cell of pivot view inside dashboard', function (assert) {
 
     assert.verifySteps([]);
 
-    testUtils.dom.click(form.$('.o_pivot .o_pivot_cell_value'));
+    await testUtils.dom.click(form.$('.o_pivot .o_pivot_cell_value'));
 
     assert.verifySteps(['do action']);
 

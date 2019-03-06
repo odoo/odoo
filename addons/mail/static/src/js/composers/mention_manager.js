@@ -114,7 +114,7 @@ var MentionManager = Widget.extend({
 
         if (this._activeListener) {
             var mentionWord = this._mentionWord;
-            $.when(this._activeListener.fetchCallback(mentionWord))
+            Promise.resolve(this._activeListener.fetchCallback(mentionWord))
                 .then(function (suggestions) {
                     if (mentionWord === self._mentionWord) {
                         // update suggestions only if mentionWord didn't change

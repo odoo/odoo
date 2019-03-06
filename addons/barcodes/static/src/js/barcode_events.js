@@ -289,9 +289,9 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     },
 
     stop: function(){
-        $('body').unbind("keypress", this.__handler);
-        $('body').unbind("keydown", this.__keydown_handler);
-        $('body').unbind('keyup', this.__keyup_handler);
+        $('body').off("keypress", this.__handler);
+        $('body').off("keydown", this.__keydown_handler);
+        $('body').off('keyup', this.__keyup_handler);
     },
 });
 

@@ -21,7 +21,7 @@ WebsiteNewMenu.include({
      * it and redirects the user to this new post.
      *
      * @private
-     * @returns {Deferred} Unresolved if there is a redirection
+     * @returns {Promise} Unresolved if there is a redirection
      */
     _createNewBlogPost: function () {
         return this._rpc({
@@ -30,7 +30,7 @@ WebsiteNewMenu.include({
         }).then(function (blog_ids) {
             if (blog_ids.length === 1) {
                 document.location = '/blog/' + blog_ids[0][0] + '/post/new';
-                return $.Deferred();
+                return new Promise(function () {});
             } else if (blog_ids.length > 1) {
                 return wUtils.prompt({
                     id: 'editor_new_blog',
@@ -39,12 +39,13 @@ WebsiteNewMenu.include({
                     init: function (field) {
                         return blog_ids;
                     },
-                }).then(function (blog_id) {
+                }).then(function (result) {
+                    var blog_id = result.val;
                     if (!blog_id) {
                         return;
                     }
                     document.location = '/blog/' + blog_id + '/post/new';
-                    return $.Deferred();
+                    return new Promise(function () {});
                 });
             }
         });
@@ -63,7 +64,7 @@ var options = require('web_editor.snippets.options');
 var WysiwygMultizone = require('web_editor.wysiwyg.multizone');
 
 if (!$('.website_blog').length) {
-    return $.Deferred().reject("DOM doesn't contain '.website_blog'");
+    return Promise.reject("DOM doesn't contain '.website_blog'");
 }
 
 WysiwygMultizone.include({
@@ -104,7 +105,7 @@ WysiwygMultizone.include({
                 },
             }));
         }
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 });
 

@@ -1245,7 +1245,7 @@ registry.many2one = SnippetOption.extend({
      *
      * @private
      * @param {string} name
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _findExisting: function (name) {
         var self = this;

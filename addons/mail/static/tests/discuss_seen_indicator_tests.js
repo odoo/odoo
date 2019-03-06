@@ -72,13 +72,13 @@ QUnit.module('Discuss (Seen Indicator)', {
             };
             var notification = [[false, 'mail.channel', params.channelID], data];
             params.widget.call('bus_service', 'trigger', 'notification', [notification]);
+            return testUtils.nextTick();
         };
     },
 });
 
-QUnit.test('2 members: 1 myself message not received initially', function (assert) {
+QUnit.test('2 members: 1 myself message not received initially', async function (assert) {
     assert.expect(2);
-    var done = assert.async();
 
     var dmChat = {
         id: 1,
@@ -123,30 +123,27 @@ QUnit.test('2 members: 1 myself message not received initially', function (asser
         res_id: 1,
     }];
 
-    createDiscuss({
+    var discuss = await createDiscuss({
         id: 1,
         context: {},
         params: {},
         data: this.data,
         services: this.services,
         session: { partner_id: 3 },
-    }).then(function (discuss) {
-        // click on DM chat
-        var $dmChat = discuss.$('.o_mail_discuss_sidebar')
-                        .find('.o_mail_discuss_item[data-thread-id=1]');
-        testUtils.dom.click($dmChat);
-
-        assert.isVisible(discuss.$('.o_thread_message[data-message-id=100]'));
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
-
-        discuss.destroy();
-        done();
     });
+    // click on general
+    var $dmChat = discuss.$('.o_mail_discuss_sidebar')
+                    .find('.o_mail_discuss_item[data-thread-id=1]');
+    await testUtils.dom.click($dmChat);
+
+    assert.isVisible(discuss.$('.o_thread_message[data-message-id=100]'));
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
+
+    discuss.destroy();
 });
 
-QUnit.test('2 members: 1 myself message received by everyone initially', function (assert) {
+QUnit.test('2 members: 1 myself message received by everyone initially', async function (assert) {
     assert.expect(4);
-    var done = assert.async();
 
     var dmChat = {
         id: 1,
@@ -191,35 +188,32 @@ QUnit.test('2 members: 1 myself message received by everyone initially', functio
         res_id: 1,
     }];
 
-    createDiscuss({
+    var discuss = await createDiscuss({
         id: 1,
         context: {},
         params: {},
         data: this.data,
         services: this.services,
         session: { partner_id: 3 },
-    }).then(function (discuss) {
-        // click on DM chat
-        var $dmChat = discuss.$('.o_mail_discuss_sidebar')
-                        .find('.o_mail_discuss_item[data-thread-id=1]');
-        testUtils.dom.click($dmChat);
-        var $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
-        assert.isVisible($seenIcon, "should display seen icon on message");
-        assert.containsOnce($seenIcon, '.fa-check', "should display a single check");
-
-        testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
-        var $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
-        assert.isVisible($seenIconContent, "should display content on seen icon mouseover");
-        assert.strictEqual($seenIconContent.text().trim(), "Received by Everyone");
-
-        discuss.destroy();
-        done();
     });
+    // click on DM chat
+    var $dmChat = discuss.$('.o_mail_discuss_sidebar')
+                    .find('.o_mail_discuss_item[data-thread-id=1]');
+    await testUtils.dom.click($dmChat);
+    var $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
+    assert.isVisible($seenIcon, "should display seen icon on message");
+    assert.containsOnce($seenIcon, '.fa-check', "should display a single check");
+
+    await testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
+    var $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
+    assert.isVisible($seenIconContent, "should display content on seen icon mouseover");
+    assert.strictEqual($seenIconContent.text().trim(), "Received by Everyone");
+
+    discuss.destroy();
 });
 
-QUnit.test('2 members: 1 myself message seen by everyone initially', function (assert) {
+QUnit.test('2 members: 1 myself message seen by everyone initially', async function (assert) {
     assert.expect(4);
-    var done = assert.async();
 
     var dmChat = {
         id: 1,
@@ -264,37 +258,33 @@ QUnit.test('2 members: 1 myself message seen by everyone initially', function (a
         res_id: 1,
     }];
 
-    createDiscuss({
+    var discuss = await createDiscuss({
         id: 1,
         context: {},
         params: {},
         data: this.data,
         services: this.services,
         session: { partner_id: 3 },
-    }).then(function (discuss) {
-        // click on DM chat
-        var $dmChat = discuss.$('.o_mail_discuss_sidebar')
-                        .find('.o_mail_discuss_item[data-thread-id=1]');
-        testUtils.dom.click($dmChat);
-        var $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
-        assert.isVisible($seenIcon, "should display seen icon on message");
-        assert.containsN($seenIcon, '.fa-check', 2, "should display 2 checks");
-
-        testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
-        var $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
-        assert.isVisible($seenIconContent, "should display content on seen icon mouseover");
-        assert.strictEqual($seenIconContent.text().trim(), "Seen by Everyone");
-
-        discuss.destroy();
-        done();
     });
+    // click on DM chat
+    var $dmChat = discuss.$('.o_mail_discuss_sidebar')
+                    .find('.o_mail_discuss_item[data-thread-id=1]');
+    await testUtils.dom.click($dmChat);
+    var $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
+    assert.isVisible($seenIcon, "should display seen icon on message");
+    assert.containsN($seenIcon, '.fa-check', 2, "should display 2 checks");
+
+    await testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
+    var $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
+    assert.isVisible($seenIconContent, "should display content on seen icon mouseover");
+    assert.strictEqual($seenIconContent.text().trim(), "Seen by Everyone");
+
+    discuss.destroy();
 });
 
-QUnit.test('2 members: 1 myself message received by everyone (initially not received)', function (assert) {
+QUnit.test('2 members: 1 myself message received by everyone (initially not received)', async function (assert) {
     assert.expect(6);
-    var done = assert.async();
 
-    var self = this;
     var dmChat = {
         id: 1,
         channel_type: "chat",
@@ -338,49 +328,45 @@ QUnit.test('2 members: 1 myself message received by everyone (initially not rece
         res_id: 1,
     }];
 
-    createDiscuss({
+    var discuss = await createDiscuss({
         id: 1,
         context: {},
         params: {},
         data: this.data,
         services: this.services,
         session: { partner_id: 3 },
-    }).then(function (discuss) {
-        // click on DM chat
-        var $dmChat = discuss.$('.o_mail_discuss_sidebar')
-                        .find('.o_mail_discuss_item[data-thread-id=1]');
-        testUtils.dom.click($dmChat);
-
-        assert.isVisible(discuss.$('.o_thread_message[data-message-id=100]'));
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
-
-        self.simulate({
-            action: 'received',
-            channelID: 1,
-            partnerID: 2,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-
-        var $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
-        assert.isVisible($seenIcon, "should display seen icon on message");
-        assert.containsOnce($seenIcon, '.fa-check', "should display a single check");
-
-        testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
-        var $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
-        assert.isVisible($seenIconContent, "should display content on seen icon mouseover");
-        assert.strictEqual($seenIconContent.text().trim(), "Received by Everyone");
-
-        discuss.destroy();
-        done();
     });
+    // click on DM chat
+    var $dmChat = discuss.$('.o_mail_discuss_sidebar')
+                    .find('.o_mail_discuss_item[data-thread-id=1]');
+    await testUtils.dom.click($dmChat);
+
+    assert.isVisible(discuss.$('.o_thread_message[data-message-id=100]'));
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
+
+    await this.simulate({
+        action: 'received',
+        channelID: 1,
+        partnerID: 2,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+
+    var $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
+    assert.isVisible($seenIcon, "should display seen icon on message");
+    assert.containsOnce($seenIcon, '.fa-check', "should display a single check");
+
+    await testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
+    var $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
+    assert.isVisible($seenIconContent, "should display content on seen icon mouseover");
+    assert.strictEqual($seenIconContent.text().trim(), "Received by Everyone");
+
+    discuss.destroy();
 });
 
-QUnit.test('2 members: 1 myself message seen by everyone (initially not received)', function (assert) {
+QUnit.test('2 members: 1 myself message seen by everyone (initially not received)', async function (assert) {
     assert.expect(6);
-    var done = assert.async();
 
-    var self = this;
     var dmChat = {
         id: 1,
         channel_type: "chat",
@@ -424,49 +410,45 @@ QUnit.test('2 members: 1 myself message seen by everyone (initially not received
         res_id: 1,
     }];
 
-    createDiscuss({
+    var discuss = await createDiscuss({
         id: 1,
         context: {},
         params: {},
         data: this.data,
         services: this.services,
         session: { partner_id: 3 },
-    }).then(function (discuss) {
-        // click on DM chat
-        var $dmChat = discuss.$('.o_mail_discuss_sidebar')
-                        .find('.o_mail_discuss_item[data-thread-id=1]');
-        testUtils.dom.click($dmChat);
-
-        assert.isVisible(discuss.$('.o_thread_message[data-message-id=100]'));
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
-
-        self.simulate({
-            action: 'seen',
-            channelID: 1,
-            partnerID: 2,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-
-        var $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
-        assert.isVisible($seenIcon, "should display seen icon on message");
-        assert.containsN($seenIcon, '.fa-check', 2, "should display 2 checks");
-
-        testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
-        var $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
-        assert.isVisible($seenIconContent, "should display content on seen icon mouseover");
-        assert.strictEqual($seenIconContent.text().trim(), "Seen by Everyone");
-
-        discuss.destroy();
-        done();
     });
+    // click on DM chat
+    var $dmChat = discuss.$('.o_mail_discuss_sidebar')
+                    .find('.o_mail_discuss_item[data-thread-id=1]');
+    await testUtils.dom.click($dmChat);
+
+    assert.isVisible(discuss.$('.o_thread_message[data-message-id=100]'));
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
+
+    await this.simulate({
+        action: 'seen',
+        channelID: 1,
+        partnerID: 2,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+
+    var $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
+    assert.isVisible($seenIcon, "should display seen icon on message");
+    assert.containsN($seenIcon, '.fa-check', 2, "should display 2 checks");
+
+    await testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
+    var $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
+    assert.isVisible($seenIconContent, "should display content on seen icon mouseover");
+    assert.strictEqual($seenIconContent.text().trim(), "Seen by Everyone");
+
+    discuss.destroy();
 });
 
-QUnit.test('2 members: 1 other message seen by me (initially not received)', function (assert) {
+QUnit.test('2 members: 1 other message seen by me (initially not received)', async function (assert) {
     assert.expect(3);
-    var done = assert.async();
 
-    var self = this;
     var dmChat = {
         id: 1,
         channel_type: "chat",
@@ -510,44 +492,41 @@ QUnit.test('2 members: 1 other message seen by me (initially not received)', fun
         res_id: 1,
     }];
 
-    createDiscuss({
+    var discuss = await createDiscuss({
         id: 1,
         context: {},
         params: {},
         data: this.data,
         services: this.services,
         session: { partner_id: 3 },
-    }).then(function (discuss) {
-        // click on DM chat
-        var $dmChat = discuss.$('.o_mail_discuss_sidebar')
-                        .find('.o_mail_discuss_item[data-thread-id=1]');
-        testUtils.dom.click($dmChat);
-
-        assert.isVisible(discuss.$('.o_thread_message[data-message-id=100]'));
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
-
-        self.simulate({
-            action: 'seen',
-            channelID: 1,
-            partnerID: 3,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
-
-        discuss.destroy();
-        done();
     });
+    // click on DM chat
+    var $dmChat = discuss.$('.o_mail_discuss_sidebar')
+                    .find('.o_mail_discuss_item[data-thread-id=1]');
+    await testUtils.dom.click($dmChat);
+
+    assert.isVisible(discuss.$('.o_thread_message[data-message-id=100]'));
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
+
+    await this.simulate({
+        action: 'seen',
+        channelID: 1,
+        partnerID: 3,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
+
+    discuss.destroy();
 });
 
-QUnit.skip('3 members: 1 myself message received by some initially', function (assert) {
+QUnit.skip('3 members: 1 myself message received by some initially', async function (assert) {
     // IMPORTANT: This test make sense if this feature is on multi user channels,
     // which was the case in case at some point. It has been disabled for
     // performance reasons. We are unsure if this will come back in the future,
     // so we keep to tests in 'skip' mode in the mean time.
     assert.expect(4);
-    var done = assert.async();
 
     var members = [{
         id: 2,
@@ -601,7 +580,7 @@ QUnit.skip('3 members: 1 myself message received by some initially', function (a
         res_id: 1,
     }];
 
-    createDiscuss({
+    var discuss = await createDiscuss({
         id: 1,
         context: {},
         params: {},
@@ -610,31 +589,29 @@ QUnit.skip('3 members: 1 myself message received by some initially', function (a
         session: { partner_id: 3 },
         mockRPC: function (route, args) {
             if (args.method === 'channel_fetch_listeners') {
-                return $.when(members);
+                return Promise.resolve(members);
             }
             return this._super.apply(this, arguments);
         },
-    }).then(function (discuss) {
-        // click on general
-        var $general = discuss.$('.o_mail_discuss_sidebar')
-                        .find('.o_mail_discuss_item[data-thread-id=1]');
-        testUtils.dom.click($general);
-        var $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
-        assert.isVisible($seenIcon, "should display seen icon on message");
-        assert.containsOnce($seenIcon, '.fa-check', "should display a single check");
-
-        testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
-        var $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
-        assert.isVisible($seenIconContent, "should display content on seen icon mouseover");
-        assert.strictEqual($seenIconContent.text().replace(/\s/g, ""),
-            "Receivedby:Someone(someone@example.com)");
-
-        discuss.destroy();
-        done();
     });
+    // click on general
+    var $general = discuss.$('.o_mail_discuss_sidebar')
+                    .find('.o_mail_discuss_item[data-thread-id=1]');
+    await testUtils.dom.click($general);
+    var $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
+    assert.isVisible($seenIcon, "should display seen icon on message");
+    assert.containsOnce($seenIcon, '.fa-check', "should display a single check");
+
+    await testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
+    var $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
+    assert.isVisible($seenIconContent, "should display content on seen icon mouseover");
+    assert.strictEqual($seenIconContent.text().replace(/\s/g, ""),
+        "Receivedby:Someone(someone@example.com)");
+
+    discuss.destroy();
 });
 
-QUnit.skip('several members: 1 myself message seen by everyone (initially not received)', function (assert) {
+QUnit.skip('several members: 1 myself message seen by everyone (initially not received)', async function (assert) {
     // IMPORTANT: This test make sense if this feature is on multi user channels,
     // which was the case in case at some point. It has been disabled for
     // performance reasons. We are unsure if this will come back in the future,
@@ -643,9 +620,7 @@ QUnit.skip('several members: 1 myself message seen by everyone (initially not re
     // seen icon and content should change for my messages based on other users
     // actions (received and/or seen the message)
     assert.expect(26);
-    var done = assert.async();
 
-    var self = this;
     var members = [{
         id: 2,
         name: "Someone",
@@ -706,7 +681,7 @@ QUnit.skip('several members: 1 myself message seen by everyone (initially not re
         res_id: 1,
     }];
 
-    createDiscuss({
+    var discuss = await createDiscuss({
         id: 1,
         context: {},
         params: {},
@@ -715,133 +690,131 @@ QUnit.skip('several members: 1 myself message seen by everyone (initially not re
         session: { partner_id: 3 },
         mockRPC: function (route, args) {
             if (args.method === 'channel_fetch_listeners') {
-                return $.when(members);
+                return Promise.resolve(members);
             }
             return this._super.apply(this, arguments);
         },
-    }).then(function (discuss) {
-        // click on general
-        var $general = discuss.$('.o_mail_discuss_sidebar')
-                        .find('.o_mail_discuss_item[data-thread-id=1]');
-        testUtils.dom.click($general);
-
-        assert.isVisible(discuss.$('.o_thread_message[data-message-id=100]'));
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
-
-        self.simulate({
-            action: 'received',
-            channelID: 1,
-            partnerID: 2,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-
-        var $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
-        assert.isVisible($seenIcon, "should display seen icon on message");
-        assert.containsOnce($seenIcon, '.fa-check', "should display a single check");
-
-        testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
-        var $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
-        assert.isVisible($seenIconContent, "should display content on seen icon mouseover");
-        assert.strictEqual($seenIconContent.text().replace(/\s/g, ""),
-            "Receivedby:Someone(someone@example.com)");
-
-        self.simulate({
-            action: 'received',
-            channelID: 1,
-            partnerID: 4,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-
-        $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
-        assert.isVisible($seenIcon, "should still display seen icon on message");
-        assert.containsOnce($seenIcon, '.fa-check', "should still display a single check");
-
-        testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
-        $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
-        assert.isVisible($seenIconContent, "should still display content on seen icon mouseover");
-        assert.strictEqual($seenIconContent.text().replace(/\s/g, ""),
-            "Receivedby:Someone(someone@example.com)Other(other@example.com)");
-
-        self.simulate({
-            action: 'seen',
-            channelID: 1,
-            partnerID: 2,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-
-        $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
-        assert.isVisible($seenIcon, "should still display seen icon on message");
-        assert.containsN($seenIcon, '.fa-check', 2, "should now display 2 checks");
-
-        testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
-        $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
-        assert.isVisible($seenIconContent, "should still display content on seen icon mouseover");
-        assert.strictEqual($seenIconContent.text().replace(/\s/g, ""),
-            "Seenby:Someone(someone@example.com)Receivedby:Other(other@example.com)");
-
-        self.simulate({
-            action: 'seen',
-            channelID: 1,
-            partnerID: 4,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-
-        $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
-        assert.isVisible($seenIcon, "should still display seen icon on message");
-        assert.containsN($seenIcon, '.fa-check', 2, "should still display 2 checks");
-
-        testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
-        $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
-        assert.isVisible($seenIconContent, "should still display content on seen icon mouseover");
-        assert.strictEqual($seenIconContent.text().replace(/\s/g, ""),
-            "Seenby:Someone(someone@example.com)Other(other@example.com)");
-
-        self.simulate({
-            action: 'received',
-            channelID: 1,
-            partnerID: 5,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-
-        $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
-        assert.isVisible($seenIcon, "should still display seen icon on message");
-        assert.containsN($seenIcon, '.fa-check', 2, "should still display 2 checks");
-
-        testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
-        $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
-        assert.isVisible($seenIconContent, "should still display content on seen icon mouseover");
-        assert.strictEqual($seenIconContent.text().replace(/\s/g, ""),
-            "Seenby:Someone(someone@example.com)Other(other@example.com)ReceivedbyEveryone");
-
-        self.simulate({
-            action: 'seen',
-            channelID: 1,
-            partnerID: 5,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-
-        $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
-        assert.isVisible($seenIcon, "should still display seen icon on message");
-        assert.containsN($seenIcon, '.fa-check', 2, "should still display 2 checks");
-
-        testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
-        $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
-        assert.isVisible($seenIconContent, "should still display content on seen icon mouseover");
-        assert.strictEqual($seenIconContent.text().trim(),
-            "Seen by Everyone");
-
-        discuss.destroy();
-        done();
     });
+    // click on general
+    var $general = discuss.$('.o_mail_discuss_sidebar')
+                    .find('.o_mail_discuss_item[data-thread-id=1]');
+    await testUtils.dom.click($general);
+
+    assert.isVisible(discuss.$('.o_thread_message[data-message-id=100]'));
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
+
+    await this.simulate({
+        action: 'received',
+        channelID: 1,
+        partnerID: 2,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+
+    var $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
+    assert.isVisible($seenIcon, "should display seen icon on message");
+    assert.containsOnce($seenIcon, '.fa-check', "should display a single check");
+
+    await testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
+    var $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
+    assert.isVisible($seenIconContent, "should display content on seen icon mouseover");
+    assert.strictEqual($seenIconContent.text().replace(/\s/g, ""),
+        "Receivedby:Someone(someone@example.com)");
+
+    await this.simulate({
+        action: 'received',
+        channelID: 1,
+        partnerID: 4,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+
+    $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
+    assert.isVisible($seenIcon, "should still display seen icon on message");
+    assert.containsOnce($seenIcon, '.fa-check', "should still display a single check");
+
+    await testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
+    $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
+    assert.isVisible($seenIconContent, "should still display content on seen icon mouseover");
+    assert.strictEqual($seenIconContent.text().replace(/\s/g, ""),
+        "Receivedby:Someone(someone@example.com)Other(other@example.com)");
+
+    await this.simulate({
+        action: 'seen',
+        channelID: 1,
+        partnerID: 2,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+
+    $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
+    assert.isVisible($seenIcon, "should still display seen icon on message");
+    assert.containsN($seenIcon, '.fa-check', 2, "should now display 2 checks");
+
+    await testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
+    $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
+    assert.isVisible($seenIconContent, "should still display content on seen icon mouseover");
+    assert.strictEqual($seenIconContent.text().replace(/\s/g, ""),
+        "Seenby:Someone(someone@example.com)Receivedby:Other(other@example.com)");
+
+    await this.simulate({
+        action: 'seen',
+        channelID: 1,
+        partnerID: 4,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+
+    $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
+    assert.isVisible($seenIcon, "should still display seen icon on message");
+    assert.containsN($seenIcon, '.fa-check', 2, "should still display 2 checks");
+
+    await testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
+    $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
+    assert.isVisible($seenIconContent, "should still display content on seen icon mouseover");
+    assert.strictEqual($seenIconContent.text().replace(/\s/g, ""),
+        "Seenby:Someone(someone@example.com)Other(other@example.com)");
+
+    await this.simulate({
+        action: 'received',
+        channelID: 1,
+        partnerID: 5,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+
+    $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
+    assert.isVisible($seenIcon, "should still display seen icon on message");
+    assert.containsN($seenIcon, '.fa-check', 2, "should still display 2 checks");
+
+    await testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
+    $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
+    assert.isVisible($seenIconContent, "should still display content on seen icon mouseover");
+    assert.strictEqual($seenIconContent.text().replace(/\s/g, ""),
+        "Seenby:Someone(someone@example.com)Other(other@example.com)ReceivedbyEveryone");
+
+    await this.simulate({
+        action: 'seen',
+        channelID: 1,
+        partnerID: 5,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+
+    $seenIcon = discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]');
+    assert.isVisible($seenIcon, "should still display seen icon on message");
+    assert.containsN($seenIcon, '.fa-check', 2, "should still display 2 checks");
+
+    await testUtils.dom.triggerMouseEvent($seenIcon, 'mouseover');
+    $seenIconContent = $('.o_mail_thread_message_seen_icon_content');
+    assert.isVisible($seenIconContent, "should still display content on seen icon mouseover");
+    assert.strictEqual($seenIconContent.text().trim(),
+        "Seen by Everyone");
+
+    discuss.destroy();
 });
 
-QUnit.skip('several members: other message seen by everyone (initially not received)', function (assert) {
+QUnit.skip('several members: other message seen by everyone (initially not received)', async function (assert) {
     // IMPORTANT: This test make sense if this feature is on multi user channels,
     // which was the case in case at some point. It has been disabled for
     // performance reasons. We are unsure if this will come back in the future,
@@ -849,9 +822,7 @@ QUnit.skip('several members: other message seen by everyone (initially not recei
 
     // seen icon should never be visible for message of others
     assert.expect(9);
-    var done = assert.async();
 
-    var self = this;
     var members = [{
         id: 2,
         name: "Someone",
@@ -912,7 +883,7 @@ QUnit.skip('several members: other message seen by everyone (initially not recei
         res_id: 1,
     }];
 
-    createDiscuss({
+    var discuss = await createDiscuss({
         id: 1,
         context: {},
         params: {},
@@ -921,103 +892,99 @@ QUnit.skip('several members: other message seen by everyone (initially not recei
         session: { partner_id: 3 },
         mockRPC: function (route, args) {
             if (args.method === 'channel_fetch_listeners') {
-                return $.when(members);
+                return Promise.resolve(members);
             }
             return this._super.apply(this, arguments);
         },
-    }).then(function (discuss) {
-        // click on general
-        var $general = discuss.$('.o_mail_discuss_sidebar')
-                        .find('.o_mail_discuss_item[data-thread-id=1]');
-        testUtils.dom.click($general);
-
-        assert.isVisible(discuss.$('.o_thread_message[data-message-id=100]'));
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
-
-        self.simulate({
-            action: 'received',
-            channelID: 1,
-            partnerID: 3,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'),
-            "should not display seen icon on message of other users");
-
-        self.simulate({
-            action: 'seen',
-            channelID: 1,
-            partnerID: 3,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'),
-            "should not display seen icon on message of other users");
-
-        self.simulate({
-            action: 'received',
-            channelID: 1,
-            partnerID: 4,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'),
-            "should not display seen icon on message of other users");
-
-        self.simulate({
-            action: 'seen',
-            channelID: 1,
-            partnerID: 2,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'),
-            "should not display seen icon on message of other users");
-
-        self.simulate({
-            action: 'seen',
-            channelID: 1,
-            partnerID: 4,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'),
-            "should not display seen icon on message of other users");
-
-        self.simulate({
-            action: 'received',
-            channelID: 1,
-            partnerID: 5,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'),
-            "should not display seen icon on message of other users");
-
-        self.simulate({
-            action: 'seen',
-            channelID: 1,
-            partnerID: 5,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'),
-            "should not display seen icon on message of other users");
-
-        discuss.destroy();
-        done();
     });
+    // click on general
+    var $general = discuss.$('.o_mail_discuss_sidebar')
+                    .find('.o_mail_discuss_item[data-thread-id=1]');
+    await testUtils.dom.click($general);
+
+    assert.isVisible(discuss.$('.o_thread_message[data-message-id=100]'));
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
+
+    await this.simulate({
+        action: 'received',
+        channelID: 1,
+        partnerID: 3,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'),
+        "should not display seen icon on message of other users");
+
+    await this.simulate({
+        action: 'seen',
+        channelID: 1,
+        partnerID: 3,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'),
+        "should not display seen icon on message of other users");
+
+    await this.simulate({
+        action: 'received',
+        channelID: 1,
+        partnerID: 4,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'),
+        "should not display seen icon on message of other users");
+
+    await this.simulate({
+        action: 'seen',
+        channelID: 1,
+        partnerID: 2,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'),
+        "should not display seen icon on message of other users");
+
+    await this.simulate({
+        action: 'seen',
+        channelID: 1,
+        partnerID: 4,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'),
+        "should not display seen icon on message of other users");
+
+    await this.simulate({
+        action: 'received',
+        channelID: 1,
+        partnerID: 5,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'),
+        "should not display seen icon on message of other users");
+
+    await this.simulate({
+        action: 'seen',
+        channelID: 1,
+        partnerID: 5,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'),
+        "should not display seen icon on message of other users");
+
+    discuss.destroy();
 });
 
-QUnit.skip('several members: only show seen icons from last message seen by everyone', function (assert) {
+QUnit.skip('several members: only show seen icons from last message seen by everyone', async function (assert) {
     // IMPORTANT: This test make sense if this feature is on multi user channels,
     // which was the case in case at some point. It has been disabled for
     // performance reasons. We are unsure if this will come back in the future,
     // so we keep to tests in 'skip' mode in the mean time.
     assert.expect(12);
-    var done = assert.async();
 
-    var self = this;
     var members = [{
         id: 2,
         name: "Someone",
@@ -1092,7 +1059,7 @@ QUnit.skip('several members: only show seen icons from last message seen by ever
         res_id: 1,
     }];
 
-    createDiscuss({
+    var discuss = await createDiscuss({
         id: 1,
         context: {},
         params: {},
@@ -1101,55 +1068,53 @@ QUnit.skip('several members: only show seen icons from last message seen by ever
         session: { partner_id: 3 },
         mockRPC: function (route, args) {
             if (args.method === 'channel_fetch_listeners') {
-                return $.when(members);
+                return Promise.resolve(members);
             }
             return this._super.apply(this, arguments);
         },
-    }).then(function (discuss) {
-        // click on general
-        var $general = discuss.$('.o_mail_discuss_sidebar')
-                        .find('.o_mail_discuss_item[data-thread-id=1]');
-        testUtils.dom.click($general);
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=98]'));
-        assert.isVisible(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=99]'));
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
-
-        self.simulate({
-            action: 'seen',
-            channelID: 1,
-            partnerID: 2,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=98]'));
-        assert.isVisible(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=99]'));
-        assert.isVisible(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
-
-        self.simulate({
-            action: 'seen',
-            channelID: 1,
-            partnerID: 4,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=98]'));
-        assert.isVisible(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=99]'));
-        assert.isVisible(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
-
-        self.simulate({
-            action: 'seen',
-            channelID: 1,
-            partnerID: 5,
-            lastMessageID: 100,
-            widget: discuss,
-        });
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=98]'));
-        assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=99]'));
-        assert.isVisible(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
-
-        discuss.destroy();
-        done();
     });
+    // click on general
+    var $general = discuss.$('.o_mail_discuss_sidebar')
+                    .find('.o_mail_discuss_item[data-thread-id=1]');
+    await testUtils.dom.click($general);
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=98]'));
+    assert.isVisible(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=99]'));
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
+
+    await this.simulate({
+        action: 'seen',
+        channelID: 1,
+        partnerID: 2,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=98]'));
+    assert.isVisible(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=99]'));
+    assert.isVisible(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
+
+    await this.simulate({
+        action: 'seen',
+        channelID: 1,
+        partnerID: 4,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=98]'));
+    assert.isVisible(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=99]'));
+    assert.isVisible(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
+
+    await this.simulate({
+        action: 'seen',
+        channelID: 1,
+        partnerID: 5,
+        lastMessageID: 100,
+        widget: discuss,
+    });
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=98]'));
+    assert.containsNone(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=99]'));
+    assert.isVisible(discuss.$('.o_mail_thread_message_seen_icon[data-message-id=100]'));
+
+    discuss.destroy();
 });
 
 });

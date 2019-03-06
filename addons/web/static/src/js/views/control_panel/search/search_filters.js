@@ -40,7 +40,9 @@ var ExtendedSearchProposition = Widget.extend({
         this.value = null;
     },
     start: function () {
-        return this._super().done(this.proxy('changed'));
+        var parent =  this._super();
+        parent.then(this.proxy('changed'));
+        return parent;
     },
     changed: function () {
         var nval = this.$(".o_searchview_extended_prop_field").val();
@@ -234,10 +236,10 @@ var DateTime = Field.extend({
         return str;
     },
     start: function () {
-        return $.when(
+        return Promise.all([
             this._super.apply(this, arguments),
             this._create_new_widget("datewidget_0")
-        );
+        ]);
     },
     _create_new_widget: function (name) {
         this[name] = new (this._get_widget_class())(this);

@@ -27,6 +27,17 @@ var LinkPlugin = Plugins.linkDialog.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @param {Object} layoutInfo
+     */
+    show: function () {
+        var self = this;
+        var linkInfo = this.context.invoke('editor.getLinkInfo');
+        this.context.invoke('editor.saveRange');
+        return this.showLinkDialog(linkInfo)
+            .then(function (linkInfo) {})
+            .guardedCatch(function () {});
+    },
+    /**
      * @override
      * @param {Object} linkInfo
      * @returns {Promise}
@@ -145,64 +156,67 @@ var LinkPlugin = Plugins.linkDialog.extend({
             linkInfo.needLabel = !linkInfo.text.length;
         }
 
-        var def = $.Deferred();
-        var linkDialog = new LinkDialog(this.options.parent, {
-                onClose: function () {
-                    setTimeout(function () {
-                        self.context.invoke('editor.focus');
-                    });
-                }
-            },
-            _.omit(linkInfo, 'range')
-        );
+        var def = new Promise(function (resolve, reject) {
+            var linkDialog = new LinkDialog(self.options.parent, {
+                    onClose: function () {
+                        setTimeout(function () {
+                            self.context.invoke('editor.focus');
+                        });
+                    }
+                },
+                _.omit(linkInfo, 'range')
+            );
 
-        linkDialog.on('save', this, this._wrapCommand(function (newLinkInfo) {
-            var isCollapsed = linkInfo.range.isCollapsed();
-            linkInfo.range.select();
-            var $anchor;
-            if (linkInfo.isAnchor) {
-                $anchor = $(dom.ancestor(r.sc, dom.isAnchor));
-                $anchor.css(newLinkInfo.style || {});
-                if (newLinkInfo.isNewWindow) {
-                    $anchor.attr('target', '_blank');
+            linkDialog.on('save', self, self._wrapCommand(function (newLinkInfo) {
+                var isCollapsed = linkInfo.range.isCollapsed();
+                linkInfo.range.select();
+                newLinkInfo.range = linkInfo.range;
+
+                var $anchor;
+                if (linkInfo.isAnchor) {
+                    $anchor = $(dom.ancestor(r.sc, dom.isAnchor));
+                    $anchor.css(newLinkInfo.style || {});
+                    if (newLinkInfo.isNewWindow) {
+                        $anchor.attr('target', '_blank');
+                    } else {
+                        $anchor.removeAttr('target');
+                    }
                 } else {
-                    $anchor.removeAttr('target');
+                    self.context.invoke('editor.saveRange');
+                    self.context.invoke('editor.createLink', newLinkInfo);
+                    var range = self.context.invoke('editor.createRange');
+                    var anchor = dom.ancestor(range.sc.childNodes[range.so] || range.sc, dom.isAnchor);
+                    $anchor = $(anchor);
+                    if (isCollapsed) {
+                        // move the range just after the link
+                        var point = dom.nextPoint({
+                            node: anchor,
+                            offset: dom.nodeLength(anchor),
+                        });
+                        range = self.context.invoke('editor.setRange', point.node, point.offset);
+                        range.select();
+                    } else {
+                        $anchor.selectContent();
+                    }
                 }
-            } else {
+                if ((dom.isImg(media) || dom.isIcon(media)) && !$anchor.find(media).length) {
+                    $(media).remove();
+                }
+                $anchor.attr('class', newLinkInfo.className);
+                $anchor.attr('href', newLinkInfo.url);
                 self.context.invoke('editor.saveRange');
-                def.resolve(_.clone(newLinkInfo));
-                var range = self.context.invoke('editor.createRange');
-                var anchor = dom.ancestor(range.sc.childNodes[range.so] || range.sc, dom.isAnchor);
-                $anchor = $(anchor);
-                if (isCollapsed) {
-                    // move the range just after the link
-                    var point = dom.nextPoint({
-                        node: anchor,
-                        offset: dom.nodeLength(anchor),
-                    });
-                    range = self.context.invoke('editor.setRange', point.node, point.offset);
-                    range.select();
-                } else {
-                    $anchor.selectContent();
-                }
-            }
-            if ((dom.isImg(media) || dom.isIcon(media)) && !$anchor.find(media).length) {
-                $(media).remove();
-            }
-            $anchor.attr('class', newLinkInfo.className);
-            $anchor.attr('href', newLinkInfo.url);
-            self.context.invoke('editor.saveRange');
-            self.context.invoke('editor.saveTarget', $anchor[0]);
-            self.context.triggerEvent('focusnode', $anchor[0]);
-        }));
-        linkDialog.on('closed', this, function () {
-            def.reject();
-            this.context.invoke('editor.restoreRange');
-            this.context.invoke('LinkPopover.update');
+                self.context.invoke('editor.saveTarget', $anchor[0]);
+                self.context.triggerEvent('focusnode', $anchor[0]);
+                resolve(linkInfo);
+            }));
+            linkDialog.on('closed', self, function () {
+                this.context.invoke('editor.restoreRange');
+                this.context.invoke('LinkPopover.update');
+                reject();
+            });
+            linkDialog.open();
         });
-
-        linkDialog.open();
-        return def.promise();
+        return def;
     },
     /**
      * Remove the current link, keep its contents.

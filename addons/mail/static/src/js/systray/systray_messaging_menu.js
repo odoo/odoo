@@ -30,7 +30,7 @@ var MessagingMenu = Widget.extend({
      * @override
      */
     willStart: function () {
-        return $.when(this._super.apply(this, arguments), this.call('mail_service', 'isReady'));
+        return Promise.all([this._super.apply(this, arguments), this.call('mail_service', 'isReady')]);
     },
     /**
      * @override
@@ -112,7 +112,7 @@ var MessagingMenu = Widget.extend({
     },
     /**
      * @private
-     * @returns {$.Promise<Object[]>} resolved with list of previews that are
+     * @returns {Promise<Object[]>} resolved with list of previews that are
      *   compatible with the 'mail.Preview' template.
      */
     _getPreviews: function () {

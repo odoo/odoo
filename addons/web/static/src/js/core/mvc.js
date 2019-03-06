@@ -76,7 +76,7 @@ var Model = Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      * @returns {Promise} The promise resolves to some kind of handle
      */
     load: function () {
-        return $.when();
+        return Promise.resolve();
     },
 });
 
@@ -119,9 +119,9 @@ var Controller = Widget.extend({
      * @returns {Promise}
      */
     start: function () {
-        return $.when(
-            this._super.apply(this, arguments),
-            this._startRenderer()
+        return Promise.all(
+            [this._super.apply(this, arguments),
+            this._startRenderer()]
         );
     },
 
@@ -177,7 +177,8 @@ var Factory = Class.extend({
     getController: function (parent) {
         var self = this;
         var model = this.getModel(parent);
-        return $.when(this._loadData(model), ajax.loadLibs(this)).then(function (state) {
+        return Promise.all([this._loadData(model), ajax.loadLibs(this)]).then(function (result) {
+            var state = result[0];
             var renderer = self.getRenderer(parent, state);
             var Controller = self.Controller || self.config.Controller;
             var controllerParams = _.extend({

@@ -47,14 +47,14 @@ var RecordQuickCreate = Widget.extend({
      */
     willStart: function () {
         var self = this;
-        var def1 = this._super.apply(this, arguments);
-        var def2;
+        var superWillStart = this._super.apply(this, arguments);
+        var viewsLoaded;
         if (this.formViewRef) {
             var views = [[false, 'form']];
             var context = _.extend({}, this.context, {
                 form_view_ref: this.formViewRef,
             });
-            def2 = this.loadViews(this.model, context, views);
+            viewsLoaded = this.loadViews(this.model, context, views);
         } else {
             var fieldsView = {};
             fieldsView.arch = '<form>' +
@@ -65,9 +65,9 @@ var RecordQuickCreate = Widget.extend({
             };
             fieldsView.fields = fields;
             fieldsView.viewFields = fields;
-            def2 = $.when({form: fieldsView});
+            viewsLoaded = Promise.resolve({form: fieldsView});
         }
-        def2 = def2.then(function (fieldsViews) {
+        viewsLoaded = viewsLoaded.then(function (fieldsViews) {
             var formView = new QuickCreateFormView(fieldsViews.form, {
                 context: self.context,
                 modelName: self.model,
@@ -78,7 +78,7 @@ var RecordQuickCreate = Widget.extend({
                 return self.controller.appendTo(document.createDocumentFragment());
             });
         });
-        return $.when(def1, def2);
+        return Promise.all([superWillStart, viewsLoaded]);
     },
     /**
      * @override
@@ -113,7 +113,7 @@ var RecordQuickCreate = Widget.extend({
      * have been made yet
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     cancel: function () {
         var self = this;
@@ -129,7 +129,6 @@ var RecordQuickCreate = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @override
      * @private
      * @param {Object} [options]
      * @param {boolean} [options.openRecord] set to true to directly open the
@@ -139,7 +138,7 @@ var RecordQuickCreate = Widget.extend({
         var self = this;
         if (this._disabled) {
             // don't do anything if we are already creating a record
-            return $.Deferred();
+            return;
         }
         // disable the widget to prevent the user from creating multiple records
         // with the current values ; if the create works, the widget will be
@@ -157,13 +156,13 @@ var RecordQuickCreate = Widget.extend({
             } else {
                 self._enableQuickCreate();
             }
-        }).fail(this._enableQuickCreate.bind(this));
+        }).guardedCatch(this._enableQuickCreate.bind(this));
     },
     /**
      * Notifies the environment that the quick creation must be cancelled
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _cancel: function () {
         this.trigger_up('cancel_quick_create');

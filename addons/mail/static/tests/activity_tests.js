@@ -162,19 +162,19 @@ QUnit.module('activity view', {
     }
 });
 
-QUnit.test('activity view: simple activity rendering', function (assert) {
+QUnit.test('activity view: simple activity rendering', async function (assert) {
     assert.expect(7);
-    var activity = createView({
+    var activity = await createView({
         View: ActivityView,
         model: 'task',
         data: this.data,
         arch: '<activity string="Task"/>',
         mockRPC: function(route, args) {
             if (args.method === 'get_activity_data') {
-                return $.when(ACTIVITY_DATA);
+                return Promise.resolve(ACTIVITY_DATA);
             }
             return this._super(route, args);
-        }
+        },
     });
 
     assert.containsOnce(activity, 'table',
@@ -194,16 +194,16 @@ QUnit.test('activity view: simple activity rendering', function (assert) {
     activity.destroy();
 });
 
-QUnit.test('activity view: no content rendering', function (assert) {
+QUnit.test('activity view: no content rendering', async function (assert) {
     assert.expect(2);
-    var activity = createView({
+    var activity = await createView({
         View: ActivityView,
         model: 'task',
         data: this.data,
         arch: '<activity string="Task"/>',
         mockRPC: function (route, args) {
             if (args.method === 'get_activity_data') {
-                return $.when({ activity_types: [] });
+                return Promise.resolve({ activity_types: [] });
             }
             return this._super(route, args);
         },
@@ -218,20 +218,20 @@ QUnit.test('activity view: no content rendering', function (assert) {
     activity.destroy();
 });
 
-QUnit.test('activity view: batch send mail on activity', function (assert) {
+QUnit.test('activity view: batch send mail on activity', async function (assert) {
     assert.expect(6);
-    var activity = createView({
+    var activity = await createView({
         View: ActivityView,
         model: 'task',
         data: this.data,
         arch: '<activity string="Task"/>',
         mockRPC: function(route, args) {
             if (args.method === 'activity_send_mail'){
-                assert.step(args.args);
-                return $.when();
+                assert.step(JSON.stringify(args.args));
+                return Promise.resolve();
             }
             if (args.method === 'get_activity_data') {
-                return $.when(ACTIVITY_DATA);
+                return Promise.resolve(ACTIVITY_DATA);
             }
             return this._super(route, args);
         },
@@ -250,16 +250,16 @@ QUnit.test('activity view: batch send mail on activity', function (assert) {
     testUtils.dom.click(activity.$('table thead tr:first th:nth-child(2) span:nth-child(2) i.fa-ellipsis-v'));
     testUtils.dom.click(activity.$('table thead tr:first th:nth-child(2) span:nth-child(2) .dropdown-menu.show .o_send_mail_template:nth-child(2):contains(Task: Reception Acknowledgment)'));
     assert.verifySteps([
-        [[13, 30], 9], //send mail template 9 on tasl 13 and 30
-        [[13, 30], 8]  //send mail template 8 on tasl 13 and 30
+        '[[13,30],9]', // send mail template 9 on tasks 13 and 30
+        '[[13,30],8]',  // send mail template 8 on tasks 13 and 30
     ]);
 
     activity.destroy();
 });
 
-QUnit.test('activity view: activity widget', function (assert) {
+QUnit.test('activity view: activity widget', async function (assert) {
     assert.expect(16);
-    var activity = createView({
+    var activity = await createView({
         View: ActivityView,
         model: 'task',
         data: this.data,
@@ -268,16 +268,16 @@ QUnit.test('activity view: activity widget', function (assert) {
             if (args.method === 'activity_send_mail'){
                 assert.deepEqual([[30],8],args.args, "Should send template 8 on record 30");
                 assert.step('activity_send_mail');
-                return $.when();
+                return Promise.resolve();
             }
             if (args.method === 'action_feedback_schedule_next'){
                 assert.deepEqual([[3]],args.args, "Should execute action_feedback_schedule_next on activity 3 only ");
                 assert.equal(args.kwargs.feedback, "feedback2");
                 assert.step('action_feedback_schedule_next');
-                return $.when({serverGeneratedAction: true});
+                return Promise.resolve({serverGeneratedAction: true});
             }
             if (args.method === 'get_activity_data') {
-                return $.when(ACTIVITY_DATA);
+                return Promise.resolve(ACTIVITY_DATA);
             }
             return this._super(route, args);
         },
@@ -305,12 +305,12 @@ QUnit.test('activity view: activity widget', function (assert) {
                     assert.step("Unexpected action");
                 }
             },
-        }
+        },
     });
     var today = activity.$('table tbody tr:first td:nth-child(2).today');
     var dropdown = today.find('.dropdown-menu.o_activity');
 
-    testUtils.dom.click(today.find('.o_closest_deadline'));
+    await testUtils.dom.click(today.find('.o_closest_deadline'));
     assert.hasClass(dropdown,'show', "dropdown should be displayed");
     assert.ok(dropdown.find('.o_activity_color_today:contains(Today)').length, "Title should be today");
     assert.ok(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:first div:contains(template8)').length,
@@ -318,20 +318,20 @@ QUnit.test('activity view: activity widget', function (assert) {
     assert.ok(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:eq(1) div:contains(template9)').length,
         "template9 should be available");
 
-    testUtils.dom.click(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:first .o_activity_template_preview'));
-    testUtils.dom.click(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:first .o_activity_template_send'));
+    await testUtils.dom.click(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:first .o_activity_template_preview'));
+    await testUtils.dom.click(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:first .o_activity_template_send'));
     var overdue = activity.$('table tbody tr:first td:nth-child(3).overdue');
-    testUtils.dom.click(overdue.find('.o_closest_deadline'));
+    await testUtils.dom.click(overdue.find('.o_closest_deadline'));
     dropdown = overdue.find('.dropdown-menu.o_activity');
     assert.notOk(dropdown.find('.o_activity_title div div div:first span').length,
         "No template should be available");
 
-    testUtils.dom.click(dropdown.find('.o_schedule_activity'));
-    testUtils.dom.click(overdue.find('.o_closest_deadline'));
-    testUtils.dom.click(dropdown.find('.o_mark_as_done'));
+    await testUtils.dom.click(dropdown.find('.o_schedule_activity'));
+    await testUtils.dom.click(overdue.find('.o_closest_deadline'));
+    await testUtils.dom.click(dropdown.find('.o_mark_as_done'));
     dropdown.find('#activity_feedback').val("feedback2");
 
-    testUtils.dom.click(dropdown.find('.o_activity_popover_done_next'));
+    await testUtils.dom.click(dropdown.find('.o_activity_popover_done_next'));
     assert.verifySteps([
         "do_action_compose",
         "activity_send_mail",
@@ -342,10 +342,10 @@ QUnit.test('activity view: activity widget', function (assert) {
 
     activity.destroy();
 });
-QUnit.test('activity view: no group_by_menu and no time_range_menu', function (assert) {
+QUnit.test('activity view: no group_by_menu and no time_range_menu', async function (assert) {
     assert.expect(4);
 
-    var actionManager = createActionManager({
+    var actionManager = await createActionManager({
         actions: [{
             id: 1,
             name: 'Task Action',
@@ -365,13 +365,13 @@ QUnit.test('activity view: no group_by_menu and no time_range_menu', function (a
             if (args.method === 'get_activity_data') {
                 assert.deepEqual(args.kwargs.context, {lang: 'zz_ZZ'},
                     'The context should have been passed');
-                return $.when(ACTIVITY_DATA);
+                return Promise.resolve(ACTIVITY_DATA);
             }
             return this._super(route, args);
         },
     });
 
-    actionManager.doAction(1);
+    await actionManager.doAction(1);
 
     assert.containsN(actionManager, '.o_search_options .o_dropdown button:visible', 2,
         "only two elements should be available in view search");

@@ -410,17 +410,14 @@ odoo.define('website_slides.fullscreen', function (require) {
     publicWidget.registry.websiteSlidesFullscreenPlayer = publicWidget.Widget.extend({
         selector: '.o_wslides_fs_main',
         xmlDependencies: ['/website_slides/static/src/xml/website_slides_fullscreen.xml'],
-        init: function (el){
-            this._super.apply(this, arguments);
-        },
         start: function (){
-            var defs = [this._super.apply(this, arguments)];
+            var proms = [this._super.apply(this, arguments)];
             var userId = this.$el.data('userId');
             var courseId = this.$el.data('courseId');
             var slideId = this.$el.data('slideId');
             var fullscreen = new Fullscreen(this, courseId, slideId, userId);
-            defs.push(fullscreen.attachTo(this.$el));
-            return $.when.apply($, defs);
+            proms.push(fullscreen.attachTo(this.$el));
+            return Promise.all(proms);
         }
     });
 

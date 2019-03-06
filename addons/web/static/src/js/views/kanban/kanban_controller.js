@@ -76,6 +76,7 @@ var KanbanController = BasicController.extend({
 
     /**
      * @param {jQueryElement} $node
+     * @returns {Promise}
      */
     renderButtons: function ($node) {
         if (this.hasButtons && this.is_action_enabled('create')) {
@@ -86,8 +87,9 @@ var KanbanController = BasicController.extend({
             this.$buttons.on('click', 'button.o-kanban-button-new', this._onButtonNew.bind(this));
             this.$buttons.on('keydown', this._onButtonsKeyDown.bind(this));
             this._updateButtons();
-            this.$buttons.appendTo($node);
+            return Promise.resolve(this.$buttons.appendTo($node));
         }
+        return Promise.resolve();
     },
     /**
      * Override to add the domain coming from the searchPanel (if any) to the
@@ -110,7 +112,7 @@ var KanbanController = BasicController.extend({
         params.domain = this.controlPanelDomain.concat(this.searchPanelDomain);
         var superProm = this._super.apply(this, arguments);
         var searchPanelProm = this._updateSearchPanel();
-        return $.when(superProm, searchPanelProm).then(function () {
+        return Promise.all([superProm, searchPanelProm]).then(function () {
             // searchPanel has been re-rendered, so re-render the view
             return self.renderer.render();
         });
@@ -124,7 +126,7 @@ var KanbanController = BasicController.extend({
      * @override method comes from field manager mixin
      * @private
      * @param {string} id local id from the basic record data
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _confirmSave: function (id) {
         var data = this.model.get(this.handle, {raw: true});
@@ -197,7 +199,7 @@ var KanbanController = BasicController.extend({
     /**
      * @param {number[]} ids
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _resequenceColumns: function (ids) {
         var state = this.model.get(this.handle, {raw: true});
@@ -212,7 +214,7 @@ var KanbanController = BasicController.extend({
      * @private
      * @param {string} column_id
      * @param {string[]} ids
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _resequenceRecords: function (column_id, ids) {
         var self = this;
@@ -246,7 +248,7 @@ var KanbanController = BasicController.extend({
     },
     /**
      * @private
-     * @returns {$.Promise}
+     * @returns {Promise}
      */
     _updateSearchPanel: function () {
         return this._searchPanel.update({searchDomain: this.controlPanelDomain});
@@ -296,7 +298,7 @@ var KanbanController = BasicController.extend({
                             self.renderer.updateColumn(db_id, data);
                         });
                     });
-            }).fail(this.reload.bind(this, {}));
+            }).guardedCatch(this.reload.bind(this));
     },
     /**
      * @private
@@ -400,7 +402,7 @@ var KanbanController = BasicController.extend({
         var relatedModelName = state.fields[state.groupedBy[0]].relation;
         this.model
             .deleteRecords([column.db_id], relatedModelName)
-            .done(function () {
+            .then(function () {
                 self.update({}, {reload: !column.isEmpty()});
             });
     },
@@ -415,11 +417,12 @@ var KanbanController = BasicController.extend({
         var self = this;
         this.model.loadColumnRecords(ev.data.columnID).then(function (dbID) {
             var data = self.model.get(dbID);
-            self.renderer.updateColumn(dbID, data);
-            self._updateEnv();
-            if (ev.data.onSuccess) {
-                ev.data.onSuccess();
-            }
+            return self.renderer.updateColumn(dbID, data).then(function() {
+                self._updateEnv();
+                if (ev.data.onSuccess) {
+                    ev.data.onSuccess();
+                }
+            });
         });
     },
     /**
@@ -470,8 +473,8 @@ var KanbanController = BasicController.extend({
 
         this.model.createRecordInGroup(column.db_id, values)
             .then(update)
-            .fail(function (error, ev) {
-                ev.preventDefault();
+            .guardedCatch(function (reason) {
+                reason.event.preventDefault();
                 var columnState = self.model.get(column.db_id, {raw: true});
                 var context = columnState.getContext();
                 var state = self.model.get(self.handle, {raw: true});
@@ -538,11 +541,15 @@ var KanbanController = BasicController.extend({
      *
      * @private
      * @param {OdooEvent} ev
+     * @param {function} [ev.data.onSuccess] callback to execute after applying
+     *   changes
      */
     _onUpdateRecord: function (ev) {
+        var onSuccess = ev.data.onSuccess;
+        delete ev.data.onSuccess;
         var changes = _.clone(ev.data);
         ev.data.force_save = true;
-        this._applyChanges(ev.target.db_id, changes, ev);
+        this._applyChanges(ev.target.db_id, changes, ev).then(onSuccess);
     },
     /**
      * Allow the user to archive/restore all the records of a column.

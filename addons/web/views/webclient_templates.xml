@@ -67,6 +67,8 @@
             <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overriden.scss"/>
         </t>
 
+        <script type="text/javascript" src="/web/static/lib/es6-promise/es6-promise-polyfill.js"></script>
+        <script type="text/javascript" src="/web/static/lib/unhandled-rejection-polyfill/unhandled-rejection-polyfill.js"></script>
         <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
         <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
         <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
@@ -102,6 +104,7 @@
         <script type="text/javascript" src="/web/static/lib/clipboard/clipboard.js"></script>
 
         <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/promise_extension.js"></script>
         <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/autocomplete.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/bootstrap.js"></script>
@@ -446,15 +449,14 @@
     </template>
 
     <template id="web.js_tests_assets">
-        <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-2.3.0.css"/>
-        <script type="text/javascript" src="/web/static/lib/qunit/qunit-2.3.0.js"></script>
-        <script type="text/javascript" src="/web/static/tests/helpers/qunit_config.js"></script>
-
         <t t-call-assets="web.assets_common" t-js="false"/>
         <t t-call-assets="web.assets_backend" t-js="false"/>
         <t t-call-assets="web.assets_common" t-css="false"/>
         <t t-call-assets="web.assets_backend" t-css="false"/>
 
+        <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-2.9.1.css"/>
+        <script type="text/javascript" src="/web/static/lib/qunit/qunit-2.9.1.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/qunit_config.js"></script>
         <script type="text/javascript" src="/web/static/tests/helpers/qunit_asserts.js"></script>
 
         <!-- add lazy-loaded libs to make tests synchronous -->
@@ -654,8 +656,8 @@
             <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
             <t t-set="title">Web Benchmarks</t>
             <t t-set="head">
-                <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-2.3.0.css"/>
-                <script type="text/javascript" src="/web/static/lib/qunit/qunit-2.3.0.js"></script>
+                <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-2.9.1.css"/>
+                <script type="text/javascript" src="/web/static/lib/qunit/qunit-2.9.1.js"></script>
                 <script type="text/javascript" src="/web/static/tests/helpers/qunit_config.js"></script>
                 <script type="text/javascript" src="/web/static/lib/benchmarkjs/lodash.js"></script>
                 <script type="text/javascript" src="/web/static/lib/benchmarkjs/benchmark.js"></script>

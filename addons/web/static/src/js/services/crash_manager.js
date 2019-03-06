@@ -20,9 +20,29 @@ var map_title ={
 };
 
 var CrashManager = core.Class.extend({
-    init: function() {
+    init: function () {
+        var self = this;
         this.active = true;
         this.isConnected = true;
+
+        // listen to unhandled rejected promises, and throw an error when the
+        // promise has been rejected due to a crash
+        window.addEventListener('unhandledrejection', function (ev) {
+            if (ev.reason && ev.reason instanceof Error) {
+                var traceback = ev.reason.stack;
+                self.show_error({
+                    type: _t("Odoo Client Error"),
+                    message: '',
+                    data: {debug: _t('Traceback:') + "\n" + traceback},
+                });
+            } else {
+                // the rejection is not due to an Error, so prevent the browser
+                // from displaying an 'unhandledrejection' error in the console
+                ev.stopPropagation();
+                ev.stopImmediatePropagation();
+                ev.preventDefault();
+            }
+        });
     },
     enable: function () {
         this.active = true;
@@ -45,7 +65,7 @@ var CrashManager = core.Class.extend({
             ajax.jsonRpc('/web/webclient/version_info', 'call', {}, {shadow:true}).then(function () {
                 core.bus.trigger('connection_restored');
                 self.isConnected = true;
-            }).fail(function () {
+            }).guardedCatch(function () {
                 // exponential backoff, with some jitter
                 delay = (delay * 1.5) + 500*Math.random();
                 setTimeout(checkConnection, delay);

@@ -453,34 +453,33 @@ var ClientScreenWidget = PosBaseWidget.extend({
         var self = this;
         function loop() {
             if (self.pos.proxy.posbox_supports_display) {
-                var deffered = self.pos.proxy.test_ownership_of_client_screen();
-                if (deffered) {
-                    deffered.then(
-                        function(data) {
-                            if (typeof data === 'string') {
-                                data = JSON.parse(data);
-                            }
-                            if (data.status === 'OWNER') {
-                                self.change_status_display('success');
-                            } else {
-                                self.change_status_display('warning');
-                              }
-                        },
-                        
-                        function(err) {
-                            if (typeof err == "undefined") {
-                                self.change_status_display('failure');
-                            } else {
-                                self.change_status_display('not_found');
-                                self.pos.proxy.posbox_supports_display = false;
-                            }
-                        })
-    
-                    .always(function () {
-                        setTimeout(loop,3000);
-                    });
-                }
-            }   
+                self.pos.proxy.test_ownership_of_client_screen().then(
+                    function (data) {
+                        if (typeof data === 'string') {
+                            data = JSON.parse(data);
+                        }
+                        if (data.status === 'OWNER') {
+                            self.change_status_display('success');
+                        } else {
+                            self.change_status_display('warning');
+                        }
+                        setTimeout(loop, 3000);
+                    },
+                    function (err) {
+                        if (err.abort) {
+                            // Stop the loop
+                            return;
+                        }
+                        if (typeof err == "undefined") {
+                            self.change_status_display('failure');
+                        } else {
+                            self.change_status_display('not_found');
+                            self.pos.proxy.posbox_supports_display = false;
+                        }
+                        setTimeout(loop, 3000);
+                    }
+                );
+            }
         }
         loop();
     },
@@ -563,12 +562,12 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
         this.logo_click_time  = 0;
         this.logo_click_count = 0;
 
-            this.previous_touch_y_coordinate = -1;
+        this.previous_touch_y_coordinate = -1;
 
         this.widget = {};   // contains references to subwidgets instances
 
         this.cleanup_dom();
-        this.pos.ready.done(function(){
+        this.pos.ready.then(function(){
             self.build_chrome();
             self.build_widgets();
             self.disable_rubberbanding();
@@ -577,7 +576,7 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
             self.loading_hide();
             self.replace_crashmanager();
             self.pos.push_order();
-        }).fail(function(err){   // error when loading models data from the backend
+        }).guardedCatch(function (err) { // error when loading models data from the backend
             self.loading_error(err);
         });
     },
@@ -859,6 +858,7 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
 
     // This method instantiates all the screens, widgets, etc.
     build_widgets: function() {
+        var self = this;
         this.load_widgets(this.widgets);
 
         this.screens = {};
@@ -874,15 +874,15 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
         }
 
         this.popups = {};
-        for (i = 0; i < this.gui.popup_classes.length; i++) {
-            classe = this.gui.popup_classes[i];
-            if (!classe.condition || classe.condition.call(this)) {
-                var popup = new classe.widget(this,{});
-                    popup.appendTo(this.$('.popups'));
-                this.popups[classe.name] = popup;
-                this.gui.add_popup(classe.name, popup);
+        _.forEach(this.gui.popup_classes, function (classe) {
+            if (!classe.condition || classe.condition.call(self)) {
+                var popup = new classe.widget(self,{});
+                popup.appendTo(self.$('.popups')).then(function () {
+                    self.popups[classe.name] = popup;
+                    self.gui.add_popup(classe.name, popup);
+                });
             }
-        }
+        });
 
         this.gui.set_startup_screen('products');
         this.gui.set_default_screen('products');

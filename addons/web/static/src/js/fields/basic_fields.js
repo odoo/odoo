@@ -213,7 +213,7 @@ var InputField = DebouncedField.extend({
                 // sure they are recomputed.
                 this._applyDecorations();
             }
-            return $.when();
+            return Promise.resolve();
         } else {
             return this._render();
         }
@@ -486,8 +486,6 @@ var LinkButton = AbstractField.extend({
 
 });
 
-
-
 var FieldDate = InputField.extend({
     className: "o_field_date",
     tagName: "span",
@@ -513,7 +511,7 @@ var FieldDate = InputField.extend({
      */
     start: function () {
         var self = this;
-        var def;
+        var prom;
         if (this.mode === 'edit') {
             this.datewidget = this._makeDatePicker();
             this.datewidget.on('datetime_changed', this, function () {
@@ -522,13 +520,13 @@ var FieldDate = InputField.extend({
                     this._setValue(value);
                 }
             });
-            def = this.datewidget.appendTo('<div>').done(function () {
+            prom = this.datewidget.appendTo('<div>').then(function () {
                 self.datewidget.$el.addClass(self.$el.attr('class'));
                 self._prepareInput(self.datewidget.$input);
                 self._replaceElement(self.datewidget.$el);
             });
         }
-        return $.when(def, this._super.apply(this, arguments));
+        return Promise.resolve(prom).then(this._super.bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -728,7 +726,7 @@ var FieldMonetary = InputField.extend({
         this.$el.empty();
 
         // Prepare and add the input
-        this._prepareInput(this.$input).appendTo(this.$el);
+        var def = this._prepareInput(this.$input).appendTo(this.$el);
 
         if (this.currency) {
             // Prepare and add the currency symbol
@@ -739,6 +737,7 @@ var FieldMonetary = InputField.extend({
                 this.$el.prepend($currencySymbol);
             }
         }
+        return def;
     },
     /**
      * @override
@@ -1136,7 +1135,7 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
      */
     reset: function () {
         var self = this;
-        return $.when(this._super.apply(this, arguments)).then(function () {
+        return Promise.resolve(this._super.apply(this, arguments)).then(function () {
             if (self.mode === 'edit') {
                 self.$input.trigger('change');
             }
@@ -2568,7 +2567,7 @@ var JournalDashboardGraph = AbstractField.extend({
         if (this._isInDOM) {
             return this._renderInDOM();
         }
-        return $.when();
+        return Promise.resolve();
     },
     /**
      * Render the widget. This function assumes that it is attached to the DOM.
@@ -2743,13 +2742,13 @@ var FieldDomain = AbstractField.extend({
     /**
      * @private
      * @override _render from AbstractField
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _render: function () {
         // If there is no model, only change the non-domain-selector content
         if (!this._domainModel) {
             this._replaceContent();
-            return $.when();
+            return Promise.resolve();
         }
 
         // Convert char value to array value
@@ -2901,7 +2900,7 @@ var AceEditor = DebouncedField.extend({
     /**
      * @override start from AbstractField (Widget)
      *
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     start: function () {
         this._startAce(this.$('.ace-view-editor')[0]);

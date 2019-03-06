@@ -40,10 +40,8 @@ var CalendarNotification = Notification.extend({
             },
 
             'click .link2showed': function() {
-                var self = this;
-                this._rpc({route: '/calendar/notify_ack'}).always(function() {
-                    self.destroy();
-                });
+                this._rpc({route: '/calendar/notify_ack'})
+                    .then(this.destroy.bind(this), this.destroy.bind(this));
             },
         });
     },
@@ -84,8 +82,10 @@ WebClient.include({
     },
     get_next_calendar_notif: function() {
         session.rpc("/calendar/notify", {}, {shadow: true})
-            .done(this.display_calendar_notif.bind(this))
-            .fail(function(err, ev) {
+            .then(this.display_calendar_notif.bind(this))
+            .guardedCatch(function(reason) { //
+                var err = reason.message;
+                var ev = reason.event;
                 if(err.code === -32098) {
                     // Prevent the CrashManager to display an error
                     // in case of an xhr error not due to a server error
@@ -114,7 +114,7 @@ BasicModel.include({
      * @private
      * @param {Object} record
      * @param {string} fieldName
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _fetchSpecialAttendeeStatus: function (record, fieldName) {
         var context = record.getContext({fieldName: fieldName});

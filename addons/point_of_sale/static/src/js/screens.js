@@ -1107,7 +1107,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
             this.display_client_details('show',this.old_client,0);
         }
 
-        this.$('.client-list-contents').delegate('.client-line','click',function(event){
+        this.$('.client-list-contents').on('click', '.client-line', function(event){
             self.line_select(event,$(this),parseInt($(this).data('id')));
         });
 
@@ -1317,11 +1317,16 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 contents.on('click','.button.save',function(){ self.save_client_details(partner); });
             });
     },
-    
+
     // what happens when we've just pushed modifications for a partner of id partner_id
-    saved_client_details: function(partner_id){
+    saved_client_details: function (partner_id) {
         var self = this;
-        this.reload_partners().then(function(){
+        var always = function () {
+            $(".client-details-contents").on('click', '.button.save', function () {
+                self.save_client_details(partner);
+            });
+        };
+        this.reload_partners().then( function() {
             var partner = self.pos.db.get_partner_by_id(partner_id);
             if (partner) {
                 self.new_client = partner;
@@ -1329,12 +1334,10 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 self.display_client_details('show',partner);
             } else {
                 // should never happen, because create_from_ui must return the id of the partner it
-                // has created, and reload_partner() must have loaded the newly created partner. 
+                // has created, and reload_partner() must have loaded the newly created partner.
                 self.display_client_details('hide');
             }
-        }).always(function(){
-            $(".client-details-contents").on('click','.button.save',function(){ self.save_client_details(partner); });
-        });
+        }).then(always, always);
     },
 
     // resizes an image, keeping the aspect ratio intact,
@@ -2081,7 +2084,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
             var invoiced = this.pos.push_and_invoice_order(order);
             this.invoicing = true;
 
-            invoiced.fail(function(error){
+            invoiced.catch(function (error) {
                 self.invoicing = false;
                 order.finalized = false;
                 if (error.message === 'Missing Customer') {
@@ -2121,7 +2124,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 }
             });
 
-            invoiced.done(function(){
+            invoiced.then(function () {
                 self.invoicing = false;
                 self.gui.show_screen('receipt');
             });

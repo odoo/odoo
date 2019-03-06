@@ -69,7 +69,7 @@ publicWidget.registry.WebsiteSaleOptions = publicWidget.Widget.extend(ProductCon
             false
         );
 
-        return productReady.done(function (productId) {
+        productReady.then(function (productId){
             $form.find(productSelector.join(', ')).val(productId);
 
             self.rootProduct = {
@@ -96,6 +96,8 @@ publicWidget.registry.WebsiteSaleOptions = publicWidget.Widget.extend(ProductCon
 
             return self.optionalProductsModal.opened();
         });
+
+        return productReady;
     },
 
     /**

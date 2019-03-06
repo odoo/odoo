@@ -241,7 +241,7 @@ var SlideUploadDialog = Dialog.extend({
      * @private
      * @param {String} Placeholder for element.
      * @param {bool}  true for multiple selection box, false for single selection
-     * @param {Function} Function to fetch data from remote location should return $.deferred object
+     * @param {Function} Function to fetch data from remote location should return a Promise
      * resolved data should be array of object with id and name. eg. [{'id': id, 'name': 'text'}, ...]
      * @param {String} [nameKey='name'] (optional) the name key of the returned record
      *   ('name' if not provided)

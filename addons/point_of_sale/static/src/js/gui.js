@@ -1,6 +1,6 @@
 odoo.define('point_of_sale.gui', function (require) {
 "use strict";
-// this file contains the Gui, which is the pos 'controller'. 
+// this file contains the Gui, which is the pos 'controller'.
 // It contains high level methods to manipulate the interface
 // such as changing between screens, creating popups, etc.
 //
@@ -24,7 +24,7 @@ var Gui = core.Class.extend({
         this.default_screen = null;
         this.startup_screen = null;
         this.current_popup  = null;
-        this.current_screen = null; 
+        this.current_screen = null;
 
         this.chrome.ready.then(function(){
             self.close_other_tabs();
@@ -55,7 +55,7 @@ var Gui = core.Class.extend({
 
     // sets the screen that will be displayed
     // for new orders
-    set_default_screen: function(name){ 
+    set_default_screen: function(name){
         this.default_screen = name;
     },
 
@@ -73,8 +73,8 @@ var Gui = core.Class.extend({
         options = options || {};
         this.close_popup();
         if (order) {
-            this.show_screen(order.get_screen_data('screen') || 
-                             options.default_screen || 
+            this.show_screen(order.get_screen_data('screen') ||
+                             options.default_screen ||
                              this.default_screen,
                              null,'refresh');
         } else {
@@ -82,7 +82,7 @@ var Gui = core.Class.extend({
         }
     },
 
-    // display a screen. 
+    // display a screen.
     // If there is an order, the screen will be saved in the order
     // - params: used to load a screen with parameters, for
     // example loading a 'product_details' screen for a specific product.
@@ -120,7 +120,7 @@ var Gui = core.Class.extend({
             this.current_screen.show(refresh);
         }
     },
-    
+
     // returns the current screen.
     get_current_screen: function() {
         return this.pos.get_order() ? ( this.pos.get_order().get_screen_data('screen') || this.default_screen ) : this.startup_screen;
@@ -213,7 +213,7 @@ var Gui = core.Class.extend({
                      msg.session  ==  self.pos.pos_session.id &&
                      msg.window_uid != now) {
 
-                    console.info('POS / Session opened in another window. EXITING POS')
+                    console.info('POS / Session opened in another window. EXITING POS');
                     self._close();
                 }
             }
@@ -224,28 +224,28 @@ var Gui = core.Class.extend({
     /* ---- Gui: ACCESS CONTROL ---- */
 
     // A Generic UI that allow to select a user from a list.
-    // It returns a deferred that resolves with the selected user 
+    // It returns a promise that resolves with the selected user
     // upon success. Several options are available :
     // - security: passwords will be asked
     // - only_managers: restricts the list to managers
-    // - current_user: password will not be asked if this 
+    // - current_user: password will not be asked if this
     //                 user is selected.
     // - title: The title of the employee selection list.
-    
+
 
     // checks if the current user (or the user provided) has manager
     // access rights. If not, a popup is shown allowing the user to
-    // temporarily login as an administrator. 
-    // This method returns a deferred, that succeeds with the 
+    // temporarily login as an administrator.
+    // This method returns a promise, that succeeds with the
     // manager user when the login is successfull.
     sudo: function(user){
         user = user || this.pos.get_cashier();
 
         if (user.role === 'manager') {
-            return new $.Deferred().resolve(user);
+            return Promise.resolve(user);
         } else {
             return this.select_employee({
-                security:       true, 
+                security:       true,
                 only_managers:  true,
                 title:       _t('Login as a Manager'),
             });
@@ -261,14 +261,14 @@ var Gui = core.Class.extend({
         if (!pending) {
             this._close();
         } else {
-            this.pos.push_order().always(function() {
+            var always = function () {
                 var pending = self.pos.db.get_orders().length;
                 if (!pending) {
                     self._close();
                 } else {
-                    var reason = self.pos.get('failed') ? 
-                                 'configuration errors' : 
-                                 'internet connection issues';  
+                    var reason = self.pos.get('failed') ?
+                                 'configuration errors' :
+                                 'internet connection issues';
 
                     self.show_popup('confirm', {
                         'title': _t('Offline Orders'),
@@ -282,7 +282,8 @@ var Gui = core.Class.extend({
                         },
                     });
                 }
-            });
+            };
+            this.pos.push_order().then(always, always);
         }
     },
 
@@ -314,10 +315,10 @@ var Gui = core.Class.extend({
 
     /* ---- Gui: FILE I/O ---- */
 
-    // This will make the browser download 'contents' as a 
+    // This will make the browser download 'contents' as a
     // file named 'name'
     // if 'contents' is not a string, it is converted into
-    // a JSON representation of the contents. 
+    // a JSON representation of the contents.
 
 
     // TODO: remove me in master: deprecated in favor of prepare_download_link
@@ -329,9 +330,9 @@ var Gui = core.Class.extend({
         evt.initEvent("click");
 
         $("<a>",href_params).get(0).dispatchEvent(evt);
-        
-    },      
-    
+
+    },
+
     prepare_download_link: function(contents, filename, src, target) {
         var href_params = this.prepare_file_blob(contents, filename);
 
@@ -344,11 +345,11 @@ var Gui = core.Class.extend({
             $(src).removeClass('oe_hidden');
             $(this).addClass('oe_hidden');
         });
-    },  
-    
+    },
+
     prepare_file_blob: function(contents, name) {
         var URL = window.URL || window.webkitURL;
-        
+
         if (typeof contents !== 'string') {
             contents = JSON.stringify(contents,null,2);
         }
@@ -366,21 +367,21 @@ var Gui = core.Class.extend({
     // prefilled.
 
     send_email: function(address, subject, body) {
-        window.open("mailto:" + address + 
+        window.open("mailto:" + address +
                           "?subject=" + (subject ? window.encodeURIComponent(subject) : '') +
                           "&body=" + (body ? window.encodeURIComponent(body) : ''));
     },
 
     /* ---- Gui: KEYBOARD INPUT ---- */
 
-    // This is a helper to handle numpad keyboard input. 
+    // This is a helper to handle numpad keyboard input.
     // - buffer: an empty or number string
     // - input:  '[0-9],'+','-','.','CLEAR','BACKSPACE'
     // - options: 'firstinput' -> will clear buffer if
     //     input is '[0-9]' or '.'
     //  returns the new buffer containing the modifications
-    //  (the original is not touched) 
-    numpad_input: function(buffer, input, options) { 
+    //  (the original is not touched)
+    numpad_input: function(buffer, input, options) {
         var newbuf  = buffer.slice(0);
         options = options || {};
         var newbuf_float  = newbuf === '-' ? newbuf : field_utils.parse.float(newbuf);
@@ -395,8 +396,8 @@ var Gui = core.Class.extend({
                 newbuf = newbuf + decimal_point;
             }
         } else if (input === 'CLEAR') {
-            newbuf = ""; 
-        } else if (input === 'BACKSPACE') { 
+            newbuf = "";
+        } else if (input === 'BACKSPACE') {
             newbuf = newbuf.substring(0,newbuf.length - 1);
         } else if (input === '+') {
             if ( newbuf[0] === '-' ) {

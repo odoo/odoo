@@ -75,7 +75,7 @@ KanbanRenderer.include({
     /**
      * Displays the quick create record in the active column
      *
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     addQuickCreate: function () {
         return this.widgets[this.activeColumnIndex].addQuickCreate();
@@ -260,26 +260,26 @@ KanbanRenderer.include({
      * @private
      * @param {integer} moveToIndex index of the column to move to
      * @param {boolean} [animate=false] set to true to animate
-     * @returns {Deferred} resolved when the new current group has been loaded
+     * @returns {Promise} resolved when the new current group has been loaded
      *   and displayed
      */
     _moveToGroup: function (moveToIndex, animate) {
         var self = this;
         if (moveToIndex < 0 || moveToIndex >= this.widgets.length) {
             this._layoutUpdate(animate);
-            return $.when();
+            return Promise.resolve();
         }
-        var def = $.Deferred();
         this.activeColumnIndex = moveToIndex;
         var column = this.widgets[this.activeColumnIndex];
-        this.trigger_up('kanban_load_records', {
-            columnID: column.db_id,
-            onSuccess: function () {
-                self._layoutUpdate(animate);
-                def.resolve();
-            },
+        return new Promise(function (resolve) {
+            self.trigger_up('kanban_load_records', {
+                columnID: column.db_id,
+                onSuccess: function () {
+                    self._layoutUpdate(animate);
+                    resolve();
+                },
+            });
         });
-        return def;
     },
 
     /**
@@ -287,22 +287,23 @@ KanbanRenderer.include({
      * @private
      */
     _renderGrouped: function (fragment) {
-        var result = this._super.apply(this, arguments);
-        var data = [];
-        _.each(this.state.data, function (group) {
-            if (!group.value) {
-                group = _.extend({}, group, {value: _t('Undefined')});
-                data.unshift(group);
-            }
-            else {
-                data.push(group);
-            }
-        });
+        var self = this;
+        this._super.apply(this, arguments);
+        this.defs.push(Promise.all(this.defs).then(function () {
+            var data = [];
+            _.each(self.state.data, function (group) {
+                if (!group.value) {
+                    group = _.extend({}, group, {value: _t('Undefined')});
+                    data.unshift(group);
+                } else {
+                    data.push(group);
+                }
+            });
 
-        $(qweb.render('KanbanView.MobileTabs', {
-            data: data,
-        })).prependTo(fragment);
-        return result;
+            $(qweb.render('KanbanView.MobileTabs', {
+                data: data,
+            })).prependTo(fragment);
+        }));
     },
 
     /**

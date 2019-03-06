@@ -32,7 +32,7 @@ var FilterInterface = Class.extend(mixins.EventDispatcherMixin, {
      * label. They will be used by search_bar in @_onAutoCompleteSelected.
      *
      * @param {string} value value to getAutocompletionValues
-     * @returns {Deferred<null|Array>}
+     * @returns {Promise<null|Array>}
      */
     getAutocompletionValues: function (value) {
         var result;
@@ -46,7 +46,7 @@ var FilterInterface = Class.extend(mixins.EventDispatcherMixin, {
                 },
             }];
         }
-        return $.when(result);
+        return Promise.resolve(result);
     },
 });
 
@@ -83,7 +83,7 @@ var Field = FilterInterface.extend(ServicesMixin, {
      * @override
      */
     getAutocompletionValues: function (value) {
-        return $.when([{
+        return Promise.resolve([{
             label: this._getAutocompletionLabel(value),
             facet: this._getFacetValue(value),
         }]);
@@ -194,7 +194,7 @@ var CharField = Field.extend({
      * @override
      */
     getAutocompletionValues: function (value) {
-        if (_.isEmpty(value)) { return $.when(null); }
+        if (_.isEmpty(value)) { return Promise.resolve(null); }
         return this._super.apply(this, arguments);
     },
 });
@@ -210,7 +210,7 @@ var NumberField = Field.extend({
      */
     getAutocompletionValues: function (value) {
         var val = this.parse(value);
-        if (isNaN(val)) { return $.when(); }
+        if (isNaN(val)) { return Promise.resolve(); }
         return this._super.apply(this, arguments);
     },
 });
@@ -261,8 +261,8 @@ var SelectionField = Field.extend({
                     facet: self._getFacetValue(sel)
                 };
             }).value();
-        if (_.isEmpty(results)) { return $.when(null); }
-        return $.when.call(null, [{
+        if (_.isEmpty(results)) { return Promise.resolve(null); }
+        return Promise.resolve([{
             label: _.escape(this.attrs.string)
         }].concat(results));
     },
@@ -310,15 +310,15 @@ var DateField = Field.extend({
             t = (this.attrs && this.attrs.type === 'datetime') ? 'datetime' : 'date';
             v = field_utils.parse[t](value, {type: t}, {timezone: true});
         } catch (e) {
-            return $.when(null);
+            return Promise.resolve(null);
         }
 
         var m = moment(v, t === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD');
-        if (!m.isValid()) { return $.when(null); }
+        if (!m.isValid()) { return Promise.resolve(null); }
         var dateString = field_utils.format[t](m, {type: t});
         var label = this._getAutocompletionLabel(dateString);
         var facet = this._getFacetValue(dateString, m.toDate());
-        return $.when([{
+        return Promise.resolve([{
             label: label,
             facet: facet,
         }]);
@@ -379,9 +379,9 @@ var ManyToOneField = CharField.extend({
      * @override
      */
     getAutocompletionValues: function (value) {
-        if (_.isEmpty(value)) { return $.when(null); }
+        if (_.isEmpty(value)) { return Promise.resolve(null); }
         var label = this._getAutocompletionLabel(value);
-        return $.when([{
+        return Promise.resolve([{
             label: label,
             facet: this._getFacetValue(value),
             expand: this._expand.bind(this),

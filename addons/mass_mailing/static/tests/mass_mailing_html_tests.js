@@ -41,13 +41,13 @@ QUnit.module('field html', {
         testUtils.mock.patch(ajax, {
             loadAsset: function (xmlId) {
                 if (xmlId === 'template.assets') {
-                    return $.when({
+                    return Promise.resolve({
                         cssLibs: [],
                         cssContents: ['.field_body {background-color: red;}']
                     });
                 }
                 if (xmlId === 'template.assets_all_style') {
-                    return $.when({
+                    return Promise.resolve({
                         cssLibs: $('link[href]:not([type="image/x-icon"])').map(function () {
                             return $(this).attr('href');
                         }).get(),
@@ -63,11 +63,10 @@ QUnit.module('field html', {
     },
 }, function () {
 
-QUnit.test('save arch and html', function (assert) {
-    var done = assert.async();
+QUnit.test('save arch and html', async function (assert) {
     assert.expect(6);
 
-    testUtils.createAsyncView({
+    var form = await testUtils.createView({
         View: FormView,
         model: 'mail.mass_mailing',
         data: this.data,
@@ -79,7 +78,7 @@ QUnit.test('save arch and html', function (assert) {
             '   />'+
             '   <field name="body_arch" class="oe_edit_only" widget="mass_mailing_html"'+
             '       options="{'+
-            '                \'snippets\': \'template.assets\','+
+            '                \'snippets\': \'web_editor.snippets\','+
             '                \'cssEdit\': \'template.assets\','+
             '                \'inline-field\': \'body_html\''+
             '       }"'+
@@ -99,44 +98,42 @@ QUnit.test('save arch and html', function (assert) {
             }
             return this._super.apply(this, arguments);
         },
-    }).then(function (form) {
-        var $fieldReadonly = form.$('.oe_form_field[name="body_html"]');
-        var $fieldEdit = form.$('.oe_form_field[name="body_arch"]');
-
-        assert.strictEqual($fieldReadonly.css('display'), 'block', "should display the readonly mode");
-        assert.strictEqual($fieldEdit.css('display'), 'none', "should hide the edit mode");
-
-        form.$buttons.find('.o_form_button_edit').click();
-
-        $fieldReadonly = form.$('.oe_form_field[name="body_html"]');
-        $fieldEdit = form.$('.oe_form_field[name="body_arch"]');
-
-        assert.strictEqual($fieldReadonly.css('display'), 'none', "should hide the readonly mode");
-        assert.strictEqual($fieldEdit.css('display'), 'block', "should display the edit mode");
-
-        var $iframe = $fieldEdit.find('iframe');
-
-        $iframe.data('load-def').then(function () {
-            var doc = $iframe.contents()[0];
-            var $content = $('#iframe_target', doc);
-
-            // select the text
-            var pText = $content.find('.note-editable p').first().contents()[0];
-            Wysiwyg.setRange(pText, 1, pText, 3);
-            // text is selected
-
-            $content.find('.note-toolbar .note-font .note-btn-bold').mousedown().click();
-
-            form.$buttons.find('.o_form_button_save').click();
-
-            form.destroy();
-            done();
-        });
     });
+    var $fieldReadonly = form.$('.oe_form_field[name="body_html"]');
+    var $fieldEdit = form.$('.oe_form_field[name="body_arch"]');
+
+    assert.strictEqual($fieldReadonly.css('display'), 'block', "should display the readonly mode");
+    assert.strictEqual($fieldEdit.css('display'), 'none', "should hide the edit mode");
+
+    await testUtils.form.clickEdit(form);
+
+    $fieldReadonly = form.$('.oe_form_field[name="body_html"]');
+    $fieldEdit = form.$('.oe_form_field[name="body_arch"]');
+
+    assert.strictEqual($fieldReadonly.css('display'), 'none', "should hide the readonly mode");
+    assert.strictEqual($fieldEdit.css('display'), 'block', "should display the edit mode");
+
+    var $iframe = $fieldEdit.find('iframe');
+    await testUtils.nextTick();
+    await $iframe.data('loadDef');
+    await testUtils.nextTick();
+    var doc = $iframe.contents()[0];
+    var $content = $('#iframe_target', doc);
+
+    // select the text
+    var pText = $content.find('.note-editable p').first().contents()[0];
+    Wysiwyg.setRange(pText, 1, pText, 3);
+    // text is selected
+    await testUtils.nextTick();
+
+    await testUtils.dom.triggerEvents($content.find('.note-toolbar .note-font .note-btn-bold'),['mousedown','click']);
+
+    await testUtils.dom.click(form.$buttons.find('.o_form_button_save'));
+
+    form.destroy();
 });
 
-QUnit.test('save and edit arch wysiwyg', function (assert) {
-    var done = assert.async();
+QUnit.test('save and edit arch wysiwyg', async function (assert) {
     assert.expect(4);
 
     testUtils.mock.patch(FieldHtml, {
@@ -153,45 +150,43 @@ QUnit.test('save and edit arch wysiwyg', function (assert) {
         },
     });
 
-    testUtils.createAsyncView({
+    var form = await testUtils.createView({
         View: FormView,
         model: 'mail.mass_mailing',
         data: this.data,
         arch: '<form>' +
-            '   <header style="min-height:31px;">'+
-            '       <button name="put_in_queue" type="object" class="oe_highlight" string="Send Now"/>'+
-            '   </header>'+
-            '   <field name="body_arch" class="oe_edit_only" widget="mass_mailing_html"'+
-            '       options="{'+
-            '                \'snippets\': \'template.assets\','+
-            '                \'cssEdit\': \'template.assets\','+
-            '                \'inline-field\': \'body_html\''+
-            '       }"'+
-            '   />'+
+            '   <header style="min-height:31px;">' +
+            '       <button name="put_in_queue" type="object" class="oe_highlight" string="Send Now"/>' +
+            '   </header>' +
+            '   <field name="body_arch" class="oe_edit_only" widget="mass_mailing_html"' +
+            '       options="{' +
+            '                \'snippets\': \'template.assets\',' +
+            '                \'cssEdit\': \'template.assets\',' +
+            '                \'inline-field\': \'body_html\'' +
+            '       }"' +
+            '   />' +
             '</form>',
         res_id: 1,
         intercepts: {
             execute_action: function (event) {
                 event.data.on_success();
-            }
+            },
         },
-    }).then(function (form) {
-        testUtils.dom.click($('[name=put_in_queue]'))
-        testUtils.form.clickEdit(form)
-        var $fieldEdit = form.$('.oe_form_field[name="body_arch"]');
-        var $iframe = $fieldEdit.find('iframe');
-
-        $iframe.data('load-def').then(function () {
-            testUtils.dom.click($('[name=put_in_queue]'))
-            assert.verifySteps(["MassMailingFieldHtml", "FieldHtml", "MassMailingFieldHtml"]);
-            testUtils.mock.unpatch(FieldHtml);
-            testUtils.mock.unpatch(MassMailingFieldHtml);
-
-            form.destroy();
-            done();
-        });
-
     });
+
+    await testUtils.dom.click($('[name=put_in_queue]'));
+    await testUtils.form.clickEdit(form);
+    var $fieldEdit = form.$('.oe_form_field[name="body_arch"]');
+    var $iframe = $fieldEdit.find('iframe');
+
+    await $iframe.data('loadDef');
+    await testUtils.nextTick();
+    await testUtils.dom.click($('[name=put_in_queue]'));
+    assert.verifySteps(["MassMailingFieldHtml", "FieldHtml", "MassMailingFieldHtml"]);
+
+    testUtils.mock.unpatch(FieldHtml);
+    testUtils.mock.unpatch(MassMailingFieldHtml);
+    form.destroy();
 });
 
 });

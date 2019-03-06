@@ -138,7 +138,7 @@
 </template>
 
 <template id="qunit_suite" inherit_id="web.qunit_suite">
-    <xpath expr="." position="inside">
+    <xpath expr="//script[last()]" position="after">
         <script type="text/javascript">
             odoo.define('web_editor.wysiwyg.root.test', function (require) {
                 'use strict';

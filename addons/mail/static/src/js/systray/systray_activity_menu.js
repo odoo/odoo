@@ -20,7 +20,7 @@ var ActivityMenu = Widget.extend({
         'show.bs.dropdown': '_onActivityMenuShow',
     },
     willStart: function () {
-        return $.when(this.call('mail_service', 'isReady'));
+        return Promise.resolve(this.call('mail_service', 'isReady'));
     },
     start: function () {
         this._$activitiesPreview = this.$('.o_mail_systray_dropdown_items');
