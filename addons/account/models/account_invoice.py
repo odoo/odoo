@@ -1000,7 +1000,7 @@ class AccountInvoice(models.Model):
         # lots of duplicate calls to action_invoice_open, so we remove those already open
         to_open_invoices = self.filtered(lambda inv: inv.state != 'open')
         if to_open_invoices.filtered(lambda inv: not inv.partner_id):
-            raise UserError(_("The field Vendor is required, please complete it to validate the Vendor Bill."))
+            raise UserError(_("The field Vendor/Customer is required, please complete it to validate the Vendor Bill/Customer Invoice."))
         if to_open_invoices.filtered(lambda inv: inv.state != 'draft'):
             raise UserError(_("Invoice must be in draft state in order to validate it."))
         if to_open_invoices.filtered(lambda inv: float_compare(inv.amount_total, 0.0, precision_rounding=inv.currency_id.rounding) == -1):
