@@ -19,7 +19,7 @@ Sidebar.include({
         if (this.options.viewType === "form") {
             def = this._addGoogleDocItems(this.env.model, this.env.activeIds[0]);
         }
-        return $.when(def).then(this._super.bind(this));
+        return Promise.resolve(def).then(this._super.bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -30,12 +30,12 @@ Sidebar.include({
      * @private
      * @param {string} model
      * @param {integer} resID
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _addGoogleDocItems: function (model, resID) {
         var self = this;
         if (!resID) {
-            return $.when();
+            return Promise.resolve();
         }
         var gdoc_item = _.indexOf(_.pluck(self.items.other, 'classname'), 'oe_share_gdoc');
         if (gdoc_item !== -1) {
