@@ -12,6 +12,9 @@ from collections import namedtuple
 import io
 import base64
 
+import logging
+_logger = logging.getLogger(__name__)
+
 
 DEFAULT_FACTURX_DATE_FORMAT = '%Y%m%d'
 
@@ -56,22 +59,23 @@ class AccountInvoice(models.Model):
 
         # type must be present in the context to get the right behavior of the _default_journal method (account.invoice).
         # journal_id must be present in the context to get the right behavior of the _default_account method (account.invoice.line).
-        self_ctx = self.with_context(type='in_invoice')
-        journal_id = self_ctx._default_journal().id
-        self_ctx = self_ctx.with_context(journal_id=journal_id)
+        journal_id = self._default_journal()
+        self_ctx = self.with_context(journal_id=journal_id.id)
 
         # self could be a single record (editing) or be empty (new).
-        with Form(self_ctx, view='account.invoice_supplier_form') as invoice_form:
+        view = journal_id.type == 'purchase' and 'account.invoice_supplier_form' or 'account.invoice_form'
+        with Form(self_ctx, view=view) as invoice_form:
 
             # Partner (first step to avoid warning 'Warning! You must first select a partner.').
-            elements = tree.xpath('//ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID', namespaces=tree.nsmap)
+            partner_type = journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
+            elements = tree.xpath('//ram:'+partner_type+'/ram:SpecifiedTaxRegistration/ram:ID', namespaces=tree.nsmap)
             partner = elements and self.env['res.partner'].search([('vat', '=', elements[0].text)], limit=1)
             if not partner:
-                elements = tree.xpath('//ram:SellerTradeParty/ram:Name', namespaces=tree.nsmap)
+                elements = tree.xpath('//ram:'+partner_type+'/ram:Name', namespaces=tree.nsmap)
                 partner_name = elements and elements[0].text
                 partner = elements and self.env['res.partner'].search([('name', 'ilike', partner_name)], limit=1)
             if not partner:
-                elements = tree.xpath('//ram:SellerTradeParty//ram:URIID[@schemeID=\'SMTP\']', namespaces=tree.nsmap)
+                elements = tree.xpath('//ram:'+partner_type+'//ram:URIID[@schemeID=\'SMTP\']', namespaces=tree.nsmap)
                 partner = elements and self.env['res.partner'].search([('email', '=', elements[0].text)], limit=1)
             if partner:
                 invoice_form.partner_id = partner
@@ -98,7 +102,7 @@ class AccountInvoice(models.Model):
             # To handle both, we consider the 'a' mode and switch to 'b' if a negative amount is encountered.
             elements = tree.xpath('//rsm:ExchangedDocument/ram:TypeCode', namespaces=tree.nsmap)
             type_code = elements[0].text
-            refund_sign = 1
+            refund_sign = type_code == '380' and 1 or -1
 
             # Total amount.
             elements = tree.xpath('//ram:GrandTotalAmount', namespaces=tree.nsmap)
@@ -131,6 +135,8 @@ class AccountInvoice(models.Model):
             if elements:
                 date_str = elements[0].text
                 date_obj = datetime.strptime(date_str, DEFAULT_FACTURX_DATE_FORMAT)
+                # Set to empty record set to avoid readonly on date_due, can not set to False or None in a Form
+                invoice_form.payment_term_id = self.env['account.payment.term']
                 invoice_form.date_due = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
             # Invoice lines.
@@ -163,7 +169,7 @@ class AccountInvoice(models.Model):
                         # Quantity.
                         line_elements = element.xpath('.//ram:SpecifiedLineTradeDelivery/ram:BilledQuantity', namespaces=tree.nsmap)
                         if line_elements:
-                            invoice_line_form.quantity = float(line_elements[0].text) * refund_sign
+                            invoice_line_form.quantity = float(line_elements[0].text)
 
                         # Price Unit.
                         line_elements = element.xpath('.//ram:GrossPriceProductTradePrice/ram:ChargeAmount', namespaces=tree.nsmap)
@@ -188,7 +194,7 @@ class AccountInvoice(models.Model):
                             tax = self.env['account.tax'].search([
                                 ('company_id', '=', invoice_form.company_id.id),
                                 ('amount_type', '=', 'percent'),
-                                ('type_tax_use', '=', 'purchase'),
+                                ('type_tax_use', '=', journal_id.type),
                                 ('amount', '=', percentage),
                             ], limit=1)
 
@@ -202,7 +208,10 @@ class AccountInvoice(models.Model):
                     invoice_line_form.price_unit = amount_total_import
 
             # Refund.
-            invoice_form.type = 'in_refund' if refund_sign == -1 else 'in_invoice'
+            if self_ctx.env.context['journal_type'] == 'purchase':
+                invoice_form.type = 'in_refund' if refund_sign == -1 else 'in_invoice'
+            else:
+                invoice_form.type = 'out_refund' if refund_sign == -1 else 'out_invoice'
 
         return invoice_form.save()
 
@@ -221,7 +230,7 @@ class AccountInvoice(models.Model):
             # Handle both _Attachment namedtuple in mail.thread or ir.attachment.
             return hasattr(attachment, 'content') and getattr(attachment, 'content') or base64.b64decode(attachment.datas)
 
-        if 'default_res_id' not in self._context and len(self) == 1 and self.state == 'draft' and self.type in ('in_invoice', 'in_refund'):
+        if 'default_res_id' not in self._context and len(self) == 1 and self.state == 'draft':
             # Get attachments.
             # - 'attachments' is a namedtuple defined in mail.thread looking like:
             # _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
@@ -260,8 +269,9 @@ class AccountInvoice(models.Model):
                                 self._import_facturx_invoice(tree)
                                 buffer.close()
                                 return res
-                except:
+                except Exception as e:
                     # Malformed PDF.
+                    _logger.exception(e)
                     pass
                 buffer.close()
         return res
