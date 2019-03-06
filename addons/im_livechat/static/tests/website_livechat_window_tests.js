@@ -17,7 +17,7 @@ var Widget = require('web.Widget');
 QUnit.module('im_livechat', {}, function () {
 QUnit.module('Website Livechat Window', {});
 
-QUnit.test('basic rendering', function (assert) {
+QUnit.test('basic rendering', async function (assert) {
     assert.expect(3);
 
     var parent = new Widget();
@@ -46,7 +46,7 @@ QUnit.test('basic rendering', function (assert) {
 
     var chatWindow = new ChatWindow(parent, livechat);
     testUtils.mock.addMockEnvironment(parent, {});
-    chatWindow.appendTo($('#qunit-fixture'));
+    await chatWindow.appendTo($('#qunit-fixture'));
     chatWindow.render();
 
     assert.containsOnce(chatWindow, '.o_thread_window_header',
