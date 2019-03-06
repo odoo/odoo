@@ -34,7 +34,7 @@ odoo.define('crm.leads.tree', function (require) {
                         self.buttons_template = 'LeadMiningRequestListView.buttons';
                     }
                 });
-            return $.when(this._super.apply(this, arguments), ready);
+            return Promise.all([this._super.apply(this, arguments), ready]);
         },
         renderButtons: function () {
             this._super.apply(this, arguments);
@@ -57,7 +57,7 @@ odoo.define('crm.leads.tree', function (require) {
                         self.buttons_template = 'LeadMiningRequestKanbanView.buttons';
                     }
                 });
-            return $.when(this._super.apply(this, arguments), ready);
+            return Promise.all([this._super.apply(this, arguments), ready]);
         },
         renderButtons: function () {
             this._super.apply(this, arguments);
