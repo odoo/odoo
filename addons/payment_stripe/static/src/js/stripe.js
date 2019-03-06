@@ -47,17 +47,19 @@ odoo.define('payment_stripe.stripe', function(require) {
                     invoice_num: $("input[name='invoice_num']").val(),
                     tx_ref: $("input[name='invoice_num']").val(),
                     return_url: $("input[name='return_url']").val()
-                }).always(function(){
+                }).then(function(data){
+                    handler.isTokenGenerate = false;
+                    window.location.href = data;
                     if ($.blockUI) {
                         $.unblockUI();
                     }
-                }).done(function(data){
-                    handler.isTokenGenerate = false;
-                    window.location.href = data;
-                }).fail(function(data){
+                }).guardedCatch(function(data){
                     var msg = data && data.data && data.data.message;
                     var wizard = $(qweb.render('stripe.error', {'msg': msg || _t('Payment error')}));
                     wizard.appendTo($('body')).modal({'keyboard': true});
+                    if ($.blockUI) {
+                        $.unblockUI();
+                    }
                 });
             },
         });
@@ -66,7 +68,7 @@ odoo.define('payment_stripe.stripe', function(require) {
 
     require('web.dom_ready');
     if (!$('.o_payment_form').length) {
-        return $.Deferred().reject("DOM doesn't contain '.o_payment_form'");
+        return Promise.reject("DOM doesn't contain '.o_payment_form'");
     }
 
     var observer = new MutationObserver(function(mutations, observer) {
@@ -109,7 +111,7 @@ odoo.define('payment_stripe.stripe', function(require) {
             try { provider_form[0].innerHTML = data; } catch (e) {}
             // Restore 'Pay Now' button HTML since data might have changed it.
             $(provider_form[0]).find('#pay_stripe').replaceWith($pay_stripe);
-        }).done(function () {
+        }).then(function () {
             getStripeHandler().open({
                 name: merchant,
                 description: invoice_num,
