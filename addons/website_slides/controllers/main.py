@@ -192,7 +192,7 @@ class WebsiteSlides(WebsiteProfile):
         domain = request.website.website_domain()
         channels_all = request.env['slide.channel'].search(domain)
         if not request.env.user._is_public():
-            channels_my = channels_all.filtered(lambda channel: channel.completion > 0).sorted('completion', reverse=True)[:3]
+            channels_my = channels_all.filtered(lambda channel: channel.is_member).sorted('completion', reverse=True)[:3]
         else:
             channels_my = request.env['slide.channel']
         channels_popular = channels_all.sorted('total_votes', reverse=True)[:3]
