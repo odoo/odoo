@@ -89,7 +89,7 @@ publicWidget.registry.websiteSlidesSlideLike = publicWidget.Widget.extend({
         $('.o_wslides_js_slide_like').each(function () {
             defs.push(new SlideLikeWidget(self).attachTo($(this)));
         });
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 });
 
