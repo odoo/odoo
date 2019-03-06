@@ -153,7 +153,7 @@ var ResumeLineRenderer = AbstractGroupedOne2ManyRenderer.extend({
 
     _render: function () {
         var self = this;
-        this._super().then(function () {
+        return this._super().then(function () {
             // Allow to sort records
             self.$el.find('.o_list_view').sortable({
                 axis: 'y',
