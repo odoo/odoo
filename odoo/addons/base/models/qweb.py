@@ -1594,32 +1594,26 @@ class QWeb(object):
 
     def _compile_expr0(self, expr):
         if expr == "0":
-            # values.get(0) and u''.join(values[0])
-            return ast.BoolOp(
-                    op=ast.And(),
-                    values=[
-                        ast.Call(
-                            func=ast.Attribute(
-                                value=ast.Name(id='values', ctx=ast.Load()),
-                                attr='get',
-                                ctx=ast.Load()
-                            ),
-                            args=[ast.Num(0)], keywords=[],
-                            starargs=None, kwargs=None
+            # u''.join(values.get(0, []))
+            return ast.Call(
+                func=ast.Attribute(
+                    value=ast.Str(u''),
+                    attr='join',
+                    ctx=ast.Load()
+                ),
+                args=[
+                    ast.Call(
+                        func=ast.Attribute(
+                            value=ast.Name(id='values', ctx=ast.Load()),
+                            attr='get',
+                            ctx=ast.Load()
                         ),
-                        ast.Call(
-                            func=ast.Attribute(
-                                value=ast.Str(u''),
-                                attr='join',
-                                ctx=ast.Load()
-                            ),
-                            args=[
-                                self._values_var(ast.Num(0), ctx=ast.Load())
-                            ],
-                            keywords=[], starargs=None, kwargs=None
-                        )
-                    ]
-                )
+                        args=[ast.Num(0), ast.List(elts=[], ctx=ast.Load())], keywords=[],
+                        starargs=None, kwargs=None
+                    )
+                ],
+                keywords=[], starargs=None, kwargs=None
+            )
         return self._compile_expr(expr)
 
     def _compile_format(self, f):
