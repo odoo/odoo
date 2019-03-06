@@ -37,7 +37,7 @@ publicWidget.registry.LazyTemplateRenderer = publicWidget.Widget.extend({
             });
         });
 
-        return $.when(def, renderDef);
+        return Promise.all([def, renderDef]);
     },
 });
 });

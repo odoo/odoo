@@ -143,7 +143,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                 return core.qweb.add_template(data);
             });
         }
-        return $.when(this._super.apply(this, arguments), templateDef);
+        return Promise.all([this._super.apply(this, arguments), templateDef]);
     },
     /**
      * @override
@@ -204,7 +204,7 @@ var ThemeCustomizeDialog = Dialog.extend({
             }
         });
 
-        return $.when(this._super.apply(this, arguments), loadDef);
+        return Promise.all([this._super.apply(this, arguments), loadDef]);
     },
 
     //--------------------------------------------------------------------------
@@ -216,36 +216,37 @@ var ThemeCustomizeDialog = Dialog.extend({
      */
     _chooseBodyCustomImage: function () {
         var self = this;
-        var def = $.Deferred();
-        var $image = $('<img/>');
-        var editor = new weWidgets.MediaDialog(this, {
-            onlyImages: true,
-            firstFilters: ['background'],
-        }, $image[0]);
+        var def = new Promise(function (resolve, reject) {
+            var $image = $('<img/>');
+            var editor = new weWidgets.MediaDialog(this, {
+                onlyImages: true,
+                firstFilters: ['background'],
+            }, $image[0]);
 
-        editor.on('save', this, function (media) { // TODO use scss customization instead (like for user colors)
-            var src = $(media).attr('src');
-            self._rpc({
-                model: 'ir.model.data',
-                method: 'get_object_reference',
-                args: ['website', this.CUSTOM_BODY_IMAGE_XML_ID],
-            }).then(function (data) {
-                return self._rpc({
-                    model: 'ir.ui.view',
-                    method: 'save',
-                    args: [
-                        data[1],
-                        '#wrapwrap { background-image: url("' + src + '"); }',
-                        '//style',
-                    ],
-                });
-            }).always(def.resolve.bind(def));
-        });
-        editor.on('cancel', this, function () {
-            def.resolve();
-        });
+            editor.on('save', this, function (media) { // TODO use scss customization instead (like for user colors)
+                var src = $(media).attr('src');
+                self._rpc({
+                    model: 'ir.model.data',
+                    method: 'get_object_reference',
+                    args: ['website', this.CUSTOM_BODY_IMAGE_XML_ID],
+                }).then(function (data) {
+                    return self._rpc({
+                        model: 'ir.ui.view',
+                        method: 'save',
+                        args: [
+                            data[1],
+                            '#wrapwrap { background-image: url("' + src + '"); }',
+                            '//style',
+                        ],
+                    });
+                }).then(resolve).guardedCatch(resolve);
+            });
+            editor.on('cancel', this, function () {
+                resolve();
+            });
 
-        editor.open();
+            editor.open();
+        });
 
         return def;
     },
@@ -433,39 +434,37 @@ var ThemeCustomizeDialog = Dialog.extend({
         var colorName = $color.data('color');
         var colorType = $color.data('colorType');
 
-        var def = $.Deferred();
+        return new Promise(function (resolve, reject) {
+            var colorpicker = new ColorpickerDialog(this, {
+                defaultColor: $color.css('background-color'),
+            });
+            var chosenColor = undefined;
+            colorpicker.on('colorpicker:saved', this, function (ev) {
+                ev.stopPropagation();
+                chosenColor = ev.data.cssColor;
+            });
+            colorpicker.on('closed', this, function (ev) {
+                if (chosenColor === undefined) {
+                    resolve();
+                    return;
+                }
 
-        var colorpicker = new ColorpickerDialog(this, {
-            defaultColor: $color.css('background-color'),
+                var baseURL = '/website/static/src/scss/options/colors/';
+                var url = _.str.sprintf('%suser_%scolor_palette.scss', baseURL, (colorType ? (colorType + '_') : ''));
+
+                var colors = {};
+                colors[colorName] = chosenColor;
+                if (colorName === 'alpha') {
+                    colors['beta'] = 'null';
+                    colors['gamma'] = 'null';
+                    colors['delta'] = 'null';
+                    colors['epsilon'] = 'null';
+                }
+
+                self._makeSCSSCusto(url, colors).always(resolve);
+            });
+            colorpicker.open();
         });
-        var chosenColor = undefined;
-        colorpicker.on('colorpicker:saved', this, function (ev) {
-            ev.stopPropagation();
-            chosenColor = ev.data.cssColor;
-        });
-        colorpicker.on('closed', this, function (ev) {
-            if (chosenColor === undefined) {
-                def.resolve();
-                return;
-            }
-
-            var baseURL = '/website/static/src/scss/options/colors/';
-            var url = _.str.sprintf('%suser_%scolor_palette.scss', baseURL, (colorType ? (colorType + '_') : ''));
-
-            var colors = {};
-            colors[colorName] = chosenColor;
-            if (colorName === 'alpha') {
-                colors['beta'] = 'null';
-                colors['gamma'] = 'null';
-                colors['delta'] = 'null';
-                colors['epsilon'] = 'null';
-            }
-
-            self._makeSCSSCusto(url, colors).always(def.resolve.bind(def));
-        });
-        colorpicker.open();
-
-        return def;
     },
     /**
      * @private
@@ -494,7 +493,7 @@ var ThemeCustomizeDialog = Dialog.extend({
             return self._quickEdit($(inputData));
         }));
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * @private
@@ -504,23 +503,25 @@ var ThemeCustomizeDialog = Dialog.extend({
         var value = parseFloat(text) || '';
         var unit = text.match(/([^\s\d]+)$/)[1];
 
-        var def = $.Deferred();
-        var qEdit = new QuickEdit(this, value, unit);
-        qEdit.on('QuickEdit:save', this, function (ev) {
-            ev.stopPropagation();
+        var def = new Promise(function (resolve, reject) {
+            var qEdit = new QuickEdit(this, value, unit);
+            qEdit.on('QuickEdit:save', this, function (ev) {
+                ev.stopPropagation();
 
-            var value = ev.data.value;
-            // Convert back to rem if needed
-            if ($inputData.data('unit') === 'rem' && unit === 'px' && value !== 'null') {
-                value = parseFloat(value) / this.PX_BY_REM + 'rem';
-            }
+                var value = ev.data.value;
+                // Convert back to rem if needed
+                if ($inputData.data('unit') === 'rem' && unit === 'px' && value !== 'null') {
+                    value = parseFloat(value) / this.PX_BY_REM + 'rem';
+                }
 
-            var values = {};
-            values[$inputData.data('value')] = value;
-            this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values)
-                .always(def.resolve.bind(def));
+                var values = {};
+                values[$inputData.data('value')] = value;
+                this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values)
+                    .always(resolve);
+            });
+            qEdit.appendTo($inputData.closest('.o_theme_customize_option'));
         });
-        qEdit.appendTo($inputData.closest('.o_theme_customize_option'));
+
         return def;
     },
     /**
@@ -581,7 +582,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                 disable: (disable || []).join(','),
                 tab: this.$('.nav-link.active').parent().index(),
             });
-            return $.Deferred();
+            return Promise.resolve();
         }
 
         return this._rpc({
@@ -599,22 +600,26 @@ var ThemeCustomizeDialog = Dialog.extend({
                 $allLinks = $allLinks.add($links);
                 var $newLinks = $(bundleContent).filter(linkSelector);
 
-                var linksLoaded = $.Deferred();
-                var nbLoaded = 0;
-                $newLinks.on('load', function (e) {
-                    if (++nbLoaded >= $newLinks.length) {
-                        linksLoaded.resolve();
-                    }
-                });
-                $newLinks.on('error', function (e) {
-                    linksLoaded.reject();
-                    window.location.hash = 'theme=true';
-                    window.location.reload();
+                var linksLoaded = new Promise(function (resolve, reject) {
+                    var nbLoaded = 0;
+                    $newLinks.on('load', function () {
+                        if (++nbLoaded >= $newLinks.length) {
+                            resolve();
+                        }
+                    });
+                    $newLinks.on('error', function () {
+                        reject();
+                        window.location.hash = 'theme=true';
+                        window.location.reload();
+                    });
                 });
                 $links.last().after($newLinks);
                 return linksLoaded;
             });
-            return $.when.apply($, defs).always(function () {
+            return Promise.all(defs).then(function () {
+                $loading.remove();
+                $allLinks.remove();
+            }).guardedCatch(function () {
                 $loading.remove();
                 $allLinks.remove();
             });
@@ -750,7 +755,7 @@ var ThemeCustomizeMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      *
      * @private
      * @param {string} tab
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _openThemeCustomizeDialog: function (tab) {
         return new ThemeCustomizeDialog(this, {tab: tab}).open();

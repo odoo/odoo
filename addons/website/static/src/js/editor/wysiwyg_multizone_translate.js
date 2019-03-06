@@ -171,7 +171,7 @@ var WysiwygTranslate = WysiwygMultizone.extend({
             kwargs: {
                 context: recordInfo.context,
             },
-        }).fail(function (error) {
+        }).guardedCatch(function (error) {
             console.error(error.data.message);
             webDialog.alert(null, error.data.message);
        });

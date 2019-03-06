@@ -57,12 +57,13 @@ options.registry.menu_data = options.Class.extend({
                         actionName: 'edit_menu',
                         params: [
                             function () {
-                                var def = $.Deferred();
-                                self.trigger_up('request_save', {
-                                    onSuccess: def.resolve.bind(def),
-                                    onFailure: def.reject.bind(def),
+                                var prom = new Promise(function (resolve, reject) {
+                                    self.trigger_up('request_save', {
+                                        onSuccess: resolve,
+                                        onFailure: reject,
+                                    });
                                 });
-                                return def;
+                                return prom;
                             },
                         ],
                     });
@@ -82,10 +83,10 @@ options.registry.company_data = options.Class.extend({
      */
     start: function () {
         var proto = options.registry.company_data.prototype;
-        var def;
+        var prom;
         var self = this;
         if (proto.__link === undefined) {
-            def = this._rpc({route: '/web/session/get_session_info'}).then(function (session) {
+            prom = this._rpc({route: '/web/session/get_session_info'}).then(function (session) {
                 return self._rpc({
                     model: 'res.users',
                     method: 'read',
@@ -95,7 +96,7 @@ options.registry.company_data = options.Class.extend({
                 proto.__link = '/web#action=base.action_res_company_form&view_type=form&id=' + (res && res[0] && res[0].company_id[0] || 1);
             });
         }
-        return $.when(this._super.apply(this, arguments), def);
+        return Promise.all([this._super.apply(this, arguments), prom]);
     },
     /**
      * When the users selects company data, opens a dialog to ask him if he
@@ -737,7 +738,7 @@ options.registry.facebookPage = options.Class.extend({
             }));
         }
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * @override

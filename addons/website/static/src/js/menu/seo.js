@@ -105,6 +105,7 @@ var Keyword = Widget.extend({
         this._super(parent);
     },
     start: function () {
+        var self = this;
         this.$('.js_seo_keyword_suggestion').empty();
         this.suggestionList = new SuggestionList(this, {
             root: this.keyword,
@@ -114,12 +115,12 @@ var Keyword = Widget.extend({
         this.suggestionList.on('selected', this, function (word, language) {
             this.trigger('selected', word, language);
         });
-        this.suggestionList.appendTo(this.$('.js_seo_keyword_suggestion'));
-
-        this.htmlPage.on('title-changed', this, this._updateTitle);
-        this.htmlPage.on('description-changed', this, this._updateDescription);
-        this._updateTitle();
-        this._updateDescription();
+        return this.suggestionList.appendTo(this.$('.js_seo_keyword_suggestion')).then(function() {
+            self.htmlPage.on('title-changed', self, self._updateTitle);
+            self.htmlPage.on('description-changed', self, self._updateDescription);
+            self._updateTitle();
+            self._updateDescription();
+        });
     },
     destroy: function () {
         this.trigger('removed');
@@ -461,10 +462,10 @@ var MetaKeywords = Widget.extend({
         this.keywordList.on('content-updated', this, function (removed) {
             self._updateTable(removed);
         });
-        this.keywordList.insertAfter(this.$('.table thead'));
-
-        this._getLanguages();
-        this._updateTable();
+        return this.keywordList.insertAfter(this.$('.table thead')).then(function() {
+            self._getLanguages();
+            self._updateTable();
+        });
     },
     _addKeyword: function () {
         var $language = this.$('select[name=seo_page_language]');
@@ -740,39 +741,37 @@ var SeoConfigurator = Dialog.extend({
     },
     loadMetaData: function () {
         var obj = this.getMainObject();
-        var def = $.Deferred();
-        if (!obj) {
-            // return $.Deferred().reject(new Error("No main_object was found."));
-            def.resolve(null);
-        } else {
-            var fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords'
-                            ,'website_meta_og_img'];
-            if (obj.model === 'website.page'){
-                fields.push('website_indexed');
-                fields.push('website_id');
-            }
-            rpc.query({
-                model: obj.model,
-                method: 'read',
-                args: [[obj.id], fields],
-            }).then(function (data) {
-                if (data.length) {
-                    var meta = data[0];
-                    meta.model = obj.model;
-                    def.resolve(meta);
-                } else {
-                    def.resolve(null);
+        return new Promise(function (resolve, reject) {
+            if (!obj) {
+                // return Promise.reject(new Error("No main_object was found."));
+                resolve(null);
+            } else {
+                var fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords'
+                                ,'website_meta_og_img'];
+                if (obj.model === 'website.page'){
+                    fields.push('website_indexed');
+                    fields.push('website_id');
                 }
-            }).fail(function () {
-                def.reject();
-            });
-        }
-        return def;
+                rpc.query({
+                    model: obj.model,
+                    method: 'read',
+                    args: [[obj.id], fields],
+                }).then(function (data) {
+                    if (data.length) {
+                        var meta = data[0];
+                        meta.model = obj.model;
+                        resolve(meta);
+                    } else {
+                        resolve(null);
+                    }
+                }).guardedCatch(reject);
+            }
+        });
     },
     saveMetaData: function (data) {
         var obj = this.getMainObject();
         if (!obj) {
-            return $.Deferred().reject();
+            return Promise.reject();
         } else {
             return this._rpc({
                 model: obj.model,

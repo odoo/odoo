@@ -57,7 +57,7 @@ tour.register('website_reset_password', {
                 });
             });
 
-            return $.when(def1, def2, def3).then(function () {
+            return Promise.all([def1, def2, def3]).then(function () {
                 window.location.href = usersUrl;
             });
         },

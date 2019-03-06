@@ -43,7 +43,7 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * edit mode.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _goToMasterPage: function () {
         var lang = '/' + utils.get_cookie('frontend_lang');
@@ -60,19 +60,19 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         link.search += (link.search ? '&' : '?') + 'r=' + encodeURIComponent(current.pathname + current.search + current.hash);
 
         window.location = link.href;
-        return $.Deferred();
+        return new Promise(function () {});
     },
     /**
      * Redirects the user to the same page in translation mode (or start the
      * translator is translation mode is already enabled).
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _startTranslateMode: function () {
         if (!this._mustEditTranslations) {
             window.location.search += '&edit_translations';
-            return $.Deferred();
+            return new Promise(function () {});
         }
 
         var translator = new TranslatorMenu(this);
