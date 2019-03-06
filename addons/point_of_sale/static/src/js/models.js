@@ -23,12 +23,12 @@ var round_pr = utils.round_precision;
 var exports = {};
 
 // The PosModel contains the Point Of Sale's representation of the backend.
-// Since the PoS must work in standalone ( Without connection to the server ) 
-// it must contains a representation of the server's PoS backend. 
+// Since the PoS must work in standalone ( Without connection to the server )
+// it must contains a representation of the server's PoS backend.
 // (taxes, product list, configuration options, etc.)  this representation
-// is fetched and stored by the PosModel at the initialisation. 
-// this is done asynchronously, a ready deferred alows the GUI to wait interactively 
-// for the loading to be completed 
+// is fetched and stored by the PosModel at the initialisation.
+// this is done asynchronously, a ready promise alows the GUI to wait interactively
+// for the loading to be completed
 // There is a single instance of the PosModel for each Front-End instance, it is usually called
 // 'pos' and is available to all widgets extending PosWidget.
 
@@ -116,48 +116,49 @@ exports.PosModel = Backbone.Model.extend({
         this.barcode_reader.disconnect_from_proxy();
     },
 
-    connect_to_proxy: function(){
+    connect_to_proxy: function () {
         var self = this;
-        var  done = new $.Deferred();
-        this.barcode_reader.disconnect_from_proxy();
-        this.chrome.loading_message(_t('Connecting to the IoT Box'),0);
-        this.chrome.loading_skip(function(){
+        return new Promise(function (resolve, reject) {
+            self.barcode_reader.disconnect_from_proxy();
+            self.chrome.loading_message(_t('Connecting to the IoT Box'), 0);
+            self.chrome.loading_skip(function () {
                 self.proxy.stop_searching();
             });
-        this.proxy.autoconnect({
+            self.proxy.autoconnect({
                 force_ip: self.config.proxy_ip || undefined,
                 progress: function(prog){
                     self.chrome.loading_progress(prog);
                 },
             }).then(
-                function(){
-                        if(self.config.iface_scan_via_proxy){
-                            self.barcode_reader.connect_to_proxy();
-                        }
-                        done.resolve();
+                function () {
+                    if (self.config.iface_scan_via_proxy) {
+                        self.barcode_reader.connect_to_proxy();
+                    }
+                    resolve();
                 },
-                function(statusText, url){
-                        if (statusText == 'error' && window.location.protocol == 'https:') {
-                            var error = {message: 'TLSError', url: url};
-                            self.chrome.loading_error(error);
-                        } else {
-                            done.resolve();
-                        }
-                });
-        return done;
+                function (statusText, url) {
+                    if (statusText == 'error' && window.location.protocol == 'https:') {
+                        var error = {message: 'TLSError', url: url};
+                        self.chrome.loading_error(error);
+                    } else {
+                        resolve();
+                    }
+                }
+            );
+        });
     },
 
     // Server side model loaders. This is the list of the models that need to be loaded from
     // the server. The models are loaded one by one by this list's order. The 'loaded' callback
     // is used to store the data in the appropriate place once it has been loaded. This callback
-    // can return a deferred that will pause the loading of the next module.
+    // can return a promise that will pause the loading of the next module.
     // a shared temporary dictionary is available for loaders to communicate private variables
     // used during loading such as object ids, etc.
     models: [
     {
         label:  'version',
-        loaded: function(self){
-            return session.rpc('/web/webclient/version_info',{}).done(function(version) {
+        loaded: function (self) {
+            return session.rpc('/web/webclient/version_info',{}).then(function (version) {
                 self.version = version;
             });
         },
@@ -447,55 +448,51 @@ exports.PosModel = Backbone.Model.extend({
     },  {
         label: 'fonts',
         loaded: function(){
-            var fonts_loaded = new $.Deferred();
-            // Waiting for fonts to be loaded to prevent receipt printing
-            // from printing empty receipt while loading Inconsolata
-            // ( The font used for the receipt )
-            waitForWebfonts(['Lato','Inconsolata'], function(){
-                fonts_loaded.resolve();
+            return new Promise(function (resolve, reject) {
+                // Waiting for fonts to be loaded to prevent receipt printing
+                // from printing empty receipt while loading Inconsolata
+                // ( The font used for the receipt )
+                waitForWebfonts(['Lato','Inconsolata'], function () {
+                    resolve();
+                });
+                // The JS used to detect font loading is not 100% robust, so
+                // do not wait more than 5sec
+                setTimeout(resolve, 5000);
             });
-            // The JS used to detect font loading is not 100% robust, so
-            // do not wait more than 5sec
-            setTimeout(function(){
-                fonts_loaded.resolve();
-            },5000);
-
-            return fonts_loaded;
         },
     },{
         label: 'pictures',
-        loaded: function(self){
+        loaded: function (self) {
             self.company_logo = new Image();
-            var  logo_loaded = new $.Deferred();
-            self.company_logo.onload = function(){
-                var img = self.company_logo;
-                var ratio = 1;
-                var targetwidth = 300;
-                var maxheight = 150;
-                if( img.width !== targetwidth ){
-                    ratio = targetwidth / img.width;
-                }
-                if( img.height * ratio > maxheight ){
-                    ratio = maxheight / img.height;
-                }
-                var width  = Math.floor(img.width * ratio);
-                var height = Math.floor(img.height * ratio);
-                var c = document.createElement('canvas');
+            return new Promise(function (resolve, reject) {
+                self.company_logo.onload = function () {
+                    var img = self.company_logo;
+                    var ratio = 1;
+                    var targetwidth = 300;
+                    var maxheight = 150;
+                    if( img.width !== targetwidth ){
+                        ratio = targetwidth / img.width;
+                    }
+                    if( img.height * ratio > maxheight ){
+                        ratio = maxheight / img.height;
+                    }
+                    var width  = Math.floor(img.width * ratio);
+                    var height = Math.floor(img.height * ratio);
+                    var c = document.createElement('canvas');
                     c.width  = width;
                     c.height = height;
-                var ctx = c.getContext('2d');
+                    var ctx = c.getContext('2d');
                     ctx.drawImage(self.company_logo,0,0, width, height);
 
-                self.company_logo_base64 = c.toDataURL();
-                logo_loaded.resolve();
-            };
-            self.company_logo.onerror = function(){
-                logo_loaded.reject();
-            };
-            self.company_logo.crossOrigin = "anonymous";
-            self.company_logo.src = '/web/binary/company_logo' +'?dbname=' + session.db + '&_'+Math.random();
-
-            return logo_loaded;
+                    self.company_logo_base64 = c.toDataURL();
+                    resolve();
+                };
+                self.company_logo.onerror = function () {
+                    reject();
+                };
+                self.company_logo.crossOrigin = "anonymous";
+                self.company_logo.src = '/web/binary/company_logo' + '?dbname=' + session.db + '&_' + Math.random();
+            });
         },
     }, {
         label: 'barcodes',
@@ -507,93 +504,94 @@ exports.PosModel = Backbone.Model.extend({
     }
     ],
 
-    // loads all the needed data on the sever. returns a deferred indicating when all the data has loaded.
+    // loads all the needed data on the sever. returns a promise indicating when all the data has loaded.
     load_server_data: function(){
         var self = this;
-        var loaded = new $.Deferred();
         var progress = 0;
         var progress_step = 1.0 / self.models.length;
         var tmp = {}; // this is used to share a temporary state between models loaders
 
-        function load_model(index){
-            if(index >= self.models.length){
-                loaded.resolve();
-            }else{
-                var model = self.models[index];
-                self.chrome.loading_message(_t('Loading')+' '+(model.label || model.model || ''), progress);
+        var loaded = new Promise(function (resolve, reject) {
+            function load_model(index) {
+                if (index >= self.models.length) {
+                    resolve();
+                } else {
+                    var model = self.models[index];
+                    self.chrome.loading_message(_t('Loading')+' '+(model.label || model.model || ''), progress);
 
-                var cond = typeof model.condition === 'function'  ? model.condition(self,tmp) : true;
-                if (!cond) {
-                    load_model(index+1);
-                    return;
-                }
-
-                var fields =  typeof model.fields === 'function'  ? model.fields(self,tmp)  : model.fields;
-                var domain =  typeof model.domain === 'function'  ? model.domain(self,tmp)  : model.domain;
-                var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context || {};
-                var ids     = typeof model.ids === 'function'     ? model.ids(self,tmp) : model.ids;
-                var order   = typeof model.order === 'function'   ? model.order(self,tmp):    model.order;
-                progress += progress_step;
-
-                if( model.model ){
-                    var params = {
-                        model: model.model,
-                        context: _.extend(context, session.user_context || {}),
-                    };
-
-                    if (model.ids) {
-                        params.method = 'read';
-                        params.args = [ids, fields];
-                    } else {
-                        params.method = 'search_read';
-                        params.domain = domain;
-                        params.fields = fields;
-                        params.orderBy = order;
+                    var cond = typeof model.condition === 'function'  ? model.condition(self,tmp) : true;
+                    if (!cond) {
+                        load_model(index+1);
+                        return;
                     }
 
-                    rpc.query(params).then(function(result){
-                        try{    // catching exceptions in model.loaded(...)
-                            $.when(model.loaded(self,result,tmp))
-                                .then(function(){ load_model(index + 1); },
-                                      function(err){ loaded.reject(err); });
-                        }catch(err){
-                            console.error(err.message, err.stack);
-                            loaded.reject(err);
+                    var fields =  typeof model.fields === 'function'  ? model.fields(self,tmp)  : model.fields;
+                    var domain =  typeof model.domain === 'function'  ? model.domain(self,tmp)  : model.domain;
+                    var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context || {};
+                    var ids     = typeof model.ids === 'function'     ? model.ids(self,tmp) : model.ids;
+                    var order   = typeof model.order === 'function'   ? model.order(self,tmp):    model.order;
+                    progress += progress_step;
+
+                    if( model.model ){
+                        var params = {
+                            model: model.model,
+                            context: _.extend(context, session.user_context || {}),
+                        };
+
+                        if (model.ids) {
+                            params.method = 'read';
+                            params.args = [ids, fields];
+                        } else {
+                            params.method = 'search_read';
+                            params.domain = domain;
+                            params.fields = fields;
+                            params.orderBy = order;
                         }
-                    },function(err){
-                        loaded.reject(err);
-                    });
-                }else if( model.loaded ){
-                    try{    // catching exceptions in model.loaded(...)
-                        $.when(model.loaded(self,tmp))
-                            .then(  function(){ load_model(index +1); },
-                                    function(err){ loaded.reject(err); });
-                    }catch(err){
-                        loaded.reject(err);
+
+                        rpc.query(params).then(function (result) {
+                            try { // catching exceptions in model.loaded(...)
+                                Promise.resolve(model.loaded(self, result, tmp))
+                                    .then(function () { load_model(index + 1); },
+                                        function (err) { reject(err); });
+                            } catch (err) {
+                                console.error(err.message, err.stack);
+                                reject(err);
+                            }
+                        }, function (err) {
+                            reject(err);
+                        });
+                    } else if (model.loaded) {
+                        try { // catching exceptions in model.loaded(...)
+                            Promise.resolve(model.loaded(self, tmp))
+                                .then(function () { load_model(index +1); },
+                                    function (err) { reject(err); });
+                        } catch (err) {
+                            reject(err);
+                        }
+                    } else {
+                        load_model(index + 1);
                     }
-                }else{
-                    load_model(index + 1);
                 }
             }
-        }
 
-        try{
-            load_model(0);
-        }catch(err){
-            loaded.reject(err);
-        }
+            try {
+                return load_model(0);
+            } catch (err) {
+                return Promise.reject(err);
+            }
+        });
 
         return loaded;
     },
 
-    // reload the list of partner, returns as a deferred that resolves if there were
+    // reload the list of partner, returns as a promise that resolves if there were
     // updated partners, and fails if not
     load_new_partners: function(){
         var self = this;
-        var def  = new $.Deferred();
-        var fields = _.find(this.models,function(model){ return model.model === 'res.partner'; }).fields;
-        var domain = [['customer','=',true],['write_date','>',this.db.get_partner_write_date()]];
-        rpc.query({
+        return new Promise(function (resolve, reject) {
+            var fields = _.find(self.models, function(model){ return model.model === 'res.partner'; }).fields;
+            var domain = [['customer','=',true],['write_date','>',self.db.get_partner_write_date()]];
+            rpc.query({
                 model: 'res.partner',
                 method: 'search_read',
                 args: [domain, fields],
@@ -601,14 +599,14 @@ exports.PosModel = Backbone.Model.extend({
                 timeout: 3000,
                 shadow: true,
             })
-            .then(function(partners){
+            .then(function (partners) {
                 if (self.db.add_partners(partners)) {   // check if the partners we got were real updates
-                    def.resolve();
+                    resolve();
                 } else {
-                    def.reject();
+                    reject();
                 }
-            }, function(type,err){ def.reject(); });
-        return def;
+            }, function (type, err) { reject(); });
+        });
     },
 
     // this is called when an order is removed from the order collection. It ensures that there is always an existing
@@ -718,27 +716,26 @@ exports.PosModel = Backbone.Model.extend({
     },
 
     _convert_product_img_to_base64: function (product, url) {
-        var deferred = new $.Deferred();
-        var img = new Image();
+        return new Promise(function (resolve, reject) {
+            var img = new Image();
 
-        img.onload = function () {
-            var canvas = document.createElement('CANVAS');
-            var ctx = canvas.getContext('2d');
+            img.onload = function () {
+                var canvas = document.createElement('CANVAS');
+                var ctx = canvas.getContext('2d');
 
-            canvas.height = this.height;
-            canvas.width = this.width;
-            ctx.drawImage(this,0,0);
+                canvas.height = this.height;
+                canvas.width = this.width;
+                ctx.drawImage(this,0,0);
 
-            var dataURL = canvas.toDataURL('image/jpeg');
-            product.image_base64 = dataURL;
-            canvas = null;
+                var dataURL = canvas.toDataURL('image/jpeg');
+                product.image_base64 = dataURL;
+                canvas = null;
 
-            deferred.resolve();
-        };
-        img.crossOrigin = 'use-credentials';
-        img.src = url;
-
-        return deferred;
+                resolve();
+            };
+            img.crossOrigin = 'use-credentials';
+            img.src = url;
+        });
     },
 
     send_current_order_to_customer_facing_display: function() {
@@ -748,6 +745,9 @@ exports.PosModel = Backbone.Model.extend({
         });
     },
 
+    /**
+     * @returns {Promise<string>}
+     */
     render_html_for_customer_facing_display: function () {
         var self = this;
         var order = this.get_order();
@@ -758,7 +758,7 @@ exports.PosModel = Backbone.Model.extend({
         // IoT Box is not logged in and thus doesn't have the access
         // rights to access product.product. So instead we'll base64
         // encode it and embed it in the HTML.
-        var get_image_deferreds = [];
+        var get_image_promises = [];
 
         if (order) {
             order.get_orderlines().forEach(function (orderline) {
@@ -767,13 +767,13 @@ exports.PosModel = Backbone.Model.extend({
 
                 // only download and convert image if we haven't done it before
                 if (! product.image_base64) {
-                    get_image_deferreds.push(self._convert_product_img_to_base64(product, image_url));
+                    get_image_promises.push(self._convert_product_img_to_base64(product, image_url));
                 }
             });
         }
 
         // when all images are loaded in product.image_base64
-        return $.when.apply($, get_image_deferreds).then(function () {
+        return Promise.all(get_image_promises).then(function () {
             var rendered_order_lines = "";
             var rendered_payment_lines = "";
             var order_total_with_tax = self.chrome.format_currency(0);
@@ -813,87 +813,81 @@ exports.PosModel = Backbone.Model.extend({
     },
 
     // saves the order locally and try to send it to the backend.
-    // it returns a deferred that succeeds after having tried to send the order and all the other pending orders.
-    push_order: function(order, opts) {
+    // it returns a promise that succeeds after having tried to send the order and all the other pending orders.
+    push_order: function (order, opts) {
         opts = opts || {};
         var self = this;
 
-        if(order){
+        if (order) {
             this.db.add_order(order.export_as_JSON());
         }
 
-        var pushed = new $.Deferred();
+        return new Promise(function (resolve, reject) {
+            self.flush_mutex.exec(function () {
+                var flushed = self._flush_orders(self.db.get_orders(), opts);
 
-        this.flush_mutex.exec(function(){
-            var flushed = self._flush_orders(self.db.get_orders(), opts);
+                flushed.then(resolve, resolve);
 
-            flushed.always(function(ids){
-                pushed.resolve();
+                return flushed;
             });
-
-            return flushed;
         });
-        return pushed;
     },
 
     // saves the order locally and try to send it to the backend and make an invoice
-    // returns a deferred that succeeds when the order has been posted and successfully generated
+    // returns a promise that succeeds when the order has been posted and successfully generated
     // an invoice. This method can fail in various ways:
     // error-no-client: the order must have an associated partner_id. You can retry to make an invoice once
     //     this error is solved
     // error-transfer: there was a connection error during the transfer. You can retry to make the invoice once
     //     the network connection is up
 
-    push_and_invoice_order: function(order){
+    push_and_invoice_order: function (order) {
         var self = this;
-        var invoiced = new $.Deferred();
+        var invoiced = new Promise(function (resolveInvoiced, rejectInvoiced) {
+            if(!order.get_client()){
+                rejectInvoiced({code:400, message:'Missing Customer', data:{}});
+            }
+            else {
+                var order_id = self.db.add_order(order.export_as_JSON());
 
-        if(!order.get_client()){
-            invoiced.reject({code:400, message:'Missing Customer', data:{}});
-            return invoiced;
-        }
+                self.flush_mutex.exec(function () {
+                    var done =  new Promise(function (resolveDone, rejectDone) {
+                        // send the order to the server
+                        // we have a 30 seconds timeout on this push.
+                        // FIXME: if the server takes more than 30 seconds to accept the order,
+                        // the client will believe it wasn't successfully sent, and very bad
+                        // things will happen as a duplicate will be sent next time
+                        // so we must make sure the server detects and ignores duplicated orders
 
-        var order_id = this.db.add_order(order.export_as_JSON());
+                        var transfer = self._flush_orders([self.db.get_order(order_id)], {timeout:30000, to_invoice:true});
 
-        this.flush_mutex.exec(function(){
-            var done = new $.Deferred(); // holds the mutex
+                        transfer.catch(function (error) {
+                            rejectInvoiced(error);
+                            rejectDone();
+                        });
 
-            // send the order to the server
-            // we have a 30 seconds timeout on this push.
-            // FIXME: if the server takes more than 30 seconds to accept the order,
-            // the client will believe it wasn't successfully sent, and very bad
-            // things will happen as a duplicate will be sent next time
-            // so we must make sure the server detects and ignores duplicated orders
-
-            var transfer = self._flush_orders([self.db.get_order(order_id)], {timeout:30000, to_invoice:true});
-
-            transfer.fail(function(error){
-                invoiced.reject(error);
-                done.reject();
-            });
-
-            // on success, get the order id generated by the server
-            transfer.pipe(function(order_server_id){
-
-                // generate the pdf and download it
-                if (order_server_id.length) {
-                    self.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{
-                        active_ids:order_server_id,
-                    }}).done(function () {
-                        invoiced.resolve();
-                        done.resolve();
+                        // on success, get the order id generated by the server
+                        transfer.then(function(order_server_id){
+                            // generate the pdf and download it
+                            if (order_server_id.length) {
+                                self.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{
+                                    active_ids:order_server_id,
+                                }}).then(function () {
+                                    resolveInvoiced();
+                                    resolveDone();
+                                });
+                            } else {
+                                // The order has been pushed separately in batch when
+                                // the connection came back.
+                                // The user has to go to the backend to print the invoice
+                                rejectInvoiced({code:401, message:'Backend Invoice', data:{order: order}});
+                                rejectDone();
+                            }
+                        });
+                        return done;
                     });
-                } else {
-                    // The order has been pushed separately in batch when
-                    // the connection came back.
-                    // The user has to go to the backend to print the invoice
-                    invoiced.reject({code:401, message:'Backend Invoice', data:{order: order}});
-                    done.reject();
-                }
-            });
-
-            return done;
-
+                });
+            }
         });
 
         return invoiced;
@@ -904,7 +898,7 @@ exports.PosModel = Backbone.Model.extend({
         var self = this;
         this.set('synch',{ state: 'connecting', pending: orders.length});
 
-        return self._save_to_server(orders, options).done(function (server_ids) {
+        return self._save_to_server(orders, options).then(function (server_ids) {
             var pending = self.db.get_orders().length;
 
             self.set('synch', {
@@ -913,7 +907,7 @@ exports.PosModel = Backbone.Model.extend({
             });
 
             return server_ids;
-        }).fail(function(error, event){
+        }).catch(function(){
             var pending = self.db.get_orders().length;
             if (self.get('failed')) {
                 self.set('synch', { state: 'error', pending: pending });
@@ -926,13 +920,11 @@ exports.PosModel = Backbone.Model.extend({
     // send an array of orders to the server
     // available options:
     // - timeout: timeout for the rpc call in ms
-    // returns a deferred that resolves with the list of
+    // returns a promise that resolves with the list of
     // server generated ids for the sent orders
     _save_to_server: function (orders, options) {
         if (!orders || !orders.length) {
-            var result = $.Deferred();
-            result.resolve([]);
-            return result;
+            return Promise.resolve([]);
         }
 
         options = options || {};
@@ -966,7 +958,8 @@ exports.PosModel = Backbone.Model.extend({
                 });
                 self.set('failed',false);
                 return server_ids;
-            }).fail(function (type, error){
+            }).catch(function (reason){
+                var error = reason.message;
                 if(error.code === 200 ){    // Business Logic Error, not a connection problem
                     //if warning do not need to display traceback!!
                     if (error.data.exception_type == 'warning') {
@@ -1152,7 +1145,7 @@ exports.load_fields = function(model_name, fields) {
 
 // Loads openerp models at the point of sale startup.
 // load_models take an array of model loader declarations.
-// - The models will be loaded in the array order. 
+// - The models will be loaded in the array order.
 // - If no openerp model name is provided, no server data
 //   will be loaded, but the system can be used to preprocess
 //   data before load.
@@ -1168,9 +1161,9 @@ exports.load_fields = function(model_name, fields) {
 // models: [{
 //  model: [string] the name of the openerp model to load.
 //  label: [string] The label displayed during load.
-//  fields: [[string]|function] the list of fields to be loaded. 
+//  fields: [[string]|function] the list of fields to be loaded.
 //          Empty Array / Null loads all fields.
-//  order:  [[string]|function] the models will be ordered by 
+//  order:  [[string]|function] the models will be ordered by
 //          the provided fields
 //  domain: [domain|function] the domain that determines what
 //          models need to be loaded. Null loads everything
@@ -1179,9 +1172,9 @@ exports.load_fields = function(model_name, fields) {
 //  context: [Dict|function] the openerp context for the model read
 //  condition: [function] do not load the models if it evaluates to
 //             false.
-//  loaded: [function(self,model)] this function is called once the 
+//  loaded: [function(self,model)] this function is called once the
 //          models have been loaded, with the data as second argument
-//          if the function returns a deferred, the next model will
+//          if the function returns a promise, the next model will
 //          wait until it resolves before loading.
 // }]
 //
@@ -1311,7 +1304,7 @@ exports.Product = Backbone.Model.extend({
 var orderline_id = 1;
 
 // An orderline represent one element of the content of a client's shopping cart.
-// An orderline contains a product, its quantity, its price, discount. etc. 
+// An orderline contains a product, its quantity, its price, discount. etc.
 // An Order contains zero or more Orderlines.
 exports.Orderline = Backbone.Model.extend({
     initialize: function(attr,options){
@@ -1980,8 +1973,8 @@ var PaymentlineCollection = Backbone.Collection.extend({
     model: exports.Paymentline,
 });
 
-// An order more or less represents the content of a client's shopping cart (the OrderLines) 
-// plus the associated payment information (the Paymentlines) 
+// An order more or less represents the content of a client's shopping cart (the OrderLines)
+// plus the associated payment information (the Paymentlines)
 // there is always an active ('selected') order in the Pos, a new one is created
 // automaticaly once an order is completed and sent to the server.
 exports.Order = Backbone.Model.extend({
