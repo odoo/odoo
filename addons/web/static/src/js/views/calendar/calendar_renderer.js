@@ -10,6 +10,8 @@ var FieldManagerMixin = require('web.FieldManagerMixin');
 var relational_fields = require('web.relational_fields');
 var session = require('web.session');
 var Widget = require('web.Widget');
+var StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
+var fieldRegistry = require('web.field_registry');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -166,7 +168,7 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
     },
 });
 
-return AbstractRenderer.extend({
+return AbstractRenderer.extend(StandaloneFieldManagerMixin, {
     template: "CalendarView",
 
     /**
@@ -177,8 +179,8 @@ return AbstractRenderer.extend({
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
+        StandaloneFieldManagerMixin.init.call(this);
         this.displayFields = params.displayFields;
-        this.model = params.model;
         this.filters = [];
         this.color_map = {};
     },
@@ -654,6 +656,7 @@ return AbstractRenderer.extend({
      * @param {jQueryElement} $eventElement
      */
     _renderEventPopover: function (eventData, $eventElement) {
+        var self = this;
         $eventElement.popover({
             animation: false,
             delay: {
@@ -665,12 +668,52 @@ return AbstractRenderer.extend({
             title: eventData.record.display_name,
             template: this._getEventPopoverTemplate(eventData),
             container: eventData.allDay ? '.fc-view' : '.fc-scroller',
+        }).on('shown.bs.popover', function () {
+            var $popover = $($(this).data('bs.popover').tip);
+            $popover.find('.o_cw_popover_close').on('click', self._unselectEvents.bind(self));
+            $popover.find('.o_cw_popover_edit').on('click', self._onClickEditEvent.bind(self, eventData));
+            $popover.find('.o_cw_popover_delete').on('click', self._onClickDeleteEvent.bind(self, eventData));
         }).popover('show');
-        // Bind events
-        var $popover = $($eventElement.data('bs.popover').tip);
-        $popover.find('.o_cw_popover_close').on('click', this._unselectEvents.bind(this));
-        $popover.find('.o_cw_popover_edit').on('click', this._onClickEditEvent.bind(this, eventData));
-        $popover.find('.o_cw_popover_delete').on('click', this._onClickDeleteEvent.bind(this, eventData));
+
+        // var fields = [];
+        // _.each(this.displayFields, function (displayField) {
+        //     var fieldInfo = self.state.fields[displayField.name];
+        //     var field = {
+        //         name: displayField.name,
+        //         value: eventData.record[displayField.name],
+        //         type: fieldInfo.type,
+        //     };
+        //     if (field.type === 'selection') {
+        //         field.selection = fieldInfo.selection;
+        //     }
+        //     if (fieldInfo.relation) {
+        //         field.relation = fieldInfo.relation;
+        //     }
+        //     if (displayField.widget) {
+        //         field.widget = displayField.widget;
+        //     } else if (field.type === 'many2many' || field.type === 'one2many') {
+        //         field.widget = 'many2many_tags';
+        //     }
+        //     if (field.type === 'many2many' || field.type === 'one2many') {
+        //         field.fields = [{
+        //             name: 'id',
+        //             type: 'integer',
+        //         }, {
+        //             name: 'display_name',
+        //             type: 'char',
+        //         }];
+        //     }
+        //     fields.push(field);
+        // });
+
+        // this.model.makeRecord(this.model, fields).then(function (recordID) {
+        //     var record = self.model.get(recordID);
+        //     _.each(fields, function (field) {
+        //         var FieldClass = fieldRegistry.getAny([field.widget, field.type]);
+        //         var fieldWidget = new FieldClass(self, field.name, record);
+        //         fieldWidget.appendTo($($eventElement.data('bs.popover').tip).find('.o_cw_popover_fields_secondary'));
+        //     });
+        // });
     },
     /**
      * Remove highlight classes and dispose of popovers
