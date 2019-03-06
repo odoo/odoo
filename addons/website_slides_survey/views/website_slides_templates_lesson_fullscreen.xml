@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <template id="slide_fullscreen_sidebar_category" inherit_id="website_slides.slide_fullscreen_sidebar_category">
+        <xpath expr="//div[@t-attf-index='#{i}']" position="attributes">
+             <attribute name="t-att-data-certification-done">course_slide.user_membership_id.survey_quizz_passed</attribute>
+             <attribute name="t-att-data-certification-id">course_slide.survey_id.id</attribute>
+        </xpath>
+    </template>
+
+</data></odoo>
