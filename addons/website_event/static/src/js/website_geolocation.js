@@ -17,7 +17,7 @@ publicWidget.registry.visitor = publicWidget.Widget.extend({
                 self.$('.country_events_list').replaceWith(data);
             }
         }));
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 });
 });
