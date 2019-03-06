@@ -76,6 +76,27 @@ class AccountFrFec(models.TransientModel):
         listrow = list(row)
         return listrow
 
+    def _get_company_legal_data(self, company):
+        """
+        Dom-Tom are excluded from the EU's fiscal territory
+        Those regions do not have SIREN
+        sources:
+            https://www.service-public.fr/professionnels-entreprises/vosdroits/F23570
+            http://www.douane.gouv.fr/articles/a11024-tva-dans-les-dom
+        """
+        dom_tom_group = self.env.ref('l10n_fr.dom-tom')
+        is_dom_tom = company.country_id.code in dom_tom_group.country_ids.mapped('code')
+        if not is_dom_tom and not company.vat:
+            raise Warning(
+                _("Missing VAT number for company %s") % company.name)
+        if not is_dom_tom and company.vat[0:2] != 'FR':
+            raise Warning(
+                _("FEC is for French companies only !"))
+
+        return {
+            'siren': company.vat[4:13] if not is_dom_tom else '',
+        }
+
     @api.multi
     def generate_fec(self):
         self.ensure_one()
@@ -87,6 +108,9 @@ class AccountFrFec(models.TransientModel):
         # 2) CSV files are easier to read/use for a regular accountant.
         # So it will be easier for the accountant to check the file before
         # sending it to the fiscal administration
+        company = self.env.user.company_id
+        company_legal_data = self._get_company_legal_data(company)
+
         header = [
             u'JournalCode',    # 0
             u'JournalLib',     # 1
@@ -108,18 +132,7 @@ class AccountFrFec(models.TransientModel):
             u'Idevise',        # 17
             ]
 
-        company = self.env.user.company_id
-        if not company.vat:
-            raise Warning(
-                _("Missing VAT number for company %s") % company.name)
-        if company.vat[0:2] != 'FR':
-            raise Warning(
-                _("FEC is for French companies only !"))
-
-        fecfile = io.BytesIO()
-        w = pycompat.csv_writer(fecfile, delimiter='|')
-        w.writerow(header)
-
+        rows_to_write = [header]
         # INITIAL BALANCE
         unaffected_earnings_xml_ref = self.env.ref('account.data_unaffected_earnings')
         unaffected_earnings_line = True  # used to make sure that we add the unaffected earning initial balance only once
@@ -195,7 +208,8 @@ class AccountFrFec(models.TransientModel):
                     else:
                         listrow[11] = '0,00'
                         listrow[12] = str(-listrow_amount).replace('.', ',')
-            w.writerow(listrow)
+            rows_to_write.append(listrow)
+
         #if the unaffected earnings account wasn't in the selection yet: add it manually
         if (not unaffected_earnings_line
             and unaffected_earnings_results
@@ -206,7 +220,7 @@ class AccountFrFec(models.TransientModel):
             if unaffected_earnings_account:
                 unaffected_earnings_results[4] = unaffected_earnings_account.code
                 unaffected_earnings_results[5] = unaffected_earnings_account.name
-            w.writerow(unaffected_earnings_results)
+            rows_to_write.append(unaffected_earnings_results)
 
         # INITIAL BALANCE - receivable/payable
         sql_query = '''
@@ -264,7 +278,7 @@ class AccountFrFec(models.TransientModel):
         for row in self._cr.fetchall():
             listrow = list(row)
             account_id = listrow.pop()
-            w.writerow(listrow)
+            rows_to_write.append(listrow)
 
         # LINES
         sql_query = '''
@@ -329,20 +343,19 @@ class AccountFrFec(models.TransientModel):
             sql_query, (self.date_from, self.date_to, company.id))
 
         for row in self._cr.fetchall():
-            w.writerow(list(row))
+            rows_to_write.append(list(row))
 
-        siren = company.vat[4:13]
+        fecvalue = self._csv_write_rows(rows_to_write)
         end_date = fields.Date.to_string(self.date_to).replace('-', '')
         suffix = ''
         if self.export_type == "nonofficial":
             suffix = '-NONOFFICIAL'
-        fecvalue = fecfile.getvalue()
+
         self.write({
             'fec_data': base64.encodestring(fecvalue),
             # Filename = <siren>FECYYYYMMDD where YYYMMDD is the closing date
-            'filename': '%sFEC%s%s.csv' % (siren, end_date, suffix),
+            'filename': '%sFEC%s%s.csv' % (company_legal_data['siren'], end_date, suffix),
             })
-        fecfile.close()
 
         action = {
             'name': 'FEC',
@@ -351,3 +364,29 @@ class AccountFrFec(models.TransientModel):
             'target': 'self',
             }
         return action
+
+    def _csv_write_rows(self, rows, lineterminator=u'\r\n'):
+        """
+        Write FEC rows into a file
+        It seems that Bercy's bureaucracy is not too happy about the
+        empty new line at the End Of File.
+
+        @param {list(list)} rows: the list of rows. Each row is a list of strings
+        @param {unicode string} [optional] lineterminator: effective line terminator
+            Has nothing to do with the csv writer parameter
+            The last line written won't be terminated with it
+
+        @return the value of the file
+        """
+        fecfile = io.BytesIO()
+        writer = pycompat.csv_writer(fecfile, delimiter='|', lineterminator='')
+
+        rows_length = len(rows)
+        for i, row in enumerate(rows):
+            if not i == rows_length - 1:
+                row.append(lineterminator)
+            writer.writerow(row)
+
+        fecvalue = fecfile.getvalue()
+        fecfile.close()
+        return fecvalue

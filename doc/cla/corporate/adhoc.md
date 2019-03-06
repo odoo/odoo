@@ -14,3 +14,4 @@ Damián Soriano ds@adhoc.com.ar https://github.com/damiansoriano
 Juan José Scarafía jjs@adhoc.com.ar https://github.com/jjscarafia
 Nicolás Mac Rouillon nmr@adhoc.com.ar https://github.com/nicomacr
 Katherine Zaoral kz@adhoc.com.ar https://github.com/zaoral
+Valentino Defelice vd@adhoc.com.ar https://github.com/ValentinoDefelice

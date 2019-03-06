@@ -1076,6 +1076,48 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('Reload, group by columns, reload', function (assert) {
+        assert.expect(2);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot/>',
+        });
+
+        // Set a column groupby
+        pivot.$('thead .o_pivot_header_cell_closed').click();
+        pivot.$('.o_field_selection li[data-field=customer] a').click();
+
+        // Set a domain
+        pivot.update({domain: [['product_id', '=', 41]]});
+
+        var expectedContext = {pivot_column_groupby: ['customer'],
+                               pivot_measures: ['__count'],
+                               pivot_row_groupby: []};
+
+        // Check that column groupbys were not lost
+        assert.deepEqual(pivot.getContext(), expectedContext,
+            'Column groupby not lost after first reload');
+
+        // Set a column groupby
+        pivot.$('thead .o_pivot_header_cell_closed').click();
+        pivot.$('.o_field_selection li[data-field=product_id] a').click();
+
+        // Set a domain
+        pivot.update({domain: [['product_id', '=', 37]]});
+
+        var expectedContext = {pivot_column_groupby: ['customer', 'product_id'],
+                               pivot_measures: ['__count'],
+                               pivot_row_groupby: []};
+
+        assert.deepEqual(pivot.getContext(), expectedContext,
+            'Column groupby not lost after second reload');
+
+        pivot.destroy();
+    });
+
     QUnit.test('correctly uses pivot_ keys from the context', function (assert) {
         assert.expect(7);
 
