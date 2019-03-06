@@ -62,7 +62,7 @@ var AddToBoardMenu = Widget.extend({
      * information.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _addToBoard: function () {
         var self = this;
