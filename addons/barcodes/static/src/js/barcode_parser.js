@@ -22,7 +22,7 @@ var BarcodeParser = Class.extend({
             return;
         }
         var id = this.nomenclature_id[0];
-        rpc.query({
+        return rpc.query({
                 model: 'barcode.nomenclature',
                 method: 'read',
                 args: [[id], ['name','rule_ids','upc_ean_conv']],
@@ -80,7 +80,7 @@ var BarcodeParser = Class.extend({
         var total = sum1 + 3 * sum2;
         return Number((10 - total % 10) % 10);
     },
-    
+
 
     // returns true if the ean is a valid EAN barcode number by checking the control digit.
     // ean must be a string
@@ -185,10 +185,10 @@ var BarcodeParser = Class.extend({
 
         return match;
     },
-            
+
     // attempts to interpret a barcode (string encoding a barcode Code-128)
     // it will return an object containing various information about the barcode.
-    // most importantly : 
+    // most importantly :
     // - code    : the barcode
     // - type   : the type of the barcode (e.g. alias, unit product, weighted product...)
     //
@@ -198,7 +198,7 @@ var BarcodeParser = Class.extend({
     parse_barcode: function(barcode){
         var parsed_result = {
             encoding: '',
-            type:'error',  
+            type:'error',
             code:barcode,
             base_code: barcode,
             value: 0,
@@ -213,7 +213,7 @@ var BarcodeParser = Class.extend({
             var rule = rules[i];
             var cur_barcode = barcode;
 
-            if (    rule.encoding === 'ean13' && 
+            if (    rule.encoding === 'ean13' &&
                     this.check_encoding(barcode,'upca') &&
                     this.nomenclature.upc_ean_conv in {'upc2ean':'','always':''} ){
                 cur_barcode = '0' + cur_barcode;
