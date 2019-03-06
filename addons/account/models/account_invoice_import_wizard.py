@@ -9,10 +9,10 @@ class ImportInvoiceImportWizard(models.TransientModel):
     _description = 'Import Your Vendor Bills from Files.'
 
     def _get_default_journal_id(self):
-        return self.env['account.journal'].search([('type', '=', 'purchase')], limit=1)
+        return self.env['account.journal'].search([('type', '=', self.env.context.get('journal_type'))], limit=1)
 
     attachment_ids = fields.Many2many('ir.attachment', string='Files')
-    journal_id = fields.Many2one(string="Journal", comodel_name="account.journal", required=True, domain="[('type', '=', 'purchase')]", default=_get_default_journal_id, help="Journal where to generate the bills")
+    journal_id = fields.Many2one(string="Journal", comodel_name="account.journal", required=True, domain="[('type', 'in', ('sale', 'purchase'))]", default=_get_default_journal_id, help="Journal where to generate the bills")
 
     @api.multi
     def _create_invoice_from_file(self, attachment):
@@ -35,12 +35,14 @@ class ImportInvoiceImportWizard(models.TransientModel):
         for attachment in self.attachment_ids:
             invoices += self._create_invoice_from_file(attachment)
 
+        form_view = self.env.context.get('journal_type') == 'purchase' and self.env.ref('account.invoice_supplier_form').id or self.env.ref('account.invoice_form').id
+        tree_view = self.env.context.get('journal_type') == 'purchase' and self.env.ref('account.invoice_supplier_tree').id or self.env.ref('account.invoice_tree').id
         action_vals = {
             'name': _('Invoices'),
             'domain': [('id', 'in', invoices.ids)],
             'view_type': 'form',
             'res_model': 'account.invoice',
-            'view_id': False,
+            'views': [[tree_view, "tree"], [form_view, "form"]],
             'type': 'ir.actions.act_window',
         }
         if len(invoices) == 1:

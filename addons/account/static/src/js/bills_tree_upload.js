@@ -22,7 +22,6 @@ odoo.define('account.bills.tree', function (require) {
                 this.$buttons.on('click', '.o_button_upload_bill', function () {
                     var state = self.model.get(self.handle, {raw: true});
                     var context = state.getContext()
-                    context['type'] = 'in_invoice'
                     self.do_action({
                         type: 'ir.actions.act_window',
                         res_model: 'account.invoice.import.wizard',
@@ -41,5 +40,5 @@ odoo.define('account.bills.tree', function (require) {
         }),
     });
 
-    viewRegistry.add('account_bills_tree', BillsListView);
+    viewRegistry.add('account_tree', BillsListView);
 });

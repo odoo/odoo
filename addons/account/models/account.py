@@ -487,10 +487,10 @@ class AccountJournal(models.Model):
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id', readonly=False)
     post_at_bank_rec = fields.Boolean(string="Post At Bank Reconciliation", help="Whether or not the payments made in this journal should be generated in draft state, so that the related journal entries are only posted when performing bank reconciliation.")
 
-    # alias configuration for 'purchase' type journals
+    # alias configuration for journals
     alias_id = fields.Many2one('mail.alias', string='Alias', copy=False)
     alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
-    alias_name = fields.Char('Alias Name for Vendor Bills', related='alias_id.alias_name', help="It creates draft vendor bill by sending an email.", readonly=False)
+    alias_name = fields.Char('Alias Name', related='alias_id.alias_name', help="It creates draft invoices and bills by sending an email.", readonly=False)
 
     journal_group_ids = fields.Many2many('account.journal.group', string="Journal Groups")
 
@@ -583,13 +583,13 @@ class AccountJournal(models.Model):
             self.default_debit_account_id = self.default_credit_account_id
 
     @api.multi
-    def _get_alias_values(self, alias_name=None):
+    def _get_alias_values(self, type, alias_name=None):
         if not alias_name:
             alias_name = self.name
             if self.company_id != self.env.ref('base.main_company'):
                 alias_name += '-' + str(self.company_id.name)
         return {
-            'alias_defaults': {'type': 'in_invoice', 'company_id': self.company_id.id},
+            'alias_defaults': {'type': type == 'purchase' and 'in_invoice' or 'out_invoice', 'company_id': self.company_id.id},
             'alias_parent_thread_id': self.id,
             'alias_name': re.sub(r'[^\w]+', '-', alias_name)
         }
@@ -617,7 +617,7 @@ class AccountJournal(models.Model):
 
     def _update_mail_alias(self, vals):
         self.ensure_one()
-        alias_values = self._get_alias_values(alias_name=vals.get('alias_name'))
+        alias_values = self._get_alias_values(type=vals.get('type') or self.type, alias_name=vals.get('alias_name'))
         if self.alias_id:
             self.alias_id.write(alias_values)
         else:
@@ -663,7 +663,7 @@ class AccountJournal(models.Model):
                     bank_account = self.env['res.partner.bank'].browse(vals['bank_account_id'])
                     if bank_account.partner_id != company.partner_id:
                         raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
-            if vals.get('type') == 'purchase':
+            if 'alias_name' in vals:
                 journal._update_mail_alias(vals)
         result = super(AccountJournal, self).write(vals)
 
@@ -787,8 +787,7 @@ class AccountJournal(models.Model):
         if vals.get('type') in ('sale', 'purchase') and vals.get('refund_sequence') and not vals.get('refund_sequence_id'):
             vals.update({'refund_sequence_id': self.sudo()._create_sequence(vals, refund=True).id})
         journal = super(AccountJournal, self.with_context(mail_create_nolog=True)).create(vals)
-        if journal.type == 'purchase':
-            # create a mail alias for purchase journals (always, deactivated if alias_name isn't set)
+        if 'alias_name' in vals:
             journal._update_mail_alias(vals)
 
         # Create the bank_account_id if necessary
