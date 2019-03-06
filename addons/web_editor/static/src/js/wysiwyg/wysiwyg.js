@@ -610,7 +610,7 @@ var Wysiwyg = Widget.extend({
         this._editableHasFocus = true;
         this._justFocused = true;
         setTimeout(function () {
-            self._justFocused = true;
+            self._justFocused = false;
         });
     },
     /**
