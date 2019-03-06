@@ -178,8 +178,8 @@
                             </div>
                             <button class="btn btn-sm d-md-none bg-white border" type="button" data-toggle="collapse" data-target="#o_wprofile_sidebar_collapse" aria-expanded="false" aria-controls="o_wprofile_sidebar_collapse">More info</button>
                         </div>
-                        <div t-if="user.rank_id" class="collapse d-md-block" id="o_wprofile_sidebar_collapse">
-                            <div class="mb-3">
+                        <div class="collapse d-md-block" id="o_wprofile_sidebar_collapse">
+                            <div t-if="user.next_rank_id" class="mb-3">
                                 <small class="font-weight-bold mt-1">Next rank:</small>
                                 <t t-call="website_profile.profile_next_rank_card">
                                     <t t-set="img_max_width">40%</t>
@@ -228,9 +228,14 @@
     </template>
 
     <template id="profile_next_rank_card" name="Profile Next Rank Card">
-        <div class="o_wprofile_progress_circle">
+        <div t-if="user.next_rank_id" class="o_wprofile_progress_circle">
             <svg viewBox="0 0 36 36" class="o_pc_circular_chart">
-                <t t-set="user_points" t-value="int(100*(user.karma - user.rank_id.karma_min)/(user.next_rank_id.karma_min - user.rank_id.karma_min))"/>
+                <t t-if="(user.next_rank_id.karma_min - user.rank_id.karma_min) > 0">
+                    <t t-set="user_points" t-value="int(100*(user.karma - user.rank_id.karma_min)/(user.next_rank_id.karma_min - user.rank_id.karma_min))"/>
+                </t>
+                <t t-else="">
+                    <t t-set="user_points" t-value="0"/>
+                </t>
                 <path class="o_pc_circle_bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                 <path class="o_pc_circle" t-attf-stroke-dasharray="#{user_points}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke="url(#gradient)" />
                 <linearGradient id="gradient">
@@ -254,16 +259,18 @@
     <template id="user_badges" name="User Bagdes">
         <div t-if="user.badge_ids" class="row mx-n1">
             <div class="col px-1 mb-2 col-xl-4" t-foreach="user.badge_ids" t-as="badge">
-                <div class="card">
-                    <div class="card-body p-2 pr-3">
-                        <div class="media align-items-center">
-                            <img height="38" t-attf-src="/web/image/gamification.badge/#{badge.badge_id.id}/image_small" class="mr-2"/>
-                            <div class="media-body text-nowrap">
-                                <h6 class="my-0" t-field="badge.badge_id.name"/>
+                <t t-if="badge.badge_id.website_published">
+                    <div class="card">
+                        <div class="card-body p-2 pr-3">
+                            <div class="media align-items-center">
+                                <img height="38" t-attf-src="/web/image/gamification.badge/#{badge.badge_id.id}/image_small" class="mr-2"/>
+                                <div class="media-body text-nowrap">
+                                    <h6 class="my-0" t-field="badge.badge_id.name"/>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </t>
             </div>
         </div>
         <div class="mb-3" t-if="not user.badge_ids">

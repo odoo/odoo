@@ -13,6 +13,12 @@
         <record id="rank_newbie" model="gamification.karma.rank">
             <field name="name">Newbie</field>
             <field name="description" type="html"><p>You just began the adventure! Welcome!</p></field>
+            <field name="description_motivational" type="html">
+                <div class="media align-items-center">
+                    <div class="media-body">Reach the next rank to start conquering the world!</div>
+                    <img class="ml-3 img img-fluid" style="max-height: 72px;" src="/gamification/static/img/rank_misc_world.png"/>
+                </div>
+            </field>
             <field name="karma_min">1</field>
             <field name="image" type="base64" file="gamification/static/img/rank_newbie_badge.svg"/>
         </record>
