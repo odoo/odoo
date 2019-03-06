@@ -23,10 +23,10 @@ QUnit.module('Views', {
 }, function () {
     QUnit.module('LunchKanbanView');
 
-    QUnit.test('Simple rendering of LunchKanbanView', function (assert) {
+    QUnit.test('Simple rendering of LunchKanbanView', async function (assert) {
         assert.expect(7);
 
-        var lunchKanban = createView({
+        var lunchKanban = await createView({
             View: LunchKanbanView,
             model: 'product',
             data: this.data,
@@ -36,7 +36,7 @@ QUnit.module('Views', {
                 '</t></templates></kanban>',
             mockRPC: function(route, args) {
                 if (route === '/lunch/infos') {
-                    return $.when({
+                    return Promise.resolve({
                         order: 1,
                         wallet: 20,
                         username: 'Marc Demo',
@@ -56,11 +56,11 @@ QUnit.module('Views', {
                         user_location: [1, 'hello'],
                     });
                 } else if (route === '/lunch/user_location_get') {
-                    return $.when(1);
+                    return Promise.resolve(1);
                 } else if (route === '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id') {
-                    return $.when();
+                    return Promise.resolve();
                 } else if (route.startsWith('data:image/png;base64,')) {
-                    return $.when();
+                    return Promise.resolve();
                 }
                 return this._super(route, args);
             },
@@ -88,12 +88,12 @@ QUnit.module('Views', {
         lunchKanban.destroy();
     });
 
-    QUnit.test('User interactions', function (assert) {
+    QUnit.test('User interactions', async function (assert) {
         assert.expect(9);
 
         var state = 'new';
 
-        var lunchKanban = createView({
+        var lunchKanban = await createView({
             View: LunchKanbanView,
             model: 'product',
             data: this.data,
@@ -103,7 +103,7 @@ QUnit.module('Views', {
                 '</t></templates></kanban>',
             mockRPC: function(route, args) {
                 if (route === '/lunch/infos') {
-                    return $.when({
+                    return Promise.resolve({
                         order: 1,
                         wallet: 20,
                         username: 'Marc Demo',
@@ -124,35 +124,35 @@ QUnit.module('Views', {
                         user_location: [1, 'hello'],
                     });
                 } else if (route === '/lunch/payment_message') {
-                    return $.when({message: 'Hello'});
+                    return Promise.resolve({message: 'Hello'});
                 } else if (route === '/lunch/pay') {
-                    return $.when(true);
+                    return Promise.resolve(true);
                 } else if (route === '/lunch/user_location_get') {
-                    return $.when(1);
+                    return Promise.resolve(1);
                 } else if (args.method === 'update_quantity') {
-                    assert.step(args.args);
-                    return $.when();
+                    assert.step(JSON.stringify(args.args));
+                    return Promise.resolve();
                 } else if (route === '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id') {
-                    return $.when();
+                    return Promise.resolve();
                 } else if (route.startsWith('data:image/png;base64,')) {
-                    return $.when();
+                    return Promise.resolve();
                 }
                 return this._super(route, args);
             },
         });
 
-        lunchKanban.$('.o_add_product').click();
-        lunchKanban.$('.o_remove_product').click();
+        await testUtils.dom.click(lunchKanban.$('.o_add_product'));
+        await testUtils.dom.click(lunchKanban.$('.o_remove_product'));
 
         state = 'ordered';
-        lunchKanban.$('.o_lunch_widget_order_button').click();
+        await testUtils.dom.click(lunchKanban.$('.o_lunch_widget_order_button'));
         // state is shown
         assert.strictEqual(lunchKanban.$('.o_lunch_ordered').length, 1, 'state should be shown as ordered');
         // buttons
         assert.strictEqual(lunchKanban.$('.o_remove_product').length, 1, 'button to remove product should be shown');
         assert.strictEqual(lunchKanban.$('.o_add_product').length, 1, 'button to add product should be shown');
         state = 'confirmed';
-        lunchKanban.reload();
+        await lunchKanban.reload();
         // state is updated
         assert.strictEqual(lunchKanban.$('.o_lunch_confirmed').length, 1, 'state should be shown as confirmed');
         // Buttons not shown anymore
@@ -161,17 +161,17 @@ QUnit.module('Views', {
 
 
         assert.verifySteps([
-            [[1], 1],
-            [[1], -1],
+            JSON.stringify([[1], 1]),
+            JSON.stringify([[1], -1]),
         ]);
 
         lunchKanban.destroy();
     });
 
-    QUnit.test('Manager interactions', function (assert) {
+    QUnit.test('Manager interactions', async function (assert) {
         assert.expect(1);
 
-        var lunchKanban = createView({
+        var lunchKanban = await createView({
             View: LunchKanbanView,
             model: 'product',
             data: this.data,
@@ -181,7 +181,7 @@ QUnit.module('Views', {
                 '</t></templates></kanban>',
             mockRPC: function(route, args) {
                 if (route === '/lunch/infos') {
-                    return $.when({
+                    return Promise.resolve({
                         order: 1,
                         wallet: 20,
                         username: 'Marc Demo',
@@ -202,11 +202,11 @@ QUnit.module('Views', {
                         user_location: [1, 'hello'],
                     });
                 } else if (route === '/lunch/user_location_get') {
-                    return $.when(1);
+                    return Promise.resolve(1);
                 } else if (route === '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id') {
-                    return $.when();
+                    return Promise.resolve();
                 } else if (route.startsWith('data:image/png;base64,')) {
-                    return $.when();
+                    return Promise.resolve();
                 }
                 return this._super(route, args);
             },
