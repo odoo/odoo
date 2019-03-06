@@ -559,11 +559,13 @@ class WebsiteSlides(WebsiteProfile):
     # SLIDE.SLIDE UTILS
     # --------------------------------------------------
 
-    @http.route('/slide/html_content/get', type="json", auth="public", website=True)
+    @http.route('/slides/slide/get_html_content', type="json", auth="public", website=True)
     def get_html_content(self, slide_id):
-        slide = request.env['slide.slide'].browse(slide_id)
+        fetch_res = self._fetch_slide(slide_id)
+        if fetch_res.get('error'):
+            return fetch_res
         return {
-            'html_content': slide.html_content
+            'html_content': fetch_res['slide'].html_content
         }
 
     @http.route('/slides/slide/<model("slide.slide"):slide>/set_completed', website=True, type="http", auth="user")
