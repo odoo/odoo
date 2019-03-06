@@ -16,7 +16,8 @@ class Employee(models.Model):
     medic_exam = fields.Date(string='Medical Examination Date', groups="hr.group_hr_user")
     vehicle = fields.Char(string='Company Vehicle', groups="hr.group_hr_user")
     contract_ids = fields.One2many('hr.contract', 'employee_id', string='Employee Contracts')
-    contract_id = fields.Many2one('hr.contract', compute='_compute_contract_id', string='Current Contract', help='Latest contract of the employee')
+    contract_id = fields.Many2one('hr.contract', compute='_compute_contract_id', string='Current Contract', help='Latest contract of the employee',
+                                  compute_sudo=True)
     contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contract Count')
 
     def _compute_contract_id(self):
