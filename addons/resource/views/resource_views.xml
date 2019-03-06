@@ -193,6 +193,8 @@
         <field name="model">resource.calendar.attendance</field>
         <field name="arch" type="xml">
             <tree string="Working Time" editable="top">
+                <field name="sequence" widget="handle"/>
+                <field name="display_type" invisible="1"/>
                 <field name="name"/>
                 <field name="dayofweek"/>
                 <field name="day_period"/>
@@ -265,7 +267,14 @@
                     </group>
                     <notebook>
                         <page string="Working Hours" name="working_hours">
-                            <field name="attendance_ids"/>
+                        <button name="switch_calendar_type" attrs="{'invisible':[('two_weeks_calendar', '=', True)]}" string="Switch to 2 weeks calendar" type="object" confirm="Are you sure you want to switch this calendar to 2 weeks calendar ? All entries will be lost"/>
+                        <button name="switch_calendar_type" attrs="{'invisible':[('two_weeks_calendar', '=', False)]}" string="Switch to 1 week calendar" type="object" confirm="Are you sure you want to switch this calendar to 1 week calendar ? All entries will be lost"/>
+                        <field name="two_weeks_calendar" invisible="1"/>
+
+                        <group attrs="{'invisible':[('two_weeks_calendar', '=', False)]}">
+                            <field name="two_weeks_explanation" nolabel="1"/>
+                        </group>
+                            <field name="attendance_ids" widget="section_one2many"/>
                         </page>
                         <page string="Global Time Off" name="global_leaves">
                             <field name="global_leave_ids">
