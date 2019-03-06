@@ -44,7 +44,7 @@ var PortalComposer = publicWidget.Widget.extend({
      * @private
      */
     _onSubmitButtonClick: function () {
-        return $.Deferred();
+        return new Promise(function() {});
     },
 });
 
@@ -102,10 +102,10 @@ var PortalChatter = publicWidget.Widget.extend({
      * @override
      */
     willStart: function () {
-        return $.when(
+        return Promise.all([
             this._super.apply(this, arguments),
             this._chatterInit()
-        );
+        ]);
     },
     /**
      * @override
@@ -133,7 +133,7 @@ var PortalChatter = publicWidget.Widget.extend({
             defs.push(this._composer.replace(this.$('.o_portal_chatter_composer')));
         }
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 
     //--------------------------------------------------------------------------
@@ -145,7 +145,7 @@ var PortalChatter = publicWidget.Widget.extend({
      * current page and current domain.
      *
      * @param {Array} domain
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     messageFetch: function (domain) {
         var self = this;
@@ -307,7 +307,7 @@ publicWidget.registry.portalChatter = publicWidget.Widget.extend({
         var defs = [this._super.apply(this, arguments)];
         var chatter = new PortalChatter(this, this.$el.data());
         defs.push(chatter.appendTo(this.$el));
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 });
 

@@ -34,7 +34,7 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
         var countryID = ($country.val() || 0);
         this.$stateOptions.detach();
         var $displayedState = this.$stateOptions.filter('[data-country_id=' + countryID + ']');
-        var nb = $displayedState.appendTo(this.$state).show().size();
+        var nb = $displayedState.appendTo(this.$state).show().length;
         this.$state.parent().toggle(nb >= 1);
     },
 
