@@ -138,7 +138,7 @@ class TestLeaveRequests(TestHrHolidaysBase):
             'number_of_days': 1,
         })
 
-    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail', 'odoo.models')
     def test_accrual_validity_time_not_valid(self):
         """  Employee ask leav during a not valid validity time """
         with self.assertRaises(ValidationError):
