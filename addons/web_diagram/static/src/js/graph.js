@@ -87,11 +87,11 @@
             dummy_circle.animate({'r': close_button_radius }, 400, 'linear');
 
             if(entity_type == "node"){
-                $.when(GraphNode.destruction_callback(entity)).done(function () {
+                Promise.resolve(GraphNode.destruction_callback(entity)).then(function () {
                     entity.remove();
                 });
             }else if(entity_type == "edge"){
-                $.when(GraphEdge.destruction_callback(entity)).done(function () {
+                Promise.resolve(GraphEdge.destruction_callback(entity)).then(function () {
                     entity.remove();
                 });
             }
