@@ -31,12 +31,6 @@ var SwitchCompanyMenu = Widget.extend({
     /**
      * @override
      */
-    willStart: function () {
-        return session.user_companies ? this._super() : $.Deferred().reject();
-    },
-    /**
-     * @override
-     */
     start: function () {
         var companiesList = '';
         if (this.isMobile) {
@@ -81,9 +75,9 @@ var SwitchCompanyMenu = Widget.extend({
         });
     },
 });
-
-SystrayMenu.Items.push(SwitchCompanyMenu);
-
+if (session.user_companies) {
+    SystrayMenu.Items.push(SwitchCompanyMenu);
+}
 return SwitchCompanyMenu;
 
 });

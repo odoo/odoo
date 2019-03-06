@@ -22,7 +22,7 @@ var UserMenu = Widget.extend({
 
     /**
      * @override
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     start: function () {
         var self = this;
@@ -36,7 +36,7 @@ var UserMenu = Widget.extend({
             var $avatar = self.$('.oe_topbar_avatar');
             if (!session.uid) {
                 $avatar.attr('src', $avatar.data('default-src'));
-                return $.when();
+                return Promise.resolve();
             }
             var topbar_name = session.name;
             if (session.debug) {
@@ -67,7 +67,7 @@ var UserMenu = Widget.extend({
                     .then(function (url) {
                         framework.redirect(url);
                     })
-                    .fail(function (result, ev){
+                    .guardedCatch(function (result, ev){
                         ev.preventDefault();
                         framework.redirect('https://accounts.odoo.com/account');
                     });
@@ -100,7 +100,7 @@ var UserMenu = Widget.extend({
                         model: "res.users",
                         method: "action_get"
                     })
-                    .done(function (result) {
+                    .then(function (result) {
                         result.res_id = session.uid;
                         self.do_action(result);
                     });

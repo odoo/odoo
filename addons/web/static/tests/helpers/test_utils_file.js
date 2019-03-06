@@ -47,29 +47,30 @@ function _createFakeDataTransfer(file) {
  * @param {string} data.name
  * @param {string} data.content
  * @param {string} data.contentType
- * @returns {$.Promise<Object>} resolved with file created
+ * @returns {Promise<Object>} resolved with file created
  */
 function createFile(data) {
-    var def = $.Deferred();
-    var requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
-    if (!requestFileSystem) {
-        throw new Error('FileSystem API is not supported');
-    }
-    requestFileSystem(window.TEMPORARY, 1024 * 1024, function (fileSystem) {
-        fileSystem.root.getFile(data.name, { create: true }, function (fileEntry) {
-            fileEntry.createWriter(function (fileWriter) {
-                fileWriter.onwriteend = function (e) {
-                    fileSystem.root.getFile(data.name, {}, function (fileEntry) {
-                        fileEntry.file(function (file) {
-                            def.resolve(file);
+    // Note: this is only supported by Chrome, and does not work in Incognito mode
+    return new Promise(function (resolve, reject) {
+        var requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+        if (!requestFileSystem) {
+            throw new Error('FileSystem API is not supported');
+        }
+        requestFileSystem(window.TEMPORARY, 1024 * 1024, function (fileSystem) {
+            fileSystem.root.getFile(data.name, { create: true }, function (fileEntry) {
+                fileEntry.createWriter(function (fileWriter) {
+                    fileWriter.onwriteend = function (e) {
+                        fileSystem.root.getFile(data.name, {}, function (fileEntry) {
+                            fileEntry.file(function (file) {
+                                resolve(file);
+                            });
                         });
-                    });
-                };
-                fileWriter.write(new Blob([ data.content ], { type: data.contentType }));
+                    };
+                    fileWriter.write(new Blob([ data.content ], { type: data.contentType }));
+                });
             });
         });
     });
-    return def;
 }
 
 /**

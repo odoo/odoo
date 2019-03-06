@@ -20,7 +20,7 @@ var ChangePassword = AbstractAction.extend({
      * @fixme: weird interaction with the parent for the $buttons handling
      *
      * @override
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     start: function () {
         var self = this;
@@ -37,7 +37,7 @@ var ChangePassword = AbstractAction.extend({
                         fields: $('form[name=change_password_form]').serializeArray()
                     }
                 })
-                .done(function (result) {
+                .then(function (result) {
                     if (result.error) {
                         self._display_error(result);
                     } else {

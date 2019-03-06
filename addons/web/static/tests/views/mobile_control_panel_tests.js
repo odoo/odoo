@@ -39,12 +39,12 @@ QUnit.module('Mobile Search view Screen', {
         };
     },
 }, function () {
-    QUnit.test('can activate a filter with mobile search view', function (assert) {
+    QUnit.test('can activate a filter with mobile search view', async function (assert) {
         assert.expect(3);
 
         var filterActiveFlag = false;
 
-        var actionManager = createActionManager({
+        var actionManager = await createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
@@ -57,23 +57,23 @@ QUnit.module('Mobile Search view Screen', {
             },
         });
 
-        actionManager.doAction(1);
+        await actionManager.doAction(1);
 
         assert.ok(!$('.o_mobile_search').is(':visible'),
             'mobile search view is not visible');
         // open the search view
-        testUtils.dom.click($('button.o_enable_searchview'));
+        await testUtils.dom.click($('button.o_enable_searchview'));
 
         assert.ok($('.o_mobile_search').is(':visible'),
             'mobile search view is visible');
 
         // open filter sub menu
-        testUtils.dom.click($('button.o_dropdown_toggler_btn').first());
+        await testUtils.dom.click($('button.o_dropdown_toggler_btn').first());
 
         filterActiveFlag = true;
 
         // click on Active filter
-        testUtils.dom.click($('.o_filters_menu a:contains(Active)'));
+        await testUtils.dom.click($('.o_filters_menu a:contains(Active)'));
 
         actionManager.destroy();
     });

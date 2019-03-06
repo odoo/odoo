@@ -103,9 +103,9 @@ var MockServer = Class.extend({
      *
      * @param {string} route
      * @param {Object} args
-     * @returns {Deferred<any>}
+     * @returns {Promise<any>}
      *          Resolved with the result of the RPC, stringified then parsed.
-     *          If the RPC should fail, the deferred will be rejected with the
+     *          If the RPC should fail, the promise will be rejected with the
      *          error object, stringified then parsed.
      */
     performRpc: function (route, args) {
@@ -132,17 +132,18 @@ var MockServer = Class.extend({
                 console.log('%c[rpc] response' + route, 'color: blue; font-weight: bold;', JSON.parse(resultString));
             }
             return JSON.parse(resultString);
-        }, function (result, event) {
-            var errorString = JSON.stringify(result || false);
+        }, function (result) {
+            var message = result && result.message;
+            var event = result && result.event;
+            var errorString = JSON.stringify(message || false);
             if (debug) {
                 console.log('%c[rpc] response (error) ' + route, 'color: orange; font-weight: bold;', JSON.parse(errorString));
             }
-            return $.Deferred().reject(errorString, event || $.Event());
+            return Promise.reject({message: errorString, event: event || $.Event()});
         });
 
-        var promise = def.promise();
-        promise.abort = abort;
-        return promise;
+        def.abort = abort;
+        return def;
     },
 
     //--------------------------------------------------------------------------
@@ -861,7 +862,7 @@ var MockServer = Class.extend({
                     }
                 }
                 if (type === 'many2one') {
-                    var ids = _.pluck(records, aggregatedFields[i]); 
+                    var ids = _.pluck(records, aggregatedFields[i]);
                     group[aggregatedFields[i]] = _.uniq(ids).length || null;
                 }
             }
@@ -1064,7 +1065,7 @@ var MockServer = Class.extend({
         var result = this._mockSearchReadController({
             model: model,
             domain: kwargs.domain || args[0],
-            fields: kwargs.fields || args[1],
+            fields: kwargs.fields || args[1],
             offset: kwargs.offset || args[2],
             limit: kwargs.limit || args[3],
             order: kwargs.order || args[4],
@@ -1181,83 +1182,83 @@ var MockServer = Class.extend({
      * @private
      * @param {string} route
      * @param {Object} args
-     * @returns {Deferred<any>}
+     * @returns {Promise<any>}
      *          Resolved with the result of the RPC. If the RPC should fail, the
-     *          deferred should either be rejected or the call should throw an
+     *          promise should either be rejected or the call should throw an
      *          exception (@see performRpc for error handling).
      */
     _performRpc: function (route, args) {
         switch (route) {
             case '/web/action/load':
-                return $.when(this._mockLoadAction(args.kwargs));
+                return Promise.resolve(this._mockLoadAction(args.kwargs));
 
             case '/web/dataset/search_read':
-                return $.when(this._mockSearchReadController(args));
+                return Promise.resolve(this._mockSearchReadController(args));
 
             case '/web/dataset/resequence':
-                return $.when(this._mockResequence(args));
+                return Promise.resolve(this._mockResequence(args));
         }
         if (route.indexOf('/web/image') >= 0 || _.contains(['.png', '.jpg'], route.substr(route.length - 4))) {
-            return $.when();
+            return Promise.resolve();
         }
         switch (args.method) {
             case 'copy':
-                return $.when(this._mockCopy(args.model, args.args[0]));
+                return Promise.resolve(this._mockCopy(args.model, args.args[0]));
 
             case 'create':
-                return $.when(this._mockCreate(args.model, args.args[0]));
+                return Promise.resolve(this._mockCreate(args.model, args.args[0]));
 
             case 'default_get':
-                return $.when(this._mockDefaultGet(args.model, args.args, args.kwargs));
+                return Promise.resolve(this._mockDefaultGet(args.model, args.args, args.kwargs));
 
             case 'fields_get':
-                return $.when(this._mockFieldsGet(args.model, args.args));
+                return Promise.resolve(this._mockFieldsGet(args.model, args.args));
 
             case 'search_panel_select_range':
-                return $.when(this._mockSearchPanelSelectRange(args.model, args.args, args.kwargs));
+                return Promise.resolve(this._mockSearchPanelSelectRange(args.model, args.args, args.kwargs));
 
             case 'search_panel_select_multi_range':
-                return $.when(this._mockSearchPanelSelectMultiRange(args.model, args.args, args.kwargs));
+                return Promise.resolve(this._mockSearchPanelSelectMultiRange(args.model, args.args, args.kwargs));
 
             case 'load_views':
-                return $.when(this._mockLoadViews(args.model, args.kwargs));
+                return Promise.resolve(this._mockLoadViews(args.model, args.kwargs));
 
             case 'name_get':
-                return $.when(this._mockNameGet(args.model, args.args));
+                return Promise.resolve(this._mockNameGet(args.model, args.args));
 
             case 'name_create':
-                return $.when(this._mockNameCreate(args.model, args.args));
+                return Promise.resolve(this._mockNameCreate(args.model, args.args));
 
             case 'name_search':
-                return $.when(this._mockNameSearch(args.model, args.args, args.kwargs));
+                return Promise.resolve(this._mockNameSearch(args.model, args.args, args.kwargs));
 
             case 'onchange':
-                return $.when(this._mockOnchange(args.model, args.args));
+                return Promise.resolve(this._mockOnchange(args.model, args.args));
 
             case 'read':
-                return $.when(this._mockRead(args.model, args.args, args.kwargs));
+                return Promise.resolve(this._mockRead(args.model, args.args, args.kwargs));
 
             case 'read_group':
-                return $.when(this._mockReadGroup(args.model, args.kwargs));
+                return Promise.resolve(this._mockReadGroup(args.model, args.kwargs));
 
             case 'read_progress_bar':
-                return $.when(this._mockReadProgressBar(args.model, args.kwargs));
+                return Promise.resolve(this._mockReadProgressBar(args.model, args.kwargs));
 
             case 'search_count':
-                return $.when(this._mockSearchCount(args.model, args.args));
+                return Promise.resolve(this._mockSearchCount(args.model, args.args));
 
             case 'search_read':
-                return $.when(this._mockSearchRead(args.model, args.args, args.kwargs));
+                return Promise.resolve(this._mockSearchRead(args.model, args.args, args.kwargs));
 
             case 'unlink':
-                return $.when(this._mockUnlink(args.model, args.args));
+                return Promise.resolve(this._mockUnlink(args.model, args.args));
 
             case 'write':
-                return $.when(this._mockWrite(args.model, args.args));
+                return Promise.resolve(this._mockWrite(args.model, args.args));
         }
         var model = this.data[args.model];
         if (model && typeof model[args.method] === 'function') {
-            return $.when(this.data[args.model][args.method](args.args, args.kwargs));
+            return Promise.resolve(this.data[args.model][args.method](args.args, args.kwargs));
         }
 
         throw new Error("Unimplemented route: " + route);

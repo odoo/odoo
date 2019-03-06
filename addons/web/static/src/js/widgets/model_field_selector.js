@@ -112,17 +112,17 @@ var ModelFieldSelector = Widget.extend({
     },
     /**
      * @see Widget.willStart()
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     willStart: function () {
-        return $.when(
+        return Promise.all([
             this._super.apply(this, arguments),
             this._prefill()
-        );
+        ]);
     },
     /**
      * @see Widget.start
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     start: function () {
         this.$value = this.$(".o_field_selector_value");
@@ -162,11 +162,11 @@ var ModelFieldSelector = Widget.extend({
      * Saves a new field chain (array) and re-render.
      *
      * @param {string[]} chain - the new field chain
-     * @returns {Deferred} resolved once the re-rendering is finished
+     * @returns {Promise} resolved once the re-rendering is finished
      */
     setChain: function (chain) {
         if (_.isEqual(chain, this.chain)) {
-            return $.when();
+            return Promise.resolve();
         }
 
         this.chain = chain;
@@ -290,14 +290,14 @@ var ModelFieldSelector = Widget.extend({
      * chain.
      *
      * @private
-     * @returns {Deferred} resolved once the whole field chain has been
+     * @returns {Promise} resolved once the whole field chain has been
      *                     processed
      */
     _prefill: function () {
         this.pages = [];
         return this._pushPageData(this.model).then((function () {
             this._validate(true);
-            return (this.chain.length ? processChain.call(this, this.chain.slice().reverse()) : $.when());
+            return (this.chain.length ? processChain.call(this, this.chain.slice().reverse()) : Promise.resolve());
         }).bind(this));
 
         function processChain(chain) {
@@ -305,11 +305,11 @@ var ModelFieldSelector = Widget.extend({
             if (field && field.relation && chain.length > 0) { // Fetch next chain node if any and possible
                 return this._pushPageData(field.relation).then(processChain.bind(this, chain));
             } else if (field && chain.length === 0) { // Last node fetched
-                return $.when();
+                return Promise.resolve();
             } else { // Wrong node chain
                 this._validate(false);
             }
-            return $.when();
+            return Promise.resolve();
         }
     },
     /**
@@ -318,12 +318,12 @@ var ModelFieldSelector = Widget.extend({
      *
      * @private
      * @param {string} model - the model name whose fields have to be fetched
-     * @returns {Deferred} resolved once the fields have been added
+     * @returns {Promise} resolved once the fields have been added
      */
     _pushPageData: function (model) {
         var def;
         if (this.model === model && this.options.fields) {
-            def = $.when(sortFields(this.options.fields, model, this.options.order));
+            def = Promise.resolve(sortFields(this.options.fields, model, this.options.order));
         } else {
             def = this._getModelFieldsFromCache(model, this.options.filters);
         }

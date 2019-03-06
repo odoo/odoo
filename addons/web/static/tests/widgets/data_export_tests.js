@@ -35,7 +35,7 @@ QUnit.module('widgets', {
     QUnit.module('Data Export');
 
 
-    QUnit.test('exporting all data in list view', function (assert) {
+    QUnit.test('exporting all data in list view', async function (assert) {
         assert.expect(6);
 
         var blockUI = framework.blockUI;
@@ -47,7 +47,7 @@ QUnit.module('widgets', {
             assert.step('unblock UI');
         };
 
-        var list = createView({
+        var list = await createView({
             View: ListView,
             model: 'partner',
             data: this.data,
@@ -57,13 +57,13 @@ QUnit.module('widgets', {
             },
             mockRPC: function (route) {
                 if (route === '/web/export/formats') {
-                    return $.when([
+                    return Promise.resolve([
                         {tag: 'csv', label: 'CSV'},
                         {tag: 'xls', label: 'Excel'},
                     ]);
                 }
                 if (route === '/web/export/get_fields') {
-                    return $.when([
+                    return Promise.resolve([
                         {
                             field_type: "one2many",
                             string: "Activities",
@@ -94,19 +94,19 @@ QUnit.module('widgets', {
             },
         });
 
-        testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
-        testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
-        testUtils.dom.click(list.sidebar.$('a:contains(Export)'));
+        await testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
+        await testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        await testUtils.dom.click(list.sidebar.$('a:contains(Export)'));
 
         assert.strictEqual($('.modal').length, 1, "a modal dialog should be open");
         assert.strictEqual($('span.o_tree_column:contains(Activities)').length, 1,
             "the Activities field should be in the list of exportable fields");
 
         // select the field Description, click on add, then export and close
-        testUtils.dom.click($('.modal span:contains(Description)'));
-        testUtils.dom.click($('.modal .o_add_field'));
-        testUtils.dom.click($('.modal span:contains(Export To File)'));
-        testUtils.dom.click($('.modal span:contains(Close)'));
+        await testUtils.dom.click($('.modal span:contains(Description)'));
+        await testUtils.dom.click($('.modal .o_add_field'));
+        await testUtils.dom.click($('.modal span:contains(Export To File)'));
+        await testUtils.dom.click($('.modal span:contains(Close)'));
 
         list.destroy();
         framework.blockUI = blockUI;
@@ -118,17 +118,17 @@ QUnit.module('widgets', {
         ]);
     });
 
-    QUnit.test('saving fields list when exporting data', function (assert) {
+    QUnit.test('saving fields list when exporting data', async function (assert) {
         assert.expect(5);
 
         var create = data.DataSet.prototype.create;
 
         data.DataSet.prototype.create = function (data, options) {
             assert.step('create');
-            return $.when([]);
+            return Promise.resolve([]);
         };
 
-        var list = createView({
+        var list = await createView({
             View: ListView,
             model: 'partner',
             data: this.data,
@@ -138,13 +138,13 @@ QUnit.module('widgets', {
             },
             mockRPC: function (route) {
                 if (route === '/web/export/formats') {
-                    return $.when([
+                    return Promise.resolve([
                         {tag: 'csv', label: 'CSV'},
                         {tag: 'xls', label: 'Excel'},
                     ]);
                 }
                 if (route === '/web/export/get_fields') {
-                    return $.when([
+                    return Promise.resolve([
                         {
                             field_type: "one2many",
                             string: "Activities",
@@ -162,29 +162,29 @@ QUnit.module('widgets', {
         });
 
         // Open the export modal
-        testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
-        testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
-        testUtils.dom.click(list.sidebar.$('a:contains(Export)'));
+        await testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
+        await testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        await testUtils.dom.click(list.sidebar.$('a:contains(Export)'));
         assert.strictEqual($('.modal').length, 1,
             "a modal dialog should be open");
 
         // Select 'Activities' in fields to export
         assert.strictEqual($('.modal select.o_fields_list option').length, 0,
             "the fields list should be empty");
-        testUtils.dom.click($('.modal .o_export_tree_item:contains(Activities)'));
-        testUtils.dom.click($('.modal button:contains(Add)'));
+        await testUtils.dom.click($('.modal .o_export_tree_item:contains(Activities)'));
+        await testUtils.dom.click($('.modal button:contains(Add)'));
         assert.strictEqual($('.modal select.o_fields_list option').length, 1,
             "there should be one item in the fields list");
 
         // Save fields list
-        testUtils.dom.click($('.modal a:contains(Save fields list)'));
-        testUtils.fields.editInput($('.modal .o_save_list > input'), 'fields list');
-        testUtils.dom.click($('.modal .o_save_list > button'));
+        await testUtils.dom.click($('.modal a:contains(Save fields list)'));
+        await testUtils.fields.editInput($('.modal .o_save_list > input'), 'fields list');
+        await testUtils.dom.click($('.modal .o_save_list > button'));
         assert.verifySteps(['create'],
             "create should have been called");
 
         // Close the modal and destroy list
-        testUtils.dom.click($('.modal button span:contains(Close)'));
+        await testUtils.dom.click($('.modal button span:contains(Close)'));
         list.destroy();
 
         // restore create function

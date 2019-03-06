@@ -56,7 +56,7 @@ var DataExport = Dialog.extend({
      */
     start: function () {
         var self = this;
-        var defs = [this._super.apply(this, arguments)];
+        var proms = [this._super.apply(this, arguments)];
 
         // The default for the ".modal_content" element is "max-height: 100%;"
         // but we want it to always expand to "height: 100%;" for this modal.
@@ -67,10 +67,10 @@ var DataExport = Dialog.extend({
         this.$fieldsList = this.$('.o_fields_list');
         this.$importCompatRadios = this.$('.o_import_compat input');
 
-        defs.push(this._rpc({route: '/web/export/formats'}).then(doSetupExportFormats));
-        defs.push(this._onChangeCompatibleInput());
+        proms.push(this._rpc({route: '/web/export/formats'}).then(doSetupExportFormats));
+        proms.push(this._onChangeCompatibleInput());
 
-        defs.push(this.getParent().getActiveDomain().then(function (domain) {
+        proms.push(this.getParent().getActiveDomain().then(function (domain) {
             if (domain === undefined) {
                 self.idsToExport = self.getParent().getSelectedIds();
                 self.domain = self.record.domain;
@@ -80,7 +80,7 @@ var DataExport = Dialog.extend({
             }
         }));
 
-        defs.push(this._showExportsList().then(function () {
+        proms.push(this._showExportsList().then(function () {
             _.each(self.records, function (record, key) {
                 if (_.contains(self.defaultExportFields, key)) {
                     self._addField(key, record.string);
@@ -88,12 +88,12 @@ var DataExport = Dialog.extend({
             });
         }));
 
-        return $.when.apply($, defs);
+        return Promise.all(proms);
 
-        function doSetupExportFormats (formats) {
+        function doSetupExportFormats(formats) {
             var $fmts = self.$('.o_export_format');
 
-            _.each(formats, function (format, i) {
+            _.each(formats, function (format) {
                 var $radio = $('<input/>', {type: 'radio', value: format.tag, name: 'o_export_format_name'});
                 var $label = $('<span/>', {html: format.label});
 
@@ -192,16 +192,16 @@ var DataExport = Dialog.extend({
      */
     _onExpandAction: function (record) {
         var self = this;
-        if (!record['children']) {
+        if (!record.children) {
             return;
         }
 
-        var model = record['params']['model'];
-        var prefix = record['params']['prefix'];
-        var name = record['params']['name'];
+        var model = record.params.model;
+        var prefix = record.params.prefix;
+        var name = record.params.name;
         var excludeFields = [];
-        if (record['relation_field']) {
-            excludeFields.push(record['relation_field']);
+        if (record.relation_field) {
+            excludeFields.push(record.relation_field);
         }
 
         if (!record.loaded) {
@@ -212,11 +212,11 @@ var DataExport = Dialog.extend({
                     prefix: prefix,
                     parent_name: name,
                     import_compat: !!this.$importCompatRadios.filter(':checked').val(),
-                    parent_field_type: record['field_type'],
-                    parent_field: record['params']['parent_field'],
+                    parent_field_type: record.field_type,
+                    parent_field: record.params.parent_field,
                     exclude: excludeFields,
                 },
-            }).done(function (results) {
+            }).then(function (results) {
                 record.loaded = true;
                 self._onShowData(results, record.id);
             });
@@ -294,7 +294,7 @@ var DataExport = Dialog.extend({
         var self = this;
         if (this.$('.o_exported_lists_select').is(':hidden')) {
             this.$('.o_exported_lists').show();
-            return $.when();
+            return Promise.resolve();
         }
 
         return this._rpc({
@@ -355,7 +355,7 @@ var DataExport = Dialog.extend({
                 model: this.record.model,
                 import_compat: this.isCompatibleMode,
             },
-        }).done(function (records) {
+        }).then(function (records) {
             var compatibleFields = _.map(records, function (record) { return record.id; });
             self.$fieldsList
                 .find('option')

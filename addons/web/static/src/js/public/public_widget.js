@@ -43,7 +43,7 @@ var RootWidget = Widget.extend({
         defs.push(this._attachComponents());
         this._listenToUpdates = true;
 
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
 
     //--------------------------------------------------------------------------
@@ -71,7 +71,7 @@ var RootWidget = Widget.extend({
             self._widgets.push(w);
             return w.attachTo(element);
         });
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * Instantiates the child widgets that need to be according to the linked
@@ -88,7 +88,7 @@ var RootWidget = Widget.extend({
         var defs = _.map(childInfos, function (childInfo) {
             return self._attachComponent(childInfo, $from);
         });
-        return $.when.apply($, defs);
+        return Promise.all(defs);
     },
     /**
      * Returns the `RootWidgetRegistry` instance that is linked to this

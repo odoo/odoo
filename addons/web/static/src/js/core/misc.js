@@ -114,7 +114,7 @@ function redirect (url, wait) {
     };
 
     var wait_server = function() {
-        ajax.rpc("/web/webclient/version_info", {}).done(load).fail(function() {
+        ajax.rpc("/web/webclient/version_info", {}).then(load).guardedCatch(function () {
             setTimeout(wait_server, 250);
         });
     };
@@ -172,7 +172,7 @@ core.action_registry.add("login", login);
 
 function logout() {
     redirect('/web/session/logout');
-    return $.Deferred();
+    return new Promise();
 }
 core.action_registry.add("logout", logout);
 

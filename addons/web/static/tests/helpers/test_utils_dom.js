@@ -1,5 +1,7 @@
-odoo.define('web.test_utils_dom', function () {
+odoo.define('web.test_utils_dom', function (require) {
 "use strict";
+
+var concurrency = require('web.concurrency');
 
 /**
  * DOM Test Utils
@@ -101,6 +103,7 @@ function dragAndDrop($el, $to, options) {
             $el.trigger($.Event("mouseup"));
         });
     }
+    return concurrency.delay(0);
 }
 
 /**
@@ -114,7 +117,8 @@ function dragAndDrop($el, $to, options) {
 function triggerMouseEvent($el, type) {
     var pos = $el.offset();
     var e = new $.Event(type);
-    e.pageX = e.layerX = e.screenX = pos.left;
+    // little fix since it seems on chrome, it triggers 1px too on the left
+    e.pageX = e.layerX = e.screenX = pos.left + 1;
     e.pageY = e.layerY = e.screenY = pos.top;
     e.which = 1;
     $el.trigger(e);
@@ -154,6 +158,8 @@ function triggerKeypressEvent(char) {
     var keycode;
     if (char === "Enter") {
         keycode = $.ui.keyCode.ENTER;
+    } else if (char === "Tab") {
+        keycode = $.ui.keyCode.TAB;
     } else {
         keycode = char.charCodeAt(0);
     }
@@ -177,37 +183,47 @@ function openDatepicker($datepickerEl) {
  * @param {Object} [options]
  * @param {boolean} [options.first=false] if true, clicks on the first element
  * @param {boolean} [options.last=false] if true, clicks on the last element
+ * @param {boolean} [options.allowInvisible=false] if true, clicks on the
+ *   element event if it is invisible
+ * @param {boolean} [options.shouldTriggerClick=false] if true, trigger the
+ *   click event without calling the function click of jquery
  */
 function click(el, options) {
     options = options || {};
     var matches = typeof el === 'string' ? $(el) : el;
-    var selectorMsg = el.selector ? `(selector: ${el.selector})` : '';
+    var selectorMsg = typeof el === 'string' ? `(selector: ${el})` : '';
     if (!matches.filter) { // it might be an array of dom elements
         matches = $(matches);
     }
+    var validMatches = options.allowInvisible ? matches : matches.filter(':visible');
 
-    var visibleMatches = matches.filter(':visible');
     if (options.first) {
-        if (visibleMatches.length === 1) {
+        if (validMatches.length === 1) {
             throw new Error(`There should be more than one visible target ${selectorMsg}.  If` +
                 ' you are sure that there is exactly one target, please use the ' +
                 'click function instead of the clickFirst function');
         }
-        visibleMatches = visibleMatches.first();
+        validMatches = validMatches.first();
     } else if (options.last) {
-        if (visibleMatches.length === 1) {
+        if (validMatches.length === 1) {
             throw new Error(`There should be more than one visible target ${selectorMsg}.  If` +
                 ' you are sure that there is exactly one target, please use the ' +
                 'click function instead of the clickLast function');
         }
-        visibleMatches = visibleMatches.last();
+        validMatches = validMatches.last();
     }
-    if (visibleMatches.length === 0 && matches.length > 0) {
+    if (validMatches.length === 0 && matches.length > 0) {
         throw new Error(`Element to click on is not visible ${selectorMsg}`);
-    } else if (visibleMatches.length !== 1) {
-        throw new Error(`Found ${visibleMatches.length} elements to click on, instead of 1 ${selectorMsg}`);
+    } else if (validMatches.length !== 1) {
+        throw new Error(`Found ${validMatches.length} elements to click on, instead of 1 ${selectorMsg}`);
     }
-    visibleMatches.click();
+    if (options.shouldTriggerClick) {
+        validMatches.trigger('click');
+    } else {
+        validMatches.click();
+    }
+
+    return concurrency.delay(0);
 }
 
 /**
@@ -216,9 +232,13 @@ function click(el, options) {
  * use the click helper instead.
  *
  * @param {string|NodeList|jQuery} el (if string: it is a (jquery) selector)
+ * @param {boolean} [options.allowInvisible=false] if true, clicks on the
+ *   element event if it is invisible
+ * @param {boolean} [options.shouldTriggerClick=false] if true, trigger the
+ *   click event without calling the function click of jquery
  */
-function clickFirst(el) {
-    click(el, {first: true});
+function clickFirst(el, options) {
+    return click(el, _.extend({}, options, {first: true}));
 }
 
 /**
@@ -227,10 +247,35 @@ function clickFirst(el) {
  * use the click helper instead.
  *
  * @param {string|NodeList|jQuery} el
+ * @param {boolean} [options.allowInvisible=false] if true, clicks on the
+ *   element event if it is invisible
+ * @param {boolean} [options.shouldTriggerClick=false] if true, trigger the
+ *   click event without calling the function click of jquery
  */
-function clickLast(el) {
-    click(el, {last: true});
+function clickLast(el, options) {
+    return click(el, _.extend({}, options, {last: true}));
 }
+
+
+/**
+ * trigger events on the specified target
+ * @param {jQuery} $el should target a single dom node
+ * @param {string[]} events the events you want to trigger
+ * @returns Promise
+ */
+function triggerEvents($el, events) {
+    if ($el.length !== 1) {
+        throw new Error(`target has length ${$el.length} instead of 1`);
+    }
+    if (typeof events === 'string') {
+        events = [events];
+    }
+    events.forEach(function (event) {
+        $el.trigger(event);
+    });
+    return concurrency.delay(0);
+}
+
 
 return {
     triggerKeypressEvent: triggerKeypressEvent,
@@ -241,6 +286,7 @@ return {
     click: click,
     clickFirst: clickFirst,
     clickLast: clickLast,
+    triggerEvents: triggerEvents,
 };
 
 });

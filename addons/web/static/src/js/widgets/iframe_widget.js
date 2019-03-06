@@ -29,7 +29,7 @@ var IFrameWidget = Widget.extend({
     },
     /**
      * @override
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     start: function () {
         this.$el.css({height: '100%', width: '100%', border: 0});

@@ -52,9 +52,11 @@ var Dialog = Widget.extend({
      *        (use this for non-editor frontend features)
      */
     init: function (parent, options) {
+        var self = this;
         this._super(parent);
-        this._opened = $.Deferred();
-
+        this._opened = new Promise(function (resolve) {
+            self._openedResolver = resolve;
+        });
         options = _.defaults(options || {}, {
             title: _t('Odoo'), subtitle: '',
             size: 'large',
@@ -140,7 +142,7 @@ var Dialog = Widget.extend({
                     def = buttonData.click.call(self, e);
                 }
                 if (buttonData.close) {
-                    $.when(def).always(self.close.bind(self));
+                    Promise.resolve(def).then(self.close.bind(self)).guardedCatch(self.close.bind(self));
                 }
             });
             if (self.technical) {
@@ -185,7 +187,7 @@ var Dialog = Widget.extend({
             self.$modal.attr('open', true);
             self.$modal.removeAttr("aria-hidden");
             self.$modal.modal('show');
-            self._opened.resolve();
+            self._openedResolver();
             if (options && options.shouldFocusButtons) {
                 self._onFocusControlButton();
             }

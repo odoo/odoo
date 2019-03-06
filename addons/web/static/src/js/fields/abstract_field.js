@@ -184,7 +184,7 @@ var AbstractField = Widget.extend({
      * When a field widget is appended to the DOM, its start method is called,
      * and will automatically call render. Most widgets should not override this.
      *
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     start: function () {
         var self = this;
@@ -236,7 +236,7 @@ var AbstractField = Widget.extend({
      * if the value changed but was not notified.
      *
      * @abstract
-     * @returns {Deferred|undefined}
+     * @returns {Promise|undefined}
      */
     commitChanges: function () {},
     /**
@@ -290,12 +290,12 @@ var AbstractField = Widget.extend({
      *   is optional, and may be used by a widget to share information from the
      *   moment a field change event is triggered to the moment a reset
      *   operation is applied.
-     * @returns {Deferred} A Deferred, which resolves when the widget rendering
+     * @returns {Promise} A promise, which resolves when the widget rendering
      *   is complete
      */
     reset: function (record, event) {
         this._reset(record, event);
-        return this._render() || $.when();
+        return this._render() || Promise.resolve();
     },
     /**
      * Remove the invalid class on a field
@@ -396,7 +396,7 @@ var AbstractField = Widget.extend({
      * synchronous.
      *
      * @private
-     * @returns {Deferred|undefined}
+     * @returns {Promise|undefined}
      */
     _render: function () {
         if (this.attrs.decorations) {
@@ -413,7 +413,7 @@ var AbstractField = Widget.extend({
      * concrete widget.
      *
      * @private
-     * @returns {Deferred|undefined}
+     * @returns {Promise|undefined}
      */
     _renderEdit: function () {
     },
@@ -422,7 +422,7 @@ var AbstractField = Widget.extend({
      * the concrete widget.
      *
      * @private
-     * @returns {Deferred|undefined}
+     * @returns {Promise|undefined}
      */
     _renderReadonly: function () {
     },
@@ -457,13 +457,13 @@ var AbstractField = Widget.extend({
      *   will not notify and not trigger the onchange, even though it was changed.
      * @param {boolean} [options.forceChange=false] if true, the change event will be
      *   triggered even if the new value is the same as the old one
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _setValue: function (value, options) {
         // we try to avoid doing useless work, if the value given has not
         // changed.  Note that we compare the unparsed values.
         if (this.lastSetValue === value || (this.value === false && value === '')) {
-            return $.when();
+            return Promise.resolve();
         }
         this.lastSetValue = value;
         try {
@@ -472,25 +472,26 @@ var AbstractField = Widget.extend({
         } catch (e) {
             this._isValid = false;
             this.trigger_up('set_dirty', {dataPointID: this.dataPointID});
-            return $.Deferred().reject();
+            return Promise.reject({message: "Value set is not valid"});
         }
         if (!(options && options.forceChange) && this._isSameValue(value)) {
-            return $.when();
+            return Promise.resolve();
         }
-        var def = $.Deferred();
-        var changes = {};
-        changes[this.name] = value;
-        this.trigger_up('field_changed', {
-            dataPointID: this.dataPointID,
-            changes: changes,
-            viewType: this.viewType,
-            doNotSetDirty: options && options.doNotSetDirty,
-            notifyChange: !options || options.notifyChange !== false,
-            allowWarning: options && options.allowWarning,
-            onSuccess: def.resolve.bind(def),
-            onFailure: def.reject.bind(def),
+        var self = this;
+        return new Promise(function (resolve, reject) {
+            var changes = {};
+            changes[self.name] = value;
+            self.trigger_up('field_changed', {
+                dataPointID: self.dataPointID,
+                changes: changes,
+                viewType: self.viewType,
+                doNotSetDirty: options && options.doNotSetDirty,
+                notifyChange: !options || options.notifyChange !== false,
+                allowWarning: options && options.allowWarning,
+                onSuccess: resolve,
+                onFailure: reject,
+            });
         });
-        return def;
     },
 
     //--------------------------------------------------------------------------

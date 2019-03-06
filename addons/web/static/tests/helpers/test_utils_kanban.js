@@ -18,22 +18,24 @@ var testUtilsFields = require('web.test_utils_fields');
  * the Create button is visible.
  *
  * @param {KanbanController} kanban
+ * @returns {Promise}
  */
 function clickCreate(kanban) {
-    testUtilsDom.click(kanban.$buttons.find('.o-kanban-button-new'));
+    return testUtilsDom.click(kanban.$buttons.find('.o-kanban-button-new'));
 }
 
 /**
  * Open the settings menu for a column (in a grouped kanban view)
  *
  * @param {jQuery} $column
+ * @returns {Promise}
  */
 function toggleGroupSettings($column) {
     var $dropdownToggler = $column.find('.o_kanban_config > a.dropdown-toggle');
     if (!$dropdownToggler.is(':visible')) {
         $dropdownToggler.css('display', 'block');
     }
-    testUtilsDom.click($dropdownToggler);
+    return testUtilsDom.click($dropdownToggler);
 }
 
 /**
@@ -43,6 +45,7 @@ function toggleGroupSettings($column) {
  * @param {kanbanController} kanban
  * @param {string|number} value
  * @param {[string]} fieldName
+ * @returns {Promise}
  */
 function quickCreate(kanban, value, fieldName) {
     var additionalSelector = fieldName ? ('[name=' + fieldName + ']'): '';
@@ -53,7 +56,7 @@ function quickCreate(kanban, value, fieldName) {
             keyCode: $.ui.keyCode.ENTER,
         }
     );
-    testUtilsFields.editAndTrigger(
+    return testUtilsFields.editAndTrigger(
         kanban.$('.o_kanban_quick_create input' + additionalSelector),
         value,
         ['input', enterEvent]
@@ -65,9 +68,10 @@ function quickCreate(kanban, value, fieldName) {
  *
  * @param {KanbanController} kanban
  * @param {[Object]} params given to the controller reload method
+ * @returns {Promise}
  */
 function reload(kanban, params) {
-    kanban.reload(params);
+    return kanban.reload(params);
 }
 
 /**
@@ -76,13 +80,14 @@ function reload(kanban, params) {
  * does not comply with the usual dom structure.
  *
  * @param {jQuery} $record
+ * @returns {Promise}
  */
 function toggleRecordDropdown($record) {
     var $dropdownToggler = $record.find('.o_dropdown_kanban > a.dropdown-toggle');
     if (!$dropdownToggler.is(':visible')) {
         $dropdownToggler.css('display', 'block');
     }
-    testUtilsDom.click($dropdownToggler);
+    return testUtilsDom.click($dropdownToggler);
 }
 
 
