@@ -285,13 +285,38 @@ class HolidaysRequest(models.Model):
             self.date_to = False
             return
 
-        domain = [('calendar_id', '=', self.employee_id.resource_calendar_id.id or self.env.company.resource_calendar_id.id)]
+        resource_calendar_id = self.employee_id.resource_calendar_id or self.env.company.resource_calendar_id
+        domain = [('calendar_id', '=', resource_calendar_id.id), ('display_type', '=', False)]
         attendances = self.env['resource.calendar.attendance'].search(domain, order='dayofweek, day_period DESC')
 
-        # find first attendance coming after first_day
-        attendance_from = next((att for att in attendances if int(att.dayofweek) >= self.request_date_from.weekday()), attendances[0])
-        # find last attendance coming before last_day
-        attendance_to = next((att for att in reversed(attendances) if int(att.dayofweek) <= self.request_date_to.weekday()), attendances[-1])
+        if resource_calendar_id.two_weeks_calendar:
+            # find week type of start_date
+            start_week_type = int(math.floor((self.request_date_from.toordinal() - 1) / 7) % 2)
+            attendance_actual_week = attendances.filtered(lambda att: att.week_type is False or int(att.week_type) == start_week_type)
+            attendance_actual_next_week = attendances.filtered(lambda att: att.week_type is False or int(att.week_type) != start_week_type)
+            # First, add days of actual week coming after date_from
+            attendance_filtred = list(attendance_actual_week.filtered(lambda att: int(att.dayofweek) >= self.request_date_from.weekday()))
+            # Second, add days of the other type of week
+            attendance_filtred += list(attendance_actual_next_week)
+            # Third, add days of actual week (to consider days that we have remove first because they coming before date_from)
+            attendance_filtred += list(attendance_actual_week)
+
+            end_week_type = int(math.floor((self.request_date_to.toordinal() - 1) / 7) % 2)
+            attendance_actual_week = attendances.filtered(lambda att: att.week_type is False or int(att.week_type) == end_week_type)
+            attendance_actual_next_week = attendances.filtered(lambda att: att.week_type is False or int(att.week_type) != end_week_type)
+            attendance_filtred_reversed = list(reversed(attendance_actual_week.filtered(lambda att: int(att.dayofweek) <= self.request_date_to.weekday())))
+            attendance_filtred_reversed += list(reversed(attendance_actual_next_week))
+            attendance_filtred_reversed += list(reversed(attendance_actual_week))
+
+            # find first attendance coming after first_day
+            attendance_from = attendance_filtred[0]
+            # find last attendance coming before last_day
+            attendance_to = attendance_filtred_reversed[0]
+        else:
+            # find first attendance coming after first_day
+            attendance_from = next((att for att in attendances if int(att.dayofweek) >= self.request_date_from.weekday()), attendances[0])
+            # find last attendance coming before last_day
+            attendance_to = next((att for att in reversed(attendances) if int(att.dayofweek) <= self.request_date_to.weekday()), attendances[-1])
 
         if self.request_unit_half:
             if self.request_date_from_period == 'am':
@@ -314,10 +339,6 @@ class HolidaysRequest(models.Model):
         self.date_from = timezone(tz).localize(datetime.combine(self.request_date_from, hour_from)).astimezone(UTC).replace(tzinfo=None)
         self.date_to = timezone(tz).localize(datetime.combine(self.request_date_to, hour_to)).astimezone(UTC).replace(tzinfo=None)
         self._onchange_leave_dates()
-
-    @api.onchange('holiday_status_id')
-    def _onchange_holiday_status_id(self):
-        self.request_unit_half = False
 
     @api.onchange('request_unit_half')
     def _onchange_request_unit_half(self):
