@@ -325,44 +325,69 @@ tour.register('main_flow_tour', {
     content: _t("Click here to add some lines to your quotations."),
     position: "bottom",
 }, {
-    trigger: ".o_field_widget[name=product_id] input",
+    /**
+     * We need both triggers because the "sale_product_configurator" module replaces the
+     * "product_id" field with a "product_template_id" field.
+     * This selector will still only ever select one element.
+     */
+    trigger: ".o_field_widget[name=product_id] input, .o_field_widget[name=product_template_id] input",
     content: _t("Select a product, or create a new one on the fly. The product will define the default sales price (that you can change), taxes and description automatically."),
     position: "right",
-    run: "text the_flow.product",
+    run: function (actions) {
+        actions.text("the_flow.product", this.$anchor);
+        // fake keydown to trigger search
+        var keyDownEvent = jQuery.Event("keydown");
+        keyDownEvent.which = 42;
+        this.$anchor.trigger(keyDownEvent);
+        var $descriptionElement = $('.o_form_editable textarea[name="name"]');
+        // when description changes, we know the product has been loaded
+        $descriptionElement.change(function () {
+            if ($(this).val().indexOf('the_flow.product') !== -1){
+                $(this).addClass('product_loading_success');
+            }
+        });
+    },
 }, {
     trigger: ".ui-menu-item > a:contains('the_flow.product')",
-    auto: true,
-    in_modal: false,
-    run: function (actions) {
-        actions.auto();
-        // if the one2many isn't editable, we have to close the dialog
-        if ($(".modal-footer .btn-primary").length) {
-            actions.auto(".modal-footer .btn-primary");
-        }
-    },
+}, {
+    trigger: '.o_form_editable textarea[name="name"].product_loading_success',
+    run: function () {} // wait for product loading
 }, {
     trigger: ".o_field_widget[name=order_line] .o_field_x2many_list_row_add > a",
     content: _t("Click here to add some lines to your quotations."),
     position: "bottom",
 }, {
-    trigger: ".o_field_widget[name=product_id] input",
-    // the one2many may be editable or not according to the modules installed, so
-    // we have to handle both cases
-    extra_trigger: '.o_field_widget[name=order_line] .o_data_row:nth(1).o_selected_row, .modal-dialog',
+    /**
+     * We need both triggers because the "sale_product_configurator" module replaces the
+     * "product_id" field with a "product_template_id" field.
+     * This selector will still only ever select one element.
+     */
+    trigger: ".o_field_widget[name=product_id] input, .o_field_widget[name=product_template_id] input",
+    extra_trigger: '.o_field_widget[name=order_line] .o_data_row:nth(1).o_selected_row',
     content: _t("Select a product"),
     position: "right",
-    run: "text the_flow.service",
+    run: function (actions) {
+        actions.text("the_flow.service", this.$anchor);
+        // fake keydown to trigger search
+        var keyDownEvent = jQuery.Event("keydown");
+        keyDownEvent.which = 42;
+        this.$anchor.trigger(keyDownEvent);
+        var $descriptionElement = $('.o_form_editable textarea[name="name"]');
+        // when description changes, we know the product has been loaded
+        $descriptionElement.change(function () {
+            if ($(this).val().indexOf('the_flow.service') !== -1){
+                $(this).addClass('product_service_loading_success');
+            }
+        });
+    },
 }, {
     trigger: ".ui-menu-item > a:contains('the_flow.service')",
-    auto: true,
-    in_modal: false,
-    run: function (actions) {
-        actions.auto();
-        // if the one2many isn't editable, we have to close the dialog
-        if ($(".modal-footer .btn-primary").length) {
-            actions.auto(".modal-footer .btn-primary");
-        }
-    },
+}, {
+    trigger: '.o_form_editable textarea[name="name"].product_service_loading_success',
+    run: function () {} // wait for product loading
+}, {
+    trigger: 'label:contains("Untaxed Amount")',
+    // click somewhere else to exit cell focus
 }, {
     trigger: ".o_statusbar_buttons > button.o_sale_print:enabled",
     content: _t("<p><b>Print this quotation.</b></p>"),

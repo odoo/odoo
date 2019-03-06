@@ -8,23 +8,64 @@ var OptionalProductsModal = require('sale_product_configurator.OptionalProductsM
 
 var ProductConfiguratorFormController = FormController.extend({
     custom_events: _.extend({}, FormController.prototype.custom_events, {
-        field_changed: '_onFieldChanged'
+        field_changed: '_onFieldChanged',
+        handle_add: '_handleAdd'
     }),
-
     /**
      * @override
      */
     start: function () {
-        this.$el.addClass('o_product_configurator');
-        return this._super.apply(this, arguments);
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self.$el.addClass('o_product_configurator');
+        });
     },
     /**
-     * We need to override the default click behavior for our "Add" button
-     * because there is a possibility that this product has optional products.
-     * If so, we need to display an extra modal to choose the options.
+     * We need to first load the template of the selected product and then render the content
+     * to avoid a flicker when the modal is opened.
      *
      * @override
      */
+    willStart: function (){
+        var def = this._super.apply(this, arguments);
+        if (this.initialState.data.product_template_id) {
+            return this._configureProduct(
+                this.initialState.data.product_template_id.data.id
+            ).then(function () {
+                return def;
+            });
+        }
+
+        return def;
+    },
+    /**
+     * Showing this window is useless for configuratorMode 'options' as this form view
+     * is used as a bridge between SO lines and optional products.
+     *
+     * Placed here because it's the only method that is called after the modal is rendered.
+     *
+     * @override
+     */
+    renderButtons: function () {
+        this._super.apply(this, arguments);
+
+        if (this.renderer.state.context.configuratorMode === 'options') {
+            this.$el.closest('.modal').addClass('d-none');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+
+    /**
+    * We need to override the default click behavior for our "Add" button
+    * because there is a possibility that this product has optional products.
+    * If so, we need to display an extra modal to choose the options.
+    *
+    * @override
+    */
     _onButtonClicked: function (event) {
         if (event.stopPropagation){
             event.stopPropagation();
@@ -37,16 +78,15 @@ var ProductConfiguratorFormController = FormController.extend({
                     .parents('.modal')
                     .find('.o_sale_product_configurator_add')
                     .hasClass('disabled')){
-                this._handleAdd(this.$el);
+                this._handleAdd();
             }
         }
     },
     /**
      * This is overridden to allow catching the "select" event on our product template select field.
-     * This will not work anymore if more fields are added to the form.
-     * TODO awa: Find a better way to catch that event.
      *
      * @override
+     * @private
      */
     _onFieldChanged: function (event) {
         this._super.apply(this, arguments);
@@ -59,23 +99,37 @@ var ProductConfiguratorFormController = FormController.extend({
             return;
         }
 
-        this.$el.parents('.modal').find('.o_sale_product_configurator_add').removeClass('disabled');
-
-        this._rpc({
-            route: '/product_configurator/configure',
-            params: {
-                product_id: product_id,
-                pricelist_id: this.renderer.pricelistId
-            }
-        }).then(function (configurator) {
-            self.renderer.renderConfigurator(configurator);
-        });
+        this._configureProduct(event.data.changes.product_template_id.id)
+            .then(function (){
+                self.renderer.renderConfigurator(self.renderer.configuratorHtml);
+            });
     },
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
+    /**
+     * Renders the "variants" part of the wizard
+     *
+     * @param {integer} productTemplateId
+     */
+    _configureProduct: function (productTemplateId) {
+        var self = this;
+        var data = this.renderer.state.data;
+        return this._rpc({
+            route: '/sale_product_configurator/configure',
+            params: {
+                product_id: productTemplateId,
+                pricelist_id: this.renderer.pricelistId,
+                add_qty: data.quantity,
+                product_template_attribute_value_ids: this._getAttributeValueIds(
+                    data.product_template_attribute_value_ids
+                ),
+                product_no_variant_attribute_value_ids: this._getAttributeValueIds(
+                    data.product_no_variant_attribute_value_ids
+                )
+            }
+        }).then(function (configurator) {
+            self.renderer.configuratorHtml = configurator;
+        });
+    },
     /**
     * When the user adds a product that has optional products, we need to display
     * a window to allow the user to choose these extra options.
@@ -83,21 +137,31 @@ var ProductConfiguratorFormController = FormController.extend({
     * This will also create the product if it's in "dynamic" mode
     * (see product_attribute.create_variant)
     *
+    * If "self.renderer.state.context.configuratorMode" is 'edit', this will only send
+    * the main product with its changes.
+    *
+    * As opposed to the 'add' mode that will add the main product AND all the configured optional products.
+    *
+    * A third mode, 'options', is available for products that don't have a configuration but have
+    * optional products to select. This will bypass the configuration step and open the
+    * options modal directly.
+    *
     * @private
-    * @param {$.Element} $modal
     */
-    _handleAdd: function ($modal) {
+    _handleAdd: function () {
         var self = this;
+        var $modal = this.$el;
         var productSelector = [
             'input[type="hidden"][name="product_id"]',
             'input[type="radio"][name="product_id"]:checked'
         ];
 
         var productId = parseInt($modal.find(productSelector.join(', ')).first().val(), 10);
+        var productTemplateId = $modal.find('.product_template_id').val();
         this.renderer.selectOrCreateProduct(
             $modal,
             productId,
-            $modal.find('.product_template_id').val(),
+            productTemplateId,
             false
         ).then(function (productId) {
             $modal.find(productSelector.join(', ')).val(productId);
@@ -116,37 +180,51 @@ var ProductConfiguratorFormController = FormController.extend({
 
             self.rootProduct = {
                 product_id: productId,
+                product_template_id: parseInt(productTemplateId),
                 quantity: parseFloat($modal.find('input[name="add_qty"]').val() || 1),
                 variant_values: variantValues,
                 product_custom_attribute_values: productCustomVariantValues,
                 no_variant_attribute_values: noVariantAttributeValues
             };
 
+            if (self.renderer.state.context.configuratorMode === 'edit') {
+                // edit mode only takes care of main product
+                self._onAddRootProductOnly();
+                return;
+            }
+
             self.optionalProductsModal = new OptionalProductsModal($('body'), {
                 rootProduct: self.rootProduct,
                 pricelistId: self.renderer.pricelistId,
                 okButtonText: _t('Confirm'),
                 cancelButtonText: _t('Back'),
-                title: _t('Configure')
+                title: _t('Configure'),
+                context: self.initialState.context,
+                previousModalHeight: self.$el.closest('.modal-content').height()
             }).open();
 
             self.optionalProductsModal.on('options_empty', null,
-                self._onModalOptionsEmpty.bind(self));
+                // no optional products found for this product, only add the root product
+                self._onAddRootProductOnly.bind(self));
 
             self.optionalProductsModal.on('update_quantity', null,
                 self._onOptionsUpdateQuantity.bind(self));
 
             self.optionalProductsModal.on('confirm', null,
                 self._onModalConfirm.bind(self));
+
+            self.optionalProductsModal.on('closed', null,
+                self._onModalClose.bind(self));
         });
     },
 
     /**
-     * No optional products found for this product, only add the root product
+     * Add root product only and forget optional products.
+     * Used when product has no optional products and in 'edit' mode.
      *
      * @private
      */
-    _onModalOptionsEmpty: function () {
+    _onAddRootProductOnly: function () {
         this._addProducts([this.rootProduct]);
     },
 
@@ -156,7 +234,21 @@ var ProductConfiguratorFormController = FormController.extend({
      * @private
      */
     _onModalConfirm: function () {
+        this._wasConfirmed = true;
         this._addProducts(this.optionalProductsModal.getSelectedProducts());
+    },
+
+    /**
+     * When the optional products modal is closed (and not confirmed) on 'options' mode,
+     * this window should also be closed immediately.
+     *
+     * @private
+     */
+    _onModalClose: function () {
+        if (this.renderer.state.context.configuratorMode === 'options'
+            && this._wasConfirmed !== true) {
+            this._onAddRootProductOnly();
+        }
     },
 
     /**
@@ -176,7 +268,7 @@ var ProductConfiguratorFormController = FormController.extend({
     /**
     * This triggers the close action for the window and
     * adds the product as the "infos" parameter.
-    * It will allow the caller (typically the SO line form) of this window
+    * It will allow the caller (typically the product_configurator widget) of this window
     * to handle the added products.
     *
     * @private
@@ -189,7 +281,28 @@ var ProductConfiguratorFormController = FormController.extend({
     *     see product_configurator_mixin.getNoVariantAttributeValues
     */
     _addProducts: function (products) {
-        this.do_action({type: 'ir.actions.act_window_close', infos: products});
+        this.do_action({type: 'ir.actions.act_window_close', infos: {
+            mainProduct: products[0],
+            options: products.slice(1)
+        }});
+    },
+    /**
+     * Extracts the ids from the passed attributeValueIds and returns them
+     * as a plain array.
+     *
+     * @param {Array} attributeValueIds
+     */
+    _getAttributeValueIds(attributeValueIds) {
+        if (!attributeValueIds || attributeValueIds.length === 0){
+            return false;
+        }
+
+        var result = [];
+        _.each(attributeValueIds.data, function (attributeValue) {
+            result.push(attributeValue.data.id);
+        });
+
+        return result;
     }
 });
 

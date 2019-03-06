@@ -24,15 +24,20 @@ tour.register('sale_product_configurator_advanced_tour', {
     trigger: ".ui-menu-item > a:contains('Tajine Saucisse')",
     auto: true,
 }, {
-    trigger: "a:contains('Configure a product')",
+    trigger: "a:contains('Add a product')",
     extra_trigger: ".o_field_widget[name=pricelist_id] > .o_external_button", // Wait for pricelist (onchange_partner_id)
 }, {
-    trigger: '.o_product_configurator .o_input_dropdown input',
-    run: 'click'
+    trigger: 'div[name="product_template_id"] input',
+    run: function (){
+        var $input = $('div[name="product_template_id"] input');
+        $input.click();
+        $input.val('Custo');
+        var keyDownEvent = jQuery.Event("keydown");
+        keyDownEvent.which = 42;
+        $input.trigger(keyDownEvent);
+    }
 }, {
-    trigger: 'li a:contains("Customizable Desk")',
-    in_modal: false,
-    extra_trigger: 'ul.ui-autocomplete',
+    trigger: 'ul.ui-autocomplete a:contains("Customizable Desk")',
     run: 'click'
 }, {
     trigger: 'span:contains("Custom")',

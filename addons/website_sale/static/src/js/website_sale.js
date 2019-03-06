@@ -369,7 +369,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(ProductConfigurat
      * @override
      * @private
      */
-    _updateProductImage: function ($productContainer, productId, productTemplateId, new_carousel) {
+    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, new_carousel) {
         var $img;
         var $carousel = $productContainer.find('#o-carousel-product');
 
@@ -415,7 +415,8 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(ProductConfigurat
             }
         }
 
-        $carousel.toggleClass('css_not_available', !this.isSelectedVariantAllowed);
+        $carousel.toggleClass('css_not_available',
+            $productContainer.find('.js_main_product').hasClass('css_not_available'));
     },
 
     //--------------------------------------------------------------------------
