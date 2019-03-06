@@ -39,9 +39,6 @@ var PosDB = core.Class.extend({
         this.category_childs = {};
         this.category_parent    = {};
         this.category_search_string = {};
-        this.packagings_by_id = {};
-        this.packagings_by_product_tmpl_id = {};
-        this.packagings_by_barcode = {};
     },
 
     /* 
@@ -167,10 +164,6 @@ var PosDB = core.Class.extend({
         if (product.description_sale) {
             str += '|' + product.description_sale;
         }
-        var packagings = this.packagings_by_product_tmpl_id[product.product_tmpl_id] || [];
-        for (var i = 0; i < packagings.length; i++) {
-            str += '|' + packagings[i].barcode;
-        }
         str  = product.id + ':' + str.replace(/:/g,'') + '\n';
         return str;
     },
@@ -215,19 +208,6 @@ var PosDB = core.Class.extend({
             }
         }
     },
-    add_packagings: function(packagings){
-        for(var i = 0, len = packagings.length; i < len; i++){
-            var pack = packagings[i];
-            this.packagings_by_id[pack.id] = pack;
-            if(!this.packagings_by_product_tmpl_id[pack.product_tmpl_id[0]]){
-                this.packagings_by_product_tmpl_id[pack.product_tmpl_id[0]] = [];
-            }
-            this.packagings_by_product_tmpl_id[pack.product_tmpl_id[0]].push(pack);
-            if(pack.barcode){
-                this.packagings_by_barcode[pack.barcode] = pack;
-            }
-        }
-    },
     _partner_search_string: function(partner){
         var str =  partner.name;
         if(partner.barcode){
@@ -245,6 +225,9 @@ var PosDB = core.Class.extend({
         if(partner.email){
             str += '|' + partner.email;
         }
+        if(partner.vat){
+            str += '|' + partner.vat;
+        }
         str = '' + partner.id + ':' + str.replace(':','') + '\n';
         return str;
     },
@@ -255,10 +238,12 @@ var PosDB = core.Class.extend({
         for(var i = 0, len = partners.length; i < len; i++){
             partner = partners[i];
 
-            if (    this.partner_write_date && 
+            var local_partner_date = (this.partner_write_date || '').replace(/^(\d{4}-\d{2}-\d{2}) ((\d{2}:?){3})$/, '$1T$2Z');
+            var dist_partner_date = (partner.write_date || '').replace(/^(\d{4}-\d{2}-\d{2}) ((\d{2}:?){3})$/, '$1T$2Z');
+            if (    this.partner_write_date &&
                     this.partner_by_id[partner.id] &&
-                    new Date(this.partner_write_date).getTime() + 1000 >=
-                    new Date(partner.write_date).getTime() ) {
+                    new Date(local_partner_date).getTime() + 1000 >=
+                    new Date(dist_partner_date).getTime() ) {
                 // FIXME: The write_date is stored with milisec precision in the database
                 // but the dates we get back are only precise to the second. This means when
                 // you read partners modified strictly after time X, you get back partners that were
@@ -319,7 +304,7 @@ var PosDB = core.Class.extend({
     search_partner: function(query){
         try {
             query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g,'.');
-            query = query.replace(' ','.+');
+            query = query.replace(/ /g,'.+');
             var re = RegExp("([0-9]+):.*?"+query,"gi");
         }catch(e){
             return [];
@@ -358,12 +343,9 @@ var PosDB = core.Class.extend({
     get_product_by_barcode: function(barcode){
         if(this.product_by_barcode[barcode]){
             return this.product_by_barcode[barcode];
+        } else {
+            return undefined;
         }
-        var pack = this.packagings_by_barcode[barcode];
-        if(pack){
-            return this.product_by_id[pack.product_tmpl_id[0]];
-        }
-        return undefined;
     },
     get_product_by_category: function(category_id){
         var product_ids  = this.product_by_category_id[category_id];
@@ -433,6 +415,10 @@ var PosDB = core.Class.extend({
             }
         }
 
+        // Only necessary when we store a new, validated order. Orders
+        // that where already stored should already have been removed.
+        this.remove_unpaid_order(order);
+
         orders.push({id: order_id, data: order});
         this.save('orders',orders);
         return order_id;
@@ -496,6 +482,13 @@ var PosDB = core.Class.extend({
         }
         return orders;
     },
+    set_cashier: function(cashier) {
+        // Always update if the user is the same as before
+        this.save('cashier', cashier || null);
+    },
+    get_cashier: function() {
+        return this.load('cashier');
+    }
 });
 
 return PosDB;

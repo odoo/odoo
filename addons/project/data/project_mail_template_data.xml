@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sample stage-related template -->
+        <record id="mail_template_data_project_task" model="mail.template">
+            <field name="name">Task: Reception Acknowledgment</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="subject">Reception of ${object.name}</field>
+            <field name="use_default_to" eval="True"/>
+            <field name="body_html" type="html">
+<div>
+    Dear ${object.partner_id.name or 'customer'},<br/>
+    Thank you for your enquiry.<br />
+    If you have any questions, please let us know.
+    <br/><br/>
+    Thank you,
+    <br/>
+</div>
+        </field>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="True"/>
+        </record>
+
+        <!-- Mail sent to request a rating for a task -->
+        <record id="rating_project_request_email_template" model="mail.template">
+            <field name="name">Task: Rating Request</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="subject">${object.project_id.company_id.name}: Satisfaction Survey</field>
+            <field name="email_from">${('"%s" &lt;%s&gt;' % (object.rating_get_rated_partner_id().name, object.rating_get_rated_partner_id().email) if object.rating_get_rated_partner_id().email else '') | safe}</field>
+            <field name="partner_to" >${object.rating_get_partner_id().id}</field>
+            <field name="body_html" type="html">
+<div>
+    % set access_token = object.rating_get_access_token()
+    % set partner = object.rating_get_partner_id()
+    <table border="0" cellpadding="0" cellspacing="0" width="590" style="width:100%; margin:0px auto;">
+    <tbody>
+        <tr><td valign="top" style="font-size: 13px;">
+            Hello ${partner.name},<br/>
+            Please take a moment to rate our services related to the task "<strong>${object.name}</strong>"
+            % if object.rating_get_rated_partner_id().name:
+                assigned to <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>
+            % else:
+                .<br/>
+            % endif
+        </td></tr>
+        <tr><td style="text-align: center;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" summary="o_mail_notification" style="width:100%; margin: 32px 0px 32px 0px;">
+                <tr><td style="font-size: 13px;">
+                    <strong>Tell us how you feel about our service</strong><br/>
+                    <span style="text-color: #888888">(click on one of these smileys)</span>
+                </td></tr>
+                <tr><td style="font-size: 13px;">
+                    <table style="width:100%;text-align:center;">
+                        <tr>
+                            <td>
+                                <a href="/rating/${access_token}/10">
+                                    <img alt="Satisfied" src="/rating/static/src/img/rating_10.png" title="Satisfied"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="/rating/${access_token}/5">
+                                    <img alt="Not satisfied" src="/rating/static/src/img/rating_5.png" title="Not satisfied"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="/rating/${access_token}/1">
+                                    <img alt="Highly Dissatisfied" src="/rating/static/src/img/rating_1.png" title="Highly Dissatisfied"/>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </td></tr>
+            </table>
+        </td></tr>
+        <tr><td valign="top" style="font-size: 13px;">
+            We appreciate your feedback. It helps us to improve continuously.
+            % if object.project_id.rating_status == 'stage':
+                <br/><span style="margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;">This customer survey has been sent because your task has been moved to the stage <b>${object.stage_id.name}</b></span>
+            % endif
+            % if object.project_id.rating_status == 'periodic':
+                <br/><span style="margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;">This customer survey is sent <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.</span>
+            % endif
+        </td></tr>
+    </tbody>
+    </table>
+</div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="False"/>
+        </record>
+    </data>
+</odoo>

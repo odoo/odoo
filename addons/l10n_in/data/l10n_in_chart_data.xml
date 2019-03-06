@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <menuitem id="account_reports_in_statements_menu" name="India" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
+
+        <record id="indian_chart_template_standard" model="account.chart.template">
+            <field name="name">Indian Chart of Accounts - Standard</field>
+            <field name="bank_account_code_prefix">1002</field>
+            <field name="cash_account_code_prefix">1001</field>
+            <field name="transfer_account_code_prefix">1008</field>
+            <field name="code_digits">6</field>
+            <field name="currency_id" ref="base.INR"/>
+        </record>
+
+        <record id="sgst_tag_account" model="account.account.tag">
+            <field name="name">SGST</field>
+            <field name="applicability">accounts</field>
+        </record>
+        <record id="cgst_tag_account" model="account.account.tag">
+            <field name="name">CGST</field>
+            <field name="applicability">accounts</field>
+        </record>
+        <record id="igst_tag_account" model="account.account.tag">
+            <field name="name">IGST</field>
+            <field name="applicability">accounts</field>
+        </record>
+</odoo>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="pos_assets_backend" name="POS UI Backend Assets" inherit_id="web.assets_backend" primary="True">
+    <xpath expr="//script[contains(@src, '/mail/static/src/js/services/mail_service.js')]" position="replace"></xpath>
+</template>
+
+<template id="index" name="POS Index">&lt;!DOCTYPE html&gt;
+<html>
+    <head>
+        <title>Odoo POS</title>
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <meta http-equiv="content-type" content="text/html, charset=utf-8" />
+
+        <meta name="viewport" content=" width=1024, user-scalable=no"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta name="mobile-web-app-capable" content="yes"/>
+
+        <link rel="shortcut icon"    sizes="196x196" href="/point_of_sale/static/src/img/touch-icon-196.png"/>
+        <link rel="shortcut icon"    sizes="128x128" href="/point_of_sale/static/src/img/touch-icon-128.png"/>
+        <link rel="apple-touch-icon"                 href="/point_of_sale/static/src/img/touch-icon-iphone.png"/>
+        <link rel="apple-touch-icon" sizes="76x76"   href="/point_of_sale/static/src/img/touch-icon-ipad.png"/>
+        <link rel="apple-touch-icon" sizes="120x120" href="/point_of_sale/static/src/img/touch-icon-iphone-retina.png"/>
+        <link rel="apple-touch-icon" sizes="152x152" href="/point_of_sale/static/src/img/touch-icon-ipad-retina.png"/>
+
+        <style> body { background: #222; } </style>
+
+        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+
+        <script type="text/javascript">
+            var odoo = {
+                csrf_token: "<t t-esc="request.csrf_token(None)"/>",
+                session_info: <t t-raw="session_info"/>,
+            };
+        </script>
+
+        <t t-call-assets="web.assets_common" t-css="false"/>
+        <t t-call-assets="point_of_sale.pos_assets_backend" t-css="false"/>
+        <t t-call-assets="web_editor.summernote" t-css="false"/>
+        <t t-call-assets="web_editor.assets_editor" t-css="false"/>
+        <t t-call-assets="point_of_sale.assets"/>
+
+        <script type="text/javascript" id="loading-script" t-raw="init">
+            odoo.define('web.web_client', function (require) {
+                var WebClient = require('web.AbstractWebClient');
+                var web_client = new WebClient();
+
+                web_client._title_changed = function() {};
+                web_client.show_application = function() {
+                    return web_client.action_manager.do_action("pos.ui");
+                };
+
+                $(function () {
+                    web_client.setElement($(document.body));
+                    web_client.start();
+                });
+                return web_client;
+            });
+        </script>
+    </head>
+    <body>
+        <div class="o_main_content"/>
+    </body>
+</html>
+</template>
+
+<!-- This is a duplicate of Qweb template JS side CustomerFacingDisplayHead. We could have told models.js to do an extra rpc call for this-->
+<template id="extra_head">
+    <link href="/point_of_sale/static/src/css/customer_facing_display.css" rel="stylesheet"/>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(window).on('resize', function () {
+                $('.pos-customer_facing_display').toggleClass('pos-js_no_ADV', $('.pos-adv').hasClass('pos-hidden'));
+            }).trigger('resize');
+        });
+    </script>
+</template>
+
+<template id="pos_editor_fieldtexthtml_assets" inherit_id="web.assets_backend">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/point_of_sale/static/src/js/field_text_html.js"/>
+    </xpath>
+</template>
+
+<template id="pos_editor_assets" inherit_id="web_editor.assets_editor">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/point_of_sale/static/src/js/pos.web_editor.js"/>
+    </xpath>
+</template>
+
+
+<template id="customer_facing_display_snippets">
+    <!-- web_editor needs a ul (normally contains the header, body, extra buttons)-->
+    <ul/>
+    <div id="o_scroll" class="d-none"/>
+
+    <div id="snippet_options" class="d-none">
+        <t t-call="web_editor.snippet_options"/>
+
+        <div data-js='pos_no_remove' data-selector=".pos-company_logo, .pos-adv, .pos-customer_facing_display"/>
+        <div data-js='pos_no_parent' data-selector=".pos-company_logo, .pos-adv"/>
+        <div data-js='pos_company_logo' data-selector=".pos-company_logo"/>
+
+        <div data-js='pos_palette' data-selector=".pos-customer_facing_display">
+            <a href="#" class="pos-palette_01 dropdown-item" data-select-class="pos-palette_01"></a>
+            <a href="#" class="pos-palette_02 dropdown-item" data-select-class="pos-palette_02"></a>
+            <a href="#" class="pos-palette_03 dropdown-item" data-select-class="pos-palette_03"></a>
+            <a href="#" class="pos-palette_04 dropdown-item" data-select-class="pos-palette_04"></a>
+            <a href="#" class="pos-palette_05 dropdown-item" data-select-class="pos-palette_05"></a>
+            <a href="#" class="pos-palette_06 dropdown-item" data-select-class="pos-palette_06"></a>
+            <a href="#" class="pos-palette_07 dropdown-item" data-select-class="pos-palette_07"></a>
+            <a href="#" class="pos-palette_08 dropdown-item" data-select-class="pos-palette_08"></a>
+            <a href="#" class="pos-palette_09 dropdown-item" data-select-class="pos-palette_09"></a>
+            <a href="#" class="pos-palette_10 dropdown-item" data-select-class="pos-palette_10"></a>
+            <a href="#" class="pos-palette_11 dropdown-item" data-select-class="pos-palette_11"></a>
+            <a href="#" class="pos-palette_12 dropdown-item" data-select-class="pos-palette_12"></a>
+            <a href="#" class="pos-palette_13 dropdown-item" data-select-class="pos-palette_13"></a>
+        </div>
+
+        <div data-js='pos_background' data-selector=".pos-company_logo, .pos-adv">
+            <a href="#" class="dropdown-item" data-choose-image="true" data-no-preview="true"><b>Set Custom Image...</b></a>
+            <a href="#" class="dropdown-item d-none pos-use_default_logo" data-background="">Default company logo</a>
+            <div class="dropdown-divider"/>
+            <a href="#" class="dropdown-item" data-toggle-class="pos-hidden"><i class="fa fa-eye-slash"/>Hide</a>
+        </div>
+    </div>
+</template>
+</odoo>

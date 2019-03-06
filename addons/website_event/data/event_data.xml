@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <record id="menu_events" model="website.menu">
@@ -11,7 +11,7 @@
         <record id="action_open_website" model="ir.actions.act_url">
             <field name="name">Website Home</field>
             <field name="target">self</field>
-            <field name="url">/event#tutorial.event=true</field>
+            <field name="url">/event</field>
         </record>
         <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_open_website"/>
@@ -32,4 +32,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

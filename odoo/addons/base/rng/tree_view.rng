@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0"
+             xmlns:a="http://relaxng.org/ns/annotation/1.0"
+             datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <!-- Handling of element overloading when inheriting from a base
+         template
+    -->
+    <rng:include href="common.rng"/>
+    <rng:define name="tree">
+        <rng:element name="tree">
+            <rng:ref name="overload"/>
+            <rng:optional><rng:attribute name="name" /></rng:optional>
+            <rng:optional><rng:attribute name="create" /></rng:optional>
+            <rng:optional><rng:attribute name="delete" /></rng:optional>
+            <rng:optional><rng:attribute name="edit" /></rng:optional>
+            <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:optional><rng:attribute name="duplicate"/></rng:optional>
+            <rng:optional><rng:attribute name="import"/></rng:optional>
+            <rng:optional><rng:attribute name="class"/></rng:optional>
+            <!-- Allows to take a custom View widget for handling. Defined in view_manager. -->
+            <rng:optional><rng:attribute name="js_class"/></rng:optional>
+            <rng:optional><rng:attribute name="colors"/></rng:optional>
+            <rng:optional><rng:attribute name="fonts"/></rng:optional>
+            <rng:optional><rng:attribute name="default_order"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-bf"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-it"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-danger"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-info"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-muted"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-primary"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-success"/></rng:optional>
+            <rng:optional><rng:attribute name="decoration-warning"/></rng:optional>
+            <rng:optional><rng:attribute name="banner_route"/></rng:optional>
+            <rng:optional>
+                <rng:attribute name="limit">
+                    <rng:data type="int"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+              <rng:attribute name="editable">
+                <rng:choice>
+                  <rng:value>top</rng:value>
+                  <rng:value>bottom</rng:value>
+                </rng:choice>
+              </rng:attribute>
+              <rng:optional><rng:attribute name="on_write"/></rng:optional>
+            </rng:optional>
+            <rng:optional>
+              <rng:attribute name="toolbar">
+                <rng:choice>
+                  <rng:value>1</rng:value>
+                  <rng:value>True</rng:value>
+                </rng:choice>
+              </rng:attribute>
+            </rng:optional>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:ref name="control"/>
+                    <rng:ref name="field"/>
+                    <rng:ref name="separator"/>
+                    <rng:ref name="tree"/>
+                    <rng:ref name="group"/>
+                    <rng:ref name="button"/>
+                    <rng:ref name="filter"/>
+                    <rng:ref name="html"/>
+                    <rng:element name="newline"><rng:empty/></rng:element>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+    <rng:start>
+        <rng:choice>
+            <rng:ref name="tree" />
+        </rng:choice>
+    </rng:start>
+</rng:grammar>

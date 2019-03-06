@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="escompte_template" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="l10nbe_chart_template"/>
+        <field name="name">Escompte</field>
+        <field name="account_id" ref="a653"/>
+        <field name="amount_type">percentage</field>
+        <field name="amount">100</field>
+        <field name="label">Escompte accordé</field>
+    </record>
+    <record id="frais_bancaires_htva_template" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="l10nbe_chart_template"/>
+        <field name="name">Frais bancaires HTVA</field>
+        <field name="account_id" ref="a656" />
+        <field name="amount_type">percentage</field>
+        <field name="amount">100</field>
+        <field name="label">Frais bancaires HTVA</field>
+    </record>
+    <record id="frais_bancaires_tva21_template" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="l10nbe_chart_template"/>
+        <field name="name">Frais bancaires TVA21</field>
+        <field name="account_id" ref="a656"/>
+        <field name="amount_type">percentage</field>
+        <field name="tax_id" ref="attn_TVA-21-inclus-dans-prix"/>
+        <field name="amount">100</field>
+        <field name="label">Frais bancaires TVA21</field>
+    </record>
+    <record id="virements_internes_template" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="l10nbe_chart_template"/>
+        <field name="account_id" search="[('code', '=like', obj().env.ref('l10n_be.l10nbe_chart_template').transfer_account_code_prefix + '%'), ('chart_template_id', '=', obj().env.ref('l10n_be.l10nbe_chart_template').id)]"/>
+        <field name="name">Virements internes</field>
+        <field name="amount_type">percentage</field>
+        <field name="amount">100</field>
+        <field name="label">Virements internes</field>
+    </record>
+</odoo>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <record id="removal_fifo" model="product.removal">
+            <field name="name">First In First Out (FIFO)</field>
+            <field name="method">fifo</field>
+        </record>
+        <record id="removal_lifo" model="product.removal">
+            <field name="name">Last In First Out (LIFO)</field>
+            <field name="method">lifo</field>
+        </record>
+        
+                <!--
+    Resource: stock.location
+    -->
+        <record id="stock_location_locations" model="stock.location">
+            <field name="name">Physical Locations</field>
+            <field name="usage">view</field>
+            <field name="company_id"></field>
+        </record>
+        <record id="stock_location_locations_partner" model="stock.location">
+            <field name="name">Partner Locations</field>
+            <field name="usage">view</field>
+            <field name="posz">1</field>
+            <field name="company_id"></field>
+        </record>
+        <record id="stock_location_locations_virtual" model="stock.location">
+            <field name="name">Virtual Locations</field>
+            <field name="usage">view</field>
+            <field name="posz">1</field>
+            <field name="company_id"></field>
+        </record>
+        <record id="stock_location_scrapped" model="stock.location">
+            <field name="name">Scrapped</field>
+            <field name="location_id" ref="stock_location_locations_virtual"/>
+            <field name="scrap_location">True</field>
+            <field name="usage">inventory</field>
+            <field name="company_id"></field>
+        </record>
+
+        <record id="location_inventory" model="stock.location">
+            <field name="name">Inventory adjustment</field>
+            <field name="location_id" ref="stock_location_locations_virtual"/>
+            <field name="usage">inventory</field>
+            <field name="company_id"></field>
+        </record>
+        <record id="location_procurement" model="stock.location">
+            <field name="name">Procurements</field>
+            <field name="location_id" ref="stock_location_locations_virtual"/>
+            <field name="usage">procurement</field>
+            <field name="company_id"></field>
+        </record>
+        <record id="location_production" model="stock.location">
+            <field name="name">Production</field>
+            <field name="location_id" ref="stock_location_locations_virtual"/>
+            <field name="usage">production</field>
+            <field name="company_id"></field>
+        </record>
+        <record id="stock_location_suppliers" model="stock.location">
+            <field name="name">Vendors</field>
+            <field name="location_id" ref="stock_location_locations_partner"/>
+            <field name="usage">supplier</field>
+            <field name="company_id"></field>
+        </record>
+        <record id="stock_location_customers" model="stock.location">
+            <field name="name">Customers</field>
+            <field name="location_id" ref="stock_location_locations_partner"/>
+            <field name="usage">customer</field>
+            <field name="company_id"></field>
+        </record>
+        
+        <record id="stock_location_inter_wh" model="stock.location">
+            <field name="name">Inter Company Transit</field>
+            <field name="location_id" ref="stock_location_locations_virtual"/>
+            <field name="usage">transit</field>
+            <field name="company_id"></field>
+        </record>
+
+    </data>
+    <data noupdate="1">
+        <!--
+             Stock rules
+        -->
+        
+        <!-- set a lower sequence on the mto route than on the resupply routes -->
+        <record id="route_warehouse0_mto" model='stock.location.route'>
+            <field name="name">Make To Order</field>
+            <field name="company_id"></field>
+            <field name="sequence">5</field>
+        </record>
+
+        <!--
+    Properties
+    -->
+        <record forcecreate="True" id="property_stock_supplier" model="ir.property">
+            <field name="name">property_stock_supplier</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_supplier')]"/>
+            <field eval="'stock.location,'+str(stock_location_suppliers)" name="value"/>
+        </record>
+        <record forcecreate="True" id="property_stock_customer" model="ir.property">
+            <field name="name">property_stock_customer</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_customer')]"/>
+            <field eval="'stock.location,'+str(stock_location_customers)" name="value"/>
+        </record>
+        <record forcecreate="True" id="property_stock_inventory" model="ir.property">
+            <field name="name">property_stock_inventory</field>
+            <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_inventory')]"/>
+            <field eval="'stock.location,'+str(location_inventory)" name="value"/>
+        </record>
+        <record forcecreate="True" id="property_stock_production" model="ir.property">
+            <field name="name">property_stock_production</field>
+            <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_production')]"/>
+            <field eval="'stock.location,'+str(location_production)" name="value"/>
+        </record>
+
+
+        <!--
+    Resource: stock.warehouse
+    -->
+        
+
+        <record id="warehouse0" model="stock.warehouse">
+            <field name="partner_id" ref="base.main_partner"/>
+            <field name="code">WH</field>
+        </record>
+ 
+        <record id="sequence_mrp_op" model="ir.sequence">
+            <field name="name">Stock orderpoint</field>
+            <field name="code">stock.orderpoint</field>
+            <field name="prefix">OP/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="sequence_stock_scrap" model="ir.sequence">
+            <field name="name">Scrap</field>
+            <field name="code">stock.scrap</field>
+            <field name="prefix">SP/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- create xml ids for demo data that are widely used in tests or in other codes, for more convenience -->
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'stock.stock_location_stock',
+                'record': obj().env.ref('stock.warehouse0').lot_stock_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.stock_location_company',
+                'record': obj().env.ref('stock.warehouse0').wh_input_stock_loc_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.stock_location_output',
+                'record': obj().env.ref('stock.warehouse0').wh_output_stock_loc_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.location_pack_zone',
+                'record': obj().env.ref('stock.warehouse0').wh_pack_stock_loc_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.picking_type_internal',
+                'record': obj().env.ref('stock.warehouse0').int_type_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.picking_type_in',
+                'record': obj().env.ref('stock.warehouse0').in_type_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.picking_type_out',
+                'record': obj().env.ref('stock.warehouse0').out_type_id,
+                'noupdate': True,
+            }]"/>
+        </function>
+
+        <!-- create the transit location for each company existing -->
+        <function model="res.company" name="create_transit_location">
+            <value model="res.company" eval="obj().search([('internal_transit_location_id', '=', False)]).ids"/>
+        </function>
+    </data>
+</odoo>

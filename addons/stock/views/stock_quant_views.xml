@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="quant_search_view" model="ir.ui.view">
+        <field name="name">stock.quant.search</field>
+        <field name="model">stock.quant</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <search string="Quants">
+                <field name="product_id"/>
+                <field name="location_id"/>
+                <field name="package_id" groups="stock.group_tracking_lot"/>
+                <field name="lot_id" groups="stock.group_production_lot"/>
+                <field name="owner_id" groups="stock.group_tracking_owner"/>
+                <group expand='0' string='Filters'>
+                    <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
+                    <filter name='transit_loc' string="Transit Locations" domain="[('location_id.usage' ,'=', 'transit')]"/>
+                    <separator/>
+                    <filter name="negative" string="Negative Stock" domain="[('quantity', '&lt;', 0.0)]"/>
+                    <filter name="positive" string="Positive Stock" domain="[('quantity', '&gt;', 0.0)]"/>
+                    <filter name="reserved" string="Reservations" domain="[('reserved_quantity', '&gt;', 0.0)]"/>
+                </group>
+                <group expand='0' string='Group by...'>
+                    <filter string='Location' name="locationgroup" domain="[]" context="{'group_by': 'location_id'}"/>
+                    <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
+                    <filter string='Owner' name="owner" context="{'group_by': 'owner_id'}" groups="stock.group_tracking_owner"/>
+                    <filter string='Lot/Serial Number' name="Lot_Serial_number" context="{'group_by': 'lot_id'}" groups="stock.group_production_lot"/>
+                    <filter string='Package' name="package" domain="[]" context="{'group_by': 'package_id'}" groups="stock.group_tracking_lot"/>
+                    <filter string='Company' name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+               </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_stock_quant_form">
+        <field name="name">stock.quant.form</field>
+        <field name="model">stock.quant</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <form string="Inventory Valuation" create="false" edit="false" delete="false">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-arrows-v" type="object" name="action_view_stock_moves" string="Picking Moves"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="location_id"/>
+                            <field name="lot_id" groups="stock.group_production_lot"/>
+                            <field name="package_id" groups="stock.group_tracking_lot"/>
+                            <field name="owner_id" groups="stock.group_tracking_owner"/>
+                        </group>
+                        <group>
+                            <label for="quantity" string="Quantity On Hand"/>
+                            <div class="o_row">
+                                <field name="quantity"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
+                            </div>
+                            <label for="reserved_quantity" string="Quantity Reserved"/>
+                            <div class="o_row">
+                                <field name="reserved_quantity"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
+                            </div>
+                            <field name="in_date" attrs="{'invisible': [('lot_id', '=', False)]}" groups="stock.group_production_lot"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_stock_quant_tree">
+        <field name="name">stock.quant.tree</field>
+        <field name="model">stock.quant</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <tree string="Inventory Valuation" create="0" delete="0" decoration-danger="quantity &lt; 0">
+                <field name="product_id"/>
+                <field name="location_id"/>
+                <field name="lot_id" groups="stock.group_production_lot"/>
+                <field name="package_id" groups="stock.group_tracking_lot"/>
+                <field name="owner_id" groups="stock.group_tracking_owner"/>
+                <field name="reserved_quantity" string="Reserved"/>
+                <field name="quantity" string="On Hand"/>
+                <field name="product_uom_id" groups="uom.group_uom"/>
+                <field name='company_id' groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="view_stock_quant_pivot">
+        <field name="name">stock.quant.pivot</field>
+        <field name="model">stock.quant</field>
+        <field name="arch" type="xml">
+            <pivot string="Inventory">
+                <field name="product_id" type="row"/>
+                <field name="location_id" type="col"/>
+                <field name="quantity" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="stock_quant_view_graph" model="ir.ui.view">
+        <field name="name">stock.quant.graph</field>
+        <field name="model">stock.quant</field>
+        <field name="arch" type="xml">
+            <graph string="Stock Quant">
+                <field name="location_id"/>
+                <field name="quantity" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="quantsact"> <!-- Menu + python -->
+        <field name="name">Inventory</field>
+        <field name="res_model">stock.quant</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{'search_default_internal_loc': 1, 'group_by': ['product_id', 'location_id']}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No inventory found
+            </p><p>
+                This analysis gives you a fast overview on the current stock level of your products and their current inventory value.    
+            </p>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="product_template_open_quants"> <!-- Not used -->
+        <field name="name">Stock On Hand</field>
+        <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup':1, 'search_default_locationgroup':1}</field>
+        <field name="domain">[('product_id.product_tmpl_id', '=', active_id)]</field>
+        <field name="res_model">stock.quant</field>
+    </record>
+     <record model="ir.actions.act_window" id="product_open_quants"> <!-- product_view + python -->
+        <field name="name">Stock On Hand</field>
+        <field name="context">{'search_default_internal_loc': 1, 'search_default_locationgroup':1}</field>
+       <field name="domain">[('product_id', '=', active_id)]</field>
+        <field name="res_model">stock.quant</field>
+    </record>
+    <record model="ir.actions.act_window" id="location_open_quants"> <!-- Used in location -->
+        <field name="context">{'search_default_productgroup': 1}</field>
+        <field name="domain">[('location_id', 'child_of', active_ids)]</field>
+        <field name="name">Current Stock</field>
+        <field name="res_model">stock.quant</field>
+    </record>
+
+    <record id="quant_package_search_view" model="ir.ui.view">
+        <field name="name">stock.quant.package.search</field>
+        <field name="model">stock.quant.package</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <search string="Package">
+                <field name="name" string="Package Name"/>
+                <field name="location_id"/>
+                <field name="packaging_id"/>
+                <group  expand='0' string='Group by...'>
+                   <filter string='Location' name="location" domain="[]" context="{'group_by' : 'location_id'}"/>
+                   <filter string='Packaging' name="packaging" domain="[]" context="{'group_by' : 'packaging_id'}"/>
+                   <filter string='Company' name="company" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
+               </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_quant_package_form">
+        <field name="name">stock.quant.package.form</field>
+        <field name="model">stock.quant.package</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <form string="Package">
+                <header>
+                    <button name="unpack" string="Unpack" type="object"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="action_view_picking"
+                        string="Package Transfers" type="object"
+                        widget="statinfo" icon="fa-arrows-v"/>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Package Reference" class="oe_edit_only"/>
+                        <h1><field name="name" class="oe_inline"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name='company_id' groups="base.group_multi_company"/>
+                            <field name='owner_id' groups="stock.group_tracking_owner"/>
+                            <field name="location_id"/>
+                        </group>
+                    </group>
+                    <separator string="Content"/>
+                    <field name="quant_ids">
+                        <tree>
+                            <field name="product_id"/>
+                            <field name="lot_id" groups="stock.group_production_lot"/>
+                            <field name="quantity"/>
+                            <field name="product_uom_id" groups="uom.group_uom"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_quant_package_tree">
+        <field name="name">stock.quant.package.tree</field>
+        <field name="model">stock.quant.package</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <tree string="Package">
+                <field name="display_name"/>
+                <field name="location_id"/>
+                <field name="company_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_quant_package_kanban">
+        <field name="name">stock.quant.package.kanban</field>
+        <field name="model">stock.quant.package</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                <field name="name"/>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top mb0">
+                                <strong class="o_kanban_record_title"><field name="name"/></strong>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_package_view">
+        <field name="context">{}</field>
+        <field name="name">Packages</field>
+        <field name="res_model">stock.quant.package</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new package
+            </p><p>
+                Packages are usually created by pack operations made on transfers and can contains several different products. You can then reuse a package to move its whole content somewhere else, or to pack it into another bigger package. A package can also be unpacked, allowing the disposal of its former content as single units again.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_package" name="Packages" parent="menu_stock_inventory_control" action="action_package_view" groups="stock.group_tracking_lot" sequence="102"/>
+
+</odoo>

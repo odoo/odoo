@@ -1,57 +1,77 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import babel
 import base64
 import copy
 import datetime
 import dateutil.relativedelta as relativedelta
 import logging
-import lxml
-import urlparse
-import openerp
-from urllib import urlencode, quote as quote
 
-from openerp import _, api, fields, models, SUPERUSER_ID
-from openerp import tools
-from openerp import report as odoo_report
-from openerp.exceptions import UserError
+import functools
+import lxml
+from werkzeug import urls
+
+from odoo import _, api, fields, models, tools
+from odoo.exceptions import UserError
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
 
-def format_tz(pool, cr, uid, dt, tz=False, format=False, context=None):
-    context = dict(context or {})
-    if tz:
-        context['tz'] = tz or pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz'] or "UTC"
-    timestamp = datetime.datetime.strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+def format_date(env, date, pattern=False):
+    if not date:
+        return ''
+    try:
+        return tools.format_date(env, date, date_format=pattern)
+    except babel.core.UnknownLocaleError:
+        return date
 
-    ts = openerp.osv.fields.datetime.context_timestamp(cr, uid, timestamp, context)
+
+def format_tz(env, dt, tz=False, format=False):
+    record_user_timestamp = env.user.sudo().with_context(tz=tz or env.user.sudo().tz or 'UTC')
+    timestamp = fields.Datetime.from_string(dt)
+
+    ts = fields.Datetime.context_timestamp(record_user_timestamp, timestamp)
 
     # Babel allows to format datetime in a specific language without change locale
     # So month 1 = January in English, and janvier in French
     # Be aware that the default value for format is 'medium', instead of 'short'
     #     medium:  Jan 5, 2016, 10:20:31 PM |   5 janv. 2016 22:20:31
     #     short:   1/5/16, 10:20 PM         |   5/01/16 22:20
-    if context.get('use_babel'):
+    if env.context.get('use_babel'):
         # Formatting available here : http://babel.pocoo.org/en/latest/dates.html#date-fields
         from babel.dates import format_datetime
-        return format_datetime(ts, format or 'medium', locale=context.get("lang") or 'en_US')
+        return format_datetime(ts, format or 'medium', locale=env.context.get("lang") or 'en_US')
 
     if format:
-        return ts.strftime(format)
+        return pycompat.text_type(ts.strftime(format))
     else:
-        lang = context.get("lang")
-        lang_params = {}
+        lang = env.context.get("lang")
+        langs = env['res.lang']
         if lang:
-            res_lang = pool.get('res.lang')
-            ids = res_lang.search(cr, uid, [("code", "=", lang)])
-            if ids:
-                lang_params = res_lang.read(cr, uid, ids[0], ["date_format", "time_format"])
-        format_date = lang_params.get("date_format", '%B-%d-%Y')
-        format_time = lang_params.get("time_format", '%I-%M %p')
+            langs = env['res.lang'].search([("code", "=", lang)])
+        format_date = langs.date_format or '%B-%d-%Y'
+        format_time = langs.time_format or '%I-%M %p'
 
-        fdate = ts.strftime(format_date).decode('utf-8')
-        ftime = ts.strftime(format_time)
-        return "%s %s%s" % (fdate, ftime, (' (%s)' % tz) if tz else '')
+        fdate = pycompat.text_type(ts.strftime(format_date))
+        ftime = pycompat.text_type(ts.strftime(format_time))
+        return u"%s %s%s" % (fdate, ftime, (u' (%s)' % tz) if tz else u'')
+
+def format_amount(env, amount, currency):
+    fmt = "%.{0}f".format(currency.decimal_places)
+    lang = env['res.lang']._lang_get(env.context.get('lang') or 'en_US')
+
+    formatted_amount = lang.format(fmt, currency.round(amount), grouping=True, monetary=True)\
+        .replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
+
+    pre = post = u''
+    if currency.position == 'before':
+        pre = u'{symbol}\N{NO-BREAK SPACE}'.format(symbol=currency.symbol or '')
+    else:
+        post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=currency.symbol or '')
+
+    return u'{pre}{0}{post}'.format(formatted_amount, pre=pre, post=post)
 
 try:
     # We use a jinja2 sandboxed environment to render mako templates.
@@ -76,8 +96,8 @@ try:
     )
     mako_template_env.globals.update({
         'str': str,
-        'quote': quote,
-        'urlencode': urlencode,
+        'quote': urls.url_quote,
+        'urlencode': urls.url_encode,
         'datetime': datetime,
         'len': len,
         'abs': abs,
@@ -85,10 +105,9 @@ try:
         'max': max,
         'sum': sum,
         'filter': filter,
-        'reduce': reduce,
+        'reduce': functools.reduce,
         'map': map,
         'round': round,
-        'cmp': cmp,
 
         # dateutil.relativedelta is an old-style class and cannot be directly
         # instanciated wihtin a jinja2 expression, so a lambda "proxy" is
@@ -111,12 +130,12 @@ class MailTemplate(models.Model):
     def default_get(self, fields):
         res = super(MailTemplate, self).default_get(fields)
         if res.get('model'):
-            res['model_id'] = self.env['ir.model'].search([('model', '=', res.pop('model'))]).id
+            res['model_id'] = self.env['ir.model']._get(res.pop('model')).id
         return res
 
     name = fields.Char('Name')
-    model_id = fields.Many2one('ir.model', 'Applies to', help="The kind of document with with this template can be used")
-    model = fields.Char('Related Document Model', related='model_id.model', select=True, store=True, readonly=True)
+    model_id = fields.Many2one('ir.model', 'Applies to', help="The type of document this template can be used with")
+    model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
     lang = fields.Char('Language',
                        help="Optional translation language (ISO code) to select when sending out an email. "
                             "If not set, the english version will be used. "
@@ -144,16 +163,14 @@ class MailTemplate(models.Model):
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
                                      help="Optional preferred server for outgoing mails. If not set, the highest "
                                           "priority one will be used.")
-    body_html = fields.Html('Body', translate=True, sanitize=False, help="Rich-text/HTML version of the message (placeholders may be used here)")
+    body_html = fields.Html('Body', translate=True, sanitize=False)
     report_name = fields.Char('Report Filename', translate=True,
                               help="Name to use for the generated report file (may contain placeholders)\n"
                                    "The extension can be omitted and will then come from the report type.")
-    report_template = fields.Many2one('ir.actions.report.xml', 'Optional report to print and attach')
+    report_template = fields.Many2one('ir.actions.report', 'Optional report to print and attach')
     ref_ir_act_window = fields.Many2one('ir.actions.act_window', 'Sidebar action', readonly=True, copy=False,
                                         help="Sidebar action to make this template available on records "
                                              "of the related document model")
-    ref_ir_value = fields.Many2one('ir.values', 'Sidebar Button', readonly=True, copy=False,
-                                   help="Sidebar button to open the sidebar action")
     attachment_ids = fields.Many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
                                       'attachment_id', 'Attachments',
                                       help="You may attach files to this template, to be added to all "
@@ -174,6 +191,7 @@ class MailTemplate(models.Model):
                                                   "destination document model (sub-model).")
     null_value = fields.Char('Default Value', help="Optional value to use if the target field is empty")
     copyvalue = fields.Char('Placeholder Expression', help="Final placeholder expression, to be copy-pasted in the desired template field.")
+    scheduled_date = fields.Char('Scheduled Date', help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Jinja2 placeholders may be used.")
 
     @api.onchange('model_id')
     def onchange_model_id(self):
@@ -205,9 +223,9 @@ class MailTemplate(models.Model):
     def onchange_sub_model_object_value_field(self):
         if self.model_object_field:
             if self.model_object_field.ttype in ['many2one', 'one2many', 'many2many']:
-                models = self.env['ir.model'].search([('model', '=', self.model_object_field.relation)])
-                if models:
-                    self.sub_object = models.id
+                model = self.env['ir.model']._get(self.model_object_field.relation)
+                if model:
+                    self.sub_object = model.id
                     self.copyvalue = self.build_expression(self.model_object_field.name, self.sub_model_object_field and self.sub_model_object_field.name or False, self.null_value or False)
             else:
                 self.sub_object = False
@@ -225,6 +243,7 @@ class MailTemplate(models.Model):
         return super(MailTemplate, self).unlink()
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {},
                        name=_("%s (copy)") % self.name)
@@ -234,41 +253,29 @@ class MailTemplate(models.Model):
     def unlink_action(self):
         for template in self:
             if template.ref_ir_act_window:
-                template.ref_ir_act_window.sudo().unlink()
-            if template.ref_ir_value:
-                template.ref_ir_value.sudo().unlink()
+                template.ref_ir_act_window.unlink()
         return True
 
     @api.multi
     def create_action(self):
-        ActWindowSudo = self.env['ir.actions.act_window'].sudo()
-        IrValuesSudo = self.env['ir.values'].sudo()
+        ActWindow = self.env['ir.actions.act_window']
         view = self.env.ref('mail.email_compose_message_wizard_form')
 
         for template in self:
-            src_obj = template.model_id.model
-
             button_name = _('Send Mail (%s)') % template.name
-            action = ActWindowSudo.create({
+            action = ActWindow.create({
                 'name': button_name,
                 'type': 'ir.actions.act_window',
                 'res_model': 'mail.compose.message',
-                'src_model': src_obj,
+                'src_model': template.model_id.model,
                 'view_type': 'form',
                 'context': "{'default_composition_mode': 'mass_mail', 'default_template_id' : %d, 'default_use_template': True}" % (template.id),
                 'view_mode': 'form,tree',
                 'view_id': view.id,
                 'target': 'new',
-                'auto_refresh': 1})
-            ir_value = IrValuesSudo.create({
-                'name': button_name,
-                'model': src_obj,
-                'key2': 'client_action_multi',
-                'value': "ir.actions.act_window,%s" % action.id})
-            template.write({
-                'ref_ir_act_window': action.id,
-                'ref_ir_value': ir_value.id,
+                'binding_model_id': template.model_id.id,
             })
+            template.write({'ref_ir_act_window': action.id})
 
         return True
 
@@ -277,55 +284,17 @@ class MailTemplate(models.Model):
     # ----------------------------------------
 
     @api.model
-    def _replace_local_links(self, html):
-        """ Post-processing of html content to replace local links to absolute
-        links, using web.base.url as base url. """
-        if not html:
-            return html
-
-        # form a tree
-        root = lxml.html.fromstring(html)
-        if not len(root) and root.text is None and root.tail is None:
-            html = '<div>%s</div>' % html
-            root = lxml.html.fromstring(html)
-
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        (base_scheme, base_netloc, bpath, bparams, bquery, bfragment) = urlparse.urlparse(base_url)
-
-        def _process_link(url):
-            new_url = url
-            (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(url)
-            if not scheme and not netloc:
-                new_url = urlparse.urlunparse((base_scheme, base_netloc, path, params, query, fragment))
-            return new_url
-
-        # check all nodes, replace :
-        # - img src -> check URL
-        # - a href -> check URL
-        for node in root.iter():
-            if node.tag == 'a' and node.get('href'):
-                node.set('href', _process_link(node.get('href')))
-            elif node.tag == 'img' and not node.get('src', 'data').startswith('data'):
-                node.set('src', _process_link(node.get('src')))
-
-        html = lxml.html.tostring(root, pretty_print=False, method='html')
-        # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
-        if html.startswith('<div>') and html.endswith('</div>'):
-            html = html[5:-6]
-        return html
-
-    @api.model
     def render_post_process(self, html):
-        html = self._replace_local_links(html)
+        html = self.env['mail.thread']._replace_local_links(html)
         return html
 
     @api.model
-    def render_template(self, template_txt, model, res_ids, post_process=False):
+    def _render_template(self, template_txt, model, res_ids, post_process=False):
         """ Render the given template text, replace mako expressions ``${expr}``
         with the result of evaluating these expressions with an evaluation
         context containing:
 
-         - ``user``: browse_record of the current user
+         - ``user``: Model of the current user
          - ``object``: record of the document record this mail is related to
          - ``context``: the context passed to the mail composition wizard
 
@@ -334,7 +303,7 @@ class MailTemplate(models.Model):
         :param int res_ids: list of ids of document records those mails are related to.
         """
         multi_mode = True
-        if isinstance(res_ids, (int, long)):
+        if isinstance(res_ids, pycompat.integer_types):
             multi_mode = False
             res_ids = [res_ids]
 
@@ -349,29 +318,30 @@ class MailTemplate(models.Model):
             return multi_mode and results or results[res_ids[0]]
 
         # prepare template variables
-        records = self.env[model].browse(filter(None, res_ids))  # filter to avoid browsing [None]
+        records = self.env[model].browse(it for it in res_ids if it)  # filter to avoid browsing [None]
         res_to_rec = dict.fromkeys(res_ids, None)
         for record in records:
             res_to_rec[record.id] = record
         variables = {
-            'format_tz': lambda dt, tz=False, format=False, context=self._context: format_tz(self.pool, self._cr, self._uid, dt, tz, format, context),
+            'format_date': lambda date, format=False, context=self._context: format_date(self.env, date, format),
+            'format_tz': lambda dt, tz=False, format=False, context=self._context: format_tz(self.env, dt, tz, format),
+            'format_amount': lambda amount, currency, context=self._context: format_amount(self.env, amount, currency),
             'user': self.env.user,
             'ctx': self._context,  # context kw would clash with mako internals
         }
-        for res_id, record in res_to_rec.iteritems():
+        for res_id, record in res_to_rec.items():
             variables['object'] = record
             try:
                 render_result = template.render(variables)
             except Exception:
                 _logger.info("Failed to render template %r using values %r" % (template, variables), exc_info=True)
                 raise UserError(_("Failed to render template %r using values %r")% (template, variables))
-                render_result = u""
             if render_result == u"False":
                 render_result = u""
             results[res_id] = render_result
 
         if post_process:
-            for res_id, result in results.iteritems():
+            for res_id, result in results.items():
                 results[res_id] = self.render_post_process(result)
 
         return multi_mode and results or results[res_ids[0]]
@@ -379,7 +349,7 @@ class MailTemplate(models.Model):
     @api.multi
     def get_email_template(self, res_ids):
         multi_mode = True
-        if isinstance(res_ids, (int, long)):
+        if isinstance(res_ids, pycompat.integer_types):
             res_ids = [res_ids]
             multi_mode = False
 
@@ -391,8 +361,8 @@ class MailTemplate(models.Model):
             return results
         self.ensure_one()
 
-        langs = self.render_template(self.lang, self.model, res_ids)
-        for res_id, lang in langs.iteritems():
+        langs = self._render_template(self.lang, self.model, res_ids)
+        for res_id, lang in langs.items():
             if lang:
                 template = self.with_context(lang=lang)
             else:
@@ -411,16 +381,24 @@ class MailTemplate(models.Model):
 
         if self.use_default_to or self._context.get('tpl_force_default_to'):
             default_recipients = self.env['mail.thread'].message_get_default_recipients(res_model=self.model, res_ids=res_ids)
-            for res_id, recipients in default_recipients.iteritems():
+            for res_id, recipients in default_recipients.items():
                 results[res_id].pop('partner_to', None)
                 results[res_id].update(recipients)
 
-        for res_id, values in results.iteritems():
+        records_company = None
+        if self._context.get('tpl_partners_only') and self.model and results and 'company_id' in self.env[self.model]._fields:
+            records = self.env[self.model].browse(results.keys()).read(['company_id'])
+            records_company = {rec['id']: rec['company_id'][0] for rec in records}
+
+        for res_id, values in results.items():
             partner_ids = values.get('partner_ids', list())
             if self._context.get('tpl_partners_only'):
                 mails = tools.email_split(values.pop('email_to', '')) + tools.email_split(values.pop('email_cc', ''))
+                Partner = self.env['res.partner']
+                if records_company:
+                    Partner = Partner.with_context(default_company_id=records_company[res_id])
                 for mail in mails:
-                    partner_id = self.env['res.partner'].find_or_create(mail)
+                    partner_id = Partner.find_or_create(mail)
                     partner_ids.append(partner_id)
             partner_to = values.pop('partner_to', '')
             if partner_to:
@@ -435,7 +413,6 @@ class MailTemplate(models.Model):
         """Generates an email from the template for given the given model based on
         records given by res_ids.
 
-        :param template_id: id of the template to render.
         :param res_id: id of the record to use for rendering the template (model
                        is taken from template definition)
         :returns: a dict containing all relevant fields for creating a new
@@ -444,31 +421,31 @@ class MailTemplate(models.Model):
         """
         self.ensure_one()
         multi_mode = True
-        if isinstance(res_ids, (int, long)):
+        if isinstance(res_ids, pycompat.integer_types):
             res_ids = [res_ids]
             multi_mode = False
         if fields is None:
-            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to']
+            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'scheduled_date']
 
-        res_ids_to_templates = self.get_email_template_batch(res_ids)
+        res_ids_to_templates = self.get_email_template(res_ids)
 
         # templates: res_id -> template; template -> res_ids
         templates_to_res_ids = {}
-        for res_id, template in res_ids_to_templates.iteritems():
+        for res_id, template in res_ids_to_templates.items():
             templates_to_res_ids.setdefault(template, []).append(res_id)
 
         results = dict()
-        for template, template_res_ids in templates_to_res_ids.iteritems():
+        for template, template_res_ids in templates_to_res_ids.items():
             Template = self.env['mail.template']
             # generate fields value for all res_ids linked to the current template
             if template.lang:
                 Template = Template.with_context(lang=template._context.get('lang'))
             for field in fields:
                 Template = Template.with_context(safe=field in {'subject'})
-                generated_field_values = Template.render_template(
+                generated_field_values = Template._render_template(
                     getattr(template, field), template.model, template_res_ids,
                     post_process=(field == 'body_html'))
-                for res_id, field_value in generated_field_values.iteritems():
+                for res_id, field_value in generated_field_values.items():
                     results.setdefault(res_id, dict())[field] = field_value
             # compute recipients
             if any(field in fields for field in ['email_to', 'partner_to', 'email_cc']):
@@ -493,17 +470,16 @@ class MailTemplate(models.Model):
                 )
 
             # Add report in attachments: generate once for all template_res_ids
-            if template.report_template and not 'report_template_in_attachment' in self.env.context:
+            if template.report_template:
                 for res_id in template_res_ids:
                     attachments = []
-                    report_name = self.render_template(template.report_name, template.model, res_id)
+                    report_name = self._render_template(template.report_name, template.model, res_id)
                     report = template.report_template
                     report_service = report.report_name
 
-                    if report.report_type in ['qweb-html', 'qweb-pdf']:
-                        result, format = self.pool['report'].get_pdf(self._cr, self._uid, [res_id], report_service, context=Template._context), 'pdf'
-                    else:
-                        result, format = odoo_report.render_report(self._cr, self._uid, [res_id], report_service, {'model': template.model}, Template._context)
+                    if report.report_type not in ['qweb-html', 'qweb-pdf']:
+                        raise UserError(_('Unsupported report type %s found.') % report.report_type)
+                    result, format = report.render_qweb_pdf([res_id])
 
                     # TODO in trunk, change return format to binary to match message_post expected format
                     result = base64.b64encode(result)
@@ -518,17 +494,18 @@ class MailTemplate(models.Model):
         return multi_mode and results or results[res_ids[0]]
 
     @api.multi
-    def send_mail(self, res_id, force_send=False, raise_exception=False):
-        """Generates a new mail message for the given template and record,
-           and schedules it for delivery through the ``mail`` module's scheduler.
+    def send_mail(self, res_id, force_send=False, raise_exception=False, email_values=None, notif_layout=False):
+        """ Generates a new mail.mail. Template is rendered on record given by
+        res_id and model coming from template.
 
-           :param int res_id: id of the record to render the template with
-                              (model is taken from the template)
-           :param bool force_send: if True, the generated mail.message is
-                immediately sent after being created, as if the scheduler
-                was executed for this message only.
-           :returns: id of the mail.message that was created
-        """
+        :param int res_id: id of the record to render the template
+        :param bool force_send: send email immediately; otherwise use the mail
+            queue (recommended);
+        :param dict email_values: update generated mail with those values to further
+            customize the mail;
+        :param str notif_layout: optional notification layout to encapsulate the
+            generated email;
+        :returns: id of the mail.mail that was created """
         self.ensure_one()
         Mail = self.env['mail.mail']
         Attachment = self.env['ir.attachment']  # TDE FIXME: should remove dfeault_type from context
@@ -536,11 +513,27 @@ class MailTemplate(models.Model):
         # create a mail_mail based on values, without attachments
         values = self.generate_email(res_id)
         values['recipient_ids'] = [(4, pid) for pid in values.get('partner_ids', list())]
+        values.update(email_values or {})
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])
         # add a protection against void email_from
         if 'email_from' in values and not values.get('email_from'):
             values.pop('email_from')
+        # encapsulate body
+        if notif_layout and values['body_html']:
+            try:
+                template = self.env.ref(notif_layout, raise_if_not_found=True)
+            except ValueError:
+                _logger.warning('QWeb template %s not found when sending template %s. Sending without layouting.' % (notif_layout, self.name))
+            else:
+                record = self.env[self.model].browse(res_id)
+                template_ctx = {
+                    'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
+                    'model_description': self.env['ir.model']._get(record._name).display_name,
+                    'company': 'company_id' in record and record['company_id'] or self.env.user.company_id,
+                }
+                body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
+                values['body_html'] = self.env['mail.thread']._replace_local_links(body)
         mail = Mail.create(values)
 
         # manage attachments
@@ -549,6 +542,7 @@ class MailTemplate(models.Model):
                 'name': attachment[0],
                 'datas_fname': attachment[0],
                 'datas': attachment[1],
+                'type': 'binary',
                 'res_model': 'mail.message',
                 'res_id': mail.mail_message_id.id,
             }
@@ -560,18 +554,3 @@ class MailTemplate(models.Model):
         if force_send:
             mail.send(raise_exception=raise_exception)
         return mail.id  # TDE CLEANME: return mail + api.returns ?
-
-    # compatibility
-    render_template_batch = render_template
-    get_email_template_batch = get_email_template
-    generate_email_batch = generate_email
-
-    # Compatibility method
-    # def render_template(self, cr, uid, template, model, res_id, context=None):
-    #     return self.render_template_batch(cr, uid, template, model, [res_id], context)[res_id]
-
-    # def get_email_template(self, cr, uid, template_id=False, record_id=None, context=None):
-    #     return self.get_email_template_batch(cr, uid, template_id, [record_id], context)[record_id]
-
-    # def generate_email(self, cr, uid, template_id, res_id, context=None):
-    #     return self.generate_email_batch(cr, uid, template_id, [res_id], context)[res_id]

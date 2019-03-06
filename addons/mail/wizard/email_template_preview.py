@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models
+from odoo import api, fields, models
 
 
 class TemplatePreview(models.TransientModel):
@@ -16,7 +17,7 @@ class TemplatePreview(models.TransientModel):
         if not template_id:
             return []
         template = self.env['mail.template'].browse(int(template_id))
-        records = self.env[template.model_id.model].search([], limit=10)
+        records = self.env[template.model_id.model].search([], order="id desc", limit=10)
         records |= records.browse(default_res_id)
         return records.name_get()
 
@@ -33,12 +34,15 @@ class TemplatePreview(models.TransientModel):
 
     res_id = fields.Selection(_get_records, 'Sample Document')
     partner_ids = fields.Many2many('res.partner', string='Recipients')
+    attachment_ids = fields.Many2many(string='Attachments', store=False)
 
     @api.onchange('res_id')
     @api.multi
     def on_change_res_id(self):
+        if not self.res_id:
+            return {}
         mail_values = {}
-        if self.res_id and self._context.get('template_id'):
+        if self._context.get('template_id'):
             template = self.env['mail.template'].browse(self._context['template_id'])
             self.name = template.name
             mail_values = template.generate_email(self.res_id)

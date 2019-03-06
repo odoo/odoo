@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="account_reports_do_statements_menu" name="Dominican Republic" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
+
+    <data noupdate="1">
+        <!-- Chart of Accounts Template -->
+        <record id="do_chart_template" model="account.chart.template">
+            <field name="name">Catálogo de Cuentas Dominicano (NIIF)</field>
+            <field name="code_digits">8</field>
+            <field name="cash_account_code_prefix">110101</field>
+            <field name="bank_account_code_prefix">110102</field>
+            <field name="transfer_account_code_prefix">11010100</field>
+            <field name="currency_id" ref="base.DOP"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_payrolladvice">
+    <t t-call="web.html_container">
+        <t t-call="web.external_layout">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <table>
+                        <tr>
+                            <td><p><span t-esc="time.strftime('%m-%d-%Y')"/></p></td>
+                        </tr>
+                        <tr>
+                            <td><strong><span>To,</span></strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong><span>The Manager,</span></strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong><span t-esc="o.bank_id.name" />Bank</strong></td>
+                        </tr>
+                        <tr>
+                            <td><p><span>Dear Sir/Madam,</span></p></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p class="text-center">
+                                    <strong>Payment Advice from <span t-esc="o.name"/> A/C no. <span t-esc="o.company_id.partner_id.bank_ids and o.company_id.partner_id.bank_ids[0].acc_number"/> form period  <span t-esc="get_month(o.date)['from_name']"/> to <span t-esc="get_month(o.date)['to_name']"/></strong>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><p><span t-esc="o.note" /></p></td>
+                        </tr>
+                    </table>
+
+                    <table class="table table-sm">
+                        <thead>
+                            <tr style="border-top: 1px solid black">
+                                <th>SI No.</th>
+                                <th>Name Of Employee</th>
+                                <th>Bank Account No.</th>
+                                <th t-if="o.neft != True">IFSC Code</th>
+                                <th>By salary</th>
+                                <th>C/D</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="get_detail(o.line_ids)" t-as="l">
+                                <td>
+                                    <span t-esc="l_index+1">.</span>
+                                </td> 
+                                <td>
+                                  <span t-esc="l['name']"/>
+                                </td>
+                                <td>
+                                     <span t-esc="l['acc_no']"/>
+                                </td>
+                                <td t-if="o.neft != True">
+                                    <span t-esc="l['ifsc_code']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="l['bysal']" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                                </td>
+                                 <td>
+                                    <span t-esc="l['debit_credit']"/>
+                                </td>
+                            </tr>
+                            <tr class="border-black" style="border-bottom: 1px solid black">
+                                <td colspan="2"/>
+                                <td t-if="o.neft == True">
+                                    <strong >Total :</strong>
+                                </td>
+                                <td t-if="o.neft != True" colspan="2">
+                                    <strong >Total :</strong>
+                                </td>
+                                <td colspan="2">
+                                    <strong><span t-esc="get_bysal_total()" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/></strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>Yours Sincerely</p>
+                    <p>For <span t-esc="o.company_id.name"/></p>
+                    <p class="mt32">Authorized Signature</p>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</odoo>

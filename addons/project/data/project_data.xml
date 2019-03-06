@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- sale_timesheet and project define the same field without depending on each, which causes the field to be deleted when the module that created it
+        is deleted. To avoid this, we create xmlids manually for this field in both modules to prevent accidental deletion. To fix in saas-7 by moving the field definition-->
+        <record id="duplicate_field_xmlid" model="ir.model.data">
+            <field name="res_id" search="[('model','=','res.company'),('name','=','project_time_mode_id')]" model="ir.model.fields"/>
+            <field name="model">ir.model.fields</field>
+            <field name="module">project</field>
+            <field name="name">project_time_mode_id_duplicate_xmlid</field>
+            <field name="noupdate">True</field>
+        </record>
+
+        <record id="ir_cron_rating_project" model="ir.cron">
+            <field name="name">Project: Send rating</field>
+            <field name="model_id" ref="project.model_project_project"/>
+            <field name="state">code</field>
+            <field name="code">model._send_rating_all()</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+
+    </data>
+
+
+        <!-- Task-related subtypes for messaging / Chatter -->
+        <record id="mt_task_new" model="mail.message.subtype">
+            <field name="name">Task Created</field>
+            <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
+            <field name="hidden" eval="True"/>
+            <field name="description">Task Created</field>
+        </record>
+        <record id="mt_task_blocked" model="mail.message.subtype">
+            <field name="name">Task Blocked</field>
+            <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
+            <field name="description">Task blocked</field>
+        </record>
+        <record id="mt_task_ready" model="mail.message.subtype">
+            <field name="name">Task Ready</field>
+            <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
+            <field name="description">Task ready for Next Stage</field>
+        </record>
+        <record id="mt_task_stage" model="mail.message.subtype">
+            <field name="name">Stage Changed</field>
+            <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
+            <field name="description">Stage changed</field>
+        </record>
+        <record id="mt_task_rating" model="mail.message.subtype">
+            <field name="name">Task Rating</field>
+            <field name="res_model">project.task</field>
+            <field name="default" eval="True"/>
+            <field name="description">Ratings</field>
+        </record>
+        <!-- Project-related subtypes for messaging / Chatter -->
+        <record id="mt_project_task_new" model="mail.message.subtype">
+            <field name="name">Task Created</field>
+            <field name="sequence">10</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_task_new')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+        <record id="mt_project_task_blocked" model="mail.message.subtype">
+            <field name="name">Task Blocked</field>
+            <field name="sequence">11</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_task_blocked')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+        <record id="mt_project_task_ready" model="mail.message.subtype">
+            <field name="name">Task Ready</field>
+            <field name="sequence">12</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_task_ready')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+        <record id="mt_project_task_stage" model="mail.message.subtype">
+            <field name="name">Task Stage Changed</field>
+            <field name="sequence">13</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_task_stage')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+        <record id="mt_project_task_rating" model="mail.message.subtype">
+            <field name="name">Task Rating</field>
+            <field name="sequence">14</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" eval="ref('mt_task_rating')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+
+    <data noupdate="1">
+
+        <record forcecreate="False" id="project_project_data" model="project.project">
+            <field name="name">Start here to discover Odoo</field>
+            <field name="privacy_visibility">followers</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="active" eval="False"/>
+            <field name="alias_name">discover</field>
+            <field name="alias_model_id" ref="model_project_task"/>
+            <field name="alias_contact">everyone</field>
+            <field name="alias_defaults">{'project_id': 1}</field>
+            <field name="alias_force_thread_id">0</field>
+            <field name="alias_parent_model_id" ref="model_project_project"/>
+        </record>
+
+        <record forcecreate="False" id="project_stage_data_0" model="project.task.type">
+            <field name="sequence">1</field>
+            <field name="name">New</field>
+            <field name="project_ids" eval="[(4, ref('project_project_data'))]"/>
+        </record>
+
+        <record forcecreate="False" id="project_stage_data_1" model="project.task.type">
+            <field name="sequence">2</field>
+            <field name="name">Basic</field>
+            <field name="project_ids" eval="[(4, ref('project_project_data'))]"/>
+        </record>
+
+        <record forcecreate="False" id="project_stage_data_2" model="project.task.type">
+            <field name="sequence">3</field>
+            <field name="name">Advanced</field>
+            <field name="project_ids" eval="[(4, ref('project_project_data'))]"/>
+        </record>
+
+        <record forcecreate="False" id="project_task_data_0" model="project.task">
+            <field name="sequence">1</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="priority">0</field>
+            <field name="project_id" ref="project.project_project_data"/>
+            <field name="active" eval="False"/>
+            <field name="name">Welcome to Odoo</field>
+            <field name="description">Welcome! This project has the objective to show you all the main feature in the project app. Each card will help you to manage your projects easily in a few minutes.</field>
+            <field name="color">2</field>
+            <field name="stage_id" ref="project_stage_data_0"/>
+        </record>
+
+        <record forcecreate="False" id="project_task_data_1" model="project.task">
+            <field name="sequence">2</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="priority">0</field>
+            <field name="project_id" ref="project.project_project_data"/>
+            <field name="active" eval="False"/>
+            <field name="name">Try to play with the search bar. Use the filters</field>
+            <field name="description">Come back to the tasks view to play with the filters. They are up to the form</field>
+            <field name="stage_id" ref="project_stage_data_0"/>
+        </record>
+
+        <record forcecreate="False" id="project_task_data_5" model="project.task">
+            <field name="sequence">3</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="priority">0</field>
+            <field name="project_id" ref="project.project_project_data"/>
+            <field name="active" eval="False"/>
+            <field name="name">Try to drag a task wherever your want</field>
+            <field name="kanban_state">done</field>
+            <field name="stage_id" ref="project_stage_data_0"/>
+        </record>
+
+        <record forcecreate="False" id="project_task_data_2" model="project.task">
+            <field name="sequence">4</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="priority">0</field>
+            <field name="project_id" ref="project.project_project_data"/>
+            <field name="active" eval="False"/>
+            <field name="name">Guess what happens if you set this task as favorite?</field>
+            <field name="description">Click on the top left star to change the priority and come back in the tasks view. You task is now at the top of the column.</field>
+            <field name="stage_id" ref="project_stage_data_0"/>
+        </record>
+
+        <record forcecreate="False" id="project_task_data_4" model="project.task">
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="priority">0</field>
+            <field name="project_id" ref="project.project_project_data"/>
+            <field name="active" eval="False"/>
+            <field name="name">Use the chatter to collaborate with your members</field>
+            <field name="description">The chatter is right below</field>
+            <field name="stage_id" ref="project_stage_data_2"/>
+        </record>
+
+        <record forcecreate="False" id="msg_task_4" model="mail.message">
+            <field name="subject">Converse with your customers and colleagues</field>
+            <field name="model">project.task</field>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="res_id" ref="project_task_data_4"/>
+            <field name="body">Use this chatter to send emails. Add new people in the followers list, to make them aware about the main changes about this task!</field>
+            <field name="message_type">email</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
+        <record forcecreate="False" id="project_tag_data" model="project.tags">
+            <field name="name">NeedAssistance</field>
+            <field name="color" eval="5"/>
+        </record>
+
+        <record forcecreate="False" id="project_task_data_6" model="project.task">
+            <field name="sequence">3</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="priority">0</field>
+            <field name="project_id" ref="project.project_project_data"/>
+            <field name="active" eval="False"/>
+            <field name="name">Use tags to organize your tasks</field>
+            <field name="kanban_state">blocked</field>
+            <field name="stage_id" ref="project_stage_data_1"/>
+            <field name="description">Tags will be represented by colored bars on the card</field>
+            <field name="tag_ids" eval="[(6,0,[ref('project.project_tag_data')])]"/>
+        </record>
+
+        <record forcecreate="False" id="project_task_data_12" model="project.task">
+            <field name="sequence">4</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="priority">0</field>
+            <field name="project_id" ref="project.project_project_data"/>
+            <field name="active" eval="False"/>
+            <field name="color">3</field>
+            <field name="name">Try to customize this card. Change its background.</field>
+            <field name="description">Use the edit icon on the card to customize the background.</field>
+            <field name="stage_id" ref="project_stage_data_1"/>
+        </record>
+
+        <record forcecreate="False" id="project_task_data_13" model="project.task">
+            <field name="sequence">5</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="priority">0</field>
+            <field name="project_id" ref="project.project_project_data"/>
+            <field name="active" eval="False"/>
+            <field name="name">Set this task as 'Ready for next stage' to proceed further in the process</field>
+            <field name="description">You can change its state by clicking on the small circle on the card, or here, next to the task title.</field>
+            <field name="stage_id" ref="project_stage_data_1"/>
+        </record>
+
+        <record forcecreate="False" id="project_task_data_7" model="project.task">
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="priority">0</field>
+            <field name="project_id" ref="project.project_project_data"/>
+            <field name="active" eval="False"/>
+            <field name="name">Finished with this stage? Archive it !</field>
+            <field name="stage_id" ref="project_stage_data_2"/>
+            <field name="description">Click on the gear icon on the column, to archive the stage, with all the tasks in it. You can also archive one card only, by clicking on the button in the task form view.</field>
+        </record>
+
+        <record forcecreate="False" id="project_task_data_9" model="project.task">
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="priority">0</field>
+            <field name="project_id" ref="project.project_project_data"/>
+            <field name="active" eval="False"/>
+            <field name="name">You want to add a stage? Add a new column !</field>
+            <field name="stage_id" ref="project_stage_data_2"/>
+            <field name="description">Click on the last column to create a stage. The name depends on the process. For example, in a customer service process, a stage name may be 'Backlog', 'Waiting Customer Feedback' or 'Done'.</field>
+        </record>
+
+        <record forcecreate="False" id="project_task_data_11" model="project.task">
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="priority">0</field>
+            <field name="project_id" ref="project.project_project_data"/>
+            <field name="active" eval="False"/>
+            <field name="name">You can set a deadline on a task</field>
+            <field name="stage_id" ref="project_stage_data_1"/>
+            <field name="date_deadline" eval="datetime.now()+timedelta(days=30)"/>
+        </record>
+
+        <record forcecreate="False" id="project_task_data_14" model="project.task">
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="priority">0</field>
+            <field name="project_id" ref="project.project_project_data"/>
+            <field name="active" eval="False"/>
+            <field name="name">Send a message with a picture as attachment, and see what happens!</field>
+            <field name="stage_id" ref="project_stage_data_2"/>
+            <field name="description">In the chatter, sending an email with an attachment will display the picture on the card. When there are several image attachments, you can choose which one you want to display.</field>
+        </record>
+
+    </data>
+</odoo>

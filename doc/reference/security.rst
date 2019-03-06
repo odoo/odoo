@@ -71,8 +71,6 @@ This means the first *group rule* restricts access, but any further
 .. warning:: record rules do not apply to the Administrator user
     :class: aphorism
 
-    although access rules do
-
 .. _reference/security/fields:
 
 Field Access
@@ -80,7 +78,7 @@ Field Access
 
 .. versionadded:: 7.0
 
-An ORM :class:`~openerp.fields.Field` can have a ``groups`` attribute
+An ORM :class:`~odoo.fields.Field` can have a ``groups`` attribute
 providing a list of groups (as a comma-separated string of
 :term:`external identifiers`).
 
@@ -88,7 +86,7 @@ If the current user is not in one of the listed groups, he will not have
 access to the field:
 
 * restricted fields are automatically removed from requested views
-* restricted fields are removed from :meth:`~openerp.models.Model.fields_get`
+* restricted fields are removed from :meth:`~odoo.models.Model.fields_get`
   responses
 * attempts to (explicitly) read from or write to restricted fields results in
   an access error
@@ -97,12 +95,6 @@ access to the field:
 
     field access groups apply to administrator in fields_get but not in
     read/write...
-
-Workflow transition rules
-=========================
-
-Workflow transitions can be restricted to a specific group. Users outside the
-group can not trigger the transition.
 
 .. _foo: http://google.com
 .. _time module: https://docs.python.org/2/library/time.html

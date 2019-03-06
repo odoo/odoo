@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="stock_assets_backend" name="mrp_workorder assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/stock/static/tests/route_tour.js"></script>
+            <script type="text/javascript" src="/stock/static/src/js/stock_traceability_report_backend.js"></script>
+            <script type="text/javascript" src="/stock/static/src/js/stock_traceability_report_widgets.js"></script>
+            <link rel="stylesheet" type="text/scss" href="/stock/static/src/scss/stock_traceability_report.scss"/>
+        </xpath>
+   </template>
+
+   <template id="message_head">
+        <t t-if="move.state != 'done'">
+            <strong>The initial demand has been updated.</strong>
+        </t>
+        <t t-if="move.state == 'done'">
+            <strong>
+                The done move line has been corrected.
+            </strong>
+        </t>
+    </template>
+
+    <template id="message_body">
+        <ul>
+            <li>
+                <t t-esc="move.product_id.display_name"/>:
+            </li>
+            <t t-if="move.state != 'done'">
+                <t t-if="'product_uom_qty' in vals">
+                    <li>
+                        Quantity : <t t-esc="move.product_uom_qty"/> -&gt; <t t-esc="float(vals.get('product_uom_qty'))"/>
+                    </li>
+                </t>
+            </t>
+            <t t-if="'qty_done' in vals">
+                <li>
+                    Quantity : <t t-esc="move.qty_done"/> -&gt; <t t-esc="float(vals.get('qty_done'))"/>
+                </li>
+            </t>
+            <t t-if="'location_id' in vals">
+                <li>
+                    Source Location:
+                    <t t-if="move.location_id">
+                        <t t-esc="move.location_id.name"/> -&gt;
+                    </t>
+                    <t t-esc="vals['location_name']"/>
+                </li>
+            </t>
+            <t t-if="'location_dest_id' in vals">
+                <li>
+                    Destination Location:
+                    <t t-if="move.location_dest_id">
+                        <t t-esc="move.location_dest_id.name"/> -&gt;
+                    </t>
+                    <t t-esc="vals['location_dest_name']"/>
+                </li>
+            </t>
+            <t t-if="'lot_name' in vals">
+                <li>
+                    Lot/Serial :
+                    <t t-if="move.lot_id">
+                        <t t-esc="move.lot_id.name"/> -&gt;
+                    </t>
+                    <t t-esc="vals['lot_name']"/>
+                </li>
+            </t>
+            <t t-if="'package_name' in vals">
+                <li>
+                    Source Package :
+                    <t t-if="move.package_id">
+                        <t t-esc="move.package_id.name"/> -&gt;
+                    </t>
+                    <t t-esc="vals['package_name']"/>
+                </li>
+            </t>
+            <t t-if="'result_package_name' in vals">
+                <li>
+                    Destination Package :
+                    <t t-if="move.result_package_id">
+                        <t t-esc="move.result_package_id.name"/> -&gt;
+                    </t>
+                    <t t-esc="vals['result_package_name']"/>
+                </li>
+            </t>
+            <t t-if="'owner_name' in vals">
+                <li>
+                    Owner :
+                    <t t-if="move.owner_id">
+                        <t t-esc="move.owner_id.name"/> -&gt;
+                    </t>
+                    <t t-esc="vals['owner_name']"/>
+                </li>
+            </t>
+        </ul>
+    </template>
+
+    <template id="track_move_template">
+        <div>
+            <t t-call="stock.message_head"/>
+            <t t-call="stock.message_body"/>
+        </div>
+    </template>
+
+    <template id="exception_on_picking">
+        <div> Exception(s) occurred on the picking
+            <a href="#" data-oe-model="stock.picking" t-att-data-oe-id="origin_picking.id"><t t-esc="origin_picking.name"/></a>.
+            Manual actions may be needed.
+            <div class="mt16">
+                <p>Exception(s):</p>
+                <ul t-foreach="moves_information" t-as="exception">
+                    <t t-set="move" t-value="exception[0]"/>
+                    <t t-set="new_qty" t-value="exception[1][0]"/>
+                    <t t-set="old_qty" t-value="exception[1][1]"/>
+                    <li><t t-esc="new_qty"/> <t t-esc="move.product_uom.name"/>
+                    of <t t-esc="move.product_id.display_name"/> processed instead of <t t-esc="old_qty"/> <t t-esc="move.product_uom.name"/></li>
+                </ul>
+            </div>
+            <div class="mt16" t-if="impacted_pickings">
+                <p>Next transfer(s) impacted:</p>
+                <ul t-foreach="impacted_pickings" t-as="picking">
+                    <li><a href="#" data-oe-model="stock.picking" t-att-data-oe-id="picking.id"><t t-esc="picking.name"/></a></li>
+                </ul>
+            </div>
+        </div>
+    </template>
+</odoo>

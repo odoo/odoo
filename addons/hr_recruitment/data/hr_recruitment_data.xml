@@ -1,16 +1,6 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
 <data noupdate="1">
-        <!-- notify all employees of module installation -->
-        <record model="mail.message" id="module_install_notification">
-            <field name="model">mail.channel</field>
-            <field name="res_id" ref="mail.channel_all_employees"/>
-            <field name="message_type">notification</field>
-            <field name="subtype_id" ref="mail.mt_comment"/>
-            <field name="subject">Recruitment Process application installed!</field>
-            <field name="body"><![CDATA[<p>Manage job positions and your company's recruitment process. This application is integrated with the Survey application to help you define interviews for different jobs.</p>
-<p>You can automatically receive job application though an email gateway, see the Human Resources settings.</p>]]></field>
-        </record>
 
     <!-- Meeting Types (for interview meetings) -->
     <record model="calendar.event.type" id="categ_meet_interview">
@@ -18,60 +8,263 @@
     </record>
 
     <!-- Templates for interest / refusing applicants -->
-    <record id="applicant_refuse" model="mail.template">
-        <field name="name">Application refused</field>
-        <field name="subject">Application refused</field>
-        <field name="email_to">${object.email_from}</field>
-        <field name="partner_to">${object.partner_id and object.partner_id.id or ''}</field>
-        <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
+    <record id="email_template_data_applicant_refuse" model="mail.template">
+        <field name="name">Applicant: Refuse</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="user_signature" eval="0"/>
-        <field name="body_html"><![CDATA[<p>Dear ${object.partner_name or 'applicant'},</p>
-        <p>We thank you for your interest in our company and for your application.
-        Unfortunately, your profile does not match with our needs or our recruitment
-        campaign has reached its term.</p>
-        <p>If you want more details, feel free to contact us by phone.</p>
-        <p>Kind regards,</p>
-        <br/>
-         ${object.user_id and object.user_id.signature | safe or ''}]]></field>
+        <field name="subject">Your Job Application: ${object.job_id.name | safe}</field>
+        <field name="email_to">${(not object.partner_id and object.email_from or '') | safe}</field>
+        <field name="partner_to">${object.partner_id.id or ''}</field>
+        <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+    <tr>
+        <td valign="top">
+            <div style="font-size: 13px; margin: 0px; padding: 0px;">
+                Hello,<br/><br/>
+                Thank you for your interest in joining the
+                <b>${object.company_id.name}</b> team.  We wanted to
+                let you know that, although your resume is competitive,
+                our hiring team reviewed your application and <b>did not
+                select it for further consideration</b>.
+                <br/><br/>
+                Please note that recruiting is hard, and we can do
+                mistake. Do not hesitate to reply to this email if you
+                think we did a mistake, or if you want more information
+                about our decision.
+                <br/><br/>
+                We will, however, keep your resume on record and get in
+                touch with you about future opportunities that may be a
+                better fit for your skills and experience.
+                <br/><br/>
+                We wish you all the best in your job search and hope we
+                will have the chance to consider you for another role
+                in the future.
+                <br/><br/>
+                Thank you,
+                <div style="font-size: 11px; color: grey;">
+                    % if object.user_id:
+                        -- <br/>
+                        <strong>${object.user_id.name}</strong><br/>
+                        Email: ${object.user_id.email or ''}<br/>
+                        Phone: ${object.user_id.phone or ''}
+                    % else:
+                        -- <br/>
+                        ${object.company_id.name}<br/>
+                        The HR Team
+                    % endif
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+        </field>
+        <field name="user_signature" eval="False"/>
+        <field name="auto_delete" eval="True"/>
+        <field name="lang">${object.partner_id.lang or ''}</field>
     </record>
 
-    <record id="hr_welcome_new_employee" model="mail.template">
-        <field name="name">Welcome New Employee</field>
-        <field name="model_id" ref="hr.model_hr_employee"/>
-        <field name="subject">Welcoming ${object.name} </field>
-        <field name="body_html"><![CDATA[
-            <p>
-                %if object.department_id:
-                    I’m very pleased to announce that <strong> ${object.name} </strong> will be joining us as a ${object.job_id.name}
-                    in ${object.department_id.name}.
-                %else:
-                    I’m very pleased to announce that <strong> ${object.name} </strong> will be joining us as a ${object.job_id.name}.
-                %endif
-            </p>
-            <p>Please welcome him/her and help him/her finding his/her marks.</p>
-            ]]></field>
-    </record>
-
-    <record id="applicant_interest" model="mail.template">
-        <field name="name">Application approved</field>
-        <field name="subject">Application approved</field>
-        <field name="email_to">${object.email_from}</field>
-        <field name="partner_to">${object.partner_id and object.partner_id.id or ''}</field>
-        <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
+    <record id="email_template_data_applicant_interest" model="mail.template">
+        <field name="name">Applicant: Interest</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="user_signature" eval="0"/>
-        <field name="body_html"><![CDATA[<p>Dear ${object.partner_name or 'applicant'},</p>
-        <p>Congrats! Your resume's got our interest!
-        I will call you as soon as possible to make a 10 minutes phone interview and  plan a first meeting.</p>
-        <p>If we can’t reach you or if you miss our call, feel free to reach me back on the number 001 312 349 3030
-        If I do not answer, please let me a message with some schedules to call you back.</p>
-        <p>Kind regards,</p>
-        <br/>
-         ${object.user_id.signature | safe}]]></field>
+        <field name="subject">Your Job Application: ${object.job_id.name | safe}</field>
+        <field name="email_to">${(not object.partner_id and object.email_from or '') | safe}</field>
+        <field name="partner_to">${object.partner_id.id or ''}</field>
+        <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="background-color: white; border-collapse: collapse; margin-left: 20px;">
+    <tr>
+        <td valign="top" style="padding: 0px 10px;">
+            <div style="text-align: center">
+                <h2>Congratulations!</h2>
+                <div style="color:grey;">Your resume has been positively reviewed.</div>
+                <img src="/hr_recruitment/static/src/img/congratulations.png" alt="Congratulations!" style="width:175px;margin:20px 0;"/>
+            </div>
+            <div style="font-size: 13px; margin: 0px; padding: 0px;">
+                We just reviewed your resume, and it caught our
+                attention. As we think you might be great for the
+                position, your application has been short listed for a
+                call or an interview.
+                <br/><br/>
+                % if 'website_url' in object.job_id and object.job_id.website_url:
+                    <div style="margin: 16px 8px 16px 8px;">
+                        <a href="${object.job_id.website_url}"
+                            style="background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">Job Description</a>
+                    </div>
+                % endif
+
+                % if object.user_id:
+                    You will soon be contacted by:
+                    <table>
+                        <tr>
+                            <td width="75">
+                                <img src="/web/image/res.users/${object.user_id.id}/image_small" alt="Avatar" style="vertical-align:baseline;max-width:64px;" />
+                            </td>
+                            <td>
+                                <strong>${object.user_id.name}</strong><br/>
+                                <span>Email: ${object.user_id.email or ''}</span><br/>
+                                <span>Phone: ${object.user_id.phone or ''}</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <br/><br/>
+                % endif
+                See you soon,
+                <div style="font-size: 11px; color: grey;">
+                    -- <br/>
+                    The HR Team
+                    % if 'website_url' in object.job_id and object.job_id.website_url
+                        Discover <a href="/jobs" style="text-decoration:none;color:#717188;">all our jobs</a>.<br/>
+                    % endif
+                </div>
+
+                <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
+                <h3 style="color:#9A6C8E;"><strong>What is the next step?</strong></h3>
+                We usually <strong>answer applications within 3 days</strong>.
+                <br/><br/>
+                The next step is either a call or a meeting in our offices.
+                <br/>
+                Feel free to <strong>contact us if you want a faster
+                feedback</strong> or if you don't get news from us
+                quickly enough (just reply to this email).
+                <br/>
+
+                <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;"/>
+                % set location = ''
+                % if object.job_id.address_id.name:
+                    <strong>${object.job_id.address_id.name}</strong><br/>
+                % endif
+                % if object.job_id.address_id.street:
+                    ${object.job_id.address_id.street}<br/>
+                    % set location = object.job_id.address_id.street
+                % endif
+                % if object.job_id.address_id.street2:
+                    ${object.job_id.address_id.street2}<br/>
+                    % set location = '%s, %s' % (location, object.job_id.address_id.street2)
+                % endif
+                % if object.job_id.address_id.city:
+                    ${object.job_id.address_id.city},
+                    % set location = '%s, %s' % (location, object.job_id.address_id.city)
+                % endif
+                % if object.job_id.address_id.state_id.name:
+                    ${object.job_id.address_id.state_id.name},
+                    % set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)
+                % endif
+                % if object.job_id.address_id.zip:
+                    ${object.job_id.address_id.zip}
+                    % set location = '%s, %s' % (location, object.job_id.address_id.zip)
+                % endif
+                <br/>
+                % if object.job_id.address_id.country_id.name:
+                    ${object.job_id.address_id.country_id.name}<br/>
+                    % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)
+                % endif
+                <br/>
+
+                % if object.job_id.address_id:
+                    <a href="https://maps.google.com/maps?q=${location}" target="new">
+                        <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom;"/>
+                    </a>
+                % endif
+            </div>
+        </td>
+    </tr>
+</table></field>
+        <field name="user_signature" eval="False"/>
+        <field name="auto_delete" eval="True"/>
+        <field name="lang">${object.partner_id.lang or ''}</field>
     </record>
 
-        <!--    Resource(type_id)        -->
+    <record id="email_template_data_applicant_congratulations" model="mail.template">
+        <field name="name">Applicant: Acknowledgment</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="subject">Your Job Application: ${object.job_id.name | safe}</field>
+        <field name="email_to">${(not object.partner_id and object.email_from or '') | safe}</field>
+        <field name="partner_to">${object.partner_id.id or ''}</field>
+        <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="background-color: white; border-collapse: collapse; margin-left: 20px;">
+    <tr>
+        <td valign="top" style="padding: 0px 10px;">
+            <div style="font-size: 13px; margin: 0px; padding: 0px;">
+                Hello,
+                <br/><br/>
+                We confirm we successfully received your application to the job
+                "<a href="${object.job_id.website_url or ''}" style="color:#9A6C8E;"><strong>${object.job_id.name}</strong></a>" at <strong>${object.company_id.name}</strong>.
+                <br/><br/>
+                We will come back to you shortly.
+
+                % if 'website_url' in object.job_id and object.job_id.website_url:
+                    <div style="margin: 16px 8px 16px 8px;">
+                        <a href="${object.job_id.website_url}"
+                            style="background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;">Job Description</a>
+                    </div>
+                % endif
+
+                <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
+                % if object.user_id:
+                    <h3 style="color:#9A6C8E;"><strong>Your Contact:</strong></h3>
+                    <table>
+                        <tr>
+                            <td width="75">
+                                <img src="/web/image/res.users/${object.user_id.id}/image_small" alt="Avatar" style="vertical-align:baseline;max-width:64px;" />
+                            </td>
+                            <td>
+                                <strong>${object.user_id.name}</strong><br/>
+                                <span>Email: ${object.user_id.email or ''}</span><br/>
+                                <span>Phone: ${object.user_id.phone or ''}</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
+                % endif
+
+                <h3 style="color:#9A6C8E;"><strong>What is the next step?</strong></h3>
+                We usually <strong>answer applications within 3 days.</strong><br/><br/>
+                Feel free to <strong>contact us if you want a faster
+                feedback</strong> or if you don't get news from us
+                quickly enough (just reply to this email).
+
+                <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;"/>
+                % set location = ''
+                % if object.job_id.address_id.name:
+                    <strong>${object.job_id.address_id.name}</strong><br/>
+                % endif
+                % if object.job_id.address_id.street:
+                    ${object.job_id.address_id.street}<br/>
+                    % set location = object.job_id.address_id.street
+                % endif
+                % if object.job_id.address_id.street2:
+                    ${object.job_id.address_id.street2}<br/>
+                    % set location = '%s, %s' % (location, object.job_id.address_id.street2)
+                % endif
+                % if object.job_id.address_id.city:
+                    ${object.job_id.address_id.city},
+                    % set location = '%s, %s' % (location, object.job_id.address_id.city)
+                % endif
+                % if object.job_id.address_id.state_id.name:
+                    ${object.job_id.address_id.state_id.name},
+                    % set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)
+                % endif
+                % if object.job_id.address_id.zip:
+                    ${object.job_id.address_id.zip}
+                    % set location = '%s, %s' % (location, object.job_id.address_id.zip)
+                % endif
+                <br/>
+                % if object.job_id.address_id.country_id.name:
+                    ${object.job_id.address_id.country_id.name}<br/>
+                    % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)
+                % endif
+                <br/>
+                % if object.job_id.address_id:
+                    <a href="https://maps.google.com/maps?q=${location}" target="new">
+                        <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom;"/>
+                    </a>
+                % endif
+            </div>
+        </td>
+    </tr>
+</table></field>
+        <field name="user_signature" eval="False"/>
+        <field name="auto_delete" eval="True"/>
+        <field name="lang">${object.partner_id.lang or ''}</field>
+    </record>
 
     <record model="hr.recruitment.degree" id="degree_graduate">
         <field name="name">Graduate</field>
@@ -93,7 +286,7 @@
     <record id="mail_alias_jobs" model="mail.alias">
         <field name="alias_name">jobs</field>
         <field name="alias_model_id" ref="model_hr_applicant"/>
-        <field name="alias_user_id" ref="base.user_root"/>
+        <field name="alias_user_id" ref="base.user_admin"/>
         <field name="alias_parent_model_id" ref="model_hr_job"/>
     </record>
 
@@ -166,5 +359,28 @@
             <field name="name">Job Campaign</field>
     </record>
 
+    <record model="hr.recruitment.stage" id="stage_job1">
+        <field name="name">Initial Qualification</field>
+        <field name="sequence">1</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job2">
+        <field name="name">First Interview</field>
+        <field name="template_id" ref="email_template_data_applicant_interest"/>
+        <field name="sequence">2</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job3">
+        <field name="name">Second Interview</field>
+        <field name="sequence">3</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job4">
+        <field name="name">Contract Proposal</field>
+        <field name="sequence">4</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job5">
+        <field name="name">Contract Signed</field>
+        <field name="sequence">5</field>
+        <field name="fold" eval="True"/>
+    </record>
+
 </data>
-</openerp>
+</odoo>

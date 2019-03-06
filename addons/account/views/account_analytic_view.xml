@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <record id="view_account_analytic_line_form_inherit_account" model="ir.ui.view">
             <field name="name">account.analytic.line.form.inherit.account</field>
@@ -7,18 +7,20 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_line_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='account_id']" position="after">
-                        <field name="general_account_id"/>
+                    <xpath expr="//field[@name='tag_ids']" position="after">
                         <field name="ref"/>
                         <field name="partner_id"/>
-                        <field name="move_id" readonly="1"/>
                     </xpath>
-                    <xpath expr="//field[@name='amount']" position="after">
-                        <field name="company_currency_id" invisible="1"/>
-                        <field name="amount_currency"/>
+                    <xpath expr="//field[@name='product_uom_id']" position="before">
                         <field name="product_id"/>
-                        <field name="product_uom_id" class="oe_inline"/>
                     </xpath>
+                    <group name="amount" position="after">
+                        <group/> <!-- put Accounting group under Amount group -->
+                        <group name="accounting" string="Accounting">
+                            <field name="general_account_id"/>
+                            <field name="move_id"/>
+                        </group>
+                    </group>
                 </data>
             </field>
         </record>
@@ -45,9 +47,9 @@
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     </xpath>
                     <xpath expr="//group[@name='groupby']" position="after">
-                        <filter string="Financial Account" context="{'group_by':'general_account_id'}"/>
-                        <filter string="Product" context="{'group_by':'product_id'}"/>
-                        <filter string="Partner" context="{'group_by':'partner_id'}"/>
+                        <filter string="Financial Account" name="financialaccount" context="{'group_by':'general_account_id'}"/>
+                        <filter string="Product" name="product" context="{'group_by':'product_id'}"/>
+                        <filter string="Partner" name="partner" context="{'group_by':'partner_id'}"/>
                     </xpath>
                 </data>
             </field>
@@ -65,15 +67,8 @@
         </record>
 
         <menuitem
-            name="Analytic Accounts"
-            parent="menu_finance_entries"
-            action="analytic.action_account_analytic_chart"
-            id="menu_action_analytic_account_tree2"
-            sequence="30"
-            groups="analytic.group_analytic_accounting"/>
-        <menuitem
-            name="Analytic Entries"
-            parent="menu_finance_entries"
+            name="Analytic Items"
+            parent="account.menu_finance_entries_accounting_entries"
             action="analytic.account_analytic_line_action_entries"
             id="menu_action_analytic_lines_tree"
             sequence="35"
@@ -81,5 +76,20 @@
         <menuitem action="analytic.action_account_analytic_account_form" id="account_analytic_def_account"
             parent="menu_analytic_accounting"
             groups="analytic.group_analytic_accounting" sequence="0"/>
+
+        <menuitem
+            id="account_analytic_tag_menu"
+            name="Analytic Tags"
+            parent="menu_analytic_accounting"
+            action="analytic.account_analytic_tag_action"
+            groups="analytic.group_analytic_tags"/>
+
+        <menuitem
+            id="account_analytic_group_menu"
+            name="Analytic Account Groups"
+            parent="menu_analytic_accounting"
+            action="analytic.account_analytic_group_action"
+            groups="analytic.group_analytic_accounting"/>
+
     </data>
-</openerp>
+</odoo>

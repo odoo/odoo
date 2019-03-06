@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Fiscal Position Templates -->
+
+        <record id="fiscal_position_template_import" model="account.fiscal.position.template">
+            <field name="name">Import/Export</field>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+
+        <record id="fiscal_position_tax_template_3" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import"  />
+            <field name="tax_src_id" ref="vat_25_purchase" />
+            <field name="tax_dest_id" ref="vat_O_import" />
+        </record>
+        <record id="fiscal_position_tax_template_4" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import"  />
+            <field name="tax_src_id" ref="vat_25_invest" />
+            <field name="tax_dest_id" ref="vat_O_import" />
+        </record>
+
+        <record id="fiscal_position_tax_template_5" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import"  />
+            <field name="tax_src_id" ref="vat_37_purchase" />
+            <field name="tax_dest_id" ref="vat_O_import" />
+        </record>
+        <record id="fiscal_position_tax_template_6" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import"  />
+            <field name="tax_src_id" ref="vat_37_invest" />
+            <field name="tax_dest_id" ref="vat_O_import" />
+        </record>
+
+
+        <record id="fiscal_position_tax_template_9" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import"  />
+            <field name="tax_src_id" ref="vat_77_purchase" />
+            <field name="tax_dest_id" ref="vat_O_import" />
+        </record>
+        <record id="fiscal_position_tax_template_10" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import"  />
+            <field name="tax_src_id" ref="vat_77_invest" />
+            <field name="tax_dest_id" ref="vat_O_import" />
+        </record>
+
+        <record id="fiscal_position_tax_template_14" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import"  />
+            <field name="tax_src_id" ref="vat_25" />
+            <field name="tax_dest_id" ref="vat_XO" />
+        </record>
+
+        <record id="fiscal_position_tax_template_15" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import"  />
+            <field name="tax_src_id" ref="vat_37" />
+            <field name="tax_dest_id" ref="vat_XO" />
+        </record>
+
+        <record id="fiscal_position_tax_template_17" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_import"  />
+            <field name="tax_src_id" ref="vat_77" />
+            <field name="tax_dest_id" ref="vat_XO" />
+        </record>
+    </data>
+</odoo>

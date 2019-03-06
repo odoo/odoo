@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
         <!-- USER INPUTS -->
@@ -11,14 +11,15 @@
                     <field name="survey_id"/>
                     <field name="email"/>
                     <field name="partner_id"/>
-                    <filter string="Completed" domain="[('state', '=', 'done')]"/>
-                    <filter string="Partially completed" domain="[('state', '=', 'skip')]"/>
-                    <filter string="New" domain="[('state', '=', 'new')]"/>
-                    <filter string="Test" domain="[('state','=', 'test')]"/>
+                    <filter name="completed" string="Completed" domain="[('state', '=', 'done')]"/>
+                    <filter string="Partially Completed" name="partially_completed" domain="[('state', '=', 'skip')]"/>
+                    <filter string="New" name="new" domain="[('state', '=', 'new')]"/>
+                    <separator/>
+                    <filter string="Test Entries" name="test" domain="[('test_entry','=', True)]"/>
                     <group expand="0" string="Group By">
                         <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by': 'survey_id'}"/>
-                        <filter string="Email" domain="[]" context="{'group_by': 'email'}"/>
-                        <filter string="Partner" domain="[]" context="{'group_by': ['partner_id']}"/>
+                        <filter string="Email" name="group_by_email" domain="[]" context="{'group_by': 'email'}"/>
+                        <filter string="Partner" name="group_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                     </group>
                 </search>
             </field>
@@ -29,7 +30,7 @@
             <field name="arch" type="xml">
                 <form string="Survey User inputs" create="false">
                     <header>
-                        <button name="action_survey_resent" string="Sent Invitation Again" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('type','=','manually'), ('state', '=', 'done')]}"/>
+                        <button name="action_survey_resend" string="Send Invitation Again" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('type','=','manually'), ('state', '=', 'done')]}"/>
                         <button name="action_view_answers" states="done" string="Print These Answers" type="object"  class="oe_highlight" />
                         <button name="action_survey_results" string="View Results" type="object" />
                         <field name="state" widget="statusbar"/>
@@ -83,15 +84,52 @@
             </field>
         </record>
 
+        <record id="view_survey_user_input_kanban" model="ir.ui.view">
+            <field name="name">survey.user_input.kanban</field>
+            <field name="model">survey.user_input</field>
+            <field name="arch" type="xml">
+                <kanban create="false">
+                    <field name="survey_id"/>
+                    <field name="date_create"/>
+                    <field name="partner_id"/>
+                    <field name="email"/>
+                    <field name="type"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title"><t t-esc="record.survey_id.value"/></strong>
+                                    </div>
+                                    <span class="badge badge-pill"><t t-esc="record.type.value"/></span>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="date_create"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right mr4">
+                                        <field name="state" widget="kanban_label_selection" options="{'classes': {'new': 'default', 'done': 'success', 'skip':'warning'}}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_survey_user_input">
             <field name="name">Answers</field>
             <field name="res_model">survey.user_input</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="survey_user_input_tree"></field>
             <field name="search_view_id" ref="survey_user_input_search"/>
             <field name="context">{'search_default_group_by_survey': True}</field>
             <field name="help" type="html">
-                <p>Nobody has replied to your surveys yet.</p>
+              <p class="o_view_nocontent_empty_folder">
+                Nobody has replied to your surveys yet
+              </p>
             </field>
         </record>
         <record id="action_selected_survey_user_input" model="ir.actions.act_window">
@@ -102,7 +140,9 @@
             <field name="search_view_id" ref="survey_user_input_search"/>
             <field name="context">{'search_default_survey_id': active_id, 'default_survey_id': active_id}</field>
             <field name="help" type="html">
-                <p>Nobody has replied to your survey yet.</p>
+              <p class="o_view_nocontent_empty_folder">
+                Nobody has replied to your surveys yet
+              </p>
             </field>
         </record>
 
@@ -114,16 +154,27 @@
                 <form string="Survey">
                     <field name="id" invisible="1"/>
                     <field name="tot_start_survey" invisible="1"/>
-                    <header groups="base.group_survey_manager">
-                        <button name="action_test_survey" string="Design Survey" type="object" class="oe_highlight"/>
+                    <field name="is_closed" invisible="1"/>
+                    <header groups="survey.group_survey_manager">
                         <button name="action_test_survey" string="Test Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
                         <button name="action_print_survey" string="Print Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
                         <button name="action_send_survey" string="Share and invite by email" type="object" class="oe_highlight"  attrs="{'invisible': [('id', '=', False)]}"/>
                         <button name="action_result_survey" string="View results" type="object" attrs="{'invisible': ['|',('id', '=', False), ('tot_start_survey', '!=', 0)]}"/>
                         <button name="action_result_survey" string="View results" type="object" class="oe_highlight" attrs="{'invisible': [('tot_start_survey', '=', 0)]}"/>
-                        <field name="stage_id" widget="statusbar" clickable="True" />
+                        <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_survey_user_input"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-pencil-square-o">
+                                <field string="Answers" name="tot_comp_survey" widget="statinfo"/>
+                            </button>
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" attrs="{'invisible': [('is_closed', '=', False)]}">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
                         <div class="oe_title" style="width: 100%;">
                             <label for="title" class="oe_edit_only"/>
                             <h1><field name="title" placeholder="Survey Title"/></h1>
@@ -149,6 +200,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
@@ -159,6 +211,7 @@
             <field name="model">survey.survey</field>
             <field name="arch" type="xml">
                 <tree string="Survey">
+                    <field name="active" invisible="1"/>
                     <field name="title" />
                     <field name="stage_id" />
                     <field name="tot_sent_survey" string="Invitations sent" />
@@ -181,26 +234,29 @@
                     <field name="color" />
                     <field name="auth_required" />
                     <field name="public_url" />
+                    <field name="activity_ids" />
+                    <field name="activity_state" />
                     <templates>
                         <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
 
-                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
-                                    <span class="fa fa-bars fa-lg"/>
+                                <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <span class="fa fa-ellipsis-v"/>
                                 </a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <li><a type="edit">Edit Survey</a></li>
-                                    <li t-if="widget.deletable"><a type="delete">Delete</a></li>
-                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                                </ul>
+                                <div class="dropdown-menu" role="menu">
+                                    <a role="menuitem" type="edit" class="dropdown-item">Edit Survey</a>
+                                    <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                    <div role="separator" class="dropdown-divider"/>
+                                    <div role="separator" class="dropdown-item-text">Color</div>
+                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                </div>
                             </div>
-                            <div class="oe_kanban_content">
-                                <h4 class="oe_center"><field name="title" /></h4>
-                                <div><ul>
-                                    <li>
-                                        <a name="action_test_survey" type="object">Design</a>
-                                    </li>
-                                    <li>
+                            <div class="o_kanban_record_top">
+                                <h4 class="o_kanban_record_title mb4"><field name="title" /></h4>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <ul class="list-unstyled">
+                                    <li id="survey_test">
                                         <t t-if="record.designed.raw_value"><a type="object" name="action_test_survey">Test</a></t>
                                         <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;">Test</a></t>
                                     </li>
@@ -212,11 +268,39 @@
                                         <t t-if="record.tot_start_survey.raw_value &gt; 0"><a name="action_result_survey" type="object">Analyze Answers</a> <span t-if="record.tot_start_survey.raw_value &gt; 0">(<field name="tot_start_survey" />)</span></t>
                                         <t t-if="record.tot_start_survey.raw_value &lt;= 0"><a style="color: #aaaaaa;">Analyze Answers</a></t>
                                     </li>
-                                </ul></div>
+                                </ul>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left"/>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="activity_ids" widget="kanban_activity" />
+                                </div>
                             </div>
                         </div>
                     </templates>
                 </kanban>
+            </field>
+        </record>
+        <record id="survey_survey_view_search" model="ir.ui.view">
+            <field name="name">survey.survey.search</field>
+            <field name="model">survey.survey</field>
+            <field name="arch" type="xml">
+                <search string="Survey">
+                    <field string="Title" name="title"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <separator/>
+                    <filter string="My Activities" name="activities_my"
+                        domain="[('activity_ids.user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Upcoming Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
+                </search>
             </field>
         </record>
 
@@ -224,11 +308,15 @@
             <field name="name">Surveys</field>
             <field name="res_model">survey.survey</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,tree,form,activity</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">Click to add a survey.</p>
-                <p>You can create surveys for different purposes: customer opinion, services feedback, recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.</p>
-                <p>Design easily your survey, send invitations to answer by email and analyse answers.</p>
+              <p class="o_view_nocontent_smiling_face">
+                Add a new survey
+              </p><p>
+                You can create surveys for different purposes: customer opinion, services feedback, recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.
+              </p><p>
+                Design easily your survey, send invitations to answer by email and analyse answers.
+              </p>
             </field>
         </record>
         <act_window context="{'search_default_survey_id': [active_id], 'default_survey_id': active_id}" id="act_survey_pages" name="Pages" res_model="survey.page" src_model="survey.survey"/>
@@ -290,6 +378,11 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="survey_page_search"/>
             <field name="context">{'search_default_group_by_survey': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_empty_folder">
+                No pages found
+              </p>
+            </field>
         </record>
         <act_window context="{'search_default_page_id': active_id, 'default_page_id': active_id}" id="act_survey_page_question" name="Questions" res_model="survey.question" src_model="survey.page"/>
 
@@ -316,33 +409,33 @@
                                 <field name="type" widget="radio" />
                             </group>
                             <group>
-                                <div class="col-md-6 col-md-offset-3 o_preview_questions">
+                                <div class="col-lg-6 offset-lg-3 o_preview_questions">
                                     <!-- Multiple Lines Text Zone -->
                                     <div attrs="{'invisible': [('type', '!=', 'free_text')]}">
-                                            <i class="fa fa-align-justify fa-4x"/>
+                                            <i class="fa fa-align-justify fa-4x" role="img" aria-label="Multiple lines" title="Multiple Lines"/>
                                     </div>
                                     <!-- Single Line Text Zone -->
                                     <div attrs="{'invisible': [('type', '!=', 'textbox')]}">
-                                        <i class="fa fa-minus fa-4x"/>
+                                        <i class="fa fa-minus fa-4x" role="img" aria-label="Single Line" title="Single Line"/>
                                     </div>
                                     <!-- Numerical Value -->
                                     <div attrs="{'invisible': [('type', '!=', 'numerical_box')]}">
-                                        <i class="fa fa-2x">123..</i>
+                                        <i class="fa fa-2x" role="img" aria-label="Numeric" title="Numeric">123..</i>
                                     </div>
                                     <!-- Date and Time -->
-                                    <div attrs="{'invisible': [('type', '!=', 'datetime')]}">
-                                        <p class="o_datetime">YYYY-MM-DD hh:mm:ss
-                                            <i class="fa fa-calendar fa-2x"/>
+                                    <div attrs="{'invisible': [('type', '!=', 'date')]}">
+                                        <p class="o_datetime">YYYY-MM-DD
+                                            <i class="fa fa-calendar fa-2x" role="img" aria-label="Calendar" title="Calendar"/>
                                         </p>
                                     </div>
                                     <!-- Multiple choice: only one answer -->
-                                    <div attrs="{'invisible': [('type', '!=', 'simple_choice')]}">
+                                    <div attrs="{'invisible': [('type', '!=', 'simple_choice')]}" role="img" aria-label="Multiple choice with one answer" title="Multiple choice with one answer">
                                         <div class="row"><i class="fa fa-circle-o  fa-lg"/> answer</div>
                                         <div class="row"><i class="fa fa-dot-circle-o fa-lg"/> answer</div>
                                         <div class="row"><i class="fa fa-circle-o  fa-lg"/> answer</div>
                                     </div>
                                     <!-- Multiple choice: multiple answers allowed -->
-                                    <div attrs="{'invisible': [('type', '!=', 'multiple_choice')]}">
+                                    <div attrs="{'invisible': [('type', '!=', 'multiple_choice')]}" role="img" aria-label="Multiple choice with multiple answers" title="Multiple choice with multiple answers">
                                         <div class="row"><i class="fa fa-square-o fa-lg"/> answer</div>
                                         <div class="row"><i class="fa fa-check-square-o fa-lg"/> answer</div>
                                         <div class="row"><i class="fa fa-square-o fa-lg"/> answer</div>
@@ -350,28 +443,28 @@
                                     <!-- Matrix -->
                                     <div attrs="{'invisible': [('type', '!=', 'matrix')]}">
                                         <div class="row o_matrix_head">
-                                            <div class="col-md-3"></div>
-                                            <div class="col-md-3">ans</div>
-                                            <div class="col-md-3">ans</div>
-                                            <div class="col-md-3">ans</div>
+                                            <div class="col-lg-3"></div>
+                                            <div class="col-lg-3">ans</div>
+                                            <div class="col-lg-3">ans</div>
+                                            <div class="col-lg-3">ans</div>
                                         </div>
                                         <div class="row o_matrix_row">
-                                            <div class="col-md-3">Row1</div>
-                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
-                                            <div class="col-md-3"><i class="fa fa-dot-circle-o fa-lg"/></div>
-                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
+                                            <div class="col-lg-3">Row1</div>
+                                            <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                            <div class="col-lg-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
+                                            <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
                                         </div>
                                         <div class="row o_matrix_row">
-                                            <div class="col-md-3">Row2</div>
-                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
-                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
-                                            <div class="col-md-3"><i class="fa fa-dot-circle-o fa-lg"/></div>
+                                            <div class="col-lg-3">Row2</div>
+                                            <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                            <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                            <div class="col-lg-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
                                         </div>
                                         <div class="row o_matrix_row">
-                                            <div class="col-md-3">Row3</div>
-                                            <div class="col-md-3"><i class="fa fa-dot-circle-o fa-lg"/></div>
-                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
-                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
+                                            <div class="col-lg-3">Row3</div>
+                                            <div class="col-lg-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
+                                            <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                            <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
                                         </div>
                                     </div>
                                 </div>
@@ -379,7 +472,7 @@
                         </group>
                         <notebook>
                             <page string="Answers">
-                                <field name="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}" on_change="onchange_validation_email(validation_email)"/>
+                                <field name="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
                                 <label for="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
                                 <separator />
                                 <field name="labels_ids" string="Type of answers" context="{'default_question_id': active_id}" attrs="{'invisible': [('type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
@@ -404,7 +497,7 @@
                                         <field name="constr_mandatory" string="Mandatory Answer"/>
                                         <field name="constr_error_msg" attrs="{'invisible': [('constr_mandatory', '=', False)]}"/>
                                     </group>
-                                    <div colspan="2" attrs="{'invisible': [('type', 'not in', ['textbox', 'numerical_box', 'datetime'])]}">
+                                    <div colspan="2" attrs="{'invisible': [('type', 'not in', ['textbox', 'numerical_box', 'date'])]}">
                                         <group>
                                             <field name="validation_required" attrs="{'invisible': [('validation_email', '=', True), ('type', '=', 'textbox')]}"/>
                                         </group>
@@ -413,8 +506,8 @@
                                             <field name="validation_length_max" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
                                             <field name="validation_min_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
                                             <field name="validation_max_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
-                                            <field name="validation_min_date" attrs="{'invisible': [('type', '!=', 'datetime')]}"/>
-                                            <field name="validation_max_date" attrs="{'invisible': [('type', '!=', 'datetime')]}"/>
+                                            <field name="validation_min_date" attrs="{'invisible': [('type', '!=', 'date')]}"/>
+                                            <field name="validation_max_date" attrs="{'invisible': [('type', '!=', 'date')]}"/>
                                             <field name="validation_error_msg" colspan="4"/>
                                         </group>
                                     </div>
@@ -474,6 +567,11 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="survey_question_search"/>
             <field name="context">{'search_default_group_by_page': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_empty_folder">
+                No questions found
+              </p>
+            </field>
         </record>
 
         <!-- LABELS -->
@@ -508,6 +606,11 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="survey_label_search"/>
             <field name="context">{'search_default_group_by_question': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_empty_folder">
+                No survey labels found
+              </p>
+            </field>
         </record>
 
         <!-- USER INPUT LINES
@@ -574,6 +677,11 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="survey_response_line_search"/>
             <field name="context">{'search_default_group_by_survey': True, 'search_default_group_by_user_input': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_empty_folder">
+                No user input lines found
+              </p>
+            </field>
         </record>
 
 
@@ -592,10 +700,22 @@
             </field>
         </record>
 
+        <record id="survey_action_server_clean_test_answers" model="ir.actions.server">
+            <field name="name">Survey: Clean test answers</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_survey_survey" />
+            <field name="binding_model_id" ref="model_survey_survey" />
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    env['survey.user_input'].search([('survey_id', 'in', records.ids), ('test_entry', '=', 'True')]).unlink()
+            </field>
+        </record>
+
         <!-- MENU ELEMENTS -->
 
         <!-- Left menu categories-->
-        <menuitem name="Surveys" id="menu_surveys" sequence="70" groups="base.group_survey_user"  web_icon="survey,static/description/icon.png"/>
+        <menuitem name="Surveys" id="menu_surveys" sequence="70" groups="group_survey_user"  web_icon="survey,static/description/icon.png"/>
 
         <!-- Left menu elements: Survey -->
         <menuitem name="Surveys" id="menu_survey_form" action="action_survey_form" parent="menu_surveys" sequence="1"/>
@@ -609,17 +729,4 @@
         <menuitem name="Labels" id="menu_survey_label_form1" action="action_survey_label_form" parent="menu_surveys_configuration" sequence="3"/>
         <menuitem name="User Input Lines" id="menu_survey_response_line_form" action="action_survey_user_input_line" parent="menu_surveys_configuration" sequence="4"/>
     </data>
-
-    <data noupdate="1">
-    <!-- After installation of the module, open the related menu -->
-        <record id="action_client_survey_menu" model="ir.actions.client">
-            <field name="name">Open Survey Menu</field>
-            <field name="tag">reload</field>
-            <field name="params" eval="{'menu_id': ref('menu_survey_form')}"/>
-        </record>
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_client_survey_menu"/>
-            <field name="state">open</field>
-        </record>
-    </data>
-</openerp>
+</odoo>

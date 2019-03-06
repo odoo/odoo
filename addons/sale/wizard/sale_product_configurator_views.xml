@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_product_configurator_view_form" model="ir.ui.view">
+        <field name="name">sale.product.configurator.view.form</field>
+        <field name="model">sale.product.configurator</field>
+        <field name="arch" type="xml">
+            <form js_class="product_configurator_form">
+                <group>
+                    <field name="product_template_id" class="oe_product_configurator_product_template_id" />
+                </group>
+                <footer>
+                    <button string="Add" class="btn-primary o_sale_product_configurator_add disabled"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

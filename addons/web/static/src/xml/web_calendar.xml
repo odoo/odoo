@@ -1,0 +1,100 @@
+<template>
+    <div t-name="CalendarView" class="o_calendar_container">
+        <div class="o_calendar_view">
+            <div class="o_calendar_buttons" role="toolbar" aria-label="Calendar toolbar"/>
+            <div class="o_calendar_widget" />
+        </div>
+        <div class="o_calendar_sidebar_container d-none d-md-block">
+            <i class="o_calendar_sidebar_toggler fa"/>
+            <div class="o_calendar_sidebar">
+                <div class="o_calendar_mini"/>
+            </div>
+        </div>
+    </div>
+
+    <t t-name="calendar-box">
+        <t t-set="color" t-value="widget.getColor(event.color_index)"/>
+        <div t-att-style="typeof color === 'string' ? ('background-color:'+color)+';' : ''" t-attf-class="#{record.is_highlighted &amp;&amp; record.is_highlighted.value ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? 'o_calendar_color_'+color : ''}">
+            <div class="fc-time"/>
+            <div class="o_fields">
+                <t t-foreach="widget.displayFields" t-as="name">
+                    <div t-attf-class="o_field_#{name} o_field_type_#{fields[name].type}">
+                        <t t-if="widget.displayFields[name].avatar_field">
+                            <t t-if="!isMobile"><t t-esc="fields[name].string"/>:</t>
+                            <div class="o_calendar_avatars float-right">
+                                <t t-foreach="widget.getAvatars(record, name, widget.displayFields[name].avatar_field).slice(0,3)" t-as="image"><t t-raw="image"/></t>
+                                <span t-if="record[name].length - 3 > 0">+<t t-esc="record[name].length - 3"/></span>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <t t-esc="format(record, name)"/>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="CalendarView.sidebar.filter">
+        <div class="o_calendar_filter">
+            <h3 t-if="widget.title"><t t-esc="widget.title"/></h3>
+            <div class="o_calendar_filter_items">
+                <div t-foreach="widget.filters" t-as="filter" t-if="filter.display == null || filter.display" class="o_calendar_filter_item" t-att-data-value="filter.value" t-att-data-id="filter.id">
+                    <t t-set="id_for_label" t-value="_.uniqueId('o_calendar_filter_item_')"/>
+                    <div class="custom-control custom-control-inline custom-checkbox">
+                        <input type="checkbox"
+                            t-att-id="id_for_label"
+                            name="selection"
+                            class="custom-control-input"
+                            t-att-checked="(filter.active ? true : undefined)"/>
+                        <label t-att-for="id_for_label"
+                            class="custom-control-label">
+                            <t t-if="filter.value == 'all'">
+                                <span><i class="fa fa-users fa-fw o_cal_avatar" role="img" aria-label="Avatar" title="Avatar"/></span>
+                            </t>
+                            <t t-if="widget.avatar_field &amp;&amp; (filter.value != 'all')">
+                                <img t-attf-src="/web/image/#{widget.avatar_model}/#{filter.value}/#{widget.avatar_field}" class="o_cal_avatar" alt="Avatar"/>
+                            </t>
+                            <t t-set="color" t-value="widget.getColor(filter.color_index)"/>
+                            <span t-if="typeof color === 'number'" t-attf-class="color_filter o_underline_color_#{widget.getColor(filter.color_index)}"><t t-esc="filter.label"/></span>
+                            <span t-elif="color" t-attf-style="border-bottom: 4px solid #{color};"><t t-esc="filter.label"/></span>
+                            <span t-else=""><t t-esc="filter.label"/></span>
+                        </label>
+                    </div>
+                    <t t-if="filter.id">
+                        <span class="o_remove fa fa-times" title="Remove this favorite from the list" role="img" aria-label="Remove this favorite from the list"/>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="CalendarView.buttons">
+        <div class="o_calendar_buttons">
+            <t t-if="!isMobile">
+                <button class="o_calendar_button_prev btn btn-primary" aria-label="Previous" title="Previous"><span class="fa fa-arrow-left"/></button>
+                <button class="o_calendar_button_today btn btn-primary">Today</button>
+                <button class="o_calendar_button_next btn btn-primary" aria-label="Next" title="Next"><span class="fa fa-arrow-right"/></button>
+            </t>
+            <div class="btn-group">
+                <button type="button" class="o_calendar_button_day btn btn-secondary">Day</button>
+                <button type="button" class="o_calendar_button_week btn btn-secondary">Week</button>
+                <button type="button" class="o_calendar_button_month btn btn-secondary">Month</button>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="CalendarView.TodayButtonMobile">
+        <span class="fa-stack o_calendar_button_today">
+            <i class="fa fa-calendar-o fa-stack-2x" role="img" aria-label="Today" title="Today"></i>
+            <strong class="o_calendar_text fa-stack-1x"><t t-esc="moment().date()"/></strong>
+        </span>
+    </t>
+
+    <main t-name="CalendarView.quick_create" class="o_calendar_quick_create">
+        <div class="form-group">
+            <label for='name' class='col-form-label'>Summary:</label>
+            <input type='text' name='name' class="o_input" t-att-value="widget.dataTemplate.name or None"/>
+        </div>
+    </main>
+</template>

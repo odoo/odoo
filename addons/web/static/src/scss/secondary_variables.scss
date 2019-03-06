@@ -1,0 +1,34 @@
+$o-webclient-background-color: desaturate($o-gray-100, 100%);
+$o-control-panel-background-color: $o-view-background-color;
+
+$o-list-footer-color: $o-main-text-color;
+$o-list-group-header-color: lighten($o-brand-lightsecondary, 10%);
+
+// UI custom colors for tags, kanban records' colors, ...)
+// Note: the first value is the old BS3 gray-light value
+$o-colors: lighten(#000, 46.7%), #F06050, #F4A460, #F7CD1F, #6CC1ED, #814968,
+              #EB7E7F, #2C8397, #475577, #D6145F, #30C381, #9365B8;
+
+$o-sheet-cancel-hpadding: $o-horizontal-padding;
+$o-sheet-cancel-bpadding: $o-horizontal-padding;
+
+$o-statusbar-arrow-width: $o-statusbar-height / 3;
+$o-statusbar-disabled-bg: lighten($o-brand-lightsecondary, 7%);
+
+$o-navbar-inverse-link-hover-bg: darken($o-brand-odoo, 10%);
+
+$o-datepicker-week-bg-color: lighten($o-datepicker-week-color, 30%);
+
+// Kanban
+
+$o-kanban-record-margin: $o-horizontal-padding / 2;
+$o-kanban-group-padding: $o-horizontal-padding; // Cannot be higher than this
+
+$o-kanban-inside-hgutter-mobile: $o-horizontal-padding;
+
+// ------- Kanban dashboard variables -------
+
+// Since rows and containers are used inside cards, we're
+// forced to set the padding relative to the grid system.
+$o-kanban-dashboard-hpadding: $o-horizontal-padding;
+$o-kanban-dashboard-vpadding: $o-horizontal-padding / 2;

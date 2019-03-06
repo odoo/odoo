@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <template id="assets_backend" name="board assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" type="text/scss" href="/board/static/src/scss/dashboard.scss"/>
+                <script type="text/javascript" src="/board/static/src/js/action_manager_board_action.js"></script>
+                <script type="text/javascript" src="/board/static/src/js/board_view.js"></script>
+                <script type="text/javascript" src="/board/static/src/js/favorite_menu.js"></script>
+            </xpath>
+        </template>
+
+         <template id="qunit_suite" name="dashboard_tests" inherit_id="web.qunit_suite">
+            <xpath expr="//t[@t-set='head']" position="inside">
+                <script type="text/javascript" src="/board/static/tests/dashboard_tests.js"></script>
+            </xpath>
+        </template>
+</odoo>

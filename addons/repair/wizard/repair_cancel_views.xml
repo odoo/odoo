@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!--  Cancel Repair -->
+        
+        <record id="view_cancel_repair" model="ir.ui.view">
+            <field name="name">Cancel Repair</field>
+            <field name="model">repair.cancel</field>
+            <field name="arch" type="xml">
+                <form string="Cancel Repair Order">
+                    <group>
+                        <span class="o_form_label">This operation will cancel the Repair process, but will not cancel it's Invoice. Do you want to continue?</span>
+                    </group>
+                    <footer>
+                        <button name="cancel_repair" string="Yes" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>         
+
+        <record id="action_cancel_repair" model="ir.actions.act_window">
+            <field name="name">Cancel Repair Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">repair.cancel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record> 
+        
+    </data>
+</odoo>    

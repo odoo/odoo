@@ -1,19 +1,23 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import functools
 import logging
 
 import json
-import urlparse
+
+import werkzeug.urls
 import werkzeug.utils
 from werkzeug.exceptions import BadRequest
 
-import openerp
-from openerp import SUPERUSER_ID
-from openerp import http
-from openerp.http import request
-from openerp.addons.web.controllers.main import db_monodb, ensure_db, set_cookie_and_redirect, login_and_redirect
-from openerp.addons.auth_signup.controllers.main import AuthSignupHome as Home
-from openerp.modules.registry import RegistryManager
-from openerp.tools.translate import _
+from odoo import api, http, SUPERUSER_ID, _
+from odoo.exceptions import AccessDenied
+from odoo.http import request
+from odoo import registry as registry_get
+
+from odoo.addons.auth_signup.controllers.main import AuthSignupHome as Home
+from odoo.addons.web.controllers.main import db_monodb, ensure_db, set_cookie_and_redirect, login_and_redirect
+
 
 _logger = logging.getLogger(__name__)
 
@@ -49,8 +53,7 @@ def fragment_to_query_string(func):
 class OAuthLogin(Home):
     def list_providers(self):
         try:
-            provider_obj = request.registry.get('auth.oauth.provider')
-            providers = provider_obj.search_read(request.cr, SUPERUSER_ID, [('enabled', '=', True)])
+            providers = request.env['auth.oauth.provider'].sudo().search_read([('enabled', '=', True)])
         except Exception:
             providers = []
         for provider in providers:
@@ -63,8 +66,7 @@ class OAuthLogin(Home):
                 scope=provider['scope'],
                 state=json.dumps(state),
             )
-            provider['auth_link'] = provider['auth_endpoint'] + '?' + werkzeug.url_encode(params)
-
+            provider['auth_link'] = "%s?%s" % (provider['auth_endpoint'], werkzeug.url_encode(params))
         return providers
 
     def get_state(self, provider):
@@ -110,8 +112,6 @@ class OAuthLogin(Home):
     @http.route()
     def web_auth_signup(self, *args, **kw):
         providers = self.list_providers()
-        if len(providers) == 1:
-            werkzeug.exceptions.abort(werkzeug.utils.redirect(providers[0]['auth_link'], 303))
         response = super(OAuthLogin, self).web_auth_signup(*args, **kw)
         response.qcontext.update(providers=providers)
         return response
@@ -119,8 +119,6 @@ class OAuthLogin(Home):
     @http.route()
     def web_auth_reset_password(self, *args, **kw):
         providers = self.list_providers()
-        if len(providers) == 1:
-            werkzeug.exceptions.abort(werkzeug.utils.redirect(providers[0]['auth_link'], 303))
         response = super(OAuthLogin, self).web_auth_reset_password(*args, **kw)
         response.qcontext.update(providers=providers)
         return response
@@ -133,13 +131,15 @@ class OAuthController(http.Controller):
     def signin(self, **kw):
         state = json.loads(kw['state'])
         dbname = state['d']
+        if not http.db_filter([dbname]):
+            return BadRequest()
         provider = state['p']
         context = state.get('c', {})
-        registry = RegistryManager.get(dbname)
+        registry = registry_get(dbname)
         with registry.cursor() as cr:
             try:
-                u = registry.get('res.users')
-                credentials = u.auth_oauth(cr, SUPERUSER_ID, provider, kw, context=context)
+                env = api.Environment(cr, SUPERUSER_ID, context)
+                credentials = env['res.users'].sudo().auth_oauth(provider, kw)
                 cr.commit()
                 action = state.get('a')
                 menu = state.get('m')
@@ -151,19 +151,23 @@ class OAuthController(http.Controller):
                     url = '/web#action=%s' % action
                 elif menu:
                     url = '/web#menu_id=%s' % menu
-                return login_and_redirect(*credentials, redirect_url=url)
+                resp = login_and_redirect(*credentials, redirect_url=url)
+                # Since /web is hardcoded, verify user has right to land on it
+                if werkzeug.urls.url_parse(resp.location).path == '/web' and not request.env.user.has_group('base.group_user'):
+                    resp.location = '/'
+                return resp
             except AttributeError:
                 # auth_signup is not installed
                 _logger.error("auth_signup not installed on database %s: oauth sign up cancelled." % (dbname,))
                 url = "/web/login?oauth_error=1"
-            except openerp.exceptions.AccessDenied:
+            except AccessDenied:
                 # oauth credentials not valid, user could be on a temporary session
                 _logger.info('OAuth2: access denied, redirect to main page in case a valid session exists, without setting cookies')
                 url = "/web/login?oauth_error=3"
                 redirect = werkzeug.utils.redirect(url, 303)
                 redirect.autocorrect_location_header = False
                 return redirect
-            except Exception, e:
+            except Exception as e:
                 # signup error
                 _logger.exception("OAuth2: %s" % str(e))
                 url = "/web/login?oauth_error=2"
@@ -178,19 +182,21 @@ class OAuthController(http.Controller):
             dbname = db_monodb()
         if not dbname:
             return BadRequest()
+        if not http.db_filter([dbname]):
+            return BadRequest()
 
-        registry = RegistryManager.get(dbname)
+        registry = registry_get(dbname)
         with registry.cursor() as cr:
-            IMD = registry['ir.model.data']
             try:
-                model, provider_id = IMD.get_object_reference(cr, SUPERUSER_ID, 'auth_oauth', 'provider_openerp')
+                env = api.Environment(cr, SUPERUSER_ID, {})
+                provider = env.ref('auth_oauth.provider_openerp')
             except ValueError:
                 return set_cookie_and_redirect('/web?db=%s' % dbname)
-            assert model == 'auth.oauth.provider'
+            assert provider._name == 'auth.oauth.provider'
 
         state = {
             'd': dbname,
-            'p': provider_id,
+            'p': provider.id,
             'c': {'no_user_creation': True},
         }
 

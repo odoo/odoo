@@ -1,208 +1,129 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields, api
-from openerp.tools.translate import _
-from openerp.addons.website.models.website import slug
-
-
-class event_track_tag(models.Model):
-    _name = "event.track.tag"
-    _description = 'Track Tag'
-    _order = 'name'
-
-    name = fields.Char('Tag')
-    track_ids = fields.Many2many('event.track', string='Tracks')
-
-    _sql_constraints = [
-            ('name_uniq', 'unique (name)', "Tag name already exists !"),
-    ]
+from odoo import api, fields, models, _
+from odoo.addons.http_routing.models.ir_http import slug
 
 
-class event_track_location(models.Model):
-    _name = "event.track.location"
-    _description = 'Track Location'
+class EventType(models.Model):
+    _inherit = 'event.type'
 
-    name = fields.Char('Room')
+    website_track = fields.Boolean('Tracks on Website')
+    website_track_proposal = fields.Boolean('Tracks Proposals on Website')
 
-
-class event_track(models.Model):
-    _name = "event.track"
-    _description = 'Event Track'
-    _order = 'priority, date'
-    _inherit = ['mail.thread', 'ir.needaction_mixin', 'website.seo.metadata', 'website.published.mixin']
-
-    name = fields.Char('Title', required=True, translate=True)
-    user_id = fields.Many2one('res.users', 'Responsible', track_visibility='onchange', default=lambda self: self.env.user)
-    partner_id = fields.Many2one('res.partner', 'Proposed by')
-    partner_name = fields.Char('Partner Name')
-    partner_email = fields.Char('Partner Email')
-    partner_phone = fields.Char('Partner Phone')
-    partner_biography = fields.Html('Partner Biography')
-    speaker_ids = fields.Many2many('res.partner', string='Speakers')
-    tag_ids = fields.Many2many('event.track.tag', string='Tags')
-    state = fields.Selection([
-        ('draft', 'Proposal'), ('confirmed', 'Confirmed'), ('announced', 'Announced'), ('published', 'Published'), ('refused', 'Refused'), ('cancel', 'Cancelled')],
-        'Status', default='draft', required=True, copy=False, track_visibility='onchange')
-    description = fields.Html('Track Description', translate=True)
-    date = fields.Datetime('Track Date')
-    duration = fields.Float('Duration', digits=(16, 2), default=1.5)
-    location_id = fields.Many2one('event.track.location', 'Room')
-    event_id = fields.Many2one('event.event', 'Event', required=True)
-    color = fields.Integer('Color Index')
-    priority = fields.Selection([
-        ('0', 'Low'), ('1', 'Medium'),
-        ('2', 'High'), ('3', 'Highest')],
-        'Priority', required=True, default='1')
-    image = fields.Binary('Image', related='speaker_ids.image_medium', store=True, attachment=True)
-
-    @api.model
-    def create(self, vals):
-        res = super(event_track, self).create(vals)
-        res.message_subscribe(res.speaker_ids.ids)
-        res.event_id.message_post(body="""<h3>%(header)s</h3>
-<ul>
-    <li>%(proposed_by)s</li>
-    <li>%(mail)s</li>
-    <li>%(phone)s</li>
-    <li>%(title)s</li>
-    <li>%(speakers)s</li>
-    <li>%(introduction)s</li>
-</ul>""" % {
-            'header': _('New Track Proposal'),
-            'proposed_by': '<b>%s</b>: %s' % (_('Proposed By'), (res.partner_id.name or res.partner_name or res.partner_email)),
-            'mail': '<b>%s</b>: %s' % (_('Mail'), '<a href="mailto:%s">%s</a>' % (res.partner_email, res.partner_email)),
-            'phone': '<b>%s</b>: %s' % (_('Phone'), res.partner_phone),
-            'title': '<b>%s</b>: %s' % (_('Title'), res.name),
-            'speakers': '<b>%s</b>: %s' % (_('Speakers Biography'), res.partner_biography),
-            'introduction': '<b>%s</b>: %s' % (_('Talk Introduction'), res.description),
-        }, subtype='event.mt_event_track')
-        return res
-
-    @api.multi
-    def write(self, vals):
-        if vals.get('state') == 'published':
-            vals.update({'website_published': True})
-        res = super(event_track, self).write(vals)
-        if vals.get('speaker_ids'):
-            self.message_subscribe([speaker['id'] for speaker in self.resolve_2many_commands('speaker_ids', vals['speaker_ids'], ['id'])])
-        return res
-
-    @api.multi
-    @api.depends('name')
-    def _website_url(self, field_name, arg):
-        res = super(event_track, self)._website_url(field_name, arg)
-        res.update({(track.id, '/event/%s/track/%s' % (slug(track.event_id), slug(track))) for track in self})
-        return res
-
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
-        """ Override read_group to always display all states. """
-        if groupby and groupby[0] == "state":
-            # Default result structure
-            # states = self._get_state_list(cr, uid, context=context)
-            states = [('draft', 'Proposal'), ('confirmed', 'Confirmed'), ('announced', 'Announced'), ('published', 'Published'), ('cancel', 'Cancelled')]
-            read_group_all_states = [{
-                '__context': {'group_by': groupby[1:]},
-                '__domain': domain + [('state', '=', state_value)],
-                'state': state_value,
-                'state_count': 0,
-            } for state_value, state_name in states]
-            # Get standard results
-            read_group_res = super(event_track, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
-            # Update standard results with default results
-            result = []
-            for state_value, state_name in states:
-                res = filter(lambda x: x['state'] == state_value, read_group_res)
-                if not res:
-                    res = filter(lambda x: x['state'] == state_value, read_group_all_states)
-                if state_value == 'cancel':
-                    res[0]['__fold'] = True
-                res[0]['state'] = [state_value, state_name]
-                result.append(res[0])
-            return result
-        else:
-            return super(event_track, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
-
-    def open_track_speakers_list(self, cr, uid, track_id, context=None):
-        track_id = self.browse(cr, uid, track_id, context=context)
-        return {
-            'name': _('Speakers'),
-            'domain': [('id', 'in', [partner.id for partner in track_id.speaker_ids])],
-            'view_type': 'form',
-            'view_mode': 'kanban,form',
-            'res_model': 'res.partner',
-            'view_id': False,
-            'type': 'ir.actions.act_window',
-        }
+    @api.onchange('website_menu')
+    def _onchange_website_menu(self):
+        if not self.website_menu:
+            self.website_track = False
+            self.website_track_proposal = False
 
 
-class event_event(models.Model):
+class EventMenu(models.Model):
+    _name = "website.event.menu"
+    _description = "Website Event Menu"
+
+    menu_id = fields.Many2one('website.menu', string='Menu', ondelete='cascade')
+    event_id = fields.Many2one('event.event', string='Event', ondelete='cascade')
+    menu_type = fields.Selection([('track', 'Event Tracks Menus'), ('track_proposal', 'Event Proposals Menus')])
+
+
+class Event(models.Model):
     _inherit = "event.event"
 
-    @api.multi
-    def _count_tracks(self):
-        track_data = self.env['event.track'].read_group([('state', '!=', 'cancel')],
-                                                        ['event_id', 'state'], ['event_id'])
-        result = dict((data['event_id'][0], data['event_id_count']) for data in track_data)
-        for event in self:
-            event.count_tracks = result.get(event.id, 0)
-
-    @api.one
-    def _count_sponsor(self):
-        self.count_sponsor = len(self.sponsor_ids)
-
-    @api.one
-    @api.depends('track_ids.tag_ids')
-    def _get_tracks_tag_ids(self):
-        self.tracks_tag_ids = self.track_ids.mapped('tag_ids').ids
-
     track_ids = fields.One2many('event.track', 'event_id', 'Tracks')
+    track_count = fields.Integer('Track Count', compute='_compute_track_count')
+
     sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsors')
-    blog_id = fields.Many2one('blog.blog', 'Event Blog')
-    show_track_proposal = fields.Boolean('Tracks Proposals', compute='_get_show_menu', inverse='_set_show_menu', store=True)
-    show_tracks = fields.Boolean('Show Tracks on Website', compute='_get_show_menu', inverse='_set_show_menu', store=True)
-    show_blog = fields.Boolean('News')
-    count_tracks = fields.Integer('Tracks', compute='_count_tracks')
+    sponsor_count = fields.Integer('Sponsor Count', compute='_compute_sponsor_count')
+
+    website_track = fields.Boolean('Tracks on Website')
+    website_track_proposal = fields.Boolean('Proposals on Website')
+
+    track_menu_ids = fields.One2many('website.event.menu', 'event_id', string='Event Tracks Menus', domain=[('menu_type', '=', 'track')])
+    track_proposal_menu_ids = fields.One2many('website.event.menu', 'event_id', string='Event Proposals Menus', domain=[('menu_type', '=', 'track_proposal')])
+
     allowed_track_tag_ids = fields.Many2many('event.track.tag', relation='event_allowed_track_tags_rel', string='Available Track Tags')
-    tracks_tag_ids = fields.Many2many('event.track.tag', relation='event_track_tags_rel', string='Track Tags', compute='_get_tracks_tag_ids', store=True)
-    count_sponsor = fields.Integer('# Sponsors', compute='_count_sponsor')
+    tracks_tag_ids = fields.Many2many(
+        'event.track.tag', relation='event_track_tags_rel', string='Track Tags',
+        compute='_compute_tracks_tag_ids', store=True)
 
-    @api.one
-    def _get_new_menu_pages(self):
-        result = super(event_event, self)._get_new_menu_pages()[0]  # TDE CHECK api.one -> returns a list with one item ?
-        if self.show_tracks:
-            result.append((_('Talks'), '/event/%s/track' % slug(self)))
-            result.append((_('Agenda'), '/event/%s/agenda' % slug(self)))
-        if self.blog_id:
-            result.append((_('News'), '/blogpost'+slug(self.blog_ig)))
-        if self.show_track_proposal:
-            result.append((_('Talk Proposals'), '/event/%s/track_proposal' % slug(self)))
-        return result
+    @api.multi
+    def _compute_track_count(self):
+        data = self.env['event.track'].read_group([('stage_id.is_cancel', '!=', True)], ['event_id'], ['event_id'])
+        result = dict((data['event_id'][0], data['event_id_count']) for data in data)
+        for event in self:
+            event.track_count = result.get(event.id, 0)
 
-    @api.one
-    def _set_show_menu(self):
-        # if the number of menu items have changed, then menu items must be regenerated
-        if self.menu_id:
-            nbr_menu_items = len(self._get_new_menu_pages()[0])
-            if nbr_menu_items != len(self.menu_id.child_id):
-                self.menu_id.unlink()
-        return super(event_event, self)._set_show_menu()[0]
+    @api.multi
+    def _compute_sponsor_count(self):
+        data = self.env['event.sponsor'].read_group([], ['event_id'], ['event_id'])
+        result = dict((data['event_id'][0], data['event_id_count']) for data in data)
+        for event in self:
+            event.sponsor_count = result.get(event.id, 0)
 
+    def _toggle_create_website_menus(self, vals):
+        super(Event, self)._toggle_create_website_menus(vals)
+        for event in self:
+            if 'website_track' in vals:
+                if vals['website_track']:
+                    for sequence, (name, url, xml_id, menu_type) in enumerate(event._get_track_menu_entries()):
+                        menu = super(Event, event)._create_menu(sequence, name, url, xml_id)
+                        event.env['website.event.menu'].create({
+                            'menu_id': menu.id,
+                            'event_id': event.id,
+                            'menu_type': menu_type,
+                        })
+                else:
+                    event.track_menu_ids.mapped('menu_id').unlink()
+            if 'website_track_proposal' in vals:
+                if vals['website_track_proposal']:
+                    for sequence, (name, url, xml_id, menu_type) in enumerate(event._get_track_proposal_menu_entries()):
+                        menu = super(Event, event)._create_menu(sequence, name, url, xml_id)
+                        event.env['website.event.menu'].create({
+                            'menu_id': menu.id,
+                            'event_id': event.id,
+                            'menu_type': menu_type,
+                        })
+                else:
+                    event.track_proposal_menu_ids.mapped('menu_id').unlink()
 
-class event_sponsors_type(models.Model):
-    _name = "event.sponsor.type"
-    _order = "sequence"
+    def _get_track_menu_entries(self):
+        self.ensure_one()
+        res = [
+            (_('Talks'), '/event/%s/track' % slug(self), False, 'track'),
+            (_('Agenda'), '/event/%s/agenda' % slug(self), False, 'track')]
+        return res
 
-    name = fields.Char('Sponsor Type', required=True, translate=True)
-    sequence = fields.Integer('Sequence')
+    def _get_track_proposal_menu_entries(self):
+        self.ensure_one()
+        res = [(_('Talk Proposals'), '/event/%s/track_proposal' % slug(self), False, 'track_proposal')]
+        return res
 
+    @api.multi
+    @api.depends('track_ids.tag_ids')
+    def _compute_tracks_tag_ids(self):
+        for event in self:
+            event.tracks_tag_ids = event.track_ids.mapped('tag_ids').ids
 
-class event_sponsors(models.Model):
-    _name = "event.sponsor"
-    _order = "sequence"
+    @api.onchange('event_type_id')
+    def _onchange_type(self):
+        super(Event, self)._onchange_type()
+        if self.event_type_id and self.website_menu:
+            self.website_track = self.event_type_id.website_track
+            self.website_track_proposal = self.event_type_id.website_track_proposal
 
-    event_id = fields.Many2one('event.event', 'Event', required=True)
-    sponsor_type_id = fields.Many2one('event.sponsor.type', 'Sponsoring Type', required=True)
-    partner_id = fields.Many2one('res.partner', 'Sponsor/Customer', required=True)
-    url = fields.Char('Sponsor Website')
-    sequence = fields.Integer('Sequence', store=True, related='sponsor_type_id.sequence')
-    image_medium = fields.Binary(string='Logo', related='partner_id.image_medium', store=True, attachment=True)
+    @api.onchange('website_menu')
+    def _onchange_website_menu(self):
+        if not self.website_menu:
+            self.website_track = False
+            self.website_track_proposal = False
+
+    @api.onchange('website_track')
+    def _onchange_website_track(self):
+        if not self.website_track:
+            self.website_track_proposal = False
+
+    @api.onchange('website_track_proposal')
+    def _onchange_website_track_proposal(self):
+        if self.website_track_proposal:
+            self.website_track = True

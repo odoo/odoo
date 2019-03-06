@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="timesheet_action_from_employee" model="ir.actions.act_window">
+        <field name="name">Timesheets</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="search_view_id" ref="hr_timesheet_line_search"/>
+        <field name="domain">[('project_id', '!=', False)]</field>
+        <field name="context">{
+            'search_default_month':1,
+            'search_default_employee_id': [active_id],
+            'default_employee_id': active_id
+        }</field>
+    </record>
+
+    <record id="timesheet_action_view_from_employee_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="hr_timesheet_line_tree"/>
+        <field name="act_window_id" ref="timesheet_action_from_employee"/>
+    </record>
+
+    <record id="timesheet_action_view_from_employee_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_timesheet_line_form"/>
+        <field name="act_window_id" ref="timesheet_action_from_employee"/>
+    </record>
+
+    <record id="hr_employee_view_form_inherit_timesheet" model="ir.ui.view">
+        <field name="name">hr.employee.form.timesheet</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='active_group']" position="before">
+                <group string="Timesheets" name="timesheet" groups="hr_timesheet.group_timesheet_manager">
+                    <label for="timesheet_cost"/>
+                    <div>
+                        <field name="timesheet_cost" class="oe_inline"/> per hour
+                        <field name="currency_id" invisible="1"/>
+                    </div>
+                </group>
+            </xpath>
+            <xpath expr="//button[@name='toggle_active']" position="before">
+                <button class="oe_stat_button" type="action" name="%(timesheet_action_from_employee)d" icon="fa-calendar">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Timesheets</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_department_view_kanban" model="ir.ui.view">
+        <field name="name">hr.department.kanban.inherit</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
+        <field name="groups_id" eval="[(4,ref('hr_timesheet.group_timesheet_manager'))]"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
+                    <div class="row">
+                        <div class="col-12 text-left">
+                            <a name="%(act_hr_timesheet_report)d" type="action"
+                               context="{ 'search_default_department_id': [active_id], 'default_department_id': active_id}">
+                            Timesheets
+                        </a>
+                        </div>
+                    </div>
+                </xpath>
+
+            </data>
+        </field>
+    </record>
+</odoo>

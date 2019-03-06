@@ -3,70 +3,62 @@
 # * web_diagram
 # 
 # Translators:
+# Michal Veselý <michal@veselyberanek.net>, 2018
+# trendspotter, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 09:26+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
+"POT-Creation-Date: 2018-03-22 14:11+0000\n"
+"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"Last-Translator: trendspotter, 2018\n"
+"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: web_diagram
 #. openerp-web
-#: code:addons/web_diagram/static/src/js/diagram.js:240
-#: code:addons/web_diagram/static/src/js/diagram.js:268
+#: code:addons/web_diagram/static/src/js/diagram_controller.js:73
+#: code:addons/web_diagram/static/src/js/diagram_controller.js:160
 #, python-format
 msgid "Activity"
-msgstr "Činnosti"
+msgstr "Činnost"
 
 #. module: web_diagram
 #. openerp-web
-#: code:addons/web_diagram/static/src/js/diagram.js:273
-#: code:addons/web_diagram/static/src/js/diagram.js:317
+#: code:addons/web_diagram/static/src/js/diagram_controller.js:192
+#, python-format
+msgid ""
+"Are you sure you want to remove this node ? This will remove its connected "
+"transitions as well."
+msgstr ""
+"Opravdu chcete tento uzel odstranit? Tímto odstraníte také propojené "
+"přechody."
+
+#. module: web_diagram
+#. openerp-web
+#: code:addons/web_diagram/static/src/js/diagram_controller.js:172
+#, python-format
+msgid "Are you sure you want to remove this transition?"
+msgstr "Opravdu chcete tento přechod odstranit?"
+
+#. module: web_diagram
+#. openerp-web
+#: code:addons/web_diagram/static/src/js/diagram_controller.js:73
+#: code:addons/web_diagram/static/src/js/diagram_controller.js:110
 #, python-format
 msgid "Create:"
 msgstr "Vytvořit:"
 
 #. module: web_diagram
 #. openerp-web
-#: code:addons/web_diagram/static/src/js/diagram.js:211
-#, python-format
-msgid ""
-"Deleting this node cannot be undone.\n"
-"It will also delete all connected transitions.\n"
-"\n"
-"Are you sure ?"
-msgstr "Odstranění tohoto uzlu nelze vrátit zpět.\nTaké to odstraní všechny související přechody.\n\nJste si jistý ?"
-
-#. module: web_diagram
-#. openerp-web
-#: code:addons/web_diagram/static/src/js/diagram.js:229
-#, python-format
-msgid ""
-"Deleting this transition cannot be undone.\n"
-"\n"
-"Are you sure ?"
-msgstr "Odstranění tohoto přechodu nelze vrátit zpět.\n\nJste si jistý ?"
-
-#. module: web_diagram
-#. openerp-web
-#: code:addons/web_diagram/static/src/js/diagram.js:18
+#: code:addons/web_diagram/static/src/js/diagram_view.js:16
 #, python-format
 msgid "Diagram"
 msgstr "Diagram"
-
-#. module: web_diagram
-#. openerp-web
-#: code:addons/web_diagram/static/src/js/diagram.js:115
-#, python-format
-msgid "New"
-msgstr "Nové"
 
 #. module: web_diagram
 #. openerp-web
@@ -77,16 +69,16 @@ msgstr "Nový uzel"
 
 #. module: web_diagram
 #. openerp-web
-#: code:addons/web_diagram/static/src/js/diagram.js:245
-#: code:addons/web_diagram/static/src/js/diagram.js:301
+#: code:addons/web_diagram/static/src/js/diagram_controller.js:143
+#: code:addons/web_diagram/static/src/js/diagram_controller.js:160
 #, python-format
-msgid "Open: "
-msgstr "Otevřít: "
+msgid "Open:"
+msgstr "Otevřít:"
 
 #. module: web_diagram
 #. openerp-web
-#: code:addons/web_diagram/static/src/js/diagram.js:296
-#: code:addons/web_diagram/static/src/js/diagram.js:312
+#: code:addons/web_diagram/static/src/js/diagram_controller.js:110
+#: code:addons/web_diagram/static/src/js/diagram_controller.js:143
 #, python-format
 msgid "Transition"
 msgstr "Přechod"

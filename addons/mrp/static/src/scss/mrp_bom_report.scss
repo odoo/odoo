@@ -1,0 +1,37 @@
+.o_mrp_bom_report_page {
+    background-color: $o-view-background-color;
+    margin: 16px auto;
+    padding: 24px 16px;
+    // Manage expand icon
+    table.o_mrp_bom_expandable {
+        thead tr {
+            border-width: 2px;
+            border-top-style: groove;
+            border-bottom-style: groove;
+        }
+        tbody tr {
+            border-width: 1px;
+            border-top-style: solid;
+            border-bottom-style: groove;
+            .o_mrp_bom_unfoldable, .o_mrp_bom_foldable {
+                cursor: pointer;
+            }
+        }
+        thead tr th {
+            padding-left: 10px;
+        }
+        tbody, tfoot {
+            & > tr > td ~ td > span {
+                margin-left: 10px;
+            }
+            tr {
+                .o_mrp_bom_no_fold {
+                    margin-left: 18px;
+                }
+                .o_mrp_bom_unfoldable, .o_mrp_bom_foldable {
+                    margin-left: -2px;
+                }
+            }
+        }
+    }
+}

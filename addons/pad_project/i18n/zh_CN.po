@@ -3,15 +3,15 @@
 # * pad_project
 # 
 # Translators:
-# Gary Wei <Gary.wei@elico-corp.com>, 2015
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-12-01 09:44+0000\n"
-"Last-Translator: Gary Wei <Gary.wei@elico-corp.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,11 +19,32 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pad_project
-#: model:ir.model.fields,field_description:pad_project.field_project_task_description_pad
+#: model:ir.model.fields,field_description:pad_project.field_project_task__description_pad
 msgid "Pad URL"
-msgstr "Pad URL"
+msgstr "Pad 的URL地址"
+
+#. module: pad_project
+#: model:ir.model,name:pad_project.model_project_project
+msgid "Project"
+msgstr "项目"
 
 #. module: pad_project
 #: model:ir.model,name:pad_project.model_project_task
 msgid "Task"
 msgstr "任务"
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_task__use_pad
+msgid "Use collaborative pad"
+msgstr "使用协作平台"
+
+#. module: pad_project
+#: model:ir.model.fields,help:pad_project.field_project_project__use_pads
+#: model:ir.model.fields,help:pad_project.field_project_task__use_pad
+msgid "Use collaborative pad for the tasks on this project."
+msgstr "使用协作平台处理此项目的任务。"
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project__use_pads
+msgid "Use collaborative pads"
+msgstr "使用协作平台"

@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 import datetime
 import random
 import re
 import string
 
-from lxml.html import parse
-from urllib2 import urlopen
-from urlparse import urljoin
-from urlparse import urlparse
-from werkzeug import url_encode
+import requests
+from lxml import html
+from werkzeug import urls, utils
 
-from openerp import models, fields, api, _
 
-URL_REGEX = r'(\bhref=[\'"](?!mailto:)([^\'"]+)[\'"])'
+from odoo import models, fields, api, _
+from odoo.tools import ustr
+
+URL_REGEX = r'(\bhref=[\'"](?!mailto:|tel:|sms:)([^\'"]+)[\'"])'
 
 def VALIDATE_URL(url):
-    if urlparse(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
+    if urls.url_parse(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
         return 'http://' + url
 
     return url
@@ -29,6 +31,7 @@ class link_tracker(models.Model):
 
     _name = "link.tracker"
     _rec_name = "short_url"
+    _description = 'Link Tracker'
 
     _inherit = ['utm.mixin']
 
@@ -48,12 +51,12 @@ class link_tracker(models.Model):
     def convert_links(self, html, vals, blacklist=None):
         for match in re.findall(URL_REGEX, html):
 
-            short_schema = self.env['ir.config_parameter'].get_param('web.base.url') + '/r/'
+            short_schema = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/r/'
 
             href = match[0]
             long_url = match[1]
 
-            vals['url'] = long_url
+            vals['url'] = utils.unescape(long_url)
 
             if not blacklist or not [s for s in blacklist if s in long_url] and not long_url.startswith(short_schema):
                 link = self.create(vals)
@@ -73,12 +76,12 @@ class link_tracker(models.Model):
     @api.one
     @api.depends('code')
     def _compute_short_url(self):
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        self.short_url = urljoin(base_url, '/r/%(code)s' % {'code': self.code})
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        self.short_url = urls.url_join(base_url, '/r/%(code)s' % {'code': self.code})
 
     @api.one
     def _compute_short_url_host(self):
-        self.short_url_host = self.env['ir.config_parameter'].get_param('web.base.url') + '/r/'
+        self.short_url_host = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/r/'
 
     @api.one
     def _compute_code(self):
@@ -93,22 +96,23 @@ class link_tracker(models.Model):
     @api.one
     @api.depends('url')
     def _compute_redirected_url(self):
-        parsed = urlparse(self.url)
+        parsed = urls.url_parse(self.url)
 
         utms = {}
         for key, field, cook in self.env['utm.mixin'].tracking_fields():
             attr = getattr(self, field).name
             if attr:
                 utms[key] = attr
+        utms.update(parsed.decode_query())
 
-        self.redirected_url = '%s://%s%s?%s&%s#%s' % (parsed.scheme, parsed.netloc, parsed.path, url_encode(utms), parsed.query, parsed.fragment)
+        self.redirected_url = parsed.replace(query=urls.url_encode(utms)).to_url()
 
     @api.model
     @api.depends('url')
     def _get_title_from_url(self, url):
         try:
-            page = urlopen(url, timeout=5)
-            p = parse(page)
+            page = requests.get(url, timeout=5)
+            p = html.fromstring(page.text.encode('utf-8'), parser=html.HTMLParser(encoding='utf-8'))
             title = p.find('.//title').text
         except:
             title = url
@@ -119,8 +123,8 @@ class link_tracker(models.Model):
     @api.depends('url')
     def _compute_favicon(self):
         try:
-            icon = urlopen('http://www.google.com/s2/favicons?domain=' + self.url, timeout=5).read()
-            icon_base64 = icon.encode('base64').replace("\n", "")
+            icon = requests.get('http://www.google.com/s2/favicons', params={'domain': self.url}, timeout=5).content
+            icon_base64 = base64.b64encode(icon).replace(b"\n", b"").decode('ascii')
         except:
             icon_base64 = 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAACiElEQVQ4EaVTzU8TURCf2tJuS7tQtlRb6UKBIkQwkRRSEzkQgyEc6lkOKgcOph78Y+CgjXjDs2i44FXY9AMTlQRUELZapVlouy3d7kKtb0Zr0MSLTvL2zb75eL838xtTvV6H/xELBptMJojeXLCXyobnyog4YhzXYvmCFi6qVSfaeRdXdrfaU1areV5KykmX06rcvzumjY/1ggkR3Jh+bNf1mr8v1D5bLuvR3qDgFbvbBJYIrE1mCIoCrKxsHuzK+Rzvsi29+6DEbTZz9unijEYI8ObBgXOzlcrx9OAlXyDYKUCzwwrDQx1wVDGg089Dt+gR3mxmhcUnaWeoxwMbm/vzDFzmDEKMMNhquRqduT1KwXiGt0vre6iSeAUHNDE0d26NBtAXY9BACQyjFusKuL2Ry+IPb/Y9ZglwuVscdHaknUChqLF/O4jn3V5dP4mhgRJgwSYm+gV0Oi3XrvYB30yvhGa7BS70eGFHPoTJyQHhMK+F0ZesRVVznvXw5Ixv7/C10moEo6OZXbWvlFAF9FVZDOqEABUMRIkMd8GnLwVWg9/RkJF9sA4oDfYQAuzzjqzwvnaRUFxn/X2ZlmGLXAE7AL52B4xHgqAUqrC1nSNuoJkQtLkdqReszz/9aRvq90NOKdOS1nch8TpL555WDp49f3uAMXhACRjD5j4ykuCtf5PP7Fm1b0DIsl/VHGezzP1KwOiZQobFF9YyjSRYQETRENSlVzI8iK9mWlzckpSSCQHVALmN9Az1euDho9Xo8vKGd2rqooA8yBcrwHgCqYR0kMkWci08t/R+W4ljDCanWTg9TJGwGNaNk3vYZ7VUdeKsYJGFNkfSzjXNrSX20s4/h6kB81/271ghG17l+rPTAAAAAElFTkSuQmCC'
 
@@ -162,7 +166,7 @@ class link_tracker(models.Model):
             create_vals['url'] = VALIDATE_URL(vals['url'])
 
         search_domain = []
-        for fname, value in create_vals.iteritems():
+        for fname, value in create_vals.items():
             search_domain.append((fname, '=', value))
 
         result = self.search(search_domain, limit=1)
@@ -181,7 +185,7 @@ class link_tracker(models.Model):
         link = super(link_tracker, self).create(create_vals)
 
         code = self.env['link.tracker.code'].get_random_code_string()
-        self.env['link.tracker.code'].create({'code': code, 'link_id': link.id})
+        self.env['link.tracker.code'].sudo().create({'code': code, 'link_id': link.id})
 
         return link
 
@@ -201,6 +205,7 @@ class link_tracker(models.Model):
 
 class link_tracker_code(models.Model):
     _name = "link.tracker.code"
+    _description = 'Link Tracker Code'
 
     code = fields.Char(string='Short URL Code', store=True)
     link_id = fields.Many2one('link.tracker', 'Link', required=True, ondelete='cascade')
@@ -209,7 +214,7 @@ class link_tracker_code(models.Model):
     def get_random_code_string(self):
         size = 3
         while True:
-            code_proposition = ''.join(random.choice(string.letters + string.digits) for _ in range(size))
+            code_proposition = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(size))
 
             if self.search([('code', '=', code_proposition)]):
                 size += 1
@@ -224,6 +229,7 @@ class link_tracker_code(models.Model):
 class link_tracker_click(models.Model):
     _name = "link.tracker.click"
     _rec_name = "link_id"
+    _description = 'Link Tracker Click'
 
     click_date = fields.Date(string='Create Date')
     link_id = fields.Many2one('link.tracker', 'Link', required=True, ondelete='cascade')
@@ -241,23 +247,21 @@ class link_tracker_click(models.Model):
         again = self.search_count([('link_id', '=', code_rec.link_id.id), ('ip', '=', ip)])
 
         if not again:
-            country_record = self.env['res.country'].search([('code', '=', country_code)], limit=1)
+            self.create(
+                self._get_click_values_from_route(dict(
+                    code=code,
+                    ip=ip,
+                    country_code=country_code,
+                    stat_id=stat_id,
+                )))
 
-            vals = {
-                'link_id': code_rec.link_id.id,
-                'create_date': datetime.date.today(),
-                'ip': ip,
-                'country_id': country_record.id,
-                'mail_stat_id': stat_id
-            }
+    def _get_click_values_from_route(self, route_values):
+        code = self.env['link.tracker.code'].search([('code', '=', route_values['code'])], limit=1)
+        country = self.env['res.country'].search([('code', '=', route_values['country_code'])], limit=1)
 
-            if stat_id:
-                mail_stat = self.env['mail.mail.statistics'].search([('id', '=', stat_id)])
-
-                if mail_stat.mass_mailing_campaign_id:
-                    vals['mass_mailing_campaign_id'] = mail_stat.mass_mailing_campaign_id.id
-
-                if mail_stat.mass_mailing_id:
-                    vals['mass_mailing_id'] = mail_stat.mass_mailing_id.id
-
-            self.create(vals)
+        return {
+            'link_id': code.link_id.id,
+            'create_date': datetime.date.today(),
+            'ip': route_values['ip'],
+            'country_id': country.id,
+        }

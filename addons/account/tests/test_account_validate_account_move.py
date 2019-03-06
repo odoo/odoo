@@ -1,5 +1,8 @@
-from openerp.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.tests import tagged
 
+
+@tagged('post_install', '-at_install')
 class TestAccountValidateAccount(AccountingTestCase):
 
     def test_account_validate_account(self):
@@ -18,13 +21,13 @@ class TestAccountValidateAccount(AccountingTestCase):
         })
         # create move line
         account_move_line.create({'account_id': account_cash.id,
-            'name': 'Basic Computer',
+            'name': 'Four Person Desk',
             'move_id': move.id,
         })
 
         # create another move line
         account_move_line.create({'account_id': account_cash.id,
-            'name': 'Basic Computer',
+            'name': 'Four Person Desk',
             'move_id': move.id,
         })
 

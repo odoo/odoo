@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template id="template" xml:space="preserve">
+
+    <!-- LAYOUT TEMPLATES -->
+    <div t-name="iap.redirect_to_odoo_credit">
+        <t t-if="data.body">
+            <div t-raw="data.body"/>
+        </t>
+        <t t-if="!data.body">
+            <t t-if="data.message">
+                <span t-esc="data.message"/>
+            </t>
+            <t t-if="!data.message">
+                <span>Insufficient credit to perform this service.</span>
+            </t>
+        </t>
+    </div>
+
+    <t t-extend="DashboardApps">
+        <t t-jquery=".o_web_settings_dashboard_pills > :first-child" t-operation="after">
+            <a t-att-href="widget.data.url" class="d-block flex-grow-1 w-25" target="_blank"><i class="fa fa-lg fa-money text-muted"/> In-App Purchases</a>
+        </t>
+    </t>
+
+    <div t-name="iap.credit_checker" class="mt-2 row">
+        <div class="col-sm">
+            <div class="loading text-muted">
+                <i class="fa fa-spinner fa-spin"/> Checking remaining credit ...
+            </div>
+            <div class="insufficient">
+                <i class="fa fa-exclamation-triangle text-warning"/> Insufficient credit
+            </div>
+            <div class="sufficient">
+                <i class="fa fa-check-circle text-success"/> Remaining : <b class="remaining_credits"/> credits
+            </div>
+            <div class="error">
+                <i class="fa fa-question-circle text-muted"/> Temporarily unavailable
+            </div>
+        </div>
+        <div class="col-sm text-right">
+            <button class="btn btn-link buy_credits"><i class="fa fa-arrow-right"/> Buy more credits</button>
+        </div>
+    </div>
+</template>

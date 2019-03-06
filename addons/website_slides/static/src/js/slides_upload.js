@@ -1,18 +1,17 @@
-/*global $, _, PDFJS */
 odoo.define('website_slides.upload', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
-var base = require('web_editor.base');
+require('web.dom_ready');
+var weContext = require("web_editor.context");
 var slides = require('website_slides.slides');
-var website = require('website.website');
 
 var qweb = core.qweb;
 var _t = core._t;
 
-if(!$('.oe_slide_js_upload').length) {
+if (!$('.oe_slide_js_upload').length) {
     return $.Deferred().reject("DOM doesn't contain '.oe_slide_js_upload'");
 }
 
@@ -71,7 +70,9 @@ var SlideDialog = Widget.extend({
             model: 'slide.slide',
             method: 'search_count',
             args: [[['channel_id', '=', self.channel_id], ['name', '=', file_name]]],
-            kwargs: {}
+            kwargs: {
+                context: weContext.get(), // TODO use this._rpc
+            }
         });
     },
     slide_upload: function (ev) {
@@ -86,8 +87,8 @@ var SlideDialog = Widget.extend({
             this.reset_file();
             return;
         }
-        if (file.size / 1024 / 1024 > 15) {
-            this.display_alert(_t("File is too big. File size cannot exceed 15MB"));
+        if (file.size / 1024 / 1024 > 25) {
+            this.display_alert(_t("File is too big. File size cannot exceed 25MB"));
             this.reset_file();
             return;
         }
@@ -150,6 +151,8 @@ var SlideDialog = Widget.extend({
                                 _.each(data.items, function (obj) {
                                     page_content = page_content + obj.str + " ";
                                 });
+                                // page_content may contain null characters
+                                page_content = page_content.replace(/\0/g, "");
                                 self.index_content = self.index_content + page_number + ". " + page_content + '\n';
                                 if (maxPages === page_number) {
                                     if (loaded) {
@@ -208,9 +211,9 @@ var SlideDialog = Widget.extend({
                 }
                 return data.text;
             },
-            createSearchChoice: function(term, data) {
+            createSearchChoice: function (term, data) {
                 var added_tags = $(this.opts.element).select2('data');
-                if (_.filter(_.union(added_tags, data), function(tag) {
+                if (_.filter(_.union(added_tags, data), function (tag) {
                     return tag.text.toLowerCase().localeCompare(term.toLowerCase()) === 0;
                 }).length === 0) {
                     return {
@@ -257,7 +260,7 @@ var SlideDialog = Widget.extend({
                     kwargs: {
                         fields: ['name'],
                         domain: [['channel_id', '=', self.channel_id]],
-                        context: base.get_context()
+                        context: weContext.get(), // TODO use this._rpc
                     }
                 });
             }));
@@ -278,7 +281,7 @@ var SlideDialog = Widget.extend({
                 args: [],
                 kwargs: {
                     fields: ['name'],
-                    context: base.get_context()
+                    context: weContext.get(), // TODO use this._rpc
                 }
             });
         }));
@@ -295,8 +298,9 @@ var SlideDialog = Widget.extend({
             });
         return res;
     },
+    // TODO: Remove this part, as now SVG support in image resize tools is included
     //Python PIL does not support SVG, so converting SVG to PNG
-    svg_to_png: function() {
+    svg_to_png: function () {
         var img = this.$el.find("img#slide-image")[0];
         var canvas = document.createElement("canvas");
         canvas.width = img.width;
@@ -334,14 +338,14 @@ var SlideDialog = Widget.extend({
         return values;
     },
     validate: function () {
-        this.$('.form-group').removeClass('has-error');
+        this.$('.form-group').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
         if (!this.$('#name').val()) {
-            this.$('#name').closest('.form-group').addClass('has-error');
+            this.$('#name').closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
             return false;
         }
         var url = this.$('#url').val() ? this.is_valid_url : false;
         if (!(this.file.name || url)) {
-            this.$('#url').closest('.form-group').addClass('has-error');
+            this.$('#url').closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
             return false;
         }
         return true;
@@ -372,10 +376,15 @@ var SlideDialog = Widget.extend({
     }
 });
 
-    // bind the event to the button
-    $('.oe_slide_js_upload').on('click', function () {
-        var channel_id = $(this).attr('channel_id');
-        slides.page_widgets['upload_dialog'] = new SlideDialog(this, channel_id).appendTo(document.body);
-    });
+// bind the event to the button
+$('.oe_slide_js_upload').on('click', function () {
+    var channel_id = $(this).attr('channel_id');
+    slides.page_widgets['upload_dialog'] = new SlideDialog(this, channel_id).appendTo(document.body);
+});
+
+// automatically open the upload dialog if requested from query string
+if ($.deparam.querystring().enable_slide_upload !== undefined) {
+    $('.oe_slide_js_upload').click();
+}
 
 });

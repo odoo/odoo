@@ -95,6 +95,16 @@ not have to be ``<t>``::
 
 will give the same results as the previous example.
 
+Extra conditional branching directives ``t-elif`` and ``t-else`` are also
+available::
+
+    <div>
+        <p t-if="user.birthday == today()">Happy bithday!</p>
+        <p t-elif="user.login == 'root'">Welcome master!</p>
+        <p t-else="">Welcome!</p>
+    </div>
+
+
 .. _reference/qweb/loops:
 
 loops
@@ -137,6 +147,9 @@ variables for various data points:
 
 :samp:`{$as}_all`
     the object being iterated over
+
+    .. note:: This variable is only available on JavaScript QWeb, not Python.
+
 :samp:`{$as}_value`
     the current iteration value, identical to ``$as`` for lists and integers,
     but for mappings it provides the value (where ``$as`` provides the key)
@@ -334,7 +347,7 @@ The ``t-field`` directive can only be used when performing field access
 to automatically format based on field type, and is integrated in the
 website's rich text edition.
 
-``t-field-options`` can be used to customize fields, the most common option
+``t-options`` can be used to customize fields, the most common option
 is ``widget``, other options are field- or widget-dependent.
 
 debugging
@@ -343,9 +356,9 @@ debugging
 ``t-debug``
     invokes a debugger using PDB's ``set_trace`` API. The parameter should
     be the name of a module, on which a ``set_trace`` method is called::
-    
+
         <t t-debug="pdb"/>
-    
+
     is equivalent to ``importlib.import_module("pdb").set_trace()``
 
 Helpers
@@ -357,7 +370,7 @@ Request-based
 Most Python-side uses of QWeb are in controllers (and during HTTP requests),
 in which case templates stored in the database (as
 :ref:`views <reference/views/qweb>`) can be trivially rendered by calling
-:meth:`openerp.http.HttpRequest.render`:
+:meth:`odoo.http.HttpRequest.render`:
 
 .. code-block:: python
 
@@ -365,7 +378,7 @@ in which case templates stored in the database (as
         'context_value': 42
     })
 
-This automatically creates a :class:`~openerp.http.Response` object which can
+This automatically creates a :class:`~odoo.http.Response` object which can
 be returned from the controller (or further customized to suit).
 
 View-based
@@ -382,7 +395,7 @@ At a deeper level than the previous helper is the ``render`` method on
     Sets up a number of default values in the rendering context:
 
     ``request``
-        the current :class:`~openerp.http.WebRequest` object, if any
+        the current :class:`~odoo.http.WebRequest` object, if any
     ``debug``
         whether the current request (if any) is in ``debug`` mode
     :func:`quote_plus <werkzeug.urls.url_quote_plus>`
@@ -405,14 +418,16 @@ At a deeper level than the previous helper is the ``render`` method on
 
 .. _reference/qweb/javascript:
 
-API
----
+.. todo:: the members below are no longer relevant, section to rewrite
 
-It is also possible to use the ``ir.qweb`` model directly (and extend it, and
-inherit from it):
+.. API
+.. ---
 
-.. automodule:: openerp.addons.base.ir.ir_qweb
-    :members: QWeb, QWebContext, FieldConverter, QwebWidget
+.. It is also possible to use the ``ir.qweb`` model directly (and extend it, and
+.. inherit from it):
+
+.. .. automodule:: odoo.addons.base.ir.ir_qweb
+..     :members: QWeb, QWebContext, FieldConverter, QwebWidget
 
 Javascript
 ==========
@@ -491,14 +506,14 @@ The javascript QWeb implementation provides a few debugging hooks:
 ``t-log``
     takes an expression parameter, evaluates the expression during rendering
     and logs its result with ``console.log``::
-    
+
         <t t-set="foo" t-value="42"/>
         <t t-log="foo"/>
-        
+
     will print ``42`` to the console
 ``t-debug``
     triggers a debugger breakpoint during template rendering::
-    
+
         <t t-if="a_test">
             <t t-debug="">
         </t>
@@ -509,7 +524,7 @@ The javascript QWeb implementation provides a few debugging hooks:
     the node's body is javascript code executed during template rendering.
     Takes a ``context`` parameter, which is the name under which the rendering
     context will be available in the ``t-js``'s body::
-    
+
         <t t-set="foo" t-value="42"/>
         <t t-js="ctx">
             console.log("Foo is", ctx.foo);
@@ -535,8 +550,8 @@ API
     The QWeb "renderer", handles most of QWeb's logic (loading,
     parsing, compiling and rendering templates).
 
-    OpenERP Web instantiates one for the user in the core module, and 
-    exports it to ``core.qweb``. It also loads all the template files 
+    Odoo Web instantiates one for the user in the core module, and
+    exports it to ``core.qweb``. It also loads all the template files
     of the various modules into that QWeb instance.
 
     A :js:class:`QWeb2.Engine` also serves as a "template namespace".
@@ -554,7 +569,7 @@ API
 
     The engine exposes an other method which may be useful in some
     cases (e.g. if you need a separate template namespace with, in
-    OpenERP Web, Kanban views get their own :js:class:`QWeb2.Engine`
+    Odoo Web, Kanban views get their own :js:class:`QWeb2.Engine`
     instance so their templates don't collide with more general
     "module" templates):
 
@@ -601,7 +616,7 @@ API
     .. js:attribute:: QWeb2.Engine.preprocess_node
 
         A ``Function``. If present, called before compiling each DOM
-        node to template code. In OpenERP Web, this is used to
+        node to template code. In Odoo Web, this is used to
         automatically translate text content and some attributes in
         templates. Defaults to ``null``.
 

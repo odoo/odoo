@@ -1,0 +1,250 @@
+
+.o_list_view {
+    position: relative;
+    cursor: pointer;
+    background-color: $o-view-background-color;
+    margin-bottom: 0px;
+
+    // Don't understand why but without those, the list view appears broken
+    // in both form views and standalone list views.
+    border-collapse: initial;
+    border-spacing: 0;
+
+    // Checkbox in editable list
+    // should be clickable and activate the row
+    &.o_editable_list .o_data_row:not(.o_selected_row) .o_data_cell {
+        .custom-checkbox:not(.o_readonly_modifier) {
+            pointer-events: none;
+        }
+    }
+
+    thead {
+        color: $o-main-text-color;
+        border-bottom: 1px solid #cacaca;
+        > tr > th {
+            border-left: 1px solid #dfdfdf;
+            @include media-breakpoint-down(sm) {
+                white-space: nowrap;
+            }
+            &:not(.o_column_sortable):hover {
+                cursor: default;
+            }
+        }
+    }
+
+    tfoot {
+        cursor: default;
+        color: $o-list-footer-color;
+        background-color: $o-list-footer-bg-color;
+        font-weight: $o-list-footer-font-weight;
+        border-top: 2px solid #cacaca;
+        border-bottom: 1px solid #cacaca;
+    }
+
+    .o_column_sortable {
+        position: relative;
+        user-select: none;  // Prevent unwanted selection while sorting
+
+        &::after {
+            font-family: FontAwesome;
+            content: "\f0d7";
+            opacity: 0;
+        }
+        &:not(:empty)::after {
+            margin-left: 6px;
+        }
+        &.o-sort-up {
+            cursor: n-resize;
+            &::after {
+                content: "\f0d7";
+            }
+        }
+        &.o-sort-down {
+            cursor: s-resize;
+            &::after {
+                content: "\f0d8";
+            }
+        }
+        &:hover::after {
+            opacity: 0.3;
+        }
+        &.o-sort-up, &.o-sort-down {
+            color: $headings-color;
+            &::after {
+                opacity: 1;
+            }
+        }
+    }
+
+    .o_list_record_selector, .o_list_record_remove, .o_handle_cell {
+        width: 1px;  // to prevent the column to expand
+    }
+
+    .o_list_record_remove button {
+        padding: 0px;
+        background: none;
+        border-style: none;
+        display: table-cell;
+        cursor: pointer;
+    }
+
+    // Contextual classes
+    @each $color, $value in $theme-colors {
+        $safe: saturate(theme-color-level($color, 2), 10%);
+        @include text-emphasis-variant(".text-#{$color}", $safe);
+    }
+
+    // Grouped list views
+    tbody > tr.o_group_header {
+        > th, > td {
+            padding-top: ($table-cell-padding-sm*2);
+            padding-bottom: ($table-cell-padding-sm*2);
+        }
+        .o_group_name {
+            white-space: nowrap;
+        }
+        .o_group_pager {
+            cursor: text;
+            user-select: none;
+            text-align: right;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            .o_pager_previous, .o_pager_next {
+                max-height: 30px;
+                background-color: $o-list-group-header-color;
+                &:hover {
+                    background-color: darken($o-list-group-header-color, 10%);
+                }
+            }
+        }
+    }
+    tbody + tbody {
+        border-top: none;  // Override bootstrap for grouped list views
+    }
+
+    tbody {
+        tr:focus-within {
+            background-color: $o-form-lightsecondary;
+        }
+    }
+
+    // Values styling
+    .o_list_number {
+        text-align: right;
+        white-space: nowrap;
+    }
+    .o_list_text {
+        white-space: pre-wrap;
+    }
+
+    .o_data_cell.o_invisible_modifier {
+        // Override display: none to keep table cells aligned. Note: cannot use
+        // 'initial' as it will force them to 'inline', not 'table-cell'.
+        display: table-cell!important;
+    }
+
+    //--------------------------------------------------------------------------
+    // Edition
+    //--------------------------------------------------------------------------
+    .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier) {
+        position: relative;
+
+        // The in-edition elements will overflow other elements (the rows below,
+        // the content below the list view, ...). As those might be using
+        // position: relative, the in-edition elements have to define a z-index.
+        // Technically, creating a stacking context for a meaningful parent
+        // (maybe the .o_content) might be required for safety but we should
+        // consider this later if needed.
+        z-index: 1;
+
+        // The in-edition elements will overflow other elements (the rows below,
+        // the content below the list view, ...). As those might be using
+        // position: relative, the in-edition elements have to define a z-index.
+        // Technically, creating a stacking context for a meaningful parent
+        // (maybe the .o_content) might be required for safety but we should
+        // consider this later if needed.
+        z-index: 1;
+
+        // Field widgets override
+        > .o_field_widget {
+            @include o-position-absolute(0, 0, auto, 0);
+            min-height: 100%;
+
+            &:not(.o_field_text) {
+                white-space: nowrap;
+            }
+
+            &.o_field_many2manytags > .badge {
+                &, > .o_badge_text {
+                    white-space: normal;
+                    max-width: 100%; // Fix a chrome bug where badge would not break on multiple lines
+                }
+            }
+        }
+        > .o_field_translate {
+            @include o-position-absolute(0, 5px);
+            width: 16px; // to have some space on the right
+        }
+        .o_input {
+            padding: $table-cell-padding-sm;
+            background-color: white;
+
+            .o_input {
+                padding: 0!important;
+            }
+        }
+        .o_input_dropdown {
+            min-height: 100%;
+        }
+        .o_field_monetary input {
+            width: 0;
+        }
+        .o_field_boolean {
+            position: relative!important;
+        }
+        .o_field_widget {
+            min-width: 0;
+        }
+        .o_input_dropdown, .o_datepicker {
+            > .o_input {
+                padding-right: 15px; // To prevent caret overlapping
+            }
+            > .o_dropdown_button, .o_datepicker_button {
+                @include o-position-absolute(20%, 5px);
+            }
+        }
+        .o_field_widget > .o_external_button {
+            padding: 0;
+            background-color: inherit;
+            margin-left: 3px;
+        }
+        .o_row_handle {
+            visibility: hidden; // Hide sequence when editing
+        }
+        .o_field_boolean {
+            width: auto!important; // Override the width computed in JS (needed for Chrome)
+        }
+    }
+
+    .o_field_x2many_list_row_add {
+        a:focus, a:active {
+            color: $link-hover-color;
+            outline: none;
+        }
+    }
+}
+
+// Buttons in ControlPanel
+.o_list_buttons {
+    .o_list_button_save, .o_list_button_discard {
+        display: none;
+    }
+    &.o-editing { // for list view editable
+        .o_list_button_add {
+            display: none
+        }
+        .o_list_button_save, .o_list_button_discard {
+            display: inline-block
+        }
+    }
+}

@@ -1,0 +1,141 @@
+{% extends "layout.html" %}
+{% block head %}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    table tr {
+        border-bottom: 1px solid #f1f1f1;
+    }
+    table tr:last-child {
+        border-width: 0px;
+    }
+    table td {
+        padding: 8px;
+        border-left: 1px solid #f1f1f1;
+    }
+    table td:first-child {
+        border-left: 0;
+    }
+    td.heading {
+        font-weight: bold;
+        vertical-align: top;
+        width: 30%;
+    }
+    .device-status {
+        margin: 6px 0;
+    }
+    .device-status .message {
+        font-size: 0.8rem;
+    }
+    .device-status .indicator {
+        margin-left: 4px;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+    }
+    .device-status .device {
+        font-weight: 500;
+    }
+    .collapse .collapsible{
+        border: 1px solid #f1f1f1;
+    }
+    .collapse .title {
+        position: relative;
+        color: #00a09d;
+        cursor: pointer;
+        padding: 8px;
+    }
+    .collapse  .active, .collapse .title:hover {
+        background-color: #f1f1f1;
+        color: #006d6b;
+    }
+    .collapse  .content {
+        padding: 0 8px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+    }
+    .arrow-down::after {
+        content: '\25bc';
+        padding: 0 10px;
+        position: absolute;
+        right: 0;
+    }
+    .arrow-up::after {
+        content: '\25b2';
+        padding: 0 10px;
+        position: absolute;
+        right: 0;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('.collapsible .title').on('click', function (ev) {
+            $(ev.target).toggleClass('active');
+            $(ev.target).toggleClass('arrow-down arrow-up');
+            var content = $(ev.target).next('.content');
+            var maxHeight = ( content.css('max-height') === '0px' ? content.prop('scrollHeight') : 0) + 'px';
+            content.css('max-height', maxHeight);
+        });
+    });
+</script>
+{% endblock %}
+{% block content %}
+    <h2 class="text-center text-green">Your IoT Box is up and running</h2>
+    <table align="center" cellpadding="3">
+        <tr>
+            <td class="heading">Name</td>
+            <td> {{ hostname }} <a class="btn btn-sm float-right" href='/server'>configure</a></td>
+        </tr>
+        <tr>
+            <td class="heading">Version</td>
+            <td>V18.12 <a class="btn btn-sm float-right" href='/hw_proxy/upgrade/'>update</a></td>
+        </tr>
+        <tr>
+            <td class="heading">IP Address</td>
+            <td>{{ ip }}</a></td>
+        </tr>
+        <tr>
+            <td class="heading">Mac Address</td>
+            <td> {{ mac }}</td>
+        </tr>
+        <tr>
+            <td class="heading">Network</td>
+            <td>{{ network_status }} <a class="btn btn-sm float-right" href='/wifi'>configure wifi</a></td>
+        </tr>
+        <tr>
+            <td class="heading">Server</td>
+            <td><a href='{{ server_status }}' target=_blank>{{ server_status }}<a class="btn btn-sm float-right" href='/server'>configure</a></td>
+        </tr>
+        <tr>
+            <td class="heading">IOT Device</td>
+            <td>
+                <div class="collapse">
+                    {% if iot_device_status|length == 0 %}
+                        No Device Found
+                    {% endif %}
+                    {% for iot_devices in iot_device_status|groupby('type') %}
+                        <div class="collapsible">
+                            <div class="title arrow-down">{{ iot_devices.grouper|capitalize }}s</div>
+                            <div class="content">
+                                {% for device in iot_devices.list %}
+                                    <div class="device-status">
+                                        <span class="device">{{ device['name'] }}</span>
+                                        <div class="message">{{ device['message'] }}</div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <br><center><a class="btn btn-sm" href='/list_drivers'>drivers list</a></center>
+            </td>
+        </tr>
+    </table>
+    <div style="margin: 20px auto 10px auto;" class="text-center">
+        <a class="btn" href='/point_of_sale/display'>POS Display</a>
+        <a class="btn" style="margin-left: 10px;" href='/remote_connect'>Remote Debug</a>
+        <a target="_blank" class="btn" style="margin-left: 10px;" href="http://{{ ip }}:631">Printers server</a>
+    </div>
+{% endblock %}

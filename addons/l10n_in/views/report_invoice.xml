@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_in_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+
+        <xpath expr="//table[@name='invoice_line_table']" position="before">
+            <t t-if="o.company_id.country_id.code == 'IN'">
+                <!-- Tag wise Tax Calculation -->
+                <t t-set="tag_cgst_id" t-value="env.ref('l10n_in.cgst_tag_tax').id"/>
+                <t t-set="tag_sgst_id" t-value="env.ref('l10n_in.sgst_tag_tax').id"/>
+                <t t-set="tag_igst_id" t-value="env.ref('l10n_in.igst_tag_tax').id"/>
+                <t t-set="tag_cess_id" t-value="env.ref('l10n_in.cess_tag_tax').id"/>
+                <t t-set="tax_map" t-value="o.tax_line_ids.mapped('tax_id.tag_ids.id')"/>
+                <t t-set="is_igst" t-value="tag_igst_id in tax_map"/>
+                <t t-set="is_cgst" t-value="tag_cgst_id in tax_map"/>
+                <t t-set="is_cess" t-value="tag_cess_id in tax_map"/>
+                <t t-set="tax_datas" t-value="o._invoice_line_tax_values()"/>
+            </t>
+        </xpath>
+
+        <xpath expr="//p[@t-if='o.comment']" position="before">
+            <t t-if="o.company_id.country_id.code == 'IN'">
+                <p id="total_in_words" class="mb16">
+                    <strong>Total (In Words): </strong>
+                    <span t-field="o.amount_total_words"/>
+                </p>
+            </t>
+        </xpath>
+
+        <xpath expr="//table[@name='invoice_line_table']/thead/tr" position="inside">
+            <t t-if="o.company_id.country_id.code == 'IN'">
+                <th class="text-right" t-if="is_cgst">CGST<t t-set="colspan" t-value="colspan+1"/></th>
+                <th class="text-right" t-if="is_cgst">SGST<t t-set="colspan" t-value="colspan+1"/></th>
+                <th class="text-right" t-if="is_igst">IGST<t t-set="colspan" t-value="colspan+1"/></th>
+                <th class="text-right" t-if="is_cess">CESS<t t-set="colspan" t-value="colspan+1"/></th>
+            </t>
+        </xpath>
+
+        <xpath expr="//td[@name='account_invoice_line_name']" position="after">
+            <t t-if="line.product_id.l10n_in_hsn_code"><h6><strong class="ml16">HSN/SAC Code:</strong> <span t-field="line.product_id.l10n_in_hsn_code"/></h6></t>
+        </xpath>
+
+        <xpath expr="//t[@name='account_invoice_line_accountable']" position="inside">
+            <t t-if="o.company_id.country_id.code == 'IN'">
+                <td class="text-right" t-if="is_cgst">
+                    <t t-foreach="tax_datas[line.id]" t-as="tax_data">
+                        <t t-if="tag_cgst_id in tax_data['tag_ids']">
+                            <t t-esc="tax_data['amount']" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                        </t>
+                    </t>
+                </td>
+                <td class="text-right" t-if="is_cgst">
+                    <t t-foreach="tax_datas[line.id]" t-as="tax_data">
+                        <t t-if="tag_sgst_id in tax_data['tag_ids']">
+                            <t t-esc="tax_data['amount']" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                        </t>
+                    </t>
+                </td>
+                <td class="text-right" t-if="is_igst">
+                    <t t-foreach="tax_datas[line.id]" t-as="tax_data">
+                        <t t-if="tag_igst_id in tax_data['tag_ids']">
+                            <t t-esc="tax_data['amount']" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                        </t>
+                    </t>
+                </td>
+                <td class="text-right" t-if="is_cess">
+                    <t t-set="total_cess" t-value="0.0"/>
+                    <t t-foreach="tax_datas[line.id]" t-as="tax_data">
+                        <t t-if="tag_cess_id in tax_data['tag_ids']">
+                            <t t-set="total_cess" t-value="total_cess + tax_data['amount']" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                        </t>
+                    </t>
+                    <t t-esc="total_cess" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                </td>
+            </t>
+        </xpath>
+
+        <xpath expr="//h2" position="replace">
+            <h2>
+                <span t-if="o.type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')" t-field="o.journal_id.name"/>
+                <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft <span t-field="o.journal_id.name"/></span>
+                <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled <span t-field="o.journal_id.name"/></span>
+                <span t-if="o.type == 'out_refund'">Credit Note</span>
+                <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
+                <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
+                <span t-field="o.number"/>
+            </h2>
+        </xpath>
+
+    </template>
+
+</odoo>

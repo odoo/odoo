@@ -1,41 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
-
-        <!-- After installation of the module, open the related menu -->
-        <record id="action_client_event_menu" model="ir.actions.client">
-            <field name="name">Open Event Menu</field>
-            <field name="tag">reload</field>
-            <field name="params" eval="{'menu_id': ref('event.menu_event_event')}"/>
-        </record>
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_client_event_menu"/>
-            <field name="state">open</field>
-        </record>
-
-        <!-- notify all employees of module installation -->
-        <function model="mail.channel" name="message_post">
-            <value eval="[ref('mail.channel_all_employees')]"/>
-            <value>From the top menu Events, you can organize events, manage registrations, automate communication around your event and sell events through your quotations.</value>
-            <value>Module Events has been installed</value>
-        </function>
-
-        <!-- Automatic confirmation of events by default -->
-        <function id="default_auto_confirmation" model="ir.values" name="set_default" eval="('event.config.settings', 'auto_confirmation', True)"/>
-
         <!-- Event Mail Scheduler-->
         <record model="ir.cron" forcecreate="True" id="event_mail_scheduler">
-            <field name="name">[event] mail scheduler</field>
-            <field name="active">True</field>
+            <field name="name">Event: Mail Scheduler</field>
+            <field name="model_id" ref="model_event_mail"/>
+            <field name="state">code</field>
+            <field name="code">model.run(True)</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">1</field>
             <field name="interval_type">hours</field>
             <field name="numbercall">-1</field>
             <field name="doall" eval="False" />
-            <field eval="'(True,)'" name="args"/>
-            <field name="model">event.mail</field>
-            <field name="function">run</field>
         </record>
 
+        <record id="event_type_data_online" model="event.type">
+            <field name="name">Online</field>
+            <field name="is_online" eval="True"/>
+            <field name="auto_confirm" eval="True"/>
+            <field name="use_mail_schedule" eval="False"/>
+        </record>
+
+        <record id="event_type_data_physical" model="event.type">
+            <field name="name">Physical Event</field>
+            <field name="is_online" eval="False"/>
+            <field name="auto_confirm" eval="True"/>
+            <field name="use_mail_schedule" eval="False"/>
+        </record>
     </data>
-</openerp>
+</odoo>

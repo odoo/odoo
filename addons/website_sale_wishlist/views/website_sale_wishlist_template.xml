@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Wishlist assets frontend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/website_sale_wishlist/static/src/scss/website_sale_wishlist.scss"/>
+            <script type="text/javascript" src="/website_sale_wishlist/static/src/js/website_sale_wishlist.js"></script>
+            <script type="text/javascript" src="/website_sale_wishlist/static/src/js/website_sale_tour_wishlist.js"></script>
+        </xpath>
+    </template>
+
+    <template id="add_to_wishlist" inherit_id="website_sale.products_item" active="True" customize_show="True" name="Wishlist" priority="20">
+        <xpath expr="//div[hasclass('product_price')]" position="inside">
+            <t t-set="in_wish" t-value="product._is_in_wishlist()"/>
+            <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
+            <button t-if="product_variant_id" type="button" role="button" class="btn btn-secondary btn-sm o_add_wishlist" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-template-id="product.id" t-att-data-product-product-id="product_variant_id" data-action="o_wishlist"><span class="fa fa-heart" role="img" aria-label="Add to wishlist"></span></button>
+        </xpath>
+    </template>
+
+    <template id="product_add_to_wishlist" name='Add to wishlist in product page' inherit_id="website_sale.product" priority="20">
+        <xpath expr="//a[@id='add_to_cart']" position="after">
+            <t t-if="request.website.viewref('website_sale_wishlist.add_to_wishlist').active">
+                <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
+                <t t-set="in_wish" t-value="product_variant and product_variant._is_in_wishlist()"/>
+                <button t-if="product_variant" type="button" role="button" class="btn btn-secondary btn-lg mt8 o_add_wishlist_dyn" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-template-id="product.id" t-att-data-product-product-id="product_variant.id" data-action="o_wishlist"><span class="fa fa-heart" role="img" aria-label="Add to wishlist"></span></button>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="header" inherit_id="website.layout" name="Header Shop Wishlist Link">
+        <xpath expr="//header//ul[@id='top_menu']/li[@id='my_cart']" position="after">
+            <t t-if="request.website.viewref('website_sale_wishlist.add_to_wishlist').active">
+                <t t-set='wishcount' t-value="len(request.env['product.wishlist'].current())"/>
+                <li id="my_wish" class="nav-item" t-att-style="not wishcount and 'display:none;'">
+                    <a href="/shop/wishlist" class="nav-link">
+                        <i class="fa fa-heart"/>
+                        Wishlist <sup t-attf-class="my_wish_quantity o_animate_blink badge badge-primary"><t t-esc='wishcount'/></sup>
+                    </a>
+                </li>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="product_wishlist" name="Wishlist Page">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Shop Wishlist</t>
+            <div id="wrap" class="js_sale">
+                <div class="oe_structure" id="oe_structure_website_sale_wishlist_product_wishlist_1"/>
+                <div class="container oe_website_sale">
+                    <section class="container wishlist-section">
+                        <h3>My Wishlist</h3>
+                        <div class="checkbox">
+                            <label class='text-muted'><input type="checkbox" id='b2b_wish' value="1" class="mr8"/>Add product to my cart but keep it in my wishlist</label>
+                        </div>
+                        <table class="table table-bordered table-striped table-hover text-center mt16 table-comparator " style="table-layout:auto" id="o_comparelist_table">
+                            <body>
+                                <t t-foreach="wishes" t-as="wish">
+                                    <tr t-att-data-wish-id='wish.id' t-att-data-product-id='wish.product_id.id'>
+                                        <td class='td-img'>
+                                            <a t-att-href="'/shop/product/%s' % slug(wish.product_id.product_tmpl_id)">
+                                                <img t-attf-src="/web/image/product.product/#{wish.product_id.id}/image/100x100" class="img img-fluid" style="margin:auto;" alt="Product image"/>
+                                            </a>
+                                        </td>
+                                        <td class='text-left'>
+                                            <strong><a t-att-href="'/shop/product/%s' % slug(wish.product_id.product_tmpl_id)"><t t-esc="wish.product_id.display_name" /></a></strong>
+                                            <small class='d-none d-md-block'><p t-field="wish.product_id.description_sale" class="text-muted"/></small>
+                                            <button type="button" class="btn btn-link o_wish_rm no-decoration"><small><i class='fa fa-trash-o'></i> Remove</small></button>
+                                        </td>
+                                        <td>
+                                            <t t-set="combination_info" t-value="wish.product_id._get_combination_info_variant()"/>
+                                            <t t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}"/>
+                                        </td>
+                                        <td class='text-center td-wish-btn'>
+                                            <input name="product_id" t-att-value="wish.product_id.id" type="hidden"/>
+                                            <button type="button" role="button" class="btn btn-secondary btn-block o_wish_add mb4" >Add <span class='d-none d-md-inline'>to Cart</span></button>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </body>
+                        </table>
+                    </section>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

@@ -31,9 +31,10 @@ var PosBaseWidget = require('point_of_sale.BaseWidget');
 var gui = require('point_of_sale.gui');
 var models = require('point_of_sale.models');
 var core = require('web.core');
-var Model = require('web.DataModel');
+var rpc = require('web.rpc');
 var utils = require('web.utils');
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
+var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -61,7 +62,7 @@ var ScreenWidget = PosBaseWidget.extend({
         var self = this;
         if (self.pos.scan_product(code)) {
             if (self.barcode_product_screen) {
-                self.gui.show_screen(self.barcode_product_screen);
+                self.gui.show_screen(self.barcode_product_screen, null, null, true);
             }
         } else {
             this.barcode_error_action(code);
@@ -73,12 +74,21 @@ var ScreenWidget = PosBaseWidget.extend({
     // - if there's a user with a matching barcode, put it as the active 'cashier', go to cashier mode, and return true
     // - else : do nothing and return false. You probably want to extend this to show and appropriate error popup... 
     barcode_cashier_action: function(code){
+        var self = this;
         var users = this.pos.users;
         for(var i = 0, len = users.length; i < len; i++){
             if(users[i].barcode === code.code){
-                this.pos.set_cashier(users[i]);
-                this.chrome.widget.username.renderElement();
-                return true;
+                if (users[i].id !== this.pos.get_cashier().id && users[i].pos_security_pin) {
+                    return this.gui.ask_password(users[i].pos_security_pin).then(function(){
+                        self.pos.set_cashier(users[i]);
+                        self.chrome.widget.username.renderElement();
+                        return true;
+                    });
+                } else {
+                    this.pos.set_cashier(users[i]);
+                    this.chrome.widget.username.renderElement();
+                    return true;
+                }
             }
         }
         this.barcode_error_action(code);
@@ -272,19 +282,30 @@ var ScaleScreenWidget = ScreenWidget.extend({
         });
 
         this.$('.next,.buy-product').click(function(){
-            self.order_product();
             self.gui.show_screen(self.next_screen);
+            // add product *after* switching screen to scroll properly
+            self.order_product();
         });
 
         queue.schedule(function(){
             return self.pos.proxy.scale_read().then(function(weight){
                 self.set_weight(weight.weight);
             });
-        },{duration:50, repeat: true});
+        },{duration:500, repeat: true});
 
     },
     get_product: function(){
         return this.gui.get_current_screen_param('product');
+    },
+    _get_active_pricelist: function(){
+        var current_order = this.pos.get_order();
+        var current_pricelist = this.pos.default_pricelist;
+
+        if (current_order) {
+            current_pricelist = current_order.pricelist;
+        }
+
+        return current_pricelist;
     },
     order_product: function(){
         this.pos.get_order().add_product(this.get_product(),{ quantity: this.weight });
@@ -295,7 +316,17 @@ var ScaleScreenWidget = ScreenWidget.extend({
     },
     get_product_price: function(){
         var product = this.get_product();
-        return (product ? product.price : 0) || 0;
+        var pricelist = this._get_active_pricelist();
+        return (product ? product.get_price(pricelist, this.weight) : 0) || 0;
+    },
+    get_product_uom: function(){
+        var product = this.get_product();
+
+        if(product){
+            return this.pos.units_by_id[product.uom_id[0]].name;
+        }else{
+            return '';
+        }
     },
     set_weight: function(weight){
         this.weight = weight;
@@ -315,7 +346,7 @@ var ScaleScreenWidget = ScreenWidget.extend({
         var unit = this.pos.units_by_id[unit_id[0]];
         var weight = round_pr(this.weight || 0, unit.rounding);
         var weightstr = weight.toFixed(Math.ceil(Math.log(1.0/unit.rounding) / Math.log(10) ));
-            weightstr += ' Kg';
+        weightstr += ' ' + unit.name;
         return weightstr;
     },
     get_computed_price_string: function(){
@@ -354,12 +385,24 @@ var NumpadWidget = PosBaseWidget.extend({
         this.state = new models.NumpadState();
     },
     start: function() {
+        this.applyAccessRights();
         this.state.bind('change:mode', this.changedMode, this);
+        this.pos.bind('change:cashier', this.applyAccessRights, this);
         this.changedMode();
         this.$el.find('.numpad-backspace').click(_.bind(this.clickDeleteLastChar, this));
         this.$el.find('.numpad-minus').click(_.bind(this.clickSwitchSign, this));
         this.$el.find('.number-char').click(_.bind(this.clickAppendNewChar, this));
         this.$el.find('.mode-button').click(_.bind(this.clickChangeMode, this));
+    },
+    applyAccessRights: function() {
+        var cashier = this.pos.get('cashier') || this.pos.get_cashier();
+        var has_price_control_rights = !this.pos.config.restrict_price_control || cashier.role == 'manager';
+        this.$el.find('.mode-button[data-mode="price"]')
+            .toggleClass('disabled-mode', !has_price_control_rights)
+            .prop('disabled', !has_price_control_rights);
+        if (!has_price_control_rights && this.state.get('mode')=='price'){
+            this.state.changeMode('quantity');
+        }
     },
     clickDeleteLastChar: function() {
         return this.state.deleteLastChar();
@@ -402,7 +445,21 @@ var ActionpadWidget = PosBaseWidget.extend({
         var self = this;
         this._super();
         this.$('.pay').click(function(){
-            self.gui.show_screen('payment');
+            var order = self.pos.get_order();
+            var has_valid_product_lot = _.every(order.orderlines.models, function(line){
+                return line.has_valid_product_lot();
+            });
+            if(!has_valid_product_lot){
+                self.gui.show_popup('confirm',{
+                    'title': _t('Empty Serial/Lot Number'),
+                    'body':  _t('One or more product(s) required serial/lot number.'),
+                    confirm: function(){
+                        self.gui.show_screen('payment');
+                    },
+                });
+            }else{
+                self.gui.show_screen('payment');
+            }
         });
         this.$('.set-customer').click(function(){
             self.gui.show_screen('clientlist');
@@ -439,6 +496,8 @@ var OrderWidget = PosBaseWidget.extend({
         this.pos.get_order().select_orderline(orderline);
         this.numpad_state.reset();
     },
+
+
     set_value: function(val) {
     	var order = this.pos.get_order();
     	if (order.get_selected_orderline()) {
@@ -448,7 +507,9 @@ var OrderWidget = PosBaseWidget.extend({
             }else if( mode === 'discount'){
                 order.get_selected_orderline().set_discount(val);
             }else if( mode === 'price'){
-                order.get_selected_orderline().set_unit_price(val);
+                var selected_orderline = order.get_selected_orderline();
+                selected_orderline.price_manually_set = true;
+                selected_orderline.set_unit_price(val);
             }
     	}
     },
@@ -495,6 +556,12 @@ var OrderWidget = PosBaseWidget.extend({
             el_node = el_node.childNodes[0];
             el_node.orderline = orderline;
             el_node.addEventListener('click',this.line_click_handler);
+        var el_lot_icon = el_node.querySelector('.line-lot-icon');
+        if(el_lot_icon){
+            el_lot_icon.addEventListener('click', (function() {
+                this.show_product_lot(orderline);
+            }.bind(this)));
+        }
 
         orderline.node = el_node;
         return el_node;
@@ -558,6 +625,11 @@ var OrderWidget = PosBaseWidget.extend({
 
         this.el.querySelector('.summary .total > .value').textContent = this.format_currency(total);
         this.el.querySelector('.summary .total .subentry .value').textContent = this.format_currency(taxes);
+    },
+    show_product_lot: function(orderline){
+        this.pos.get_order().select_orderline(orderline);
+        var order = this.pos.get_order();
+        order.display_lot_popup();
     },
 });
 
@@ -769,8 +841,26 @@ var ProductListWidget = PosBaseWidget.extend({
             options.click_product_action(product);
         };
 
+        this.keypress_product_handler = function(ev){
+            // React only to SPACE to avoid interfering with warcode scanner which sends ENTER
+            if (ev.which != 32) {
+                return;
+            }
+            ev.preventDefault();
+            var product = self.pos.db.get_product_by_id(this.dataset.productId);
+            options.click_product_action(product);
+        };
+
         this.product_list = options.product_list || [];
         this.product_cache = new DomCache();
+
+        this.pos.get('orders').bind('add remove change', function () {
+            self.renderElement();
+        }, this);
+
+        this.pos.bind('change:selectedOrder', function () {
+            this.renderElement();
+        }, this);
     },
     set_product_list: function(product_list){
         this.product_list = product_list;
@@ -784,20 +874,35 @@ var ProductListWidget = PosBaseWidget.extend({
         var target = $target[0];
         target.parentNode.replaceChild(this.el,target);
     },
+    calculate_cache_key: function(product, pricelist){
+        return product.id + ',' + pricelist.id;
+    },
+    _get_active_pricelist: function(){
+        var current_order = this.pos.get_order();
+        var current_pricelist = this.pos.default_pricelist;
 
+        if (current_order) {
+            current_pricelist = current_order.pricelist;
+        }
+
+        return current_pricelist;
+    },
     render_product: function(product){
-        var cached = this.product_cache.get_node(product.id);
+        var current_pricelist = this._get_active_pricelist();
+        var cache_key = this.calculate_cache_key(product, current_pricelist);
+        var cached = this.product_cache.get_node(cache_key);
         if(!cached){
             var image_url = this.get_product_image_url(product);
             var product_html = QWeb.render('Product',{ 
                     widget:  this, 
-                    product: product, 
+                    product: product,
+                    pricelist: current_pricelist,
                     image_url: this.get_product_image_url(product),
                 });
             var product_node = document.createElement('div');
             product_node.innerHTML = product_html;
             product_node = product_node.childNodes[1];
-            this.product_cache.cache_node(product.id,product_node);
+            this.product_cache.cache_node(cache_key,product_node);
             return product_node;
         }
         return cached;
@@ -818,6 +923,7 @@ var ProductListWidget = PosBaseWidget.extend({
         for(var i = 0, len = this.product_list.length; i < len; i++){
             var product_node = this.render_product(this.product_list[i]);
             product_node.addEventListener('click',this.click_product_handler);
+            product_node.addEventListener('keypress',this.keypress_product_handler);
             list_container.appendChild(product_node);
         }
     },
@@ -928,10 +1034,15 @@ var ProductScreenWidget = ScreenWidget.extend({
        }
     },
 
-    show: function(){
+    show: function(reset){
         this._super();
-        this.product_categories_widget.reset_category();
-        this.numpad.state.reset();
+        if (reset) {
+            this.product_categories_widget.reset_category();
+            this.numpad.state.reset();
+        }
+        if (this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard) {
+            this.chrome.widget.keyboard.connect($(this.el.querySelector('.searchbox input')));
+        }
     },
 
     close: function(){
@@ -1006,10 +1117,10 @@ var ClientListScreenWidget = ScreenWidget.extend({
         this.$('.searchbox input').on('keypress',function(event){
             clearTimeout(search_timeout);
 
-            var query = this.value;
+            var searchbox = this;
 
             search_timeout = setTimeout(function(){
-                self.perform_search(query,event.which === 13);
+                self.perform_search(searchbox.value, event.which === 13);
             },70);
         });
 
@@ -1074,8 +1185,21 @@ var ClientListScreenWidget = ScreenWidget.extend({
         }
     },
     save_changes: function(){
+        var order = this.pos.get_order();
         if( this.has_client_changed() ){
-            this.pos.get_order().set_client(this.new_client);
+            var default_fiscal_position_id = _.findWhere(this.pos.fiscal_positions, {'id': this.pos.config.default_fiscal_position_id[0]});
+            if ( this.new_client ) {
+                if (this.new_client.property_account_position_id ){
+                  var client_fiscal_position_id = _.findWhere(this.pos.fiscal_positions, {'id': this.new_client.property_account_position_id[0]});
+                  order.fiscal_position = client_fiscal_position_id || default_fiscal_position_id;
+                }
+                order.set_pricelist(_.findWhere(this.pos.pricelists, {'id': this.new_client.property_product_pricelist[0]}) || this.pos.default_pricelist);
+            } else {
+                order.fiscal_position = default_fiscal_position_id;
+                order.set_pricelist(this.pos.default_pricelist);
+            }
+
+            order.set_client(this.new_client);
         }
     },
     has_client_changed: function(){
@@ -1145,7 +1269,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
         
         var fields = {};
         this.$('.client-details-contents .detail').each(function(idx,el){
-            fields[el.name] = el.value;
+            fields[el.name] = el.value || false;
         });
 
         if (!fields.name) {
@@ -1159,17 +1283,36 @@ var ClientListScreenWidget = ScreenWidget.extend({
 
         fields.id           = partner.id || false;
         fields.country_id   = fields.country_id || false;
-        fields.barcode      = fields.barcode || '';
 
-        new Model('res.partner').call('create_from_ui',[fields]).then(function(partner_id){
-            self.saved_client_details(partner_id);
-        },function(err,event){
-            event.preventDefault();
-            self.gui.show_popup('error',{
-                'title': _t('Error: Could not Save Changes'),
-                'body': _t('Your Internet connection is probably down.'),
+        if (fields.property_product_pricelist) {
+            fields.property_product_pricelist = parseInt(fields.property_product_pricelist, 10);
+        } else {
+            fields.property_product_pricelist = false;
+        }
+        var contents = this.$(".client-details-contents");
+        contents.off("click", ".button.save");
+
+
+        rpc.query({
+                model: 'res.partner',
+                method: 'create_from_ui',
+                args: [fields],
+            })
+            .then(function(partner_id){
+                self.saved_client_details(partner_id);
+            },function(err,ev){
+                ev.preventDefault();
+                var error_body = _t('Your Internet connection is probably down.');
+                if (err.data) {
+                    var except = err.data;
+                    error_body = except.arguments && except.arguments[0] || except.message || error_body;
+                }
+                self.gui.show_popup('error',{
+                    'title': _t('Error: Could not Save Changes'),
+                    'body': error_body,
+                });
+                contents.on('click','.button.save',function(){ self.save_client_details(partner); });
             });
-        });
     },
     
     // what happens when we've just pushed modifications for a partner of id partner_id
@@ -1186,6 +1329,8 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 // has created, and reload_partner() must have loaded the newly created partner. 
                 self.display_client_details('hide');
             }
+        }).always(function(){
+            $(".client-details-contents").on('click','.button.save',function(){ self.save_client_details(partner); });
         });
     },
 
@@ -1249,6 +1394,9 @@ var ClientListScreenWidget = ScreenWidget.extend({
     reload_partners: function(){
         var self = this;
         return this.pos.load_new_partners().then(function(){
+            // partners may have changed in the backend
+            self.partner_cache = new DomCache();
+
             self.render_list(self.pos.db.get_partners_sorted(1000));
             
             // update the currently assigned client if it has been changed in db.
@@ -1266,6 +1414,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
     //             to maintain consistent scroll.
     display_client_details: function(visibility,partner,clickpos){
         var self = this;
+        var searchbox = this.$('.searchbox input');
         var contents = this.$('.client-details-contents');
         var parent   = this.$('.client-list').parent();
         var scroll   = parent.scrollTop();
@@ -1287,6 +1436,9 @@ var ClientListScreenWidget = ScreenWidget.extend({
             var new_height   = contents.height();
 
             if(!this.details_visible){
+                // resize client list to take into account client details
+                parent.height('-=' + new_height);
+
                 if(clickpos < scroll + new_height + 20 ){
                     parent.scrollTop( clickpos - 20 );
                 }else{
@@ -1299,10 +1451,33 @@ var ClientListScreenWidget = ScreenWidget.extend({
             this.details_visible = true;
             this.toggle_save_button();
         } else if (visibility === 'edit') {
+            // Connect the keyboard to the edited field
+            if (this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard) {
+                contents.off('click', '.detail');
+                searchbox.off('click');
+                contents.on('click', '.detail', function(ev){
+                    self.chrome.widget.keyboard.connect(ev.target);
+                    self.chrome.widget.keyboard.show();
+                });
+                searchbox.on('click', function() {
+                    self.chrome.widget.keyboard.connect($(this));
+                });
+            }
+
             this.editing_client = true;
             contents.empty();
             contents.append($(QWeb.render('ClientDetailsEdit',{widget:this,partner:partner})));
             this.toggle_save_button();
+
+            // Browsers attempt to scroll invisible input elements
+            // into view (eg. when hidden behind keyboard). They don't
+            // seem to take into account that some elements are not
+            // scrollable.
+            contents.find('input').blur(function() {
+                setTimeout(function() {
+                    self.$('.window').scrollTop(0);
+                }, 0);
+            });
 
             contents.find('.image-uploader').on('change',function(event){
                 self.load_image_file(event.target.files[0],function(res){
@@ -1316,6 +1491,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
             });
         } else if (visibility === 'hide') {
             contents.empty();
+            parent.height('100%');
             if( height > scroll ){
                 contents.css({height:height+'px'});
                 contents.animate({height:0},400,function(){
@@ -1330,6 +1506,9 @@ var ClientListScreenWidget = ScreenWidget.extend({
     },
     close: function(){
         this._super();
+        if (this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard) {
+            this.chrome.widget.keyboard.hide();
+        }
     },
 });
 gui.define_screen({name:'clientlist', widget: ClientListScreenWidget});
@@ -1352,7 +1531,9 @@ var ReceiptScreenWidget = ScreenWidget.extend({
 
         this.render_change();
         this.render_receipt();
-
+        this.handle_auto_print();
+    },
+    handle_auto_print: function() {
         if (this.should_auto_print()) {
             this.print();
             if (this.should_close_immediately()){
@@ -1361,7 +1542,6 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         } else {
             this.lock_screen(false);
         }
-
     },
     should_auto_print: function() {
         return this.pos.config.iface_print_auto && !this.pos.get_order()._printed;
@@ -1377,19 +1557,38 @@ var ReceiptScreenWidget = ScreenWidget.extend({
             this.$('.next').addClass('highlight');
         }
     },
+    get_receipt_render_env: function() {
+        var order = this.pos.get_order();
+        return {
+            widget: this,
+            pos: this.pos,
+            order: order,
+            receipt: order.export_for_printing(),
+            orderlines: order.get_orderlines(),
+            paymentlines: order.get_paymentlines(),
+        };
+    },
     print_web: function() {
-        window.print();
+        if ($.browser.safari) {
+            document.execCommand('print', false, null);
+        } else {
+            try {
+                window.print();
+            } catch(err) {
+                if (navigator.userAgent.toLowerCase().indexOf("android") > -1) {
+                    this.gui.show_popup('error',{
+                        'title':_t('Printing is not supported on some android browsers'),
+                        'body': _t('Printing is not supported on some android browsers due to no default printing protocol is available. It is possible to print your tickets by making use of an IoT Box.'),
+                    });
+                } else {
+                    throw err;
+                }
+            }
+        }
         this.pos.get_order()._printed = true;
     },
     print_xml: function() {
-        var env = {
-            widget:  this,
-            pos:     this.pos,
-            order:   this.pos.get_order(),
-            receipt: this.pos.get_order().export_for_printing(),
-            paymentlines: this.pos.get_order().get_paymentlines()
-        };
-        var receipt = QWeb.render('XmlReceipt',env);
+        var receipt = QWeb.render('XmlReceipt', this.get_receipt_render_env());
 
         this.pos.proxy.print_receipt(receipt);
         this.pos.get_order()._printed = true;
@@ -1457,14 +1656,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         this.$('.change-value').html(this.format_currency(this.pos.get_order().get_change()));
     },
     render_receipt: function() {
-        var order = this.pos.get_order();
-        this.$('.pos-receipt-container').html(QWeb.render('PosTicket',{
-                widget:this,
-                order: order,
-                receipt: order.export_for_printing(),
-                orderlines: order.get_orderlines(),
-                paymentlines: order.get_paymentlines(),
-            }));
+        this.$('.pos-receipt-container').html(QWeb.render('PosTicket', this.get_receipt_render_env()));
     },
 });
 gui.define_screen({name:'receipt', widget: ReceiptScreenWidget});
@@ -1514,6 +1706,13 @@ var PaymentScreenWidget = ScreenWidget.extend({
         // also called explicitly to handle some keydown events that
         // do not generate keypress events.
         this.keyboard_handler = function(event){
+            // On mobile Chrome BarcodeEvents relies on an invisible
+            // input being filled by a barcode device. Let events go
+            // through when this input is focused.
+            if (BarcodeEvents.$barcodeInput && BarcodeEvents.$barcodeInput.is(":focus")) {
+                return;
+            }
+
             var key = '';
 
             if (event.type === "keypress") {
@@ -1576,7 +1775,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 var amount = this.inputbuffer;
 
                 if (this.inputbuffer !== "-") {
-                    amount = formats.parse_value(this.inputbuffer, {type: "float"}, 0.0);
+                    amount = field_utils.parse.float(this.inputbuffer);
                 }
 
                 order.selected_paymentline.set_amount(amount);
@@ -1710,7 +1909,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
             'title': tip ? _t('Change Tip') : _t('Add Tip'),
             'value': self.format_currency_no_symbol(value),
             'confirm': function(value) {
-                order.set_tip(formats.parse_value(value, {type: "float"}, 0));
+                order.set_tip(field_utils.parse.float(value));
                 self.order_changes();
                 self.render_paymentlines();
             }
@@ -1767,13 +1966,15 @@ var PaymentScreenWidget = ScreenWidget.extend({
         this.reset_input();
         this.render_paymentlines();
         this.order_changes();
-        window.document.body.addEventListener('keypress',this.keyboard_handler);
-        window.document.body.addEventListener('keydown',this.keyboard_keydown_handler);
+        // that one comes from BarcodeEvents
+        $('body').keypress(this.keyboard_handler);
+        // that one comes from the pos, but we prefer to cover all the basis
+        $('body').keydown(this.keyboard_keydown_handler);
         this._super();
     },
     hide: function(){
-        window.document.body.removeEventListener('keypress',this.keyboard_handler);
-        window.document.body.removeEventListener('keydown',this.keyboard_keydown_handler);
+        $('body').off('keypress', this.keyboard_handler);
+        $('body').off('keydown', this.keyboard_keydown_handler);
         this._super();
     },
     // sets up listeners to watch for order changes
@@ -1804,11 +2005,9 @@ var PaymentScreenWidget = ScreenWidget.extend({
             self.$('.next').removeClass('highlight');
         }
     },
-    // Check if the order is paid, then sends it to the backend,
-    // and complete the sale process
-    validate_order: function(force_validation) {
-        var self = this;
 
+    order_is_valid: function(force_validation) {
+        var self = this;
         var order = this.pos.get_order();
 
         // FIXME: this check is there because the backend is unable to
@@ -1818,22 +2017,11 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 'title': _t('Empty Order'),
                 'body':  _t('There must be at least one product in your order before it can be validated'),
             });
-            return;
-        }
-
-        var plines = order.get_paymentlines();
-        for (var i = 0; i < plines.length; i++) {
-            if (plines[i].get_type() === 'bank' && plines[i].get_amount() < 0) {
-                this.pos_widget.screen_selector.show_popup('error',{
-                    'message': _t('Negative Bank Payment'),
-                    'comment': _t('You cannot have a negative amount in a Bank payment. Use a cash payment method to return money to the customer.'),
-                });
-                return;
-            }
+            return false;
         }
 
         if (!order.is_paid() || this.invoicing) {
-            return;
+            return false;
         }
 
         // The exact amount must be paid if there is no cash payment method defined.
@@ -1847,12 +2035,12 @@ var PaymentScreenWidget = ScreenWidget.extend({
                     title: _t('Cannot return change without a cash payment method'),
                     body:  _t('There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale configuration'),
                 });
-                return;
+                return false;
             }
         }
 
         // if the change is too large, it's probably an input error, make the user confirm.
-        if (!force_validation && (order.get_total_with_tax() * 1000 < order.get_total_paid())) {
+        if (!force_validation && order.get_total_with_tax() > 0 && (order.get_total_with_tax() * 1000 < order.get_total_paid())) {
             this.gui.show_popup('confirm',{
                 title: _t('Please Confirm Large Amount'),
                 body:  _t('Are you sure that the customer wants to  pay') + 
@@ -1868,8 +2056,15 @@ var PaymentScreenWidget = ScreenWidget.extend({
                     self.validate_order('confirm');
                 },
             });
-            return;
+            return false;
         }
+
+        return true;
+    },
+
+    finalize_validation: function() {
+        var self = this;
+        var order = this.pos.get_order();
 
         if (order.is_paid_with_cash() && this.pos.config.iface_cashdrawer) { 
 
@@ -1877,6 +2072,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         }
 
         order.initialize_validation_date();
+        order.finalized = true;
 
         if (order.is_to_invoice()) {
             var invoiced = this.pos.push_and_invoice_order(order);
@@ -1884,12 +2080,24 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
             invoiced.fail(function(error){
                 self.invoicing = false;
+                order.finalized = false;
                 if (error.message === 'Missing Customer') {
                     self.gui.show_popup('confirm',{
                         'title': _t('Please select the Customer'),
                         'body': _t('You need to select the customer before you can invoice an order.'),
                         confirm: function(){
                             self.gui.show_screen('clientlist');
+                        },
+                    });
+                } else if (error.message === 'Backend Invoice') {
+                    self.gui.show_popup('confirm',{
+                        'title': _t('Please print the invoice from the backend'),
+                        'body': _t('The order has been synchronized earlier. Please make the invoice from the backend for the order: ') + error.data.order.name,
+                        confirm: function () {
+                            this.gui.show_screen('receipt');
+                        },
+                        cancel: function () {
+                            this.gui.show_screen('receipt');
                         },
                     });
                 } else if (error.code < 0) {        // XmlHttpRequest Errors
@@ -1912,11 +2120,20 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
             invoiced.done(function(){
                 self.invoicing = false;
-                order.finalize();
+                self.gui.show_screen('receipt');
             });
         } else {
             this.pos.push_order(order);
             this.gui.show_screen('receipt');
+        }
+
+    },
+
+    // Check if the order is paid, then sends it to the backend,
+    // and complete the sale process
+    validate_order: function(force_validation) {
+        if (this.order_is_valid(force_validation)) {
+            this.finalize_validation();
         }
     },
 });
@@ -1924,23 +2141,62 @@ gui.define_screen({name:'payment', widget: PaymentScreenWidget});
 
 var set_fiscal_position_button = ActionButtonWidget.extend({
     template: 'SetFiscalPositionButton',
+    init: function (parent, options) {
+        this._super(parent, options);
+
+        this.pos.get('orders').bind('add remove change', function () {
+            this.renderElement();
+        }, this);
+
+        this.pos.bind('change:selectedOrder', function () {
+            this.renderElement();
+        }, this);
+    },
     button_click: function () {
         var self = this;
-        var selection_list = _.map(self.pos.fiscal_positions, function (fiscal_position) {
+
+        var no_fiscal_position = [{
+            label: _t("None"),
+        }];
+        var fiscal_positions = _.map(self.pos.fiscal_positions, function (fiscal_position) {
             return {
                 label: fiscal_position.name,
                 item: fiscal_position
             };
         });
+
+        var selection_list = no_fiscal_position.concat(fiscal_positions);
         self.gui.show_popup('selection',{
             title: _t('Select tax'),
             list: selection_list,
             confirm: function (fiscal_position) {
                 var order = self.pos.get_order();
                 order.fiscal_position = fiscal_position;
+                // This will trigger the recomputation of taxes on order lines.
+                // It is necessary to manually do it for the sake of consistency
+                // with what happens when changing a customer. 
+                _.each(order.orderlines.models, function (line) {
+                    line.set_quantity(line.quantity);
+                });
                 order.trigger('change');
+            },
+            is_selected: function (fiscal_position) {
+                return fiscal_position === self.pos.get_order().fiscal_position;
             }
         });
+    },
+    get_current_fiscal_position_name: function () {
+        var name = _t('Tax');
+        var order = this.pos.get_order();
+
+        if (order) {
+            var fiscal_position = order.fiscal_position;
+
+            if (fiscal_position) {
+                name = fiscal_position.display_name;
+            }
+        }
+         return name;
     },
 });
 
@@ -1949,6 +2205,64 @@ define_action_button({
     'widget': set_fiscal_position_button,
     'condition': function(){
         return this.pos.fiscal_positions.length > 0;
+    },
+});
+
+var set_pricelist_button = ActionButtonWidget.extend({
+    template: 'SetPricelistButton',
+    init: function (parent, options) {
+        this._super(parent, options);
+
+        this.pos.get('orders').bind('add remove change', function () {
+            this.renderElement();
+        }, this);
+
+        this.pos.bind('change:selectedOrder', function () {
+            this.renderElement();
+        }, this);
+    },
+    button_click: function () {
+        var self = this;
+
+        var pricelists = _.map(self.pos.pricelists, function (pricelist) {
+            return {
+                label: pricelist.name,
+                item: pricelist
+            };
+        });
+
+        self.gui.show_popup('selection',{
+            title: _t('Select pricelist'),
+            list: pricelists,
+            confirm: function (pricelist) {
+                var order = self.pos.get_order();
+                order.set_pricelist(pricelist);
+            },
+            is_selected: function (pricelist) {
+                return pricelist.id === self.pos.get_order().pricelist.id;
+            }
+        });
+    },
+    get_current_pricelist_name: function () {
+        var name = _t('Pricelist');
+        var order = this.pos.get_order();
+
+        if (order) {
+            var pricelist = order.pricelist;
+
+            if (pricelist) {
+                name = pricelist.display_name;
+            }
+        }
+         return name;
+    },
+});
+
+define_action_button({
+    'name': 'set_pricelist',
+    'widget': set_pricelist_button,
+    'condition': function(){
+        return this.pos.pricelists.length > 1;
     },
 });
 
@@ -1968,7 +2282,7 @@ return {
     ProductCategoriesWidget: ProductCategoriesWidget,
     ScaleScreenWidget: ScaleScreenWidget,
     set_fiscal_position_button: set_fiscal_position_button,
+    set_pricelist_button: set_pricelist_button,
 };
 
 });
-

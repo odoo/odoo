@@ -8,11 +8,13 @@ from os.path import isfile
 from os import listdir
 from threading import Thread, Lock
 
-from openerp import http
+from odoo import http
 
-import openerp.addons.hw_proxy.controllers.main as hw_proxy
+from odoo.addons.hw_proxy.controllers import main as hw_proxy
 
 _logger = logging.getLogger(__name__)
+
+DRIVER_NAME = 'fiscal_data_module'
 
 class Blackbox(Thread):
     def __init__(self):
@@ -39,26 +41,31 @@ class Blackbox(Thread):
     # request. The first device to give an answer that makes sense
     # wins.
     def _find_device_path_by_probing(self):
-        path = "/dev/serial/by-path/"
-        probe_message = self._wrap_low_level_message_around("S000")
+        with hw_proxy.rs232_lock:
+            path = "/dev/serial/by-path/"
+            probe_message = self._wrap_low_level_message_around("S000")
 
-        try:
-            devices = listdir(path)
-        except OSError:
-            _logger.warning(path + " doesn't exist")
-        else:
-            for device in listdir(path):
-                path_to_device = path + device
-                _logger.debug("Probing " + device)
+            try:
+                devices = listdir(path)
+            except OSError:
+                _logger.warning(path + " doesn't exist")
+                self.set_status("disconnected", ["No RS-232 device (or emulated ones) found"])
+            else:
+                for device in devices:
+                    if device in hw_proxy.rs232_devices:
+                        continue
+                    path_to_device = path + device
+                    _logger.debug("Probing " + device)
 
-                if self._send_to_blackbox(probe_message, 21, path_to_device, just_wait_for_ack=True):
-                    _logger.info(device + " will be used as the blackbox")
-                    self.set_status("connected", [device])
-                    return path_to_device
+                    if self._send_to_blackbox(probe_message, 21, path_to_device, just_wait_for_ack=True):
+                        _logger.info(device + " will be used as the blackbox")
+                        self.set_status("connected", [device])
+                        hw_proxy.rs232_devices[device] = DRIVER_NAME
+                        return path_to_device
 
-            _logger.warning("Blackbox could not be found")
-            self.set_status("error", ["Couldn't find the Fiscal Data Module"])
-            return ""
+                _logger.warning("Blackbox could not be found")
+                self.set_status("disconnected", ["Couldn't find the Fiscal Data Module"])
+                return ""
 
     def _lrc(self, msg):
         lrc = 0
@@ -73,7 +80,7 @@ class Blackbox(Thread):
 
     def _wrap_low_level_message_around(self, high_level_message):
         bcc = self._lrc(high_level_message)
-        high_level_message_bytes = map(ord, high_level_message)
+        high_level_message_bytes = (ord(b) for b in high_level_message)
 
         low_level_message = bytearray()
         low_level_message.append(0x02)
@@ -152,7 +159,7 @@ class Blackbox(Thread):
 
 if isfile("/home/pi/registered_blackbox_be"):
     blackbox_thread = Blackbox()
-    hw_proxy.drivers['fiscal_data_module'] = blackbox_thread
+    hw_proxy.drivers[DRIVER_NAME] = blackbox_thread
 
     class BlackboxDriver(hw_proxy.Proxy):
         @http.route('/hw_proxy/request_blackbox/', type='json', auth='none', cors='*')
@@ -166,4 +173,4 @@ if isfile("/home/pi/registered_blackbox_be"):
 
         @http.route('/hw_proxy/request_serial/', type='json', auth='none', cors='*')
         def request_serial(self):
-            return subprocess.check_output("ifconfig eth0 | grep -o 'HWaddr.*' | sed 's/HWaddr \\(.*\\)/\\1/' | sed 's/://g'", shell=True).rstrip()[-7:]
+            return subprocess.check_output("ifconfig eth0 | grep 'ether.*' | sed 's/://g' | awk '{print $2}'", shell=True).rstrip()[-7:]

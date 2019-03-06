@@ -31,7 +31,7 @@ otherwise.
 ``arch``
     the description of the view's layout
 ``groups_id``
-    :class:`~openerp.fields.Many2many` field to the groups allowed to view/use
+    :class:`~odoo.fields.Many2many` field to the groups allowed to view/use
     the current view
 ``inherit_id``
     the current view's parent view, see :ref:`reference/views/inheritance`,
@@ -44,6 +44,45 @@ otherwise.
 ``application``
     website feature defining togglable views. By default, views are always
     applied
+``banner_route``
+    a route address to be fetched and prepended to the view.
+
+    If this attribute is set, the
+    :ref:`controller route url<reference/http/controllers>` will be fetched and
+    displayed above the view. The json response from the controller should
+    contain an "html" key.
+
+    If the html contains a stylesheet <link> tag, it will be
+    removed and appended to <head>.
+
+    To interact with the backend you can use <a type="action"> tags. Please take
+    a look at the documentation of the _onActionClicked method of
+    AbstractController (*addons/web/static/src/js/views/abstract_controller.js*)
+    for more details.
+
+    Only views extending AbstractView and AbstractController can use this
+    attribute, like :ref:`reference/views/form`, :ref:`reference/views/kanban`,
+    :ref:`reference/views/list`, ...
+
+    Example:
+
+    .. code-block:: xml
+
+        <tree banner_route="/module_name/hello" />
+
+    .. code-block:: python
+
+        class MyController(odoo.http.Controller):
+            @http.route('/module_name/hello', auth='user', type='json')
+            def hello(self):
+                return {
+                    'html': """
+                        <div>
+                            <link href="/module_name/static/src/css/banner.css"
+                                rel="stylesheet">
+                            <h1>hello, world</h1>
+                        </div> """
+                }
 
 .. _reference/views/inheritance:
 
@@ -76,15 +115,19 @@ The result of applying children views yields the final ``arch``
 Inheritance specs
 -----------------
 
-There are three types of inheritance specs:
+Inheritance specs are comprised of an element locator, to match
+the inherited element in the parent view, and children element that
+will be used to modify the inherited element.
+
+There are three types of element locators for matching a target element:
 
 * An ``xpath`` element with an ``expr`` attribute. ``expr`` is an XPath_
   expression\ [#hasclass]_ applied to the current ``arch``, the first node
   it finds is the match
 * a ``field`` element with a ``name`` attribute, matches the first ``field``
-  with the same ``name``
-* any other element, the first element with the same name and identical
-  attributes (ignoring ``position``) is matched
+  with the same ``name``. All other attributes are ignored during matching
+* any other element: the first element with the same name and identical
+  attributes (ignoring ``position`` and ``version`` attributes) is matched
 
 The inheritance spec may have an optional ``position`` attribute specifying
 how the matched node should be altered:
@@ -92,7 +135,10 @@ how the matched node should be altered:
 ``inside`` (default)
     the content of the inheritance spec is appended to the matched node
 ``replace``
-    the content of the inheritance spec replaces the matched node
+    the content of the inheritance spec replaces the matched node.
+    Any text node containing only ``$0`` within the contents of the spec will
+    be replaced  by a complete copy of the matched node, effectively wrapping
+    the matched node.
 ``after``
     the content of the inheritance spec is added to the matched node's
     parent, after the matched node
@@ -109,6 +155,21 @@ how the matched node should be altered:
     * if the ``attribute`` element has no body, the attribute named after
       its ``name`` is removed from the matched node. If no such attribute
       exists, an error is raised
+
+Additionally, the ``position`` ``move`` can be used as a direct child of a spec
+with a ``inside``, ``replace``, ``after`` or ``before`` ``position`` attribute
+to move a node.
+
+.. code-block:: xml
+
+    <xpath expr="//@target" position="after">
+        <xpath expr="//@node" position="move"/>
+    </xpath>
+
+    <field name="target_field" position="after">
+        <field name="my_field" position="move"/>
+    </field>
+
 
 A view's specs are applied sequentially.
 
@@ -159,11 +220,13 @@ root can have the following attributes:
 
     ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
     (``font-style: italic``), or any `bootstrap contextual color
-    <http://getbootstrap.com/components/#available-variations>`_ (``danger``,
+    <https://getbootstrap.com/docs/3.3/components/#available-variations>`_ (``danger``,
     ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 ``create``, ``edit``, ``delete``
     allows *dis*\ abling the corresponding action in the view by setting the
     corresponding attribute to ``false``
+``limit``
+    the default size of a page. It should be a positive integer
 ``on_write``
     only makes sense on an ``editable`` list. Should be the name of a method
     on the list's model. The method will be called with the ``id`` of a record
@@ -194,10 +257,6 @@ Possible children elements of the list view are:
     ``type``
         type of button, indicates how it clicking it affects Odoo:
 
-        ``workflow`` (default)
-            sends a signal to a workflow. The button's ``name`` is the
-            workflow signal, the row's record is passed as argument to the
-            signal
         ``object``
             call a method on the list's model. The button's ``name`` is the
             method, which is called with the current row's record id and the
@@ -225,8 +284,7 @@ Possible children elements of the list view are:
         context of the current row's record, if ``True`` the corresponding
         attribute is set on the cell.
 
-        Possible attributes are ``invisible`` (hides the button) and
-        ``readonly`` (disables the button but still shows it)
+        Possible attribute is ``invisible`` (hides the button).
     ``states``
         shorthand for ``invisible`` ``attrs``: a list of states, comma separated,
         requires that the model has a ``state`` field and that it is
@@ -234,6 +292,11 @@ Possible children elements of the list view are:
 
         Makes the button ``invisible`` if the record is *not* in one of the
         listed states
+
+        .. danger::
+
+            Using ``states`` in combination with ``attrs`` may lead to
+            unexpected results as domains are combined with a logical AND.
     ``context``
         merged into the view's context when performing the button's Odoo call
     ``confirm``
@@ -269,7 +332,7 @@ Possible children elements of the list view are:
             filled, and a cross if it is not
         ``handle``
             for ``sequence`` fields, instead of displaying the field's value
-            just displays a dra&drop icon
+            just displays a drag&drop icon
     ``sum``, ``avg``
         displays the corresponding aggregate at the bottom of the column. The
         aggregation is only computed on *currently displayed* records. The
@@ -283,6 +346,56 @@ Possible children elements of the list view are:
     .. note:: if the list view is ``editable``, any field attribute from the
               :ref:`form view <reference/views/form>` is also valid and will
               be used when setting up the inline form view
+
+``control``
+  defines custom controls for the current view.
+
+  This makes sense if the parent ``tree`` view is inside a One2many field.
+
+  Does not support any attribute, but can have children:
+
+  ``create``
+    adds a button to create a new element on the current list.
+
+    .. note:: If any ``create`` is defined, it will overwrite the default
+              "add a line" button.
+
+    The following attributes are supported:
+
+    ``string`` (required)
+      The text displayed on the button.
+
+    ``context``
+      This context will be merged into the existing context
+      when retrieving the default value of the new record.
+
+      For example it can be used to override default values.
+
+
+  The following example will override the default "add a line" button
+  by replacing it with 3 new buttons:
+  "Add a product", "Add a section" and "Add a note".
+
+  "Add a product" will set the field 'display_type' to its default value.
+
+  The two other buttons will set the field 'display_type'
+  to be respectively 'line_section' and 'line_note'.
+
+  .. code-block:: xml
+
+    <control>
+      <create
+        string="Add a product"
+      />
+      <create
+        string="Add a section"
+        context="{'default_display_type': 'line_section'}"
+      />
+      <create
+        string="Add a note"
+        context="{'default_display_type': 'line_note'}"
+      />
+    </control>
 
 .. _reference/views/form:
 
@@ -347,7 +460,13 @@ system. Available semantic components are:
 
 ``button``
   call into the Odoo system, similar to :ref:`list view buttons
-  <reference/views/list/button>`
+  <reference/views/list/button>`. In addition, the following attribute can be
+  specified:
+
+  ``special``
+    for form views opened in dialogs: ``save`` to save the record and close the
+    dialog, ``cancel`` to close the dialog without saving.
+
 ``field``
   renders (and allow edition of, possibly) a single field of the current
   record. Possible attributes are:
@@ -356,8 +475,8 @@ system. Available semantic components are:
     the name of the field to render
   ``widget``
     fields have a default rendering based on their type
-    (e.g. :class:`~openerp.fields.Char`,
-    :class:`~openerp.fields.Many2one`). The ``widget`` attributes allows using
+    (e.g. :class:`~odoo.fields.Char`,
+    :class:`~odoo.fields.Many2one`). The ``widget`` attributes allows using
     a different rendering method and context.
 
     .. todo:: list of widgets
@@ -378,7 +497,7 @@ system. Available semantic components are:
       only displays the field in the corresponding form mode
     ``oe_no_button``
       avoids displaying the navigation button in a
-      :class:`~openerp.fields.Many2one`
+      :class:`~odoo.fields.Many2one`
     ``oe_avatar``
       for image fields, displays images as "avatar" (square, 90x90 maximum
       size, some image decorations)
@@ -390,7 +509,7 @@ system. Available semantic components are:
 
     .. deprecated:: 8.0
 
-       Use :func:`openerp.api.onchange` on the model
+       Use :func:`odoo.api.onchange` on the model
 
   ``attrs``
     dynamic meta-parameters based on record values
@@ -413,7 +532,7 @@ system. Available semantic components are:
     complex forms. *Should not* be an example of data as users are liable to
     confuse placeholder text with filled fields
   ``mode``
-    for :class:`~openerp.fields.One2many`, display mode (view type) to use for
+    for :class:`~odoo.fields.One2many`, display mode (view type) to use for
     the field's linked records. One of ``tree``, ``form``, ``kanban`` or
     ``graph``. The default is ``tree`` (a list display)
   ``help``
@@ -422,7 +541,7 @@ system. Available semantic components are:
     for binary fields, name of the related field providing the name of the
     file
   ``password``
-    indicates that a :class:`~openerp.fields.Char` field stores a password and
+    indicates that a :class:`~odoo.fields.Char` field stores a password and
     that its data shouldn't be displayed
 
 .. todo:: classes for forms
@@ -501,12 +620,6 @@ should only be visible when current.
 The states are shown following the order used in the field (the list in a
 selection field, etc). States that are always visible are specified with the
 attribute ``statusbar_visible``.
-
-``statusbar_colors``
-    can be used to give a custom color to specific states.
-
-    .. deprecated:: 9.0
-
 
 ::
 
@@ -691,7 +804,7 @@ The form above contains a <sheet> element that starts with:
 Tags
 ....
 
-Most :class:`~openerp.fields.Many2many` fields, like categories, are better
+Most :class:`~odoo.fields.Many2many` fields, like categories, are better
 rendered as a list of tags. Use the widget ``many2many_tags`` for this:
 
 .. image:: forms/screenshot-04.png
@@ -760,8 +873,11 @@ The only allowed element within a graph view is ``field`` which can have the
 following attributes:
 
 ``name`` (required)
-  the name of a field to use in a graph view. If used for grouping (rather
+  the name of a field to use in the view. If used for grouping (rather
   than aggregating)
+
+``title`` (optional)
+  string displayed on the top of the graph.
 
 ``type``
   indicates whether the field should be used as a grouping criteria or as an
@@ -769,10 +885,9 @@ following attributes:
 
   ``row`` (default)
     groups by the specified field. All graph types support at least one level
-    of grouping, some may support more. For pivot views, each group gets its
-    own row.
+    of grouping, some may support more.
   ``col``
-    only used by pivot tables, creates column-wise groups
+    authorized in graph views but only used by pivot tables
   ``measure``
     field to aggregate within a group
 
@@ -781,23 +896,90 @@ following attributes:
   ``week``, ``month``, ``quarter`` or ``year``) instead of grouping on the
   specific datetime (fixed second resolution) or date (fixed day resolution).
 
+The measures are automatically generated from the model fields; only the
+aggregatable fields are used. Those measures are also alphabetically
+sorted on the string of the field.
+
 .. warning::
 
    graph view aggregations are performed on database content, non-stored
    function fields can not be used in graph views
 
-Pivots
-------
 
-The pivot view is used to visualize aggregations as a `pivot table`_. Its root 
+.. _reference/views/pivot:
+
+Pivots
+======
+
+The pivot view is used to visualize aggregations as a `pivot table`_. Its root
 element is ``<pivot>`` which can take the following attributes:
 
 ``disable_linking``
   Set to ``True`` to remove table cell's links to list view.
 ``display_quantity``
   Set to ``true`` to display the Quantity column by default.
+``default_order``
+  The name of the measure and the order (asc or desc) to use as default order
+  in the view.
 
-The elements allowed within a pivot view are the same as for the graph view.
+  .. code-block:: xml
+
+     <pivot default_order="foo asc">
+        <field name="foo" type="measure"/>
+     </pivot>
+
+The only allowed element within a pivot view is ``field`` which can have the
+following attributes:
+
+``name`` (required)
+  the name of a field to use in the view. If used for grouping (rather
+  than aggregating)
+
+``string``
+  the name that will be used to display the field in the pivot view,
+  overrides the default python String attribute of the field.
+
+``type``
+  indicates whether the field should be used as a grouping criteria or as an
+  aggregated value within a group. Possible values are:
+
+  ``row`` (default)
+    groups by the specified field, each group gets its own row.
+  ``col``
+    creates column-wise groups
+  ``measure``
+    field to aggregate within a group
+  ``interval``
+    on date and datetime fields, groups by the specified interval (``day``,
+    ``week``, ``month``, ``quarter`` or ``year``) instead of grouping on the
+    specific datetime (fixed second resolution) or date (fixed day resolution).
+
+``invisible``
+  if true, the field will not appear either in the active measures nor in the
+  selectable measures (useful for fields that do not make sense aggregated,
+  such as fields in different units, e.g. € and $).
+
+The measures are automatically generated from the model fields; only the
+aggregatable fields are used. Those measures are also alphabetically
+sorted on the string of the field.
+
+.. warning::
+
+    like the graph view, the pivot aggregates data on database content
+    which means that non-stored function fields can not be used in pivot views
+
+
+In Pivot view a ``field`` can have a ``widget`` attribute to dictate its format.
+The widget should be a field formatter, of which the most interesting are
+``date``, ``datetime``, ``float_time``, and ``monetary``.
+
+For instance a timesheet pivot view could be defined as::
+
+    <pivot string="Timesheet">
+        <field name="employee_id" type="row"/>
+        <field name="date" interval="month" type="col"/>
+        <field name="unit_amount" type="measure" widget="float_time"/>
+    </pivot>
 
 .. _reference/views/kanban:
 
@@ -810,39 +992,66 @@ non-editable :ref:`form view <reference/views/form>`. Records may be grouped
 in columns for use in workflow visualisation or manipulation (e.g. tasks or
 work-progress management), or ungrouped (used simply to visualize records).
 
+.. note:: The kanban view will load and display a maximum of ten columns.
+          Any column after that will be closed (but can still be opened by
+          the user).
+
 The root element of the Kanban view is ``<kanban>``, it can use the following
 attributes:
 
 ``default_group_by``
   whether the kanban view should be grouped if no grouping is specified via
-  the action or the current research. Should be the name of the field to group
+  the action or the current search. Should be the name of the field to group
   by when no grouping is otherwise specified
 ``default_order``
   cards sorting order used if the user has not already sorted the records (via
   the list view)
 ``class``
   adds HTML classes to the root HTML element of the Kanban view
+``group_create``
+  whether the "Add a new column" bar is visible or not. Default: true.
+``group_delete``
+  whether groups can be deleted via the context menu. Default: true.
+``group_edit``
+  whether groups can be edited via the context menu. Default: true.
+``archivable``
+  whether records belonging to a column can be archived / restored if an
+  ``active`` field is defined on the model. Default: true.
 ``quick_create``
   whether it should be possible to create records without switching to the
   form view. By default, ``quick_create`` is enabled when the Kanban view is
-  grouped, and disabled when not.
+  grouped by many2one, selection, char or boolean fields, and disabled when not.
 
   Set to ``true`` to always enable it, and to ``false`` to always disable it.
 
 Possible children of the view element are:
 
 ``field``
-  declares fields to aggregate or to use in kanban *logic*. If the field is
-  simply displayed in the kanban view, it does not need to be pre-declared.
+  declares fields to use in kanban *logic*. If the field is simply displayed in
+  the kanban view, it does not need to be pre-declared.
 
   Possible attributes are:
 
   ``name`` (required)
     the name of the field to fetch
-  ``sum``, ``avg``, ``min``, ``max``, ``count``
-    displays the corresponding aggregation at the top of a kanban column, the
-    field's value is the label of the aggregation (a string). Only one
-    aggregate operation per field is supported.
+
+``progressbar``
+  declares a progressbar element to put on top of kanban columns.
+
+  Possible attributes are:
+
+  ``field`` (required)
+    the name of the field whose values are used to subgroup column's records in
+    the progressbar
+
+  ``colors`` (required)
+    JSON mapping the above field values to either "danger", "warning" or
+    "success" colors
+
+  ``sum_field`` (optional)
+    the name of the field whose column's records' values will be summed and
+    displayed next to the progressbar (if omitted, displays the total number of
+    records)
 
 ``templates``
   defines a list of :ref:`reference/qweb` templates. Cards definition may be
@@ -853,8 +1062,6 @@ Possible children of the view element are:
   The kanban view uses mostly-standard :ref:`javascript qweb
   <reference/qweb/javascript>` and provides the following context variables:
 
-  ``instance``
-    the current :ref:`reference/javascript/client` instance
   ``widget``
     the current :js:class:`KanbanRecord`, can be used to fetch some
     meta-information. These methods are also available directly in the
@@ -863,11 +1070,9 @@ Possible children of the view element are:
     an object with all the requested fields as its attributes. Each field has
     two attributes ``value`` and ``raw_value``, the former is formatted
     according to current user parameters, the latter is the direct value from
-    a :meth:`~openerp.models.Model.read` (except for date and datetime fields
+    a :meth:`~odoo.models.Model.read` (except for date and datetime fields
     that are `formatted according to user's locale
     <https://github.com/odoo/odoo/blob/a678bd4e/addons/web_kanban/static/src/js/kanban_record.js#L102>`_)
-  ``formats``
-    the :js:class:`web.formats` module to manipulate and convert values
   ``read_only_mode``
     self-explanatory
 
@@ -901,43 +1106,7 @@ Possible children of the view element are:
        * kanban-specific CSS
        * kanban structures/widgets (vignette, details, ...)
 
-Javascript API
---------------
-
-.. js:class:: KanbanRecord
-
-   :js:class:`Widget` handling the rendering of a single record to a
-   card. Available within its own rendering as ``widget`` in the template
-   context.
-
-   .. js:function:: kanban_color(raw_value)
-
-      Converts a color segmentation value to a kanban color class
-      :samp:`oe_kanban_color_{color_index}`. The built-in CSS provides classes
-      up to a ``color_index`` of 9.
-
-   .. js:function:: kanban_getcolor(raw_value)
-
-      Converts a color segmentation value to a color index (between 0 and 9 by
-      default). Color segmentation values can be either numbers or strings.
-
-   .. js:function:: kanban_image(model, field, id[, cache][, options])
-
-      Generates the URL to the specified field as an image access.
-
-      :param String model: model hosting the image
-      :param String field: name of the field holding the image data
-      :param id: identifier of the record contaning the image to display
-      :param Number cache: caching duration (in seconds) of the browser
-                           default should be overridden. ``0`` disables
-                           caching entirely
-      :returns: an image URL
-
-   .. js:function:: kanban_text_ellipsis(string[, size=160])
-
-      clips text beyond the specified size and appends an ellipsis to it. Can
-      be used to display the initial part of potentially very long fields
-      (e.g. descriptions) without the risk of unwieldy cards
+If you need to extend the Kanban view, see :js:class::`the JS API <KanbanRecord>`.
 
 .. _reference/views/calendar:
 
@@ -956,24 +1125,26 @@ calendar view are:
     directly in the calendar
 ``date_delay``
     alternative to ``date_stop``, provides the duration of the event instead of
-    its end date
-
-    .. todo:: what's the unit? Does it allow moving the record?
-
+    its end date (unit: day)
 ``color``
     name of a record field to use for *color segmentation*. Records in the
     same color segment are allocated the same highlight color in the calendar,
     colors are allocated semi-randomly.
+    Displayed the display_name/avatar of the visible record in the sidebar
+``readonly_form_view_id``
+    view to open in readonly mode
+``form_view_id``
+    view to open when the user create or edit an event. Note that if this attribute
+    is not set, the calendar view will fall back to the id of the form view in the
+    current action, if any.
 ``event_open_popup``
-    opens the event in a dialog instead of switching to the form view, disabled
-    by default
+    If the option 'event_open_popup' is set to true, then the calendar view will
+    open events (or records) in a FormViewDialog. Otherwise, it will open events
+    in a new form view (with a do_action)
 ``quick_add``
     enables quick-event creation on click: only asks the user for a ``name``
     and tries to create a new event with just that and the clicked event
     time. Falls back to a full form dialog if the quick creation fails
-``display``
-    format string for event display, field names should be within brackets
-    ``[`` and ``]``
 ``all_day``
     name of a boolean field on the record indicating whether the corresponding
     event is flagged as day-long (and duration is irrelevant)
@@ -981,21 +1152,51 @@ calendar view are:
     Default display mode when loading the calendar.
     Possible attributes are: ``day``, ``week``, ``month``
 
+``<field>``
+  declares fields to aggregate or to use in kanban *logic*. If the field is
+  simply displayed in the calendar cards.
 
-.. todo::
+  Fields can have additional attributes:
 
-   what's the purpose of ``<field>`` inside a calendar view?
+    ``invisible``
+        use "True" to hide the value in the cards
+    ``avatar_field``
+        only for x2many field, to display the avatar instead the display_name
+        in the cards
+    ``write_model`` and ``write_field``
+        you can add a filter and save the result in the defined model, the
+        filter is added in the sidebar
 
-.. todo::
+``templates``
+  defines the :ref:`reference/qweb` template ``calendar-box``. Cards definition
+  may be split into multiple templates for clarity which will be rendered once
+  for each record.
 
-   calendar code is an unreadable mess, no idea what these things are:
+  The kanban view uses mostly-standard :ref:`javascript qweb
+  <reference/qweb/javascript>` and provides the following context variables:
 
-   * ``attendee``
-   * ``avatar_model``
-   * ``use_contacts``
-
-   calendar code also seems to refer to multiple additional attributes of
-   unknown purpose
+  ``widget``
+    the current :js:class:`KanbanRecord`, can be used to fetch some
+    meta-information. These methods are also available directly in the
+    template context and don't need to be accessed via ``widget``
+    ``getColor`` to convert in a color integer
+    ``getAvatars`` to convert in an avatar image
+    ``displayFields`` list of not invisible fields
+  ``record``
+    an object with all the requested fields as its attributes. Each field has
+    two attributes ``value`` and ``raw_value``
+  ``event``
+    the calendar event object
+  ``format``
+    format method to convert values into a readable string with the user
+    parameters
+  ``fields``
+    definition of all model fields
+    parameters
+  ``user_context``
+    self-explanatory
+  ``read_only_mode``
+    self-explanatory
 
 .. _reference/views/gantt:
 
@@ -1028,7 +1229,7 @@ take the following attributes:
   ``gantt`` classic gantt view (default)
 
   ``consolidate`` values of the first children are consolidated in the gantt's task
-  
+
   ``planning`` children are displayed in the gantt's task
 ``consolidation``
   field name to display consolidation value in record cell
@@ -1036,23 +1237,30 @@ take the following attributes:
   dictionary with the "group by" field as key and the maximum consolidation
   value that can be reached before displaying the cell in red
   (e.g. ``{"user_id": 100}``)
+``consolidation_exclude``
+  name of the field that describe if the task has to be excluded
+  from the consolidation
+  if set to true it displays a striped zone in the consolidation line
 
   .. warning::
       The dictionnary definition must use double-quotes, ``{'user_id': 100}`` is
       not a valid value
-``consolidation_label``
+``create``, ``edit``
+    allows *dis*\ abling the corresponding action in the view by setting the
+    corresponding attribute to ``false``
+``string``
   string to display next to the consolidation value, if not specified, the label
   of the consolidation field will be used
 ``fold_last_level``
   If a value is set, the last grouping level is folded
 ``round_dnd_dates``
   enables rounding the task's start and end dates to the nearest scale marks
+``drag_resize``
+  resizing of the tasks, default is ``true``
 
-.. ``progress``
-    name of a field providing the completion percentage for the record's event,
-    between 0 and 100
-.. consolidation_exclude
-.. consolidation_color
+``progress``
+  name of a field providing the completion percentage for the record's event,
+  between 0 and 100
 
 .. _reference/views/diagram:
 
@@ -1083,10 +1291,10 @@ Possible children of the diagram view are:
     ``object`` (required)
       the edge's Odoo model
     ``source`` (required)
-      :class:`~openerp.fields.Many2one` field of the edge's model pointing to
+      :class:`~odoo.fields.Many2one` field of the edge's model pointing to
       the edge's source node record
     ``destination`` (required)
-      :class:`~openerp.fields.Many2one` field of the edge's model pointing to
+      :class:`~odoo.fields.Many2one` field of the edge's model pointing to
       the edge's destination node record
     ``label``
       Python list of attributes (as quoted strings). The corresponding
@@ -1097,6 +1305,290 @@ Possible children of the diagram view are:
     Explanatory note for the diagram, the ``string`` attribute defines the
     note's content. Each ``label`` is output as a paragraph in the diagram
     header, easily visible but without any special emphasis.
+
+.. _reference/views/dashboard:
+
+Dashboard
+=========
+
+Like pivot and graph view, The dashboard view is used to display aggregate data.
+However, the dashboard can embed sub views, which makes it possible to have a
+more complete and interesting look on a given dataset.
+
+.. warning::
+
+   The Dashboard view is only available in Odoo Enterprise.
+
+The dashboard view can display sub views, aggregates for some fields (over a
+domain), or even *formulas* (expressions which involves one or more aggregates).
+For example, here is a very simple dashboard:
+
+.. code-block:: xml
+
+    <dashboard>
+        <view type="graph" ref="sale_report.view_order_product_graph"/>
+        <group string="Sale">
+            <aggregate name="price_total" field="price_total" widget="monetary"/>
+            <aggregate name="order_id" field="order_id" string="Orders"/>
+            <formula name="price_average" string="Price Average"
+                value="record.price_total / record.order_id" widget="percentage"/>
+        </group>
+        <view type="pivot" ref="sale_report.view_order_product_pivot"/>
+    </dashboard>
+
+The root element of the Dashboard view is <dashboard>, it does not accept any
+attributes.
+
+There are 5 possible type of tags in a dashboard view:
+
+``view``
+    declares a sub view.
+
+    Admissible attributes are:
+
+    - ``type`` (mandatory)
+        The type of the sub view.  For example, *graph* or *pivot*.
+
+    - ``ref`` (optional)
+        An xml id for a view. If not given, the default view for the model will
+        be used.
+
+    - ``name`` (optional)
+        A string which identifies this element.  It is mostly
+        useful to be used as a target for an xpath.
+
+``group``
+    defines a column layout.  This is actually very similar to the group element
+    in a form view.
+
+    Admissible attributes are:
+
+    - ``string`` (optional)
+        A description which will be displayed as a group title.
+
+    - ``colspan`` (optional)
+        The number of subcolumns in this group tag. By default, 6.
+
+    - ``col`` (optional)
+        The number of columns spanned by this group tag (only makes sense inside
+        another group). By default, 6.
+
+
+``aggregate``
+    declares an aggregate.  This is the value of an aggregate for a given field
+    over the current domain.
+
+    Note that aggregates are supposed to be used inside a group tag (otherwise
+    the style will not be properly applied).
+
+    Admissible attributes are:
+
+    - ``field`` (mandatory)
+        The field name to use for computing the aggregate. Possible field types
+        are:
+
+        - ``integer`` (default group operator is sum)
+        - ``float``  (default group operator is sum)
+        - ``many2one`` (default group operator is count distinct)
+
+    - ``name`` (mandatory)
+        A string to identify this aggregate (useful for formulas)
+
+    - ``string`` (optional)
+        A short description that will be displayed above the value. If not
+        given, it will fall back to the field string.
+
+    - ``domain`` (optional)
+        An additional restriction on the set of records that we want to aggregate.
+        This domain will be combined with the current domain.
+
+    - ``domain_label`` (optional)
+        When the user clicks on an aggregate with a domain, it will be added to
+        the search view as a facet.  The string displayed for this facet can
+        be customized with this attribute.
+
+    - ``group_operator`` (optional)
+        A valid postgreSQL aggregate function identifier to use when aggregating
+        values (see https://www.postgresql.org/docs/9.5/static/functions-aggregate.html).
+        If not provided, By default, the group_operator from the field definition is used.
+        Note that no aggregation of field values is achieved if the group_operator value is "".
+
+        .. note:: The special aggregate function ``count_distinct`` (defined in odoo) can also be used here
+
+        .. code-block:: xml
+
+          <aggregate name="price_total_max" field="price_total" group_operator="max"/>
+
+
+
+    - ``col`` (optional)
+        The number of columns spanned by this tag (only makes sense inside a
+        group). By default, 1.
+
+    - ``widget`` (optional)
+        A widget to format the value (like the widget attribute for fields).
+        For example, monetary.
+
+    - ``help`` (optional)
+        A help message to dipslay in a tooltip (equivalent of help for a field in python)
+
+    - ``measure`` (optional)
+        This attribute is the name of a field describing the measure that has to be used
+        in the graph and pivot views when clicking on the aggregate.
+        The special value __count__ can be used to use the count measure.
+
+        .. code-block:: xml
+
+          <aggregate name="total_ojects" string="Total Objects" field="id" group_operator="count" measure="__count__"/>
+
+    - ``clickable`` (optional)
+        A boolean indicating if this aggregate should be clickable or not (default to true).
+        Clicking on a clickable aggregate will change the measures used by the subviews
+        and add the value of the domain attribute (if any) to the search view.
+
+    - ``value_label`` (optional)
+        A string put on the right of the aggregate value.
+        For example, it can be useful to indicate the unit of measure
+        of the aggregate value.
+
+``formula``
+    declares a derived value.  Formulas are values computed from aggregates.
+
+    Note that like aggregates, formulas are supposed to be used inside a group
+    tag (otherwise the style will not be properly applied).
+
+    Admissible attributes are:
+
+    - ``value`` (mandatory)
+        A string expression that will be evaluated, with the builtin python
+        evaluator (in the web client).  Every aggregate can be used in the
+        context, in the ``record`` variable.  For example,
+        ``record.price_total / record.order_id``.
+
+    - ``name`` (optional)
+        A string to identify this formula
+
+    - ``string`` (optional)
+        A short description that will be displayed above the formula.
+
+    - ``col`` (optional)
+        The number of columns spanned by this tag (only makes sense inside a
+        group). By default, 1.
+
+    - ``widget`` (optional)
+        A widget to format the value (like the widget attribute for fields).
+        For example, monetary. By default, it is 'float'.
+
+    - ``help`` (optional)
+        A help message to dipslay in a tooltip (equivalent of help for a field in python)
+
+    - ``value_label`` (optional)
+        A string put on the right of the formula value.
+        For example, it can be useful to indicate the unit of measure
+        of the formula value.
+
+``widget``
+    Declares a specialized widget to be used to display the information. This is
+    a mechanism similar to the widgets in the form view.
+
+    Admissible attributes are:
+
+    - ``name`` (mandatory)
+        A string to identify which widget should be instantiated. The view will
+        look into the ``widget_registry`` to get the proper class.
+
+    - ``col`` (optional)
+        The number of columns spanned by this tag (only makes sense inside a
+        group). By default, 1.
+
+.. _reference/views/cohort:
+
+Cohort
+=========
+
+The cohort view is used to display and understand the way some data changes over
+a period of time.  For example, imagine that for a given business, clients can
+subscribe to some service.  The cohort view can then display the total number
+of subscriptions each month, and study the rate at which client leave the service
+(churn). When clicking on a cell, the cohort view will redirect you to a new action
+in which you will only see the records contained in the cell's time interval;
+this action contains a list view and a form view.
+
+.. warning::
+
+   The Cohort view is only available in Odoo Enterprise.
+
+.. note:: By default the cohort view will use the same list and form views as those
+   defined on the action. You can pass a list view and a form view
+   to the context of the action in order to set/override the views that will be
+   used (the context keys to use being `form_view_id` and `list_view_id`)
+
+For example, here is a very simple cohort view:
+
+.. code-block:: xml
+
+    <cohort string="Subscription" date_start="date_start" date_stop="date" interval="month"/>
+
+The root element of the Cohort view is <cohort>, it accepts the following
+attributes:
+
+
+- ``string`` (mandatory)
+    A title, which should describe the view
+
+- ``date_start`` (mandatory)
+    A valid date or datetime field. This field is understood by the view as the
+    beginning date of a record
+
+- ``date_stop`` (mandatory)
+    A valid date or datetime field. This field is understood by the view as the
+    end date of a record.  This is the field that will determine the churn.
+
+- ``mode`` (optional)
+    A string to describe the mode. It should be either 'churn' or
+    'retention' (default). Churn mode will start at 0% and accumulate over time
+    whereas retention will start at 100% and decrease over time.
+
+- ``timeline`` (optional)
+    A string to describe the timeline. It should be either 'backward' or 'forward' (default).
+    Forward timeline will display data from date_start to date_stop, whereas backward timeline
+    will display data from date_stop to date_start (when the date_start is in future / greater
+    than date_stop).
+
+- ``interval`` (optional)
+    A string to describe a time interval. It should be 'day', 'week', 'month''
+    (default) or 'year'.
+
+- ``measure`` (optional)
+    A field that can be aggregated.  This field will be used to compute the values
+    for each cell.  If not set, the cohort view will count the number of occurrences.
+
+.. _reference/views/activity:
+
+Activity
+========
+
+The Activity view is used to display the activities linked to the records. The
+data are displayed in a chart with the records forming the rows and the activity
+types the columns. When clicking on a cell, a detailed description of all
+activities of the same type for the record is displayed.
+
+.. warning::
+
+   The Activity view is only available when the ``mail`` module is installed,
+   and for the models that inherit from the ``mail.activity.mixin``.
+
+For example, here is a very simple Activity view:
+
+.. code-block:: xml
+
+    <activity string="Activities"/>
+
+The root element of the Activity view is <activity>, it accepts the following
+attributes:
+
+- ``string`` (mandatory)
+    A title, which should describe the view
 
 .. _reference/views/search:
 
@@ -1150,7 +1642,7 @@ Possible children elements of the search view are:
         fields don't generate domains.
 
         .. note:: the domain and context are inclusive and both are generated
-                  if if a ``context`` is specified. To only generate context
+                  if a ``context`` is specified. To only generate context
                   values, set ``filter_domain`` to an empty list:
                   ``filter_domain="[]"``
     ``groups``
@@ -1158,10 +1650,10 @@ Possible children elements of the search view are:
     ``widget``
         use specific search widget for the field (the only use case in
         standard Odoo 8.0 is a ``selection`` widget for
-        :class:`~openerp.fields.Many2one` fields)
+        :class:`~odoo.fields.Many2one` fields)
     ``domain``
         if the field can provide an auto-completion
-        (e.g. :class:`~openerp.fields.Many2one`), filters the possible
+        (e.g. :class:`~odoo.fields.Many2one`), filters the possible
         completion results.
 
 ``filter``
@@ -1174,12 +1666,89 @@ Possible children elements of the search view are:
 
     ``string`` (required)
         the label of the filter
-    ``domain``
+    ``domain`` (optional)
         an Odoo :ref:`domain <reference/orm/domains>`, will be appended to the
-        action's domain as part of the search domain
+        action's domain as part of the search domain.
+    ``date`` (optional)
+        the name of a field of type ``date`` or ``datetime``.
+        Using this attribute has the effect to create
+        a set of filters available in a submenu
+        of the filters menu.
+
+        Example:
+
+        .. code-block:: xml
+
+          <filter name="filter_create_date" date="create_date" string="Creation Date"/>
+
+        The example above allows to easily search for records with creation date field
+        values in one of the periods below.
+
+        .. code-block:: text
+
+          Create Date >
+            Today
+            This Week
+            This Month
+            This Quarter
+            This Year
+          --------------
+            Yesterday
+            Last Week
+            Last Month
+            Last Quarter
+            Last Year
+          --------------
+            Last 7 Days
+            Last 30 Days
+            Last 365 Days
+
+        Note that the generated domains are dynamic and can be saved as such (via the favorites menu).
+
+    ``default_period`` (optional)
+        only makes sense for a filter with non empty ``date`` attribute.
+        determines which period is activated if the filter is in the
+        default set of filters activated at the view initialization. If not provided,
+        'this_month' is used by default.
+
+        To choose among the following options:
+        today, this_week, this_month, this_quarter, this_year,
+        yesterday, last_week, last_month,
+        last_quarter, last_year, last_7_days, last_30_days, last_365_days
+
+        Example:
+
+        .. code-block:: xml
+
+          <filter name="filter_create_date" date="create_date" string="Creation Date" default_period="this_week"/>
+
     ``context``
         a Python dictionary, merged into the action's domain to generate the
         search domain
+
+        The key ``group_by`` can be used to define a groupby available in the
+        'Group By' menu.
+        The 'group_by' value can be a valid field name or a list of field names.
+
+        .. code-block:: xml
+
+          <filter name="groupby_category" string="Category" context = {'group_by': 'category_id'}/>
+
+        The groupby defined above allows to group data by category.
+
+        When the field is of type ``date`` or ``datetime``, the filter generates a submenu of the Group By
+        menu in which the following interval options are available: day, week, month, quarter, year.
+
+        In case the filter is in the default set of filters activated at the view initialization,
+        the records are grouped by month by default. This can be changed by using the syntax
+        'date_field:interval' as in the following example.
+
+        Example:
+
+        .. code-block:: xml
+
+          <filter name="groupby_create_date" string="Creation Date" context = {'group_by': 'create_date:week'}/>
+
     ``name``
         logical name for the filter, can be used to :ref:`enable it by default
         <reference/views/search/defaults>`, can also be used as

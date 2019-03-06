@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
+
+        <!-- Open Settings from Purchase Journal to configure mail servers -->
+        <record id="action_open_settings" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context" eval="{'module': 'general_settings'}"/>
+        </record>
 
         <!-- TAGS FOR CASH FLOW STATEMENT -->
 
@@ -18,28 +27,40 @@
         </record>
 
         <!--
-        Payment term
+        Payment terms
         -->
         <record id="account_payment_term_immediate" model="account.payment.term">
             <field name="name">Immediate Payment</field>
-            <field name="note">Payment term: Immediate Payment</field>
+            <field name="note">Payment terms: Immediate Payment</field>
         </record>
 
         <record id="account_payment_term_15days" model="account.payment.term">
             <field name="name">15 Days</field>
-            <field name="note">Payment term: 15 Days</field>
-            <field name="line_ids" eval="[(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 15, 'option': 'day_after_invoice_date'})]"/>
+            <field name="note">Payment terms: 15 Days</field>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 15, 'option': 'day_after_invoice_date'})]"/>
         </record>
 
         <record forcecreate="True" id="decimal_payment" model="decimal.precision">
-            <field name="name">Payment Term</field>
+            <field name="name">Payment Terms</field>
             <field name="digits">6</field>
         </record>
 
         <record id="account_payment_term_net" model="account.payment.term">
             <field name="name">30 Net Days</field>
-            <field name="note">Payment term: 30 Net Days</field>
-            <field name="line_ids" eval="[(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 30, 'option': 'day_after_invoice_date'})]"/>
+            <field name="note">Payment terms: 30 Net Days</field>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 30, 'option': 'day_after_invoice_date'})]"/>
+        </record>
+
+        <record id="account_payment_term_45days" model="account.payment.term">
+            <field name="name">45 Days</field>
+            <field name="note">Payment terms: 45 Days</field>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 45, 'option': 'day_after_invoice_date'})]"/>
+        </record>
+
+        <record id="account_payment_term_2months" model="account.payment.term">
+            <field name="name">2 Months</field>
+            <field name="note">Payment terms: 2 Months</field>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 60, 'option': 'day_after_invoice_date'})]"/>
         </record>
 
         <!--
@@ -51,13 +72,7 @@
             <field name="prefix">A</field>
             <field eval="1" name="number_next"/>
             <field eval="1" name="number_increment"/>
-        </record>
-        <!--
-        Invoice requests (deprecated)
-        -->
-        <record id="req_link_invoice" model="res.request.link">
-            <field name="name">Invoice</field>
-            <field name="object">account.invoice</field>
+            <field eval="False" name="company_id"/>
         </record>
 
         <!-- Account-related subtypes for messaging / Chatter -->
@@ -105,7 +120,7 @@
             <field name="padding">4</field>
         </record>
         <record id="sequence_payment_customer_refund" model="ir.sequence">
-            <field name="name">Payments customer refunds sequence</field>
+            <field name="name">Payments customer credit notes sequence</field>
             <field name="code">account.payment.customer.refund</field>
             <field name="prefix">CUST.OUT/%(range_year)s/</field>
             <field eval="1" name="number_next"/>
@@ -125,7 +140,7 @@
             <field name="padding">4</field>
         </record>
         <record id="sequence_payment_supplier_refund" model="ir.sequence">
-            <field name="name">Payments supplier refunds sequence</field>
+            <field name="name">Payments supplier credit notes sequence</field>
             <field name="code">account.payment.supplier.refund</field>
             <field name="prefix">SUPP.IN/%(range_year)s/</field>
             <field eval="1" name="number_next"/>
@@ -151,5 +166,36 @@
             <field name="sequence">0</field>
         </record>
 
+        <!-- Partner Trust Property -->
+        <record forcecreate="True" id="default_followup_trust" model="ir.property">
+            <field name="name">Followup Trust Property</field>
+            <field name="fields_id" search="[('model', '=', 'res.partner'), ('name', '=', 'trust')]"/>
+            <field name="value">normal</field>
+            <field name="type">selection</field>
+        </record>
+
+        <!-- Share Button in action menu -->
+        <record id="model_account_invoice_action_share" model="ir.actions.server">
+            <field name="name">Share</field>
+            <field name="model_id" ref="account.model_account_invoice"/>
+            <field name="binding_model_id" ref="account.model_account_invoice"/>
+            <field name="state">code</field>
+            <field name="code">action = records.action_share()</field>
+        </record>
+
+        <!-- Account Reconciliation Models
+        Create a default rule for the reconciliation widget matching invoices automatically.
+        -->
+        <record id="reconciliation_model_default_rule" model="account.reconcile.model">
+            <field name="name">Invoices Matching Rule</field>
+            <field name="sequence">1</field>
+            <field name="rule_type">invoice_matching</field>
+            <field name="auto_reconcile" eval="False"/>
+            <field name="match_nature">both</field>
+            <field name="match_same_currency" eval="True"/>
+            <field name="match_total_amount" eval="True"/>
+            <field name="match_total_amount_param" eval="100"/>
+            <field name="match_partner" eval="True"/>
+        </record>
     </data>
-</openerp>
+</odoo>

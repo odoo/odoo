@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Add batch picking -->
+    <record id="stock_picking_batch_dry_1" model="stock.picking.batch">
+        <field name="state">in_progress</field>
+    </record>
+    <record id="stock_picking_batch_freeze_1" model="stock.picking.batch">
+        <field name="state">in_progress</field>
+    </record>
+
+    <!-- Add picking -->
+    <record id="Picking_A" model="stock.picking">
+        <field name="move_type">one</field>
+        <field name="priority">2</field>
+        <field name="picking_type_id" ref="stock.picking_type_internal"/>
+        <field name="batch_id" ref="stock_picking_batch_freeze_1"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_output"/>
+    </record>
+    <record id="Picking_B" model="stock.picking">
+        <field name="move_type">one</field>
+        <field name="state">assigned</field>
+        <field name="priority">1</field>
+        <field name="picking_type_id" ref="stock.picking_type_internal"/>
+        <field name="batch_id" ref="stock_picking_batch_freeze_1"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_output"/>
+    </record>
+    <record id="Picking_C" model="stock.picking">
+        <field name="move_type">one</field>
+        <field name="state">assigned</field>
+        <field name="priority">1</field>
+        <field name="picking_type_id" ref="stock.picking_type_internal"/>
+        <field name="batch_id" ref="stock_picking_batch_dry_1"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_output"/>
+    </record>
+
+    <!-- Add stock move -->
+    <record id="stock_move1" model="stock.move">
+        <field name="name">A first stock move</field>
+        <field name="picking_type_id" ref="stock.picking_type_internal"/>
+        <field name="picking_id" ref="Picking_A"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_output"/>
+        <field name="product_uom_qty">10</field>
+        <field name="product_uom" ref="uom.product_uom_unit" />
+        <field name="product_id" ref="product.product_delivery_01"/>
+    </record>
+    <record id="stock_move2" model="stock.move">
+        <field name="name">A second stock move</field>
+        <field name="picking_type_id" ref="stock.picking_type_internal"/>
+        <field name="picking_id" ref="Picking_A"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_output"/>
+        <field name="product_uom_qty">5</field>
+        <field name="product_uom" ref="uom.product_uom_unit" />
+        <field name="product_id" ref="product.product_delivery_02"/>
+    </record>
+    <record id="stock_move3" model="stock.move">
+        <field name="name">A third stock move</field>
+        <field name="picking_type_id" ref="stock.picking_type_internal"/>
+        <field name="picking_id" ref="Picking_B"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_output"/>
+        <field name="product_uom_qty">10</field>
+        <field name="product_uom" ref="uom.product_uom_unit" />
+        <field name="product_id" ref="product.product_order_01"/>
+    </record>
+    <record id="stock_move4" model="stock.move">
+        <field name="name">A fourth stock move</field>
+        <field name="picking_type_id" ref="stock.picking_type_internal"/>
+        <field name="picking_id" ref="Picking_C"/>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_output"/>
+        <field name="product_uom" ref="uom.product_uom_unit" />
+        <field name="product_id" ref="product.product_delivery_02"/>
+    </record>
+
+</odoo>

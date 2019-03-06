@@ -1,31 +1,20 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 import re
-import unicodedata
 
-from openerp import _, api, fields, models, SUPERUSER_ID
-from openerp.exceptions import UserError
-from openerp.modules.registry import RegistryManager
-from openerp.tools import ustr
-from openerp.tools.safe_eval import safe_eval as eval
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
+from odoo.tools import remove_accents
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
 
-# Inspired by http://stackoverflow.com/questions/517923
-def remove_accents(input_str):
-    """Suboptimal-but-better-than-nothing way to replace accented
-    latin letters by an ASCII equivalent. Will obviously change the
-    meaning of input_str and work only for some cases"""
-    input_str = ustr(input_str)
-    nkfd_form = unicodedata.normalize('NFKD', input_str)
-    return u''.join([c for c in nkfd_form if not unicodedata.combining(c)])
-
-
 class Alias(models.Model):
-    """A Mail Alias is a mapping of an email address with a given OpenERP Document
-       model. It is used by OpenERP's mail gateway when processing incoming emails
+    """A Mail Alias is a mapping of an email address with a given Odoo Document
+       model. It is used by Odoo's mail gateway when processing incoming emails
        sent to the system. If the recipient address (To) of the message matches
        a Mail Alias, the message will be either processed following the rules
        of that alias. If the message is a reply it will be attached to the
@@ -34,7 +23,7 @@ class Alias(models.Model):
 
        This is meant to be used in combination with a catch-all email configuration
        on the company's mail server, so that as soon as a new mail.alias is
-       created, it becomes immediately usable and OpenERP will accept email for it.
+       created, it becomes immediately usable and Odoo will accept email for it.
      """
     _name = 'mail.alias'
     _description = "Email Aliases"
@@ -63,7 +52,7 @@ class Alias(models.Model):
         help="Optional ID of a thread (record) to which all incoming messages will be attached, even "
              "if they did not reply to it. If set, this will disable the creation of new records completely.")
     alias_domain = fields.Char('Alias domain', compute='_get_alias_domain',
-                               default=lambda self: self.env["ir.config_parameter"].get_param("mail.catchall.domain"))
+                               default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
     alias_parent_model_id = fields.Many2one(
         'ir.model', 'Parent Model',
         help="Parent model holding the alias. The model holding the alias reference "
@@ -86,7 +75,7 @@ class Alias(models.Model):
 
     @api.multi
     def _get_alias_domain(self):
-        alias_domain = self.env["ir.config_parameter"].get_param("mail.catchall.domain")
+        alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
         for record in self:
             record.alias_domain = alias_domain
 
@@ -94,9 +83,9 @@ class Alias(models.Model):
     @api.constrains('alias_defaults')
     def _check_alias_defaults(self):
         try:
-            dict(eval(self.alias_defaults))
+            dict(safe_eval(self.alias_defaults))
         except Exception:
-            raise UserError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
+            raise ValidationError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
 
     @api.model
     def create(self, vals):
@@ -111,10 +100,10 @@ class Alias(models.Model):
         if vals.get('alias_name'):
             vals['alias_name'] = self._clean_and_make_unique(vals.get('alias_name'))
         if model_name:
-            model = self.env['ir.model'].search([('model', '=', model_name)])
+            model = self.env['ir.model']._get(model_name)
             vals['alias_model_id'] = model.id
         if parent_model_name:
-            model = self.env['ir.model'].search([('model', '=', parent_model_name)])
+            model = self.env['ir.model']._get(parent_model_name)
             vals['alias_parent_model_id'] = model.id
         return super(Alias, self).create(vals)
 
@@ -165,67 +154,6 @@ class Alias(models.Model):
         name = re.sub(r'[^\w+.]+', '-', name)
         return self._find_unique(name, alias_ids=alias_ids)
 
-    def migrate_to_alias(self, cr, child_model_name, child_table_name, child_model_auto_init_fct,
-        alias_model_name, alias_id_column, alias_key, alias_prefix='', alias_force_key='', alias_defaults={},
-        alias_generate_name=False, context=None):
-        """ Installation hook to create aliases for all users and avoid constraint errors.
-
-            :param child_model_name: model name of the child class (i.e. res.users)
-            :param child_table_name: table name of the child class (i.e. res_users)
-            :param child_model_auto_init_fct: pointer to the _auto_init function
-                (i.e. super(res_users,self)._auto_init(cr, context=context))
-            :param alias_model_name: name of the aliased model
-            :param alias_id_column: alias_id column (i.e. self._columns['alias_id'])
-            :param alias_key: name of the column used for the unique name (i.e. 'login')
-            :param alias_prefix: prefix for the unique name (i.e. 'jobs' + ...)
-            :param alias_force_key': name of the column for force_thread_id;
-                if empty string, not taken into account
-            :param alias_defaults: dict, keys = mail.alias columns, values = child
-                model column name used for default values (i.e. {'job_id': 'id'})
-            :param alias_generate_name: automatically generate alias name using prefix / alias key;
-                default alias_name value is False because since 8.0 it is not required anymore
-        """
-        if context is None:
-            context = {}
-
-        # disable the unique alias_id not null constraint, to avoid spurious warning during
-        # super.auto_init. We'll reinstall it afterwards.
-        alias_id_column.required = False
-
-        # call _auto_init
-        res = child_model_auto_init_fct(cr, context=context)
-
-        registry = RegistryManager.get(cr.dbname)
-        mail_alias = registry.get('mail.alias')
-        child_class_model = registry[child_model_name]
-        no_alias_ids = child_class_model.search(cr, SUPERUSER_ID, [('alias_id', '=', False)], context={'active_test': False})
-        # Use read() not browse(), to avoid prefetching uninitialized inherited fields
-        for obj_data in child_class_model.read(cr, SUPERUSER_ID, no_alias_ids, [alias_key]):
-            alias_vals = {'alias_name': False}
-            if alias_generate_name:
-                alias_vals['alias_name'] = '%s%s' % (alias_prefix, obj_data[alias_key])
-            if alias_force_key:
-                alias_vals['alias_force_thread_id'] = obj_data[alias_force_key]
-            alias_vals['alias_defaults'] = dict((k, obj_data[v]) for k, v in alias_defaults.iteritems())
-            alias_vals['alias_parent_thread_id'] = obj_data['id']
-            alias_create_ctx = dict(context, alias_model_name=alias_model_name, alias_parent_model_name=child_model_name)
-            alias_id = mail_alias.create(cr, SUPERUSER_ID, alias_vals, context=alias_create_ctx)
-            child_class_model.write(cr, SUPERUSER_ID, obj_data['id'], {'alias_id': alias_id}, context={'mail_notrack': True})
-            _logger.info('Mail alias created for %s %s (id %s)', child_model_name, obj_data[alias_key], obj_data['id'])
-
-        # Finally attempt to reinstate the missing constraint
-        try:
-            cr.execute('ALTER TABLE %s ALTER COLUMN alias_id SET NOT NULL' % (child_table_name))
-        except Exception:
-            _logger.warning("Table '%s': unable to set a NOT NULL constraint on column '%s' !\n"\
-                            "If you want to have it, you should update the records and execute manually:\n"\
-                            "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL",
-                            child_table_name, 'alias_id', child_table_name, 'alias_id')
-
-        # set back the unique alias_id constraint
-        alias_id_column.required = True
-        return res
-
     @api.multi
     def open_document(self):
         if not self.alias_model_id or not self.alias_force_thread_id:
@@ -249,3 +177,107 @@ class Alias(models.Model):
             'res_id': self.alias_parent_thread_id,
             'type': 'ir.actions.act_window',
         }
+
+
+class AliasMixin(models.AbstractModel):
+    """ A mixin for models that inherits mail.alias. This mixin initializes the
+        alias_id column in database, and manages the expected one-to-one
+        relation between your model and mail aliases.
+    """
+    _name = 'mail.alias.mixin'
+    _inherits = {'mail.alias': 'alias_id'}
+    _description = 'Email Aliases Mixin'
+
+    alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True)
+
+    def get_alias_model_name(self, vals):
+        """ Return the model name for the alias. Incoming emails that are not
+            replies to existing records will cause the creation of a new record
+            of this alias model. The value may depend on ``vals``, the dict of
+            values passed to ``create`` when a record of this model is created.
+        """
+        return None
+
+    def get_alias_values(self):
+        """ Return values to create an alias, or to write on the alias after its
+            creation.
+        """
+        return {'alias_parent_thread_id': self.id}
+
+    @api.model
+    def create(self, vals):
+        """ Create a record with ``vals``, and create a corresponding alias. """
+        record = super(AliasMixin, self.with_context(
+            alias_model_name=self.get_alias_model_name(vals),
+            alias_parent_model_name=self._name,
+        )).create(vals)
+        record.alias_id.sudo().write(record.get_alias_values())
+        return record
+
+    @api.multi
+    def unlink(self):
+        """ Delete the given records, and cascade-delete their corresponding alias. """
+        aliases = self.mapped('alias_id')
+        res = super(AliasMixin, self).unlink()
+        aliases.unlink()
+        return res
+
+    @api.model_cr_context
+    def _init_column(self, name):
+        """ Create aliases for existing rows. """
+        super(AliasMixin, self)._init_column(name)
+        if name != 'alias_id':
+            return
+
+        # both self and the alias model must be present in 'ir.model'
+        IM = self.env['ir.model']
+        IM._reflect_model(self)
+        IM._reflect_model(self.env[self.get_alias_model_name({})])
+
+        alias_ctx = {
+            'alias_model_name': self.get_alias_model_name({}),
+            'alias_parent_model_name': self._name,
+        }
+        alias_model = self.env['mail.alias'].sudo().with_context(alias_ctx).browse([])
+
+        child_ctx = {
+            'active_test': False,       # retrieve all records
+            'prefetch_fields': False,   # do not prefetch fields on records
+        }
+        child_model = self.sudo().with_context(child_ctx).browse([])
+
+        for record in child_model.search([('alias_id', '=', False)]):
+            # create the alias, and link it to the current record
+            alias = alias_model.create(record.get_alias_values())
+            record.with_context({'mail_notrack': True}).alias_id = alias
+            _logger.info('Mail alias created for %s %s (id %s)',
+                         record._name, record.display_name, record.id)
+
+    def _alias_check_contact(self, message, message_dict, alias):
+        """ Main mixin method that inheriting models may inherit in order
+        to implement a specifc behavior. """
+        return self._alias_check_contact_on_record(self, message, message_dict, alias)
+
+    def _alias_check_contact_on_record(self, record, message, message_dict, alias):
+        """ Generic method that takes a record not necessarily inheriting from
+        mail.alias.mixin. """
+        author = self.env['res.partner'].browse(message_dict.get('author_id', False))
+        if alias.alias_contact == 'followers':
+            if not record.ids:
+                return {
+                    'error_message': _('incorrectly configured alias (unknown reference record)'),
+                }
+            if not hasattr(record, "message_partner_ids") or not hasattr(record, "message_channel_ids"):
+                return {
+                    'error_message': _('incorrectly configured alias'),
+                }
+            accepted_partner_ids = record.message_partner_ids | record.message_channel_ids.mapped('channel_partner_ids')
+            if not author or author not in accepted_partner_ids:
+                return {
+                    'error_message': _('restricted to followers'),
+                }
+        elif alias.alias_contact == 'partners' and not author:
+            return {
+                'error_message': _('restricted to known authors')
+            }
+        return True

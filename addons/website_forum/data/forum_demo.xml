@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
         <!-- Set demo karma for test tour as demo user-->
@@ -31,11 +31,15 @@
             <field name="forum_id" ref="website_forum.forum_help"/>
             <field name="post_type">question</field>
             <field name="views">3</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="write_uid" ref="base.user_admin"/>
             <field name="tag_ids" eval="[(4,ref('website_forum.tags_0')), (4,ref('website_forum.tags_1'))]"/>
         </record>
         <record id="question_1" model="forum.post">
             <field name="name">CMS replacement for ERP and eCommerce</field>
             <field name="views">8</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="write_uid" ref="base.user_admin"/>
             <field name="forum_id" ref="website_forum.forum_help"/>
             <field name="content"><![CDATA[<p>I use Wordpress as a CMS and eCommerce platform. The developing in Wordpress is quite easy and solid but it missing ERP feature (there is single plugin to integrate with Frontaccounting) so I wonder:
 
@@ -62,7 +66,7 @@ In simple words does Odoo became CMS+ERP platform?</p>]]></field>
         <record id="answer_1" model="forum.post">
             <field name="forum_id" ref="website_forum.forum_help"/>
             <field name="content"><![CDATA[
-<p><span class="oe_social_share" data-social="twitter linkedin facebook" data-hashtags="#odoo #CMS">Odoo v8 (next release) provides a web module and an e-commerce module: www.odoo.com/page/website-builder</span>
+<p>Odoo v8 (next release) provides a web module and an e-commerce module: www.odoo.com/page/website-builder
 The CMS editor in Odoo web is nice but I prefer Drupal for customization and there is a Drupal module for Odoo. I think WP is better than Odoo web too.
 </p>]]></field>
             <field name="parent_id" ref="question_1"/>
@@ -76,6 +80,8 @@ The CMS editor in Odoo web is nice but I prefer Drupal for customization and the
             <field name="forum_id" ref="website_forum.forum_help"/>
             <field name="post_type">link</field>
             <field name="views">6</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="write_uid" ref="base.user_admin"/>
             <field name="tag_ids" eval="[(4,ref('website_forum.tags_3'))]"/>
         </record>
 
@@ -106,6 +112,8 @@ Are there any automation scripts available I might use?
                 </ol>]]>
             </field>
             <field name="parent_id" ref="discussion_0"/>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="write_uid" ref="base.user_admin"/>
             <field name="post_type">discussion</field>
         </record>
 
@@ -127,7 +135,10 @@ Are there any automation scripts available I might use?
         </record>
 
         <!-- Run Scheduler -->
-        <function model="gamification.challenge" name="_cron_update"/>
+        <function model="gamification.challenge" name="_cron_update">
+            <value eval="False"/>
+            <value eval="False"/>
+        </function>
 
     </data>
-</openerp>
+</odoo>

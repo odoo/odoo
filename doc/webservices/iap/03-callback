@@ -1,0 +1,40 @@
+Index: coalroller/coalroller/__init__.py
+===================================================================
+--- coalroller.orig/coalroller/__init__.py
++++ coalroller/coalroller/__init__.py
+@@ -1 +1,2 @@
+ # -*- coding: utf-8 -*-
++from . import models
+Index: coalroller/coalroller/models/__init__.py
+===================================================================
+--- /dev/null
++++ coalroller/coalroller/models/__init__.py
+@@ -0,0 +1 @@
++from . import res_partner
+Index: coalroller/coalroller/models/res_partner.py
+===================================================================
+--- /dev/null
++++ coalroller/coalroller/models/res_partner.py
+@@ -0,0 +1,22 @@
++# -*- coding: utf-8 -*-
++from odoo import api, models
++from odoo.addons.iap import jsonrpc, InsufficientCreditError
++
++# whichever URL you deploy the service at, here we will run the remote
++# service in a local Odoo bound to the port 8070
++DEFAULT_ENDPOINT = 'http://localhost:8070'
++class Partner(models.Model):
++    _inherit = 'res.partner'
++    @api.multi
++    def action_partner_coalroll(self):
++        # fetch the user's token for our service
++        user_token = self.env['iap.account'].get('coalroller')
++        params = {
++            # we don't have any parameter to provide
++            'account_token': user_token.account_token
++        }
++        # ir.config_parameter allows locally overriding the endpoint
++        # for testing & al
++        endpoint = self.env['ir.config_parameter'].sudo().get_param('coalroller.endpoint', DEFAULT_ENDPOINT)
++        jsonrpc(endpoint + '/roll', params=params)
++        return True

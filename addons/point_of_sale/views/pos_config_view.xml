@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--Account cashbox line-->
+
+    <record id="account_cashbox_line_view_tree" model="ir.ui.view">
+        <field name="name">account.cashbox.line.tree</field>
+        <field name="model">account.cashbox.line</field>
+        <field name="arch" type="xml">
+            <tree string="Cashbox balance" editable="top">
+                <field name="coin_value"/>
+                <field name="number"/>
+                <field name="subtotal"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="account_cashbox_line_action" model="ir.actions.act_window">
+        <field name="name">Opening/Closing Values</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.cashbox.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="account_cashbox_line_view_tree"/>
+    </record>
+
+    <record id="pos_config_view_form" model="ir.ui.view">
+        <field name="name">pos.config.form.view</field>
+        <field name="model">pos.config</field>
+        <field name="arch" type="xml">
+            <form string="Point of Sale Configuration">
+                <sheet>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="is_installed_account_accountant" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <div class="oe_title" id="title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <div class="row mt16 o_settings_container">
+                      <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                          <field name="module_pos_restaurant"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                          <label for="module_pos_restaurant"/>
+                          <button string="Save" type="object" name="execute" class="oe_highlight" id="btn_use_pos_restaurant" attrs="{'invisible': [('module_pos_restaurant','=',False)]}" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mt16" id="company" groups="base.group_multi_company">
+                        <label for="company_id" class="col-lg-2"/>
+                        <field name="company_id"/>
+                    </div>
+                    <h2 name="order">Order Interface</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div id="category_reference" class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="iface_display_categ_images"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="iface_display_categ_images" string="Category Pictures"/>
+                                <div class="text-muted">
+                                    Display pictures of product categories
+                                </div>
+                                <div class="content-group mt16" attrs="{'invisible': [('iface_display_categ_images', '=', False)]}">
+                                    <button name="%(product_pos_category_action)d" icon="fa-arrow-right" type="action" string="Categories" class="btn-link"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_left_pane">
+                                <field name="start_category"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="start_category"/>
+                                <div class="text-muted">
+                                    Start selling from a default product category
+                                </div>
+                                <div class="content-group mt16" attrs="{'invisible': [('start_category', '=', False)]}">
+                                    <field name="iface_start_categ_id"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" title="Don't turn this option on if you take orders on smartphones or tablets. Such devices already benefit from a native keyboard.">
+                            <div class="o_setting_left_pane">
+                                <field name="iface_vkeyboard"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="iface_vkeyboard"/>
+                                <div class="text-muted">
+                                    Use a virtual keyboard for touchscreens
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_left_pane">
+                                <field name="iface_big_scrollbars"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="iface_big_scrollbars"/>
+                                <div class="text-muted">
+                                    Improve navigation for imprecise industrial touchscreens
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>IotBox / Hardware Proxy</h2>
+                    <div class="row mt16 o_settings_container" id="posbox_reference">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="is_posbox"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="is_posbox"/>
+                                <div class="text-muted">
+                                    Use an integrated hardware setup like <a href="https://www.odoo.com/documentation/user/online/iot/pos.html" target="_blank">IoT Box</a>
+                                </div>
+                                <div class="content-group" attrs="{'invisible' : [('is_posbox', '=', False)]}">
+                                    <div class="row mt16">
+                                        <label string="IP Address" for="proxy_ip" class="col-lg-3 o_light_label"/>
+                                        <field name="proxy_ip"/>
+                                    </div>
+                                    <div class="row">
+                                        <label string="Barcode Scanner" for="iface_scan_via_proxy" class="col-lg-3 o_light_label"/>
+                                        <field name="iface_scan_via_proxy"/>
+                                    </div>
+                                    <div class="row">
+                                        <label string="Electronic Scale" for="iface_electronic_scale" class="col-lg-3 o_light_label"/>
+                                        <field name="iface_electronic_scale"/>
+                                    </div>
+                                    <div class="row">
+                                        <label string="Cashdrawer" for="iface_cashdrawer" class="col-lg-3 o_light_label"/>
+                                        <field name="iface_cashdrawer"/>
+                                    </div>
+                                    <div class="row">
+                                        <label string="Receipt Printer" for="iface_print_via_proxy" class="col-lg-3 o_light_label"/>
+                                        <field name="iface_print_via_proxy"/>
+                                    </div>
+                                    <div class="row">
+                                        <label string="Customer Display" for="iface_customer_facing_display" class="col-lg-3 o_light_label"/>
+                                        <field name="iface_customer_facing_display"/>
+                                    </div>
+                                    <field name="customer_facing_display_html" invisible="1"/>
+                                    <div class="text-muted" attrs="{'invisible' : ['|', ('iface_customer_facing_display', '=', False), '&amp;', ('id', '!=', False), ('customer_facing_display_html', '!=', '')]}">Save this configuration to see and edit the customer display</div>
+                                    <div class="row mt16 o_settings_container" attrs="{'invisible' : ['|', '|',('iface_customer_facing_display', '=', False), ('id', '=', False), ('customer_facing_display_html', '=', '')]}">
+                                        <div class="col-12 col-lg-6 o_setting_box">
+                                        <field name="customer_facing_display_html" widget="html_frame" nolabel="1" options="{'editor_url': '/point_of_sale/field/customer_facing_display_template'}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="barcode_scanner" class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="barcode_scanner"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="barcode_scanner" string="Barcode Scanner"/>
+                                <div class="text-muted">
+                                    Set barcodes to scan products, customer cards, etc.
+                                </div>
+                                <div class="content-group row mt16" attrs="{'invisible': [('barcode_scanner', '=', False)]}">
+                                    <label for="barcode_nomenclature_id" string="Barcode Nomenclature" class="col-lg-3 o_light_label"/>
+                                    <field name="barcode_nomenclature_id" attrs="{'required': [('barcode_scanner', '=', True)]}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Taxes</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box" title="Choose a specific tax regime at the order depending on the kind of customer (tax exempt, onsite vs. takeaway, etc.).">
+                            <div class="o_setting_left_pane">
+                                <field name="tax_regime_selection"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="tax_regime_selection" string="Fiscal Position per Order"/>
+                                <div class="text-muted">
+                                    Choose among several tax regimes when processing an order
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('tax_regime_selection', '=', False)]}">
+                                    <div class="mt16">
+                                        <field name="fiscal_position_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                    </div>
+                                    <div>
+                                        <button name="%(account.action_account_fiscal_position_form)d" icon="fa-arrow-right" type="action" string="Fiscal Positions" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="tax_regime"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="tax_regime" string="Fiscal Position"/>
+                                <div class="text-muted">
+                                    Use a default specific tax regime
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('tax_regime', '=', False)]}">
+                                    <div class="mt16">
+                                        <field name="default_fiscal_position_id" attrs="{'required': [('tax_regime', '=', True)]}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Pricing</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-lg-6 o_setting_box" id="product_prices"> 
+                            <div class="o_setting_right_pane"> 
+                                <label for="iface_tax_included" string="Product Prices"/>  
+                                <div class="text-muted">   
+                                    Product prices on receipts 
+                                </div> 
+                                <div class="content-group">    
+                                    <div class="mt16"> 
+                                        <field name="iface_tax_included" class="o_light_label" widget="radio"/>    
+                                    </div> 
+                                    <a attrs="{'invisible': [('iface_tax_included', '!=', 'total')]}" href="https://www.odoo.com/documentation/user/12.0/accounting/others/taxes/tax_included.html"  target="_blank" class="oe-link"><i class="fa fa-fw fa-arrow-right"/>How to manage tax-included prices</a>
+                                </div> 
+                            </div> 
+                        </div>
+                        <div class="col-xs-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_left_pane">
+                                <field name="module_pos_discount"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_pos_discount"/>
+                                <div class="text-muted">
+                                    Allow global discounts on orders
+                                </div>
+                                <div class="content-group " attrs="{'invisible':[('module_pos_discount','=',False)]}">
+                                    <div class="mt16" id="btn_use_pos_discount">
+                                        <button string="Save" type="object" name="execute" class="oe_highlight"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="pricelist_setting" title="Choose a pricelist for the Point Of Sale" groups="product.group_sale_pricelist">
+                            <div class="o_setting_left_pane">
+                                <field name="use_pricelist"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="use_pricelist" string="Pricelist"/>
+                                <div class="text-muted">
+                                    Set shop-specific prices, seasonal discounts, etc.
+                                </div>
+                                <div class="content-group mt16" attrs="{'invisible': [('use_pricelist','=',False)], 'required' : [('use_pricelist', '=', True)]}">
+                                    <div class="row mt16">
+                                        <label string="Available Pricelists" for="available_pricelist_ids" class="col-lg-3 o_light_label"/>
+                                        <field name="available_pricelist_ids" widget="many2many_tags"/>
+                                    </div>
+                                    <div class="row">
+                                        <label string="Default Pricelist" for="pricelist_id" class="col-lg-3 o_light_label"/>
+                                        <field name="pricelist_id" domain="[('id', 'in', available_pricelist_ids)]" options="{'no_create': True}"/>
+                                    </div>
+                                    <div>
+                                        <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pos_loyalty" widget="upgrade_boolean" nolabel="1"/>
+                            </div>
+                            <div class="o_setting_right_pane" title="Loyalty program to use for this point of sale. ">
+                                <label for="module_pos_loyalty"/>
+                                <div class="text-muted" id="loyalty_program">
+                                    Give customer rewards, free samples, etc.
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('module_pos_loyalty', '=', False)]}">
+                                    <div class="mt16" id="btn_use_pos_loyalty">
+                                        <button string="Save" type="object" name="execute" class="oe_highlight"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" title="Only users with Manager access rights for PoS app can modify the product prices on orders.">
+                            <div class="o_setting_left_pane">
+                                <field name="restrict_price_control"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="restrict_price_control" string="Price Control"/>
+                                <div class="text-muted">
+                                    Restrict price modification to managers
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Payments</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="payment_methods">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Payment Methods</span>
+                                <div class="text-muted">
+                                    Payment methods available
+                                </div>
+                                <div class="content-group mt16">
+                                    <field name="journal_ids" colspan="4" nolabel="1" context="{'default_journal_user': 1, 'default_type': 'cash'}" widget="many2many_tags"/>
+                                </div>
+                                <div>
+                                    <button name="%(account_journal_action_point_of_sale)d" icon="fa-arrow-right" type="action" string="Payment Methods" class="btn-link"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="cash_control"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="cash_control"/>
+                                <div class="text-muted">
+                                    Control cash box at opening and closing
+                                </div>
+                                <div class="content-group mt16" attrs="{'invisible': [('cash_control', '=', False)]}">
+                                    <div class="row mt16">
+                                        <label string="Default Opening" for="proxy_ip" class="col-lg-3 o_light_label" />
+                                        <field name="default_cashbox_lines_ids" widget="many2many_tags" context="{'show_coin_and_value': True}"/>
+                                    </div>
+                                    <div>
+                                        <button type="action" name="%(account_cashbox_line_action)d" string="Opening/Closing Values" class="btn-link" icon="fa-arrow-right"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="iface_precompute_cash"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="iface_precompute_cash"/>
+                                <div class="text-muted">
+                                    Prefill amount paid with the exact due amount
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Bills &amp; Receipts</h2>
+                    <div class="row mt16 o_settings_container" id="receipt">
+                        <div id="order_reference" class="col-12 col-lg-6 o_setting_box" groups="base.group_no_one">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Order Reference</span>
+                                <div class="text-muted">
+                                    Generation of your order references
+                                </div>
+                                <div class="content-group mt16">
+                                    <field name="sequence_id" readonly="1"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="is_header_or_footer"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="is_header_or_footer"/>
+                                <div class="text-muted">
+                                    Add a custom message to header and footer
+                                </div>
+                                <div class="content-group mt16" attrs="{'invisible' : [('is_header_or_footer', '=', False)]}">
+                                    <div>
+                                        <label string="Header" for="receipt_header" class="col-lg-2 o_light_label"/>
+                                        <field name="receipt_header" placeholder="e.g. Company Address, Website"/>
+                                    </div>
+                                    <div>
+                                        <label string="Footer" for="receipt_footer" class="col-lg-2 o_light_label"/>
+                                        <field name="receipt_footer" placeholder="e.g. Return Policy, Thanks for shopping with us!"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="auto_printing">
+                            <div class="o_setting_left_pane">
+                                <field name="iface_print_auto"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="iface_print_auto"/>
+                                <div class="text-muted">
+                                    Print receipts automatically once the payment is registered
+                                </div>
+                                <div class="content-group mt16" attrs="{'invisible' : ['|', ('iface_print_auto', '=', False), ('is_posbox', '=', False)]}">
+                                    <div>
+                                        <field name="iface_print_skip_screen" class="oe_inline"/><span class="oe_inline"><b>Skip Preview Screen</b></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('iface_print_via_proxy','=',False)]}">
+                            <div class="o_setting_left_pane">
+                                <field name='module_pos_reprint'/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_pos_reprint"/>
+                                <div class="text-muted">
+                                    Allow cashier to reprint receipts
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('module_pos_reprint', '=', False)]}">
+                                    <div class="mt16" id="btn_use_pos_reprint">
+                                        <button string="Save" type="object" name="execute" class="oe_highlight"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="iface_invoicing">
+                            <div class="o_setting_left_pane">
+                                <field name="module_account"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_account"/>
+                                <div class="text-muted" id="invoice_journal">
+                                   Print invoices on customer request
+                                </div>
+                                <div class="content-group mt16" attrs="{'invisible': [('module_account', '=', False)]}">
+                                    <div class="row mt16">
+                                        <label string="Invoice Journal" for="invoice_journal_id" class="col-lg-3 o_light_label"/>
+                                        <field name="invoice_journal_id"
+                                               attrs="{'required': [('module_account', '=', True)]}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Inventory</h2>
+                    <div class="row mt16 o_settings_container" id="inventory_location">
+                        <div class="col-12 col-lg-6 o_setting_box" title="Operation types show up in the Inventory dashboard.">
+                            <div class="o_setting_right_pane">
+                                <label for="picking_type_id" string="Operation Type"/>
+                                <div class="text-muted">
+                                    Operation type used to record product pickings
+                                </div>
+                                <div class="content-group mt16">
+                                    <field name="picking_type_id" required="1"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" groups="stock.group_stock_multi_locations">
+                            <div class="o_setting_right_pane">
+                                <label for="stock_location_id"/>
+                                <div class="text-muted">
+                                    Stock location used for the inventory
+                                </div>
+                                <div>
+                                    <field name="stock_location_id"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Accounting</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Journal Entries</span>
+                                <div class="text-muted">
+                                    Configuration for journal entries of PoS orders
+                                </div>
+                                <div class="content-group">
+                                    <div class="row mt16" title="Whenever you close a session, one entry is generated in the following accounting journal for all the orders not invoiced. Invoices are recorded in accounting separately.">
+                                        <label string="Sales Journal" for="journal_id" class="col-lg-3 o_light_label" widget="selection"/>
+                                        <field name="journal_id"/>
+                                    </div>
+                                    <div class="row" groups="account.group_account_user" title="Get one journal item per product rather than one journal item per receipt line. This works for any anonymous order. If the customer is set on the order, one journal item is created for each receipt line. This option is recommended for an easy review of your journal entries when managing lots of orders.">
+                                        <label string="Group Journal Items" for="group_by" class="col-lg-3 o_light_label"/>
+                                        <field name="group_by"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pos_config_tree" model="ir.ui.view">
+        <field name="name">pos.config.tree.view</field>
+        <field name="model">pos.config</field>
+        <field name="arch" type="xml">
+            <tree string="Point of Sale Configuration">
+                <field name="name" />
+                <field name="stock_location_id" groups="stock.group_stock_multi_locations"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pos_config_search" model="ir.ui.view">
+        <field name="name">pos.config.search.view</field>
+        <field name="model">pos.config</field>
+        <field name="arch" type="xml">
+            <search string="Point of Sale Config">
+                <field name="name"/>
+                <filter string="Inactive" name="inactive" domain="[('active', '=', False)]" />
+                <field name="stock_location_id" groups="stock.group_stock_multi_locations" />
+            </search>
+        </field>
+    </record>
+
+    <act_window
+        id="act_pos_config_sessions"
+        name="Sessions"
+        src_model="pos.config"
+        res_model="pos.session"
+        domain="[('config_id', '=', active_id)]" />
+
+    <record id="action_pos_config_pos" model="ir.actions.act_window">
+        <field name="name">Point of Sale</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.config</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_pos_config_search" />
+    </record>
+
+    <menuitem
+        id="menu_pos_config_pos"
+        name="Point of Sale"
+        parent="menu_point_config_product"
+        sequence="1"
+        action="action_pos_config_pos"
+        groups="group_pos_manager"/>
+
+    <record id="action_pos_config_kanban" model="ir.actions.act_window">
+        <field name="name">Point of Sale</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.config</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain"></field>
+        <field name="search_view_id" ref="view_pos_config_search" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new PoS config
+            </p><p>
+                Configure at least one Point of Sale to be able to sell through the PoS interface.
+            </p>
+        </field>
+    </record>
+
+    <!-- Products sub Category -->
+    <menuitem id="menu_products_pos_category"
+        action="point_of_sale.product_pos_category_action"
+        parent="point_of_sale.pos_menu_products_configuration"
+        sequence="1"/>
+    <menuitem id="pos_menu_products_attribute_action"
+        action="product.attribute_action"
+        parent="point_of_sale.pos_menu_products_configuration"  groups="product.group_product_variant" sequence="2"/>
+    <menuitem id="pos_menu_products_variants_action"
+        action="product.variants_action"
+        parent="point_of_sale.pos_menu_products_configuration" groups="product.group_product_variant" sequence="3"/>
+
+    <menuitem id="menu_pos_dashboard" action="action_pos_config_kanban" parent="menu_point_root" name="Dashboard" sequence="1"/>
+</odoo>

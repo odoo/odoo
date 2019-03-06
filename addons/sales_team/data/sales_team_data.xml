@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="team_sales_department" model="crm.team">
+            <field name="name">Sales</field>
+            <field name="member_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="salesteam_website_sales" model="crm.team">
+            <field name="name">Website</field>
+            <field name="company_id" eval="False"/>
+            <field name="active" eval="False"/>
+            <field name="team_type" eval="'website'"/>
+        </record>
+    </data>
+
+    <record id="sales_team.group_sale_salesman" model="res.groups">
+        <field name="category_id" ref="base.module_category_sales_management"/>
+    </record>
+
+    <record id="sales_team.group_sale_manager" model="res.groups">
+        <field name="category_id" ref="base.module_category_sales_management"/>
+    </record>
+</odoo>

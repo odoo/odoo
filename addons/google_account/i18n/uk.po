@@ -3,87 +3,107 @@
 # * google_account
 # 
 # Translators:
-# Bohdan Lisnenko, 2015
+# Martin Trigaux, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-13 13:41+0000\n"
-"PO-Revision-Date: 2016-05-06 12:24+0000\n"
-"Last-Translator: Bohdan Lisnenko\n"
-"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
+"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service_create_uid
+#: model:ir.model.fields,field_description:google_account.field_google_service__create_uid
 msgid "Created by"
 msgstr "Створив"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service_create_date
+#: model:ir.model.fields,field_description:google_account.field_google_service__create_date
 msgid "Created on"
-msgstr "Дата створення"
+msgstr "Створено"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service_display_name
+#: model:ir.model.fields,field_description:google_account.field_google_service__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service_id
+#: model:ir.model,name:google_account.model_google_service
+msgid "Google Service"
+msgstr "Google Сервіс"
+
+#. module: google_account
+#: model:ir.model.fields,field_description:google_account.field_google_service__id
 msgid "ID"
 msgstr "ID"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service___last_update
+#: model:ir.model.fields,field_description:google_account.field_google_service____last_update
 msgid "Last Modified on"
 msgstr "Остання модифікація"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service_write_uid
+#: model:ir.model.fields,field_description:google_account.field_google_service__write_uid
 msgid "Last Updated by"
 msgstr "Востаннє оновив"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service_write_date
+#: model:ir.model.fields,field_description:google_account.field_google_service__write_date
 msgid "Last Updated on"
 msgstr "Останнє оновлення"
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:98
+#: code:addons/google_account/models/google_service.py:172
+#, python-format
+msgid "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!"
+msgstr "Метод не підтримується [%s] не в [GET, POST, PUT, PATCH or DELETE]!"
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:120
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid"
 msgstr ""
+"Щось пішло не так під час генерації ваших токенів. Можливо, ваш код "
+"авторизації недійсний"
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:37
+#: code:addons/google_account/models/google_service.py:56
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired"
 msgstr ""
+"Щось пішло не так під час вашої генерації токенів.  Може, ваш код "
+"авторизації недійсний або вже минув"
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:128
+#: code:addons/google_account/models/google_service.py:150
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired [%s]"
 msgstr ""
+"Щось пішло не так під час вашої генерації токенів. Може, ваш код авторизації"
+" недійсний або вже минув [%s]"
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:173
+#: code:addons/google_account/models/google_service.py:193
 #, python-format
 msgid "Something went wrong with your request to google"
 msgstr "Щось пішло не так з вашим запитом в google"
 
 #. module: google_account
-#: model:ir.model,name:google_account.model_google_service
-msgid "google.service"
-msgstr ""
+#: code:addons/google_account/models/google_service.py:131
+#, python-format
+msgid "The account for the Google service '%s' is not configured."
+msgstr "Обліковий запис для Google сервісу '%s' не налаштований."

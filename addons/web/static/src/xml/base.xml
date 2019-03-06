@@ -2,296 +2,347 @@
 <templates id="template" xml:space="preserve">
 
 <div t-name="EmptyComponent"/>
-<div t-name="Loading" class="oe_loading">Loading...</div>
+
+<div t-name="Loading" class="o_loading"/>
+
+<t t-name="WidgetLabel.tooltip">
+    <div class="oe_tooltip_string" t-if="widget.string" role="tooltip">
+        <t t-esc="widget.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
+    </div>
+    <p t-if="widget.attrs.help || widget.field.help" class="oe_tooltip_help" role="tooltip">
+        <t t-esc="widget.attrs.help || widget.field.help"/>
+    </p>
+    <ul t-if="debug" class="oe_tooltip_technical" role="tooltip">
+        <li data-item="field" t-if="widget.name">
+            <span class="oe_tooltip_technical_title">Field:</span>
+            <t t-esc="widget.name"/>
+        </li>
+        <li data-item="object">
+            <span class="oe_tooltip_technical_title">Object:</span>
+            <t t-esc="widget.model"/>
+        </li>
+        <li data-item="type">
+            <span class="oe_tooltip_technical_title">Type:</span>
+            <t t-esc="widget.field.type"/>
+        </li>
+        <li t-if="widget.attrs.widget" data-item="widget">
+            <span class="oe_tooltip_technical_title">Widget:</span>
+            <t t-esc="widget.attrs.widget"/>
+        </li>
+        <li t-if="widget.attrs.size || widget.field.size" data-item="size">
+            <span class="oe_tooltip_technical_title">Size:</span>
+            <t t-esc="widget.attrs.size || widget.field.size"/>
+        </li>
+        <li t-if="widget.attrs.context || widget.field.context" data-item="context">
+            <span class="oe_tooltip_technical_title">Context:</span>
+            <t t-esc="widget.attrs.context || JSON.stringify(widget.field.context)"/>
+        </li>
+        <li t-if="widget.attrs.domain || widget.field.domain" data-item="domain">
+            <span class="oe_tooltip_technical_title">Domain:</span>
+            <t t-esc="widget.attrs.domain || JSON.stringify(widget.field.domain)"/>
+        </li>
+        <li t-if="widget.attrs.modifiers and !_.isEmpty(widget.attrs.modifiers)" data-item="modifiers">
+            <span class="oe_tooltip_technical_title">Modifiers:</span>
+            <t t-esc="JSON.stringify(widget.attrs.modifiers)"/>
+        </li>
+        <li t-if="widget.field and widget.field.change_default" data-item="change_default">
+            <span class="oe_tooltip_technical_title">Change default:</span>
+            Yes
+        </li>
+        <li t-if="widget.attrs.on_change" data-item="on_change">
+            <span class="oe_tooltip_technical_title">On change:</span>
+            <t t-esc="widget.attrs.on_change"/>
+        </li>
+        <li t-if="widget.field and widget.field.relation" data-item="relation">
+            <span class="oe_tooltip_technical_title">Relation:</span>
+            <t t-esc="widget.field.relation"/>
+        </li>
+        <li t-if="widget.field and widget.field.selection" data-item="selection">
+            <span class="oe_tooltip_technical_title">Selection:</span>
+            <ul class="oe_tooltip_technical">
+                <li t-foreach="widget.field.selection" t-as="option">
+                    [<t t-esc="option[0]"/>]
+                    <t t-if="option[1]"> - </t>
+                    <t t-esc="option[1]"/>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</t>
+<t t-name="WidgetButton.tooltip">
+    <div class="oe_tooltip_string" t-if="debug || node.attrs.string" role="tooltip">
+        <t t-if="debug">
+            Button
+            <t t-if="node.attrs.string">: </t>
+            <t t-if="!node.attrs.string"> (no string)</t>
+        </t>
+        <t t-esc="node.attrs.string"/>
+    </div>
+    <p t-if="node.attrs.help" class="oe_tooltip_help" role="tooltip">
+        <t t-esc="node.attrs.help"/>
+    </p>
+    <ul t-if="debug" class="oe_tooltip_technical" role="tooltip">
+        <li data-item="object">
+            <span class="oe_tooltip_technical_title">Object:</span>
+            <t t-esc="state.model"/>
+        </li>
+        <li t-if="node.attrs.context" data-item="context">
+            <span class="oe_tooltip_technical_title">Context:</span>
+            <t t-esc="node.attrs.context || widget.field.context"/>
+        </li>
+        <li t-if="node.attrs.modifiers and !_.isEmpty(node.attrs.modifiers)" data-item="modifiers">
+            <span class="oe_tooltip_technical_title">Modifiers:</span>
+            <t t-esc="JSON.stringify(node.attrs.modifiers)"/>
+        </li>
+        <li t-if="node.attrs.special" data-item="special">
+            <span class="oe_tooltip_technical_title">Special:</span>
+            <t t-esc="node.attrs.special"/>
+        </li>
+        <t t-set="button_type" t-value="node.attrs.type"/>
+        <li t-if="button_type" data-item="button_type">
+            <span class="oe_tooltip_technical_title">Button Type:</span>
+            <t t-esc="button_type"/>
+        </li>
+        <li t-if="button_type === 'object'" data-item="button_method">
+            <span class="oe_tooltip_technical_title">Method:</span>
+            <t t-esc="node.attrs.name"/>
+        </li>
+        <li t-if="button_type === 'action'" data-item="button_action">
+            <span class="oe_tooltip_technical_title">Action ID:</span>
+            <t t-esc="node.attrs.name"/>
+        </li>
+    </ul>
+</t>
+
 <t t-name="Notification">
-    <div class="o_notification" t-translation="off">
-        <a t-if="widget.sticky" class="fa fa-times o_close" href="#"/>
+    <div t-attf-class="o_notification #{widget.className}" t-translation="off" role="alertdialog">
+        <a t-if="widget.sticky" class="fa fa-times o_close" href="#" title="Close" aria-label="Close"/>
         <div class="o_notification_title">
-            <span class="o_icon fa fa-3x fa-lightbulb-o"/>
+            <span t-attf-class="o_icon fa fa-3x #{widget.icon}" role="img" t-attf-aria-label="Notification #{widget.name}" t-attf-title="Notification #{widget.name}"/>
             <t t-raw="widget.title"/>
         </div>
-        <div class="o_notification_content"><t t-raw="widget.text"/></div>
+        <div class="o_notification_content" t-if="widget.message"><t t-raw="widget.message"/></div>
+        <div t-if="widget.buttons.length" class="o_buttons">
+            <button t-foreach="widget.buttons" t-as="button" t-attf-class="btn #{button.primary ? 'btn-primary' : 'btn-secondary'}" type="button">
+                <t t-if="button.icon">
+                    <i t-if="button.icon.indexOf('fa-') === 0" t-attf-class="fa fa-fw o_button_icon #{button.icon}" role="img" t-att-aria-label="button.name" t-att-title="button.name"/>
+                    <img t-else="" t-att-src="button.icon" t-att-alt="button.name"/>
+                </t>
+                <span><t t-esc="button.text"/></span>
+            </button>
+        </div>
     </div>
 </t>
-<t t-name="Warning" t-extend="Notification">
-    <t t-jquery=".o_notification">$(this).addClass('o_error');</t>
-    <t t-jquery=".o_icon" t-operation="replace">
-        <span class="o_icon fa fa-3x fa-exclamation"/>
+
+<div t-name="CrashManager.warning" class="o_dialog_warning" role="alert">
+    <t t-js="d">
+        var message = (d.message !== undefined) ? d.message : d.error.data.message;
+        d.html_error = context.engine.tools.html_escape(message).replace(/\n/g, '<br/>');
     </t>
-</t>
-<t t-name="CrashManager.warning">
-    <div class="o_dialog_warning">
-        <t t-js="d">
-            var message = d.message ? d.message : d.error.data.message;
-            d.html_error = context.engine.tools.html_escape(message).replace(/\n/g, '<br/>');
-        </t>
-        <t t-raw="html_error"/>
+    <t t-raw="html_error"/>
+</div>
+<div t-name="CrashManager.error" class="o_dialog_error">
+    <div class="alert alert-warning clearfix" role="alert">
+        <button class="btn btn-primary float-right ml8 o_clipboard_button">
+            <i class="fa fa-clipboard mr8"/>Copy the full error to clipboard
+        </button>
+        <p><b>An error occurred</b></p>
+        <p>Please use the copy button to report the error to your support service.</p>
     </div>
-</t>
-<t t-name="CrashManager.error">
-    <div class="o_error_detail">
+
+    <t t-set="errUID" t-value="_.uniqueId()"/>
+    <button class="btn btn-link" t-att-data-target="'#o_error_detail' + errUID" data-toggle="collapse">See details</button>
+    <div t-att-id="'o_error_detail' + errUID" class="collapse alert alert-danger o_error_detail" role="alert">
         <pre><t t-esc="error.message"/></pre>
         <pre><t t-esc="error.data.debug"/></pre>
     </div>
-</t>
+</div>
 
-<t t-name="ChangePassword">
-    <form name="change_password_form" method="POST">
-      <div class="oe_form">
-        <table align="center">
+<form t-name="ChangePassword" name="change_password_form" method="POST" aria-atomic="true">
+    <div class="o_form_view">
+        <table class="o_group o_inner_group o_label_nowrap">
             <tr>
-                <td class="oe_form_group_cell oe_form_group_cell_label"><label for="old_pwd" class="oe_form_label">Old Password:</label></td>
-                <td class="oe_form_group_cell"><input type="password" name="old_pwd"
-                           minlength="1" autofocus="autofocus"/></td>
+                <td class="o_td_label"><label for="old_pwd" class="o_form_label">Old Password</label></td>
+                <td width="100%"><input type="password" class="o_field_widget o_input" name="old_pwd" minlength="1" autofocus="autofocus" autocomplete="current-password"/></td>
             </tr>
             <tr>
-            <td class="oe_form_group_cell oe_form_group_cell_label"><label for="new_password" class="oe_form_label">New Password:</label></td>
-            <td class="oe_form_group_cell"><input type="password" name="new_password"
-                       minlength="1"/></td>
+                <td class="o_td_label"><label for="new_password" class="o_form_label">New Password</label></td>
+                <td width="100%"><input type="password" class="o_field_widget o_input" name="new_password" minlength="1" autocomplete="new-password"/></td>
             </tr>
             <tr>
-                <td class="oe_form_group_cell oe_form_group_cell_label"><label for="confirm_pwd" class="oe_form_label">Confirm New Password:</label></td>
-                <td class="oe_form_group_cell"><input type="password" name="confirm_pwd"
-                             minlength="1"/></td>
-            </tr>
-            <tr>
-                <td colspan="2" align="right">
-                    <button type="button" class='oe_button oe_form_button'>Change Password</button>
-                    <button type="button" class="oe_button oe_form_button_cancel oe_form_button oe_link" href="javascript:void(0)"><span>Cancel</span></button>
-                </td>
+                <td class="o_td_label"><label for="confirm_pwd" class="o_form_label">Confirm New Password</label></td>
+                <td width="100%"><input type="password" class="o_field_widget o_input" name="confirm_pwd" minlength="1" autocomplete="new-password"/></td>
             </tr>
         </table>
-      </div>
-    </form>
-</t>
 
-<t t-name="Menu.needaction_counter">
-    <div id="menu_counter" class="badge pull-right">
-        <t t-if="widget.needaction_counter &gt; 99"> 99+ </t>
-        <t t-if="widget.needaction_counter &lt;= 99"> <t t-esc="widget.needaction_counter"/> </t>
+        <button type="button" class="btn btn-primary oe_form_button">Change Password</button>
+        <button type="button" class="btn btn-secondary oe_form_button oe_form_button_cancel" href="javascript:void(0)">Cancel</button>
     </div>
-</t>
-
-<t t-name="UserMenu">
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
-                <span class="oe_topbar_name"/> <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-                <li><a href="#" data-menu="documentation">Documentation</a></li>
-                <li><a href="#" data-menu="support">Support</a></li>
-                <li><a href="#" data-menu="about">About</a></li>
-                <li class="divider"/>
-                <li><a href="#" data-menu="settings">Preferences</a></li>
-                <li><a href="#" data-menu="account">My Odoo.com account</a></li>
-                <li><a href="#" data-menu="logout">Log out</a></li>
-            </ul>
-        </li>
-</t>
-
-<div t-name="UserMenu.about" class="oe_about">
-    <div class="container-fluid">
-        <div class="row">
-            <a class="oe_activate_debug_mode oe_right label label-primary" href="?debug" >Activate the developer mode</a>
-        </div>
-        <div class="row">
-            <div class="col-sm-offset-2 col-md-offset-2 col-sm-8 col-md-8 user-details">
-                <div class="user-image">
-                    <img src="/web/static/src/img/logo2.png" alt="Odoo (Formerly OpenERP)" title="Odoo (Formerly OpenERP)" class="img-circle"/>
-                </div>
-                <div class="user-info-block">
-                    <div class="user-heading">
-                        <h3>
-                            Version <t t-esc="db_info.server_version"/>
-                            (Community Edition)
-                        </h3>
-                        <t t-if="db_info.expiration_date">
-                            <h5>Database expiration: <t t-esc="new moment(db_info.expiration_date).format('LL')"/></h5>
-                        </t>
-                    </div>
-                    <div class="user-body">
-                        <div class="tab-content">
-                            <div id="settings" class="tab-pane active">
-                                <h4>Copyright © 2004-2015 Odoo S.A.</h4>
-                                <p>Odoo is a trademark of <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo S.A.</a></p>
-                                <p>Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/lgpl.html" style="text-decoration: underline;">GNU Lesser General Public License</a></p>
-                                <p>For more information visit <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo.com</a></p>
-                                <p>
-                                  <a href="https://www.odoo.com/web/about/facebook"><i class="fa fa-facebook-square fa-3x social-fb"></i></a>
-                                  <a href="https://www.odoo.com/web/about/twitter"><i class="fa fa-twitter-square fa-3x social-tw"></i></a>
-                                  <a href="https://www.odoo.com/web/about/googleplus"><i class="fa fa-google-plus-square fa-3x social-gp"></i></a>
-                                  <a href="https://www.odoo.com/web/about/linkedin"><i class="fa fa-linkedin-square fa-3x social-lk"></i></a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<t t-name="WebClient.timezone_warning">
-    <i class="fa fa-exclamation-triangle oe_tz_warning"></i>
-</t>
-
-<t t-name="EmbedClient">
-    <div class="openerp">
-        <div class="oe_application"></div>
-    </div>
-</t>
-
-<div t-name="ActionManager" class="oe_application" />
+</form>
 
 <t t-name="ControlPanel">
-    <div class="oe-control-panel">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-6 oe-cp-title">
-                    <ol class="oe-view-title breadcrumb">
-                    </ol>
-                </div>
-                <div class="oe-cp-search-view col-md-6" />
-            </div>
-            <div class="row">
-                <div class="col-md-6 oe-button-column">
-                    <div class="oe-cp-buttons"></div>
-                    <div class="oe-cp-sidebar"></div>
-                </div>
-                <div class="col-md-6">
-                    <div class="oe-search-options btn-group"/>
-                    <div class="oe-right-toolbar">
-                        <div class="oe-cp-pager"></div>
-                        <div class="oe-cp-switch-buttons btn-group btn-group-sm"></div>
-                    </div>
-                </div>
-            </div>
+    <div class="o_control_panel">
+        <ol class="breadcrumb" role="navigation"/>
+        <div class="o_cp_searchview" role="search"/>
+        <div class="o_cp_left">
+            <div class="o_cp_buttons" role="toolbar" aria-label="Control panel toolbar"/>
+            <aside class="o_cp_sidebar"/>
+        </div>
+        <div class="o_cp_right">
+            <div class="btn-group o_search_options" role="search"/>
+            <nav class="o_cp_pager" role="search" aria-label="Pager"/>
+            <nav class="btn-group o_cp_switch_buttons" role="toolbar" aria-label="View switcher"/>
         </div>
     </div>
 </t>
-
 <t t-name="X2ManyControlPanel">
-    <div class="oe-x2m-control-panel container-fluid">
-        <div class="oe-cp-buttons pull-left"/>
-        <div class="oe-cp-pager pull-right"/>
+    <div class="o_x2m_control_panel">
+        <nav class="o_cp_buttons" aria-label="Control panel toolbar" role="toolbar"/>
+        <nav class="o_cp_pager" aria-label="Pager" role="toolbar"/>
     </div>
 </t>
 
-<div t-name="ViewManager" class="oe-view-manager">
-    <div class="oe-view-manager-content">
-        <t t-foreach="widget.views" t-as="view">
-            <div t-attf-class="oe-view-manager-view-#{view}"/>
-        </t>
-    </div>
-</div>
-<t t-name="ViewManager.switch-buttons">
+<t t-name="ControlPanel.SwitchButton">
+    <button type="button" t-att-accesskey="view.accessKey"
+        t-attf-class="btn btn-secondary fa fa-lg #{view.icon} o_cp_switch_#{view.type}"
+        t-attf-aria-label="View #{view.type}"
+        t-att-data-view-type="view.type" t-attf-title="View #{view.type}" tabindex="-1"/>
+</t>
+
+<t t-name="ControlPanel.SwitchButtons.Mobile">
+    <button class="btn btn-link btn-sm" data-toggle="dropdown" aria-expanded="false">
+        <span class="o_switch_view_button_icon"/>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right list-inline">
+        <li t-foreach="views" t-as="view">
+            <t t-call="ControlPanel.SwitchButton"/>
+        </li>
+    </ul>
+</t>
+
+<t t-name="ControlPanel.SwitchButtons">
     <t t-foreach="views" t-as="view">
-        <button type="button" t-att-accesskey="view.accesskey"
-            t-attf-class="btn btn-default fa #{view.icon} oe-cp-switch-#{view.type}" 
-            t-att-data-view-type="view.type" t-att-title="view.label"/>
+        <t t-call="ControlPanel.SwitchButton"/>
     </t>
 </t>
 
 <t t-name="WebClient.DebugManager">
-    <li class="oe_debug_manager">
-        <a href="#" title="Open Debug Menu" class="dropdown-toggle oe_debug_button" data-toggle="dropdown">
+    <li class="o_debug_manager" role="menuitem">
+        <a role="button" href="#" title="Open Developer Tools" aria-label="Open Developer Tools" data-toggle="dropdown" aria-expanded="false" tabindex="-1" data-display="static">
             <span class="fa fa-bug"/>
-            <b class="caret"/>
         </a>
-        <ul class="dropdown-menu js_debug_dropdown" role="menu"/>
+        <div class="dropdown-menu dropdown-menu-right o_debug_dropdown" role="menu"/>
     </li>
 </t>
-<t t-name="WebClient.DebugDropdown">
-    <t t-if="active_view.type === 'form'">
-        <t t-if="active_view.controller.get_selected_ids().length == 1">
-            <li class="oe_metadata"><a href="#" data-action="get_metadata">View Metadata</a></li>
-        </t>
-        <li class="oe_layout"><a href="#" data-action="toggle_layout_outline">Toggle Form Layout Outline</a></li>
-        <li class="oe_defaults"><a href="#" data-action="set_defaults">Set Defaults</a></li>
+<t t-name="WebClient.DebugManager.Global">
+    <a role="menuitem" href="#" data-action="perform_js_tests" class="dropdown-item">Run JS Tests</a>
+    <a role="menuitem" href="#" data-action="perform_js_mobile_tests" class="dropdown-item">Run JS Mobile Tests</a>
+    <a role="menuitem" href="#" data-action="perform_click_everywhere_test" class="dropdown-item">Run Click Everywhere Test</a>
+    <a role="menuitem" href="#" data-action="select_view" class="dropdown-item">Open View</a>
+    <t t-if="manager._events">
+        <div class="dropdown-divider" role="separator"/>
+        <a role="menuitem" href="#" data-action="show_timelines" class="dropdown-item">Toggle Timelines</a>
+        <a role="menuitem" href="#" data-action="requests_clear" class="dropdown-item">Clear Events</a>
     </t>
-    <li class="oe_defaults"><a href="#" data-action="perform_js_tests">JS Tests</a></li>
-    <li class="oe_fields"><a href="#" data-action="get_view_fields">View Fields</a></li>
-    <li class="oe_fvg"><a href="#" data-action="fvg">Fields View Get</a></li>
-    <li class="oe_filters"><a href="#" data-action="manage_filters">Manage Filters</a></li>
-    <t t-if="is_admin">
-        <li class="oe_translate"><a href="#" data-action="translate">Technical Translation</a></li>
-        <li class="oe_edit_view"><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="active_view.controller.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/> View</a></li>
-        <li class="oe_edit_searchview" t-if="searchview"><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="searchview.view_id">Edit SearchView</a></li> 
-        <li class="oe_edit_action" t-if="action"><a href="#" data-action="edit" t-att-data-model="action.type" t-att-data-id="action.id">Edit Action</a></li> 
-        <li class="oe_edit_workflow"><a href="#" data-action="edit_workflow">Edit Workflow</a></li>
-        <li class="oe_print_workflow"><a href="#" data-action="print_workflow">Print Workflow</a></li>
-        <li class="divider"/>
-        <li class="oe_leave"><a href="#" data-action="leave_debug">Leave Debug Mode</a></li>
+    <div class="dropdown-divider o_debug_leave_section" role="separator"/>
+    <a role="menuitem" href="#" data-action="split_assets" class="dropdown-item">Activate Assets Debugging</a>
+    <a role="menuitem" href="#" data-action="regenerateAssets" class="dropdown-item">Regenerate Assets Bundles</a>
+    <a t-if="manager._is_admin" role="menuitem" href="/web/become" class="dropdown-item">Become Superuser</a>
+    <a role="menuitem" href="#" data-action="leave_debug_mode" class="dropdown-item">Leave the Developer Tools</a>
+</t>
+<t t-name="WebClient.DebugManager.Action">
+    <t t-if="action">
+        <div class="dropdown-divider" role="separator"/>
+        <a role="menuitem" href="#" data-action="edit" t-att-data-model="action.type" t-att-data-id="action.id" class="dropdown-item">Edit Action</a>
+        <t t-if="action.res_model">
+            <a role="menuitem" href="#" data-action="get_view_fields" class="dropdown-item">View Fields</a>
+            <a role="menuitem" href="#" data-action="manage_filters" class="dropdown-item">Manage Filters</a>
+            <a role="menuitem" href="#" data-action="translate" class="dropdown-item">Technical Translation</a>
+        </t>
+    </t>
+</t>
+<t t-name="WebClient.DebugManager.View">
+    <t t-if="view">
+        <div role="separator" class="dropdown-divider"/>
+        <t t-if="view.type === 'form'">
+            <a role="menuitem" href="#" data-action="set_defaults" class="dropdown-item">Set Defaults</a>
+            <t t-if="controller.getSelectedIds().length === 1">
+                <a role="menuitem" href="#" data-action="get_metadata" class="dropdown-item">View Metadata</a>
+                <a role="menuitem" href="#" data-action="get_attachments" class="dropdown-item">Manage Attachments</a>
+            </t>
+        </t>
+        <a role="menuitem" href="#" data-action="fvg" class="dropdown-item">Fields View Get</a>
+        <t t-if="can_edit">
+            <a role="menuitem" href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fieldsView.view_id" class="dropdown-item">
+                Edit View: <t t-esc="view.displayName"/>
+            </a>
+            <a t-if="searchview and searchview.$el.is(':visible')" role="menuitem" href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="action.searchFieldsView.view_id" class="dropdown-item">Edit SearchView</a>
+        </t>
     </t>
 </t>
 <t t-name="WebClient.DebugViewLog">
-    <div class="oe_debug_menu_log">
-        <table class="table table-condensed table-striped">
-            <tr>
-                <th>ID:</th>
-                <td><t t-esc="perm.id"/></td>
-            </tr>
-            <tr>
-                <th>XML ID:</th>
-                <td><t t-esc="perm.xmlid or '/'"/></td>
-            </tr>
-            <tr>
-                <th>No Update:</th>
-                <td><t t-esc="perm.noupdate"/></td>
-            </tr>
-            <tr>
-                <th>Creation User:</th>
-                <td><t t-esc="format(perm.create_uid, { 'type' : 'many2one' }, '/')"/></td>
-            </tr>
-            <tr>
-                <th>Creation Date:</th>
-                <td><t t-esc="format(perm.create_date, { 'type' : 'datetime' }, '/')"/></td>
-            </tr>
-            <tr>
-                <th>Latest Modification by:</th>
-                <td><t t-esc="format(perm.write_uid, { 'type' : 'many2one' }, '/')"/></td>
-            </tr>
-            <tr>
-                <th>Latest Modification Date:</th>
-                <td><t t-esc="format(perm.write_date, { 'type' : 'datetime' }, '/')"/></td>
-            </tr>
-        </table>
-    </div>
+    <table class="table table-sm table-striped">
+        <tr>
+            <th>ID:</th>
+            <td><t t-esc="perm.id"/></td>
+        </tr>
+        <tr>
+            <th>XML ID:</th>
+            <td><t t-esc="perm.xmlid or '/'"/></td>
+        </tr>
+        <tr>
+            <th>No Update:</th>
+            <td>
+                <t t-esc="perm.noupdate"/>
+                <t t-if="perm.xmlid">
+                    <a data-action="toggle_noupdate">(change)</a>
+                </t>
+            </td>
+        </tr>
+        <tr>
+            <th>Creation User:</th>
+            <td><t t-esc="perm.creator"/></td>
+        </tr>
+        <tr>
+            <th>Creation Date:</th>
+            <td><t t-esc="perm.create_date"/></td>
+        </tr>
+        <tr>
+            <th>Latest Modification by:</th>
+            <td><t t-esc="perm.lastModifiedBy"/></td>
+        </tr>
+        <tr>
+            <th>Latest Modification Date:</th>
+            <td><t t-esc="perm.write_date"/></td>
+        </tr>
+    </table>
 </t>
-<span t-name="ViewPager">
-    <div class="oe_pager_value" style="display: inline-block">
-        <t t-raw="0"/>
-    </div>
-    <div class="btn-group btn-group-sm oe-pager-buttons" style="display: inline-block">
-        <!-- accesskeys not wanted in X2Many widgets -->
-        <t t-if="!widget.x2m">
-            <t t-set="att_prev" t-value="{'accesskey': 'O'}" />
-            <t t-set="att_next" t-value="{'accesskey': 'P'}" />
-        </t>
-        <a class="fa fa-chevron-left btn btn-default oe-pager-button" t-att="att_prev" type="button" data-pager-action="previous"></a>
-        <a class="fa fa-chevron-right btn btn-default oe-pager-button" t-att="att_next" type="button" data-pager-action="next"></a>
-    </div>
-</span>
+<div t-name="WebClient.DebugManager.RequestsOverlay" class="o_debug_manager_overlay">
+    <header>
+        <!-- enough height to display all tracks + 1px spacing between tracks -->
+        <t t-set="canvas_height" t-value="widget.TRACKS * (widget.TRACK_WIDTH + 1)"/>
+        <canvas t-att-height="canvas_height" id="o_debug_requests_summary"/>
+        <!-- transparent overlay to display selected range -->
+        <canvas t-att-height="canvas_height" id="o_debug_requests_selector"/>
+    </header>
+    <div class="o_debug_requests"/>
+    <div class="o_debug_tooltip"/>
+</div>
 
-<div t-name="Sidebar" class="oe_sidebar btn-group">
+<t t-name="Sidebar">
     <t t-foreach="widget.sections" t-as="section">
-        <div class="oe_form_dropdown_section btn-group btn-group-sm">
-            <button type="button" class="btn btn-default dropdown-toggle"
-                    t-if="section.name != 'buttons'"
-                    data-toggle="dropdown">
+        <div class="btn-group o_dropdown">
+            <button t-if="section.name != 'buttons'" class="o_dropdown_toggler_btn btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <t t-if="section.name == 'files'" t-raw="widget.items[section.name].length || ''"/>
                 <t t-esc="section.label"/>
-                <span class="caret"></span>
             </button>
             <t t-if="section.name == 'buttons'" t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
-                <button type="button" t-att-title="item.title or ''" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url"
-                    target="_blank" class="oe_sidebar_button oe_highlight">
+                <a t-att-title="item.title or None" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url or '#'" target="_blank">
                     <t t-raw="item.label"/>
-                </button>
+                </a>
             </t>
-            <ul class="dropdown-menu" role="menu">
-                <li t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
+            <div class="dropdown-menu o_dropdown_menu" role="menu">
+                <t t-foreach="widget.items[section.name]" t-as="item">
                     <t t-if="section.name == 'files'">
                         <t t-set="item.title">
                             <b>Attachment : </b><br/>
@@ -300,221 +351,98 @@
                         <t t-if="item.create_uid and item.create_uid[0]" t-set="item.title">
                             <t t-raw="item.title"/><br/>
                             <b>Created by : </b><br/>
-                            <t t-raw="item.create_uid[1] + ' ' + item.create_date"/>
+                            <t t-raw="item.create_uid[1]"/>  <t t-esc="item.create_date_string" />
                         </t>
                         <t t-if="item.create_uid and item.write_uid and item.create_uid[0] != item.write_uid[0]" t-set="item.title">
                             <t t-raw="item.title"/><br/>
                             <b>Modified by : </b><br/>
-                            <t t-raw="item.write_uid[1] + ' ' + item.write_date"/>
+                            <t t-raw="item.write_uid[1]"/>  <t t-esc="item.write_date_string"/>
                         </t>
                     </t>
-                    <a class="oe_file_attachment" t-att-title="item.title or ''" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url">
+                    <a t-attf-class="dropdown-item #{item.classname}" role="menuitem" t-att-title="item.title or None" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url or '#'">
                         <t t-raw="item.label"/>
-                        <span t-if="section.name == 'files' and widget.options.editable and !item.callback" class="oe_sidebar_delete_item" t-att-data-id="item.id" title="Delete this attachment">
-                            <i class="fa fa-trash-o"/>
-                        </span>
+                        <span t-if="section.name == 'files' and widget.options.editable and !item.callback" class="fa fa-trash-o o_sidebar_delete_attachment" t-att-data-id="item.id" title="Delete this attachment" role="img" aria-label="Delete this attachment"/>
                     </a>
-                </li>
-                <li t-if="section.name == 'files' and widget.options.editable" class="oe_sidebar_add_attachment">
+                </t>
+                <div role="menuitem" t-if="section.name == 'files' and widget.options.editable" class="dropdown-item o_sidebar_add_attachment">
                     <t t-call="HiddenInputFile">
-                        <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                        <t t-set="fileupload_id" t-value="widget.fileuploadId"/>
                         <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
-                        <input type="hidden" name="model" t-att-value="widget.dataset and widget.dataset.model"/>
-                        <input type="hidden" name="id" t-att-value="widget.model_id"/>
-                        <input type="hidden" name="session_id" t-att-value="widget.session.session_id" t-if="widget.session.override_session"/>
+                        <t t-set="multi_upload" t-value="true"/>
+                        <input type="hidden" name="model" t-att-value="widget.env and widget.env.model"/>
+                        <input type="hidden" name="id" t-att-value="widget.env.activeIds[0]"/>
+                        <input type="hidden" name="session_id" t-att-value="widget.getSession().session_id" t-if="widget.getSession().override_session"/>
                         <span>Add...</span>
                     </t>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
     </t>
-</div>
-
-<t t-name="TreeView">
-    <select t-if="toolbar" style="width: 30%">
-    </select>
-    <table class="oe_tree_table oe-treeview-table">
-        <thead>
-            <tr>
-                <th t-foreach="fields_view" t-as="field"
-                    t-if="!field.attrs.modifiers.tree_invisible"
-                    class="treeview-header">
-                    <t t-esc="field_value.attrs.string || fields[field.attrs.name].string" />
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
 </t>
-<tr t-name="TreeView.rows"
-        t-foreach="records" t-as="record"
-        t-att-id="'treerow_' + record.id"
-        t-att-data-id="record.id" t-att-data-level="level + 1"
-        t-att-data-row-parent-id="row_parent_id">
-    <t t-set="children" t-value="record[children_field]"/>
-    <t t-set="class" t-value="children and children.length ? 'treeview-tr' : 'treeview-td'"/>
-    <t t-set="rank" t-value="'oe-treeview-first'"/>
-    <t t-set="style" t-value="'background-position: ' + 19*(level) + 'px; padding-left: ' + (4 + 19*(level)) + 'px;'"/>
 
-    <td t-foreach="fields_view" t-as="field"
-        t-if="!field.attrs.modifiers.tree_invisible"
-        t-att-data-id="record.id"
-        t-att-style="color_for(record) + style "
-        t-attf-class="#{class} #{rank} #{(fields[field.attrs.name].type === 'float') or (fields[field.attrs.name].type === 'integer') or (fields[field.attrs.name].type === 'monetary')? 'oe_number' : ''}">
-
-        <span t-if="!field.attrs.modifiers.invisible" >
-            <t t-esc="render(record[field.attrs.name], fields[field.attrs.name])" />
-        </span>
-
-        <t t-set="class" t-value="'treeview-td'"/>
-        <t t-set="rank" t-value="''"/>
-        <t t-set="style" t-value="''"/>
-    </td>
-</tr>
-
-<table t-name="ListView" class="oe_list_content">
-    <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
-    <thead>
-        <tr t-if="(!!options.action_buttons and !options.$buttons) or (!!options.pager and !options.$pager)">
-            <th t-att-colspan="columns_count">
-                <div class="oe_list_buttons"/>
-                <div class="oe_list_sidebar"/>
-                <div class="oe_list_pager"/>
-            </th>
-        </tr>
-        <tr t-if="options.header" class="oe_list_header_columns">
-            <t t-foreach="columns" t-as="column">
-                <th t-if="column.meta">
-                    <t t-esc="column.string"/>
-                </th>
-            </t>
-            <th t-if="options.selectable" width="1"  >
-                <input type="checkbox" class="oe_list_record_selector"/>
-            </th>
-            <t t-foreach="columns" t-as="column">
-                <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
-                    t-attf-class="oe_list_header_#{column.widget or column.type} #{((options.sortable and column.tag !== 'button') ? 'oe_sortable' : null)}"><div>
-                    <t t-if="column.tag !== 'button'"><t t-esc="column.string"/></t>
-                </div></th>
-            </t>
-            <th t-if="options.deletable" class="oe_list_record_delete" width="13px"/>
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <td t-if="options.selectable"/>
-            <td t-foreach="aggregate_columns" t-as="column" class="oe_list_footer oe_number"
-                t-att-data-field="column.id" t-att-title="column.label">
-            </td>
-            <td t-if="options.deletable" class="oe_list_record_delete"/>
-        </tr>
-    </tfoot>
-</table>
 <t t-name="ListView.buttons">
-    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
-    <div class="oe_list_buttons">
-        <button type="button" class="btn btn-sm btn-primary o_list_button_add" accesskey="C">
-            <t t-esc="widget.options.addable"/>
-        </button>
-    </div>
-    </t>
-</t>
-<t t-name="ListView.pager" t-if="!widget.no_leaf and widget.options.pager !== false" t-call="ViewPager">
-    <span class="oe_list_pager_state"></span>
-</t>
-<t t-name="ListView.rows" t-foreach="records.length" t-as="index">
-    <t t-call="ListView.row">
-        <t t-set="record" t-value="records.at(index)"/>
-    </t>
-</t>
-<tr t-name="ListView.row"
-        t-att-data-id="record.get('id')"
-        t-attf-style="#{(view.fonts || view.colors) ? view.style_for(record) : ''}"
-        t-attf-class="#{view.compute_decoration_classnames(record)}">
-    <t t-set="asData" t-value="record.toForm().data"/>
-    <t t-foreach="columns" t-as="column">
-        <td t-if="column.meta"> </td>
-    </t>
-    <th t-if="options.selectable" class="oe_list_record_selector" width="1">
-        <t t-set="checked" t-value="options.select_view_id == record.get('id') ? 'checked' : null"/>
-        <input t-if="options.radio" type="radio" name="radiogroup" t-att-checked="checked"/>
-        <input t-if="!options.radio" type="checkbox" name="radiogroup" t-att-checked="checked"/>
-    </th>
-    <t t-foreach="columns" t-as="column">
-        <t t-set="number" t-value="column.type === 'integer' or column.type == 'float' or column.type == 'monetary'"/>
-        <t t-set="modifiers" t-value="column.modifiers_for(asData)"/>
-        <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
-            t-attf-class="oe_list_field_cell oe_list_field_#{column.widget or column.type} #{number ? 'oe_number' : ''} #{column.tag === 'button' ? 'oe-button' : ''} #{modifiers.readonly ? 'oe_readonly' : ''} #{modifiers.required ? 'oe_required' : ''}"
-            t-att-data-field="column.id"
-            ><t t-raw="render_cell(record, column)"/></td>
-    </t>
-    <td t-if="options.deletable" class='oe_list_record_delete' width="13px">
-        <span name="delete" class="fa fa-trash-o"/>
-    </td>
-</tr>
-<t t-extend="ListView.buttons">
-    <t t-jquery="button.o_list_button_add" t-operation="after">
-        <button type="button" class="btn btn-primary btn-sm o_list_button_save" accesskey="S">
-            Save
-        </button>
-        <button type="button" class="btn btn-default btn-sm o_list_button_discard" accesskey="D">
-            Discard
-        </button>
-    </t>
-</t>
-<button t-name="ListView.row.text_button" type="button"
-        t-att-title="widget.string" t-att-disabled="disabled || undefined"
-        t-att-class="disabled ? 'oe_list_button_disabled btn_txt oe_link' : 'btn_txt oe_link'"
-        ><t t-esc="widget.string"/></button>
-<button t-name="ListView.row.button" type="button"
-        t-att-title="widget.string" t-att-disabled="disabled || undefined"
-        t-att-class="disabled ? 'oe_list_button_disabled' : ''"
-        ><img t-if="!widget.icon.indexOf('fa-') == 0" t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
-        t-att-alt="widget.string"/><i t-if="widget.icon.indexOf('fa-') == 0" t-attf-class="fa #{widget.icon}" t-att-title="widget.string"/>
-</button>
-<t t-extend="ListView.row">
-    <!-- adds back padding to row being rendered after edition, if necessary
-         (if not deletable add back padding), otherwise the row being added is
-         missing columns
-     -->
-    <t t-jquery="&gt; :last" t-operation="after">
-        <td t-if="edited and !options.deletable" class="oe-listview-padding"/>
-    </t>
-</t>
-
-<t t-name="FormView">
-    <div class="oe_formview">
-        <div class="oe_form_buttons"/>
-        <div class="oe_form_sidebar"/>
-        <div class="oe_form_pager"/>
-        <div class="oe_form_container"/>
-    </div>
-</t>
-<div t-name="FormView.buttons" class="oe_form_buttons">
-    <t t-if="widget.options.action_buttons !== false">
-        <div class="o_form_buttons_view">
-            <button t-if="widget.is_action_enabled('edit')"
-                    type="button"
-                    class="oe_form_button_edit btn btn-default btn-sm" accesskey="E">
-                Edit
-            </button>
-            <button t-if="widget.is_action_enabled('create')"
-                    type="button" class="oe_form_button_create btn btn-default btn-sm"
-                    accesskey="C">
+    <div class="o_list_buttons" role="toolbar" aria-label="Main actions">
+        <t t-if="widget.is_action_enabled('create')">
+            <button type="button" class="btn btn-primary o_list_button_add" accesskey="c">
                 Create
             </button>
-        </div>
-        <span class="o_form_buttons_edit">
-            <button type="button" class="oe_form_button_save btn btn-primary btn-sm" accesskey="S">Save</button>
-            <button type="button" class="oe_form_button_cancel btn btn-sm btn-default" accesskey="D">Discard</button>
-        </span>
-    </t>
-</div>
-<t t-name="FormView.pager" t-if="widget.options.pager !== false" t-call="ViewPager">
-    <span class="oe_form_pager_state"></span>
+        </t>
+        <button type="button" class="btn btn-primary o_list_button_save" accesskey="s">
+            Save
+        </button>
+        <button type="button" class="btn btn-secondary o_list_button_discard" accesskey="j">
+            Discard
+        </button>
+    </div>
 </t>
-<form t-name="FormView.set_default">
+
+<t t-name="FormView.buttons">
+    <div class="o_form_buttons_view" role="toolbar" aria-label="Main actions">
+        <button t-if="widget.is_action_enabled('edit')" type="button"
+                class="btn btn-primary o_form_button_edit" accesskey="a">
+            Edit
+        </button>
+        <button t-if="widget.is_action_enabled('create')" type="button"
+                class="btn btn-secondary o_form_button_create" accesskey="c">
+            Create
+        </button>
+    </div>
+    <div class="o_form_buttons_edit" role="toolbar" aria-label="Main actions">
+        <button type="button"
+                class="btn btn-primary o_form_button_save" accesskey="s">
+            Save
+        </button>
+        <button type="button"
+                class="btn btn-secondary o_form_button_cancel" accesskey="j">
+            Discard
+        </button>
+    </div>
+</t>
+<t t-name="SaveCancelButton.tooltip">
+    <div class="oe_tooltip_string" role="alert">
+        <div class="tooltip-inner">
+            Hit ENTER to SAVE<br/>
+            Hit ESCAPE to DISCARD
+        </div>
+    </div>
+</t>
+<t t-name="CreateButton.tooltip">
+    <div class="oe_tooltip_string" role="tooltip">
+        <div class="tooltip-inner">
+            Hit ENTER to CREATE<br/>
+            Hit DOWN to navigate to the list below
+        </div>
+    </div>
+</t>
+<t t-name="FormButton.tooltip">
+    <div class="oe_tooltip_string" role="tooltip">
+        <div class="tooltip-inner">
+            Hit ENTER to
+            <t t-esc="title"></t>
+        </div>
+    </div>
+</t>
+<form t-name="FormView.set_default" aria-atomic="true">
     <t t-set="args" t-value="widget.args"/>
     <table style="width: 100%">
         <tr>
@@ -525,7 +453,7 @@
                 </label>
             </td>
             <td class="oe_form_required">
-                <select id="formview_default_fields">
+                <select id="formview_default_fields" class="o_input">
                     <option value=""/>
                     <option t-foreach="args.fields" t-as="field"
                             t-att-value="field.name">
@@ -542,7 +470,7 @@
                 </label>
             </td>
             <td>
-                <select id="formview_default_conditions">
+                <select id="formview_default_conditions" class="o_input">
                     <option value=""/>
                     <option t-foreach="args.conditions" t-as="cond"
                             t-att-value="cond.name + '=' + cond.value">
@@ -570,587 +498,763 @@
         </tr>
     </table>
 </form>
-
-<t t-name="FormRenderingForm">
-    <div t-attf-class="#{classnames}">
-    </div>
-</t>
-<t t-name="FormRenderingSheet">
-    <div class="oe_form_sheetbg">
-        <div t-attf-class="oe_form_sheet oe_form_sheet_width #{classnames}">
-        </div>
-    </div>
-</t>
-<t t-name="FormRenderingGroup">
-    <t t-if="string" t-call="FormRenderingSeparator"/>
-    <table border="0" cellpadding="0" cellspacing="0" t-attf-class="oe_form_group #{classnames}"/>
-</t>
-<t t-name="FormRenderingNotebook">
-    <div class="oe_clear">
-        <ul t-attf-class="nav nav-tabs #{classnames}" role="tablist">
-            <li t-foreach="pages" t-as="page" t-att-modifiers="page.modifiers">
-                <a role="tab" t-attf-href="##{page.id}" t-att-accesskey="page.accesskey" data-toggle="tab">
-                    <t t-esc="page.string"/>
-                </a>
-            </li>
-        </ul>
-        <div class="tab-content">
-            <div role="tabpanel" t-foreach="pages" t-as="page" t-attf-class="tab-pane #{classnames}" t-att-id="id">
-                <t t-raw="page.contents"/>
-            </div>
-        </div>
-    </div>
-</t>
-<t t-name="FormRenderingSeparator">
-    <div t-attf-class="oe_horizontal_separator oe_clear #{classnames}">
-        <t t-esc="string"/>
-    </div>
-</t>
-<t t-name="FormRenderingLabel">
-    <label  t-att-for="_for"
-            t-attf-class="#{classnames} oe_form_label#{help ? '_help' : ''} oe_align_#{align}">
-        <t t-esc="string"/>
-    </label>
-</t>
-
 <t t-name="GraphView.buttons">
-    <div class="btn-group btn-group-sm">
-        <button class="btn btn-default fa fa-bar-chart-o oe-bar-mode" title="Bar Chart"></button>
-        <button class="btn btn-default fa fa-line-chart oe-line-mode" title="Line Chart"></button>
-        <button class="btn btn-default fa fa-pie-chart oe-pie-mode" title="Pie Chart"></button>
-    </div>
-    <div class="btn-group btn-group-sm">
-        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            Measure <span class="caret"/>
+    <div class="btn-group" role="toolbar" aria-label="Main actions">
+        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            Measures
         </button>
-        <ul class="oe-measure-list dropdown-menu">
-            <li t-foreach="measures" t-as="measure" t-att-data-field="measure[0]">
-                <a><t t-esc="measure[1].string"/></a>
-            </li>
-            <li class="divider"></li>
-            <li data-field="__count__"><a>Quantity</a></li>
-        </ul>
+        <div class="dropdown-menu o_graph_measures_list" role="menu">
+            <t t-foreach="measures" t-as="measure">
+                <a role="menuitem" href="#" class="dropdown-item" t-att-data-field="measure[0]"><t t-esc="measure[1].string"/><t t-if="measure[1].type === 'many2one'"> (count)</t></a>
+            </t>
+            <div role="separator" class="dropdown-divider"/>
+            <a role="menuitem" href="#" class="dropdown-item" data-field="__count__">Count</a>
+        </div>
+    </div>
+    <div class="btn-group" role="toolbar" aria-label="Change graph">
+        <button class="btn btn-secondary fa fa-bar-chart-o o_graph_button" title="Bar Chart" aria-label="Bar Chart" data-mode="bar"/>
+        <button class="btn btn-secondary fa fa-area-chart o_graph_button" title="Line Chart" aria-label="Line Chart" data-mode="line"/>
+        <button class="btn btn-secondary fa fa-pie-chart o_graph_button" title="Pie Chart" aria-label="Pie Chart" data-mode="pie"/>
     </div>
 </t>
-
-<div t-name="GraphView.error" class="oe_view_nocontent" >
-    <div class="oe_empty_custom_dashboard">
-        <p><b><t t-esc="title"/></b></p>
+<div t-name="GraphView.error" class="o_view_nocontent" role="alert">
+    <div class="o_nocontent_help">
+        <p class="o_view_nocontent_empty_folder"><t t-esc="title"/></p>
         <p><t t-esc="description"/></p>
     </div>
 </div>
 
-
-<div t-name="PivotView" class="oe_pivot">
-    <div class="o-field-selection"/>
-    <div class="o-pivot-table"/>
+<div t-name="PivotView" class="o_pivot">
+    <div class="o_field_selection"/>
 </div>
-
 <t t-name="PivotView.buttons">
-    <div class="btn-group btn-group-sm">
-        <button class="btn btn-default fa fa-expand oe-pivot-flip" title="Flip axis"></button>
-        <button class="btn btn-default fa fa-arrows-alt oe-pivot-expand-all" title="Expand all"></button>
-    </div>
-    <div class="btn-group btn-group-sm">
-        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            Measures <span class="caret"/>
+    <div class="btn-group" role="toolbar" aria-label="Main actions">
+        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            Measures
         </button>
-        <ul class="oe-measure-list dropdown-menu">
-            <li t-foreach="measures" t-as="measure" t-att-data-field="measure[0]">
-                <a><t t-esc="measure[1].string"/></a>
-            </li>
-            <li class="divider"></li>
-            <li data-field="__count__"><a>Quantity</a></li>
-        </ul>
+        <div class="dropdown-menu o_pivot_measures_list" role="menu">
+            <t t-foreach="measures" t-as="measure">
+                <a role="menuitem" href="#" class="dropdown-item" t-att-data-field="measure[0]"><t t-esc="measure[1].string"/><t t-if="measure[1].type === 'many2one'"> (count)</t></a>
+            </t>
+            <div role="separator" class="dropdown-divider"/>
+            <a role="menuitem" href="#" class="dropdown-item" data-field="__count">Count</a>
+        </div>
+    </div>
+    <div class="btn-group" role="toolbar" aria-label="Pivot settings">
+        <button class="btn btn-secondary fa fa-exchange o_pivot_flip_button" title="Flip axis" aria-label="Flip axis"/>
+        <button class="btn btn-secondary fa fa-arrows o_pivot_expand_button" title="Expand all" aria-label="Expand all"/>
+        <button class="btn btn-secondary fa fa-download o_pivot_download" title="Download xls" aria-label="Download xls"/>
     </div>
 </t>
-
 <t t-name="PivotView.FieldSelection">
-    <ul class="dropdown-menu multi-level o-field-menu" role="menu">
+    <div class="dropdown-menu o_pivot_field_menu" role="menu">
         <t t-foreach="fields" t-as="field">
             <t t-if="(field[1].type === 'date') || (field[1].type === 'datetime')">
-                <li class="pivot-dropdown-submenu" t-att-data-field="field[0]">
-                    <a class="field-selection">
+                <div role="menuitem" aria-haspopup="true" class="o_inline_dropdown">
+                    <a href="#" t-att-data-field="field[0]" t-attf-class="dropdown-item o_pivot_field_selection#{field[2] ? ' disabled' : ''}">
                         <t t-esc="field[1].string"/>
                     </a>
-                    <ul class="dropdown-menu">
-                        <li t-att-data-field="field[0]"><a t-att-data-interval="'day'">Day</a></li>
-                        <li t-att-data-field="field[0]"><a t-att-data-interval="'week'">Week</a></li>
-                        <li t-att-data-field="field[0]"><a t-att-data-interval="'month'">Month</a></li>
-                        <li t-att-data-field="field[0]"><a t-att-data-interval="'quarter'">Quarter</a></li>
-                        <li t-att-data-field="field[0]"><a t-att-data-interval="'year'">Year</a></li>
-                    </ul>
-                </li>
+                    <div class="dropdown-menu" role="menu">
+                        <a role="menuitem" href="#" class="dropdown-item" t-att-data-interval="'day'" t-att-data-field="field[0]">Day</a>
+                        <a role="menuitem" href="#" class="dropdown-item" t-att-data-interval="'week'" t-att-data-field="field[0]">Week</a>
+                        <a role="menuitem" href="#" class="dropdown-item" t-att-data-interval="'month'" t-att-data-field="field[0]">Month</a>
+                        <a role="menuitem" href="#" class="dropdown-item" t-att-data-interval="'quarter'" t-att-data-field="field[0]">Quarter</a>
+                        <a role="menuitem" href="#" class="dropdown-item" t-att-data-interval="'year'" t-att-data-field="field[0]">Year</a>
+                    </div>
+                </div>
             </t>
-            <t t-if="(field[1].type !== 'date') &amp;&amp; (field[1].type !== 'datetime')">
-                <li t-att-data-field="field[0]"><a><t t-esc="field[1].string"/></a></li>
+            <t t-else="">
+                <a href="#" role="menuitem" t-att-data-field="field[0]" t-attf-class="dropdown-item#{field[2] ? ' disabled' : ''}"><t t-esc="field[1].string"/></a>
             </t>
         </t>
-    </ul>
+    </div>
 </t>
-
-<div t-name="PivotView.nodata" class="oe_view_nocontent" >
-    <div class="oe_empty_custom_dashboard">
-        <p><b>No data to display.</b></p>
-        <p>
-                No data available for this pivot table.  Try to add some records, or make sure
+<div t-name="PivotView.nodata">
+    <div class="o_view_nocontent" role="alert">
+        <div class="o_nocontent_help">
+            <p class="o_view_nocontent_empty_folder">
+                No data to display
+            </p><p>
+                Try to add some records, or make sure
                 that there is at least one measure and no active filter in the search bar.
-        </p>
+            </p>
+        </div>
     </div>
 </div>
 
-
-<t t-name="Widget">
-    Unhandled widget
-    <t t-js="dict">console.warn('Unhandled widget', dict.widget);</t>
-</t>
-<t t-name="FieldChar">
-    <span t-att-class="'oe_form_field '+widget.widget_class" t-att-style="widget.node.attrs.style">
-        <t t-if="!widget.get('effective_readonly')">
-            <input t-att-type="widget.password ? 'password' : 'text'"
-                t-att-barcode_events="widget.options.barcode_events"
-                t-att-id="widget.id_for_label"
-                t-att-tabindex="widget.node.attrs.tabindex"
-                t-att-autofocus="widget.node.attrs.autofocus"
-                t-att-placeholder="widget.node.attrs.placeholder"
-                t-att-maxlength="widget.field.size"
-            /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
-        </t>
-        <t t-if="widget.get('effective_readonly')">
-            <span class="oe_form_char_content"></span>
-        </t>
-    </span>
-</t>
 <t t-name="FormSelection">
-    <div class="btn-group o_kanban_selection">
-        <a href="#" data-toggle="dropdown"><span class="oe_kanban_status"/></a>
-        <ul class="dropdown-menu state" role="menu">
-        </ul>
+    <div class="btn-group o_selection" aria-atomic="true">
+        <a href="#" data-toggle="dropdown" aria-label="Dropdown menu" title="Dropdown menu"><span class="o_status"/></a>
+        <div class="dropdown-menu state" role="menu"/>
     </div>
 </t>
 <t t-name="FormSelection.items">
-    <li t-foreach="states" t-as="rec" t-att-data-value="rec.name">
-        <a href="#">
-            <span t-att-class="'oe_kanban_status ' + (rec.state_class &amp;&amp; rec.state_class || '')"/>
+    <t t-foreach="states" t-as="rec">
+        <a role="menuitem" href="#" class="dropdown-item" t-att-data-value="rec.name">
+            <span t-att-class="'o_status ' + (rec.state_class &amp;&amp; rec.state_class || '')"/>
             <t t-raw="rec.state_name"/>
         </a>
-    </li>
-</t>
-<div t-name="Priority" class="o_priority">
-    <a t-if="!widget.readonly" t-foreach="widget.values.slice(1)" t-as="v" href="#" t-att-data-value="v[0]" t-att-title="v[1]" class="o_priority_star fa"/>
-    <span t-if="widget.readonly" t-foreach="widget.values.slice(1)" t-as="v" t-att-data-value="v[0]" t-att-title="v[1]" class="o_priority_star fa"/>
-</div>
-<t t-name="FieldEmail">
-    <span class="oe_form_field oe_form_field_email" t-att-style="widget.node.attrs.style">
-        <a t-if="widget.get('effective_readonly')" href="#" class="oe_form_uri" target="_blank"/>
-        <t t-if="!widget.get('effective_readonly')">
-            <div>
-                <input type="text"
-                    t-att-id="widget.id_for_label"
-                    t-att-tabindex="widget.node.attrs.tabindex"
-                    t-att-autofocus="widget.node.attrs.autofocus"
-                    t-att-placeholder="widget.node.attrs.placeholder"
-                t-att-maxlength="widget.field.size"
-                />
-            </div>
-        </t>
-    </span>
-</t>
-<t t-name="FieldUrl" t-extend="FieldEmail">
-    <t t-jquery="span:first">
-        this.removeClass('oe_form_field_email').addClass('oe_form_field_url');
     </t>
 </t>
-<t t-name="FieldText">
-    <div class="oe_form_field oe_form_field_text" t-att-style="widget.node.attrs.style">
-        <t t-if="!widget.get('effective_readonly')">
-            <textarea rows="6"
-                t-att-name="widget.name"
-                class="field_text"
-                t-att-tabindex="widget.node.attrs.tabindex"
-                t-att-autofocus="widget.node.attrs.autofocus"
-                t-att-placeholder="! widget.get('effective_readonly') ? widget.node.attrs.placeholder : ''"
-                t-att-maxlength="widget.field.size"
-            ></textarea><img class="oe_field_translate oe_input_icon"
-                            t-if="widget.field.translate and !widget.get('effective_readonly')"
-                            t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"
-            />
-        </t>
-        <t t-if="widget.get('effective_readonly')">
-            <span class="oe_form_text_content"></span>
-        </t>
+<t t-name="FieldDomain.content">
+    <div t-if="hasModel" class="o_field_domain_panel">
+        <i class="fa fa-arrow-right" role="img" aria-label="Domain" title="Domain"/>
+
+        <button t-if="isValid" class="btn btn-sm btn-secondary o_domain_show_selection_button" type="button">
+            <t t-esc="nbRecords"/> record(s)
+        </button>
+        <span t-else="" class="text-warning" role="alert"><i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> Invalid domain</span>
+
+        <button t-if="inDialogEdit" class="btn btn-sm btn-primary o_field_domain_dialog_button">Edit Domain</button>
+    </div>
+    <div t-else="">Select a model to add a filter.</div>
+</t>
+<t t-name="DomainNode.ControlPanel">
+    <div t-if="!widget.readonly &amp;&amp; !widget.noControlPanel" class="o_domain_node_control_panel" role="toolbar" aria-label="Domain node">
+        <button class="btn o_domain_delete_node_button" title="Delete node" aria-label="Delete node"><i class="fa fa-times"/></button>
+        <button class="btn o_domain_add_node_button" title="Add node" aria-label="Add node"><i class="fa fa-plus-circle"/></button>
+        <button class="btn o_domain_add_node_button" title="Add branch" aria-label="Add branch" data-branch="1"><i class="fa fa-ellipsis-h"/></button>
     </div>
 </t>
-<t t-name="FieldTextHtml">
-    <div t-att-class="'oe_form_field oe_form_field_html' + (widget.get('effective_readonly') ? ' oe_form_embedded_html' : '')"
-            t-att-style="widget.node.attrs.style">
-        <t t-if="! widget.get('effective_readonly')">
-            <textarea/>
+<t t-name="DomainTree.OperatorSelector">
+    <div t-if="!widget.readonly" class="btn-group o_domain_tree_operator_selector" aria-atomic="true">
+        <button class="btn btn-sm btn-primary o_domain_tree_operator_caret" data-toggle="dropdown">
+            <t t-if="widget.operator === '&amp;'">All</t>
+            <t t-if="widget.operator === '|'">Any</t>
+            <t t-if="widget.operator === '!'">None</t>
+        </button>
+        <div class="dropdown-menu" role="menu">
+            <a role="menuitem" href="#" class="dropdown-item" data-operator="&amp;">All</a>
+            <a role="menuitem" href="#" class="dropdown-item" data-operator="|">Any</a>
+        </div>
+    </div>
+    <strong t-else="">
+        <t t-if="widget.operator === '&amp;'">ALL</t>
+        <t t-if="widget.operator === '|'">ANY</t>
+        <t t-if="widget.operator === '!'">NONE</t>
+    </strong>
+</t>
+<div aria-atomic="true" t-name="DomainSelector" t-attf-class="o_domain_node o_domain_tree o_domain_selector #{widget.readonly ? 'o_read_mode' : 'o_edit_mode'}">
+    <t t-if="widget.children.length === 0">
+        <span>Match <strong>all records</strong></span>
+        <button t-if="!widget.readonly" class="btn btn-sm btn-primary o_domain_add_first_node_button"><i class="fa fa-plus"/> Add filter</button>
+    </t>
+    <t t-else="">
+        <div class="o_domain_tree_header">
+            <t t-if="widget.children.length === 1">Match records with the following rule:</t>
+            <t t-else="">
+                <span>Match records with</span>
+                <t t-call="DomainTree.OperatorSelector"/>
+                <span>of the following rules:</span>
+            </t>
+        </div>
+
+        <div class="o_domain_node_children_container"/>
+    </t>
+    <label t-if="widget.debug &amp;&amp; !widget.readonly" class="o_domain_debug_container">
+        <span class="small"># Code editor</span>
+        <input type="text" class="o_domain_debug_input"/>
+    </label>
+</div>
+<div t-name="DomainTree" class="o_domain_node o_domain_tree">
+    <div class="o_domain_tree_header o_domain_selector_row">
+        <t t-call="DomainNode.ControlPanel"/>
+        <t t-call="DomainTree.OperatorSelector"/>
+        <span class="ml4">of:</span>
+    </div>
+
+    <div class="o_domain_node_children_container"/>
+</div>
+<div t-name="DomainLeaf" t-attf-class="o_domain_node o_domain_leaf o_domain_selector_row #{widget.readonly ? 'o_read_mode' : 'o_edit_mode'}">
+    <t t-call="DomainNode.ControlPanel"/>
+
+    <div t-if="!widget.readonly" class="o_domain_leaf_edition">
+        <!-- field selector will be instantiated here -->
+        <div> <!-- used for flex stretching -->
+            <select class="o_domain_leaf_operator_select o_input">
+                <option t-foreach="widget.operators" t-as="key"
+                        t-att-value="key"
+                        t-att-selected="widget.displayOperator === key ? 'selected' : None">
+                    <t t-esc="key_value"/>
+                </option>
+            </select>
+        </div>
+        <div t-attf-class="o_ds_value_cell#{_.contains(['set', 'not set'], widget.displayOperator) ? ' d-none' : ''}">
+            <t t-if="widget.selectionChoices !== null">
+                <select class="o_domain_leaf_value_input o_input">
+                    <option t-foreach="widget.selectionChoices" t-as="val"
+                            t-att-value="val[0]"
+                            t-att-selected="_.contains(val, widget.displayValue) ? 'selected' : None">
+                        <t t-esc="val[1]"/>
+                    </option>
+                </select>
+            </t>
+            <t t-else="">
+                <t t-if="_.contains(['in', 'not in'], widget.operator)">
+                    <div class="o_domain_leaf_value_input">
+                        <span class="badge badge-pill" t-foreach="widget.displayValue" t-as="val">
+                            <t t-esc="val"/> <i class="o_domain_leaf_value_remove_tag_button fa fa-times" t-att-data-value="val" role="img" aria-label="Remove tag" title="Remove tag"/>
+                        </span>
+                    </div>
+                    <div class="o_domain_leaf_value_tags">
+                        <input placeholder="Add new value" type="text" class="o_input"/>
+                        <button class="btn btn-sm btn-primary fa fa-plus o_domain_leaf_value_add_tag_button" aria-label="Add tag" title="Add tag"/>
+                    </div>
+                </t>
+                <t t-else="">
+                    <input class="o_domain_leaf_value_input o_input" type="text" t-att-value="widget.displayValue"/>
+                </t>
+            </t>
+        </div>
+    </div>
+    <div t-else="" class="o_domain_leaf_info">
+        <!-- field selector will be instantiated here -->
+        <t t-if="_.isString(widget.value)">
+            <span class="o_domain_leaf_operator"><t t-esc="widget.operator_mapping[widget.operator]"/></span>
+            <span class="o_domain_leaf_value text-primary">"<t t-esc="widget.value"/>"</span>
+        </t>
+        <t t-if="_.isArray(widget.value)">
+            <span class="o_domain_leaf_operator"><t t-esc="widget.operator_mapping[widget.operator]"/></span>
+            <t t-foreach="widget.value" t-as="v">
+                <span class="o_domain_leaf_value text-primary">"<t t-esc="v"/>"</span>
+                <t t-if="!v_last"> or </t>
+            </t>
+        </t>
+        <t t-if="_.isNumber(widget.value)">
+            <span class="o_domain_leaf_operator"><t t-esc="widget.operator_mapping[widget.operator]"/></span>
+            <span class="o_domain_leaf_value text-primary"><t t-esc="widget.value"></t></span>
+        </t>
+        <t t-if="_.isBoolean(widget.value)">
+            is
+            <t t-if="widget.operator === '=' &amp;&amp; widget.value === false || widget.operator === '!=' &amp;&amp; widget.value === true">not</t>
+            set
         </t>
     </div>
-</t>
-<t t-name="FieldCharDomain">
-    <div class="oe_form_field">
-        <span class="o_count"/>
-        <button class="btn btn-link" type="button"
-            t-att-accesskey="widget.node.attrs.accesskey"/>
-        <input t-if="widget.debug" t-att-readonly="widget.get('effective_readonly')" type="text" class="o_form_input o_debug_input"/>
+</div>
+<div aria-atomic="true" t-name="ModelFieldSelector" t-attf-class="o_field_selector#{!widget.options.readonly ? ' o_edit_mode o_input' : ''}">
+    <div class="o_field_selector_value" tabindex="0"/>
+    <div class="o_field_selector_controls" tabindex="0">
+        <i role="alert" class="fa fa-exclamation-triangle o_field_selector_warning d-none" title="Invalid field chain" aria-label="Invalid field chain"/>
     </div>
+    <div t-if="!widget.options.readonly" class="o_field_selector_popover d-none" tabindex="0">
+        <div class="o_field_selector_popover_header text-center">
+            <i class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page" title="Previous" role="img" aria-label="Previous"/>
+            <div class="o_field_selector_title"/>
+            <i class="fa fa-times o_field_selector_popover_option o_field_selector_close" title="Close" role="img" aria-label="Close"/>
+        </div>
+        <div class="o_field_selector_popover_body">
+            <ul class="o_field_selector_page"/>
+        </div>
+        <div t-if="widget.options.debugMode" class="o_field_selector_popover_footer">
+            <input type="text" class="o_input"/>
+        </div>
+    </div>
+</div>
+<t t-name="ModelFieldSelector.value">
+    <t t-foreach="chain" t-as="fieldName">
+        <t t-if="fieldName_index > 0">
+            <i class="fa fa-chevron-right" role="img" aria-label="Followed by" title="Followed by"/>
+        </t>
+        <span class="o_field_selector_chain_part">
+            <t t-set="fieldInfo" t-value="_.findWhere(pages[fieldName_index], {'name': fieldName})"/>
+            <t t-esc="fieldInfo &amp;&amp; fieldInfo.string || '?'"/>
+        </span>
+    </t>
 </t>
+<ul t-name="ModelFieldSelector.page" class="o_field_selector_page">
+    <t t-foreach="lines" t-as="line">
+        <t t-set="relationToFollow" t-value="followRelations(line) &amp;&amp; line.relation"/>
+        <li t-attf-class="o_field_selector_item #{relationToFollow and 'o_field_selector_next_page' or 'o_field_selector_select_button'}#{line_index == 0 and ' active' or ''}"
+            t-att-data-name="line.name">
+            <t t-esc="line.string"/>
+            <div t-if="debug" class="text-muted o_field_selector_item_title"><t t-esc="line.name"/> (<t t-esc="line.type"/>)</div>
+            <i t-if="relationToFollow" class="fa fa-chevron-right o_field_selector_relation_icon" role="img" aria-label="Relation to follow" title="Relation to follow"/>
+        </li>
+    </t>
+</ul>
 <t t-name="web.datepicker">
     <t t-set="placeholder" t-value="widget.getParent().node and widget.getParent().node.attrs.placeholder"/>
-    <div class="o_datepicker">
+    <t t-set="datepickerID" t-value="_.uniqueId('datepicker')"/>
+    <div class="o_datepicker" aria-atomic="true" t-att-id="datepickerID" data-target-input="nearest">
         <input type="text"
-            class="o_datepicker_input"
+            class="o_datepicker_input o_input datetimepicker-input"
             t-att-name="widget.name"
-            t-att-placeholder="placeholder"/>
-        <span class="fa fa-calendar o_datepicker_button"/>
+            t-att-placeholder="placeholder"
+            t-attf-data-target="##{datepickerID}"/>
+        <span class="o_datepicker_button"/>
     </div>
 </t>
-<t t-name="FieldDate">
-    <span class="oe_form_field oe_datepicker_root oe_form_field_date" t-att-style="widget.node.attrs.style"/>
-</t>
-<t t-name="FieldDatetime">
-    <span class="oe_form_field oe_datepicker_root oe_form_field_datetime" t-att-style="widget.node.attrs.style"/>
-</t>
 <t t-name="FieldSelection">
-    <span class="oe_form_field oe_form_field_selection" t-att-style="widget.node.attrs.style">
-    </span>
-</t>
-<t t-name="FieldSelectionSelect">
-    <select t-if="!widget.get('effective_readonly')"
+    <span t-if="widget.mode === 'readonly'"/>
+
+    <select t-if="widget.mode !== 'readonly'"
+        class="o_input"
         t-att-name="widget.name"
-        t-att-tabindex="widget.node.attrs.tabindex"
-        t-att-autofocus="widget.node.attrs.autofocus"
-        t-att-id="widget.id_for_label">
-            <t t-foreach="values" t-as="option">
-                <option t-att-value="JSON.stringify(option[0])">
-                    <t t-esc="option[1]"/>
-                </option>
-            </t>
-    </select>
+        t-att-tabindex="widget.attrs.tabindex"
+        t-att-autofocus="widget.attrs.autofocus"
+        t-att-id="widget.idForLabel"/>
 </t>
-<t t-name="FieldRadio">
-    <span t-attf-class="oe_form_field oe_form_field_radio #{widget.options.horizontal ? 'oe_horizontal' : 'oe_vertical'}" t-att-style="widget.node.attrs.style">
-        <span t-if="!widget.get('effective_readonly')">
-            <t t-foreach="widget.selection" t-as="selection">
-                <div>
-                    <span class="oe_radio_input"><input type="radio" t-att-id="widget.uniqueId + '_' + selection[0]" t-att-name="widget.uniqueId" t-att-value="selection[0]"/></span><label t-if="!widget.options.no_radiolabel" t-att-for="widget.uniqueId + '_' + selection[0]"><t t-esc="selection[1]"/></label>
-                </div>
-            </t>
-        </span>
-        <span t-if="widget.get('effective_readonly')" class="oe_radio_readonly"/>
+<t t-name="FieldRadio.button">
+    <div class="custom-control custom-radio o_radio_item" aria-atomic="true">
+        <input type="radio" class="custom-control-input o_radio_input" t-att-checked="checked ? true : undefined"
+            t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
+        <label class="custom-control-label o_form_label" t-att-for="id"><t t-esc="value[1]"/></label>
+    </div>
+</t>
+
+<t t-name="FieldSelectionBadge">
+    <span t-foreach="values" t-as="value" t-attf-class="o_selection_badge #{value[0] == current_value ? 'active' : ''}" t-att-data-index="value_index">
+        <t t-esc="value[1]"/>
     </span>
 </t>
+
 <t t-name="FieldMany2One">
-    <span class="oe_form_field oe_form_field_many2one oe_form_field_with_button" t-att-style="widget.node.attrs.style">
-        <t t-if="widget.get('effective_readonly')">
-            <a t-if="! widget.options.no_open" href="#" class="oe_form_uri"/>
-            <span t-if="widget.options.no_open" href="#" class="oe_form_uri"/>
-            <span class="oe_form_m2o_follow"/>
-        </t>
-        <t t-if="!widget.get('effective_readonly')">
-            <i t-if="! widget.options.no_open" href="#" tabindex="-1"
-                class="oe_m2o_cm_button fa fa-external-link" draggable="false"/>
-            <div>
-                <input type="text"
-                    t-att-barcode_events="widget.options.barcode_events"
-                    t-att-id="widget.id_for_label"
-                    t-att-tabindex="widget.node.attrs.tabindex"
-                    t-att-autofocus="widget.node.attrs.autofocus"
-                    t-att-placeholder="widget.node.attrs.placeholder"
-                />
-                <span class="oe_m2o_drop_down_button">
-                    <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' draggable="false"/>
-                </span>
-            </div>
-        </t>
-    </span>
+    <t t-if="widget.mode === 'readonly'">
+        <a t-if="!widget.nodeOptions.no_open" t-att-tabindex="widget.attrs.tabindex" class="o_form_uri" href="#"/>
+        <span t-if="widget.nodeOptions.no_open"/>
+    </t>
+    <div t-if="widget.mode === 'edit'" class="o_field_widget o_field_many2one" aria-atomic="true">
+        <div class="o_input_dropdown">
+            <input type="text" class="o_input"
+                t-att-barcode_events="widget.nodeOptions.barcode_events"
+                t-att-tabindex="widget.attrs.tabindex"
+                t-att-autofocus="widget.attrs.autofocus"
+                t-att-placeholder="widget.attrs.placeholder"
+                t-att-id="widget.idForLabel"/>
+            <a role="button" class="o_dropdown_button" draggable="false"/>
+        </div>
+        <button type="button" t-if="!widget.noOpen" class="fa fa-external-link btn btn-secondary o_external_button" tabindex="-1" draggable="false" aria-label="External link" title="External link"/>
+    </div>
 </t>
-<t t-name="Many2OneButton.cell"
-    ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png" t-att-alt="widget.string" width="16" height="16"/>
+<t t-name="FieldReference" t-extend="FieldMany2One">
+    <t t-jquery=".o_input_dropdown" t-operation="before">
+        <select t-att-class="'o_input o_field_widget' + (widget.nodeOptions.hide_model and ' d-none' or '')">
+            <option/>
+            <option t-foreach="widget.field.selection" t-as="model" t-att-value="model[0]"><t t-esc="model[1]"/></option>
+        </select>
+    </t>
 </t>
 <t t-name="FieldMany2ManyTag">
     <t t-foreach="elements" t-as="el">
-        <span t-attf-class="badge dropdown #{'o_tag_color_' + (el['color'] || 0)}" t-att-data-color="(el['color'] || 0)" t-att-data-index="el_index" t-att-data-id="el['id']">
-            <t t-esc="el['display_name']"/>
-            <span t-if="!readonly" class="fa fa-times o_delete"/>
-        </span>
+        <t t-set="color" t-value="el[colorField] || 0"/>
+        <t t-set="colornames" t-value="['No color', 'Red', 'Orange', 'Yellow', 'Light blue', 'Dark purple', 'Salmon pink', 'Medium blue', 'Dark blue', 'Fushia', 'Green', 'Purple']"/>
+        <div t-attf-class="badge badge-pill #{hasDropdown ? 'dropdown' : ''} o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
+            <t t-set="_badge_text">
+                <span class="o_badge_text" t-att-title="el.display_name"><span role="img" t-attf-aria-label="Tag color: #{colornames[color]}"/><t t-esc="el.display_name"/></span>
+            </t>
+            <t t-if="hasDropdown">
+                <a role="button" href="#" class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false">
+                    <t t-raw="_badge_text"/>
+                </a>
+            </t>
+            <t t-else="">
+                <t t-raw="_badge_text"/>
+            </t>
+            <a t-if="!readonly" href="#" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
+        </div>
     </t>
 </t>
 <t t-name="FieldMany2ManyTag.colorpicker">
-    <ul class="o_colorpicker dropdown-menu" role="menu">
-        <li t-foreach="10" t-as="color">
-            <span href="#" t-att-data-id="tag_id" t-att-data-color="color_index + 1" t-attf-class="o_tag_color_#{color + 1}"/>
-        </li>
-        <li>
-            <span t-att-data-id="tag_id" t-att-data-color="0" class="o_tag_color_0"/>
-        </li>
-        <li>
-            Not shown in kanban
-        </li>
-    </ul>
+    <div class="o_colorpicker dropdown-menu tagcolor_dropdown_menu" role="menu">
+        <ul>
+            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_1" data-color="1" title="Red" aria-label="Red"/></li>
+            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_2" data-color="2" title="Orange" aria-label="Orange"/></li>
+            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_3" data-color="3" title="Yellow" aria-label="Yellow"/></li>
+            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_4" data-color="4" title="Light blue" aria-label="Light blue"/></li>
+            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_5" data-color="5" title="Dark purple" aria-label="Dark purple"/></li>
+            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_6" data-color="6" title="Salmon pink" aria-label="Salmon pink"/></li>
+            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_7" data-color="7" title="Medium blue" aria-label="Medium blue"/></li>
+            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_8" data-color="8" title="Dark blue" aria-label="Dark blue"/></li>
+            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_9" data-color="9" title="Fushia" aria-label="Fushia"/></li>
+            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_10" data-color="10" title="Green" aria-label="Green"/></li>
+            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_11" data-color="11" title="Purple" aria-label="Purple"/></li>
+            <li> <!-- checkbox for tag color 0 -->
+                <div role="menuitem" class="o_hide_in_kanban"
+                     t-att-data-id="tag_id"
+                     t-att-data-color="0">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="o_hide_in_kanban_checkbox" class="custom-control-input"/>
+                        <label for="o_hide_in_kanban_checkbox" class="custom-control-label">Hide in Kanban</label>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
 </t>
-<t t-name="FieldReference">
-    <table class="oe_form_field oe_form_field_reference" border="0" cellpadding="0" cellspacing="0" t-att-style="widget.node.attrs.style">
-    <tr>
-        <td t-attf-class="oe_form_frame_cell oe_form_selection">
-            <span t-attf-class="oe_form_view_reference_selection"/>
-        </td>
-        <td t-attf-class="oe_form_frame_cell oe_form_many2one" nowrap="true">
-            <span t-attf-class="oe_form_view_reference_m2o"/>
-        </td>
-    </tr>
-    </table>
-</t>
-<t t-name="FieldBoolean">
-    <span class="oe_form_field oe_form_field_boolean" t-att-style="widget.node.attrs.style">
-        <input type="checkbox"
-            t-att-id="widget.id_for_label"
-            t-att-name="widget.name"
-            t-att-tabindex="widget.node.attrs.tabindex"
-            t-att-autofocus="widget.node.attrs.autofocus"
-            class="field_boolean"/>
-    </span>
-</t>
-<div t-name="FieldUpgradeBoolean" class="oe_form_field oe_form_field_boolean">
-  <t t-call="FieldBoolean"/>
-</div>
 <t t-name="ProgressBar">
-    <div class="o_progressbar">
+    <div class="o_progressbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
         <div t-if="widget.title" class="o_progressbar_title"><t t-esc="widget.title"/></div><div class="o_progress">
             <div class="o_progressbar_complete"/>
-        </div><div t-if="widget.readonly" class="o_progressbar_value"/><input t-if="!widget.readonly" class="o_progressbar_value"/>
+        </div><div class="o_progressbar_value"/>
     </div>
 </t>
 <t t-name="FieldPercentPie">
-    <div class="oe_form_field oe_form_field_percent_pie" t-att-style="widget.node.attrs.style">
-        <svg></svg>
+    <div class="o_field_percent_pie">
+        <div class="o_pie">
+            <div class="o_mask"/>
+            <div class="o_mask"/>
+            <div class="o_pie_value"/>
+        </div>
         <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </div>
-</t>
-<t t-name="FieldBarChart">
-    <div class="oe_form_field oe_form_field_bar_chart" t-att-style="widget.node.attrs.style">
-        <svg></svg>
-        <span t-if="widget.string"><t t-esc="widget.string"/></span>
-    </div>
-</t>
-<t t-name="FieldStatus">
-    <ul t-att-class="'oe_form_field_status ' + (widget.options.clickable ? 'oe_form_status_clickable' : 'oe_form_status')" t-att-style="widget.node.attrs.style"/>
 </t>
 <t t-name="FieldStatus.content">
-    <t t-foreach="widget.selection.unfolded" t-as="i">
-        <li t-att-class="i[0] === widget.get('value') ? 'oe_active' : ''" t-att-data-id="i[0]">
-            <span class="label"><t t-esc="i[1]"/></span>
-            <!-- are you mit ? -->
-            <span class="arrow"><span></span></span>
-        </li>
-    </t>
-    <t t-if="widget.selection.folded.length">
-        <li>
-            <span class="label oe_dropdown_toggle oe_dropdown_arrow">More</span>
-            <ul class="oe_dropdown_menu">
-                <t t-foreach="widget.selection.folded" t-as="i">
-                    <li t-att-class="i[0] === widget.get('value') ? 'oe_active' : ''" t-att-data-id="i[0]">
-                        <span class="label"><t t-esc="i[1]"/></span>
-                    </li>
+    <t t-if="selection_folded.length">
+        <button type="button" class="btn o_arrow_button btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">More</button>
+        <div class="dropdown-menu" role="menu">
+            <t t-foreach="selection_folded" t-as="i">
+                <t t-call="FieldStatus.content.button">
+                    <t t-set="is_dropdown" t-value="true"/>
                 </t>
-            </ul>
-        </li>
+            </t>
+        </div>
+    </t>
+    <t t-foreach="selection_unfolded.reverse()" t-as="i">
+        <t t-call="FieldStatus.content.button"/>
     </t>
 </t>
+<t t-name="FieldStatus.content.button">
+    <t t-set="disabled" t-value="!clickable"/>
+    <button type="button" t-att-data-value="i.id" disabled="disabled" title="Current state" aria-pressed="true"
+        t-attf-class="btn o_arrow_button btn-primary disabled #{is_dropdown ? 'dropdown-item bg-primary text-white': ''}" t-if="i.selected" aria-current="step">
+        <t t-esc="i.display_name" role="img" t-attf-aria-label="#{i.display_name} is current state"/>
+    </button>
+    <button type="button" t-att-data-value="i.id" disabled="disabled" title="Not active state" aria-pressed="false"
+        t-attf-class="btn o_arrow_button btn-secondary disabled #{is_dropdown ? 'dropdown-item': ''}" t-if="!i.selected and disabled">
+        <t t-esc="i.display_name" role="img" t-attf-aria-label="#{i.display_name} is not current state"/>
+    </button>
+    <button type="button" t-att-data-value="i.id" title="Not active state, click to change it" aria-pressed="false"
+        t-attf-class="btn o_arrow_button btn-secondary #{is_dropdown ? 'dropdown-item': ''}" t-if="!i.selected and !disabled">
+        <t t-esc="i.display_name" role="img" t-attf-aria-label="Click to change current state to #{i.display_name}"/>
+    </button>
+</t>
 <t t-name="FieldBinaryImage">
-    <span class="oe_form_field oe_form_field_image" t-att-style="widget.node.attrs.style">
-        <t t-if="!widget.get('effective_readonly')">
-            <div class="oe_form_field_image_controls oe_edit_only">
-              <i class="fa fa-pencil fa-1g pull-left col-md-offset-1 oe_form_binary_file_edit" title="Edit"/>
-              <i class="fa fa-trash-o fa-1g col-md-offset-5 oe_form_binary_file_clear" title="Clear"/>
-                <div class="oe_form_binary_progress" style="display: none">
-                    <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
-                    <b>Uploading ...</b>
-                </div>
+    <div class="o_field_image" aria-atomic="true">
+        <t t-if="widget.mode !== 'readonly'">
+            <div class="o_form_image_controls">
+                <button class="fa fa-pencil fa-lg float-left o_select_file_button" title="Edit" aria-label="Edit"/>
+                <button class="fa fa-trash-o fa-lg float-right o_clear_file_button" title="Clear" aria-label="Clear"/>
+
+                <span class="o_form_binary_progress">Uploading...</span>
                 <t t-call="HiddenInputFile">
+                    <t t-set="image_only" t-value="true"/>
                     <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
                 </t>
             </div>
         </t>
-    </span>
+    </div>
 </t>
 <t t-name="FieldBinaryImage-img">
-    <img t-att-src='url'
+    <img class="img img-fluid"
+        alt="Binary file"
+        t-att-src='url'
         t-att-border="widget.readonly ? 0 : 1"
-        t-att-name="widget.name"
-        t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"
-        t-att-height="widget.node.attrs.img_height || widget.node.attrs.height"
-    />
+        t-att-name="widget.name"/>
+</t>
+<t t-name="CopyClipboardText">
+    <button class="btn btn-sm btn-primary o_clipboard_button o_btn_text_copy">
+        <span class="fa fa-clipboard"></span><span> Copy Text</span>
+    </button>
+</t>
+<t t-name="CopyClipboardChar">
+    <button class="btn btn-sm btn-primary o_clipboard_button o_btn_char_copy">
+        <span class="fa fa-clipboard"></span><span> Copy Text</span>
+    </button>
 </t>
 <t t-name="FieldBinaryFile">
-    <t t-if="!widget.get('effective_readonly')">
-        <table class="oe_form_field oe_form_field_binary" cellpadding="0" cellspacing="0" border="0" t-att-style="widget.node.attrs.style">
-        <tr>
-            <td>
-                <input type="text" size="1" readonly="readonly"
-                    t-att-name="widget.name"
-                    t-att-tabindex="widget.node.attrs.tabindex"
-                    t-att-autofocus="widget.node.attrs.autofocus"
-                    class="field_binary"
-                />
-            </td>
-            <td class="oe_form_binary" nowrap="true">
-                <table cellspacing="0" cellpadding="0" border="0">
-                <tr>
-                    <td>
-                        <t t-call="HiddenInputFile">
-                            <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                            <t t-set="fileupload_style" t-translation="off">overflow-x: hidden</t>
-                            <button class="oe_button oe_field_button" type="button">
-                                <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
-                                <span>Select</span>
-                            </button>
-                        </t>
-                    </td>
-                    <td>
-                        <a class="oe_form_binary_file_save_data">
-                            <button class="oe_button oe_form_binary_file_save" type="button" title="Save As">
-                                <img t-att-src='_s + "/web/static/src/img/icons/gtk-save.png"'/>
-                                <span>Save As</span>
-                            </button>
-                        </a>
-                    </td>
-                    <td>
-                        <button class="oe_button oe_form_binary_file_clear" type="button" title="Clear">
-                            <img t-att-src='_s + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
-                            <span>Clear</span>
-                        </button>
-                    </td>
-                </tr>
-                </table>
-            </td>
-            <td class="oe_form_binary_progress" style="display: none" nowrap="true">
-                <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
-                <b>Uploading ...</b>
-            </td>
-        </tr>
-        </table>
-    </t>
-    <t t-if="widget.get('effective_readonly')">
-        <span t-att-style="widget.node.attrs.style">
-            <a href="javascript:void(0)" class="oe_form_uri"/>
-        </span>
-    </t>
+    <a t-if="widget.mode === 'readonly'" href="javascript:void(0)" class="o_form_uri"/>
+
+    <div t-if="widget.mode !== 'readonly'" class="o_field_binary_file" aria-atomic="true">
+        <input type="text" class="o_input"
+            readonly="readonly"
+            t-att-name="widget.name"
+            t-att-tabindex="widget.attrs.tabindex"
+            t-att-autofocus="widget.attrs.autofocus"/>
+
+        <button type="button" class="btn btn-primary o_select_file_button" title="Select">Upload your file</button>
+        <button type="button" class="btn btn-secondary fa fa-pencil o_select_file_button" title="Select" aria-label="Select"/>
+        <button type="button" class="btn btn-secondary fa fa-trash-o o_clear_file_button" title="Clear" aria-label="Clear"/>
+
+        <span class="o_form_binary_progress">Uploading...</span>
+        <t t-call="HiddenInputFile">
+            <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+            <t t-set="fileupload_style" t-translation="off">overflow-x: hidden</t>
+        </t>
+    </div>
 </t>
+
 <t t-name="HiddenInputFile">
-    <div t-attf-class="oe_hidden_input_file #{fileupload_class or ''}" t-att-style="fileupload_style">
+    <div t-attf-class="o_hidden_input_file #{fileupload_class or ''}" t-att-style="fileupload_style" aria-atomic="true">
         <form class="o_form_binary_form" t-att-target="fileupload_id"
               method="post" enctype="multipart/form-data" t-att-action="fileupload_action || '/web/binary/upload'">
             <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
-            <input type="hidden" name="session_id" value="" t-if="widget.session.override_session"/>
+            <input type="hidden" name="session_id" value="" t-if="widget.getSession().override_session"/>
             <input type="hidden" name="callback" t-att-value="fileupload_id"/>
+            <input t-if="widget.image_only" type="file" class="o_input_file" name="ufile" accept="image/*"/>
+            <input t-if="!widget.image_only" type="file" class="o_input_file" name="ufile" t-att="{'multiple': multi_upload ? 'multiple' : null}"/>
             <t t-raw="0"/>
-            <input type="file" class="o_form_input_file" name="ufile" t-if="widget.widget!='image'"/>
-            <input type="file" class="o_form_input_file" name="ufile" accept="image/*" t-if="widget.widget=='image'"/>
         </form>
         <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
     </div>
 </t>
-<t t-name="FieldBinaryFileUploader.files">
-    <div class="oe_attachments">
-        <t t-if="!widget.get('effective_readonly')">
-            <t t-foreach="values" t-as="id">
-                <t t-set="file" t-value="widget.data[id]"/>
-                <div class="oe_attachment">
-                    <span t-if="(file.upload or file.percent_loaded&lt;100)" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-attf-name="#{file.name || file.filename}">
-                        <span class="oe_fileuploader_in_process">...Upload in progress...</span>
-                        <t t-raw="file.name || file.filename"/>
-                    </span>
-                    <t t-if="(!file.upload or file.percent_loaded&gt;=100)">
-                        <a class="o_image" target="_blank" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-att-data-mimetype="file.mimetype" t-attf-data-src="/web/image/#{file.id}/100x80">
-                            <t t-raw="file.name || file.filename"/>
-                        </a>
-                        <span class="fa fa-stack oe_delete" title="Delete this file" t-attf-data-id="#{file.id}">
-                            <i class="fa fa-circle fa-stack-1x fa-inverse"></i>
-                            <i class="fa fa-times-circle fa-stack-1x"></i>
-                        </span>
-                    </t>
-                </div>
-            </t>
-        </t>
-        <t t-if="widget.get('effective_readonly')">
-            <t t-foreach="widget.get('value')" t-as="id">
-                <t t-set="file" t-value="widget.data[id]"/>
-                <div>
-                    <a target="_blank" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
-                        <t t-raw="file.name || file.filename"/>
-                    </a>
-                </div>
-            </t>
+
+<t t-name="FieldPdfViewer">
+    <div class="o_field_pdfviewer" aria-atomic="true">
+        <div t-if="widget.mode !== 'readonly'" class="o_form_pdf_controls mt8" role="toolbar" aria-label="PDF controls">
+            <span class="o_form_binary_progress">Uploading...</span>
+            <button type="button" class="btn btn-primary o_select_file_button" title="Select">Upload your file</button>
+            <button class="btn btn-secondary fa fa-pencil o_select_file_button" title="Select" aria-label="Select" type="button"></button>
+            <button class="btn btn-secondary fa fa-trash-o o_clear_file_button" title="Clear" aria-label="Clear" type="button"></button>
+        </div>
+        <iframe class="o_pdfview_iframe o_field_pdfviewer"/>
+        <t t-call="HiddenInputPDFFile">
+            <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+            <t t-set="fileupload_style" t-translation="off">overflow-x: hidden</t>
         </t>
     </div>
 </t>
-<t t-name="FieldBinaryFileUploader">
-    <div t-att-style="widget.node.attrs.style" t-attf-class="oe_fileupload #{widget.node.attrs.class ? widget.node.attrs.class :''}">
-        <div class="oe_placeholder_files"/>
-        <div class="oe_add" t-if="!widget.get('effective_readonly')">
-            <!-- uploader of file -->
-            <button class="oe_attach"><i class="fa fa-paperclip"/></button>
-            <span class='oe_attach_label'><t t-esc="widget.string"/></span>
-            <t t-call="HiddenInputFile">
-                <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
-                <input type="hidden" name="model" t-att-value="widget.view.model"/>
-                <input type="hidden" name="id" value="0"/>
-                <input type="hidden" name="session_id" t-att-value="widget.session.session_id" t-if="widget.session.override_session"/>
+
+<t t-name="HiddenInputPDFFile" t-extend="HiddenInputFile">
+    <!-- remove the inputs and put a new one for pdf only -->
+    <t t-jquery="input[type='file']" t-operation="replace"/>
+    <t t-jquery="form" t-operation="append">
+        <input type="file" class="o_input_file" name="ufile" accept="application/pdf"/>
+    </t>
+</t>
+
+<div t-name="FieldBinaryFileUploader" t-attf-class="oe_fileupload #{widget.attrs.class ? widget.attrs.class :''}" aria-atomic="true">
+    <div class="oe_placeholder_files"/>
+    <div t-if="widget.mode !== 'readonly'" class="oe_add">
+        <button class="btn btn-secondary o_attach" title="Attach"><span class="fa fa-paperclip" aria-label="Attach"/> <t t-esc="widget.string"/></button>
+        <t t-call="HiddenInputFile">
+            <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+            <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+            <t t-set="multi_upload" t-value="true"/>
+            <input type="hidden" name="model" t-att-value="widget.model"/>
+            <input type="hidden" name="id" value="0"/>
+            <input t-if="widget.getSession().override_session" type="hidden" name="session_id" t-att-value="widget.getSession().session_id"/>
+        </t>
+    </div>
+</div>
+<div t-name="FieldBinaryFileUploader.files" class="oe_attachments" aria-atomic="true">
+    <t t-if="widget.mode === 'readonly'">
+        <div t-foreach="widget.value.data" t-as="file">
+            <a target="_blank" t-att-href="widget.metadata[file.id].url" t-attf-title="#{(file.data.name || file.data.filename) + (file.data.date?' \n('+file.data.date+')':'' )}"><t t-raw="file.data.name || file.data.filename"/></a>
+        </div>
+    </t>
+    <t t-else="1">
+        <div t-foreach="widget.value.data" t-as="file" class="oe_attachment">
+            <t t-if="!file.data.upload">
+                <div>
+                    <a href="#" class="fa fa-times float-right oe_delete" title="Delete this file" aria-label="Delete this file" t-att-data-id="file.data.id"/>
+                    <t t-raw="file.data.name || file.data.filename"/>
+                </div>
+                <a class="o_image" target="_blank" t-att-href="widget.metadata[file.id] ? widget.metadata[file.id].url : false"
+                   t-att-title="file.data.name"
+                   t-att-aria-label="file.data.name"
+                   t-att-data-mimetype="file.data.mimetype"
+                   t-attf-data-src="/web/image/#{file.data.id}/100x80"/>
             </t>
+        </div>
+        <div t-foreach="widget.uploadingFiles" t-as="file" class="oe_attachment">
+            <div>Uploading...</div>
+            <a t-att-title="file.name" t-att-aria-label="file.name" t-att-name="file.name" class="o_image">
+                <i class="fa fa-spinner fa-spin fa-5x fa-fw" role="img" aria-label="Loading, please wait..." title="Loading, please wait..."></i>
+            </a>
+            <div><t t-esc="file.name"/></div>
+        </div>
+    </t>
+</div>
+
+<t t-name="DropdownMenu.MenuItems">
+    <t t-if="widget.items.length !== 0">
+        <t t-set="group" t-value="0"/>
+        <t t-foreach="widget.items" t-as="item">
+            <div t-if="group !== item.groupId" role="separator" class="dropdown-divider" data-removable="1"/>
+            <div class="o_menu_item"
+                t-att-data-id="item.itemId">
+                <a role="menuitem" href="#" t-attf-class="dropdown-item#{item.isActive ? ' selected ' : ''}">
+                    <t t-esc="item.description"/>
+                    <span t-if="item.isRemovable" t-att-data-id="item.itemId" class="o_trash_button" > <span class="fa fa-trash-o"></span> </span>
+                    <span t-if="item.hasOptions" t-att-data-id="item.itemId" class="o_submenu_switcher">
+                        <span t-att-class="item.isOpen ? 'fa fa-caret-down' : 'fa fa-caret-right'"></span>
+                    </span>
+                </a>
+                <ul t-if="item.hasOptions &amp;&amp; item.isOpen" class="list-unstyled">
+                    <t t-set="subgroup" t-value="0"/>
+                    <t t-foreach="_.values(item.options)" t-as="option">
+                        <li t-if="subgroup !== option.groupId" role="separator" class="dropdown-divider" data-removable="1"/>
+                        <li class="o_item_option"
+                            t-att-data-item_id="item.itemId" t-att-data-option_id="option.optionId">
+                            <a role="menuitem" href="#" t-attf-class="dropdown-item#{item.currentOptionId === option.optionId ? ' selected': ''} pl-5"><t t-esc="option.description"/></a>
+                        </li>
+                        <t t-set="subgroup" t-value="option.groupId"/>
+                    </t>
+                </ul>
+            </div>
+            <t t-set="group" t-value="item.groupId"/>
+        </t>
+    </t>
+</t>
+
+<div t-name="web.DropdownMenu" t-att-class="widget.dropdownStyle.el.class" t-att="widget.dropdownStyle.el.attrs">
+    <button t-att-class="widget.dropdownStyle.mainButton.class" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
+        <span t-att-class="widget.dropdownIcon"/> <t t-esc="widget.dropdownTitle"/> <span t-if="widget.dropdownSymbol" t-att-class="widget.dropdownSymbol"/>
+    </button>
+    <div class="dropdown-menu o_dropdown_menu" role="menu">
+        <t t-call="DropdownMenu.MenuItems"/>
+    </div>
+</div>
+
+<t t-name="GroupbyMenuGenerator">
+    <div t-if="Object.keys(widget.presentedFields).length !== 0 &amp;&amp; widget.items.length !== 0" role="separator" class="dropdown-divider o_generator_menu"/>
+    <button t-if="Object.keys(widget.presentedFields).length !== 0" type="button" class="dropdown-item o_generator_menu o_add_custom_group" aria-expanded="false">Add Custom Group</button>
+    <div t-if="widget.generatorMenuIsOpen" class="dropdown-item-text o_generator_menu">
+        <select class="w-auto o_input o_group_selector o_add_group">
+            <t t-foreach="widget.presentedFields" t-as="field">
+                <option t-att-value="field.name"><t t-esc="field.string"/></option>
+            </t>
+        </select>
+    </div>
+    <div t-if="widget.generatorMenuIsOpen" class="dropdown-item-text o_generator_menu">
+        <button type="button" class="btn btn-primary o_apply_group o_add_group" tabindex="-1">Apply</button>
+    </div>
+</t>
+
+<t t-name="FiltersMenuGenerator">
+    <div role="separator" class="dropdown-divider"/>
+    <button t-if="Object.keys(widget.fields).length !== 0" type="button" class="dropdown-item o_add_custom_filter o_closed_menu" aria-expanded="false">Add Custom Filter</button>
+    <div class="dropdown-item-text o_add_filter_menu">
+        <button class="btn btn-primary o_apply_filter" type="button">Apply</button>
+        <button class="btn btn-secondary o_add_condition" type="button">
+            <span class="fa fa-plus-circle"/>
+            Add a condition
+        </button>
+    </div>
+</t>
+
+<div t-name="web.TimeRangeMenu" class="btn-group o_dropdown">
+    <button t-att-class="'o_dropdown_toggler_btn btn btn-secondary dropdown-toggle o_time_range_menu_button' + (widget.isMobile ? ' o-no-caret' : '')" data-toggle="dropdown"
+        aria-expanded="false" tabindex="-1">
+        <span class="fa fa-calendar"/> Time Ranges <span t-att-class="widget.symbol"/>
+    </button>
+    <div class="dropdown-menu o_dropdown_menu o_time_range_menu" role="menu">
+        <div class="dropdown-item-text">
+            <label for="date_field_selector">Based On</label>
+            <select id="date_field_selector" class="o_input o_date_field_selector">
+                <t t-foreach="widget.dateFields" t-as="field">
+                    <t t-if="widget.dateField.name === field.name">
+                    <option t-att-value="field.name" selected="selected">
+                        <t t-esc="field.string"/>
+                    </option>
+                    </t>
+                    <t t-else="">
+                        <option t-att-value="field.name">
+                            <t t-esc="field.string"/>
+                        </option>
+                    </t>
+                </t>
+            </select>
+        </div>
+        <div class="dropdown-item-text">
+            <label for="time_range_selector">Range</label>
+            <select id="time_range_selector" class="o_input o_time_range_selector">
+                <t t-foreach="widget.periodGroups" t-as="group">
+                    <optgroup t-if="group !== 1"/>
+                        <t t-foreach="widget.periodOptions" t-as="option">
+                            <t t-if="option.groupId === group">
+                                <t t-if="widget.timeRangeId === option.optionId">
+                                    <option t-att-value="option.optionId" selected="selected">
+                                        <t t-esc="option.description"/>
+                                    </option>
+                                </t>
+                                <t t-else="">
+                                    <option t-att-value="option.optionId">
+                                        <t t-esc="option.description"/>
+                                    </option>
+                                </t>
+                            </t>
+                        </t>
+                </t>
+            </select>
+        </div>
+        <div class="dropdown-item-text">
+            <t t-set="isSelected" t-value="widget.comparisonIsSelected"/>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" id="comparison_checkbox" class="custom-control-input o_comparison_checkbox" t-att-checked="isSelected ? 'checked' : undefined"/>
+                <label for="comparison_checkbox" class="custom-control-label">Compare To</label>
+            </div>
+            <select t-att-class="'o_input o_comparison_time_range_selector' + (widget.comparisonIsSelected ? '' : ' o_hidden')">
+                <t t-foreach="widget.comparisonOptions" t-as="option">
+                    <t t-if="widget.comparisonTimeRangeId === option.optionId">
+                        <option t-att-value="option.optionId" selected="selected">
+                            <t t-esc="option.description"/>
+                        </option>
+                    </t>
+                    <t t-else="">
+                        <option t-att-value="option.optionId">
+                            <t t-esc="option.description"/>
+                        </option>
+                    </t>
+                </t>
+            </select>
+        </div>
+        <div class="dropdown-item-text">
+            <button class="btn btn-primary o_apply_range" type="button">Apply</button>
+        </div>
+    </div>
+</div>
+
+
+<div t-name="SearchView" class="o_searchview" role="search" aria-autocomplete="list">
+    <span class="o_searchview_more fa" title="Advanced Search..." role="img" aria-label="Advanced Search..."/>
+    <div class="o_searchview_input_container"/>
+</div>
+<t t-name="SearchViewMobile">
+    <div class="o_searchview" role="search" aria-autocomplete="list">
+        <button class="o_enable_searchview btn fa fa-search"/>
+        <div class="o_mobile_search o_hidden">
+            <div class="o_mobile_search_header">
+                <span class="o_mobile_search_close float-left mt16 mb16 mr8 ml16">
+                    <i class="fa fa-arrow-left"/>
+                    <strong class="float-right ml8">FILTER</strong>
+                </span>
+                <span class="float-right o_mobile_search_clear_facets mt16 mr16">CLEAR</span>
+            </div>
+            <div class="o_searchview_input_container"/>
+            <div class="o_mobile_search_filter o_search_options mb8 mt8 ml16 mr16"/>
+            <div class="btn btn-primary o_mobile_search_show_result">SEE RESULT</div>
         </div>
     </div>
 </t>
 
-<t t-name="One2Many.formview" t-extend="FormView">
-    <t t-jquery=".oe_form_buttons" t-operation="inner">
-        <button type="button" class="oe_button oe_form_button_create">Add</button>
-    </t>
-</t>
-
-<t t-name="One2Many.listview" t-extend="ListView">
-    <t t-jquery="thead > tr:first">
-        this.removeAttr('t-if');
-    </t>
-</t>
-
-<div t-name="SearchView" class="oe_searchview form-control input-sm">
-    <div class="oe_searchview_search fa fa-lg fa-search" title="Search Again"/>
-    <div class="oe_searchview_facets"/>
-    <div class="oe_searchview_unfold_drawer fa fa-lg fa-fw fa-chevron-right" title="Advanced Search..."/>
-</div>
-
-<div t-name="SearchView.InputView"
-     class="oe_searchview_input"
-     contenteditable="true"
-     tabindex="0"/>
-<!-- tabindex: makes div focusable -->
-<div t-name="SearchView.FacetView"
-     class="oe_tag oe_searchview_facet"
-     tabindex="0">
-    <span class="oe_facet_remove">x</span>
-    <span t-if="widget.model.has('icon')"
-            t-att-class="'label label-default fa ' + widget.model.get('icon')">
-    </span>
-    <span class="label label-default" t-if="!widget.model.has('icon')">
+<input t-name="SearchView.InputView" type="text" class="o_searchview_input" accesskey="Q" placeholder="Search..." role="searchbox" aria-haspopup="true"/>
+<div t-name="SearchView.FacetView" tabindex="0" class="o_searchview_facet" role="img" aria-label="search">
+    <span t-if="widget.model.has('icon')" t-att-class="'fa ' + widget.model.get('icon') + ' o_searchview_facet_label'"/>
+    <span t-if="!widget.model.has('icon')" class="o_searchview_facet_label">
         <t t-esc="widget.model.get('category')"/>
-    </span >
-    <span class="oe_facet_values"/>
+    </span>
+    <div class="o_facet_values"/>
+    <div class="fa fa-sm fa-remove o_facet_remove" role="img" aria-label="Remove" title="Remove"/>
 </div>
-<span t-name="SearchView.FacetView.Value" class="oe_facet_value">
-    <t t-esc="widget.model.get('label')"/>
+<span t-name="SearchView.FacetView.Value">
+    <t t-esc="widget.model.get('label') + (widget.optionLabel ? (': ' + widget.optionLabel) : '')"/>
 </span>
+<t t-name="SearchView.autocomplete">
+    <div class="dropdown-menu o_searchview_autocomplete" role="menu"/>
+</t>
+
 <t t-name="SearchView.filters">
-    <li t-foreach="widget.filters" t-as="filter" t-if="!filter.visible || filter.visible()"
-            t-att-title="filter.attrs.string ? filter.attrs.help : undefined"
-            t-att-data-index="filter_index">
-        <a>
+    <t t-foreach="widget.filters" t-as="filter">
+        <a t-if="!filter.visible || filter.visible()"
+           href="#"
+           class="dropdown-item"
+           t-att-title="filter.attrs.string ? filter.attrs.help : undefined"
+           t-att-data-index="filter_index"
+           role="menuitem">
             <t t-esc="filter.attrs.string or filter.attrs.help or filter.attrs.name or 'Ω'"/>
         </a>
-    </li>
+    </t>
 </t>
 <t t-name="SearchView.field">
     <label t-att-class="'oe_label' + (attrs.help ? '_help' : '')"
@@ -1161,7 +1265,8 @@
         <span t-if="attrs.help">?</span>
     </label>
     <div t-att-style="style">
-        <input type="text" size="15" t-att-name="attrs.name"
+        <input type="text" size="15" class="o_input"
+               t-att-name="attrs.name"
                t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined"
                t-att-id="element_id"
                t-att-value="defaults[attrs.name] || ''"/>
@@ -1190,7 +1295,9 @@
         <span t-if="attrs.help">?</span>
     </label>
     <div t-att-style="style">
-        <select t-att-name="attrs.name" t-att-id="element_id"
+        <select class="o_input"
+                t-att-name="attrs.name"
+                t-att-id="element_id"
                 t-att-autofocus="attrs.default_focus === '1' || undefined">
             <option t-if="prepend_empty"/>
             <t t-foreach="attrs.selection" t-as="option">
@@ -1208,56 +1315,11 @@
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
 </t>
-<div t-name="SearchView.FilterMenu" class="btn-group btn-group-sm">
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-        <span class="fa fa-filter"/> Filters <span class="caret"/>
-    </button>
-    <ul class="dropdown-menu filters-menu" role="menu">
-        <li class="oe-add-filter o_closed_menu"><a>Add Custom Filter</a></li>
-        <li class="oe-add-filter-menu"><button type="button" class="btn btn-default oe-apply-filter">Apply</button><a class="oe-add-condition"><span class="fa fa-plus-circle"/> Add a condition</a></li>
-    </ul>
-</div>
-
-<div t-name="SearchView.GroupByMenu" class="btn-group btn-group-sm oe-groupby-menu">
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-        <span class="fa fa-bars"/> Group By <span class="caret"/>
-    </button>
-    <ul class="dropdown-menu group-by-menu" role="menu">
-        <li class="divider"/>
-        <li class="add-custom-group o_closed_menu"><a>Add custom group</a></li>
-    </ul>
-</div>
-
-<t t-name="GroupByMenuSelector">
-    <li><select class="form-control oe-add-group oe-group-selector">
-        <t t-foreach="groupable_fields" t-as="field">
-            <option t-att-data-name="field.name"><t t-esc="field.string"/></option>
-        </t>
-    </select></li>
-    <li><button type="button" class="btn btn-default oe-add-group oe-select-group">Apply</button></li>
-</t>
-<div t-name="SearchView.FavoriteMenu" class="btn-group btn-group-sm">
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-        <span class="fa fa-star"/> Favorites <span class="caret"/>
-    </button>
-    <ul class="dropdown-menu o_favorites_menu" role="menu">
-        <li class="divider"/>
-        <li class="oe-save-search o_closed_menu"><a>Save current search</a></li>
-        <li class="oe-save-name"><input type="text" class="form-control"></input></li>
-        <li class="oe-save-name">
-            <span><input type="checkbox"/>Use by default</span>
-        </li>
-        <li class="oe-save-name">
-            <span class="oe-share-filter"><input type="checkbox"/>Share with all users</span>
-        </li>
-        <li class="oe-save-name"><button type="button" class="btn btn-default">Save</button></li>
-    </ul>
-</div>
 <t t-name="SearchView.extended_search.proposition">
-    <li class="oe-filter-condition">
-        <span class="o-or-filter">or</span>
+    <div role="menuitem" class="dropdown-item-text o_filter_condition">
+        <span class="o_or_filter">or</span>
         <span>
-            <select class="searchview_extended_prop_field form-control">
+            <select class="o_input o_searchview_extended_prop_field">
                 <t t-foreach="widget.attrs.fields" t-as="field">
                     <option t-att="{'selected': field === widget.attrs.selected ? 'selected' : null}"
                             t-att-value="field.name">
@@ -1265,237 +1327,242 @@
                     </option>
                 </t>
             </select>
-            <span class="searchview_extended_delete_prop fa fa-trash-o"/>
+            <span class="o_searchview_extended_delete_prop fa fa-trash-o" role="img" aria-label="Delete" title="Delete"/>
         </span>
-        <select class="searchview_extended_prop_op form-control"/>
-        <span class="searchview_extended_prop_value"/>
-    </li>
-</t>
-<t t-name="SearchView.extended_search.proposition.char">
-    <input class="field_char form-control"/>
-</t>
-<t t-name="SearchView.extended_search.proposition.empty">
-    <span/>
-</t>
-<t t-name="SearchView.extended_search.proposition.integer">
-    <input type="number" class="field_integer form-control" value = "0" step="1"/>
+        <select class="o_input o_searchview_extended_prop_op"/>
+        <span class="o_searchview_extended_prop_value"/>
+    </div>
 </t>
 <t t-name="SearchView.extended_search.proposition.float">
-    <input class="field_float form-control"
+    <input class="o_input"
         t-att-type="widget.decimal_point === '.' ? 'number' : 'text'"
         t-attf-title="Number using #{widget.decimal_point  || '.' } as decimal separator."
         t-attf-pattern="[0-9]+([\\#{widget.decimal_point || '.' }][0-9]+)?"
         t-attf-value="0#{widget.decimal_point || '.' }0" step="0.01"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.selection">
-    <select class="form-control">
-        <t t-foreach="widget.field.selection" t-as="element">
-        <option t-att-value="element[0]"><t t-esc="element[1]"/></option>
-        </t>
+    <select class="o_input">
+        <option t-foreach="widget.field.selection" t-as="element" t-att-value="element[0]">
+            <t t-esc="element[1]"/>
+        </option>
     </select>
 </t>
 
-<div t-name="SearchView.autocomplete" class="oe-autocomplete">
-    <ul>
-    </ul>
-</div>
-<t t-name="ExportView">
-    <a id="exportview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Export</a>
-</t>
-<table t-name="ExportTreeView" class="oe_export"
-       style="background-color: #F3F3F3;">
-    <tr>
-        <td colspan="3">
-            This wizard will export all data that matches the current search criteria to a CSV file.
-            You can export all data or only the fields that can be reimported after modification.
-        </td>
-    </tr>
-    <tr>
-        <td colspan="3">
-            <label for="import_compat">Export Type:</label>
-            <select id="import_compat" name="import_compat">
-                <option value="yes">Import-Compatible Export</option>
-                <option value="">Export all Data</option>
-            </select>
-
-            <label for="export_format">Export Formats</label>
-            <select id="export_format" name="export_format"></select>
-        </td>
-    </tr>
-
-    <tr>
-        <th>Available fields</th>
-        <th/>
-        <th>
-            Fields to export
-            <a style="color: blue; text-decoration: none;" href="#" id="export_new_list">Save fields list</a>
-            <div id="savenewlist"></div>
-            <div id="ExistsExportList"></div>
-        </th>
-    </tr>
-    <tr style="height: 400px;">
-        <td class="oe_export_fields_selector_left">
-            <div id="left_field_panel">
+<div t-name="SearchView.FavoriteMenu" class="btn-group o_dropdown">
+    <button t-attf-class="o_dropdown_toggler_btn btn btn-secondary dropdown-toggle#{widget.isMobile ? ' o-no-caret' : ''}" data-toggle="dropdown" aria-expanded="false" tabindex="-1" aria-label="Favorites" title="Favorites">
+        <span class="fa fa-star"/> Favorites <span t-if="widget.isMobile" class="fa fa-chevron-right float-right mt4"/>
+    </button>
+    <div class="dropdown-menu o_favorites_menu" role="menu">
+        <div role="separator" class="dropdown-divider user_filter"/>
+        <div role="separator" class="dropdown-divider shared_filter"/>
+        <a role="button" href="#" class="dropdown-item o_save_search o_closed_menu" aria-expanded="false">Save current search</a>
+        <div role="menuitem" class="dropdown-item-text o_save_name">
+            <input type="text" class="o_input"></input>
+        </div>
+        <div role="menuitem" class="dropdown-item-text o_save_name">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" id="o_fav_menu_use_by_default" class="custom-control-input"/>
+                <label for="o_fav_menu_use_by_default" class="custom-control-label">Use by default</label>
             </div>
-        </td>
-        <td class="oe_export_fields_selector_center">
-            <!-- TODO: replace ids by 'oe_*' classes -->
-            <button class="oe_button" id="add_field">Add</button>
-            <button class="oe_button" id="remove_field">Remove</button>
-            <button class="oe_button" id="remove_all_field">Remove All</button>
-            <button class="oe_button" id="move_up">Move Up</button>
-            <button class="oe_button" id="move_down">Move Down</button>
-        </td>
-        <td class="oe_export_fields_selector_right">
-            <select name="fields_list" id="fields_list"
-                    multiple="multiple"></select>
-        </td>
-    </tr>
-</table>
-<t t-name="ExportTreeView-Domain">
-    <t t-if="! record.ids_to_export">
-        <p><strong>Please pay attention that all records matching your search filter will be exported. Not only the selected ids.</strong></p>
-    </t>
-    <t t-if="record.ids_to_export">
-        <p><strong>Please note that only the selected ids will be exported.</strong></p>
-    </t>
-</t>
-<table t-name="ExportTreeView-Secondary"
-       id="field-tree-structure" class="oe_export_fields_selector_export"
-       cellspacing="0" cellpadding="0">
-    <tr><th class="oe_export_tree_header"> Name </th></tr>
-    <t t-call="ExportTreeView-Secondary.children"/>
-</table>
-<tr t-name="ExportTreeView-Secondary.children"
-    t-foreach="fields" t-as="field"
-    t-att-id="'treerow-' + field.id" class="oe_export_row">
-    <td>
-        <table class="tree_grid" border="0">
-            <tr class="oe_export_row">
-                <t t-foreach="(field.id).split('/')" t-as="level" >
-                    <t t-if="(field.id).split('/')[0] != level">
-                        <td width="18" t-translation="off">&amp;nbsp;</td>
-                    </t>
-                </t>
-                <td valign="top" align="left" style="cursor: pointer;" width="18">
-                    <t t-if="field.children">
-                        <t t-if="(field.id).split('/').length != 3">
-                            <img t-att-id="'parentimg-' + field.id" t-att-src='_s + "/web/static/src/img/expand.gif"' width="16" height="16" border="0"/>
-                        </t>
-                    </t>
-                </td>
-                <td id="tree-column" valign="middle" align="left" style="cursor: pointer;">
-                    <a t-att-id="'export-' + field.id"  t-att-string="field.string" href="javascript: void(0);" style="text-decoration: none;">
-                        <t t-esc="field.string"/>
-                    </a>
-                </td>
-            </tr>
-        </table>
-    </td>
-</tr>
-<t t-name="ExportNewList">
-    <tr>
-        <th><label>Save as:</label></th>
-        <td><input size="10" type="text" id="savelist_name"/></td>
-        <td><button class="oe_button oe_export_button_export" id="add_export_list">Ok</button></td>
-    </tr>
-</t>
-<t t-name="Exists.ExportList">
-    <label for="saved_export_list">Saved exports:</label>
+        </div>
+        <div role="menuitem" class="dropdown-item-text o_save_name">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" id="o_fav_menu_share_all_users" class="custom-control-input"/>
+                <label for="o_fav_menu_share_all_users" class="custom-control-label">Share with all users <span class="fa fa-users" role="img" aria-label="Users" title="Users"/></label>
+            </div>
+        </div>
+        <div class="dropdown-item-text o_save_name">
+            <button type="button" class="btn btn-primary">Save</button>
+        </div>
+    </div>
+</div>
 
-    <select id="saved_export_list">
+<div t-name="ExportDialog" class="o_export">
+    <div class="row">
+        <div class="col-lg-6">
+            <strong>What do you want to do?</strong>
+            <div class="o_import_compat">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="o_import_compat_name" value="" checked="checked"/>
+                        Use data in a spreadsheet (export all data)
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="o_import_compat_name" value="yes"/>
+                        Update data (import-compatible export)
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <strong>Export Format:</strong>
+            <div class="o_export_format"/>
+        </div>
+    </div>
+
+    <div class="o_export_panel">
+        <div class="o_left_panel">
+            <h4>Available fields</h4>
+            <div class="o_left_field_panel"/>
+        </div>
+        <div class="o_center_panel">
+            <button type="button" class="btn btn-secondary o_add_field">Add</button>
+            <button type="button" class="btn btn-secondary o_remove_field">Remove</button>
+            <button type="button" class="btn btn-secondary o_remove_all_field">Remove All</button>
+            <button type="button" class="btn btn-secondary o_move_up">Move Up</button>
+            <button type="button" class="btn btn-secondary o_move_down">Move Down</button>
+        </div>
+        <div class="o_right_panel">
+            <h4>
+                <a href="#" class="float-right o_toggle_save_list">Save fields list</a>
+                Fields to export
+            </h4>
+            <div class="o_save_list"/>
+            <div class="o_exported_lists"/>
+            <select class="o_fields_list" multiple="multiple"></select>
+        </div>
+    </div>
+</div>
+<t t-name="Export.TreeItems">
+    <t t-foreach="fields" t-as="field">
+        <t t-set="has_child" t-value="field.children &amp;&amp; (field.id).split('/').length != 3" />
+        <div t-att-data-id="field.id" t-attf-class="o_export_tree_item #{has_child ? 'haschild' : ''}" tabindex="-1" role="treeitem"> <!-- tabindex make the div focusable -->
+            <t t-if="has_child">
+                <span class="o_expand o_expand_parent fa fa-chevron-right" role="img" aria-label="Expand parents" title="Expand parents"/>
+                <span class="o_tree_column o_expand" t-att-title="debug and field.id or None"><t t-esc="field.string"/></span>
+            </t>
+            <t t-else="">
+                <span class="o_tree_column" t-att-title="debug and field.id or None"><t t-esc="field.string"/></span>
+            </t>
+        </div>
+    </t>
+</t>
+<t t-name="Export.SaveList">
+    <label>Save as:</label> <input type="text"/><button type="button" class="btn btn-secondary">Ok</button>
+</t>
+<t t-name="Export.SavedList">
+    <label>Saved exports: </label>
+    <select class="o_exported_lists_select">
         <option></option>
         <t t-foreach="existing_exports" t-as="export">
             <option t-att-value="export.id"><t t-esc="export.name"/></option>
         </t>
     </select>
-    <button class="oe_button oe_export_button_export" id="delete_export_list" type="button">Delete</button>
+    <button type="button" class="btn btn-secondary o_delete_exported_list">Delete</button>
 </t>
 
 <t t-name="Throbber">
     <div>
         <div class="oe_blockui_spin" style="height: 50px">
+            <img src="/web/static/src/img/spin.png" style="animation: fa-spin 1s infinite steps(12);" alt="Loading..."/>
         </div>
         <br />
         <div class="oe_throbber_message" style="color:white"></div>
     </div>
 </t>
+<t t-name="Spinner">
+    <div class="o_spinner"><i class="fa fa-spinner fa-spin" role="img" aria-label="Loading, please wait..." title="Loading, please wait..."/></div>
+</t>
 <t t-name="M2ODialog">
     <div>
-        <p class="oe_grey"/>
-        Name: <input class="oe_form_m2o_input_name" type="text"/>
+        <p/>
+        Name: <input class="o_input" type="text"/>
     </div>
 </t>
-<t t-name="FieldMonetary" t-extend="FieldChar">
-    <t t-jquery="t:first" t-operation="before">
-        <t t-if="widget.get('currency_info') and widget.get('currency_info').position === 'before'">
-            <t t-esc="widget.get('currency_info').symbol"/>
-        </t>
-    </t>
-    <t t-jquery="t:last" t-operation="after">
-        <t t-if="widget.get('currency_info') and widget.get('currency_info').position === 'after'">
-            <t t-esc="widget.get('currency_info').symbol"/>
-        </t>
-    </t>
-</t>
 <t t-name="FieldMany2ManyCheckBoxes">
-    <t t-foreach="widget.get('records')" t-as="record">
-        <div>
-            <label style="font-weight: normal">
-                <input type="checkbox" t-att-data-record-id="JSON.stringify(record[0])"
-                       t-att-checked="(widget.get('value').indexOf(record[0]) !== -1) or null"/>
-                <t t-esc="record[1]"/>
-            </label>
+    <div aria-atomic="true">
+        <div t-foreach="widget.m2mValues" t-as="m2m_value">
+            <t t-set="id_for_label" t-value="'o_many2many_checkbox_' + _.uniqueId()"/>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" t-att-id="id_for_label" class="custom-control-input" t-att-data-record-id="JSON.stringify(m2m_value[0])"/>
+                <label t-att-for="id_for_label" class="custom-control-label o_form_label"><t t-esc="m2m_value[1]"/></label>
+            </div>
         </div>
-    </t>
-</t>
-<t t-name="X2ManyCounter">
-    <a href="javascript:void(0)"><t t-esc="text"/></a>
+    </div>
 </t>
 <t t-name="StatInfo">
     <span class="o_stat_value"><t t-esc="value"/></span>
     <span class="o_stat_text"><t t-esc="text"/></span>
 </t>
-
-<button t-name="toggle_button" type="button"
-    t-att-title="widget.string"
-    style="box-shadow: none; white-space:nowrap;">
-    <img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
-    t-att-alt="widget.string"/>
-</button>
+<t t-name="toggle_button">
+    <button type="button" class="o_icon_button" t-att-title="widget.string" t-att-aria-label="widget.string" aria-pressed="false">
+        <i class="fa fa-circle" t-att-title="widget.string"/>
+    </button>
+</t>
 
 <div t-name="Pager">
-    <span class="o_pager_value"></span> / <span class="o_pager_limit"></span>
-    <span class="btn-group btn-group-sm">
+    <span class="o_pager_counter">
+        <span class="o_pager_value"></span> / <span class="o_pager_limit"></span>
+    </span>
+    <span class="btn-group" aria-atomic="true">
         <!-- accesskeys not wanted in X2Many widgets -->
-        <t t-if="!widget.getParent().x2m">
-            <t t-set="att_prev" t-value="{'accesskey': 'O'}" />
-            <t t-set="att_next" t-value="{'accesskey': 'P'}" />
+        <t t-if="widget.options.withAccessKey">
+            <t t-set="att_prev" t-value="{'accesskey': 'p'}" />
+            <t t-set="att_next" t-value="{'accesskey': 'n'}" />
         </t>
-        <button type="button" class="fa fa-chevron-left btn btn-icon o_pager_previous" t-att="att_prev"/>
-        <button type="button" class="fa fa-chevron-right btn btn-icon o_pager_next" t-att="att_next"/>
+        <button type="button" class="fa fa-chevron-left btn btn-secondary o_pager_previous" t-att="att_prev" aria-label="Previous" title="Next" tabindex="-1"/>
+        <button type="button" class="fa fa-chevron-right btn btn-secondary o_pager_next" t-att="att_next" aria-label="Next" title="Next" tabindex="-1"/>
     </span>
 </div>
 
-<button t-name="FieldToggleBoolean" type="button"
-    t-att-title="widget.string" class="oe_toggle_button">
-    <img t-attf-src="#{_s}/web/static/src/img/icons/#{widget.icon}" t-att-alt="widget.string"/>
-</button>
+<t t-name="AceEditor">
+    <div class="oe_form_field o_ace_view_editor oe_ace_open">
+        <div class="ace-view-editor"/>
+    </div>
+</t>
 
-<t t-name="BooleanButton">
-    <t t-if="widget.get_value()">
-        <span class="o_stat_text o_not_hover text-success"><t t-esc="widget.string_true"/></span>
-        <span class="o_stat_text o_hover text-danger"><t t-esc="widget.hover_true"/></span>
-    </t>
-    <t t-if="!widget.get_value()">
-        <span class="o_stat_text o_not_hover text-danger"><t t-esc="widget.string_false"/></span>
-        <span class="o_stat_text o_hover text-success"><t t-esc="widget.hover_false"/></span>
-    </t>
+<t t-name="notification-box">
+    <div t-attf-class="o_notification_box mb0 alert alert-dismissible alert-{{type}}" role="alertdialog">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span class="fa fa-times"></span>
+        </button>
+    </div>
+</t>
+
+<t t-name="translation-alert">
+    <div role="alertdialog">
+        Please update translations of :
+        <t t-foreach="fields" t-as="field">
+            <strong><a class="oe_field_translate" t-att-name="field" href="#"><t t-esc="field_value.string"/><t t-if="field_index &lt; _.size(fields)-1">, </t></a></strong>
+        </t>
+    </div>
+</t>
+
+<t t-name="UserMenu">
+    <li class="o_user_menu">
+        <a role="button" class="dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#">
+            <img class="rounded-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'" alt="Avatar"/>
+            <span class="oe_topbar_name"/>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" role="menu">
+            <t t-call="UserMenu.Actions"/>
+        </div>
+    </li>
+</t>
+
+<t t-name="UserMenu.Actions">
+    <a role="menuitem" href="#" data-menu="documentation" class="dropdown-item">Documentation</a>
+    <a role="menuitem" href="#" data-menu="support" class="dropdown-item">Support</a>
+    <div role="separator" class="dropdown-divider"/>
+    <a role="menuitem" href="#" data-menu="settings" class="dropdown-item">Preferences</a>
+    <a role="menuitem" href="#" data-menu="account" class="dropdown-item">My Odoo.com account</a>
+    <a role="menuitem" href="#" data-menu="logout" class="dropdown-item">Log out</a>
+</t>
+
+<t t-name="SwitchCompanyMenu">
+    <li class="o_switch_company_menu">
+        <a role="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+            <span t-attf-class="#{widget.isMobile ? 'fa fa-building-o' : 'oe_topbar_name'}"/>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" role="menu"/>
+    </li>
 </t>
 
 <t t-name="EnterpriseUpgrade">
-    <div class="row">
-        <div class="col-xs-6">
+    <div class="row" role="status">
+        <div class="col-6">
             Get this feature and much more with Odoo Enterprise!
             <ul class="list-unstyled">
                 <li><i class="fa fa-check"></i> Access to all Enterprise Apps</li>
@@ -1503,13 +1570,44 @@
                 <li><i class="fa fa-check"></i> Mobile support</li>
                 <li><i class="fa fa-check"></i> Upgrade to future versions</li>
                 <li><i class="fa fa-check"></i> Bugfixes guarantee</li>
-                <li><a href="http://www.odoo.com/editions" target="_blank"><i class="fa fa-plus"></i> And more</a></li>
+                <li><a href="http://www.odoo.com/editions?utm_source=db&amp;utm_medium=enterprise" target="_blank"><i class="fa fa-plus"></i> And more</a></li>
             </ul>
         </div>
-        <div class="col-xs-6">
-            <img class="img-responsive" t-att-src='_s + "/web/static/src/img/enterprise_upgrade.jpg"' draggable="false"/>
+        <div class="col-6">
+            <img class="img-fluid" t-att-src='_s + "/web/static/src/img/enterprise_upgrade.jpg"' draggable="false" alt="Upgrade to enterprise"/>
         </div>
     </div>
+</t>
+
+<t t-name="BaseSetting.Tabs">
+    <t t-foreach="tabItems" t-as="tab">
+        <div class="tab" t-attf-data-key="#{tab.key}" role="tab">
+            <div class="icon d-none d-md-block" t-attf-style="background : url('#{imgurl}') no-repeat center;background-size:contain;"/> <span class="app_name"><t t-esc="tab.string"/></span>
+        </div>
+    </t>
+</t>
+
+<t t-name="BaseSetting.SearchHeader">
+    <div class="settingSearchHeader o_hidden" role="search">
+        <img class="icon" t-att-src="imgurl" alt="Search"></img>
+        <span class="appName"><t t-esc="string"/></span>
+    </div>
+</t>
+
+<t t-name="AttachDocument">
+    <button t-attf-class="btn o_attachment_button #{widget.node.attrs.highlight?'btn-primary':'btn-secondary'}">
+        <span class="o_attach_document"><t t-esc="widget.node.attrs.string"/></span>
+        <span class="d-none">
+            <t t-call="HiddenInputFile">
+                <t t-set="fileupload_id" t-value="widget.fileuploadID"/>
+                <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+                <t t-set="multi_upload" t-value="true"/>
+                <input type="hidden" name="model" t-att-value="widget.res_model"/>
+                <input type="hidden" name="id" t-att-value="widget.res_id"/>
+                <input type="hidden" name="session_id" t-att-value="widget.getSession().session_id"/>
+            </t>
+        </span>
+    </button>
 </t>
 
 </templates>

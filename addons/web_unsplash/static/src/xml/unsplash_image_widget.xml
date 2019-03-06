@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-extend="web_editor.dialog.image">
+    <t t-jquery=".o_media_image_card .form-inline" t-operation="append">
+        <div class="ml-auto border-left pl-4">
+            <span class="d-block font-weight-bold">Photos by <a href="https://unsplash.com" target="_blank">Unsplash</a></span>
+            <input type="text" class="form-control unsplash_search mr8" placeholder="Search free high-resolution photos" style="width: 250px;"/>
+        </div>
+    </t>
+    <t t-jquery=".existing-attachments" t-operation="after">
+        <div class="unsplash_img_container container-fluid"></div>
+    </t>
+</t>
+
+<t t-name="web_unsplash.dialog.image.content">
+    <div class="row mt16" t-as="row" t-foreach="rows">
+        <div class="col-sm-2 o_unsplash_img_cell text-center" t-as="img" t-foreach="row">
+            <div class="o_image o_webimage" t-att-data-imgid="img.id" t-att-data-url="img.urls.regular" t-att-data-download-url="img.links.download_location">
+                <img class="img-fluid" t-att-src="img.urls.thumb" />
+            </div>
+            <div class="author_name"><a t-att-href="img.user.links.html" target="_blank"><t t-esc="img.user.name"/></a></div>
+        </div>
+    </div>
+    <div class="row mt16" t-if="rows.length == 0">
+        <div class="m-auto text-muted not-found">
+            <i class="fa fa-camera mr8"/> Photos not found
+        </div>
+    </div>
+</t>
+
+<t t-name="web_unsplash.dialog.error.credentials">
+    <h4 class="text-muted">
+        <t t-esc="title"/>
+    </h4>
+    <div class="details">
+        <t t-esc="subtitle"/>
+        <div class="form-group btn-group mt-4 access_key_box">
+            <input type="text" class="form-control w-100" id="accessKeyInput" placeholder="Paste your access key here"/>
+        </div>
+        <a href="https://www.odoo.com/documentation/user/general/unsplash/unsplash_access_key.html" target="_blank"><i class="fa fa-arrow-right"/> Generate an access key</a>
+        <div class="form-group btn-group mt-4 access_key_box">
+            <input type="text" class="form-control w-100" id="appIdInput" placeholder="Paste your application ID here"/>
+        </div>
+        <a href="https://www.odoo.com/documentation/user/general/unsplash/unsplash_application_id.html" target="_blank"><i class="fa fa-arrow-right"/> How to find my Unsplash Application ID?</a>
+        <button type="button" class="btn btn-primary btn-block mt-4 save_unsplash">Apply</button>
+    </div>
+</t>
+
+<t t-name="web_unsplash.dialog.error.content">
+    <div class="row mt16 text-muted unsplash_error">
+        <div class="m-auto text-center">
+            <t t-if="status == 'key_not_found'">
+                <t t-call="web_unsplash.dialog.error.credentials">
+                    <t t-set="title">
+                        Unsplash requires an access key and an application ID
+                    </t>
+                </t>
+            </t>
+            <t t-elif="status == 403">
+                <h4 class="text-muted">
+                    Search is temporarily unavailable
+                </h4>
+                <div class="details">
+                    The max number of searches is exceeded. Please retry in an hour or extend to a better account.
+                </div>
+            </t>
+            <t t-elif="status == 401">
+                <t t-call="web_unsplash.dialog.error.credentials">
+                    <t t-set="title">
+                        Unauthorized Key
+                    </t>
+                    <t t-set="subtitle">
+                        Please check your Unsplash access key and application ID.
+                    </t>
+                </t>
+            </t>
+            <t t-else="">
+                <h4 class="text-muted">
+                    Something went wrong
+                </h4>
+                <div class="details">
+                    Please check your internet connection or contact administrator.
+                </div>
+            </t>
+        </div>
+    </div>
+</t>
+
+</templates>

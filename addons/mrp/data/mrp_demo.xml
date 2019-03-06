@@ -1,0 +1,694 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('group_mrp_user'))]" name="groups_id"/>
+        </record>
+
+        <!-- Resource: res.company -->
+        <record id="stock.res_company_1" model="res.company">
+            <field eval="1.0" name="manufacturing_lead"/>
+        </record>
+
+        <!-- Resource: mrp.workcenter -->
+
+        <record id="mrp_workcenter_0" model="mrp.workcenter">
+            <field name="name">Assembly Station 1</field>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+            <field name="capacity">5</field>
+            <field name="time_start">10</field>
+            <field name="time_stop">8</field>
+            <field name="time_efficiency">87</field>
+        </record>
+
+        <record id="mrp_workcenter_3" model="mrp.workcenter">
+            <field name="name">Assembly Line 1</field>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+        </record>
+
+        <record id="mrp_workcenter_1" model="mrp.workcenter">
+            <field name="name">Drill Station 1</field>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+        </record>
+
+        <record id="mrp_workcenter_2" model="mrp.workcenter">
+            <field name="name">Assemble Station 2</field>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+        </record>
+
+
+
+        <!-- Resource: mrp.routing -->
+
+        <record id="mrp_routing_0" model="mrp.routing">
+            <field name="name">Primary Assembly</field>
+        </record>
+
+        <record id="mrp_routing_1" model="mrp.routing">
+            <field name="name">Secondary Assembly</field>
+        </record>
+
+        <record id="mrp_routing_2" model="mrp.routing">
+            <field name="name">Manual Component's Assembly</field>
+        </record>
+
+        <record id="mrp_routing_3" model="mrp.routing">
+            <field name="name">Assemble Furniture</field>
+        </record>
+
+
+        <!-- Resource: mrp.routing.workcenter -->
+
+        <record id="mrp_routing_workcenter_0" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="mrp_routing_0"/>
+            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="name">Manual Assembly</field>
+            <field name="time_cycle">60</field>
+            <field name="sequence">5</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
+        </record>
+
+        <record id="mrp_routing_workcenter_1" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="mrp_routing_1"/>
+            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="name">Long time assembly</field>
+            <field name="time_cycle">180</field>
+            <field name="sequence">15</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
+        </record>
+
+        <record id="mrp_routing_workcenter_3" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="mrp_routing_1"/>
+            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="name">Testing</field>
+            <field name="time_cycle">60</field>
+            <field name="sequence">10</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
+        </record>
+
+        <record id="mrp_routing_workcenter_4" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="mrp_routing_1"/>
+            <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="name">Packing</field>
+            <field name="time_cycle">30</field>
+            <field name="sequence">5</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
+        </record>
+
+        <record id="mrp_routing_workcenter_2" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="mrp_routing_2"/>
+            <field name="workcenter_id" ref="mrp_workcenter_2"/>
+            <field name="time_cycle">120</field>
+            <field name="sequence">5</field>
+            <field name="name">Manual Assembly</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
+        </record>
+
+        <record id="mrp_routing_workcenter_5" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="mrp_routing_3"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
+            <field name="time_cycle">120</field>
+            <field name="sequence">10</field>
+            <field name="name">Assembly Line 1</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
+        </record>
+
+        <!-- Resource: mrp.bom -->
+
+        <record id="product.product_product_3_product_template" model="product.template">
+            <field name="route_ids" eval="[(6, 0, [ref('stock.route_warehouse0_mto'), ref('mrp.route_warehouse0_manufacture')])]"/>
+        </record>
+        <record id="mrp_bom_manufacture" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product.product_product_3_product_template"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="routing_id" ref="mrp_routing_0"/>
+        </record>
+
+        <record id="mrp_bom_manufacture_line_1" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">5</field>
+            <field name="bom_id" ref="mrp_bom_manufacture"/>
+        </record>
+
+        <record id="mrp_bom_manufacture_line_2" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_13"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">5</field>
+            <field name="bom_id" ref="mrp_bom_manufacture"/>
+        </record>
+
+        <record id="mrp_bom_manufacture_line_3" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_16"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">5</field>
+            <field name="bom_id" ref="mrp_bom_manufacture"/>
+        </record>
+
+        <record id="mrp_production_1" model="mrp.production">
+            <field name="product_id" ref="product.product_product_3"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="product_qty">3</field>
+            <field name="bom_id" ref="mrp_bom_manufacture"/>
+        </record>
+
+        <!-- Table -->
+
+        <record id="product_product_computer_desk" model="product.product">
+            <field name="name">Table (MTO)</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">290</field>
+            <field name="list_price">520</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="description">Solid wood table.</field>
+            <field name="default_code">FURN_9666</field>
+            <field name="tracking">serial</field>
+            <field name="image" type="base64" file="mrp/static/img/table.png"/>
+        </record>
+        <record id="product_product_computer_desk_head" model="product.product">
+            <field name="name">Table Top</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">240</field>
+            <field name="list_price">380</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="description">Solid wood is a durable natural material.</field>
+            <field name="default_code">FURN_8522</field>
+            <field name="tracking">serial</field>
+            <field name="image" type="base64" file="mrp/static/img/table_top.png"/>
+        </record>
+        <record id="product_product_computer_desk_leg" model="product.product">
+            <field name="name">Table Leg</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">10</field>
+            <field name="list_price">50</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="description">18″ x 2½″ Square Leg</field>
+            <field name="default_code">FURN_2333</field>
+            <field name="tracking">lot</field>
+            <field name="image" type="base64" file="mrp/static/img/table_leg.png"/>
+        </record>
+        <record id="product_product_computer_desk_bolt" model="product.product">
+            <field name="name">Bolt</field>
+            <field name="categ_id" ref="product.product_category_consumable"/>
+            <field name="standard_price">0.5</field>
+            <field name="list_price">0.5</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="description">Stainless steel screw full (dia - 5mm, Length - 10mm)</field>
+            <field name="default_code">CONS_89957</field>
+            <field name="image" type="base64" file="mrp/static/img/product_product_computer_desk_bolt.png"/>
+        </record>
+        <record id="product_product_computer_desk_screw" model="product.product">
+            <field name="name">Screw</field>
+            <field name="categ_id" ref="product.product_category_consumable"/>
+            <field name="standard_price">0.1</field>
+            <field name="list_price">0.2</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="description">Stainless steel screw</field>
+            <field name="default_code">CONS_25630</field>
+            <field name="image" type="base64" file="mrp/static/img/product_product_computer_desk_screw.png"/>
+        </record>
+
+        <record id="product_product_wood_ply" model="product.product">
+            <field name="name">Ply Layer</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">10</field>
+            <field name="list_price">10</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="description">Layers that are stick together to assemble wood panels.</field>
+            <field name="default_code">FURN_7111</field>
+            <field name="image" type="base64" file="mrp/static/img/product_product_wood_ply.png"/>
+        </record>
+        <record id="product_product_wood_wear" model="product.product">
+            <field name="name">Wear Layer</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">10</field>
+            <field name="list_price">10</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="description">Top layer of a wood panel.</field>
+            <field name="default_code">FURN_8111</field>
+            <field name="image" type="base64" file="mrp/static/img/product_product_wood_wear.png"/>
+        </record>
+        <record id="product_product_ply_veneer" model="product.product">
+            <field name="name">Ply Veneer</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">10</field>
+            <field name="list_price">10</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="default_code">FURN_9111</field>
+            <field name="image" type="base64" file="mrp/static/img/product_product_ply_veneer.png"/>
+        </record>
+
+        <record id="product_product_wood_panel" model="product.product">
+            <field name="name">Wood Panel</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">80</field>
+            <field name="list_price">100</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="default_code">FURN_7023</field>
+            <field name="image" type="base64" file="mrp/static/img/product_product_wood_panel.png"/>
+        </record>
+        <record id="product_product_plastic_laminate" model="product.product">
+            <field name="name">Plastic Laminate</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">3000</field>
+            <field name="list_price">1000</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="default_code">FURN_8621</field>
+            <field name="image" type="base64" file="mrp/static/img/product_product_plastic_laminate.png"/>
+        </record>
+
+        <record id="product_product_computer_desk_product_template" model="product.template">
+            <field name="route_ids" eval="[(6, 0, [ref('stock.route_warehouse0_mto'), ref('mrp.route_warehouse0_manufacture')])]"/>
+        </record>
+
+        <record id="mrp_bom_desk" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_product_computer_desk_product_template"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">3</field>
+            <field name="routing_id" ref="mrp_routing_3"/>
+        </record>
+
+        <record id="mrp_bom_desk_line_1" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_computer_desk_head"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_desk"/>
+            <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
+        </record>
+
+        <record id="mrp_bom_desk_line_2" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_computer_desk_leg"/>
+            <field name="product_qty">4</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">2</field>
+            <field name="bom_id" ref="mrp_bom_desk"/>
+            <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
+        </record>
+
+        <record id="mrp_bom_desk_line_3" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_computer_desk_bolt"/>
+            <field name="product_qty">4</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">3</field>
+            <field name="bom_id" ref="mrp_bom_desk"/>
+            <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
+        </record>
+
+        <record id="mrp_bom_desk_line_4" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_computer_desk_screw"/>
+            <field name="product_qty">10</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">4</field>
+            <field name="bom_id" ref="mrp_bom_desk"/>
+            <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
+        </record>
+
+        <record id="mrp_production_3" model="mrp.production">
+            <field name="product_id" ref="product_product_computer_desk"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="product_qty">1</field>
+            <field name="bom_id" ref="mrp_bom_desk"/>
+        </record>
+
+        <record id="mrp_bom_table_top" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_product_computer_desk_head_product_template"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="routing_id" ref="mrp_routing_0"/>
+        </record>
+        <record id="mrp_bom_line_wood_panel" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_wood_panel"/>
+            <field name="product_qty">2</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_table_top"/>
+        </record>
+        <record id="mrp_bom_line_plastic_laminate" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_plastic_laminate"/>
+            <field name="product_qty">4</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">2</field>
+            <field name="bom_id" ref="mrp_bom_table_top"/>
+        </record>
+
+        <record id="mrp_bom_plastic_laminate" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_product_plastic_laminate_product_template"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="routing_id" ref="mrp_routing_1"/>
+        </record>
+        <record id="mrp_bom_line_plastic_laminate" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_ply_veneer"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_plastic_laminate"/>
+        </record>
+
+        <record id="mrp_bom_wood_panel" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_product_wood_panel_product_template"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+        </record>
+        <record id="mrp_bom_line_wood_panel_ply" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_wood_ply"/>
+            <field name="product_qty">3</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_wood_panel"/>
+        </record>
+        <record id="mrp_bom_line_wood_panel_wear" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_wood_wear"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_wood_panel"/>
+        </record>
+
+        <!-- Table Kit -->
+
+        <record id="product_product_table_kit" model="product.product">
+            <field name="name">Table Kit</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">600.0</field>
+            <field name="list_price">147.0</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="description">Table kit</field>
+            <field name="default_code">FURN_78236</field>
+            <field name="image" type="base64" file="mrp/static/img/product_product_table_kit.png"/>
+        </record>
+
+         <record id="product_product_table_kit_product_template" model="product.template">
+            <field name="route_ids" eval="[(6, 0, [ref('mrp.route_warehouse0_manufacture')])]"/>
+        </record>
+
+        <record id="mrp_bom_kit" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_product_table_kit_product_template"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">2</field>
+            <field name="type">phantom</field>
+        </record>
+
+        <record id="mrp_bom_kit_line_1" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_wood_panel"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="bom_id" ref="mrp_bom_kit"/>
+        </record>
+
+        <record id="mrp_bom_kit_line_2" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_computer_desk_bolt"/>
+            <field name="product_qty">4</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="bom_id" ref="mrp_bom_kit"/>
+        </record>
+
+
+        <!-- Manufacturing Order Demo With Lots-->
+
+        <record id="product_product_drawer_drawer" model="product.product">
+            <field name="name">Drawer Black</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="tracking">lot</field>
+            <field name="standard_price">2000.0</field>
+            <field name="list_price">2250.0</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="description">Drawer on casters for great usability.</field>
+            <field name="default_code">FURN_2100</field>
+            <field name="barcode">601647855646</field>
+            <field name="image" type="base64" file="mrp/static/img/product_product_drawer_black.png"/>
+        </record>
+
+        <record id="product_product_drawer_case" model="product.product">
+            <field name="name">Drawer Case Black</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="tracking">lot</field>
+            <field name="standard_price">800</field>
+            <field name="list_price">850</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="default_code">FURN_5623</field>
+            <field name="barcode">601647855647</field>
+            <field name="image" type="base64" file="mrp/static/img/product_product_drawer_case_black.png"/>
+        </record>
+
+        <record id="product.product_product_27" model="product.product">
+            <field name="tracking">lot</field>
+        </record>
+
+        <record id="lot_product_27_0" model="stock.production.lot">
+            <field name="name">0000000000030</field>
+            <field name="product_id" ref="product.product_product_27"/>
+        </record>
+
+        <record id="lot_product_product_drawer_drawer_0" model="stock.production.lot">
+            <field name="name">0000000010001</field>
+            <field name="product_id" ref="product_product_drawer_drawer"/>
+        </record>
+
+        <record id="lot_product_product_drawer_case_0" model="stock.production.lot">
+            <field name="name">0000000020045</field>
+            <field name="product_id" ref="product_product_drawer_case"/>
+        </record>
+
+
+        <!-- Initital Inventory -->
+
+        <record id="stock_inventory_drawer" model="stock.inventory">
+            <field name="name">Inventory: Drawer + Kit</field>
+            <field name="filter">partial</field>
+        </record>
+
+        <record id="stock_inventory_drawer_lot0" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_drawer"/>
+            <field name="product_qty">50</field>
+            <field name="prod_lot_id" ref="lot_product_27_0"/>
+            <field name="location_id" ref="stock.stock_location_14"/>
+        </record>
+        <record id="stock_inventory_drawer_lot1" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_drawer"/>
+            <field name="product_qty">40</field>
+            <field name="location_id" ref="stock.stock_location_14"/>
+        </record>
+        <record id="stock_inventory_line_product_drawer_drawer" model="stock.inventory.line">
+            <field name="product_id" ref="product_product_drawer_drawer"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_drawer"/>
+            <field name="product_qty">50</field>
+            <field name="prod_lot_id" ref="lot_product_product_drawer_drawer_0"/>
+            <field name="location_id" ref="stock.stock_location_14"/>
+        </record>
+        <record id="stock_inventory_line_product_drawer_case" model="stock.inventory.line">
+            <field name="product_id" ref="product_product_drawer_case"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_drawer"/>
+            <field name="product_qty">50</field>
+            <field name="prod_lot_id" ref="lot_product_product_drawer_case_0"/>
+            <field name="location_id" ref="stock.stock_location_14"/>
+        </record>
+
+        <record id="stock_inventory_line_product_wood_panel" model="stock.inventory.line">
+            <field name="product_id" ref="product_product_wood_panel"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_drawer"/>
+            <field name="product_qty">50</field>
+            <field name="location_id" ref="stock.stock_location_14"/>
+        </record>
+        <record id="stock_inventory_line_product_ply" model="stock.inventory.line">
+            <field name="product_id" ref="product_product_wood_ply"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_drawer"/>
+            <field name="product_qty">20</field>
+            <field name="location_id" ref="stock.stock_location_14"/>
+        </record>
+        <record id="stock_inventory_line_product_wear" model="stock.inventory.line">
+            <field name="product_id" ref="product_product_wood_wear"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_drawer"/>
+            <field name="product_qty">30</field>
+            <field name="location_id" ref="stock.stock_location_14"/>
+        </record>
+        <record id="stock_inventory_line_product_table_kit" model="stock.inventory.line">
+            <field name="product_id" ref="product_product_table_kit"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_drawer"/>
+            <field name="product_qty">30</field>
+            <field name="location_id" ref="stock.stock_location_14"/>
+        </record>
+
+        <function model="stock.inventory" name="_action_done">
+            <function eval="[[('state','=','draft'), ('id', '=', ref('stock_inventory_drawer'))]]" model="stock.inventory" name="search"/>
+        </function>
+
+        <!-- BoM -->
+
+        <record id="mrp_bom_laptop_cust" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product.product_product_27_product_template"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="code">PRIM-ASSEM</field>
+        </record>
+        <record id="mrp_bom_laptop_cust_line_1" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_drawer_drawer"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_laptop_cust"/>
+        </record>
+        <record id="mrp_bom_laptop_cust_line_2" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_drawer_case"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">2</field>
+            <field name="bom_id" ref="mrp_bom_laptop_cust"/>
+        </record>
+
+        <record id="mrp_bom_laptop_cust_rout" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product.product_product_27_product_template"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">2</field>
+            <field name="routing_id" ref="mrp_routing_1"/>
+            <field name="code">SEC-ASSEM</field>
+        </record>
+        <record id="mrp_bom_laptop_cust_rout_line_1" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_drawer_drawer"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_laptop_cust_rout"/>
+        </record>
+        <record id="mrp_bom_laptop_cust_rout_line_2" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_drawer_case"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">2</field>
+            <field name="bom_id" ref="mrp_bom_laptop_cust_rout"/>
+        </record>
+
+        <record id="product.product_product_27" model="product.product">
+            <field name="type">product</field>
+        </record>
+        <record id="mrp_production_laptop_cust" model="mrp.production">
+            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="product_qty">5</field>
+            <field name="location_src_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_stock"/>
+            <field name="bom_id" ref="mrp_bom_laptop_cust"/>
+        </record>
+
+
+        <!-- Run Scheduler -->
+        <function model="procurement.group" name="run_scheduler"/>
+
+
+        <!-- OEE -->
+
+        <record id="mrp_workcenter_efficiency_0" model="mrp.workcenter.productivity">
+            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="loss_id" ref="block_reason7"/>
+            <field name="date_start" eval="(datetime.now() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(datetime.now() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="mrp_workcenter_efficiency_1" model="mrp.workcenter.productivity">
+            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="loss_id" ref="block_reason0"/>
+            <field name="date_start" eval="(datetime.now() - timedelta(hours=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(datetime.now() - timedelta(hours=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="mrp_workcenter_efficiency_2" model="mrp.workcenter.productivity">
+            <field name="workcenter_id" ref="mrp_workcenter_0"/>
+            <field name="loss_id" ref="block_reason1"/>
+            <field name="date_start" eval="(datetime.now() - timedelta(days=5, hours=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(datetime.now() - timedelta(days=5, hours=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="mrp_workcenter_efficiency_3" model="mrp.workcenter.productivity">
+            <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="loss_id" ref="block_reason7"/>
+            <field name="date_start" eval="(datetime.now() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(datetime.now() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="mrp_workcenter_efficiency_4" model="mrp.workcenter.productivity">
+            <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="loss_id" ref="block_reason0"/>
+            <field name="date_start" eval="(datetime.now() - timedelta(days=5,hours=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(datetime.now() - timedelta(days=5,hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="mrp_workcenter_efficiency_5" model="mrp.workcenter.productivity">
+            <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="loss_id" ref="block_reason1"/>
+            <field name="date_start" eval="(datetime.now() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <function model="mrp.production" name="action_assign">
+            <value eval="[ref('mrp.mrp_production_laptop_cust')]"/>
+        </function>
+
+        <function model="mrp.product.produce" name="create">
+            <value model="mrp.product.produce" eval="dict(
+                obj().with_context(active_id=ref('mrp.mrp_production_laptop_cust')).default_get(list(obj().fields_get())),
+                **{
+                    'product_qty': obj().env.ref('mrp.mrp_production_laptop_cust').product_qty,
+                    'lot_id': ref('mrp.lot_product_27_0'),
+                }
+            )"/>
+        </function>
+
+        <function model="mrp.product.produce" name="_onchange_product_qty">
+            <value model="mrp.product.produce" search="[('production_id', '=', obj().env.ref('mrp.mrp_production_laptop_cust').id)]"/>
+        </function>
+
+        <function model="mrp.product.produce" name="do_produce">
+            <value model="mrp.product.produce" search="[('production_id', '=', obj().env.ref('mrp.mrp_production_laptop_cust').id)]"/>
+        </function>
+
+        <function model="mrp.production" name="post_inventory">
+            <value eval="[ref('mrp.mrp_production_laptop_cust')]"/>
+        </function>
+
+        <function model="mrp.production" name="button_mark_done">
+            <value eval="[ref('mrp.mrp_production_laptop_cust')]"/>
+        </function>
+
+    </data>
+</odoo>

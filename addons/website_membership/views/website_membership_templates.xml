@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="index" name="Members">
+    <t t-call="website.layout">
+        <t t-set="additional_title">Members</t>
+        <div id="wrap">
+            <div class="oe_structure">
+                <section>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <h1 class="text-center">Our Members Directory</h1>
+                                <h3 class="text-muted text-center">Find a business partner</h3>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="container">
+                <div class="row">
+
+            <div class="col-lg-3 mb32" id="left_column">
+                <ul class="nav nav-pills flex-column mt16">
+                    <li class="nav-header nav-item"><h3>Associations</h3></li>
+                    <li class="nav-item"><a href="/members" class="nav-link#{'' if membership_id else ' active'}">All</a></li>
+                    <t t-foreach="memberships_data" t-as="membership_data">
+                        <li class="nav-item">
+                            <a t-attf-href="/members/association/#{ membership_data['id'] }#{current_country and '/country/%s' % slug(current_country) or ''}#{ search }"
+                                t-attf-class="nav-link#{membership_id and membership_data['id'] == membership_id and ' active' or ''}"><t t-esc="membership_data['name']"/></a>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+            <div class="col-lg-8" id="ref_content">
+                <div class='d-flex m-2'>
+                    <t t-call="website.pager">
+                       <t t-set="classname">float-left</t>
+                    </t>
+                    <form action="" method="get" class="navbar-search ml-auto pagination form-inline">
+                        <t t-call="website.website_search_box">
+                            <t t-set="search" t-value="post.get('search', '')"/>
+                        </t>
+                    </form>
+                </div>
+                <div>
+                    <t t-if="not memberships_partner_ids">
+                        <p>No result found.</p>
+                    </t>
+                    <t t-foreach="memberships_data" t-as="membership_data">
+                        <t t-if="memberships_partner_ids.get(membership_data['id'])">
+                            <h3 class="text-center"><span t-esc="membership_data['name']"/></h3>
+                            <t t-foreach="memberships_partner_ids[membership_data['id']]" t-as="partner_id">
+                                <t t-set="partner" t-value="partners[partner_id]"/>
+                                <div class="media mt-3">
+                                    <a t-attf-href="/members/#{slug(partner)}"
+                                       t-field="partner.image_small"
+                                       t-options='{"widget": "image", "class": "media-object mr-3"}'
+                                    ></a>
+                                    <div class="media-body" style="min-height: 64px;">
+                                        <a t-attf-href="/members/#{slug(partner)}">
+                                            <span t-field="partner.display_name"/>
+                                        </a>
+                                        <div t-field="partner.website_short_description"/>
+                                    </div>
+                                </div>
+                            </t>
+                        </t>
+                    </t>
+                </div>
+            </div>
+
+                </div>
+            </div>
+            <div class="oe_structure" id="oe_structure_website_membership_index_1"/>
+        </div>
+    </t>
+</template>
+
+<template id="opt_index_country" name="Location"
+        customize_show="True" inherit_id="website_membership.index">
+    <xpath expr="//div[@id='left_column']/ul[1]" position="after">
+        <ul class="nav nav-pills flex-column mt16">
+            <li class="nav-header nav-item"><h3>Location</h3></li>
+            <t t-foreach="countries" t-as="country">
+                <li t-if="country['country_id']" class="nav-item">
+                    <a t-attf-href="/members#{ membership_id and '/association/%s' % membership_id or '' }#{ country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ search }"
+                        t-attf-class="nav-link#{country['country_id'] and country['country_id'][0] == current_country_id and ' active' or ''}"><t t-esc="country['country_id'][1]"/>
+                        <span class="badge badge-pill float-right"><t t-esc="country['country_id_count'] or '0'"/></span>
+                    </a>
+                </li>
+            </t>
+        </ul>
+    </xpath>
+</template>
+
+<!-- Option: index: Left Google Map -->
+<template id="opt_index_google_map" name="Left World Map"
+        customize_show="True" inherit_id="website_membership.index">
+    <xpath expr="//div[@id='left_column']/ul[last()]" position="after">
+        <t t-if="google_maps_api_key">
+            <!-- modal for large map -->
+            <div role="dialog" class="modal fade partner_map_modal" tabindex="-1">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <header class="modal-header">
+                        <h4 class="modal-title">World Map</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                    </header>
+                    <iframe t-attf-src="/google_map/?width=898&amp;height=485&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
+                    style="width:898px; height:485px; border:0; padding:0; margin:0;"></iframe>
+                </div>
+              </div>
+            </div>
+            <!-- modal end -->
+            <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".partner_map_modal"><span class="fa fa-external-link" role="img" aria-label="External link" title="External link"/></button></h3>
+            <ul class="nav">
+                <iframe t-attf-src="/google_map/?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
+                    style="width:260px; height:240px; border:0; padding:0; margin:0;"></iframe>
+            </ul>
+        </t>
+    </xpath>
+</template>
+
+<template id="partner" name="Members">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="oe_structure" id="oe_structure_website_membership_partner_1"/>
+            <div class="container">
+                <div class="row">
+                    <t t-call="website_partner.partner_detail"/>
+                </div>
+            </div>
+            <div class="oe_structure" id="oe_structure_website_membership_partner_2"/>
+        </div>
+    </t>
+</template>
+
+</odoo>

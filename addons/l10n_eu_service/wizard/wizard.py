@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.exceptions import Warning
-from openerp import fields, models, api
-from openerp.tools.translate import _
+from odoo import api, fields, models, _
+from odoo.exceptions import Warning
+
 
 class l10n_eu_service(models.TransientModel):
-
     """Create fiscal positions for EU Service VAT"""
-
     _name = "l10n_eu_service.wizard"
     _description = __doc__
 

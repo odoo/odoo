@@ -1,3 +1,5 @@
 # -*- coding: utf-8 -*-
-import ir_module
-import base_import_module
+# flake8: noqa
+from . import base_import_module
+from . import ir_module
+from . import ir_ui_view

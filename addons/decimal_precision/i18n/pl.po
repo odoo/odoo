@@ -3,31 +3,36 @@
 # * decimal_precision
 # 
 # Translators:
+# Martin Trigaux, 2018
+# Tomasz Leppich <t.leppich@gmail.com>, 2018
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2018
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2018
+# Andrzej Donczew <a.donczew@hadron.eu.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-10-08 13:47+0000\n"
-"Last-Translator: Dariusz Żbikowski <darek@krokus.com.pl>\n"
-"Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Andrzej Donczew <a.donczew@hadron.eu.com>, 2018\n"
+"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: decimal_precision
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_create_uid
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_create_uid
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision__create_uid
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test__create_uid
 msgid "Created by"
-msgstr "Utworzone przez"
+msgstr "Utworzona przez"
 
 #. module: decimal_precision
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_create_date
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_create_date
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision__create_date
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test__create_date
 msgid "Created on"
-msgstr "Utworzono"
+msgstr "Data utworzenia"
 
 #. module: decimal_precision
 #: model:ir.actions.act_window,name:decimal_precision.action_decimal_precision_form
@@ -36,74 +41,79 @@ msgid "Decimal Accuracy"
 msgstr "Dokładność po przecinku"
 
 #. module: decimal_precision
-#: model:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_form
-#: model:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_tree
+#: model:ir.model,name:decimal_precision.model_decimal_precision
+#: model_terms:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_form
+#: model_terms:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_tree
 msgid "Decimal Precision"
 msgstr "Dokładność po przecinku"
 
 #. module: decimal_precision
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_digits
+#: model:ir.model,name:decimal_precision.model_decimal_precision_test
+msgid "Decimal Precision Test"
+msgstr ""
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision__digits
 msgid "Digits"
 msgstr "Cyfry"
 
 #. module: decimal_precision
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_display_name
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_display_name
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision__display_name
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test__display_name
 msgid "Display Name"
-msgstr "Wyświetlana nazwa "
+msgstr "Nazwa wyświetlana"
 
 #. module: decimal_precision
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_id
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_id
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test__float
+msgid "Float"
+msgstr "Zmiennoprzecinkowy"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test__float_2
+msgid "Float 2"
+msgstr "Zmiennoprzecinkowy 2"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test__float_4
+msgid "Float 4"
+msgstr "Zmiennoprzecinkowy 4"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision__id
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test__id
 msgid "ID"
 msgstr "ID"
 
 #. module: decimal_precision
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision___last_update
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test___last_update
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision____last_update
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test____last_update
 msgid "Last Modified on"
-msgstr "Ostatnio modyfikowano"
+msgstr "Data ostatniej modyfikacji"
 
 #. module: decimal_precision
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_write_uid
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_write_uid
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision__write_uid
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test__write_uid
 msgid "Last Updated by"
-msgstr "Ostatnio modyfikowane przez"
+msgstr "Ostatnio aktualizowane przez"
 
 #. module: decimal_precision
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_write_date
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_write_date
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision__write_date
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test__write_date
 msgid "Last Updated on"
-msgstr "Ostatnia zmiana"
+msgstr "Data ostatniej aktualizacji"
 
 #. module: decimal_precision
 #: sql_constraint:decimal.precision:0
 msgid "Only one value can be defined for each given usage!"
-msgstr "Tylko jedna wartość może zostać określona dla każdego podanego użycia!"
-
-#. module: decimal_precision
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_name
-msgid "Usage"
-msgstr "Użycie"
-
-#. module: decimal_precision
-#: model:ir.model,name:decimal_precision.model_decimal_precision
-msgid "decimal.precision"
 msgstr ""
-
-#. module: decimal_precision
-#: model:ir.model,name:decimal_precision.model_decimal_precision_test
-msgid "decimal.precision.test"
-msgstr ""
+"Tylko jedna wartość może zostać określona dla każdego podanego użycia!"
 
 #. module: decimal_precision
 #: model:ir.model,name:decimal_precision.model_ir_qweb_field_float
-msgid "ir.qweb.field.float"
+msgid "Qweb Field Float"
 msgstr ""
 
 #. module: decimal_precision
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_2
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_4
-msgid "unknown"
-msgstr "nieznane"
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision__name
+msgid "Usage"
+msgstr "Użycie"

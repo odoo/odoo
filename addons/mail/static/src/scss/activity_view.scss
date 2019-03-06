@@ -1,0 +1,56 @@
+.o_activity_view {
+    height: 100%;
+    > table {
+        background-color: white;
+    }
+    .o_activity_summary_cell {
+        background-color: #FFF;
+        &.planned {
+            background-color: theme-color('success');
+        }
+        &.overdue {
+            background-color: theme-color('danger');
+        }
+        &.today {
+            background-color: theme-color('warning');
+        }
+        .o_kanban_inline_block {
+            min-height: 42px;
+        }
+        .dropdown-toggle {
+            cursor: pointer;
+            .o_closest_deadline {
+                height: 42px;
+                width: 100%;
+                color: #FFF;
+                text-align: center;
+                line-height: 42px;
+            }
+        }
+    }
+    .o_res_name_cell {
+        padding: 0 10px;
+        color: #008784;
+        &:hover {
+            color: #666;
+            cursor: pointer;
+        }
+        cursor: pointer;
+    }
+    .o_activity_type_cell {
+        padding:10px;
+        min-width:100px;
+        .fa-ellipsis-v {
+            cursor: pointer;
+        }
+
+        .o_template_element {
+            white-space: nowrap;
+            padding:5px;
+            cursor: pointer;
+            &:hover {
+                color: theme-color('success');
+            }
+        }
+    }
+}

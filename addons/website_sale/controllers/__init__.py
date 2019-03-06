@@ -1,3 +1,5 @@
-# -*- coding: utf-8 -*
-import main
-import website_mail
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from . import backend
+from . import main

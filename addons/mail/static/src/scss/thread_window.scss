@@ -1,0 +1,60 @@
+.o_thread_window {
+    &.o_thread_less {
+        .o_thread_search_input {
+            display: flex;
+            align-items: baseline;
+            padding: $o-mail-chatter-gap*0.5 $o-mail-chatter-gap;
+
+            > span {
+                flex: 0 0 auto;
+            }
+
+            > input {
+                margin-left: 5px;
+                padding: $o-mail-chatter-gap*0.5;
+                flex: 1 1 100%;
+            }
+        }
+
+        .o_mail_thread {
+            background-color: $o-webclient-background-color;
+        }
+
+        .o_thread_composer {
+            display: none;
+        }
+    }
+
+    .o_thread_composer {
+        .o_composer {
+            .o_composer_input {
+                width: 80%;
+                > textarea {
+                    padding: 10px;
+                    font-size: 13px;
+                }
+                @include media-breakpoint-down(sm) {
+                    width: 70%;
+                    > textarea {
+                        padding: 15px 10px;
+                    }
+                }
+            }
+            .o_chatter_composer_tools {
+                @include o-position-absolute($right: 0px, $top: 0px);
+                button {
+                    padding: 10px;
+                    @include media-breakpoint-down(sm) {
+                        padding: 13px;
+                    }
+                    &.btn.fa {
+                        font-size: 1.3em;
+                    }
+                }
+            }
+        }
+        .o_composer_attachments_list {
+            margin: 0px;
+        }
+    }
+}

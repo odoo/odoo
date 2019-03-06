@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record model="crm.team" id="sales_team.team_sales_department">
+            <field name="use_quotations" eval="True"/>
+            <field name="use_invoices" eval="True"/>
+            <field name="dashboard_graph_model">sale.report</field>
+        </record>
+
+        <!-- Share Button in action menu -->
+        <record id="model_sale_order_action_share" model="ir.actions.server">
+            <field name="name">Share</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">action = records.action_share()</field>
+        </record>
+    </data>
+</odoo>

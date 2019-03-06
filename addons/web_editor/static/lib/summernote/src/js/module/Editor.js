@@ -616,7 +616,6 @@ define([
       var linkUrl = linkInfo.url;
       var linkText = linkInfo.text;
       var isNewWindow = linkInfo.isNewWindow;
-      var className = linkInfo.className || null; // ODOO: addition
       var rng = linkInfo.range || this.createRange($editable);
       var isTextChanged = rng.toString() !== linkText;
 
@@ -629,9 +628,9 @@ define([
       }
 
       var anchors = [];
-      // ODOO: adding this branch to modify existing anchor
+      // ODOO: adding this branch to modify existing anchor if it fully contains the range
       var ancestor_anchor = dom.ancestor(rng.sc, dom.isAnchor);
-      if(ancestor_anchor) {
+      if(ancestor_anchor && ancestor_anchor === dom.ancestor(rng.ec, dom.isAnchor)) {
           anchors.push($(ancestor_anchor).html(linkText).get(0));
       } else if (isTextChanged) {
         // Create a new link when text changed.
@@ -647,7 +646,8 @@ define([
 
       $.each(anchors, function (idx, anchor) {
         $(anchor).attr('href', linkUrl);
-        $(anchor).attr('class', className); // ODOO: addition
+        $(anchor).attr('class', linkInfo.className || null); // ODOO: addition
+        $(anchor).css(linkInfo.style || {}); // ODOO: addition
         if (isNewWindow) {
           $(anchor).attr('target', '_blank');
         } else {
@@ -740,7 +740,7 @@ define([
     this.floatMe = function ($editable, value, $target) {
       beforeCommand($editable);
       // bootstrap
-      $target.removeClass('pull-left pull-right');
+      $target.removeClass('float-left float-right');
       if (value && value !== 'none') {
         $target.addClass('pull-' + value);
       }
@@ -760,7 +760,7 @@ define([
     this.imageShape = function ($editable, value, $target) {
       beforeCommand($editable);
 
-      $target.removeClass('img-rounded img-circle img-thumbnail');
+      $target.removeClass('rounded rounded-circle img-thumbnail');
 
       if (value) {
         $target.addClass(value);

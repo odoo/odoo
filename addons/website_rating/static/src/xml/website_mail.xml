@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="website_rating.rating_stars_static">
+        <t t-set="val_integer" t-value="Math.floor(val)"/>
+        <t t-set="val_decimal" t-value="val - val_integer"/>
+        <t t-set="empty_star" t-value="5 - (val_integer+Math.ceil(val_decimal))"/>
+        <div class="o_website_rating_static">
+            <t t-foreach="_.range(0, val_integer)" t-as="num">
+                <i class="fa fa-star" role="img" aria-label="One star" title="One star"></i>
+            </t>
+            <t t-if="val_decimal">
+                <i class="fa fa-star-half-o" role="img" aria-label="Half a star" title="Half a star"></i>
+            </t>
+            <t t-foreach="_.range(0, empty_star)" t-as="num" role="img" t-attf-aria-label="#{empty_star} on 5" t-attf-title="#{empty_star} on 5">
+                <i class="fa fa-star-o"></i>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="website_rating.rating_card">
+        <div class="row o_website_rating_card_container">
+            <div class="col-lg-3 offset-lg-2" t-if="!_.isEmpty(widget.get('rating_card_values'))">
+                <p><strong>Average</strong></p>
+                <div class="o_website_rating_avg text-center">
+                    <h1><t t-esc="widget.get('rating_card_values')['avg']"/></h1>
+                    <t t-call="website_rating.rating_stars_static">
+                        <t t-set="val" t-value="widget.get('rating_card_values')['avg'] || 0"/>
+                    </t>
+                    <t t-call="portal.chatter_message_count"/>
+                </div>
+            </div>
+            <div class="col-lg-6" t-if="!_.isEmpty(widget.get('rating_card_values'))">
+                <p><strong>Details</strong></p>
+                <div class="o_website_rating_progress_bars">
+                    <table class="o_website_rating_progress_table">
+                        <t t-foreach="widget.get('rating_card_values')['percent']" t-as="percent">
+                            <tr class="o_website_rating_select" t-att-data-star="percent['num']" style="opacity: 1">
+                                <td class="o_website_rating_table_star_num" t-att-data-star="percent['num']">
+                                    <t t-esc="percent['num']"/> stars
+                                </td>
+                                <td class="o_website_rating_table_progress">
+                                    <div class="progress">
+                                        <div class="progress-bar o_rating_progressbar" role="progressbar" t-att-aria-valuenow="percent['percent']" aria-valuemin="0" aria-valuemax="100" t-att-style="'width:' + percent['percent'] + '%;'">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="o_website_rating_table_percent">
+                                    <strong><t t-esc="percent['percent']"/>%</strong>
+                                </td>
+                                <td class="o_website_rating_table_reset">
+                                    <a href="#" role="button" class="btn btn-link o_website_rating_select_text" t-att-data-star="percent['num']">Remove selection</a>
+                                </td>
+                            </tr>
+                        </t>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website_rating.rating_star_input">
+        <div class="o_rating_star_card" t-if="widget.options['display_rating']">
+            <div class="stars enabled">
+                <i class="fa fa-star-o" role="img" aria-label="One star on five" title="One star on five"></i>
+                <i class="fa fa-star-o" role="img" aria-label="Two stars on five" title="Two stars on five"></i>
+                <i class="fa fa-star-o" role="img" aria-label="Three stars on five" title="Three stars on five"></i>
+                <i class="fa fa-star-o" role="img" aria-label="Four stars on five" title="Four stars on five"></i>
+                <i class="fa fa-star-o" role="img" aria-label="Five stars on five" title="Five stars on five"></i>
+            </div>
+            <div class="rate_text">
+                <span class="badge badge-info"></span>
+            </div>
+            <input type="hidden" readonly="readonly" name="rating_value" value="0.0"/>
+        </div>
+    </t>
+
+    <!--
+        Inherited templates from portal to custom chatter with rating
+    -->
+    <t t-extend="portal.chatter_composer">
+        <t t-jquery=".o_portal_chatter_composer_form input[name='csrf_token']" t-operation="after">
+            <t t-call="website_rating.rating_star_input"/>
+        </t>
+    </t>
+
+    <t t-extend="portal.chatter_messages">
+        <t t-jquery="t[t-raw='message.body']" t-operation="before">
+            <t t-if="message['rating_value']">
+                <t t-call="website_rating.rating_stars_static">
+                    <t t-set="val" t-value="message.rating_value"/>
+                </t>
+            </t>
+        </t>
+    </t>
+
+    <t t-extend="portal.chatter">
+        <t t-jquery="t[t-call='portal.chatter_message_count']" t-operation="replace">
+            <t t-if="widget.options['display_rating']">
+                <t t-call="website_rating.rating_card"/>
+            </t>
+            <t t-if="!widget.options['display_rating']">
+                <t t-call="portal.chatter_message_count"/>
+            </t>
+        </t>
+    </t>
+
+</templates>

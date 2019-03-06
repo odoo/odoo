@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <template id="authorize_form">
+            <div>
+                <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
+                <input type="hidden" name='x_login' t-att-value='x_login'/>
+                <input type="hidden" name='x_fp_hash' t-att-value='x_fp_hash'/>
+                <input type="hidden" name='x_amount' t-att-value='x_amount'/>
+                <input type="hidden" name='x_show_form' t-att-value="x_show_form"/>
+                <input type="hidden" name='x_type' t-att-value="x_type"/>
+                <input type="hidden" name='x_method' t-att-value="x_method"/>
+                <input type="hidden" name='x_fp_sequence' t-att-value='x_fp_sequence'/>
+                <input type="hidden" name='x_version' t-att-value="x_version"/>
+                <input type="hidden" name="x_relay_response" t-att-value="x_relay_response"/>
+                <input type="hidden" name="x_relay_url" t-att-value="x_relay_url"/>
+                <input type="hidden" name="x_fp_timestamp" t-att-value="x_fp_timestamp"/>
+                <input type="hidden" name='return_url' t-att-value="returndata"/>
+                <input type="hidden" name='x_cancel_url' t-att-value="x_cancel_url"/>
+                <!--Order Information -->
+                <input type="hidden" name='x_invoice_num' t-att-value='reference'/>
+                <input type="hidden" name='x_currency_code' t-att-value='x_currency_code'/>
+                <!-- Billing Information-->
+                <input type="hidden" name='x_first_name' t-att-value="billing_first_name"/>
+                <input type="hidden" name='x_last_name' t-att-value="billing_last_name"/>
+                <input type="hidden" name="x_company" t-att-value="billing_partner_commercial_company_name"/>
+                <input type="hidden" name='x_address' t-att-value="billing_address"/>
+                <input type="hidden" name='x_city' t-att-value="billing_city"/>
+                <input type="hidden" name='x_zip' t-att-value="billing_zip_code"/>
+                <input type="hidden" name='x_country' t-att-value="billing_country"/>
+                <input type="hidden" name='x_phone' t-att-value='billing_phone'/>
+                <input type="hidden" name='x_email' t-att-value="billing_email"/>
+                <input type="hidden" name='x_state' t-att-value="billing_state"/>
+                <!-- Shipping Information-->
+                <input type="hidden" name='x_ship_to_first_name' t-att-value="first_name"/>
+                <input type="hidden" name='x_ship_to_last_name' t-att-value="last_name"/>
+                <input type="hidden" name='x_ship_to_address' t-att-value="address"/>
+                <input type="hidden" name='x_ship_to_city' t-att-value="city"/>
+                <input type="hidden" name='x_ship_to_zip' t-att-value="zip_code"/>
+                <input type="hidden" name='x_ship_to_country' t-att-value="country"/>
+                <input type="hidden" name='x_ship_to_phone' t-att-value='phone'/>
+                <input type="hidden" name='x_ship_to_email' t-att-value="email"/>
+                <input type="hidden" name='x_ship_to_state' t-att-value="state"/>
+            </div>
+        </template>
+
+        <template id="payment_authorize_redirect" name="Payment Authorize">
+            <script type="text/javascript">
+                window.location.href = '<t t-esc="return_url"/>';
+            </script>
+        </template>
+
+        <template id="authorize_s2s_form">
+            <input type="hidden" name="data_set" data-create-route="/payment/authorize/s2s/create_json_3ds"/>
+            <div t-attf-class="row mt8 #{'' if bootstrap_formatting else 'o_card_brand_detail'}">
+                <div t-att-class="'form-group col-lg-12' if bootstrap_formatting else 'form-group'">
+                    <input type="tel" name="cc_number" id="cc_number" class="form-control" placeholder="Card number" data-is-required="true"/>
+                    <div class="card_placeholder"></div>
+                    <div class="visa"></div>
+                    <input type="hidden" name="cc_brand" value=""/>
+                </div>
+                <div t-att-class="'form-group col-lg-5' if bootstrap_formatting else 'form-group'">
+                    <input type="text" name="cc_holder_name" id="cc_holder_name" class="form-control" placeholder="Cardholder name" data-is-required="true"/>
+                </div>
+                <div t-att-class="'form-group col-lg-3' if bootstrap_formatting else 'form-group'">
+                    <input type="text" name="cc_expiry" id="cc_expiry" class="form-control" maxlength="7" placeholder="Expires (MM / YY)" data-is-required="true"/>
+                </div>
+                <div t-att-class="'form-group col-lg-4' if bootstrap_formatting else 'form-group'">
+                    <input type="text" name="cc_cvc" id="cc_cvc" class="form-control" maxlength="4" placeholder="CVC" data-is-required="true"/>
+                </div>
+            </div>
+            <input type="hidden" name="acquirer_id" t-att-value="id"/>
+            <input class="d-none" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <input t-if="return_url" type="hidden" name="return_url" t-att-value="return_url"/>
+            <input t-if="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
+         </template>
+    </data>
+</odoo>

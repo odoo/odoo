@@ -1,200 +1,95 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
-from openerp.osv import orm, fields
-from openerp import SUPERUSER_ID
-from openerp.addons import decimal_precision
-from openerp.exceptions import ValidationError
-from openerp.tools.translate import _
-
+from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
 
 
-class delivery_carrier(orm.Model):
-    _name = 'delivery.carrier'
-    _inherit = ['delivery.carrier', 'website.published.mixin']
-
-    _columns = {
-        'website_description': fields.related('product_id', 'description_sale', type="text", string='Description for Online Quotations'),
-    }
-    _defaults = {
-        'website_published': False
-    }
-
-
-class SaleOrder(orm.Model):
+class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    def _amount_delivery(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        for order in self.browse(cr, uid, ids, context=context):
-            res[order.id] = {}
-            res[order.id]['amount_delivery'] = sum([line.price_subtotal for line in order.order_line if line.is_delivery])
-        return res
+    amount_delivery = fields.Monetary(
+        compute='_compute_amount_delivery', digits=0,
+        string='Delivery Amount',
+        help="The amount without tax.", store=True, track_visibility='always')
+    has_delivery = fields.Boolean(
+        compute='_compute_has_delivery', string='Has delivery',
+        help="Has an order line set for delivery", store=True)
 
-    def _has_delivery(self, cr, uid, ids, field_name, arg, context=None):
-        result = dict.fromkeys(ids, False)
-        for so in self.browse(cr, uid, ids, context=context):
-            for line in so.order_line:
-                if line.is_delivery:
-                    result[so.id] = True
-                    break
-        return result
+    @api.one
+    def _compute_website_order_line(self):
+        super(SaleOrder, self)._compute_website_order_line()
+        self.website_order_line = self.website_order_line.filtered(lambda l: not l.is_delivery)
 
-    def _get_order(self, cr, uid, ids, context=None):
-        result = {}
-        for line in self.pool.get('sale.order.line').browse(cr, uid, ids, context=context):
-            result[line.order_id.id] = True
-        return result.keys()
-
-    _columns = {
-        'amount_delivery': fields.function(
-            _amount_delivery, type='float', digits=0,
-            string='Delivery Amount',
-            store={
-                'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
-                'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
-            },
-            multi='sums', help="The amount without tax.", track_visibility='always'
-        ),
-        'has_delivery': fields.function(
-            _has_delivery, type='boolean', string='Has delivery',
-            store={
-                'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
-                'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
-            },
-            help="Has an order line set for delivery"
-        ),
-        'website_order_line': fields.one2many(
-            'sale.order.line', 'order_id',
-            string='Order Lines displayed on Website', readonly=True,
-            domain=[('is_delivery', '=', False)],
-            help='Order Lines to be displayed on the website. They should not be used for computation purpose.',
-        ),
-    }
-
-    def _check_carrier_quotation(self, cr, uid, order, force_carrier_id=None, context=None):
-        carrier_obj = self.pool.get('delivery.carrier')
-
-        # check to add or remove carrier_id
-        if not order:
-            return False
-        if all(line.product_id.type in ("service", "digital") for line in order.website_order_line):
-            order.write({'carrier_id': None})
-            self.pool['sale.order']._delivery_unset(cr, SUPERUSER_ID, [order.id], context=context)
-            return True
-        else: 
-            carrier_id = force_carrier_id or order.carrier_id.id
-            carrier_ids = self._get_delivery_methods(cr, uid, order, context=context)
-            if carrier_id:
-                if carrier_id not in carrier_ids:
-                    carrier_id = False
-                else:
-                    carrier_ids.remove(carrier_id)
-                    carrier_ids.insert(0, carrier_id)
-            if force_carrier_id or not carrier_id or not carrier_id in carrier_ids:
-                for delivery_id in carrier_ids:
-                    carrier = carrier_obj.verify_carrier(cr, SUPERUSER_ID, [delivery_id], order.partner_shipping_id)
-                    if carrier:
-                        carrier_id = delivery_id
-                        break
-                order.write({'carrier_id': carrier_id})
-            if carrier_id:
-                order.delivery_set()
+    @api.depends('order_line.price_unit', 'order_line.tax_id', 'order_line.discount', 'order_line.product_uom_qty')
+    def _compute_amount_delivery(self):
+        for order in self:
+            if self.env.user.has_group('account.group_show_line_subtotals_tax_excluded'):
+                order.amount_delivery = sum(order.order_line.filtered('is_delivery').mapped('price_subtotal'))
             else:
-                order._delivery_unset()
+                order.amount_delivery = sum(order.order_line.filtered('is_delivery').mapped('price_total'))
 
-        return bool(carrier_id)
+    @api.depends('order_line.is_delivery')
+    def _compute_has_delivery(self):
+        for order in self:
+            order.has_delivery = any(order.order_line.filtered('is_delivery'))
 
-    def _get_delivery_methods(self, cr, uid, order, context=None):
-        carrier_obj = self.pool.get('delivery.carrier')
-        carrier_ids = carrier_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True)], context=context)
-        available_carrier_ids = []
-        # Following loop is done to avoid displaying delivery methods who are not available for this order
-        # This can surely be done in a more efficient way, but at the moment, it mimics the way it's
-        # done in delivery_set method of sale.py, from delivery module
+    def _check_carrier_quotation(self, force_carrier_id=None):
+        self.ensure_one()
+        DeliveryCarrier = self.env['delivery.carrier']
 
-        new_context = dict(context, order_id=order.id)
-        for carrier in carrier_ids:
+        if self.only_services:
+            self.write({'carrier_id': None})
+            self._remove_delivery_line()
+            return True
+        else:
+            # attempt to use partner's preferred carrier
+            if not force_carrier_id and self.partner_shipping_id.property_delivery_carrier_id:
+                force_carrier_id = self.partner_shipping_id.property_delivery_carrier_id.id
 
-            try:
-                _logger.debug("Checking availability of carrier #%s" % carrier)
-                available = carrier_obj.read(cr, SUPERUSER_ID, [carrier], fields=['available'], context=new_context)[0]['available']
-                if available:
-                    available_carrier_ids = available_carrier_ids + [carrier]
-            except ValidationError as e:
-                # RIM: hack to remove in master, because available field should not depend on a SOAP call to external shipping provider
-                # The validation error is used in backend to display errors in fedex config, but should fail silently in frontend
-                _logger.debug("Carrier #%s removed from e-commerce carrier list. %s" % (carrier, e))
+            carrier = force_carrier_id and DeliveryCarrier.browse(force_carrier_id) or self.carrier_id
+            available_carriers = self._get_delivery_methods()
+            if carrier:
+                if carrier not in available_carriers:
+                    carrier = DeliveryCarrier
+                else:
+                    # set the forced carrier at the beginning of the list to be verfied first below
+                    available_carriers -= carrier
+                    available_carriers = carrier + available_carriers
+            if force_carrier_id or not carrier or carrier not in available_carriers:
+                for delivery in available_carriers:
+                    verified_carrier = delivery._match_address(self.partner_shipping_id)
+                    if verified_carrier:
+                        carrier = delivery
+                        break
+                self.write({'carrier_id': carrier.id})
+            self._remove_delivery_line()
+            if carrier:
+                self.get_delivery_price()
+                if self.delivery_rating_success:
+                    self.set_delivery_line()
 
-        return available_carrier_ids
+        return bool(carrier)
 
-    def _get_errors(self, cr, uid, order, context=None):
-        errors = super(SaleOrder, self)._get_errors(cr, uid, order, context=context)
-        if not self._get_delivery_methods(cr, uid, order, context=context):
-            errors.append(
-                (_('Sorry, we are unable to ship your order'),
-                 _('No shipping method is available for your current order and shipping address. '
-                   'Please contact us for more information.')))
-        return errors
+    def _get_delivery_methods(self):
+        address = self.partner_shipping_id
+        # searching on website_published will also search for available website (_search method on computed field)
+        return self.env['delivery.carrier'].sudo().search([('website_published', '=', True)]).available_carriers(address)
 
-    def _get_website_data(self, cr, uid, order, context=None):
-        """ Override to add delivery-related website data. """
-        values = super(SaleOrder, self)._get_website_data(cr, uid, order, context=context)
-        # We need a delivery only if we have stockable products
-        has_stockable_products = False
-        for line in order.order_line:
-            if line.product_id.type in ('consu', 'product'):
-                has_stockable_products = True
-        if not has_stockable_products:
-            return values
-
-        delivery_ctx = dict(context, order_id=order.id)
-        DeliveryCarrier = self.pool.get('delivery.carrier')
-        delivery_ids = self._get_delivery_methods(cr, uid, order, context=context)
-
-        values['deliveries'] = DeliveryCarrier.browse(cr, SUPERUSER_ID, delivery_ids, context=delivery_ctx)
-        return values
-
-    def _cart_update(self, cr, uid, ids, product_id=None, line_id=None, add_qty=0, set_qty=0, context=None, **kwargs):
+    @api.multi
+    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
         """ Override to update carrier quotation if quantity changed """
 
-        self._delivery_unset(cr, uid, ids, context=context)
+        self._remove_delivery_line()
 
         # When you update a cart, it is not enouf to remove the "delivery cost" line
         # The carrier might also be invalid, eg: if you bought things that are too heavy
         # -> this may cause a bug if you go to the checkout screen, choose a carrier,
         #    then update your cart (the cart becomes uneditable)
-        self.write(cr, uid, ids, {'carrier_id': False}, context=context)
+        self.write({'carrier_id': False})
 
-        values = super(SaleOrder, self)._cart_update(
-            cr, uid, ids, product_id, line_id, add_qty, set_qty, context, **kwargs)
+        values = super(SaleOrder, self)._cart_update(product_id, line_id, add_qty, set_qty, **kwargs)
 
-        if add_qty or set_qty is not None:
-            for sale_order in self.browse(cr, uid, ids, context=context):
-                self._check_carrier_quotation(cr, uid, sale_order, context=context)
-
-        return values
-
-    def _get_shipping_country(self, cr, uid, values, context=None):
-        country_ids = set()
-        state_ids = set()
-        values['shipping_countries'] = values['countries']
-        values['shipping_states'] = values['states']
-
-        DeliveryCarrier = self.pool['delivery.carrier']
-        delivery_carrier_ids = DeliveryCarrier.search(cr, SUPERUSER_ID, [('website_published', '=', True)], context=context)
-        for carrier in DeliveryCarrier.browse(cr, SUPERUSER_ID, delivery_carrier_ids, context):
-            if not carrier.country_ids and not carrier.state_ids:
-                return values
-            # Authorized shipping countries
-            country_ids = country_ids|set(carrier.country_ids.ids)
-            # Authorized shipping countries without any state restriction
-            state_country_ids = [country.id for country in carrier.country_ids if country.id not in carrier.state_ids.mapped('country_id.id')]
-            # Authorized shipping states + all states from shipping countries without any state restriction
-            state_ids = state_ids|set(carrier.state_ids.ids)|set(values['states'].filtered(lambda r: r.country_id.id in state_country_ids).ids)
-
-        values['shipping_countries'] = values['countries'].filtered(lambda r: r.id in list(country_ids))
-        values['shipping_states'] = values['states'].filtered(lambda r: r.id in list(state_ids))
         return values

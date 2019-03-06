@@ -3,16 +3,15 @@
 # * payment_authorize
 # 
 # Translators:
-# Daniel & Delphine <dd2013@leschoupinous.net>, 2015
-# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-11-18 17:39+0000\n"
-"Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
-"Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
+"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,58 +19,110 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: payment_authorize
-#: model:payment.acquirer,cancel_msg:payment_authorize.payment_acquirer_authorize
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>Annulez,</i> Votre paiement a été annulé.</span>"
-
-#. module: payment_authorize
-#: model:payment.acquirer,done_msg:payment_authorize.payment_acquirer_authorize
-msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr "<span><i>Terminé,</i> votre paiement en ligne a été traité avec succès. Merci de votre commande.</span>"
-
-#. module: payment_authorize
-#: model:payment.acquirer,error_msg:payment_authorize.payment_acquirer_authorize
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr "<span><i>Erreur,</i> une erreur est survenue pendant la transaction. La commande a été confirmée mais ne sera pas payée. N'hésitez pas à nous contacter si vous avez une question sur le statut de votre commande.</span>"
-
-#. module: payment_authorize
-#: model:payment.acquirer,pending_msg:payment_authorize.payment_acquirer_authorize
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr "<span><i>En cours,</i> votre paiement en ligne a été enregistré. Mais votre commande n'est pas encore validée.</span>"
-
-#. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_login
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
 msgid "API Login Id"
 msgstr "Identifiant API"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_transaction_key
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
 msgid "API Transaction Key"
 msgstr "Clé de transaction API"
 
 #. module: payment_authorize
-#: model:payment.acquirer,name:payment_authorize.payment_acquirer_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
 msgid "Authorize.Net"
 msgstr "Authorize.Net"
 
 #. module: payment_authorize
-#: model:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
+msgid "Authorize.net Profile ID"
+msgstr "ID de profil Authorize.net"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:177
+#, python-format
 msgid ""
-"How to configure your Authorize.Net account (look for Getting Started Guide)"
-" ?"
-msgstr "Comment configurer votre compte Authorize.Net (chercher le Guide de Mise en Route)?"
+"Authorize: received data with missing reference (%s) or trans_id (%s) or "
+"fingerprint (%s)"
+msgstr ""
+"Authorize : données reçues sans référence (%s), trans_id (%s) ou empreinte "
+"(%s)"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
+msgid "CVC"
+msgstr "CVC"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
+msgid "Card number"
+msgstr "Numéro de carte"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
+msgid "Cardholder name"
+msgstr "Nom du titulaire de la carte"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
+msgid "Expires (MM / YY)"
+msgstr "Date d'expiration (MM/AA)"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
+msgid "How to get paid with Authorize.Net"
+msgstr "Comment se faire payer avec Authorize.Net"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:64
+#, python-format
+msgid ""
+"If you don't have any account, please ask your salesperson to update your "
+"profile. "
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:261
+#, python-format
+msgid ""
+"Invalid token found: the Authorize profile is missing.Please make sure the "
+"token has a valid acquirer reference."
+msgstr ""
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Configuration Manuelle"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Intermédiaire de paiement"
+msgstr "Intermédiaire de Paiement"
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_payment_token
+msgid "Payment Token"
+msgstr "Jeton de paiement"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_transaction
@@ -79,8 +130,82 @@ msgid "Payment Transaction"
 msgstr "Transaction"
 
 #. module: payment_authorize
-#: model:payment.acquirer,pre_msg:payment_authorize.payment_acquirer_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:66
+#, python-format
+msgid "Please complete your profile. "
+msgstr "Complétez votre profil s'il vous plaît."
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:61
+#, python-format
+msgid "Please sign in to complete your profile."
+msgstr "Veuillez vous connecter afin de compléter votre profil."
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__provider
+msgid "Provider"
+msgstr "Fournisseur"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__save_token
+msgid "Save Cards"
+msgstr "Enregistrer les cartes"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:365
+#, python-format
+msgid "The Customer Profile creation in Authorize.NET failed."
+msgstr "La création du profil client dans Authorize.Net a échoué."
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:58
+#, python-format
 msgid ""
-"You will be redirected to the Authorize website after clicking on the "
-"payment button."
-msgstr "Vous serez redirigé vers le site d'Authorize après avoir cliqué sur le bouton de paiement."
+"The transaction cannot be processed because some contact details are missing"
+" or invalid: "
+msgstr ""
+"La transaction ne peut pas être traitée car certains détails de contact sont"
+" manquants ou non valides:"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
+msgid ""
+"This contains the unique reference for this partner/payment token "
+"combination in the Authorize.net backend"
+msgstr ""
+"Contient la référence unique pour cette combinaison partenaire/jeton de "
+"paiement dans le backend Authorize.Net"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__save_token
+msgid ""
+"This option allows customers to save their credit card as a payment token "
+"and to reuse it for a later purchase. If you manage subscriptions (recurring"
+" invoicing), you need it to automatically charge the customer when you issue"
+" an invoice."
+msgstr ""
+"Cette option permet aux clients d'enregistrer leur carte de crédit en tant "
+"que moyen de paiement et de l'utiliser pour un achat ultérieur. Si vous "
+"gérez des abonnements (facturation récurrente), vous en avez besoin pour "
+"facturer automatiquement le client lorsque vous émettez une facture."
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Virement bancaire"

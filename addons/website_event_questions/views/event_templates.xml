@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="event_question_assets" inherit_id="website.assets_frontend" name="Events Questions">
+    <xpath expr="/t" position="inside">
+        <script type="text/javascript" src="/website_event_questions/static/src/js/website_event_questions.js"></script>
+    </xpath>
+</template>
+
+<template id="registration_attendee_details_questions" inherit_id="website_event.registration_attendee_details" name="Registration Attendee Details with questions">
+    <data>
+        <!-- Attendee specific questions -->
+        <xpath expr="//t[@name='attendee_loop']" position="inside">
+            <t t-if="event.specific_question_ids">
+                <div class="mb16 mt16">
+                    <div t-foreach='event.specific_question_ids' t-as='question'>
+                        <div class="row mb4">
+                            <span class="col-lg-7 mt4 text-right"><t t-esc="question.title"/></span>
+                            <div class="col-lg-5">
+                                <select t-attf-name="#{counter}-answer_ids-#{question.id}" class="o_specific_answer" required="true">
+                                    <t t-foreach='question.answer_ids' t-as="answer">
+                                        <option t-esc='answer.name' t-att-value='answer.id'/>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+
+        <!-- Generic questions -->
+        <xpath expr="//*[hasclass('modal-body')]/div/t[last()]" position="after">
+            <t t-if="event.general_question_ids">
+                <h4 class="o_page_header mt8"><strong>Questions</strong></h4>
+                <div>
+                    <div t-foreach='event.general_question_ids' t-as='question'>
+                        <div class="row mb4">
+                            <span class="col-lg-7 mt4 text-right"><t t-esc='question.title'/></span>
+                            <div class="col-lg-5">
+                                <select t-attf-name="0-answer_ids-#{question.id}" class="o_general_answer" required="true">
+                                    <t t-foreach='question.answer_ids' t-as="answer">
+                                        <option t-esc='answer.name' t-att-value='answer.id'/>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </data>
+</template>
+
+</odoo>

@@ -1,13 +1,31 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# Author: Nicolas Bessi. Copyright Camptocamp SA
-# Financial contributors: Hasa SA, Open Net SA,
-#                         Prisme Solutions Informatique SA, Quod SA
-# Translation contributors: brain-tec AG, Agile Business Group
+from . import models
 
-from openerp import SUPERUSER_ID
+from odoo import api, SUPERUSER_ID
 
-def load_translations(cr, registry):
-    chart_template = registry['ir.model.data'].xmlid_to_object(cr, SUPERUSER_ID, 'l10n_ch.l10nch_chart_template')
-    chart_template.process_coa_translations()
+
+def load_translations(env):
+    env.ref('l10n_ch.l10nch_chart_template').process_coa_translations()
+
+
+def init_settings(env):
+    '''If the company is localized in Switzerland, activate the cash rounding by default.
+    '''
+    # The cash rounding is activated by default only if the company is localized in Switzerland.
+    for company in env['res.company'].search([]):
+        if company.country_id != env.ref('base.ch'):
+            continue
+        res_config_id = env['res.config.settings'].create({
+            'company_id': company.id,
+            'group_cash_rounding': True
+        })
+        # We need to call execute, otherwise the "implied_group" in fields are not processed.
+        res_config_id.execute()
+
+
+def post_init(cr, registry):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    load_translations(env)
+    init_settings(env)

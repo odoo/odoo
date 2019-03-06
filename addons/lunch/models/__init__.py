@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-import lunch
+from . import lunch

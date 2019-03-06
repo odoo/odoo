@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+<template id="assets_common" name="stock_location_barcodes pdf assets" inherit_id="web.report_assets_common">
+    <xpath expr="." position="inside">
+        <link rel="stylesheet" type="text/scss" href="/stock/static/src/scss/report_location_barcode.scss"/>
+    </xpath>
+</template>
+
+<template id="report_location_barcode">
+    <t t-call="web.html_container">
+        <div t-foreach="[docs[x:x+4] for x in range(0, len(docs), 4)]" t-as="page_docs" class="page article page_stock_location_barcodes">
+            <t t-foreach="page_docs" t-as="o">
+                <t t-if="o.barcode"><t t-set="content" t-value="o.barcode"/></t>
+                <t t-if="not o.barcode"><t t-set="content" t-value="o.name"/></t>
+                <img class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', content, 600, 100)" alt="Barcode"/>
+            </t>
+        </div>
+    </t>
+</template>
+</data>
+</odoo>

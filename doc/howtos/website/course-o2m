@@ -3,7 +3,7 @@
 diff -r c3619e60d819 -r 957395d27f63 academy/models.py
 --- a/academy/models.py	Wed Aug 13 14:29:45 2014 +0200
 +++ b/academy/models.py	Wed Aug 13 15:06:30 2014 +0200
-@@ -7,6 +7,8 @@ class Teachers(models.Model):
+@@ -8,6 +8,8 @@ class Teachers(models.Model):
      name = fields.Char()
      biography = fields.Html()
  
@@ -15,7 +15,7 @@ diff -r c3619e60d819 -r 957395d27f63 academy/models.py
 diff -r c3619e60d819 -r 957395d27f63 academy/views.xml
 --- a/academy/views.xml	Wed Aug 13 14:29:45 2014 +0200
 +++ b/academy/views.xml	Wed Aug 13 15:06:30 2014 +0200
-@@ -11,8 +11,15 @@
+@@ -12,8 +12,15 @@
        <form>
          <sheet>
            <label for="name"/> <field name="name"/>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_costs_reporting_action" model="ir.actions.act_window">
+      <field name="name">Costs Analysis</field>
+      <field name="res_model">fleet.vehicle.cost</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">graph,pivot</field>
+      <field name="view_id"></field>  <!-- force empty -->
+      <field name="context">{"search_default_parent_false" : True,}</field>
+      <field name="help" type="html">
+        <p class="o_view_nocontent_empty_folder">
+          No data for analysis
+        </p><p>
+          Odoo helps you managing the costs for your different vehicles
+          Costs are generally created from services and contract and appears here.
+        </p><p>
+          Thanks to the different filters, Odoo can only print the effective
+          costs, sort them by type and by vehicle.
+        </p>
+      </field>
+    </record>
+    <record id="fleet_reporting_pivot_action" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="fleet_vehicle_cost_view_pivot"/>
+        <field name="act_window_id" ref="fleet_costs_reporting_action"/>
+    </record>
+    <record id="fleet_reporting_graph_action" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="fleet_vehicle_cost_view_graph"/>
+        <field name="act_window_id" ref="fleet_costs_reporting_action"/>
+    </record>
+
+    <record id="fleet_costs_reporting_non_effective_action" model="ir.actions.act_window">
+      <field name="name">Indicative Costs Analysis</field>
+      <field name="res_model">fleet.vehicle.cost</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">graph,pivot</field>
+     <field name="view_id"></field>  <!-- force empty -->
+      <field name="context">{"search_default_parent_true" : True,}</field>
+      <field name="help" type="html">
+        <p class="o_view_nocontent_empty_folder">
+          No data for analysis
+        </p><p>
+          Odoo helps you managing the costs for your different vehicles
+          Costs are generally created from services and contract and appears here.
+        </p><p>
+          Thanks to the different filters, Odoo can only print the effective
+          costs, sort them by type and by vehicle.
+        </p>
+      </field>
+    </record>
+    <record id="view_fleet_non_effective_pivot_action" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="fleet_vehicle_cost_indicative_view_pivot"/>
+        <field name="act_window_id" ref="fleet_costs_reporting_non_effective_action"/>
+    </record>
+    <record id="view_fleet_non_effective_graph_action" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="fleet_vehicle_cost_indicative_view_graph"/>
+        <field name="act_window_id" ref="fleet_costs_reporting_non_effective_action"/>
+    </record>
+    
+    <menuitem name="Reporting" parent="menu_root" id="menu_fleet_reporting" sequence="99" groups="fleet_group_manager"/>
+
+    <menuitem id="menu_fleet_reporting_costs"
+              name="Costs"
+              parent="menu_fleet_reporting"
+              action="fleet_costs_reporting_action"
+              sequence="1"
+              groups="fleet_group_manager"/>
+    <menuitem id="menu_fleet_reporting_indicative_costs"
+              name="Indicative Costs"
+              parent="menu_fleet_reporting"
+              action="fleet_costs_reporting_non_effective_action"
+              sequence="2"
+              groups="fleet_group_manager"/>
+</odoo>

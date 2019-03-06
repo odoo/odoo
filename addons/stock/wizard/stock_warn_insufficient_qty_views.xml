@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_warn_insufficient_qty_form_view" model="ir.ui.view">
+        <field name="name">stock.warn.insufficient.qty</field>
+        <field name="model">stock.warn.insufficient.qty</field>
+        <field name="arch" type="xml">
+            <form>
+                <div>
+                    The product
+                    <strong><field name="product_id" readonly="True"/></strong> is not available in sufficient quantity
+                    <span class="oe_inline" groups="stock.group_stock_multi_locations"> in
+                        <strong><field name="location_id" readonly="True"/></strong>.
+                    </span>
+                </div>
+                <div attrs="{'invisible': [('quant_ids', '=', [])]}">
+                    <br/>
+                    <strong>Here is your current inventory: </strong>
+                    <field name="quant_ids" style="margin-top:10px;">
+                        <tree>
+                            <field name="product_id"/>
+                            <field name="location_id"/>
+                            <field name="lot_id" groups="stock.group_production_lot"/>
+                            <field name="quantity"/>
+                        </tree>
+                    </field>
+                </div>
+                <div>
+                    Are you sure you want to confirm this operation? This may lead to inconsistencies in your inventory.
+                </div>
+                <footer>
+                    <button name="cancel_button" string="Discard" class="btn-primary" special="cancel"/>
+                    <button string="Confirm" name="action_done" type="object" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="stock_warn_insufficient_qty_scrap_form_view" model="ir.ui.view">
+        <field name="name">stock.warn.insufficient.qty.scrap</field>
+        <field name="model">stock.warn.insufficient.qty.scrap</field>
+        <field name="inherit_id" ref="stock.stock_warn_insufficient_qty_form_view"/>
+         <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="scrap_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

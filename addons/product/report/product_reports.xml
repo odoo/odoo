@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            id="report_product_label"
+            string="Product Label (PDF)"
+            model="product.product"
+            report_type="qweb-pdf"
+            name="product.report_productlabel"
+            file="product.report_productlabel"
+            print_report_name="'Products Labels - %s' % (object.name)"
+        />
+
+        <report
+            id="report_product_template_label"
+            string="Product Label (PDF)"
+            model="product.template"
+            report_type="qweb-pdf"
+            name="product.report_producttemplatelabel"
+            file="product.report_producttemplatelabel"
+            print_report_name="'Products Labels - %s' % (object.name)"
+        />
+
+        <report
+            id="report_product_product_barcode"
+            string="Product Barcode (PDF)"
+            model="product.product"
+            report_type="qweb-pdf"
+            name="product.report_productbarcode"
+            file="product.report_productbarcode"
+            print_report_name="'Products barcode - %s' % (object.name)"
+        />
+
+        <report
+            id="report_product_template_barcode"
+            string="Product Barcode (PDF)"
+            model="product.template"
+            report_type="qweb-pdf"
+            name="product.report_producttemplatebarcode"
+            file="product.report_producttemplatebarcode"
+            print_report_name="'Products barcode - %s' % (object.name)"
+        />
+
+        <report
+            id="report_product_packaging"
+            string="Product Packaging (PDF)"
+            model="product.packaging"
+            report_type="qweb-pdf"
+            name="product.report_packagingbarcode"
+            file="product.report_packagingbarcode"
+            print_report_name="'Products packaging - %s' % (object.name)"/>
+
+        <report
+            id="action_report_pricelist"
+            string="Pricelist"
+            model="product.product"
+            report_type="qweb-pdf"
+            name="product.report_pricelist"
+            file="product.report_pricelist"
+            menu="False"/>
+    </data>
+</odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_hr_timesheet_attendance_report_search" model="ir.ui.view">
+            <field name="name">Search for HR timesheet attendance report</field>
+            <field name="model">hr.timesheet.attendance.report</field>
+            <field name="arch" type="xml">
+                <search string="timesheet attendance">
+                    <field name="user_id"/>
+                    <filter name="month" string="Date" date="date"/>
+                </search>
+            </field>
+        </record>
+        <record id="view_hr_timesheet_attendance_report_pivot" model="ir.ui.view">
+            <field name="name">HR timesheet attendance report: Pivot</field>
+            <field name="model">hr.timesheet.attendance.report</field>
+            <field name="arch" type="xml">
+                <pivot string="timesheet attendance">
+                    <field name="user_id" type="row"/>
+                    <field name="date" interval="day" type="col"/>
+                    <field name="total_difference" type="measure" widget="float_time"/>
+                    <field name="total_timesheet" type="measure" widget="float_time"/>
+                    <field name="total_attendance" type="measure" widget="float_time"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="action_hr_timesheet_attendance_report" model="ir.actions.act_window">
+            <field name="name">HR Timesheet/Attendance Report</field>
+            <field name="res_model">hr.timesheet.attendance.report</field>
+            <field name="view_mode">pivot</field>
+            <field name="context">{'search_default_week': True}</field>
+        </record>
+
+        <menuitem id="menu_hr_timesheet_attendance_report"
+                  parent="hr_timesheet.menu_timesheets_reports"
+                  action="action_hr_timesheet_attendance_report"
+                  name="Timesheet / Attendance"/>
+    </data>
+</odoo>

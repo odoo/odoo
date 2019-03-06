@@ -3,17 +3,19 @@
 # * board
 # 
 # Translators:
-# krnkris, 2015
-# krnkris, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
+# Martin Trigaux, 2018
+# krnkris, 2018
+# gezza <geza.nagy@oregional.hu>, 2019
+# Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-04-12 10:04+0000\n"
-"Last-Translator: krnkris\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,74 +24,68 @@ msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:24
+#: code:addons/board/static/src/xml/board.xml:53
+#, python-format
+msgid ""
+"\"Add to\n"
+"                Dashboard\""
+msgstr ""
+"\"Hozzáadás a\n"
+"                kezelőpulthoz\""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:25
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:406
+#: code:addons/board/static/src/js/favorite_menu.js:103
 #, python-format
 msgid "'%s' added to dashboard"
 msgstr "'%s' hozzáadva a kezelőpulthoz"
 
 #. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
-msgid "<b>Your personal dashboard is empty.</b>"
-msgstr "<b>A személyes kezelőpultja üres.</b>"
-
-#. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:70
+#: code:addons/board/static/src/xml/board.xml:83
 #, python-format
 msgid "Add"
 msgstr "Hozzáadás"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:64
+#: code:addons/board/static/src/xml/board.xml:78
 #, python-format
 msgid "Add to my Dashboard"
-msgstr "Hozzáadás saját kezelőpulthoz"
+msgstr "Hozzáadás a kezelőpultomhoz"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:139
+#: code:addons/board/static/src/js/board_view.js:362
 #, python-format
-msgid "Are you sure you want to remove this item ?"
-msgstr "Biztosan el szeretné távolítani ezt az elemet?"
+msgid "Are you sure you want to remove this item?"
+msgstr "Biztosan el akarja távolítani ezt a tételt?"
 
 #. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/board_view.js:439
 #: model:ir.model,name:board.model_board_board
+#, python-format
 msgid "Board"
 msgstr "Kezelőpult"
 
 #. module: board
-#: model:ir.model,name:board.model_board_create
-msgid "Board Creation"
-msgstr "Kezelőpult létrehozása"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_name
-msgid "Board Name"
-msgstr "Kezelőpult neve"
-
-#. module: board
-#: model:ir.ui.view,arch_db:board.view_board_create
-msgid "Cancel"
-msgstr "Mégse"
-
-#. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:6
+#: code:addons/board/static/src/xml/board.xml:7
 #, python-format
 msgid "Change Layout"
 msgstr "Elrendezés megváltoztatása"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:4
+#: code:addons/board/static/src/xml/board.xml:5
 #, python-format
 msgid "Change Layout.."
 msgstr "Elrendezés megváltoztatása.."
@@ -99,99 +95,94 @@ msgstr "Elrendezés megváltoztatása.."
 #: code:addons/board/static/src/xml/board.xml:36
 #, python-format
 msgid "Choose dashboard layout"
-msgstr "Kezelőpult elrendezés kiválasztása"
+msgstr "Kezelőpult elrendezésének kiválasztása"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:408
+#: code:addons/board/static/src/js/favorite_menu.js:107
 #, python-format
 msgid "Could not add filter to dashboard"
 msgstr "Nem lehetett hozzáadni a szűrőt a kezelőpulthoz"
 
 #. module: board
-#: model:ir.ui.view,arch_db:board.view_board_create
-msgid "Create"
-msgstr "Létrehozás"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_create
-#: model:ir.ui.menu,name:board.menu_board_create
-msgid "Create Board"
-msgstr "Kezelőpult létrehozása"
-
-#. module: board
-#: model:ir.ui.view,arch_db:board.view_board_create
-msgid "Create New Dashboard"
-msgstr "Új kezelőpult létrehozása"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_create_uid
-msgid "Created by"
-msgstr "Létrehozta"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_create_date
-msgid "Created on"
-msgstr "Létrehozás dátuma"
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_board_display_name
-#: model:ir.model.fields,field_description:board.field_board_create_display_name
+#: model:ir.model.fields,field_description:board.field_board_board__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:94
+#: code:addons/board/static/src/js/board_view.js:80
 #, python-format
 msgid "Edit Layout"
 msgstr "Elrendezés szerkesztése"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_board_id
-#: model:ir.model.fields,field_description:board.field_board_create_id
+#: model:ir.model.fields,field_description:board.field_board_board__id
 msgid "ID"
-msgstr "ID"
+msgstr "Azonosító"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_board___last_update
-#: model:ir.model.fields,field_description:board.field_board_create___last_update
+#: model:ir.model.fields,field_description:board.field_board_board____last_update
 msgid "Last Modified on"
-msgstr "Utolsó frissítés dátuma"
+msgstr "Legutóbb módosítva"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_write_uid
-msgid "Last Updated by"
-msgstr "Utoljára frissítette"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:41
+#, python-format
+msgid "Layout"
+msgstr "Elrendezés"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_write_date
-msgid "Last Updated on"
-msgstr "Utoljára frissítve"
-
-#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/board_view.js:43
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
-#: model:ir.ui.view,arch_db:board.board_my_dash_view
+#: model_terms:ir.ui.view,arch_db:board.board_my_dash_view
+#, python-format
 msgid "My Dashboard"
 msgstr "Kezelőpultom"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_create_menu_parent_id
-msgid "Parent Menu"
-msgstr "Szülő menü"
+#. openerp-web
+#: code:addons/board/static/src/js/favorite_menu.js:104
+#, python-format
+msgid "Please refresh your browser for the changes to take effect."
+msgstr "Kérem, frissítse a böngészőjét a változtatások érvénybe léptetéséhez."
 
 #. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:51
+#, python-format
 msgid ""
 "To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add to\n"
-"                    Dashboard'</i> in the extended search options."
-msgstr "Ahhoz, hogy hozzáadja az első riportot ehhez a kezelőpulthoz, navigáljon bármelyik menübe, váltson a lista vagy grafikon nézetre, és kattintson <i>'Kezelőpulthoz adás'</i> lehetőségre a kiterjesztett keresésnél."
+"                menu, switch to list or graph view, and click"
+msgstr ""
+"Kimutatás kezelőpulthoz történő hozzáadásához\n"
+"                keresse fel bármelyik menüt, váltson lista- vagy grafikonnézetre,\n"
+"                és kattintson"
 
 #. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:55
+#, python-format
 msgid ""
 "You can filter and group data before inserting into the\n"
-"                    dashboard using the search options."
-msgstr "Az adatokat szűrheti és csoportosíthatja a műszerfalba illesztés \n                    előtt a keresési lehetőségek használatával."
+"                dashboard using the search options."
+msgstr ""
+"A keresési lehetőségek használatával szűrhetőek és csoportosíthatóak\n"
+"                az adatok a kezelőpultba történő beillesztésük előtt."
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:49
+#, python-format
+msgid "Your personal dashboard is empty"
+msgstr "Az Ön személyes kezelőpultja üres"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:53
+#, python-format
+msgid "in the extended search options."
+msgstr "a bővített keresési lehetőségekben."

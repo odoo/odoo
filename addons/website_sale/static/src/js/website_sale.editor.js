@@ -1,31 +1,72 @@
-odoo.define('website_sale.editor', function (require) {
-"use strict";
+odoo.define('website_sale.add_product', function (require) {
+'use strict';
 
-var ajax = require('web.ajax');
 var core = require('web.core');
-var Model = require('web.Model');
-var contentMenu = require('website.contentMenu');
-var options = require('web_editor.snippets.options');
-
-var website = require('website.website');
+var wUtils = require('website.utils');
+var WebsiteNewMenu = require('website.newMenu');
 
 var _t = core._t;
 
-contentMenu.TopBar.include({
-    new_product: function() {
-        website.prompt({
+WebsiteNewMenu.include({
+    actions: _.extend({}, WebsiteNewMenu.prototype.actions || {}, {
+        new_product: '_createNewProduct',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Actions
+    //--------------------------------------------------------------------------
+
+    /**
+     * Asks the user information about a new product to create, then creates it
+     * and redirects the user to this new product.
+     *
+     * @private
+     * @returns {Deferred} Unresolved if there is a redirection
+     */
+    _createNewProduct: function () {
+        var self = this;
+        return wUtils.prompt({
             id: "editor_new_product",
             window_title: _t("New Product"),
-            input: "Product Name",
+            input: _t("Name"),
         }).then(function (name) {
-            website.form('/shop/add_product', 'POST', {
-                name: name
+            if (!name) {
+                return;
+            }
+            return self._rpc({
+                route: '/shop/add_product',
+                params: {
+                    name: name,
+                },
+            }).then(function (url) {
+                window.location.href = url;
+                return $.Deferred();
             });
         });
     },
 });
+});
+
+//==============================================================================
+
+odoo.define('website_sale.editor', function (require) {
+'use strict';
+
+require('web.dom_ready');
+var options = require('web_editor.snippets.options');
+
+if (!$('.js_sale').length) {
+    return $.Deferred().reject("DOM doesn't contain '.js_sale'");
+}
+
+$('.oe_website_sale').on('click', '.oe_currency_value:o_editable', function (ev) {
+    $(ev.currentTarget).selectContent();
+});
 
 options.registry.website_sale = options.Class.extend({
+    /**
+     * @override
+     */
     start: function () {
         var self = this;
         this.product_tmpl_id = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
@@ -33,43 +74,44 @@ options.registry.website_sale = options.Class.extend({
         var size_x = parseInt(this.$target.attr("colspan") || 1);
         var size_y = parseInt(this.$target.attr("rowspan") || 1);
 
-        var $size = this.$el.find('ul[name="size"]');
+        var $size = this.$el.find('div[name="size"]');
         var $select = $size.find('tr:eq(0) td:lt('+size_x+')');
         if (size_y >= 2) $select = $select.add($size.find('tr:eq(1) td:lt('+size_x+')'));
         if (size_y >= 3) $select = $select.add($size.find('tr:eq(2) td:lt('+size_x+')'));
         if (size_y >= 4) $select = $select.add($size.find('tr:eq(3) td:lt('+size_x+')'));
         $select.addClass("selected");
 
-        new Model('product.style')
-            .call('search_read', [[]])
-                .then(function (data) {
-                    var $ul = self.$el.find('ul[name="style"]');
-                    for (var k in data) {
-                        $ul.append(
-                            $('<li data-style="'+data[k]['id']+'" data-toggle_class="'+data[k]['html_class']+'"/>')
-                                .append( $('<a/>').text(data[k]['name']) ));
-                    }
-                    self.set_active();
-                });
+        this._rpc({
+            model: 'product.style',
+            method: 'search_read',
+        }).then(function (data) {
+            var $ul = self.$el.find('div[name="style"]');
+            for (var k in data) {
+                $ul.append(
+                    $('<a class="dropdown-item" role="menuitem" data-style="'+data[k]['id']+'" data-toggle-class="'+data[k]['html_class']+'" data-no-preview="true"/>')
+                        .append(data[k]['name']));
+            }
+            self._setActive();
+        });
 
         this.bind_resize();
     },
     reload: function () {
-        if (location.href.match(/\?enable_editor/)) {
-            location.reload();
+        if (window.location.href.match(/\?enable_editor/)) {
+            window.location.reload();
         } else {
-            location.href = location.href.replace(/\?(enable_editor=1&)?|#.*|$/, '?enable_editor=1&');
+            window.location.href = window.location.href.replace(/\?(enable_editor=1&)?|#.*|$/, '?enable_editor=1&');
         }
     },
     bind_resize: function () {
         var self = this;
-        this.$el.on('mouseenter', 'ul[name="size"] table', function (event) {
+        this.$el.on('mouseenter', 'div[name="size"] table', function (event) {
             $(event.currentTarget).addClass("oe_hover");
         });
-        this.$el.on('mouseleave', 'ul[name="size"] table', function (event) {
+        this.$el.on('mouseleave', 'div[name="size"] table', function (event) {
             $(event.currentTarget).removeClass("oe_hover");
         });
-        this.$el.on('mouseover', 'ul[name="size"] td', function (event) {
+        this.$el.on('mouseover', 'div[name="size"] td', function (event) {
             var $td = $(event.currentTarget);
             var $table = $td.closest("table");
             var x = $td.index()+1;
@@ -85,23 +127,37 @@ options.registry.website_sale = options.Class.extend({
             $table.find("td").removeClass("select");
             $select_td.addClass("select");
         });
-        this.$el.on('click', 'ul[name="size"] td', function (event) {
+        this.$el.on('click', 'div[name="size"] td', function (event) {
             var $td = $(event.currentTarget);
             var x = $td.index()+1;
             var y = $td.parent().index()+1;
-            ajax.jsonRpc('/shop/change_size', 'call', {'id': self.product_tmpl_id, 'x': x, 'y': y})
-                .then(self.reload);
+            self._rpc({
+                route: '/shop/change_size',
+                params: {
+                    id: self.product_tmpl_id,
+                    x: x,
+                    y: y,
+                },
+            }).then(self.reload);
         });
     },
-    style: function (type, value, $li) {
-        if(type !== "click") return;
-        ajax.jsonRpc('/shop/change_styles', 'call', {'id': this.product_tmpl_id, 'style_id': value});
+    style: function (previewMode, value, $li) {
+        this._rpc({
+            route: '/shop/change_styles',
+            params: {
+                id: this.product_tmpl_id,
+                style_id: value,
+            },
+        });
     },
-    go_to: function (type, value) {
-        if(type !== "click") return;
-        ajax.jsonRpc('/shop/change_sequence', 'call', {'id': this.product_tmpl_id, 'sequence': value})
-            .then(this.reload);
+    go_to: function (previewMode, value) {
+        this._rpc({
+            route: '/shop/change_sequence',
+            params: {
+                id: this.product_tmpl_id,
+                sequence: value,
+            },
+        }).then(this.reload);
     }
 });
-
 });

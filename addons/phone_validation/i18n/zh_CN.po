@@ -1,0 +1,102 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * phone_validation
+# 
+# Translators:
+# Martin Trigaux, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# 广州救火 <7017511@qq.com>, 2018
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: 广州救火 <7017511@qq.com>, 2018\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: phone_validation
+#: selection:res.company,phone_international_format:0
+msgid "Add international prefix"
+msgstr "添加国际字头"
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_res_company__phone_international_format
+msgid ""
+"Always encode phone numbers using international format. Otherwise numbers "
+"coming from the company's country are nationaly formatted. International "
+"numbers are always using international format."
+msgstr "始终使用国际化格式编码电话的号码。否则，来自公司所属国家的号码将在全国范围内被格式化。国际号码总是采用国际化格式。"
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin__id
+msgid "ID"
+msgstr "ID"
+
+#. module: phone_validation
+#: code:addons/phone_validation/tools/phone_validation.py:23
+#, python-format
+msgid "Impossible number %s: probably invalid number of digits"
+msgstr "号码有误 %s: 可能有无效数字"
+
+#. module: phone_validation
+#: code:addons/phone_validation/tools/phone_validation.py:25
+#, python-format
+msgid "Invalid number %s: probably incorrect prefix"
+msgstr "无效号码 %s: 前缀有误"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin____last_update
+msgid "Last Modified on"
+msgstr "最后修改时间"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_res_company__phone_international_format
+msgid "Local Numbers"
+msgstr "本地号码"
+
+#. module: phone_validation
+#: selection:res.company,phone_international_format:0
+msgid "No prefix"
+msgstr "没有前缀"
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_phone_validation_mixin
+msgid "Phone Validation Mixin"
+msgstr "电话验证Mixin"
+
+#. module: phone_validation
+#: code:addons/phone_validation/tools/phone_validation.py:44
+#, python-format
+msgid ""
+"Unable to format %s:\n"
+"%s"
+msgstr ""
+"不能格式化 %s:\n"
+"%s"
+
+#. module: phone_validation
+#: code:addons/phone_validation/tools/phone_validation.py:20
+#, python-format
+msgid ""
+"Unable to parse %s:\n"
+"%s"
+msgstr ""
+"不能解析 %s:\n"
+"%s"

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_quantity_history" model="ir.ui.view">
+        <field name="name">Inventory Report</field>
+        <field name="model">stock.quantity.history</field>
+        <field name="arch" type="xml">
+            <form string="Choose your date">
+                <group>
+                    <group>
+                        <field name="compute_at_date" widget="radio"/>
+                        <field name="date" attrs="{'invisible': [('compute_at_date', '=', 0)]}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="open_table" string="Retrieve the Inventory Quantities" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_stock_quantity_history" model="ir.actions.act_window">
+        <field name="name">Inventory Report</field>
+        <field name="res_model">stock.quantity.history</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_stock_quantity_history"/>
+        <field name="target">new</field>
+        <field name="context">{'default_compute_at_date': 0}</field>
+    </record>
+    <menuitem id="menu_valuation" name="Inventory Report" parent="stock.menu_warehouse_report" sequence="100" action="action_stock_quantity_history"/>
+</odoo>
+

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<menuitem id="account_reports_vn_statements_menu" name="Vietnam" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
+
+<data>
+    <!-- Account Chart Templates -->
+    <record id="vn_template" model="account.chart.template">
+        <field name="name">VN - Chart of Accounts</field>
+        <field name="code_digits">0</field>
+        <field name="currency_id" ref="base.VND"/>
+        <field name="bank_account_code_prefix">112</field>
+        <field name="cash_account_code_prefix">111</field>
+        <field name="transfer_account_code_prefix">113</field>
+    </record>
+</data>
+</odoo>

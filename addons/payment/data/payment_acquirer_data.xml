@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <template id="default_acquirer_button">
+        <input type="hidden" name="data_set" t-att-data-action-url="tx_url"/>
+        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+        <t t-if="return_url">
+            <input type="hidden" name="return_url" t-att-value="return_url"/>
+        </t>
+        <input type="hidden" name="reference" t-att-value="reference"/>
+        <input type="hidden" name="amount" t-att-value="amount"/>
+        <input type="hidden" name="currency" t-att-value="currency.name"/>
+    </template>
+
+    <record id="payment_acquirer_buckaroo" model="payment.acquirer">
+        <field name="name">Buckaroo</field>
+        <field name="image" type="base64" file="payment_buckaroo/static/src/img/buckaroo_icon.png"/>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="module_id" ref="base.module_payment_buckaroo"/>
+        <field name="description" type="html">
+            <p>
+                A payment gateway to accept online payments via credit cards.
+            </p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
+            </ul>
+        </field>
+        <!-- https://www.buckaroo-payments.com/products/payment-methods/ -->
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_bancontact"),
+                                                        ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_visa"),
+                                                        ref("payment.payment_icon_cc_american_express")])]'/>
+    </record>
+
+    <record id="payment_acquirer_ogone" model="payment.acquirer">
+        <field name="name">Ingenico</field>
+        <field name="sequence">2</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_ogone/static/src/img/ogone_icon.png"/>
+        <field name="module_id" ref="base.module_payment_ogone"/>
+        <field name="description" type="html">
+            <p>
+                Ingenico Payment Services (formerly Ogone) supports credit cards, debit cards and bank transfers.
+            </p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Subscriptions</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Save Cards</li>
+            </ul>
+        </field>
+        <!-- https://payment-services.ingenico.com/~/media/files/130806_product_sheet_ingenico_collect_en.ashx?la=en -->
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_bancontact"),
+                                                        ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_visa")])]'/>
+    </record>
+
+    <record id="payment_acquirer_adyen" model="payment.acquirer">
+        <field name="name">Adyen</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_adyen/static/src/img/adyen_icon.png"/>
+        <field name="module_id" ref="base.module_payment_adyen"/>
+        <field name="description" type="html">
+            <p>
+                A payment gateway to accept online payments via credit cards, debit cards and bank transfers.
+            </p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
+            </ul>
+        </field>
+        <!-- https://www.adyen.com/payment-methods -->
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_bancontact"),
+                                                        ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_visa"),
+                                                        ref("payment.payment_icon_cc_discover"),
+                                                        ref("payment.payment_icon_cc_diners_club_intl"),
+                                                        ref("payment.payment_icon_cc_jcb"),
+                                                        ref("payment.payment_icon_cc_unionpay")])]'/>
+    </record>
+
+    <record id="payment_acquirer_authorize" model="payment.acquirer">
+        <field name="name">Authorize.net</field>
+        <field name="sequence">3</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_authorize/static/src/img/authorize_icon.png"/>
+        <field name="module_id" ref="base.module_payment_authorize"/>
+        <field name="description" type="html">
+            <p>
+                A payment gateway to accept online payments via credit cards and e-checks.
+            </p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Subscriptions</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Save Cards</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Manual Capture</li>
+            </ul>
+        </field>
+        <!-- https://www.authorize.net/solutions/merchantsolutions/onlinemerchantaccount/ -->
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_discover"),
+                                                        ref("payment.payment_icon_cc_diners_club_intl"),
+                                                        ref("payment.payment_icon_cc_jcb"),
+                                                        ref("payment.payment_icon_cc_visa")])]'/>
+    </record>
+
+    <record id="payment_acquirer_transfer" model="payment.acquirer">
+        <field name="name">Wire Transfer</field>
+        <field name="sequence">2</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_transfer/static/src/img/transfer_icon.png"/>
+        <field name="module_id" ref="base.module_payment_transfer"/>
+        <field name="pending_msg">&lt;i&gt;Pending&lt;/i&gt;... The order will be validated after the payment.</field>
+        <field name="description" type="html">
+            <p>
+                Provide instructions to customers so that they can pay their orders manually.
+            </p>
+        </field>
+    </record>
+
+    <record id="payment_acquirer_sips" model="payment.acquirer">
+        <field name="name">Sips</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_sips/static/src/img/sips_icon.png"/>
+        <field name="module_id" ref="base.module_payment_sips"/>
+        <field name="description" type="html">
+            <p>
+                A payment gateway from Atos Worldline to accept online payments via credit cards.
+            </p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
+            </ul>
+        </field>
+        <!-- http://sips.worldline.com/en-us/home/features/payment-types-and-acquirers.html -->
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_discover"),
+                                                        ref("payment.payment_icon_cc_diners_club_intl"),
+                                                        ref("payment.payment_icon_cc_jcb"),
+                                                        ref("payment.payment_icon_cc_american_express"),
+                                                        ref("payment.payment_icon_cc_bancontact"),
+                                                        ref("payment.payment_icon_cc_unionpay"),
+                                                        ref("payment.payment_icon_cc_visa")])]'/>
+    </record>
+
+    <record id="payment_acquirer_paypal" model="payment.acquirer">
+        <field name="name">Paypal</field>
+        <field name="sequence">1</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_paypal/static/src/img/paypal_icon.png"/>
+        <field name="module_id" ref="base.module_payment_paypal"/>
+        <field name="description" type="html">
+            <p>
+                PayPal is the easiest way to accept payments via Paypal or credit cards.
+            </p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
+            </ul>
+        </field>
+        <!-- https://www.paypal.com/us/selfhelp/article/Which-credit-cards-can-I-accept-with-PayPal-Merchant-Services-FAQ1525#business -->
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_discover"),
+                                                        ref("payment.payment_icon_cc_diners_club_intl"),
+                                                        ref("payment.payment_icon_cc_jcb"),
+                                                        ref("payment.payment_icon_cc_american_express"),
+                                                        ref("payment.payment_icon_cc_unionpay"),
+                                                        ref("payment.payment_icon_cc_visa")])]'/>
+    </record>
+
+    <record id="payment_acquirer_stripe" model="payment.acquirer">
+        <field name="name">Stripe</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image" type="base64" file="payment_stripe/static/src/img/stripe_icon.png"/>
+        <field name="module_id" ref="base.module_payment_stripe"/>
+        <field name="description" type="html">
+            <p>
+                A payment gateway to accept online payments via credit cards.
+            </p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Subscriptions</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Save Cards</li>
+            </ul>
+        </field>
+        <!--
+            https://stripe.com/payments/payment-methods-guide
+            https://support.goteamup.com/hc/en-us/articles/115002089349-Which-cards-and-payment-types-can-I-accept-with-Stripe-
+        -->
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_discover"),
+                                                        ref("payment.payment_icon_cc_diners_club_intl"),
+                                                        ref("payment.payment_icon_cc_jcb"),
+                                                        ref("payment.payment_icon_cc_american_express"),
+                                                        ref("payment.payment_icon_cc_visa")])]'/>
+    </record>
+
+    <record id="payment_acquirer_custom" model="payment.acquirer">
+        <field name="name">Custom</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="module_id" ref="base.module_payment_transfer"/>
+        <field name="description" type="html">
+            <p>
+                A generic payment acquirer to send payment instructions to any payment acquirer.
+            </p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+            </ul>
+        </field>
+    </record>
+
+    <record id="payment_acquirer_payu" model="payment.acquirer">
+        <field name="name">PayUmoney</field>
+        <field name="image" type="base64" file="payment_payumoney/static/src/img/payumoney_icon.png"/>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="module_id" ref="base.module_payment_payumoney"/>
+        <field name="description" type="html">
+            <p>
+                PayU India is an online payments solutions company serving the Indian market.
+            </p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
+            </ul>
+        </field>
+        <!-- https://www.payumoney.com/selfcare.html?userType=seller
+            > Banks & Cards > What options do you have in the Credit Card payment?
+         -->
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_american_express"),
+                                                        ref("payment.payment_icon_cc_visa")])]'/>
+    </record>
+
+</odoo>

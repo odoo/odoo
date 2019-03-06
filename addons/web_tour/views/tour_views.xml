@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="edit_tour_list" model="ir.ui.view">
+            <field name="model">web_tour.tour</field>
+            <field name="arch" type="xml">
+                <tree string="Menu" editable="bottom">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="edit_tour_search" model="ir.ui.view">
+            <field name="name">tour.search</field>
+            <field name="model">web_tour.tour</field>
+            <field name="arch" type="xml">
+                <search string="Tip">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <record id="edit_tour_action" model="ir.actions.act_window">
+            <field name="name">Tours</field>
+            <field name="res_model">web_tour.tour</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="edit_tour_list"/>
+            <field name="search_view_id" ref="edit_tour_search"/>
+        </record>
+        <menuitem action="edit_tour_action" id="menu_tour_action" parent="base.next_id_2" sequence="5"/>
+</odoo>

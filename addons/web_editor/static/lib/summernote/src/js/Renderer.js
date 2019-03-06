@@ -36,7 +36,7 @@ define([
       return (dropdown ? '<div class="btn-group' +
                (className ? ' ' + className : '') + '">' : '') +
                '<button type="button"' +
-                 ' class="btn btn-default btn-sm' +
+                 ' class="btn btn-secondary btn-sm' +
                    ((!dropdown && className) ? ' ' + className : '') +
                    (dropdown ? ' dropdown-toggle' : '') +
                  '"' +
@@ -77,11 +77,11 @@ define([
     var tplPopover = function (className, content) {
       var $popover = $('<div class="' + className + ' popover bottom in" style="display: none;">' +
                '<div class="arrow"></div>' +
-               '<div class="popover-content">' +
+               '<div class="popover-body">' +
                '</div>' +
              '</div>');
 
-      $popover.find('.popover-content').append(content);
+      $popover.find('.popover-body').append(content);
       return $popover;
     };
 
@@ -94,18 +94,18 @@ define([
      * @param {String} [footer='']
      */
     var tplDialog = function (className, title, body, footer) {
-      return '<div class="' + className + ' modal" aria-hidden="false">' +
+      return '<div class="' + className + ' modal" role="dialog" aria-hidden="false">' +
                '<div class="modal-dialog">' +
                  '<div class="modal-content">' +
                    (title ?
-                   '<div class="modal-header">' +
-                     '<button type="button" class="close" aria-hidden="true" tabindex="-1">&times;</button>' +
+                   '<header class="modal-header">' +
                      '<h4 class="modal-title">' + title + '</h4>' +
-                   '</div>' : ''
+                     '<button type="button" class="close" aria-hidden="true" tabindex="-1">&times;</button>' +
+                   '</header>' : ''
                    ) +
-                   '<div class="modal-body">' + body + '</div>' +
+                   '<main class="modal-body">' + body + '</main>' +
                    (footer ?
-                   '<div class="modal-footer">' + footer + '</div>' : ''
+                   '<header class="modal-footer">' + footer + '</header>' : ''
                    ) +
                  '</div>' +
                '</div>' +
@@ -162,7 +162,7 @@ define([
       style: function (lang, options) {
         var items = options.styleTags.reduce(function (memo, v) {
           var label = lang.style[v === 'p' ? 'normal' : v];
-          return memo + '<li><a data-event="formatBlock" href="#" data-value="' + v + '">' +
+          return memo + '<li><a class="dropdown-item" data-event="formatBlock" href="#" data-value="' + v + '">' +
                    (
                      (v === 'p' || v === 'pre') ? label :
                      '<' + v + '>' + label + '</' + v + '>'
@@ -216,22 +216,21 @@ define([
       color: function (lang, options) {
         var colorButtonLabel = '<i class="' +
                                   options.iconPrefix + options.icons.color.recent +
-                                '" style="color:black;background-color:yellow;"></i>';
-
+                                '" id="colors_preview" style="color:white;background-color:#B35E9B"></i>';
         var colorButton = tplButton(colorButtonLabel, {
           className: 'note-recent-color',
           title: lang.color.recent,
           event: 'color',
-          value: '{"backColor":"yellow"}'
+          value: '{"backColor":"#B35E9B"}'
         });
 
         var items = [
-          '<li><div class="btn-group">',
+          '<li class="flex"><div class="btn-group flex-column">',
           '<div class="note-palette-title">' + lang.color.background + '</div>',
           '<div class="note-color-reset" data-event="backColor"',
           ' data-value="inherit" title="' + lang.color.transparent + '">' + lang.color.setTransparent + '</div>',
           '<div class="note-color-palette" data-target-event="backColor"></div>',
-          '</div><div class="btn-group">',
+          '</div><div class="btn-group flex-column">',
           '<div class="note-palette-title">' + lang.color.foreground + '</div>',
           '<div class="note-color-reset" data-event="foreColor" data-value="inherit" title="' + lang.color.reset + '">',
           lang.color.resetToDefault,
@@ -412,6 +411,10 @@ define([
       };
 
       var tplImagePopover = function () {
+        var autoButton = tplButton('<span class="note-fontsize-10">Auto</span>', {
+          event: 'resize',
+          value: 'auto'
+        });
         var fullButton = tplButton('<span class="note-fontsize-10">100%</span>', {
           title: lang.image.resizeFull,
           event: 'resize',
@@ -447,12 +450,12 @@ define([
         var roundedButton = tplIconButton(options.iconPrefix + options.icons.image.shapeRounded, {
           title: lang.image.shapeRounded,
           event: 'imageShape',
-          value: 'img-rounded'
+          value: 'rounded'
         });
         var circleButton = tplIconButton(options.iconPrefix + options.icons.image.shapeCircle, {
           title: lang.image.shapeCircle,
           event: 'imageShape',
-          value: 'img-circle'
+          value: 'rounded-circle'
         });
         var thumbnailButton = tplIconButton(options.iconPrefix + options.icons.image.shapeThumbnail, {
           title: lang.image.shapeThumbnail,
@@ -471,7 +474,7 @@ define([
           value: 'none'
         });
 
-        var content = (options.disableResizeImage ? '' : '<div class="btn-group">' + fullButton + halfButton + quarterButton + '</div>') +
+        var content = (options.disableResizeImage ? '' : '<div class="btn-group">' + autoButton + fullButton + halfButton + quarterButton + '</div>') +
                       '<div class="btn-group">' + leftButton + rightButton + justifyButton + '</div>' +
                       '<div class="btn-group">' + roundedButton + circleButton + thumbnailButton + noneButton + '</div>' +
                       '<div class="btn-group">' + removeButton + '</div>';
@@ -533,7 +536,7 @@ define([
      * @param {String} body
      */
     var tplShortcut = function (title, keys) {
-      var keyClass = 'note-shortcut-col col-xs-6 note-shortcut-';
+      var keyClass = 'note-shortcut-col col-6 note-shortcut-';
       var body = [];
 
       for (var i in keys) {
@@ -545,7 +548,7 @@ define([
         }
       }
 
-      return '<div class="note-shortcut-row row"><div class="' + keyClass + 'title col-xs-offset-6">' + title + '</div></div>' +
+      return '<div class="note-shortcut-row row"><div class="' + keyClass + 'title offset-6">' + title + '</div></div>' +
              '<div class="note-shortcut-row row">' + body.join('</div><div class="note-shortcut-row row">') + '</div>';
     };
 
@@ -613,7 +616,7 @@ define([
     };
 
     var tplShortcutTable = function (lang, options) {
-      var colClass = 'class="note-shortcut note-shortcut-col col-sm-6 col-xs-12"';
+      var colClass = 'class="note-shortcut note-shortcut-col col-md-6 col-12"';
       var template = [
         '<div ' + colClass + '>' + tplShortcutAction(lang, options) + '</div>' +
         '<div ' + colClass + '>' + tplShortcutText(lang, options) + '</div>',
@@ -678,7 +681,7 @@ define([
       },
 
       help: function (lang, options) {
-        var body = '<a class="modal-close pull-right" aria-hidden="true" tabindex="-1">' + lang.shortcut.close + '</a>' +
+        var body = '<a class="modal-close float-right" aria-hidden="true" tabindex="-1">' + lang.shortcut.close + '</a>' +
                    '<div class="title">' + lang.shortcut.shortcuts + '</div>' +
                    (agent.isMac ? tplShortcutTable(lang, options) : replaceMacKeys(tplShortcutTable(lang, options))) +
                    '<p class="text-center">' +
@@ -793,12 +796,13 @@ define([
       });
 
       var body = document.body;
+      var $container = $('#web_editor-toolbars')
 
       // create Popover
       var $popover = $(this.tplPopovers(langInfo, options)); // ODOO: user (maybe) overrided method
       $popover.addClass('note-air-layout');
       $popover.attr('id', 'note-popover-' + id);
-      $popover.appendTo(body);
+      $popover.appendTo($container);
       createTooltip($popover, keyMap);
       this.createPalette($popover, options); // ODOO: use (maybe) overrided method
 
@@ -806,7 +810,7 @@ define([
       var $handle = $(tplHandles(options));
       $handle.addClass('note-air-layout');
       $handle.attr('id', 'note-handle-' + id);
-      $handle.appendTo(body);
+      $handle.appendTo($container);
 
       // create Dialog
       var $dialog = $(tplDialogs(langInfo, options));
@@ -815,7 +819,7 @@ define([
       $dialog.find('button.close, a.modal-close').click(function () {
         $(this).closest('.modal').modal('hide');
       });
-      $dialog.appendTo(body);
+      $dialog.appendTo($container);
     };
 
     /**
@@ -843,7 +847,7 @@ define([
       //03. create editable
       var isContentEditable = !$holder.is(':disabled');
       var $editable = $('<div class="note-editable panel-body" contentEditable="' + isContentEditable + '"></div>').prependTo($editingArea);
-      
+
       if (options.height) {
         $editable.height(options.height);
       }

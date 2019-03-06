@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="account_reports_th_statements_menu" name="Thailand" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
+<!-- ACCOUNT TYPES -->
+
+<record id="acc_type_reconciled" model="account.account.type">
+    <field name="name">Reconciled</field>
+</record>
+
+<record id="acc_type_other" model="account.account.type">
+    <field name="name">Other</field>
+</record>
+
+<!-- CHART OF Template -->
+
+<record id="chart" model="account.chart.template">
+    <field name="name">Thailand - Chart of Accounts</field>
+    <field name="cash_account_code_prefix">1100</field>
+    <field name="bank_account_code_prefix">1110</field>
+    <field name="transfer_account_code_prefix">16</field>
+    <field name="currency_id" ref="base.THB"/>
+</record>
+
+<!-- Account Tax Tags -->
+
+    <record id="tag_th_01" model="account.account.tag">
+        <field name="name">Taxes to be paid</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_02" model="account.account.tag">
+        <field name="name">Withholding Tax</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_03" model="account.account.tag">
+        <field name="name">Personal Withholding Tax</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_04" model="account.account.tag">
+        <field name="name">Personal Withholding Tax (Service)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_05" model="account.account.tag">
+        <field name="name">Personal Withholding Tax (Other)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_06" model="account.account.tag">
+        <field name="name">Company Withholding Tax</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_07" model="account.account.tag">
+        <field name="name">Company Withholding Tax (Service)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_08" model="account.account.tag">
+        <field name="name">Company Withholding Tax (Other)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_09" model="account.account.tag">
+        <field name="name">Value Added Tax</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_10" model="account.account.tag">
+        <field name="name">Output VAT</field>
+        <field name="applicability">taxes</field>
+    </record>
+     <record id="tag_th_11" model="account.account.tag">
+        <field name="name">Input VAT</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_12" model="account.account.tag">
+        <field name="name">Taxable amounts</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_13" model="account.account.tag">
+        <field name="name">Withholding Tax</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_14" model="account.account.tag">
+        <field name="name">Personal Withholding Tax</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_15" model="account.account.tag">
+        <field name="name">Personal Withholding Tax (Service)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_16" model="account.account.tag">
+        <field name="name">Personal Withholding Tax (Other)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_17" model="account.account.tag">
+        <field name="name">Company Withholding Tax</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_18" model="account.account.tag">
+        <field name="name">Company Withholding Tax (Service)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_19" model="account.account.tag">
+        <field name="name">Company Withholding Tax (Other)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_20" model="account.account.tag">
+        <field name="name">Value Added Tax</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_21" model="account.account.tag">
+        <field name="name">Output VAT</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_th_22" model="account.account.tag">
+        <field name="name">Input VAT</field>
+        <field name="applicability">taxes</field>
+    </record>
+</odoo>

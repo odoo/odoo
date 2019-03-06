@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (C) David Arnold (devCO).
@@ -8,4 +8,4 @@
 #               Nhomar Hernandez (Vauxoo)
 #               Humberto Ochoa (Vauxoo)
 
-import wizard
+from . import models

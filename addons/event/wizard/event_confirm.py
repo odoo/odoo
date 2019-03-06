@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, api
+from odoo import models, api
 
 
 class event_confirm(models.TransientModel):
     """Event Confirmation"""
     _name = "event.confirm"
+    _description = 'Event Confirmation'
 
     @api.multi
     def confirm(self):

@@ -1,0 +1,183 @@
+<templates>
+    <t t-name="ImportView">
+        <t t-set="_id" t-value="_.uniqueId('export')"/>
+        <form action="" method="post" enctype="multipart/form-data" class="oe_import">
+            <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+            <input type="hidden" name="session_id"
+               t-att-value="widget.session.session_id"/>
+            <input type="hidden" name="import_id"/>
+            <div class="oe_import_box col-lg-12 d-none">
+                <input accept=".csv, .xls, .xlsx, .xlsm, .ods" t-attf-id="file_#{_id}"
+                      name="file" class="oe_import_file" type="file" style="display:none;"/>
+                <div class="oe_import_with_file row">
+                    <a href="#" class="oe_import_toggle col-sm-12">
+                        Formatting Options…</a>
+                        <div class="row">
+                            <div class="oe_import_toggled oe_import_options js_import_options col-sm">
+                                <p t-foreach="widget.opts" t-as="option">
+                                    <!-- no @name, avoid submission when file_update called -->
+                                    <label t-attf-for="#{option.name}_#{_id}">
+                                        <t t-esc="option.label"/></label>
+                                    <input t-attf-id="#{option.name}_#{_id}"
+                                           t-attf-class="oe_import_#{option.name}"
+                                           t-att-value="option.value"/>
+                                </p>
+                            </div>
+                            <div t-foreach="[widget.parse_opts_formats, widget.parse_opts_separators]" t-as="options" class="oe_import_toggled oe_import_options col-sm">
+                                <p t-foreach="options" t-as="option">
+                                    <!-- no @name, avoid submission when file_update called -->
+                                    <label t-attf-for="#{option.name}_#{_id}">
+                                        <t t-esc="option.label"/></label>
+                                    <input t-attf-id="#{option.name}_#{_id}"
+                                           t-attf-class="oe_import_#{option.name}"
+                                           t-att-value="option.value"/>
+                                </p>
+                            </div>
+                        </div>
+                </div>
+            </div>
+
+            <div class="oe_import_with_file oe_padding col-md-12 d-none">
+                <h2>Map your columns to import</h2>
+                <div title="If the model uses openchatter, history tracking
+                            will set up subscriptions and send notifications
+                            during the import, but lead to a slower import."
+                    class="oe_import_tracking">
+                    <input type="checkbox" id="oe_import_tracking"/>
+                    <label for="oe_import_tracking">
+                        Track history during import
+                    </label>
+                </div>
+                <div title="If the model uses parent/child relations, computing the
+                    parent / child relation occurs on every line, and lead to a slower import.
+                    Defering it can speed up import."
+                    class="oe_import_deferparentstore">
+                    <input type="checkbox" id="oe_import_deferparentstore" checked="checked"/>
+                    <label for="oe_import_deferparentstore">
+                        Defer parent/child computation
+                    </label>
+                </div>
+                <input type="checkbox" class="oe_import_has_header"
+                       id="oe_import_has_header" checked="checked"/>
+                <label for="oe_import_has_header">The first row
+                 contains the label of the column</label>
+                <input type="checkbox" class="oe_import_advanced_mode" checked="checked"
+                       id="oe_import_advanced_mode"/>
+                <label for="oe_import_advanced_mode">Show fields of relation fields (advanced)</label>
+                <p class="oe_import_noheaders text-muted">If the file contains
+                the column names, Odoo can try auto-detecting the
+                field corresponding to the column. This makes imports
+                simpler especially when the file has many columns.</p>
+
+                <div class="oe_import_error_report"></div>
+                <div class="table-responsive">
+                    <table class="table-striped table-bordered oe_import_grid bg-white" />
+                </div>
+            </div>
+            <div class="o_view_nocontent">
+                <div class="o_nocontent_help">
+                    <p class="o_view_nocontent_smiling_face">
+                        Select a CSV or Excel file to import.
+                    </p>
+                    <p>
+                        Excel files are recommended as fields formatting is automatic.
+                    </p>
+                    <div class="mt16 mb4">Need Help?</div>
+                    <div t-foreach="widget.importTemplates" t-as="template">
+                        <a t-att-href="template.template" aria-label="Download" title="Download">
+                            <i class="fa fa-download"/> <span><t t-esc="template.label"/></span>
+                        </a>
+                    </div>
+                    <a href="https://www.odoo.com/documentation/user/12.0/general/base_import/import_faq.html" target="new">Import FAQ</a>
+                </div>
+            </div>
+        </form>
+    </t>
+
+    <t t-name="ImportView.buttons">
+        <button type="button" class="btn btn-primary o_import_import d-none">Import</button>
+        <button type="button" class="btn btn-secondary o_import_validate d-none">Test Import</button>
+        <button type="button" class="btn btn-secondary o_import_file_reload d-none">Reload File</button>
+        <button type="button" class="btn btn-primary oe_import_file">Load File</button>
+        <button type="button" class="btn btn-secondary o_import_cancel">Cancel</button>
+    </t>
+
+    <t t-name="ImportView.create_record_option">
+        <div class="mt4">
+            <label title="Creates new records if they can't be found (instead of failing to import). Note that the value in the column will be used as the new record's 'name', and assumes this is sufficient to create the record.">
+                <input type="checkbox" class="o_import_create_option"/>
+                Create if doesn't exist
+            </label>
+        </div>
+    </t>
+
+    <t t-name="ImportView.preview">
+        <thead>
+            <tr t-if="headers" class="oe_import_grid-header">
+                <td t-foreach="headers" t-as="header" class="oe_import_grid-cell"
+                    ><span class="o_import_header_name"><t t-esc="header"/></span></td>
+            </tr>
+            <tr class="oe_import_fields">
+                <!-- Iterate on first row to ensure we have all columns -->
+                <td t-foreach="preview[0]" t-as="column">
+                    <input class="oe_import_match_field"/>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr t-foreach="preview" t-as="row" class="oe_import_grid-row">
+                <td t-foreach="row" t-as="cell" class="oe_import_grid-cell"
+                    ><t t-esc="cell"/></td>
+            </tr>
+        </tbody>
+    </t>
+    <t t-name="ImportView.preview.error">
+        <div class="oe_import_report bg-danger">
+            <p>Import preview failed due to: <t t-esc="error"/>.</p>
+            <p>For CSV files, you may need to select the correct separator.</p>
+            <p t-if="preview">Here is the start of the file we could not import:</p>
+        </div>
+        <pre t-if="preview"><t t-esc="preview"/></pre>
+    </t>
+    <ul t-name="ImportView.error">
+        <li t-foreach="errors" t-as="error"
+            t-attf-class="oe_import_report bg-#{error_value[0].type}">
+            <t t-call="ImportView.error.each">
+                <t t-set="error" t-value="error_value[0]"/>
+            </t>
+
+            <a href="#" class="oe_import_report_count" t-if="error_value.length gt 1">
+                <t t-esc="more(error_value.length - 1)"/>
+            </a>
+            <ul class="oe_import_report_more" t-if="error_value.length gt 1">
+                <li t-foreach="error_value.length - 1" t-as="index">
+                    <t t-call="ImportView.error.each">
+                        <t t-set="error" t-value="error_value[index + 1]"/>
+                    </t>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <t t-name="ImportView.error.each">
+        <span class="oe_import_report_message">
+            <t t-esc="error.message"/>
+        </span>
+        <t t-if="error.rows"  t-esc="at(error.rows)"/>
+        <t t-if="error.moreinfo" t-raw="info(error.moreinfo)"/>
+    </t>
+    <t t-name="ImportView.import_button">
+        <button t-if='widget and widget.importEnabled' type="button" class="btn btn-secondary o_button_import">
+            Import
+        </button>
+    </t>
+    <t t-extend="ListView.buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+           <t t-call="ImportView.import_button"/>
+        </t>
+    </t>
+    <t t-extend="KanbanView.buttons">
+        <t t-jquery="button" t-operation="after">
+            <t t-call="ImportView.import_button"/>
+        </t>
+    </t>
+</templates>

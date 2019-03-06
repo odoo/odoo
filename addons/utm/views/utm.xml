@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <menuitem id="menu_link_tracker_root" name="Link Tracker" groups="base.group_no_one" sequence="30"/>
-        <menuitem name="UTMs" id="marketing_utm" groups="base.group_configuration" parent="menu_link_tracker_root" sequence="99"/>
+<odoo>
+        <menuitem id="menu_link_tracker_root" name="Link Tracker" groups="base.group_no_one" sequence="30" web_icon="utm,static/description/icon.png"/>
+        <menuitem name="UTMs" id="marketing_utm" parent="menu_link_tracker_root" sequence="99" groups="base.group_no_one"/>
 
     	<!-- utm.campaign -->
     	<record model="ir.ui.view" id="utm_campaign_tree">
@@ -66,8 +65,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new medium.
+              <p class="o_view_nocontent_smiling_face">
+                Define a new medium
               </p>
             </field>
         </record>
@@ -101,12 +100,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new source.
+              <p class="o_view_nocontent_smiling_face">
+                Define a new source
               </p>
             </field>
         </record>
 
         <menuitem action="utm_source_action" id="menu_utm_source" parent="marketing_utm" sequence="4" groups="base.group_no_one"/>
-    </data>
-</openerp>
+</odoo>

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
-
+<odoo>
     <record id="view_payment_advice_tree" model="ir.ui.view">
         <field name="name">payment.advice.report.tree</field>
         <field name="model">payment.advice.report</field>
@@ -33,10 +31,10 @@
         <field name="arch" type="xml">
             <search string="Advices Analysis">
                  <group>
-                    <filter string="Draft" domain="[('state','=','draft')]" help="Payment Advices which are in draft state"/>
+                    <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Payment Advices which are in draft state"/>
                     <filter string="Confirm" name="confirm" domain="[('state','=','confirm')]" help="Payment Advices which are in confirm state"/>
                     <separator orientation="vertical"/>
-                    <filter string="NEFT" domain="[('neft','=',True)]" help="Advices which are paid using NEFT transfer"/>
+                    <filter string="NEFT" name="neft" domain="[('neft','=',True)]" help="Advices which are paid using NEFT transfer"/>
                     <separator orientation="vertical"/>
                     <field name="date"/>
                     <separator orientation="vertical"/>
@@ -55,14 +53,14 @@
                 </group>
                 <newline/>
                 <group expand="1" string="Group By">
-                    <filter string="Employee" context="{'group_by':'employee_id'}" />
-                    <filter string="Bank" context="{'group_by':'bank_id'}"/>
+                    <filter string="Employee" name="employee" context="{'group_by':'employee_id'}" />
+                    <filter string="Bank" name="bank" context="{'group_by':'bank_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Status" context="{'group_by':'state'}"/>
+                    <filter string="Status" name="status" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    <filter string="Company" name="comapny" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Month" name="order_month" context="{'group_by':'month'}" help="Month of Payment Advices"/>
+                    <filter string="Date" name="order_month" context="{'group_by':'month'}" help="Date of Payment Advices"/>
                 </group>
             </search>
         </field>
@@ -78,8 +76,6 @@
         <field name="help">This report performs analysis on Payment Advices</field>
     </record>
 
-    <menuitem name="Reports" id="menu_l10n_in_hr_payroll_report" parent="hr_payroll.menu_hr_payroll_root" sequence="99" groups="base.group_hr_manager"/>
+    <menuitem name="Reporting" id="menu_l10n_in_hr_payroll_report" parent="hr_payroll.menu_hr_payroll_root" sequence="99" groups="hr_payroll.group_hr_payroll_manager"/>
     <menuitem action="action_payment_advice_report_all" id="menu_reporting_payment_advice" parent="menu_l10n_in_hr_payroll_report" sequence="5" />
-
-</data>
-</openerp>
+</odoo>

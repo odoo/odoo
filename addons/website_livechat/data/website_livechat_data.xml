@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <data noupdate="1">
+
+         <record id="im_livechat_channel_data_website" model="im_livechat.channel">
+             <field name="name">YourWebsiteWithOdoo.com</field>
+             <field name="default_message">Hello, how may I help you?</field>
+         </record>
+
+         <record id="website.default_website" model="website">
+             <field name="channel_id" ref="website_livechat.im_livechat_channel_data_website"></field>
+         </record>
+
+         <record id="menu_livechat" model="website.menu">
+            <field name="name">Live Support</field>
+            <field name="url">/livechat</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">55</field>
+        </record>
+     </data>
+</odoo>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="setup_financial_year_opening_form" model="ir.ui.view">
+            <field name="name">account.financial.year.op.setup.wizard.form</field>
+            <field name="model">account.financial.year.op</field>
+            <field name="arch" type="xml">
+                <form>
+                    <div class="row">
+                        <div class="col-2">
+                            <label for="opening_date"/>
+                        </div>
+                        <div class="col-3">
+                            <field name="opening_move_posted" invisible="1"/>
+                            <field name="opening_date" attrs="{'readonly': [('opening_move_posted', '=', True)]}"/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-2">
+                            <strong>Fiscal Year End</strong>
+                        </div>
+                        <div class="col-1">
+                            <field name="fiscalyear_last_day"/>
+                        </div>
+                        <div class="col-2">
+                            <field name="fiscalyear_last_month"/>
+                        </div>
+                    </div>
+                    <footer>
+                        <button name="action_save_onboarding_fiscal_year" string="Apply"
+                               class="oe_highlight" type="object" />
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="setup_bank_account_wizard" model="ir.ui.view">
+            <field name="name">account.online.sync.res.partner.bank.setup.form</field>
+            <field name="model">account.setup.bank.manual.config</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                         <field name="create_or_link_option" widget="radio" options="{'horizontal': true}"/>
+                        <group attrs="{'invisible': [('create_or_link_option','!=','link')]}">
+                           <group>
+                            <field name="linked_journal_id" attrs="{'required': [('create_or_link_option','=','link')]}" domain="[('type','=','bank'), ('bank_account_id', '=', False)]"/>
+                          </group>
+                          <group>
+                               <span class="text-muted">Only journals not yet linked to a bank account are proposed</span>
+                           </group>
+                        </group>
+                        <div attrs="{'invisible': [('create_or_link_option', '=', 'link')]}" class="oe_title">
+                            <h1><field name="new_journal_name" placeholder="e.g Checking account" class="oe_inline"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="acc_number" placeholder="e.g BE15001559627230"/>
+                                <field name="bank_id" placeholder="e.g Bank of America"/>
+                                <field name="new_journal_code" attrs="{'invisible': [('create_or_link_option', '=', 'link')]}"/>
+                            </group>
+                            <group>
+                                <field name="related_acc_type" attrs="{'invisible': [('acc_number','=',False)]}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Create" class="oe_highlight" type="object" name="validate"/>
+                        <button string="Cancel" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="init_accounts_tree" model="ir.ui.view">
+            <field name="name">account.setup.opening.move.line.tree</field>
+            <field name="model">account.account</field>
+            <field name="arch" type="xml">
+                <tree editable="top" create="1" delete="1" decoration-muted="opening_debit == 0 and opening_credit == 0">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="user_type_id"/>
+                    <field name="opening_debit"/>
+                    <field name="opening_credit"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,163 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
+    <!--=================-->
+    <!-- Base components -->
+    <!--=================-->
+
+    <!-- Editor top bar which contains the summernote tools and save/discard buttons -->
     <t t-name="web_editor.editorbar">
-        <div id="web_editor-top-edit" class="o_css_editor navbar navbar-inverse navbar-fixed-top hidden-xs">
+        <div id="web_editor-top-edit">
+            <div id="web_editor-toolbars"/>
             <form class="navbar-form text-muted">
-                <button type="button" data-action="save"
-                        class="btn btn-primary btn-xs">Save</button>
-                <span> or </span>
-                <a href="#" data-action="cancel" class="btn btn-link btn-xs">Discard</a>
+                <button type="button" class="btn btn-secondary" data-action="cancel"><i class="fa fa-times"/> Discard</button>
+                <button type="button" class="btn btn-primary" data-action="save"><i class="fa fa-floppy-o"/> Save</button>
             </form>
         </div>
     </t>
 
-    <t t-name="web_editor.dialog">
-        <div class="modal web_editor-dialog" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 class="modal-title"><t t-esc="title"/></h3>
-                    </div>
-                    <div class="modal-body"><t t-raw="0"/></div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary save" t-if="!button">Save</button>
-                        <button type="button" class="btn btn-primary save" t-if="button"><t t-raw="button"/></button>
-                        <button type="button" class="btn hidden wait" disabled="disabled"/>
-                        <span> or </span>
-                        <a href="#" data-dismiss="modal" aria-hidden="true">Discard</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Custom checkbox (material-design-like toggle) -->
+    <t t-name="web_editor.components.switch">
+        <label class="o_switch" t-att-for="id">
+            <input type="checkbox" t-att-id="id"/>
+            <span/>
+            <t t-if="label"><t t-esc="label"/></t>
+        </label>
     </t>
-    <t t-name="web_editor.dialog.media">
-        <div class="modal note-image-dialog" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog select-media">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 class="modal-title">Select a Media</h3>
-                    </div>
-                    <div class="modal-body">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#editor-media-image" data-toggle="tab">Image</a></li>
-                            <li><a href="#editor-media-document" data-toggle="tab">Document</a></li>
-                            <li><a href="#editor-media-icon" data-toggle="tab">Pictogram</a></li>
-                            <li><a href="#editor-media-video" data-toggle="tab">Video</a></li>
-                            <li class="search" style="float: right;">
-                                <ul class="pager mb0 mt0">
-                                    <li class="previous disabled"><a href="#">← Previous</a></li>
-                                    <li class="next disabled"><a href="#">Next →</a></li>
-                                </ul>
-                            </li>
-                            <li class="search" style="float: right;">
-                                <form action="#">
-                                    <div class="form-group font-icons fa fa-search mb0">
-                                        <input type="search" class="form-control" id="icon-search"/>
-                                    </div>
-                                </form>
-                            </li>
-                        </ul>
 
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane fade in active" id="editor-media-image">
-                            </div>
-                            <div class="tab-pane fade" id="editor-media-document">
-                            </div>
-                            <div class="tab-pane fade" id="editor-media-icon">
-                            </div>
-                            <div class="tab-pane fade" id="editor-media-video">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary save">Save</button>
-                        <button type="button" class="btn hidden wait" disabled="disabled"/>
-                        or
-                        <a href="#" data-dismiss="modal" aria-hidden="true">Discard</a>
-                    </div>
-                </div>
+    <!--=================-->
+    <!-- Edition Dialogs -->
+    <!--=================-->
+
+    <!-- Alt Dialog (allows to change alt and title of page images) -->
+    <form t-name="web_editor.dialog.alt" action="#">
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="alt"
+                   title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).">
+               Description <small>(ALT Tag)</small>
+            </label>
+            <div class="col-md-8">
+                <input class="form-control" id="alt" required="required" t-att-value="widget.alt" type="text"/>
             </div>
         </div>
-    </t>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="title"
+                   title="'Title tag' is shown as a tooltip when you hover the picture.">
+               Tooltip  <small>(TITLE Tag)</small>
+            </label>
+            <div class="col-md-8">
+                <input class="form-control" id="title" required="required" t-att-value="widget.tag_title" type="text"/>
+            </div>
+        </div>
+    </form>
+
+    <!-- Media Dialog (allows to choose an img/pictogram/video) -->
+    <div t-name="web_editor.dialog.media">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item"><a role="tab" href="#editor-media-image" aria-controls="editor-media-image" data-toggle="tab" t-attf-class="nav-link#{widget.noImages ? ' d-none' : ''}">Image</a></li>
+            <li class="nav-item"><a role="tab" href="#editor-media-document" aria-controls="editor-media-document" data-toggle="tab" t-attf-class="nav-link#{widget.noDocuments ? ' d-none' : ''}">Document</a></li>
+            <li class="nav-item"><a role="tab" href="#editor-media-icon" aria-controls="editor-media-icon" data-toggle="tab" t-attf-class="nav-link#{widget.noIcons ? ' d-none' : ''}">Pictogram</a></li>
+            <li class="nav-item"><a role="tab" href="#editor-media-video" aria-controls="editor-media-video" data-toggle="tab" t-attf-class="nav-link#{widget.noVideos ? ' d-none' : ''}">Video</a></li>
+            <li class="nav-item ml-auto search">
+                <div class="form-group">
+                    <input class="form-control" id="icon-search" type="search"/>
+                    <span class="fa fa-search" title="Search" role="img" aria-label="Search"/>
+                </div>
+            </li>
+            <li class="nav-item search">
+                <div class="btn-group">
+                    <a role="button" class="btn btn-secondary disabled previous" href="#"><i class="fa fa-angle-left"/>&#32;Previous</a>
+                    <a role="button" class="btn btn-secondary disabled next" href="#">Next&#32;<i class="fa fa-angle-right"/></a>
+                </div>
+            </li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade" id="editor-media-image"/>
+            <div role="tabpanel" class="tab-pane fade" id="editor-media-document"/>
+            <div role="tabpanel" class="tab-pane fade" id="editor-media-icon"/>
+            <div role="tabpanel" class="tab-pane fade" id="editor-media-video"/>
+        </div>
+    </div>
+
+    <!-- Image choosing part of the Media Dialog -->
     <t t-name="web_editor.dialog.image">
-        <div>
-            <form method="POST"
-                  action="/web_editor/attachment/add"
-                  enctype="multipart/form-data"
-                  target="fileframe"
-                  class="form-inline">
-                <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
-                <div class="well">
-                    <div class="form-group pull-left">
-                        <input type="file" name="upload" t-att-accept="widget.accept" multiple="multiple" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
+        <t t-set="iframeName" t-value="_.uniqueId('fileframe-')"/>
+        <form class="form-inline"
+            method="POST"
+            action="/web_editor/attachment/add"
+            enctype="multipart/form-data"
+            t-att-target="iframeName">
+            <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+            <input type="hidden" name="filters" t-att-value="widget.firstFilters.join('_')"/>
+            <input t-if="widget.options.res_id" type="hidden" name="res_id" t-att-value="widget.options.res_id"/>
+            <input t-if="widget.options.res_model" type="hidden" name="res_model" t-att-value="widget.options.res_model"/>
+            <div class="o_media_image_card card w-100">
+                <div class="card-body p-0">
+                    <div class="form-inline">
+                        <input type="file" class="d-none" name="upload" t-att-accept="widget.accept" multiple="multiple"/>
                         <input type="hidden" name="disable_optimization" value=""/>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary filepicker">Upload an image from your computer</button>
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                <span class="caret"></span>
+                            <button class="btn btn-primary o_upload_image_button" type="button">Upload an image</button>
+                            <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" type="button">
                                 <span class="sr-only">Alternate Upload</span>
                             </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" class="js_disable_optimization">Upload image without optimization</a></li>
-                            </ul>
+                            <div class="dropdown-menu" role="menu">
+                                <a role="menuitem" class="dropdown-item o_upload_image_button_no_optimization">Upload image without optimization</a>
+                            </div>
                         </div>
-                        <button type="button" class="btn hidden wait" disabled="disabled">Uploading...</button>
-                    </div>
-                    <div>
-                        <span class="text-muted"> — or — </span>
-                        <label for="iamgeurl">Add an image URL</label>
-                        <div class="form-group btn-group">
-                            <input type="text" name="url" class="form-control url pull-left" style="width: 320px;" id="iamgeurl" placeholder="http://openerp.com/logo.png"/>
-                            <button class="btn btn-default" type="submit">Add</button>
+                        <span class="text-muted">— or —</span>
+                        <label for="imageurl">Add an image URL</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control url" id="imageurl" name="url" placeholder="https://www.odoo.com/logo.png" style="width: 250px;"/>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-secondary o_upload_image_url_button" disabled="disabled">Add</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <input type="hidden" name="func"/>
-                <div class="help-block"/>
-                <div class="existing-attachments">
-                    <t t-call="web_editor.dialog.image.existing"/>
-                </div>
-            </form>
-        </div>
-        <iframe src="about:blank" name="fileframe" class="hidden"/>
+            </div>
+            <div class="form-text"/>
+            <div class="existing-attachments">
+                <t t-call="web_editor.dialog.image.existing"/>
+            </div>
+            <iframe class="d-none" t-att-name="iframeName"/>
+        </form>
     </t>
     <t t-name="web_editor.dialog.image.existing">
-        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div role="dialog" class="modal" tabindex="-1">
             <div class="modal-dialog select-image">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <header class="modal-header">
                         <h3 class="modal-title">Select a Picture</h3>
-                    </div>
-                    <div class="modal-body has-error">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                    </header>
+                    <main class="modal-body o_has_error">
                         <div class="existing-attachments"/>
-                        <div class="help-block"/>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="#" data-dismiss="modal" aria-hidden="true">Discard</a>
-                    </div>
+                        <div class="form-text"/>
+                    </main>
+                    <footer class="modal-footer">
+                        <a data-dismiss="modal" href="#" aria-label="Discard">Discard</a>
+                    </footer>
                 </div>
             </div>
         </div>
     </t>
     <t t-name="web_editor.dialog.image.existing.content">
         <div class="existing-attachments">
-            <div class="row mt16" t-foreach="rows" t-as="row">
-                <div class="col-sm-2 existing-attachment-cell"
-                     t-foreach="row" t-as="attachment">
-                    <i class="fa fa-times existing-attachment-remove" t-att-data-id="attachment.id"/>
-                    <div class="o_attachment_border"><div t-att-data-src="attachment.src" t-att-data-url="attachment.url" t-att-alt="attachment.name" t-att-title="attachment.name" t-att-data-id="attachment.id" t-att-data-mimetype="attachment.mimetype" class="o_image"/></div>
+            <div class="row mt16" t-as="row" t-foreach="rows">
+                <div class="col-2 o_existing_attachment_cell" t-as="attachment" t-foreach="row">
+                    <i t-if="attachment.res_model === 'ir.ui.view'" class="fa fa-times o_existing_attachment_remove" title="This file is a public view attachment" role="img" aria-label="This file is a public view attachment" t-att-data-id="attachment.id"/>
+                    <i t-else="" class="fa fa-times o_existing_attachment_remove" title="This file is attached to the current record" role="img" aria-label="This file is attached to the current record" t-att-data-id="attachment.id"/>
+                    <div class="o_attachment_border" t-att-style="attachment.res_model === 'ir.ui.view' ? null : 'border: 1px solid #5cb85c;'"><div t-att-data-src="attachment.src" t-att-data-url="attachment.url" role="img" t-att-aria-label="attachment.name" t-att-title="attachment.name" t-att-data-id="attachment.id" t-att-data-mimetype="attachment.mimetype" class="o_image o_image_loading"/></div>
                 </div>
             </div>
         </div>
     </t>
     <t t-name="web_editor.dialog.image.existing.error">
-        <div class="help-block">
+        <div class="form-text">
             <p>The image could not be deleted because it is used in the
                following pages or views:</p>
-            <ul t-foreach="views" t-as="view">
+            <ul t-as="view" t-foreach="views">
                 <li>
                     <a t-attf-href="/web#model=ir.ui.view&amp;id=#{view.id}">
                         <t t-esc="view.name"/>
@@ -167,51 +167,9 @@
         </div>
     </t>
 
-    <t t-name="web_editor.discard">
-        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h3 class="modal-title">Discard edition</h3>
-                    </div>
-                    <div class="modal-body">
-                        <p>
-                            If you discard the current edition, <em>all</em>
-                            unsaved changes will be lost.
-                        </p>
-                        <p>You can cancel to return to the edition mode.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger">Discard</button>
-                        or
-                        <a href="#" data-dismiss="modal" aria-hidden="true">Cancel</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
-    <t t-name="web_editor.dialog.alt">
-        <t t-call="web_editor.dialog">
-            <t t-set="title">Change media Alt and Title</t>
-            <form action="#" class="form-horizontal">
-                <div class="form-group">
-                    <label for="alt" class="col-sm-2 control-label">Alt:</label>
-                    <div class="col-sm-9"><input id="alt" type="text" class="form-control" required="required" t-att-value="widget.alt"/></div>
-                </div>
-                <div class="form-group">
-                    <label for="title" class="col-sm-2 control-label">Title:</label>
-                    <div class="col-sm-9"><input id="title" type="text" class="form-control" required="required" t-att-value="widget.title"/></div>
-                </div>
-            </form>
-        </t>
-    </t>
-
+    <!-- Icon choosing part of the Media Dialog -->
     <t t-name="web_editor.dialog.font-icons">
         <form action="#">
-            <input type="hidden" id="fa-icon"/>
-            <input type="hidden" id="fa-size" value="fa-1x"/>
             <div class="font-icons-icons">
                 <t t-call="web_editor.dialog.font-icons.icons">
                     <t t-set="iconsParser" t-value="widget.iconsParser"/>
@@ -220,159 +178,284 @@
         </form>
     </t>
     <t t-name="web_editor.dialog.font-icons.icons">
-        <t t-foreach="iconsParser" t-as="data">
-          <span t-foreach="data.cssData" t-as="cssData"
-                t-attf-class="#{data.base} font-icons-icon #{cssData[2]}"
-                t-attf-data-alias=",#{cssData[3]},"
-                t-att-title="cssData[3].join(', ')"
-                t-att-data-id="cssData[2]"/>
+        <t t-as="data" t-foreach="iconsParser">
+            <span t-foreach="data.cssData" t-as="cssData"
+                t-att-data-id="cssData.names[0]"
+                t-att-title="cssData.names[0]"
+                t-att-aria-label="cssData.names[0]" role="img"
+                t-attf-class="font-icons-icon #{data.base} #{cssData.names[0]}"
+                t-att-data-alias="cssData.names.join(',')"/>
         </t>
     </t>
 
-    <t t-name="web_editor.dialog.video">
-        <form action="#" class="form-inline">
-            <div class="well">
-                <div class="form-group btn-group">
-                    <span class="text-muted pull-right" style="margin-left:10px; line-height: 2em;">(Youtube, Vimeo, Dailymotion)</span>
-                    <label for="urlvideo" style="width: 220px; line-height: 2em;" class="pull-left">Set a video URL</label>
-                    <input type="text"
-                        name="url"
-                        class="form-control url pull-left"
-                        style="width: 400px;"
-                        id="urlvideo"
-                        placeholder="//www.youtube.com/embed/yws1tbgNV7k"
-                        t-translation="off"/>
-                    <button class="btn btn-default">Preview</button>
+    <!-- Video choosing part of the Media Dialog -->
+    <div t-name="web_editor.dialog.video" class="card">
+        <form action="#" class="form-inline card-body">
+            <div class="o_video_dialog_form">
+                <div class="form-group" id="o_video_form_group">
+                    <label class="mt8" for="o_video_text">Video code <small class="text-muted">(URL or Embed)</small></label>
+                    <textarea class="form-control url" id="o_video_text" placeholder="Copy-paste your URL or embed code here"/>
+                    <label class="col-form-label o_validate_feedback" for="o_video_text"><i class="fa fa-check" role="img" aria-label="Checked" title="Checked"/><i class="fa fa-exclamation-triangle" role="img" aria-label="Attention" title="Attention"/></label>
                 </div>
-                <div class="form-group btn-group">
-                    <label for="urlvideo" style="width: 220px; line-height: 2em;" class="pull-left"><span class="text-muted">— or —</span> Embed Video (HTML)</label>
-                    <input type="text"
-                        name="embed"
-                        class="form-control url pull-left"
-                        style="width: 400px;"
-                        id="embedvideo"
-                        placeholder='&lt;iframe src="//www.youtube.com/embed/yws1tbgNV7k"&gt;&lt;/iframe&gt;'
-                        t-translation="off"/>
-                    <button class="btn btn-default">Preview</button>
+                <div class="text-right">
+                    <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Instagram</i></b>, <b><i>Vine.co</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Youku</i></b> videos</small>
+                </div>
+                <div class="o_video_dialog_options d-none mt48">
+                    <small class="text-muted">Options</small>
+                    <ul class="list-group">
+                        <li class="list-group-item o_yt_option o_vim_option o_dm_option">
+                            <label class="o_switch mb0"><input id="o_video_autoplay" type="checkbox"/><span/>Autoplay</label>
+                        </li>
+                        <li class="list-group-item o_yt_option o_vim_option">
+                            <label class="o_switch mb0"><input id="o_video_loop" type="checkbox"/><span/>Loop</label>
+                        </li>
+                        <li class="list-group-item o_yt_option o_dm_option">
+                            <label class="o_switch mb0"><input id="o_video_hide_controls" type="checkbox"/><span/>Hide player controls</label>
+                        </li>
+                        <li class="list-group-item o_yt_option">
+                            <label class="o_switch mb0"><input id="o_video_hide_fullscreen" type="checkbox"/><span/>Hide fullscreen button</label>
+                        </li>
+                        <li class="list-group-item o_yt_option">
+                            <label class="o_switch mb0"><input id="o_video_hide_yt_logo" type="checkbox"/><span/>Hide Youtube logo</label>
+                        </li>
+                        <li class="list-group-item o_dm_option">
+                            <label class="o_switch mb0"><input id="o_video_hide_dm_logo" type="checkbox"/><span/>Hide Dailymotion logo</label>
+                        </li>
+                        <li class="list-group-item o_dm_option">
+                            <label class="o_switch mb0"><input id="o_video_hide_dm_share" type="checkbox"/><span/>Hide sharing button</label>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            
-            <div id="video-preview" style="width: 450px; margin: 0 auto;">
+            <div id="video-preview">
+                <div class="o_video_dialog_preview_text small mt16 mb8 d-none">Preview</div>
                 <div class="media_iframe_video">
-                    <div class="media_iframe_video_size"></div>
-                    <iframe
-                        src=""
-                        frameborder="0"
-                        allowfullscreen="allowfullscreen"></iframe>
-                </div>
-            </div>
-
-            <div class="text-center mt32">
-                <div class="checkbox">
-                    <label><input type="checkbox" id="autoplay"/> Autoplay</label>
+                    <div class="media_iframe_video_size"/>
+                    <iframe class="o_video_dialog_iframe" allowfullscreen="allowfullscreen" frameborder="0" src=""/>
                 </div>
             </div>
         </form>
-    </t>
+    </div>
 
-    <t t-name="web_editor.dialog.link">
-        <t t-call="web_editor.dialog">
-            <t t-set="title">Link to</t>
+    <!-- Link Dialog (allows to choose a style and content for a link on the page) -->
+    <div t-name="web_editor.dialog.link" class="o_link_dialog">
+        <div class="row">
+            <form class="col-lg-8">
+                <div t-attf-class="form-group row#{widget.needLabel ? '' : ' d-none'}">
+                    <label class="col-form-label col-md-3" for="o_link_dialog_label_input">Link Label</label>
+                    <div class="col-md-9">
+                        <input type="text" name="label" class="form-control" id="o_link_dialog_label_input" required="required" t-att-value="widget.data.text"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3" for="o_link_dialog_url_input">URL or Email</label>
+                    <div class="col-md-9">
+                        <input type="text" name="url" class="form-control" id="o_link_dialog_url_input" required="required"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3">Size</label>
+                    <div class="col-md-9">
+                        <select name="link_style_size" class="form-control link-style">
+                            <option value="sm">Small</option>
+                            <option value="" selected="selected">Medium</option>
+                            <option value="lg">Large</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3">Style</label>
+                    <div class="col-md-9">
+                        <select name="link_style_shape" class="form-control link-style">
+                            <option value="" selected="selected">Default</option>
+                            <option value="outline">Outline</option>
+                            <option value="rounded-circle">Rounded</option>
+                            <option value="outline,rounded-circle">Outline-Rounded</option>
+                            <option value="flat">Flat</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3">Color</label>
+                    <div class="col-md-9">
+                        <div class="o_link_dialog_color">
+                            <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-link text-center" data-color="">
+                                <span>L</span>
+                                <input class="d-none link-style" name="link_style_color" type="radio" value=""/>
+                                <i class="fa"/>
+                            </label>
+                            <t t-foreach="['alpha', 'beta', 'gamma', 'delta', 'epsilon', 'primary', 'secondary', 'success', 'info', 'warning', 'danger']" t-as="color">
+                                <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-#{color}" t-attf-aria-label="Color for #{color}" t-attf-title="Color for #{color}">
+                                    <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="color"/>
+                                    <i class="fa"/>
+                                </label>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="offset-md-3 col-md-9">
+                        <label class="o_switch">
+                            <input type="checkbox" name="is_new_window" t-att-checked="widget.data.isNewWindow ? 'checked' : undefined"/>
+                            <span/>
+                            Open in new window
+                        </label>
+                    </div>
+                </div>
+            </form>
+            <div class="col-lg-4 o_link_dialog_preview">
+                <div class="form-group text-center">
+                    <label>Preview</label>
+                    <div style="overflow: auto; max-width: 100%; max-height: 200px;">
+                        <a href="#" id="link-preview" aria-label="Preview" title="Preview"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Crop Image Dialog (allows to crop image on the page) -->
+    <div t-name="web_editor.dialog.crop_image" class="o_crop_image_dialog">
+        <div t-if="widget.imageData.isExternalImage" class="alert alert-warning text-center" role="alert">
+            <i class="fa fa-exclamation-triangle fa-2x"/>
+            <h4>This image is an external image</h4>
+            <p>
+                This type of image is not supported for cropping.<br/>
+                If you want to crop it, please first download it from the original source and upload it in Odoo.
+            </p>
+        </div>
+        <t t-else="">
+           <div class="o_crop_area">
+                <img class="img img-fluid o_cropper_image" t-att-src="widget.imageData.originalSrc"/>
+           </div>
+           <div class="o_crop_options text-center mt16">
+               <div class="btn-group btn-group-toggle" title="Aspect Ratio" data-toggle="buttons">
+                   <t t-foreach="widget.aspectRatioList" t-as="ratio">
+                       <t t-set="is_active" t-value="ratio[1] === widget.imageData.aspectRatio"/>
+                       <label t-attf-class="btn btn-secondary#{is_active and ' active' or ''}" data-event="ratio" t-att-data-label="ratio[1]" t-att-data-value="ratio[2]">
+                           <input type="radio" /><t t-esc="ratio[0]"/>
+                       </label>
+                   </t>
+               </div>
+               <div class="btn-group" role="group">
+                   <button type="button" class="btn btn-secondary" title="Zoom In" data-event="zoom" data-value="0.1"><i class="fa fa-search-plus"/></button>
+                   <button type="button" class="btn btn-secondary" title="Zoom Out" data-event="zoom" data-value="-0.1"><i class="fa fa-search-minus"/></button>
+               </div>
+               <div class="btn-group" role="group">
+                   <button type="button" class="btn btn-secondary" title="Rotate Left" data-event="rotate" data-value="-45"><i class="fa fa-rotate-left"/></button>
+                   <button type="button" class="btn btn-secondary" title="Rotate Right" data-event="rotate" data-value="45"><i class="fa fa-rotate-right"/></button>
+               </div>
+               <div class="btn-group" role="group">
+                   <button type="button" class="btn btn-secondary" title="Flip Horizontal" data-event="flip" data-value="horizontal" data-x="1"><i class="fa fa-arrows-h"/></button>
+                   <button type="button" class="btn btn-secondary" title="Flip Vertical" data-event="flip" data-value="vertical" data-y="1"><i class="fa fa-arrows-v"/></button>
+               </div>
+               <div class="btn-group" role="group">
+                   <button type="button" class="btn btn-secondary" title="Reset Image" data-event="reset"><i class="fa fa-refresh"/> Reset Image</button>
+               </div>
+           </div>
+       </t>
+    </div>
+
+    <!--=================-->
+    <!-- Snippet options -->
+    <!--=================-->
+
+    <!-- Background position option dialog -->
+    <div t-name="web_editor.dialog.background_position" class="o_bg_img_opt_modal">
+        <label class="radio-inline"><input type="radio" name="o_bg_img_opt" value="cover"/> Cover</label>
+        <label class="radio-inline"><input type="radio" name="o_bg_img_opt" value="contain"/> Contain</label>
+        <label class="radio-inline"><input type="radio" name="o_bg_img_opt" value="custom"/> Custom</label>
+
+        <div class="o_bg_img_opt" data-value="cover">
+            <div class="o_bg_img_opt_cover_edition">
+                <h6>Assign a focal point that will always be visible</h6>
+                <div class="o_bg_img_opt_object">
+                    <span class="grid grid-1"/>
+                    <span class="grid grid-2"/>
+                    <span class="grid grid-3"/>
+                    <span class="grid grid-4"/>
+                    <span class="o_focus_point"/>
+                    <div class="o_bg_img_opt_ui_info">X: <span class="o_x"/> Y: <span class="o_y"/></div>
+                </div>
+            </div>
+        </div>
+        <div class="o_bg_img_opt" data-value="contain">
             <form>
-                <div class="list-group">
-                    <div class="form-group list-group-item active">
-                        <h3 class="list-group-item-heading">
-                            <label for="link-new" class="control-label">
-                                Link Label
-                            </label>
-                        </h3>
-                        <input type="text" class="form-control" id="link-text" required="required"/>
-                    </div>
-                </div>
-                <ul class="list-group">
-                    <li class="list-group-item form-group clearfix active">
-                        <div class="pull-right" style="display: none;">
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label" for="repeatInput">Repeat</label>
+                    <div class="col-md-5">
+                        <div class="checkbox">
                             <label>
-                                <input type="checkbox" class="window-new"/>
-                                Open in new window
+                                <input type="checkbox" id="o_bg_img_opt_contain_repeat"/>
                             </label>
-                        </div>
-                        <h4 class="list-group-item-heading">
-                            <label for="link-external" class="control-label">
-                                URL or Email Address
-                            </label>
-                        </h4>
-                        <input type="text" class="form-control url email-address url-source"
-                               id="link-external" placeholder="http://openerp.com"/>
-                    </li>
-                </ul>
-                <div class="form-horizontal link-style">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">
-                            Style
-                        </label>
-                        <div class="col-sm-4">
-                            <div class="dropdown" style="line-height: 2em;">
-                                <a data-toggle="dropdown" class="btn btn-default" href="#">Color Style <span class="caret"></span></a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <li>
-                                        <label class="btn btn-link">Link<input value="" class="link-style" type="radio" name="link-style-type" checked="checked"/></label>
-                                    </li>
-                                    <li>
-                                        <label class="btn btn-default">Basic<input value="btn-default" class="link-style" type="radio" name="link-style-type"/></label>
-                                    </li>
-                                    <li>
-                                        <label class="btn btn-success">Success<input value="btn-success" class="link-style" type="radio" name="link-style-type"/></label>
-                                    </li>
-                                    <li>
-                                        <label class="btn btn-primary">Primary<input value="btn-primary" class="link-style" type="radio" name="link-style-type"/></label>
-                                    </li>
-                                    <li>
-                                        <label class="btn btn-info">Info<input value="btn-info" class="link-style" type="radio" name="link-style-type"/></label>
-                                    </li>
-                                    <li>
-                                        <label class="btn btn-warning">Warning<input value="btn-warning" class="link-style" type="radio" name="link-style-type"/></label>
-                                    </li>
-                                    <li>
-                                        <label class="btn btn-danger">Danger<input value="btn-danger" class="link-style" type="radio" name="link-style-type"/></label>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="dropdown" style="line-height: 2em;">
-                                <a data-toggle="dropdown" class="btn btn-default" href="#">Size <span class="caret"></span></a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <li>
-                                        <label class="btn btn-default btn-xs">Extra Small<input value="btn-xs" class="link-style" type="radio" name="link-style-size"/></label>
-                                    </li>
-                                    <li>
-                                        <label class="btn btn-default btn-sm">Small<input value="btn-sm" class="link-style" type="radio" name="link-style-size"/></label>
-                                    </li>
-                                    <li>
-                                        <label class="btn btn-default">Default<input value="" class="link-style" type="radio" name="link-style-size" checked="checked"/></label>
-                                    </li>
-                                    <li>
-                                        <label class="btn btn-default btn-lg">Large<input value="btn-lg" class="link-style" type="radio" name="link-style-size"/></label>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-horizontal link-style">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">
-                            Preview
-                        </label>
-                        <div class="col-sm-10" style="line-height: 2em;">
-                            <div style="overflow: auto; max-width: 100%; max-height: 200px;">
-                                <a id="link-preview" href="#"></a>
-                            </div>
                         </div>
                     </div>
                 </div>
             </form>
-        </t>
-    </t>
+        </div>
+        <form class="o_bg_img_opt" data-value="custom">
+            <fieldset>
+                <legend>Background size</legend>
+                <p>Sets the width and height of the background image in percent of the parent element.</p>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="o_bg_img_opt_custom_size_x">Background width</label>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <input type="number" min="0" max="100" class="form-control" id="o_bg_img_opt_custom_size_x" placeholder="auto"/>
+                            <div class="input-group-append">
+                                <div class="input-group-text">%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="o_bg_img_opt_custom_size_y">Background height</label>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <input type="number" min="0" max="100" class="form-control" id="o_bg_img_opt_custom_size_y" placeholder="auto"/>
+                            <div class="input-group-append">
+                                <div class="input-group-text">%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Background position</legend>
+                <p>Set the starting position of the background image.</p>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="o_bg_img_opt_custom_pos_x">Horizontal</label>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <input type="number" min="0" max="100" class="form-control " id="o_bg_img_opt_custom_pos_x" placeholder="auto"/>
+                            <div class="input-group-append">
+                                <div class="input-group-text">%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="o_bg_img_opt_custom_pos_y">Vertical</label>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <input type="number" min="0" max="100" class="form-control" id="o_bg_img_opt_custom_pos_y" placeholder="auto"/>
+                            <div class="input-group-append">
+                                <div class="input-group-text">%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Background repeat</legend>
+                <p>Define if/how the background image will be repeated</p>
+                <select class="form-control" id="o_bg_img_opt_custom_repeat">
+                    <option value="">No repeat</option>
+                    <option value="o_bg_img_opt_repeat">Repeat both</option>
+                    <option value="o_bg_img_opt_repeat_x">Repeat x</option>
+                    <option value="o_bg_img_opt_repeat_y">Repeat y</option>
+                </select>
+            </fieldset>
+        </form>
+    </div>
 </templates>

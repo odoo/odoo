@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import res_users
-import crm_stage
-import crm_lead
-import sales_team
-import models
-import calendar_event
-import report
-import wizard
-import res_partner
-import res_config
-import base_partner_merge
-import web_planner
+from . import controllers
+from . import models
+from . import report
+from . import wizard
+
+from odoo import api, SUPERUSER_ID
+
+
+def uninstall_hook(cr, registry):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    teams = env['crm.team'].search([('dashboard_graph_model', '=', 'crm.opportunity.report')])
+    teams.update({'dashboard_graph_model': None})

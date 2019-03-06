@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="sales_team.team_sales_department" model="crm.team">
+            <field name="use_opportunities">True</field>
+            <field name="alias_name">sales</field>
+            <field name="dashboard_graph_model">crm.lead</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!--default alias for leads-->
+        <record id="mail_alias_lead_info" model="mail.alias">
+            <field name="alias_name"></field>
+            <field name="alias_model_id" ref="model_crm_lead"/>
+            <field name="alias_user_id" ref="base.user_admin"/>
+            <field name="alias_parent_model_id" ref="model_crm_team"/>
+        </record>
+
+        <!-- opportunities' lost causes -->
+        <record id="lost_reason_1" model="crm.lost.reason">
+            <field name="name">Too expensive</field>
+        </record>
+        <record id="lost_reason_2" model="crm.lost.reason">
+            <field name="name">We don't have people/skills</field>
+        </record>
+        <record id="lost_reason_3" model="crm.lost.reason">
+            <field name="name">Not enough stock</field>
+        </record>
+    </data>
+
+</odoo>

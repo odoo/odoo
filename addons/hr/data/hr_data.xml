@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="dep_administration" model="hr.department">
+          <field name="name">Administration</field>
+        </record>
+
+        <record id="dep_sales" model="hr.department">
+          <field name="name">Sales</field>
+        </record>
+
+        <record id="employee_admin" model="hr.employee">
+            <field name="name" eval="obj(ref('base.partner_admin')).name" model="res.partner"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="address_id" ref="base.partner_admin"/>
+            <field name="address_home_id" ref="base.partner_admin"/>
+            <field name="image" eval="obj(ref('base.partner_admin')).image" model="res.partner"/>
+        </record>
+
+        <record id="mail_template_data_unknown_employee_email_address" model="mail.template">
+            <field name="name">HR: mailgateway unknown employee bounce</field>
+            <field name="model_id" ref="base.model_ir_module_module"/>
+            <field name="subject">Your document has not been created</field>
+            <field name="email_from">${user.email}</field>
+            <field name="email_to">${ctx['email_to']|safe}</field>
+            <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 13px;">
+                    <div>
+                        Hi,<br/>
+                        Your document has not been created because your email address is not recognized. Please send emails with the email address recorded on your employee information, or contact your HR manager.
+                    </div>
+                </td></tr>
+            </table>
+    </td></tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+      <tr><td style="text-align: center; font-size: 13px;">
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=hr" style="color: #875A7B;">Odoo</a>
+      </td></tr>
+    </table>
+</td></tr>
+</table>
+            </field>
+            <field name="lang">${user.lang}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

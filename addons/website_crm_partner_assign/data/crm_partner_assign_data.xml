@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="crm.lead.tag" id="tag_portal_lead_partner_unavailable">
+            <field name="name">No more partner available</field>
+            <field name="color">3</field>
+        </record>
+        <record model="crm.lead.tag" id="tag_portal_lead_is_spam">
+            <field name="name">Spam</field>
+            <field name="color">3</field>
+        </record>
+        <record model="crm.lead.tag" id="tag_portal_lead_own_opp">
+            <field name="name">Created by Partner</field>
+            <field name="color">4</field>
+        </record>
+        <record id="email_template_lead_forward_mail" model="mail.template">
+            <field name="name">Lead Forward: Send to partner</field>
+            <field name="model_id" ref="website_crm_partner_assign.model_crm_lead_forward_to_partner" />
+            <field name="subject">Fwd: Lead: ${ctx['partner_id'].name}</field>
+            <field name="email_from">${(user.email or '')|safe}</field>
+            <field name="email_to">${ctx['partner_id'].email|safe}</field>
+            <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <span style="font-size: 10px;">Your leads</span><br/>
+                </td><td valign="middle" align="right">
+                    <img src="/logo.png?company=${user.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="'%s' % company.name"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr>
+                    <td valign="top" style="font-size: 13px;">
+                        <div>
+                            Hello,<br/>
+                            We have been contacted by those prospects that are in your region. Thus, the following leads have been assigned to ${ctx['partner_id'].name}:<br/>
+                            <ol>
+                                % for lead in ctx['partner_leads']:
+                                    <li><a href="${lead.lead_link}">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li><br/>
+                                % endfor
+                            </ol>
+                            % if ctx.get('partner_in_portal'):
+                                Please connect to your <a href="${object.get_portal_url()}">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: "I'm interested" &amp; "I'm not interested".<br/>
+                            % else:
+                                You do not have yet a portal access to our database. Please contact
+                                ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.<br/>
+                            % endif
+                            The lead will be sent to another partner if you do not contact the lead before 20 days.<br/><br/>
+                            Thank you,<br/>
+                            ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}
+                            <br/>
+                            % if not ctx['partner_id'].user_id:
+                                PS: It looks like you do not have an account manager assigned to you, please contact us.
+                            % endif
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;">
+                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle" align="left">
+                    ${user.company_id.name}
+                </td></tr>
+                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                    ${user.company_id.phone}
+                    % if user.company_id.phone and (user.company_id.email or user.company_id.website)
+                    |
+                    % endif
+                    % if user.company_id.email
+                    <a href="'mailto:%s' % ${user.company_id.email}" style="text-decoration:none; color: #454748;">${user.company_id.email}</a>
+                    % endif
+                    % if user.company_id.email and user.company_id.website
+                    |
+                    % endif
+                    % if user.company_id.website
+                    <a href="'%s' % ${user.company_id.website}" style="text-decoration:none; color: #454748;">
+                    ${user.company_id.website}
+                    </a>
+                    % endif
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+      <tr><td style="text-align: center; font-size: 13px;">
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=website" style="color: #875A7B;">Odoo</a>
+      </td></tr>
+    </table>
+</td></tr>
+</table>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="menu_resellers" model="website.menu">
+            <field name="name">Resellers</field>
+            <field name="url">/partners</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">55</field>
+        </record>
+    </data>
+
+</odoo>

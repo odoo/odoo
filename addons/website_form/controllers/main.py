@@ -1,30 +1,34 @@
 # -*- coding: utf-8 -*-
-import base64
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import json
 import pytz
+
 from datetime import datetime
 from psycopg2 import IntegrityError
-from openerp import http, SUPERUSER_ID
-from openerp.http import request
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools.translate import _
-from openerp.exceptions import ValidationError
-from openerp.addons.base.ir.ir_qweb import nl2br
+
+from odoo import http
+from odoo.http import request
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.translate import _
+from odoo.exceptions import ValidationError
+from odoo.addons.base.models.ir_qweb_fields import nl2br
+
 
 class WebsiteForm(http.Controller):
 
     # Check and insert values from the form on the model <model>
     @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
     def website_form(self, model_name, **kwargs):
-        model_record = request.env['ir.model'].search([('model', '=', model_name), ('website_form_access', '=', True)])
+        model_record = request.env['ir.model'].sudo().search([('model', '=', model_name), ('website_form_access', '=', True)])
         if not model_record:
             return json.dumps(False)
 
         try:
-            data = self.extract_data(model_record, ** kwargs)
+            data = self.extract_data(model_record, request.params)
         # If we encounter an issue while extracting data
-        except ValidationError, e:
+        except ValidationError as e:
             # I couldn't find a cleaner way to pass data to an exception
             return json.dumps({'error_fields' : e.args[0]})
 
@@ -33,14 +37,15 @@ class WebsiteForm(http.Controller):
             if id_record:
                 self.insert_attachment(model_record, id_record, data['attachments'])
 
-        # Some fields have additionnal SQL constraints that we can't check generically
+        # Some fields have additional SQL constraints that we can't check generically
         # Ex: crm.lead.probability which is a float between 0 and 1
         # TODO: How to get the name of the erroneous field ?
         except IntegrityError:
             return json.dumps(False)
 
+        request.session['form_builder_model_model'] = model_record.model
         request.session['form_builder_model'] = model_record.name
-        request.session['form_builder_id']    = id_record
+        request.session['form_builder_id'] = id_record
 
         return json.dumps({'id': id_record})
 
@@ -101,18 +106,20 @@ class WebsiteForm(http.Controller):
 
 
     # Extract all data sent by the form and sort its on several properties
-    def extract_data(self, model, **kwargs):
+    def extract_data(self, model, values):
 
         data = {
             'record': {},        # Values to create record
             'attachments': [],  # Attached files
             'custom': '',        # Custom fields values
+            'meta': '',         # Add metadata if enabled
         }
 
         authorized_fields = model.sudo()._get_form_writable_fields()
         error_fields = []
 
-        for field_name, field_value in kwargs.items():
+
+        for field_name, field_value in values.items():
             # If the value of the field if a file
             if hasattr(field_value, 'filename'):
                 # Undo file upload field name indexing
@@ -136,7 +143,7 @@ class WebsiteForm(http.Controller):
 
             # If it's a custom field
             elif field_name != 'context':
-                data['custom'] += "%s : %s\n" % (field_name.decode('utf-8'), field_value)
+                data['custom'] += u"%s : %s\n" % (field_name, field_value)
 
         # Add metadata if enabled
         environ = request.httprequest.headers.environ
@@ -154,18 +161,19 @@ class WebsiteForm(http.Controller):
         # def website_form_input_filter(self, values):
         #     values['name'] = '%s\'s Application' % values['partner_name']
         #     return values
-        dest_model = request.env[model.model]
+        dest_model = request.env[model.sudo().model]
         if hasattr(dest_model, "website_form_input_filter"):
             data['record'] = dest_model.website_form_input_filter(request, data['record'])
 
-        missing_required_fields = [label for label, field in authorized_fields.iteritems() if field['required'] and not label in data['record']]
+        missing_required_fields = [label for label, field in authorized_fields.items() if field['required'] and not label in data['record']]
         if any(error_fields):
             raise ValidationError(error_fields + missing_required_fields)
 
         return data
 
     def insert_record(self, request, model, values, custom, meta=None):
-        record = request.env[model.model].sudo().create(values)
+        model_name = model.sudo().model
+        record = request.env[model_name].sudo().with_context(mail_create_nosubscribe=True).create(values)
 
         if custom or meta:
             default_field = model.website_form_default_field_id
@@ -177,13 +185,13 @@ class WebsiteForm(http.Controller):
             # If there is a default field configured for this model, use it.
             # If there isn't, put the custom data in a message instead
             if default_field.name:
-                if default_field.ttype == 'html' or model.model == 'mail.mail':
+                if default_field.ttype == 'html' or model_name == 'mail.mail':
                     custom_content = nl2br(custom_content)
                 record.update({default_field.name: custom_content})
             else:
                 values = {
                     'body': nl2br(custom_content),
-                    'model': model.model,
+                    'model': model_name,
                     'message_type': 'comment',
                     'no_auto_thread': False,
                     'res_id': record.id,
@@ -195,15 +203,16 @@ class WebsiteForm(http.Controller):
     # Link all files attached on the form
     def insert_attachment(self, model, id_record, files):
         orphan_attachment_ids = []
-        record = model.env[model.model].browse(id_record)
+        model_name = model.sudo().model
+        record = model.env[model_name].browse(id_record)
         authorized_fields = model.sudo()._get_form_writable_fields()
         for file in files:
             custom_field = file.field_name not in authorized_fields
             attachment_value = {
-                'name': file.field_name if custom_field else file.filename,
+                'name': file.filename,
                 'datas': base64.encodestring(file.read()),
                 'datas_fname': file.filename,
-                'res_model': model.model,
+                'res_model': model_name,
                 'res_id': record.id,
             }
             attachment_id = request.env['ir.attachment'].sudo().create(attachment_value)
@@ -212,13 +221,13 @@ class WebsiteForm(http.Controller):
             else:
                 orphan_attachment_ids.append(attachment_id.id)
 
-        # If some attachments didn't match a field on the model,
-        # we create a mail.message to link them to the record
-        if orphan_attachment_ids:
-            if model.name != 'mail.mail':
+        if model_name != 'mail.mail':
+            # If some attachments didn't match a field on the model,
+            # we create a mail.message to link them to the record
+            if orphan_attachment_ids:
                 values = {
                     'body': _('<p>Attached files : </p>'),
-                    'model': model.model,
+                    'model': model_name,
                     'message_type': 'comment',
                     'no_auto_thread': False,
                     'res_id': id_record,

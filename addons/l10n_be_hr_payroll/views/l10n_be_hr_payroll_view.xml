@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.form</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='wage']" position="after">
+                <label for="wage_with_holidays" attrs="{'invisible': [('holidays', '&lt;=', 20.0)]}"/>
+                <div class="o_row" attrs="{'invisible': [('holidays', '&lt;=', 20.0)]}">
+                    <field name="wage_with_holidays" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <label for="fuel_card"/>
+                <div class="o_row">
+                    <field name="fuel_card" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <label for="meal_voucher_amount"/>
+                <div class="o_row">
+                    <field name="meal_voucher_amount" nolabel="1"/>
+                    <span>/ worked day</span>
+                </div>
+                <label for="representation_fees"/>
+                <div class="o_row">
+                    <field name="representation_fees" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <label for="additional_net_amount"/>
+                <div class="o_row">
+                    <field name="additional_net_amount" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <label for="retained_net_amount"/>
+                <div class="o_row">
+                    <field name="retained_net_amount" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <label for="commission_on_target"/>
+                <div class="o_row">
+                    <field name="commission_on_target" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <field name="ip_wage_rate"/>
+                <label for="ip" attrs="{'invisible': [('ip_wage_rate', '=', 0.0)]}"/>
+                <div class="o_row" attrs="{'invisible': [('ip_wage_rate', '=', 0.0)]}">
+                    <field name="ip" nolabel="1"/>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='salary_and_advantages']" position="after">
+                <group string="Employee Costs" groups="hr.group_hr_manager">
+                    <field name="yearly_cost_before_charges" invisible="1"/>
+                    <field name="social_security_contributions" invisible="1"/>
+                    <field name="warrants_cost" invisible="1"/>
+                    <field name="warrant_value_employee" invisible="1"/>
+                    <field name="ucm_insurance" invisible="1"/>
+                    <field name="meal_voucher_paid_by_employer" invisible="1"/>
+                    <label for="final_yearly_costs"/>
+                    <div class="o_row">
+                        <field name="final_yearly_costs" nolabel="1"/>
+                        <span>/ year</span>
+                    </div>
+                    <field name="monthly_yearly_costs"/>
+                </group>
+                <group string="Monthly Benefit in Kind">
+                    <field name="transport_mode_car"/>
+                    <field name="car_atn" attrs="{'invisible': [('transport_mode_car', '=', False)]}" invisible="1"/>
+                    <field name="transport_employer_cost" invisible="1"/>
+                    <field name="transport_mode_public"/>
+                    <span class="o_form_label" attrs="{'invisible': [('transport_mode_public', '=', False)]}" name="public_transport_label">Public Transport</span>
+                    <div attrs="{'invisible': [('transport_mode_public', '=', False)]}" name="public_transport_div">
+                        <div>
+                            <label for="public_transport_employee_amount" class="oe_inline"/>
+                            <field name="public_transport_employee_amount" class="oe_inline"/>
+                        </div>
+                        <div>
+                            <label for="public_transport_reimbursed_amount" class="oe_inline"/>
+                            <field name="public_transport_reimbursed_amount" class="oe_inline"/>
+                        </div>
+                    </div>
+                    <field name="transport_mode_others"/>
+                    <span class="o_form_label" attrs="{'invisible': [('transport_mode_others', '=', False)]}" name="others_label">Other</span>
+                    <div attrs="{'invisible': [('transport_mode_others', '=', False)]}" class="o_row" name="others_div">
+                        <field name="others_reimbursed_amount" class="oe_inline" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                    <label for="internet"/>
+                    <div class="o_row">
+                        <field name="internet" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                    <label for="mobile"/>
+                    <div class="o_row">
+                        <field name="mobile" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                    <label for="mobile_plus"/>
+                    <div class="o_row">
+                        <field name="mobile_plus" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                </group>
+                <group string="Yearly Advantages" name="yearly_advantages">
+                    <label for="eco_checks"/>
+                    <div class="o_row">
+                        <field name="eco_checks" nolabel="1"/>
+                        <span>/ year</span>
+                    </div>
+                    <label for="thirteen_month"/>
+                    <div class="o_row">
+                        <field name="thirteen_month" nolabel="1"/>
+                        <span>/ year</span>
+                    </div>
+                    <label for="double_holidays"/>
+                    <div class="o_row">
+                        <field name="double_holidays" nolabel="1"/>
+                        <span>/ year</span>
+                    </div>
+                    <field name="holidays_editable" invisible="1"/>
+                    <label for="holidays"/>
+                    <div class="o_row">
+                        <field name="holidays" nolabel="1" attrs="{'readonly': [('holidays_editable', '=', False)]}"/>
+                        <span>/ year</span>
+                    </div>
+                    <field name="holidays_compensation" invisible="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+        <record id="hr_employee_form__l10n_be_view_for" model="ir.ui.view">
+            <field name="name">hr.employee.inherit.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
+            <field name="priority">30</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vehicle']" position="after">
+                    <field name="resident_bool" eval="False"/> 
+                </xpath>
+                <xpath expr="//field[@name='marital']" position="after">
+                    <field name="spouse_fiscal_status" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])], 'required': [('marital', 'in', ['married', 'cohabitant'])]}" colspan="1" help="if spouse has professionnel income or not"/> 
+                    <field name="disabled_spouse_bool" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" colspan="1"/>
+                </xpath>
+                <xpath expr="//field[@name='gender']" position="after">
+                    <field name="disabled"/>
+                </xpath>
+                <xpath expr="//field[@name='children']" position="after">
+                    <field name="disabled_children_bool"/>
+                    <field name="disabled_children_number" attrs="{'invisible':[('disabled_children_bool','!=',True)]}" colspan="1" help="number of dependent children declared as disabled"/>
+                    <field name="dependent_children" invisible="1"/>
+                    <field name="other_dependent_people" groups="hr.group_hr_user"/>
+                    <field name="other_senior_dependent" attrs="{'invisible':[('other_dependent_people','!=',True)]}"/>
+                    <field name="other_disabled_senior_dependent" attrs="{'invisible':[('other_dependent_people','!=',True)]}"/>
+                    <field name="other_juniors_dependent" attrs="{'invisible':[('other_dependent_people','!=',True)]}"/>
+                    <field name="other_disabled_juniors_dependent" attrs="{'invisible':[('other_dependent_people','!=',True)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='spouse_fiscal_status']" position="after">
+                    <field name="spouse_net_revenue" attrs="{'invisible': ['|', ('marital', 'not in', ['married', 'cohabitant']), ('spouse_fiscal_status', '!=', 'with income')]}"/>
+                    <field name="spouse_other_net_revenue" attrs="{'invisible': ['|', ('marital', 'not in', ['married', 'cohabitant']), ('spouse_fiscal_status', '!=', 'with income')]}"/>
+                </xpath>
+            </field>
+        </record>
+</odoo>

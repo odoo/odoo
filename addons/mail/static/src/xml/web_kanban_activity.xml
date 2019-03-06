@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mail.KanbanActivity">
+    <div class="o_kanban_inline_block dropdown o_kanban_selection o_mail_activity">
+        <a class="dropdown-toggle o-no-caret o_activity_btn" data-toggle="dropdown" role="button">
+            <span class="fa fa-clock-o fa-lg fa-fw" t-att-title="widget.selection[widget.activityState]" role="img" t-att-aria-label="widget.selection[widget.activity_state]"/>
+        </a>
+        <div class="dropdown-menu o_activity" role="menu"/>
+    </div>
+</t>
+
+<t t-name="mail.KanbanActivityLoading">
+    <div class="dropdown-item text-center o_no_activity">
+        <span class="fa fa-spinner fa-spin fa-2x" role="img" aria-label="Loading..." title="Loading..."/>
+    </div>
+</t>
+
+<t t-name="mail.KanbanActivityDropdown">
+    <span role="menuitem" t-if="_.isEmpty(records)" class="dropdown-item-text text-center o_no_activity">
+        No activities planned.
+    </span>
+    <div t-else="" aria-haspopup="true" role="menu" class="o_activity_log_container dropdown-item bg-100 p-0">
+        <ul class="o_activity_log list-group list-group-flush mb-2" role="menu">
+            <t t-foreach="_.keys(records)" t-as="key">
+                <t t-set="logs" t-value="records[key]" />
+                <t t-set="contextual_class" t-value="key == 'planned' ? 'success' : (key == 'today' ? 'warning' : 'danger') "/>
+
+                <li role="menuitem" t-attf-class="o_activity_label list-group-item list-group-item list-group-item-light d-flex justify-content-between align-items-center o_activity_color_{{key}} {{!key_first ? 'mt-2' : ''}}">
+                    <strong><t t-esc="selection[key]"/></strong>
+                    <span t-attf-class="badge badge-pill badge-{{contextual_class}} border-0 mr-0"><t t-esc="logs.length"/></span>
+                </li>
+                <t t-foreach="logs" t-as="log">
+                    <t t-set="edit_class" t-value="'o_edit_activity'"/>
+                    <t t-if="log.force_next">
+                        <t t-set="edit_class" t-value=""/>
+                    </t>
+                    <li t-att-data-activity-id="log.id" t-attf-class="list-group-item o_log_activity d-flex #{edit_class} #{log_last ? 'border-bottom' : ''}" role="menuitem">
+                        <div class="o_activity_title">
+                            <div t-attf-class="o_activity_title_entry {{! log.force_next ? 'align-items-center' : 'mb-1'}}">
+                                <span t-attf-class="fa #{log.icon ? log.icon : 'fa-bell' } fa-fw mr-2 text-center text-muted" role="img" aria-label="Log" title="Log"/>
+                                <strong class="text-dark"><t t-esc="log.title_action or log.activity_type_id[1]"/></strong>
+                                <button t-if="! log.force_next" class="btn btn-sm btn-link py-0 o_edit_button"><i class="fa fa-pencil"/></button>
+                            </div>
+                            <div class="o_activity_title_entry mt-1" t-if="log.state != 'today'">
+                                <span class="fa fa-clock-o fa-fw mr-2 text-center text-muted" role="img" aria-label="Deadline" title="Deadline"/>
+                                <small t-att-title="log.date_deadline"><t t-esc="log.label_delay" /></small>
+                            </div>
+                            <t t-if="log.mail_template_ids">
+                                <div t-foreach="log.mail_template_ids" t-as="mail_template" class="o_activity_title_entry mt-2" t-att-data-activity-id="log.id" t-att-data-force-next-activity="log.force_next" t-att-data-previous-activity-type-id="log.activity_type_id[0]">
+                                    <i class="fa fa-envelope-o fa-fw mr-2 text-center text-muted" aria-label="Mail" title="Mail" role="img"></i>
+                                    <small>
+                                        <div class="mb-1" t-esc="mail_template.name + ':'"/>
+                                        <a class="o_activity_template_preview" t-att-data-template-id="mail_template.id" href="#"><b>Preview</b></a>
+                                        <small>or</small>
+                                        <a class="o_activity_template_send" t-att-data-template-id="mail_template.id" href="#"><b>Send Now</b></a>
+                                    </small>
+                                </div>
+                            </t>
+                            <div t-if="log.user_id[0] != uid and log.mail_template_ids" class="o_activity_title_entry">
+                                <span class="fa fa-user fa-fw mr-2 text-center text-muted" role="img" aria-label="User" title="User"/>
+                                <span><t t-esc="log.user_id[1]" /></span>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 text-right">
+                        <a  t-att-data-force-next-activity="log.force_next"
+                            t-att-data-previous-activity-type-id="log.activity_type_id[0]"
+                            t-att-data-activity-id="log.id"
+                            t-attf-href="#o_mark_done_form{{log.id}}"
+                            class="o_mark_as_done o_activity_link o_activity_link_kanban fa fa-check-circle"
+                            data-toggle="collapse" title="Mark as done" role="img" aria-label="Mark as done"/>
+                        </div>
+                    </li>
+                    <li t-attf-id="o_activity_form_{{log.id}}" class="o_activity_form list-group-item border-top-0 py-0 mb-2 collapse"></li>
+                </t>
+            </t>
+        </ul>
+    </div>
+    <div class="dropdown-divider mt-0"/>
+    <div role="menuitem" class="o_schedule_activity dropdown-header py-1 text-center">
+        <button class="btn btn-secondary mb-1">
+            <i class="fa fa-plus fa-fw"></i><strong>Schedule an activity</strong>
+        </button>
+    </div>
+</t>
+
+</templates>

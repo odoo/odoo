@@ -1,29 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import io
 import logging
-import zipfile
+import PyPDF2
 import xml.dom.minidom
-from StringIO import StringIO
+import zipfile
 
-import pyPdf
-
-from openerp.osv import osv
+from odoo import api, models
 
 _logger = logging.getLogger(__name__)
-FTYPES = ['docx', 'pptx', 'xlsx', 'opendoc', 'pdf']
-
-# Keep function in case it is necessary to do toUnicode(buf.encode('ascii', 'replace'))
-def toUnicode(s):
-    try:
-        return s.decode('utf-8')
-    except UnicodeError:
-        try:
-            return s.decode('latin')
-        except UnicodeError:
-            try:
-                return s.encode('ascii')
-            except UnicodeError:
-                return s
+FTYPES = ['docx', 'pptx', 'xlsx', 'opendoc']
 
 def textToString(element):
     buff = u""
@@ -35,13 +21,13 @@ def textToString(element):
     return buff
 
 
-class IrAttachment(osv.osv):
+class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 
     def _index_docx(self, bin_data):
         '''Index Microsoft .docx documents'''
         buf = u""
-        f = StringIO(bin_data)
+        f = io.BytesIO(bin_data)
         if zipfile.is_zipfile(f):
             try:
                 zf = zipfile.ZipFile(f)
@@ -57,7 +43,7 @@ class IrAttachment(osv.osv):
         '''Index Microsoft .pptx documents'''
 
         buf = u""
-        f = StringIO(bin_data)
+        f = io.BytesIO(bin_data)
         if zipfile.is_zipfile(f):
             try:
                 zf = zipfile.ZipFile(f)
@@ -75,7 +61,7 @@ class IrAttachment(osv.osv):
         '''Index Microsoft .xlsx documents'''
 
         buf = u""
-        f = StringIO(bin_data)
+        f = io.BytesIO(bin_data)
         if zipfile.is_zipfile(f):
             try:
                 zf = zipfile.ZipFile(f)
@@ -91,7 +77,7 @@ class IrAttachment(osv.osv):
         '''Index OpenDocument documents (.odt, .ods...)'''
 
         buf = u""
-        f = StringIO(bin_data)
+        f = io.BytesIO(bin_data)
         if zipfile.is_zipfile(f):
             try:
                 zf = zipfile.ZipFile(f)
@@ -106,21 +92,25 @@ class IrAttachment(osv.osv):
     def _index_pdf(self, bin_data):
         '''Index PDF documents'''
 
+        # extractText gives very bad results for indexing, hence we don't index PDF anymore. A
+        # better alternative is probably PDFMiner.six, but not for stable.
+        # See POC at https://github.com/odoo/odoo/pull/27568.
         buf = u""
-        if bin_data.startswith('%PDF-'):
-            f = StringIO(bin_data)
+        if bin_data.startswith(b'%PDF-'):
+            f = io.BytesIO(bin_data)
             try:
-                pdf = pyPdf.PdfFileReader(f)
+                pdf = PyPDF2.PdfFileReader(f, overwriteWarnings=False)
                 for page in pdf.pages:
                     buf += page.extractText()
             except Exception:
                 pass
         return buf
 
-    def _index(self, cr, uid, bin_data, datas_fname, mimetype):
+    @api.model
+    def _index(self, bin_data, datas_fname, mimetype):
         for ftype in FTYPES:
             buf = getattr(self, '_index_%s' % ftype)(bin_data)
             if buf:
                 return buf
 
-        return super(IrAttachment, self)._index(cr, uid, bin_data, datas_fname, mimetype)
+        return super(IrAttachment, self)._index(bin_data, datas_fname, mimetype)

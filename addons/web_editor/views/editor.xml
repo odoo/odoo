@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-
+<odoo>
 <template id="summernote" name="Summernote">
     <script type="text/javascript">
         (function () {
@@ -13,7 +12,7 @@
                 var args = Array.prototype.slice.call(arguments);
                 var factorie = args.pop();
                 var id = args[0];
-                
+
                 if (id instanceof Array) {
                     var name = "summernote_factorie_" + (++uniqId);
                     odoo[name] = factorie;
@@ -44,73 +43,145 @@
         <script>odoo.website_next_define = 'summernote/<t t-esc="file" />';</script>
         <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/{{ file }}.js"></script>
     </t>
-    <script type="text/javascript" src="/web_editor/static/src/js/summernote.js" />
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/summernote.js" />
     <script type="text/javascript">
         window.define = odoo.__define__;
         delete odoo.__define__;
         delete odoo.website_next_define;
     </script>
-
-    <!--link rel="stylesheet" href="/web_editor/static/lib/summernote/src/less/summernote.less"/-->
-    <link rel="stylesheet" href="/web_editor/static/lib/summernote/summernote.css"/>
+    <link rel="stylesheet" type="text/css" href="/web_editor/static/lib/summernote/src/css/summernote.css"/>
 </template>
 
-<template id="editor" name="Editor">
-    <link rel='stylesheet' href='/web_editor/static/src/css/snippets.css'/>
-    <link rel="stylesheet" href='/web_editor/static/src/css/editor.css'/>
-    <script type="text/javascript" src='/web_editor/static/lib/nearest/jquery.nearest.js' />
-    <script type="text/javascript" src="/web_editor/static/src/js/editor.js" />
-    <script type="text/javascript" src="/web_editor/static/src/js/rte.js" />
-    <script type="text/javascript" src="/web_editor/static/src/js/rte.summernote.js" />
-    <script type="text/javascript" src="/web_editor/static/src/js/widgets.js" />
-    <script type="text/javascript" src="/web_editor/static/src/js/snippets.editor.js" />
-    <script type="text/javascript" src="/web_editor/static/src/js/snippets.options.js" />
-    <script type="text/javascript" src="/web_editor/static/src/js/tour.rte.js" />
-    <script type="text/javascript" src="/web_editor/static/src/js/transcoder.js"></script>
-    <script type="text/javascript" src="/web_editor/static/src/js/translator.js"></script>
-</template>
-
-<template id="assets_common" inherit_id="web.assets_common" name="web_editor base assets_common">
-    <xpath expr="." position="inside">
-        <link rel="stylesheet" href='/web_editor/static/src/css/web_editor.css'/>
-        <link rel="stylesheet" href='/web_editor/static/src/less/web_editor.less'/>
-        <script type="text/javascript" src="/web_editor/static/src/js/base.js" />
-        <script type="text/javascript" src="/web_editor/static/src/js/snippets.animation.js" />
+<template id="_assets_primary_variables" inherit_id="web._assets_primary_variables">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.variables.scss"/>
     </xpath>
 </template>
 
-<template id="assets_editor" name="web_editor assets for editor">
-    <t t-call="web.assets_common"/>
-    <t t-call="web.bootstrap"/>
-    <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
-    <t t-call="web_editor.summernote"/>
-    <t t-call="web_editor.editor"/>
-</template>
-
-<template id="assets_backend" name="web_editor assets for backend" inherit_id="web.assets_backend">
-    <xpath expr="." position="inside">
-        <t t-call="web_editor.summernote"/>
-        <t t-call="web_editor.editor"/>
-        <link rel="stylesheet" href="/web_editor/static/src/css/backend.css"/>
-        <script type="text/javascript" src="/web_editor/static/src/js/backend.js" />
+<template id="assets_common" inherit_id="web.assets_common" name="Web Editor Common Assets (used in backend interface and website)">
+    <xpath expr="script[last()]" position="after">
+        <script type="text/javascript" src="/web_editor/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
+        <script type="text/javascript" src="/web_editor/static/src/js/base.js"/>
+        <script type="text/javascript" src="/web_editor/static/src/js/widgets/ace.js"/>
     </xpath>
 </template>
 
-<!-- color-picker -->
-<!-- HTML class to hide option for one mode : only-text, only-bg -->
+<template id="_assets_backend_helpers" inherit_id="web._assets_backend_helpers">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
+    </xpath>
+</template>
 
+<template id="assets_backend" inherit_id="web.assets_backend" name="Web Editor Backend Assets (used in backend interface)">
+    <xpath expr="link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.common.scss"/> <!-- not in common because compiled differently with context -->
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.backend.scss"/>
+    </xpath>
+    <xpath expr="script[last()]" position="after">
+        <script type="text/javascript" src="/web_editor/static/src/js/backend/fields.js" />
+    </xpath>
+</template>
+
+<template id="_assets_frontend_helpers" inherit_id="web._assets_frontend_helpers">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
+    </xpath>
+</template>
+
+<template id="assets_frontend" inherit_id="web.assets_frontend" name="Web Editor Frontend Assets (used in public odoo)" priority="15">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.common.scss"/> <!-- not in common because compiled differently with context -->
+    </xpath>
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/web_editor/static/src/js/content/body_manager.js"/>
+        <script type="text/javascript" src="/web_editor/static/src/js/root_widget.js"/>
+    </xpath>
+</template>
+
+<template id="assets_editor" name="Web Editor Assets (used in private and public editor)">
+    <t t-call="web._assets_helpers"/>
+
+    <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.ui.scss"/>
+
+    <script type="text/javascript" src="/web_editor/static/lib/nearest/jquery.nearest.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/editor.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/rte.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/rte.summernote.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/snippets.editor.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/snippets.options.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/transcoder.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/translator.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/tours/rte.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/widgets/widgets.js"/>
+</template>
+
+<template id="webclient_bootstrap" inherit_id="web.webclient_bootstrap">
+    <xpath expr="//t[@t-call-assets='web.assets_backend'][@t-js='false']" position="after">
+        <t t-call-assets="web_editor.summernote" t-js="false"/>
+        <t t-call-assets="web_editor.assets_editor" t-js="false"/>
+    </xpath>
+    <xpath expr="//t[@t-call-assets='web.assets_backend'][@t-css='false']" position="after">
+        <t t-call-assets="web_editor.summernote" t-css="false"/>
+        <t t-call-assets="web_editor.assets_editor" t-css="false"/>
+    </xpath>
+</template>
+<template id="js_tests_assets" inherit_id="web.js_tests_assets">
+    <xpath expr="." position="inside">
+        <t t-call-assets="web_editor.summernote" t-css="false"/>
+        <t t-call-assets="web_editor.assets_editor" t-css="false"/>
+    </xpath>
+</template>
+<template id="qunit_suite" inherit_id="web.qunit_suite">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/web_editor/static/tests/web_editor_tests.js"></script>
+    </xpath>
+</template>
+
+<!--
+    The web_editor.colorpicker template regroups section of colorpicker menu for website customization
+    (text foreground/background but also snippet background color option).
+    As it is presentend below, the colorpicker tag regroups a set of .o_colorpicker_section with name,
+    icon-class and icon-content as data. These will be used to build the colorpicker dropdowns.
+
+    Redefinition can edit section content, add sections or even remove them. If no section is found when
+    building a colorpicker dropdown, the template content will be used without changes as the colorpicker
+    dropdown content.
+
+    Sections should contain a set of button with a data-color attribute. When selecting such a button to
+    edit style, the "bg-x" class or the "text-x" will be automatically added.
+-->
 <template id="web_editor.colorpicker" name="Color-Picker">
-    <table class="colorpicker">
-        <tr>
-            <td><button class="bg-primary" title="Primary Color"/></td>
-            <td><button class="bg-success" title="Success Color"/></td>
-            <td><button class="bg-info" title="Info Color"/></td>
-            <td><button class="bg-warning" title="Warning Color"/></td>
-            <td><button class="bg-danger" title="Danger Color"/></td>
-            <!-- retrocompatibility v8 -->
-            <td><button class="oe_dark" title="Light"/></td>
-        </tr>
-    </table>
+    <colorpicker>
+        <div class="o_colorpicker_section" data-name="theme" data-display="Theme Colors" data-icon-class="fa fa-flask">
+            <button data-color="alpha"></button>
+            <button data-color="beta"></button>
+            <button data-color="gamma"></button>
+            <button data-color="delta"></button>
+            <button data-color="epsilon"></button>
+        </div>
+        <div class="o_colorpicker_section" data-name="transparent_grayscale" data-display="Transparent Colors" data-icon-class="fa fa-eye-slash">
+            <button class="o_btn_transparent"></button>
+            <button data-color="black-25"></button>
+            <button data-color="black-50"></button>
+            <button data-color="black-75"></button>
+            <button data-color="white-25"></button>
+            <button data-color="white-50"></button>
+            <button data-color="white-75"></button>
+        </div>
+        <div class="o_colorpicker_section" data-name="common" data-display="Common Colors" data-icon-class="fa fa-paint-brush">
+            <button data-color="black"></button>
+            <button data-color="white"></button>
+            <div class="clearfix"/>
+            <button data-color="900"></button>
+            <button data-color="800"></button>
+            <button data-color="700"></button>
+            <button data-color="600"></button>
+            <button data-color="500"></button>
+            <button data-color="400" class="d-none"></button><!-- Hide this one to be able to use it but not display it -->
+            <button data-color="300"></button>
+            <button data-color="200"></button>
+            <button data-color="100"></button>
+        </div>
+    </colorpicker>
 </template>
-
-</openerp>
+</odoo>

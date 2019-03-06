@@ -1,0 +1,37 @@
+.oe_chatter {
+
+    .btn.o_active_attach {
+        height: 300px;
+    }
+    .o_mail_chatter_attachments {
+        min-height: 50px;
+
+        .o_chatter_attachment {
+            padding: 3px;
+
+            input.o_input_file {
+                position: absolute;
+                top: 1px;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            .o_border_dashed {
+                position: relative;
+                margin-top: 5px;
+                margin-bottom: 5px;
+                border-bottom: 1px dashed gray('300');
+                text-align: center;
+
+                .o_attach_title {
+                    position: relative;
+                    top: 10px;
+                    margin: 0 auto;
+                    padding: 0 10px;
+                    font-weight: bold;
+                    background: white;
+                }
+            }
+        }
+    }
+}

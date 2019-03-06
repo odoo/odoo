@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from openerp import api, fields, models
+from odoo import api, fields, models
 
-class account_bank_statement_import_journal_creation(models.TransientModel):
+
+class AccountBankStatementImportJounalCreation(models.TransientModel):
     _name = 'account.bank.statement.import.journal.creation'
-    _description = 'Import Bank Statement Journal Creation Wizard'
+    _description = 'Journal Creation on Bank Statement Import'
 
     journal_id = fields.Many2one('account.journal', delegate=True, required=True, ondelete='cascade')
 

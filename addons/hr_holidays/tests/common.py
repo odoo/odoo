@@ -1,80 +1,63 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.tests import common
+from odoo.addons.test_mail.tests.common import mail_new_test_user
+from odoo.tests import common
 
 
 class TestHrHolidaysBase(common.TransactionCase):
 
     def setUp(self):
         super(TestHrHolidaysBase, self).setUp()
-        cr, uid = self.cr, self.uid
-
-        # Usefull models
-        self.hr_employee = self.registry('hr.employee')
-        self.hr_holidays = self.registry('hr.holidays')
-        self.hr_holidays_status = self.registry('hr.holidays.status')
-        self.res_users = self.registry('res.users')
-        self.res_partner = self.registry('res.partner')
-
-        # Find Employee group
-        group_employee_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
-        self.group_employee_id = group_employee_ref and group_employee_ref[1] or False
-
-        # Find Hr User group
-        group_hr_user_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_hr_user')
-        self.group_hr_user_ref_id = group_hr_user_ref and group_hr_user_ref[1] or False
-
-        # Find Hr Manager group
-        group_hr_manager_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_hr_manager')
-        self.group_hr_manager_ref_id = group_hr_manager_ref and group_hr_manager_ref[1] or False
-
-        # Test partners to use through the various tests
-        self.hr_partner_id = self.res_partner.create(cr, uid, {
-            'name': 'Gertrude AgrolaitPartner',
-            'email': 'gertrude.partner@agrolait.com',
-        })
-        self.email_partner_id = self.res_partner.create(cr, uid, {
-            'name': 'Patrick Ratatouille',
-            'email': 'patrick.ratatouille@agrolait.com',
-        })
 
         # Test users to use through the various tests
-        self.user_hruser_id = self.res_users.create(cr, uid, {
-            'name': 'Armande HrUser',
-            'login': 'Armande',
-            'alias_name': 'armande',
-            'email': 'armande.hruser@example.com',
-            'groups_id': [(6, 0, [self.group_employee_id, self.group_hr_user_ref_id])]
-        }, {'no_reset_password': True})
-        self.user_hrmanager_id = self.res_users.create(cr, uid, {
-            'name': 'Bastien HrManager',
-            'login': 'bastien',
-            'alias_name': 'bastien',
-            'email': 'bastien.hrmanager@example.com',
-            'groups_id': [(6, 0, [self.group_employee_id, self.group_hr_manager_ref_id])]
-        }, {'no_reset_password': True})
-        self.user_none_id = self.res_users.create(cr, uid, {
-            'name': 'Charlie Avotbonkeur',
-            'login': 'charlie',
-            'alias_name': 'charlie',
-            'email': 'charlie.noone@example.com',
-            'groups_id': [(6, 0, [])]
-        }, {'no_reset_password': True})
-        self.user_employee_id = self.res_users.create(cr, uid, {
-            'name': 'David Employee',
-            'login': 'david',
-            'alias_name': 'david',
-            'email': 'david.employee@example.com',
-            'groups_id': [(6, 0, [self.group_employee_id])]
-        }, {'no_reset_password': True})
+        self.user_hruser = mail_new_test_user(self.env, login='armande', groups='base.group_user,hr_holidays.group_hr_holidays_user')
+        self.user_hruser_id = self.user_hruser.id
+
+        self.user_hrmanager = mail_new_test_user(self.env, login='bastien', groups='base.group_user,hr_holidays.group_hr_holidays_manager')
+        self.user_hrmanager_id = self.user_hrmanager.id
+
+        self.user_employee = mail_new_test_user(self.env, login='david', groups='base.group_user')
+        self.user_employee_id = self.user_employee.id
+
+        self.user_hrmanager_2 = mail_new_test_user(self.env, login='florence', groups='base.group_user,hr_holidays.group_hr_holidays_manager')
+        self.user_hrmanager_2_id = self.user_hrmanager_2.id
 
         # Hr Data
-        self.employee_emp_id = self.hr_employee.create(cr, uid, {
+        Department = self.env['hr.department'].with_context(tracking_disable=True)
+
+        self.hr_dept = Department.create({
+            'name': 'Human Resources',
+        })
+        self.rd_dept = Department.create({
+            'name': 'Research and devlopment',
+        })
+
+        self.employee_emp = self.env['hr.employee'].create({
             'name': 'David Employee',
             'user_id': self.user_employee_id,
+            'department_id': self.rd_dept.id,
         })
-        self.employee_hruser_id = self.hr_employee.create(cr, uid, {
+        self.employee_emp_id = self.employee_emp.id
+
+        self.employee_hruser = self.env['hr.employee'].create({
             'name': 'Armande HrUser',
             'user_id': self.user_hruser_id,
+            'department_id': self.rd_dept.id,
         })
+        self.employee_hruser_id = self.employee_hruser.id
+
+        self.employee_hrmanager = self.env['hr.employee'].create({
+            'name': 'Bastien HrManager',
+            'user_id': self.user_hrmanager_id,
+            'department_id': self.hr_dept.id,
+        })
+        self.employee_hrmanager_id = self.employee_hrmanager.id
+
+        self.employee_hrmanager_2_id = self.env['hr.employee'].create({
+            'name': 'Florence HrManager',
+            'user_id': self.user_hrmanager_2_id,
+            'parent_id': self.employee_hrmanager_id,
+        }).id
+
+        self.rd_dept.write({'manager_id': self.employee_hruser_id})

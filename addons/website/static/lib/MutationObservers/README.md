@@ -1,4 +1,0 @@
-MutationObservers
-=================
-
-Mutation Observers Polyfill

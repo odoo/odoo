@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+<template id="report_package_barcode">
+    <t t-call="web.basic_layout">
+        <t t-foreach="docs" t-as="o">
+            <t>
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <table class="table table-condensed" style="border-bottom: 0px solid white !important;">
+                        <tr>
+                          <th>
+                            <h1 t-field="o.name" class="mt0 float-left"/>
+                          </th>
+                            <th style="text-align: center">
+                                <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" alt="Barcode"
+                                  style="width:300px;height:50px"/>
+                                  <p t-field="o.name"/>
+                            </th>
+                        </tr>
+                  </table>
+                    <div class="row o_packaging_type" t-if="o.packaging_id">
+                        <div class="col-12" style="font-weight:bold;">Package Type: <span t-field="o.packaging_id.name"/></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h2>Package Content</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <table class="table table-sm" style="border-bottom: 0px solid white !important;">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th class="text-right">Quantity</th>
+                                        <th class="text-right">Lot/Serial Number</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.quant_ids" t-as="l">
+                                        <td>
+                                           <span  t-field="l.product_id.name"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="l.quantity"/>
+                                            <span groups="uom.group_uom" t-field="l.product_id.uom_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-if="l.lot_id"><span t-field="l.lot_id.name"/></t>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+
+<template id="report_package_barcode_small">
+    <t t-call="web.basic_layout">
+        <t t-foreach="docs" t-as="o">
+            <t>
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row o_package_name text-center">
+                      <div class="col-xs-12" style="font-size:24px; font-weight:bold;">Package Reference: <span t-field="o.name"/></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:600px;height:100px" alt="Barcode"/>
+                            <p t-field="o.name"  style="font-size:20px;"></p>
+                        </div>
+                    </div>
+                    <div class="row o_packaging_type" t-if="o.packaging_id">
+                        <div class="col-12" style="font-size:24px; font-weight:bold;">Package Type: <span t-field="o.packaging_id.name"/></div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</data>
+</odoo>

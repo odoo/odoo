@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="account_reports_ch_statements_menu" name="Switzerland" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
+
+    <data noupdate="1">
+         <!-- Account Tags -->
+        <record id="l10nch_chart_template" model="account.chart.template">
+            <field name="name">Plan comptable 2015</field>
+            <field name="code_digits">4</field>
+            <field name="bank_account_code_prefix">102</field>
+            <field name="cash_account_code_prefix">100</field>
+            <field name="transfer_account_code_prefix">1090</field>
+            <field name="currency_id" ref="base.CHF"/>
+            <field name="spoken_languages" eval="'it_IT;de_DE;de_CH'"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_line_tree" model="ir.ui.view">
+        <field name="name">stock.move.line.tree</field>
+        <field name="model">stock.move.line</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done'))" string="Move Lines" create="0" default_order="date">
+                <field name="date"/>
+                <field name="reference" string="Reference"/>
+                <field name="product_id"/>
+                <field name="location_id"/>
+                <field name="location_dest_id"/>
+                <field name="qty_done" string="Quantity Done"/>
+                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_move_line_form" model="ir.ui.view">
+        <field name="name">stock.move.line.form</field>
+        <field name="model">stock.move.line</field>
+        <field name="arch" type="xml">
+            <form string="Move Lines" create="0" edit="0">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <field name="picking_id" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="reference" string="Reference"/>
+                            <field name="product_id"/>
+                            <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                            <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                        </group>
+                        <group>
+                            <label for="product_uom_qty" string="Quantity Reserved" attrs="{'invisible': [('state', '=', 'done')]}"/>
+                            <div class="o_row" attrs="{'invisible': [('state', '=', 'done')]}">
+                                <field name="product_uom_qty"/>
+                                <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                            </div>
+                            <label for="qty_done" string="Quantity Done"/>
+                            <div class="o_row">
+                                <field name="qty_done"/>
+                                <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                            </div>
+                            <field name="lot_id" domain="[('product_id', '=', product_id)]" groups="stock.group_production_lot" context="{'default_product_id': product_id, 'active_picking_id': picking_id}" attrs="{'invisible': [('lot_id', '=', False),('lot_name', '!=', False)]}"/>
+                            <field name="lot_name" groups="stock.group_production_lot" attrs="{'invisible': ['|',('lot_id', '!=', False),('lot_name', '=', False)]}"/>
+                            <field name="package_id" string="Source Package" groups="product.group_stock_packaging"/>
+                            <field name="result_package_id" string="Destination Package" groups="stock.group_tracking_lot"/>
+                            <field name="owner_id" string="Owner" groups="stock.group_tracking_owner"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="stock_move_line_view_search" model="ir.ui.view">
+        <field name="name">stock.move.line.search</field>
+        <field name="model">stock.move.line</field>
+        <field name="arch" type="xml">
+            <search string="Stock Moves">
+                <field name="picking_id" string="Reference"/>
+                <field name="product_id"/>
+                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                <separator/>
+                <filter string="To Do" name="todo" domain="[('state','not in', ['done', 'draft'])]"/>
+                <filter string="Done" name="done" domain="[('state','=','done')]"/>
+                <separator/>
+                <filter string="Receptions" name="incoming" domain="[('picking_id.picking_type_id.code','=','incoming')]"/>
+                <filter string="Deliveries" name="outgoing" domain="[('picking_id.picking_type_id.code','=','outgoing')]"/>
+                <filter string="Internal" name="internal" domain="[('picking_id.picking_type_id.code','=','internal')]"/>
+                <filter string="Manufacturing" name="manufacturing" domain="[('picking_id.picking_type_id.code','=','mrp_operation')]"/>
+
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="by_state" domain="[]"  context="{'group_by':'state'}"/>
+                    <filter string="Product" name="groupby_product_id" domain="[]" context="{'group_by': 'product_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_stock_move_line_kanban" model="ir.ui.view">
+        <field name="name">stock.move.line.kanban</field>
+        <field name="model">stock.move.line</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="0">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <strong><field name="product_id"/></strong>
+                            <field name="picking_id"/>
+                            <div class="row">
+                                <div class="col-6">
+                                    <field name="lot_id" invisible="not context.get('show_lots_m2o')" domain="[('product_id', '=', product_id)]" groups="stock.group_production_lot" context="{'default_product_id': product_id, 'active_picking_id': picking_id}"/>
+                                    <field name="lot_name" invisible="not context.get('show_lots_text')" groups="stock.group_production_lot"/>
+                                    <field name="qty_done" string="Quantity Done"/>
+                                    <field name="product_uom_id" string="Unit of Measure" groups="uom.group_uom"/>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <field name="date"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="stock_move_line_action" model="ir.actions.act_window">
+            <field name="name">Product Moves</field>
+            <field name="res_model">stock.move.line</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,pivot,form</field>
+            <field name="view_id" ref="view_move_line_tree"/>
+            <field name="context">{'search_default_done': 1, 'search_default_groupby_product_id': 1}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_empty_folder">
+                There's no product move yet
+              </p>
+            </field>
+    </record>
+
+    <menuitem 
+        action="stock_move_line_action" 
+        id="stock_move_line_menu" 
+        parent="stock.menu_warehouse_report" sequence="150"/>
+</odoo>

@@ -1,6 +1,9 @@
-from openerp.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.tests import tagged
 import time
 
+
+@tagged('post_install', '-at_install')
 class TestProductIdChange(AccountingTestCase):
     """Test that when an included tax is mapped by a fiscal position, the included tax must be
     subtracted to the price of the product.
@@ -52,7 +55,6 @@ class TestProductIdChange(AccountingTestCase):
 
         out_invoice = self.invoice_model.create({
             'partner_id': partner.id,
-            'reference_type': 'none',
             'name': 'invoice to client',
             'account_id': self.account_receivable.id,
             'type': 'out_invoice',
@@ -70,7 +72,6 @@ class TestProductIdChange(AccountingTestCase):
 
         in_invoice = self.invoice_model.create({
             'partner_id': partner.id,
-            'reference_type': 'none',
             'name': 'invoice to supplier',
             'account_id': self.account_receivable.id,
             'type': 'in_invoice',

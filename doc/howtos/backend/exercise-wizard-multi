@@ -1,8 +1,8 @@
 Index: addons/openacademy/views/openacademy.xml
 ===================================================================
---- addons.orig/openacademy/views/openacademy.xml	2014-08-28 14:34:28.583004473 +0200
-+++ addons/openacademy/views/openacademy.xml	2014-08-28 14:34:28.579004473 +0200
-@@ -245,7 +245,7 @@
+--- addons.orig/openacademy/views/openacademy.xml
++++ addons/openacademy/views/openacademy.xml
+@@ -229,7 +229,7 @@
              <field name="arch" type="xml">
                  <form string="Add Attendees">
                      <group>
@@ -13,11 +13,11 @@ Index: addons/openacademy/views/openacademy.xml
                      <footer>
 Index: addons/openacademy/wizard.py
 ===================================================================
---- addons.orig/openacademy/wizard.py	2014-08-28 14:34:28.583004473 +0200
-+++ addons/openacademy/wizard.py	2014-08-28 14:34:28.579004473 +0200
-@@ -5,14 +5,15 @@
- class Wizard(models.TransientModel):
+--- addons.orig/openacademy/wizard.py
++++ addons/openacademy/wizard.py
+@@ -6,14 +6,15 @@ class Wizard(models.TransientModel):
      _name = 'openacademy.wizard'
+     _description = "Wizard: Quick Registration of Attendees to Sessions"
  
 -    def _default_session(self):
 -        return self.env['openacademy.session'].browse(self._context.get('active_id'))

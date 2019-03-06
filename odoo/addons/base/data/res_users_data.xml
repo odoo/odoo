@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- user 1 is the technical admin user -->
+        <record model="res.users" id="base.user_root">
+            <field name="partner_id" ref="base.partner_root"/>
+            <field name="company_id" ref="main_company"/>
+            <field name="company_ids" eval="[(4, ref('main_company'))]"/>
+            <field name="signature"><![CDATA[<span>-- <br/>
+System</span>]]></field>
+        </record>
+
+        <!-- user 2 is the human admin user -->
+        <record id="user_admin" model="res.users">
+            <field name="login">admin</field>
+            <field name="password">admin</field>
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="company_id" ref="main_company"/>
+            <field name="company_ids" eval="[(4, ref('main_company'))]"/>
+            <field name="groups_id" eval="[(6,0,[])]"/>
+            <field name="signature"><![CDATA[<span>-- <br/>
+Administrator</span>]]></field>
+        </record>
+
+        <!-- Default user with full access rights for newly created users -->
+        <record id="default_user" model="res.users">
+            <field name="name">Default User Template</field>
+            <field name="login">default</field>
+            <field name="active" eval="False"/>
+        </record>
+        
+        <record id="public_user" model="res.users">
+            <field name="name">Public user</field>
+            <field name="login">public</field>
+            <field name="password"></field>
+            <!-- Avoid auto-including this demo user in any default group -->
+            <field name="groups_id" eval="[(6,0,[])]"/>
+            <field name="image" type="base64" file="base/static/img/public_user-image.png"/>
+            <field name="partner_id" ref="public_partner"/>
+            <field name="active" eval="False"/>
+        </record>
+    </data>
+</odoo>

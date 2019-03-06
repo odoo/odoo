@@ -5,12 +5,15 @@ var PosBaseWidget = require('point_of_sale.BaseWidget');
 var gui = require('point_of_sale.gui');
 var keyboard = require('point_of_sale.keyboard');
 var models = require('point_of_sale.models');
+var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
 var ajax = require('web.ajax');
 var CrashManager = require('web.CrashManager');
+var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
 
 
 var _t = core._t;
+var _lt = core._lt;
 var QWeb = core.qweb;
 
 /* -------- The Order Selector -------- */
@@ -106,7 +109,7 @@ var UsernameWidget = PosBaseWidget.extend({
         });
     },
     get_name: function(){
-        var user = this.pos.cashier || this.pos.user;
+        var user = this.pos.get_cashier();
         if(user){
             return user.name;
         }else{
@@ -269,7 +272,7 @@ var DebugWidget = PosBaseWidget.extend({
         this.$('.button.delete_unpaid_orders').click(function(){
             self.gui.show_popup('confirm',{
                 'title': _t('Delete Unpaid Orders ?'),
-                'body':  _t('This operation will permanently destroy all unpaid orders from all sessions that have been put in the local storage. You will lose all the data and exit the point of sale. This operation cannot be undone.'),
+                'body':  _t('This operation will destroy all unpaid orders in the browser. You will lose all the unsaved data and exit the point of sale. This operation cannot be undone.'),
                 confirm: function(){
                     self.pos.db.remove_all_unpaid_orders();
                     window.location = '/';
@@ -278,13 +281,23 @@ var DebugWidget = PosBaseWidget.extend({
         });
 
         this.$('.button.export_unpaid_orders').click(function(){
-            self.gui.download_file(self.pos.export_unpaid_orders(),
-                "unpaid_orders_" + (new Date()).toUTCString().replace(/\ /g,'_') + '.json');
+            self.gui.prepare_download_link(
+                self.pos.export_unpaid_orders(),
+                _t("unpaid orders") + ' ' + moment().format('YYYY-MM-DD-HH-mm-ss') + '.json',
+                ".export_unpaid_orders", ".download_unpaid_orders"
+            );
         });
 
         this.$('.button.export_paid_orders').click(function() {
-            self.gui.download_file(self.pos.export_paid_orders(),
-                "paid_orders_" + (new Date()).toUTCString().replace(/\ /g,'_') + '.json');
+            self.gui.prepare_download_link(
+                self.pos.export_paid_orders(),
+                _t("paid orders") + ' ' + moment().format('YYYY-MM-DD-HH-mm-ss') + '.json',
+                ".export_paid_orders", ".download_paid_orders"
+            );
+        });
+
+        this.$('.button.display_refresh').click(function () {
+            self.pos.proxy.message('display_refresh', {});
         });
 
         this.$('.button.import_orders input').on('change', function(event) {
@@ -318,6 +331,7 @@ var DebugWidget = PosBaseWidget.extend({
 
 var StatusWidget = PosBaseWidget.extend({
     status: ['connected','connecting','disconnected','warning','error'],
+
     set_status: function(status,msg){
         for(var i = 0; i < this.status.length; i++){
             this.$('.js_'+this.status[i]).addClass('oe_hidden');
@@ -385,6 +399,7 @@ var ProxyStatusWidget = StatusWidget.extend({
                     msg += _t('Scale');
                 }
             }
+
             msg = msg ? msg + ' ' + _t('Offline') : msg;
             this.set_status(warning ? 'warning' : 'connected', msg);
         }else{
@@ -405,6 +420,129 @@ var ProxyStatusWidget = StatusWidget.extend({
         });
     },
 });
+
+
+/* --------- The Sale Details --------- */
+
+// Generates a report to print the sales of the
+// day on a ticket
+
+var SaleDetailsButton = PosBaseWidget.extend({
+    template: 'SaleDetailsButton',
+    start: function(){
+        var self = this;
+        this.$el.click(function(){
+            self.pos.proxy.print_sale_details();
+        });
+    },
+});
+
+/* User interface for distant control over the Client display on the IoT Box */
+// The boolean posbox_supports_display (in devices.js) will allow interaction to the IoT Box on true, prevents it otherwise
+// We don't want the incompatible IoT Box to be flooded with 404 errors on arrival of our many requests as it triggers losses of connections altogether
+var ClientScreenWidget = PosBaseWidget.extend({
+    template: 'ClientScreenWidget',
+
+    change_status_display: function(status) {
+        var msg = ''
+        if (status === 'success') {
+            this.$('.js_warning').addClass('oe_hidden');
+            this.$('.js_disconnected').addClass('oe_hidden');
+            this.$('.js_connected').removeClass('oe_hidden');
+        } else if (status === 'warning') {
+            this.$('.js_disconnected').addClass('oe_hidden');
+            this.$('.js_connected').addClass('oe_hidden');
+            this.$('.js_warning').removeClass('oe_hidden');
+            msg = _t('Connected, Not Owned');
+        } else {
+            this.$('.js_warning').addClass('oe_hidden');
+            this.$('.js_connected').addClass('oe_hidden');
+            this.$('.js_disconnected').removeClass('oe_hidden');
+            msg = _t('Disconnected')
+            if (status === 'not_found') {
+                msg = _t('Client Screen Unsupported. Please upgrade the IoT Box')
+            }
+        }
+
+        this.$('.oe_customer_display_text').text(msg);
+    },
+
+    status_loop: function() {
+        var self = this;
+        function loop() {
+            if (self.pos.proxy.posbox_supports_display) {
+                var deffered = self.pos.proxy.test_ownership_of_client_screen();
+                if (deffered) {
+                    deffered.then(
+                        function(data) {
+                            if (typeof data === 'string') {
+                                data = JSON.parse(data);
+                            }
+                            if (data.status === 'OWNER') {
+                                self.change_status_display('success');
+                            } else {
+                                self.change_status_display('warning');
+                              }
+                        },
+                        
+                        function(err) {
+                            if (typeof err == "undefined") {
+                                self.change_status_display('failure');
+                            } else {
+                                self.change_status_display('not_found');
+                                self.pos.proxy.posbox_supports_display = false;
+                            }
+                        })
+    
+                    .always(function () {
+                        setTimeout(loop,3000);
+                    });
+                }
+            }   
+        }
+        loop();
+    },
+
+    start: function(){
+        if (this.pos.config.iface_customer_facing_display) {
+                this.show();
+                var self = this;
+                this.$el.click(function(){
+                    self.pos.render_html_for_customer_facing_display().then(function(rendered_html) {
+                        self.pos.proxy.take_ownership_over_client_screen(rendered_html).then(
+       
+                        function(data) {
+                            if (typeof data === 'string') {
+                                data = JSON.parse(data);
+                            }
+                            if (data.status === 'success') {
+                               self.change_status_display('success');
+                            } else {
+                               self.change_status_display('warning');
+                            }
+                            if (!self.pos.proxy.posbox_supports_display) {
+                                self.pos.proxy.posbox_supports_display = true;
+                                self.status_loop();
+                            }
+                        }, 
+        
+                        function(err) {
+                            if (typeof err == "undefined") {
+                                self.change_status_display('failure');
+                            } else {
+                                self.change_status_display('not_found');
+                            }
+                        });
+                    });
+
+                });
+                this.status_loop();
+        } else {
+            this.hide();
+        }
+    },
+});
+
 
 /*--------------------------------------*\
  |             THE CHROME               |
@@ -427,7 +565,7 @@ var ProxyStatusWidget = StatusWidget.extend({
 // - .gui which controls the switching between 
 //   screens and the showing/closing of popups
 
-var Chrome = PosBaseWidget.extend({
+var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
     template: 'Chrome',
     init: function() { 
         var self = this;
@@ -436,7 +574,7 @@ var Chrome = PosBaseWidget.extend({
         this.started  = new $.Deferred(); // resolves when DOM is online
         this.ready    = new $.Deferred(); // resolves when the whole GUI has been loaded
 
-        this.pos = new models.PosModel(this.session,{chrome:this});
+        this.pos = new models.PosModel(this.getSession(), {chrome:this});
         this.gui = new gui.Gui({pos: this.pos, chrome: this});
         this.chrome = this; // So that chrome's childs have chrome set automatically
         this.pos.gui = this.gui;
@@ -470,15 +608,12 @@ var Chrome = PosBaseWidget.extend({
         $(window).off();
         $('html').off();
         $('body').off();
-        $(this.$el).parent().off();
-        $('document').off();
-        $('.oe_web_client').off();
-        $('.openerp_webclient_container').off();
+        // The above lines removed the bindings, but we really need them for the barcode
+        BarcodeEvents.start();
     },
 
     build_chrome: function() { 
         var self = this;
-        FastClick.attach(document.body);
 
         if ($.browser.chrome) {
             var chrome_version = $.browser.version.split('.')[0];
@@ -606,7 +741,10 @@ var Chrome = PosBaseWidget.extend({
         if(err.message === 'XmlHttpRequestError '){
             title = 'Network Failure (XmlHttpRequestError)';
             body  = 'The Point of Sale could not be loaded due to a network problem.\n Please check your internet connection.';
-        }else if(err.message === 'OpenERP Server Error'){
+        }else if(err.message === 'TLSError'){
+            title = 'Https connection to IoT Box failed';
+            body = 'Make sure you are using IoT Box v18.12 or higher.\n\n Navigate to ' + err.url + ' to accept the certificate of your IoT Box.';
+        }else if(err.code === 200){
             title = err.data.message;
             body  = err.data.debug;
         }
@@ -663,9 +801,19 @@ var Chrome = PosBaseWidget.extend({
             'widget': OrderSelectorWidget,
             'replace':  '.placeholder-OrderSelectorWidget',
         },{
+            'name':   'sale_details',
+            'widget': SaleDetailsButton,
+            'append':  '.pos-rightheader',
+            'condition': function(){ return this.pos.config.use_proxy; },
+        },{
             'name':   'proxy_status',
             'widget': ProxyStatusWidget,
             'append':  '.pos-rightheader',
+            'condition': function(){ return this.pos.config.use_proxy; },
+        },{
+            'name': 'screen_status',
+            'widget': ClientScreenWidget,
+            'append': '.pos-rightheader',
             'condition': function(){ return this.pos.config.use_proxy; },
         },{
             'name':   'notification',
@@ -676,7 +824,7 @@ var Chrome = PosBaseWidget.extend({
             'widget': HeaderButtonWidget,
             'append':  '.pos-rightheader',
             'args': {
-                label: _t('Close'),
+                label: _lt('Close'),
                 action: function(){ 
                     var self = this;
                     if (!this.confirmed) {
@@ -769,9 +917,10 @@ return {
     HeaderButtonWidget: HeaderButtonWidget,
     OrderSelectorWidget: OrderSelectorWidget,
     ProxyStatusWidget: ProxyStatusWidget,
+    SaleDetailsButton: SaleDetailsButton,
+    ClientScreenWidget: ClientScreenWidget,
     StatusWidget: StatusWidget,
     SynchNotificationWidget: SynchNotificationWidget,
     UsernameWidget: UsernameWidget,
 };
 });
-

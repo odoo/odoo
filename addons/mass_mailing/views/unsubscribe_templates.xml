@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="unsubscribe">
+        <div class="container o_unsubscribe_form">
+            <div class="row">
+                <form action="/mail/mailing/unsubscribe" method="POST" id="unsubscribe_form" class="col-lg-6 offset-lg-3 mt-4">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="email" t-att-value="email"/>
+                    <input type="hidden" name="mailing_id" t-att-value="mailing_id"/>
+                    <input type="hidden" name="res_id" t-att-value="res_id"/>
+                    <input type="hidden" name="unsubscribed_list" t-att-value="unsubscribed_list"/>
+
+                    <div>
+                        <t t-if="contacts">
+                            <div id="info_state" class="alert alert-success" role="status">
+                                <div id="subscription_info"></div>
+                                <div id="div_feedback">
+                                    <p>We would appreciate if you provide feedback about why you updated<br/>your subscriptions</p>
+                                    <textarea class="form-control"  name="opt_out_feedback" cols="60" rows="3"></textarea>
+                                    <br/>
+                                    <div class="btn btn-primary text-left" id="button_feedback">Send</div>
+                                </div>
+                            </div>
+
+                            <h1 class="o_page_header">Mailing Subscriptions</h1>
+                            <p>Choose your mailing subscriptions</p>
+                            <div id="div_opt_out">
+                                <ul class="list-group">
+                                    <t t-foreach="list_ids" t-as="list_id">
+                                        <t t-if="list_id.is_public == True">
+                                            <li class="list-group-item">
+                                                <input type="checkbox" class="mail_list_checkbox" name="contact_ids"
+                                                    t-att-value="list_id['id']" t-att-checked="None if list_id['id'] in opt_out_list_ids else 'checked'"/>
+                                                <t t-esc="list_id.name"/>
+                                                <span t-if="list_id['id'] in opt_out_list_ids"
+                                                      class="o_mass_mailing_unsubscribed">
+                                                    Unsubscribed
+                                                </span>
+                                            </li>
+                                        </t>
+                                    </t>
+                                </ul>
+
+                                <div class="mb64 pt-3">
+                                    <div t-if="show_blacklist_button">
+                                        <div class="btn btn-secondary pull-right" id="button_add_blacklist" style="display:none">Blacklist Me</div>
+                                    </div>
+                                    <div class="btn btn-secondary pull-right" id="button_remove_blacklist" style="display:none">Come Back</div>
+                                    <input type="submit" id="send_form" class="btn btn-primary" value="Update my subscriptions"/>
+                                </div>
+                            </div>
+
+                        </t>
+                        <t t-else="">
+                            <div class="alert alert-info text-center" role="status">
+                                <p>You are not subscribed to any of our mailing list.</p>
+                            </div>
+                        </t>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <template id="unsubscribed">
+        <div class="container o_unsubscribe_form">
+            <div class="row">
+                <input type="hidden" name="email" t-att-value="email"/>
+                <input type="hidden" name="mailing_id" t-att-value="mailing_id"/>
+                <input type="hidden" name="res_id" t-att-value="res_id"/>
+                <div id="div_blacklist" class="col-lg-6 offset-lg-3">
+                    <h1 class="o_page_header">Mailing Subscriptions</h1>
+
+                    <div id="subscription_info" class="alert alert-success text-center" role="status">
+                        <p>You have been successfully <strong>unsubscribed</strong>!</p>
+                    </div>
+
+                    <div t-if="show_blacklist_button" class="mb64">
+                        <div class="btn btn-secondary pull-right" id="button_add_blacklist" style="display:none">Blacklist Me</div>
+                        <div class="btn btn-secondary pull-right" id="button_remove_blacklist" style="display:none">Come Back</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="page_unsubscribe" name="Unsubscribe">
+        <t t-call="mass_mailing.layout">
+            <t t-call="mass_mailing.unsubscribe"/>
+        </t>
+    </template>
+
+    <template id="page_unsubscribed" name="Unsubscribed">
+        <t t-call="mass_mailing.layout">
+            <t t-call="mass_mailing.unsubscribed"/>
+        </t>
+    </template>
+
+    <!-- new layout for mass_mailing -->
+    <template id="mass_mailing.layout" name="Mass Mailing Layout">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <t t-call-assets="web.assets_common"/>
+                <t t-call-assets="mass_mailing.assets_backend"/>
+            </t>
+            <body class="o_white_body">
+                <header>
+                    <div><title>Odoo</title></div>
+                    <div class="text-center">
+                        <img t-attf-src="/web/binary/company_logo"/>
+                    </div>
+                </header>
+                <div id="wrap" class="oe_structure oe_empty"/>
+                <main>
+                    <t t-raw="0"/>
+                </main>
+            </body>
+            <xpath expr="//footer" position="replace">
+                <div class="container mt16 mb8">
+                    <div class="pull-right" t-ignore="true" t-if="not editable">
+                        Create a <a target="_blank" href="https://www.odoo.com/page/website-builder">free website</a> with
+                        <a target="_blank" class="label label-danger" href="https://www.odoo.com/page/website-builder">Odoo</a>
+                    </div>
+                    <div class="pull-left text-muted" itemscope="itemscope" itemtype="https://schema.org/Organization">
+                        Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
+                    </div>
+                </div>
+            </xpath>
+         </t>
+     </template>
+</odoo>

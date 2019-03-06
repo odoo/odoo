@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
+import json
+import lxml
+import requests
 import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
-import json
-import lxml
-from urllib2 import urlopen, URLError
-import base64
 
-import openerp
-from openerp import tools, _
-from openerp.addons.web import http
-from openerp.addons.web.controllers.main import binary_content
-from openerp.addons.web.http import request
-from openerp.addons.website.models.website import slug
+from datetime import datetime
+
+from odoo import http, modules, SUPERUSER_ID, tools, _
+from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.web.controllers.main import binary_content
+from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.http import request
 
 
 class WebsiteForum(http.Controller):
@@ -56,7 +57,7 @@ class WebsiteForum(http.Controller):
         request.session['validation_email_sent'] = True
         return True
 
-    @http.route('/forum/validate_email', type='http', auth='public', website=True)
+    @http.route('/forum/validate_email', type='http', auth='public', website=True, sitemap=False)
     def validate_email(self, token, id, email, forum_id=None, **kwargs):
         if forum_id:
             try:
@@ -80,10 +81,13 @@ class WebsiteForum(http.Controller):
 
     @http.route(['/forum'], type='http', auth="public", website=True)
     def forum(self, **kwargs):
-        forums = request.env['forum.forum'].search([])
-        return request.website.render("website_forum.forum_all", {'forums': forums})
+        domain = request.website.website_domain()
+        forums = request.env['forum.forum'].search(domain)
+        if len(forums) == 1:
+            return werkzeug.utils.redirect('/forum/%s' % slug(forums[0]), code=302)
+        return request.render("website_forum.forum_all", {'forums': forums})
 
-    @http.route('/forum/new', type='http', auth="user", methods=['POST'], website=True)
+    @http.route('/forum/new', type='json', auth="user", methods=['POST'], website=True)
     def forum_create(self, forum_name="New Forum", add_menu=False):
         forum_id = request.env['forum.forum'].create({'name': forum_name})
         if add_menu:
@@ -93,19 +97,31 @@ class WebsiteForum(http.Controller):
                 'parent_id': request.website.menu_id.id,
                 'website_id': request.website.id,
             })
-        return request.redirect("/forum/%s" % slug(forum_id))
+        return "/forum/%s" % slug(forum_id)
 
     @http.route('/forum/notification_read', type='json', auth="user", methods=['POST'], website=True)
     def notification_read(self, **kwargs):
         request.env['mail.message'].browse([int(kwargs.get('notification_id'))]).set_message_done()
         return True
 
+    def sitemap_forum(env, rule, qs):
+        Forum = env['forum.forum']
+        dom = sitemap_qs2dom(qs, '/forum', Forum._rec_name)
+        dom += env['website'].get_current_website().website_domain()
+        for f in Forum.search(dom):
+            loc = '/forum/%s' % slug(f)
+            if not qs or qs.lower() in loc:
+                yield {'loc': loc}
+
     @http.route(['/forum/<model("forum.forum"):forum>',
                  '/forum/<model("forum.forum"):forum>/page/<int:page>',
-                 '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag", "[('forum_id','=',forum[0])]"):tag>/questions''',
-                 '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag", "[('forum_id','=',forum[0])]"):tag>/questions/page/<int:page>''',
-                 ], type='http', auth="public", website=True)
+                 '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions''',
+                 '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions/page/<int:page>''',
+                 ], type='http', auth="public", website=True, sitemap=sitemap_forum)
     def questions(self, forum, tag=None, page=1, filters='all', sorting=None, search='', post_type=None, **post):
+        if not forum.can_access_from_current_website():
+            raise werkzeug.exceptions.NotFound()
+
         Post = request.env['forum.post']
 
         domain = [('forum_id', '=', forum.id), ('parent_id', '=', False), ('state', '=', 'active')]
@@ -151,7 +167,7 @@ class WebsiteForum(http.Controller):
 
         question_ids = Post.search(domain, limit=self._post_per_page, offset=pager['offset'], order=sorting)
 
-        values = self._prepare_forum_values(forum=forum, searches=post)
+        values = self._prepare_forum_values(forum=forum, searches=post, header={'ask_hide': not forum.active})
         values.update({
             'main_object': tag or forum,
             'question_ids': question_ids,
@@ -163,14 +179,14 @@ class WebsiteForum(http.Controller):
             'search': search,
             'post_type': post_type,
         })
-        return request.website.render("website_forum.forum_index", values)
+        return request.render("website_forum.forum_index", values)
 
-    @http.route(['/forum/<model("forum.forum"):forum>/faq'], type='http', auth="public", website=True)
+    @http.route(['''/forum/<model("forum.forum", "[('website_id', 'in', (False, current_website_id))]"):forum>/faq'''], type='http', auth="public", website=True)
     def forum_faq(self, forum, **post):
         values = self._prepare_forum_values(forum=forum, searches=dict(), header={'is_guidelines': True}, **post)
-        return request.website.render("website_forum.faq", values)
+        return request.render("website_forum.faq", values)
 
-    @http.route('/forum/get_tags', type='http', auth="public", methods=['GET'], website=True)
+    @http.route('/forum/get_tags', type='http', auth="public", methods=['GET'], website=True, sitemap=False)
     def tag_read(self, q='', l=25, **post):
         data = request.env['forum.tag'].search_read(
             domain=[('name', '=ilike', (q or '') + "%")],
@@ -179,7 +195,7 @@ class WebsiteForum(http.Controller):
         )
         return json.dumps(data)
 
-    @http.route(['/forum/<model("forum.forum"):forum>/tag', '/forum/<model("forum.forum"):forum>/tag/<string:tag_char>'], type='http', auth="public", website=True)
+    @http.route(['/forum/<model("forum.forum"):forum>/tag', '/forum/<model("forum.forum"):forum>/tag/<string:tag_char>'], type='http', auth="public", website=True, sitemap=False)
     def tags(self, forum, tag_char=None, **post):
         # build the list of tag first char, with their value as tag_char param Ex : [('All', 'all'), ('C', 'c'), ('G', 'g'), ('Z', z)]
         first_char_tag = forum.get_tags_first_char()
@@ -198,16 +214,17 @@ class WebsiteForum(http.Controller):
         tags = request.env['forum.tag'].search(domain, limit=None, order=order_by)
         # prepare values and render template
         values = self._prepare_forum_values(forum=forum, searches={'tags': True}, **post)
+
         values.update({
             'tags': tags,
             'pager_tag_chars': first_char_list,
             'active_char_tag': active_char_tag,
         })
-        return request.website.render("website_forum.tag", values)
+        return request.render("website_forum.tag", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/edit_welcome_message', auth="user", website=True)
     def edit_welcome_message(self, forum, **kw):
-        return request.website.render("website_forum.edit_welcome_message", {'forum': forum})
+        return request.render("website_forum.edit_welcome_message", {'forum': forum})
 
     # Questions
     # --------------------------------------------------
@@ -215,13 +232,18 @@ class WebsiteForum(http.Controller):
     @http.route('/forum/get_url_title', type='json', auth="user", methods=['POST'], website=True)
     def get_url_title(self, **kwargs):
         try:
-            arch = lxml.html.parse(urlopen(kwargs.get('url')))
+            req = requests.get(kwargs.get('url'))
+            req.raise_for_status()
+            arch = lxml.html.fromstring(req.content)
             return arch.find(".//title").text
-        except URLError:
+        except IOError:
             return False
 
-    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False),('can_view', '=', True)]"):question>'''], type='http', auth="public", website=True)
+    @http.route(['''/forum/<model("forum.forum", "[('website_id', 'in', (False, current_website_id))]"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False),('can_view', '=', True)]"):question>'''], type='http', auth="public", website=True)
     def question(self, forum, question, **post):
+        if not forum.active:
+            return request.render("website_forum.header", {'forum': forum})
+
         # Hide posts from abusers (negative karma), except for moderators
         if not question.can_view:
             raise werkzeug.exceptions.NotFound()
@@ -241,12 +263,12 @@ class WebsiteForum(http.Controller):
         values.update({
             'main_object': question,
             'question': question,
-            'can_bump': (question.forum_id.allow_bump and not question.child_ids and (datetime.today() - datetime.strptime(question.write_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days > 9),
+            'can_bump': (question.forum_id.allow_bump and not question.child_ids and (datetime.today() - question.write_date).days > 9),
             'header': {'question_data': True},
             'filters': filters,
             'reversed': reversed,
         })
-        return request.website.render("website_forum.post_description_full", values)
+        return request.render("website_forum.post_description_full", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/toggle_favourite', type='json', auth="user", methods=['POST'], website=True)
     def question_toggle_favorite(self, forum, question, **post):
@@ -271,7 +293,7 @@ class WebsiteForum(http.Controller):
             'forum': forum,
             'reasons': reasons,
         })
-        return request.website.render("website_forum.close_post", values)
+        return request.render("website_forum.close_post", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/edit_answer', type='http', auth="user", website=True)
     def question_edit_answer(self, forum, question, **kwargs):
@@ -311,15 +333,22 @@ class WebsiteForum(http.Controller):
         if not user.email or not tools.single_email_re.match(user.email):
             return werkzeug.utils.redirect("/forum/%s/user/%s/edit?email_required=1" % (slug(forum), request.session.uid))
         values = self._prepare_forum_values(forum=forum, searches={}, header={'ask_hide': True})
-        return request.website.render("website_forum.new_%s" % post_type, values)
+        return request.render("website_forum.new_%s" % post_type, values)
 
     @http.route(['/forum/<model("forum.forum"):forum>/new',
                  '/forum/<model("forum.forum"):forum>/<model("forum.post"):post_parent>/reply'],
                 type='http', auth="user", methods=['POST'], website=True)
     def post_create(self, forum, post_parent=None, post_type=None, **post):
-        if post_type == 'question' and not post.get('post_name', '').strip():
-            return request.website.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Title should not be empty.')})
+        if post_type == 'question' and not post.get('post_name', ''):
+            return request.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Title should not be empty.')})
+        if post.get('content', '') == '<p><br></p>':
+            return request.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Question should not be empty.')})
+
         post_tag_ids = forum._tag_to_write_vals(post.get('post_tags', ''))
+
+        if request.env.user.forum_waiting_posts_count:
+            return werkzeug.utils.redirect("/forum/%s/ask" % slug(forum))
+
         new_question = request.env['forum.post'].create({
             'forum_id': forum.id,
             'name': post.get('post_name') or (post_parent and 'Re: %s' % (post_parent.name or '')) or '',
@@ -377,12 +406,12 @@ class WebsiteForum(http.Controller):
             'content': post.name,
         })
         template = "website_forum.new_link" if post.post_type == 'link' and not post.parent_id else "website_forum.edit_post"
-        return request.website.render(template, values)
+        return request.render(template, values)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/save', type='http', auth="user", methods=['POST'], website=True)
     def post_save(self, forum, post, **kwargs):
         if 'post_name' in kwargs and not kwargs.get('post_name').strip():
-            return request.website.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Title should not be empty.')})
+            return request.render('website.http_error', {'status_code': _('Bad Request'), 'status_message': _('Title should not be empty.')})
         post_tags = forum._tag_to_write_vals(kwargs.get('post_tags', ''))
         vals = {
             'tag_ids': post_tags,
@@ -426,7 +455,7 @@ class WebsiteForum(http.Controller):
     # --------------------------------------------------
 
     @http.route('/forum/<model("forum.forum"):forum>/validation_queue', type='http', auth="user", website=True)
-    def validation_queue(self, forum):
+    def validation_queue(self, forum, **kwargs):
         user = request.env.user
         if user.karma < forum.karma_moderate:
             raise werkzeug.exceptions.NotFound()
@@ -441,10 +470,10 @@ class WebsiteForum(http.Controller):
             'queue_type': 'validation',
         })
 
-        return request.website.render("website_forum.moderation_queue", values)
+        return request.render("website_forum.moderation_queue", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/flagged_queue', type='http', auth="user", website=True)
-    def flagged_queue(self, forum):
+    def flagged_queue(self, forum, **kwargs):
         user = request.env.user
         if user.karma < forum.karma_moderate:
             raise werkzeug.exceptions.NotFound()
@@ -459,10 +488,10 @@ class WebsiteForum(http.Controller):
             'queue_type': 'flagged',
         })
 
-        return request.website.render("website_forum.moderation_queue", values)
+        return request.render("website_forum.moderation_queue", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/offensive_posts', type='http', auth="user", website=True)
-    def offensive_posts(self, forum):
+    def offensive_posts(self, forum, **kwargs):
         user = request.env.user
         if user.karma < forum.karma_moderate:
             raise werkzeug.exceptions.NotFound()
@@ -477,10 +506,10 @@ class WebsiteForum(http.Controller):
             'queue_type': 'offensive',
         })
 
-        return request.website.render("website_forum.moderation_queue", values)
+        return request.render("website_forum.moderation_queue", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/validate', type='http', auth="user", website=True)
-    def post_accept(self, forum, post):
+    def post_accept(self, forum, post, **kwargs):
         url = "/forum/%s/validation_queue" % (slug(forum))
         if post.state == 'flagged':
             url = "/forum/%s/flagged_queue" % (slug(forum))
@@ -490,7 +519,7 @@ class WebsiteForum(http.Controller):
         return werkzeug.utils.redirect(url)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/refuse', type='http', auth="user", website=True)
-    def post_refuse(self, forum, post):
+    def post_refuse(self, forum, post, **kwargs):
         post.refuse()
         return self.question_ask_for_close(forum, post)
 
@@ -501,7 +530,7 @@ class WebsiteForum(http.Controller):
         return post.flag()[0]
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/ask_for_mark_as_offensive', type='http', auth="user", methods=['GET'], website=True)
-    def post_ask_for_mark_as_offensive(self, forum, post):
+    def post_ask_for_mark_as_offensive(self, forum, post, **kwargs):
         offensive_reasons = request.env['forum.post.reason'].search([('reason_type', '=', 'offensive')])
 
         values = self._prepare_forum_values(forum=forum)
@@ -511,7 +540,7 @@ class WebsiteForum(http.Controller):
             'reasons': offensive_reasons,
             'offensive': True,
         })
-        return request.website.render("website_forum.close_post", values)
+        return request.render("website_forum.close_post", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/mark_as_offensive', type='http', auth="user", methods=["POST"], website=True)
     def post_mark_as_offensive(self, forum, post, **kwargs):
@@ -526,8 +555,8 @@ class WebsiteForum(http.Controller):
     # User
     # --------------------------------------------------
 
-    @http.route(['/forum/<model("forum.forum"):forum>/users',
-                 '/forum/<model("forum.forum"):forum>/users/page/<int:page>'],
+    @http.route(['''/forum/<model("forum.forum", "[('website_id', 'in', (False, current_website_id))]"):forum>/users''',
+                 '''/forum/<model("forum.forum"):forum>/users/page/<int:page>'''],
                 type='http', auth="public", website=True)
     def users(self, forum, page=1, **searches):
         User = request.env['res.users']
@@ -536,9 +565,9 @@ class WebsiteForum(http.Controller):
         pager = request.website.pager(url="/forum/%s/users" % slug(forum), total=tag_count, page=page, step=step, scope=30)
         user_obj = User.sudo().search([('karma', '>', 1), ('website_published', '=', True)], limit=step, offset=pager['offset'], order='karma DESC')
         # put the users in block of 3 to display them as a table
-        users = [[] for i in range(len(user_obj) / 3 + 1)]
+        users = [[] for i in range(len(user_obj) // 3 + 1)]
         for index, user in enumerate(user_obj):
-            users[index / 3].append(user)
+            users[index // 3].append(user)
         searches['users'] = 'True'
 
         values = self._prepare_forum_values(forum=forum, searches=searches)
@@ -549,7 +578,7 @@ class WebsiteForum(http.Controller):
             'pager': pager,
         })
 
-        return request.website.render("website_forum.users", values)
+        return request.render("website_forum.users", values)
 
     @http.route(['/forum/<model("forum.forum"):forum>/partner/<int:partner_id>'], type='http', auth="public", website=True)
     def open_partner(self, forum, partner_id=0, **post):
@@ -559,15 +588,15 @@ class WebsiteForum(http.Controller):
                 return werkzeug.utils.redirect("/forum/%s/user/%d" % (slug(forum), partner.user_ids[0].id))
         return werkzeug.utils.redirect("/forum/%s" % slug(forum))
 
-    @http.route(['/forum/user/<int:user_id>/avatar'], type='http', auth="public", website=True)
+    @http.route(['/forum/user/<int:user_id>/avatar'], type='http', auth="public", website=True, sitemap=False)
     def user_avatar(self, user_id=0, **post):
-        status, headers, content = binary_content(model='res.users', id=user_id, field='image_medium', default_mimetype='image/png', env=request.env(user=openerp.SUPERUSER_ID))
+        status, headers, content = binary_content(model='res.users', id=user_id, field='image_medium', default_mimetype='image/png', env=request.env(user=SUPERUSER_ID))
 
         if not content:
-            img_path = openerp.modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
+            img_path = modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
             with open(img_path, 'rb') as f:
                 image = f.read()
-            content = image.encode('base64')
+            content = base64.b64encode(image)
         if status == 304:
             return werkzeug.wrappers.Response(status=304)
         image_base64 = base64.b64decode(content)
@@ -647,8 +676,8 @@ class WebsiteForum(http.Controller):
         posts = {}
         for act in activities:
             posts[act.res_id] = True
-        posts_ids = Post.search([('id', 'in', posts.keys())])
-        posts = dict(map(lambda x: (x.id, (x.parent_id or x, x.parent_id and x or False)), posts_ids))
+        posts_ids = Post.search([('id', 'in', list(posts))])
+        posts = {x.id: (x.parent_id or x, x.parent_id and x or False) for x in posts_ids}
 
         # TDE CLEANME MASTER: couldn't it be rewritten using a 'menu' key instead of one key for each menu ?
         if user == request.env.user:
@@ -673,7 +702,7 @@ class WebsiteForum(http.Controller):
             'posts': posts,
             'vote_post': vote_ids,
         })
-        return request.website.render("website_forum.user_detail_full", values)
+        return request.render("website_forum.user_detail_full", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/user/<model("res.users"):user>/edit', type='http', auth="user", website=True)
     def edit_profile(self, forum, user, **kwargs):
@@ -684,7 +713,7 @@ class WebsiteForum(http.Controller):
             'countries': countries,
             'notifications': self._get_notifications(),
         })
-        return request.website.render("website_forum.edit_profile", values)
+        return request.render("website_forum.edit_profile", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/user/<model("res.users"):user>/save', type='http', auth="user", methods=['POST'], website=True)
     def save_edited_profile(self, forum, user, **kwargs):
@@ -696,6 +725,13 @@ class WebsiteForum(http.Controller):
             'country_id': int(kwargs.get('country')) if kwargs.get('country') else False,
             'website_description': kwargs.get('description'),
         }
+
+        if 'clear_image' in kwargs:
+            values['image'] = False
+        elif kwargs.get('ufile'):
+            image = kwargs.get('ufile').read()
+            values['image'] = base64.b64encode(image)
+
         if request.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
             values['website_published'] = kwargs.get('website_published') == 'True'
         user.write(values)
@@ -704,7 +740,7 @@ class WebsiteForum(http.Controller):
     # Badges
     # --------------------------------------------------
 
-    @http.route('/forum/<model("forum.forum"):forum>/badge', type='http', auth="public", website=True)
+    @http.route('''/forum/<model("forum.forum", "[('website_id', 'in', (False, current_website_id))]"):forum>/badge''', type='http', auth="public", website=True)
     def badges(self, forum, **searches):
         Badge = request.env['gamification.badge']
         badges = Badge.sudo().search([('challenge_ids.category', '=', 'forum')])
@@ -713,17 +749,7 @@ class WebsiteForum(http.Controller):
         values.update({
             'badges': badges,
         })
-        return request.website.render("website_forum.badge", values)
-
-    @http.route(['''/forum/<model("forum.forum"):forum>/badge/<model("gamification.badge"):badge>'''], type='http', auth="public", website=True)
-    def badge_users(self, forum, badge, **kwargs):
-        users = [badge_user.user_id for badge_user in badge.sudo().owner_ids]
-        values = self._prepare_forum_values(forum=forum, searches={'badges': True})
-        values.update({
-            'badge': badge,
-            'users': users,
-        })
-        return request.website.render("website_forum.badge_user", values)
+        return request.render("website_forum.badge", values)
 
     # Messaging
     # --------------------------------------------------
@@ -739,8 +765,8 @@ class WebsiteForum(http.Controller):
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/convert_to_comment', type='http', auth="user", methods=['POST'], website=True)
     def convert_answer_to_comment(self, forum, post, **kwarg):
         question = post.parent_id
-        new_msg_id = post.convert_answer_to_comment()[0]
-        if not new_msg_id:
+        new_msg = post.convert_answer_to_comment()
+        if not new_msg:
             return werkzeug.utils.redirect("/forum/%s" % slug(forum))
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 

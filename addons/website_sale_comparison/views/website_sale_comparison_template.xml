@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Comparison assets frontend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/website_sale_comparison/static/src/scss/website_sale_comparison.scss"/>
+            <script type="text/javascript" src="/website_sale_comparison/static/src/js/website_sale_comparison.js"></script>
+        </xpath>
+    </template>
+
+    <template id="add_to_compare" inherit_id="website_sale.products_item" active="True" customize_show="True" name="Comparison List" priority="22">
+        <xpath expr="//div[hasclass('product_price')]" position="inside">
+            <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
+            <button t-if="product_variant_id" type="button" role="button" class="d-none d-md-inline-block btn btn-secondary btn-sm o_add_compare" title="Compare" aria-label="Compare" t-att-data-product-product-id="product_variant_id" data-action="o_comparelist"><span class="fa fa-exchange"></span></button>
+        </xpath>
+    </template>
+
+    <template id="product_add_to_compare" name='Add to comparison in product page' inherit_id="website_sale.product" priority="8">
+        <xpath expr="//a[@id='add_to_cart']" position="after">
+            <t t-if="request.website.viewref('website_sale_comparison.add_to_compare').active">
+                <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
+                <button t-if="product_variant" type="button" role="button" class="d-none d-md-inline-block btn btn-secondary btn-lg mt8 o_add_compare_dyn" title="Compare" aria-label="Compare" t-att-data-product-product-id="product_variant.id" data-action="o_comparelist"><span class="fa fa-exchange"></span></button>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="product_attributes_body" inherit_id="website_sale.product" customize_show="True" active="True" name="Product attributes table">
+        <xpath expr="//hr[@id='hr_product_attributes_simple']" position="replace"/>
+        <xpath expr="//p[@id='product_attributes_simple']" position="replace"/>
+        <xpath expr="//div[@id='product_full_description']" position="after">
+            <section class="container" id="product_full_spec">
+                <t t-set="atts" t-value="product.get_variant_groups()"/>
+                <t t-if='len(atts)'>
+                    <h3 class="text-center mb32">Specifications for <t t-esc="product.name"/></h3>
+                    <div class="row">
+                        <div class='col-lg-8 offset-lg-2' id='product_specifications'>
+                            <table class='table table-striped table-sm table-hover'>
+                                <t t-foreach="atts.keys()" t-as="spec">
+                                    <t t-if="len(atts.keys())&gt;1">
+                                        <tr class="clickable" data-toggle="collapse" t-att-data-target="'.'+spec.split()[0]">
+                                            <th class="text-left" t-att-colspan="2"><t t-esc="spec"/></th>
+                                        </tr>
+                                    </t>
+                                    <tr t-foreach="atts[spec]" t-as="att" t-att-class="'collapse in show ' + spec.split()[0]">
+                                        <td t-esc="att.attribute_id.name"/>
+                                        <td>
+                                            <t t-set='or_separator'>or</t>
+                                            <t t-esc="(' %s ' % or_separator).join(att.value_ids.mapped('name'))"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </section>
+        </xpath>
+    </template>
+
+    <template id='recommended_product' inherit_id="website_sale.recommended_products" name="Alternative Products">
+        <xpath expr="//h3" position="replace">
+            <!--
+                Create the first variant if it doesn't exist for the current
+                product and every alternative product because the product
+                comparator need the variants and not the templates.
+            -->
+            <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
+            <t t-set="id_list" t-value="[product_variant.id] if product_variant else []"/>
+            <t t-foreach="product.alternative_product_ids" t-as="alt_product">
+                <t t-set="alt_product_variant_id" t-value="alt_product._create_first_product_variant().id"/>
+                <t t-if="alt_product_variant_id" t-set="id_list" t-value="id_list + [alt_product_variant_id]"/>
+            </t>
+            <t t-set="ids" t-value="','.join([str(id) for id in id_list])"/>
+            <div><span class='h3'>Suggested alternatives: </span><a t-if="len(id_list) > 1" role="button" class="btn btn-primary" t-attf-href="/shop/compare/?products=#{ids}"><i class="fa fa-exchange"></i> Compare</a></div>
+        </xpath>
+    </template>
+
+    <template id="product_compare" name="Comparator Page">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Shop Comparator</t>
+            <div id="wrap" class="js_sale">
+                <div class="oe_structure" id="oe_structure_website_sale_comparison_product_compare_1"/>
+                <div class="container oe_website_sale">
+                    <section class="container">
+                        <h3>Compare Products</h3>
+                        <table class="table table-bordered table-hover text-center mt16 table-comparator" id="o_comparelist_table">
+                            <thead>
+                                <td t-if="specs.keys()" class='td-top-left'/>
+                                <td t-foreach="products" t-as="product">
+                                    <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
+                                    <a href="#" t-att-data-product_product_id="product.id" class="o_comparelist_remove" t-if="len(products) &gt; 2">
+                                        <strong class='float-right'>x</strong>
+                                    </a>
+                                    <a t-att-href="'/shop/product/%s' % slug(product.product_tmpl_id)">
+                                        <img t-attf-src="/web/image/product.product/#{product.id}/image/200x150" class="img img-fluid" style="margin:auto;" alt="Product image"/>
+                                    </a>
+                                    <div class='product_summary'>
+                                        <a class="o_product_comparison_table" t-attf-href="/shop/product/#{ slug(product.product_tmpl_id) }">
+                                            <span t-esc="combination_info['display_name']"></span><br/>
+                                        </a>
+
+                                        <span>
+                                            <strong>Price:</strong>
+                                            <t t-if="True"><!-- compatibility 12.0-->
+                                                <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                                            </t>
+                                            <span t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"></span>
+                                        </span>
+
+                                        <form action="/shop/cart/update" method="post" class="text-center">
+                                            <input name="product_id" t-att-value="product.id" type="hidden"/>
+                                            <a role="button" class="btn btn-primary btn-block a-submit" href="#"><i class="fa fa-shopping-cart"></i>&amp;nbsp;Add to Cart</a>
+                                        </form>
+                                    </div>
+                                </td>
+                            </thead>
+                        <tbody>
+                            <t t-foreach="specs.keys()" t-as="spec">
+                                <t t-if="len(specs.keys())&gt;1">
+                                    <tr class="clickable" data-toggle="collapse" t-att-data-target="'.'+spec.split()[0]">
+                                        <th class="text-left" t-att-colspan="len(products) + 1"><i class="fa fa-chevron-circle-down o_product_comparison_collpase" role="img" aria-label="Collapse" title="Collapse"></i><t t-esc="spec"/></th>
+                                    </tr>
+                                </t>
+                                <tr t-foreach="specs[spec].keys()" t-as="att" t-att-class="'collapse in show ' + spec.split()[0]">
+                                    <td t-esc="att"/>
+                                    <td t-foreach="specs[spec][att]" t-as="val"><t t-esc="val"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="product_product" name="Comparator - Product row in comparator popover">
+        <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
+        <div class="row no-gutters align-items-center mt-2 o_product_row" t-att-data-category_ids="product.public_categ_ids.ids">
+            <div class="col-3">
+                <img class="img img-fluid" t-attf-src="/web/image/product.product/#{product.id}/image_small" style="max-height: 50px;" alt="Product image"/>
+            </div>
+            <div class="col-8 pl-2">
+                <h6>
+                    <a t-attf-href="/shop/product/#{product.product_tmpl_id[0].id}"><t t-esc="combination_info['display_name']" /></a><br/>
+                    <t t-if="True"><!--compatibility 12.0-->
+                        <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                    </t>
+                    <span t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"></span>
+                </h6>
+            </div>
+            <div class="col-1 text-right">
+                <a href='#' class="o_remove" title="Remove" t-att-data-product_product_id="product.id">
+                    <i class="fa fa-trash" role="img" aria-label="Remove"></i>
+                </a>
+            </div>
+        </div>
+    </template>
+
+</odoo>

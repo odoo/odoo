@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_pos_form" model="ir.ui.view">
+        <field name="name">pos.order.form</field>
+        <field name="model">pos.order</field>
+        <field name="arch" type="xml">
+            <form string="Point of Sale Orders" create="0">
+                <header>
+                    <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" states="draft" context="{'pos_session_id' : session_id}"/>
+                    <button name="action_pos_order_invoice" string="Invoice" type="object"
+                            attrs="{'invisible': ['|', ('invoice_group', '=', False), ('state','!=','paid')]}"/>
+                    <button name="refund" string="Return Products" type="object"
+                        attrs="{'invisible':[('state','=','draft')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" />
+                </header>
+                <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_invoice"
+                        string="Invoice"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o"
+                        attrs="{'invisible':[('state','!=','invoiced')]}">
+                    </button>
+                </div>
+                <group col="4" colspan="4" name="order_fields">
+                    <field name="name"/>
+                    <field name="date_order"/>
+                    <field name="session_id" />
+                    <field name="partner_id" domain="[('customer', '=', True)]" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
+                    <field name="fiscal_position_id" options="{'no_create': True}"/>
+                    <field name="invoice_group" invisible="1"/>
+                </group>
+                <notebook colspan="4">
+                    <page string="Products">
+                        <field name="lines" colspan="4" nolabel="1">
+                            <tree string="Order lines" editable="bottom">
+                                <field name="product_id"/>
+                                <field name="qty"/>
+                                <field name="price_unit" widget="monetary"/>
+                                <field name="discount" widget="monetary"/>
+                                <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
+                                <field name="tax_ids" widget="many2many_tags" invisible="1"/>
+                                <field name="price_subtotal" widget="monetary" force_save="1"/>
+                                <field name="price_subtotal_incl" widget="monetary" force_save="1"/>
+                            </tree>
+                            <form string="Order lines">
+                                <group col="4">
+                                    <field name="product_id"/>
+                                    <field name="qty"/>
+                                    <field name="discount" widget="monetary"/>
+                                    <field name="price_unit" widget="monetary"/>
+                                    <field name="price_subtotal" invisible="1" widget="monetary" force_save="1"/>
+                                    <field name="price_subtotal_incl" invisible="1" widget="monetary" force_save="1"/>
+                                    <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
+                                    <field name="tax_ids" widget="many2many_tags" invisible="1"/>
+                                    <field name="notice"/>
+                                </group>
+                            </form>
+                        </field>
+                        <group class="oe_subtotal_footer oe_right" colspan="2" name="order_total">
+                            <field name="amount_tax"
+                                   force_save="1"
+                                   widget="monetary"/>
+                            <div class="oe_subtotal_footer_separator oe_inline">
+                                <label for="amount_total" />
+                                <button name="button_dummy"
+                                    states="draft" string="(update)" class="oe_edit_only oe_link"/>
+                            </div>
+                            <field name="amount_total"
+                                   force_save="1"
+                                   nolabel="1"
+                                   class="oe_subtotal_footer_separator"
+                                   widget="monetary"/>
+                        </group>
+                        <div class="oe_clear"/>
+                    </page>
+                    <page string="Payments">
+                        <field name="statement_ids" colspan="4" nolabel="1">
+                            <tree editable="bottom" string="Statement lines">
+                                <field name="journal_id"/>
+                                <field name="statement_id"/>
+                                <field name="amount"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page name="extra" string="Extra Info">
+                        <group string="General Information">
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="location_id" widget="selection" groups="stock.group_stock_multi_locations"/>
+                            <field name="user_id"/>
+                            <field name="pricelist_id" groups="product.group_sale_pricelist"/>
+                            <field name="picking_id" readonly="1"/>
+                            <field name="pos_reference"/>
+                        </group>
+                        <group string="Accounting Information" groups="account.group_account_manager">
+                            <group>
+                                <field name="sale_journal" domain="[('type','=','sale')]"/>
+                                <field name="account_move" readonly="1"
+                                        attrs="{'invisible':[('state','!=','done')]}"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Notes" >
+                        <field name="note"/>
+                    </page>
+                </notebook>
+            </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_pos_order_kanban">
+        <field name="name">pos.order.kanban</field>
+        <field name="model">pos.order</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="0">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="amount_total"/>
+                <field name="date_order"/>
+                <field name="state"/>
+                <field name="pos_reference"/>
+                <field name="partner_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title"><span><t t-esc="record.user_id.value"/></span></strong>
+                                </div>
+                                <strong><span class="badge badge-pill"><i class="fa fa-money" role="img" aria-label="Amount" title="Amount"/> <field name="amount_total"/></span></strong>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                <span><t t-esc="record.pos_reference.value"/></span>
+                            </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-8 text-muted">
+                                    <span><t t-esc="record.date_order.value"/></span>
+                                </div>
+                                <div class="col-4">
+                                    <span class="float-right text-right">
+                                        <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default',
+                                        'invoiced': 'success', 'cancel': 'danger'}}"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_pos_pos_form" model="ir.actions.act_window">
+        <field name="name">Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_id" eval="False"/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No orders found
+            </p><p>
+                To record new orders, start a new session.
+            </p>
+        </field>
+    </record>
+    <record id="action_pos_sale_graph" model="ir.actions.act_window">
+        <field name="name">Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.order</field>
+        <field name="view_mode">graph,tree,kanban,form</field>
+        <field name="domain">[('state', 'not in', ['draft', 'cancel', 'invoiced'])]</field>
+    </record>
+    <record id="view_pos_order_tree" model="ir.ui.view">
+        <field name="name">pos.order.tree</field>
+        <field name="model">pos.order</field>
+        <field name="arch" type="xml">
+            <tree string="POS Orders" decoration-info="state == 'draft'" decoration-muted="state in ('done','cancel')" create="0">
+                <field name="name"/>
+                <field name="pos_reference"/>
+                <field name="partner_id"/>
+                <field name="date_order"/>
+                <field name="user_id"/>
+                <field name="amount_total" sum="Amount total" widget="monetary"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state"/>
+                <field name="session_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pos_order_search" model="ir.ui.view">
+        <field name="name">pos.order.search.view</field>
+        <field name="model">pos.order</field>
+        <field name="arch" type="xml">
+            <search string="Point of Sale Orders">
+                <field name="name"/>
+                <field name="config_id"/>
+            </search>
+        </field>
+    </record>
+
+    <menuitem id="menu_point_ofsale" parent="menu_point_of_sale" action="action_pos_pos_form" sequence="1" groups="group_pos_manager,group_pos_user"/>
+
+    <record id="view_pos_order_line" model="ir.ui.view">
+        <field name="name">pos.order.line.tree</field>
+        <field name="model">pos.order.line</field>
+        <field name="arch" type="xml">
+            <tree string="POS Order lines">
+                <field name="product_id" readonly="1"/>
+                <field name="qty" readonly="1" sum="Total qty"/>
+                <field name="discount" readonly="1" widget="monetary"/>
+                <field name="price_unit" readonly="1" widget="monetary"/>
+                <field name="price_subtotal" readonly="1" sum="Sum of subtotals" widget="monetary"/>
+                <field name="price_subtotal_incl" readonly="1" sum="Sum of subtotals" widget="monetary"/>
+                <field name="create_date" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pos_order_line_form" model="ir.ui.view">
+        <field name="name">pos.order.line.form</field>
+        <field name="model">pos.order.line</field>
+        <field name="arch" type="xml">
+            <form string="POS Order line">
+                <group col="4">
+                    <field name="product_id" />
+                    <field name="qty" />
+                    <field name="discount" widget="monetary"/>
+                    <field name="price_unit" widget="monetary"/>
+                    <field name="create_date" />
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_pos_order_line" model="ir.actions.act_window">
+        <field name="name">Sale line</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.order.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_pos_order_line"/>
+    </record>
+
+    <record id="action_pos_order_line_form" model="ir.actions.act_window">
+        <field name="name">Sale line</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.order.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree</field>
+        <field name="view_id" ref="view_pos_order_line_form"/>
+    </record>
+
+    <record id="action_pos_order_line_day" model="ir.actions.act_window">
+        <field name="name">Sale line</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.order.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_pos_order_line"/>
+        <field name="domain">[('create_date', '&gt;=', time.strftime('%Y-%m-%d 00:00:00')),('create_date', '&lt;=', time.strftime('%Y-%m-%d 23:59:59'))]</field>
+    </record>
+
+    <record id="view_pos_order_tree_all_sales_lines" model="ir.ui.view">
+        <field name="name">pos.order.line.all.sales.tree</field>
+        <field name="model">pos.order.line</field>
+        <field name="arch" type="xml">
+            <tree string="POS Orders lines">
+                <field name="order_id" />
+                <field name="create_date" />
+                <field name="product_id" />
+                <field name="qty" />
+                <field name="price_unit" widget="monetary"/>
+            </tree>
+        </field>
+    </record>
+     <record id="action_pos_all_sales_lines" model="ir.actions.act_window">
+        <field name="name">All sales lines</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.order.line</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_pos_order_tree_all_sales_lines" />
+    </record>
+
+    <record id="view_pos_order_filter" model="ir.ui.view">
+        <field name="name">pos.order.list.select</field>
+        <field name="model">pos.order</field>
+        <field name="arch" type="xml">
+            <search string="Search Sales Order">
+                <field name="name"/>
+                <field name="date_order"/>
+                <filter string="New" name="new" domain="[('state','=','draft')]"/>
+                <filter string="Done" name="done" domain="[('state','in',('paid','invoiced','done'))]"/>
+                <filter string="Invoiced" name="invoiced" domain="[('state','=','invoiced')]"/>
+                <filter string="Posted" name="posted" domain="[('state','=','done')]"/>
+                <field name="user_id"/>
+                <field name="partner_id"/>
+                <field name="session_id"/>
+                <field name="config_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Customer" name="customer" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter string="Salesperson" name="salesman" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Session" name="session" domain="[]" context="{'group_by':'session_id'}"/>
+                    <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Order Date" name="order_month" domain="[]" context="{'group_by':'date_order'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

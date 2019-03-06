@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="stock_picking_batch.report_picking_batch">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="move_line_ids" t-value="o.picking_ids.mapped('move_line_ids')"/>
+                    <t t-set="has_package" t-value="move_line_ids.filtered('result_package_id')" groups="stock.group_tracking_lot"/>
+                    <t t-set="has_serial_number" t-value="move_line_ids.filtered('lot_id')" groups="stock.group_production_lot"/>
+                    <t t-set="has_barcode" t-value="move_line_ids.mapped('product_id').filtered('barcode')"/>
+                    <t t-set="locations" t-value="move_line_ids.mapped('location_id')"/>
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h3>Summary: <span t-field="o.name"/></h3>
+                            <div t-if="o.user_id">
+                                <strong>Responsible:</strong>
+                                <span t-field="o.user_id"/>
+                            </div><br/>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Picking Reference</th>
+                                        <th>Status</th>
+                                        <th>Commitment Date</th>
+                                        <th>Scheduled Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.picking_ids" t-as="pick">
+                                        <td>
+                                            <span t-field="pick.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="pick.state"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="pick.date"/>
+                                        </td>
+                                        <td >
+                                            <span t-field="pick.scheduled_date"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p style="page-break-after: always;"/>
+                            <t t-foreach="locations" t-as="location">
+                                <t t-set="loc_move_line" t-value="move_line_ids.filtered(lambda x: x.location_id==location)"/>
+                                <t t-set="products" t-value="loc_move_line.mapped('product_id')"/>
+                                <h3><span t-field="o.name"/></h3>
+                                <div t-if="o.user_id">
+                                    <strong>Responsible:</strong>
+                                    <span t-field="o.user_id"/>
+                                </div><br/>
+                                <h4><strong>To take from: <span t-field="location.display_name"/></strong></h4>
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Quantity</th>
+                                            <th width="27%">Destination</th>
+                                            <th width="23%">Picking</th>
+                                            <th t-if="has_serial_number" width="15%">
+                                                <strong>Lot/Serial Number</strong>
+                                            </th>
+                                            <th t-if="has_barcode" width="15%" class="text-center">
+                                                <strong>Product Barcode</strong>
+                                            </th>
+                                            <th t-if="has_package" width="15%">
+                                                <strong>Package</strong>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="loc_move_line" t-as="move_operation">
+                                            <td>
+                                                <span t-field="move_operation.display_name"/>
+                                            </td>
+                                            <td>
+                                                <t t-if="not has_package">
+                                                    <t t-if="any(move_operation.filtered(lambda l: l.state == 'done'))">
+                                                        <span t-esc="sum(move_operation.mapped('qty_done'))"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span t-esc="sum(move_operation.mapped('product_uom_qty'))"/>
+                                                    </t>
+                                                </t>
+                                                <t t-if="has_package">
+                                                    <span t-esc="sum(move_operation.mapped('qty_done'))"/>
+                                                </t>
+                                                <span t-field="move_operation.uom_id" groups="move_operation.group_uom"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="move_operation.mapped('location_dest_id').display_name"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="move_operation.mapped('picking_id').display_name"/>
+                                            </td>
+                                            <td t-if="has_serial_number and (move_operation.lot_id or move_operation.lot_name)" class="text-center h6" width="15%">
+                                                <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', move_operation.lot_id.name, 600, 100)" style="width:100%;height:35px;" alt="Barcode"/>
+                                            </td>
+                                            <td width="15%" class="text-center" t-if="has_barcode">
+                                                <span t-if="move_operation.product_id and move_operation.product_id.barcode">
+                                                    <img t-if="len(move_operation.product_id.barcode) == 13" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', move_operation.product_id.barcode, 600, 100)" style="width:100%;height:35px" alt="Barcode"/>
+                                                    <img t-elif="len(move_operation.product_id.barcode) == 8" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN8', move_operation.product_id.barcode, 600, 100)" style="width:100%;height:35px" alt="Barcode"/>
+                                                    <img t-else="" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', move_operation.product_id.barcode, 600, 100)" style="width:100%;height:35px" alt="Barcode"/>
+
+                                                </span>
+                                            </td>
+                                            <td t-if="has_package" width="15%">
+                                                <span t-field="move_operation.package_id"/>
+                                                <t t-if="move_operation.result_package_id">
+                                                     → <span t-field="move_operation.result_package_id"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <p style="page-break-after: always;"/>
+                            </t>
+                         </div>
+                     </t>
+                 </t>
+            </t>
+        </template>
+    </data>
+</odoo>

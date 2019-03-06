@@ -3,18 +3,22 @@
 # * delivery
 # 
 # Translators:
-# Kisrobert <kisrobi@gmail.com>, 2015
-# Kovács Tibor <kovika@gmail.com>, 2015
-# krnkris, 2015-2016
-# krnkris, 2016
+# Martin Trigaux, 2018
+# krnkris, 2018
+# gezza <geza.nagy@oregional.hu>, 2018
+# Kisrobert <kisrobi@gmail.com>, 2018
+# Kovács Tibor <kovika@gmail.com>, 2018
+# Ákos Nagy <akos.nagy@oregional.hu>, 2018
+# Tibor Kőnig <konig.tibor@evitalit.hu>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-04-12 10:04+0000\n"
-"Last-Translator: krnkris\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
+"Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2018\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,159 +26,131 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_rules_count
-msgid "# Analytic Rules"
-msgstr "# Elemző/Analitikai szabályok"
+#: model:mail.template,report_name:delivery.mail_template_data_delivery_confirmation
+msgid "${(object.name or '').replace('/','_')}"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_bom_count
-msgid "# Bill of Material"
-msgstr "# Darabjegyzék"
+#: model:mail.template,subject:delivery.mail_template_data_delivery_confirmation
+msgid ""
+"${object.company_id.name} Delivery Order (Ref ${object.name or 'n/a' })"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_num_invoiced
-msgid "# Invoiced in Purchase"
-msgstr "# számlázott a beszerzéskor"
+#: model:mail.template,body_html:delivery.mail_template_data_delivery_confirmation
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hello ${object.partner_id.name},<br/><br/>\n"
+"        We are glad to inform you that your order has been shipped.\n"
+"        %if object.carrier_tracking_ref:\n"
+"            Your tracking reference is\n"
+"            <strong>\n"
+"            %if object.carrier_tracking_url:\n"
+"                <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"            %else:\n"
+"                ${object.carrier_tracking_ref}.\n"
+"            %endif\n"
+"            </strong>\n"
+"        %endif\n"
+"        <br/><br/>\n"
+"        Please find your delivery order attached for more details.<br/><br/>\n"
+"        Thank you,<br/>\n"
+"        % if user and user.signature:\n"
+"          ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"        "
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_num_invoiced
-msgid "# Invoiced in Sale"
-msgstr "# Eladáskor számlázott"
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "<i class=\"fa fa-arrow-right\"/> Add to order"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_mo_count
-msgid "# Manufacturing Orders"
-msgstr "# Gyártási megrendelések"
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "<i class=\"fa fa-arrow-right\"/> Get rate"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_count
-msgid "# Purchases"
-msgstr "# Beszerzések"
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid ""
+"<i class=\"fa fa-check text-success\" role=\"img\" aria-label=\"Rating OK\" "
+"title=\"Rating OK\" "
+"attrs=\"{'invisible':['|','|',('carrier_id','=',False),('state','not "
+"in',('draft','sent')),('delivery_rating_success','=',False)]}\"/>"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sales_count
-msgid "# Sales"
-msgstr "# Értékesítések"
+#: code:addons/delivery/models/delivery_carrier.py:77
+#, python-format
+msgid ""
+"<p class=\"o_view_nocontent\">\n"
+"                    Buy Odoo Enterprise now to get more providers.\n"
+"                </p>"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_count
-msgid "# of Product Variants"
-msgstr "# Termékváltozat"
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
+msgid "<span>kg</span>"
+msgstr "<span>kg</span>"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
-#: model:ir.ui.view,arch_db:delivery.report_shipping2
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
+#: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier</strong>"
 msgstr "<strong>Szállító</strong>"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
-#: model:ir.ui.view,arch_db:delivery.report_shipping2
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
+msgid "<strong>Shipping Weight</strong>"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
+msgid "<strong>Tracking Number</strong>"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Weight</strong>"
 msgstr "<strong>Súly</strong>"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_product_type
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_type
-msgid ""
-"A consumable is a product for which you don't manage stock, a service is a "
-"non-material product provided by a company or an individual."
-msgstr "Egy fogyó termékek olyan termékek melyekre nem szervez  raktárkészletet, egy szolgáltatás egy nem materiális termék melyet egy vállalat vagy egyén kínál."
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
+msgid "Action while validating Delivery Orders"
+msgstr "Művelet a  Szállítólevelek jóváhagyása közben"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_description_sale
-msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sale Order, Delivery Order and "
-"Customer Invoice/Refund"
-msgstr "Egy termék leírása, melyről beszélgetést szeretne fojtatni a vásárlókkal.  Ez a leírás lesz átmásolva minden egyes árajánlatra, szállítási megbízásra/szállítólevélre és vásárlói számlára/visszatérítésre."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_description_purchase
-msgid ""
-"A description of the Product that you want to communicate to your vendors. "
-"This description will be copied to every Purchase Order, Receipt and Vendor "
-"Bill/Refund."
-msgstr "Egy termék leírása, melyről beszélgetést szeretne fojtatni a beszállítókkal. Ez a leírás lesz átmásolva minden egyes beszerzési megrendelésre, beszállítási megbízásra/szállítólevélre és beszállítói számlára/visszatérítésre."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_description
-msgid ""
-"A precise description of the Product, used only for internal information "
-"purposes."
-msgstr "Egy ár részletes leírása, kizárólag belső információként lesz felhasználva."
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
-msgid "Action Needed"
-msgstr "Művelet szükséges"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
 msgid "Active"
 msgstr "Aktív"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_amount
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__amount
 msgid "Amount"
 msgstr "Összeg"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_amount
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__amount
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
-msgstr "Rendelési érték ami után a vevő ingyenes szállítást vehet igénybe, a vállalat pénznemében kifejezve."
+msgstr ""
+"Rendelési érték ami után a vevő ingyenes szállítást vehet igénybe, a "
+"vállalat pénznemében kifejezve."
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
-msgid "Asset Type"
-msgstr "Eszköz típus"
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Archived"
+msgstr "Archivált"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_value_ids
-msgid "Attributes"
-msgstr "Tulajdonságok"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_available
-msgid "Available"
-msgstr "Rendelkezésre álló"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_produce_delay
-msgid ""
-"Average delay in days to produce this product. In the case of multi-level "
-"BOM, the manufacturing lead times of the components will be added."
-msgstr "Átlag késés napokban, ennek a terméknek az előállításához.  Több lépcsős anyagjegyzék (BOM) esetén, az alkatrészek gyártási ideje is hozzá lesz adva."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_avg_price
-msgid "Avg. Price in Customer Invoices."
-msgstr "Átl. ár a vevő számláin."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_avg_price
-msgid "Avg. Price in Vendor Bills "
-msgstr "Átl. ár a brszállítók számláin."
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_avg_price
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_avg_price
-msgid "Avg. Unit Price"
-msgstr "Átlagos egységár"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_barcode
-msgid "Barcode"
-msgstr "Vonalkód"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_list_price
-msgid ""
-"Base price to compute the customer price. Sometimes called the catalog "
-"price."
-msgstr "Alapár a vásárlói ár számításához. Sokszor listaárnak nevezik."
+#: model:ir.model.fields,field_description:delivery.field_sale_order__available_carrier_ids
+msgid "Available Carriers"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -182,229 +158,137 @@ msgid "Based on Rules"
 msgstr "Szabályok alapján"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image
-msgid "Big-sized image"
-msgstr "Nagyméretű kép"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_bom_ids
-msgid "Bill of Materials"
-msgstr "Anyagjegyzékek"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_bulk
+#: model:ir.model.fields,field_description:delivery.field_stock_picking__weight_bulk
 msgid "Bulk Weight"
 msgstr "Ömlesztett súly"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_ok
-msgid "Can be Purchased"
-msgstr "Beszerezhető"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_rental
-msgid "Can be Rent"
-msgstr "Bérelhető"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_sale_ok
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_ok
-msgid "Can be Sold"
-msgstr "Értékesíthető"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_can_be_expensed
-msgid "Can be expensed"
-msgstr "Költségként elszámolható"
-
-#. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form_shipping
+#: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Cancel"
-msgstr "Megszakítás"
+msgstr "Mégsem"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_carrier
-#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_carrier_id
-#: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_id
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
+#: model:ir.model.fields,field_description:delivery.field_product_packaging__package_carrier_type
+#: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_id
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
-msgstr "Fuvarozás"
+msgstr "Fuvarozó"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
-msgid "Carrier Information"
-msgstr "Szállítói információ"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
-msgid "Carrier Tracking Ref"
-msgstr "Fuvarozó hiv."
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_from_categ_ids
-msgid "Category Routes"
-msgstr "Kategória útvonalai"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_membership
-msgid "Check if the product is eligible for membership."
-msgstr "Vizsgálja meg, hogy a termék alkalmas-e a tagsághoz."
-
-#. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
-msgid "Click to define a new delivery method."
-msgstr "Kattintson egy új szállítási mód meghatározásához."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_uos_coeff
-msgid ""
-"Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
-"coeff"
-msgstr "Együttható az alap mértékegységről az értékesítési mértékegységgé konvertáláshoz\n uos = uom * coeff"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_color
-msgid "Color Index"
-msgstr "Szín meghatározó"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_company_id
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__company_id
 msgid "Company"
 msgstr "Vállalat"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Condition"
 msgstr "Feltétel"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_method
-msgid "Control Purchase Bills"
-msgstr "Beszerzések számláinak ellenőrzése"
+#: model:ir.model,name:delivery.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurációs beállítások"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_standard_price
-msgid "Cost"
-msgstr "Költség"
+#: model:ir.model,name:delivery.model_res_partner
+msgid "Contact"
+msgstr "Kapcsolattartó"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_standard_price
-msgid "Cost Price"
-msgstr "Bekerülési érték"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_standard_price
-msgid ""
-"Cost of the product template used for standard stock valuation in accounting"
-" and used as a base price on purchase orders. Expressed in the default unit "
-"of measure of the product."
-msgstr "A termék sablon bekerülési értéke az általános raktárkészlet megállapításhoz a könyvelésben, és mint alap ár a beszerzési megrendeléseknél. A termék mértékegységében feltüntetve."
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_cost_method
-msgid "Costing Method"
-msgstr "Költségszámítási mód"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_country_ids
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__country_ids
 msgid "Countries"
 msgstr "Országok"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_uid
-#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_create_uid
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__create_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__create_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_uid
 msgid "Created by"
-msgstr "Készítette"
+msgstr "Létrehozta"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_date
-#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_create_date
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__create_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__create_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_date
 msgid "Created on"
-msgstr "Létrehozás dátuma"
+msgstr "Létrehozva"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_currency_id
-msgid "Currency"
-msgstr "Valuta"
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
+msgid "Debug logging"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_qty_available
-msgid ""
-"Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr "A termékek jelenlegi mennyisége.\nAz egy raktár hellyel összefüggésben, ez magában foglalja az ezen a helyen és alárendelt helyein tárolt termékeket.\nAz egy teljes raktárépülettel összefüggésben, ez magában foglalja az ebben a Raktárépületben és alárendelt helyein tárolt termékeket.\nTárolva ennek az Üzletnek a Raktárépület raktározási helyén, vagy bármely  alárendelt helyein.\nEgyébként, ez magában foglalja bármely raktár helyen tárolt termékeket, melyek 'belső' típusuak."
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid "Define a new delivery method"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_delay
-msgid "Customer Lead Time"
-msgstr "Vásárlói átfutási idő"
+#: model:product.category,name:delivery.product_category_deliveries
+msgid "Deliveries"
+msgstr "Szállítások"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
-msgid "Customer Taxes"
-msgstr "Vásárlói értékesítést terhelő adók"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
-msgid "Customer ref"
-msgstr "Vevői hivatkozás"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_from
-msgid "Date from which membership becomes active."
-msgstr "Dátum amitől a tagság aktiválódik."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_to
-msgid "Date until which membership remains active."
-msgstr "Dátum ameddig a tagság aktív maradhat."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_id
-msgid "Default Unit of Measure used for all stock operation."
-msgstr "A készletezési műveletekhez használatos alapértelmezett mértékegység."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_po_id
-msgid ""
-"Default Unit of Measure used for purchase orders. It must be in the same "
-"category than the default unit of measure."
-msgstr "A szállítói megrendelésekhez használt alapértelmezett mértékegység. Ugyanabban a kategóriában kell lennie, mint az alapértelmezett mértékegységnek."
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_deferred_revenue_category_id
-msgid "Deferred Revenue Type"
-msgstr "Késleltetett bevétel típus"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_count
 #: model:ir.ui.menu,name:delivery.menu_delivery
-#: model:ir.ui.menu,name:delivery.sale_menu_delivery
 msgid "Delivery"
 msgstr "Szállítás"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
-#: model:ir.model.fields,field_description:delivery.field_sale_order_carrier_id
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Delivery Carrier"
+msgstr "Szállítmány fuvarozó"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+msgid "Delivery Cost"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Delivery Information"
+msgstr "Szállítási információ"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_message
+msgid "Delivery Message"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
+#: model:ir.model.fields,field_description:delivery.field_res_partner__property_delivery_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
 msgid "Delivery Method"
 msgstr "Szállítási mód"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
+#: model:ir.model,name:delivery.model_delivery_carrier
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Delivery Methods"
 msgstr "Szállítás módja"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_choose_delivery_package
+msgid "Delivery Package Selection Wizard"
+msgstr ""
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
+#: model:ir.ui.menu,name:delivery.menu_delivery_packagings
+#: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
+msgid "Delivery Packages"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_packaging_id
+#: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_form
+msgid "Delivery Packaging"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
@@ -412,795 +296,450 @@ msgid "Delivery Price Rules"
 msgstr "Szállítási ár szabályok"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_id
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__product_id
 msgid "Delivery Product"
 msgstr "Szállítási termék"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_route_ids
-msgid ""
-"Depending on the modules installed, this will allow you to define the route "
-"of the product: whether it will be bought, manufactured, MTO/MTS,..."
-msgstr "A telepített moduloktól függően, lehetővé teszi a termék útvonalának meghatásozását: akár vásárolt, gyártott, MTO (Gyártás rendelésre) / MTS (Gyártás értékesítésre), ..."
+#: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_rating_success
+msgid "Delivery Rating Success"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description
-msgid "Description"
-msgstr "Leírás"
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Destination Availability"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_picking
-msgid "Description on Picking"
-msgstr "Kiválogatási leírás"
-
-#. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid "Destination"
-msgstr "Cél"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_event_ok
-msgid ""
-"Determine if a product needs to create automatically an event registration "
-"at the confirmation of a sales order line."
-msgstr "Meghatározza ha a terméknek automatikusan eseményt kell lefoglalnia  a megrendelés sori visszaigazolásra."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_sequence
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
 msgid "Determine the display order"
 msgstr "Megjelenített értékek sorrendjének meghatározása"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
-#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_display_name
-msgid "Display Name"
-msgstr "Név megjelenítése"
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
+msgid "Discard"
+msgstr "Elvetés"
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__display_name
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__display_name
+msgid "Display Name"
+msgstr "Megjelenített név"
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.act_delivery_trackers_url
+msgid "Display tracking links"
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid ""
 "Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
-msgstr "Minden szállítónak (pl. UPS) több különböző szállítási módja van\n (pl. UPS Express, UPS Standard),  szállítási módokhoz kapcsolódó\nárszámítási szabályokkal."
+msgstr ""
+"Minden szállítónak (pl. UPS) több különböző szállítási módja van\n"
+" (pl. UPS Express, UPS Standard),  szállítási módokhoz kapcsolódó\n"
+"árszámítási szabályokkal."
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
+msgid "Environment"
+msgstr "Környezet"
+
+#. module: delivery
+#: code:addons/delivery/models/delivery_carrier.py:217
+#: code:addons/delivery/models/delivery_grid.py:50
+#, python-format
+msgid "Error: this delivery method is not available for this address."
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_price
 msgid "Estimated Delivery Price"
 msgstr "Becsült szállítási költség"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ok
-msgid "Event Subscription"
-msgstr "Eseményre feliratkozás"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ticket_ids
-msgid "Event Tickets"
-msgstr "Jegyek a rendezvényre"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expected_margin
-msgid "Expected Margin"
-msgstr "Elvárt árrés"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expected_margin_rate
-msgid "Expected Margin (%)"
-msgstr "Elvárt árrés (%)"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_expected
-msgid "Expected Sale"
-msgstr "Elvárt árbevétel"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_expected_margin
-msgid "Expected Sale - Normal Cost"
-msgstr "Elvárt árbevétel - számított beszerzési érték"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_sales_gap
-msgid "Expected Sale - Turn Over"
-msgstr "Elvárt árbevétel - tényleges árbevétel"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_expected_margin_rate
-msgid "Expected margin * 100 / Expected Sale"
-msgstr "Elvárt árrés * 100 / Elvárt árbevétel"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_expense_id
-msgid "Expense Account"
-msgstr "Beszerzés főkönyvi számla"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expense_policy
-msgid "Expense Invoice Policy"
-msgstr "Költség számla szabály"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
+#: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr "Töltse ki ezt a mezőt, ha kiválogatási lista alapján számláznak."
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid ""
+"Filling this form allows you to filter delivery carriers according to the "
+"delivery address of your customer."
+msgstr ""
+"Ennek az űrlapnak a kitöltése lehetővé teszi a szállítmány fuvarozójának "
+"szűrését a vásárló szállítási címe alapján."
+
+#. module: delivery
 #: selection:delivery.carrier,delivery_type:0
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_fixed_price
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
 msgid "Fixed Price"
 msgstr "Rögzített ár"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_follower_ids
-msgid "Followers"
-msgstr "Követők"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Követők (Csatornák)"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Követők (Partnerek)"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_virtual_available
-msgid "Forecast Quantity"
-msgstr "Jelezze előre a mennyiséget"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_virtual_available
-msgid ""
-"Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr "Mennyiség előrejelzése (Készlet mennyiség - Kimenő + Bejövő képlet alapján)\nEgy meglévő raktár hellyel összefüggésben, itt beleértve az ezen a raktáron raktározott termékeket, vagy bármely az alaktárain lévőket.\nEgy meglévő raktár épület összefüggésben, itt beleértve az ebben a raktárépületben lévő raktár helyen raktározott termékeket, vagy bármely az alaktárain lévőket.\nEgyéb esetben , beleértve azokat a termékeket, melyek bármely raktár helyen tároltak a 'belső' típussal megjelölve."
-
-#. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
-#: model:product.product,name:delivery.free_delivery_carrier_product_product
+#: model:product.product,name:delivery.product_product_delivery
+#: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
 msgstr "Ingyenes szállítás"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_if_more_than
-msgid "Free if Order total is more than"
-msgstr "Ingyenes, ha a rendelés értéke meghaladja a(z)"
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__free_over
+msgid "Free if order amount is above"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_packaging_ids
-msgid ""
-"Gives the different ways to package the same product. This has no impact on "
-"the picking order and is mainly used if you use the EDI module."
-msgstr "Megadja ugyanazon termék csomagolásának különböző módjait. Nincs hatása a kiválogatási rendre, és nagyrészt csak az elektronikus adatcsere modullal használatos."
+#: selection:delivery.carrier,integration_level:0
+msgid "Get Rate"
+msgstr "Érték igénylés"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_price_rule_sequence
-msgid "Gives the sequence order when calculating delivery carrier."
-msgstr "Sorrendet ad, ha szállító fuvarozót számol."
+#: selection:delivery.carrier,integration_level:0
+msgid "Get Rate and Create Shipment"
+msgstr "Érték igénylése és szállítás létrehozása"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_weight
-msgid "Gross Weight"
-msgstr "Bruttó súly"
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Group By"
+msgstr "Csoportosítás ezzel"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
-#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_id
+#: model:ir.model.fields,field_description:delivery.field_product_packaging__height
+msgid "Height"
+msgstr "Magasság"
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Height must be positive"
+msgstr "Magasságnak pozitívnak kell lennie"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__id
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__id
 msgid "ID"
-msgstr "ID"
+msgstr "Azonosító"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_valuation
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__free_over
 msgid ""
-"If perpetual valuation is enabled for a product, the system will "
-"automatically create journal entries corresponding to stock moves, with "
-"product price as specified by the 'Costing Method'The inventory variation "
-"account set on the product category will represent the current inventory "
-"value, and the stock input and stock output account will hold the "
-"counterpart moves for incoming and outgoing products."
-msgstr "Ha az állandó értékelés be van kapcsolva egy termékre, akkor a rendszer automatikusan naplót bejegyzést hoz létre a készlet mozgások függvényében a 'Költség mód' alapján meghatározott termék ár alapján. termék kategórián beállított készletszámla képviseli a jelenlegi készlet értéket, és a készletnövekedési számla és készletcsökkenési számla hordozza a beérkezett és kiküldött termékek megfelelő mozgásait."
+"If the order total amount (shipping excluded) is above or equal to this "
+"value, the customer benefits from a free shipping"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_free_if_more_than
+#: code:addons/delivery/models/delivery_carrier.py:126
+#, python-format
 msgid ""
-"If the order is more expensive than a certain amount, the customer can "
-"benefit from a free shipping"
-msgstr "Ha megrendelés sokkal többe kerül mint egy megadott érték, a vevő ingyenes szállítást vehet igénybe"
+"Info:\n"
+"The shipping is free because the order amount exceeds %.2f.\n"
+"(The actual shipping cost is: %.2f)"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_active
-msgid ""
-"If unchecked, it will allow you to hide the product without removing it."
-msgstr "Ha nincs bejelölve, akkor eltüntetheti a terméket annak törlése nélkül."
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Install more Providers"
+msgstr "Több szolgáltatót telepítsen"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_expense_policy
-msgid ""
-"If you invoice at cost, the expense will be invoiced on the sale order at "
-"the cost of the analytic line;if you invoice at sales price, the price of "
-"the product will be used instead."
-msgstr "Ha költségre számlát ad ki, a kiadás a vásárlói megrendelésen az értékesítési megbízás gyűjtő/elemző tételsorra létrehozott költség; ha a termék értékesítési árára számláz, akkor helyette a termék listaára kerül felhasználásra."
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__integration_level
+msgid "Integration Level"
+msgstr "Integrációs szint"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_image
-msgid ""
-"Image of the product variant (Big-sized image of product template if false)."
-" It is automatically resized as a 1024x1024px image, with aspect ratio "
-"preserved."
-msgstr "A termék változat képe (Nagy-méretű kép a termék sablonról, ha hamisra állítva). Automatikusan átméretezve 1024x1024px képre, a képarány megtartása mellett."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_image_medium
-msgid ""
-"Image of the product variant (Medium-sized image of product template if "
-"false)."
-msgstr "A termék változat képe (Közepes-méretű kép a termék sablonról, ha hamisra állítva)."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_image_small
-msgid ""
-"Image of the product variant (Small-sized image of product template if "
-"false)."
-msgstr "A termék változat képe (Kis-méretű kép a termék sablonról, ha hamisra állítva)."
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_income_id
-msgid "Income Account"
-msgstr "Árbevétel főkönyvi számla"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_incoming_qty
-msgid "Incoming"
-msgstr "Bejövő"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_categ_id
-msgid "Internal Category"
-msgstr "Belső hivatkozási kategória"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_code
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_default_code
-msgid "Internal Reference"
-msgstr "Belső hivatkozás"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_barcode
-msgid "International Article Number used for product identification."
-msgstr "Nemzetközi cikk szám melyet a termék azonosítására használnak."
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_inventory
-msgid "Inventory Location"
-msgstr "Leltár helye"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_valuation
-msgid "Inventory Valuation"
-msgstr "Készletkönyvelés"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__invoice_shipping_on_delivery
 msgid "Invoice Shipping on Delivery"
 msgstr "Szállítási számla a szállításokra"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_state
-msgid "Invoice State"
-msgstr "Számla állapota"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_policy
-msgid "Invoicing Policy"
-msgstr "Számlázási szabály"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_is_follower
-msgid "Is Follower"
-msgstr "Ő egy követő"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_sale_order_line_is_delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
 msgid "Is a Delivery"
 msgstr "Ez egy szállítás"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_is_product_variant
-msgid "Is a product variant"
-msgstr "Ez egy termék változat"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_fixed_price
-msgid ""
-"Keep empty if the pricing depends on the advanced pricing per destination"
-msgstr "Hagyja üresen ha az ár az előre beírt célállomásonkénti haladó díjszabásától függjön"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_last_post
-msgid "Last Message Date"
-msgstr "Utolsó üzenet dátuma"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier___last_update
-#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule___last_update
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package____last_update
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier____last_update
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule____last_update
 msgid "Last Modified on"
-msgstr "Utolsó frissítés dátuma"
+msgstr "Legutóbb frissítve"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_uid
-#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_write_uid
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__write_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__write_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítve, által"
+msgstr "Legutóbb frissítette"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_date
-#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_write_date
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__write_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__write_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve ekkor"
+msgstr "Legutóbb frissítve "
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_location_id
-msgid "Location"
-msgstr "Helyszín"
+#: model:ir.model.fields,field_description:delivery.field_product_packaging__length
+msgid "Length"
+msgstr "Hossz"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_packaging_ids
-msgid "Logistical Units"
-msgstr "Logosztikai egységek"
+#: sql_constraint:product.packaging:0
+msgid "Length must be positive"
+msgstr "Hosszúságnak pozitívnak kell lennie"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
-msgid "Manufacturing Lead Time"
-msgstr "Gyártási átfutási idő"
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
+msgid "Log requests in order to ease debugging"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_from
-msgid "Margin Date From"
-msgstr "Árrés ettől a dátumtól"
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
+msgid "Margin"
+msgstr "Árrés"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_to
-msgid "Margin Date To"
-msgstr "Árrés eddig a dátumig"
+#: sql_constraint:delivery.carrier:0
+msgid "Margin cannot be lower than -100%"
+msgstr "Árrés nem lehet kisebb mint -100%"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Margin on Rate"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_product_packaging__max_weight
+msgid "Max Weight"
+msgstr "Max súly"
+
+#. module: delivery
+#: sql_constraint:product.packaging:0
+msgid "Max Weight must be positive"
+msgstr "Max súlynak pozitívnak kell lennie"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__max_value
 msgid "Maximum Value"
 msgstr "Maximum érték"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_medium
-msgid "Medium-sized image"
-msgstr "Közepes méretű kép"
+#: model:ir.model.fields,help:delivery.field_product_packaging__max_weight
+msgid "Maximum weight shippable in this packaging"
+msgstr "Maximum szállítható súly ebben a csomagolásban"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership
-msgid "Membership"
-msgstr "Tagság"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership_date_to
-msgid "Membership End Date"
-msgstr "Tagság befejezés dátuma"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership_date_from
-msgid "Membership Start Date"
-msgstr "Tagság kezdő dátum"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_ids
-msgid "Messages"
-msgstr "Üzenetek"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_message_ids
-msgid "Messages and communication history"
-msgstr "Üzenetek és kommunikáció történet"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_orderpoint_ids
-msgid "Minimum Stock Rules"
-msgstr "Minimum készlet szabályok"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name
-#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_name
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Name"
 msgstr "Név"
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:62
-#, python-format
-msgid "No carrier matching."
-msgstr "Nincs hasonló szállítmányozó."
+#: selection:product.packaging,package_carrier_type:0
+msgid "No carrier integration"
+msgstr "Nincs szállítmányozó integrálva"
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:70
+#: code:addons/delivery/models/sale_order.py:80
 #, python-format
 msgid "No carrier set for this order."
 msgstr "Nincs szállítmányozó beállítva a rendeléshez"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_normal_cost
-msgid "Normal Cost"
-msgstr "Számított beszerzési érték"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_gap
-msgid "Normal Cost - Total Cost"
-msgstr "Számított beszerzési érték - tényleges beszerzési érték"
+#: code:addons/delivery/models/delivery_grid.py:102
+#, python-format
+msgid "No price rule matching this order; delivery cost cannot be computed."
+msgstr ""
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
-#: model:product.product,name:delivery.normal_delivery_carrier_product_product
+#: model:product.product,name:delivery.product_product_delivery_normal
+#: model:product.template,name:delivery.product_product_delivery_normal_product_template
 msgid "Normal Delivery Charges"
 msgstr "Normál szállítási költségek"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Műveletek száma"
+#: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
+msgid "OK"
+msgstr "Ok"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
-msgid "Number of Packages"
-msgstr "Csomagok száma"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Olvasatlan üzenetek száma"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_operator
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
 msgid "Operator"
 msgstr "Operátor"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_outgoing_qty
-msgid "Outgoing"
-msgstr "Kimenő"
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
+msgid "Package"
+msgstr "Csomag"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
+#: model:ir.model.fields,field_description:delivery.field_product_packaging__shipper_package_code
+msgid "Package Code"
+msgstr "Csomag kód"
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:35
+#: code:addons/delivery/models/stock_picking.py:122
+#, python-format
+msgid "Package Details"
+msgstr "Csomag részletei"
+
+#. module: delivery
+#: code:addons/delivery/wizard/choose_delivery_package.py:52
+#, python-format
+msgid "Package too heavy!"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_quant_package
+#: model:ir.model.fields,field_description:delivery.field_stock_picking__package_ids
 msgid "Packages"
 msgstr "Csomagok"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_res_partner
-msgid "Partner"
-msgstr "Partner"
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__stock_quant_package_id
+msgid "Physical Package"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_stock_quant_package
-msgid "Physical Packages"
-msgstr "Fizikai csomagok"
+#: code:addons/delivery/models/sale_order.py:82
+#, python-format
+msgid ""
+"Please use \"Check price\" in order to compute a shipping price for this "
+"quotation."
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price
 msgid "Price"
-msgstr "Érték"
+msgstr "Ár"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_type
-#: model:ir.model.fields,field_description:delivery.field_stock_picking_delivery_type
-msgid "Price Computation"
-msgstr "Ár számítása"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_creditor_price_difference
-msgid "Price Difference Account"
-msgstr "Árkülönbözet számla"
-
-#. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
-#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Price Rules"
 msgstr "Ár szabályok"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_id
-msgid "Pricelist"
-msgstr "Árlista"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_item_ids
-msgid "Pricelist Items"
-msgstr "Árlista elemek"
-
-#. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Pricing"
 msgstr "Árképzés"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_rule_ids
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
 msgid "Pricing Rules"
 msgstr "Árazási szabályok"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_procurement
-msgid "Procurement Location"
-msgstr "Beszerzési hely"
+#: model:ir.model,name:delivery.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_alert_time
-msgid "Product Alert Time"
-msgstr "Termék riasztási idő"
+#: model:ir.model,name:delivery.model_product_packaging
+msgid "Product Packaging"
+msgstr "Termék csomagolás"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_line_ids
-msgid "Product Attributes"
-msgstr "Termék tulajdonságok"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_email_template_id
-msgid "Product Email Template"
-msgstr "Termék Email sablon"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_life_time
-msgid "Product Life Time"
-msgstr "Termék élettartama"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_manager
-msgid "Product Manager"
-msgstr "Termékmenedzser"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_removal_time
-msgid "Product Removal Time"
-msgstr "Termék eltávolításának ideje"
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_product_template
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_tmpl_id
-msgid "Product Template"
-msgstr "Terméksablon"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_type
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_type
-msgid "Product Type"
-msgstr "Terméktípus"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_use_time
-msgid "Product Use Time"
-msgstr "Termék használati ideje"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_production
-msgid "Production Location"
-msgstr "Gyártási hely"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_ids
-msgid "Products"
-msgstr "Termékek"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_purchase
-msgid "Purchase Description"
-msgstr "Megrendelési leírás"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_gap
-msgid "Purchase Gap"
-msgstr "Beszerzési különbözet"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_po_id
-msgid "Purchase Unit of Measure"
-msgstr "Beszerzés mértékegysége"
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_type
+#: model:ir.model.fields,field_description:delivery.field_stock_picking__delivery_type
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Provider"
+msgstr "Szolgáltató"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
 msgid "Quantity"
 msgstr "Mennyiség"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_qty_available
-msgid "Quantity On Hand"
-msgstr "Aktuális mennyiség"
+#: model:ir.model,name:delivery.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Visszáruzás"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_incoming_qty
-msgid ""
-"Quantity of products that are planned to arrive.\n"
-"In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
-msgstr "Termék mennyisége a tervezett beérkezés szerint.\nEgy raktározási hely vonatkozásában, beleértve a raktárhelyre beérkező termékeket, vagy bármely al-helyre.\nEgy raktárépület vonatkozásában,,beleértve a raktárépület raktárhelyére beérkező termékeket,  vagy bármely al-helyre.\nEgyébként, beleértve a beérkező termékeket bármely raktár helyre, mely 'belső' típusú."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_outgoing_qty
-msgid ""
-"Quantity of products that are planned to leave.\n"
-"In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods leaving any Stock Location with 'internal' type."
-msgstr "Tervszerűen távozó termékek mennyisége.\nEgy raktár hely vonatkozásában, magában foglalja az erről a helyről, és bármely al-helyeiről, távozó termékeket.\nEgy raktárépület vonatkozásában, magában foglalja az erről a raktárépület raktár helyéről, és bármely al-helyeiről, távozó termékeket.\nEgyébként, magában foglalja azokat az eltávozó termékeket, melyek bármely raktár helyen 'belső' típusúak."
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reception_count
-msgid "Receipt"
-msgstr "Bevétel"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
-msgid "Reordering Rules"
-msgstr "Újrarendelési szabályok"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
-msgid "Routes"
-msgstr "Útvonalak"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_base_price
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
 msgid "Sale Base Price"
 msgstr "Alap eladási ár"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_sale
-msgid "Sale Description"
-msgstr "Értékesítési leírás"
+#: model:ir.model,name:delivery.model_sale_order
+msgid "Sale Order"
+msgstr "Vásárlói megrendelés"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_list_price
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_lst_price
-#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_price
-#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
-#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_price
 msgid "Sale Price"
 msgstr "Eladási ár"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sales_gap
-msgid "Sales Gap"
-msgstr "Árbevétel különbözet"
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_sale_order
-msgid "Sales Order"
-msgstr "Vevői megrendelés"
-
-#. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Vevői megrendelés sor"
+msgstr "Vásárlói megrendelés tételsor"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_categ_id
-msgid "Select category for the current product"
-msgstr "Válasszon ki egy kategóriát az aktuális termékhez."
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
+msgid "Save"
+msgstr "Mentés"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_event_type_id
-msgid ""
-"Select event types so when we use this product in sales order lines, it will"
-" filter events of this type only."
-msgstr "Válasszon esemény típust így ennek a terméknek a megrendelési sorokon való használatakor, csak ezeket az eseményeket fogja szűrni."
+#: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+msgid "Send Confirmation Email"
+msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/delivery_carrier.py:250
-#, python-format
-msgid ""
-"Selected product in the delivery method doesn't fulfill any of the delivery "
-"carrier(s) criteria."
-msgstr "A kiválasztott termék a szállítási módban nem teljesíti a szállítási útvonal(ak) kritériumait."
-
-#. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send to Shipper"
 msgstr "Szállítmányozóknak elküld"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sequence
-#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_sequence
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__sequence
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__sequence
 msgid "Sequence"
 msgstr "Sorszám"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
-msgid "Set price"
-msgstr "Ár beállítása"
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
+msgid "Set to True if your credentials are certified for production."
+msgstr ""
+"Állítsa Igaz -ra, ha a megbízottak a gyártásra minősítéssel rendelkeznek."
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:88
-#, python-format
-msgid "Shipment sent to carrier %s for expedition with tracking number %s"
-msgstr "Szállítmány %s szállítmányozónak elküldve teljesítésre ezzel a nyomkövetési számmal %s"
-
-#. module: delivery
-#: code:addons/delivery/models/stock_picking.py:106
+#: code:addons/delivery/models/stock_picking.py:171
 #, python-format
 msgid ""
-"Your delivery method has no redirect on courier provider's website to track "
-"this order."
-msgstr "Szállítási módját nem továbbított a szállító  szolgáltatói weboldalára a vásárlói megrendelés nyomonkövetéséhez."
+"Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
+"%.2f %s"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
+#: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
 msgid "Shipping Cost"
 msgstr "Szállítási költség"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_shipping_enabled
-msgid "Shipping enabled"
-msgstr "Szállítás engedélyezve"
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__shipping_weight
+#: model:ir.model.fields,field_description:delivery.field_stock_quant_package__shipping_weight
+msgid "Shipping Weight"
+msgstr "Szállítmány súlya"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
-msgid "Small-sized image"
-msgstr "Kis méretű ábra"
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
+msgid "Shipping Weight:"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_uos_id
-msgid ""
-"Specify a unit of measure here if invoicing is made in another unit of "
-"measure than inventory. Keep empty to use the default unit of measure."
-msgstr "Határozza meg itt a mérték egységét ha a számlázást a leltárban lévőtől eltérő mérték egységben szeretné meghatározni. Hagyja üresen, ha az alapértelmezett mértékegységet használja."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_product_sale_ok
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_ok
-msgid "Specify if the product can be selected in a sales order line."
-msgstr "Határozza meg, ha terméket a megrendelésből is ki lehet választani."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_can_be_expensed
-msgid "Specify whether the product can be selected in an HR expense."
-msgstr "Pontosítsa, vajon a termék választható egy emberi erőforrás készpénzes kiadási tételsorának."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_cost_method
-msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
-"                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
-"                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
-msgstr "Alapár: Az alapárat kézzel frissíti egy megadott időtartam végén (általában évenként).\n                    Átlagár: A bekerülési értéket újraszámolja minden egyes bejövő szállítmányhoz és ezt használja a termék értékelésnél.\n                    Tényleges ár: A kijelzett bekerülési érték  az utoljára kiküldött áru értéke (ezt használja, ha készlethiány van például)."
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
 msgid "States"
 msgstr "Állapotok"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state
-msgid "Status"
-msgstr "Állapot"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_input
-msgid "Stock Input Account"
-msgstr "Készletnövekedés főkönyvi számla"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -1208,180 +747,68 @@ msgid "Stock Move"
 msgstr "Készletmozgás"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_output
-msgid "Stock Output Account"
-msgstr "Készletcsökkenés főkönyvi számla"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_normal_cost
-msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
-msgstr "A többszörös bekerülési ár és a beszállítói számlák összegének mennyisége"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_turnover
-msgid ""
-"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
-msgstr "A többszörös számlázás összege és a vevő számlák mennyisége"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_total_cost
-msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
-msgstr "A többszörös számlázási ár és a beszállítói számlák összegének mennyisége"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_expected
-msgid ""
-"Sum of Multiplication of Sale Catalog price and quantity of Customer "
-"Invoices"
-msgstr "A többszörös eladói katalógus ár és a vevő számlák mennyisége"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_num_invoiced
-msgid "Sum of Quantity in Customer Invoices"
-msgstr "Összes mennyiség a kimenő számlákban"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_num_invoiced
-msgid "Sum of Quantity in Vendor Bills"
-msgstr "Összes mennyiség a beszállítói számlákban"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name_template
-msgid "Template Name"
-msgstr "Sablonnév"
-
-#. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
-#: model:product.product,name:delivery.delivery_carrier_product_product
+#: model:product.product,name:delivery.product_product_delivery_poste
+#: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"
 msgstr "A posta"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
-msgid ""
-"The average delay in days between the confirmation of the customer order and"
-" the delivery of the finished products. It's the time you promise to your "
-"customers."
-msgstr "Az átlag késés napokban a megrendelő felé történt visszaigazolás dátuma és az elkészült termék kiszállítása közti idő. Ez az idő amit megígér a vevőinek."
-
-#. module: delivery
-#: code:addons/delivery/models/sale_order.py:53
+#: code:addons/delivery/wizard/choose_delivery_package.py:53
 #, python-format
-msgid "The order state have to be draft to add delivery lines."
-msgstr "A megrendelésnek tervezet állapotban kell lenni ahhoz, hogy a szállítási díj sort létre lehessen hozni benne."
+msgid ""
+"The weight of your package is higher than the maximum weight authorized for "
+"this package type. Please choose another package type."
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_partner_id
-msgid "The partner that is doing the delivery service."
-msgstr "A partner aki a szállítást biztosítja."
+#: code:addons/delivery/models/delivery_grid.py:111
+#, python-format
+msgid "There is no matching delivery rule."
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_volume
-msgid "The volume in m3."
-msgstr "A térfogat köbméterben."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_weight
-msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr "A konténer súlya kg-ban, csomagolás nélkül, stb."
-
-#. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid ""
 "These methods allow to automatically compute the delivery price\n"
 "                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders)."
-msgstr "Ez a mód lehetővé teszi a szállítási ár automatikus kiszámítását\n                a beállításai alapján; a vásárlói megrendeléseken (az árajánlat\n                alapján) vagy a számlákon (a szállítási megbízások /szállítólevelek alapján)."
+msgstr ""
+"Ez a mód lehetővé teszi a szállítási ár automatikus kiszámítását\n"
+"                a beállításai alapján; a vásárlói megrendeléseken (az árajánlat\n"
+"                alapján) vagy a számlákon (a szállítási megbízások /szállítólevelek alapján)."
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_expense_id
-msgid ""
-"This account will be used for invoices instead of the default one to value "
-"expenses for the current product."
-msgstr "A rendszer az alapértelmezett helyett ezt a számlát fogja használni a költségek értékeinek a jelenlegi terméken."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_income_id
-msgid ""
-"This account will be used for invoices instead of the default one to value "
-"sales for the current product."
-msgstr "A rendszer az alapértelmezett helyett ezt a számlát fogja használni az értékesítések értékeinek a jelenlegi terméken."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_creditor_price_difference
-msgid ""
-"This account will be used to value price difference between purchase price "
-"and cost price."
-msgstr "Ez a főkönyvi számla szolgál a tényleges bekerülési érték és a nyilvántartási ár (elszámoló ár) közötti árkülönbözet könyvelésére."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_res_partner_property_delivery_carrier_id
+#: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
-msgstr "Ez a szállítási mód lesz használva, ha kiválogatási lista alapján számláznak."
+msgstr ""
+"Ez a szállítási mód lesz használva, ha kiválogatási lista alapján "
+"számláznak."
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_image_variant
-msgid ""
-"This field holds the image used as image for the product variant, limited to"
-" 1024x1024px."
-msgstr "Ez a mező tartalmazza a termék variációra vonatkozó képet, lehatárolva 1024x1024px méretre."
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
+msgid "This percentage will be added to the shipping price."
+msgstr "Ez a százalék adódik hozzá a szállítási árhoz."
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_price_extra
-msgid "This is the sum of the extra price of all attributes"
-msgstr "Ez a többlet költségek árainak összege, az összes kiegészítő jellemzőkre vonatkozólag"
+#: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
+msgid "Trackers URL"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_production
-msgid ""
-"This stock location will be used, instead of the default one, as the source "
-"location for stock moves generated by manufacturing orders."
-msgstr "Ez a raktár termékhely lesz használva, az alapértelmezett helyett, ha a forrás termékhelyet a raktár mozgásokhoz a gyártási megrendelések generálták."
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_procurement
-msgid ""
-"This stock location will be used, instead of the default one, as the source "
-"location for stock moves generated by procurements."
-msgstr "Ez a raktárhely lesz használva, az alapértelmezett helyett, mint forrás hely a beszerzés által létrehozott készlet mozgásnál"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_inventory
-msgid ""
-"This stock location will be used, instead of the default one, as the source "
-"location for stock moves generated when you do an inventory."
-msgstr "Ez a raktár termékhely lesz használva, az alapértelmezett helyett, mint forrás termékhely amikor készlet készítéskor raktár mozgás lesz létrehozva."
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_cost
-msgid "Total Cost"
-msgstr "Összes költség"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_margin
-msgid "Total Margin"
-msgstr "Összes árrés"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_margin_rate
-msgid "Total Margin Rate(%)"
-msgstr "Teljes árrés aránya(%)"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_total_margin_rate
-msgid "Total margin * 100 / Turnover"
-msgstr "Összes árrés * 100 / tényleges árbevétel"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_track_service
-msgid "Track Service"
-msgstr "Kamion szolgáltatás"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_tracking
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Tracking"
 msgstr "Nyomonkövetés"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_tracking_ref
+msgid "Tracking Reference"
+msgstr "Nyomon-követési hivatkozás"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_tracking_url
+msgid "Tracking URL"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1389,125 +816,49 @@ msgid "Transfer"
 msgstr "Átvitel"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_id
-msgid "Transporter Company"
-msgstr "Szállítmányozó vállalat"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_turnover
-msgid "Turnover"
-msgstr "Tényleges árbevétel"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_total_margin
-msgid "Turnover - Standard price"
-msgstr "Tényleges árbevétel - alapár"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_type_id
-msgid "Type of Event"
-msgstr "Esemény típusa"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_shipping_enabled
-msgid ""
-"Uncheck this box to disable package shipping while validating Delivery "
-"Orders"
-msgstr "Hagyja jelöletlenül ezt a négyzetet a csomagolt szállítás kikapcsolásához a szállítási megbízások / szállítólevelek érvényesítésekor"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_id
-#: model:ir.model.fields,field_description:delivery.field_stock_move_weight_uom_id
-#: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_uom_id
+#: model:ir.model.fields,field_description:delivery.field_stock_picking__weight_uom_id
 msgid "Unit of Measure"
 msgstr "Mértékegység"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_stock_move_weight_uom_id
-msgid ""
-"Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr "Mérték egysége (Mértékegység) a súly mértékegysége"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uos_coeff
-msgid "Unit of Measure -> UOS Coeff"
-msgstr "Mértékegység -> Eladási egység együttható"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uos_id
-msgid "Unit of Sale"
-msgstr "Eladási egység"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_stock_picking_weight_uom_id
+#: model:ir.model.fields,help:delivery.field_stock_picking__weight_uom_id
 msgid "Unit of measurement for Weight"
 msgstr "A súly mértékegysége"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread
-msgid "Unread Messages"
-msgstr "Olvasatlan üzenetek"
+#: model:product.product,uom_name:delivery.product_product_delivery
+#: model:product.product,uom_name:delivery.product_product_delivery_normal
+#: model:product.product,uom_name:delivery.product_product_delivery_poste
+#: model:product.template,uom_name:delivery.product_product_delivery_normal_product_template
+#: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
+#: model:product.template,uom_name:delivery.product_product_delivery_product_template
+msgid "Unit(s)"
+msgstr "Egység(ek)"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Olvasatlan üzenetek számlálója"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable
 msgid "Variable"
 msgstr "Változó"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable_factor
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable_factor
 msgid "Variable Factor"
 msgstr "Változó tényező"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_extra
-msgid "Variant Extra Price"
-msgstr "Termékváltozat felár"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_variant
-msgid "Variant Image"
-msgstr "Termékváltozat kép"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
-msgid "Vendor"
-msgstr "Beszállító"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
-msgid "Vendor Taxes"
-msgstr "Beszálító adói"
-
-#. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_volume
-#: model:ir.model.fields,field_description:delivery.field_stock_picking_volume
+#: model:ir.model.fields,field_description:delivery.field_stock_picking__volume
 msgid "Volume"
 msgstr "Térfogat"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_warehouse_id
-msgid "Warehouse"
-msgstr "Raktár"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_warranty
-msgid "Warranty"
-msgstr "Garancia"
-
-#. module: delivery
 #: selection:delivery.price.rule,variable:0
 #: selection:delivery.price.rule,variable_factor:0
-#: model:ir.model.fields,field_description:delivery.field_stock_move_weight
-#: model:ir.model.fields,field_description:delivery.field_stock_picking_weight
-#: model:ir.model.fields,field_description:delivery.field_stock_quant_package_weight
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+#: model:ir.model.fields,field_description:delivery.field_stock_move__weight
+#: model:ir.model.fields,field_description:delivery.field_stock_picking__weight
+#: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight
+#: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Weight"
 msgstr "Súly"
 
@@ -1518,78 +869,88 @@ msgid "Weight * Volume"
 msgstr "Súly * térfogat"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_alert_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr "Ha egy új széria számot bocsát ki, akkor ez a napok számát jelzi, amielőtt egy vészjelzést ki kell adni."
+#: model:ir.model.fields,help:delivery.field_stock_quant_package__weight
+msgid "Weight computed based on the sum of the weights of the products."
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_life_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr "Ha egy szériaszám hozzáadásra került, akkor ez a szám annak a napoknak a száma mielőtt a termék fogyaszthatatlanná válik és veszélyes lesz."
+#: model:ir.model.fields,field_description:delivery.field_stock_picking__shipping_weight
+msgid "Weight for Shipping"
+msgstr "Mérés a szállításhoz"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_removal_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr "Ha egy új széria számot bocsát ki, akkor ez a napok számát jelzi, amielőtt a terméket ki kell vonni a raktárból."
+#: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
+msgid "Weight used to compute the price of the delivery (if applicable)."
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_use_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr "Ha egy új széria számot bocsát ki, akkor ez a napok számát jelzi, amielőtt a termék romlásnak indulna, de még nem veszélyes."
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
+msgid "Weight:"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_input
-msgid ""
-"When doing real-time inventory valuation, counterpart journal items for all "
-"incoming stock moves will be posted in this account, unless there is a "
-"specific valuation account set on the source location. When not set on the "
-"product, the one from the product category is used."
-msgstr "Ha valós-idejű készletkönyvelést végez, az összes készletnövelő mozgás ellenszámla napló tételei erre a számlára lesznek mozgatva, hacsak nem lett a forrás helyre jellemző készletkönyvelési számla beállítva. Ez az ebbe a kategóriába tartozó minden termék alapértéke. Ezt minden egyes termékre egyesével be lehet állítani."
+#: model:ir.model.fields,field_description:delivery.field_product_packaging__width
+msgid "Width"
+msgstr "Szélesség"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_output
-msgid ""
-"When doing real-time inventory valuation, counterpart journal items for all "
-"outgoing stock moves will be posted in this account, unless there is a "
-"specific valuation account set on the destination location. When not set on "
-"the product, the one from the product category is used."
-msgstr "Valós idejű készletkönyvelés alkalmazása esetén minden készletcsökkenés az ellenszámla naplózott tételein ide lesznek könyvelve, hacsak nem egy erre a célra létrehozott könyvelési számla nincs beállítva a célállomás termékhelyen. Ha nincs beállítva a termékre, akkor a termék kategóriára vonatkozó lesz használva."
+#: sql_constraint:product.packaging:0
+msgid "Width must be positive"
+msgstr "Szélességnek pozitívnak kell lennie"
 
 #. module: delivery
-#: model:ir.model.fields,help:delivery.field_delivery_carrier_email_template_id
+#: code:addons/delivery/models/stock_picking.py:222
+#, python-format
 msgid ""
-"When validating an invoice, an email will be sent to the customer based on "
-"this template. The customer will receive an email for each product linked to"
-" an email template."
-msgstr "Ha egy számla jóváhagyásra kerül, egy emailt kerül kiküldésre a vásárló részére ennek a sablonnak az alapján. Az ügyfél azokról a termékekről kap emailt, melyek egy email sablonhoz tartoznak."
+"You are shipping different packaging types in the same shipment.\n"
+"Packaging Types: %s"
+msgstr ""
+"Különböző csomag típusokat szállít ugyanabban a szállítmányban.\n"
+"Csomag típusok: %s"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from
+#: code:addons/delivery/models/sale_order.py:78
+#, python-format
+msgid "You can add delivery price only on unconfirmed quotations."
+msgstr ""
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
+msgid "You have multiple tracker links, they are available in the chatter."
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/stock_picking.py:185
+#, python-format
+msgid ""
+"Your delivery method has no redirect on courier provider's website to track "
+"this order."
+msgstr ""
+"Szállítási módját nem továbbított a szállító  szolgáltatói weboldalára a "
+"vásárlói megrendelés nyomonkövetéséhez."
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_from
 msgid "Zip From"
 msgstr "Feladó irányítószám"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_to
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_to
 msgid "Zip To"
 msgstr "Lerakó irányítószám"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
 msgstr "pl. UPS Expressz"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_cost_method
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_min_qty
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
-msgid "unknown"
-msgstr "ismeretlen"
+#: model:product.product,weight_uom_name:delivery.product_product_delivery
+#: model:product.product,weight_uom_name:delivery.product_product_delivery_normal
+#: model:product.product,weight_uom_name:delivery.product_product_delivery_poste
+#: model:product.template,weight_uom_name:delivery.product_product_delivery_normal_product_template
+#: model:product.template,weight_uom_name:delivery.product_product_delivery_poste_product_template
+#: model:product.template,weight_uom_name:delivery.product_product_delivery_product_template
+msgid "kg"
+msgstr "kg"

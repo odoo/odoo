@@ -1,17 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="website.contentMenu.dialog.submenu">
     <li t-att-data-menu-id="submenu.id">
         <div class="input-group">
-            <span class="input-group-addon fa fa-bars"/>
+            <div class="input-group-prepend">
+                <span class="input-group-text fa fa-bars" role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
+            </div>
             <span class="form-control">
                 <span class="js_menu_label">
                     <t t-esc="submenu.name"/>
                 </span>
-                <i class="pull-right fa fa-home" style="margin-top: 3px"/>
+                <i t-if="submenu.is_homepage" class="float-right fa fa-home" style="margin-top: 3px" role="img" aria-label="Home" title="Home"/>
             </span>
-            <span class="input-group-btn">
-                <button type="button" class="btn btn-primary js_edit_menu fa fa-pencil-square-o"/>
-                <button type="button" class="btn btn-danger js_delete_menu fa fa-trash-o"/>
+            <span class="input-group-append">
+                <button type="button" class="btn btn-primary js_edit_menu fa fa-pencil-square-o" aria-label="Edit menu" title="Edit menu"/>
+                <button type="button" class="btn btn-danger js_delete_menu fa fa-trash-o" aria-label="Delete menu" title="Delete menu"/>
             </span>
         </div>
         <t t-set="children" t-value="submenu.children"/>
@@ -22,52 +25,36 @@
         </ul>
     </li>
 </t>
-<t t-name="website.contentMenu.dialog.select">
-    <t t-call="web_editor.dialog">
-        <t t-set="title">Select a Menu</t>
-        <t t-set="button">Continue</t>
-        <select class="form-control mb16" t-if="widget.roots">
-            <t t-foreach="widget.roots" t-as="root">
-                <option t-att-value="root.id"><t t-esc="root.name"/></option>
-            </t>
-        </select>
-    </t>
-</t>
-<t t-name="website.contentMenu.dialog.edit">
-    <t t-call="web_editor.dialog">
-        <t t-set="title">Edit Menu</t>
-        <select class="form-control mb16" t-if="widget.roots">
-            <t t-foreach="widget.roots" t-as="root">
-                <option t-att-value="root.id"><t t-esc="root.name"/></option>
-            </t>
-        </select>
-        <ul class="oe_menu_editor list-unstyled">
-            <t t-foreach="widget.menu.children" t-as="submenu">
-                <t t-call="website.contentMenu.dialog.submenu"/>
-            </t>
-        </ul>
-        <div class="mt16">
-            <div class="pull-right text-muted">
-                Drag a menu to the right to create a sub-menu
-            </div>
-            <div>
-                <a href="#" class="js_add_menu">
-                    <i class="fa fa-plus-circle"/> Add Menu Entry
-                </a>
-            </div>
-        </div>
-    </t>
-</t>
-<t t-name="website.contentMenu.dialog.add" t-extend="web_editor.dialog.link">
-    <t t-jquery="t[t-set='title']" t-operation="inner">
-        <t t-if="!widget.update_mode">Add Menu Entry</t>
-        <t t-if="widget.update_mode">Edit Menu Entry</t>
-    </t>
-    <t t-jquery="form > div.form-horizontal" t-operation="replace"/>
-    <t t-jquery="form > div.list-group:first label" t-operation="replace">
-        <label for="link-new" class="control-label">
-            Menu Label
-        </label>
-    </t>
+<div t-name="website.contentMenu.dialog.select">
+    <select class="form-control mb16" t-if="widget.roots">
+        <t t-foreach="widget.roots" t-as="root">
+            <option t-att-value="root.id"><t t-esc="root.name"/></option>
+        </t>
+    </select>
+</div>
+<div t-name="website.contentMenu.dialog.edit">
+    <select class="form-control mb16" t-if="widget.roots">
+        <t t-foreach="widget.roots" t-as="root">
+            <option t-att-value="root.id"><t t-esc="root.name"/></option>
+        </t>
+    </select>
+    <ul class="oe_menu_editor list-unstyled">
+        <t t-foreach="widget.menu.children" t-as="submenu">
+            <t t-call="website.contentMenu.dialog.submenu"/>
+        </t>
+    </ul>
+    <div class="mt32">
+        <small class="float-right text-muted">
+            Drag a menu to the right to create a sub-menu
+        </small>
+        <a href="#" class="js_add_menu">
+            <i class="fa fa-plus-circle"/> Add Menu Entry
+        </a>
+    </div>
+</div>
+<t t-name="website.contentMenu.dialog.edit.link_menu_hint">
+    <small class="text-muted">
+        Hint: Simply type '#' to create a container menu
+    </small>
 </t>
 </templates>

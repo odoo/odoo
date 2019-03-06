@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="account_invoice_send_inherit_account_wizard_form">
+            <field name="name">account.invoice.send.form.inherited.snailmail</field>
+            <field name="model">account.invoice.send</field>
+            <field name="inherit_id" ref="account.account_invoice_send_wizard_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='option_email']" position='before'>
+                    <div name="option_letter">
+                        <field name="letter_ids" invisible="1"/>
+                        <div name="option" class="text-left d-inline-block">
+                            <field name="snailmail_is_letter" />
+                            <b><label for="snailmail_is_letter"/></b>
+                        </div>
+                        <div class="text-left d-inline-block mr8" name='cost' attrs="{'invisible': [('snailmail_is_letter','=', False)]}">
+                            <b>(
+                                <span>
+                                    <field name="snailmail_cost" options="{'digits':[0,0]}" class="mr4"/>
+                                    <label for="snailmail_cost" class="mr4"/>
+                                </span>
+                                <i class="fa fa-info-circle" role="img" aria-label="Warning" title="
+                                The letter will be sent using the IAP service from Odoo.&#10;Make sure you have enough credits on your account or proceed to a recharge.&#10;The price is estimated based on 1 page per document.
+                                "/>
+                            )</b>
+                        </div>
+                        <div class="text-right text-muted d-inline-block" name="address" attrs="{'invisible': ['|', ('composition_mode', '=', 'mass_mail'), ('snailmail_is_letter','=', False)]}">
+                            <span> to: </span>
+                            <field name="partner_id" readonly="1" force_save="1" context="{'show_address': 1, 'address_inline': 1}" options="{'always_reload': True, 'no_quick_create': True}"/>
+                        </div>
+                    </div>
+                </xpath>
+                <xpath expr="//footer/button[hasclass('send_and_print')]" position='attributes'>
+                    <attribute name="attrs">{'invisible': ['|', ('is_print', '=', False), '&amp;', '&amp;', ('is_print', '=', True), ('snailmail_is_letter', '=', False), ('is_email', '=', False)]}</attribute>
+                </xpath>
+                <xpath expr="//footer/button[hasclass('send')]" position='attributes'>
+                    <attribute name="attrs">{'invisible': ['|', ('is_print', '=', True), '&amp;', '&amp;', ('is_print', '=', False), ('snailmail_is_letter', '=', False), ('is_email', '=', False)]}</attribute>
+                </xpath>
+                <xpath expr="//footer/button[hasclass('print')]" position='attributes'>
+                    <attribute name="attrs">{'invisible': ['|', '|', ('is_print', '=', False), ('snailmail_is_letter', '=', True), ('is_email', '=', True)]}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

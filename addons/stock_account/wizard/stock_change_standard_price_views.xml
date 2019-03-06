@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_change_standard_price" model="ir.ui.view">
+            <field name="name">Change Standard Price</field>
+            <field name="model">stock.change.standard.price</field>
+            <field name="arch" type="xml">
+              <form string="Change Standard Price">
+                  <separator string="Change Price"/>
+                  <field name="counterpart_account_id_required" invisible="1"/>
+                  <group>
+                      <group>
+                          <field name="new_price" string="Cost"/>
+                      </group>
+                      <group>
+                          <field name="counterpart_account_id"
+                              attrs="{'invisible': [('counterpart_account_id_required', '=', False)], 'required': [('counterpart_account_id_required', '=', True)]}"/>
+                      </group>
+                  </group>
+                  <footer>
+                      <button name="change_price" string="_Apply" type="object" class="btn-primary"/>
+                      <button string="Cancel" class="btn-secondary" special="cancel" />
+                  </footer>
+              </form>
+            </field>
+        </record>
+
+        <record id="action_view_change_standard_price" model="ir.actions.act_window">
+            <field name="name">Change Standard Price</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.change.standard.price</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_change_standard_price"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!--
+        @param {mail.ThreadWindow} widget
+    -->
+    <t t-name="mail.ThreadWindow" t-extend="mail.AbstractThreadWindow">
+        <t t-jquery=".o_thread_window_header" t-operation="after">
+            <div t-if="!widget.hasThread()" class="o_thread_search_input">
+                <span> To: </span>
+                <input type="text" placeholder="User name"/>
+            </div>
+        </t>
+    </t>
+
+    <!--
+        @param {string} expandTitle text to display on mouse hover (title attribute)
+    -->
+    <t t-extend="mail.AbstractThreadWindow.HeaderContent">
+        <t t-jquery=".o_thread_window_buttons" t-operation="prepend">
+            <a href="#" class="o_thread_window_expand fa fa-expand" t-att-title="expandTitle" t-att-aria-label="expandTitle"/>
+        </t>
+    </t>
+
+</templates>

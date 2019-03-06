@@ -3,14 +3,16 @@
 
 from lxml import etree
 
-from openerp import models, api
-from openerp.tools.translate import encode, xml_translate, html_translate
+from odoo import models, api
+from odoo.tools.translate import encode, xml_translate, html_translate
+
 
 def edit_translation_mapping(data):
     data = dict(data, model=data['name'].partition(',')[0])
     return '<span data-oe-model="%(model)s" data-oe-translation-id="%(id)s" data-oe-translation-state="%(state)s">%(value)s</span>' % data
 
-class ir_translation(models.Model):
+
+class IrTranslation(models.Model):
     _inherit = 'ir.translation'
 
     @api.model
@@ -18,14 +20,14 @@ class ir_translation(models.Model):
         if self._context.get('edit_translations'):
             self.insert_missing(field, records)
             return edit_translation_mapping
-        return super(ir_translation, self)._get_terms_mapping(field, records)
+        return super(IrTranslation, self)._get_terms_mapping(field, records)
 
     @api.multi
     def save_html(self, value):
         """ Convert the HTML fragment ``value`` to XML if necessary, and write
         it as the value of translation ``self``.
         """
-        assert len(self) == 1 and self.type == 'model'
+        assert len(self) == 1 and self.type == 'model_terms'
         mname, fname = self.name.split(',')
         field = self.env[mname]._fields[fname]
         if field.translate == xml_translate:

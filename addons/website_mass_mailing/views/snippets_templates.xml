@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="remove_external_snippets" inherit_id="website.external_snippets">
+    <xpath expr="//t[@t-install='mass_mailing']" position="replace"/>
+</template>
+
+<template id="snippets" inherit_id="website.snippets">
+    <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
+        <t groups="website_mass_mailing.group_website_popup_on_exit">
+            <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" t-thumbnail="/website_mass_mailing/static/src/img/blocks/newsletter_subscribe_popup.png"/>
+        </t>
+    </xpath>
+
+    <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
+        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.png"/>
+    </xpath>
+</template>
+
+<template id="s_newsletter_subscribe_form" name="Newsletter">
+    <div class="oe_snippet_body input-group js_subscribe" data-list-id="0">
+        <input type="email" name="email" class="js_subscribe_email form-control" placeholder="your email..."/>
+        <span class="input-group-append">
+            <a role="button" href="#" class="btn btn-primary js_subscribe_btn">Subscribe</a>
+            <a role="button" href="#" class="btn btn-success js_subscribed_btn d-none" disabled="disabled">Thanks</a>
+        </span>
+        <div class="alert alert-success d-none" role="status">Thanks for your subscription!</div>
+    </div>
+</template>
+
+<template id="s_newsletter_subscribe_popup" name="Newsletter Popup">
+    <div class="o_newsletter_popup" data-list-id="0">
+        <div class="alert alert-warning alert-dismissible fade show css_non_editable_mode_hidden o_not_editable" role="status">
+            <strong>Newsletter Popup!</strong> The newsletter popup snippet effect is active on this page. Click <a id="edit_dialog" href="#">Here To Edit Dialog Content</a>
+        </div>
+        <div role="dialog" class="modal modal-dialog modal-md fade fade-custom" id="o_newsletter_popup" tabindex="-1">
+            <div class="modal-content o_popup_modal_content">
+                <a role="button" href="#" class="o_popup_btn_close o_not_editable" data-dismiss="modal">&amp;times;</a>
+
+                <div class="o_popup_modal_body text-center">
+                    <div class="o_popup_content_dev" data-oe-placeholder="Type Here ..."/>
+                    <div class="input-group o_not_editable o_popup_animated o_popup_bounce_del500ms o_popup_bounce_small" >
+                        <input type="email" name="email" class="popup_subscribe_email form-control" placeholder="your email..." autofocus="autofocus"/>
+                        <div class="input-group-append">
+                            <a role="button" href="#" class="btn btn-success popup_subscribe_btn">Subscribe</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="newsletter_subscribe_options" name="Newsletter Subscribe Options" inherit_id="website.snippet_options">
+    <xpath expr="//*[@id='so_snippet_addition']" position="attributes">
+        <attribute name="data-selector" add=".o_newsletter_popup" separator=","/>
+    </xpath>
+    <xpath expr="//div" position="after">
+        <div data-js="mailing_list_subscribe"
+            data-selector=".js_subscribe"
+            data-drop-near="p, h1, h2, h3, blockquote, .card">
+            <a tabindex="-1" href="#" class="dropdown-item" data-select_mailing_list="" data-no-preview="true">Change Newsletter</a>
+        </div>
+        <div data-js="newsletter_popup"
+            data-selector=".o_newsletter_popup">
+            <a tabindex="-1" href="#" class="dropdown-item" data-select_mailing_list="" data-no-preview="true">Change Newsletter</a>
+        </div>
+    </xpath>
+</template>
+
+<!-- Extend default mass_mailing snippets with website feature -->
+<template id="social_links">
+    <t t-if="website.social_facebook">
+        <a t-att-href="website.social_facebook" aria-label="Facebook" title="Facebook">
+          <span class="fa fa-facebook"></span>
+        </a>
+    </t>
+    <t t-if="website.social_googleplus">
+        <a t-att-href="website.social_googleplus" style="margin-left:10px" aria-label="Google Plus" title="Google Plus">
+            <span class="fa fa-google-plus"></span>
+        </a>
+    </t>
+    <t t-if="website.social_linkedin">
+        <a t-att-href="website.social_linkedin" style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn">
+            <span class="fa fa-linkedin"></span>
+        </a>
+    </t>
+    <t t-if="website.social_twitter">
+        <a t-att-href="website.social_twitter" style="margin-left:10px" aria-label="Twitter" title="Twitter">
+            <span class="fa fa-twitter"></span>
+        </a>
+    </t>
+    <t t-if="website.social_instagram">
+        <a t-att-href="website.social_instagram" style="margin-left:10px" aria-label="Instagram" title="Instagram">
+            <span class="fa fa-instagram"></span>
+        </a>
+    </t>
+</template>
+
+<template id="s_mail_block_header_social" inherit_id="mass_mailing.s_mail_block_header_social">
+    <xpath expr="//td[hasclass('o_mail_logo_container')]" position="after">
+        <td width="30%" class="text-right o_mail_no_resize">
+            <div class="o_mail_header_social">
+                <t t-call="website_mass_mailing.social_links"/>
+            </div>
+        </td>
+    </xpath>
+</template>
+
+<template id="s_mail_block_header_text_social" inherit_id="mass_mailing.s_mail_block_header_text_social">
+    <xpath expr="//table//td" position="after">
+        <td width="30%" class="text-right o_mail_no_resize">
+            <div class="o_mail_header_social">
+                <t t-call="website_mass_mailing.social_links"/>
+            </div>
+        </td>
+    </xpath>
+</template>
+
+<template id="s_mail_block_footer_social" inherit_id="mass_mailing.s_mail_block_footer_social">
+    <xpath expr="//td[hasclass('o_mail_footer_links')]" position="inside">
+        <t> | <a role="button" href="/contactus" class="btn btn-link">Contact</a></t>
+    </xpath>
+    <xpath expr="//tr" position="before">
+        <tr>
+            <td class="o_mail_footer_social">
+                <t t-call="website_mass_mailing.social_links"/>
+            </td>
+        </tr>
+    </xpath>
+</template>
+
+<template id="s_mail_block_footer_social_left" inherit_id="mass_mailing.s_mail_block_footer_social_left">
+    <xpath expr="//div[hasclass('o_mail_footer_links')]" position="inside">
+        <t> | <a role="button" href="/contactus" class="btn btn-link">Contact</a></t>
+    </xpath>
+    <xpath expr="//td" position="after">
+        <td class="o_mail_footer_social">
+            <t t-call="website_mass_mailing.social_links"/>
+        </td>
+    </xpath>
+</template>
+</odoo>

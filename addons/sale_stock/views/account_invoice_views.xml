@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="invoice_form_inherit_sale_stock" model="ir.ui.view">
+        <field name="name">account.invoice.form.sale.stock</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//page[@name='other_info']//field[@name='origin']" position="after">
+                <field name="incoterms_id" widget="selection" groups="sale_stock.group_display_incoterm"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <template id="report_invoice_document_inherit_sale_stock" inherit_id="account.report_invoice_document">
+        <!-- HTML Preview for mobile responsive -->
+        <xpath expr="//div[@name='reference']" position="after">
+            <div t-att-class="o_grid_layout" t-if="o.incoterms_id" groups="sale_stock.group_display_incoterm">
+                <strong>Incoterms:</strong>
+                <p t-field="o.incoterms_id.code"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

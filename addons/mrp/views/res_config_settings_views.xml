@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.mrp</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="35"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Manufacturing" string="Manufacturing" data-key="mrp" groups="mrp.group_mrp_manager">
+                        <h2>Operations</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-lg-6 col-12 o_setting_box" id="work_order" title="Work Order Operations allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required raw materials.">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_mrp_routings"/>
+                                    <field name="module_mrp_workorder" invisible="1"/>
+                                </div>
+                                <div class="o_setting_right_pane" id="workorder_settings">
+                                    <label for="group_mrp_routings" string="Work Orders"/>
+                                    <div class="text-muted">
+                                        Process operations at specific work centers based on the routing
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('group_mrp_routings','=',False)]}">
+                                        <div class="mt16">
+                                            <div>
+                                                <button name="%(mrp.mrp_routing_action)d" icon="fa-arrow-right" type="action" string="Routings" class="btn-link"/>
+                                            </div>
+                                            <div>
+                                                <button name="%(mrp.mrp_workcenter_action)d" icon="fa-arrow-right" type="action" string="Work Centers" class="btn-link"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-12 o_setting_box" attrs="{'invisible': [('group_mrp_routings', '=', False)]}" id="quality_control">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_quality_control" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_quality_control"/>
+                                    <div class="text-muted">
+                                        Add quality checks to your work orders
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Products</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-lg-6 col-12 o_setting_box" id="mrp_byproduct" title="Add by-products to bills of materials. This can be used to get several finished products as well. Without this option you only do: A + B = C. With the option: A + B = C + D.">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_mrp_byproduct"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_mrp_byproduct"/>
+                                    <div class="text-muted">
+                                        Produce residual products (A + B -> C + D)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Planning</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-lg-6 col-12 o_setting_box" id="mrp_mps" title="Using a MPS report to schedule your reordering and manufacturing operations is useful if you have long lead time and if you produce based on sales forecasts.">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_mrp_mps" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_mrp_mps"/>
+                                    <div class="text-muted">
+                                        Plan manufacturing or purchase orders based on forecasts
+                                    </div>
+                                    <div class="content-group" id="content_mrp_mps"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-12 o_setting_box" id="security_lead_time">
+                                <div class="o_setting_left_pane">
+                                    <field name="use_manufacturing_lead"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Security Lead Time" for="use_manufacturing_lead"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <div class="text-muted">
+                                        Schedule manufacturing orders earlier to avoid delays
+                                     </div>
+                                     <div class="content-group" attrs="{'invisible': [('use_manufacturing_lead','=',False)]}">
+                                        <div class="mt16" >
+                                            Move forward deadline start dates by
+                                            <field name="manufacturing_lead" class="oe_inline"/> days
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_mrp_configuration" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'mrp'}</field>
+        </record>
+
+        <menuitem id="menu_mrp_config" name="Settings" parent="menu_mrp_configuration"
+            sequence="0" action="action_mrp_configuration" groups="base.group_system"/>
+    </data>
+</odoo>

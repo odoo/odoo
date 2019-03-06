@@ -1,0 +1,122 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_payumoney
+# 
+# Translators:
+# Mustafa Rawi <mustafa@cubexco.com>, 2018
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2018
+# Shaima Safar <shaima.safar@open-inside.com>, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2018\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr ""
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr ""
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr ""
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr ""
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
+msgid "Merchant Key"
+msgstr ""
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_salt
+msgid "Merchant Salt"
+msgstr ""
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr ""
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr ""
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:108
+#, python-format
+msgid "PayUmoney: invalid shasign, received %s, computed %s, for data %s"
+msgstr ""
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:102
+#, python-format
+msgid "PayUmoney: received data for reference %s; multiple orders found"
+msgstr ""
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:99
+#, python-format
+msgid "PayUmoney: received data for reference %s; no order found"
+msgstr ""
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:94
+#, python-format
+msgid ""
+"PayUmoney: received data with missing reference (%s) or pay_id (%s) or "
+"shashign (%s)"
+msgstr ""
+
+#. module: payment_payumoney
+#: model:ir.model,name:payment_payumoney.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "طريقة السداد الإلكتروني"
+
+#. module: payment_payumoney
+#: model:ir.model,name:payment_payumoney.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "معاملة السداد"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "المستحق"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "المزود"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr ""
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr ""
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr ""

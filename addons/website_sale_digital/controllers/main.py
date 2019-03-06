@@ -1,56 +1,54 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-from openerp.addons.website_portal.controllers.main import website_account
-from openerp.addons.website_sale.controllers.main import website_sale
-from cStringIO import StringIO
+import io
 from werkzeug.utils import redirect
 
+from odoo import http
+from odoo.http import request
+from odoo.addons.sale.controllers.portal import CustomerPortal
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 
-class website_sale_digital_confirmation(website_sale):
 
+class WebsiteSaleDigitalConfirmation(WebsiteSale):
     @http.route([
         '/shop/confirmation',
     ], type='http', auth="public", website=True)
     def payment_confirmation(self, **post):
-        response = super(website_sale_digital_confirmation, self).payment_confirmation(**post)
+        response = super(WebsiteSaleDigitalConfirmation, self).payment_confirmation(**post)
         order_lines = response.qcontext['order'].order_line
-        digital_content = map(lambda x: x.product_id.type == 'digital', order_lines)
-        response.qcontext.update(digital=any(digital_content))
+        digital_content = any(x.product_id.type == 'digital' for x in order_lines)
+        response.qcontext.update(digital=digital_content)
         return response
 
 
-class website_sale_digital(website_account):
-
+class WebsiteSaleDigital(CustomerPortal):
     orders_page = '/my/orders'
 
     @http.route([
-        '/my/orders/<int:order>',
-    ], type='http', auth='user', website=True)
-    def orders_followup(self, order=None, **post):
-        response = super(website_sale_digital, self).orders_followup(order=order, **post)
-        if not 'order' in response.qcontext:
+        '/my/orders/<int:order_id>',
+    ], type='http', auth='public', website=True)
+    def portal_order_page(self, order_id=None, **post):
+        response = super(WebsiteSaleDigital, self).portal_order_page(order_id=order_id, **post)
+        if not 'sale_order' in response.qcontext:
             return response
-
-        order_products_attachments = {}
-        order = response.qcontext['order']
+        order = response.qcontext['sale_order']
         invoiced_lines = request.env['account.invoice.line'].sudo().search([('invoice_id', 'in', order.invoice_ids.ids), ('invoice_id.state', '=', 'paid')])
+        products = invoiced_lines.mapped('product_id') | order.order_line.filtered(lambda r: not r.price_subtotal).mapped('product_id')
+        if not order.amount_total:
+            # in that case, we should add all download links to the products
+            # since there is nothing to pay, so we shouldn't wait for an invoice
+            products = order.order_line.mapped('product_id')
 
         purchased_products_attachments = {}
-        for il in invoiced_lines:
-            p_obj = il.product_id
-            # Ignore products that do not have digital content
-            if not p_obj.product_tmpl_id.type == 'digital':
-                continue
-
+        for product in products:
             # Search for product attachments
-            A = request.env['ir.attachment']
-            p_id = p_obj.id
-            template = p_obj.product_tmpl_id
-            att = A.search_read(
-                domain=['|', '&', ('res_model', '=', p_obj._name), ('res_id', '=', p_id), '&', ('res_model', '=', template._name), ('res_id', '=', template.id)],
+            Attachment = request.env['ir.attachment']
+            product_id = product.id
+            template = product.product_tmpl_id
+            att = Attachment.search_read(
+                domain=['|', '&', ('res_model', '=', product._name), ('res_id', '=', product_id), '&', ('res_model', '=', template._name), ('res_id', '=', template.id), ('product_downloadable', '=', True)],
                 fields=['name', 'write_date'],
                 order='write_date desc',
             )
@@ -59,7 +57,7 @@ class website_sale_digital(website_account):
             if not att:
                 continue
 
-            purchased_products_attachments[p_id] = att
+            purchased_products_attachments[product_id] = att
 
         response.qcontext.update({
             'digital_attachments': purchased_products_attachments,
@@ -81,11 +79,10 @@ class website_sale_digital(website_account):
         else:
             return redirect(self.orders_page)
 
-
         # Check if the user has bought the associated product
         res_model = attachment['res_model']
         res_id = attachment['res_id']
-        purchased_products = request.env['account.invoice.line'].get_digital_purchases(request.uid)
+        purchased_products = request.env['account.invoice.line'].get_digital_purchases()
 
         if res_model == 'product.product':
             if res_id not in purchased_products:
@@ -93,8 +90,7 @@ class website_sale_digital(website_account):
 
         # Also check for attachments in the product templates
         elif res_model == 'product.template':
-            P = request.env['product.product']
-            template_ids = map(lambda x: P.browse(x).product_tmpl_id.id, purchased_products)
+            template_ids = request.env['product.product'].sudo().browse(purchased_products).mapped('product_tmpl_id').ids
             if res_id not in template_ids:
                 return redirect(self.orders_page)
 
@@ -108,7 +104,7 @@ class website_sale_digital(website_account):
             else:
                 return request.not_found()
         elif attachment["datas"]:
-            data = StringIO(base64.standard_b64decode(attachment["datas"]))
+            data = io.BytesIO(base64.standard_b64decode(attachment["datas"]))
             return http.send_file(data, filename=attachment['name'], as_attachment=True)
         else:
             return request.not_found()

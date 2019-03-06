@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_backend" name="sale timesheet assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/sale_timesheet/static/src/js/timesheet_plan.js"></script>
+            <link rel="stylesheet" type="text/scss" href="/sale_timesheet/static/src/scss/sale_timesheet.scss"/>
+        </xpath>
+    </template>
+
+
+    <template id="qunit_suite" name="timesheet plan tests" inherit_id="web.qunit_suite">
+        <xpath expr="//script[contains(@src, '/web/static/tests/views/kanban_tests.js')]" position="after">
+            <script type="text/javascript" src="/sale_timesheet/static/tests/timesheet_plan_tests.js"></script>
+        </xpath>
+    </template>
+
+
+    <template id="timesheet_plan" name="Timesheet Plan">
+        <div class="o_form_view o_form_readonly o_project_plan">
+            <div class="o_form_sheet_bg">
+                <div class="o_form_sheet o_timesheet_plan_content">
+                    <div class="o_timesheet_plan_sale_timesheet">
+                        <div class="o_timesheet_plan_sale_timesheet_dashboard">
+
+                            <div class="o_timesheet_plan_stat_buttons oe_button_box">
+                                <t t-foreach="stat_buttons" t-as="stat_button">
+                                    <button class="btn oe_stat_button" t-att-data-domain="stat_button.get('domain')" t-att-data-res-model="stat_button['res_model']" t-att-data-res-id="stat_button.get('res_id')">
+                                        <div t-attf-class="fa fa-fw o_button_icon #{stat_button['icon']}" role="img" aria-label="Statistics" title="Statistics"></div>
+                                        <div class="o_field_widget o_stat_info o_readonly_modifier" t-att-title="stat_button['name']">
+                                            <span class="o_stat_value" t-if="stat_button.get('count')">
+                                                <t t-esc="stat_button['count']"/>
+                                            </span>
+                                            <span class="o_stat_text">
+                                                <t t-esc="stat_button['name']"/>
+                                            </span>
+                                        </div>
+                                    </button>
+                                </t>
+                            </div>
+
+                            <t t-set="display_cost" t-value="dashboard['profit']['expense_cost'] != 0.0"/>
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <th rowspan="6">
+                                            <a type="action" t-att-domain="json.dumps(timesheet_domain)" context="{'pivot_row_groupby': ['date:month'],'pivot_column_groupby': ['timesheet_invoice_type'], 'pivot_measures': ['unit_amount']}" tabindex="-1">Hours</a>
+                                        </th>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="dashboard['hours']['billable_time']" t-options="{'widget': 'float_time'}"/>
+                                        </td>
+                                        <td>Timesheets</td>
+                                        <th rowspan="6">
+                                            <a type="action" t-att-domain="json.dumps(timesheet_domain)" context="{'pivot_row_groupby': ['date:month', 'employee_id'], 'pivot_column_groupby': ['timesheet_invoice_type'],'pivot_measures': ['unit_amount']}" tabindex="-1">Rates</a>
+                                        </th>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="dashboard['rates']['billable_time']"/> %
+                                        </td>
+                                        <td>Timesheets</td>
+                                        <th rowspan="6">
+                                            <a type="action" t-att-domain="json.dumps(timesheet_domain)" context="{'pivot_row_groupby': ['timesheet_invoice_id'], 'pivot_column_groupby': ['date:month'],'pivot_measures': ['amount']}" tabindex="-1">Profitability</a>
+                                        </th>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="dashboard['profit']['invoiced']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        </td>
+                                        <td>Invoiced</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="dashboard['hours']['billable_fixed']" t-options="{'widget': 'float_time'}"/>
+                                        </td>
+                                        <td>Fixed</td>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="dashboard['rates']['billable_fixed']"/> %
+                                        </td>
+                                        <td>Fixed</td>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="dashboard['profit']['to_invoice']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        </td>
+                                        <td>To invoice</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="dashboard['hours']['non_billable_project']" t-options="{'widget': 'float_time'}"/>
+                                        </td>
+                                        <td>No task found</td>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="dashboard['rates']['non_billable_project']"/> %
+                                        </td>
+                                        <td>No task found</td>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="dashboard['profit']['cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        </td>
+                                        <td>Timesheet costs</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="dashboard['hours']['non_billable']" t-options="{'widget': 'float_time'}"/>
+                                        </td>
+                                        <td><a class="o_timesheet_plan_non_billable_task">Non billable</a></td>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="dashboard['rates']['non_billable']"/> %
+                                        </td>
+                                        <td>Non billable</td>
+                                        <t t-if="display_cost">
+                                            <td class="o_timesheet_plan_dashboard_cell">
+                                                <t t-esc="dashboard['profit']['expense_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                            </td>
+                                            <td>Other costs</td>
+                                        </t>
+                                        <t t-else="">
+                                            <td class="o_timesheet_plan_dashboard_total">
+                                                <t t-esc="dashboard['profit']['total']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                            </td>
+                                            <td><b>Total</b></td>
+                                        </t>
+                                    </tr>
+                                    <tr>
+                                        <td class="o_timesheet_plan_dashboard_total">
+                                            <t t-esc="dashboard['hours']['total']" t-options="{'widget': 'float_time'}"/>
+                                        </td>
+                                        <td><b>Total</b></td>
+                                        <td></td>
+                                        <td></td>
+                                        <t t-if="display_cost">
+                                            <td class="o_timesheet_plan_dashboard_cell">
+                                                <t t-esc="dashboard['profit']['expense_amount_untaxed_invoiced']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                            </td>
+                                            <td>Re-invoiced costs</td>
+                                        </t>
+                                        <t t-else="">
+                                            <td></td>
+                                            <td></td>
+                                        </t>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <t t-if="display_cost">
+                                            <td class="o_timesheet_plan_dashboard_total">
+                                                <t t-esc="dashboard['profit']['total']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                            </td>
+                                            <td><b>Total</b></td>
+                                        </t>
+                                        <t t-else="">
+                                            <td></td>
+                                            <td></td>
+                                        </t>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="o_timesheet_plan_sale_timesheet_people_time">
+                            <h3>Time by people</h3>
+                            <t t-if="not repartition_employee">
+                                <p>There is no timesheet for now.</p>
+                            </t>
+                            <t t-if="repartition_employee">
+                                <div class="float-right o_timesheet_plan_badge">
+                                    <span class="badge badge-pill o_progress_billable_fixed">
+                                        <a type="action" t-att-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','billable_fixed')])" tabindex="-1">Billable fixed</a>
+                                    </span>
+                                    <span class="badge badge-pill o_progress_billable_time">
+                                        <a type="action" t-att-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','billable_time')])" tabindex="-1">Billable time</a>
+                                    </span>
+                                    <span class="badge badge-pill o_progress_non_billable_project">
+                                        <a type="action" t-att-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable_project')])" tabindex="-1">No task found</a>
+                                    </span>
+                                    <span class="badge badge-pill o_progress_non_billable">
+                                        <a type="action" t-att-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable')])" tabindex="-1">Non billable</a>
+                                    </span>
+                                </div>
+                                <table class="table">
+                                    <tbody>
+                                        <t t-foreach="repartition_employee" t-as="employee_id">
+                                            <tr>
+                                                <td style="width: 15%">
+                                                    <a type="action" t-att-domain="json.dumps(timesheet_domain)" t-att-context="{'search_default_employee_id': employee_id}" views="[[0, 'list']]" tabindex="-1">
+                                                        <t t-esc="repartition_employee[employee_id]['employee_name']"/>
+                                                    </a>
+                                                </td>
+                                                <td style="width: 10%">
+                                                    <t t-esc="repartition_employee[employee_id]['total']" t-options="{'widget': 'float_time'}"/>
+                                                </td>
+                                                <td>
+                                                    <div t-if="repartition_employee_max" class="progress" t-att-style="'width: ' + str(repartition_employee[employee_id]['total'] / repartition_employee_max * 100) +'%'">
+
+                                                        <t t-set="total" t-value="repartition_employee[employee_id]['total'] or 1.0" />
+                                                        <t t-set="billable_fixed" t-value="repartition_employee[employee_id]['billable_fixed']" />
+                                                        <t t-set="billable_time" t-value="repartition_employee[employee_id]['billable_time']" />
+                                                        <t t-set="non_billable" t-value="repartition_employee[employee_id]['non_billable']" />
+                                                        <t t-set="non_billable_project" t-value="repartition_employee[employee_id]['non_billable_project']"/>
+
+                                                        <t t-if="billable_fixed">
+                                                            <t t-set="billable_fixed_title"><t t-esc="billable_fixed" t-options="{'widget': 'float_time'}" /></t>
+                                                            <div class="progress-bar o_progress_billable_fixed"
+                                                                 t-att-style="'width: ' + str(billable_fixed / total * 100) + '%'"
+                                                                 t-att-title="billable_fixed_title"
+                                                                 t-att-data-domain="repartition_employee[employee_id]['__domain_billable_fixed']">
+                                                            </div>
+                                                        </t>
+                                                        <t t-if="billable_time">
+                                                            <t t-set="billable_time_title"><t t-esc="billable_time" t-options="{'widget': 'float_time'}" /></t>
+                                                            <div class="progress-bar o_progress_billable_time"
+                                                                 t-att-style="'width: ' + str(billable_time / total * 100) + '%'"
+                                                                 t-att-title="billable_time_title"
+                                                                 t-att-data-domain="repartition_employee[employee_id]['__domain_billable_time']">
+                                                            </div>
+                                                        </t>
+                                                        <t t-if="non_billable_project">
+                                                            <t t-set="non_billable_project_title"><t t-esc="non_billable_project" t-options="{'widget': 'float_time'}" /></t>
+                                                            <div class="progress-bar o_progress_non_billable_project"
+                                                                 t-att-style="'width: ' + str(non_billable_project / total * 100) + '%'"
+                                                                 t-att-title="non_billable_project_title"
+                                                                 t-att-data-domain="repartition_employee[employee_id]['__domain_non_billable_project']">
+                                                            </div>
+                                                        </t>
+                                                        <t t-if="non_billable">
+                                                            <t t-set="non_billable_title"><t t-esc="non_billable" t-options="{'widget': 'float_time'}" /></t>
+                                                            <div class="progress-bar o_progress_non_billable"
+                                                                 t-att-style="'width: ' + str(non_billable / total * 100) + '%'"
+                                                                 t-att-title="non_billable_title"
+                                                                 t-att-data-domain="json.dumps(repartition_employee[employee_id]['__domain_non_billable'])">
+                                                            </div>
+                                                        </t>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                        </div>
+
+                        <!-- NOTE: this template to display a table works whatever the length of the rows, as project_timesheet_forecast_sale extends the table to add forecasts -->
+                        <div class="o_project_plan_project_timesheet_forecast">
+                            <t t-if="timesheet_forecast_table and timesheet_forecast_table['rows']">
+                                <h3 name="table_plan_title">Timesheets</h3>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <t t-foreach="timesheet_forecast_table['header']" t-as="header_val">
+                                                <th t-att-class="'o_right_bordered' if header_val_index in [5,10] else ''">
+                                                    <span t-att-title="header_val['tooltip']"><t t-esc="header_val['label']"/></span>
+                                                </th>
+                                            </t>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="row_is_milestone" t-value="False"/>
+                                        <t t-foreach="timesheet_forecast_table['rows']" t-as="row">
+                                            <t t-set="row_type" t-value="row[0].get('type')"/>
+                                            <t t-if="row_type == 'sale_order_line'">
+                                                <t t-set="row_is_milestone" t-value="row[0].get('is_milestone')"/>
+                                            </t>
+                                            <tr t-att-class="'o_timesheet_forecast_' + row_type">
+                                                <t t-foreach="row" t-as="row_value">
+                                                    <td t-att-class="'o_right_bordered' if row_value_index in [5,10] else '' + ' text-center' if row_value_index != 0 else ''">
+                                                        <t t-if="row_value_index == 0">
+                                                            <t t-if="row_type == 'sale_order'">
+                                                                <a t-att-data-oe-model="row_value['res_model']" t-att-data-oe-id="row_value['res_id']" t-att-class="'o_timesheet_plan_redirect' if row_value['res_id'] else ''">
+                                                                    <t t-esc="row_value.get('label')"/>
+                                                                </a>
+                                                            </t>
+                                                            <t t-if="row_type != 'sale_order'">
+                                                                <t t-if="not row_is_milestone">
+                                                                    <span><t t-esc="row_value.get('label')"/></span>
+                                                                </t>
+                                                                 <t t-if="row_is_milestone">
+                                                                    <span><i><t t-esc="row_value.get('label')"/></i></span>
+                                                                </t>
+                                                            </t>
+                                                        </t>
+                                                        <t t-if="row_value_index != 0">
+                                                            <t t-if="row_value_index &lt; len(row)-2">
+                                                                <t t-if="row_is_milestone">
+                                                                    <i t-att-class="'text-muted' if not row_value else ''"><t t-esc="row_value" t-options="{'widget': 'float_time'}"/></i>
+                                                                </t>
+                                                                <t t-else="">
+                                                                    <span t-att-class="'text-muted' if not row_value else ''"><t t-esc="row_value" t-options="{'widget': 'float_time'}"/></span>
+                                                                </t>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <t t-if="not row_is_milestone and not row[0].get('type') == 'hr_employee'">
+                                                                    <span t-att-class="'text-muted' if not row_value else ''"><t t-esc="row_value" t-options="{'widget': 'float_time'}"/></span>
+                                                                </t>
+                                                            </t>
+                                                        </t>
+                                                    </td>
+                                                </t>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+</odoo>

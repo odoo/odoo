@@ -1,0 +1,132 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_payumoney
+# 
+# Translators:
+# Martin Trigaux, 2016
+# David Arnold <blaggacao@users.noreply.github.com>, 2017
+# e2f <projects@e2f.com>, 2018
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
+# Humberto Garza De Koster <garzadekoster@gmail.com>, 2018
+# Antonio Trueba, 2018
+# RGB Consulting <odoo@rgbconsulting.com>, 2018
+# Nicolás Broggi <rnbroggi@gmail.com>, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Nicolás Broggi <rnbroggi@gmail.com>, 2018\n"
+"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Configuración manual"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
+msgid "Merchant Key"
+msgstr "Clave del comerciante"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_salt
+msgid "Merchant Salt"
+msgstr "Merchant Salt"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:108
+#, python-format
+msgid "PayUmoney: invalid shasign, received %s, computed %s, for data %s"
+msgstr "PayUmoney: shasign nulo, %s recibido, %s calculado, para datos %s"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:102
+#, python-format
+msgid "PayUmoney: received data for reference %s; multiple orders found"
+msgstr ""
+"PayUmoney: datos recibidos para la referencia %s, pedidos múltiples "
+"encontrados"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:99
+#, python-format
+msgid "PayUmoney: received data for reference %s; no order found"
+msgstr ""
+"PayUmoney: datos recibidos para la referencia%s; ningún pedido encontrado"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:94
+#, python-format
+msgid ""
+"PayUmoney: received data with missing reference (%s) or pay_id (%s) or "
+"shashign (%s)"
+msgstr ""
+"PayUmoney: datos recibidos sin referencia (%s) o pay_id (%s) o shashign (%s)"
+
+#. module: payment_payumoney
+#: model:ir.model,name:payment_payumoney.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Método de pago"
+
+#. module: payment_payumoney
+#: model:ir.model,name:payment_payumoney.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transacción de pago"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Proveedor"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Transferencia bancaria"

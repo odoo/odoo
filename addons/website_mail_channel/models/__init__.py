@@ -1,2 +1,4 @@
-import mail_channel
-import mail_mail
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from . import mail_channel
+from . import mail_mail

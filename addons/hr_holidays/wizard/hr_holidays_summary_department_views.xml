@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="view_hr_holidays_summary_dept" model="ir.ui.view">
+            <field name="name">hr.holidays.summary.dept.form</field>
+            <field name="model">hr.holidays.summary.dept</field>
+            <field name="arch" type="xml">
+            <form string="Leaves by Department">
+                <group>
+                    <field name="date_from" />
+                    <field name="holiday_type"/>
+                    <field name="depts"/>
+                </group>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_hr_holidays_summary_dept" model="ir.actions.act_window">
+            <field name="name">Leaves by Department</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.holidays.summary.dept</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            name="Report by Department"
+            parent="menu_hr_holidays_report"
+            action="action_hr_holidays_summary_dept"
+            id="menu_hr_holidays_summary_dept"/>
+
+</odoo>

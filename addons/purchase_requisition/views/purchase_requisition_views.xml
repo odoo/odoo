@@ -1,0 +1,366 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+    <!-- Purchase Requisition Type -->
+
+    <record model="ir.ui.view" id="view_purchase_requisition_type_tree">
+        <field name="name">purchase.requisition.type.tree</field>
+        <field name="model">purchase.requisition.type</field>
+        <field name="arch" type="xml">
+            <tree string="Purchase Agreement Types">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="exclusive"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_purchase_requisition_type_kanban" model="ir.ui.view">
+        <field name="name">purchase.requisition.type.kanban</field>
+        <field name="model">purchase.requisition.type</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="exclusive"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top ">
+                                <div class="o_kanban_record_headings mt4">
+                                    <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                </div>
+                                <field name="exclusive" widget="kanban_label_selection"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_purchase_requisition_type_form">
+        <field name="name">purchase.requisition.type.form</field>
+        <field name="model">purchase.requisition.type</field>
+        <field name="arch" type="xml">
+            <form string="Purchase Agreement Types">
+            <sheet>
+                <group>
+                    <group string="Agreement Type">
+                        <field name="name"/>
+                        <field name="exclusive" widget="radio"/>
+                    </group>
+                    <group string="Data for new quotations">
+                        <field name="line_copy" widget="radio"/>
+                        <field name="quantity_copy" widget="radio"/>
+                    </group>
+                </group>
+            </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="tender_type_action" model="ir.actions.act_window">
+        <field name="name">Purchase Agreement Types</field>
+        <field name="res_model">purchase.requisition.type</field>
+        <field name="context">{}</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+    <menuitem
+        id="menu_purchase_requisition_type"
+        sequence="2"
+        parent="purchase.menu_purchase_config"
+        action="tender_type_action"/>
+
+    <!-- Purchase Orders -->
+
+    <record model="ir.ui.view" id="purchase_order_form_inherit">
+        <field name="name">purchase.order.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+          <field name="partner_id" position="replace">
+            <field name="is_quantity_copy" invisible="1"/>
+            <field name="partner_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]" attrs="{'readonly': ['|', ('is_quantity_copy', '=', 'none'), ('state', 'in', ['purchase', 'done', 'cancel'])]}" force_save="1"/>
+            </field>
+            <field name="partner_ref" position="after">
+                <field name="requisition_id"
+                    domain="[('state', 'in', ('in_progress', 'open', 'ongoing')), ('vendor_id', 'in', (partner_id, False))]"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="supplier_info_form_inherit">
+        <field name="name">product.supplierinfo.requisition.view</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
+        <field name="arch" type="xml">
+            <field name="product_code" position="after">
+                <field name="purchase_requisition_id"
+                    attrs="{'invisible': [('purchase_requisition_id', '=', False)]}"
+                    />
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="purchase_order_search_inherit">
+        <field name="name">purchase.order.list.select.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='approved']" position="after">
+                <filter string="Requisition" name="requisition" domain="[('requisition_id', '!=', False)]"  help="Purchase Orders with requisition"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_purchase_requisition_to_so">
+        <field name="name">Request for Quotation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree</field>
+        <field name="domain">[('requisition_id','=',active_id)]</field>
+        <field name="context">{"default_requisition_id":active_id}</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_purchase_requisition_list">
+        <field name="name">Request for Quotations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('requisition_id','=',active_id)]</field>
+        <field name="context">{"default_requisition_id":active_id}</field>
+    </record>
+
+    <record model="ir.ui.view" id="view_purchase_requisition_form">
+        <field name="name">purchase.requisition.form</field>
+        <field name="model">purchase.requisition</field>
+        <field name="arch" type="xml">
+            <form string="Purchase Agreements">
+            <header>
+                <button name="%(action_purchase_requisition_to_so)d" type="action"
+                    string="New Quotation"
+                    attrs="{'invisible': [('state', '!=', 'open')]}"/>
+                <button name="%(action_purchase_requisition_to_so)d" type="action"
+                    string="New Quotation" class="btn-primary"
+                    attrs="{'invisible': [('state', 'not in', ('in_progress', 'ongoing'))]}"/>
+                <button name="action_in_progress" states="draft" string="Confirm" type="object" class="btn-primary"/>
+                <button name="action_open" states="in_progress" string="Validate" type="object" class="btn-primary"/>
+                <button name="action_done" states="open,ongoing" string="Close" type="object" class="btn-primary"/>
+                <button name="action_draft" states="cancel" string="Reset to Draft" type="object"/>
+                <button name="action_cancel" states="draft,in_progress,ongoing" string="Cancel" type="object"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,open,done" attrs="{'invisible': [('is_quantity_copy', '=', 'none')]}"/>
+                <field name="state_blanket_order" widget="statusbar" statusbar_visible="draft,ongoing,done" attrs="{'invisible': [('is_quantity_copy', '!=', 'none')]}"/>
+            </header>
+            <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button name="%(action_purchase_requisition_list)d" type="action" class="oe_stat_button" icon="fa-list-alt"
+                        attrs="{'invisible': [('state', '=', 'draft')]}">
+                        <field name="order_count" widget="statinfo" string="RFQs/Orders"/>
+                    </button>
+                </div>
+                <div class="float-left">
+                    <label for="name" class="oe_edit_only oe_inline"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                </div>
+                <group>
+                    <group>
+                        <field name="is_quantity_copy" invisible='1'/>
+                        <field name="user_id" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}"/>
+                        <field name="type_id" attrs="{'readonly': [('state','!=','draft')]}" widget="selection"/>
+                        <field name="vendor_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]" attrs="{'required': [('is_quantity_copy', '=', 'none')], 'readonly': [('state', 'in', ['ongoing','done'])]}"/>
+                        <field name="currency_id" groups="base.group_multi_currency"/>
+                    </group>
+                    <group>
+                        <field name="date_end" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
+                        <field name="ordering_date" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
+                        <field name="schedule_date" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
+                        <field name="origin" placeholder="e.g. PO0025" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="picking_type_id" widget="selection" groups="stock.group_adv_location" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Products">
+                        <field name="line_ids">
+                            <tree string="Products" editable="bottom">
+                                <field name="product_id"/>
+                                <field name="product_qty"/>
+                                <field name="qty_ordered"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
+                                <field name="schedule_date" groups="base.group_no_one"/>
+                                <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+                                <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
+                                <field name="price_unit"/>
+                            </tree>
+                            <form string="Products">
+                                <group>
+                                    <field name="product_id" />
+                                    <field name="product_qty"/>
+                                    <field name="qty_ordered"/>
+                                    <field name="product_uom_id" />
+                                    <field name="schedule_date"/>
+                                    <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                </group>
+                            </form>
+                        </field>
+                        <separator string="Terms and Conditions"/>
+                        <field name="description" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}"/>
+                    </page>
+                </notebook>
+            </sheet>
+            <div class="oe_chatter">
+              <field name="message_follower_ids" widget="mail_followers"/>
+              <field name="message_ids" widget="mail_thread"/>
+            </div>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_purchase_requisition_tree">
+        <field name="name">purchase.requisition.tree</field>
+        <field name="model">purchase.requisition</field>
+        <field name="arch" type="xml">
+            <tree decoration-bf="message_needaction==True" decoration-muted="state == 'cancel'" decoration-danger="date_end and date_end&lt;current_date" string="Purchase Agreements">
+                <field name="message_needaction" invisible="1"/>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                <field name="ordering_date"/>
+                <field name="date_end"/>
+                <field name="origin"/>
+                <field name="state"/>
+            </tree>
+      </field>
+    </record>
+
+    <record id="view_purchase_requisition_kanban" model="ir.ui.view">
+        <field name="name">purchase.requisition.kanban</field>
+        <field name="model">purchase.requisition</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="state"/>
+                <field name="user_id"/>
+                <field name="type_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings mt4">
+                                    <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
+                                </div>
+                                <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'in_progress': 'default', 'open': 'success', 'done': 'success', 'close': 'danger'}}"/>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <span class="text-muted"><field name="type_id"/></span>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <field name="vendor_id"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_purchase_requisition_filter" model="ir.ui.view">
+            <field name="name">purchase.requisition.list.select</field>
+            <field name="model">purchase.requisition</field>
+            <field name="arch" type="xml">
+                <search string="Search Purchase Agreements">
+                    <field name="name" string="Purchase Agreements" filter_domain="['|', ('name','ilike',self), ('origin','ilike',self)]"/>
+                    <field name="type_id"/>
+                    <filter name="draft" string="Draft" domain="[('state','=','draft')]" help="New Agreements"/>
+                    <filter string="Confirmed" name="confirmed" domain="[('state','in',('in_progress','open'))]" help="In negotiation"/>
+                    <filter string="Done" name="done" domain="[('state','=','done')]"/>
+                    <separator/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
+                    <filter string="My Agreements" name="my_agreements" domain="[('user_id','=', uid)]"/>
+                    <field name="user_id" />
+                    <group expand="0" string="Group By">
+                        <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Source" name="source" domain="[]" context="{'group_by':'origin'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Ordering Date" name="ordering_date" domain="[]" context="{'group_by':'ordering_date'}"/>
+                        <filter string="End Date" name="end_month" domain="[]" context="{'group_by':'date_end'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+    <record model="ir.actions.act_window" id="action_purchase_requisition">
+        <field name="name">Purchase Agreements</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">purchase.requisition</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" ref="view_purchase_requisition_filter"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Start a new purchase agreement
+          </p><p>
+            Example of purchase agreements include call for tenders and blanket orders.
+          </p><p>
+            In a call for tenders, you can record the products you need to buy
+            and generate the creation of RfQs to vendors. Once the tenders have
+            been registered, you can review and compare them and you can
+            validate some and cancel others.
+          </p><p>
+            For a blanket order, you can record an agreement for a specifc period
+            (e.g. a year) and you order products within this agreement, benefiting
+            from the negociated prices.
+          </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_purchase_requisition_pro_mgt"
+        sequence="10"
+        parent="purchase.menu_procurement_management"
+        action="action_purchase_requisition"/>
+
+    <record model="ir.ui.view" id="product_template_form_view_inherit">
+        <field name="name">product.template.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="purchase.view_product_supplier_inherit"/>
+        <field name="arch" type="xml">
+            <group name="bill" position="before">
+                <group string="Reordering" attrs="{'invisible': [('type', '=', 'service')]}">
+                    <field name="purchase_requisition" widget="radio"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_supplierinfo_tree_view_inherit">
+        <field name="name">product.template.product.form.inherit</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
+        <field name="arch" type="xml">
+          <xpath expr="//field[@name='min_qty']" position="before">
+              <field name="purchase_requisition_id"/>
+          </xpath>
+        </field>
+    </record>
+
+    <act_window
+            domain="[('requisition_id', '=', active_id)]"
+            context="{'default_requisition_id': active_id}"
+            id="act_res_partner_2_purchase_order"
+            name="Purchase orders"
+            res_model="purchase.order"
+            src_model="purchase.requisition"/>
+
+    </data>
+</odoo>

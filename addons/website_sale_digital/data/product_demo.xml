@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="website_sale_digital.product_1" model="product.template">
+        <field name="name">eBook: Office Renovation for Dummies</field>
+        <field name="standard_price">2</field>
+        <field name="list_price">4.50</field>
+        <field name="type">service</field>
+        <field name="website_published" eval="True"/>
+        <field name="image" type="base64" file="website_sale_digital/static/digital_product_1.jpg"/>
+        <field name="categ_id" ref="product.product_category_6"/>
+    </record>
+
+    <record id="website_sale_digital.attach1" model="ir.attachment">
+        <field name="name">ebook.pdf</field>
+        <field name="datas_fname">ebook.pdf</field>
+        <field name="type">binary</field>
+        <field name="datas" type="base64" file="website_sale_digital/static/ebook.pdf"/>
+        <field name="res_id" ref="website_sale_digital.product_1"/>
+        <field name="res_model">product.template</field>
+        <field name="product_downloadable">True</field>
+    </record>
+
+</odoo>

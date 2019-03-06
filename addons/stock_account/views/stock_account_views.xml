@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_move_form_inherit" model="ir.ui.view">
+            <field name="name">stock.move.form.inherit</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_get_account_moves" icon="fa-usd" class="oe_stat_button" string="Accounting Entries" type="object"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_inventory_form_inherit" model="ir.ui.view">
+            <field name="name">stock.inventory.form.inherit</field>
+            <field name="model">stock.inventory</field>
+            <field name="inherit_id" ref="stock.view_inventory_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="accounting_date" attrs="{'readonly':[('state','!=', 'draft')]}" groups="base.group_no_one"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_location_form_inherit" model="ir.ui.view">
+            <field name="name">stock.location.form.inherit</field>
+            <field name="model">stock.location</field>
+            <field name="inherit_id" ref="stock.view_location_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='localization']" position="after">
+                    <group string="Accounting Information" attrs="{'invisible':[('usage','not in',('inventory','production'))]}">
+                        <field name="valuation_in_account_id"/>
+                        <field name="valuation_out_account_id"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_stock_return_picking_form_inherit_stock_account" model="ir.ui.view">
+            <field name="name">stock.return.picking.stock.account.form</field>
+            <field name="inherit_id" ref="stock.view_stock_return_picking_form"/>
+            <field name="model">stock.return.picking</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_return_moves']/tree" position="inside">
+                    <field name="to_refund"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- valuation wizard: current or at date -->
+        <record id="view_stock_quantity_history" model="ir.ui.view">
+            <field name="name">Valuation Report</field>
+            <field name="model">stock.quantity.history</field>
+            <field name="arch" type="xml">
+                <form string="Choose your date">
+                    <group>
+                        <group>
+                            <field name="compute_at_date" widget="radio"/>
+                            <field name="date" attrs="{'invisible': [('compute_at_date', '=', 0)]}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="open_table" string="Retrieve the inventory valuation" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="view_stock_product_tree2" model="ir.ui.view">
+            <field name="name">product.stock.tree.2</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="display_name"/>
+                    <field name="qty_at_date"/>
+                    <field name="uom_id" groups="uom.group_uom"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="cost_currency_id" invisible="1"/>
+                    <field name="stock_value" sum="Stock Valuation" widget="monetary" options="{'currency_field': 'cost_currency_id'}"/>
+                    <field name="cost_method" invisible="1"/>
+                    <button name="action_valuation_at_date_details" type="object" icon="fa-info-circle" aria-label="Valuation" title="Valuation" attrs="{'invisible': [('cost_method', '!=', 'fifo')]}" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_inventory_valuation_search" model="ir.ui.view">
+            <field name="name">product.product</field>
+            <field name="model">product.product</field>
+            <field name="priority" eval="17"/>
+            <field name="arch" type="xml">
+                <search string="Inventory Valuation">
+                    <field name="name" string="Product"/>
+                    <field name="categ_id" />
+                    <field name="product_tmpl_id" />
+                    <field name="attribute_value_ids" />
+                    <filter string="Category" name="categ_id" context="{'group_by':'categ_id'}"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_stock_inventory_valuation" model="ir.actions.act_window">
+            <field name="name">Inventory Valuation</field>
+            <field name="res_model">stock.quantity.history</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock_account.view_stock_quantity_history"/>
+            <field name="target">new</field>
+            <field name="context">{'default_compute_at_date': 0, 'valuation': True}</field>
+        </record>
+        <menuitem id="menu_valuation" name="Inventory Valuation" parent="stock.menu_warehouse_report" sequence="110" action="action_stock_inventory_valuation"/>
+
+        <!-- AML specialized tree view -->
+        <record id="view_stock_account_aml" model="ir.ui.view">
+            <field name="name">stock.account.aml</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="date" />
+                    <field name="ref" />
+                    <field name="product_id" />
+                    <field name="quantity" />
+                    <field name="product_uom_id" groups="uom.group_uom" />
+                    <field name="balance" string="Value"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- stock move specialized tree view -->
+        <record id="view_move_tree_valuation_at_date" model="ir.ui.view">
+            <field name="name">stock.move.tree.valuation.at.date</field>
+            <field name="model">stock.move</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="date" />
+                    <field name="picking_id" string="Reference"/>
+                    <field name="state" invisible="1"/>
+                    <field name="product_id"/>
+                    <field name="product_uom_qty" string="Quantity"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                    <field name="value" sum="Stock Valuation"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>

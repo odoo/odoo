@@ -3,14 +3,16 @@
 # * website_mail
 # 
 # Translators:
+# Martin Trigaux, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-09-30 09:29+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/language/zh_TW/)\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,122 +20,85 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_mail
+#: model:ir.model.fields,field_description:website_mail.field_account_invoice_send__description
+#: model:ir.model.fields,field_description:website_mail.field_mail_compose_message__description
+#: model:ir.model.fields,field_description:website_mail.field_mail_mail__description
+#: model:ir.model.fields,field_description:website_mail.field_mail_message__description
+msgid "Description"
+msgstr "描述"
+
+#. module: website_mail
 #: model:mail.channel,name:website_mail.channel_public
 msgid "Discussion Group"
 msgstr "討論群組"
 
 #. module: website_mail
-#: model:ir.model,name:website_mail.model_mail_thread
-msgid "Email Thread"
-msgstr "電子郵件討論串"
-
-#. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "Leave a comment"
-msgstr ""
-
-#. module: website_mail
 #: model:ir.model,name:website_mail.model_mail_message
 msgid "Message"
-msgstr "訊息"
+msgstr "消息"
 
 #. module: website_mail
-#: model:ir.model.fields,help:website_mail.field_mail_message_description
+#: model:ir.model.fields,help:website_mail.field_account_invoice_send__description
+#: model:ir.model.fields,help:website_mail.field_mail_compose_message__description
+#: model:ir.model.fields,help:website_mail.field_mail_mail__description
+#: model:ir.model.fields,help:website_mail.field_mail_message__description
 msgid "Message description: either the subject, or the beginning of the body"
-msgstr ""
+msgstr "消息描述：主題或正文的開始部分"
 
 #. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "Oops! Something went wrong. Try to reload the page and to log in."
-msgstr ""
-
-#. module: website_mail
-#: model:ir.model.fields,field_description:website_mail.field_mail_message_website_published
+#. openerp-web
+#: code:addons/website_mail/static/src/xml/website_mail.xml:7
+#: model:ir.model.fields,field_description:website_mail.field_account_invoice_send__website_published
+#: model:ir.model.fields,field_description:website_mail.field_mail_compose_message__website_published
+#: model:ir.model.fields,field_description:website_mail.field_mail_mail__website_published
+#: model:ir.model.fields,field_description:website_mail.field_mail_message__website_published
+#, python-format
 msgid "Published"
+msgstr "已發佈"
+
+#. module: website_mail
+#: model:ir.model,name:website_mail.model_publisher_warranty_contract
+msgid "Publisher Warranty Contract"
 msgstr ""
 
 #. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "Send"
-msgstr "傳送"
-
-#. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.follow
+#: model_terms:ir.ui.view,arch_db:website_mail.follow
 msgid "Subscribe"
 msgstr "訂閱"
 
 #. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:69
+#: code:addons/website_mail/models/mail_message.py:57
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
-msgstr "因安全限制，操作無法完成。請聯絡系統管理員。\n((Document type: %s, Operation: %s))"
-
-#. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.follow
-msgid "Unsubscribe"
 msgstr ""
-
-#. module: website_mail
-#: model:ir.model.fields,help:website_mail.field_mail_message_website_published
-msgid "Visible on the website as a comment"
-msgstr ""
-
-#. module: website_mail
-#: model:ir.model.fields,field_description:website_mail.field_mail_thread_website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: website_mail
-#: model:ir.model.fields,help:website_mail.field_mail_thread_website_message_ids
-msgid "Website communication history"
-msgstr ""
-
-#. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "Write a message..."
-msgstr ""
-
-#. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "You must be"
-msgstr ""
+"由於安全限制，請求的操作無法完成。請聯繫您的系統管理員。\n"
+"\n"
+"（單據類型：%s，操作：%s）"
 
 #. module: website_mail
 #. openerp-web
-#: code:addons/website_mail/static/src/xml/chatter_message.xml:8
+#: code:addons/website_mail/static/src/xml/website_mail.xml:6
 #, python-format
-msgid "just now"
-msgstr ""
+msgid "Unpublished"
+msgstr "未發佈"
 
 #. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "logged in"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_mail.follow
+msgid "Unsubscribe"
+msgstr "退訂"
 
 #. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "on"
-msgstr ""
+#: model:ir.model.fields,help:website_mail.field_account_invoice_send__website_published
+#: model:ir.model.fields,help:website_mail.field_mail_compose_message__website_published
+#: model:ir.model.fields,help:website_mail.field_mail_mail__website_published
+#: model:ir.model.fields,help:website_mail.field_mail_message__website_published
+msgid "Visible on the website as a comment"
+msgstr "作為評論在網站可見"
 
 #. module: website_mail
-#: model:ir.model,name:website_mail.model_publisher_warranty_contract
-msgid "publisher_warranty.contract"
-msgstr ""
-
-#. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.message_thread
-msgid "to post a comment."
-msgstr ""
-
-#. module: website_mail
-#: model:ir.model.fields,field_description:website_mail.field_mail_message_description
-msgid "unknown"
-msgstr "不詳"
-
-#. module: website_mail
-#: model:ir.ui.view,arch_db:website_mail.follow
+#: model_terms:ir.ui.view,arch_db:website_mail.follow
 msgid "your email..."
-msgstr ""
+msgstr "您的電子信件..."

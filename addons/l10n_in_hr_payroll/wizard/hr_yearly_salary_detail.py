@@ -1,40 +1,34 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
+from odoo import api, fields, models
 
-from openerp.osv import fields, osv
 
-class yearly_salary_detail(osv.osv_memory):
+class YearlySalaryDetail(models.TransientModel):
+    _name = 'yearly.salary.detail'
+    _description = 'Hr Salary Employee By Category Report'
 
-   _name ='yearly.salary.detail'
-   _description = 'Hr Salary Employee By Category Report'
-   _columns = {
-        'employee_ids': fields.many2many('hr.employee', 'payroll_emp_rel', 'payroll_id', 'employee_id', 'Employees', required=True),
-        'date_from': fields.date('Start Date', required=True),
-        'date_to': fields.date('End Date', required=True),
-    }
+    def _get_default_date_from(self):
+        year = fields.Date.from_string(fields.Date.today()).strftime('%Y')
+        return '{}-01-01'.format(year)
 
-   _defaults = {
-        'date_from': lambda *a: time.strftime('%Y-01-01'),
-        'date_to': lambda *a: time.strftime('%Y-%m-%d'),
+    def _get_default_date_to(self):
+        date = fields.Date.from_string(fields.Date.today())
+        return date.strftime('%Y') + '-' + date.strftime('%m') + '-' + date.strftime('%d')
 
-    }
+    employee_ids = fields.Many2many('hr.employee', 'payroll_emp_rel', 'payroll_id', 'employee_id', string='Employees', required=True)
+    date_from = fields.Date(string='Start Date', required=True, default=_get_default_date_from)
+    date_to = fields.Date(string='End Date', required=True, default=_get_default_date_to)
 
-   def print_report(self, cr, uid, ids, context=None):
+    @api.multi
+    def print_report(self):
         """
          To get the date and print the report
-         @param self: The object pointer.
-         @param cr: A database cursor
-         @param uid: ID of the user currently logged in
-         @param context: A standard dictionary
          @return: return report
         """
-        if context is None:
-            context = {}
-        datas = {'ids': context.get('active_ids', [])}
-
-        res = self.read(cr, uid, ids, context=context)
+        self.ensure_one()
+        data = {'ids': self.env.context.get('active_ids', [])}
+        res = self.read()
         res = res and res[0] or {}
-        datas.update({'form':res})
-        return self.pool['report'].get_action(cr, uid, ids, 'l10n_in_hr_payroll.report_hryearlysalary', data=datas, context=context)
+        data.update({'form': res})
+        return self.env.ref('l10n_in_hr_payroll.action_report_hryearlysalary').report_action(self, data=data)

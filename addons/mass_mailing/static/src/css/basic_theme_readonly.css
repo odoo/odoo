@@ -1,0 +1,7 @@
+/* We want to show system's default font in the mail sent with the basic theme.
+   And so we remove font-family from basic theme while saving. But by doing so
+   in readonly mode is not getting proper font in odoo. So we added if from here.
+ */
+#wrapwrap .o_layout.o_basic_theme {
+    font-family: -apple-system, "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}

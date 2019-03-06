@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="res_partner_view_form_short">
+            <field name="name">res.partner.view.form.short.inherit.mail</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_short_form" />
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//field[@name='email']" position="replace">
+                    <field name="is_blacklisted" invisible="1"/>
+                    <label for="email" class="oe_inline"/>
+                    <div class="o_row o_row_readonly">
+                        <i class="fa fa-ban" style="color: red;" role="img" title="This email is blacklisted for mass mailing"
+                            aria-label="Blacklisted" attrs="{'invisible': [('is_blacklisted', '=', False)]}" groups="base.group_user"></i>
+                        <field name="email" widget="email"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,131 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_payumoney
+# 
+# Translators:
+# darenkster <inactive+darenkster@transifex.com>, 2017
+# Martin Trigaux, 2017
+# e2f <projects@e2f.com>, 2018
+# Ralf Hilgenstock <rh@dialoge.info>, 2018
+# Wolfgang Taferner, 2018
+# Tina Rittmüller <tr@ife.de>, 2018
+# Fabian Liesch <fabian.liesch@gmail.com>, 2018
+# Andi, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Andi, 2018\n"
+"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Manuelle Konfiguration"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
+msgid "Merchant Key"
+msgstr "Händlerschlüssel"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_salt
+msgid "Merchant Salt"
+msgstr "Händler Salt"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:108
+#, python-format
+msgid "PayUmoney: invalid shasign, received %s, computed %s, for data %s"
+msgstr ""
+"PayUmoney: ungültiges Shasign, %s erhalten, %s berechnet, %s für Daten"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:102
+#, python-format
+msgid "PayUmoney: received data for reference %s; multiple orders found"
+msgstr ""
+"PayUmoney: empfangene Daten für Referenz %s; Mehrfachaufträge gefunden"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:99
+#, python-format
+msgid "PayUmoney: received data for reference %s; no order found"
+msgstr "PayUmoney: empfangene Daten für Referenz %s; kein Auftrag gefunden"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:94
+#, python-format
+msgid ""
+"PayUmoney: received data with missing reference (%s) or pay_id (%s) or "
+"shashign (%s)"
+msgstr ""
+"PayUmoney: empfangene Daten mit fehlender Referenz (%s) oder pay_id (%s) "
+"oder shashign (%s)"
+
+#. module: payment_payumoney
+#: model:ir.model,name:payment_payumoney.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Zahlungsanbieter"
+
+#. module: payment_payumoney
+#: model:ir.model,name:payment_payumoney.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Zahlungstransaktion"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Anbieter"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Banküberweisung"

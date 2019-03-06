@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+        <!-- Chart template -->
+        <record id="l10n_chart_china_standard_business" model="account.chart.template">
+            <field name="name">中国会计科目表 （财会[2006]3号《企业会计准则》</field>
+            <field name="code_digits" eval="6" />
+            <field name="currency_id" ref="base.CNY" />
+            <field name="cash_account_code_prefix">1001</field>
+            <field name="bank_account_code_prefix">1002</field>
+            <field name="transfer_account_code_prefix">1003</field>
+        </record>
+    </data>
+</odoo>

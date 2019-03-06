@@ -1,0 +1,35 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="portal.portal_signature">
+        <form id="o_portal_sign_accept" method="POST">
+            <input type="hidden" name="csrf_token" t-att-value="widget.options.csrf_token"/>
+            <div class="form-group">
+                <label class="col-form-label" for="name">Your Name</label>
+                <input type="text" name="partner_name" id="o_portal_sign_name" class="form-control" t-att-value="widget.options.partnerName"/>
+            </div>
+            <div class="card mt16 mb0" id="o_portal_sign_draw">
+                <div class="card-header">
+                    <div class="float-right">
+                        <a role="button" id="o_portal_sign_clear" class="btn btn-sm">Clear</a>
+                    </div>
+                    <strong>Draw your signature</strong>
+                </div>
+                <div id="o_portal_signature" class="card-body" style="padding: 0"/>
+            </div>
+            <div class="mt16 clearfix">
+              <button type="submit" class="btn btn-primary o_portal_sign_submit float-right"><t t-esc="widget.options.signLabel or 'Accept &amp; Sign'"/></button>
+            </div>
+        </form>
+    </t>
+    <t t-name="portal.portal_signature_success">
+        <div class="alert alert-success" role="status">
+            <strong>Thank You !</strong><br />
+            <span t-esc="widget.success"/>
+            <a t-att-href="widget.redirect_url">Click here to see your document.</a>
+        </div>
+    </t>
+    <t t-name="portal.portal_signature_error">
+        <div class="o_portal_sign_error_msg">
+            <t t-esc="message"/>
+        </div>
+    </t>
+</templates>

@@ -1,11 +1,17 @@
 odoo.define('survey.survey', function (require) {
 'use strict';
 
-var website = require('website.website');
+require('web.dom_ready');
+var core = require('web.core');
+var time = require('web.time');
+var ajax = require('web.ajax');
+var base = require('web_editor.base');
+var context = require('web_editor.context');
+var field_utils = require('web.field_utils');
 
+var _t = core._t;
 /*
- * This file is intended to add interactivity to survey forms rendered by
- * the website engine.
+ * This file is intended to add interactivity to survey forms
  */
 
 var the_form = $('.js_surveyform');
@@ -24,7 +30,7 @@ if(!the_form.length) {
 
     // Printing mode: will disable all the controls in the form
     if (_.isUndefined(submit_controller)) {
-        $(".js_surveyform .input-group-addon span.fa-calendar").css("pointer-events", "none");
+        $(".js_surveyform .input-group-text span.fa-calendar").css("pointer-events", "none");
         $('.js_surveyform :input').prop('disabled', true);
         print_mode = true;
     }
@@ -34,17 +40,6 @@ if(!the_form.length) {
         quiz_correction_mode = true;
     }
 
-    $("div.input-group span.fa-calendar").on('click', function(e) {
-        $(e.currentTarget).closest("div.date").datetimepicker({
-            useSeconds: true,
-            icons : {
-                time: 'fa fa-clock-o',
-                date: 'fa fa-calendar',
-                up: 'fa fa-chevron-up',
-                down: 'fa fa-chevron-down'
-            },
-        });
-    });
 
     // Custom code for right behavior of radio buttons with comments box
     $('.js_comments>input[type="text"]').focusin(function(){
@@ -61,11 +56,11 @@ if(!the_form.length) {
     $('.js_drop select').change(function(){
         var other_val = $(this).find('.js_other_option').val();
         if($(this).val() === other_val){
-            $(this).parent().removeClass('col-md-12').addClass('col-md-6');
+            $(this).parent().removeClass('col-lg-12').addClass('col-lg-6');
             $(this).closest('.js_drop').find('input[data-oe-survey-othert="1"]').show().focus();
         }
         else{
-            $(this).parent().removeClass('col-md-6').addClass('col-md-12');
+            $(this).parent().removeClass('col-lg-6').addClass('col-lg-12');
             $(this).closest('.js_drop').find('input[data-oe-survey-othert="1"]').val("").hide();
         }
     });
@@ -88,6 +83,11 @@ if(!the_form.length) {
 
                         // prefill of text/number/date boxes
                         var input = the_form.find(".form-control[name=" + key + "]");
+                        if (input.attr('date')) {
+                            // display dates in user timezone
+                            var moment_date = field_utils.parse.date(value[0]);
+                            value = field_utils.format.date(moment_date, null, {timezone: true});
+                        }
                         input.val(value);
 
                         // special case for comments under multiple suggestions questions
@@ -130,7 +130,19 @@ if(!the_form.length) {
         url: submit_controller,
         type: 'POST',                       // submission type
         dataType: 'json',                   // answer expected type
-        beforeSubmit: function(){           // hide previous errmsg before resubmitting
+        beforeSubmit: function(formData, $form, options){           // hide previous errmsg before resubmitting
+            var date_fields = $form.find('div.date > input.form-control');
+            for (var i=0; i < date_fields.length; i++) {
+                var el = date_fields[i];
+                var moment_date = el.value !== '' ? field_utils.parse.date(el.value) : '';
+                if (moment_date) {
+                    moment_date.toJSON = function () {
+                        return this.clone().locale('en').format('YYYY-MM-DD');
+                    };
+                }
+                var field_obj = _.findWhere(formData, {'name': el.name});
+                field_obj.value = JSON.parse(JSON.stringify(moment_date));
+            }
             $('.js_errzone').html("").hide();
         },
         success: function(response, status, xhr, wfe){ // submission attempt
@@ -161,11 +173,43 @@ if(!the_form.length) {
     //         console.debug("[survey] Focus lost on question " + $(this).attr("id"));
     // });
 
-    // Launch prefilling
-    prefill();
-    if(quiz_correction_mode === true){
-        display_scores();
+    function load_locale(){
+        var url = "/web/webclient/locale/" + context.get().lang || 'en_US';
+        return ajax.loadJS(url);
     }
+
+    var ready_with_locale = $.when(base.ready(), load_locale());
+    // datetimepicker use moment locale to display date format according to language
+    // frontend does not load moment locale at all.
+    // so wait until DOM ready with locale then init datetimepicker
+    ready_with_locale.then(function(){
+         _.each($('.input-group.date'), function(date_field){
+            var minDate = $(date_field).data('mindate') || moment({ y: 1900 });
+            var maxDate = $(date_field).data('maxdate') || moment().add(200, "y");
+            $('#' + date_field.id).datetimepicker({
+                format : time.getLangDateFormat(),
+                minDate: minDate,
+                maxDate: maxDate,
+                calendarWeeks: true,
+                icons: {
+                    time: 'fa fa-clock-o',
+                    date: 'fa fa-calendar',
+                    next: 'fa fa-chevron-right',
+                    previous: 'fa fa-chevron-left',
+                    up: 'fa fa-chevron-up',
+                    down: 'fa fa-chevron-down',
+                },
+                locale : moment.locale(),
+                allowInputToggle: true,
+                keyBinds: null,
+            });
+        });
+        // Launch prefilling
+        prefill();
+        if(quiz_correction_mode === true){
+            display_scores();
+        }
+    });
 
     console.debug("[survey] Custom JS for survey loaded!");
 

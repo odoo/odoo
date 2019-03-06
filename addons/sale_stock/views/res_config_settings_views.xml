@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_sale" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.stock.sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='sale_order_dates']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box">
+                    <div class="o_setting_left_pane">
+                        <field name="group_display_incoterm"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="group_display_incoterm"/>
+                        <div class="text-muted">
+                            Display incoterms on orders &amp; invoices
+                        </div>
+                        <div class="content-group" attrs="{'invisible': [('group_display_incoterm','=',False)]}">
+                            <div class="mt16">
+                                <button name="%(account.action_incoterms_tree)d" icon="fa-arrow-right" type="action" string="Incoterms" class="btn-link"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 o_setting_box" title="This allows to apply a special route on sales order lines (e.g. dropshipping, make-to-order) in case of unusual order scenario. To be available in sales orders, routes must have 'Sales Order Line' option checked in their setup form.">
+                    <div class="o_setting_left_pane">
+                        <field name="group_route_so_lines"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="group_route_so_lines"/>
+                        <div class="text-muted">
+                            Apply special routes from orders (e.g. dropshipping, MTO)
+                        </div>
+                        <div class="content-group" attrs="{'invisible': [('group_route_so_lines','=',False)]}">
+                            <div class="mt16">
+                                <button name="%(stock.action_routes_form)d" icon="fa-arrow-right" type="action" string="Routes for Sales Order Lines" class="btn-link" context="{'default_sale_selectable': 1}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_config_settings_view_form_stock" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.stock.stock</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="warning_info" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" title="Reserving products manually in delivery orders or by running the scheduler is advised to better manage priorities in case of long customer lead times or/and frequent stock-outs. By default, the scheduler runs automatically every 24 hours.">
+                    <div class="o_setting_right_pane">
+                        <label for="module_procurement_jit"/>
+                        <div class="text-muted">
+                            When to reserve sold products
+                        </div>
+                        <div class="content-group">
+                            <div class="mt16">
+                                <field name="module_procurement_jit" class="o_light_label" widget="radio"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 o_setting_box">
+                    <div class="o_setting_right_pane">
+                        <label for="default_picking_policy"/>
+                        <div class="text-muted">
+                            When to start shipping
+                        </div>
+                        <div class="content-group">
+                            <div class="mt16">
+                                <field name="default_picking_policy" class="o_light_label" widget="selection"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="sale_security_lead" position="replace">
+                <div class="col-12 col-lg-6 o_setting_box" title="Margin of error for dates promised to customers. Products will be scheduled for procurement and delivery that many days earlier than the actual promised date, to cope with unexpected delays in the supply chain.">
+                    <div class="o_setting_left_pane">
+                        <field name="use_security_lead"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="use_security_lead"/>
+                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
+                        <div class="text-muted">
+                            Schedule deliveries earlier to avoid delays
+                        </div>
+                        <div class="content-group">
+                            <div class="mt16" attrs="{'invisible': [('use_security_lead','=',False)]}">
+                                <span>Move forward expected delivery dates by <field name="security_lead" class="oe_inline"/> days</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+
+</odoo>

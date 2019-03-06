@@ -6,42 +6,50 @@
 Odoo Guidelines
 ===============
 
-This page introduces the new Odoo Coding Guidelines. Those aim to improve the quality of the code (e.g. better readability of source) and Odoo Apps. Indeed, proper code eases maintenance, aids debugging, lowers complexity and promotes reliability.
-
-These guidelines should be applied to every new module, and new developpment. These guidelines will be applied to old module **only** in case of code refactoring (migration to new API, big refactoring, ...).
+This page introduces the Odoo Coding Guidelines. Those aim to improve the
+quality of Odoo Apps code. Indeed proper code improves readability, eases
+maintenance, helps debugging, lowers complexity and promotes reliability.
+These guidelines should be applied to every new module and to all new development.
 
 .. warning::
 
-    These guidelines are written with new modules and new files in mind. When
-    modifying existing files, the original style of the file strictly supersedes
-    any other style guidelines. In other words, never modify existing files in
-    order to apply these guidelines, to avoid disrupting the revision history of
-    each line. For more details, see our `pull request guide <https://odoo.com/submit-pr>`_.
+    When modifying existing files in **stable version** the original file style
+    strictly supersedes any other style guidelines. In other words please never
+    modify existing files in order to apply these guidelines. It avoids disrupting
+    the revision history of code lines. Diff should be kept minimal. For more
+    details, see our `pull request guide <https://odoo.com/submit-pr>`_.
+
+.. warning::
+
+    When modifying existing files in **master (development) version** apply those
+    guidelines to existing code only for modified code or if most of the file is
+    under revision. In other words modify existing files structure only if it is
+    going under major changes. In that case first do a **move** commit then apply
+    the changes related to the feature.
 
 Module structure
 ================
 
 Directories
 -----------
-A module is organised in important directories. Those contain the business logic; having a look at them should make understand the purpose of the module.
+A module is organised in important directories. Those contain the business logic; having a look at them should make you understand the purpose of the module.
 
 - *data/* : demo and data xml
 - *models/* : models definition
-- *controllers/* : contains controllers (HTTP routes).
+- *controllers/* : contains controllers (HTTP routes)
 - *views/* : contains the views and templates
 - *static/* : contains the web assets, separated into *css/, js/, img/, lib/, ...*
 
 Other optional directories compose the module.
 
-- *wizard/* : regroups the transient models (formerly *osv_memory*) and their views.
-- *report/* : contains the reports (RML report **[deprecated]**, models based on SQL views (for reporting) and other complex reports). Python objects and XML views are included in this directory.
-- *tests/* : contains the Python/YML tests
+- *wizard/* : regroups the transient models (``models.TransientModel``) and their views
+- *report/* : contains the printable reports and models based on SQL views. Python objects and XML views are included in this directory
+- *tests/* : contains the Python tests
 
 
 File naming
 -----------
-For *views* declarations, split backend views from (frontend)
-templates in 2 differents files.
+For *views* declarations, distinguish the backend views definition (list, form, kanban, ...), the templates (QWeb pages) and bundle (JS and CSS assets). Bundles are theorically QWeb templates, but should be in their own file :file:`assets.xml`.
 
 For *models*, split the business logic by sets of models, in each set
 select a main model, this model gives its name to the set. If there is
@@ -61,7 +69,7 @@ For instance, *sale* module introduces ``sale_order`` and
 For *data*, split them by purpose : demo or data. The filename will be
 the main_model name, suffixed by *_demo.xml* or *_data.xml*.
 
-For *controllers*, the only file should be named *main.py*. Otherwise, if you need to inherit an existing controller from another module, its name will be *<module_name>.py*. Unlike *models*, each controller class should be contained in a separated file.
+For *controllers*, the only file should be named *<my_module_name>.py*. If you need to inherit an existing controller from another module, its name will be *<module_name>.py*. Unlike *models*, each controller class should be contained in a separated file. For instance, *purchase* module implements its part of the customer portal in :file:`controllers/portal.py` and its own typical routes on :file:`controllers/purchase.py`.
 
 For *static files*, since the resources can be used in different contexts (frontend, backend, both), they will be included in only one bundle. So, CSS/Less, JavaScript and XML files should be suffixed with the name of the bundle type. i.e.: *im_chat_common.css*, *im_chat_common.js* for 'assets_common' bundle, and *im_chat_backend.css*, *im_chat_backend.js* for 'assets_backend' bundle.
 If the module owns only one file, the convention will be *<module_name>.ext* (i.e.: *project.js*).
@@ -76,7 +84,7 @@ Regarding *wizards*, naming convention is :
 - :file:`{<main_transient>}.py`
 - :file:`{<main_transient>}_views.xml`
 
-Where *<main_transient>* is the name of the dominant transient model, just like for *models*. <main_transient>.py can contains the models 'model.action' and 'model.action.line'.
+Where *<main_transient>* is the name of the dominant transient model, just like for *models*. <main_transient>.py can contains the models 'transient_model.action' and 'transient_model.action.line'.
 
 For *statistics reports*, their names should look like :
 
@@ -95,11 +103,11 @@ The complete tree should look like
 
     addons/<my_module_name>/
     |-- __init__.py
-    |-- __openerp__.py
+    |-- __manifest__.py
     |-- controllers/
     |   |-- __init__.py
     |   |-- <inherited_module_name>.py
-    |   `-- main.py
+    |   `-- <my_module_name>.py
     |-- data/
     |   |-- <main_model>_data.xml
     |   `-- <inherited_main_model>_demo.xml
@@ -124,13 +132,15 @@ The complete tree should look like
     |   |   `-- external_lib/
     |   `-- src/
     |       |-- js/
-    |       |   `-- <my_module_name>.js
+    |       |   |-- <my_module_name>.js
+                `-- <my_widget_A>.js
     |       |-- css/
     |       |   `-- <my_module_name>.css
-    |       |-- less/
-    |       |   `-- <my_module_name>.less
+    |       |-- scss/
+    |       |   `-- <my_module_name>.scss
     |       `-- xml/
-    |           `-- <my_module_name>.xml
+    |           |-- <my_module_name>.xml
+                `-- <my_widget_A>.xml
     |-- views/
     |   |-- <main_model>_templates.xml
     |   |-- <main_model>_views.xml
@@ -163,7 +173,9 @@ To declare a record in XML, the **record** notation (using *<record>*) is recomm
 - Try to group the record by model. In case of dependencies between
   action/menu/views, this convention may not be applicable.
 - Use naming convention defined at the next point
-- The tag *<data>* is only used to set not-updatable data with ``noupdate=1``
+- The tag *<data>* is only used to set not-updatable data with ``noupdate=1``.
+  If there is only not-updatable data in the file, the ``noupdate=1`` can be
+  set on the ``<odoo>`` tag and do not set a ``<data>`` tag.
 
 .. code-block:: xml
 
@@ -182,7 +194,6 @@ To declare a record in XML, the **record** notation (using *<record>*) is recomm
 Odoo supports custom tags acting as syntactic sugar:
 
 - menuitem: use it as a shortcut to declare a ``ir.ui.menu``
-- workflow: the <workflow> tag sends a signal to an existing workflow.
 - template: use it to declare a QWeb View requiring only the ``arch`` section of the view.
 - report: use to declare a :ref:`report action <reference/actions/report>`
 - act_window: use it if the record notation can't do what you want
@@ -198,7 +209,7 @@ Security, View and Action
 
 Use the following pattern :
 
-* For a menu: :samp:`{<model_name>}_menu`
+* For a menu: :samp:`{<model_name>}_menu`, or :samp:`{<model_name>}_menu_{do_stuff}` for submenus.
 * For a view: :samp:`{<model_name>}_view_{<view_type>}`, where *view_type* is
   ``kanban``, ``form``, ``tree``, ``search``, ...
 * For an action: the main action respects :samp:`{<model_name>}_action`.
@@ -212,7 +223,6 @@ Use the following pattern :
   *concerned_group* is the short name of the concerned group ('user'
   for the 'model_name_group_user', 'public' for public user, 'company'
   for multi-company rules, ...).
-* For a group : :samp:`{<model_name>}_group_{<group_name>}` where *group_name* is the name of the group, generally 'user', 'manager', ...
 
 .. code-block:: xml
 
@@ -271,18 +281,23 @@ Inherited XML
 ~~~~~~~~~~~~~
 
 The naming pattern of inherited view is
-:samp:`{<base_view>}_inherit_{<current_module_name>}`. A module may only
-extend a view once.  Suffix the orginal name with
-:samp:`_inherit_{<current_module_name>}` where *current_module_name* is the
-technical name of the module extending the view.
+
+#. Extension mode: Use the same xml id than the original view you are extending, and suffix it by :samp:`{_inherit}` . For instance, the view :samp:`project.project_view_form` can be extended by :samp:`project_forecast.project_view_form_inherit`.
+#. Primary mode: Keep the original xml id.
 
 
 .. code-block:: xml
 
-    <record id="inherited_model_view_form_inherit_my_module" model="ir.ui.view">
+    <record id="module2.model_view_form_inherit" model="ir.ui.view">
+        <field name="inherit_id" ref="module1.model_view_form"/>
         ...
     </record>
 
+    <record id="module2.model_view_form" model="ir.ui.view">
+        <field name="inherit_id" ref="module1.model_view_form"/>
+        <field name="mode">primary</field>
+        ...
+    </record>
 
 Python
 ======
@@ -324,7 +339,7 @@ Inside these 3 groups, the imported lines are alphabetically sorted.
     from odoo import api, fields, models # alphabetically ordered
     from odoo.tools.safe_eval import safe_eval as eval
     from odoo.tools.translate import _
-    # 3 :  imports from odoo modules
+    # 3 :  imports from odoo addons
     from odoo.addons.website.models.website import slug
     from odoo.addons.web.controllers.main import login_redirect
 
@@ -345,7 +360,7 @@ Idiomatics Python Programming
     new_dict = dict(my_dict)
     new_list = list(old_list)
 
-- Python dictionnary : creation and update
+- Python dictionary : creation and update
 
 .. code-block:: python
 
@@ -409,7 +424,7 @@ Idiomatics Python Programming
 .. code-block:: python
 
     value = my_dict.get('key', None) # very very redundant
-    value= my_dict.get('key') # good
+    value = my_dict.get('key') # good
 
 Also, ``if 'key' in my_dict`` and ``if my_dict.get('key')`` have very different
 meaning, be sure that you're using the right one.
@@ -451,11 +466,8 @@ So, you can write ``if some_collection:`` instead of ``if len(some_collection):`
     # better
     for key in my_dict:
             "do something..."
-    # creates a temporary list
+    # accessing the key,value pair
     for key, value in my_dict.items():
-            "do something..."
-    # only iterates
-    for key, value in my_dict.iteritems():
             "do something..."
 
 - Use dict.setdefault
@@ -489,12 +501,11 @@ Programming in Odoo
   ease code reading and performance.
 
 
-Make your method works in batch
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Make your method work in batch
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 When adding a function, make sure it can process multiple records. Typically,
-such method is decorated with ``api.multi`` decorator (or takes a list of *id*,
-if written in old api). Then you will have to iterate on ``self`` to treat each
-record.
+such methods are decorated with the ``api.multi`` decorator. Then you will have
+to iterate on ``self`` to treat each record.
 
 .. code-block:: python
 
@@ -524,8 +535,8 @@ is recommended to use ``read_group`` method, to compute all value in only one re
 
 Propagate the context
 ~~~~~~~~~~~~~~~~~~~~~
-In new API, the context is a ``frozendict`` that cannot be modified. To call
-a method with a different context, the ``with_context`` method should be used :
+The context is a ``frozendict`` that cannot be modified. To call a method with
+a different context, the ``with_context`` method should be used :
 
 .. code-block:: python
 
@@ -612,17 +623,47 @@ online documentation of pyscopg2 to learn of to use it properly:
 - Advanced parameter types (http://initd.org/psycopg/docs/usage.html#adaptation-of-python-values-to-sql-types)
 
 
-Keep your methods short/simple when possible
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Think extendable
+~~~~~~~~~~~~~~~~
 Functions and methods should not contain too much logic: having a lot of small
 and simple methods is more advisable than having few large and complex methods.
-A good rule of thumb is to split a method as soon as:
-- it has more than one responsibility (see http://en.wikipedia.org/wiki/Single_responsibility_principle)
-- it is too big to fit on one screen.
+A good rule of thumb is to split a method as soon as it has more than one
+responsibility (see http://en.wikipedia.org/wiki/Single_responsibility_principle).
 
-Also, name your functions accordingly: small and properly named functions are the starting point of readable/maintainable code and tighter documentation.
+Hardcoding a business logic in a method should be avoided as it prevents to be
+easily extended by a submodule.
 
-This recommendation is also relevant for classes, files, modules and packages. (See also http://en.wikipedia.org/wiki/Cyclomatic_complexity)
+.. code-block:: python
+
+    # do not do this
+    # modifying the domain or criteria implies overriding whole method
+    def action(self):
+        ...  # long method
+        partners = self.env['res.partner'].search(complex_domain)
+        emails = partners.filtered(lambda r: arbitrary_criteria).mapped('email')
+
+    # better but do not do this either
+    # modifying the logic forces to duplicate some parts of the code
+    def action(self):
+        ...
+        partners = self._get_partners()
+        emails = partners._get_emails()
+
+    # better
+    # minimum override
+    def action(self):
+        ...
+        partners = self.env['res.partner'].search(self._get_partner_domain())
+        emails = partners.filtered(lambda r: r._filter_partners()).mapped('email')
+
+The above code is over extendable for the sake of example but the readability
+must be taken into account and a tradeoff must be made.
+
+Also, name your functions accordingly: small and properly named functions are
+the starting point of readable/maintainable code and tighter documentation.
+
+This recommendation is also relevant for classes, files, modules and packages.
+(See also http://en.wikipedia.org/wiki/Cyclomatic_complexity)
 
 
 Never commit the transaction
@@ -786,13 +827,12 @@ Symbols and Conventions
       and *sale.order* instead of *res.partnerS* and *saleS.orderS*)
     - When defining an Odoo Transient (wizard) : use ``<related_base_model>.<action>``
       where *related_base_model* is the base model (defined in *models/*) related
-      to the transient, and *action* is the short name of what the transient do.
+      to the transient, and *action* is the short name of what the transient do. Avoid the *wizard* word.
       For instance : ``account.invoice.make``, ``project.task.delegate.batch``, ...
     - When defining *report* model (SQL views e.i.) : use
       ``<related_base_model>.report.<action>``, based on the Transient convention.
 
-- Odoo Python Class : use camelcase for code in api v8 (Object-oriented style),
-  underscore lowercase notation for old api (SQL style).
+- Odoo Python Class : use camelcase (Object-oriented style).
 
 
 .. code-block:: python
@@ -800,20 +840,15 @@ Symbols and Conventions
     class AccountInvoice(models.Model):
         ...
 
-    class account_invoice(osv.osv):
-        ...
-
 - Variable name :
     - use camelcase for model variable
     - use underscore lowercase notation for common variable.
-    - since new API works with record or recordset instead of id list, don't
-      suffix variable name with *_id* or *_ids* if they not contain id or list
-      of id.
+    - prefix your variable name with *_id* or *_ids* if it contains a record id or list of id. Don't use ``partner_id`` to contain a record of res.partner
 
 .. code-block:: python
 
-    ResPartner = self.env['res.partner']
-    partners = ResPartner.browse(ids)
+    Partner = self.env['res.partner']
+    partners = Partner.browse(ids)
     partner_id = partners[0].id
 
 - ``One2Many`` and ``Many2Many`` fields should always have *_ids* as suffix (example: sale_order_line_ids)
@@ -822,6 +857,7 @@ Symbols and Conventions
     - Compute Field : the compute method pattern is *_compute_<field_name>*
     - Search method : the search method pattern is *_search_<field_name>*
     - Default method : the default method pattern is *_default_<field_name>*
+    - Selection method: the selection method pattern is *_selection_<field_name>*
     - Onchange method : the onchange method pattern is *_onchange_<field_name>*
     - Constraint method : the constraint method pattern is *_check_<constraint_name>*
     - Action method : an object action method is prefix with *action_*. Its decorator is
@@ -832,7 +868,8 @@ Symbols and Conventions
     #. Private attributes (``_name``, ``_description``, ``_inherit``, ...)
     #. Default method and ``_default_get``
     #. Field declarations
-    #. Compute and search methods in the same order as field declaration
+    #. Compute, inverse and search methods in the same order as field declaration
+    #. Selection method (methods used to return computed values for selection fields)
     #. Constrains methods (``@api.constrains``) and onchange methods (``@api.onchange``)
     #. CRUD methods (ORM overrides)
     #. Action methods
@@ -856,12 +893,17 @@ Symbols and Conventions
         seats_available = fields.Integer(oldname='register_avail', string='Available Seats',
             store=True, readonly=True, compute='_compute_seats')
         price = fields.Integer(string='Price')
+        event_type = fields.Selection(string="Type", selection='_selection_type')
 
         # compute and search fields, in the same order of fields declaration
         @api.multi
         @api.depends('seats_max', 'registration_ids.state', 'registration_ids.nb_register')
         def _compute_seats(self):
             ...
+
+        @api.model
+        def _selection_type(self):
+            return []
 
         # Constraints and onchanges
         @api.constrains('seats_max', 'seats_available')
@@ -889,7 +931,34 @@ Symbols and Conventions
 
 Javascript and CSS
 ==================
-**For javascript :**
+
+Static files organization
+--------------------------
+
+Odoo addons have some conventions on how to structure various files. We explain
+here in more details how web assets are supposed to be organized.
+
+The first thing to know is that the Odoo server will serve (statically) all files
+located in a *static/* folder, but prefixed with the addon name. So, for example,
+if a file is located in *addons/web/static/src/js/some_file.js*, then it will be
+statically available at the url *your-odoo-server.com/web/static/src/js/some_file.js*
+
+The convention is to organize the code according to the following structure:
+
+- *static*: all static files in general
+- *static/lib*: this is the place where js libs should be located, in a sub folder.
+  So, for example, all files from the *jquery* library are in *addons/web/static/lib/jquery*
+- *static/src*: the generic static source code folder
+- *static/src/css*: all css files
+- *static/src/fonts*
+- *static/src/img*
+- *static/src/js*
+- *static/src/scss*: scss files
+- *static/src/xml*: all qweb templates that will be rendered in JS
+- *static/tests*: this is where we put all test related files.
+
+Javascript coding guidelines
+----------------------------
 
 - ``use strict;`` is recommended for all javascript files
 - Use a linter (jshint, ...)
@@ -902,69 +971,161 @@ Javascript and CSS
 
 .. code-block:: javascript
 
-    openerp.website.if_dom_contains('.jquery_class_selector', function () {
+    odoo.website.if_dom_contains('.jquery_class_selector', function () {
         /*your code here*/
     });
 
 
-**For CSS :**
+CSS coding guidelines
+---------------------
 
 - Prefix all your classes with *o_<module_name>* where *module_name* is the
   technical name of the module ('sale', 'im_chat', ...) or the main route
   reserved by the module (for website module mainly, i.e. : 'o_forum' for
   *website_forum* module). The only exception for this rule is the
   webclient: it simply uses *o_* prefix.
-- Avoid using id
+- Avoid using *id* tag
 - Use Bootstrap native classes
 - Use underscore lowercase notation to name class
 
 Git
 ===
 
-Commit message
---------------
+Configure your git
+------------------
 
-Prefix your commit with
+Based on ancestral experience and oral tradition, the following things go a long
+way towards making your commits more helpful:
 
-- **[IMP]** for improvements
-- **[FIX]** for bug fixes
-- **[REF]** for refactoring
-- **[ADD]** for adding new resources
-- **[REM]** for removing of resources
-- **[MOV]** for moving files (Do not change content of moved file, otherwise
-  Git will loose track, and the history will be lost !), or simply moving code
-  from a file to another one.
-- **[MERGE]** for merge commits (only for forward/back-port)
-- **[CLA]** for signing the Odoo Individual Contributor License
+- Be sure to define both the user.email and user.name in your local git config
 
-Then, in the message itself, specify the part of the code impacted by
-your changes (module name, lib, transversal object, ...) and a description
-of the changes.
+  .. code-block:: text
 
-- Always include a meaningful commit message: it should be self explanatory
-  (long enough) including the name of the module that has been changed and the
-  reason behind the change. Do not use single words like "bugfix" or
-  "improvements".
-- Avoid commits which simultaneously impact multiple modules. Try to
-  split into different commits where impacted modules are different
-  (It will be helpful if we need to revert a module separately).
+     git config --global <var> <value>
+
+- Be sure to add your full name to your Github profile here. Please feel fancy
+  and add your team, avatar, your favorite quote, and whatnot ;-)
+
+Commit message structure
+------------------------
+
+Commit message has four parts: tag, module, short description and full
+description. Try to follow the preferred structure for your commit messages
 
 .. code-block:: text
 
-    [FIX] website, website_mail: remove unused alert div, fixes look of input-group-btn
+  [TAG] module: describe your change in a short sentence (ideally < 50 chars)
 
-    Bootstrap's CSS depends on the input-group-btn
-    element being the first/last child of its parent.
-    This was not the case because of the invisible
-    and useless alert.
+  Long version of the change description, including the rationale for the change,
+  or a summary of the feature being introduced.
 
-    [IMP] fields: reduce memory footprint of list/set field attributes
+  Please spend a lot more time describing WHY the change is being done rather
+  than WHAT is being changed. This is usually easy to grasp by actually reading
+  the diff. WHAT should be explained only if there are technical choices
+  or decision involved. In that case explain WHY this decision was taken.
 
-    [REF] web: add module system to the web client
+  End the message with references, such as task or bug numbers, PR numbers, and
+  OPW tickets, following the suggested format:
+  Related to task #taskId
+  Fixes #12345  (link and close issue on Github)
+  Closes #7865  (link and close PR on Github)
+  OPW-112233
 
-    This commit introduces a new module system for the javascript code.
-    Instead of using global ...
+Tag and module name
+-------------------
 
+Tags are used to prefix your commit. They should be one of the following
+
+- **[FIX]** for bug fixes: mostly used in stable version but also valid if you
+  are fixing a recent bug in development version;
+- **[REF]** for refactoring: when a feature is heavily rewritten;
+- **[ADD]** for adding new modules;
+- **[REM]** for removing resources: removing dead code, removing views,
+  removing modules, ...;
+- **[REV]** for reverting commits: if a commit causes issues or is not wanted
+  reverting it is done using this tag;
+- **[MOV]** for moving files: use git move and do not change content of moved file
+  otherwise Git may loose track and history of the file; also used when moving
+  code from one file to another;
+- **[REL]** for release commits: new major or minor stable versions;
+- **[IMP]** for improvements: most of the changes done in development version
+  are incremental improvements not related to another tag;
+- **[MERGE]** for merge commits: used in forward port of bug fixes but also as
+  main commit for feature involving several separated commits;
+- **[CLA]** for signing the Odoo Individual Contributor License;
+- **[I18N]** for changes in translation files;
+
+After tag comes the modified module name. Use the technical name as functional
+name may change with time. If several modules are modified, list them or use
+various to tell it is cross-modules. Unless really required or easier avoid
+modifying code across several modules in the same commit. Understanding module
+history may become difficult.
+
+Commit message header
+---------------------
+
+After tag and module name comes a meaningful commit message header. It should be
+self explanatory and include the reason behind the change. Do not use single words
+like "bugfix" or "improvements". Try to limit the header length to about 50 characters
+for readability.
+
+Commit message header should make a valid sentence once concatenated with
+``if applied, this commit will <header>``. For example ``[IMP] base: prevent to
+archive users linked to active partners`` is correct as it makes a valid sentence
+``if applied, this commit will prevent users to archive...``.
+
+Commit message full description
+-------------------------------
+
+In the message description specify the part of the code impacted by your changes
+(module name, lib, transversal object, ...) and a description of the changes.
+
+First explain WHY you are modifying code. What is important if someone goes back
+to your commit in about 4 decades (or 3 days) is why you did it. It is the
+purpose of the change.
+
+What you did can be found in the commit itself. If there was some technical choices
+involved it is a good idea to explain it also in the commit message after the why.
+For Odoo R&D developers "PO team asked me to do it" is not a valid why, by the way.
+
+Please avoid commits which simultaneously impact multiple modules. Try to split
+into different commits where impacted modules are different. It will be helpful
+if we need to revert changes in a given module separately.
+
+Don't hesitate to be a bit verbose. Most people will only see your commit message
+and judge everything you did in your life just based on those few sentences.
+No pressure at all.
+
+**You spend several hours, days or weeks working on meaningful features. Take
+some time to calm down and write clear and understandable commit messages.**
+
+If you are an Odoo R&D developer the WHY should be the purpose of the task you
+are working on. Full specifications make the core of the commit message.
+**If you are working on a task that lacks purpose and specifications please
+consider making them clear before continuing.**
+
+Finally here are some examples of correct commit messages :
+
+.. code-block:: text
+
+ [REF] models: use `parent_path` to implement parent_store
+
+  This replaces the former modified preorder tree traversal (MPTT) with the
+  fields `parent_left`/`parent_right`[...]
+
+ [FIX] account: remove frenglish
+
+  [...]
+
+  Closes #22793
+  Fixes #22769
+
+ [FIX] website: remove unused alert div, fixes look of input-group-btn
+
+  Bootstrap's CSS depends on the input-group-btn
+  element being the first/last child of its parent.
+  This was not the case because of the invisible
+  and useless alert.
 
 .. note:: Use the long description to explain the *why* not the
           *what*, the *what* can be seen in the diff

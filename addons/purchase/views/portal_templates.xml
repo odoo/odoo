@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <template id="portal_my_home_menu_purchase" name="Portal layout : purchase menu entries" inherit_id="portal.portal_breadcrumbs" priority="25">
+    <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+      <li t-if="page_name == 'purchase' or purchase_order" t-attf-class="breadcrumb-item #{'active ' if not purchase_order else ''}">
+        <a t-if="purchase_order" t-attf-href="/my/purchase?{{ keep_query() }}">Purchase Orders</a>
+        <t t-else="">Purchase Orders</t>
+      </li>
+      <li t-if="purchase_order" class="breadcrumb-item active">
+        <t t-esc="purchase_order.name"/>
+      </li>
+    </xpath>
+  </template>
+
+  <template id="portal_my_home_purchase" name="Portal My Home : purchase entry" inherit_id="portal.portal_my_home" priority="25">
+    <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+        <t t-if="purchase_count" t-call="portal.portal_docs_entry">
+            <t t-set="title">Purchase Orders</t>
+            <t t-set="url" t-value="'/my/purchase'"/>
+            <t t-set="count" t-value="purchase_count"/>
+        </t>
+    </xpath>
+  </template>
+
+  <template id="portal_my_purchase_orders" name="Portal: My Purchase Orders">
+    <t t-call="portal.portal_layout">
+      <t t-call="portal.portal_searchbar">
+        <t t-set="title">Purchase Orders</t>
+      </t>
+      <t t-if="orders" t-call="portal.portal_table">
+        <thead>
+          <tr class="active">
+            <th>Purchase Orders #</th>
+            <th>Order Date</th>
+            <th></th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <t t-foreach="orders" t-as="order">
+            <tr>
+              <td><a t-attf-href="/my/purchase/#{order.id}?#{keep_query()}"><t t-esc="order.name"/></a></td>
+              <td><span t-field="order.date_order"/></td>
+              <td>
+                <t t-if="order.invoice_status == 'to invoice'">
+                  <span class="badge badge-info"><i class="fa fa-fw fa-file-text"/> Waiting for Bill</span>
+                </t>
+                <t t-if="order.state == 'cancel'">
+                  <span class="badge badge-secondary"><i class="fa fa-fw fa-remove"/> Cancelled</span>
+                </t>
+              </td>
+              <td><span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/></td>
+            </tr>
+          </t>
+        </tbody>
+      </t>
+    </t>
+  </template>
+
+  <template id="portal_my_purchase_order" name="Portal: My Purchase Order">
+    <t t-call="portal.portal_layout">
+      <t t-set="purchase_order" t-value="order"/>
+      <div id="optional_placeholder"></div>
+      <div class="container">
+          <div class="card">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-lg-12">
+                  <h4>
+                    <t t-if="order.state in ['draft', 'sent']">
+                      Request for Quotation
+                    </t>
+                    <t t-else="1">
+                      Purchase Order
+                    </t>
+                    <span t-esc="order.name"/>
+                  </h4>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="mb8">
+                  <strong>Date:</strong> <span t-field="order.date_order" t-options='{"widget": "date"}'/>
+              </div>
+              <div class="row">
+                <div class="col-lg-6">
+                  <strong>Product</strong>
+                </div>
+                <div class="col-lg-2 text-right">
+                  <strong>Unit Price</strong>
+                </div>
+                <div class="col-lg-2 text-right">
+                  <strong>Quantity</strong>
+                </div>
+                <div class="col-lg-2 text-right">
+                  <strong>Subtotal</strong>
+                </div>
+              </div>
+              <t t-foreach="order.order_line" t-as="ol">
+                <div class="row purchases_vertical_align">
+                  <div class="col-lg-1 text-center">
+                      <img t-att-src="image_data_uri(resize_to_48(ol.product_id.image))" alt="Product"/>
+                  </div>
+                  <div id='product_name' class="col-lg-5">
+                    <span t-esc="ol.product_id.name"/>
+                  </div>
+                  <div class="col-lg-2 text-right">
+                    <span t-field="ol.price_unit" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                  </div>
+                  <div class="col-lg-2 text-right">
+                      <span t-esc="ol.product_qty"/>
+                  </div>
+                  <div class="col-lg-2 text-right">
+                    <span t-field="ol.price_subtotal" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                  </div>
+                </div>
+              </t>
+
+              <hr/>
+
+              <div class="row">
+                <div class="col-lg-12 text-right">
+                  <div class="row">
+                    <div class="col-lg-10 text-right">
+                      Untaxed Amount:
+                    </div>
+                    <div class="col-lg-2 text-right">
+                      <span t-field="order.amount_untaxed" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-10 text-right">
+                      Taxes:
+                    </div>
+                    <div class="col-lg-2 text-right">
+                      <span t-field="order.amount_tax" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-10 text-right">
+                      <strong>Total:</strong>
+                    </div>
+                    <div class="col-lg-2 text-right">
+                      <strong><span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/></strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="oe_structure mb32"/>
+    </t>
+  </template>
+
+</odoo>

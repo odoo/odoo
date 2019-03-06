@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data>
 
         <!-- mail.channel.partner -->
@@ -49,13 +49,11 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <kanban>
-                    <field name="message_follower_ids"/>
-                    <field name="is_member"/>
-                    <field name="message_needaction_counter"/>
+                    <field name="id"/>
                     <field name="description"/>
-                    <field name="alias_id"/>
-                    <field name="alias_name"/>
-                    <field name="alias_domain"/>
+                    <field name="is_subscribed"/>
+                    <field name="group_ids"/>
+                    <field name="public"/>
                     <templates>
                         <t t-name="kanban-description">
                             <div class="oe_group_description" t-if="record.description.raw_value">
@@ -63,27 +61,15 @@
                             </div>
                         </t>
                         <t t-name="kanban-box">
-                            <div t-attf-class="{record.is_member.raw_value} oe_group_vignette oe_semantic_html_override">
-                                <div class="oe_group_image">
-                                    <a type="open"><img t-att-src="kanban_image('mail.channel', 'image_medium', record.id.value)" class="oe_group_photo" tooltip="kanban-description"/></a>
-                                </div>
-                                <div class="oe_group_details">
-                                    <h4><a type="open"><field name="name"/></a></h4>
-                                    <div class="oe_kanban_alias" t-if="record.alias_name.value and record.alias_domain.value">
-                                        <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
-                                    </div>
-                                    <div class="oe_grey">
+                            <div class="oe_module_vignette oe_kanban_global_click">
+                                <img t-att-src="kanban_image('mail.channel', 'image_medium', record.id.raw_value)" class="oe_module_icon" alt="Channel"/>
+                                <div class="oe_module_desc">
+                                    <h4 class="o_kanban_record_title">#<field name="name"/></h4>
+                                    <p class="oe_module_name">
                                         <field name="description"/>
-                                    </div>
-                                    <div class="oe_kanban_bottom_left">
-                                        <t t-if="record.message_needaction_counter.raw_value">
-                                            <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
-                                        </t>
-                                    </div>
-                                    <div class="oe_group_button">
-                                        <button t-if="record.is_member.raw_value" name="action_unfollow" type="object">Unfollow</button>
-                                        <button t-if="! record.is_member.raw_value" name="action_follow" type="object">Join Group</button>
-                                    </div>
+                                    </p>
+                                    <button type="object" attrs="{'invisible':['|', ('is_subscribed','=',True), ('group_ids', '!=', [])]}" class="btn btn-primary float-right" name="channel_join_and_get_info">Join</button>
+                                    <button type="object" attrs="{'invisible':['|', ('is_subscribed','=',False), ('group_ids', '!=', [])]}" class="btn btn-secondary float-right" name="action_unfollow">Leave</button>
                                 </div>
                             </div>
                         </t>
@@ -98,7 +84,16 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <form string="Mail Channel Form">
+                    <header>
+                        <button name="send_guidelines" type="object" string="Send guidelines" confirm="You are going to send the guidelines to all the subscribers. Do you confirm the action?" attrs="{'invisible':['|',('moderation_guidelines','=',False), ('is_moderator', '=', False)]}"/>
+                    </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <field name="is_moderator" invisible="1"/>
+                            <button class="btn oe_stat_button" name="mail.mail_moderation_action" type="action" attrs="{'invisible':[('is_moderator', '=', False)]}" icon="fa-bars" context="{'search_default_channel_id': active_id}">
+                            <field string="Ban List" name="moderation_count" widget="statinfo"/>
+                            </button>
+                        </div>
                         <div class="oe_button_box" name="button_box"/>
                         <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium', 'size': [90, 90]}"/>
                         <div class="oe_title">
@@ -106,15 +101,16 @@
                                 <label for="name"/>
                             </div>
                             <h1>
-                                <field name="name" default_focus="1" placeholder="Name" readonly="0"/>
+                                #<field name="name" default_focus="1" placeholder="Name" readonly="0"/>
                             </h1>
                         </div>
                         <group class="o_label_nowrap">
                             <field name="email_send"/>
+                            <field name="moderation" attrs="{'invisible': [('email_send', '=', False)]}"/>
                             <field name="description" placeholder="Topics discussed in this group..."/>
                         </group>
                         <group name="group_alias" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                            <label for="alias_id" string=" " class="fa fa-envelope-o" style="min-width: 20px;"/>
+                            <label for="alias_id" string=" " class="fa fa-envelope-o" style="min-width: 20px;" aria-label="Email" title="Email" role="img"/>
                             <div name="alias_def">
                                 <field name="alias_id" class="oe_read_only oe_inline"
                                         string="Email Alias" required="0"/>
@@ -122,28 +118,37 @@
                                     <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                 </div>
                             </div>
-                            <label for="alias_contact" string=" " class="fa fa-lock" style="min-width: 20px;"/>
-                            <field name="alias_contact" class="oe_inline" nolabel="1"/>
+                            <field name="alias_contact" class="oe_inline" invisible="1"/>
                         </group>
                         <notebook>
                             <page string="Privacy">
                                 <group class="o_label_nowrap">
                                     <field name="public" widget="radio" string="Who can follow the group's activities?"/>
                                     <field name="group_public_id"
-                                        attrs="{'invisible': [('public','&lt;&gt;','groups')], 'required': [('public','=','groups')]}"
+                                        attrs="{'invisible': [('public','!=','groups')], 'required': [('public','=','groups')]}"
                                         />
-                                    <field name="group_ids" widget="many2many_tags"/>
+                                    <field name="group_ids" widget="many2many_tags"
+                                        string="Auto Subscribe Groups"/>
                                 </group>
                             </page>
                             <page string="Members">
-                                <field name="channel_partner_ids" mode="tree">
-                                    <tree string="members">
-                                        <field name="name"/>
-                                        <field name="email"/>
-                                        <field name="im_status"/>
+                                <field name="channel_last_seen_partner_ids" mode="tree" context="{'active_test': False}">
+                                    <tree string="Members" editable="bottom">
+                                        <field name="partner_id"/>
+                                        <field name="partner_email" readonly="1"/>
                                     </tree>
                                 </field>
                             </page>
+                            <page string="Moderation" attrs="{'invisible': [('moderation', '=', False)]}">
+                                <group>
+                                    <field name="moderator_ids" widget="many2many_tags"/>
+                                    <field name="moderation_notify"/>
+                                    <field name="moderation_notify_msg" attrs="{'invisible': [('moderation_notify', '=', False)]}"/>
+                                    <field name="moderation_guidelines"/>
+                                    <field name="moderation_guidelines_msg" attrs="{'invisible':[('moderation_guidelines', '=', False)]}"/>
+                                </group>
+                            </page>
+                            <page string="Integrations" invisible="0" name="mail_channel_integrations"></page>
                         </notebook>
                         <div class="oe_chatter" groups="base.group_no_one">
                             <field name="message_follower_ids" widget="mail_followers"/>
@@ -190,23 +195,32 @@
 
 
 
-    <record id="mail_channel_action_client_chat" model="ir.actions.client">
-            <field name="name">Chat</field>
-            <field name="tag">mail.chat.instant_messaging</field>
+    <record id="action_discuss" model="ir.actions.client">
+            <field name="name">Discuss</field>
+            <field name="tag">mail.discuss</field>
             <field name="res_model">mail.channel</field>
             <field name="params" eval="&quot;{
-                'default_active_id': 'channel_inbox'
+                'default_active_id': 'mailbox_inbox'
             }&quot;"/>
         </record>
 
     <menuitem
-        id="mail.mail_channel_menu_root_chat"
+        id="mail.menu_root_discuss"
         name="Discuss"
-        action="mail_channel_action_client_chat"
-        icon="fa-envelope"
+        action="action_discuss"
         web_icon="mail,static/description/icon.png"
         groups="base.group_user"
         sequence="1"/>
 
+    <!--
+        This menuitem will be activated by integrations modules (like github, twitter, ...). It
+        is a hook to ease other modules to plug into mail.
+    -->
+    <record id="mail.mail_channel_integrations_menu" model="ir.ui.menu">
+        <field name="name">Integrations</field>
+        <field name="parent_id" ref="mail.menu_root_discuss"></field>
+        <field name="active" eval="False"></field>
+    </record>
+
     </data>
-</openerp>
+</odoo>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="Payment Assets Backend" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/payment/static/src/scss/payment_acquirer.scss"/>
+        </xpath>
+    </template>
+
+    <template id="payment_tokens_list" name="Payment Tokens list">
+        <!--
+        Variables description:
+            - 'submit_txt' the text displayed inside the submit button
+            - 'submit_class' the css classes to style the submit button
+            - 'icon_class' font awesome class (e.g. 'fa-trash', 'fa-lock')
+            - 'form_action' the URI to the page that will handle the form values given for server2server
+            - 'pms' the tokens
+            - 'checked_pm_id' the payment token that should be checked (for radio buttons)
+            - 'mode' can take two values, either 'payment' or 'manage'. 'manage' displays the add a new card and delete buttons. 'payment'
+                display a form that is used to pay and send the information to the form action url.
+            - 'acquirers' the list of both server2server and form payment acquirers
+            - 'verify_validity' if we need to verify if the payment method is valid when adding a new one
+            - 'prepare_tx_url' the url of the route which will handle the creation of a transaction for a form base payment (handles if the transaction is form or form_save)
+        -->
+        <form t-if="pms or acquirers" method="post" class="o_payment_form mt-3 clearfix"
+                t-att-action="form_action if form_action else '#'"
+                t-att-data-success-url="success_url or ''"
+                t-att-data-error-url="error_url or ''"
+                t-att-data-access-token="access_token or ''"
+                t-att-data-partner-id="partner_id"
+                t-att-data-callback-method="callback_method or ''"
+                t-att-data-order-id="order_id or ''">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <input type="hidden" t-if="verify_validity==True" name="verify_validity" value="1"/>
+            <input type="hidden" t-if="prepare_tx_url" name="prepare_tx_url" t-att-value="prepare_tx_url"/>
+            <input type="hidden" t-if="order_id" name="order_id" t-att-value="order_id"/>
+            <!-- s2s form submission -->
+            <input type="hidden" t-if="access_token" name="access_token" t-att-value="access_token"/>
+            <input type="hidden" t-if="success_url" name="success_url" t-att-value="success_url"/>
+            <input type="hidden" t-if="error_url" name="error_url" t-att-value="error_url"/>
+            <input type="hidden" t-if="callback_method" name="callback_method" t-att-value="callback_method"/>
+
+            <div class="card">
+                <t t-set="acquirers_count" t-value="len(acquirers) if acquirers else 0"/>
+                <t t-set="pms_count" t-value="len(pms) if pms else 0"/>
+                <t t-set="MAX_BRAND_LINE" t-value="3"/>
+                <t t-foreach="acquirers" t-as="acq">
+                    <div class="card-body">
+                        <label>
+                            <t t-if="acq.payment_flow == 'form'">
+                                <input type="radio" t-att-data-acquirer-id="acq.id"
+                                       t-att-data-form-payment="true"
+                                       t-att-data-provider="acq.provider"
+                                       t-att-class="'d-none' if (acquirers_count==1 and pms_count==0) else ''"
+                                       name="pm_id" t-attf-value="form_{{acq.id}}"
+                                       t-att-checked="acquirers_count==1 and pms_count==0 or acquirers[0] == acq"/>
+                            </t>
+                            <t t-else="acq.payment_flow == 's2s'">
+                                <input type="radio" t-att-data-acquirer-id="acq.id"
+                                       t-att-data-s2s-payment="true"
+                                       t-att-data-provider="acq.provider"
+                                       name="pm_id" t-attf-value="new_{{acq.id}}"
+                                       t-att-class="'d-none' if (acquirers_count==1 and pms_count==0) else ''"
+                                       t-att-checked="acquirers_count==1 and pms_count==0 or acquirers[0] == acq"/>
+                            </t>
+                            <span class="payment_option_name" t-esc="acq.name"/>
+                        </label>
+                        <ul class="float-right list-inline payment_icon_list">
+                            <t t-set="i" t-value="0"/>
+                            <t t-foreach="acq.payment_icon_ids" t-as="pm_icon">
+                                <li t-attf-class="list-inline-item#{'' if (i &lt; MAX_BRAND_LINE) else ' d-none'}">
+                                    <span t-field="pm_icon.image_payment_form"
+                                          t-options='{"widget": "image", "alt-field": "name"}'/>
+                                </li>
+                                <li t-if="i==MAX_BRAND_LINE" style="display:block;" class="list-inline-item">
+                                    <span class="float-right more_option text-info">
+                                        <a href="#" class="o_payment_form_pay_icon_more" data-toggle="tooltip" t-att-title="', '.join([opt.name for opt in acq.payment_icon_ids[MAX_BRAND_LINE:]])">and more</a>
+                                    </span>
+                                </li>
+                                <t t-set="i" t-value="i+1"/>
+                            </t>
+                        </ul>
+                    </div>
+                    <t t-if="acq.payment_flow == 'form'">
+                        <div t-attf-id="o_payment_form_acq_{{acq.id}}"
+                             t-attf-class="d-none {{'card-footer' if acq.save_token == 'ask' else ''}}">
+                            <label t-if="acq.save_token == 'ask'">
+                                <input type="checkbox" name="o_payment_form_save_token" data-remove-me=""/>
+                                Save my payment data
+                            </label>
+                        </div>
+                    </t>
+                    <t t-else="acq.payment_flow == 's2s'">
+                        <div t-attf-id="o_payment_add_token_acq_{{acq.id}}"
+                             t-attf-class="card-footer {{'d-none' if(acquirers_count &gt; 1 and pms_count==0 and acquirers[0]!=acq) else 'd-none' if pms_count &gt;0 else ''}}">
+                            <div class="clearfix">
+                                <t t-call="{{acq.sudo().get_s2s_form_xml_id()}}">
+                                    <t t-set="id" t-value="acq.id"/>
+                                    <t t-set="partner_id" t-value="partner_id"/>
+                                    <t t-if="not return_url" t-set="return_url" t-value="''"/>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+                <t t-foreach="pms" t-as="pm">
+                    <div class="card-body">
+                        <label>
+                            <input t-if="mode == 'payment'" type="radio" name="pm_id" t-att-value="pm.id" t-att-checked="checked_pm_id == pm.id"/>
+                            <span class="payment_option_name" t-esc="pm.name"/>
+                            <t t-if="pm.verified">
+                                <i class="fa fa-check text-success" title="This payment method is verified by our system." role="img" aria-label="Ok"></i>
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-close text-danger" title="This payment method has not been verified by our system." role="img" aria-label="Not verified"></i>
+                            </t>
+                        </label>
+                        <button t-if="mode == 'manage'" name="delete_pm" t-att-value="pm.id" class="btn btn-primary btn-sm float-right">
+                            <i class="fa fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </t>
+            </div>
+            <div t-if='back_button_txt' class="float-left mt-2">
+                <a role="button" t-att-href="back_button_link or '#'" t-att-class="back_button_class or 'btn btn-lg btn-secondary'">
+                    <i t-if="back_button_icon_class" t-attf-class="fa {{back_button_icon_class}}"/>
+                    <t t-esc="back_button_txt"/>
+                </a>
+            </div>
+            <div class="float-right mt-2">
+                <button t-if="mode == 'payment'" id="o_payment_form_pay" type="submit" t-att-class="submit_class if submit_class else 'btn btn-primary btn-lg mb8 mt8'">
+                    <t t-if="submit_txt">
+                        <i t-if="icon_class and not icon_right" t-attf-class="fa {{icon_class}}"/>
+                        <t t-esc="submit_txt"/>
+                        <i t-if="icon_class and icon_right" t-attf-class="fa {{icon_class}}"/>
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-lock"> Pay</i>
+                    </t>
+                </button>
+                <button t-if="mode == 'manage' and list(filter(lambda x: x.payment_flow == 's2s', acquirers))" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
+                    <i class="fa fa-plus-circle"> Add new card</i>
+                </button>
+            </div>
+        </form>
+    </template>
+
+    <template id="payment_process_page" name="Payment processing page">
+        <!-- If you are looking at this template and tries to understand how it works,
+            You should take a look at the file located in /static/src/js/payment_processing.js
+        -->
+        <t t-call="portal.frontend_layout">
+            <div class="wrap">
+                <div class="container o_website_payment">
+                    <div class="o_payment_processing">
+                        <div class="row">
+                            <div class="o_payment_processing_content col-sm-6 col-sm-offset-3">
+                                <!-- here should be the content generated by payment_processing.js -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- We load and attach the payment processing widget -->
+            <script>
+                odoo.define('payment.processing_bootstrap', function(require) {
+                    var PaymentProcessing = require('payment.processing');
+                    var processingWidget = new PaymentProcessing(null, <t t-esc="payment_tx_ids"/>);
+                    processingWidget.attachTo($('.o_payment_processing'));
+                });
+            </script>
+        </t>
+    </template>
+</odoo>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
+<odoo>
     <data>
         <record model="ir.ui.view" id="email_template_form">
             <field name="name">email.template.form</field>
@@ -9,19 +9,22 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <field name="ref_ir_act_window" invisible="1"/>
-                            <button class="oe_stat_button" name="create_action" type="object"
+                            <button class="oe_stat_button"
+                                    groups="base.group_system"
+                                    name="create_action" type="object"
                                     attrs="{'invisible':[('ref_ir_act_window','!=',False)]}" icon="fa-plus"
                                     help="Display an option on related documents to open a composition wizard with this template">
-                                <div class="o_form_field o_stat_info">
+                                <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_text">Add</span>
                                     <span class="o_stat_text">Context Action</span>
                                 </div>
                             </button>
-                            <button name="unlink_action" type="object" 
+                            <button name="unlink_action" type="object"
+                                    groups="base.group_system"
                                     class="oe_stat_button" icon="fa-minus"
                                     attrs="{'invisible':[('ref_ir_act_window','=',False)]}"
                                     help="Remove the contextual action to use this template on related documents" widget="statinfo">
-                                <div class="o_form_field o_stat_info">
+                                <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_text">Remove</span>
                                     <span class="o_stat_text">Context Action</span>
                                 </div>
@@ -59,6 +62,7 @@
                                     <field name="reply_to"
                                             placeholder="Preferred reply address"/>
                                     <field name="user_signature" string="Author Signature (mass mail only)"/>
+                                    <field name="scheduled_date" string="Scheduled Send Date"/>
                                 </group>
                             </page>
                             <page string="Advanced Settings">
@@ -114,8 +118,8 @@
                     <field name="lang"/>
                     <field name="model_id"/>
                     <group expand="0" string="Group by...">
-                        <filter string="SMTP Server" domain="[]" context="{'group_by':'mail_server_id'}"/>
-                        <filter string="Model" domain="[]" context="{'group_by':'model_id'}"/>
+                        <filter string="SMTP Server" name="smtpserver" domain="[]" context="{'group_by':'mail_server_id'}"/>
+                        <filter string="Model" name="model" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>
                </search>
            </field>
@@ -134,4 +138,4 @@
                   sequence="20"/>
 
     </data>
-</openerp>
+</odoo>

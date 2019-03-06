@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
-from openerp.models import AbstractModel
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-class publisher_warranty_contract(AbstractModel):
+from odoo import api, models
+
+
+class PublisherWarrantyContract(models.AbstractModel):
     _inherit = "publisher_warranty.contract"
 
-    def _get_message(self, cr, uid):
-        msg = super(publisher_warranty_contract, self)._get_message(cr, uid)
+    @api.model
+    def _get_message(self):
+        msg = super(PublisherWarrantyContract, self)._get_message()
         msg['website'] = True
         return msg

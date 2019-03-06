@@ -1,0 +1,65 @@
+$o-theme-layout: 'full';
+
+//------------------------------------------------------------------------------
+// Colors
+//------------------------------------------------------------------------------
+
+// Extend default color palettes with website-related colors
+$-palettes: ();
+@each $palette in $o-color-palettes {
+    $-palettes: append($-palettes, map-merge((
+        'body': null, // Default to bootstrap
+        'menu': #F9F9F9,
+        'footer': #F9F9F9,
+        'text': null, // Default to bootstrap
+        'h1': null, // Default to text
+        'h2': null, // Default to h1
+        'h3': null, // Default to h2
+        'h4': null, // Default to h3
+        'h5': null, // Default to h4
+        'h6': null, // Default to h5
+    ), $palette));
+}
+$o-color-palettes: $-palettes;
+
+// By default, all user color palette values are null. Each null value is
+// automatically replaced with corresponsing color of chosen color palette.
+$o-user-color-palette: () !default;
+
+// By default, all user theme color palette values are null. Each null value
+// is automatically replaced with corresponsing color of chosen theme color
+// palette.
+$o-user-theme-color-palette: () !default;
+
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+$o-theme-fonts: (
+    (-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"), // This is BS default
+    ('Open Sans', sans-serif),
+    ('Source Sans Pro', sans-serif),
+    ('Raleway', sans-serif),
+    ('Noto Serif', serif),
+    ('Arvo', Times, serif),
+) !default;
+$o-theme-font-urls: (
+    null,
+    'Open+Sans:400,400i,700,700i',
+    'Source+Sans+Pro:400,400i,700,700i',
+    'Raleway:400,400i,700,700i',
+    'Noto+Serif:400,400i,700,700i',
+    'Arvo:400,400i,700,700i',
+) !default;
+$o-theme-font-names: (
+    'Bootstrap',
+    'Open Sans',
+    'Source Sans Pro',
+    'Raleway',
+    'Noto Serif',
+    'Arvo',
+) !default;
+$o-theme-font-number: 1 !default;
+$o-theme-headings-font-number: 1 !default;
+$o-theme-buttons-font-number: 1 !default;
+$o-theme-navbar-font-number: 1 !default;

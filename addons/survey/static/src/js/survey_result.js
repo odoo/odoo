@@ -1,7 +1,7 @@
 odoo.define('survey.result', function (require) {
 'use strict';
 
-var website = require('website.website');
+require('web.dom_ready');
 
 if(!$('.js_surveyresult').length) {
     return $.Deferred().reject("DOM doesn't contain '.js_surveyresult'");
@@ -14,19 +14,19 @@ if(!$('.js_surveyresult').length) {
     $.each(survey_pagination, function(index, pagination){
         var question_id = $(pagination).attr("data-question_id");
         var limit = $(pagination).attr("data-record_limit"); //Number of Record Par Page. If you want to change number of record per page, change record_limit in pagination template.
-        $('#table_question_'+ question_id +' tbody tr:lt('+limit+')').removeClass('hidden');
+        $('#table_question_'+ question_id +' tbody tr:lt('+limit+')').removeClass('d-none');
         $('#pagination_'+question_id+' li a').click(function(event){
             event.preventDefault();
             $('#pagination_'+question_id+' li').removeClass('active');
             $(this).parent('li').addClass('active');
-            $('#table_question_'+ question_id +' tbody tr').addClass('hidden');
+            $('#table_question_'+ question_id +' tbody tr').addClass('d-none');
             var num = $(this).text();
             var min = (limit * (num-1))-1;
             if (min == -1){
-                $('#table_question_'+ question_id +' tbody tr:lt('+ limit * num +')').removeClass('hidden');
+                $('#table_question_'+ question_id +' tbody tr:lt('+ limit * num +')').removeClass('d-none');
             }
             else{
-                $('#table_question_'+question_id+' tbody tr:lt('+ limit * num +'):gt('+min+')').removeClass('hidden');
+                $('#table_question_'+question_id+' tbody tr:lt('+ limit * num +'):gt('+min+')').removeClass('d-none');
             }
         });
         $('#pagination_'+question_id+' li:first').addClass('active').find('a').click();
@@ -41,7 +41,7 @@ if(!$('.js_surveyresult').length) {
 
         // Replacing Library's Default Tooltip with our Custom One
         chart.tooltip(function(key, x, y, e) {
-            return '<h5 class="panel-primary"><div class="panel-heading">' + x + '</div></h5>' +
+            return '<h5 class="bg-primary text-white"><div class="card-header">' + x + '</div></h5>' +
             '<p>' + '<b>Responses : </b>' + key + '</p>' +
             '<p>' + "<b>Total Vote : </b>" + y + '</p>';
         });

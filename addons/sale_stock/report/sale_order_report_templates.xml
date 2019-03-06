@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="report_saleorder_document_inherit_sale_stock" inherit_id="sale.report_saleorder_document">
+      	<xpath expr="//div[@name='payment_term']" position="after">
+        	<div class="col-3" t-if="doc.incoterm" groups="sale_stock.group_display_incoterm">
+          		<strong>Incoterms:</strong>
+          		<p t-field="doc.incoterm.code"/>
+        	</div>
+      	</xpath>
+  	</template>
+</odoo>

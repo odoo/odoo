@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_picking_type_dropship" model="ir.sequence">
+            <field name="name">Dropship</field>
+            <field name="prefix">DS</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="picking_type_dropship" model="stock.picking.type">
+            <field name="name">Dropship</field>
+            <field name="sequence_id" ref="seq_picking_type_dropship"/>
+            <field name="code">incoming</field>
+            <field name="warehouse_id" eval="False"/>
+            <field name="default_location_src_id" ref="stock.stock_location_suppliers"/>
+            <field name="default_location_dest_id" ref="stock.stock_location_customers"/>
+        </record>
+
+        <!-- Drop Shipping-->
+        <record id="route_drop_shipping" model='stock.location.route'>
+            <field name="name">Dropship</field>
+            <field name="sequence">3</field>
+            <field name="company_id"></field>
+            <field name="sale_selectable" eval="True"/>
+            <field name="product_selectable" eval="True"/>
+            <field name="product_categ_selectable" eval="True"/>
+        </record>
+
+        <record id="stock_rule_drop_shipping" model="stock.rule">
+            <field name="name">Vendor → Customer (Dropshipping)</field>
+            <field name="action">buy</field>
+            <field name="location_id" ref="stock.stock_location_customers"/>
+            <field name="location_src_id" ref="stock.stock_location_suppliers"/>
+            <field name="procure_method">make_to_stock</field>
+            <field name="route_id" ref="route_drop_shipping"/>
+            <field name="picking_type_id" ref="picking_type_dropship"/>
+        </record>
+    </data>
+</odoo>

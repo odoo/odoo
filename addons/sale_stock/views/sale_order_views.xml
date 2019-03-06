@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_order_form_inherit_sale_stock" model="ir.ui.view">
+            <field name="name">sale.order.form.sale.stock</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_view_invoice']" position="before">
+                    <field name="picking_ids" invisible="1"/>
+                    <button type="object"
+                        name="action_view_delivery"
+                        class="oe_stat_button"
+                        icon="fa-truck"
+                        attrs="{'invisible': [('delivery_count', '=', 0)]}" groups="base.group_user">
+                        <field name="delivery_count" widget="statinfo" string="Delivery"/>
+                    </button>
+                </xpath>
+                <xpath expr="//group[@name='sale_shipping']" position="attributes">
+                    <attribute name="groups"></attribute> <!-- Remove the res.group on the group and set it on the field directly-->
+                </xpath>
+                <xpath expr="//field[@name='expected_date']" position="before">
+                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                    <field name="incoterm" widget="selection" groups="sale_stock.group_display_incoterm"/>
+                    <field name="picking_policy" required="True"/>
+                </xpath>
+                <xpath expr="//field[@name='commitment_date']" position="after">
+                    <field name="effective_date" groups="sale.group_sale_order_dates"/>
+                </xpath>
+                <xpath expr="//page/field[@name='order_line']/form/group/group/field[@name='tax_id']" position="before">
+                    <field name="product_packaging" attrs="{'invisible': [('product_id', '=', False)]}" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging" />
+                </xpath>
+                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
+                    <field name="route_id" groups="sale_stock.group_route_so_lines" options="{'no_create': True}"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="before">
+                    <field name="route_id" groups="sale_stock.group_route_so_lines" options="{'no_create': True}"/>
+                </xpath>
+           </field>
+        </record>
+
+        <record id="view_order_line_tree_inherit_sale_stock" model="ir.ui.view">
+            <field name="name">sale.order.line.tree.sale.stock.location</field>
+            <field name="inherit_id" ref="sale.view_order_line_tree"/>
+            <field name="model">sale.order.line</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='price_subtotal']" position="before">
+                    <field name="route_id" groups="sale_stock.group_route_so_lines" options="{'no_create': True}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

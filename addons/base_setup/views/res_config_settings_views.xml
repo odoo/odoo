@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.base.setup</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="100"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="General Settings" string="General Settings" data-key="general_settings">
+                        <div id="business_documents">
+                            <h2>Business Documents</h2>
+                            <div class="row mt16 o_settings_container">
+                                <div class="col-12 col-lg-6 o_setting_box">
+                                    <div class="o_setting_right_pane">
+                                        <span class="o_form_label">Format</span>
+                                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                        <div class="text-muted">
+                                            Set the paper format of printed documents
+                                        </div>
+                                        <div class="content-group">
+                                            <div class="mt16 row">
+                                                <label for="paperformat_id" string="Format" class="col-3 col-lg-3 o_light_label"/>
+                                                <field name="paperformat_id" class="oe_inline" required="1"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 o_setting_box">
+                                    <div class="o_setting_right_pane">
+                                        <span class="o_form_label">Document Template</span>
+                                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                        <div class="text-muted">
+                                            Choose your document's header and footer layout
+                                        </div>
+                                        <div class="content-group">
+                                            <div class="mt16" groups="base.group_no_one">
+                                                <label for="external_report_layout_id" string="Template" class="col-3 col-lg-3 o_light_label"/>
+                                                <field name="external_report_layout_id" domain="[('type','=', 'qweb')]" class="oe_inline"/>
+                                            </div>
+                                            <div class="mt16">
+                                                <button name="change_report_template" string="Change Document Template" type="object" class="oe_link" icon="fa-arrow-right"/>
+                                                <button name="edit_external_header" string="Edit Layout" type="object" class="oe_link" groups="base.group_no_one"/>
+                                                <button name="%(web.action_report_externalpreview)d" string="Preview Document" type="action" class="oe_link" groups="base.group_no_one"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="emails"/>
+                        <h2>Users</h2>
+                        <div class="row mt16 o_settings_container" id="user_default_rights">
+                            <div class="col-12 col-lg-6 o_setting_box"  title="By default, new users get highest access rights for all installed apps." id="access_rights">
+                                <div class="o_setting_left_pane">
+                                    <field name="user_default_rights"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Access Rights" for="user_default_rights"/>
+                                    <div class="text-muted">
+                                        Set custom access rights for new users
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('user_default_rights','=',False)]}">
+                                        <div class="mt16">
+                                            <button type="object" name="open_default_user" string="Default Access Rights" icon="fa-arrow-right" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_base_import" />
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Import &amp; Export" for="module_base_import"/>
+                                    <div class="text-muted">
+                                        Allow users to import data from CSV/XLS/XLSX/ODS files
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" groups="base.group_no_one">
+                                <div class="o_setting_left_pane">
+                                    <field name="show_effect"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="show_effect"/>
+                                    <div class="text-muted">
+                                        Add fun feedback and motivate your employees
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="multi_company">
+                            <field name="company_id" invisible="1"/>
+                            <h2>Multi-companies</h2>
+                            <div class="row mt16 o_settings_container" name="multi_company">
+                                <div class="col-12 col-lg-6 o_setting_box">
+                                    <div class="o_setting_left_pane">
+                                        <field name="group_multi_company"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label string="Multi-companies" for="group_multi_company"/>
+                                        <div class="text-muted">
+                                            Manage multiple legal entities with separate accounting
+                                        </div>
+                                        <div class="content-group" attrs="{'invisible': [('group_multi_company','=',False)]}">
+                                            <div class="mt16">
+                                                <button name="%(base.action_res_company_form)d" icon="fa-arrow-right" type="action" string="Companies" class="btn-link"/>
+                                            </div>
+                                            <div id="company_share_partner">
+                                                <field name="company_share_partner" class="oe_inline"/>
+                                                <label string="Common Contact Book" class="o_light_label" for="company_share_partner"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 o_setting_box" title="Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company." attrs="{'invisible': [('group_multi_company', '=', False)]}" id="inter_company">
+                                    <div class="o_setting_left_pane">
+                                        <field name="module_inter_company_rules" widget="upgrade_boolean"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label string="Inter Company Flows" for="module_inter_company_rules"/>
+                                        <div>
+                                            <i class="fa fa-lg fa-building-o"/>
+                                            <span class="text-muted">
+                                                the creation of documents between your companies
+                                            </span>
+                                        </div>
+                                        <div class="content-group" attrs="{'invisible': [('module_inter_company_rules','=',False)]}" id="inter_companies_rules">
+                                            <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Integrations</h2>
+                        <div class="row mt16 o_settings_container" name="integration">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_pad"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_pad"/>
+                                    <div class="text-muted">
+                                        Use external pads in Odoo Notes
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('module_pad','=',False)]}" id="msg_module_pad">
+                                        <div class="text-warning mt16"><strong>Save</strong> this page and come back here to set up the feature.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_google_calendar" />
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Google Calendar" for="module_google_calendar"/>
+                                    <div class="text-muted">
+                                        Synchronize your calendar with Google Calendar
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('module_google_calendar','=',False)]}" id="msg_module_google_calendar">
+                                        <div class="text-warning mt16"><strong>Save</strong> this page and come back here to set up the feature.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_google_drive" />
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Google Drive" for="module_google_drive"/>
+                                    <div class="text-muted">
+                                        Create and attach Google Drive documents to any record
+                                    </div>
+                                    <div class="content-group mt16" attrs="{'invisible': [('module_google_drive','=',False)]}" id="msg_module_google_drive">
+                                        <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_google_spreadsheet" />
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_google_spreadsheet"/>
+                                    <div class="text-muted">
+                                        Extract and analyze Odoo data from Google Spreadsheet
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('module_google_spreadsheet','=',False)]}" id="msg_module_google_spreadsheet">
+                                        <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="module_auth_oauth">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_auth_oauth" />
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="OAuth Authentication" for="module_auth_oauth"/>
+                                    <div class="text-muted">
+                                       Use external accounts to log in (Google, Facebook, etc.)
+                                    </div>
+                                    <div class="content-group mt16" attrs="{'invisible': [('module_auth_oauth','=',False)]}" id="msg_module_auth_oauth">
+                                        <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="oauth">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_auth_ldap"/>
+                                </div>
+                                <div class="o_setting_right_pane" name="auth_ldap_right_pane">
+                                    <label string="LDAP Authentication" for="ldaps"/>
+                                    <div class="text-muted">
+                                       Use LDAP credentials to log in
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('module_auth_ldap','=',False)]}" id="auth_ldap_warning">
+                                        <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="oauth">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_base_gengo"/>
+                                </div>
+                                <div class="o_setting_right_pane" name="base_gengo_right_pane">
+                                    <label string="Gengo Translations" for="module_base_gengo"/>
+                                    <div class="text-muted">
+                                       Translate your website with Gengo
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('module_base_gengo','=',False)]}" name="base_gengo_warning">
+                                        <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_web_unsplash"/>
+                                </div>
+                                <div class="o_setting_right_pane" id="web_unsplash_settings">
+                                    <label for="module_web_unsplash"/>
+                                    <div class="text-muted">
+                                        Find free high-resolution images from Unsplash
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="When populating your address book, Odoo provides a list of matching companies. When selecting one item, the company data and logo are auto-filled.">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_partner_autocomplete"/>
+                                </div>
+                                <div class="o_setting_right_pane" id="partner_autocomplete_settings">
+                                    <label for="module_partner_autocomplete"/>
+                                    <div class="text-muted">
+                                        Autocomplete company data (name, logo, address, etc.)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_general_configuration" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'general_settings'}</field>
+        </record>
+
+        <menuitem
+            id="menu_config"
+            name="General Settings"
+            parent="base.menu_administration"
+            sequence="2"
+            action="action_general_configuration"
+            groups="base.group_system"/>
+
+</odoo>

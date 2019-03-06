@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.fr.hr.payroll</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_payroll.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='hr_payroll_localization']" position="after">
+                <field name="module_l10n_fr_hr_payroll" invisible="1"/>
+                <h2 attrs="{'invisible': [('module_l10n_fr_hr_payroll','=',False)]}">Payroll</h2>
+                <div class="row mt16 o_settings_container" attrs="{'invisible': [('module_l10n_fr_hr_payroll','=',False)]}">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                            <span class="o_form_label">Paie</span>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="plafond_secu" class="col-lg-3 o_light_label"/>
+                                    <field name="plafond_secu"/>
+                                </div>
+                                <div class="row mt16">
+                                    <label for="nombre_employes" class="col-lg-3 o_light_label"/>
+                                    <field name="nombre_employes"/>
+                                </div>
+                                <div class="row mt16">
+                                    <label for="cotisation_prevoyance" class="col-lg-3 o_light_label"/>
+                                    <field name="cotisation_prevoyance"/>
+                                </div>
+                                <div class="row mt16">
+                                    <label for="org_ss" class="col-lg-3 o_light_label"/>
+                                    <field name="org_ss"/>
+                                </div>
+                                <div class="row mt16">
+                                    <label for="conv_coll" class="col-lg-3 o_light_label"/>
+                                    <field name="conv_coll"/>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

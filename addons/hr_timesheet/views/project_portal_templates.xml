@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_task" inherit_id="project.portal_my_task" name="Portal: My Task with Timesheets">
+        <xpath expr="//t[@t-set='card_body']" position="inside">
+            <div class="container" t-if="task.timesheet_ids">
+                <hr class="mt-4 mb-1"/>
+                <h5 class="mt-2 mb-2">Timesheets</h5>
+                <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Responsible</th>
+                        <th class="text-right">Duration</th>
+                      </tr>
+                    </thead>
+                    <tr t-foreach="task.timesheet_ids" t-as="timesheet">
+                        <td><t t-esc="timesheet.date"/></td>
+                        <td><t t-esc="timesheet.name"/></td>
+                        <td><t t-esc="timesheet.sudo().user_id.name"/></td>
+                        <td class="text-right"><span t-field="timesheet.unit_amount" t-options='{"widget": "duration", "unit": "hour", "round": "minute"}'/></td>
+                    </tr>
+                </table>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

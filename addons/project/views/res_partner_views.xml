@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+         <!--  Partners inherited form -->
+        <record id="view_task_partner_info_form" model="ir.ui.view">
+            <field name="name">res.partner.task.buttons</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority" eval="7"/>
+            <field name="groups_id" eval="[(4, ref('project.group_project_user'))]"/>
+            <field name="arch" type="xml">
+                <button name="toggle_active" position="before">
+                    <button class="oe_stat_button" type="action" name="%(project_task_action_from_partner)d"
+                        context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}" attrs="{'invisible': [('task_count', '=', 0)]}"
+                        icon="fa-tasks">
+                        <field  string="Tasks" name="task_count" widget="statinfo"/>
+                    </button>
+                </button>
+            </field>
+       </record>
+
+</odoo>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_account_journal_form_inherit" model="ir.ui.view">
+            <field name="name">account.journal.form</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <field name="group_invoice_lines" position="after">
+                    <field name="update_posted" groups="base.group_no_one"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="invoice_form_cancel_inherit" model="ir.ui.view">
+            <field name="name">invoice.form.cancel.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_invoice_draft']" position="before">
+                    <button name="action_invoice_cancel" type="object" states="draft,open,paid" string="Cancel" groups="account.group_account_invoice"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="invoice_supplier_cancel_form_inherit" model="ir.ui.view">
+            <field name="name">invoice.supplier.cancel.form.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_invoice_draft']" position="before">
+                    <button name="action_invoice_cancel" type="object" states="draft,open,paid" string="Cancel" groups="account.group_account_invoice"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="bank_statement_draft_form_inherit" model="ir.ui.view">
+            <field name="name">bank.statement.draft.form.inherit</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='check_confirm_bank']" position="after">
+                    <button name="button_draft" states="confirm" string="Reset to New" type="object"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="bank_statement_cancel_form_inherit" model="ir.ui.view">
+            <field name="name">bank.statement.cancel.form.inherit</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_form"/>
+            <field name="arch" type="xml">
+                <field name="line_ids" position="attributes">
+                    <attribute name="options">{'reload_on_button': true}</attribute>
+                </field>
+                <xpath expr="//field[@name='bank_account_id']" position="after">
+                    <field name="state" invisible="1"/>
+                    <button name="button_cancel_reconciliation" attrs="{'invisible': ['|',('journal_entry_ids', '=', []), ('state', '=', 'confirm')]}" string="Revert reconciliation" type="object" icon="fa-undo"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="payment_cancel_form_inherit" model="ir.ui.view">
+            <field name="name">payment.cancel.form.inherit</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header/field[@name='state']" position="before">
+                    <button name="cancel" attrs="{'invisible': [('state', 'in', ['draft','cancelled'])]}" string="Cancel" type="object"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_move_form_inherit_account_cancel" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <field name="state" position="before">
+                    <button name="button_cancel" states="posted" string="Cancel Entry" type="object" groups="account.group_account_invoice"/>
+                </field>
+            </field>
+        </record>
+
+</odoo>

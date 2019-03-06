@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-extend="website.dashboard_header">
+        <t t-jquery="div.o_dashboard_common" t-operation="append">
+            <div class="col-12 o_box" t-if="widget.dashboards_data.sales.summary.order_unpaid_count || widget.dashboards_data.sales.summary.order_to_invoice_count || widget.dashboards_data.sales.summary.payment_to_capture_count || widget.dashboards_data.sales.summary.order_carts_abandoned_count">
+                <div t-if="widget.dashboards_data.sales.summary.order_unpaid_count" class="o_inner_box o_dashboard_action" title="Confirm orders when you get paid." name="website_sale.action_unpaid_orders_ecommerce">
+                    <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_unpaid_count"/></div>
+                    Unpaid Orders
+                </div>
+                <div t-if="widget.dashboards_data.sales.summary.order_to_invoice_count" class="o_inner_box o_dashboard_action" title="Generate an invoice from orders ready for invoicing." name="website_sale.sale_order_action_to_invoice">
+                    <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_to_invoice_count"/></div>
+                    Orders to Invoice
+                </div>
+                <div t-if="widget.dashboards_data.sales.summary.payment_to_capture_count" class="o_inner_box o_dashboard_action" title="Capture order payments when the delivery is completed." name="website_sale.payment_transaction_action_payments_to_capture">
+                    <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.payment_to_capture_count"/></div>
+                    Payments to Capture
+                </div>
+                <div t-if="widget.dashboards_data.sales.summary.order_carts_abandoned_count" class="o_inner_box o_dashboard_action" title="Send a recovery email to visitors who haven't completed their order." name="website_sale.action_abandoned_orders_ecommerce">
+                    <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_carts_abandoned_count"/></div>
+                    Abandoned Carts
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <t t-extend="website.dashboard_content">
+        <t t-jquery="div.o_website_dashboard_content" t-operation="prepend">
+            <div t-if="widget.groups.sale_salesman" class="row o_dashboard_sales">
+                <div class="col-12 row o_box">
+                    <t t-if="widget.dashboards_data.sales.summary.order_count">
+                        <h2 class="col-lg-7 col-12">
+                            <t t-if="widget.date_range">
+                                Sales Since Last <t t-esc="widget.date_range"></t>
+                            </t>
+                            <t t-else="">Sales</t>
+                        </h2>
+                        <h4 class='col-lg-5 col-12'>AT A GLANCE</h4>
+                        <div class="col-lg-7 col-12">
+                            <div class="o_graph_sales" data-type="sales"/>
+                        </div>
+                        <div class="col-lg-5 col-12">
+                            <t t-call="website_sale.products_table"/>
+                        </div>
+                    </t>
+                    <t t-if="! widget.dashboards_data.sales.summary.order_count">
+                        <t t-if="widget.date_range">
+                            <h2>Sales Since Last <t t-esc="widget.date_range"></t></h2>
+                        </t>
+                        <t t-else=""><h2>Sales</h2></t>
+                        <div class="col-lg-12 col-12">
+                            <div class="o_demo_background">
+                            </div>
+                            <div class="o_demo_message">
+                                <h3>There is no recent confirmed order.</h3>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="website_sale.products_table">
+        <div class="row">
+            <a href="#" class="col-md-4 o_dashboard_action" name="website_sale.sale_report_action_dashboard">
+                <div class="o_link_enable" title="Orders">
+                    <div class="o_highlight">
+                        <t t-esc="widget.dashboards_data.sales.summary.order_count"/>
+                    </div>
+                    Orders
+                </div>
+            </a>
+            <a href="#" class="col-md-4 o_dashboard_action" name="website_sale.sale_report_action_dashboard">
+                <div class="o_link_enable" title="Untaxed Total Sold">
+                    <div class="o_highlight">
+                        <t t-esc="widget.render_monetary_field(widget.dashboards_data.sales.summary.total_sold, widget.data.currency)"/>
+                    </div>
+                    Sold
+                </div>
+            </a>
+            <a href="#" class="col-md-4 o_dashboard_action" name="website_sale.sale_report_action_carts">
+                <div class="o_link_enable o_invisible_border" title="Carts">
+                    <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_carts_count"/></div>
+                    Carts
+                </div>
+            </a>
+            <div class="col-md-4 o_link_disable" title="Orders/Day">
+                <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_per_day_ratio"/></div>
+                Orders/Day
+            </div>
+            <div class="col-md-4 o_link_disable" title="Average Order">
+                <div class="o_highlight"><t t-esc="widget.render_monetary_field(widget.dashboards_data.sales.summary.order_sold_ratio, widget.data.currency)"/></div>
+                Average Order
+            </div>
+            <div class="col-md-4 o_link_disable o_invisible_border" title="Conversion">
+                <div class="o_highlight"><t t-esc="widget.format_number(widget.dashboards_data.sales.summary.order_convertion_pctg, 'float', [3, 2], '%')"/></div>
+                Conversion
+            </div>
+        </div>
+        <div class="col-lg-12 col-12 o_top_margin">
+            <div class="row">
+                <div class="col-lg-12 col-12">
+                    <h4>Best Sellers</h4>
+                    <table class="table table-responsive table-hover">
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Sold</th>
+                        </tr>
+                        <tr class="o_product_template" t-foreach="widget.dashboards_data.sales.best_sellers" t-as="product" t-att-data-product-id="product.id">
+                            <td><t t-esc="product.name"/></td>
+                            <td><t t-esc="product.qty"/></td>
+                            <td><t t-esc="widget.render_monetary_field(product.sales, widget.data.currency)"/></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

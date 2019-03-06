@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<odoo>
+
+        <report
+            id="action_report_holidayssummary"
+            string="Leaves Summary"
+            model="hr.leave"
+            report_type="qweb-pdf"
+            name="hr_holidays.report_holidayssummary"
+            file="hr_holidays.report_holidayssummary"
+            menu="False"/>
+
+        <record id="action_report_holidayssummary" model="ir.actions.report">
+            <field name="paperformat_id" ref="hr_holidays.paperformat_hrsummary"/>
+        </record>
+
+        <report
+            id="action_report_holidayssummary2"
+            string="Leaves Summary"
+            model="hr.leave.allocation"
+            report_type="qweb-pdf"
+            name="hr_holidays.report_holidayssummary"
+            file="hr_holidays.report_holidayssummary"
+            menu="False"/>
+
+        <record id="action_report_holidayssummary" model="ir.actions.report">
+            <field name="paperformat_id" ref="hr_holidays.paperformat_hrsummary"/>
+        </record>
+
+</odoo>

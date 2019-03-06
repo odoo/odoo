@@ -50,12 +50,12 @@ $(document).ready(function () {
             },
             // page switching
             render_page: function (page_number) {
-                this.pdf_viewer.renderPage(page_number).then(this.on_rendered_page);
+                this.pdf_viewer.renderPage(page_number).then(this.on_rendered_page.bind(this));
             },
             change_page: function () {
                 var page_asked = parseInt(this.$('#page_number').val(), 10);
                 if(1 <= page_asked && page_asked <= this.pdf_viewer.pdf_page_total){
-                    this.pdf_viewer.changePage(page_asked).then(this.on_rendered_page);
+                    this.pdf_viewer.changePage(page_asked).then(this.on_rendered_page.bind(this));
                 }else{
                     // if page number out of range, reset the page_counter to the actual page
                     this.$('#page_number').val(this.pdf_viewer.pdf_page_current);
@@ -184,7 +184,7 @@ $(document).ready(function () {
             var input = widget.find('input');
             var slide_id = widget.find('button').data('slide-id');
             if(input.val() && input[0].checkValidity()){
-                widget.removeClass('has-error');
+                widget.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
                 $.ajax({
                     type: "POST",
                     dataType: 'json',
@@ -199,7 +199,7 @@ $(document).ready(function () {
                     }
                 });
             }else{
-                widget.addClass('has-error');
+                widget.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
                 input.focus();
             }
         });

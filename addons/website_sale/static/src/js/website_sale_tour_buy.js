@@ -1,98 +1,89 @@
 odoo.define('website_sale.tour', function (require) {
 'use strict';
 
-var Tour = require('web.Tour');
+var tour = require("web_tour.tour");
+var base = require("web_editor.base");
 
-Tour.register({
-    id:   'shop_buy_product',
-    name: "Try to buy products",
-    path: '/shop',
-    mode: 'test',
-    steps: [
+tour.register('shop_buy_product', {
+    test: true,
+    url: '/shop',
+    wait_for: base.ready()
+},
+    [
         {
-            title:  "search ipod",
-            element: 'form:has(input[name="search"]) a.a-submit',
-            onload: function() {
-                $('input[name="search"]').val("ipod");
-            }
+            content: "search conference chair",
+            trigger: 'form input[name="search"]',
+            run: "text conference chair",
         },
         {
-            title:     "select ipod",
-            element:   '.oe_product_cart a:contains("iPod")',
+            content: "search conference chair",
+            trigger: 'form:has(input[name="search"]) .oe_search_button',
         },
         {
-            title:     "select ipod 32GB",
-            waitFor:   '#product_detail',
-            element:   'label:contains(32 GB) input',
+            content: "select conference chair",
+            trigger: '.oe_product_cart:first a:contains("Conference Chair")',
         },
         {
-            title:     "click on add to cart",
-            waitFor:   'label:contains(32 GB) input:propChecked',
-            element:   '#product_detail form[action^="/shop/cart/update"] .btn',
+            content: "select Conference Chair Aluminium",
+            extra_trigger: '#product_detail',
+            trigger: 'label:contains(Aluminium) input',
         },
         {
-            title:     "add suggested",
-            waitNot:   '#cart_products:contains("[A8767] Apple In-Ear Headphones")',
-            element:   '.oe_cart a:contains("Add to Cart")',
+            content: "select Conference Chair Steel",
+            extra_trigger: '#product_detail',
+            trigger: 'label:contains(Steel) input',
         },
         {
-            title:     "add one more iPod",
-            waitFor:   '.my_cart_quantity:contains(2)',
-            element:   '#cart_products tr:contains("32 GB") a.js_add_cart_json:eq(1)',
+            content: "click on add to cart",
+            extra_trigger: 'label:contains(Steel) input:propChecked',
+            trigger: '#product_detail form[action^="/shop/cart/update"] .btn-primary',
         },
         {
-            title:     "remove Headphones",
-            waitFor:   '#cart_products tr:contains("32 GB") input.js_quantity:propValue(2)',
-            element:   '#cart_products tr:contains("Apple In-Ear Headphones") a.js_add_cart_json:first',
+            content: "click in modal on 'Proceed to checkout' button",
+            trigger: 'button:contains("Proceed to Checkout")',
         },
         {
-            title:     "set one iPod",
-            waitNot:   '#cart_products tr:contains("Apple In-Ear Headphones")',
-            element:   '#cart_products input.js_quantity',
-            sampleText: '1',
+            content: "add suggested",
+            extra_trigger: '#wrap:not(:has(#cart_products:contains("Storage Box")))',
+            trigger: '.oe_cart:has(tr:contains("Storage Box")) a:contains("Add to Cart")',
         },
         {
-            title:     "go to checkout",
-            waitFor:   '#cart_products input.js_quantity:propValue(1)',
-            element:   'a[href="/shop/checkout"]',
+            content: "add one more",
+            extra_trigger: '#cart_products tr:contains("Storage Box")',
+            trigger: '#cart_products tr:contains("Steel") a.js_add_cart_json:eq(1)',
         },
         {
-            title:     "test with input error",
-            element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
-            onload: function (tour) {
-                $("input[name='phone']").val("");
-            },
+            content: "remove Storage Box",
+            extra_trigger: '#cart_products tr:contains("Steel") input.js_quantity:propValue(2)',
+            trigger: '#cart_products tr:contains("Storage Box") a.js_add_cart_json:first',
         },
         {
-            title:     "test without input error",
-            waitFor:   'form[action="/shop/confirm_order"] .has-error',
-            element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
-            onload: function (tour) {
-                if ($("input[name='name']").val() === "")
-                    $("input[name='name']").val("website_sale-test-shoptest");
-                if ($("input[name='email']").val() === "")
-                    $("input[name='email']").val("website_sale_test_shoptest@websitesaletest.odoo.com");
-                $("input[name='phone']").val("123");
-                $("input[name='street2']").val("123");
-                $("input[name='city']").val("123");
-                $("input[name='zip']").val("123");
-                $("select[name='country_id']").val("21");
-            },
+            content: "set one",
+            extra_trigger: '#wrap:not(:has(#cart_products tr:contains("Storage Box")))',
+            trigger: '#cart_products input.js_quantity',
+            run: 'text 1',
         },
         {
-            title:     "select payment",
-            element:   '#payment_method label:has(img[title="Wire Transfer"]) input',
+            content: "go to checkout",
+            extra_trigger: '#cart_products input.js_quantity:propValue(1)',
+            trigger: 'a[href*="/shop/checkout"]',
         },
         {
-            title:     "Pay Now",
-            waitFor:   '#payment_method label:has(input:checked):has(img[title="Wire Transfer"])',
-            element:   '.oe_sale_acquirer_button .btn[type="submit"]:visible',
+            content: "select payment",
+            trigger: '#payment_method label:contains("Wire Transfer")',
         },
         {
-            title:     "finish",
-            waitFor:   '.oe_website_sale:contains("Thank you for your order")',
+            content: "Pay Now",
+            //Either there are multiple payment methods, and one is checked, either there is only one, and therefore there are no radio inputs
+            extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
+            trigger: 'button[id="o_payment_form_pay"]:visible:not(:disabled)',
+        },
+        {
+            content: "finish",
+            trigger: '.oe_website_sale:contains("Pending... The order will be validated after the payment.")',
+            timeout: 30000,
         }
     ]
-});
+);
 
 });

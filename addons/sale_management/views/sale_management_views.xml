@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale.sale_menu_root" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_report_product_all" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_sales_config" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.product_menu_catalog" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_product" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_product_template_action" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.prod_config_main" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_products" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.next_id_16" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_product_uom_form_action" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_product_uom_categ_form_action" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_product_pricelist_main" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_sale_order" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_sale_invoicing" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_sale_order_invoice" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_sale_order_upselling" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_sale_quotations" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="sale_order_view_tree" model="ir.ui.view">
+        <field name="name">sale.order.tree</field>
+        <field name="model">sale.order</field>
+        <field name="priority">2</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="invoice_status" position="attributes">
+                <attribute name="invisible" eval="False"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="sale_order_view_form" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale_pay']/field[@name='invoice_status']" position="attributes">
+                <attribute name="invisible" eval="False"/>
+            </xpath>
+            <xpath expr="//button[@name='action_quotation_send']" position="before">
+                <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                    type="action" class="btn-primary"
+                    attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}"/>
+                <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                    type="action" context="{'default_advance_payment_method': 'percentage'}"
+                    attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_config_settings_view_form_inherit_sale_management" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.management</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='sale_management']" position="attributes">
+                <attribute name="class">app_settings_block</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_template_sale_form_view">
+        <field name="name">product.template.sales</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='description']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//group[@name='sale']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//group[@name='invoicing']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//group[@name='description']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

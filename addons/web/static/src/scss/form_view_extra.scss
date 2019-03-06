@@ -1,0 +1,196 @@
+.o_form_view {
+    $sheet-max-width: 1140px;
+    $sheet-min-width: 650px;
+    $sheet-padding: 16px;
+
+    &.o_form_nosheet.oe_form_nomargin {
+        margin: 0;
+    }
+    .o_form_sheet_bg {
+        border-bottom: 1px solid #ddd;
+        background: url(/web/static/src/img/form_sheetbg.png);
+
+        > .o_form_sheet {
+            min-width: $sheet-min-width;
+            max-width: $sheet-max-width;
+            min-height: 330px;
+            padding: 16px;
+            border: 1px solid #c8c8d3;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            background: white;
+
+            .ui-tabs {
+                margin: 0 -16px;
+            }
+            .oe_notebook_page {
+                padding: 0 16px;
+            }
+        }
+    }
+
+    // Button box
+    .oe_button_box {
+        width: 400px;
+        text-align: right;
+        float: right;
+        margin-bottom: 4px;
+
+        &, & + .oe_avatar {
+            + .oe_title {
+                width: 400px;
+            }
+        }
+
+        // TODO remove me in master (this rule is a copy of the one in the
+        // bootstrap_review.scss file)
+        + .alert {
+            clear: both;
+        }
+
+        .oe_stat_button {
+            color: $o-main-text-color;
+            text-align: left;
+            width: 132px !important;
+            height: 40px;
+            margin: 0px -1px -1px 0px;
+            padding: 0;
+            border-radius: 0;
+            border-color: #ccc;
+            background: white;
+            outline: none;
+
+            &:hover {
+                background-color: #e6e6e6;
+            }
+
+            .o_button_icon {
+                display: inline-block;
+                width: 37px;
+                padding: 0px 3px;
+                text-align: center;
+                vertical-align: middle;
+                color: #7C7BAD;
+                font-size: 24px;
+            }
+
+            // Some buttons only display text without using StatInfo template
+            .o_stat_info, > span { // contains the value and text
+                display: inline-block;
+                vertical-align: middle;
+                max-width: 70%;
+                line-height: 1.2;
+
+                > .o_stat_value, > .o_stat_text {
+                    @include o-text-overflow(block);
+                }
+
+                .o_stat_value {
+                    font-weight: 700;
+                    color: $o-brand-odoo;
+                }
+                .o_stat_text {
+                    font-size: small;
+                }
+            }
+            > span {
+                font-size: small;
+                white-space: normal; // text on several lines if needed
+            }
+
+            > div {
+                text-align: left;
+                padding: 0;
+                line-height: 120%;
+                vertical-align: middle;
+            }
+        }
+
+        &.o_full {
+            position: relative;
+            .o_button_more {
+                padding: 0 10px;
+            }
+            .o_dropdown_more {
+                @include o-position-absolute($top: 100%, $right: 0);
+                min-width: 0;
+                padding: 0px;
+            }
+        }
+    }
+
+    // Avatar
+    .oe_avatar {
+        float: left;
+        > img {
+            max-height: 90px;
+            max-width: 90px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+            border: none;
+        }
+        + .oe_title {
+            padding-left: 95px;
+            margin-left: 5px;
+        }
+    }
+
+    // Groups
+    .o_group {
+        .o_td_label {
+            border-right: 1px solid #ddd;
+        }
+        .o_td_label + td {
+            padding: 2px 36px 2px 8px;
+        }
+        .o_field_widget.o_text_overflow {
+            width: 1px!important; // hack to make the table layout believe it is a small element (so that the table does not grow too much) ...
+            min-width: 100%;      // ... but in fact it takes the whole table space
+        }
+    }
+
+    // Separators
+    .o_horizontal_separator {
+        color: $o-brand-primary;
+        font-weight: bold;
+    }
+
+    // Translate icon
+    .o_field_translate {
+        margin-left: -15px;
+    }
+
+    // Specific style classes
+    .o_group.o_inner_group.oe_subtotal_footer {
+        .oe_subtotal_footer_separator {
+            border-top: 1px solid #cacaca;
+        }
+        .o_td_label {
+            border-right: none;
+        }
+    }
+
+    // Chatter
+    .oe_chatter {
+        display: block;
+        min-width: $sheet-min-width + 2* $sheet-padding;
+        max-width: $sheet-max-width + 2* $sheet-padding;
+        margin: 0 auto;
+        padding: 16px 16px 48px;
+    }
+}
+
+// Overriden style when form view in modal
+.modal .modal-dialog {
+    .o_form_view {
+        .o_form_sheet_bg, .o_form_sheet {
+            border: none;
+        }
+    }
+}
+
+// XXS form view specific rules
+.o_form_view.o_xxs_form_view {
+    .o_group .o_td_label {
+        border: none;
+    }
+}

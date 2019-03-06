@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
         <!-- Graph view for question analysis-->
@@ -37,9 +37,9 @@
                     <field name="event_id" string="Event"/>
                     <field name="attendee_id" string="Registration"/>
                     <group expand="1" string="Group By">
-                        <filter string="Event" context="{'group_by': 'event_id'}" />
-                        <filter string="Question" context="{'group_by': 'question_id'}"/>
-                        <filter string="Answer" context="{'group_by': 'answer_id'}" />
+                        <filter string="Event" name="group_by_event" context="{'group_by': 'event_id'}" />
+                        <filter string="Question" name="group_by_question" context="{'group_by': 'question_id'}"/>
+                        <filter string="Answer" name="group_by_answer" context="{'group_by': 'answer_id'}" />
                     </group>
                 </search>
             </field>
@@ -50,7 +50,7 @@
            <field name="name">Questions Analysis</field>
            <field name="res_model">event.question.report</field>
            <field name="view_type">form</field>
-           <field name="view_mode">pivot,graph</field>
+           <field name="view_mode">graph,pivot</field>
        </record>
 
        <!-- Menu -->
@@ -58,4 +58,4 @@
             parent="event.menu_reporting_events" action="action_event_question_report" sequence="4"/>
 
     </data>
-</openerp>
+</odoo>

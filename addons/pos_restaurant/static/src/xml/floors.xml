@@ -32,6 +32,12 @@
         </div>
     </t>
 
+    <t t-name="TransferOrderButton">
+        <div class='control-button'>
+            <i class='fa fa-arrow-right' /> Transfer
+        </div>
+    </t>
+
     <t t-name="TableWidget">
         <t t-if='!widget.selected'>
             <div class='table' t-att-style='widget.table_style_str()'>
@@ -55,21 +61,25 @@
                     <t t-esc='widget.table.name' />
                 </span>
                 <span class="table-seats"><t t-esc="widget.table.seats" /></span>
-                <span class='table-handle top'></span>
-                <span class='table-handle bottom'></span>
-                <span class='table-handle left'></span>
-                <span class='table-handle right'></span>
-                <span class='table-handle top right'></span>
-                <span class='table-handle top left'></span>
-                <span class='table-handle bottom right'></span>
-                <span class='table-handle bottom left'></span>
+                <t t-if="widget.table.shape === 'round'">
+                    <span class='table-handle top'></span>
+                    <span class='table-handle bottom'></span>
+                    <span class='table-handle left'></span>
+                    <span class='table-handle right'></span>
+                </t>
+                <t t-if="widget.table.shape === 'square'">
+                    <span class='table-handle top right'></span>
+                    <span class='table-handle top left'></span>
+                    <span class='table-handle bottom right'></span>
+                    <span class='table-handle bottom left'></span>
+                </t>
             </div>
         </t>
     </t>
 
     <t t-name="BackToFloorButton">
         <span class="order-button floor-button">
-            <i class='fa fa-angle-double-left'/>
+            <i class='fa fa-angle-double-left' role="img" aria-label="Back to floor" title="Back to floor"/>
             <t t-esc="floor.name"/>
             <span class='table-name'>
                 ( <t t-esc="table.name" /> )
@@ -94,60 +104,60 @@
                 </t>
                 <div class='floor-map' t-att-style='widget.get_floor_style()' >
                     <div class='empty-floor oe_hidden'>
-                        This floor has no tables yet, use the <i class="fa fa-plus"></i> button in the editing toolbar to create new tables.
+                        This floor has no tables yet, use the <i class="fa fa-plus" role="img" aria-label="Add button" title="Add button"></i> button in the editing toolbar to create new tables.
                     </div>
                     <div class='tables'></div>
-                    <span class='edit-button editing'><i class='fa fa-pencil'></i></span>
+                    <span t-if="widget.pos.user.role == 'manager'" class='edit-button editing'><i class='fa fa-pencil' role="img" aria-label="Edit" title="Edit"></i></span>
                     <div class='edit-bar oe_hidden'>
                         <span class='edit-button new-table'>
-                            <i class='fa fa-plus'></i>
+                            <i class='fa fa-plus' role="img" aria-label="Add" title="Add"></i>
                         </span>
                         <span class='edit-button dup-table needs-selection'>
-                            <i class='fa fa-files-o'></i>
+                            <i class='fa fa-files-o' role="img" aria-label="Duplicate" title="Duplicate"></i>
                         </span>
                         <span class='edit-button rename needs-selection'>
-                            <i class='fa fa-font'></i>
+                            <i class='fa fa-font' role="img" aria-label="Rename" title="Rename"></i>
                         </span>
                         <span class='edit-button seats needs-selection'>
-                            <i class='fa fa-user'></i>
+                            <i class='fa fa-user' role="img" aria-label="Seats" title="Seats"></i>
                         </span>
                         <span class='edit-button shape needs-selection'>
-                            <span class='button-option square'><i class='fa fa-square-o'></i></span>
-                            <span class='button-option round oe_hidden'><i class='fa fa-circle-o'></i></span>
+                            <span class='button-option square'><i class='fa fa-square-o' role="img" aria-label="Square Shape" title="Square Shape"></i></span>
+                            <span class='button-option round oe_hidden'><i class='fa fa-circle-o' role="img" aria-label="Round Shape" title="Round Shape"></i></span>
                         </span> 
                         <span class='edit-button color'>
-                            <i class='fa fa-tint'></i>
+                            <i class='fa fa-tint' role="img" aria-label="Tint" title="Tint"></i>
                             <div class='color-picker fg-picker oe_hidden'>
-                                <div  class='close-picker'>
+                                <div  class='close-picker' title="Close" role="img" aria-label="Close">
                                     <i class='fa fa-times' />
                                 </div>
-                                <span class='color tl'  style='background-color:#EB6D6D' />
-                                <span class='color'     style='background-color:#35D374' />
-                                <span class='color tr'  style='background-color:#6C6DEC' />
-                                <span class='color'     style='background-color:#EBBF6D' />
-                                <span class='color'     style='background-color:#EBEC6D' />
-                                <span class='color'     style='background-color:#AC6DAD' />
-                                <span class='color bl'  style='background-color:#6C6D6D' />
-                                <span class='color'     style='background-color:#ACADAD' />
-                                <span class='color br'  style='background-color:#4ED2BE' />
+                                <span class='color tl'  style='background-color:#EB6D6D' role="img" aria-label="Red" title="Red"/>
+                                <span class='color'     style='background-color:#35D374' role="img" aria-label="Green" title="Green"/>
+                                <span class='color tr'  style='background-color:#6C6DEC' role="img" aria-label="Blue" title="Blue"/>
+                                <span class='color'     style='background-color:#EBBF6D' role="img" aria-label="Orange" title="Orange"/>
+                                <span class='color'     style='background-color:#EBEC6D' role="img" aria-label="Yellow" title="Yellow"/>
+                                <span class='color'     style='background-color:#AC6DAD' role="img" aria-label="Purple" title="Purple"/>
+                                <span class='color bl'  style='background-color:#6C6D6D' role="img" aria-label="Grey" title="Grey"/>
+                                <span class='color'     style='background-color:#ACADAD' role="img" aria-label="Light grey" title="Light grey"/>
+                                <span class='color br'  style='background-color:#4ED2BE' role="img" aria-label="Turquoise" title="Turquoise"/>
                             </div>
                             <div class='color-picker bg-picker oe_hidden'>
-                                <div  class='close-picker'>
+                                <div  class='close-picker' title="Close" role="img" aria-label="Close">
                                     <i class='fa fa-times' />
                                 </div>
-                                <span class='color tl'  style='background-color:rgb(244, 149, 149)' />
-                                <span class='color'     style='background-color:rgb(130, 233, 171)' />
-                                <span class='color tr'  style='background-color:rgb(136, 137, 242)' />
-                                <span class='color'     style='background-color:rgb(255, 214, 136)' />
-                                <span class='color'     style='background-color:rgb(254, 255, 154)' />
-                                <span class='color'     style='background-color:rgb(209, 171, 210)' />
-                                <span class='color bl'  style='background-color:rgb(75, 75, 75)'    />
-                                <span class='color'     style='background-color:rgb(210, 210, 210)' />
-                                <span class='color br'  style='background-color:rgb(127, 221, 236)' />
+                                <span class='color tl'  style='background-color:rgb(244, 149, 149)' role="img" aria-label="Red" title="Red"/>
+                                <span class='color'     style='background-color:rgb(130, 233, 171)' role="img" aria-label="Green" title="Green"/>
+                                <span class='color tr'  style='background-color:rgb(136, 137, 242)' role="img" aria-label="Blue" title="Blue"/>
+                                <span class='color'     style='background-color:rgb(255, 214, 136)' role="img" aria-label="Orange" title="Orange"/>
+                                <span class='color'     style='background-color:rgb(254, 255, 154)' role="img" aria-label="Yellow" title="Yellow"/>
+                                <span class='color'     style='background-color:rgb(209, 171, 210)' role="img" aria-label="Purple" title="Purple"/>
+                                <span class='color bl'  style='background-color:rgb(75, 75, 75)'    role="img" aria-label="Grey" title="Grey"/>
+                                <span class='color'     style='background-color:rgb(210, 210, 210)' role="img" aria-label="Light grey" title="Light grey"/>
+                                <span class='color br'  style='background-color:rgb(127, 221, 236)' role="img" aria-label="Turquoise" title="Turquoise"/>
                             </div>
                         </span>
                         <span class='edit-button trash needs-selection'>
-                            <i class='fa fa-trash'></i>
+                            <i class='fa fa-trash' role="img" aria-label="Delete" title="Delete"></i>
                         </span>
                     </div>
                     

@@ -1,0 +1,114 @@
+///
+/// This file regroups the variables that style odoo components.
+/// They are available in every asset bundle.
+///
+
+// Font sizes
+$o-root-font-size: 12px;
+$o-font-size-base: 13rem * (1px / $o-root-font-size);
+$o-line-height-base: 1.5; // This is BS default
+
+// Colors
+$o-community-color: #7C7BAD;
+$o-enterprise-color: #875A7B;
+$o-enterprise-primary-color: #00A09D;
+
+$o-brand-odoo: $o-community-color;
+$o-brand-primary: $o-community-color;
+
+$o-brand-secondary: #f0eeee;
+$o-brand-lightsecondary: #e2e2e0;
+$o-gray-100: #f8f9fa; // This is BS default
+
+$o-main-color-muted: #a8a8a8;
+$o-main-text-color: #4c4c4c;
+
+$o-view-background-color: white;
+$o-shadow-color: #303030;
+
+$o-form-lightsecondary: #ccc;
+
+$o-list-footer-bg-color: #eee;
+$o-list-footer-font-weight: bold;
+
+$o-tooltip-background-color: black;
+$o-tooltip-color: white;
+$o-tooltip-arrow-color: black;
+$o-tooltip-text-color: #777777;
+$o-tooltip-title-text-color: #4c4c4c;
+
+// Layout
+//
+// Extension of BS4. This is not redefining the BS4 variable directly as we only
+// need the extra ones for media queries (not creating new breakpoint classes).
+// Note: default BS4 values are hardcoded here while it should be possible to
+// merge with the default BS variable (but we would have to take care of
+// ordering & cie).
+$o-extra-grid-breakpoints: (
+    xs: 0,
+    vsm: 475px,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+    xxl: 1534px,
+);
+
+$o-form-group-cols: 12;
+$o-form-spacing-unit: 5px;
+$o-horizontal-padding: 16px;
+$o-innergroup-rpadding: 45px;
+$o-dropdown-hpadding: 20px;
+
+$o-sheet-vpadding: 24px;
+
+$o-notification-error-bg-color: #F16567;
+$o-notification-info-bg-color: #FCFBEA;
+
+$o-modal-lg: 980px;
+$o-modal-md: 650px;
+
+// Needed for having no spacing between sheet and mail body in mass_mailing:
+// Different required cancel paddings between web and web_enterprise
+$o-sheet-cancel-tpadding: 0px;
+
+$o-avatar-size: 90px;
+
+$o-statusbar-height: 33px;
+
+$o-label-font-size-factor: 0.8;
+$o-navbar-height: 46px;
+
+$o-nb-calendar-colors: 24;
+
+$o-base-settings-mobile-tabs-height: 40px;
+$o-base-settings-mobile-tabs-overflow-gap: 3%;
+
+$o-cp-breadcrumb-height: 30px;
+
+$o-datepicker-week-color: #8f8f8f;
+
+// Kanban
+
+$o-kanban-default-record-width: 300px;
+$o-kanban-small-record-width: 240px;
+
+$o-kanban-header-title-height: 50px;
+
+$o-kanban-image-width: 64px;
+$o-kanban-image-fill-width: 95px;
+$o-kanban-inside-vgutter: 8px;
+$o-kanban-inside-hgutter: 8px;
+$o-kanban-color-border-width: 3px;
+$o-kanban-inner-hmargin: 5px;
+$o-kanban-progressbar-height: 20px;
+
+$o-kanban-mobile-tabs-height: 40px;
+
+// ------- Kanban dashboard variables -------
+
+// Used to manage spacing in complex dropdown menu
+$o-kanban-dashboard-dropdown-complex-gap: 5px;
+
+// For the frontend part
+$o-theme-font-size-base: (14 / 16) * 1rem;

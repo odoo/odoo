@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 15:42+0000\n"
-"PO-Revision-Date: 2015-09-18 15:42+0000\n"
+"POT-Creation-Date: 2019-02-12 05:39+0000\n"
+"PO-Revision-Date: 2019-02-12 05:39+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,12 +16,331 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_ch
-#: model:ir.actions.client,name:l10n_ch.action_client_l10n_ch_menu
-msgid "Open Account Dashboard Menu"
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<br/>\n"
+"\n"
+"                            <span class=\"swissqr_text title\">Creditor</span><br/>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<br/>\n"
+"\n"
+"                            <span class=\"swissqr_text title\">Debtor</span><br/>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<br/>\n"
+"\n"
+"                            <span class=\"swissqr_text title\">Due date</span><br/>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<br/>\n"
+"\n"
+"                            <span class=\"swissqr_text title\">Reference number</span><br/>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">ISR scan line offset</span>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span class=\"swissqr_text title title_zone\">QR-bill payment part</span><br/>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span class=\"swissqr_text title\">Account</span><br/>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span class=\"swissqr_text title\">Additional information</span><br/>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span class=\"swissqr_text title\">Amount</span><br/>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span class=\"swissqr_text title\">Currency</span><br/>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span class=\"swissqr_text title\">Supports</span><br/>\n"
+"                            <span class=\"swissqr_text content\">Credit transfer</span>"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span>Some pieces of this information are not set correctly to display the Swiss QR Code.<br/>\n"
+"                            -Bank &gt; CHF ISR reference<br/>\n"
+"                            -Bank &gt; EUR ISR reference<br/>\n"
+"                            -Your company &gt; Street with number<br/>\n"
+"                            -Your company &gt; City<br/>\n"
+"                            -Your company &gt; Zip<br/>\n"
+"                            -Your company &gt; Country<br/>\n"
+"                            -Debtor &gt; Street with number<br/>\n"
+"                            -Debtor &gt; City<br/>\n"
+"                            -Debtor &gt; Zip<br/>\n"
+"                            -Debtor &gt; Country\n"
+"                            </span>"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model,name:l10n_ch.model_res_bank
+msgid "Bank"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model,name:l10n_ch.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_res_company__l10n_ch_isr_print_bank_location
+#: model:ir.model.fields,help:l10n_ch.field_res_config_settings__l10n_ch_isr_print_bank_location
+msgid "Boolean option field indicating whether or not the alternate layout (the one printing bank name and address) must be used when generating an ISR."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_invoice__l10n_ch_isr_sent
+msgid "Boolean value telling whether or not the ISR corresponding to this invoice has already been printed or sent by mail."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_invoice__l10n_ch_isr_valid
+msgid "Boolean value. True iff all the data required to generate the ISR are present"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__l10n_ch_postal_chf
+msgid "CHF ISR reference"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.cash.rounding,name:l10n_ch.cash_rounding_5_centime
+msgid "Coinage 0.05"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model,name:l10n_ch.model_res_config_settings
+msgid "Config Settings"
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__l10n_ch_currency_name
+msgid "Currency Name"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_bank__l10n_ch_postal_eur
+msgid "EUR ISR reference"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__l10n_ch_isr_scan_line_left
+msgid "Horizontal offset"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.actions.report,name:l10n_ch.l10n_ch_isr_report
+msgid "ISR"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_isr_report_template
+msgid "ISR for invoice"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_invoice__l10n_ch_isr_number_spaced
+msgid "ISR number split in blocks of 5 characters (right-justified), to generate ISR report."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__l10n_ch_postal
+#: model:ir.model.fields,field_description:l10n_ch.field_account_setup_bank_manual_config__l10n_ch_postal
+#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__l10n_ch_postal
+msgid "ISR reference"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.isr_invoice_search_view
+msgid "ISR reference number"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model,name:l10n_ch.model_account_invoice
+msgid "Invoice"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model,name:l10n_ch.model_account_journal
+msgid "Journal"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__l10n_ch_isr_number
+msgid "L10N Ch Isr Number"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__l10n_ch_isr_number_spaced
+msgid "L10N Ch Isr Number Spaced"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__l10n_ch_isr_optical_line
+msgid "L10N Ch Isr Optical Line"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__l10n_ch_isr_postal
+msgid "L10N Ch Isr Postal"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__l10n_ch_isr_postal_formatted
+msgid "L10N Ch Isr Postal Formatted"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__l10n_ch_isr_sent
+msgid "L10N Ch Isr Sent"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice__l10n_ch_isr_valid
+msgid "L10N Ch Isr Valid"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.res_config_settings_view_form
+msgid "Offset to move the the scan line in mm"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_invoice__l10n_ch_isr_optical_line
+msgid "Optical reading line, as it will be printed on ISR"
+msgstr ""
+
+#. module: l10n_ch
+#: code:addons/l10n_ch/models/res_bank.py:41
+#, python-format
+msgid "Postal"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_invoice__l10n_ch_isr_postal_formatted
+msgid "Postal reference of the bank, formated with '-' and without the padding zeros, to generate ISR report."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_company__l10n_ch_isr_preprinted_account
+#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__l10n_ch_isr_preprinted_account
+msgid "Preprinted account"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_company__l10n_ch_isr_preprinted_bank
+#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__l10n_ch_isr_preprinted_bank
+msgid "Preprinted bank"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.isr_invoice_form
+msgid "Print ISR"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_company__l10n_ch_isr_print_bank_location
+msgid "Print bank location"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__l10n_ch_isr_print_bank_location
+msgid "Print bank on ISR"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.res_config_settings_view_form
+msgid "Print the coordinates of your bank under the 'Payment for' title of the ISR.\n"
+"                                Your address will be moved to the 'in favour of' section."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_company__l10n_ch_isr_scan_line_left
+msgid "Scan line horizontal offset (mm)"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_company__l10n_ch_isr_scan_line_top
+msgid "Scan line vertical offset (mm)"
 msgstr ""
 
 #. module: l10n_ch
 #: model:ir.ui.menu,name:l10n_ch.account_reports_ch_statements_menu
-msgid "Swiss Statements"
+msgid "Switzerland"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_journal__l10n_ch_postal
+#: model:ir.model.fields,help:l10n_ch.field_account_setup_bank_manual_config__l10n_ch_postal
+#: model:ir.model.fields,help:l10n_ch.field_res_partner_bank__l10n_ch_postal
+msgid "The ISR number of the company within the bank"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_invoice__l10n_ch_currency_name
+msgid "The name of this invoice's currency"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_invoice__l10n_ch_isr_postal
+msgid "The postal reference identifying the bank managing this ISR."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_res_bank__l10n_ch_postal_chf
+msgid "The postal reference of the bank, used to generate ISR payment slips in CHF."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_res_bank__l10n_ch_postal_eur
+msgid "The postal reference of the bank, used to generate ISR payment slips in EUR."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_invoice__l10n_ch_isr_number
+msgid "The reference number associated with this invoice"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__l10n_ch_isr_scan_line_top
+msgid "Vertical offset"
+msgstr ""
+
+#. module: l10n_ch
+#: code:addons/l10n_ch/models/account_invoice.py:165
+#, python-format
+msgid "You cannot generate an ISR yet.\n"
+"\n"
+"                                   For this, you need to :\n"
+"\n"
+"                                   - set a valid postal account number (or an IBAN referencing one) for your company\n"
+"\n"
+"                                   - define its bank\n"
+"\n"
+"                                   - associate this bank with a postal reference for the currency used in this invoice\n"
+"\n"
+"                                   - fill the 'bank account' field of the invoice with the postal to be used to receive the related payment. A default account will be automatically set for all invoices created after you defined a postal account for your company."
 msgstr ""
 

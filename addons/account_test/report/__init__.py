@@ -1,2 +1,4 @@
 # -*- coding: utf-8 -*-
-import account_test_report
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from . import report_account_test

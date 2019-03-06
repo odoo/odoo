@@ -47,7 +47,7 @@ Import Vendor Pricelists
 Take smart purchase decisions using the best prices.  Easily import vendor's
 pricelists to make smarter purchase decisions based on promotions, prices
 depending on quantities and special contract conditions. You can even base your
-sales price depending on your vendor's prices.
+sale price depending on your vendor's prices.
 
 Control Products and Invoices
 -----------------------------

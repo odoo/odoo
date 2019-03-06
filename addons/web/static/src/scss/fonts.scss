@@ -1,0 +1,37 @@
+// ------------------------------------------------------------------
+// Lato
+// ------------------------------------------------------------------
+$lato-font-path: '../fonts/lato';
+
+@mixin lato-font($type, $weight, $style) {
+    @font-face {
+        font-family: 'Lato';
+        src: url('#{$lato-font-path}/Lato-#{$type}-webfont.eot');
+        src: url('#{$lato-font-path}/Lato-#{$type}-webfont.eot?#iefix') format('embedded-opentype'),
+             url('#{$lato-font-path}/Lato-#{$type}-webfont.woff') format('woff'),
+             url('#{$lato-font-path}/Lato-#{$type}-webfont.ttf') format('truetype'),
+             url('#{$lato-font-path}/Lato-#{$type}-webfont.svg#Lato') format('svg');
+        font-weight: $weight;
+        font-style: $style;
+    }
+
+    @font-face {
+        font-family: 'Lato-#{$type}';
+        src: url('#{$lato-font-path}/Lato-#{$type}-webfont.eot');
+        src: url('#{$lato-font-path}/Lato-#{$type}-webfont.eot?#iefix') format('embedded-opentype'),
+             url('#{$lato-font-path}/Lato-#{$type}-webfont.woff') format('woff'),
+             url('#{$lato-font-path}/Lato-#{$type}-webfont.ttf') format('truetype'),
+             url('#{$lato-font-path}/Lato-#{$type}-webfont.svg#Roboto') format('svg');
+    }
+}
+
+@mixin lato-font-pair($type, $weight) {
+    @include lato-font('#{$type}', $weight, normal);
+    @include lato-font('#{$type}Ita', $weight, italic);
+}
+
+@include lato-font-pair('Hai', 100);
+@include lato-font-pair('Lig', 300);
+@include lato-font-pair('Reg', 400);
+@include lato-font-pair('Bol', 700);
+@include lato-font-pair('Bla', 900);

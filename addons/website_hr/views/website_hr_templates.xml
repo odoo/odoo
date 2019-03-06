@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- Page -->
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="website_hr_assets">
+    <xpath expr="." position="inside">
+        <link rel="stylesheet" type="text/scss" href="/website_hr/static/src/scss/website_hr.scss"/>
+    </xpath>
+</template>
+
+<template id="aboutus" inherit_id="website.aboutus" customize_show="True" name="Our Team">
+    <xpath expr="//div[hasclass('oe_structure')]" position="after">
+        <section class="pt32 pb32" id="team">
+            <t t-set="is_publisher" t-value="request.env['res.users'].has_group('website.group_website_publisher')" />
+            <t t-set="multiwebsite_domain" t-value="request.website.website_domain()"/>
+            <t t-set="employees_domain" t-value="[] if is_publisher else [('website_published', '=', True)]" />
+            <t t-set="employees" t-value="request.env['hr.employee'].search(employees_domain + multiwebsite_domain)" />
+            <div class="container" t-if="len(employees)">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h2>Our Team</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div t-foreach="employees" t-as="employee" class="col-md-3 col-xl-2 mt16 text-center">
+                        <t t-call="website.publish_management">
+                            <t t-set="object" t-value="employee"/>
+                            <t t-set="publish_edit" t-value="True"/>
+                            <t t-set="style" t-value="'float: none !important; margin-bottom: 4px;'"/>
+                        </t>
+                        <img t-att-src="website.image_url(employee, 'image_medium')" class="img shadow rounded" alt="Employee"/>
+                        <div class="mt8">
+                            <strong t-field="employee.name"></strong>
+                        </div>
+                        <div t-field="employee.job_id"/>
+                        <div t-field="employee.public_info" class="text-muted mt16 d-block mx-auto"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </xpath>
+</template>
+
+</odoo>

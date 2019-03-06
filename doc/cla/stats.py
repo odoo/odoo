@@ -2,6 +2,7 @@
 #
 # Runme From the repo toplevel directory
 #
+from __future__ import print_function
 import subprocess
 import glob
 import re
@@ -37,18 +38,18 @@ def blamestat(ext='py'):
             else:
                 ko += lines
                 kol.append(i)
-    print '-'*60
-    print 'Stats for ',ext
-    print '-'*60
-    print "\nCLA SIGNED %s/%s (%.0f%%)" % (ok, ok+ko, ok*100.0/(ok+ko))
+    print('-'*60)
+    print('Stats for ', ext)
+    print('-'*60)
+    print("\nCLA SIGNED %s/%s (%.0f%%)" % (ok, ok+ko, ok*100.0/(ok+ko)))
     for i in okl:
-        print i
+        print(i)
 
-    print "\nCLA MISSING %s/%s (%.0f%%)\n" % (ko, ok+ko, ko*100.0/(ok+ko))
+    print("\nCLA MISSING %s/%s (%.0f%%)\n" % (ko, ok+ko, ko*100.0/(ok+ko)))
     for i in kol:
-        print i
-    print
-    print
+        print(i)
+    print()
+    print()
 
 blamestat('md')
 blamestat('rst')

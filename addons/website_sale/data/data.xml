@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <record id="menu_shop" model="website.menu">
@@ -11,7 +11,7 @@
         <record id="action_open_website" model="ir.actions.act_url">
             <field name="name">Website Shop</field>
             <field name="target">self</field>
-            <field name="url">/shop#tutorial.shop=true</field>
+            <field name="url">/shop</field>
         </record>
         <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_open_website"/>
@@ -27,22 +27,45 @@
             <field name="html_class">oe_image_full</field>
         </record>
 
-        <record model="crm.team" id="website.salesteam_website_sales">
-            <field name="name">Website Sales</field>
-            <field name="code">WS</field>
-            <field name="use_quotations" eval="False"/>
+        <record model="crm.team" id="sales_team.salesteam_website_sales">
+            <field name="active" eval="True"/>
+            <field name="dashboard_graph_model">sale.report</field>
+            <field name="dashboard_graph_period">week</field>
+            <field name="company_id" eval="False"/>
         </record>
 
         <record model="website" id="website.default_website">
-            <field name="salesteam_id" ref="website.salesteam_website_sales"/>
+            <field name="salesteam_id" ref="sales_team.salesteam_website_sales"/>
         </record>
 
-        <record id="wlist0" model="website_pricelist">
-            <field name="selectable" eval="True" />
+        <record model="product.pricelist" id="product.list0">
+            <field name="selectable" eval="False" />
             <field name="website_id" ref="website.default_website" />
-            <field name="pricelist_id" ref='product.list0' />
-            <field name="country_group_ids" eval="[(6,0,[ref('base.europe')])]" />
-
         </record>
     </data>
-</openerp>
+    <data>
+        <record id="sale.model_sale_order" model="ir.model">
+            <field name="website_form_access" eval="True"/>
+            <field name="website_form_label">Sales Order</field>
+        </record>
+        <function model="ir.model.fields" name="formbuilder_whitelist">
+            <value>sale.order</value>
+            <value eval="[
+                'client_order_ref',
+            ]"/>
+        </function>
+
+        <record id="base.model_res_partner" model="ir.model">
+            <field name="website_form_access">True</field>
+            <field name="website_form_label">Customer</field>
+        </record>
+        <function model="ir.model.fields" name="formbuilder_whitelist">
+            <value>res.partner</value>
+            <value eval="[
+                'name', 'phone', 'email',
+                'city', 'zip', 'street', 'street2', 'state_id', 'country_id',
+                'vat', 'company_name'
+            ]"/>
+        </function>
+    </data>
+</odoo>

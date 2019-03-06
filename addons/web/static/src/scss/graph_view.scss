@@ -1,0 +1,63 @@
+.o_graph {
+    .o_graph_container {
+        height: 100%;
+        overflow: auto;
+        .o_graph_svg_container {
+            direction: ltr#{"/*rtl:ignore*/"};
+            height: 100%;
+            overflow: auto;
+            svg {
+                background-color: $o-view-background-color;
+                .nv-y {
+                    path.domain, g.tick.zero {
+                        // Hide y axis line and zero tick label
+                        display: none;
+                    }
+                }
+                .nv-axis.nv-x path.domain {
+                    stroke-opacity: 0.2;
+                }
+                .nv-groups g.nv-group {
+                    stroke-width:10px;
+                }
+                .nv-groups path.nv-area {
+                    // ligther area color
+                    fill-opacity: 0.1;
+                }
+                .nv-lineChart .nv-x.nv-axis .nv-axisMaxMin-x {
+                    &.nv-axisMin-x text {
+                        text-anchor: start !important;
+                    }
+                    &.nv-axisMax-x text {
+                        text-anchor: end !important;
+                    }
+                }
+            }
+
+            /* Use less than 50% of the screen area for tooltip and show legends in 3 column of 33% each */
+            &.o_tooltip_split_in_columns .nvtooltip {
+                max-width: 48%;
+                tbody {
+                    display: flex;
+                    flex-flow: wrap;
+                    tr {
+                        width: 33%;
+                        td {
+                            display: inline-block;
+                            &.key {
+                                min-width: 160px;
+                                max-width: 70%;
+                                overflow-x: hidden;
+                                text-overflow: ellipsis;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.nvtooltip thead {
+    background-color: transparent;
+}

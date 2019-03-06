@@ -1,0 +1,126 @@
+.modal.o_technical_modal {
+
+    .modal-content {
+        border-radius: 0;
+
+        .modal-header .o_subtitle {
+            margin-left: 10px;
+        }
+
+        .modal-body {
+            &.o_act_window {
+                padding: 0;
+            }
+
+            .o_modal_header {
+                @include o-webclient-padding($top: 10px, $bottom: 10px);
+                @include clearfix;
+
+                .o_search_options {
+                    display: inline-block;
+                }
+                .o_pager {
+                    float: right;
+                }
+            }
+        }
+
+        .modal-footer {
+            flex-wrap: wrap;
+            text-align: left;
+            justify-content: flex-start;
+
+            // TODO These rules should not be necessary if we used buttons
+            // as direct children of the modal-footer as normally required
+            > div, > footer {
+                flex: 1 1 auto;
+            }
+
+            footer {
+                > :not(:first-child) { margin-left: .25rem; }
+                > :not(:last-child) { margin-right: .25rem; }
+            }
+
+            button {
+                margin-bottom: .5rem;
+            }
+        }
+    }
+
+
+    @include media-breakpoint-up(md) {
+        .modal-dialog {
+            height: 100%;
+            padding: 30px 0;
+            margin: 0 auto;
+
+            .modal-content {
+                max-height: 100%;
+                display: flex;
+                flex-flow: column nowrap;
+
+                .modal-header, .modal-footer {
+                    flex: 0 0 auto;
+                }
+
+                .modal-body {
+                    overflow: auto;
+                    // fix iOS issue https://github.com/scottjehl/Device-Bugs/issues/8
+                    -webkit-transform: translate3d(0, 0, 0);
+                    min-height: 0;
+
+                    &.o_dialog_error {
+                        overflow: visible;
+                        display: flex;
+                        flex-flow: column nowrap;
+
+                        > .alert, > button {
+                            flex: 0 0 auto;
+                        }
+
+                        > .o_error_detail {
+                            flex: 1 1 auto;
+                            min-height: 0;
+                            overflow: auto;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @include media-breakpoint-down(xs) {
+        &.o_modal_full {
+            .modal-dialog {
+                margin: 0px;
+                height: 100%;
+
+                .modal-content {
+                    height: 100%;
+                    border: none;
+
+                    .modal-header {
+                        background: $o-brand-odoo;
+                        .modal-title, .o_subtitle, button.close {
+                            color: white;
+                        }
+                    }
+
+                    .modal-body {
+                        height: 100%;
+                        overflow-y: auto;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Temporary fix for modals which are not instantiated thanks to the Dialog
+// JS classes (deprecated case) (see bootstrap_overridden.scss) + Frontend.
+//
+// TODO the following code was disabled because it is saas-incompatible
+//
+// :not(body) > .modal {
+//     z-index: $zindex-modal-background + 1;
+// }

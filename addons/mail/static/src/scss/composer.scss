@@ -1,0 +1,566 @@
+@font-face {
+    font-family: 'emojifont';
+    src: local('Segoe UI'),
+         local('Apple Color Emoji'),
+         local('Android Emoji'),
+         local('Noto Color Emoji'),
+         local('Twitter Color Emoji'),
+         local('Twitter Color'),
+         local('EmojiOne Color'),
+         local('EmojiOne'),
+         local(EmojiSymbols),
+         local(Symbola);
+}
+
+.o_thread_composer {
+    position: relative;
+    flex: 0 0 auto;
+    display: flex;
+    margin: 1px 0;
+    border-top: none;
+    background: theme-color('light');
+
+    .o_composer, .o_composer_subject {
+        position: relative;
+        background: white;
+
+        textarea, input {
+            border: none;
+        }
+    }
+
+    .o_composer_subject {
+        display: flex;
+        padding-bottom: 5px;
+
+        > input {
+            flex: 1 1 auto;
+            padding: 5px;
+            margin-right: 30px;
+        }
+    }
+
+    .o_composer {
+        .o_composer_input > textarea {
+            width: 100%;
+            resize: none;
+        }
+        .o_composer_mention_dropdown .o_mention_proposition {
+            @include o-text-overflow;
+            width: 100%;
+            padding: 3px 15px;
+            .o_mention_name {
+                font-weight: 500;
+            }
+            .o_mention_info {
+                font-style: italic;
+                color: gray;
+            }
+        }
+        textarea {
+            resize: none;
+        }
+        .btn.fa {
+            @include o-hover-opacity($default-opacity: 0.8, $hover-opacity: 1);
+            border: none;
+        }
+        .o_composer_button_full_composer {
+            @include o-position-absolute(auto, 0);
+        }
+        @include media-breakpoint-down(sm) {
+            .o_composer_button_send {
+                color: $o-brand-primary;
+            }
+        }
+
+        .o_mail_emoji_container {
+            padding: 0 $o-mail-chatter-gap $o-mail-chatter-gap 0;
+            border: 1px solid gray('300');
+            border-width: 1px 0 0 0;
+            background-color: theme-color('light');
+
+            .o_mail_emoji {
+                margin: $o-mail-chatter-gap 0 0 $o-mail-chatter-gap;
+                cursor: pointer; // only in the popover
+                min-width: 22px;
+                min-height: 22px;
+            }
+        }
+    }
+
+    // Both inline and not-inline design. Mini-composer disabled.
+    &:not(.o_chat_mini_composer) {
+        padding:  $o-mail-thread-avatar-size*0.5;
+        padding-left: $grid-gutter-width*0.5 + $o-mail-thread-avatar-size + $o-mail-chatter-gap;
+        border: 1px solid gray('300');
+        border-top: none;
+
+        .o_chatter_avatar {
+            @include o-position-absolute(0, $left:  -$o-mail-thread-avatar-size - $o-mail-chatter-gap);
+        }
+
+        .o_chatter_composer_info, .o_composer_suggested_partners {
+            flex: 0 0 100%;
+            margin-bottom: $o-mail-chatter-gap*0.5;
+        }
+
+        .o_composer_container {
+            position: relative;
+        }
+
+        .o_composer {
+            border-radius: 2px;
+            textarea {
+                padding-right: $grid-gutter-width; // avoid overlaps betwenn textarea and o_composer_button_full_composer
+            }
+
+            .o_mail_emoji_container {
+                margin: 0 -$o-mail-chatter-gap;
+            }
+        }
+
+        .o_composer, .o_composer_subject {
+            border: 1px solid gray('300');
+
+            textarea, input {
+                padding: 0 0 $o-mail-chatter-gap;
+                border: none;
+            }
+        }
+        .o_composer_subject {
+            border-bottom: 0;
+            border-radius: 2px 2px 0 0;
+        }
+
+        .o_chatter_composer_tools {
+            border-top: 1px solid gray('300');
+        }
+
+        &:not(.o_chat_inline_composer) {
+            flex-flow: row wrap;
+
+            .o_composer_container, .o_composer_button_send {
+                flex: 1 0 100%;
+            }
+            .o_composer, .o_composer_subject {
+                padding: $o-mail-chatter-gap $o-mail-chatter-gap 0;
+            }
+            .o_composer_send {
+                margin-top: $o-mail-chatter-gap;
+            }
+        }
+
+        &.o_chat_inline_composer {
+            .o_composer_container {
+                flex: 1 1 auto;
+            }
+            .o_composer {
+                padding: $o-mail-chatter-gap $o-mail-chatter-gap 0 $o-mail-chatter-gap;
+                border-radius: 2px 0 0 2px;
+                border-right-width: 0;
+
+                .o_mail_emoji_container {
+                    text-align: right;
+                    border-right-width: 1px;
+                }
+            }
+            .o_composer_input {
+                display: flex;
+                flex-flow: row wrap;
+            }
+            .o_composer_text_field {
+                flex: 1 1 50%;
+                margin: 0;
+                padding: 0;
+            }
+            .o_chatter_composer_tools {
+                flex: 0 1 auto;
+            }
+            .o_composer_attachments_list {
+                flex: 1 0 100%;
+            }
+
+            .o_chatter_composer_tools {
+                border: none;
+                border-left: 1px solid gray('300');
+                padding-left: $o-mail-chatter-gap*0.5;
+                transform: translateY(-$o-mail-chatter-gap*0.5);
+            }
+
+            .o_composer_button_send {
+                border-radius: 0 3px 3px 0;
+                // Make the button appear as the same size as the subject input
+                padding: 10px $input-btn-padding-x;
+                border: 1px solid darken($o-brand-primary, 5%);
+                border-left-width: 0;
+            }
+        }
+    }
+
+    // Mini-composer enabled
+    &.o_chat_mini_composer {
+        .o_composer_container {
+            border-top: 1px solid gray('300');
+            width: 100%;
+        }
+        .o_composer {
+            .o_mail_emoji_container {
+                @include o-position-absolute(auto, 0, 100%, 0);
+                border-bottom-width: 1px;
+            }
+        }
+        .o_composer_input {
+            display: flex;
+            flex-flow: row nowrap;
+
+            textarea.o_composer_text_field {
+                flex: 1 1 auto;
+            }
+
+            .o_chatter_composer_tools {
+                flex: 0 0 auto;
+            }
+            @include media-breakpoint-down(sm) {
+                .o_composer_button_send {
+                    display: inline-block;
+                }
+            }
+        }
+        .o_composer_button_send, .o_chatter_avatar {
+            display: none !important;
+        }
+    }
+}
+
+.o_composer_attachments_list:not(:empty) {
+    margin-top: $o-mail-chatter-gap;
+    text-align: justify;
+}
+
+// Emoji
+.o_mail_emoji {
+    display: inline-block;
+    padding: 0;
+    font-size: 1.3rem;
+    font-family: emojifont;
+}
+.o_mail_preview .o_mail_emoji {
+    font-size: 100%;
+}
+
+// Attachment Icons (common for chat thread and chat composer)
+// ------------------------------------------------------------------
+$o-mail-attachment-image-size: 38px;
+$o-mail-attachment-margin: 5px;
+
+.o_attachments_list, .o_attachments_previews {
+    margin: 0 (-$o-mail-attachment-margin) 0;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.o_attachment {
+    position: relative;
+    width: 100%;
+    padding: $o-mail-attachment-margin;
+
+    @include media-breakpoint-up(md) {
+        width: 50%;
+    }
+    @include media-breakpoint-up(lg) {
+        width: 25%;
+    }
+
+    .o_attachment_wrap {
+        overflow: hidden;
+        position: relative;
+        border-bottom: 1px solid rgba(black, 0.1);
+        border-radius: 2px;
+        padding: 4px 6px 0 4px;
+        background-color: rgba(black, 0.05);
+    }
+
+    &.o_attachment_editable .o_attachment_wrap  {
+        padding-right: 40px;
+    }
+
+    .o_image {
+        width: $o-mail-attachment-image-size;
+        height: $o-mail-attachment-image-size;
+        image-orientation: from-image; // Only supported in Firefox
+        &.o_hover {
+            @include o-hover-opacity($default-opacity: 1, $hover-opacity: 0.7);
+        }
+    }
+
+    .o_attachment_view {
+        cursor: zoom-in;
+    }
+
+    .caption {
+        @include o-text-overflow(block);
+
+        a {
+            @include o-hover-text-color($default-color: $o-main-text-color, $hover-color: $headings-color);
+        }
+    }
+
+    .o_attachment_progress_bar {
+        display: none;
+    }
+
+    .o_attachment_uploaded, .o_attachment_delete {
+        @include o-position-absolute(0, 0, 0, $left: auto);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+    }
+
+    .o_attachment_delete {
+        background: desaturate(theme-color('primary'), 50%);
+        color: white;
+        cursor: pointer;
+        font-size: 20px;
+        transform: translateX(100%);
+        transition: all 0.3s ease 0s;
+
+        &:hover {
+            background: theme-color('primary');
+        }
+    }
+
+    &.o_attachment_uploading {
+        .o_attachment_progress_bar {
+            display: inline-block;
+            margin: 0 0 0 8px;
+            border-radius: 2px;
+            vertical-align: bottom;
+
+            > div {
+                font-size: 11px;
+                padding: 0 7px;
+            }
+        }
+
+        .o_attachment_delete, .o_attachment_uploaded {
+            display: none;
+        }
+    }
+
+    &:hover .o_attachment_delete {
+        transition: all 0.1s ease 0s;
+        transform: translateX(0);
+    }
+}
+
+.o_attachments_previews {
+    > .o_attachment {
+        width: 50%;
+
+        @include media-breakpoint-up(md) {
+            width: percentage(1/3);
+        }
+        @include media-breakpoint-up(lg) {
+            width: percentage(1/4);
+        }
+        @include media-breakpoint-up(xl) {
+            width: percentage(1/6);
+        }
+
+        .o_attachment_wrap {
+            padding: 0;
+            border-radius: 2px;
+            border: 1px solid gray('400');
+        }
+
+        .o_image_box {
+            overflow: hidden;
+            padding-top: 75%;
+
+            .o_attachment_image {
+                @include o-position-absolute(0, 0, 0, 0);
+                background-size: cover;
+                background-position: center;
+                transform: scale(1.05);
+                transition: all 0.3s ease 0s;
+            }
+
+            &:hover .o_attachment_image {
+                transform: scale(1);
+            }
+        }
+
+        .o_image_overlay {
+            @include o-position-absolute($top: 0, $left: 0, $right:0, $bottom:0);
+            @include o-hover-opacity($default-opacity: 0, $hover-opacity: 1);
+            background-image: linear-gradient(180deg, rgba(black, 0.2), rgba(black, 0.9));
+            transition: all 0.3s ease 0s;
+            padding: 10px;
+
+            .o_attachment_title {
+                @include o-position-absolute($bottom: 7px);
+                width: 80%;
+                @include o-text-overflow(inline-block);
+                font-size: $font-size-sm;
+            }
+
+            .o_attachment_delete_cross {
+                color: white;
+            }
+
+            .o_attachment_download {
+                @include o-position-absolute($right: 7px, $bottom:7px);
+            }
+        }
+    }
+}
+
+
+@mixin o-viewer-black-btn {
+    background-color: rgba(black, 0.4);
+    color: rgba(theme-color('light'), 0.7);
+
+    &:hover {
+        background-color: rgba(black, 0.6);
+        color: white;
+    }
+
+    &.disabled {
+        color: gray('600');
+        background: none;
+    }
+}
+.o_modal_fullscreen {
+    z-index: $o-mail-thread-window-zindex + 1;
+
+    .o_viewer_content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+
+        .o_viewer-header {
+            @include o-position-absolute(0, 0, $left: 0);
+            height: 45px;
+            padding: $grid-gutter-width*0.5;
+            background-color: rgba(black, 0.8);
+            z-index: 1;
+            color: #FFFFFF;
+
+            a {
+                @include o-hover-text-color(rgba(theme-color('light'), 0.6), white);
+            }
+
+            .o_close_btn {
+                @include o-position-absolute(-1px, $grid-gutter-width*0.5);
+                font-size: $h1-font-size;
+                font-weight: 300;
+            }
+
+            .o_image_caption {
+                bottom: 20%;
+                position: absolute;
+
+                .o_split_pdf_area {
+                    background-color: #3a3a3a;
+                    margin: 5px;
+                    padding: 6px;
+                    margin-left: 50px;
+
+                    .o_split_btn {
+                        vertical-align: baseline;
+                    }
+
+                    .o_page_number_input {
+                        width: 13%;
+                        color: black;
+                        display: inline;
+                    }
+
+                    .o_remainder_input {
+                        vertical-align: middle;
+                    }
+                }
+            }
+        }
+
+        .o_loading_img {
+            @include o-position-absolute($top: 45%, $right: 0, $left: 0);
+        }
+
+        .o_viewer_img_wrapper {
+            cursor: pointer;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(black, 0.7);
+
+            .o_viewer_zoomer {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 45px 0;
+
+                img {
+                    image-orientation: from-image; // Only supported in Firefox
+                }
+
+                img, video {
+                    cursor :auto;
+                    max-width: 100%;
+                    max-height: 100%;
+                    transition: 0.2s cubic-bezier(0, 0, 0.49, 1.6) 0s, opacity 0.15s;
+                    box-shadow: 0 0 40px black;
+                }
+
+                .o_viewer_pdf {
+                    width: 80%;
+                    height: 100%;
+                    border: 0px;
+                    box-shadow: 1px 1px 20px 1px #000;
+                }
+
+                .o_viewer_text {
+                    width: 80%;
+                    height: 100%;
+                    border: 0px;
+                    box-shadow: 1px 1px 20px 1px #000;
+                    background-color: white;
+                }
+
+                .o_viewer_video {
+                    height: 80%;
+                }
+            }
+        }
+
+        .o_viewer_toolbar {
+            @include o-position-absolute($left: 50%, $bottom: $grid-gutter-width*0.5);
+            transform: translate(-50%, -50%);
+            overflow: hidden;
+            border-radius: 4px;
+            background-color: rgba(black, 0.4);
+
+            .o_viewer_toolbar_btn {
+                @include o-viewer-black-btn;
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+        }
+    }
+
+    .arrow {
+        @include o-position-absolute(50%, $grid-gutter-width*0.5);
+        border-radius: 100%;
+        padding: 12px 16px 11px 18px;
+        @include o-viewer-black-btn;
+    }
+
+    .arrow-left {
+        left: $grid-gutter-width*0.5;
+        right: auto;
+        padding: 12px 18px 11px 16px;
+    }
+}

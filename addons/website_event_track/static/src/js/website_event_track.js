@@ -9,8 +9,8 @@ $(document).ready(function() {
 
         $("#search_summary").removeClass('invisible');
         if (change_text) {
-            $("#search_number").text($(".event_track:Contains("+change_text+")").length);
-            $(".event_track:not(:Contains("+change_text+"))").addClass('invisible');
+            $("#search_number").text($(".event_track:containsLike("+change_text+")").length);
+            $(".event_track:not(:containsLike("+change_text+"))").addClass('invisible');
         } else {
             $("#search_number").text(30);
         }

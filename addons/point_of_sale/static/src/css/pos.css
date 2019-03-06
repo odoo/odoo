@@ -110,6 +110,7 @@ td {
 }
 
 .pos {
+    direction: ltr;
     padding: 0;
     margin: 0;
     background-color: #f0eeee;
@@ -189,6 +190,7 @@ td {
     height: 100%;
     display: table;
     border: none;
+    overflow: hidden;
 }
 .pos .window .subwindow{
     display: table-row;
@@ -211,6 +213,19 @@ td {
 .pos .subwindow .subwindow-container-fix{
     height: 100%;
     position: relative;
+}
+
+.pos .clientlist-screen .window,
+.pos .clientlist-screen .full-content .subwindow{
+    display: block;
+}
+.pos .clientlist-screen .full-content .subwindow-container{
+    display: block;
+    height: 100%;
+}
+.pos .clientlist-screen .full-content .subwindow.collapsed,
+.pos .clientlist-screen .full-content .subwindow-container.collapsed{
+    height: auto;
 }
 
 /* ---- Scrollers ----- */
@@ -422,6 +437,8 @@ td {
     display: flex;
     -webkit-flex: 1;
     flex: 1;
+    max-width: -moz-available;
+    max-width: -webkit-fill-available;
 }
 .pos .orders {
     display: -webkit-flex;
@@ -497,7 +514,9 @@ td {
 .pos .oe_icon.oe_orange {
     color: rgb(239, 153, 65);
 }
-
+.pos .oe_link_icon{
+    cursor:pointer;
+}
 /*  ********* Contains everything below the  bar ********* */
 
 .pos .pos-content {
@@ -615,7 +634,7 @@ td {
     margin-right: 0;
     text-align: center;
     vertical-align: top;
-    width: 188px;
+    width: 186px;
     border: none;
     border-radius: 0;
     border-top: 1px solid;
@@ -701,6 +720,7 @@ td {
     display: inline-block;
     float: right;
     text-align: center;
+    width: 216px;
     margin: 16px;
     margin-top: 8px;
     margin-left: 0px;
@@ -753,6 +773,11 @@ td {
     background: #6EC89B;
     color: white;
     border-color: transparent;
+}
+.pos .numpad .disabled-mode, .pos .numpad .disabled-mode:hover {
+    background: #c7c7c7;
+    color: #a5a1a1;
+    cursor: not-allowed;
 }
 
 /*  ********* The right pane contains the screens and headers ********* */
@@ -1409,6 +1434,7 @@ td {
 .pos .pos-receipt-container {
     font-size: 0.75em;
     text-align: center;
+    direction: ltr;
 }
 
 .pos .pos-sale-ticket {
@@ -1453,8 +1479,11 @@ td {
     body {
         margin: 0;
         color: white !important;
+        /* avoid black background if backgrounds are printed */
+        background: initial;
     }
     .oe_leftbar,
+    .oe_loading,
     .pos .pos-topheader, 
     .pos .pos-leftpane, 
     .pos .keyboard_frame,
@@ -2122,6 +2151,42 @@ td {
     font-family: 'Lato';
     font-family: Lato;
 }
+
+.pos .modal-dialog .popup-textinput{
+    display: flex;
+    flex-direction: column;
+}
+
+.pos .modal-dialog .popup-textinput .title,
+.pos .modal-dialog .popup-textinput .footer{
+    flex: none;
+}
+
+.pos .modal-dialog .popup-textinput textarea{
+    resize: none;
+    flex: auto;
+    margin: 0 20px 80px;
+}
+.pos .modal-dialog .popup-confirm{
+    height: 250px;
+}
+.pos .popup-confirm .body {
+    overflow: auto;
+    height: 120px;
+}
+.pos .modal-dialog .popup-textinput{
+    display: flex;
+    flex-direction: column;
+}
+.pos .modal-dialog .popup-textinput .title,
+.pos .modal-dialog .popup-textinput .footer{
+    flex: none;
+}
+.pos .modal-dialog .popup-textinput textarea{
+    resize: none;
+    flex: auto;
+    margin: 0 20px 80px;
+}
 .pos .popup .title {
     background: rgba(255,255,255,0.5);
     margin: 0;
@@ -2222,6 +2287,15 @@ td {
     box-sizing: border-box;
     width: 80%;
 }
+.pos .popup .packlot-lines{
+    overflow: auto;
+    height: 250px;
+    margin: 10px;
+}
+.pos .popup .packlot-line-input {
+    margin: 3px;
+}
+
 .pos .popup-number .popup-input {
     text-align: center;
 }
@@ -2246,7 +2320,7 @@ td {
     width: auto;
     line-height: 50px;
     margin-top: -1px;
-    border-top: solid 3px #6EC89B;
+    border-top: solid 3px rgba(60,60,60,0.1);
     
 }
 .pos .popup.popup-selection .selection-item {
@@ -2256,8 +2330,11 @@ td {
     text-align: left;
     padding: 0px 16px;
 }
-.pos .popup.popup-selection .selection-item:nth-child(even) {
+.pos .popup.popup-selection .selection-item:nth-child(odd) {
     background: rgb(247,247,247);
+}
+.pos .popup.popup-selection .selection-item.selected {
+    background: #6EC89B;
 }
 .pos .popup.popup-number {
     width: 300px;
@@ -2313,7 +2390,6 @@ td {
 }
 .pos .popup-password .popup-input {
     width: 70%;
-    -webkit-text-security: disc;
  }
 
 .pos .popup .body ul,

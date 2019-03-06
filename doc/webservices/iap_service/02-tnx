@@ -1,0 +1,48 @@
+Index: coalroller_service/coalroller_service/controllers/main.py
+===================================================================
+--- /dev/null
++++ coalroller_service/coalroller_service/controllers/main.py
+@@ -0,0 +1,29 @@
++import time
++
++from passlib import pwd, hash
++
++from odoo import http
++from odoo.addons.iap import charge
++
++class CoalBurnerController(http.Controller):
++    @http.route('/roll', type='json', auth='none', csrf='false')
++    def roll(self, account_token):
++        # the service key *is a secret*, it should not be committed in
++        # the source
++        service_key = self.env['ir.config_parameter'].sudo().get_param('coalroller.service_key')
++
++        # we charge 1 credit for 10 seconds of CPU
++        cost = 1
++        # TODO: allow the user to specify how many (tens of seconds) of CPU they want to use
++        with charge(http.request.env, service_key, account_token, cost):
++
++            # 10 seconds of CPU per credit
++            end = time.time() + (10 * cost)
++            while time.time() < end:
++                # we will use CPU doing useful things: generating and
++                # hashing passphrases
++                p = pwd.genphrase()
++                h = hash.pbkdf2_sha512.hash(p)
++        # here we don't have anything useful to the client, an error
++        # will be raised & transmitted in case of issue, if no error
++        # is raised we did the job
+Index: coalroller_service/coalroller_service/controllers/__init__.py
+===================================================================
+--- /dev/null
++++ coalroller_service/coalroller_service/controllers/__init__.py
+@@ -0,0 +1,2 @@
++# -*- encoding: utf-8 -*-
++from . import main
+Index: coalroller_service/coalroller_service/__init__.py
+===================================================================
+--- coalroller_service.orig/coalroller_service/__init__.py
++++ coalroller_service/coalroller_service/__init__.py
+@@ -1 +1,2 @@
+ # -*- encoding: utf-8 -*-
++from . import controllers

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Front-end/Back-end integration -->
+    <template id="user_navbar" inherit_id="website.layout">
+        <xpath expr="//t[@t-set='html_data']" position="after">
+            <t t-set="body_classname" t-value="'o_connected_user' if env['ir.ui.view'].user_has_groups('base.group_user') else None"/>
+        </xpath>
+        <xpath expr="//div[@id='wrapwrap']" position="before">
+            <nav groups="base.group_user" t-if="website and menu_data" id="oe_main_menu_navbar" class="o_main_navbar">
+                <ul id="oe_applications">
+                    <li class="dropdown active">
+                        <a class="dropdown-toggle full" data-toggle="dropdown" href="#">
+                            <i class="fa fa-th-large"/> WEBSITE
+                        </a>
+                        <div class="dropdown-menu" role="menu">
+                            <t t-set="debug_param" t-value="'?&amp;debug=' if debug else ''"/>
+                            <t t-as="menu" t-foreach="menu_data['children']">
+                                <a role="menuitem"
+                                   t-attf-class="dropdown-item #{'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'}"
+                                   t-att-data-action-id="menu['action'] and menu['action'].split(',')[1] or None"
+                                   t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or None"
+                                   t-att-data-menu="menu['id']"
+                                   t-att-data-menu-xmlid="menu.get('xmlid')"
+                                   t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')">
+                                    <i t-attf-class="fa #{menu.get('icon')} fa-lg fa-fw" t-if="menu.get('icon')" role="img" aria-label="Menu" title="Menu"/>
+                                    <span class="oe_menu_text">
+                                        <t t-esc="menu['name']"/>
+                                    </span>
+                                </a>
+                            </t>
+                        </div>
+                    </li>
+                </ul>
+
+                <button type="button" class="fa fa-bars float-right d-block d-md-none o_mobile_menu_toggle" aria-label="Menu" title="Menu"/>
+
+                <ul class="o_menu_sections" groups="website.group_website_designer">
+                    <!-- Content -->
+                    <li t-if="editable" class="dropdown" id="content-menu">
+                        <a id="content-menu-button" class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" data-display="static" href="#">Pages</a>
+                        <div class="dropdown-menu" role="menu">
+                            <a role="menuitem" data-action="edit_menu" href="#" title="Edit Top Menu" class="dropdown-item">Edit Menu</a>
+                            <a role="menuitem" href="/website/pages" title="Manage Your Website Pages" class="dropdown-item">Manage Pages</a>
+                            <div t-if="deletable" role="separator" class="dropdown-divider"/>
+                            <a role="menuitem" href="#" data-action="page_properties" class="dropdown-item" t-if="deletable">Page Properties</a>
+                        </div>
+                    </li>
+                    <!-- Customize -->
+                    <li class="dropdown" id="customize-menu">
+                        <a class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" data-display="static" href="#">Customize</a>
+                        <div class="dropdown-menu" role="menu">
+                            <a role="menuitem" href="#" data-action="customize_theme" class="dropdown-item" id="theme_customize">Customize Theme</a>
+                            <a role="menuitem" href="#" data-action="ace" class="dropdown-item" id="html_editor">HTML/CSS Editor</a>
+                            <a role="menuitem" href="/web#action=website.action_website_add_features" class="dropdown-item" id="install_apps" context="{'search_default_web_features' : 1}">Add Features</a>
+                            <div role="separator" class="dropdown-divider"/>
+                        </div>
+                    </li>
+                    <!-- Promote -->
+                    <li class="dropdown" id="promote-menu">
+                        <a class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" href="#">Promote</a>
+                        <div class="dropdown-menu oe_promote_menu" role="menu">
+                            <a role="menuitem" data-action="promote-current-page" href="#" title="Promote page on the web" class="dropdown-item">Optimize SEO</a>
+                        </div>
+                    </li>
+                </ul>
+
+                <ul class="o_menu_systray d-none d-md-block" groups="website.group_website_publisher">
+                    <li t-if="'website_published' in main_object.fields_get()" t-attf-class="js_publish_management #{main_object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="main_object.id" t-att-data-object="main_object._name" t-att-data-controller="publish_controller">
+                        <label class="o_switch o_switch_danger js_publish_btn" for="id">
+                            <input type="checkbox" t-att-checked="main_object.website_published" id="id"/>
+                            <span/>
+                            <span class="css_publish">Unpublished</span>
+                            <span class="css_unpublish">Published</span>
+                        </label>
+                    </li>
+                    <!-- Mobile preview -->
+                    <li class="o_mobile_preview" id="mobile-menu">
+                        <a data-action="show-mobile-preview" href="#"><span title="Mobile preview" role="img" aria-label="Mobile preview" class="fa fa-mobile"/></a>
+                    </li>
+                    <li t-if="user_id.has_group('base.group_multi_company') and user_id.has_group('website.group_multi_website') and len(multi_website_companies)">
+                        <a class="dropdown-toggle waves" data-toggle="dropdown" href="#"><t t-esc="multi_website_companies_current['name']"/></a>
+                        <div class="dropdown-menu" role="menu">
+                            <t t-foreach="multi_website_companies" t-as="multi_website_company">
+                                <a role="menuitem" href="#"
+                                    class="dropdown-item oe_menu_text js_multi_company_switch"
+                                    t-att-company-id="str(multi_website_company['company_id'])"
+                                >
+                                    <span t-esc="multi_website_company['name']" />
+                                </a>
+                            </t>
+                        </div>
+                    </li>
+                    <li groups="website.group_multi_website" t-if="multi_website_websites">
+                        <a class="dropdown-toggle waves" data-toggle="dropdown" href="#"><t t-esc="multi_website_websites_current['name']"/></a>
+                        <div class="dropdown-menu" role="menu">
+                            <t t-foreach="multi_website_websites" t-as="multi_website_website">
+                                <a role="menuitem" href="#"
+                                    t-att-domain="multi_website_website['domain']"
+                                    class="dropdown-item oe_menu_text js_multi_website_switch"
+                                    t-att-website-id="str(multi_website_website['website_id'])"
+                                >
+                                    <span t-esc="multi_website_website['name']" />
+                                </a>
+                            </t>
+                        </div>
+                    </li>
+
+                    <!-- Page Edition -->
+                    <li class="o_new_content_menu" id="new-content-menu">
+                        <a href="#"><span class="fa fa-plus"/>New</a>
+                        <div id="o_new_content_menu_choices" class="o_hidden">
+                            <div class="container pt32 pb32">
+                                <div class="row">
+                                    <div groups="website.group_website_designer" class="col-md-4 mb8 o_new_content_element">
+                                        <a href="#" data-action="new_page" aria-label="New page" title="New page">
+                                            <i class="fa fa-file-o"/>
+                                            <p>New Page</p>
+                                        </a>
+                                    </div>
+                                    <div groups="base.group_system" name="module_website_blog" t-att-data-module-id="env.ref('base.module_website_blog').id" t-att-data-module-shortdesc="env.ref('base.module_website_blog').shortdesc" class="col-md-4 mb8 o_new_content_element">
+                                        <a href="#" data-action="new_blog_post">
+                                            <i class="fa fa-rss"/>
+                                            <p>New Blog Post</p>
+                                        </a>
+                                    </div>
+                                    <div groups="base.group_system" name="module_website_event" t-att-data-module-id="env.ref('base.module_website_event').id" t-att-data-module-shortdesc="env.ref('base.module_website_event').shortdesc" class="col-md-4 mb8 o_new_content_element">
+                                        <a href="#" data-action="new_event">
+                                            <i class="fa fa-glass"/>
+                                            <p>New Event</p>
+                                        </a>
+                                    </div>
+                                    <div groups="base.group_system" name="module_website_forum" t-att-data-module-id="env.ref('base.module_website_forum').id" t-att-data-module-shortdesc="env.ref('base.module_website_forum').shortdesc" class="col-md-4 mb8 o_new_content_element">
+                                        <a href="#" data-action="new_forum">
+                                            <i class="fa fa-comment"/>
+                                            <p>New Forum</p>
+                                        </a>
+                                    </div>
+                                    <div groups="base.group_system" name="module_website_hr_recruitment" t-att-data-module-id="env.ref('base.module_website_hr_recruitment').id" t-att-data-module-shortdesc="env.ref('base.module_website_hr_recruitment').shortdesc" class="col-md-4 mb8 o_new_content_element">
+                                        <a href="#">
+                                            <i class="fa fa-briefcase"/>
+                                            <p>New Job Offer</p>
+                                        </a>
+                                    </div>
+                                    <div groups="base.group_system" name="module_website_sale" t-att-data-module-id="env.ref('base.module_website_sale').id" t-att-data-module-shortdesc="env.ref('base.module_website_sale').shortdesc" class="col-md-4 mb8 o_new_content_element">
+                                        <a href="#" data-action="new_product">
+                                            <i class="fa fa-shopping-cart"/>
+                                            <p>New Product</p>
+                                        </a>
+                                    </div>
+                                    <div groups="base.group_system" name="module_website_slides" t-att-data-module-id="env.ref('base.module_website_slides').id" t-att-data-module-shortdesc="env.ref('base.module_website_slides').shortdesc" class="col-md-4 mb8 o_new_content_element">
+                                        <a href="#" data-action="new_slide">
+                                            <i class="fa fa-youtube-play"/>
+                                            <p>New Slide</p>
+                                        </a>
+                                    </div>
+                                    <div groups="base.group_system" name="module_website_livechat" t-att-data-module-id="env.ref('base.module_website_livechat').id" t-att-data-module-shortdesc="env.ref('base.module_website_livechat').shortdesc" class="col-md-4 mb8 o_new_content_element">
+                                        <a href="#" data-action="new_channel">
+                                            <i class="fa fa-hashtag"/>
+                                            <p>New Channel</p>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li t-if="not translatable" id="edit-page-menu">
+                        <a data-action="edit" href="#"><span class="fa fa-pencil"/>Edit</a>
+                    </li>
+                    <li t-if="'website_published' in main_object.fields_get() and main_object._name != 'website.page'">
+                        <a role="button" class="btn btn-primary btn-sm dropdown-toggle css_edit_dynamic" data-toggle="dropdown">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </a>
+                        <div class="dropdown-menu" role="menu">
+                            <a role="menuitem" style="text-align: left;" t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}&amp;menu_id=#{menu or main_object.env.ref('website.menu_website_configuration').id}"
+                                   class="dropdown-item" title='Edit in backend' id="edit-in-backend">Edit in backend</a>
+                        </div>
+                    </li>
+                    <li t-if="translatable">
+                        <a data-action="translate" href="#">TRANSLATE</a>
+                    </li>
+                    <li t-if="translatable">
+                        <a data-action="edit_master" href="#">or Edit Master</a>
+                    </li>
+                </ul>
+            </nav>
+        </xpath>
+    </template>
+</odoo>

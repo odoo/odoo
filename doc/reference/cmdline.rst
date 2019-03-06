@@ -2,20 +2,22 @@
 
 .. _reference/cmdline:
 
-===============================
-Command-line interface: odoo.py
-===============================
+================================
+Command-line interface: odoo-bin
+================================
 
 .. _reference/cmdline/server:
 
 Running the server
 ==================
 
-.. program:: odoo.py
+.. program:: odoo-bin
 
 .. option:: -d <database>, --database <database>
 
-    database used when installing or updating modules.
+    database(s) used when installing or updating modules.
+    Providing a comma-separated list restrict access to databases provided in
+    list.
 
 .. option:: -i <modules>, --init <modules>
 
@@ -54,7 +56,7 @@ Running the server
         Maximum allowed virtual memory per worker. If the limit is exceeded,
         the worker is killed and recycled at the end of the current request.
 
-        Defaults to 640MB.
+        Defaults to 2048MiB.
 
     .. option:: --limit-memory-hard <limit>
 
@@ -62,7 +64,7 @@ Running the server
         immediately killed without waiting for the end of the current request
         processing.
 
-        Defaults to 768MB.
+        Defaults to 2560MiB.
 
     .. option:: --limit-time-cpu <limit>
 
@@ -96,7 +98,7 @@ Running the server
 .. option:: -s, --save
 
     saves the server configuration to the current configuration file
-    (:file:`{$HOME}/.openerp_serverrc` by default, and can be overridden using
+    (:file:`{$HOME}/.odoorc` by default, and can be overridden using
     :option:`-c`)
 
 .. option:: --proxy-mode
@@ -111,11 +113,25 @@ Running the server
 
     runs tests after installing modules
 
-.. option:: --debug
+.. option:: --test-tags 'tag_1,tag_2,...,-tag_n'
 
-    when an unexpected error is raised (not a warning or an access error),
-    automatically starts :mod:`python:pdb` before logging and returning the
-    error
+    select the tests to run by using tags.
+
+.. option:: --dev <feature,feature,...,feature>
+
+    * ``all``: all the features below are activated
+
+    * ``xml``: read template qweb from xml file directly instead of database.
+      Once a template has been modified in database, it will be not be read from
+      the xml file until the next update/init.
+
+    * ``reload``: restart server when python file are updated (may not be detected
+      depending on the text editor used)
+
+    * ``qweb``: break in the evaluation of qweb template when a node contains ``t-debug='debugger'``
+
+    * ``(i)p(u)db``: start the chosen python debugger in the code when an
+      unexpected error is raised before logging and returning the error.
 
 .. _reference/cmdline/server/database:
 
@@ -149,17 +165,109 @@ database
     - ``%h`` is replaced by the whole hostname the request is made on.
     - ``%d`` is replaced by the subdomain the request is made on, with the
       exception of ``www`` (so domain ``odoo.com`` and ``www.odoo.com`` both
-      match the database ``odoo``)
+      match the database ``odoo``).
 
+      These operations are case sensitive. Add option ``(?i)`` to match all
+      databases (so domain ``odoo.com`` using ``(?i)%d`` matches the database
+      ``Odoo``).
+
+    Since version 11, it's also possible to restrict access to a given database
+    listen by using the --database parameter and specifying a comma-separated
+    list of databases
+
+    When combining the two parameters, db-filter superseed the comma-separated
+    database list for restricting database list, while the comma-separated list
+    is used for performing requested operations like upgrade of modules.
+    
+    .. code-block:: bash
+
+        odoo-bin --db-filter ^11.*$
+
+    Restrict access to databases whose name starts with 11
+
+    .. code-block:: bash
+
+        odoo-bin --database 11firstdatabase,11seconddatabase
+
+    Restrict access to only two databases, 11firstdatabase and 11seconddatabase
+    
+    .. code-block:: bash
+
+        odoo-bin --database 11firstdatabase,11seconddatabase -u base
+
+    Restrict access to only two databases, 11firstdatabase and 11seconddatabase,
+    and update base module on one database: 11firstdatabase
+    If database 11seconddatabase doesn't exist, the database is created and base modules
+    is installed
+    
+    .. code-block:: bash
+
+        odoo-bin --db-filter ^11.*$ --database 11firstdatabase,11seconddatabase -u base
+        
+    Restrict access to databases whose name starts with 11,
+    and update base module on one database: 11firstdatabase
+    If database 11seconddatabase doesn't exist, the database is created and base modules
+    is installed
+    
 .. option:: --db-template <template>
 
     when creating new databases from the database-management screens, use the
-    specified `template database`_. Defaults to ``template1``.
+    specified `template database`_. Defaults to ``template0``.
+
+.. option:: --no-database-list
+
+    Suppresses the ability to list databases available on the system
+    
+.. option:: --db_sslmode
+
+    Control the SSL security of the connection between Odoo and PostgreSQL.
+    Value should bve one of 'disable', 'allow', 'prefer', 'require',
+    'verify-ca' or 'verify-full'
+    Default value is 'prefer'
+
+.. _reference/cmdline/server/internationalisation:
+
+Internationalisation
+--------------------
+
+Use these options to translate Odoo to another language. See i18n section of
+the user manual. Option '-d' is mandatory. Option '-l' is mandatory in case
+of importation
+
+.. option:: --load-language <languages>
+
+    specifies the languages (separated by commas) for the translations you
+    want to be loaded
+
+.. option:: -l, --language <language>
+
+    specify the language of the translation file. Use it with --i18n-export
+    or --i18n-import
+
+.. option:: --i18n-export <filename>
+
+    export all sentences to be translated to a CSV file, a PO file or a TGZ
+    archive and exit.
+
+.. option:: --i18n-import <filename>
+
+    import a CSV or a PO file with translations and exit. The '-l' option is
+    required.
+
+.. option:: --i18n-overwrite
+
+    overwrites existing translation terms on updating a module or importing
+    a CSV or a PO file.
+
+.. option:: --modules
+
+    specify modules to export. Use in combination with --i18n-export
+
 
 built-in HTTP
 -------------
 
-.. option:: --no-xmlrpc
+.. option:: --no-http
 
     do not start the HTTP or long-polling workers (may still start cron
     workers)
@@ -167,12 +275,12 @@ built-in HTTP
     .. warning:: has no effect if :option:`--test-enable` is set, as tests
                  require an accessible HTTP server
 
-.. option:: --xmlrpc-interface <interface>
+.. option:: --http-interface <interface>
 
     TCP/IP address on which the HTTP server listens, defaults to ``0.0.0.0``
     (all addresses)
 
-.. option:: --xmlrpc-port <port>
+.. option:: --http-port <port>
 
     Port on which the HTTP server listens, defaults to 8069.
 
@@ -201,6 +309,13 @@ customize the amount of logging output
     enables `log rotation <https://docs.python.org/2/library/logging.handlers.html#timedrotatingfilehandler>`_
     daily, keeping 30 backups. Log rotation frequency and number of backups is
     not configurable.
+    
+    .. danger:: 
+    
+        Built-in log rotation is not reliable in multi-workers scenarios
+        and may incur significant data loss. It is *strongly recommended* to 
+        use an external log rotation utility or use system loggers (--syslog) 
+        instead.
 
 .. option:: --syslog
 
@@ -218,7 +333,7 @@ customize the amount of logging output
 .. option:: --log-handler <handler-spec>
 
     :samp:`{LOGGER}:{LEVEL}`, enables ``LOGGER`` at the provided ``LEVEL``
-    e.g. ``openerp.models:DEBUG`` will enable all logging messages at or above
+    e.g. ``odoo.models:DEBUG`` will enable all logging messages at or above
     ``DEBUG`` level in the models.
 
     * The colon ``:`` is mandatory
@@ -229,34 +344,34 @@ customize the amount of logging output
 
     .. code-block:: console
 
-        $ odoo.py --log-handler :DEBUG --log-handler werkzeug:CRITICAL --log-handler openerp.fields:WARNING
+        $ odoo-bin --log-handler :DEBUG --log-handler werkzeug:CRITICAL --log-handler odoo.fields:WARNING
 
 .. option:: --log-request
 
     enable DEBUG logging for RPC requests, equivalent to
-    ``--log-handler=openerp.http.rpc.request:DEBUG``
+    ``--log-handler=odoo.http.rpc.request:DEBUG``
 
 .. option:: --log-response
 
     enable DEBUG logging for RPC responses, equivalent to
-    ``--log-handler=openerp.http.rpc.response:DEBUG``
+    ``--log-handler=odoo.http.rpc.response:DEBUG``
 
 .. option:: --log-web
 
     enables DEBUG logging of HTTP requests and responses, equivalent to
-    ``--log-handler=openerp.http:DEBUG``
+    ``--log-handler=odoo.http:DEBUG``
 
 .. option:: --log-sql
 
     enables DEBUG logging of SQL querying, equivalent to
-    ``--log-handler=openerp.sql_db:DEBUG``
+    ``--log-handler=odoo.sql_db:DEBUG``
 
 .. option:: --log-level <level>
 
     Shortcut to more easily set predefined levels on specific loggers. "real"
     levels (``critical``, ``error``, ``warn``, ``debug``) are set on the
-    ``openerp`` and ``werkzeug`` loggers (except for ``debug`` which is only
-    set on ``openerp``).
+    ``odoo`` and ``werkzeug`` loggers (except for ``debug`` which is only
+    set on ``odoo``).
 
     Odoo also provides debugging pseudo-levels which apply to different sets
     of loggers:
@@ -266,11 +381,11 @@ customize the amount of logging output
 
         equivalent to ``--log-sql``
     ``debug_rpc``
-        sets the ``openerp`` and HTTP request loggers to ``debug``
+        sets the ``odoo`` and HTTP request loggers to ``debug``
 
         equivalent to ``--log-level debug --log-request``
     ``debug_rpc_answer``
-        sets the ``openerp`` and HTTP request and response loggers to
+        sets the ``odoo`` and HTTP request and response loggers to
         ``debug``
 
         equivalent to ``--log-level debug --log-request --log-response``
@@ -280,20 +395,45 @@ customize the amount of logging output
         In case of conflict between :option:`--log-level` and
         :option:`--log-handler`, the latter is used
 
+emails
+------
+
+.. option:: --email-from <address>
+
+    Email address used as <FROM> when Odoo needs to send mails
+
+.. option:: --smtp <server>
+
+    Address of the SMTP server to connect to in order to send mails
+
+.. option:: --smtp-port <port>
+
+.. option:: --smtp-ssl
+
+    If set, odoo should use SSL/STARTSSL SMTP connections
+
+.. option:: --smtp-user <name>
+
+    Username to connect to the SMTP server
+
+.. option:: --smtp-password <password>
+
+    Password to connect to the SMTP server
+
 
 .. _reference/cmdline/scaffold:
 
 Scaffolding
 ===========
 
-.. program:: odoo.py scaffold
+.. program:: odoo-bin scaffold
 
 Scaffolding is the automated creation of a skeleton structure to simplify
 bootstrapping (of new modules, in the case of Odoo). While not necessary it
 avoids the tedium of setting up basic structures and looking up what all
 starting requirements are.
 
-Scaffolding is available via the :command:`odoo.py scaffold` subcommand.
+Scaffolding is available via the :command:`odoo-bin scaffold` subcommand.
 
 .. option:: -t <template>
 
@@ -315,6 +455,8 @@ Scaffolding is available via the :command:`odoo.py scaffold` subcommand.
 Configuration file
 ==================
 
+.. program:: odoo-bin
+
 Most of the command-line options can also be specified via a configuration
 file. Most of the time, they use similar names with the prefix ``-`` removed
 and other ``-`` are replaced by ``_`` e.g. :option:`--db-template` becomes
@@ -323,19 +465,18 @@ and other ``-`` are replaced by ``_`` e.g. :option:`--db-template` becomes
 Some conversions don't match the pattern:
 
 * :option:`--db-filter` becomes ``dbfilter``
-* :option:`--no-xmlrpc` corresponds to the ``xmlrpc`` boolean
+* :option:`--no-http` corresponds to the ``http_enable`` boolean
 * logging presets (all options starting with ``--log-`` except for
   :option:`--log-handler` and :option:`--log-db`) just add content to
   ``log_handler``, use that directly in the configuration file
 * :option:`--smtp` is stored as ``smtp_server``
 * :option:`--database` is stored as ``db_name``
-* :option:`--debug` is stored as ``debug_mode`` (a boolean)
 * :option:`--i18n-import` and :option:`--i18n-export` aren't available at all
   from configuration files
 
-The default configuration file is :file:`{$HOME}/.openerp_serverrc` which
-can be overridden using :option:`--config <odoo.py -c>`. Specifying
-:option:`--save <odoo.py -s>` will save the current configuration state back
+The default configuration file is :file:`{$HOME}/.odoorc` which
+can be overridden using :option:`--config <odoo-bin -c>`. Specifying
+:option:`--save <odoo-bin -s>` will save the current configuration state back
 to that file.
 
 .. _jinja2: http://jinja.pocoo.org
@@ -349,5 +490,5 @@ to that file.
 .. _a PostgreSQL URI:
     http://www.postgresql.org/docs/9.2/static/libpq-connect.html#AEN38208
 .. _Werkzeug's proxy support:
-    http://werkzeug.pocoo.org/docs/0.9/contrib/fixers/#werkzeug.contrib.fixers.ProxyFix
+    http://werkzeug.pocoo.org/docs/contrib/fixers/#werkzeug.contrib.fixers.ProxyFix
 .. _pyinotify: https://github.com/seb-m/pyinotify/wiki

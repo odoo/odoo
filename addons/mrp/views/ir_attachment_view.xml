@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Files -->
+    <record model="ir.ui.view" id="view_document_file_kanban_mrp">
+        <field name="name">mrp.document kanban.mrp</field>
+        <field name="model">mrp.document</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="ir_attachment_id"/>
+                <field name="mimetype"/>
+                <field name="type"/>
+                <field name="datas_fname"/>
+                <field name="name"/>
+                <field name="priority"/>
+                <field name="create_uid"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_area o_kanban_attachment oe_kanban_global_click">
+                            <div class="o_kanban_image">
+                                <div class="o_kanban_image_wrapper">
+                                    <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
+                                    <div t-if="record.type.raw_value == 'url'" class="o_url_image fa fa-link fa-3x text-muted"/>
+                                    <img t-elif="webimage" t-attf-src="/web/image/#{record.ir_attachment_id.raw_value}?field=thumbnail" width="100" height="100" alt="Document" class="o_attachment_image"/>
+                                    <div t-else="!webimage" class="o_image o_image_thumbnail" t-att-data-mimetype="record.mimetype.value"/>
+                                </div>
+                            </div>
+                            <div class="o_kanban_details">
+                                <div class="o_kanban_details_wrapper">
+                                    <div class="o_kanban_record_title">
+                                        <field name="name" class="o_text_overflow"/>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                      <field name="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
+                                      <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
+                                    </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <span class="oe_kanban_bottom_left">
+                                            <field name="priority" widget="priority"/>
+                                        </span>
+                                        <div class="oe_kanban_bottom_right">
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.create_uid.raw_value)" t-att-data-member_id="record.create_uid.raw_value" t-att-alt="record.create_uid.raw_value" width="32" height="32" class="oe_kanban_avatar"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_document_form" model="ir.ui.view">
+        <field name="name">mrp.document.form</field>
+        <field name="model">mrp.document</field>
+        <field name="inherit_id" ref="base.view_attachment_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+          <xpath expr="//field[@name='mimetype']" position="after">
+              <field name="priority" widget="priority"/>
+          </xpath>
+        </field>
+    </record>
+</odoo>

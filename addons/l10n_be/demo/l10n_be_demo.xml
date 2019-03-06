@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be.a1000" model="account.account.template">
+        <field name="tag_ids" eval="[(4, ref('account.demo_capital_account'))]"/>
+    </record>
+    <record id="l10n_be.a300" model="account.account.template">
+        <field name="tag_ids" eval="[(4, ref('account.demo_stock_account'))]"/>
+    </record>
+    <record id="l10n_be.a7600" model="account.account.template">
+        <field name="tag_ids" eval="[(4, ref('account.demo_sale_of_land_account'))]"/>
+    </record>
+    <record id="l10n_be.a6201" model="account.account.template">
+        <field name="tag_ids" eval="[(4, ref('account.demo_ceo_wages_account'))]"/>
+    </record>
+    <record id="l10n_be.a24011" model="account.account.template">
+        <field name="tag_ids" eval="[(4, ref('account.demo_coffee_machine_account'))]"/>
+    </record>
+    <function model="account.account" name="write">
+        <value model="account.account" search="[('code', 'like', obj().env.ref('l10n_be.a1000').code)]"/>
+        <value eval="{'tag_ids': [(4, ref('account.demo_capital_account'))]}"/>
+    </function>
+    <function model="account.account" name="write">
+        <value model="account.account" search="[('code', 'like', obj().env.ref('l10n_be.a300').code)]"/>
+        <value eval="{'tag_ids': [(4, ref('account.demo_stock_account'))]}"/>
+    </function>
+    <function model="account.account" name="write">
+        <value model="account.account" search="[('code', 'like', obj().env.ref('l10n_be.a7600').code)]"/>
+        <value eval="{'tag_ids': [(4, ref('account.demo_sale_of_land_account'))]}"/>
+    </function>
+    <function model="account.account" name="write">
+        <value model="account.account" search="[('code', 'like', obj().env.ref('l10n_be.a6201').code)]"/>
+        <value eval="{'tag_ids': [(4, ref('account.demo_ceo_wages_account'))]}"/>
+    </function>
+    <function model="account.account" name="write">
+        <value model="account.account" search="[('code', 'like', obj().env.ref('l10n_be.a24011').code)]"/>
+        <value eval="{'tag_ids': [(4, ref('account.demo_coffee_machine_account'))]}"/>
+    </function>
+</odoo>

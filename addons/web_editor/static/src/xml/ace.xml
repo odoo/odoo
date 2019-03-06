@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+<t t-name="web_editor.ace_view_editor">
+    <div class="o_ace_view_editor">
+        <div class="form-inline o_ace_view_editor_title">
+            <div class="btn-group o_ace_type_switcher">
+                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">XML (HTML)</button>
+                <div class="dropdown-menu" role="menu">
+                    <a role="menuitem" href="#" class="dropdown-item o_ace_type_switcher_choice" data-type="xml">XML (HTML)</a>
+                    <a role="menuitem" href="#" class="dropdown-item o_ace_type_switcher_choice" data-type="scss">SCSS (CSS)</a>
+                </div>
+            </div>
+            <select id="ace-view-list" class="o_res_list"/>
+            <select id="ace-scss-list" class="o_res_list d-none"/>
+            <label class="o_include_option oe_include_bundles">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" id="o_ace_view_editor_include_bundle"
+                        class="custom-control-input js_include_bundles"
+                        t-att-checked="widget.options.includeBundles ? 'checked' : undefined"/>
+                    <label for="o_ace_view_editor_include_bundle"
+                        class="custom-control-label">Include Asset Bundles</label>
+                </div>
+            </label>
+            <label class="o_include_option o_include_all_scss d-none">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" id="o_ace_view_editor_include_all_scss"
+                        class="custom-control-input js_include_all_scss"
+                        t-att-checked="widget.options.includeAllSCSS ? 'checked' : undefined"/>
+                    <label for="o_ace_view_editor_include_all_scss"
+                        class="custom-control-label">Include All SCSS Files</label>
+                </div>
+            </label>
+            <div class="o_button_section">
+                <button data-action="save" type="submit" class="btn btn-primary">Save</button>
+                <button data-action="close" type="button" class="btn btn-secondary">Close</button>
+            </div>
+        </div>
+        <div id="ace-view-id">
+            <span/>
+            <div class="float-right">
+                <button data-action="reset" type="button" class="btn btn-sm btn-danger"><i class="fa fa-undo"/> Reset</button>
+                <button data-action="format" type="button" class="btn btn-sm btn-link">Format</button>
+            </div>
+        </div>
+        <div id="ace-view-editor"/>
+    </div>
+</t>
+
+</templates>

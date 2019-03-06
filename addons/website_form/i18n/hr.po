@@ -3,16 +3,21 @@
 # * website_form
 # 
 # Translators:
-# Davor Bojkić <bole@dajmi5.com>, 2015
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2015
+# Martin Trigaux, 2019
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
+# Bole <bole@dajmi5.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:12+0000\n"
-"PO-Revision-Date: 2015-10-27 08:45+0000\n"
-"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
-"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2019\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,26 +26,33 @@ msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:208
+#: code:addons/website_form/static/src/js/website_form.js:230
 #, python-format
 msgid "'%s' is not a correct date"
 msgstr "'%s' nije ispravan datum"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:203
+#: code:addons/website_form/static/src/js/website_form.js:225
 #, python-format
 msgid "'%s' is not a correct datetime"
 msgstr "'%s' nije ispravan datum i vrijeme"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:205
+#: code:addons/website_form/controllers/main.py:229
 #, python-format
 msgid "<p>Attached files : </p>"
 msgstr "<p>Priložene datoteke : </p>"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_access
+#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+
+#. module: website_form
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
 msgid "Allowed to use in forms"
 msgstr "Dozvoljeno koristiti na formama"
 
@@ -52,33 +64,41 @@ msgid "An error has occured, the form has not been sent."
 msgstr "Došlo je do pogreške, obrazac nije poslan."
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_fields_website_form_blacklisted
+#: model:ir.model.fields,help:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklist this field for web forms"
 msgstr "Zabrani ovo polje za sve webforme"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_fields_website_form_blacklisted
+#: model:ir.model.fields,field_description:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklisted in web forms"
 msgstr "Zabranjeno u webformama"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:48
+#: model:ir.model,name:website_form.model_res_config_settings
+msgid "Config Settings"
+msgstr "Postavke"
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:54
 #, python-format
 msgid "Custom infos"
 msgstr "Prilagođene informacije"
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_website_form_access
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_access
 msgid "Enable the form builder feature for this model."
 msgstr "Omogući izradu formi za ovaj model."
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_website_website_form_enable_metadata
-msgid "Enable writing metadata on form submit."
-msgstr "Omogući zapisivanje metapodataka prilikom slanja forme."
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:14
+#: code:addons/website_form/static/src/xml/website_form.xml:21
+#, python-format
+msgid "Error"
+msgstr "Greška"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_default_field_id
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_default_field_id
 msgid "Field for custom form data"
 msgstr "Polje za prilagođene podatke na formi"
 
@@ -88,19 +108,21 @@ msgid "Fields"
 msgstr "Polja"
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_website_form_label
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_label
 msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
 "could be 'Create an Issue'."
-msgstr "Natpis akcije forme, npr: crm.lead može biti 'Pošalji mail' ili project.issue može biti 'Kreiraj zadatak'."
+msgstr ""
+"Natpis akcije forme, npr: crm.lead može biti 'Pošalji mail' ili "
+"project.issue može biti 'Kreiraj zadatak'."
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_label
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_label
 msgid "Label for form action"
 msgstr "Natpis za akciju forme"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:49
+#: code:addons/website_form/controllers/main.py:55
 #, python-format
 msgid "Metadata"
 msgstr "Metapodaci"
@@ -118,9 +140,23 @@ msgid "Please fill in the form correctly."
 msgstr "Molimo ispunite formu ispravno."
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_website_form_default_field_id
-msgid "Specify the field wich will contain meta and custom form fields datas."
-msgstr "Odredite polje koje će sadržavati meta i prilagođene podatke polja."
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_default_field_id
+msgid ""
+"Specify the field which will contain meta and custom form fields datas."
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:7
+#, python-format
+msgid "Success"
+msgstr "Uspjeh"
+
+#. module: website_form
+#: model:ir.model.fields,field_description:website_form.field_res_config_settings__website_form_enable_metadata
+#: model:ir.model.fields,field_description:website_form.field_website__website_form_enable_metadata
+msgid "Technical data on contact form"
+msgstr ""
 
 #. module: website_form
 #. openerp-web
@@ -130,11 +166,17 @@ msgid "The form has been sent successfully."
 msgstr "Obrazac uspješno poslan."
 
 #. module: website_form
-#: model:ir.model,name:website_form.model_website
-msgid "Website"
-msgstr "Web stranice"
+#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
+msgid "Track metadata (IP, User Agent, ...) on your Website Forms"
+msgstr ""
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_website_website_form_enable_metadata
-msgid "Write metadata"
-msgstr "Zapiši metapodatke"
+#: model:ir.model,name:website_form.model_website
+msgid "Website"
+msgstr "Web stranica"
+
+#. module: website_form
+#: model:ir.model.fields,help:website_form.field_res_config_settings__website_form_enable_metadata
+#: model:ir.model.fields,help:website_form.field_website__website_form_enable_metadata
+msgid "You can choose to log technical data like IP, User Agent ,..."
+msgstr ""

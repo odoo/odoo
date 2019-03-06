@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record forcecreate="True" id="default_cost_method" model="ir.property">
+            <field name="name">Cost Method Property</field>
+            <field name="fields_id" ref="field_product_template__property_cost_method"/>
+            <field name="value" eval="False" />
+            <field name="type">selection</field>
+        </record>
+        <record forcecreate="True" id="default_valuation" model="ir.property">
+            <field name="name">Valuation Property</field>
+            <field name="fields_id" ref="field_product_template__property_valuation"/>
+            <field name="value" eval="False" />
+            <field name="type">selection</field>
+        </record>
+
+        <record forcecreate="True" id="default_category_cost_method" model="ir.property">
+            <field name="name">Cost Method Property</field>
+            <field name="fields_id" ref="field_product_category__property_cost_method"/>
+            <field name="value">standard</field>
+            <field name="type">selection</field>
+        </record>
+        <record forcecreate="True" id="default_category_valuation" model="ir.property">
+            <field name="name">Valuation Property</field>
+            <field name="fields_id" ref="field_product_category__property_valuation"/>
+            <field name="value">manual_periodic</field>
+            <field name="type">selection</field>
+        </record>
+    </data>
+</odoo>
+

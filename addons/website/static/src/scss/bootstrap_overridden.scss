@@ -1,0 +1,35 @@
+//
+// Color system
+//
+
+// Bootstrap default for $yiq-text-light and $yiq-text-dark are $white and
+// $gray-900. What we want to do is use the user text color as light or dark
+// depending on its contrast. Themes should be careful if they decide to
+// override those values. This would be simplified by giving the user the choice
+// for its dark *and* light text colors.
+$-light: if($white != null, $white, #FFFFFF);
+$-dark: if($gray-900 != null, $gray-900, #212529);
+$-text: if(color('text') != null, color('text'), $-dark);
+$-is-light: (o-get-most-contrast($-text, $-light, $-dark, color('body'), $cross-mix: false) == $-dark);
+$yiq-text-light: if($-is-light, color('text'), null);
+$yiq-text-dark: if($-is-light, null, color('text'));
+
+// Body
+//
+// Settings for the `<body>` element.
+
+$body-bg: color('body');
+$body-color: color('text');
+
+// Fonts
+//
+// Font, line-height, and color for body text, headings, and more.
+
+$font-family-sans-serif: nth($o-theme-fonts, $o-theme-font-number);
+
+$headings-font-family: nth($o-theme-fonts, $o-theme-headings-font-number);
+$headings-color: color('h1');
+
+// Jumbotron
+
+$jumbotron-bg: transparent !default;

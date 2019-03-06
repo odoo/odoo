@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
         <!--
@@ -8,19 +8,46 @@
         -->
         <template id="assets_frontend" name="im_livechat assets frontend" inherit_id="website.assets_frontend">
             <xpath expr="." position="inside">
-                <script type="text/javascript" src="/bus/static/src/js/bus.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/chat_window.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/thread.js"></script>
+                    <!-- thread window -->
+                    <script type="text/javascript" src="/mail/static/src/js/thread_windows/abstract_thread_window.js"></script>
+                    <script type="text/javascript" src="/im_livechat/static/src/js/website_livechat_window.js"></script>
+
+                <script type="text/javascript" src="/bus/static/src/js/longpolling_bus.js"></script>
+                <script type="text/javascript" src="/bus/static/src/js/crosstab_bus.js"></script>
+                <script type="text/javascript" src="/bus/static/src/js/services/bus_service.js"></script>
+
+                <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/thread_widget.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
                 <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
-                <link rel="stylesheet" href="/mail/static/src/less/chat_window.less"></link>
-                <link rel="stylesheet" href="/mail/static/src/less/thread.less"></link>
-                <link rel="stylesheet" href="/im_livechat/static/src/less/im_livechat.less"/>
+                <!-- Models -->
+                    <!-- threads -->
+                    <script type="text/javascript" src="/mail/static/src/js/models/threads/abstract_thread.js"></script>
+                    <script type="text/javascript" src="/im_livechat/static/src/js/models/website_livechat.js"></script>
+                        <!-- thread typing mixin -->
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/thread_typing_mixin.js"></script>
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/timer.js"></script>
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/timers.js"></script>
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/cc_throttle_function.js"></script>
+                    <!-- messages -->
+                    <script type="text/javascript" src="/mail/static/src/js/models/messages/abstract_message.js"></script>
+                    <script type="text/javascript" src="/im_livechat/static/src/js/models/website_livechat_message.js"></script>
+                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/abstract_thread_window.scss"></link>
+                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/thread.scss"></link>
+                <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat.scss"/>
             </xpath>
         </template>
+
+        <template id="assets_editor_inherit_website_livechat" inherit_id="website.assets_editor" name="website_livechat Assets Editor">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_livechat/static/src/js/website_livechat.editor.js"></script>
+            </xpath>
+        </template>
+
         <template id="loader" inherit_id="website.layout" name="Livechat : include loader on Website">
-            <xpath expr="//body" position="inside">
+            <xpath expr="//div[@id='wrapwrap']" position="after">
                 <t t-if="website and website.channel_id">
-                     <script>
+                    <script>
                         <t t-call="im_livechat.loader">
                             <t t-set="channel" t-value="website.channel_id.id"/>
                         </t>
@@ -29,15 +56,8 @@
             </xpath>
         </template>
 
-        <!-- Layout add footer -->
-        <template id="header_footer_custom" inherit_id="website.footer_default" name="Footer Rating Livechat Link">
-            <xpath expr="//ul[@id='products']" position="inside">
-                <li><a href="/livechat/">Livechat Support</a></li>
-            </xpath>
-        </template>
-
         <!-- Page Layout -->
-        <template id="channel_page" name="Livechat Channel Satisfaction Page" page="True">
+        <template id="channel_page" name="Livechat Channel Satisfaction Page">
             <t t-call="website.layout">
               <div id="wrap">
                 <div class="container">
@@ -50,64 +70,66 @@
                     <h1><span>Livechat Channel</span>  <small t-field="channel.name" /></h1>
                     <div t-field="channel.website_description" class="oe_structure mt16" />
                     <div class="row mt32">
-                        <div class="col-md-8">
+                        <div class="col-lg-8">
                             <t t-if="len(ratings) &gt; 0">
                                 <div class="row">
-                                    <h3>Statistics</h3>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="panel panel-warming">
-                                                <div class="panel-body text-center bg-warning">
-                                                    <img src="/rating/static/src/img/rating_5.png" style="height:50px"/>
-                                                </div>
-                                                <div class="panel-body text-center bg-warning">
-                                                    <h2 style="margin: 0">
-                                                        <b style="font-size: 50px">
-                                                            <t t-esc="percentage['okay']" />
-                                                        </b>
-                                                        <small>%</small>
-                                                    </h2>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="panel panel-success">
-                                                <div class="panel-body text-center bg-success">
-                                                    <img src="/rating/static/src/img/rating_10.png" style="height:60px"/>
-                                                </div>
-                                                <div class="panel-body text-center bg-success">
-                                                    <h2 style="margin: 0">
-                                                        <b style="font-size: 60px">
-                                                            <t t-esc="percentage['great']" />
-                                                        </b>
-                                                        <small>%</small>
-                                                    </h2>
+                                    <div class="col-lg-12 mb32">
+                                        <h3>Statistics</h3>
+                                        <div class="row">
+                                            <div class="col-lg-5">
+                                                <div class="card bg-success text-white" t-attf-style="height: #{150 + int(percentage['great'])}px;">
+                                                    <div class="card-body text-center">
+                                                        <img src="/rating/static/src/img/rating_10_white.png" style="height:40px" alt="Happy face"/>
+                                                    </div>
+                                                    <div class="card-body text-center">
+                                                        <h2 style="margin: 0">
+                                                            <b style="font-size: 30px">
+                                                                <t t-esc="percentage['great']" />
+                                                            </b>
+                                                            <small>%</small>
+                                                        </h2>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="panel panel-danger">
-                                                <div class="panel-body text-center bg-danger">
-                                                    <img src="/rating/static/src/img/rating_0.png" style="height:40px"/>
+                                            <div class="col-lg-4">
+                                                <div class="card bg-warning text-white" t-attf-style="height: #{150 + int(percentage['okay'])}px;">
+                                                    <div class="card-body text-center">
+                                                        <img src="/rating/static/src/img/rating_5_white.png" style="height:40px" alt="Neutral face"/>
+                                                    </div>
+                                                    <div class="card-body text-center">
+                                                        <h2 style="margin: 0">
+                                                            <b style="font-size: 30px">
+                                                                <t t-esc="percentage['okay']" />
+                                                            </b>
+                                                            <small>%</small>
+                                                        </h2>
+                                                    </div>
                                                 </div>
-                                                <div class="panel-body text-center bg-danger">
-                                                    <h2 style="margin: 0">
-                                                        <b style="font-size: 40px">
-                                                            <t t-esc="percentage['bad']" />
-                                                        </b>
-                                                        <small>%</small>
-                                                    </h2>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div class="card bg-danger text-white" t-attf-style="height: #{150 + int(percentage['bad'])}px;">
+                                                    <div class="card-body text-center">
+                                                        <img src="/rating/static/src/img/rating_1_white.png" style="height:40px" alt="Sad face"/>
+                                                    </div>
+                                                    <div class="card-body text-center">
+                                                        <h2 style="margin: 0">
+                                                            <b style="font-size: 30px">
+                                                                <t t-esc="percentage['bad']" />
+                                                            </b>
+                                                            <small>%</small>
+                                                        </h2>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-12 mb32">
+                                    <div class="col-lg-12 mb32">
                                         <h3>The <t t-esc="len(ratings)"/> last feedbacks</h3>
                                         <div style="text-align:center">
-                                            <t t-foreach="ratings" t-as="rating" class="media">
-                                                <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png' t-att-alt="rating.res_name"/>
+                                            <t t-foreach="ratings" t-as="rating">
+                                                <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png' t-att-alt="rating.res_name" width="48px" height="48px"/>
                                                 <t t-if="(rating_index+1) % 10 == 0">
                                                     <br/>
                                                 </t>
@@ -117,16 +139,17 @@
                                 </div>
                             </t>
                             <t t-if="len(ratings) == 0">
-                                <h4 style="text-align:center">This is no rating for this channel for now.</h4>
+                                <h4 style="text-align:center">There is no rating for this channel for now.</h4>
                             </t>
                         </div>
-                        <div class="col-md-4 mb32">
+                        <div class="col-lg-4 mb32">
                             <h3>The Team</h3>
-                            <t t-foreach="team" t-as="user" class="media">
-                                <div class="media">
-                                    <div class="pull-left">
-                                        <img t-att-src="'data:image/png;base64,' + user.image_small" class="img-rounded" t-att-alt="user.name"/>
-                                    </div>
+                            <t t-foreach="team" t-as="user">
+                                <div class="media mt-3">
+                                    <t t-if="user.image_small">
+                                        <img t-att-src="user.image_small and image_data_uri(user.image_small) or '/web/static/src/img/placeholder.png'"
+                                            class="rounded" style="padding-right: 8px;" t-att-alt="user.name"/>
+                                    </t>
                                     <div class="media-body">
                                         <h5><t t-esc="user.name"/></h5>
                                     </div>
@@ -143,24 +166,24 @@
         <template id="channel_list_page" name="Livechat Channel List Page">
             <t t-call="website.layout">
                 <div id="wrap">
-                    <div class="oe_structure"/>
+                    <div class="oe_structure" id="oe_structure_website_livechat_channel_list_1"/>
                     <div class="container">
                         <h1>Livechat Support Channels</h1>
                         <div class="row mt32 mb32">
                             <t t-if="not len(channels)">
-                                <div class="col-md-6 col-md-offset-3">
+                                <div class="col-lg-6 offset-lg-3">
                                     There is no public livechat channel to show.
                                 </div>
                             </t>
                             <t t-if="len(channels)">
-                                <div class="col-md-6 col-md-offset-3">
+                                <div class="col-lg-6 offset-lg-3">
                                     <t t-foreach="channels" t-as="channel">
-                                        <div class="media">
-                                            <a class="pull-left" t-attf-href="/livechat/channel/#{ slug(channel)}">
-                                                <img t-att-src="'data:image/png;base64,' + channel.image_small" t-att-alt="channel.name" />
+                                        <div t-attf-class="media#{' mt-3' if channel_index else ''}">
+                                            <a t-attf-href="/livechat/channel/#{ slug(channel)}">
+                                                <img t-att-src="channel.image_small and image_data_uri(channel.image_small) or '/web/static/src/img/placeholder.png'" t-att-alt="channel.name" />
                                             </a>
                                             <div class="media-body">
-                                                <h4 class="media-heading"><t t-esc="channel.name"/></h4>
+                                                <h4><t t-esc="channel.name"/></h4>
                                             </div>
                                         </div>
                                     </t>
@@ -168,10 +191,20 @@
                             </t>
                         </div>
                     </div>
-                    <div class="oe_structure"/>
+                    <div class="oe_structure" id="oe_structure_website_livechat_channel_list_2"/>
                 </div>
             </t>
         </template>
 
+        <!-- User Navbar -->
+        <template id="user_navbar_inherit_website_livecaht" inherit_id="website.user_navbar">
+            <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_livechat']" position="attributes">
+                <attribute name="name"/>
+                <attribute name="t-att-data-module-id"/>
+                <attribute name="t-att-data-module-shortdesc"/>
+                <attribute name="groups">im_livechat.im_livechat_group_manager</attribute>
+            </xpath>
+        </template>
+
     </data>
-</openerp>
+</odoo>

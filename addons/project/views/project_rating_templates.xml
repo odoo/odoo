@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Page : List of project -->
+        <template id="rating_index" name="Project Rating List">
+            <t t-call="portal.frontend_layout">
+                <t t-set="additional_title">Project Satisfaction</t>
+                <div id="wrap" class="row mt4">
+                    <div class="oe_structure" id="oe_structure_project_rating_index_1"/>
+                    <div class="container o_portal_project_rating">
+                        <h3>Projects</h3>
+                        <div class="oe_structure" id="oe_structure_project_rating_index_2"/>
+                        <div class="row">
+                            <t t-if="not projects">
+                              <div class="mt64 text-center">
+                                  No project rating published for now.
+                              </div>
+                            </t>
+                            <t t-foreach="projects" t-as="project">
+                                <div t-if="project.percentage_satisfaction_project != -1" class="col-md-6 col-4 col-lg-4 col-xl-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="caption">
+                                                <span class="badge badge-secondary float-right"><t t-esc="project.privacy_visibility"/></span>
+                                                <h4><t t-esc="project.name"/></h4>
+                                                <p t-if="project.date"  class="text-muted">
+                                                    <i class="fa fa-calendar"/> End date : <t t-esc="project.date"/>
+                                                </p>
+                                                <p t-if="project.alias_name and project.alias_domain"  class="text-muted">
+                                                    <i class="fa fa-envelope"/> Email : <t t-esc="project.alias_name"/>@<t t-esc="project.alias_domain"/>
+                                                </p>
+                                                <div class="row">
+                                                    <div class="col-lg-6 text-center">
+                                                        <h2><t t-esc="len(project.task_ids)"/></h2>
+                                                        <p><t t-esc="project.label_tasks"/></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="caption">
+                                                <p>
+                                                    <a role="button" t-att-href="'/project/rating/%s' % project.id" class="btn btn-primary btn-lg btn-block">
+                                                        <i class="fa fa-arrow-circle-right "/> See the feedbacks
+                                                    </a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="oe_structure" id="oe_structure_project_rating_index_3"/>
+              </div>
+            </t>
+        </template>
+
+        <!-- Page : Project Rating Page (and widgets) -->
+        <template id="portal_project_rating_progressbar">
+            <div class="progress o_rating_progress">
+                <t t-set="percent_rating_10" t-value="(stats['rating_10'] / float(stats['total'])) * 100 if stats['total'] else 0.0"/>
+                <div class="progress-bar bg-success" t-attf-style="width: #{percent_rating_10}%;" title="Happy">
+                    <t t-esc="percent_rating_10"/>%
+                </div>
+                <t t-set="percent_rating_5" t-value="(stats['rating_5'] / float(stats['total'])) * 100 if stats['total'] else 0.0"/>
+                <div class="progress-bar bg-warning" t-attf-style="width: #{percent_rating_5}%;" title="Average">
+                    <t t-esc="percent_rating_5"/>%
+                </div>
+                <t t-set="percent_rating_1" t-value="(stats['rating_1'] / float(stats['total'])) * 100 if stats['total'] else 0.0"/>
+                <div class="progress-bar bg-danger" t-attf-style="width: #{percent_rating_1}%;" title="Bad">
+                    <t t-esc="percent_rating_1"/>%
+                </div>
+            </div>
+        </template>
+
+        <template id="portal_project_rating_partner_stat">
+            <t t-foreach="partner_stats.values()" t-as="partner_stat">
+                <div class="row mt8" t-if="partner_stat['total']" title="Top 5 partner ratings of last 15 days.">
+                    <div class="col-md-1">
+                        <img t-if="partner_stat['rated_partner'].image" class="o_top_partner_image" t-att-src="image_data_uri(partner_stat['rated_partner'].image)" alt="Rated partner"/>
+                        <img  t-if="not partner_stat['rated_partner'].image" class="o_top_partner_image" src='/web/static/src/img/placeholder.png' alt="Placeholder"/>
+                    </div>
+                    <div class="col-md-4 o_smiley_no_padding_right">
+                        <span class="ml8" t-esc="partner_stat['rated_partner'].name"/>
+                    </div>
+                    <div class="col-md-4 o_smiley_no_padding_right">
+                        <div class="col-md-4 o_smiley_no_padding_right o_smiley_no_padding_left">
+                            <span t-if="partner_stat['rating_10']">
+                                <img title="happy" alt="Happy face" class="o_top_partner_rating_image" src='/rating/static/src/img/rating_10.png'/>
+                                <span class="o_rating_count" t-esc="partner_stat['rating_10']"/>
+                            </span>
+                            <span t-if="not partner_stat['rating_10']">
+                                <img title="happy" alt="Happy face" class="o_top_partner_rating_image o_lighter_smileys" src='/rating/static/src/img/rating_10.png'/>
+                                <span class="o_rating_count o_lighter_smileys" t-esc="partner_stat['rating_10']"/>
+                            </span>
+                        </div>
+                        <div class="col-md-4 o_smiley_no_padding_right o_smiley_no_padding_left">
+                            <span t-if="partner_stat['rating_5']">
+                                <img title="average" alt="Neutral face" class="o_top_partner_rating_image" src='/rating/static/src/img/rating_5.png'/>
+                                <span class="o_rating_count" t-esc="partner_stat['rating_5']"/>
+                            </span>
+                            <span t-if="not partner_stat['rating_5']">
+                                <img title="average" alt="Neutral face" class="o_top_partner_rating_image o_lighter_smileys" src='/rating/static/src/img/rating_5.png'/>
+                                <span class="o_rating_count o_lighter_smileys" t-esc="partner_stat['rating_5']"/>
+                            </span>
+                        </div>
+                        <div class="col-md-4 o_smiley_no_padding_right o_smiley_no_padding_left">
+                           <span t-if="partner_stat['rating_1']">
+                                <img title="bad" alt="Sad face" class="o_top_partner_rating_image" src='/rating/static/src/img/rating_1.png'/>
+                                <span class="o_rating_count" t-esc="partner_stat['rating_1']"/>
+                            </span>
+                            <span t-if="not partner_stat['rating_1']">
+                                <img title="bad" alt="Sad face" class="o_top_partner_rating_image o_lighter_smileys" src='/rating/static/src/img/rating_1.png'/>
+                                <span class="o_rating_count o_lighter_smileys" t-esc="partner_stat['rating_1']"/>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 o_smiley_no_padding_left">
+                        <strong class="float-right"><t t-esc="partner_stat['percentage_happy']"/>%</strong>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="portal_project_rating_popover">
+            <div t-attf-id="rating_#{rating.id}" class="container d-none">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <img t-if="rating.partner_id.image" class="o_top_partner_image" t-att-src="image_data_uri(rating.partner_id.image)" alt="Rated partner"/>
+                        <img  t-if="not rating.partner_id.image" class="o_top_partner_image" src='/web/static/src/img/placeholder.png' alt="Placeholder"/>
+                    </div>
+                    <div class="col-lg-10">
+                        <div class="mt4">
+                            <strong><t t-esc="rating.rated_partner_id.name"/></strong> - <span class="rating_timeduration"><t t-esc="rating.create_date"/></span>
+                        </div>
+                        <strong>Rated by: </strong><t t-esc="rating.partner_id.name" />
+                    </div>
+                </div>
+                <div class="row o_top_partner_feedback" t-if="rating.feedback">
+                    <div class="col-lg-12">
+                        <t t-esc="rating.feedback" />
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="rating_project_rating_page" name="Project Rating Page">
+            <t t-call="portal.frontend_layout">
+                 <div id="wrap" class="row mt4">
+                    <div class="oe_structure" id="oe_structure_project_rating_page_1"/>
+                    <div class="container o_project o_portal_project_rating">
+                        <h2 t-esc="project.name"/>
+                        <div class="row mb32">
+                            <div class="col-lg-12">
+                                <h3 class="o_page_header">Customer Ratings</h3>
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <t t-foreach="ratings" t-as="rating">
+                                            <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png'
+                                                class="mt4 o_rating_image"
+                                                t-att-alt="rating.res_name"
+                                                t-att-data-id="rating.id"
+                                                t-att-data-rating-date="rating.write_date"/>
+                                            <t t-call="project.portal_project_rating_popover"/>
+                                        </t>
+                                    </div>
+                                    <div class="col-lg-5 o_vertical_separator">
+                                        <div t-if="statistics['period_statistics']['days_06']">
+                                            <h5>Last 7 days</h5>
+                                            <t t-call="project.portal_project_rating_progressbar">
+                                                <t t-set="stats" t-value="statistics['period_statistics']['days_06']"/>
+                                            </t>
+                                        </div>
+                                        <div t-if="statistics['period_statistics']['days_30']">
+                                            <h5>Last 30 days</h5>
+                                            <t t-call="project.portal_project_rating_progressbar">
+                                                <t t-set="stats" t-value="statistics['period_statistics']['days_30']"/>
+                                            </t>
+                                        </div>
+                                        <div t-if="statistics['period_statistics']['days_90']">
+                                            <h5>Last 3 months</h5>
+                                            <t t-call="project.portal_project_rating_progressbar">
+                                                <t t-set="stats" t-value="statistics['period_statistics']['days_90']"/>
+                                            </t>
+                                        </div>
+                                        <div>
+                                            <t t-call="project.portal_project_rating_partner_stat">
+                                                <t t-set="partner_stats" t-value="statistics['partner_statistics']"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="oe_structure" id="oe_structure_project_rating_page_2"/>
+                </div>
+            </t>
+        </template>
+
+    </data>
+</odoo>

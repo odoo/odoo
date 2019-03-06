@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Employee -->
+    <record id="hr.employee_admin" model="hr.employee">
+        <field name="timesheet_cost">100</field>
+    </record>
+
+    <record id="hr.employee_qdp" model="hr.employee">
+        <field name="timesheet_cost">75</field>
+        <field name="parent_id" ref="hr.employee_admin"/>
+    </record>
+
+    <!-- Projects -->
+    <record id="account_analytic_account_project_2" model="account.analytic.account">
+        <field name="name">Research &amp; Development Project</field>
+        <field name="code">RD</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="project.project_project_2" model="project.project">
+        <field name="analytic_account_id" ref="account_analytic_account_project_2"/>
+    </record>
+
+    <record id="working_hours_requirements" model="account.analytic.line">
+        <field name="name">Requirements analysis</field>
+        <field name="user_id" ref='base.user_admin'/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-1)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">2.00</field>
+        <field name="project_id" ref='project.project_project_2'/>
+        <field name="amount">-60.00</field>
+    </record>
+
+    <record id="working_hours_design" model="account.analytic.line">
+        <field name="name">Design</field>
+        <field name="user_id" ref='base.user_admin'/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-1)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">1.00</field>
+        <field name="project_id" ref='project.project_project_2'/>
+        <field name="amount">-30.00</field>
+    </record>
+
+    <record id="working_hours_coding" model="account.analytic.line">
+        <field name="name">Quality analysis</field>
+        <field name="user_id" ref='base.user_admin'/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-1)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">3.00</field>
+        <field name="project_id" ref='project.project_project_2'/>
+        <field name="amount">-90.00</field>
+    </record>
+
+    <record id="working_hours_testing" model="account.analytic.line">
+        <field name="name">Quality analysis</field>
+        <field name="user_id" ref='base.user_admin'/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-1)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">1.00</field>
+        <field name="project_id" ref='project.project_project_2'/>
+        <field name="amount">-30.00</field>
+    </record>
+
+    <record id="working_hours_maintenance" model="account.analytic.line">
+        <field name="name">Delivery</field>
+        <field name="user_id" ref='base.user_admin'/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-1)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">1.00</field>
+        <field name="project_id" ref='project.project_project_2'/>
+        <field name="amount">-30.00</field>
+    </record>
+
+</odoo>

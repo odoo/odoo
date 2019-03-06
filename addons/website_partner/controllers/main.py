@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from openerp import SUPERUSER_ID
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-from openerp.addons.website.models.website import unslug
+
+from odoo import http
+from odoo.addons.http_routing.models.ir_http import unslug
+from odoo.http import request
 
 
 class WebsitePartnerPage(http.Controller):
@@ -12,13 +12,13 @@ class WebsitePartnerPage(http.Controller):
     def partners_detail(self, partner_id, **post):
         _, partner_id = unslug(partner_id)
         if partner_id:
-            partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
-            is_website_publisher = request.registry['res.users'].has_group(request.cr, request.uid, 'base.group_website_publisher')
-            if partner.exists() and (partner.website_published or is_website_publisher):
+            partner_sudo = request.env['res.partner'].sudo().browse(partner_id)
+            is_website_publisher = request.env['res.users'].has_group('website.group_website_publisher')
+            if partner_sudo.exists() and (partner_sudo.website_published or is_website_publisher):
                 values = {
-                    'main_object': partner,
-                    'partner': partner,
+                    'main_object': partner_sudo,
+                    'partner': partner_sudo,
                     'edit_page': False
                 }
-                return request.website.render("website_partner.partner_page", values)
+                return request.render("website_partner.partner_page", values)
         return request.not_found()

@@ -1,77 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
-        <record id="view_hr_timesheet_report_pivot" model="ir.ui.view">
-            <field name="name">hr.timesheet.report.pivot</field>
-            <field name="model">hr.timesheet.report</field>
-            <field name="arch" type="xml">
-                <pivot string="Timesheet">
-                    <field name="user_id" type="row"/>
-                    <field name="date" interval="month" type="col"/>
-                    <field name="quantity" type="measure"/>
-                </pivot>
+        <record id="act_hr_timesheet_report" model="ir.actions.act_window">
+            <field name="name">By Employee</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="domain">[('project_id', '!=', False)]</field>
+            <field name="context">{'search_default_groupby_employee':1,}</field>
+            <field name="search_view_id" ref="hr_timesheet_line_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Record a new activity
+              </p><p>
+                You can register and track your workings hours by project every
+                day. Every time spent on a project will become a cost and can be re-invoiced to
+                customers if required.
+              </p>
             </field>
         </record>
 
-        <record id="view_hr_timesheet_report_graph" model="ir.ui.view">
-            <field name="name">hr.timesheet.report.graph</field>
-            <field name="model">hr.timesheet.report</field>
-            <field name="arch" type="xml">
-                <graph string="Timesheet">
-                    <field name="user_id"/>
-                    <field name="date" interval="month"/>
-                    <field name="quantity" type="measure"/>
-                </graph>
+        <record model="ir.actions.act_window.view" id="act_hr_timesheet_report_pivot">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_pivot"/>
+            <field name="act_window_id" ref="act_hr_timesheet_report"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="act_hr_timesheet_report_tree">
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+            <field name="act_window_id" ref="act_hr_timesheet_report"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="act_hr_timesheet_report_form">
+            <field name="sequence" eval="15"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+            <field name="act_window_id" ref="act_hr_timesheet_report"/>
+        </record>
+
+        <record id="timesheet_action_report_by_project" model="ir.actions.act_window">
+            <field name="name">By Project</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="domain">[('project_id', '!=', False)]</field>
+            <field name="context">{'search_default_groupby_project':1,}</field>
+            <field name="search_view_id" ref="hr_timesheet_line_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Record a new activity
+              </p><p>
+                You can register and track your workings hours by project every
+                day. Every time spent on a project will become a cost and can be re-invoiced to
+                customers if required.
+              </p>
             </field>
         </record>
 
+        <record id="timesheet_action_view_report_by_project_pivot" model="ir.actions.act_window.view">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_pivot"/>
+            <field name="act_window_id" ref="timesheet_action_report_by_project"/>
+        </record>
 
-        <record id="view_hr_timesheet_report_search" model="ir.ui.view">
-            <field name="name">hr.timesheet.report.search</field>
-            <field name="model">hr.timesheet.report</field>
-            <field name="arch" type="xml">
-                <search string="Timesheet">
-                    <field name="account_id"/>
-                    <field name="user_id"/>
-                    <filter string="This Month" name="month" domain="[('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;=',time.strftime('%Y-%m-01'))]" help="month"/>
-                    <group expand="0" string="Extended Filters...">
-                        <field name="product_id"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
-                        <field name="date"/>
-                    </group>
-                    <group expand="1" string="Group By">
-                        <filter string="User" name="group_user_id" context="{'group_by':'user_id'}"/>
-                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <separator/>
-                        <filter string="Month" context="{'group_by':'date:month'}" help="Group by month of date"/>
-                    </group>
-                </search>
+        <record id="timesheet_action_view_report_by_project_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+            <field name="act_window_id" ref="timesheet_action_report_by_project"/>
+        </record>
+
+        <record id="timesheet_action_view_report_by_project_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="15"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+            <field name="act_window_id" ref="timesheet_action_report_by_project"/>
+        </record>
+
+        <record id="timesheet_action_report_by_task" model="ir.actions.act_window">
+            <field name="name">By Task</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="domain">[('project_id', '!=', False)]</field>
+            <field name="context">{'search_default_groupby_task':1,}</field>
+            <field name="search_view_id" ref="hr_timesheet_line_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Record a new activity
+              </p><p>
+                You can register and track your workings hours by project every
+                day. Every time spent on a project will become a cost and can be re-invoiced to
+                customers if required.
+              </p>
             </field>
         </record>
 
-        <record id="action_hr_timesheet_report_stat_all" model="ir.actions.act_window">
-            <field name="name">Timesheet Analysis</field>
-            <field name="res_model">hr.timesheet.report</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">pivot,graph</field>
-            <field name="context">{}</field>  <!-- force empty -->
+        <record id="timesheet_action_view_report_by_task_pivot" model="ir.actions.act_window.view">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_pivot"/>
+            <field name="act_window_id" ref="timesheet_action_report_by_task"/>
         </record>
 
-        <record id="action_hr_timesheet_report_stat_filtered" model="ir.actions.act_window">
-            <field name="name">Timesheet Analysis</field>
-            <field name="res_model">hr.timesheet.report</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">pivot,graph</field>
-            <field name="context">{
-                'search_default_department_id': [active_id],
-                'default_department_id': active_id}
-            </field>
+        <record id="timesheet_action_view_report_by_task_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+            <field name="act_window_id" ref="timesheet_action_report_by_task"/>
         </record>
 
-        <menuitem id="menu_timesheets_reports" name="Reports"
-            parent="hr_attendance.timesheet_menu_root" sequence="99" groups="base.group_hr_manager"/>
-        <menuitem name="Timesheet" action="action_hr_timesheet_report_stat_all"  id="menu_hr_timesheet_report_all"
-            parent="menu_timesheets_reports"  sequence="3"/>
+        <record id="timesheet_action_view_report_by_task_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="15"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+            <field name="act_window_id" ref="timesheet_action_report_by_task"/>
+        </record>
+
+        <menuitem id="menu_timesheets_reports"
+            name="Reporting"
+            parent="timesheet_menu_root"
+            groups="hr_timesheet.group_timesheet_manager"
+            sequence="99"/>
+
+        <menuitem id="menu_timesheets_reports_timesheet"
+            name="Timesheet"
+            parent="menu_timesheets_reports"
+            groups="hr_timesheet.group_timesheet_manager"
+            sequence="10"/>
+
+        <menuitem id="menu_hr_activity_analysis"
+            parent="menu_timesheets_reports_timesheet"
+            action="act_hr_timesheet_report"
+            name="By Employee"
+            sequence="10"/>
+
+        <menuitem id="timesheet_menu_report_timesheet_by_project"
+            parent="menu_timesheets_reports_timesheet"
+            action="timesheet_action_report_by_project"
+            name="By Project"
+            sequence="15"/>
+
+        <menuitem id="timesheet_menu_report_timesheet_by_task"
+            parent="menu_timesheets_reports_timesheet"
+            action="timesheet_action_report_by_task"
+            name="By Task"
+            sequence="20"/>
 
     </data>
-</openerp>
+</odoo>

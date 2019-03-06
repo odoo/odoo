@@ -1,0 +1,760 @@
+.o_form_view {
+    background-color: $o-view-background-color;
+
+    // Utility classes
+    .oe_form_box_info {
+        @include o-webclient-padding($top: 5px, $bottom: 5px);
+        > p {
+            margin: auto;
+        }
+    }
+    .oe_text_center {
+        text-align: center;
+    }
+    .oe_grey {
+        opacity: 0.5;
+    }
+    .oe_inline {
+        width: auto!important;
+        @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
+            &.o_inner_group {
+                width: 1px!important;
+            }
+        }
+    }
+    .oe_left {
+        @extend .oe_inline;
+        float: left!important;
+    }
+    .oe_right {
+        @extend .oe_inline;
+        float: right!important;
+    }
+
+    @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
+        .o_row {
+            &, &.o_field_widget { // Some field may want to use o_row as root and these rules must prevalue
+                display: flex;
+                width: auto!important;
+            }
+
+            align-items: baseline;
+            min-width: 50px;
+            margin: 0 (-$o-form-spacing-unit/2);
+
+            > div, > span, > button, > label, > a, > input { // > * did not add a level of priority to the rule
+                flex: 0 0 auto;
+                width: auto!important;
+                margin-right: $o-form-spacing-unit/2;
+                margin-left: $o-form-spacing-unit/2;
+            }
+
+            > .o_row {
+                margin: 0;
+            }
+            > .btn {
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+            > .o_field_boolean {
+                align-self: center;
+            }
+        }
+    }
+
+    .o_row > div > .o_field_widget {
+        width: 100%;
+    }
+
+    // Readonly specific rules
+    &.o_form_readonly {
+        .oe_edit_only {
+            display: none!important;
+        }
+
+        .o_row:not(.o_row_readonly) {
+            &, & > div {
+                display: inline-block;
+            }
+        }
+    }
+
+    .o_form_uri {
+        display: inline-block;
+
+        color: $o-main-text-color;
+        &:first-line {
+            color: $link-color;
+        }
+        &:hover {
+            color: darken($o-main-text-color, 1%); // hack required on chrome
+            &:first-line {
+                color: darken($link-color, 15%);
+            }
+        }
+    }
+
+    // Editable specific rules
+    &.o_form_editable {
+        .oe_read_only {
+            display: none!important;
+        }
+
+        .oe_title {
+            max-width: map-get($container-max-widths, md) - (2 * $o-horizontal-padding);
+        }
+
+        @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
+            .o_row {
+                > .o_field_widget, > div {
+                    flex: 1 1 auto;
+                    width: 0!important; // 3rd flex argument does not work with input (must be auto and real width 0)
+
+                    &.o_field_boolean, &.o_priority {
+                        flex: 0 0 auto;
+                        width: auto!important;
+                    }
+                }
+            }
+        }
+    }
+
+    // No sheet
+    &.o_form_nosheet {
+        display: block;
+        @include o-webclient-padding($top: $o-sheet-vpadding, $bottom: $o-sheet-vpadding);
+
+        .o_form_statusbar {
+            margin: (-$o-sheet-vpadding) (-$o-horizontal-padding) $o-sheet-vpadding (-$o-horizontal-padding);
+        }
+    }
+
+    // Non-chatter rules
+    .o_form_sheet_bg {
+        position: relative;
+
+        > .o_form_sheet {
+            margin: $o-sheet-vpadding*0.5 auto;
+        }
+    }
+
+    // Statusbar
+    .o_form_statusbar {
+        position: relative; // Needed for the "More" dropdown
+        display: flex;
+        justify-content: space-between;
+        padding-left: $o-horizontal-padding;
+        border-bottom: 1px solid gray('400');
+        background-color: $o-view-background-color;
+
+        > .o_statusbar_buttons, > .o_statusbar_status {
+            display: flex;
+            align-items: center;
+            align-content: space-around;
+        }
+
+        > .o_field_widget {
+            align-self: center;
+            margin-bottom: 0px;
+        }
+
+        > .o_statusbar_buttons {
+            flex-flow: row wrap;
+
+            > .btn {
+                $o-statusbar-buttons-vmargin: 4px;
+                min-height: $o-statusbar-height - 2 * $o-statusbar-buttons-vmargin;
+                margin: $o-statusbar-buttons-vmargin 3px $o-statusbar-buttons-vmargin 0;
+                padding-top: 2px;
+                padding-bottom: 2px;
+            }
+        }
+
+        > .o_statusbar_status {
+            margin-left: auto;
+            flex-flow: row-reverse wrap-reverse;
+            align-self: stretch;
+            align-items: stretch;
+
+            > .o_arrow_button {
+                min-height: $o-statusbar-height;
+                font-size: 11px;
+                font-weight: bold;
+                position: relative;
+                padding-left: $o-statusbar-arrow-width*2;
+                color: gray('700');
+                border-width: 0 0 0;
+                border-radius: 0;
+                transition: all 0.1s ease 0s;
+
+                &:first-child {
+                    padding-right: $o-horizontal-padding; // Compensate container padding
+                    overflow-x: hidden; // to prevent horizontal scroll due to last arrow
+                }
+                &:last-child {
+                    padding-left: $o-horizontal-padding - 1;
+                    border-left: 1px solid gray('400');
+                }
+
+                &:active {
+                    box-shadow: none;
+                }
+
+                &.disabled {
+                    opacity: 1.0;
+                    color: $text-muted;
+                    pointer-events: none;
+                    border-left: 1px solid gray('300');
+                }
+
+                &:not(:first-child):before, &:not(:first-child):after {
+                    content: " ";
+                    display: block;
+                    @include o-position-absolute(0, -$o-statusbar-arrow-width + 1);
+
+                    border-top: floor($o-statusbar-height/2) solid transparent;
+                    border-bottom: ceil($o-statusbar-height/2) solid transparent;
+                    border-right: none;
+                    border-left: $o-statusbar-arrow-width solid $o-view-background-color;
+                    transition: border 0.2s ease 0s;
+                    -moz-transform: scale(0.9999); // Smooth the triangle on firefox
+                }
+
+                &:not(.disabled) {
+                    &:hover, &:active, &:focus {
+                        color: $o-brand-primary;
+                        background-color: gray('200');
+
+                        &:after {
+                            border-left-color: gray('200');
+                        }
+                    }
+                }
+
+                &:not(:first-child):before {
+                    right: -$o-statusbar-arrow-width;
+                    border-left-color: gray('300');
+                }
+
+                &.btn-primary.disabled {
+                    color: $o-brand-odoo;
+                    font-size: 11px;
+                    background-color: gray('200');
+                    cursor: default;
+
+                    &:after {
+                        border-left-color: gray('200');
+                    }
+                }
+            }
+
+        }
+
+        // Touch device mode
+        > .o_statusbar_buttons > .btn-group, > .o_statusbar_status {
+            > .dropdown-toggle {
+                &:after {
+                    @include o-caret-down;
+                    margin-left: $o-form-spacing-unit;
+                }
+            }
+
+            > .dropdown-menu {
+                padding: 5px 0 2px 0;
+                min-width: 100px;
+
+                .dropdown-item.btn {
+                    min-width: 100%;
+                    margin-bottom: 3px;
+                }
+            }
+        }
+    }
+
+    // Button box
+    .oe_button_box {
+        .oe_stat_button {
+            &:not(:hover) .o_stat_info > .o_hover {
+                display: none !important;
+            }
+            &:hover .o_stat_info > .o_not_hover {
+                display: none !important
+            }
+        }
+    }
+
+    // Title
+    .oe_title {
+        > h1, > h2, > h3 {
+            width: 100%; // Needed because inline-block when is a hx.o_row
+            margin-top: 0;
+            margin-bottom: 0;
+            line-height: inherit;
+        }
+        .o_priority > .o_priority_star {
+            font-size: inherit;
+        }
+    }
+
+    // Groups
+    .o_group {
+        display: inline-block;
+        width: 100%;
+        margin: 10px 0;
+
+        // o_group contains nested groups
+        @for $i from 1 through $o-form-group-cols {
+            .o_group_col_#{$i} {
+                display: inline-block;
+                width: floor(100% / 12 * $i);
+                vertical-align: top;
+            }
+        }
+
+        &.o_inner_group {
+            display: inline-table;
+
+            > tbody > tr > td {
+                &.o_td_label {
+                    width: 0%;
+                    padding: 0 15px 0 0;
+                    min-width: 150px;
+                }
+                vertical-align: top;
+
+                span, .o_field_boolean, .oe_avatar, .o_form_uri {
+                    &.o_field_widget {
+                        width: auto;
+                    }
+                }
+            }
+        }
+
+        .o_form_label {
+            font-weight: normal;
+        }
+
+        .o_field_widget {
+            width: 100%;
+
+            > .btn {
+                flex: 0 0 auto;
+                padding: 0 10px;
+            }
+        }
+
+        :not(.o_row):not(.o_data_cell) > .o_field_widget,
+        .o_row > .o_field_widget:last-child { // Note: this does not take care
+                                              // of an invisible last-child but
+                                              // it does not really matter
+            // Makes extra buttons (e.g. m2o external button) overflow on the
+            // right padding of the parent element
+            > .o_input_dropdown {
+                flex: 1 0 auto;
+            }
+        }
+
+        &.o_label_nowrap .o_form_label {
+            white-space: nowrap;
+        }
+
+        .o_td_label .o_form_label {
+            font-weight: bold;
+            margin-right: 0px;
+        }
+    }
+
+    // Separators
+    .o_horizontal_separator {
+        font-size: $h2-font-size;
+        margin: $o-form-spacing-unit 0;
+        &:empty {
+            height: $o-form-spacing-unit * 2;
+        }
+    }
+
+    // Notebooks
+    .o_notebook {
+        clear: both; // For the notebook not to have alongside floating elements
+        margin-top: $o-form-spacing-unit * 2;
+
+        .tab-content > .tab-pane {
+            padding: $o-horizontal-padding 0;
+        }
+    }
+
+    // Labels
+    .o_form_label {
+        margin: 0 $o-form-spacing-unit 0 0;
+        font-size: $font-size-base; // The label muse have the same size whatever their position
+        line-height: $line-height-base;
+        font-weight: bold;
+    }
+
+    // Form fields
+    .o_field_widget {
+        margin-bottom: $o-form-spacing-unit;
+    }
+    .o_field_widget, .btn {
+        .o_field_widget {
+            margin-bottom: 0px;
+        }
+    }
+
+    // Translate icon
+    .o_field_translate {
+        padding: 0;
+        cursor: pointer;
+        width: 12px !important;
+        vertical-align: top;
+        &::before { // seems to be useful for some old browser
+            position: relative;
+        }
+    }
+
+    // Text field with oe_inline class
+    .o_field_text.oe_inline {
+        width: 100%!important;
+        @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
+            width: 45%!important;
+        }
+    }
+
+    // One2Many, Many2Many outside of group
+    .o_field_widget {
+        &.o_field_one2many, &.o_field_many2many {
+            width: 100%;
+            > div {
+                width: 100%;
+            }
+        }
+    }
+
+    // Specific style classes
+    .o_group.o_inner_group.oe_subtotal_footer {
+        @extend .oe_right;
+
+        > tbody > tr > td {
+            padding: 0;
+
+            &.o_td_label {
+                text-align: right;
+            }
+
+            .o_form_label {
+                padding-right: 20px;
+
+                min-width: 0;
+                white-space: nowrap;
+                &:after {
+                    content: ":";
+                }
+            }
+
+            .o_field_widget {
+                text-align: right;
+                justify-content: flex-end;
+                width: 100%;
+            }
+        }
+
+        > tbody > tr:first-child > td {
+            padding-top: 4px;
+        }
+
+        .oe_subtotal_footer_separator {
+            width: 100%;
+            text-align: right;
+            border-top: 1px solid gray('300');
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+    }
+
+    .o_address_format {
+        width: 100%;
+        .o_address_street, .o_address_country {
+            display: flex;
+        }
+
+        .o_address_city {
+            margin-right: 2%;
+        }
+        .o_address_state {
+            margin-right: 2%;
+        }
+        &.o_zip_city {
+            .o_address_zip {
+                margin-right: 2%;
+            }
+            .o_address_city {
+                margin-right: 0;
+            }
+            .o_address_state {
+                display: block;
+                margin-right: 0;
+            }
+        }
+        &.o_city_state {
+            .o_address_state {
+                margin-right: 0;
+            }
+            .o_address_zip {
+                display: block;
+                margin-right: 0;
+            }
+        }
+        > span.o_field_widget {
+            width: auto;
+        }
+    }
+    &.o_form_editable .o_address_format {
+        .o_address_city {
+            width: 38%;
+        }
+        div.o_address_state {
+            width: 33%;
+        }
+        input.o_address_zip {
+            width: 25%;
+        }
+        &.o_zip_city {
+            .o_address_zip {
+                width: 38%;
+            }
+            .o_address_city {
+                width: 60%;
+            }
+            .o_address_state {
+                width: 100%;
+            }
+        }
+        &.o_city_state {
+            .o_address_city {
+                width: 50%;
+            }
+            .o_address_state {
+                width: 48%;
+            }
+            .o_address_zip {
+                width: 100%;
+            }
+        }
+    }
+
+    // Boolean
+    .o_field_boolean {
+        margin-right: $o-form-spacing-unit;
+    }
+
+    // Timezone widget warning
+    .o_tz_warning {
+        color: theme-color('danger');
+        cursor: help;
+        position: absolute;
+        margin-left: -40px;
+        margin-top: 5px;
+    }
+
+    // One2Many Kanban views
+    .o_field_widget .o_kanban_view.o_kanban_ungrouped {
+        padding: 0;
+        .o_kanban_record {
+            box-shadow: none;
+        }
+    }
+
+    // One2Many List views
+    .o_field_widget .o_list_view {
+        margin-bottom: 10px;
+
+        > tfoot > tr > td {
+            padding: 3px;
+            color: $o-main-text-color;
+        }
+    }
+    &.o_form_readonly .o_field_widget .o_list_view .o_row_handle {
+        display: none;  // Hide the handler in non-edit mode
+    }
+
+    // Attachments
+    .oe_attachment {
+        display: inline-block;
+        border: 1px solid $o-brand-lightsecondary;
+        margin: 0 $o-form-spacing-unit $o-form-spacing-unit 0;
+        padding: $o-form-spacing-unit;
+    }
+
+    &.oe_form_configuration {
+        .o_group .o_form_label {
+            white-space: nowrap;
+        }
+        h2 {
+            margin-top: 32px !important;
+        }
+    }
+    &.o_company_document_layout {
+        .report_layout_container {
+            display: inline-block;
+            div {
+                display: inline-block;
+                img {
+                    margin-left: 0 !important;
+                }
+            }
+        }
+        img[name="logo"] {
+            max-height: 100px;
+            max-width: 300px;
+        }
+    }
+}
+
+// Overriden style when form view in modal
+.modal .modal-dialog {
+    .o_form_view {
+        .o_form_sheet_bg {
+            padding: 0;
+
+            > * {
+                margin: 0;
+            }
+
+            > .o_form_sheet {
+                box-shadow: none;
+                width: 100%;
+                margin: 0 auto;
+                max-width: none;
+            }
+        }
+        .oe_chatter {
+            display: none;
+        }
+    }
+    &:not(.modal-lg) .o_form_view {
+        .o_group {
+            width: 100%;
+        }
+    }
+    .o_onboarding_payment_acquirer_wizard {
+        a[type="action"] {
+            color: $link-color;
+            cursor: pointer;
+        }
+    }
+}
+
+@media print {
+    .oe_button_box, .o_form_statusbar {
+        display: none !important;
+    }
+}
+
+// Buttons in ControlPanel
+.o_control_panel .o_form_buttons_view > button:first-child {
+    float: left; // Unfortunately needed for the bounce effect
+    margin-right: 4px;
+}
+
+
+// XXS form view specific rules
+@mixin form-break-table {
+    display: block;
+    margin-bottom: $o-form-spacing-unit * 4;
+
+    > tbody {
+        display: block;
+
+        > tr {
+            display: flex;
+            flex-flow: row wrap;
+
+            > td {
+                flex: 1 0 auto;
+                display: block;
+                max-width: 100%;
+                padding: 0;
+
+                width: auto!important;  // !important is required to override the width computed in JS
+                &.o_td_label {
+                    width: 94%!important; // The label must be on its own line except if the form field is small enough (checkbox)
+                    line-height: $o-label-font-size-factor;
+                }
+
+                .o_field_widget {
+                    margin-bottom: $o-form-spacing-unit * 2;
+                    &.o_field_boolean {
+                        margin-right: 0;
+                    }
+                }
+
+                .o_input_dropdown {
+                    width: auto;
+                    max-width: 100%;
+                }
+            }
+        }
+    }
+}
+.o_form_view.o_xxs_form_view {
+    .oe_title {
+        word-break: break-all;
+    }
+    .o_group {
+        &.o_inner_group {
+            @include form-break-table;
+        }
+    }
+}
+
+// Settings form views
+.o_settings_container {
+    display: flex;
+    flex: 0 1 auto;
+    flex-flow: row wrap;
+
+    .o_form_label.o_light_label, .o_light_label .o_form_label {
+        font-weight: normal;
+    }
+    .o_setting_box:visible:nth-child(odd) {
+        clear: left;
+    }
+    .text-muted {
+        color: #aaaaaa;
+    }
+    .o_setting_box {
+        margin-bottom: 8px;
+        margin-top: 8px;
+        .o_setting_left_pane {
+            width: 24px;
+            float: left;
+            .o_enterprise_label {
+                position: absolute;
+                top: 0px;
+                right: 40px;
+            }
+        }
+        .o_setting_right_pane {
+            margin-left: 30px;
+            border-left: 1px solid #bbbbbb;
+            padding-left: 10px;
+            .o_input_dropdown > .o_input {
+                width: 100%;
+            }
+            .o_field_widget {
+                width: 50%;
+                flex: 0 0 auto;
+
+                &.o_field_many2manytags > .o_field_widget {
+                    flex: 1 0 50px;
+                }
+            }
+            button.btn-link:first-child {
+                padding-left: 0;
+            }
+            a.oe-link {
+                font-size: 12px;
+            }
+        }
+    }
+}

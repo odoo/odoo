@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="_assets_primary_variables" inherit_id="web._assets_primary_variables">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/portal/static/src/scss/primary_variables.scss"/>
+        </xpath>
+    </template>
+    <template id="_assets_frontend_helpers" inherit_id="web._assets_frontend_helpers">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/portal/static/src/scss/bootstrap_overridden.scss"/>
+        </xpath>
+    </template>
+
+    <template id="assets_frontend" inherit_id="web.assets_frontend" name="Portal Assets" priority="15">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/portal/static/src/scss/bootstrap.extend.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/portal/static/src/scss/portal.scss"/>
+        </xpath>
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/portal/static/src/js/portal.js"></script>
+            <script type="text/javascript" src="/portal/static/src/js/portal_tour.js"></script>
+            <script type="text/javascript" src="/portal/static/src/js/portal_chatter.js"></script>
+            <script type="text/javascript" src="/portal/static/src/js/portal_signature.js"></script>
+            <script type="text/javascript" src="/portal/static/src/js/portal_sidebar.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_common" inherit_id="web.assets_common" name="Portal Common Assets">
+        <xpath expr="script[last()]" position="after">
+            <script type="text/javascript" src="/web/static/lib/jSignature/jSignatureCustom.js"></script>
+        </xpath>
+    </template>
+</odoo>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <record id="view_event_registration_editor_form" model="ir.ui.view">
             <field name="name">registration.editor.form</field>
@@ -11,9 +10,9 @@
                     please give details about the registrations</p>
                     <field name="event_registration_ids">
                         <tree string="Registration" editable="top" create="false" delete="false">
-                            <field name="event_id" readonly='1'/>
-                            <field name="registration_id" readonly='1'/>
-                            <field name="event_ticket_id" domain="[('event_id', '=', event_id)]" readonly='1'/>
+                            <field name="event_id" readonly='1' force_save="1"/>
+                            <field name="registration_id" readonly='1' force_save="1"/>
+                            <field name="event_ticket_id" domain="[('event_id', '=', event_id)]" readonly='1' force_save="1"/>
                             <field name="name"/>
                             <field name="email"/>
                             <field name="phone"/>
@@ -21,7 +20,7 @@
                     </field>
                     <footer>
                         <button string="Apply" name="action_make_registration" type="object" class="btn-primary"/>
-                        <button string="Skip" class="btn-default" special="cancel"/>
+                        <button string="Skip" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form>
             </field>
@@ -37,6 +36,4 @@
             <field name="target">new</field>
             <field name="context">{}</field>
         </record>
-
-    </data>
-</openerp>
+</odoo>

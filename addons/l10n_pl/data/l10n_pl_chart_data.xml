@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<menuitem id="account_reports_pl_statements_menu" name="Poland" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
+
+<data noupdate="1">
+    <record model="account.account.type" id="account_type_tax">
+      <field name="name">Podatki</field>
+    </record>
+
+    <record model="account.account.type" id="account_type_settlement">
+      <field name="name">Rozrachunki</field>
+    </record>
+
+    <record model="account.account.type" id="account_type_nonbalance">
+      <field name="name">Pozabilansowe</field>
+    </record>
+    <!-- Chart template -->
+
+        <record id="pl_chart_template" model="account.chart.template">
+            <field name="name">Polska - Plan kont</field>
+            <field name="code_digits">6</field>
+            <field name="currency_id" ref="base.PLN"/>
+            <field name="bank_account_code_prefix">11-000-000</field>
+            <field name="cash_account_code_prefix">12-000-000</field>
+            <field name="transfer_account_code_prefix">11-090-000</field>
+        </record>
+        
+</data>
+</odoo>

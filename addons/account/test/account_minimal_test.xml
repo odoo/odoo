@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="0">
 
         <!-- This should be loaded for non python tests in other modules that require accounting test data but that don't depend on any localization -->
 
         <record id="base.main_company" model="res.company">
             <field name="bank_account_code_prefix">X1100</field>
-            <field name="accounts_code_digits">7</field>
         </record>
 
         <!--
@@ -187,11 +186,6 @@
             <field name="name">Dividends</field>
             <field name="user_type_id" ref="account.data_account_type_equity"/>
         </record>
-        <record id="a_current_year_earnings" model="account.account">
-            <field name="code">X0000</field>
-            <field name="name">Unaffected Earnings</field>
-            <field name="user_type_id" ref="account.data_unaffected_earnings"/>
-        </record>
 
         <!-- Properties -->
         <record forcecreate="True" id="property_account_receivable_id" model="ir.property">
@@ -237,7 +231,6 @@
 
         <record id="bank_account" model="res.partner.bank">
             <field name="acc_number">987654321</field>
-            <field name="acc_type">bank</field>
             <field name="bank_name">Bank</field>
             <field name="partner_id" ref="base.main_partner"/>
         </record>
@@ -274,7 +267,6 @@
 
         <record id="bank_account_usd" model="res.partner.bank">
             <field name="acc_number">123456789</field>
-            <field name="acc_type">bank</field>
             <field name="bank_name">Bank US</field>
             <field name="partner_id" ref="base.main_partner"/>
         </record>
@@ -284,7 +276,6 @@
             <field name="type">bank</field>
             <field name="default_debit_account_id" ref="usd_bnk"/>
             <field name="default_credit_account_id" ref="usd_bnk"/>
-            <field name="currency_id" ref="base.USD"/>
             <field name="bank_account_id" ref="bank_account_usd"/>
         </record>
         <record id="base.main_company" model="res.company">
@@ -307,4 +298,4 @@
             <field name="company_id" ref="base.main_company"/>
         </record>
     </data>
-</openerp>
+</odoo>

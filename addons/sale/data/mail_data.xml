@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Activities -->
+        <record id="mail_act_sale_upsell" model="mail.activity.type">
+            <field name="name">Order Upsell</field>
+            <field name="icon">fa-line-chart</field>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+        </record>
+
+        <!-- Sale-related subtypes for messaging / Chatter -->
+        <record id="mt_order_sent" model="mail.message.subtype">
+            <field name="name">Quotation sent</field>
+            <field name="res_model">sale.order</field>
+            <field name="default" eval="False"/>
+            <field name="description">Quotation sent</field>
+        </record>
+        <record id="mt_order_confirmed" model="mail.message.subtype">
+            <field name="name">Sales Order Confirmed</field>
+            <field name="res_model">sale.order</field>
+            <field name="default" eval="False"/>
+            <field name="description">Quotation confirmed</field>
+        </record>
+
+        <!-- Salesteam-related subtypes for messaging / Chatter -->
+        <record id="mt_salesteam_order_sent" model="mail.message.subtype">
+            <field name="name">Quotation sent</field>
+            <field name="sequence">20</field>
+            <field name="res_model">crm.team</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" eval="ref('sale.mt_order_sent')"/>
+            <field name="relation_field">team_id</field>
+        </record>
+        <record id="mt_salesteam_order_confirmed" model="mail.message.subtype">
+            <field name="name">Sales Order Confirmed</field>
+            <field name="sequence">21</field>
+            <field name="res_model">crm.team</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" eval="ref('sale.mt_order_confirmed')"/>
+            <field name="relation_field">team_id</field>
+        </record>
+        <record id="mt_salesteam_invoice_created" model="mail.message.subtype">
+            <field name="name">Invoice Created</field>
+            <field name="sequence">22</field>
+            <field name="res_model">crm.team</field>
+            <field name="parent_id" eval="ref('account.mt_invoice_created')"/>
+            <field name="relation_field">team_id</field>
+        </record>
+        <record id="mt_salesteam_invoice_confirmed" model="mail.message.subtype">
+            <field name="name">Invoice Confirmed</field>
+            <field name="sequence">23</field>
+            <field name="res_model">crm.team</field>
+            <field name="parent_id" eval="ref('account.mt_invoice_validated')"/>
+            <field name="relation_field">team_id</field>
+        </record>
+    </data>
+    <!-- Template and notification section -->
+    <data noupdate="1">
+        <template id="mail_notification_paynow_online" inherit_id="mail.mail_notification_paynow" name="oezirhgoi">
+            <xpath expr="//t[@t-set='access_name']" position="after">
+                <t t-if="record._name == 'sale.order'">
+                    <t t-if="record.has_to_be_signed()">
+                        <t t-if="record.has_to_be_paid()" t-set="access_name">Sign and pay online</t>
+                        <t t-else="" t-set="access_name">Accept and sign online</t>
+                    </t>
+                    <t t-elif="record.has_to_be_paid()">
+                        <t t-set="access_name">Pay online</t>
+                    </t>
+                </t>
+            </xpath>
+        </template>
+
+        <record id="email_template_edi_sale" model="mail.template">
+            <field name="name">Sales Order: Send by email</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="email_from">${object.user_id.email_formatted |safe}</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="subject">${object.company_id.name} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'
+        Dear ${object.partner_id.name}
+        % if object.partner_id.parent_id:
+            (${object.partner_id.parent_id.name})
+        % endif
+        <br /><br />
+        Here is
+        % if ctx.get('proforma')
+            in attachment your pro-forma invoice
+        % else
+            the ${doc_name} <strong>${object.name}</strong>
+        % endif
+        % if object.origin:
+            (with reference: ${object.origin} )
+        % endif
+        amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong>
+        from ${object.company_id.name}.
+        <br /><br />
+        Do not hesitate to contact us if you have any question.
+    </p>
+</div>
+            </field>
+            <field name="report_template" ref="action_report_saleorder"/>
+            <field name="report_name">${(object.name or '').replace('/','_')}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

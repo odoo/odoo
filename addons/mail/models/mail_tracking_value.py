@@ -1,12 +1,18 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import datetime
 
-from openerp import api, fields, models, tools
+from odoo import api, fields, models, tools
 
 
 class MailTracking(models.Model):
     _name = 'mail.tracking.value'
     _description = 'Mail Tracking Value'
+    _rec_name = 'field'
+    _order = 'track_sequence asc'
 
+    # TDE CLEANME: why not a m2o to ir model field ?
     field = fields.Char('Changed Field', required=True, readonly=1)
     field_desc = fields.Char('Field Description', required=True, readonly=1)
     field_type = fields.Char('Field Type')
@@ -25,12 +31,14 @@ class MailTracking(models.Model):
     new_value_text = fields.Text('New Value Text', readonly=1)
     new_value_datetime = fields.Datetime('New Value Datetime', readonly=1)
 
-    mail_message_id = fields.Many2one('mail.message', 'Message ID', required=True, select=True, ondelete='cascade')
+    mail_message_id = fields.Many2one('mail.message', 'Message ID', required=True, index=True, ondelete='cascade')
+
+    track_sequence = fields.Integer('Tracking field sequence', readonly=1, default=100)
 
     @api.model
-    def create_tracking_values(self, initial_value, new_value, col_name, col_info):
+    def create_tracking_values(self, initial_value, new_value, col_name, col_info, track_sequence):
         tracked = True
-        values = {'field': col_name, 'field_desc': col_info['string'], 'field_type': col_info['type']}
+        values = {'field': col_name, 'field_desc': col_info['string'], 'field_type': col_info['type'], 'track_sequence': track_sequence}
 
         if col_info['type'] in ['integer', 'float', 'char', 'text', 'datetime', 'monetary']:
             values.update({
@@ -39,8 +47,8 @@ class MailTracking(models.Model):
             })
         elif col_info['type'] == 'date':
             values.update({
-                'old_value_datetime': initial_value and datetime.strftime(datetime.combine(datetime.strptime(initial_value, tools.DEFAULT_SERVER_DATE_FORMAT), datetime.min.time()), tools.DEFAULT_SERVER_DATETIME_FORMAT) or False,
-                'new_value_datetime': new_value and datetime.strftime(datetime.combine(datetime.strptime(new_value, tools.DEFAULT_SERVER_DATE_FORMAT), datetime.min.time()), tools.DEFAULT_SERVER_DATETIME_FORMAT) or False,
+                'old_value_datetime': initial_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(initial_value), datetime.min.time())) or False,
+                'new_value_datetime': new_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(new_value), datetime.min.time())) or False,
             })
         elif col_info['type'] == 'boolean':
             values.update({
@@ -56,8 +64,8 @@ class MailTracking(models.Model):
             values.update({
                 'old_value_integer': initial_value and initial_value.id or 0,
                 'new_value_integer': new_value and new_value.id or 0,
-                'old_value_char': initial_value and initial_value.name_get()[0][1] or '',
-                'new_value_char': new_value and new_value.name_get()[0][1] or ''
+                'old_value_char': initial_value and initial_value.sudo().name_get()[0][1] or '',
+                'new_value_char': new_value and new_value.sudo().name_get()[0][1] or ''
             })
         else:
             tracked = False
@@ -67,41 +75,36 @@ class MailTracking(models.Model):
         return {}
 
     @api.multi
-    def get_old_display_value(self):
+    def get_display_value(self, type):
+        assert type in ('new', 'old')
         result = []
         for record in self:
-            if record.field_type in ['integer', 'float', 'char', 'text', 'datetime', 'monetary']:
-                result.append(getattr(record, 'old_value_%s' % record.field_type))
-            elif record.field_type == 'date':
-                if record.old_value_datetime:
-                    old_date = datetime.strptime(record.old_value_datetime, tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-                    result.append(old_date.strftime(tools.DEFAULT_SERVER_DATE_FORMAT))
+            if record.field_type in ['integer', 'float', 'char', 'text', 'monetary']:
+                result.append(getattr(record, '%s_value_%s' % (type, record.field_type)))
+            elif record.field_type == 'datetime':
+                if record['%s_value_datetime' % type]:
+                    new_datetime = getattr(record, '%s_value_datetime' % type)
+                    result.append('%sZ' % new_datetime)
                 else:
-                    result.append(record.old_value_datetime)
+                    result.append(record['%s_value_datetime' % type])
+            elif record.field_type == 'date':
+                if record['%s_value_datetime' % type]:
+                    new_date = record['%s_value_datetime' % type]
+                    result.append(fields.Date.to_string(new_date))
+                else:
+                    result.append(record['%s_value_datetime' % type])
             elif record.field_type == 'boolean':
-                result.append(bool(record.old_value_integer))
-            elif record.field_type in ['many2one', 'selection']:
-                result.append(record.old_value_char)
+                result.append(bool(record['%s_value_integer' % type]))
             else:
-                result.append(record.old_value_char)
+                result.append(record['%s_value_char' % type])
         return result
 
     @api.multi
+    def get_old_display_value(self):
+        # grep : # old_value_integer | old_value_datetime | old_value_char
+        return self.get_display_value('old')
+
+    @api.multi
     def get_new_display_value(self):
-        result = []
-        for record in self:
-            if record.field_type in ['integer', 'float', 'char', 'text', 'datetime', 'monetary']:
-                result.append(getattr(record, 'new_value_%s' % record.field_type))
-            elif record.field_type == 'date':
-                if record.new_value_datetime:
-                    new_date = datetime.strptime(record.new_value_datetime, tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-                    result.append(new_date.strftime(tools.DEFAULT_SERVER_DATE_FORMAT))
-                else:
-                    result.append(record.new_value_datetime)
-            elif record.field_type == 'boolean':
-                result.append(bool(record.new_value_integer))
-            elif record.field_type in ['many2one', 'selection']:
-                result.append(record.new_value_char)
-            else:
-                result.append(record.new_value_char)
-        return result
+        # grep : # new_value_integer | new_value_datetime | new_value_char
+        return self.get_display_value('new')

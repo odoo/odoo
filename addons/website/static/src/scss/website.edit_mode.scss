@@ -1,0 +1,314 @@
+
+@each $url in $o-theme-font-urls {
+    @if $url {
+        @import url("https://fonts.googleapis.com/css?family=#{unquote($url)}");
+    }
+}
+
+.modal.o_theme_customize_modal {
+
+    &.o_theme_customize_loading {
+        pointer-events: none;
+
+        &::after {
+            content: "";
+            @include o-position-absolute(0, 0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    .modal-dialog {
+        @include o-position-absolute(0, 2%);
+        width: 96%;
+        max-width: 550px;
+    }
+
+    .modal-header {
+        background-color: $o-brand-odoo;
+        color: white;
+        border-radius: 0;
+
+        * {
+            color: inherit;
+        }
+    }
+
+    .close:hover, .close:focus {
+        color: white;
+    }
+
+
+    .nav {
+        padding: 0;
+
+        .nav-item {
+            text-align: center;
+            background-color: $o-brand-lightsecondary;
+
+            .nav-link {
+                color: $o-main-text-color;
+
+                &.active {
+                    font-weight: bold;
+                    background-color: white;
+                    border: 1px solid #d9d7d7;
+                    border-left: 1px solid #333333;
+                }
+                &:hover, &:focus {
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+
+    .o_theme_customize_option {
+        position: relative;
+        width: 100%;
+
+        > img {
+            width: 100%;
+
+            + label {
+                @include o-position-absolute(0, 0, 0, 0);
+                width: auto;
+                background: transparent;
+            }
+        }
+
+        label {
+            width: 100%;
+            min-height: 24px;
+            margin: 0;
+            padding: 8px;
+            border: 2px solid transparent;
+            background-color: $o-brand-lightsecondary;
+            font-size: 14px;
+            line-height: 1;
+            cursor: pointer;
+
+            &.o_theme_customize_option_palette_label {
+                display: none !important;
+            }
+
+            &.checked {
+                border-color: $o-brand-odoo;
+                color: $o-brand-odoo;
+            }
+        }
+
+        $i: 1;
+        @each $font in $o-theme-fonts {
+            &.o_theme_customize_option_font_#{$i} {
+                font-family: if($font, $font, $font-family-base);
+
+                > label > span::before {
+                    content: nth($o-theme-font-names, $i);
+                }
+            }
+            $i: $i + 1;
+        }
+    }
+
+    .o_theme_customize_color_previews {
+        h6, a {
+            font-size: 12px;
+            margin: 4px 0 0;
+        }
+
+        .o_theme_customize_color {
+            > .o_color_preview {
+                position: relative;
+                display: inline-block;
+                width: 48px;
+                height: 27px;
+                border: 1px solid black;
+
+                &::before, &::after {
+                    content: "";
+                    @include o-position-absolute(0, 0, 0, 0);
+                }
+                &::before {
+                    background-image: url('/web_editor/static/src/img/transparent.png');
+                }
+                &::after {
+                    background-color: inherit;
+                }
+            }
+
+            $palette: nth($o-color-palettes, $o-color-palette-number);
+            $-text-color: if(map-get($palette, 'text'), map-get($palette, 'text'), #212529); // BS default as fallback (TODO find real value)
+            $-h1-color: if(map-get($palette, 'h1'), map-get($palette, 'h1'), $-text-color);
+            $-h2-color: if(map-get($palette, 'h2'), map-get($palette, 'h2'), $-h1-color);
+            $-h3-color: if(map-get($palette, 'h3'), map-get($palette, 'h3'), $-h2-color);
+            $-h4-color: if(map-get($palette, 'h4'), map-get($palette, 'h4'), $-h3-color);
+            $-h5-color: if(map-get($palette, 'h5'), map-get($palette, 'h5'), $-h4-color);
+            $-h6-color: if(map-get($palette, 'h6'), map-get($palette, 'h6'), $-h5-color);
+            $-defaults: (
+                'body': white, // BS default as fallback (TODO find real value)
+                'text': $-text-color,
+                'h1': $-h1-color,
+                'h2': $-h2-color,
+                'h3': $-h3-color,
+                'h4': $-h4-color,
+                'h5': $-h5-color,
+                'h6': $-h6-color,
+            );
+
+            @each $name, $value in map-merge($-defaults, o-map-omit($palette)) {
+                &.o_theme_customize_color_#{$name} > .o_color_preview {
+                    background-color: $value;
+                }
+            }
+        }
+    }
+
+    .o_theme_customize_option_input {
+        position: absolute;
+        clip: rect(0, 0, 0, 0);
+        pointer-events: none;
+    }
+
+    .o_theme_customize_option_list {
+        box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.05);
+    }
+}
+
+
+.o_homepage_editor_welcome_message {
+    padding-top: 128px;
+    padding-bottom: 128px;
+    font-family: Roboto, $font-family-sans-serif;
+
+    .o_tooltip_container {
+        transition: opacity 1s linear;
+
+        > .o_tooltip {
+            @include o-position-absolute;
+            position: relative;
+            display: inline-block;
+            margin: 0 8px;
+            opacity: 1;
+            z-index: auto;
+        }
+    }
+}
+
+.o_editable {
+    &:not(:empty), &[data-oe-type] {
+        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):hover {
+            box-shadow: $o-brand-odoo 0 0 5px 2px inset;
+        }
+    }
+    &:focus, &[data-oe-type] {
+        min-height: 0.8em;
+        min-width: 8px;
+    }
+    &.o_is_inline_editable {
+        display: inline-block;
+    }
+    .btn, &.btn {
+        user-select: auto;
+        cursor: text!important;
+    }
+    /* Summernote not Support for placeholder text https://github.com/summernote/summernote/issues/581 */
+    &[placeholder]:empty:not(:focus):before {
+        content: attr(placeholder);
+        opacity: 0.3;
+    }
+
+    &.oe_structure.oe_empty, &[data-oe-type=html] {
+        &:empty {
+            border: 2px dashed gray('400');
+            margin: 20px;
+            padding: 112px 0px;
+            text-align: center;
+            &:before {
+                content: attr(data-editor-message);
+                font-size: 20px;
+                color: gray('400');
+            }
+        }
+        > p:empty:only-child {
+            color: #aaa;
+        }
+    }
+}
+.editor_enable [data-oe-readonly]:hover {
+    cursor: default;
+}
+
+/* Prevent the text contents of draggable elements from being selectable. */
+[draggable] {
+    user-select: none;
+}
+
+.oe_editable:focus,
+.css_editable_hidden,
+.editor_enable .css_editable_mode_hidden {
+    outline: none!important;
+}
+
+.css_editable_display,
+.editor_enable .css_non_editable_mode_hidden,
+.o_editable .media_iframe_video .css_editable_mode_display {
+    display: block!important;
+}
+
+[data-oe-type=html].oe_no_empty:empty {
+    height: 16px!important;
+}
+
+// EDITOR BAR
+table.editorbar-panel {
+    cursor: pointer;
+    width: 100%;
+    td { border: 1px solid #aaa}
+    td.selected { background-color: #b1c9d9}
+}
+.link-style {
+    .dropdown > .btn {
+        min-width: 160px;
+    }
+    .link-style {
+        display: none;
+    }
+    li {
+        text-align: center;
+        label {
+            width: 100px;
+            margin: 0 5px;
+        }
+    }
+    .col-md-2 > * {
+        line-height: 2em;
+    }
+}
+
+// fontawesome
+.note-editable .fa {
+    cursor: pointer;
+}
+
+// parallax dropzones are in conflict with outside of parallax dropzones
+.parallax .oe_structure > .oe_drop_zone {
+    &:first-child {
+        top: 16px;
+    }
+    &:last-child {
+        bottom: 16px;
+    }
+}
+
+.editor_enable .js_language_selector {
+    display: none;
+}
+
+// Facebook Page
+.editor_enable .o_facebook_page:not(.o_facebook_preview) {
+    iframe {
+        pointer-events: none;
+    }
+    .o_facebook_alert .o_add_facebook_page {
+        cursor: pointer;
+    }
+}

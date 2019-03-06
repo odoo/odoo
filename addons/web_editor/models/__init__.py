@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-import ir_attachment
-import ir_qweb
-import ir_ui_view
-import ir_http
-import ir_translation
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import test_models
+from . import ir_attachment
+from . import ir_qweb
+from . import ir_ui_view
+from . import ir_http
+from . import ir_translation
+
+from . import test_models

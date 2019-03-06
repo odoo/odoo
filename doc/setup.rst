@@ -9,5 +9,7 @@ Setting Up
 
     setup/install
     setup/deploy
+    setup/update
     setup/cdn
     setup/enterprise
+    setup/email_gateway

@@ -1,8 +1,5 @@
-import sys
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# Mock deprecated openerp.addons.web.http module
-import openerp.http
-sys.modules['openerp.addons.web.http'] = openerp.http
-http = openerp.http
-
-import controllers
+from . import controllers
+from . import models

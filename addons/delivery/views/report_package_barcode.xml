@@ -1,0 +1,23 @@
+<odoo>
+    <template id="report_package_barcode_delivery" inherit_id="stock.report_package_barcode">
+        <xpath expr="//div[hasclass('o_packaging_type')]" position="after">
+            <div class="row o_package_weight" t-if="o.weight">
+                <div class="col-12" style="font-weight:bold;">Weight: <span t-field="o.weight"/></div>
+            </div>
+            <div class="row o_package_shipping_weight" t-if="o.shipping_weight">
+                <div class="col-12" style="font-weight:bold;">Shipping Weight: <span t-field="o.shipping_weight"/></div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="report_package_barcode_small_delivery" inherit_id="stock.report_package_barcode_small">
+        <xpath expr="//div[hasclass('o_packaging_type')]" position="after">
+            <div class="row o_package_weight" t-if="o.weight">
+                <div class="col-12" style="font-size:24px; font-weight:bold;">Weight: <span t-field="o.weight"/></div>
+            </div>
+            <div class="row o_package_shipping_weight" t-if="o.shipping_weight">
+                <div class="col-12" style="font-size:24px; font-weight:bold;">Shipping Weight: <span t-field="o.shipping_weight"/></div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

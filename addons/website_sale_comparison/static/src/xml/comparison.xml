@@ -1,0 +1,35 @@
+<templates id="compare_products" xml:space="preserve">
+
+    <t t-name="product_comparison_template">
+        <div class="o_product_feature_panel d-none css_editable_mode_hidden">
+            <span class="o_product_panel" id="comparelist">
+                <span class="o_product_panel_header">
+                    <span class="o_product_icon"><i class="fa fa-exchange" role="img" aria-label="Product" title="Product"></i></span>
+                    <span class="o_product_text">Compare</span>
+                    <span class="o_product_circle o_animate_blink badge badge-primary">0</span>
+                </span>
+                <span class="o_product_panel_content">
+                    <div class="o_comparelist_products">
+                        <div class="o_comparelist_limit_warning" style="display:none">
+                            <div class="o_shortlog alert alert-warning" role="alert">
+                                <span><i class="fa fa-warning text-danger" role="img" aria-label="Warning" title="Warning"></i> You can compare max 4 products.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="o_comparelist_button" style='display:none'>
+                        <a role="button" class="btn btn-primary btn-block" href="#"><i class="fa fa-exchange mr4"/>Compare</a>
+                    </div>
+                </span>
+            </span>
+        </div>
+    </t>
+
+    <t t-name="popover">
+        <div style="width:600px;" class="popover comparator-popover" role="tooltip">
+            <div class="arrow"/>
+            <h3 class="popover-header"/>
+            <div class="popover-body"/>
+        </div>
+    </t>
+
+</templates>

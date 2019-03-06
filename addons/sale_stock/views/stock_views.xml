@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend" inherit_id="web.assets_backend">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/sale_stock/static/src/js/tour.js"></script>
+            </xpath>
+        </template>
+
+        <template id="exception_on_so">
+            <div>
+                Exception(s) occurred on the sale order(s):
+                <t t-foreach="sale_order_ids" t-as="sale_order">
+                    <a href="#" data-oe-model="sale.order" t-att-data-oe-id="sale_order.id"><t t-esc="sale_order.name"/></a>.
+                </t>
+                Manual actions may be needed.
+                <div class="mt16">
+                    <p>Exception(s):</p>
+                    <ul t-foreach="order_exceptions" t-as="exception">
+                        <li>
+                            <t t-set="order_line" t-value="exception[0]"/>
+                            <t t-set="new_qty" t-value="exception[1][0]"/>
+                            <t t-set="old_qty" t-value="exception[1][1]"/>
+                                <a href="#" data-oe-model="sale.order" t-att-data-oe-id="order_line.order_id.id"><t t-esc="order_line.order_id.name"/></a>:
+                                <t t-esc="new_qty"/> <t t-esc="order_line.product_uom.name"/> of <t t-esc="order_line.product_id.name"/>
+                                <t t-if="cancel">
+                                    cancelled
+                                </t>
+                                <t t-if="not cancel">
+                                    ordered instead of <t t-esc="old_qty"/> <t t-esc="order_line.product_uom.name"/>
+                                </t>
+                          </li>
+                    </ul>
+                </div>
+                <div class="mt16" t-if="not cancel and impacted_pickings">
+                    <p>Impacted Transfer(s):</p>
+                    <ul t-foreach="impacted_pickings" t-as="picking">
+                        <li><a href="#" data-oe-model="stock.picking" t-att-data-oe-id="picking.id"><t t-esc="picking.name"/></a></li>
+                    </ul>
+                </div>
+            </div>
+        </template>
+
+        <template id="exception_on_picking">
+            <div>
+                Exception(s) occurred on the picking:
+                <a href="#" data-oe-model="stock.picking" t-att-data-oe-id="origin_picking.id"><t t-esc="origin_picking.name"/></a>.
+                Manual actions may be needed.
+                <div class="mt16">
+                    <p>Exception(s):</p>
+                    <ul t-foreach="moves_information" t-as="exception">
+                        <t t-set="move" t-value="exception[0]"/>
+                        <t t-set="new_qty" t-value="exception[1][0]"/>
+                        <t t-set="old_qty" t-value="exception[1][1]"/>
+                        <li>
+                        <t t-esc="new_qty"/> <t t-esc="move.product_uom.name"/>
+                        of <t t-esc="move.product_id.display_name"/> processed instead of <t t-esc="old_qty"/> <t t-esc="move.product_uom.name"/></li>
+                    </ul>
+                </div>
+            </div>
+        </template>
+
+        <menuitem id="menu_aftersale" name="After-Sale"
+            groups="sales_team.group_sale_salesman"
+            parent="sale.sale_menu_root" sequence="5" />
+        <menuitem id="menu_invoiced" name="Invoicing" parent="menu_aftersale" sequence="1"/>
+
+        <record id="stock_location_route_view_form_inherit_sale_stock" model="ir.ui.view">
+            <field name="name">stock.location.route.form</field>
+            <field name="inherit_id" ref="stock.stock_location_route_form_view"/>
+            <field name="model">stock.location.route</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='warehouse_ids']" position="after">
+                    <br/><field name="sale_selectable" string="Sales Order Lines"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_template_view_form_inherit_sale" model="ir.ui.view">
+            <field name="name">product.template.inherit.form</field>
+            <field name="inherit_id" ref="sale.product_template_form_view_sale_order_button"/>
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_view_sales']" position="replace" />
+            </field>
+        </record>
+
+        <record id="product_template_view_form_inherit_stock" model="ir.ui.view">
+            <field name="name">product.template.inherit.form</field>
+            <field name="inherit_id" ref="stock.product_template_form_view_procurement_button"/>
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+                <button name="action_view_orderpoints" position="after">
+                    <button class="oe_stat_button" name="action_view_sales"
+                        type="object" icon="fa-signal" attrs="{'invisible': [('sale_ok', '=', False)]}"
+                        groups="sales_team.group_sale_salesman" help="Sold in the last 365 days">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="sales_count" widget="statinfo" nolabel="1" class="mr4"/>
+                                <field name="uom_name"/>
+                            </span>
+                            <span class="o_stat_text">Sold</span>
+                        </div>
+                    </button>
+                </button>
+            </field>
+        </record>
+    </data>
+</odoo>
