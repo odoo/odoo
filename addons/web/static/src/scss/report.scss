@@ -30,18 +30,6 @@ body {
     page-break-inside: avoid;
 }
 
-/* Avoid flex removing vertical margin */
-div.address.row {
-    display: block;
-}
-
-/* margin-top does not work on first visible element of page */
-body:not([onload="subst()"]) > *:first-child::before {
-    content: '\00a0';
-    display: block;
-    height: 1px;
-}
-
 /* Wkhtmltopdf doesn't support very well the media-print CSS (depends on the version) */
 .d-print-none{
     display: none;
