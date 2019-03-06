@@ -280,25 +280,25 @@ var ProductConfiguratorMixin = {
     },
 
     /**
-     * Will return a deferred:
+     * Will return a promise:
      *
      * - If the product already exists, immediately resolves it with the product_id
      * - If the product does not exist yet ("dynamic" variant creation), this method will
-     *   create the product first and then resolve the deferred with the created product's id
+     *   create the product first and then resolve the promise with the created product's id
      *
      * @param {$.Element} $container the container to look into
      * @param {integer} productId the product id
      * @param {integer} productTemplateId the corresponding product template id
      * @param {boolean} useAjax wether the rpc call should be done using ajax.jsonRpc or using _rpc
-     * @returns {$.Deferred} the deferred that will be resolved with a {integer} productId
+     * @returns {Promise} the promise that will be resolved with a {integer} productId
      */
     selectOrCreateProduct: function ($container, productId, productTemplateId, useAjax) {
         var self = this;
         productId = parseInt(productId);
         productTemplateId = parseInt(productTemplateId);
-        var productReady = $.Deferred();
+        var productReady = Promise.resolve();
         if (productId) {
-            productReady.resolve(productId);
+            productReady = Promise.resolve(productId);
         } else {
             var params = {
                 product_template_id: productTemplateId,
