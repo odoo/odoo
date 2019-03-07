@@ -12,7 +12,7 @@ tour.register('shop_sale_coupon', {
     [
         {
             content: "open customize menu",
-            extra_trigger: '.oe_website_sale .o_website_sale_search',
+            extra_trigger: '.oe_website_sale .o_wsale_products_searchbar_form',
             trigger: '#customize-menu > a',
         },
         {
