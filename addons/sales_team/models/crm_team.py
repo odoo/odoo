@@ -27,19 +27,10 @@ class CrmTeam(models.Model):
         company_id = self.sudo(user_id).env.user.company_id.id
         team_id = self.env['crm.team'].sudo().search([
             '|', ('user_id', '=', user_id), ('member_ids', '=', user_id),
-            '|', ('company_id', '=', False), ('company_id', 'child_of', [company_id])
+            '|', ('company_id', '=', False), ('company_id', 'child_of', [company_id]), ('use_opportunities', '=', True)
         ], limit=1)
         if not team_id and 'default_team_id' in self.env.context:
             team_id = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
-        if not team_id:
-            default_team_id = self.env.ref('sales_team.team_sales_department', raise_if_not_found=False)
-            if default_team_id:
-                try:
-                    default_team_id.check_access_rule('read')
-                except AccessError:
-                    return self.env['crm.team']
-                if self.env.context.get('default_type') != 'lead' and default_team_id.active:
-                    team_id = default_team_id
         return team_id
 
 
