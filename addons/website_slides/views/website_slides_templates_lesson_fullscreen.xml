@@ -8,20 +8,14 @@
 
             <div class="o_wslides_slide_fs_header d-flex flex-shrink-0 text-white">
                 <div class="d-flex">
-                    <a class="o_wslides_fs_toggle_sidebar d-flex align-items-center px-3" href="#" title="Lessons">
+                    <a class="o_wslides_fs_toggle_sidebar d-flex align-items-center px-3 active" href="#" title="Lessons">
                         <i class="fa fa-bars"/><span class="d-none d-md-inline-block ml-1">Lessons</span>
                     </a>
                     <a class="o_wslides_fs_review d-flex align-items-center px-3" t-att-href="slide.channel_id.website_url" title="Reviews" t-if="slide.channel_id.allow_comment">
                         <i class="fa fa-pencil"/><span class="d-none d-md-inline-block ml-1">Write a review</span>
                     </a>
                 </div>
-                <div class="o_wslides_fs_slide_title flex-grow-1 d-flex align-items-center px-2 px-md-3">
-                    <t t-call="website_slides.slide_icon">
-                        <t t-set="icon_class" t-value="'mr-2 text'"/>
-                    </t>
-                    <span class="o_wslides_fs_slide_title_span" t-esc="slide.name"/>
-                </div>
-                <div class="d-flex">
+                <div class="d-flex ml-auto">
                     <a class="d-flex align-items-center px-3" t-attf-href="/slides/#{slug(slide.channel_id)}">
                         <i class="fa fa-sign-out d-md-none"/><span class="d-none d-md-inline-block ml-1">Back to course</span>
                     </a>
@@ -70,19 +64,14 @@
 
 
 <template id="slide_fullscreen_sidebar_category" name="Slides category template for fullscreen view side bar">
-    <li class="o_wslides_fs_sidebar_section py-2 px-3 mb-2">
-        <a class="text-uppercase text-500 py-1 small d-block" t-attf-id="category-collapse-#{category.id if category else 0}" data-toggle="collapse" role="button" aria-expanded="true" t-att-href="('#collapse-%s') % (category.id if category else 0)" t-attf-aria-controls="collapse-#{category.id if category else 0}">
-            <t t-if="category">
-                <b t-field="category.name"/>
-            </t>
-            <t t-else="">
-                <b >Uncategorized</b>
-            </t>
+    <li class="o_wslides_fs_sidebar_section py-2 px-3">
+        <a t-if="category" class="text-uppercase text-500 py-1 small d-block" t-attf-id="category-collapse-#{category.id if category else 0}" data-toggle="collapse" role="button" aria-expanded="true" t-att-href="('#collapse-%s') % (category.id if category else 0)" t-attf-aria-controls="collapse-#{category.id if category else 0}">
+            <b t-field="category.name"/>
         </a>
         <ul class="o_wslides_fs_sidebar_section_slides collapse show position-relative px-0 pb-1 my-0 mx-n3" t-att-id="('collapse-%s') % (category.id if category else 0)">
             <t t-foreach="slides" t-as="slide">
                 <t t-set="slide_completed" t-value="channel_progress[slide.id].get('completed')"/>
-                <li t-att-class="'o_wslides_fs_sidebar_list_item d-flex align-items-top py-2 %s text-truncate' % ('active' if slide.id == current_slide.id else '')"
+                <li t-att-class="'o_wslides_fs_sidebar_list_item d-flex align-items-top py-1 %s' % ('active' if slide.id == current_slide.id else '')"
                     t-att-data-id="slide.id"
                     t-att-data-name="slide.name"
                     t-att-data-type="slide.slide_type"
@@ -93,17 +82,13 @@
                     t-att-data-embed-code="slide.embed_code if slide.slide_type in ['video', 'document', 'presentation', 'infographic'] else False"
                     t-att-data-readonly="not channel_progress[slide.id]"
                     >
-                    <span class="ml-3 pt-1">
-                        <i t-if="not slide_completed" class="fa fa-circle-thin overflow-hidden d-flex align-items-center justify-content-center" t-att-data-slide-id="slide.id"/>
-                        <i t-if="slide_completed" class="o_wslides_slide_completed fa fa-check-circle rounded-circle text-success bg-white border border-success overflow-hidden d-flex align-items-center justify-content-center" t-att-data-slide-id="slide.id"/>
+                    <span class="ml-3">
+                        <i t-if="slide_completed" class="o_wslides_slide_completed fa fa-check fa-fw text-success" t-att-data-slide-id="slide.id"/>
+                        <i t-else="" class="fa fa-circle-thin fa-fw" t-att-data-slide-id="slide.id"/>
                     </span>
                     <div class="ml-2">
                         <a class="d-block pt-1" href="#">
                             <div class="d-flex ">
-                                <t t-call="website_slides.slide_icon">
-                                    <t t-set="icon_class" t-value="'mr-1 fw-fw'"/>
-                                    <t t-set="slide" t-value="slide"/>
-                                </t>
                                 <div class="o_wslides_fs_slide_name" t-esc="slide.name"/>
                             </div>
                         </a>
