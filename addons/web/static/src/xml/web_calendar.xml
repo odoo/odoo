@@ -17,23 +17,31 @@
         </div>
     </t>
 
-    <t t-name="CalendarView.event.popover">
-        <div t-attf-class="o_cw_popover popover card shadow #{typeof color === 'number' ? 'o_calendar_color_'+color : ''}" role="tooltip">
+    <t t-name="CalendarView.event.popover.placeholder">
+        <div t-attf-class="o_cw_popover popover card shadow #{typeof color === 'number' ? _.str.sprintf('o_calendar_color_%s', color) : ''}" role="tooltip">
             <div class="arrow"/>
             <div class="card-header d-flex justify-content-between py-2 pr-2">
-                <!-- Popover title is computed in JS -->
                 <h4 class="popover-header border-0 p-0 pt-1"/>
                 <span class="o_cw_popover_close ml-4"><i class="fa fa-close small"/></span>
             </div>
+            <div class="o_cw_body">
+                <div class="py-4 text-center">
+                    <i class="fa fa-spinner fa-spin fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </t>
 
+    <t t-name="CalendarView.event.popover">
+        <div class="o_cw_body">
             <ul class="list-group list-group-flush">
-                <li class="list-group-item" t-if="!hideDate and eventDate.date">
+                <li class="list-group-item" t-if="!widget.hideDate and widget.eventDate.date">
                     <i class="fa fa-fw fa-calendar-o"/>
-                    <b class="text-capitalize" t-esc="eventDate.date"/> <small t-if="eventDate.duration"><b t-esc="'(' + eventDate.duration + ')'"/></small>
+                    <b class="text-capitalize" t-esc="widget.eventDate.date"/> <small t-if="widget.eventDate.duration"><b t-esc="_.str.sprintf('(%s)', widget.eventDate.duration)"/></small>
                 </li>
-                <li class="list-group-item" t-if="!hideTime and eventTime.time">
+                <li class="list-group-item" t-if="!widget.hideTime and widget.eventTime.time">
                     <i class="fa fa-fw fa-clock-o"/>
-                    <b t-esc="eventTime.time"/> <small t-if="eventTime.duration"><b t-esc="'(' + eventTime.duration + ')'"/></small>
+                    <b t-esc="widget.eventTime.time"/> <small t-if="widget.eventTime.duration"><b t-esc="_.str.sprintf('(%s)', widget.eventTime.duration)"/></small>
                 </li>
             </ul>
 

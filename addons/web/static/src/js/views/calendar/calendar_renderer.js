@@ -168,8 +168,115 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
     },
 });
 
-return AbstractRenderer.extend(StandaloneFieldManagerMixin, {
+var CalendarPopover = Widget.extend(StandaloneFieldManagerMixin, {
+    template: 'CalendarView.event.popover',
+    events: {
+        'click .o_cw_popover_edit': '_onClickPopoverEdit',
+        'click .o_cw_popover_delete': '_onClickPopoverDelete',
+    },
+    init: function (parent, context) {
+        this._super.apply(this, arguments);
+        StandaloneFieldManagerMixin.init.call(this);
+
+        this.hideDate = context.hideDate;
+        this.hideTime = context.hideTime;
+        this.color = context.color;
+        this.eventTime = context.eventTime;
+        this.eventDate = context.eventDate;
+        this.displayFields = context.displayFields;
+        this.fields = context.fields;
+        this.event = context.event;
+    },
+    willStart: function () {
+        var self = this;
+        var defs = [this._super.apply(this, arguments)];
+        this.$fieldsList = [];
+        defs.push(this._processFields().then(function ($fieldsList) {
+            self.$fieldsList = $fieldsList;
+        }));
+        return $.when.apply($, defs);
+    },
+    start: function () {
+        var self = this;
+        _.each(this.$fieldsList, function ($field) {
+            $field.appendTo(self.$('.o_cw_popover_fields_secondary'));
+        });
+        return this._super.apply(this, arguments);
+    },
+    _processFields: function () {
+        var self = this;
+        var fields = [];
+        _.each(this.displayFields, function (displayField) {
+            var fieldInfo = self.fields[displayField.name];
+            var field = {
+                name: displayField.name,
+                string: displayField.string || fieldInfo.string,
+                value: self.event.record[displayField.name],
+                type: fieldInfo.type,
+            };
+            if (field.type === 'selection') {
+                field.selection = fieldInfo.selection;
+            }
+            if (fieldInfo.relation) {
+                field.relation = fieldInfo.relation;
+            }
+            if (displayField.widget) {
+                field.widget = displayField.widget;
+            } else if (_.contains(['many2many', 'one2many'], field.type)) {
+                field.widget = 'many2many_tags';
+            }
+            if (_.contains(['many2many', 'one2many'], field.type)) {
+                field.fields = [{
+                    name: 'id',
+                    type: 'integer',
+                }, {
+                    name: 'display_name',
+                    type: 'char',
+                }];
+            }
+            fields.push(field);
+        });
+
+        return this.model.makeRecord(this.model, fields).then(function (recordID) {
+            var defs = [];
+            var $fieldsList = [];
+            var record = self.model.get(recordID);
+            _.each(fields, function (field) {
+                var FieldClass = fieldRegistry.getAny([field.widget, field.type]);
+                var fieldWidget = new FieldClass(self, field.name, record);
+
+                var $field = $('<li>', {class: 'list-group-item flex-shrink-0 d-flex flex-wrap'});
+                var $fieldLabel = $('<strong>', {class: 'mr-2', text: field.string + ' : '});
+                $fieldLabel.appendTo($field);
+                var $fieldContainer = $('<div>', {class: 'flex-grow-1'});
+                $fieldContainer.appendTo($field);
+
+                defs.push(fieldWidget.appendTo($fieldContainer).then(function () {
+                    $fieldsList.push($field);
+                }));
+            });
+            return $.when.apply($, defs).then(function () {
+                return $fieldsList;
+            });
+        });
+    },
+    _onClickPopoverEdit: function () {
+        this.trigger_up('edit_event', {id: this.event.id});
+    },
+    _onClickPopoverDelete: function () {
+        this.trigger_up('delete_event', {id: this.event.id});
+    },
+});
+
+return AbstractRenderer.extend({
     template: "CalendarView",
+    config: {
+        CalendarPopover: CalendarPopover,
+    },
+    custom_events: _.extend({}, AbstractRenderer.prototype.custom_events || {}, {
+        edit_event: '_onEditEvent',
+        delete_event: '_onDeleteEvent',
+    }),
 
     /**
      * @constructor
@@ -179,7 +286,6 @@ return AbstractRenderer.extend(StandaloneFieldManagerMixin, {
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
-        StandaloneFieldManagerMixin.init.call(this);
         this.displayFields = params.displayFields;
         this.filters = [];
         this.color_map = {};
@@ -424,7 +530,9 @@ return AbstractRenderer.extend(StandaloneFieldManagerMixin, {
                 }
 
                 // On double click, edit the event
-                element.on('dblclick', self._onClickEditEvent.bind(self, event));
+                element.on('dblclick', function () {
+                    self.trigger_up('edit_event', {id: event.id});
+                });
             },
             viewRender: function (view) {
                 // compute mode from view.name which is either 'month', 'agendaWeek' or 'agendaDay'
@@ -601,17 +709,18 @@ return AbstractRenderer.extend(StandaloneFieldManagerMixin, {
      * @param {Object} event
      * @returns {string} The popover template
      */
-    _getEventPopoverTemplate: function (eventData) {
+    _getPopoverContext: function (eventData) {
         var context = {
             hideDate: this.hideDate,
             hideTime: this.hideTime,
             color: this.getColor(eventData.color_index),
             eventTime: {},
             eventDate: {},
+
             fields: this.state.fields,
             displayFields: this.displayFields,
-
-            // event: eventData,
+            event: eventData,
+            // TODO: Remove this
             // format: this._format.bind(this),
             // record: eventData.record,
             // widget: this,
@@ -660,7 +769,7 @@ return AbstractRenderer.extend(StandaloneFieldManagerMixin, {
             }
         }
 
-        return qweb.render('CalendarView.event.popover', context);
+        return context;
     },
     /**
      * Render event popover
@@ -671,6 +780,7 @@ return AbstractRenderer.extend(StandaloneFieldManagerMixin, {
      */
     _renderEventPopover: function (eventData, $eventElement) {
         var self = this;
+        var context = this._getPopoverContext(eventData);
         $eventElement.popover({
             animation: false,
             delay: {
@@ -680,54 +790,15 @@ return AbstractRenderer.extend(StandaloneFieldManagerMixin, {
             trigger: 'manual',
             html: true,
             title: eventData.record.display_name,
-            template: this._getEventPopoverTemplate(eventData),
+            template: qweb.render('CalendarView.event.popover.placeholder', {color: context.color}),
             container: eventData.allDay ? '.fc-view' : '.fc-scroller',
         }).on('shown.bs.popover', function () {
             var $popover = $($(this).data('bs.popover').tip);
             $popover.find('.o_cw_popover_close').on('click', self._unselectEvents.bind(self));
-            $popover.find('.o_cw_popover_edit').on('click', self._onClickEditEvent.bind(self, eventData));
-            $popover.find('.o_cw_popover_delete').on('click', self._onClickDeleteEvent.bind(self, eventData));
+
+            var calendarPopover = new self.config.CalendarPopover(self, context);
+            calendarPopover.replace($popover.find('.o_cw_body'));
         }).popover('show');
-
-        // var fields = [];
-        // _.each(this.displayFields, function (displayField) {
-        //     var fieldInfo = self.state.fields[displayField.name];
-        //     var field = {
-        //         name: displayField.name,
-        //         value: eventData.record[displayField.name],
-        //         type: fieldInfo.type,
-        //     };
-        //     if (field.type === 'selection') {
-        //         field.selection = fieldInfo.selection;
-        //     }
-        //     if (fieldInfo.relation) {
-        //         field.relation = fieldInfo.relation;
-        //     }
-        //     if (displayField.widget) {
-        //         field.widget = displayField.widget;
-        //     } else if (field.type === 'many2many' || field.type === 'one2many') {
-        //         field.widget = 'many2many_tags';
-        //     }
-        //     if (field.type === 'many2many' || field.type === 'one2many') {
-        //         field.fields = [{
-        //             name: 'id',
-        //             type: 'integer',
-        //         }, {
-        //             name: 'display_name',
-        //             type: 'char',
-        //         }];
-        //     }
-        //     fields.push(field);
-        // });
-
-        // this.model.makeRecord(this.model, fields).then(function (recordID) {
-        //     var record = self.model.get(recordID);
-        //     _.each(fields, function (field) {
-        //         var FieldClass = fieldRegistry.getAny([field.widget, field.type]);
-        //         var fieldWidget = new FieldClass(self, field.name, record);
-        //         fieldWidget.appendTo($($eventElement.data('bs.popover').tip).find('.o_cw_popover_fields_secondary'));
-        //     });
-        // });
     },
     /**
      * Remove highlight classes and dispose of popovers
@@ -738,30 +809,21 @@ return AbstractRenderer.extend(StandaloneFieldManagerMixin, {
         this.$('.fc-event').removeClass('o_cw_custom_highlight');
         this.$('.o_cw_popover').popover('dispose');
     },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
     /**
-     * Delete record when the delete button is clicked in the popover
-     *
      * @private
-     * @param {Object} eventData
+     * @param {OdooEvent} event
      */
-    _onClickDeleteEvent: function (eventData) {
+    _onEditEvent: function (event) {
         this._unselectEvents();
-        this.trigger_up('deleteRecord', eventData);
+        this.trigger_up('openEvent', {_id: event.data.id});
     },
     /**
-     * Open record when the edit button is clicked in the popover
-     *
      * @private
-     * @param {Object} eventData
+     * @param {OdooEvent} event
      */
-    _onClickEditEvent: function (eventData) {
+    _onDeleteEvent: function (event) {
         this._unselectEvents();
-        this.trigger_up('openEvent', eventData);
+        this.trigger_up('deleteRecord', {id: event.data.id});
     },
 });
 
