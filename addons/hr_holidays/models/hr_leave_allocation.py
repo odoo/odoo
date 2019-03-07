@@ -251,7 +251,7 @@ class HolidaysAllocation(models.Model):
             if self.env.user.employee_ids:
                 self.department_id = self.department_id or self.env.user.employee_ids[0].department_id
             self.employee_id = None
-        elif self.holiday_type == 'category':
+        else:
             self.employee_id = None
             self.department_id = None
 
