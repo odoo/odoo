@@ -34,5 +34,5 @@ Belgian Payroll Rules.
     'demo':[
         'data/l10n_be_hr_payroll_demo.xml'
     ],
-    'auto_install': True,
+    'auto_install': False,
 }
