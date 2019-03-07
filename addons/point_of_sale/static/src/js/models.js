@@ -2281,12 +2281,12 @@ exports.Order = Backbone.Model.extend({
         var company = this.pos.company;
         var date    = new Date();
 
-        function is_xml(subreceipt){
+        function is_html(subreceipt){
             return subreceipt ? (subreceipt.split('\n')[0].indexOf('<!DOCTYPE QWEB') >= 0) : false;
         }
 
-        function render_xml(subreceipt){
-            if (!is_xml(subreceipt)) {
+        function render_html(subreceipt){
+            if (!is_html(subreceipt)) {
                 return subreceipt;
             } else {
                 subreceipt = subreceipt.split('\n').slice(1).join('\n');
@@ -2343,16 +2343,16 @@ exports.Order = Backbone.Model.extend({
             currency: this.pos.currency,
         };
 
-        if (is_xml(this.pos.config.receipt_header)){
+        if (is_html(this.pos.config.receipt_header)){
             receipt.header = '';
-            receipt.header_xml = render_xml(this.pos.config.receipt_header);
+            receipt.header_html = render_html(this.pos.config.receipt_header);
         } else {
             receipt.header = this.pos.config.receipt_header || '';
         }
 
-        if (is_xml(this.pos.config.receipt_footer)){
+        if (is_html(this.pos.config.receipt_footer)){
             receipt.footer = '';
-            receipt.footer_xml = render_xml(this.pos.config.receipt_footer);
+            receipt.footer_html = render_html(this.pos.config.receipt_footer);
         } else {
             receipt.footer = this.pos.config.receipt_footer || '';
         }

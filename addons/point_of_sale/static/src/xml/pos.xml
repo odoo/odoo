@@ -748,25 +748,25 @@
         </div>
     </t>
 
-    <t t-name="XmlReceiptWrappedProductNameLines">
+    <t t-name="OrderReceiptWrappedProductNameLines">
         <t t-foreach="line.product_name_wrapped.slice(1)" t-as="wrapped_line">
-            <line>
-                <left><t t-esc="wrapped_line"/></left>
-            </line>
+            <t t-esc="wrapped_line"/>
         </t>
     </t>
 
-    <t t-name="XmlReceipt">
-        <receipt align='center' width='40' value-thousands-separator='' >
+    <t t-name="OrderReceipt">
+        <div class="pos-receipt">
             <t t-if='receipt.company.logo'>
-                <img t-att-src='receipt.company.logo' alt="Logo"/>
+                <img class="pos-receipt-logo" t-att-src='receipt.company.logo' alt="Logo"/>
                 <br/>
             </t>
             <t t-if='!receipt.company.logo'>
-                <h1><t t-esc='receipt.company.name' /></h1>
+                <h2 class="pos-receipt-center-align">
+                    <t t-esc='receipt.company.name' />
+                </h2>
                 <br/>
             </t>
-            <div font='b'>
+            <div class="pos-receipt-contact">
                 <t t-if='receipt.company.contact_address'>
                     <div><t t-esc='receipt.company.contact_address' /></div>
                 </t>
@@ -782,10 +782,10 @@
                 <t t-if='receipt.company.website'>
                     <div><t t-esc='receipt.company.website' /></div>
                 </t>
-                <t t-if='receipt.header_xml'>
-                    <t t-raw='receipt.header_xml' />
+                <t t-if='receipt.header_html'>
+                    <t t-raw='receipt.header_html' />
                 </t>
-                <t t-if='!receipt.header_xml and receipt.header'>
+                <t t-if='!receipt.header_html and receipt.header'>
                     <div><t t-esc='receipt.header' /></div>
                 </t>
                 <t t-if='receipt.cashier'>
@@ -799,69 +799,50 @@
 
             <!-- Orderlines -->
 
-            <div class='orderlines' line-ratio='0.6'>
+            <div class='orderlines'>
                 <t t-foreach='receipt.orderlines' t-as='line'>
                     <t t-set='simple' t-value='(line.discount === 0 and line.unit_name === "Units" and line.quantity === 1 and !discount_to_show and !(line.display_discount_policy == "without_discount" &amp;&amp; line.price != line.price_lst))' />
                     <t t-if='simple'>
-                        <line>
-                            <left><t t-esc='line.product_name_wrapped[0]' /></left>
-                            <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='line.price_display' /></value></right>
-                        </line>
-                        <t t-call="XmlReceiptWrappedProductNameLines"/>
+                        <div>
+                            <t t-esc='line.product_name_wrapped[0]' />
+                            <span t-esc='widget.format_currency_no_symbol(line.price_display)' class="price_display pos-receipt-right-align"/>
+                        </div>
+                        <t t-call="OrderReceiptWrappedProductNameLines"/>
                     </t>
                     <t t-if='!simple'>
-                        <line><left><t t-esc='line.product_name_wrapped[0]' /></left></line>
-                        <t t-call="XmlReceiptWrappedProductNameLines"/>
+                        <div t-esc='line.product_name_wrapped[0]'/>
+                        <t t-call="OrderReceiptWrappedProductNameLines"/>
                         <t t-if="line.display_discount_policy == 'without_discount' &amp;&amp; line.price != line.price_lst">
-                            <line indent='1'>
-                                <left>
-                                    <value t-att-value-decimals='pos.dp["Product Price"]'>
-                                        <t t-esc="line.price_lst" />
-                                    </value> ->
-                                    <value t-att-value-decimals='pos.dp["Product Price"]'>
-                                        <t t-esc="line.price" />
-                                    </value>
-                                </left>
-                            </line>
+                            <div class="pos-receipt-left-padding">
+                                <t t-esc="widget.format_currency_no_symbol(line.price_lst)" /> 
+                                ->
+                                <t t-esc="widget.format_currency_no_symbol(line.price)" />
+                            </div>
                         </t>
                         <t t-elif='line.discount !== 0'>
-                            <line indent='1'>
-                                <left>
-                                    <value t-att-value-decimals='pos.dp["Product Price"]'>
-                                        <t t-if="pos.config.iface_tax_included === 'total'">
-                                            <t t-esc="line.price_with_tax_before_discount" />
-                                        </t>
-                                        <t t-else="">
-                                            <t t-esc="line.price_lst" />
-                                        </t>
-                                    </value>
-                                </left>
-                            </line>
+                            <div class="pos-receipt-left-padding">
+                                <t t-if="pos.config.iface_tax_included === 'total'">
+                                    <t t-esc="widget.format_currency_no_symbol(line.price_with_tax_before_discount)"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-esc="widget.format_currency_no_symbol(line.price_lst)"/>
+                                </t>
+                            </div>
                         </t>
                         <t t-if='line.discount !== 0'>
-                            <line indent='1'>
-                                <left>
-                                    Discount: <t t-esc='line.discount' />%
-                                </left>
-                            </line>
+                            <div class="pos-receipt-left-padding">
+                                Discount: <t t-esc='line.discount' />%
+                            </div>
                         </t>
-                        <line indent='1'>
-                            <left>
-                                <value t-att-value-decimals='pos.dp["Product Unit of Measure"]' value-autoint='on'>
-                                    <t t-esc='line.quantity' />
-                                </value>
-                                <t t-if='line.unit_name !== "Units"'>
-                                    <t t-esc='line.unit_name' />
-                                </t>
-                                x
-                                <value t-att-value-decimals='pos.dp["Product Price"]'>
-                                    <t t-esc='line.price_display_one' />
-                                </value>
-                            </left>
-                            <right>
-                                <value t-att-value-decimals='pos.currency.decimals'><t t-esc='line.price_display' /></value>
-                            </right>
-                        </line>
+                        <div class="pos-receipt-left-padding">
+                            <t t-esc="Math.round(line.quantity * Math.pow(10, pos.dp['Product Unit of Measure'])) / Math.pow(10, pos.dp['Product Unit of Measure'])"/>
+                            <t t-if='line.unit_name !== "Units"' t-esc='line.unit_name'/>
+                            x
+                            <t t-esc='widget.format_currency_no_symbol(line.price_display_one)' />
+                            <span class="price_display pos-receipt-right-align">
+                                <t t-esc='widget.format_currency_no_symbol(line.price_display)'/>
+                            </span>
+                        </div>
                     </t>
                 </t>
             </div>
@@ -870,168 +851,160 @@
 
             <t t-set='taxincluded' t-value='Math.abs(receipt.subtotal - receipt.total_with_tax) &lt;= 0.000001' />
             <t t-if='!taxincluded'>
-                <line><right>--------</right></line>
-                <line><left>Subtotal</left><right><value t-att-value-decimals='pos.currency.decimals'><t t-esc="receipt.subtotal" /></value></right></line>
+                <div class="pos-receipt-right-align">--------</div>
+                <br/>
+                <div>Subtotal<span t-esc='widget.format_currency_no_symbol(receipt.subtotal)' class="pos-receipt-right-align"/></div>
                 <t t-foreach='receipt.tax_details' t-as='tax'>
-                    <line>
-                        <left><t t-esc='tax.name' /></left>
-                        <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='tax.amount' /></value></right>
-                    </line>
+                    <div>
+                        <t t-esc='tax.name' />
+                        <span t-esc='widget.format_currency_no_symbol(tax.amount)' class="pos-receipt-right-align"/>
+                    </div>
                 </t>
             </t>
 
             <!-- Total -->
-
-            <line><right>--------</right></line>
-            <line class='total' size='double-height'>
-                <left><pre>        TOTAL</pre></left>
-                <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='receipt.total_with_tax' /></value></right>
-            </line>
+            <div class="pos-receipt-right-align">--------</div>
+            <br/>
+            <div class="pos-receipt-amount">
+                TOTAL
+                <span t-esc='widget.format_currency_no_symbol(receipt.total_with_tax)' class="pos-receipt-right-align"/>
+            </div>
             <br/><br/>
 
             <!-- Payment Lines -->
 
             <t t-foreach='paymentlines' t-as='line'>
-                <line>
-                    <left><t t-esc='line.name' /></left>
-                    <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='line.get_amount()'/></value></right>
-                </line>
+                <div>
+                    <t t-esc='line.name' />
+                    <span t-esc='widget.format_currency_no_symbol(line.get_amount())' class="pos-receipt-right-align"/>
+                </div>
             </t>
             <br/>
 
-            <line size='double-height'>
-                <left><pre>        CHANGE</pre></left>
-                <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='receipt.change' /></value></right>
-            </line>
+            <div class="pos-receipt-amount">
+                CHANGE
+                <span t-esc='widget.format_currency_no_symbol(receipt.change)' class="pos-receipt-right-align"/>
+            </div>
             <br/>
 
             <!-- Extra Payment Info -->
 
             <t t-if='receipt.total_discount'>
-                <line>
-                    <left>Discounts</left>
-                    <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='receipt.total_discount'/></value></right>
-                </line>
+                <div>
+                    Discounts
+                    <span t-esc='widget.format_currency_no_symbol(receipt.total_discount)' class="pos-receipt-right-align"/>
+                </div>
             </t>
             <t t-if='taxincluded'>
                 <t t-foreach='receipt.tax_details' t-as='tax'>
-                    <line>
-                        <left><t t-esc='tax.name' /></left>
-                        <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='tax.amount' /></value></right>
-                    </line>
+                    <div>
+                        <t t-esc='tax.name' />
+                        <span t-esc='widget.format_currency_no_symbol(tax.amount)' class="pos-receipt-right-align"/>
+                    </div>
                 </t>
-                <line>
-                    <left>Total Taxes</left>
-                    <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='receipt.total_tax'/></value></right>
-                </line>
+                <div>
+                    Total Taxes
+                    <span t-esc='widget.format_currency_no_symbol(receipt.total_tax)' class="pos-receipt-right-align"/>
+                </div>
             </t>
 
             <div class='before-footer' />
 
             <!-- Footer -->
-            <t t-if='receipt.footer_xml'>
-                <t t-raw='receipt.footer_xml' />
-            </t>
+            <div t-if='receipt.footer_html'  class="pos-receipt-center-align">
+                <t t-raw='receipt.footer_html'/>
+            </div>
 
-            <t t-if='!receipt.footer_xml and receipt.footer'>
+            <div t-if='!receipt.footer_html and receipt.footer'  class="pos-receipt-center-align">
                 <br/>
-                <t t-esc='receipt.footer' />
+                <t t-esc='receipt.footer'/>
                 <br/>
                 <br/>
-            </t>
+            </div>
 
             <div class='after-footer' />
 
             <br/>
-            <div font='b'>
+            <div class="pos-receipt-order-data">
                 <div><t t-esc='receipt.name' /></div>
                 <div><t t-esc='receipt.date.localestring' /></div>
             </div>
 
-        </receipt>
+        </div>
     </t>
 
     <t t-name="SaleDetailsReport">
-        <receipt align='center' width='40' value-thousands-separator='' >
+        <div class="pos-receipt">
             <t t-if='pos.company_logo_base64'>
-                <img t-att-src='pos.company_logo_base64' alt="Logo"/>
+                <img class="pos-receipt-logo" t-att-src='pos.company_logo_base64' alt="Logo"/>
                 <br/>
             </t>
-            <t t-if='!pos.company_logo_base64'>
-                <h1><t t-esc='company.name' /></h1>
+            <t t-if='!pos.company_logo_base64' class="pos-receipt-center-align">
+                <h1 t-esc='company.name' />
                 <br/>
             </t>
             <br /><br />
 
             <!-- Orderlines -->
 
-            <div class='orderlines' line-ratio='0.6'>
+            <div class='orderlines'>
                 <t t-foreach='products' t-as='line'>
-                    <line>
-                        <left><t t-esc='line.product_name.substr(0,20)' /></left>
-                        <right>
-                            <value value-decimals='2' value-autoint='on'>
-                                <t t-esc='line.quantity' />
-                            </value>
+                    <div>
+                        <t t-esc='line.product_name.substr(0,20)' />
+                        <span class="pos-receipt-right-align">
+                            <t t-esc='Math.round(line.quantity * Math.pow(10, pos.dp["Product Unit of Measure"])) / Math.pow(10, pos.dp["Product Unit of Measure"])' />
                             <t t-if='line.uom !== "Units"'>
                                 <t t-esc='line.uom' />
                             </t>
-                        </right>
-                        <right>
-                            <value><t t-esc='line.price_unit' /></value>
-                        </right>
-                    </line>
+                            x
+                            <t t-esc='widget.format_currency_no_symbol(line.price_unit)' />
+                        </span>
+                    </div>
                     <t t-if='line.discount !== 0'>
-                        <line indent='1'><left>Discount: <t t-esc='line.discount' />%</left></line>
+                        <div class="pos-receipt-left-padding">Discount: <t t-esc='line.discount' />%</div>
                     </t>
                 </t>
             </div>
 
             <br/>
-            <line><left>------------------------</left></line>
+            <div>------------------------</div>
             <br/>
 
-            <line>
-                <left>Payments:</left>
-            </line>
-            <line t-foreach='payments' t-as='payment'>
-                <left><t t-esc='payment.name' /></left>
-                <right>
-                    <t t-esc='widget.format_currency_no_symbol(payment.total)'/>
-                </right>
-            </line>
+            <div>
+                Payments:
+            </div>
+            <div t-foreach='payments' t-as='payment'>
+                <t t-esc='payment.name'/>
+                <span t-esc='widget.format_currency_no_symbol(payment.total)' class="pos-receipt-right-align"/>
+            </div>
 
             <br/>
-            <line><left>------------------------</left></line>
+            <div>------------------------</div>
             <br/>
 
-            <line>
-                <left>Taxes:</left>
-            </line>
-            <line t-foreach='taxes' t-as='taxe'>
-                <left><t t-esc='taxe.name' /></left>
-                <right>
-                    <t t-esc='widget.format_currency_no_symbol(taxe.tax_amount)'/>
-                </right>
-            </line>
+            <div>
+                Taxes:
+            </div>
+            <div t-foreach='taxes' t-as='taxe'>
+                <t t-esc='taxe.name'/>
+                <span t-esc='widget.format_currency_no_symbol(taxe.tax_amount)' class="pos-receipt-right-align"/>
+            </div>
 
             <br/>
-            <line><left>------------------------</left></line>
+            <div>------------------------</div>
             <br/>
 
-            <line>
-                <left>Total:</left>
-                <right>
-                    <t t-esc='widget.format_currency_no_symbol(total_paid)'/>
-                </right>
-            </line>
+            <div>
+                Total:
+                <span t-esc='widget.format_currency_no_symbol(total_paid)' class="pos-receipt-right-align"/>
+            </div>
 
             <br/>
-            <div font='b'>
+            <div class="pos-receipt-order-data">
                 <div><t t-esc='date' /></div>
             </div>
 
-        </receipt>
+        </div>
     </t>
 
 
@@ -1507,116 +1480,6 @@
         <span class="username">
             <t t-esc="widget.get_name()" />
         </span>
-    </t>
-
-    <t t-name="PosTicket">
-        <div class="pos-sale-ticket">
-
-            <div class="pos-center-align"><t t-esc="order.formatted_validation_date"/> <t t-esc="order.name"/></div>
-            <br />
-            <t t-esc="widget.pos.company.name"/><br />
-            <div class="receipt-phone">
-                Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
-            </div>
-            <div class="receipt-user">
-                User: <t t-esc="widget.pos.get_cashier().name"/><br />
-            </div>
-            <br />
-            <t t-if="receipt.header">
-                <div style='text-align:center'>
-                    <t t-esc="receipt.header" />
-                </div>
-                <br />
-            </t>
-            <table class='receipt-orderlines'>
-                <colgroup>
-                    <col width='50%' />
-                    <col width='25%' />
-                    <col width='25%' />
-                </colgroup>
-                <tr t-foreach="orderlines" t-as="orderline">
-                    <td>
-                        <t t-esc="orderline.get_product().display_name"/>
-                        <t t-if="orderline.display_discount_policy() == 'without_discount' &amp;&amp; 
-                            orderline.get_unit_display_price() != orderline.get_lst_price()">
-                            <div class="pos-disc-font">
-                                <s>
-                                    <t t-esc="widget.format_currency(orderline.get_lst_price(),'Product Price')"/>
-                                </s> ->
-                                <t t-esc="widget.format_currency(orderline.get_unit_display_price(),'Product Price')"/>
-                            </div>
-                        </t>
-                         <t t-if="orderline.get_discount() > 0">
-                            <div class="pos-disc-font">
-                                With a <t t-esc="orderline.get_discount()"/>% discount
-                            </div>
-                        </t>
-                    </td>
-                    <td class="pos-right-align">
-                        <t t-esc="orderline.get_quantity_str_with_unit()"/>
-                    </td>
-                    <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(orderline.get_display_price())"/>
-                    </td>
-                </tr>
-            </table>
-            <br />
-            <table class='receipt-total'>
-                <tr>
-                    <td>Subtotal:</td>
-                    <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.get_total_without_tax())"/>
-                    </td>
-                </tr>
-                <t t-foreach="order.get_tax_details()" t-as="taxdetail">
-                    <tr>
-                        <td><t t-esc="taxdetail.name" /></td>
-                        <td class="pos-right-align">
-                            <t t-esc="widget.format_currency(taxdetail.amount)" />
-                        </td>
-                    </tr>
-                </t>
-                <tr>
-                    <t t-if="order.get_total_discount() > 0">
-                        <td>Discount:</td>
-                        <td class="pos-right-align">
-                            <t t-esc="widget.format_currency(order.get_total_discount())"/>
-                        </td>
-                    </t>
-                </tr>
-                <tr class="emph">
-                    <td>Total:</td>
-                    <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.get_total_with_tax())"/>
-                    </td>
-                </tr>
-            </table>
-            <br />
-            <table class='receipt-paymentlines'>
-                <t t-foreach="paymentlines" t-as="line">
-                  <tr>
-                      <td>
-                          <t t-esc="line.name"/>
-                      </td>
-                      <td class="pos-right-align">
-                          <t t-esc="widget.format_currency(line.get_amount())"/>
-                      </td>
-                  </tr>
-                </t>
-            </table>
-            <br />
-            <table class='receipt-change'>
-                <tr><td>Change:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(order.get_change())"/>
-                    </td></tr>
-            </table>
-            <t t-if="receipt.footer">
-                <br />
-                <div style='text-align:center'>
-                    <t t-esc="receipt.footer" />
-                </div>
-            </t>
-        </div>
     </t>
 
     <!-- Onscreen Keyboard :

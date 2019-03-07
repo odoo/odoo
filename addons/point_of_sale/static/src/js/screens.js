@@ -1669,8 +1669,8 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         }
         this.pos.get_order()._printed = true;
     },
-    print_xml: function() {
-        var receipt = QWeb.render('XmlReceipt', this.get_receipt_render_env());
+    print_html: function () {
+        var receipt = QWeb.render('OrderReceipt', this.get_receipt_render_env());
 
         this.pos.proxy.printer.print_receipt(receipt);
         this.pos.get_order()._printed = true;
@@ -1703,8 +1703,8 @@ var ReceiptScreenWidget = ScreenWidget.extend({
             }, 1000);
 
             this.print_web();
-        } else {    // proxy (xml) printing
-            this.print_xml();
+        } else {    // proxy (html) printing
+            this.print_html();
             this.lock_screen(false);
         }
     },
@@ -1761,7 +1761,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         }
     },
     render_receipt: function() {
-        this.$('.pos-receipt-container').html(QWeb.render('PosTicket', this.get_receipt_render_env()));
+        this.$('.pos-receipt-container').html(QWeb.render('OrderReceipt', this.get_receipt_render_env()));
     },
 });
 gui.define_screen({name:'receipt', widget: ReceiptScreenWidget});
