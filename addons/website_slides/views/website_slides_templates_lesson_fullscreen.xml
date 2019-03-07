@@ -73,14 +73,14 @@
                 <li t-att-index="i" t-att-data-slide-id="course_slide.id" t-attf-class="#{'active' if slide.id == course_slide.id else ''}">
                     <span>
                         <span class="o_wslides_top_line"></span>
-                        <i t-attf-id="check-#{course_slide.id}" t-if="not course_slide.id in user_progress or not user_progress[course_slide.id].completed" class="check-done fa fa-circle-thin"></i>
-                        <i t-attf-id="check-#{course_slide.id}" t-if="course_slide.id in user_progress and user_progress[course_slide.id].completed" class="check-done o_wslides_slide_completed fa fa-check-circle"></i>
+                        <i t-attf-id="check-#{course_slide.id}" t-if="not channel_progress[course_slide.id].get('completed')" class="check-done fa fa-circle-thin"></i>
+                        <i t-attf-id="check-#{course_slide.id}" t-if="channel_progress[course_slide.id].get('completed')" class="check-done o_wslides_slide_completed fa fa-check-circle"></i>
                         <span class="o_wslides_bottom_line"></span>
                     </span>
                     <a t-att-index="i" t-att-data-slide-id="course_slide.id">
                         <div t-attf-index="#{i}"
                             t-att-data-slug="slug(course_slide)"
-                            t-att-data-done="course_slide.id in user_progress and user_progress[course_slide.id].completed"
+                            t-att-data-done="channel_progress[course_slide.id].get('completed')"
                             t-att-data-id="course_slide.id"
                             t-att-data-readonly="not course_slide.channel_id.is_member"
                             t-att-data-name="course_slide.name"

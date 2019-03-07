@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="slide_detail_view_inherit_survey" inherit_id="website_slides.slide_detail_view">
-            <xpath expr="//div[hasclass('o_w_slides_slide_detail_container')]/div[hasclass('row')]" position="before">
+        <template id="slide_content_detailed" inherit_id="website_slides.slide_content_detailed">
+            <xpath expr="//div[hasclass('o_wslides_lesson_content_type')]" position="inside">
                 <t t-if="not test_entry" t-set="begin_certification_label" t-value="'Begin certification'" />
                 <t t-if="test_entry" t-set="begin_certification_label" t-value="'Test certification'" />
                 <div t-if="slide.slide_type == 'certification' and not quizz_passed" class="mb8">

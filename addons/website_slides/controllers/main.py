@@ -68,13 +68,24 @@ class WebsiteSlides(WebsiteProfile):
         return True
 
     def _get_slide_detail(self, slide):
+        base_domain = request.website.website_domain()
         if slide.channel_id.channel_type == 'documentation':
-            most_viewed_slides = slide._get_most_viewed_slides(self.SLIDES_PER_ASIDE)
-            related_slides = slide._get_related_slides(self.SLIDES_PER_ASIDE)
-            uncategorized_slides = request.env['slide.slide']
+            base_domain = expression.AND([base_domain, [('website_published', '=', True), ('id', '!=', slide.id)]])
+            related_domain = expression.AND([base_domain, [('channel_id', '=', slide.channel_id.id)]])
+
+            most_viewed_slides = request.env['slide.slide'].search(base_domain, limit=self.SLIDES_PER_ASIDE, order='total_views desc')
+            related_slides = request.env['slide.slide'].search(related_domain, limit=self.SLIDES_PER_ASIDE)
+            uncategorized_slides, channel_slides = request.env['slide.slide'], request.env['slide.slide']
         else:
+            if slide.channel_id.can_publish:
+                related_domain = expression.AND([base_domain, [('channel_id', '=', slide.channel_id.id)]])
+            else:
+                related_domain = expression.AND([base_domain, [('channel_id', '=', slide.channel_id.id), ('website_published', '=', True)]])
+            channel_slides = request.env['slide.slide'].search(related_domain)
             most_viewed_slides, related_slides = request.env['slide.slide'], request.env['slide.slide']
-            uncategorized_slides = slide.channel_id.slide_ids.filtered(lambda slide: not slide.category_id)
+            # temporarily kept for fullscreen, to remove asap
+            uncategorized_domain = expression.AND([base_domain, [('channel_id', '=', slide.channel_id.id), ('category_id', '=', False)]])
+            uncategorized_slides = request.env['slide.slide'].search(uncategorized_domain)
 
         channel_slides_ids = slide.channel_id.slide_ids.ids
         slide_index = channel_slides_ids.index(slide.id)
@@ -89,9 +100,9 @@ class WebsiteSlides(WebsiteProfile):
             'previous_slide': previous_slide,
             'next_slide': next_slide,
             'uncategorized_slides': uncategorized_slides,
+            'channel_slides': channel_slides,
             # user
             'user': request.env.user,
-            'user_progress': self._get_user_progress(slide.channel_id)['user_progress'],
             'is_public_user': request.website.is_public_user(),
             # rating and comments
             'comments': slide.website_message_ids or [],
@@ -104,46 +115,15 @@ class WebsiteSlides(WebsiteProfile):
                 'message_post_pid': request.env.user.partner_id.id,
             })
 
-        if slide.question_ids:
-            values.update(self._get_slide_quiz_info(slide))
-
         return values
 
     def _get_slide_quiz_info(self, slide, quiz_done=False):
-        gains = [slide.quiz_first_attempt_reward,
-                 slide.quiz_second_attempt_reward,
-                 slide.quiz_third_attempt_reward,
-                 slide.quiz_fourth_attempt_reward]
-        result = {
-            'quiz_karma_max': gains[0],  # what could be gained if succeed at first try
-            'quiz_karma_gain': gains[0],  # what would be gained at next test
-            'quiz_karma_won': 0,  # what has been gained
-            'quiz_attempts_count': 0,  # number of attempts
-        }
-        if slide.user_membership_id:
-            if slide.user_membership_id.quiz_attempts_count:
-                result['quiz_karma_gain'] = gains[slide.user_membership_id.quiz_attempts_count] if slide.user_membership_id.quiz_attempts_count <= len(gains) else gains[-1]
-                result['quiz_attempts_count'] = slide.user_membership_id.quiz_attempts_count
-            if quiz_done or slide.user_membership_id.completed:
-                result['quiz_karma_won'] = gains[slide.user_membership_id.quiz_attempts_count-1] if slide.user_membership_id.quiz_attempts_count < len(gains) else gains[-1]
-        return result
+        return slide._compute_quiz_info(request.env.user.partner_id, quiz_done=quiz_done)[slide.id]
 
     # CHANNEL UTILITIES
     # --------------------------------------------------
 
-    def _get_user_progress(self, channel):
-        user_progress = {
-            slide_partner.slide_id.id: slide_partner
-            for slide_partner in request.env['slide.slide.partner'].sudo().search([
-                ('channel_id', '=', channel.id),
-                ('partner_id', '=', request.env.user.partner_id.id)
-            ])
-        }
-        return {
-            'user_progress': user_progress
-        }
-
-    def _get_channel_progress(self, channel):
+    def _get_channel_progress(self, channel, include_quiz=False):
         """ Replacement to user_progress. Both may exist in some transient state. """
         slides = request.env['slide.slide'].sudo().search([('channel_id', '=', channel.id)])
         channel_progress = dict((sid, dict()) for sid in slides.ids)
@@ -160,6 +140,11 @@ class WebsiteSlides(WebsiteProfile):
                              slide_partner.slide_id.quiz_third_attempt_reward,
                              slide_partner.slide_id.quiz_fourth_attempt_reward]
                     channel_progress[slide_partner.slide_id.id]['quiz_gain'] = gains[slide_partner.quiz_attempts_count] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
+
+        if include_quiz:
+            quiz_info = slides._compute_quiz_info(request.env.user.partner_id, quiz_done=False)
+            for slide_id, slide_info in quiz_info.items():
+                channel_progress[slide_id].update(slide_info)
 
         return channel_progress
 
@@ -531,11 +516,15 @@ class WebsiteSlides(WebsiteProfile):
         self._set_viewed_slide(slide)
 
         values = self._get_slide_detail(slide)
-        values['channel_progress'] = self._get_channel_progress(slide.channel_id)
+        # quiz-specific: update with karma and quiz information
+        if slide.question_ids:
+            values.update(self._get_slide_quiz_info(slide))
+        # sidebar: update with user channel progress
+        values['channel_progress'] = self._get_channel_progress(slide.channel_id, include_quiz=True)
 
         if 'fullscreen' in kwargs:
             return request.render("website_slides.slide_fullscreen", values)
-        return request.render("website_slides.slide_detail_view", values)
+        return request.render("website_slides.slide_main", values)
 
     @http.route('''/slides/slide/<model("slide.slide"):slide>/pdf_content''',
                 type='http', auth="public", website=True, sitemap=False)
@@ -590,7 +579,9 @@ class WebsiteSlides(WebsiteProfile):
     @http.route('/slides/slide/<model("slide.slide"):slide>/set_completed', website=True, type="http", auth="user")
     def slide_set_completed_and_redirect(self, slide, next_slide_id=None):
         self._set_completed_slide(slide)
-        next_slide = request.env['slide.slide'].browse(next_slide_id) if next_slide_id else None
+        next_slide = None
+        if next_slide_id:
+            next_slide = self._fetch_slide(next_slide_id).get('slide', None)
         return werkzeug.utils.redirect("/slides/slide/%s" % (slug(next_slide) if next_slide else slug(slide)))
 
     @http.route('/slides/slide/set_completed', website=True, type="json", auth="public")

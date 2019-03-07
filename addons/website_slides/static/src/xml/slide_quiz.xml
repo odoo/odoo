@@ -69,8 +69,9 @@
                             <h1>Amazing!</h1>
                             <div class="pb-3">
                                 <span class="pb-2">You gained <span class="badge badge-pill badge-success text-white font-weight-bold"><t t-esc="widget.quiz.quizKarmaWon"/> XP !</span> !</span>
-                                <div class="progress o_wslide_progress_bar">
-                                    <div class="progress-bar" role="progressbar" t-att-aria-valuenow="widget.quiz.rankProgress.progress" aria-valuemin="0" aria-valuemax="100" t-attf-style="width: #{widget.quiz.rankProgress.progress}%"/>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" t-att-aria-valuenow="widget.quiz.rankProgress.progress" aria-valuemin="0" aria-valuemax="100"
+                                        t-attf-style="heigth: 8px; width: #{widget.quiz.rankProgress.progress}%"/>
                                 </div>
                                 <small t-if="widget.quiz.rankProgress.lowerBound" class="float-left"><t t-esc="widget.quiz.rankProgress.lowerBound"/></small>
                                 <small t-if="widget.quiz.rankProgress.upperBound" class="float-right"><t t-esc="widget.quiz.rankProgress.upperBound"/></small>
