@@ -206,6 +206,9 @@
 <!-- Option: Blog Post List: grid layout -->
 <template id="opt_blog_post_grid_layout" name="Grid view"
         customize_show="True" active="False" inherit_id="website_blog.blog_post_short">
+    <xpath expr="//div[@id='main_column']" position="attributes">
+        <attribute name="class" separator=" " add="d-flex" />
+    </xpath>
     <xpath expr="//div[@name='blog_post']" position="attributes">
         <attribute name="class" add="col-md-5 o_grid" separator=" "/>
     </xpath>
