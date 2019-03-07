@@ -239,7 +239,7 @@ class EventEvent(models.Model):
 
             self.is_online = self.event_type_id.is_online
 
-            if self.event_type_id.event_type_mail_ids:
+            if self.event_type_id.use_mail_schedule and self.event_type_id.event_type_mail_ids:
                 self.event_mail_ids = [(5, 0, 0)] + [{
                     'template_id': line.template_id,
                     'interval_nbr': line.interval_nbr,
