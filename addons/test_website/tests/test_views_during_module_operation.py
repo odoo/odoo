@@ -62,7 +62,7 @@ class TestViewsDuringModuleOperation(TransactionCase):
         self.assertTrue(self.env.ref(update_module_view_to_be_t_called.key))
         self.assertTrue(self.env.ref(update_module_base_view.key))
 
-        # Uninstall module
+        # Update the module
         test_website_module = self.env['ir.module.module'].search([('name', '=', 'test_website')])
         test_website_module.button_immediate_upgrade()
 
