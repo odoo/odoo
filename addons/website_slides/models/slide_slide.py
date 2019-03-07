@@ -342,22 +342,6 @@ class Slide(models.Model):
     # Business Methods
     # ---------------------------------------------------------
 
-    def _get_related_slides(self, limit=20):
-        # TDE FIXME: should build a smarter domain
-        domain = request.website.website_domain()
-        domain += [('website_published', '=', True), ('id', '!=', self.id)]
-        if self.category_id:
-            domain += [('category_id', '=', self.category_id.id)]
-        for record in self.search(domain, limit=limit):
-            yield record
-
-    def _get_most_viewed_slides(self, limit=20):
-        # TDE FIXME: should build a smarter domain
-        domain = request.website.website_domain()
-        domain += [('website_published', '=', True), ('id', '!=', self.id)]
-        for record in self.search(domain, limit=limit, order='total_views desc'):
-            yield record
-
     def _post_publication(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
@@ -503,6 +487,36 @@ class Slide(models.Model):
             points += gains[slide.user_membership_id.quiz_attempts_count-1] if slide.user_membership_id.quiz_attempts_count <= len(gains) else gains[-1]
 
         return self.env.user.sudo().add_karma(points)
+
+    def _compute_quiz_info(self, target_partner, quiz_done=False):
+        result = dict.fromkeys(self.ids, False)
+        slide_partners = self.env['slide.slide.partner'].sudo().search([
+            ('slide_id', 'in', self.ids),
+            ('partner_id', '=', target_partner.id)
+        ])
+        slide_partners_map = dict((sp.slide_id.id, sp) for sp in slide_partners)
+        for slide in self:
+            if not slide.question_ids:
+                gains = [0]
+            else:
+                gains = [slide.quiz_first_attempt_reward,
+                         slide.quiz_second_attempt_reward,
+                         slide.quiz_third_attempt_reward,
+                         slide.quiz_fourth_attempt_reward]
+            result[slide.id] = {
+                'quiz_karma_max': gains[0],  # what could be gained if succeed at first try
+                'quiz_karma_gain': gains[0],  # what would be gained at next test
+                'quiz_karma_won': 0,  # what has been gained
+                'quiz_attempts_count': 0,  # number of attempts
+            }
+            slide_partner = slide_partners_map.get(slide.id)
+            if slide.question_ids and slide_partner:
+                if slide_partner.quiz_attempts_count:
+                    result[slide.id]['quiz_karma_gain'] = gains[slide_partner.quiz_attempts_count] if slide_partner.quiz_attempts_count <= len(gains) else gains[-1]
+                    result[slide.id]['quiz_attempts_count'] = slide_partner.quiz_attempts_count
+                if quiz_done or slide_partner.completed:
+                    result[slide.id]['quiz_karma_won'] = gains[slide_partner.quiz_attempts_count-1] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
+        return result
 
     # --------------------------------------------------
     # Parsing methods

@@ -3,16 +3,10 @@ $nav-tabs-border-color: #dddddd !default;
 $body-bg: #FFFFFF !default;
 $MAX-Z-INDEX : 2147483647 !default;
 $gray-50: #f4f4f4 !default;
+$o-enterprise-radient-color: #62495B !default;
 
 // Common to new slides pages
 // **************************************************
-
-.o_wslides_container {
-    margin: auto;
-    width: 100%;
-    max-width: 1140px;
-    padding: 0px 32px 0px 32px;
-}
 
 .o_wslides_wrap {
     background-color: desaturate(map-get($grays, "200"), 80%);
@@ -84,16 +78,13 @@ $gray-50: #f4f4f4 !default;
 
     .progress {
         overflow: visible;
-        margin-bottom: 0em;
-        height: 4px;
 
         .progress-bar {
-            background-color: #00A09D;
+            background-color: $primary;
             position: relative;
-            border-radius: 4px;
 
             span {
-                background-color: #00A09D;
+                background-color: $primary;
                 position: absolute;
                 bottom: -20px;
                 font-size: 10px;
@@ -275,6 +266,64 @@ $gray-50: #f4f4f4 !default;
 // New lesson page
 // **************************************************
 
+.o_wslides_lesson_header {
+    background: linear-gradient(150deg, $o-enterprise-color 20%, $o-enterprise-radient-color 80%);
+    margin: auto;
+
+    .o_wslides_lesson_header_container {
+        a:hover {
+            text-decoration: none;
+        }
+
+        .fa-trophy {
+            font-size: 2em;
+        }
+    }
+}
+
+.o_wslides_lesson_main {
+    .o_wslides_lesson_aside {
+        .o_wslides_lesson_aside_list,
+        .o_wslides_lesson_aside_doc {
+            border: 0;
+            border-bottom: 3px solid $border-color;
+            position: relative;
+            top: -50px;
+
+            .nav-tabs .nav-link {
+                border-top: 0;
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+            }
+        }
+
+        .o_wslides_lesson_aside_list {
+            .o_wslides_lesson_aside_list_link {
+                text-decoration: none;
+
+                &.active {
+                    background-color: $gray-200;
+                }
+            }
+        }
+    }
+
+    .o_wslides_lesson_content {
+        .o_wslides_lesson_nav {
+            .nav-link {
+                background-color: transparent;
+                border: 0;
+                border-bottom: 1px solid $border-color;
+                color: $gray-600;
+
+                &.active {
+                    border-bottom: 1px solid $success;
+                    color: $gray-800;
+                }
+            }
+        }
+    }
+}
 
 // Old brol to clean someday
 // **************************************************
