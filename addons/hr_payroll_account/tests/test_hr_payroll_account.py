@@ -43,28 +43,14 @@ class TestHrPayrollAccount(common.TransactionCase):
             'bank_account_id': self.res_partner_bank.bank_id.id,
         })
 
-        self.hr_structure_softwaredeveloper = self.env['hr.payroll.structure'].create({
-            'name': 'Salary Structure for Software Developer',
-            'code': 'SD',
-            'parent_id': self.ref('hr_payroll.structure_base'),
-            'rule_ids': [(6, 0, [
-                    self.ref('hr_payroll.hr_salary_rule_houserentallowance1'),
-                    self.ref('hr_payroll.hr_salary_rule_convanceallowance1'),
-                    self.ref('hr_payroll.hr_salary_rule_professionaltax1'),
-                    self.ref('hr_payroll.hr_salary_rule_providentfund1'),
-                    self.ref('hr_payroll.hr_salary_rule_meal_voucher'),
-            ])],
-        })
-
         # Create account journal.
         self.hr_contract_john = self.env['hr.contract'].create({
             'date_end': fields.Date.to_string(datetime.now() + timedelta(days=365)),
             'date_start': fields.Date.today(),
             'name': 'Contract for John',
             'wage': 5000.0,
-            'type_id': self.ref('hr_contract.hr_contract_type_emp'),
             'employee_id': self.hr_employee_john.id,
-            'struct_id': self.hr_structure_softwaredeveloper.id,
+            'struct_id': self.env.ref('hr_payroll.structure_002').id,
             'journal_id': self.ref('hr_payroll_account.expenses_journal'),
         })
 

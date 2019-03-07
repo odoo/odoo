@@ -43,7 +43,6 @@ class TestPayslipBase(TransactionCase):
             'date_start': Date.today(),
             'name': 'Contract for Richard',
             'wage': 5000.0,
-            'type_id': self.ref('hr_contract.hr_contract_type_emp'),
             'employee_id': self.richard_emp.id,
             'struct_id': self.developer_pay_structure.id,
         })
@@ -91,7 +90,6 @@ class TestPayslipContractBase(TestPayslipBase):
             'name': 'First CDD Contract for Richard',
             'resource_calendar_id': self.calendar_40h.id,
             'wage': 5000.0,
-            'type_id': self.ref('hr_contract.hr_contract_type_emp'),
             'employee_id': self.richard_emp.id,
             'struct_id': self.developer_pay_structure.id,
             'state': 'close',
@@ -103,7 +101,6 @@ class TestPayslipContractBase(TestPayslipBase):
             'name': 'Contract for Richard',
             'resource_calendar_id': self.calendar_35h.id,
             'wage': 5000.0,
-            'type_id': self.ref('hr_contract.hr_contract_type_emp'),
             'employee_id': self.richard_emp.id,
             'struct_id': self.developer_pay_structure.id,
             'state': 'open',

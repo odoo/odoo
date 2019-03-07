@@ -2,6 +2,10 @@
 <odoo>
     <data noupdate="0">
 
+        <record id="structure_type_employee" model="hr.payroll.structure.type">
+            <field name="name">Employee</field>
+        </record>
+
         <record id="resource.resource_calendar_std" model="resource.calendar">
             <field name="full_time_required_hours">40</field>
         </record>
@@ -47,46 +51,6 @@
         <record id="COMP" model="hr.salary.rule.category">
             <field name="name">Company Contribution</field>
             <field name="code">COMP</field>
-        </record>
-
-        <record id="hr_rule_basic" model="hr.salary.rule">
-            <field name="name">Basic Salary</field>
-            <field name="sequence" eval="1"/>
-            <field name="code">BASIC</field>
-            <field name="category_id" ref="hr_payroll.BASIC"/>
-            <field name="condition_select">none</field>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = contract.wage</field>
-        </record>
-
-        <record id="hr_rule_taxable" model="hr.salary.rule">
-            <field name="name">Gross</field>
-            <field name="sequence" eval="100"/>
-            <field name="code">GROSS</field>
-            <field name="category_id" ref="hr_payroll.GROSS"/>
-            <field name="condition_select">none</field>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = categories.BASIC + categories.ALW</field>
-        </record>
-
-        <record id="hr_rule_net" model="hr.salary.rule">
-            <field name="name">Net Salary</field>
-            <field name="sequence" eval="200"/>
-            <field name="code">NET</field>
-            <field name="category_id" ref="hr_payroll.NET"/>
-            <field name="condition_select">none</field>
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = categories.BASIC + categories.ALW + categories.DED</field>
-            <field name="register_id" ref="contrib_register_employees"/>
-        </record>
-
-
-        <!-- Salary Structure -->
-
-         <record id="structure_base" model="hr.payroll.structure">
-            <field name="code">BASE</field>
-            <field name="name">Base for new structures</field>
-            <field eval="[(6, 0, [ref('hr_rule_basic'), ref('hr_rule_taxable'),ref('hr_rule_net')])]" name="rule_ids"/>
         </record>
 
         <!-- Decimal Precision -->

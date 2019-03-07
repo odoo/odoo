@@ -6,6 +6,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
+# YTI TODO: Split me into 2 files
 class HrContract(models.Model):
     _inherit = 'hr.contract'
 
@@ -61,12 +62,6 @@ class HrContract(models.Model):
         help="Number of days of paid leaves the employee gets per year.")
     wage_with_holidays = fields.Monetary(compute='_compute_wage_with_holidays', inverse='_inverse_wage_with_holidays',
         tracking=True, string="Wage update with holidays retenues")
-    additional_net_amount = fields.Monetary(string="Net Supplements",
-        tracking=True,
-        help="Monthly net amount the employee receives.")
-    retained_net_amount = fields.Monetary(sting="Net Retained",
-        tracking=True,
-        help="Monthly net amount that is retained on the employee's salary.")
     eco_checks = fields.Monetary("Eco Vouchers",
         help="Yearly amount the employee receives in the form of eco vouchers.")
     ip = fields.Boolean(default=False, tracking=True)

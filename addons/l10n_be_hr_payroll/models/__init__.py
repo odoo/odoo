@@ -4,3 +4,4 @@
 from . import l10n_be_hr_payroll
 from . import res_config_settings
 from . import res_users
+from . import hr_payslip

@@ -48,18 +48,7 @@ class Employee(models.Model):
         return self.search([])._get_contracts(date_from, date_to, states=states)
 
 
-class ContractType(models.Model):
-
-    _name = 'hr.contract.type'
-    _description = 'Contract Type'
-    _order = 'sequence, id'
-
-    name = fields.Char(string='Contract Type', required=True)
-    sequence = fields.Integer(help="Gives the sequence when displaying a list of Contract.", default=10)
-
-
 class Contract(models.Model):
-
     _name = 'hr.contract'
     _description = 'Contract'
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -68,7 +57,6 @@ class Contract(models.Model):
     active = fields.Boolean(default=True)
     employee_id = fields.Many2one('hr.employee', string='Employee')
     department_id = fields.Many2one('hr.department', string="Department")
-    type_id = fields.Many2one('hr.contract.type', string="Employee Category", required=True, default=lambda self: self.env['hr.contract.type'].search([], limit=1))
     job_id = fields.Many2one('hr.job', string='Job Position')
     date_start = fields.Date('Start Date', required=True, default=fields.Date.today,
         help="Start date of the contract.")

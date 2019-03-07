@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- YTI TODO SET TO 1 -->
+    <data noupdate="0">
+        <!-- Salary Structure -->
+        <record id="hr_payroll_structure_cp200_thirteen_month" model="hr.payroll.structure">
+            <field name="code">CP 200 EOYB</field>
+            <field name="name">13th Month</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="report_id" ref="l10n_be_hr_payroll.action_report_double_holiday_13th_month"/>
+            <field name="payslip_name">13th Month Slip</field>
+            <field name="type_id" ref="l10n_be_hr_payroll.structure_type_employee_cp200"/>
+        </record>
+
+        <!-- Salary Rules -->
+        <function model="hr.salary.rule" name="write">
+            <value model="hr.salary.rule" search="[
+                ('struct_id', '=', ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_thirteen_month')),
+                ('code', '=', 'BASIC')]"/>
+            <value eval="{'amount_python_compute': 'result = contract.wage_with_holidays'}"/>
+        </function>
+
+        <record id="cp200_employees_thirteen_month_gross_salary" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_salary"/>
+            <field name="name">Gross Salary</field>
+            <field name="code">SALARY</field>
+            <field name="sequence">20</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories.BASIC
+if contract.internet:
+    result += 5.0
+if contract.mobile:
+    result += 12.0
+            </field>
+            <field name="appears_on_payslip" eval="False"/>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+        </record>
+
+        <record id="cp200_employees_thirteen_month_onss_rule" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_onss"/>
+            <field name="name">Social contribution</field>
+            <field name="code">ONSS</field>
+            <field name="sequence">41</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">SALARY</field>
+            <field name="amount_percentage">-13.07</field>
+            <field name="register_id" ref="contrib_register_onss"/>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+        </record>
+    
+        <record id="cp200_employees_thirteen_month_p_p" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_pp"/>
+            <field name="name">Withholding Tax</field>
+            <field name="code">P.P</field>
+            <field name="sequence">102</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = compute_thirteen_month_withholding_taxes(payslip, categories, worked_days, inputs)</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+        </record>
+
+        <record id="cp200_employees_thirteen_month_mis_ex_onss" model="hr.salary.rule">
+            <field name="category_id" ref="hr_salary_rule_category_spec_soc_contribution"/>
+            <field name="name">Special social cotisation</field>
+            <field name="code">M.ONSS</field>
+            <field name="amount_select">fix</field>
+            <field name="sequence">165</field>
+            <field name="appears_on_payslip" eval="False"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = compute_special_social_cotisations(payslip, categories, worked_days, inputs)</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+        </record>
+
+    </data>
+</odoo>
