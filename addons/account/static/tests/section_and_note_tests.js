@@ -47,7 +47,7 @@ QUnit.module('section_and_note', {
     },
 }, function () {
     QUnit.test('correct display of section and note fields', async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
         var form = await createView({
             View: FormView,
             model: 'invoice',
@@ -63,6 +63,8 @@ QUnit.module('section_and_note', {
             },
             res_id: 1,
         });
+
+        assert.hasClass(form.$('[name="invoice_line_ids"] table'), 'o_section_and_note_list_view');
 
         // section should be displayed correctly
         var $tr0 = form.$('tr.o_data_row:eq(0)');

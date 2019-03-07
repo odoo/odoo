@@ -68,9 +68,10 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
      * @private
      */
     _renderView: function () {
-        var def = this._super();
-        this.$el.find('> table').addClass('o_section_and_note_list_view');
-        return def;
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self.$('> table').addClass('o_section_and_note_list_view');
+        });
     },
     /**
      * Add support for product configurator
