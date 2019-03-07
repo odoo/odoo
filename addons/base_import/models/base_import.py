@@ -263,9 +263,9 @@ class Import(models.TransientModel):
     def _read_xls_book(self, book):
         sheet = book.sheet_by_index(0)
         # emulate Sheet.get_rows for pre-0.9.4
-        for row in map(sheet.row, range(sheet.nrows)):
+        for rowx, row in enumerate(map(sheet.row, range(sheet.nrows)), 1):
             values = []
-            for cell in row:
+            for colx, cell in enumerate(row, 1):
                 if cell.ctype is xlrd.XL_CELL_NUMBER:
                     is_float = cell.value % 1 != 0.0
                     values.append(
@@ -286,9 +286,11 @@ class Import(models.TransientModel):
                     values.append(u'True' if cell.value else u'False')
                 elif cell.ctype is xlrd.XL_CELL_ERROR:
                     raise ValueError(
-                        _("Error cell found while reading XLS/XLSX file: %s") %
-                        xlrd.error_text_from_code.get(
-                            cell.value, "unknown error code %s" % cell.value)
+                        _("Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s") % {
+                            'row': rowx,
+                            'col': colx,
+                            'cell_value': xlrd.error_text_from_code.get(cell.value, _("unknown error code %s") % cell.value)
+                        }
                     )
                 else:
                     values.append(cell.value)
