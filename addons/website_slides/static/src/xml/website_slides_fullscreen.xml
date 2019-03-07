@@ -1,28 +1,14 @@
 <templates id="template" xml:space="preserve">
 
-    <t t-name="website.slides.fullscreen.title">
-        <t t-if="!widget.get('slide').isQuiz">
-            <i t-if="widget.get('slide').type == 'document'" class="fa fa-file-pdf-o mr-2"></i>
-            <i t-if="widget.get('slide').type == 'infographic'" class="fa fa-file-picture-o mr-2"></i>
-            <i t-if="widget.get('slide').type == 'video'" class="fa fa-play-circle mr-2"></i>
-            <i t-if="widget.get('slide').type == 'webpage'" class="fa fa-file-text mr-2"></i>
-            <i t-if="widget.get('slide').type == 'quiz'" class="fa fa-question-circle mr-2 text"></i>
-            <span class="o_wslides_fs_slide_title_span" t-esc="widget.get('slide').name"/>
-        </t>
-        <t t-else="">
-            <span><i class="fa fa-flag-checkered"></i>Quiz: <span t-esc="widget.get('slide').name"/></span>
-        </t>
-    </t>
-
     <t t-name="website.slides.fullscreen.content">
         <t t-if="_.contains(['document', 'presentation'], widget.get('slide').type)">
-            <div class="embed-responsive embed-responsive-4by3 embed-responsive-item h-100">
-                <iframe t-att-src="widget.get('slide').embedUrl" class="o_wslides_iframe_viewer h-100 w-100" allowFullScreen="true" frameborder="0"></iframe>
+            <div class="embed-responsive h-100">
+                <iframe t-att-src="widget.get('slide').embedUrl" class="o_wslides_iframe_viewer" allowFullScreen="true" frameborder="0"/>
             </div>
         </t>
         <t t-if="widget.get('slide').type === 'infographic'">
-            <div class="w-100 h-100 text-center">
-                <img t-att-src="'/web/image/slide.slide/'+ widget.get('slide').id +'/image'" class="img-fluid" style="height: 100%" alt="Slide image"/>
+            <div class="o_wslides_fs_player w-100 h-100 overflow-auto d-flex align-items-start justify-content-center">
+                <img t-att-src="'/web/image/slide.slide/'+ widget.get('slide').id +'/image'" class="img-fluid position-relative m-auto" alt="Slide image"/>
             </div>
         </t>
     </t>

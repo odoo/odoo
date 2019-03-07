@@ -181,7 +181,7 @@ odoo.define('website_slides.fullscreen', function (require) {
          */
         setSlideCompleted: function (slideId) {
             var $elem = this.$('.fa-circle-thin[data-slide-id="'+slideId+'"]');
-            $elem.removeClass('fa-circle-thin').addClass('fa-check-circle text-success bg-white o_wslides_slide_completed rounded-circle');
+            $elem.removeClass('fa-circle-thin').addClass('fa-check text-success o_wslides_slide_completed');
         },
         /**
          * Updates the progressbar whenever a lesson is completed
@@ -484,8 +484,7 @@ odoo.define('website_slides.fullscreen', function (require) {
         _onChangeSlide: function () {
             var self = this;
             var slide = this.get('slide');
-            return this._fetchSlideContent().then(function() { // update title and render content
-                self.$('.o_wslides_fs_slide_title').html(QWeb.render('website.slides.fullscreen.title', {widget: self}));
+            return this._fetchSlideContent().then(function() { // render content
                 return self._renderSlide();
             }).then(function() {
                 if (slide._autoSetDone && !session.is_website_user) {  // no useless RPC call
