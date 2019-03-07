@@ -2,11 +2,11 @@
 (function () {
 "use strict";
 
-const self = window;
-const OriginalPromise = self.Promise;
+var self = window;
+var OriginalPromise = self.Promise;
 
 function dispatchUnhandledRejectionEvent(promise, reason) {
-    const event = document.createEvent('Event');
+    var event = document.createEvent('Event');
     Object.defineProperties(event, {
         promise: {
             value: promise,
@@ -25,8 +25,8 @@ function MyPromise(resolver) {
     if (!(this instanceof MyPromise)) {
         throw new TypeError('Cannot call a class as a function');
     }
-    const promise = new OriginalPromise(function (resolve, reject) {
-        const customReject = function (reason) {
+    var promise = new OriginalPromise(function (resolve, reject) {
+        var customReject = function (reason) {
             // macro-task (setTimeout) will execute after micro-task (promise)
             setTimeout(function () {
                 if (promise.handled !== true) {
@@ -50,15 +50,17 @@ MyPromise.prototype.__proto__ = OriginalPromise.prototype;
 
 
 MyPromise.prototype.then = function (resolve, reject) {
+    var self = this;
     return OriginalPromise.prototype.then.call(this, resolve, reject && (function reason() {
-        this.handled = true;
+        self.handled = true;
         return reject(reason);
     }));
 };
 
 MyPromise.prototype.catch = function (reject) {
+    var self = this;
     return OriginalPromise.prototype.catch.call(this, reject && (function reason() {
-        this.handled = true;
+        self.handled = true;
         return reject(reason);
     }));
 };
