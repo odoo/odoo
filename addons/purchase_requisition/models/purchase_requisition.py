@@ -151,6 +151,7 @@ class PurchaseRequisition(models.Model):
         return{
             'origin': origin,
             'date_end': values['date_planned'],
+            'user_id': False,
             'warehouse_id': values.get('warehouse_id') and values['warehouse_id'].id or False,
             'company_id': company_id.id,
             'line_ids': [(0, 0, {

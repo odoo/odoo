@@ -264,6 +264,7 @@ class StockRule(models.Model):
 
         return {
             'partner_id': partner.id,
+            'user_id': False,
             'picking_type_id': self.picking_type_id.id,
             'company_id': company_id.id,
             'currency_id': partner.with_context(force_company=company_id.id).property_purchase_currency_id.id or self.env.company_id.currency_id.id,
