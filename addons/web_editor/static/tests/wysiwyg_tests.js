@@ -4,6 +4,8 @@ odoo.define('web_editor.wysiwyg_tests', function (require) {
 var testUtils = require('web.test_utils');
 var weTestUtils = require('web_editor.test_utils');
 var Wysiwyg = require('web_editor.wysiwyg');
+var AltDialog = require('wysiwyg.widgets.AltDialog');
+var CropDialog = require('wysiwyg.widgets.CropImageDialog');
 
 var testName = "";
 var carretTestSuffix = " (carret position)";
@@ -2968,6 +2970,9 @@ QUnit.test('CodeView', async function (assert) {
 var imgWidth = 10;
 var imgHeight = 10;
 
+var altDialogOpened;
+var altDialogSaved;
+var cropDialogOpened;
 QUnit.module('Media', {
     beforeEach: function () {
         $('body').on('submit.WysiwygTests', function (ev) {
@@ -3011,8 +3016,43 @@ QUnit.module('Media', {
                 return this._super(route, args);
             },
         };
+
+        testUtils.mock.patch(AltDialog, {
+            init: function () {
+                this._super.apply(this, arguments);
+                altDialogOpened = this._opened;
+            },
+            save: function () {
+                altDialogSaved = this._super.apply(this, arguments);
+                return altDialogSaved;
+            },
+        });
+
+        testUtils.mock.patch(CropDialog, {
+            init: function () {
+                var self = this;
+                this._super.apply(this, arguments);
+                cropDialogOpened = new Promise (function (resolve) {
+                    self.opened(function () {
+                        var cropper = self.$cropperImage.data('cropper');
+                        cropper.clone();
+                        $.extend(cropper.image, {
+                            naturalWidth: imgWidth,
+                            naturalHeight: imgHeight,
+                            aspectRatio: imgWidth / imgHeight,
+                        });
+                        cropper.loaded = true;
+                        cropper.build();
+                        cropper.render();
+                        resolve();
+                    });
+                });
+            },
+        });
     },
     afterEach: function () {
+        testUtils.mock.unpatch(AltDialog);
+        testUtils.mock.unpatch(CropDialog);
         $('body').off('submit.WysiwygTests');
     },
 }, function () {
@@ -3057,8 +3097,8 @@ var _valueToRatio = function (value) {
 };
 
 
-QUnit.skip('Image !! fix me after jquery 3 is merged !!', function (assert) {
-    assert.expect(13);
+QUnit.test('Image', function (assert) {
+    assert.expect(23);
 
     return weTestUtils.createWysiwyg(this.data).then(function (wysiwyg) {
         var $editable = wysiwyg.$('.note-editable');
@@ -3277,15 +3317,33 @@ QUnit.skip('Image !! fix me after jquery 3 is merged !!', function (assert) {
                 },
                 test: {
                     check: async function () {
+                        await altDialogOpened;
                         await testUtils.dom.triggerEvents($('.note-image-popover .note-btn:contains("Description")'), ['mousedown', 'click']);
                         $('.modal-dialog input#alt').val('Description');
                         await testUtils.nextTick();
                         $('.modal-dialog input#title').val('Title');
                         await testUtils.nextTick();
                         await testUtils.dom.triggerEvents($('.modal-dialog .modal-footer .btn.btn-primary:contains("Save")'), ['mousedown', 'click']);
-                        assert.deepEqual(wysiwyg.getValue(),
-                            '<p>\u200B<img class="img-fluid o_we_custom_image" data-src="/web_editor/static/src/img/transparent.png" alt="Description" title="Title">\u200B</p>',
-                            testName);
+                        await altDialogSaved;
+                        var value = $(wysiwyg.getValue());
+                        // We can't simply compare the string result of getValue
+                        // here, as the img tag has multiple attributes and the
+                        // output order of the attributes is non-deterministic !
+                        assert.strictEqual(value.prop('tagName'), 'P', "should be a p");
+                        var contents = value.contents();
+                        assert.strictEqual(contents.length, 3, "should contain a text node, then an img, then another text node");
+                        var firstText = contents.eq(0);
+                        assert.notOk(firstText.prop('tagName'), 'should not have a tag name since it is a pure text node');
+                        assert.strictEqual(firstText.text(), "\u200b");
+                        var img = contents.eq(1);
+                        assert.strictEqual(img.prop('tagName'), "IMG", "second content should be an img");
+                        assert.strictEqual(img.prop('className'), "img-fluid o_we_custom_image", "img should have correct class");
+                        assert.strictEqual(img.data('src'), "/web_editor/static/src/img/transparent.png", "img should have correct data-src");
+                        assert.strictEqual(img.attr('alt'), "Description", "img should have correct alt");
+                        assert.strictEqual(img.attr('title'), "Title", "img should have correct title");
+                        var secondText = contents.eq(2);
+                        assert.notOk(secondText.prop('tagName'), 'should not have a tag name since it is a pure text node');
+                        assert.strictEqual(secondText.text(), "\u200b");
                     },
                 },
             },
@@ -3307,22 +3365,7 @@ QUnit.skip('Image !! fix me after jquery 3 is merged !!', function (assert) {
     });
 });
 
-async function imageSrc () {
-    await testUtils.nextTick();
-    var cropper = $('.o_cropper_image').data('cropper');
-    cropper.clone();
-    $.extend(cropper.image, {
-        naturalWidth: imgWidth,
-        naturalHeight: imgHeight,
-        aspectRatio: imgWidth / imgHeight,
-    });
-    cropper.loaded = true;
-    cropper.build();
-    cropper.render();
-    await testUtils.nextTick();
-}
-
-QUnit.skip('Image crop !! fix me after jquery 3 is merged !!', function (assert) {
+QUnit.test('Image crop', function (assert) {
     assert.expect(5);
 
     return weTestUtils.createWysiwyg(this.data).then(function (wysiwyg) {
@@ -3342,7 +3385,7 @@ QUnit.skip('Image crop !! fix me after jquery 3 is merged !!', function (assert)
                         var $img = $editable.find('img');
                         $img.attr('src', $img.data('src'));
                         await testUtils.dom.triggerEvents($('.note-image-popover .note-btn:has(.fa-crop)'), ['mousedown', 'click']);
-                        await imageSrc();
+                        await cropDialogOpened;
                         await testUtils.dom.triggerEvents($('.o_crop_image_dialog .o_crop_options .btn:contains("16:9")'), ['mousedown', 'click']);
                         var $zoomBtn = $('.o_crop_image_dialog .o_crop_options .btn:has(.fa-search-plus)');
                         zoomRatio = _valueToRatio(Number($zoomBtn.data('value')));
@@ -3368,7 +3411,7 @@ QUnit.skip('Image crop !! fix me after jquery 3 is merged !!', function (assert)
                         var $img = $editable.find('img');
                         $img.attr('src', $img.data('src'));
                         await testUtils.dom.triggerEvents($('.note-image-popover .note-btn:has(.fa-crop)'), ['mousedown', 'click']);
-                        await imageSrc();
+                        await cropDialogOpened;
                         await testUtils.dom.triggerEvents($('.o_crop_image_dialog .o_crop_options .btn:contains("16:9")'), ['mousedown', 'click']);
                         await testUtils.dom.triggerEvents($('.o_crop_image_dialog .o_crop_options .btn:has(.fa-rotate-left)'), ['mousedown', 'click']);
                         await testUtils.dom.triggerEvents($('.o_crop_image_dialog .o_crop_options .btn:has(.fa-arrows-h)'), ['mousedown', 'click']);
@@ -3394,7 +3437,7 @@ QUnit.skip('Image crop !! fix me after jquery 3 is merged !!', function (assert)
                         var $img = $editable.find('img');
                         $img.attr('src', $img.data('src'));
                         await testUtils.dom.triggerEvents($('.note-image-popover .note-btn:has(.fa-crop)'), ['mousedown', 'click']);
-                        await imageSrc();
+                        await cropDialogOpened;
                         var $cropperPoints = $('.modal-dialog .cropper-crop-box .cropper-point');
                         var $pointW = $cropperPoints.filter('.point-w');
                         var pos1 = $pointW.offset();
