@@ -228,10 +228,16 @@ var dom = {
      * @param {function|boolean} stopPropagation
      */
     makeAsyncHandler: function (fct, preventDefault, stopPropagation) {
-        // Create a promise indicating if a previous call to this handler is
-        // still pending.
-        var def = $.when();
-
+        var pending = false;
+        function _isLocked() {
+            return pending;
+        }
+        function _lock() {
+            pending = true;
+        }
+        function _unlock() {
+            pending = false;
+        }
         return function (ev) {
             if (preventDefault === true || preventDefault && preventDefault()) {
                 ev.preventDefault();
@@ -240,13 +246,15 @@ var dom = {
                 ev.stopPropagation();
             }
 
-            if (def.state() === 'pending') {
+            if (_isLocked()) {
                 // If a previous call to this handler is still pending, ignore
                 // the new call.
                 return;
             }
+
+            _lock();
             var result = fct.apply(this, arguments);
-            def = $.when(result);
+            Promise.resolve(result).then(_unlock).guardedCatch(_unlock);
             return result;
         };
     },
