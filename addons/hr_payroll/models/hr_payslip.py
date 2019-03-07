@@ -143,7 +143,7 @@ class HrPayslip(models.Model):
             number = payslip.number or self.env['ir.sequence'].next_by_code('salary.slip')
             # delete old payslip lines
             payslip.line_ids.unlink()
-            lines = [(0, 0, line) for line in payslip._get_payslip_lines(payslip.contract_id)]
+            lines = [(0, 0, line) for line in payslip._get_payslip_lines()]
             payslip.write({'line_ids': lines, 'number': number, 'state': 'verify', 'compute_date': fields.Date.today()})
         return True
 
@@ -181,89 +181,67 @@ class HrPayslip(models.Model):
             'float_round': float_round
         }
 
-    # YTI TODO: pass recordset as argument
     @api.model
-    def _get_payslip_lines(self, contracts):
-        # YTI TODO: Move into browsable_object.py ?
+    def _get_payslip_lines(self):
         def _sum_salary_rule_category(localdict, category, amount):
             if category.parent_id:
                 localdict = _sum_salary_rule_category(localdict, category.parent_id, amount)
-            localdict['categories'].dict[category.code] = category.code in localdict['categories'].dict and localdict['categories'].dict[category.code] + amount or amount
+            localdict['categories'].dict[category.code] = localdict['categories'].dict.get(category.code, 0) + amount
             return localdict
 
         self.ensure_one()
-        #we keep a dict with the result because a value can be overwritten by another rule with the same code
-        result_dict = {}
+        result = {}
         rules_dict = {}
-        worked_days_dict = {}
-        inputs_dict = {}
-        blacklist = []
+        worked_days_dict = {line.code: line for line in self.worked_days_line_ids if line.code}
+        inputs_dict = {line.code: line for line in self.input_line_ids if line.code}
 
-        for code in self.worked_days_line_ids.mapped('code'):
-            worked_days_dict[code] = self.worked_days_line_ids.filtered(lambda l: l.code == code)
-        for code in self.input_line_ids.mapped('code'):
-            inputs_dict[code] = self.input_line_ids.filtered(lambda l: l.code == code)
+        employee = self.employee_id
+        contract = self.contract_id
 
-        categories = BrowsableObject(self.employee_id.id, {}, self.env)
-        inputs = InputLine(self.employee_id.id, inputs_dict, self.env)
-        worked_days = WorkedDays(self.employee_id.id, worked_days_dict, self.env)
-        payslips = Payslips(self.employee_id.id, self, self.env)
-        rules = BrowsableObject(self.employee_id.id, rules_dict, self.env)
-
-        baselocaldict = {**self._get_base_local_dict(), **{'categories': categories, 'rules': rules, 'payslip': payslips, 'worked_days': worked_days, 'inputs': inputs}}
-        #get the ids of the structures on the contracts and their parent id as well
-        if len(contracts) == 1 and self.struct_id:
-            structures = self.struct_id._get_parent_structure()
-        else:
-            structures = contracts.get_all_structures()
-        #get the rules of the structure and thier children
-        rule_ids = structures.get_all_rules()
-        #run the rules by sequence
-        sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
-        sorted_rules = self.env['hr.salary.rule'].browse(sorted_rule_ids)
-
-        for contract in contracts:
-            employee = contract.employee_id
-            localdict = dict(baselocaldict, employee=employee, contract=contract)
-            for rule in sorted_rules:
-                key = rule.code + '-' + str(contract.id)
-                localdict['result'] = None
-                localdict['result_qty'] = 1.0
-                localdict['result_rate'] = 100
-                #check if the rule can be applied
-                if rule._satisfy_condition(localdict) and rule.id not in blacklist:
-                    #compute the amount of the rule
-                    amount, qty, rate = rule._compute_rule(localdict)
-                    #check if there is already a rule computed with that code
-                    previous_amount = rule.code in localdict and localdict[rule.code] or 0.0
-                    #set/overwrite the amount computed for this rule in the localdict
-                    tot_rule = amount * qty * rate / 100.0
-                    localdict[rule.code] = tot_rule
-                    rules_dict[rule.code] = rule
-                    #sum the amount for its salary category
-                    localdict = _sum_salary_rule_category(localdict, rule.category_id, tot_rule - previous_amount)
-                    #create/overwrite the rule in the temporary results
-                    result_dict[key] = {
-                        'sequence': rule.sequence,
-                        'code': rule.code,
-                        'name': rule.name,
-                        'note': rule.note,
-                        'salary_rule_id': rule.id,
-                        'contract_id': contract.id,
-                        'employee_id': contract.employee_id.id,
-                        'amount': amount,
-                        'quantity': qty,
-                        'rate': rate,
-                    }
-                else:
-                    #blacklist this rule and its children
-                    blacklist += [id for id, seq in rule._recursive_search_of_rules()]
-
-        return list(result_dict.values())
+        localdict = {
+            **self._get_base_local_dict(),
+            **{
+                'categories': BrowsableObject(employee.id, {}, self.env),
+                'rules': BrowsableObject(employee.id, rules_dict, self.env),
+                'payslip': Payslips(employee.id, self, self.env),
+                'worked_days': WorkedDays(employee.id, worked_days_dict, self.env),
+                'inputs': InputLine(employee.id, inputs_dict, self.env),
+                'employee': employee,
+                'contract': contract
+            }
+        }
+        for rule in sorted(self.struct_id.rule_ids, key=lambda x: x.sequence):
+            localdict.update({
+                'result': None,
+                'result_qty': 1.0,
+                'result_rate': 100})
+            if rule._satisfy_condition(localdict):
+                amount, qty, rate = rule._compute_rule(localdict)
+                #check if there is already a rule computed with that code
+                previous_amount = rule.code in localdict and localdict[rule.code] or 0.0
+                #set/overwrite the amount computed for this rule in the localdict
+                tot_rule = amount * qty * rate / 100.0
+                localdict[rule.code] = tot_rule
+                rules_dict[rule.code] = rule
+                # sum the amount for its salary category
+                localdict = _sum_salary_rule_category(localdict, rule.category_id, tot_rule - previous_amount)
+                # create/overwrite the rule in the temporary results
+                result[rule.code] = {
+                    'sequence': rule.sequence,
+                    'code': rule.code,
+                    'name': rule.name,
+                    'note': rule.note,
+                    'salary_rule_id': rule.id,
+                    'contract_id': contract.id,
+                    'employee_id': employee.id,
+                    'amount': amount,
+                    'quantity': qty,
+                    'rate': rate,
+                }
+        return result.values()
 
     @api.onchange('employee_id', 'contract_id', 'date_from', 'date_to')
     def onchange_employee(self):
-
         if (not self.employee_id) or (not self.date_from) or (not self.date_to):
             return
 

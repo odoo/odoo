@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.addons.resource.models.resource import Intervals
-from datetime import datetime, timedelta
+from datetime import datetime
 import pytz
+
+from odoo import api, fields, models
 
 
 class HrEmployee(models.Model):
@@ -13,14 +13,12 @@ class HrEmployee(models.Model):
 
     slip_ids = fields.One2many('hr.payslip', 'employee_id', string='Payslips', readonly=True)
     payslip_count = fields.Integer(compute='_compute_payslip_count', string='Payslip Count', groups="hr_payroll.group_hr_payroll_user")
-
     registration_number = fields.Char('Registration Number of the Employee', copy=False)
 
     _sql_constraints = [
         ('unique_registration_number', 'UNIQUE(registration_number, company_id)', 'No duplication of registration numbers is allowed')
     ]
 
-    @api.multi
     def _compute_payslip_count(self):
         for employee in self:
             employee.payslip_count = len(employee.slip_ids)
@@ -33,7 +31,6 @@ class HrEmployee(models.Model):
             ('state', 'in', ['draft', 'confirmed'])
         ]))
 
-    @api.multi
     def write(self, vals):
         res = super(HrEmployee, self).write(vals)
         if vals.get('contract_id'):
@@ -51,7 +48,6 @@ class HrEmployee(models.Model):
 
         attendance_type = self.env.ref('hr_payroll.benefit_type_attendance')
         vals_list = []
-        leaves = self.env['hr.leave']
 
         date_start = _format_datetime(date_start)
         date_stop = _format_datetime(date_stop)

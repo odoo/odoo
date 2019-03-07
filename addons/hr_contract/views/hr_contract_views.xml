@@ -83,7 +83,6 @@
                     <group expand="0" string="Group By">
                         <filter string="Employee" name="employee" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter string="Job" name="job" domain="[]" context="{'group_by':'job_id'}"/>
-                        <filter string="Employee Category" name="contract_type" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="State" name='group_by_state' domain="[]" context="{'group_by': 'state'}"/>
                     </group>
                 </search>
@@ -117,7 +116,6 @@
                             <field name="job_id"/>
                         </group>
                         <group>
-                            <field name="type_id"/>
                             <field name="reported_to_secretariat" widget="toggle_button" options='{"active": "Reported to the social secretariat", "inactive": "To report to the social secretariat"}'/>
                         </group>
                     </group>
@@ -174,7 +172,6 @@
                     <field name="name"/>
                     <field name="employee_id"/>
                     <field name="job_id"/>
-                    <field name="type_id"/>
                     <field name="resource_calendar_id"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
@@ -239,63 +236,11 @@
             </field>
         </record>
 
-        <record id="hr_contract_type_view_form" model="ir.ui.view">
-            <field name="name">hr.contract.type.form</field>
-            <field name="model">hr.contract.type</field>
-            <field name="arch" type="xml">
-                <form string="Contract Type">
-                    <sheet>
-                        <group>
-                            <field name="name"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="hr_contract_type_view_tree" model="ir.ui.view">
-            <field name="name">hr.contract.type.tree</field>
-            <field name="model">hr.contract.type</field>
-            <field name="arch" type="xml">
-                <tree string="Contract Type">
-                    <field name="sequence" widget="handle"/>
-                    <field colspan="4" name="name"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="hr_contract_type_view_search" model="ir.ui.view">
-            <field name="name">hr.contract.type.search</field>
-            <field name="model">hr.contract.type</field>
-            <field name="arch" type="xml">
-                <search string="Search Contract Type">
-                    <field name="name" string="Contract Type"/>
-                    <field name="sequence" string="Sequence"/>
-               </search>
-            </field>
-        </record>
-
-        <record id="action_hr_contract_type" model="ir.actions.act_window">
-            <field name="name">Contract Types</field>
-            <field name="res_model">hr.contract.type</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="hr_contract_type_view_search"/>
-        </record>
-
         <menuitem
             id="menu_human_resources_configuration_contract"
             name="Contracts"
             parent="hr.menu_human_resources_configuration"
             sequence="3"/>
-
-        <menuitem
-            id="hr_menu_contract_type"
-            name="Types"
-            action="action_hr_contract_type"
-            parent="hr_contract.menu_human_resources_configuration_contract"
-            sequence="3"
-            groups="base.group_no_one"/>
 
         <menuitem
             id="hr_menu_contract"

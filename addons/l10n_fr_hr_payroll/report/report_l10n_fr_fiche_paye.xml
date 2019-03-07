@@ -74,34 +74,35 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="get_payslip_lines(o.line_ids)" t-as="p">
+                            <tr t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip)" t-as="line">
                                 <td>
-                                    <span t-esc="p.code or ''"/>
+                                    <span t-esc="line.code or ''"/>
                                 </td>
                                 <td>
-                                     <span t-esc="p.name or ''"/>
+                                     <span t-esc="line.name or ''"/>
                                 </td>
                                 <td>
-                                    <t t-if="p.amount_select== 'percentage'">
-                                        <span t-esc="p.amount or ''"/>
+                                    <t t-if="line.amount_select== 'percentage'">
+                                        <span t-esc="line.amount or ''"/>
                                     </t> 
-                                    <t t-if="p.amount_select== 'fix'">
-                                        <span t-esc="p.quantity or ''"/>
+                                    <t t-if="line.amount_select== 'fix'">
+                                        <span t-esc="line.quantity or ''"/>
                                     </t>
                                 </td>
                                 <td>
-                                    <t t-if="p.amount_select == 'percentage'">
-                                        <span t-esc="p.rate or ''"/>
+                                    <t t-if="line.amount_select == 'percentage'">
+                                        <span t-esc="line.rate or ''"/>
                                     </t>
                                 </td>
                                 <td>
-                                    <span t-esc="p.total or ''"/>
+                                    <span t-esc="line.total or ''"/>
+                                </td>
+                                <t t-set="employer_line" t-value="get_employer_line(line)"/>
+                                <td>
+                                    <span t-esc="employer_line.rate if employer_line else ''"/>
                                 </td>
                                 <td>
-                                    <span t-esc="get_employer_line(o, p) and get_employer_line(o, p).rate or ''"/>
-                                </td>
-                                <td>
-                                    <span t-esc="get_employer_line(o,p) and get_employer_line(o,p).total or ''"/>
+                                    <span t-esc="employer_line.total if employer_line else ''"/>
                                 </td>
                             </tr>
                         </tbody>

@@ -2,13 +2,13 @@
 <odoo>
 
     <!-- Salary structure -->
-    <!-- YTI TODO: One salary structure list view seems to unused -->
     <record id="view_hr_payroll_structure_list_view" model="ir.ui.view">
         <field name="name">hr.payroll.structure.tree</field>
         <field name="model">hr.payroll.structure</field>
         <field name="arch" type="xml">
             <tree string="Employee Function">
                 <field name="name"/>
+                <field name="type_id" invisible="1"/>
                 <field name="code"/>
                 <field name="rule_ids"/>
                 <field name="country_id" options="{'no_create': True}"/>
@@ -41,25 +41,15 @@
         </field>
     </record>
 
-    <record id="view_hr_payroll_structure_tree" model="ir.ui.view">
-        <field name="name">hr.payroll.structure.tree</field>
-        <field name="model">hr.payroll.structure</field>
-        <field name="field_parent">children_ids</field>
-        <field name="arch" type="xml">
-            <tree string="Salary Structure">
-                <field name="name"/>
-                <field name="code"/>
-                <field name="country_id" options="{'no_create': True}"/>
-            </tree>
-        </field>
-    </record>
-
     <record id="view_hr_payroll_structure_filter" model="ir.ui.view">
         <field name="name">hr.payroll.structure.select</field>
         <field name="model">hr.payroll.structure</field>
         <field name="arch" type="xml">
             <search string="Payroll Structures">
                 <field name="name" string="Payroll Structures" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                <group col="8" colspan="4" expand="0" string="Group By">
+                    <filter string="Structure Type" name="group_by_type_id" context="{'group_by': 'type_id'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -73,14 +63,13 @@
                 <group name="salary_details" col="4">
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="parent_id"/>
                     <field name="report_id"/>
-                    <field name="payslip_name"/>
+                    <field name="type_id"/>
                     <field name="country_id" options="{'no_create': True}"/>
                 </group>
                 <notebook colspan="4">
                      <page name="salary_rules" string="Salary Rules">
-                       <field name="rule_ids" domain="[('parent_rule_id','=',False)]">
+                       <field name="rule_ids">
                          <tree>
                             <field name="name"/>
                             <field name="code"/>
@@ -101,6 +90,57 @@
         <field name="res_model">hr.payroll.structure</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
+        <field name="context">{'search_default_group_by_type_id': 1}</field>
+    </record>
+
+    <record id="hr_payroll_structure_type_view_form" model="ir.ui.view">
+        <field name="name">hr.payroll.structure.type.form</field>
+        <field name="model">hr.payroll.structure.type</field>
+        <field name="arch" type="xml">
+            <form string="Structure Type">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="default_schedule_pay"/>
+                            <field name="default_resource_calendar_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_payroll_structure_type_view_tree" model="ir.ui.view">
+        <field name="name">hr.payroll.structure.type.tree</field>
+        <field name="model">hr.payroll.structure.type</field>
+        <field name="arch" type="xml">
+            <tree string="Structure Type">
+                <field name="name"/>
+                <field name="default_schedule_pay"/>
+                <field name="default_resource_calendar_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_payroll_structure_type_view_search" model="ir.ui.view">
+        <field name="name">hr.payroll.structure.type.search</field>
+        <field name="model">hr.payroll.structure.type</field>
+        <field name="arch" type="xml">
+            <search string="Search Structure Type">
+                <field name="name" string="Contract Type"/>
+           </search>
+        </field>
+    </record>
+
+    <record id="action_hr_payroll_structure_type" model="ir.actions.act_window">
+        <field name="name">Structure Types</field>
+        <field name="res_model">hr.payroll.structure.type</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="hr_payroll_structure_type_view_search"/>
     </record>
 
     <!-- Salary Category-->
@@ -229,7 +269,6 @@
     </record>
 
     <!-- Salary Rules -->
-
     <record id="hr_salary_rule_list" model="ir.ui.view">
         <field name="name">hr.salary.rule.list</field>
         <field name="model">hr.salary.rule</field>
@@ -238,6 +277,7 @@
                 <field name="name"/>
                 <field name="code"/>
                 <field name="category_id"/>
+                <field name="struct_id" invisible="1"/>
                 <field name="sequence" invisible="1"/>
                 <field name="register_id"/>
             </tree>
@@ -272,19 +312,6 @@
         </field>
     </record>
 
-    <record id="hr_salary_rule_tree" model="ir.ui.view">
-        <field name="name">hr.salary.rule.tree</field>
-        <field name="model">hr.salary.rule</field>
-        <field name="field_parent">child_ids</field>
-        <field eval="20" name="priority"/>
-        <field name="arch" type="xml">
-            <tree string="Salary Rules">
-                <field name="name"/>
-                <field name="code"/>
-                <field name="category_id" invisible="True"/>
-            </tree>
-        </field>
-    </record>
     <record id="hr_salary_rule_form" model="ir.ui.view">
         <field name="name">hr.salary.rule.form</field>
         <field name="model">hr.salary.rule</field>
@@ -298,7 +325,8 @@
 
                 <group name="main_details" col="4">
                    <field name="code"/>
-                   <field name="sequence" />
+                   <field name="sequence"/>
+                   <field name="struct_id"/>
                    <field name="active"/>
                    <field name="appears_on_payslip"/>
                 </group>
@@ -322,11 +350,6 @@
                             <field name="register_id"/>
                         </group>
                     </page>
-                    <page name="rules" string="Child Rules">
-                       <field name="parent_rule_id"/>
-                       <separator string="Children Definition"/>
-                       <field name="child_ids"/>
-                    </page>
                     <page name="description" string="Description">
                         <field name="note"/>
                     </page>
@@ -343,9 +366,11 @@
             <search string="Search Salary Rule">
                 <field name="name" string="Salary Rules" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
                 <field name="category_id"/>
+                <field name="struct_id"/>
                 <field name="condition_range_min"/>
                 <group col="8" colspan="4" expand="0" string="Group By">
                     <filter string="Category" name="head" context="{'group_by':'category_id'}"/>
+                    <filter string="Salary Structure" name="group_by_struct_id" context="{'group_by': 'struct_id'}"/>
                 </group>
             </search>
         </field>
@@ -356,15 +381,7 @@
         <field name="res_model">hr.salary.rule</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
-        <field name="domain">[('parent_rule_id','=',False)]</field>
+        <field name="context">{'search_default_group_by_struct_id': 1}</field>
         <field name="search_view_id" ref="view_hr_rule_filter"/>
     </record>
-
-    <act_window name="All Children Rules"
-        domain="[('parent_rule_id', '=', active_id)]"
-        res_model="hr.salary.rule"
-        src_model="hr.salary.rule"
-        view_id="hr_salary_rule_list"
-        id="act_children_salary_rules"/>
-
 </odoo>

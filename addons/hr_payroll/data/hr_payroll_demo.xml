@@ -19,7 +19,15 @@
             <field name="name">Meal Voucher Register</field>
         </record>
 
-        <!-- Salary Rules -->
+        <!-- Salary Structure -->
+
+        <record id="structure_002" model="hr.payroll.structure">
+            <field name="code">MEGG</field>
+            <field name="name">Marketing Executive for Gilles Gravie</field>
+            <field name="type_id" ref="structure_type_employee"/>
+        </record>
+
+        <!-- Salary Rules for Marketing Executive for Gilles Gravie-->
 
         <record id="hr_salary_rule_houserentallowance1" model="hr.salary.rule">
             <field name="amount_select">percentage</field>
@@ -30,6 +38,7 @@
             <field name="register_id" ref="hr_houserent_register"/>
             <field name="name">House Rent Allowance</field>
             <field name="sequence" eval="5"/>
+            <field name="struct_id" ref="structure_002"/>
         </record>
 
         <record id="hr_salary_rule_convanceallowance1" model="hr.salary.rule">
@@ -39,36 +48,17 @@
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">Conveyance Allowance</field>
             <field name="sequence" eval="10"/>
-        </record>
-
-        <record id="hr_salary_rule_professionaltax1" model="hr.salary.rule">
-            <field name="amount_select">fix</field>
-            <field eval="150" name="sequence"/>
-            <field eval="-200.0" name="amount_fix"/>
-            <field name="code">PT</field>
-            <field name="category_id" ref="hr_payroll.DED"/>
-            <field name="register_id" ref="hr_professional_tax_register"/>
-            <field name="name">Professional Tax</field>
-        </record>
-
-        <record id="hr_salary_rule_providentfund1" model="hr.salary.rule">
-            <field name="amount_select">percentage</field>
-            <field eval="120" name="sequence"/>
-            <field eval="-12.5" name="amount_percentage"/>
-            <field name="amount_percentage_base">contract.wage</field>
-            <field name="code">PF</field>
-            <field name="category_id" ref="hr_payroll.DED"/>
-            <field name="register_id" ref="hr_provident_fund_register"/>
-            <field name="name">Provident Fund</field>
+            <field name="struct_id" ref="structure_002"/>
         </record>
 
         <record id="hr_salary_rule_ca_gravie" model="hr.salary.rule">
             <field name="amount_select">fix</field>
-            <field eval="600.0" name="amount_fix"/>
+            <field name="amount_fix" eval="600.0"/>
             <field name="code">CAGG</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">Conveyance Allowance For Gravie</field>
             <field name="sequence" eval="15"/>
+            <field name="struct_id" ref="structure_002"/>
         </record>
 
         <record id="hr_salary_rule_meal_voucher" model="hr.salary.rule">
@@ -80,22 +70,30 @@
             <field name="register_id" ref="hr_meal_voucher_register"/>
             <field name="name">Meal Voucher</field>
             <field name="sequence" eval="16"/>
+            <field name="struct_id" ref="structure_002"/>
          </record>
 
-        <!-- Salary Structure -->
-
-         <record id="structure_001" model="hr.payroll.structure">
-            <field name="code">ME</field>
-            <field name="name">Marketing Executive</field>
-            <field eval="[(6, 0, [ref('hr_salary_rule_houserentallowance1'), ref('hr_salary_rule_convanceallowance1'),ref('hr_salary_rule_professionaltax1'),ref('hr_salary_rule_providentfund1')])]" name="rule_ids"/>
-            <field name="parent_id" ref="structure_base"/>
+        <record id="hr_salary_rule_providentfund1" model="hr.salary.rule">
+            <field name="amount_select">percentage</field>
+            <field name="sequence" eval="120"/>
+            <field name="amount_percentage" eval="-12.5"/>
+            <field name="amount_percentage_base">contract.wage</field>
+            <field name="code">PF</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="register_id" ref="hr_provident_fund_register"/>
+            <field name="name">Provident Fund</field>
+            <field name="struct_id" ref="structure_002"/>
         </record>
 
-        <record id="structure_002" model="hr.payroll.structure">
-            <field name="code">MEGG</field>
-            <field name="name">Marketing Executive for Gilles Gravie</field>
-            <field eval="[(6, 0, [ref('hr_salary_rule_ca_gravie'), ref('hr_salary_rule_meal_voucher')])]" name="rule_ids"/>
-            <field name="parent_id" ref="structure_001"/>
+        <record id="hr_salary_rule_professionaltax1" model="hr.salary.rule">
+            <field name="amount_select">fix</field>
+            <field name="sequence" eval="150"/>
+            <field name="amount_fix" eval="-200.0"/>
+            <field name="code">PT</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="register_id" ref="hr_professional_tax_register"/>
+            <field name="name">Professional Tax</field>
+            <field name="struct_id" ref="structure_002"/>
         </record>
 
         <!-- Employee -->
@@ -113,10 +111,9 @@
 
         <record id="hr_contract_firstcontract1" model="hr.contract">
             <field name="name">Marketing Executive Contract</field>
-            <field name="type_id" ref="hr_contract.hr_contract_type_emp"/>
             <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
             <field name="date_end" eval="time.strftime('%Y')+'-12-31'"/>
-            <field name="struct_id" ref="hr_payroll.structure_001"/>
+            <field name="struct_id" ref="hr_payroll.structure_002"/>
             <field name="employee_id" ref="hr_employee_payroll"/>
             <field name="notes">Default contract for marketing executives</field>
             <field eval="4000.0" name="wage"/>
@@ -125,7 +122,6 @@
 
         <record id="hr_contract_gilles_gravie" model="hr.contract">
             <field name="name">Contract For Gilles Gravie</field>
-            <field name="type_id" ref="hr_contract.hr_contract_type_emp"/>
             <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
             <field name="date_end" eval="time.strftime('%Y')+'-12-31'"/>
             <field name="struct_id" ref="hr_payroll.structure_002"/>
@@ -136,7 +132,6 @@
 
         <record id="hr_contract_admin" model="hr.contract">
             <field name="name">Contract For Mitchell Admin</field>
-            <field name="type_id" ref="hr_contract.hr_contract_type_emp"/>
             <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
             <field name="date_end" eval="time.strftime('%Y')+'-12-31'"/>
             <field name="struct_id" ref="hr_payroll.structure_002"/>

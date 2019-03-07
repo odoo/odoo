@@ -27,6 +27,8 @@ TODO:
     """,
     'data': [
         'data/l10n_fr_hr_payroll_data.xml',
+        'data/l10n_fr_hr_payroll_employe_cadre_data.xml',
+        'data/l10n_fr_hr_payroll_employe_non_cadre_data.xml',
         'views/l10n_fr_hr_payroll_view.xml',
         'views/res_config_settings_views.xml',
         'report/report_l10n_fr_fiche_paye.xml',

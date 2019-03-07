@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- YTI TODO: Set noupdate 1 -->
+    <data noupdate="0">
+
+        <!-- Salary Structure -->
+        <record id="hr_payroll_structure_cp200_employee_salary" model="hr.payroll.structure">
+            <field name="code">CP 200</field>
+            <field name="name">Belgian Employee</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="type_id" ref="l10n_be_hr_payroll.structure_type_employee_cp200"/>
+        </record>
+
+        <!-- Salary Rules -->
+        <function model="hr.salary.rule" name="write">
+            <value model="hr.salary.rule" search="[
+                ('struct_id', '=', ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary')),
+                ('code', '=', 'BASIC')]"/>
+            <value eval="{'amount_python_compute': 'result = contract.wage_with_holidays'}"/>
+        </function>
+
+        <record id="cp200_employees_salary_atn_internet" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_div_impos"/>
+            <field name="name">ATN Internet</field>
+            <field name="code">ATN.INT</field>
+            <field name="sequence">16</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.internet)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = 5.0</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        </record>
+
+        <record id="cp200_employees_salary_atn_mobile" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_div_impos"/>
+            <field name="name">ATN Mobile</field>
+            <field name="code">ATN.MOB</field>
+            <field name="sequence">17</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.mobile)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = 12.0</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        </record>
+
+        <record id="cp200_employees_salary_gross_salary" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_salary"/>
+            <field name="name">Gross Salary</field>
+            <field name="code">SALARY</field>
+            <field name="sequence">20</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories.BASIC
+if contract.internet:
+    result += 5.0
+if contract.mobile:
+    result += 12.0
+            </field>
+            <field name="appears_on_payslip" eval="False"/>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        </record>
+
+        <record id="cp200_employees_salary_onss_rule" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_onss"/>
+            <field name="name">Social contribution</field>
+            <field name="code">ONSS</field>
+            <field name="sequence">41</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">SALARY</field>
+            <field name="amount_percentage">-13.07</field>
+            <field name="register_id" ref="contrib_register_onss"/>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        </record>
+
+        <record id="cp200_employees_salary_employment_bonus_employees" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_employment_bonus"/>
+            <field name="name">Employment Bonus</field>
+            <field name="code">EmpBonus.1</field>
+            <field name="sequence">42</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = categories.BRUT &lt;= 2560.57</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = compute_employment_bonus_employees(payslip, categories, worked_days, inputs)</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        </record>
+
+        <record id="cp200_employees_salary_reim_travel" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="name">Reimbursement of travel expenses</field>
+            <field name="code">Tr.E</field>
+            <field name="amount_select">code</field>
+            <field name="sequence">65</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.others_reimbursed_amount)</field>
+            <field name="amount_python_compute">result = contract.others_reimbursed_amount</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        </record>
+
+        <record id="cp200_employees_salary_company_car" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_div_impos"/>
+            <field name="name">ATN Company Car</field>
+            <field name="code">ATN.CAR</field>
+            <field name="sequence">70</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.transport_mode_car and contract.car_atn)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.car_atn</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        </record>
+
+        <record id="cp200_employees_salary_gross_with_ip" model="hr.salary.rule">
+            <field name="name">Total Gross</field>
+            <field name="sequence">90</field>
+            <field name="code">GROSSIP</field>
+            <field name="category_id" ref="l10n_be_hr_payroll.hr_salary_rule_category_gross_with_ip"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.ip)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.BASIC + categories.ALW</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        </record>
+
+        <record id="cp200_employees_salary_ip_part" model="hr.salary.rule">
+            <field name="category_id" ref="hr_salary_rule_category_ip_part"/>
+            <field name="name">Intellectual Property</field>
+            <field name="code">IP.PART</field>
+            <field name="sequence">91</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.ip)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = - categories.GROSSIP * contract.ip_wage_rate / 100.0</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        </record>
+
+        <record id="cp200_employees_salary_withholding_taxes" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_pp"/>
+            <field name="name">Withholding Tax</field>
+            <field name="code">P.P</field>
+            <field name="sequence">120</field>
+            <field name="condition_select">none</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = compute_withholding_taxes(payslip, categories, worked_days, inputs)
+            </field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        </record>
+
+        <record id="cp200_employees_salary_company_car_2" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_div_net"/>
+            <field name="name">ATN Company Car</field>
+            <field name="code">ATN.CAR.2</field>
+            <field name="sequence">160</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.transport_mode_car and contract.car_atn)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -contract.car_atn</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        </record>
+
+        <record id="cp200_employees_salary_atn_internet_2" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_div_net"/>
+            <field name="name">ATN Internet</field>
+            <field name="code">ATN.INT.2</field>
+            <field name="sequence">161</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.internet</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -5.0</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        </record>
+
+        <record id="cp200_employees_salary_mis_ex_onss" model="hr.salary.rule">
+            <field name="category_id" ref="hr_salary_rule_category_spec_soc_contribution"/>
+            <field name="name">Special social cotisation</field>
+            <field name="code">M.ONSS</field>
+            <field name="amount_select">fix</field>
+            <field name="sequence">165</field>
+            <field name="appears_on_payslip" eval="False"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = compute_special_social_cotisations(payslip, categories, worked_days, inputs)</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        </record>
+
+        <record id="cp200_employees_salary_ch_worker" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_div_net"/>
+            <field name="name">Retain on Meal Voucher</field>
+            <field name="code">MEAL_V_EMP</field>
+            <field name="sequence">165</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.meal_voucher_amount)</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage">-100.0</field>
+            <field name="amount_percentage_base">contract.meal_voucher_amount - contract.meal_voucher_paid_by_employer</field>
+            <field name="quantity">worked_days.WORK100 and worked_days.WORK100.number_of_days</field>
+            <field name="appears_on_payslip" eval="True"/>
+            <field name="register_id" ref="contrib_register_meal_vouchers"/>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        </record>
+
+        <record id="cp200_employees_salary_atn_mobile_2" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_div_net"/>
+            <field name="name">ATN Mobile</field>
+            <field name="code">ATN.MOB.2</field>
+            <field name="sequence">162</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.mobile</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -12.0</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        </record>
+
+        <record id="cp200_employees_salary_representation_fees" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_div_net"/>
+            <field name="name">Representation Fees</field>
+            <field name="code">REP.FEES</field>
+            <field name="amount_select">code</field>
+            <field name="sequence">171</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.representation_fees)</field>
+            <field name="amount_python_compute">result = contract.representation_fees</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        </record>
+
+        <record id="cp200_employees_salary_ip" model="hr.salary.rule">
+            <field name="category_id" ref="l10n_be_hr_payroll.hr_payroll_head_div_net"/>
+            <field name="name">Intellectual Property</field>
+            <field name="code">IP</field>
+            <field name="amount_select">code</field>
+            <field name="sequence">172</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.ip)</field>
+            <field name="amount_python_compute">result = categories.GROSSIP * contract.ip_wage_rate / 100.0</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        </record>
+
+        <record id="cp200_employees_salary_ip_deduction" model="hr.salary.rule">
+            <field name="category_id" ref="l10n_be_hr_payroll.hr_payroll_head_div_net"/>
+            <field name="name">Intellectual Property Income Deduction</field>
+            <field name="code">IP.DED</field>
+            <field name="amount_select">code</field>
+            <field name="sequence">173</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.ip)</field>
+            <field name="amount_python_compute">result = compute_ip_deduction(payslip, categories, worked_days, inputs)</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        </record>
+
+    </data>
+</odoo>

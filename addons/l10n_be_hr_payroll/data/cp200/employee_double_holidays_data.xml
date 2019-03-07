@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- YTI TODO set 1 -->
+    <data noupdate="0">
+
+        <!-- Salary Structure -->
+        <record id="hr_payroll_structure_cp200_double_holiday" model="hr.payroll.structure">
+            <field name="code">CP 200 DH</field>
+            <field name="name">Double Holidays Belgian Employee</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="report_id" ref="l10n_be_hr_payroll.action_report_double_holiday_13th_month"/>
+            <field name="payslip_name">Double Holidays Slip</field>
+            <field name="type_id" ref="l10n_be_hr_payroll.structure_type_employee_cp200"/>
+        </record>
+
+        <!-- Salary Rules -->
+        <function model="hr.salary.rule" name="write">
+            <value model="hr.salary.rule" search="[
+                ('struct_id', '=', ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_double_holiday')),
+                ('code', '=', 'BASIC')]"/>
+            <value eval="{'amount_python_compute': 'result = contract.wage_with_holidays'}"/>
+        </function>
+
+        <!-- 92% of monthly gross salary -->
+        <record id="cp200_employees_double_holiday_pay_basic" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_dp"/>
+            <field name="name">Double Holiday Pay</field>
+            <field name="code">D.P</field>
+            <field name="sequence">2</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.BASIC * 0.92</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+        </record>
+
+        <record id="cp200_employees_double_holiday_atn_internet" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_div_impos"/>
+            <field name="name">ATN Internet</field>
+            <field name="code">ATN.INT</field>
+            <field name="sequence">16</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.internet)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = 5.0</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+        </record>
+
+        <record id="cp200_employees_double_holiday_atn_mobile" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_div_impos"/>
+            <field name="name">ATN Mobile</field>
+            <field name="code">ATN.MOB</field>
+            <field name="sequence">17</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.mobile)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = 12.0</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+        </record>
+
+        <record id="cp200_employees_double_holiday_gross_salary" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_salary"/>
+            <field name="name">Gross Salary</field>
+            <field name="code">SALARY</field>
+            <field name="sequence">20</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = categories.BASIC
+if contract.internet:
+    result += 5.0
+if contract.mobile:
+    result += 12.0
+            </field>
+            <field name="appears_on_payslip" eval="False"/>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+        </record>
+
+        <!-- 85% of monthly gross salary is used to compute social contributions -->
+        <record id="cp200_employees_double_holiday_pay_salary" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_salary"/>
+            <field name="name">Gross Salary</field>
+            <field name="code">SALARY</field>
+            <field name="sequence">21</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = SALARY * 0.85</field>
+            <field name="appears_on_payslip" eval="False"/>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+        </record>
+
+        <record id="cp200_employees_double_holiday_onss_rule" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_onss"/>
+            <field name="name">Social contribution</field>
+            <field name="code">ONSS</field>
+            <field name="sequence">41</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">percentage</field>
+            <field name="amount_percentage_base">SALARY</field>
+            <field name="amount_percentage">-13.07</field>
+            <field name="register_id" ref="contrib_register_onss"/>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+        </record>
+
+        <record id="cp200_employees_double_holiday_employment_bonus_employees" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_employment_bonus"/>
+            <field name="name">Employment Bonus</field>
+            <field name="code">EmpBonus.1</field>
+            <field name="sequence">42</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = categories.BRUT &lt;= 2560.57</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = compute_employment_bonus_employees(payslip, categories, worked_days, inputs)</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+        </record>
+
+        <record id="cp200_employees_double_holiday_reim_travel" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="name">Reimbursement of travel expenses</field>
+            <field name="code">Tr.E</field>
+            <field name="amount_select">code</field>
+            <field name="sequence">65</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.others_reimbursed_amount)</field>
+            <field name="amount_python_compute">result = contract.others_reimbursed_amount</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+        </record>
+
+        <record id="cp200_employees_double_holiday_gross_with_ip" model="hr.salary.rule">
+            <field name="name">Total Gross</field>
+            <field name="sequence">90</field>
+            <field name="code">GROSSIP</field>
+            <field name="category_id" ref="l10n_be_hr_payroll.hr_salary_rule_category_gross_with_ip"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.ip)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.BASIC + categories.ALW</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+        </record>
+
+        <record id="cp200_employees_double_holiday_ip_part" model="hr.salary.rule">
+            <field name="category_id" ref="hr_salary_rule_category_ip_part"/>
+            <field name="name">Intellectual Property</field>
+            <field name="code">IP.PART</field>
+            <field name="sequence">91</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.ip)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = - categories.GROSSIP * contract.ip_wage_rate / 100.0</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+        </record>
+
+        <record id="cp200_employees_double_holiday_pay_gross" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll.GROSS"/>
+            <field name="name">Gross</field>
+            <field name="code">GROSS</field>
+            <field name="sequence">101</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.DP + categories.ALW</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+        </record>
+
+        <record id="cp200_employees_double_holiday_pay_p_p" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_pp"/>
+            <field name="name">Withholding Tax</field>
+            <field name="code">P.P</field>
+            <field name="sequence">102</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = compute_double_holiday_withholding_taxes(payslip, categories, worked_days, inputs)</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+        </record>
+
+        <record id="cp200_employees_double_holiday_atn_internet_2" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_div_net"/>
+            <field name="name">ATN Internet</field>
+            <field name="code">ATN.INT.2</field>
+            <field name="sequence">161</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.internet</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -5.0</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+        </record>
+
+        <record id="cp200_employee_double_holiday_atn_mobile_2" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll_head_div_net"/>
+            <field name="name">ATN Mobile</field>
+            <field name="code">ATN.MOB.2</field>
+            <field name="sequence">162</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.mobile</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -12.0</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+        </record>
+
+        <record id="cp200_employees_double_holiday_ip" model="hr.salary.rule">
+            <field name="category_id" ref="l10n_be_hr_payroll.hr_payroll_head_div_net"/>
+            <field name="name">Intellectual Property</field>
+            <field name="code">IP</field>
+            <field name="amount_select">code</field>
+            <field name="sequence">172</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.ip)</field>
+            <field name="amount_python_compute">result = categories.GROSSIP * contract.ip_wage_rate / 100.0</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+        </record>
+
+        <record id="cp200_employees_double_holiday_ip_deduction" model="hr.salary.rule">
+            <field name="category_id" ref="l10n_be_hr_payroll.hr_payroll_head_div_net"/>
+            <field name="name">Intellectual Property Income Deduction</field>
+            <field name="code">IP.DED</field>
+            <field name="amount_select">code</field>
+            <field name="sequence">173</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(contract.ip)</field>
+            <field name="amount_python_compute">result = compute_ip_deduction(payslip, categories, worked_days, inputs)</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+        </record>
+
+        <record id="cp200_employees_double_holiday_pay_net" model="hr.salary.rule">
+            <field name="category_id" ref="hr_payroll.NET"/>
+            <field name="name">Net</field>
+            <field name="code">NET</field>
+            <field name="sequence">201</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.DP + categories.ALW + categories.DED</field>
+            <field name="struct_id" ref="hr_payroll_structure_cp200_double_holiday"/>
+        </record>
+    </data>
+</odoo>
