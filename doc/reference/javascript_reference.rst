@@ -299,6 +299,17 @@ The *odoo.define* method is given three arguments:
   extract them from the function by calling toString on it, then using a regexp
   to find all *require* statements.
 
+.. code-block:: javascript
+
+      odoo.define('module.Something', ['web.ajax'], function (require) {
+        "use strict";
+
+        var ajax = require('web.ajax');
+
+        // some code here
+        return something;
+    });
+
 - finally, the last argument is a function which defines the module. Its return
   value is the value of the module, which may be passed to other modules requiring
   it.  Note that there is a small exception for asynchronous modules, see the
@@ -312,7 +323,7 @@ If an error happens, it will be logged (in debug mode) in the console:
 * ``Failed modules``:
   A javascript error is detected
 * ``Rejected modules``:
-  The module returns a rejected deferred. It (and its dependent modules) is not
+  The module returns a rejected Promise. It (and its dependent modules) is not
   loaded.
 * ``Rejected linked modules``:
   Modules who depend on a rejected module
@@ -326,12 +337,12 @@ Asynchronous modules
 
 It can happen that a module needs to perform some work before it is ready.  For
 example, it could do a rpc to load some data.  In that case, the module can
-simply return a deferred (promise).  In that case, the module system will simply
-wait for the deferred to complete before registering the module.
+simply return a promise.  In that case, the module system will simply
+wait for the promise to complete before registering the module.
 
 .. code-block:: javascript
 
-    odoo.define('module.Something', ['web.ajax'], function (require) {
+    odoo.define('module.Something', function (require) {
         "use strict";
 
         var ajax = require('web.ajax');
@@ -351,11 +362,11 @@ Best practices
 - declare all your dependencies at the top of the module. Also, they should be
   sorted alphabetically by module name. This makes it easier to understand your module.
 - declare all exported values at the end
-- try to avoid exporting too much things from one module.  It is usually better
+- try to avoid exporting too many things from one module.  It is usually better
   to simply export one thing in one (small/smallish) module.
-- asynchronous modules can be used to simplify some use cases.  For example,
-  the *web.dom_ready* module returns a deferred which will be resolved when the
-  dom is actually ready.  So, another module that needs the DOM could simply have
+- asynchronous modules can be used to simplify some use cases. For example,
+  the *web.dom_ready* module returns a promise which will be resolved when the
+  dom is actually ready. So, another module that needs the DOM could simply have
   a *require('web.dom_ready')* statement somewhere, and the code will only be
   executed when the DOM is ready.
 - try to avoid defining more than one module in one file.  It may be convenient
@@ -562,7 +573,7 @@ rendering takes place, then *start* and finally *destroy*.
 
     this method will be called once by the framework when a widget is created
     and in the process of being appended to the DOM.  The *willStart* method is a
-    hook that should return a deferred.  The JS framework will wait for this deferred
+    hook that should return a promise.  The JS framework will wait for this promise
     to complete before moving on to the rendering step.  Note that at this point,
     the widget does not have a DOM root element.  The *willStart* hook is mostly
     useful to perform some asynchronous work, such as fetching data from the server
@@ -585,9 +596,9 @@ rendering takes place, then *start* and finally *destroy*.
     the *start* method.  This is useful to perform some specialized post-rendering
     work.  For example, setting up a library.
 
-    Must return a deferred to indicate when its work is done.
+    Must return a promise to indicate when its work is done.
 
-    :returns: deferred object
+    :returns: promise
 
 .. function:: Widget.destroy()
 
@@ -755,7 +766,7 @@ Inserting a widget in the DOM
     uses `.insertBefore()`_
 
 All of these methods accept whatever the corresponding jQuery method accepts
-(CSS selectors, DOM nodes or jQuery objects). They all return a deferred_
+(CSS selectors, DOM nodes or jQuery objects). They all return a promise
 and are charged with three tasks:
 
 * rendering the widget's root element via
@@ -805,6 +816,34 @@ Widget Guidelines
   or intercepting DOM events) must inherit from :class:`~Widget`
   and correctly implement and use its API and life cycle.
 
+* Make sure to wait for start to be finished before using $el e.g.:
+
+    .. code-block:: javascript
+
+        var Widget = require('web.Widget');
+
+        var AlmostCorrectWidget = Widget.extend({
+            start: function () {
+                this.$el.hasClass(....) // in theory, $el is already set, but you don't know what the parent will do with it, better call super first
+                return this._super.apply(arguments);
+            },
+        });
+
+        var IncorrectWidget = Widget.extend({
+            start: function () {
+                this._super.apply(arguments); // the parent promise is lost, nobody will wait for the start of this widget
+                this.$el.hasClass(....)
+            },
+        });
+
+        var CorrectWidget = Widget.extend({
+            start: function () {
+                var self = this;
+                return this._super.apply(arguments).then(function() {
+                    self.$el.hasClass(....) // this works, no promise is lost and the code executes in a controlled order: first super, then our code.
+                });
+            },
+        });
 
 .. _reference/javascript_reference/qweb:
 
@@ -926,7 +965,7 @@ The previous example can be updated to use the custom event system:
         start: function () {
             this.counter = new Counter(this);
             var def = this.counter.appendTo(this.$el);
-            return $.when(def, this._super.apply(this, arguments);
+            return Promise.all([def, this._super.apply(this, arguments)]);
         },
         _onValueChange: function(event) {
             // do something with event.data.val
@@ -2240,5 +2279,3 @@ For more information, look into the *control_panel.js* file.
     http://api.jquery.com/delegate/
 
 .. _datepicker: https://github.com/Eonasdan/bootstrap-datetimepicker
-
-.. _deferred: http://api.jquery.com/category/deferred-object/
