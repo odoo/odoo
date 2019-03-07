@@ -18,9 +18,9 @@ class Employee(models.Model):
             line_type = self.env.ref('hr_skills.resume_type_experience', raise_if_not_found=False)
             resume_lines_values.append({
                 'employee_id': employee.id,
-                'name': employee.company_id.name,
+                'name': employee.company_id.name or '',
                 'date_start': employee.create_date.date(),
-                'description': employee.job_title,
+                'description': employee.job_title or '',
                 'line_type_id': line_type and line_type.id,
             })
         self.env['hr.resume.line'].create(resume_lines_values)
