@@ -85,20 +85,39 @@ class HrWorkEnrty(models.Model):
 
     @api.model
     def _mark_conflicting_work_entries(self, start, stop):
-        conflict = False
-        domain = [
-            ('date_start', '<', stop),
-            ('date_stop', '>', start),
-        ]
-        benefs = self.search(domain)
-        work_entries_by_employee = itertools.groupby(benefs, lambda b: b.employee_id)
-        for employee, benefs in work_entries_by_employee:
-            intervals = Intervals(intervals=((b.date_start, b.date_stop, b) for b in benefs))
-            for interval in intervals:
-                if len(interval[2]) > 1:
-                    interval[2].write({'display_warning': True})
-                    conflict = True
-        return conflict
+        """
+        Set `display_warning` to True for overlapping benefits
+        between two dates.
+        Return True if overlapping benefits were detected.
+        """
+        # Use the postgresql range type `tsrange` which is a range of timestamp
+        # It supports the intersection operator (&&) useful to detect overlap.
+        # use '()' to exlude the lower and upper bounds of the range.
+        # Filter on date_start and date_stop (both indexed) in the EXISTS clause to
+        # limit the resulting set size and fasten the query.
+        query = """
+            SELECT b1.id
+            FROM hr_work_entry b1
+            WHERE
+            b1.date_start <= %s
+            AND b1.date_stop >= %s
+            AND EXISTS (
+                SELECT 1
+                FROM hr_work_entry b2
+                WHERE
+                    b2.date_start <= %s
+                    AND b2.date_stop >= %s
+                    AND tsrange(b1.date_start, b1.date_stop, '()') && tsrange(b2.date_start, b2.date_stop, '()')
+                    AND b1.id <> b2.id
+                    AND b1.employee_id = b2.employee_id
+            );
+        """
+        self.env.cr.execute(query, (stop, start, stop, start))
+        conflicts = [res.get('id') for res in self.env.cr.dictfetchall()]
+        self.browse(conflicts).write({
+            'display_warning': True,
+        })
+        return bool(conflicts)
 
     @api.multi
     def _compute_conflicts_leaves_to_approve(self):
