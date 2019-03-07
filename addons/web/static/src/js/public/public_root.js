@@ -18,6 +18,19 @@ function getLang() {
 var lang = utils.get_cookie('frontend_lang') || getLang(); // FIXME the cookie value should maybe be in the ctx?
 var localeDef = ajax.loadJS('/web/webclient/locale/' + lang.replace('-', '_'));
 
+// In the frontend, there is no CrashManager instance. Errors are displayed in
+// the console. However, we do want to do the same as the backend for Promise
+// unhandled rejections.
+window.addEventListener('unhandledrejection', function (ev) {
+    if (!ev.reason || !(ev.reason instanceof Error)) {
+        // the rejection is not due to an Error, so prevent the browser
+        // from displaying an 'unhandledrejection' error in the console
+        ev.stopPropagation();
+        ev.stopImmediatePropagation();
+        ev.preventDefault();
+    }
+});
+
 /**
  * Element which is designed to be unique and that will be the top-most element
  * in the widget hierarchy. So, all other widgets will be indirectly linked to
