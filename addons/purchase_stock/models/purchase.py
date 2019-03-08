@@ -372,12 +372,11 @@ class PurchaseOrderLine(models.Model):
 
     @api.multi
     def _create_stock_moves(self, picking):
-        moves = self.env['stock.move']
-        done = self.env['stock.move'].browse()
+        values = []
         for line in self:
             for val in line._prepare_stock_moves(picking):
-                done += moves.create(val)
-        return done
+                values.append(val)
+        return self.env['stock.move'].create(values)
 
     def _merge_in_existing_line(self, product_id, product_qty, product_uom, location_id, name, origin, values):
         """ This function purpose is to be override with the purpose to forbide _run_buy  method

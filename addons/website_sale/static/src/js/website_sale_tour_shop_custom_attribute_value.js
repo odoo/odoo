@@ -4,13 +4,15 @@ odoo.define("website_sale.tour_shop_custom_attribute_value", function (require) 
     var tour = require("web_tour.tour");
     var base = require("web_editor.base");
 
+    var optionVariantImage;
+
     tour.register("shop_custom_attribute_value", {
-        url: "/shop",
+        url: "/shop?search=Customizable Desk",
         test: true,
         wait_for: base.ready()
     }, [{
-        trigger: 'img[src*="/product.product/10"]',
-        run: 'click'
+        content: "click on Customizable Desk",
+        trigger: '.oe_product_cart a:contains("Customizable Desk")',
     }, {
         trigger: 'li.js_attribute_value span:contains(Custom)',
         extra_trigger: 'li.js_attribute_value',
@@ -34,6 +36,24 @@ odoo.define("website_sale.tour_shop_custom_attribute_value", function (require) 
     }, {
         trigger: 'span.oe_price span:contains(600)',
         run: function (){}, // check
+    }, {
+        trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (Steel)")',
+        run: function () {
+            optionVariantImage = $('.oe_optional_products_modal .js_product:eq(1) img.variant_image').attr('src');
+        }
+    }, {
+        trigger: '.oe_optional_products_modal .js_product:eq(1) input[data-value_name="Aluminium"]',
+    }, {
+        trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (Aluminium)")',
+        run: function () {
+            var newVariantImage = $('.oe_optional_products_modal .js_product:eq(1) img.variant_image').attr('src');
+            if (newVariantImage !== optionVariantImage) {
+                $('<p>').text('image variant option src changed').insertAfter('.oe_optional_products_modal .js_product:eq(1) .product-name');
+            }
+        }
+    }, {
+        extra_trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("image variant option src changed")',
+        trigger: '.oe_optional_products_modal .js_product:eq(1) input[data-value_name="Steel"]',
     }, {
         trigger: 'li.js_attribute_value span:contains(Aluminium)',
         extra_trigger: '.oe_optional_products_modal',
