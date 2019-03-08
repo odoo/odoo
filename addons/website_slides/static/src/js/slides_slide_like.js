@@ -59,6 +59,10 @@ var SlideLikeWidget = Widget.extend({
                     self._popoverAlert(self.$el, _.str.sprintf(_t('Please <a href="/web/login?redirect=%s">login</a> to vote this slide'), (document.URL)));
                 } else if (data.error === 'vote_done') {
                     self._popoverAlert(self.$el, _t('You have already voted for this slide'));
+                } else if (data.error === 'comment_disabled') {
+                    self._popoverAlert(self.$el, _t('Votes and comments are disabled for this channel'));
+                } else if (data.error === 'missing_karma') {
+                    self._popoverAlert(self.$el, _t('You don\'t have enough karma to vote'));
                 } else {
                     self._popoverAlert(self.$el, _t('Unknown error'));
                 }

@@ -6,6 +6,7 @@ import uuid
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -114,7 +115,7 @@ class Channel(models.Model):
     total_time = fields.Float('# Hours', compute='_compute_slides_statistics', digits=(10, 4), store=True)
     # configuration
     allow_comment = fields.Boolean(
-        "Allow comment on Content", default=False,
+        "Allow rating on Course", default=False,
         help="If checked it allows members to either:\n"
              " * like content and post comments on documentation course;\n"
              " * post comment and review on training course;")
@@ -155,7 +156,11 @@ class Channel(models.Model):
     karma_gen_slide_vote = fields.Integer(string='Lesson voted', default=1)
     karma_gen_channel_rank = fields.Integer(string='Course ranked', default=5)
     karma_gen_channel_finish = fields.Integer(string='Course finished', default=10)
-    # TODO DBE : Add karma based action rules (like in forum)
+    # Karma based actions
+    karma_review = fields.Integer('Add a review', default=10, help="Karma needed to add a review on the course")
+    karma_slide_comment = fields.Integer('Add a comment', default=3, help="Karma needed to add a comment on a slide of this course")
+    karma_slide_vote = fields.Integer('Vote on slide', default=3, help="Karma needed to like/dislike a slide of this course.")
+    can_review = fields.Boolean('Can Review', compute='_compute_karma_rights')
 
     @api.depends('slide_ids.is_published')
     def _compute_slide_last_update(self):
@@ -263,6 +268,11 @@ class Channel(models.Model):
             if channel.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
 
+    @api.multi
+    def _compute_karma_rights(self):
+        for channel in self:
+            channel.can_review = self.env.user.karma >= channel.karma_review
+
     # ---------------------------------------------------------
     # ORM Overrides
     # ---------------------------------------------------------
@@ -318,6 +328,8 @@ class Channel(models.Model):
         through the 'Presentation Published' email, it should be considered as a
         note as we don't want all channel followers to be notified of this answer. """
         self.ensure_one()
+        if kwargs.get('message_type') == 'comment' and not self.can_review:
+            raise KarmaError(_('Not enough karma to review'))
         if parent_id:
             parent_message = self.env['mail.message'].sudo().browse(parent_id)
             if parent_message.subtype_id and parent_message.subtype_id == self.env.ref('website_slides.mt_channel_slide_published'):

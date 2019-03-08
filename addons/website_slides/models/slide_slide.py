@@ -13,6 +13,7 @@ from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.gamification.models.gamification_karma_rank import KarmaError
 from odoo.exceptions import Warning, UserError
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
@@ -155,6 +156,9 @@ class Slide(models.Model):
     slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
     public_views = fields.Integer('# of Public Views')
     total_views = fields.Integer("Total # Views", default="0", compute='_compute_total', store=True)
+    # Karma Based action
+    can_comment = fields.Boolean('Can Comment', compute='_compute_karma_rights')
+    can_vote = fields.Boolean('Can Vote', compute='_compute_karma_rights')
 
     _sql_constraints = [
         ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
@@ -267,6 +271,12 @@ class Slide(models.Model):
     def _get_can_publish_error_message(self):
         return _("Publishing is restricted to the responsible of training courses or members of the publisher group for documentation courses")
 
+    @api.multi
+    def _compute_karma_rights(self):
+        for slide in self:
+            slide.can_comment = self.env.user.karma >= slide.channel_id.karma_slide_comment
+            slide.can_vote = self.env.user.karma >= slide.channel_id.karma_slide_vote
+
     # ---------------------------------------------------------
     # ORM Overrides
     # ---------------------------------------------------------
@@ -312,6 +322,14 @@ class Slide(models.Model):
     # ---------------------------------------------------------
     # Mail/Rating
     # ---------------------------------------------------------
+
+    @api.multi
+    @api.returns('mail.message', lambda value: value.id)
+    def message_post(self, message_type='notification', **kwargs):
+        self.ensure_one()
+        if message_type == 'comment' and not self.can_comment:  # user comments have a restriction on karma
+            raise KarmaError(_('Not enough karma to comment'))
+        return super(Slide, self).message_post(message_type=message_type, **kwargs)
 
     @api.multi
     def get_access_action(self, access_uid=None):
