@@ -4,13 +4,11 @@
 import itertools
 import pytz
 
-from psycopg2 import IntegrityError
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.addons.resource.models.resource import Intervals
 from odoo.exceptions import ValidationError
-from odoo.tools import mute_logger
 
 
 class HrBenefit(models.Model):
