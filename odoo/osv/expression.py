@@ -262,7 +262,7 @@ def combine(operator, unit, zero, domains):
             result += normalize_domain(domain)
             count += 1
     result = [operator] * (count - 1) + result
-    return result
+    return result or unit
 
 
 def AND(domains):

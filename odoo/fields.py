@@ -161,6 +161,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
         :param compute_sudo: whether the field should be recomputed as superuser
             to bypass access rights (boolean, by default ``False``)
+            Note that this has no effects on non-stored computed fields
 
         The methods given for ``compute``, ``inverse`` and ``search`` are model
         methods. Their signature is shown in the following example::

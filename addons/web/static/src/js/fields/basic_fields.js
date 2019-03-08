@@ -1331,7 +1331,9 @@ var CopyClipboard = {
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        this.clipboard.destroy();
+        if (this.clipboard) {
+            this.clipboard.destroy();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -1346,8 +1348,8 @@ var CopyClipboard = {
         var $clipboardBtn = this.$('.o_clipboard_button');
         $clipboardBtn.tooltip({title: _t('Copied !'), trigger: 'manual', placement: 'right'});
         this.clipboard = new ClipboardJS($clipboardBtn[0], {
-            text: function (_) {
-               return self.value.trim();
+            text: function () {
+                return self.value.trim();
             },
             // Container added because of Bootstrap modal that give the focus to another element.
             // We need to give to correct focus to ClipboardJS (see in ClipboardJS doc)
@@ -1363,40 +1365,31 @@ var CopyClipboard = {
             });
         });
     },
+    /**
+     * @override
+     */
+    _render: function () {
+        this._super.apply(this, arguments);
+        this.$el.addClass('o_field_copy');
+    },
+    /**
+     * @override
+     */
+    _renderReadonly: function () {
+        this._super.apply(this, arguments);
+        if (this.value) {
+            this.$el.append($(qweb.render(this.clipboardTemplate)));
+            this._initClipboard();
+        }
+    }
 };
 
 var TextCopyClipboard = FieldText.extend(CopyClipboard, {
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _render: function() {
-        this._super.apply(this, arguments);
-        this.$el.addClass('o_field_copy');
-        this.$el.append($(qweb.render('CopyClipboardText')));
-        this._initClipboard();
-    }
+    clipboardTemplate: 'CopyClipboardText',
 });
 
 var CharCopyClipboard = FieldChar.extend(CopyClipboard, {
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _render: function() {
-        this._super.apply(this, arguments);
-        this.$el.addClass('o_field_copy');
-        this.$el.append($(qweb.render('CopyClipboardChar')));
-        this._initClipboard();
-    }
+    clipboardTemplate: 'CopyClipboardChar',
 });
 
 var AbstractFieldBinary = AbstractField.extend({

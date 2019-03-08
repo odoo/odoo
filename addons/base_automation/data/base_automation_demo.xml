@@ -71,4 +71,19 @@ if 'user_id' in env.context['old_values'][record.id]:
             </field>
         </record>
 
+        <record id="test_mail_template_automation" model="mail.template">
+            <field name="name">Template Automation</field>
+            <field name="model_id" ref="base_automation.model_base_automation_lead_test"/>
+            <field name="body_html">&lt;div&gt;Email automation&lt;/div&gt;</field>
+        </record>
+        <record id="test_rule_on_write_recompute_send_email" model="base.automation">
+            <field name="name">Base Automation: test send an email</field>
+            <field name="model_id" ref="base_automation.model_base_automation_lead_test"/>
+            <field name="template_id" ref="base_automation.test_mail_template_automation"/>
+            <field name="state">email</field>
+            <field name="trigger">on_write</field>
+            <field name="active" eval="True"/>
+            <field name="filter_domain">[('deadline', '!=', False)]</field>
+            <field name="filter_pre_domain">[('deadline', '=', False)]</field>
+        </record>
 </odoo>
