@@ -673,9 +673,10 @@
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label>Expected Closing:</label>
-                                                        <div class="input-group date">
-                                                            <input type="text" name="date_deadline" t-att-value="opportunity.date_deadline" class="form-control date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD"/>
-                                                            <div class="input-group-append">
+                                                        <div class="input-group date" id="exp_closing_div" data-target-input="nearest">
+                                                            <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="opportunity.date_deadline"/></t>
+                                                            <input  type="text" name="date_deadline" t-att-value="date_formatted" class="datetimepicker-input form-control date_deadline" t-att-name="prefix"/>
+                                                            <div class="input-group-append" data-target="#exp_closing_div" data-toggle="datetimepicker">
                                                                 <span class="input-group-text">
                                                                     <span class="fa fa-calendar" role="img" aria-label="Calendar"></span>
                                                                 </span>
@@ -688,7 +689,7 @@
                                                 <label class="col-form-label" for="next_activity">Next Activity</label>
                                                 <select class="form-control next_activity" name="next_activity">
                                                     <t t-foreach="activity_types" t-as="activity_type">
-                                                        <option t-att-data="activity_type.id" t-att-selected="activity_type.id == user_activity.activity_type_id.id" t-att-name="activity_type.name" t-att-summary="activity_type.summary"><t t-esc="activity_type.name"/></option>
+                                                        <option t-att-data="activity_type.id" t-att-selected="activity_type.id == user_activity.activity_type_id.id" t-att-name="activity_type.name" t-att-delay_count="activity_type.delay_count" t-att-delay_unit="activity_type.delay_unit" t-att-summary="activity_type.summary"><t t-esc="activity_type.name"/></option>
                                                     </t>
                                                 </select>
                                             </div>
@@ -698,9 +699,10 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-form-label" for="activity_date_deadline">Next Activity Date</label>
-                                                <div class="input-group date">
-                                                    <input type="text" name="activity_date_deadline" t-att-value="user_activity.date_deadline" class="form-control activity_date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD"/>
-                                                    <div class="input-group-append">
+                                                <div class="input-group date" id="next_activity_div" data-target-input="nearest">
+                                                    <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="user_activity.date_deadline"/></t>
+                                                    <input type="text" name="activity_date_deadline" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" t-att-name="prefix"/>
+                                                    <div class="input-group-append" data-target="#next_activity_div" data-toggle="datetimepicker">
                                                         <span class="input-group-text">
                                                             <span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span>
                                                         </span>

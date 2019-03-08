@@ -2,6 +2,7 @@ odoo.define('crm.partner_assign', function (require) {
 'use strict';
 
 var publicWidget = require('web.public.widget');
+var time = require('web.time');
 
 publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     selector: '#wrapwrap:has(.interested_partner_assign_form, .desinterested_partner_assign_form, .opp-stage-button, .new_opp_form)',
@@ -13,7 +14,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
         'click .edit_contact_confirm': '_onEditContactConfirm',
         'click .new_opp_confirm': '_onNewOppConfirm',
         'click .edit_opp_confirm': '_onEditOppConfirm',
-        'change .edit_opp_form .next_activity': '_onEditOppForm',
+        'change .edit_opp_form .next_activity': '_onChangeNextActivity',
         'click div.input-group span.fa-calendar': '_onCalendarIconClick',
     },
 
@@ -141,12 +142,12 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
             model: 'crm.lead',
             method: 'update_lead_portal',
             args: [[parseInt($('.edit_opp_form .opportunity_id').val())], {
-                date_deadline: $('.edit_opp_form .date_deadline').val(),
+                date_deadline: this._parse_date($('.edit_opp_form .date_deadline').val()),
                 planned_revenue: parseFloat($('.edit_opp_form .planned_revenue').val()),
                 probability: parseFloat($('.edit_opp_form .probability').val()),
                 activity_type_id: parseInt($('.edit_opp_form .next_activity').find(':selected').attr('data')),
                 activity_summary: $('.edit_opp_form .activity_summary').val(),
-                activity_date_deadline: $('.edit_opp_form .activity_date_deadline').val(),
+                activity_date_deadline: this._parse_date($('.edit_opp_form .activity_date_deadline').val()),
                 priority: $('input[name="PriorityRadioOptions"]:checked').val(),
             }],
         }).then(function () {
@@ -232,16 +233,15 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onEditOppForm: function (ev) {
+    _onChangeNextActivity: function (ev) {
         var $selected = $('.edit_opp_form .next_activity').find(':selected');
         if ($selected.attr('activity_summary')) {
             $('.edit_opp_form .activity_summary').val($selected.attr('activity_summary'));
         }
-        if ($selected.attr('days')) {
+        if ($selected.attr('delay_count')) {
             var now = moment();
-            var days = parseInt($selected.attr('days'));
-            var date = now.add(days, 'days');
-            $('.edit_opp_form .activity_date_deadline').val(date.format('YYYY-MM-DD'));
+            var date = now.add(parseInt($selected.attr('delay_count')), $selected.attr('delay_unit'));
+            $('.edit_opp_form .activity_date_deadline').val(date.format(time.getLangDateFormat()));
         }
     },
     /**
@@ -250,6 +250,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      */
     _onCalendarIconClick: function (ev) {
         $(ev.currentTarget).closest('div.date').datetimepicker({
+            format : time.getLangDateFormat(),
             icons: {
                 time: 'fa fa-clock-o',
                 date: 'fa fa-calendar',
@@ -257,6 +258,17 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
                 down: 'fa fa-chevron-down',
             },
         });
+    },
+
+    _parse_date: function (value) {
+        console.log(value);
+        var date = moment(value, time.getLangDateFormat(), true);
+        if (date.isValid()) {
+            return time.date_to_str(date.toDate());
+        }
+        else {
+            return false;
+        }
     },
 });
 });
