@@ -103,10 +103,15 @@ var AbstractGroupedOne2ManyRenderer = ListRenderer.extend({
             return record.data[self.groupBy].res_id;
         });
 
+        var groupTitle;
         var $body = $('<tbody>');
         for (var key in grouped_by) {
             var group = grouped_by[key];
-            var groupTitle = group[0].data[self.groupBy].data.display_name;
+            if (key === 'undefined') {
+                groupTitle = _t("Other");
+            } else {
+                groupTitle = group[0].data[self.groupBy].data.display_name;
+            }
             var $title_row = $(self._renderGroupRow(groupTitle));
             $body.append($title_row);
 
@@ -148,21 +153,14 @@ var ResumeLineRenderer = AbstractGroupedOne2ManyRenderer.extend({
 
     _getCreateLineContext: function (group) {
         var ctx = this._super(group);
-        return group ? _.extend({ default_line_type_id: group[0].data[this.groupBy].data.id }, ctx) : ctx;
+        return group ? _.extend({default_line_type_id: group[0].data[this.groupBy] && group[0].data[this.groupBy].data.id || ""}, ctx) : ctx;
     },
 
     _render: function () {
         var self = this;
         return this._super().then(function () {
-            // Allow to sort records
-            self.$el.find('.o_list_view').sortable({
-                axis: 'y',
-                items: '.o_data_row',
-                helper: 'clone',
-                handle: '.o_row_handle',
-                stop: self._resequence.bind(self),
-            });
-            self.$el.find('table').removeClass('table table-striped o_list_view_ungrouped');
+            self.$el.find('table').removeClass('table-striped o_list_view_ungrouped');
+            self.$el.find('table').addClass('o_resume_table');
         });
     },
 });
@@ -176,7 +174,7 @@ var SkillsRenderer = AbstractGroupedOne2ManyRenderer.extend({
     _renderRow: function (record) {
         var $row = this._super(record);
         // Add progress bar widget at the end of rows
-        var $td = $('<td/>', {class: 'o_data_cell'});
+        var $td = $('<td/>', {class: 'o_data_cell o_skill_cell'});
         var progress = new FieldProgressBar(this, 'level_progress', record, {
             current_value: record.data.level_progress,
             attrs: this.arch.attrs,
