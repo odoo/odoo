@@ -143,7 +143,7 @@
                     <div class="col-12 col-md-8 col-lg-9 d-flex flex-column">
                         <div class="d-flex justify-content-between align-items-start">
                             <h1 class="o_card_people_name">
-                                <span t-field="user.name"/><small t-if="not validation_email_done"> (not verified)</small>
+                                <span t-field="user.name"/><small t-if="user.karma == 0"> (not verified)</small>
                             </h1>
                             <a class="btn btn-primary d-none d-md-inline-block" t-if="request.env.user == user and validation_email_done" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
                                 <i class="fa fa-pencil mr-2"/>EDIT PROFILE
