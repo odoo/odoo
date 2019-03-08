@@ -20,118 +20,99 @@
     <record id="hr_skill_level_a1" model="hr.skill.level">
         <field name="name">A1</field>
         <field name="level_progress">10</field>
-        <field name="sequence">5</field>
         <field name="skill_type_id" ref="hr_skill_type_lang"/>
     </record>
     <record id="hr_skill_level_a2" model="hr.skill.level">
         <field name="name">A2</field>
         <field name="level_progress">40</field>
-        <field name="sequence">10</field>
         <field name="skill_type_id" ref="hr_skill_type_lang"/>
     </record>
     <record id="hr_skill_level_b1" model="hr.skill.level">
         <field name="name">B1</field>
         <field name="level_progress">60</field>
-        <field name="sequence">15</field>
         <field name="skill_type_id" ref="hr_skill_type_lang"/>
     </record>
     <record id="hr_skill_level_b2" model="hr.skill.level">
         <field name="name">B2</field>
         <field name="level_progress">75</field>
-        <field name="sequence">20</field>
         <field name="skill_type_id" ref="hr_skill_type_lang"/>
     </record>
     <record id="hr_skill_level_c1" model="hr.skill.level">
         <field name="name">C1</field>
         <field name="level_progress">85</field>
-        <field name="sequence">25</field>
         <field name="skill_type_id" ref="hr_skill_type_lang"/>
     </record>
     <record id="hr_skill_level_c2" model="hr.skill.level">
         <field name="name">C2</field>
         <field name="level_progress">100</field>
-        <field name="sequence">35</field>
         <field name="skill_type_id" ref="hr_skill_type_lang"/>
     </record>
 
     <record id="hr_skill_level_beginner" model="hr.skill.level">
         <field name="name">Beginner</field>
         <field name="level_progress">15</field>
-        <field name="sequence">1</field>
         <field name="skill_type_id" ref="hr_skill_type_dev"/>
     </record>
     <record id="hr_skill_level_elementary" model="hr.skill.level">
         <field name="name">Elementary</field>
         <field name="level_progress">25</field>
-        <field name="sequence">5</field>
         <field name="skill_type_id" ref="hr_skill_type_dev"/>
     </record>
     <record id="hr_skill_level_intermediate" model="hr.skill.level">
         <field name="name">Intermediate</field>
         <field name="level_progress">50</field>
-        <field name="sequence">15</field>
         <field name="skill_type_id" ref="hr_skill_type_dev"/>
     </record>
     <record id="hr_skill_level_advanced" model="hr.skill.level">
         <field name="name">Advanced</field>
         <field name="level_progress">80</field>
-        <field name="sequence">25</field>
         <field name="skill_type_id" ref="hr_skill_type_dev"/>
     </record>
     <record id="hr_skill_level_expert" model="hr.skill.level">
         <field name="name">Expert</field>
         <field name="level_progress">100</field>
-        <field name="sequence">35</field>
         <field name="skill_type_id" ref="hr_skill_type_dev"/>
     </record>
 
     <record id="hr_skill_level_l1" model="hr.skill.level">
         <field name="name">L1</field>
         <field name="level_progress">25</field>
-        <field name="sequence">1</field>
         <field name="skill_type_id" ref="hr_skill_type_music"/>
     </record>
     <record id="hr_skill_level_l2" model="hr.skill.level">
         <field name="name">L2</field>
         <field name="level_progress">50</field>
-        <field name="sequence">5</field>
         <field name="skill_type_id" ref="hr_skill_type_music"/>
     </record>
     <record id="hr_skill_level_l3" model="hr.skill.level">
         <field name="name">L3</field>
         <field name="level_progress">75</field>
-        <field name="sequence">15</field>
         <field name="skill_type_id" ref="hr_skill_type_music"/>
     </record>
     <record id="hr_skill_level_l4" model="hr.skill.level">
         <field name="name">L4</field>
         <field name="level_progress">100</field>
-        <field name="sequence">25</field>
         <field name="skill_type_id" ref="hr_skill_type_music"/>
     </record>
 
     <record id="hr_skill_level_ml1" model="hr.skill.level">
         <field name="name">L1</field>
         <field name="level_progress">25</field>
-        <field name="sequence">1</field>
         <field name="skill_type_id" ref="hr_skill_type_marketing"/>
     </record>
     <record id="hr_skill_level_ml2" model="hr.skill.level">
         <field name="name">L2</field>
         <field name="level_progress">50</field>
-        <field name="sequence">5</field>
         <field name="skill_type_id" ref="hr_skill_type_marketing"/>
     </record>
     <record id="hr_skill_level_ml3" model="hr.skill.level">
         <field name="name">L3</field>
         <field name="level_progress">75</field>
-        <field name="sequence">15</field>
         <field name="skill_type_id" ref="hr_skill_type_marketing"/>
     </record>
     <record id="hr_skill_level_ml4" model="hr.skill.level">
         <field name="name">L4</field>
         <field name="level_progress">100</field>
-        <field name="sequence">25</field>
         <field name="skill_type_id" ref="hr_skill_type_marketing"/>
     </record>
 
@@ -279,7 +260,6 @@
     <record id="employee_resume_line_admin_4" model="hr.resume.line">
         <field name="employee_id" ref="hr.employee_admin"/>
         <field name="name">Odoo SA</field>
-        <field name="sequence">5</field>
         <field name="date_start" eval="(datetime.now()+relativedelta(years=-3)).strftime('%Y-11-01')"/>
         <field name="line_type_id" ref="resume_type_experience"/>
         <field name="description">
@@ -291,7 +271,6 @@
     <record id="employee_resume_line_admin_3" model="hr.resume.line">
         <field name="employee_id" ref="hr.employee_admin"/>
         <field name="name">Burtho Inc.</field>
-        <field name="sequence">15</field>
         <field name="date_start" eval="(datetime.now()+relativedelta(years=-7)).strftime('%Y-09-10')"/>
         <field name="date_end" eval="(datetime.now()+relativedelta(years=-3)).strftime('%Y-09-10')"/>
         <field name="line_type_id" ref="resume_type_experience"/>
