@@ -12,6 +12,15 @@
                         <field name="split_method" attrs="{'invisible':['|', ('landed_cost_ok', '=' ,False), ('type', 'not in', ['product', 'consu', 'service'])]}"/>
                     </group>
                 </xpath>
+                <xpath expr="//group[@name='inventory']" position="after">
+                    <page string="Inventory Valuation" name="inventory_valuation" attrs="{'invisible':[('type', '!=', 'service')]}"/>
+                        <group>
+                            <group name="landed_cost_service">
+                                <field name="landed_cost_ok" class="oe_inline" attrs="{'invisible':[('type', 'not in', ['product', 'consu', 'service])]}"/>
+                                <field name="split_method" attrs="{'invisible':['|', ('landed_cost_ok', '=' ,False), ('type', 'not in', ['product', 'consu', 'service'])]}"/>
+                            </group>
+                        </group>
+                    </page>
             </field>
         </record>
     </data>
