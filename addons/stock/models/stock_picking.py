@@ -52,8 +52,6 @@ class PickingType(models.Model):
     show_operations = fields.Boolean(
         'Show Detailed Operations', default=_default_show_operations,
         help="If this checkbox is ticked, the pickings lines will represent detailed stock operations. If not, the picking lines will represent an aggregate of detailed stock operations.")
-    show_reserved = fields.Boolean(
-        'Show Reserved', default=True, help="If this checkbox is ticked, Odoo will show which products are reserved (lot/serial number, source location, source package).")
 
     # Statistics for the kanban view
     last_done_picking = fields.Char('Last 10 Done Pickings', compute='_compute_last_done_picking')
@@ -138,11 +136,6 @@ class PickingType(models.Model):
         elif self.code == 'outgoing':
             self.default_location_src_id = self.env.ref('stock.stock_location_stock').id
             self.default_location_dest_id = self.env.ref('stock.stock_location_customers').id
-
-    @api.onchange('show_operations')
-    def onchange_show_operations(self):
-        if self.show_operations is True:
-            self.show_reserved = True
 
     def _get_action(self, action_xmlid):
         # TDE TODO check to have one view + custo in methods
