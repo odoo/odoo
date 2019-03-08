@@ -11,7 +11,7 @@
                     <a class="o_wslides_fs_toggle_sidebar d-flex align-items-center px-3" href="#" title="Lessons">
                         <i class="fa fa-bars"/><span class="d-none d-md-inline-block ml-1">Lessons</span>
                     </a>
-                    <a class="o_wslides_fs_review d-flex align-items-center px-3" t-attf-href="/slides/slide/#{slug(slide)}" target="new" title="Reviews">
+                    <a class="o_wslides_fs_review d-flex align-items-center px-3" t-att-href="slide.channel_id.website_url" title="Reviews" t-if="slide.channel_id.allow_comment">
                         <i class="fa fa-pencil"/><span class="d-none d-md-inline-block ml-1">Write a review</span>
                     </a>
                 </div>
@@ -29,7 +29,7 @@
             </div>
 
             <div class="o_wslides_fs_container d-flex position-relative overflow-hidden flex-grow-1">
-                <div class="o_wslides_fs_content align-items-stretch justify-content-center d-flex h-100 flex-grow-1 order-2"></div>
+                <div class="o_wslides_fs_content align-items-stretch justify-content-center d-flex flex-grow-1 order-2"></div>
 
                 <div class="o_wslides_fs_sidebar text-white flex-shrink-0 order-1">
                     <div class="o_wslides_fs_sidebar_content d-flex flex-column px-3 pt-3 h-100">
