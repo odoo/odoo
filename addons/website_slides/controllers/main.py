@@ -376,64 +376,12 @@ class WebsiteSlides(WebsiteProfile):
         # of them but unreachable ones won't be clickable (+ slide controller will crash anyway)
         # documentation mode may display less slides than content by category but overhead of
         # computation is reasonable
-        if not category and not uncategorized:
-            category_data = []
-            all_categories = request.env['slide.category'].search([('channel_id', '=', channel.id)])
-            all_slides = request.env['slide.slide'].sudo().search(domain, order=order)
-
-            uncategorized_slides = all_slides.filtered(lambda slide: not slide.category_id)
-            displayed_slides = uncategorized_slides
-            if channel.channel_type == 'documentation':
-                displayed_slides = uncategorized_slides[:self.SLIDES_PER_CATEGORY]
-            if channel.channel_type == 'training' or displayed_slides:
-                category_data.append({
-                    'category': False, 'id': False,
-                    'name':  _('Uncategorized'), 'slug_name':  _('Uncategorized'),
-                    'total_slides': len(uncategorized_slides),
-                    'slides': displayed_slides,
-                })
-            for category in all_categories:
-                category_slides = all_slides.filtered(lambda slide: slide.category_id == category)
-                displayed_slides = category_slides
-                if channel.channel_type == 'documentation':
-                    displayed_slides = category_slides[:self.SLIDES_PER_CATEGORY]
-                    if not displayed_slides:
-                        continue
-                category_data.append({
-                    'id': category.id,
-                    'name': category.name,
-                    'slug_name': slug(category),
-                    'total_slides': len(category_slides),
-                    'slides': displayed_slides,
-                })
-        elif uncategorized:
-            if channel.channel_type == 'documentation':
-                slides_sudo = request.env['slide.slide'].sudo().search(domain, limit=self.SLIDES_PER_PAGE, offset=pager['offset'], order=order)
-            else:
-                slides_sudo = request.env['slide.slide'].sudo().search(domain, order=order)
-            category_data = [{
-                'category': False,
-                'id': False,
-                'name':  _('Uncategorized'),
-                'slug_name':  _('Uncategorized'),
-                'total_slides': len(slides_sudo),
-                'slides': slides_sudo,
-            }]
-        else:
-            if channel.channel_type == 'documentation':
-                slides_sudo = request.env['slide.slide'].sudo().search(domain, limit=self.SLIDES_PER_PAGE, offset=pager['offset'], order=order)
-            else:
-                slides_sudo = request.env['slide.slide'].sudo().search(domain, order=order)
-            category_data = [{
-                'category': category,
-                'id': category.id,
-                'name': category.name,
-                'slug_name': slug(category),
-                'total_slides': len(slides_sudo),
-                'slides': slides_sudo,
-            }]
         values['slide_promoted'] = request.env['slide.slide'].sudo().search(domain, limit=1, order=order)
-        values['category_data'] = category_data
+        values['category_data'] = channel._get_categorized_slides(
+            domain, order,
+            force_void=True,
+            limit=self.SLIDES_PER_CATEGORY if channel.channel_type == 'documentation' else False,
+            offset=pager['offset'])
         values['channel_progress'] = self._get_channel_progress(channel, include_quiz=True)
 
         values = self._prepare_additional_channel_values(values, **kw)
