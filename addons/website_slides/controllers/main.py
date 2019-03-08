@@ -69,21 +69,19 @@ class WebsiteSlides(WebsiteProfile):
         return True
 
     def _get_slide_detail(self, slide):
-        base_domain = request.website.website_domain()
+        base_domain = self._get_channel_slides_base_domain(slide.channel_id)
         if slide.channel_id.channel_type == 'documentation':
-            base_domain = expression.AND([base_domain, [('website_published', '=', True), ('id', '!=', slide.id)]])
-            related_domain = expression.AND([base_domain, [('channel_id', '=', slide.channel_id.id)]])
+            related_domain = expression.AND([base_domain, [('category_id', '=', slide.category_id.id)]])
 
             most_viewed_slides = request.env['slide.slide'].search(base_domain, limit=self.SLIDES_PER_ASIDE, order='total_views desc')
             related_slides = request.env['slide.slide'].search(related_domain, limit=self.SLIDES_PER_ASIDE)
-            uncategorized_slides, channel_slides = request.env['slide.slide'], request.env['slide.slide']
+            category_data = []
+            uncategorized_slides = request.env['slide.slide']
         else:
-            if slide.channel_id.can_publish:
-                related_domain = expression.AND([base_domain, [('channel_id', '=', slide.channel_id.id)]])
-            else:
-                related_domain = expression.AND([base_domain, [('channel_id', '=', slide.channel_id.id), ('website_published', '=', True)]])
-            channel_slides = request.env['slide.slide'].search(related_domain)
             most_viewed_slides, related_slides = request.env['slide.slide'], request.env['slide.slide']
+            category_data = slide.channel_id._get_categorized_slides(
+                base_domain, order=request.env['slide.slide']._order_by_strategy['sequence'],
+                force_void=True)
             # temporarily kept for fullscreen, to remove asap
             uncategorized_domain = expression.AND([base_domain, [('channel_id', '=', slide.channel_id.id), ('category_id', '=', False)]])
             uncategorized_slides = request.env['slide.slide'].search(uncategorized_domain)
@@ -101,7 +99,7 @@ class WebsiteSlides(WebsiteProfile):
             'previous_slide': previous_slide,
             'next_slide': next_slide,
             'uncategorized_slides': uncategorized_slides,
-            'channel_slides': channel_slides,
+            'category_data': category_data,
             # user
             'user': request.env.user,
             'is_public_user': request.website.is_public_user(),
@@ -123,6 +121,22 @@ class WebsiteSlides(WebsiteProfile):
 
     # CHANNEL UTILITIES
     # --------------------------------------------------
+
+    def _get_channel_slides_base_domain(self, channel):
+        """ base domain when fetching slit list data related to a given channel
+         * website related domain;
+         * if publisher: everything is ok
+         * if not publisher but has user: either slide is published, either
+           current user is the one that uploaded it;
+         * if not publisher and public: published
+        """
+        base_domain = expression.AND([request.website.website_domain(), [('channel_id', '=', channel.id)]])
+        if not channel.can_publish:
+            if request.website.is_public_user():
+                base_domain = expression.AND([base_domain, [('website_published', '=', True)]])
+            else:
+                base_domain = expression.AND([base_domain, ['|', ('website_published', '=', True), ('user_id', '=', request.env.user.id)]])
+        return base_domain
 
     def _get_channel_progress(self, channel, include_quiz=False):
         """ Replacement to user_progress. Both may exist in some transient state. """
@@ -294,7 +308,7 @@ class WebsiteSlides(WebsiteProfile):
         if not channel.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
 
-        domain = [('channel_id', '=', channel.id)]
+        domain = self._get_channel_slides_base_domain(channel)
 
         pager_url = "/slides/%s" % (channel.id)
         pager_args = {}
