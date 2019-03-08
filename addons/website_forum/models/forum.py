@@ -580,7 +580,7 @@ class Post(models.Model):
     @api.one
     def refuse(self):
         if not self.can_moderate:
-            raise KarmaError('Not enough karma to refuse a post')
+            raise KarmaError(_('Not enough karma to refuse a post'))
 
         self.moderator_id = self.env.user
         return True
@@ -799,7 +799,7 @@ class Post(models.Model):
 
             self.ensure_one()
             if not self.can_comment:
-                raise KarmaError('Not enough karma to comment')
+                raise KarmaError(_('Not enough karma to comment'))
             if not kwargs.get('record_name') and self.parent_id:
                 kwargs['record_name'] = self.parent_id.name
         return super(Post, self).message_post(message_type=message_type, **kwargs)
