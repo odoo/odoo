@@ -232,17 +232,17 @@ ListRenderer.include({
             return Promise.all(defs).then(function () {
                 if (self.currentRow !== null) {
                     self.currentRow = newRowIndex;
-                    return self._selectCell(newRowIndex, self.currentFieldIndex, {force: true});
-                }
-            }).then(function () {
-                // restore the cursor position
-                currentRowID = self.state.data[newRowIndex].id;
-                currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
-                if (currentWidget) {
-                    focusedElement = currentWidget.getFocusableElement().get(0);
-                    if (selectionRange) {
-                        dom.setSelectionRange(focusedElement, selectionRange);
-                    }
+                    return self._selectCell(newRowIndex, self.currentFieldIndex, {force: true}).then(function () {
+                        // restore the cursor position
+                        currentRowID = self.state.data[newRowIndex].id;
+                        currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
+                        if (currentWidget) {
+                            focusedElement = currentWidget.getFocusableElement().get(0);
+                            if (selectionRange) {
+                                dom.setSelectionRange(focusedElement, selectionRange);
+                            }
+                        }
+                    });
                 }
             });
         });
