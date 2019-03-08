@@ -68,13 +68,13 @@ tour.register('main_flow_tour', {
 }, {
     trigger: ".o_field_widget[name=taxes_id] input",
     content: _t("Focus on customer taxes field."),
-    run: function(actions) {
+    run: function (actions) {
         actions.click();
-        var $e = $(".ui-menu-item.ui-state-focus:not(.o_m2o_dropdown_option)");
+        var $e = $('.ui-menu-item:not(.o_m2o_dropdown_option) > a.ui-state-active');
         if ($e.length) {
             actions.click($e);
         } else {
-            actions.click();    // close dropdown
+            actions.click(); // close dropdown
         }
     },
 }, {
@@ -233,13 +233,13 @@ tour.register('main_flow_tour', {
 }, {
     trigger: ".o_field_widget[name=taxes_id] input",
     content: _t("Focus on customer taxes field."),
-    run: function(actions) {
+    run: function (actions) {
         actions.click();
-        var $e = $(".ui-menu-item.ui-state-focus:not(.o_m2o_dropdown_option)");
+        var $e = $('.ui-menu-item:not(.o_m2o_dropdown_option) > a.ui-state-active');
         if ($e.length) {
             actions.click($e);
         } else {
-            actions.click();    // close dropdown
+            actions.click(); // close dropdown
         }
     },
 }, {

@@ -17,20 +17,15 @@
             color: $dropdown-link-color;
 
             @extend %dropdown-li-a-padding;
-        }
 
-        &.ui-state-focus {
-            background-image: none;
-            background-color: $o-brand-odoo;
-            border: none;
-            font-weight: normal;
-            margin: 0;
+            &.ui-state-active {
+                border: none;
+                font-weight: normal;
+                margin: 0;
+            }
         }
         &.o_m2o_dropdown_option {
-            padding-left: 20px;
-            > a {
-                color: $o-brand-odoo;
-            }
+            text-indent: 20px
         }
     }
 }
@@ -56,7 +51,7 @@
         > * {
             position: relative; // to allow absolute positionning inside the items
         }
-        
+
         .dropdown-item {
             &:focus, &:active, &:focus:active {
                 outline: none;
