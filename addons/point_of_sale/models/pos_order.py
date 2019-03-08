@@ -912,7 +912,7 @@ class PosOrder(models.Model):
                         'lot_id': lot_id,
                     })
                 if not pack_lots and not float_is_zero(qty_done, precision_rounding=move.product_uom.rounding):
-                    if len(move._get_move_lines()) < 2:
+                    if len(move.move_line_ids) < 2:
                         move.quantity_done = qty_done
                     else:
                         move._set_quantity_done(qty_done)
