@@ -3,7 +3,6 @@
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
-from odoo.tools import mute_logger
 
 import time
 
@@ -61,8 +60,7 @@ class TestAccountInvoiceRounding(AccountingTestCase):
         # to avoid a ValidationError from _check_cash_rounding because the onchange
         # are not well triggered in the tests.
         try:
-            with mute_logger('odoo.models'):
-                invoice_id.cash_rounding_id = cash_rounding_id
+            invoice_id.cash_rounding_id = cash_rounding_id
         except ValidationError:
             pass
 
