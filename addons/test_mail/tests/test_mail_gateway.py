@@ -486,14 +486,18 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.addons.mail.models.mail_mail')
     def test_private_discussion(self):
         """ Testing private discussion between partners. """
-        msg1_pids = [self.env.user.partner_id.id, self.partner_1.id]
+        self.partner_2 = self.env['res.partner'].with_context(BaseFunctionalTest._test_context).create({
+            'name': 'Admin',
+            'email': 'admin@agrolait.com',
+        })
+        msg1_pids = [self.partner_1.id, self.partner_2.id]
 
         # Do: Raoul writes to Bert and Administrator, with a model specific by parameter that should not be taken into account
         msg1 = self.env['mail.thread'].sudo(self.user_employee).message_post(partner_ids=msg1_pids, subtype='mail.mt_comment', model='mail.test')
 
         # Test: message recipients
         msg = self.env['mail.message'].browse(msg1.id)
-        self.assertEqual(msg.partner_ids, self.env.user.partner_id | self.partner_1,
+        self.assertEqual(msg.partner_ids, self.partner_2 | self.partner_1,
                          'message_post: private discussion: incorrect recipients')
         self.assertEqual(msg.model, False,
                          'message_post: private discussion: parameter model not correctly ignored when having no res_id')
@@ -510,7 +514,7 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         # Test: message recipients
         self.assertEqual(msg2.author_id, self.partner_1,
                          'message_post: private discussion: wrong author through mailgateway based on email')
-        self.assertEqual(msg2.partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
+        self.assertEqual(msg2.partner_ids, self.user_employee.partner_id | self.partner_2,
                          'message_post: private discussion: incorrect recipients when replying')
 
         # Do: Bert replies through chatter (is a customer)
@@ -518,9 +522,9 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
 
         # Test: message recipients
         msg = self.env['mail.message'].browse(msg3.id)
-        self.assertEqual(msg.partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
+        self.assertEqual(msg.partner_ids, self.user_employee.partner_id | self.partner_2,
                          'message_post: private discussion: incorrect recipients when replying')
-        self.assertEqual(msg.needaction_partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
+        self.assertEqual(msg.needaction_partner_ids, self.user_employee.partner_id | self.partner_2,
                          'message_post: private discussion: incorrect notified recipients when replying')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.addons.mail.models.mail_mail')

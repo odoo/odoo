@@ -1079,6 +1079,9 @@ class Message(models.Model):
             if pid and pid == author_id and not self.env.context.get('mail_notify_author'):  # do not notify the author of its own messages
                 continue
             if pid:
+                if active is False:
+                    # avoid to notify inactive partner by email (odoobot)
+                    continue
                 pdata = {'id': pid, 'active': active, 'share': pshare, 'groups': groups}
                 if notif == 'inbox':
                     recipient_data['partners'].append(dict(pdata, notif=notif, type='user'))
