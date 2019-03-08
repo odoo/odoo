@@ -434,7 +434,7 @@ class WebsiteSlides(WebsiteProfile):
             }]
         values['slide_promoted'] = request.env['slide.slide'].sudo().search(domain, limit=1, order=order)
         values['category_data'] = category_data
-        values['channel_progress'] = self._get_channel_progress(channel)
+        values['channel_progress'] = self._get_channel_progress(channel, include_quiz=True)
 
         values = self._prepare_additional_channel_values(values, **kw)
 
