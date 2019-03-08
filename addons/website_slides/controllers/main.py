@@ -382,12 +382,15 @@ class WebsiteSlides(WebsiteProfile):
             ], order='write_date DESC', limit=1).read(['body', 'rating_value'])
             last_message_data = last_message_values[0] if last_message_values else {}
             values.update({
-                'message_post_hash': channel._sign_token(request.env.user.partner_id.id),
-                'message_post_pid': request.env.user.partner_id.id,
                 'last_message_id': last_message_data.get('id'),
                 'last_message': tools.html2plaintext(last_message_data.get('body', '')),
                 'last_rating_value': last_message_data.get('rating_value'),
             })
+            if channel.can_review:
+                values.update({
+                    'message_post_hash': channel._sign_token(request.env.user.partner_id.id),
+                    'message_post_pid': request.env.user.partner_id.id,
+                })
 
         # fetch slides and handle uncategorized slides; done as sudo because we want to display all
         # of them but unreachable ones won't be clickable (+ slide controller will crash anyway)
@@ -574,6 +577,10 @@ class WebsiteSlides(WebsiteProfile):
         if (upvote and slide_partners.vote == 1) or (not upvote and slide_partners.vote == -1):
             return {'error': 'vote_done'}
         slide = request.env['slide.slide'].browse(int(slide_id))
+        if not slide.channel_id.allow_comment:
+            return {'error': 'comment_disabled'}
+        if not slide.can_vote:
+            return {'error': 'missing_karma'}
         if upvote:
             slide.action_like()
         else:

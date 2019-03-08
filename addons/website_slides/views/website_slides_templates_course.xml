@@ -104,6 +104,7 @@
                                         <t t-set="default_message" t-value="last_message"/>
                                         <t t-set="default_rating_value" t-value="last_rating_value"/>
                                         <t t-set="force_submit_url" t-value="'/slides/mail/update_comment' if last_message_id else False"/>
+                                        <t t-set="disable_composer" t-value="not channel.allow_comment or not channel.can_review"/>
                                     </t>
                                 </div>
                             </div>
@@ -115,7 +116,7 @@
                                                 <i class="fa fa-home"/> Course
                                             </a>
                                         </li>
-                                        <li class="nav-item">
+                                        <li class="nav-item" t-if="channel.allow_comment">
                                             <a class="nav-link" id="review-tab" data-toggle="pill" href="#review" role="tab" aria-controls="review" aria-selected="false">Review</a>
                                         </li>
                                     </ul>
