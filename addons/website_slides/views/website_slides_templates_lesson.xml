@@ -106,21 +106,16 @@
     <div class="o_wslides_lesson_aside_list bg-white">
         <h5 class="bg-100 text-600 pl-2 py-2 border-bottom">Course content</h5>
         <ul class="p-0 list-unstyled">
-            <t t-set="i" t-value="0"/>
-            <t t-if="uncategorized_slides" t-call="website_slides.slide_aside_training_category">
-                <t t-set="category_slide_ids" t-value="uncategorized_slides"/>
-            </t>
-            <t t-foreach="slide.channel_id.category_ids" t-as="category">
-                <t t-call="website_slides.slide_aside_training_category">
-                    <t t-set="category_slide_ids" t-value="category.slide_ids"/>
-                </t>
+            <t t-foreach="category_data" t-as="category_info">
+                <t t-call="website_slides.slide_aside_training_category"/>
             </t>
         </ul>
     </div>
 </template>
 
 <template id="slide_aside_training_category" name="Category item for the slide detailed view list">
-    <li class="mt-3">
+    <t t-set="category" t-value="category_info['category']"/>
+    <li t-if="category_info['total_slides'] or slide.channel_id.can_publish" class="mt-3">
         <a t-att-href="('#collapse-%s') % (category.id if category else 0)" data-toggle="collapse" role="button" aria-expanded="true"
             class="o_wslides_lesson_aside_list_link pl-2 text-600"
             t-att-aria-controls="('collapse-%s') % (category.id if category else 0)">
@@ -132,7 +127,7 @@
             </t>
         </a>
         <ul class="collapse show p-0 m-0 list-unstyled" t-att-id="('collapse-%s') % (category.id if category else 0)" >
-            <t t-foreach="category_slide_ids" t-as="aside_slide">
+            <t t-foreach="category_info['slides']" t-as="aside_slide">
                 <li class="p-0">
                     <a t-att-href="'/slides/slide/%s' % (slug(aside_slide))"
                         t-att-class="'o_wslides_lesson_aside_list_link d-flex align-items-center pl-2 %s' % ('bg-200 border-left border-primary' if aside_slide == slide else '')">
