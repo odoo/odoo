@@ -366,7 +366,7 @@ sAnimations.registry.websiteLinks = sAnimations.Class.extend({
         defs.push(sourceSelect.attachTo($('#source-select')));
 
         // Recent Links Widgets
-        this.recentLinks = new RecentLinks();
+        this.recentLinks = new RecentLinks(this);
         defs.push(this.recentLinks.appendTo($('#o_website_links_recent_links')));
         this.recentLinks.getRecentLinks('newest');
 
