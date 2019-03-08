@@ -425,6 +425,33 @@ class Channel(models.Model):
         for channel in self:
             channel._action_add_members(channel.mapped('enroll_group_ids.users.partner_id'))
 
+    def _remove_membership(self, partner_ids):
+        """ Unlink (!!!) the relationships between the passed partner_ids
+        and the channels and their slides. """
+        if not partner_ids:
+            raise ValueError("Do not use this method with an empty partner_id recordset")
+
+        removed_slide_partner_domain = []
+        removed_channel_partner_domain = []
+        for channel in self:
+            removed_slide_partner_domain = expression.OR([
+                removed_slide_partner_domain,
+                [('partner_id', 'in', partner_ids.ids),
+                 ('slide_id', 'in', channel.slide_ids.ids)]
+            ])
+
+            removed_channel_partner_domain = expression.OR([
+                removed_channel_partner_domain,
+                [('partner_id', 'in', partner_ids.ids),
+                 ('channel_id', '=', channel.id)]
+            ])
+
+        if removed_slide_partner_domain:
+            self.env['slide.slide.partner'].sudo().search(removed_slide_partner_domain).unlink()
+
+        if removed_channel_partner_domain:
+            self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink()
+
     # ---------------------------------------------------------
     # Rating Mixin API
     # ---------------------------------------------------------
