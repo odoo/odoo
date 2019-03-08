@@ -26,7 +26,7 @@
                                         <span><t t-esc="slide.channel_id.completion"/> %</span>
                                     </div>
                                 </div>
-                                <i t-att-class="'fa fa-trophy m-0 ml-2 p-0 %s' % ('text-warning' if slide.channel_id.completed else 'text-light')"></i>
+                                <i t-att-class="'fa fa-trophy m-0 ml-2 p-0 %s' % ('text-success' if slide.channel_id.completed else 'text-warning')"></i>
                             </div>
                         </div>
                     </div>
@@ -146,7 +146,7 @@
                         <span t-esc="aside_slide.name" t-att-class="'mr-2 %s' % ('text-800' if aside_slide == slide else 'text-600')"/>
                         <span t-if="aside_slide.question_ids"
                             t-att-class="'ml-auto badge badge-pill %s' % ('badge-success' if channel_progress[aside_slide.id].get('completed') else 'badge-light text-600')">
-                            <t t-esc="channel_progress[aside_slide.id].get('quiz_karma_max')"/>
+                            <t t-esc="channel_progress[aside_slide.id].get('quiz_karma_won') if channel_progress[aside_slide.id].get('completed') else channel_progress[aside_slide.id].get('quiz_karma_gain')"/> xp
                         </span>
                     </a>
                     <ul t-if="aside_slide.link_ids or aside_slide.question_ids" class="list-group ml-5 list-unstyled">
@@ -186,20 +186,24 @@
                 </span>
             </div>
             <div class="ml-auto">
-                <a class="btn btn-light border" role="button"
-                    t-att-disabled="'disabled' if not previous_slide else None"
-                    t-att-href="'/slides/slide/%s' % (slug(previous_slide)) if previous_slide else '#'"><i class="fa fa-chevron-left mr-2"></i> Prev</a>
-                <a class="btn btn-primary border text-white" role="button"
-                    t-att-disabled="'disabled' if slide.question_ids or channel_progress[slide.id].get('completed') else None"
-                    t-att-href="None if (channel_progress[slide.id].get('completed') or slide.question_ids) else '/slides/slide/%s/set_completed?%s' % (slide.id, 'next_slide_id=%s' % (next_slide.id) if next_slide else '')">
+                <a t-att-class="'btn btn-light border %s' % ('disabled' if not previous_slide else '')"
+                    role="button" t-att-aria-disabled="'disabled' if not previous_slide else None"
+                    t-att-href="'/slides/slide/%s' % (slug(previous_slide)) if previous_slide else '#'">
+                    <i class="fa fa-chevron-left mr-2"></i> Prev
+                </a>
+                <a t-att-class="'btn btn-primary border text-white %s' % ('disabled' if slide.question_ids or channel_progress[slide.id].get('completed') else '')"
+                    role="button" t-att-aria-disabled="'true' if slide.question_ids or channel_progress[slide.id].get('completed') else None"
+                    t-att-href="'#' if slide.question_ids or channel_progress[slide.id].get('completed') else '/slides/slide/%s/set_completed?%s' % (slide.id, 'next_slide_id=%s' % (next_slide.id) if next_slide else '')">
                     Set Done
                 </a>
-                <a class="btn btn-light border" role="button"
-                    t-att-disabled="'disabled' if not next_slide else None"
-                    t-att-href="'/slides/slide/%s' % (slug(next_slide)) if next_slide else '#'">Next <i class="fa fa-chevron-right ml-2"></i></a>
-                <a class="btn btn-light border ml-2" role="button"
-                    t-att-disabled="'disabled' if slide.channel_id.channel_type != 'training' else None"
-                    t-att-href="'/slides/slide/%s?fullscreen=1' % (slug(slide))"><i class="fa fa-desktop mr-2"></i> Fullscreen</a>
+                <a t-att-class="'btn btn-light border %s' % ('disabled' if not next_slide else '')"
+                    role="button" t-att-aria-disabled="'disabled' if not next_slide else None"
+                    t-att-href="'/slides/slide/%s' % (slug(next_slide)) if next_slide else '#'">
+                    Next <i class="fa fa-chevron-right ml-2"></i>
+                </a>
+                <a t-att-class="'btn btn-light border ml-2 %s' % ('disabled' if slide.channel_id.channel_type != 'training' else '')"
+                    role="button" t-att-aria-disabled="'disabled' if slide.channel_id.channel_type != 'training' else None"
+                    t-att-href="'/slides/slide/%s?fullscreen=1' % (slug(slide)) if slide.channel_id.channel_type == 'training' else '#'"><i class="fa fa-desktop mr-2"></i> Fullscreen</a>
             </div>
         </div>
         <div t-if="slide.tag_ids" class="col">
