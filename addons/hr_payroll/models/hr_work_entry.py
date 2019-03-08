@@ -4,13 +4,11 @@
 import itertools
 import pytz
 
-from psycopg2 import IntegrityError
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.addons.resource.models.resource import Intervals
 from odoo.exceptions import ValidationError
-from odoo.tools import mute_logger
 
 
 class HrWorkEnrty(models.Model):
@@ -86,9 +84,9 @@ class HrWorkEnrty(models.Model):
     @api.model
     def _mark_conflicting_work_entries(self, start, stop):
         """
-        Set `display_warning` to True for overlapping benefits
+        Set `display_warning` to True for overlapping work entries
         between two dates.
-        Return True if overlapping benefits were detected.
+        Return True if overlapping work entries were detected.
         """
         # Use the postgresql range type `tsrange` which is a range of timestamp
         # It supports the intersection operator (&&) useful to detect overlap.
