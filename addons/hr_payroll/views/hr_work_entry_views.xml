@@ -37,7 +37,7 @@
                 date_stop="date_stop"
                 mode="month"
                 quick_add="False"
-                color="work_entry_type_id"
+                color="color"
                 event_limit="5">
                 <field name="state" invisible="1"/>
                 <field name="display_warning" invisible="1"/>
@@ -175,20 +175,52 @@
         </field>
     </record>
 
+    <record id="hr_work_entry_type_view_kanban" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.kanban.view</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
+                            <div class="o_dropdown_kanban dropdown">
+                                <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <span class="fa fa-bars fa-lg"/>
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                </div>
+                            </div>
+                            <div class="oe_kanban_content">
+                                <div>
+                                    <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
+                                </div>
+                                <div>
+                                    <span class="text-muted o_kanban_record_subtitle"><field name="code"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record model="ir.actions.server" id="action_generate_payslips_from_work_entries">
-            <field name="name">Generate payslips</field>
-            <field name="model_id" ref="model_hr_payslip_employees"/>
-            <field name="binding_model_id" ref="model_hr_payslip_employees" />
-            <field name="state">code</field>
-            <field name="code">
-                action = env['hr.payslip.employees'].create({}).compute_sheet()
-            </field>
-        </record>
+        <field name="name">Generate payslips</field>
+        <field name="model_id" ref="model_hr_payslip_employees"/>
+        <field name="binding_model_id" ref="model_hr_payslip_employees" />
+        <field name="state">code</field>
+        <field name="code">
+            action = env['hr.payslip.employees'].create({}).compute_sheet()
+        </field>
+    </record>
 
     <record id="action_view_hr_work_entry_type" model="ir.actions.act_window">
         <field name="name">Work Entry Types</field>
         <field name="res_model">hr.work.entry.type</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">kanban,tree,form</field>
     </record>
 
 </odoo>
