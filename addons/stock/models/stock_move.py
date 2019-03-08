@@ -1038,11 +1038,25 @@ class StockMove(models.Model):
                         # partially `quantity`. When this happens, we chose to reserve the maximum
                         # still available. This situation could not happen on MTS move, because in
                         # this case `quantity` is directly the quantity on the quants themselves.
+                        strict = True
                         available_quantity = self.env['stock.quant']._get_available_quantity(
-                            move.product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+                            move.product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+
+                        # UDES: If the available qty is 0, and the request has come from the UI
+                        # we should have a less strict search for stock, at the move location
+                        # this will allow us to pick up available stock from other locations
+                        # than those specified in the previous movelines;
+                        if self.env.context.get('from_ui') and float_compare(available_quantity, quantity,
+                                                                             precision_rounding=move.product_id.uom_id.rounding) == -1:
+                            location_id = move.location_id
+                            strict = False
+                            available_quantity = self.env['stock.quant']._get_available_quantity(
+                                move.product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+                        # End UDES change
+
                         if float_is_zero(available_quantity, precision_rounding=move.product_id.uom_id.rounding):
                             continue
-                        taken_quantity = move._update_reserved_quantity(need, min(quantity, available_quantity), location_id, lot_id, package_id, owner_id)
+                        taken_quantity = move._update_reserved_quantity(need, min(quantity, available_quantity), location_id, lot_id, package_id, owner_id, strict=strict)
                         if float_is_zero(taken_quantity, precision_rounding=move.product_id.uom_id.rounding):
                             continue
                         if need - taken_quantity == 0.0:
