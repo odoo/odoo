@@ -1,4 +1,9 @@
 .o_form_sheet {
+    .o_resume_table th,
+    .o_resume_table td {
+        border: none;
+    }
+
     .o_resume_line {
         width: 100%;
     }
@@ -12,10 +17,14 @@
     }
 
     td.o_skill_cell {
-        width: 33%;
+        white-space: normal !important;
     }
 
     .o_group_resume tbody tr.o_resume_group_header th {
         font-weight: normal;
+    }
+
+    .o_resume_line_desc {
+        white-space: normal;
     }
 }

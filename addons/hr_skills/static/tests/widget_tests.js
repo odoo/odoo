@@ -82,21 +82,21 @@ odoo.define('hr_skills.field_one_to_many_group_tests', function (require) {
                     fields: {
                         name: { string: "Name", type: "char" },
                         line_type_id: { string: "Type", relation: 'line_type', type: "many2one" },
-                        sequence: { string: "Sequence", type: "int", default:10 },
                         description: { string: "Description", type: "text" },
                         date_start: { string: "Date start", type: "date" },
                         date_end: { string: "Date end", type: "date" },
                         trululu: { string: "Trululu", type: "many2one", relation: 'partner' },
+                        display_type: { string: "display type", type: "selection"},
                     },
                     records: [{
                         id: 37,
                         name: "ULB",
                         line_type_id: 50,
-                        sequence: 5,
                         date_start: "2017-01-25",
                         date_end: "2019-01-25",
                         description: 'Hello',
                         trululu: 1,
+                        display_type: 'classic',
                     }, {
                         id: 38,
                         name: "UCL",
@@ -105,14 +105,15 @@ odoo.define('hr_skills.field_one_to_many_group_tests', function (require) {
                         date_end: "2014-01-25",
                         description: 'World',
                         trululu: 1,
+                        display_type: 'classic',
                     }, {
                         id: 39,
                         name: "KUL",
                         line_type_id: 51,
-                        sequence: 15,
                         date_start: "2008-01-25",
                         description: 'Hi',
                         trululu: 1,
+                        display_type: 'classic',
                     }],
                     onchanges: {},
                 },
@@ -145,7 +146,7 @@ odoo.define('hr_skills.field_one_to_many_group_tests', function (require) {
                             '<field name="description"/>' +
                             '<field name="date_start"/>' +
                             '<field name="date_end"/>' +
-                            '<field name="sequence"/>' +
+                            '<field name="display_type"/>' +
                         '</tree>' +
                     '</field>' +
                     '</form>',
@@ -193,7 +194,6 @@ odoo.define('hr_skills.field_one_to_many_group_tests', function (require) {
                             '<field name="description"/>' +
                             '<field name="date_start"/>' +
                             '<field name="date_end"/>' +
-                            '<field name="sequence"/>' +
                         '</tree>' +
                     '</field>' +
                     '</form>',
@@ -248,7 +248,6 @@ odoo.define('hr_skills.field_one_to_many_group_tests', function (require) {
                             '<field name="description"/>' +
                             '<field name="date_start"/>' +
                             '<field name="date_end"/>' +
-                            '<field name="sequence"/>' +
                         '</tree>' +
                     '</field>' +
                     '</form>',

@@ -2,25 +2,23 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="hr_resume_data_row">
-
     <tr class="o_data_row" t-att-data-id="id">
-        <td class="o_data_cell o_list_number o_handle_cell">
-            <span class="o_row_handle fa fa-arrows o_field_widget ui-sortable-handle" t-att-data-sequence="id"/>
-        </td>
-        <td class="o_data_cell container">
-            <div class="o_resume_line row" t-att-data-id="id">
-                <div class="o_resume_line_dates col-lg-3">
-                    <div class="row">
-                        <span class="col-6 col-lg-8"><t t-esc="data.date_start"/>-</span>
-                        <span class="col-6 col-lg-6"><t t-esc="data.date_end"/></span>
+        <t t-if="data.display_type === 'classic'">
+            <td class="o_data_cell container">
+                <div class="o_resume_line row" t-att-data-id="id">
+                    <div class="o_resume_line_dates col-lg-3">
+                        <div class="row">
+                            <span class="col-6 col-lg-8"><t t-esc="data.date_start"/>-</span>
+                            <span class="col-6 col-lg-6"><t t-esc="data.date_end"/></span>
+                        </div>
+                    </div>
+                    <div class="o_resume_line_desc col-lg-9">
+                        <h3><t t-esc="data.name"/></h3>
+                        <t t-if="data.description" t-esc="data.description"/>
                     </div>
                 </div>
-                <div class="o_resume_line_desc col-lg-9">
-                    <h3><t t-esc="data.name"/></h3>
-                    <t t-if="data.description" t-esc="data.description"/>
-                </div>
-            </div>
-        </td>
+            </td>
+        </t>
     </tr>
 </t>
 
