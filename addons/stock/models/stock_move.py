@@ -130,7 +130,6 @@ class StockMove(models.Model):
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type')
     inventory_id = fields.Many2one('stock.inventory', 'Inventory')
     move_line_ids = fields.One2many('stock.move.line', 'move_id')
-    move_line_nosuggest_ids = fields.One2many('stock.move.line', 'move_id', domain=[('product_qty', '=', 0.0)])
     origin_returned_move_id = fields.Many2one('stock.move', 'Origin return move', copy=False, help='Move that created the return move')
     returned_move_ids = fields.One2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move')
     reserved_availability = fields.Float(
@@ -242,13 +241,7 @@ class StockMove(models.Model):
         rounding_method = self._context.get('rounding_method', 'UP')
         self.product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id, rounding_method=rounding_method)
 
-    def _get_move_lines(self):
-        """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move. 
-        In some context, such as MRP, it is necessary to compute quantity_done on filtered sock.move.line."""
-        self.ensure_one()
-        return self.move_line_ids or self.move_line_nosuggest_ids
-
-    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done')
+    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id')
     def _quantity_done_compute(self):
         """ This field represents the sum of the move lines `qty_done`. It allows the user to know
         if there is still work to do.
@@ -260,14 +253,14 @@ class StockMove(models.Model):
         """
         for move in self:
             quantity_done = 0
-            for move_line in move._get_move_lines():
+            for move_line in move.move_line_ids:
                 quantity_done += move_line.product_uom_id._compute_quantity(move_line.qty_done, move.product_uom, round=False)
             move.quantity_done = quantity_done
 
     def _quantity_done_set(self):
         quantity_done = self[0].quantity_done  # any call to create will invalidate `move.quantity_done`
         for move in self:
-            move_lines = move._get_move_lines()
+            move_lines = move.move_line_ids
             if not move_lines:
                 if quantity_done:
                     # do not impact reservation here
@@ -459,14 +452,7 @@ class StockMove(models.Model):
         """
         self.ensure_one()
 
-        # If "show suggestions" is not checked on the picking type, we have to filter out the
-        # reserved move lines. We do this by displaying `move_line_nosuggest_ids`. We use
-        # different views to display one field or another so that the webclient doesn't have to
-        # fetch both.
-        if self.picking_id.picking_type_id.show_reserved:
-            view = self.env.ref('stock.view_stock_move_operations')
-        else:
-            view = self.env.ref('stock.view_stock_move_nosuggest_operations')
+        view = self.env.ref('stock.view_stock_move_operations')
 
         return {
             'name': _('Detailed Operations'),

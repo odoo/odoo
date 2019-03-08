@@ -51,7 +51,6 @@
                                 <field name="code"/>
                                 <field attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' name="return_picking_type_id"/>
                                 <field name="show_operations"/>
-                                <field name="show_reserved" attrs="{'invisible': [('show_operations', '!=', False)]}"/>
                             </group>
                         </group>
                         <group>
