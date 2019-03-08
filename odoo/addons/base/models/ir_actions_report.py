@@ -454,7 +454,7 @@ class IrActionsReport(models.Model):
         return report_obj.with_context(context).search(conditions, limit=1)
 
     @api.model
-    def barcode(self, barcode_type, value, width=600, height=100, humanreadable=0):
+    def barcode(self, barcode_type, value, width=600, height=100, humanreadable=0, quiet=False):
         if barcode_type == 'UPCA' and len(value) in (11, 12, 13):
             barcode_type = 'EAN13'
             if len(value) in (11, 12):
@@ -463,7 +463,7 @@ class IrActionsReport(models.Model):
             width, height, humanreadable = int(width), int(height), bool(int(humanreadable))
             barcode = createBarcodeDrawing(
                 barcode_type, value=value, format='png', width=width, height=height,
-                humanReadable=humanreadable
+                humanReadable=humanreadable, quiet=quiet
             )
             return barcode.asString('png')
         except (ValueError, AttributeError):
