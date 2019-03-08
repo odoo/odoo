@@ -71,8 +71,19 @@ tour.register('shop_mail', {
         extra_trigger: '.o_statusbar_status .btn-primary:contains("Sales Order")',
     },
     {
+        content: "Open recipients dropdown",
+        trigger: '.o_field_many2one[name="partner_ids"] .ui-autocomplete-input',
+        run: 'click',
+    },
+    {
+        content: "Select azure interior",
+        trigger: '.ui-menu-item a:contains(Interior24)',
+        in_modal: false,
+    },
+    {
         content: "click Send email",
         trigger: '.btn[name="action_send_mail"]',
+        extra_trigger: '.o_badge_text:contains("Azure")',
     },
     {
         content: "wait mail to be sent, and go see it",
