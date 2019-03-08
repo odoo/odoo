@@ -418,6 +418,41 @@ class Channel(models.Model):
         domain = super(Channel, self)._rating_domain()
         return expression.AND([domain, [('website_published', '=', True)]])
 
+    # ---------------------------------------------------------
+    # Data / Misc
+    # ---------------------------------------------------------
+
+    def _get_categorized_slides(self, base_domain, order, force_void=True, limit=False, offset=False):
+        """ Return an ordered structure of slides by categories within a given
+        base_domain that must fulfill slides. """
+        self.ensure_one()
+        all_categories = self.env['slide.category'].search([('channel_id', '=', self.id)])
+        all_slides = self.env['slide.slide'].sudo().search(base_domain, order=order)
+        category_data = []
+
+        # First add uncategorized slides
+        uncategorized_slides = all_slides.filtered(lambda slide: not slide.category_id)
+        if uncategorized_slides or force_void:
+            category_data.append({
+                'category': False, 'id': False,
+                'name':  _('Uncategorized'), 'slug_name':  _('Uncategorized'),
+                'total_slides': len(uncategorized_slides),
+                'slides': uncategorized_slides[(offset or 0):(limit or len(uncategorized_slides))],
+            })
+        # Then all categories by natural order
+        for category in all_categories:
+            category_slides = all_slides.filtered(lambda slide: slide.category_id == category)
+            if not category_slides and not force_void:
+                continue
+            category_data.append({
+                'category': category, 'id': category.id,
+                'name': category.name, 'slug_name': slug(category),
+                'total_slides': len(category_slides),
+                'slides': category_slides[(offset or 0):(limit or len(category_slides))],
+            })
+
+        return category_data
+
 
 class Category(models.Model):
     """ Channel contain various categories to manage its slides """

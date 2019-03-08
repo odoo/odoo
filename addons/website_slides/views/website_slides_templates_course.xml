@@ -267,6 +267,7 @@
             <ul class="o_wslides_js_slides_list_container border-bottom list-unstyled">
                 <t t-set="j" t-value="0"/>
                 <t t-foreach="category_data" t-as="category">
+                    <t t-set="category_record" t-value="category['category'] if category['id'] else None"/>
                     <t t-set="category_id" t-value="category['id'] if category['id'] else None"/>
                     <li t-if="category['total_slides'] or channel.can_publish" class="o_wslides_slide_list_category"
                         t-att-data-category-id="category_id">
@@ -274,8 +275,8 @@
                             t-att-class="'text-muted bg-white border-bottom font-weight-bold pt-0 pb-0 pl-2 pr-2 d-flex justify-content-between align-items-center %s' % ('o_wslides_js_category' if category_id else '')">
                             <div class="pt-2 pb-2 d-flex align-items-center">
                                 <i t-if="channel.can_publish and category_id" class="fa fa-arrows mr-3"></i>
-                                <t t-if="category_id">
-                                    <span t-esc="category['name']"/>
+                                <t t-if="category_record">
+                                    <span t-field="category_record.name"/>
                                 </t>
                                 <t t-else="">
                                     <span>Uncategorized</span>
