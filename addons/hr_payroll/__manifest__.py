@@ -37,6 +37,7 @@
     ],
     'demo': ['data/hr_payroll_demo.xml'],
     'qweb': [
+        "static/src/xml/work_entries_templates.xml",
         "static/src/xml/payslip_tree_views.xml",
     ],
 }

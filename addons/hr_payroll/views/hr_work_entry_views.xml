@@ -5,26 +5,7 @@
         <field name="name">Work Entry</field>
         <field name="res_model">hr.work.entry</field>
         <field name="view_type">form</field>
-        <field name="view_mode">calendar,gantt,tree,form,pivot</field>
-    </record>
-
-    <record id="hr_work_entry_gantt" model="ir.ui.view">
-        <field name="name">hr.work.entry.gantt</field>
-        <field name="model">hr.work.entry</field>
-        <field name="arch" type="xml">
-            <gantt string="Work Entry"
-                   date_start="date_start"
-                   date_stop="date_stop"
-                   color="work_entry_type_id"
-                   default_group_by='employee_id'
-                   decoration-secondary="state == 'validated'"
-                   decoration-warning="display_warning">
-                <field name="state"/>
-                <field name="employee_id"/>
-                <field name="display_warning"/>
-                <field name="name"/>
-            </gantt>
-        </field>
+        <field name="view_mode">calendar,tree,form,pivot</field>
     </record>
 
     <record id="hr_work_entry_calendar" model="ir.ui.view">
