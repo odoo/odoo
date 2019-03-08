@@ -352,6 +352,7 @@
                 <t t-esc="channel_progress[slide.id].get('quiz_karma_won', 0) if channel_progress[slide.id].get('completed') else channel_progress[slide.id].get('quiz_karma_gain', 0)"/> xp
             </span>
         </t>
+        <span class="badge badge-danger ml-2" t-if="not slide.website_published">Unpublished</span>
         <span class="badge badge-info ml-2" t-if="slide.is_preview">Free preview</span>
         <div t-if="channel.is_member or channel.can_publish" class="pt-2 pb-2 border-left ml-2 mr-2 pl-2 d-flex align-items-center o_wslides_slides_list_slide_controls">
             <t t-if="channel.is_member">
