@@ -8,7 +8,6 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='resource']" position="after">
-                <field name="parent_res_name"/>
                 <filter string="Project" name="groupby_project" context="{'group_by': 'parent_res_name'}"/>
             </xpath>
             <xpath expr="/search" position="inside">
