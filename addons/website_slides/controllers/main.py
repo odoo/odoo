@@ -401,8 +401,8 @@ class WebsiteSlides(WebsiteProfile):
         values['slide_promoted'] = request.env['slide.slide'].sudo().search(domain, limit=1, order=order)
         values['category_data'] = channel._get_categorized_slides(
             domain, order,
-            force_void=True,
-            limit=self._slides_per_category if channel.channel_type == 'documentation' else False,
+            force_void=not category,
+            limit=False if channel.channel_type != 'documentation' else self._slides_per_page if category else self._slides_per_category,
             offset=pager['offset'])
         values['channel_progress'] = self._get_channel_progress(channel, include_quiz=True)
 

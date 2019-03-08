@@ -491,7 +491,7 @@ class Channel(models.Model):
                 'category': False, 'id': False,
                 'name': _('Uncategorized'), 'slug_name': _('Uncategorized'),
                 'total_slides': len(uncategorized_slides),
-                'slides': uncategorized_slides[(offset or 0):(limit or len(uncategorized_slides))],
+                'slides': uncategorized_slides[(offset or 0):(offset + limit or len(uncategorized_slides))],
             })
         # Then all categories by natural order
         for category in all_categories:
@@ -502,7 +502,7 @@ class Channel(models.Model):
                 'category': category, 'id': category.id,
                 'name': category.name, 'slug_name': slug(category),
                 'total_slides': len(category_slides),
-                'slides': category_slides[(offset or 0):(limit or len(category_slides))],
+                'slides': category_slides[(offset or 0):(limit + offset or len(category_slides))],
             })
         return category_data
 

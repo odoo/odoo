@@ -93,7 +93,7 @@
                             <div class="row">
                                 <h3 class="col-12"><span class="font-weight-bold" t-field="channel.name"/></h3>
                                 <div class="col-12" t-field="channel.description"/>
-                                <div class="col-xs-12 col-md-6 mt8">
+                                <div class="col-xs-12 col-md-6 mt8" t-if="channel.allow_comment">
                                     <t t-call="website_rating.rating_stars_static_popup_composer">
                                         <t t-set="rating_avg" t-value="rating_avg"/>
                                         <t t-set="rating_total" t-value="rating_count"/>
@@ -104,7 +104,7 @@
                                         <t t-set="default_message" t-value="last_message"/>
                                         <t t-set="default_rating_value" t-value="last_rating_value"/>
                                         <t t-set="force_submit_url" t-value="'/slides/mail/update_comment' if last_message_id else False"/>
-                                        <t t-set="disable_composer" t-value="not channel.allow_comment or not channel.can_review"/>
+                                        <t t-set="disable_composer" t-value="not channel.can_review"/>
                                     </t>
                                 </div>
                             </div>
@@ -402,7 +402,7 @@
         </div>
     </div>
     <t t-foreach="category_data" t-as="category">
-        <div class="mb-5">
+        <div class="mb-5" t-if="(category['slides'] or channel.can_publish) and (search_category and search_category.id == category['id'] or not search_category)">
             <div class="row align-items-center">
                 <div class="col">
                     <t t-if="category['id']">
@@ -426,7 +426,7 @@
         <div class="col" t-field="channel.description_html"/>
     </div>
     <t t-if="search_category">
-        <div class="form-inline justify-content-center">
+        <div class="form-inline justify-content-center pb-5">
             <t t-call="website_profile.pager_nobox"></t>
         </div>
     </t>
