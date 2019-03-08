@@ -605,7 +605,7 @@ var SnippetsMenu = Widget.extend({
         // Active snippet editor on click in the page
         var lastClickedElement;
         this.$document.on('click.snippets_menu', '*', function (ev) {
-            var srcElement = ev.srcElement || (ev.originalEvent && (ev.originalEvent.originalTarget || ev.originalEvent.target) || ev.target);
+            var srcElement = ev.target || (ev.originalEvent && (ev.originalEvent.target || ev.originalEvent.originalTarget)) || ev.srcElement;
             if (lastClickedElement === srcElement || !srcElement) {
                 return;
             }
