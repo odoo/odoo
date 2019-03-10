@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Add fields to partner form  -->
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <field name="property_account_position_id" position="after">
+                    <field name="company_registry" attrs="{'invisible': [('company_type','!=', 'company')]}"/>
+                    <field name="einvoice_address" attrs="{'invisible': [('company_type','!=', 'company')]}"/>
+                    <field name="einvoice_operator" attrs="{'invisible': [('company_type','!=', 'company')]}"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Add eInvoicing related fields to company -->
+        <record id="view_company_form" model="ir.ui.view">
+            <field name="name">res.company.form.inherit</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <field name="company_registry" position="after">
+                    <field name="einvoice_address"/>
+                    <field name="einvoice_operator"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>
+
