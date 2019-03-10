@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- add bank reference on invoice form -->
+        <record id="account_invoice_form" model="ir.ui.view">
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_invoice']" position="after">
+                    <field name="bank_reference_formatted"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- add payment barcode on supplier invoice form -->
+        <record id="account_invoice_supplier_form" model="ir.ui.view">
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='comment']" position="after">
+                    <div class="oe_clear">
+                        <label for="bank_payment_barcode"/>
+                    </div>
+                    <field name="bank_payment_barcode"/>
+                </xpath>
+                <xpath expr="//header" position="after">
+                    <field name='is_reference_duplicate' invisible="1"/>
+                    <field name='is_valid_reference' invisible="1"/>
+                    <div class="alert alert-danger mt0 mb0 text-center" role="alert"
+                         attrs="{'invisible' : ['|',('is_reference_duplicate','=',False),('state','!=','draft')]}">
+                        Alert, duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note.
+                    </div>
+                    <div class="alert alert-warning mt0 mb0 text-center" role="alert"
+                         attrs="{'invisible' : ['|',('is_valid_reference','=',True),('state','!=','draft')]}">
+                       Alert, reference doesn't match finnish or international ISO 11649 standard for structured references.
+                    </div>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="account_invoice_supplier_tree" model="ir.ui.view">
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <field name='is_reference_duplicate' invisible="1"/>
+                </xpath>
+
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-danger">is_reference_duplicate == True and state == 'draft'</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

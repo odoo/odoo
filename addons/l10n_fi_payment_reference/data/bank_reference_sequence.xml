@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">        
+        <!-- Bank reference sequence -->
+        <record id="sequence_bank_reference" model="ir.sequence">
+            <field name="name">Finnish Bank Reference</field>
+            <field name="code">fi.bank.reference</field>
+            <field eval="4" name="padding"/>
+            <field name="prefix">1</field>
+            <field eval="1" name="number_increment"/>
+        </record>
+    </data>
+</odoo>
