@@ -49,13 +49,13 @@ msgstr "பகுப்பாய்வு கணக்கு"
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "பகுப்பாய்வு கணக்கியல்"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Analytic Accounts"
-msgstr ""
+msgstr "பகுப்பாய்வுக் கணக்குகள்"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_tag_action
@@ -75,17 +75,17 @@ msgstr "பகுப்பாய்வு உள்ளீடுகள்"
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Entry"
-msgstr ""
+msgstr "பகுப்பாய்வு நுழைவு"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "பகுப்பாய்வு வரி"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
 msgid "Analytic Lines"
-msgstr ""
+msgstr "பகுப்பாய்வு கோடுகள்"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_name
@@ -100,12 +100,12 @@ msgstr "பகுப்பாய்வு குறிச்சொற்கள�
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
-msgstr ""
+msgstr "காப்பகப்படுத்தியவை"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Associated Partner"
-msgstr ""
+msgstr "இணைக்கப்பட்ட பங்குதாரர்"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_balance
@@ -115,12 +115,12 @@ msgstr "இருப்பு"
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
 msgid "Balance:"
-msgstr ""
+msgstr "இருப்பு:"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
-msgstr ""
+msgstr "பகுப்பாய்வுக் கணக்குகளின் விளக்கப்படம்"
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_tag_action
@@ -146,12 +146,12 @@ msgstr ""
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "Cost/Revenue"
-msgstr ""
+msgstr "காஸ்ட் / வருவாய்"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action
 msgid "Costs & Revenues"
-msgstr ""
+msgstr "செலவுகள் & வருவாய்கள்"
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -160,6 +160,8 @@ msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
+"நீங்கள் வழங்குபவர் பதிவு செய்யும் போது செலவுகள் தானாகவே உருவாக்கப்படும்\n"
+"                 பொருள், செலவுகள் அல்லது நேர அட்டவணைகள்."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
@@ -231,6 +233,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the account "
 "without removing it."
 msgstr ""
+"செயலில் உள்ள புலம் தவறானது எனில், அது அகற்றாமல் கணக்கை மறைக்க அனுமதிக்கும்."
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -240,6 +243,9 @@ msgid ""
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
+"Odoo இல், விற்பனை ஆணைகள் மற்றும் திட்டங்கள் பயன்படுத்தி செயல்படுத்தப்படுகின்றன\n"
+"                 பகுப்பாய்வு கணக்குகள். பகுப்பாய்வு செய்ய நீங்கள் செலவுகளையும் வருவாயையும் கண்காணிக்க முடியும்\n"
+"                 எளிதாக உங்கள் விளிம்புகள்."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
@@ -297,16 +303,20 @@ msgid ""
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
+"நீங்கள் வாடிக்கையாளரை உருவாக்கும்போது வருவாய் தானாகவே உருவாக்கப்படும்\n"
+"                 விலைவிவரங்களும். வாடிக்கையாளர் விவரங்கள் விற்பனை ஆணைகளின் அடிப்படையில் உருவாக்கப்படும்\n"
+"                 (நிலையான விலை விவரப்பட்டியல்), நேர அட்டவணைகளில் (வேலை செய்யும் வேலையை அடிப்படையாகக் கொண்டது) அல்லது\n"
+"                 செலவினங்களில் (எ.கா. பயண செலவினங்களை திரும்பப் பெறுதல்)."
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
-msgstr ""
+msgstr "தேடல் ஆய்வியல் கோடுகள்"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_tag_active
 msgid "Set active to false to hide the Analytic Tag without removing it."
-msgstr ""
+msgstr "அதை அகற்றாமல் அனலிட்டிக் டேக் மறைக்க பொய்யான செயலை அமைக்கவும்."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
@@ -337,4 +347,4 @@ msgstr ""
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
-msgstr ""
+msgstr "எ.கா. திட்டம் XYZ"
