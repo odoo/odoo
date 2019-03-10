@@ -26,14 +26,14 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:612
 #, python-format
 msgid "%d records were successfully imported"
-msgstr ""
+msgstr "பதிவுகள் வெற்றிகரமாக இறக்குமதி செய்யப்பட்டன"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:647
 #, python-format
 msgid "(%d more)"
-msgstr ""
+msgstr "(இன்னும்)"
 
 #. module: base_import
 #. openerp-web
@@ -43,6 +43,8 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
 msgstr ""
+"கோப்பில் ஒரு ஒற்றை நெடுவரிசை காணப்பட்டது, இது பெரும்பாலும் கோப்பு பிரிப்பான்"
+" தவறு"
 
 #. module: base_import
 #. openerp-web
@@ -54,11 +56,15 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"இறக்குமதி செய்யும் போது அறியப்படாத சிக்கல் ஏற்பட்டது (இணைப்பு இழக்கப்படலாம்,"
+" தரவு வரம்பு மீறப்பட்டது அல்லது நினைவக வரம்புகள் மீறப்பட்டன). பிரச்சினை "
+"நிலையாக இருந்தால் வழக்கில் மீண்டும் முயற்சிக்கவும். சிக்கல் ஏற்பட்டால், அதை "
+"ஒரே நேரத்தில் இறக்குமதி செய்வதற்கு பதிலாக கோப்பைப் பிரிப்பதை முயற்சிக்கவும்."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
 msgid "Base"
-msgstr ""
+msgstr "அடித்தளம்"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
@@ -68,7 +74,7 @@ msgstr "அடிப்படை இறக்குமதி"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "அடிப்படை இறக்குமதி மேப்பிங்"
 
 #. module: base_import
 #. openerp-web
@@ -81,18 +87,18 @@ msgstr "ரத்து"
 #: code:addons/base_import/models/base_import.py:693
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr ""
+msgstr "நெடுவரிசையில் தவறான மதிப்புகள் (மதிப்பு:) உள்ளன"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:788
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr ""
+msgstr "நெடுவரிசையில் தவறான மதிப்புகள் உள்ளன. வரியில் பிழை:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
 msgid "Column Name"
-msgstr ""
+msgstr "நெடுவரிசை பெயர்"
 
 #. module: base_import
 #. openerp-web
@@ -100,7 +106,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:228
 #, python-format
 msgid "Comma"
-msgstr ""
+msgstr "கமா"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:825
@@ -108,14 +114,14 @@ msgstr ""
 msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
-msgstr ""
+msgstr "URL ஐ மீட்டெடுக்க முடியவில்லை: [: L]:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:108
 #, python-format
 msgid "Create if doesn't exist"
-msgstr ""
+msgstr "இல்லை என்றால் உருவாக்கவும்"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -168,6 +174,10 @@ msgid ""
 "Note that the value in the column will be used as the new record's 'name', "
 "and assumes this is sufficient to create the record."
 msgstr ""
+"புதிய பதிவுகள் அவற்றால் கண்டுபிடிக்க முடியாவிட்டால் (இறக்குமதி செய்வதற்கு "
+"பதிலாக). பத்தியில் உள்ள மதிப்பானது புதிய பதிவின் 'பெயர்' எனப் "
+"பயன்படுத்தப்படும், மேலும் இது சாதனையை உருவாக்க போதுமானது என்பதை நினைவில் "
+"கொள்ளவும்."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
@@ -180,35 +190,35 @@ msgstr "நாணயம்"
 #: code:addons/base_import/models/base_import.py:212
 #, python-format
 msgid "Database ID"
-msgstr ""
+msgstr "தரவுத்தள ஐடி"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:83
 #, python-format
 msgid "Date Format:"
-msgstr ""
+msgstr "தேதி வடிவமைப்பு:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:84
 #, python-format
 msgid "Datetime Format:"
-msgstr ""
+msgstr "டேட்டா டைம் வடிவம்:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:88
 #, python-format
 msgid "Decimal Separator:"
-msgstr ""
+msgstr "டெசிமல் பிரிப்பான்:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:56
 #, python-format
 msgid "Defer parent/child computation"
-msgstr ""
+msgstr "பெற்றோர் / குழந்தை கணக்கைக் காப்பாற்றுவது"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -236,21 +246,21 @@ msgstr "காட்சி பெயர்"
 #: code:addons/base_import/static/src/js/import_action.js:445
 #, python-format
 msgid "Don't import"
-msgstr ""
+msgstr "இறக்குமதி செய்யாதே"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:229
 #, python-format
 msgid "Dot"
-msgstr ""
+msgstr "புள்ளி"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:87
 #, python-format
 msgid "Download"
-msgstr ""
+msgstr "பதிவிறக்க"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
@@ -262,26 +272,26 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:78
 #, python-format
 msgid "Encoding:"
-msgstr ""
+msgstr "என்கோடிங்:"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:790
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr ""
+msgstr "தவறான தேதி [: L]:"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:289
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
-msgstr ""
+msgstr "XLS / XLSX கோப்பை படிக்கும்போது பிழை செல் கண்டறியப்பட்டுள்ளது:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:624
 #, python-format
 msgid "Everything seems valid."
-msgstr ""
+msgstr "எல்லாம் சரியாகி விட்டது."
 
 #. module: base_import
 #. openerp-web
@@ -289,18 +299,20 @@ msgstr ""
 #, python-format
 msgid "Excel files are recommended as fields formatting is automatic."
 msgstr ""
+"துறைகள் வடிவமைத்தல் தானாகவே இருக்கும் என எக்செல் கோப்புகள் "
+"பரிந்துரைக்கப்படுகின்றன."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:169
 #: code:addons/base_import/models/base_import.py:206
 #, python-format
 msgid "External ID"
-msgstr ""
+msgstr "புற ஐடி"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
 msgid "Field Name"
-msgstr ""
+msgstr "புலம் பெயர்"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file
@@ -315,54 +327,56 @@ msgstr "கோப்பு பெயர்"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_type
 msgid "File Type"
-msgstr ""
+msgstr "கோப்பு வகை"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:808
 #: code:addons/base_import/models/base_import.py:814
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr ""
+msgstr "கோப்பு அளவு அதிகபட்ச கட்டமைக்கப்பட்ட (பைட்டுகள்)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
 msgstr ""
+"சரிபார்க்க மற்றும் / அல்லது இறக்குமதி செய்ய, கோப்பு பைனரி (இல்லை base64 "
+"இல்லை)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:137
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
-msgstr ""
+msgstr "CSV கோப்புகளுக்கான, நீங்கள் சரியான பிரிப்பான் தேர்ந்தெடுக்க வேண்டும்."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:13
 #, python-format
 msgid "Formatting Options…"
-msgstr ""
+msgstr "வடிவமைத்தல் விருப்பங்கள் ..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:671
 #, python-format
 msgid "Get all possible values"
-msgstr ""
+msgstr "அனைத்து மதிப்புகளையும் பெறவும்"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:658
 #, python-format
 msgid "Here are the possible values:"
-msgstr ""
+msgstr "சாத்தியமான மதிப்புகள் இங்கே:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:138
 #, python-format
 msgid "Here is the start of the file we could not import:"
-msgstr ""
+msgstr "நாங்கள் இறக்குமதி செய்ய முடியாத கோப்பின் ஆரம்பம் இங்கே:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__id
@@ -395,6 +409,10 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
+"கோப்பில் இருந்தால்\n"
+"                 பத்தியின் பெயர்கள், ஒடோ, தானாகவே கண்டுபிடித்து முயற்சிக்க முடியும்\n"
+"                 நெடுவரிசைக்குத் தொடர்புடைய புலம். இது இறக்குமதி செய்கிறது\n"
+"                 குறிப்பாக கோப்பில் பல நெடுவரிசைகள் உள்ளன."
 
 #. module: base_import
 #. openerp-web
@@ -405,6 +423,9 @@ msgid ""
 "will set up subscriptions and send notifications"
 "                             during the import, but lead to a slower import."
 msgstr ""
+"மாதிரியை திறந்தால், வரலாற்று கண்காணிப்பு சந்தாக்களை அமைத்து இறக்குமதி "
+"செய்யும் போது அறிவிப்புகளை அனுப்பும், ஆனால் மெதுவான இறக்குமதிக்கு "
+"வழிவகுக்கும்."
 
 #. module: base_import
 #. openerp-web
@@ -415,6 +436,9 @@ msgid ""
 "parent / child relation occurs on every line, and lead to a slower import."
 "                     Defering it can speed up import."
 msgstr ""
+"மாதிரி பெற்றோர் / குழந்தை உறவுகளைப் பயன்படுத்தினால், ஒவ்வொரு வரியும் "
+"பெற்றோர் / குழந்தை உறவுகளை கணக்கிடுவதோடு மெதுவான இறக்குமதிக்கு வழிவகுக்கும்."
+" அதைப் பாதுகாப்பதன் மூலம் இறக்குமதி செய்யலாம்."
 
 #. module: base_import
 #. openerp-web
@@ -429,28 +453,28 @@ msgstr "இறக்குமதி"
 #: code:addons/base_import/static/src/xml/base_import.xml:91
 #, python-format
 msgid "Import FAQ"
-msgstr ""
+msgstr "இறக்குமதி FAQ"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:140
 #, python-format
 msgid "Import a File"
-msgstr ""
+msgstr "ஒரு கோப்பை இறக்குமதி செய்க"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:612
 #, python-format
 msgid "Import completed"
-msgstr ""
+msgstr "இறக்குமதி முடிந்தது"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:136
 #, python-format
 msgid "Import preview failed due to:"
-msgstr ""
+msgstr "இதன் காரணமாக இறக்குமதி முன்னோட்ட தோல்வியடைந்தது:"
 
 #. module: base_import
 #. openerp-web
@@ -461,6 +485,10 @@ msgid ""
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
 msgstr ""
+"இறக்குமதி நேரம் முடிந்தது. மீண்டும் முயற்சிக்கவும். இந்த சிக்கலை நீங்கள் "
+"எதிர்கொண்டிருந்தால், கணினி அமைப்பின் கட்டமைப்புக்கு மிகப்பெரியதாக "
+"இருக்கலாம், அதை பிரித்தெடுக்க முயற்சிக்கவும் (கோப்புக்கு குறைவான பதிவுகள் "
+"இறக்குமதி செய்யுங்கள்)."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
@@ -530,26 +558,26 @@ msgstr "கடைசியாக புதுப்பிக்கப்பட�
 #: code:addons/base_import/static/src/xml/base_import.xml:101
 #, python-format
 msgid "Load File"
-msgstr ""
+msgstr "கோப்பை ஏற்றவும்"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:364
 #, python-format
 msgid "Load New File"
-msgstr ""
+msgstr "புதிய கோப்பை ஏற்றவும்"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:41
 #, python-format
 msgid "Map your columns to import"
-msgstr ""
+msgstr "உங்கள் நெடுவரிசைகளை இறக்குமதி செய்யுங்கள்"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
 msgid "Model"
-msgstr ""
+msgstr "மாதிரி"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__name
@@ -561,26 +589,26 @@ msgstr "பெயர்"
 #: code:addons/base_import/static/src/xml/base_import.xml:85
 #, python-format
 msgid "Need Help?"
-msgstr ""
+msgstr "உதவி தேவை?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:231
 #, python-format
 msgid "No Separator"
-msgstr ""
+msgstr "பிரிப்பான் இல்லை"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:513
 #, python-format
 msgid "Normal Fields"
-msgstr ""
+msgstr "சாதாரண புலங்கள்"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__othervalue
 msgid "Other Variable"
-msgstr ""
+msgstr "பிற மாறி"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__parent_id
@@ -592,155 +620,155 @@ msgstr "பெற்றோர்"
 #: code:addons/base_import/static/src/js/import_action.js:514
 #, python-format
 msgid "Relation Fields"
-msgstr ""
+msgstr "உறவு புலங்கள்"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:100
 #, python-format
 msgid "Reload File"
-msgstr ""
+msgstr "கோப்பு மீண்டும் ஏற்றவும்"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
 msgid "Res Model"
-msgstr ""
+msgstr "ரெஸ் மாடல்"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:79
 #, python-format
 msgid "Select a CSV or Excel file to import."
-msgstr ""
+msgstr "இறக்குமதி செய்ய CSV அல்லது Excel கோப்பைத் தேர்ந்தெடுக்கவும்."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:212
 #, python-format
 msgid "Semicolon"
-msgstr ""
+msgstr "காற்"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:79
 #, python-format
 msgid "Separator:"
-msgstr ""
+msgstr "பிரிப்பான்:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:66
 #, python-format
 msgid "Show fields of relation fields (advanced)"
-msgstr ""
+msgstr "தொடர்பு துறைகள் (மேம்பட்ட)"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
 msgid "Some Value"
-msgstr ""
+msgstr "சில மதிப்பு"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:214
 #, python-format
 msgid "Space"
-msgstr ""
+msgstr "விண்வெளி"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:213
 #, python-format
 msgid "Tab"
-msgstr ""
+msgstr "தாவல்"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:99
 #, python-format
 msgid "Test Import"
-msgstr ""
+msgstr "சோதனை இறக்குமதி"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
 msgid "Tests : Base Import Model Preview"
-msgstr ""
+msgstr "டெஸ்ட்: அடிப்படை இறக்குமதி மாதிரி முன்னோட்டம்"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "Tests : Base Import Model, Character"
-msgstr ""
+msgstr "சோதனைகள்: அடிப்படை இறக்குமதி மாதிரி, எழுத்து"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "Tests : Base Import Model, Character No readonly"
-msgstr ""
+msgstr "சோதனைகள்: அடிப்படை இறக்குமதி மாதிரி, எழுத்து இல்லை"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "Tests : Base Import Model, Character readonly"
-msgstr ""
+msgstr "டெஸ்ட்: அடிப்படை இறக்குமதி மாதிரி, எழுத்து வாசிப்பு"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "Tests : Base Import Model, Character required"
-msgstr ""
+msgstr "டெஸ்ட்: அடிப்படை இறக்குமதி மாதிரி, எழுத்து தேவை"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "Tests : Base Import Model, Character states"
-msgstr ""
+msgstr "டெஸ்ட்: அடிப்படை இறக்குமதி மாதிரி, எழுத்து நிலைகள்"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "Tests : Base Import Model, Character still readonly"
-msgstr ""
+msgstr "சோதனைகள்: அடிப்படை இறக்குமதி மாதிரி, எழுத்து இன்னும் படிக்க"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
 msgid "Tests : Base Import Model, Many to One"
-msgstr ""
+msgstr "Tests : Base Import Model, Many to One"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "Tests : Base Import Model, Many to One related"
-msgstr ""
+msgstr "சோதனைகள்: அடிப்படை இறக்குமதி மாதிரி, ஒன்றுக்கு ஒன்று தொடர்பான"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
 msgid "Tests : Base Import Model, Many to One required"
-msgstr ""
+msgstr "டெஸ்ட்: அடிப்படை இறக்குமதி மாடல், பலருக்கு தேவை"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "Tests : Base Import Model, Many to One required related"
-msgstr ""
+msgstr "சோதனைகள்: அடிப்படை இறக்குமதி மாடல், அவசியமான ஒன்று தேவைப்படும்"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m
 msgid "Tests : Base Import Model, One to Many"
-msgstr ""
+msgstr "டெஸ்ட்: அடிப்படை இறக்குமதி மாதிரி, ஒன்று பல"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
 msgid "Tests : Base Import Model, One to Many child"
-msgstr ""
+msgstr "டெஸ்ட்: அடிப்படை இறக்குமதி மாடல், பல குழந்தைகளுக்கு ஒன்று"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_complex
 msgid "Tests: Base Import Model Complex"
-msgstr ""
+msgstr "டெஸ்ட்: அடிப்படை இறக்குமதி மாதிரி காம்ப்ளக்ஸ்"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_float
 msgid "Tests: Base Import Model Float"
-msgstr ""
+msgstr "டெஸ்ட்: அடிப்படை இறக்குமதி மாடல் மிதவை"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:80
 #, python-format
 msgid "Text Delimiter:"
-msgstr ""
+msgstr "டெலிமிட்டர் உரை:"
 
 #. module: base_import
 #. openerp-web
@@ -750,26 +778,28 @@ msgid ""
 "The first row\n"
 "                 contains the label of the column"
 msgstr ""
+"முதல் வரிசையில்\n"
+"                  நெடுவரிசையின் லேபிள் உள்ளது"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:87
 #, python-format
 msgid "Thousands Separator:"
-msgstr ""
+msgstr "ஆயிரக்கணக்கான பிரிப்பான்:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:47
 #, python-format
 msgid "Track history during import"
-msgstr ""
+msgstr "இறக்குமதி செய்யும் போது வரலாற்றைக் கண்காணிக்கலாம்"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:254
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
-msgstr ""
+msgstr "\"{Extension}\" கோப்பை ஏற்ற முடியவில்லை: பைத்தான் தொகுதி \"{modname}\""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:255
@@ -777,6 +807,8 @@ msgstr ""
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
+"ஆதரிக்கப்படாத கோப்பு வடிவமைப்பு \"{}\", இறக்குமதி மட்டும் CSV, ODS, XLS "
+"மற்றும் XLSX ஆதரிக்கிறது"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
@@ -803,7 +835,7 @@ msgstr "மதிப்பு"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__value2
 msgid "Value2"
-msgstr ""
+msgstr "மதிப்பு 2"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:760
@@ -812,23 +844,25 @@ msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
+"URL வழியாக படங்களை நீங்கள் இறக்குமதி செய்ய முடியாது, உங்கள் நிர்வாகிக்கு "
+"அல்லது காரணத்திற்கான ஆதரவை சரிபார்க்கவும்."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:631
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr ""
+msgstr "இறக்குமதி செய்ய குறைந்தது ஒரு புலத்தை நீங்கள் கட்டமைக்க வேண்டும்"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:641
 #, python-format
 msgid "at row %d"
-msgstr ""
+msgstr "வரிசையில்"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:643
 #, python-format
 msgid "between rows %d and %d"
-msgstr ""
+msgstr "வரிசைகள் மற்றும் இடையே"

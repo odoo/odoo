@@ -15201,6 +15201,8 @@ msgid ""
 "Module loading %s failed: file %s could not be processed:\n"
 " %s"
 msgstr ""
+"Vložení modulu %s se nezdařilo: soubor %s nelze zpracovat: \n"
+"%s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation__module
@@ -21460,6 +21462,13 @@ msgstr ""
 "vykreslování. HTML znamená, že přehled bude otevřen přímo ve vašem "
 "prohlížeči. PDF znamená, že zpráva bude vykreslena pomocí Wkhtmltopdf a "
 "stažena uživatelem."
+
+#. module: base
+#: code:addons/base/models/res_users.py:117
+#: code:addons/base/models/res_users.py:404
+#, python-format
+msgid "The user cannot have more than one user types."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__user_id

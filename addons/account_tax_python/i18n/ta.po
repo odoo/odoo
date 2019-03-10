@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>, 2019
+# Alagappan Karthikeyan <me@karthik.sg>, 2019
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
 "PO-Revision-Date: 2018-08-24 09:15+0000\n"
-"Last-Translator: Bagavathikumar Ramakrishnan <bagavathikumar@gmail.com>, 2019\n"
+"Last-Translator: Alagappan Karthikeyan <me@karthik.sg>, 2019\n"
 "Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
 msgid "Applicable Code"
-msgstr ""
+msgstr "பொருந்தக்கூடிய கோட்"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
@@ -37,6 +38,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"மாறி 'விளைவாக' அமைக்க மூலம் வரி அளவு கணக்கிட.\n"
+"\n"
+": param base_amount: float, வரி பயன்படுத்தப்படும் உண்மையான அளவு\n"
+": அளவு price_unit: float\n"
+": அளவு: மிதவை\n"
+": பரம் நிறுவனம்: res.company recordet ஒற்றை\n"
+": param தயாரிப்பு: product.product recordet ஒற்றை அல்லது ஒன்றுமில்லை\n"
+": param partner: res.partner recordet ஒற்றை அல்லது ஒன்றுமில்லை"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
@@ -49,6 +58,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"மாறி 'விளைவாக' அமைக்க மூலம் வரி அளவு கணக்கிட.\n"
+"\n"
+": param base_amount: float, வரி பயன்படுத்தப்படும் உண்மையான அளவு\n"
+": அளவு price_unit: float\n"
+": அளவு: மிதவை\n"
+": param தயாரிப்பு: product.product recordet ஒற்றை அல்லது ஒன்றுமில்லை\n"
+": param partner: res.partner recordet ஒற்றை அல்லது ஒன்றுமில்லை"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
@@ -61,6 +77,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"வரி மாறி 'முடிவு' என்பதை உண்மை அல்லது தவறானதாக்குவதன் மூலம் வரி விதிக்கப்படும் என தீர்மானிக்கவும்.\n"
+"\n"
+": அளவு price_unit: float\n"
+": அளவு: மிதவை\n"
+": பரம் நிறுவனம்: res.company recordet ஒற்றை\n"
+": param தயாரிப்பு: product.product recordet ஒற்றை அல்லது ஒன்றுமில்லை\n"
+": param partner: res.partner recordet ஒற்றை அல்லது ஒன்றுமில்லை"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
@@ -72,30 +95,36 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"வரி மாறி 'முடிவு' என்பதை உண்மை அல்லது தவறானதாக்குவதன் மூலம் வரி விதிக்கப்படும் என தீர்மானிக்கவும்.\n"
+"\n"
+": அளவு price_unit: float\n"
+": அளவு: மிதவை\n"
+": param தயாரிப்பு: product.product recordet ஒற்றை அல்லது ஒன்றுமில்லை\n"
+": param partner: res.partner recordet ஒற்றை அல்லது ஒன்றுமில்லை"
 
 #. module: account_tax_python
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Fixed"
-msgstr ""
+msgstr "நிலையான"
 
 #. module: account_tax_python
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Group of Taxes"
-msgstr ""
+msgstr "வரி குழு"
 
 #. module: account_tax_python
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Percentage of Price"
-msgstr ""
+msgstr "விலை சதவீதம்"
 
 #. module: account_tax_python
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Percentage of Price Tax Included"
-msgstr ""
+msgstr "விலை வரி சதவீதம் சேர்க்கப்பட்டுள்ளது"
 
 #. module: account_tax_python
 #: selection:account.tax,amount_type:0
@@ -103,7 +132,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
 msgid "Python Code"
-msgstr ""
+msgstr "பைதான் குறியீடு"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
@@ -114,9 +143,9 @@ msgstr "வரி"
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
 msgid "Tax Computation"
-msgstr ""
+msgstr "வரி கணிப்பு"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "வரிகளுக்கான டெம்ப்ளேட்கள்"

@@ -27,6 +27,8 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
+"LDAP வழியாக அங்கீகரிக்கும் புதிய பயனர்களுக்கு உள்ளூர் பயனர் கணக்குகளை தானாக "
+"உருவாக்கவும்"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -41,7 +43,7 @@ msgstr "நிறுவனம்"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "Company LDAP configuration"
-msgstr ""
+msgstr "நிறுவனத்தின் LDAP கட்டமைப்பு"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
@@ -51,7 +53,7 @@ msgstr "கட்டமைப்பு அமைப்புகள்"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
 msgid "Create User"
-msgstr ""
+msgstr "பயனர் உருவாக்கவும்"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
@@ -77,48 +79,48 @@ msgstr "ID"
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "LDAP Configuration"
-msgstr ""
+msgstr "LDAP கட்டமைப்பு"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
 #: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
 msgid "LDAP Parameters"
-msgstr ""
+msgstr "LDAP அளவுருக்கள்"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
-msgstr ""
+msgstr "LDAP சேவையகம்"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
 msgid "LDAP Server address"
-msgstr ""
+msgstr "LDAP சர்வர் முகவரி"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
 msgid "LDAP Server port"
-msgstr ""
+msgstr "LDAP சர்வர் போர்ட்"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
 msgid "LDAP base"
-msgstr ""
+msgstr "LDAP தளம்"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "LDAP binddn"
-msgstr ""
+msgstr "LDAP binddn"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
 msgid "LDAP filter"
-msgstr ""
+msgstr "LDAP வடிகட்டி"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_password
 msgid "LDAP password"
-msgstr ""
+msgstr "LDAP கடவுச்சொல்"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
@@ -138,18 +140,19 @@ msgstr "கடைசியாக புதுப்பிக்கப்பட�
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Login Information"
-msgstr ""
+msgstr "உள்நுழைவு தகவல்"
 
 #. module: auth_ldap
 #: code:addons/auth_ldap/models/res_company_ldap.py:201
 #, python-format
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
+"LDAP உள்நுழைவுக்கான உள்ளூர் பயனர் இல்லை, ஒன்றை உருவாக்க கட்டமைக்கப்படவில்லை"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
-msgstr ""
+msgstr "செயல்முறை அளவுரு"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
@@ -158,6 +161,9 @@ msgid ""
 "option requires a server with STARTTLS enabled, otherwise all authentication"
 " attempts will fail."
 msgstr ""
+"LDAP சேவையகத்துடன் இணைக்கும் போது பாதுகாப்பான TLS / SSL குறியாக்கத்தை கோருக."
+" இந்த விருப்பத்திற்கு STARTTLS உடன் சேவையகம் தேவைப்படுகிறது, இல்லையெனில் "
+"அனைத்து அங்கீகார முயற்சிகளும் தோல்வியடையும்."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -167,17 +173,17 @@ msgstr "வரிசை"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Server Information"
-msgstr ""
+msgstr "சர்வர் தகவல்"
 
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr ""
+msgstr "உங்கள் LDAP சேவையகத்தை அமை"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
 msgid "Template User"
-msgstr ""
+msgstr "டெம்ப்ளேட் பயனர்"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
@@ -185,6 +191,7 @@ msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
 msgstr ""
+"அடைவு வினவலுக்கு பயன்படும் LDAP சேவையகத்தில் பயனர் கணக்கின் கடவுச்சொல்."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
@@ -192,21 +199,23 @@ msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
 msgstr ""
+"அடைவு வினவலுக்கு பயன்படும் LDAP சேவையகத்தில் பயனர் கணக்கு. அநாமதேயமாக இணைக்க"
+" காலியாக விடவும்."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Use TLS"
-msgstr ""
+msgstr "TLS ஐப் பயன்படுத்துக"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "User Information"
-msgstr ""
+msgstr "பயனர் தகவல்"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
 msgid "User to copy when creating new users"
-msgstr ""
+msgstr "புதிய பயனர்களை உருவாக்கும் போது நகலெடுக்க பயனர்"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_users

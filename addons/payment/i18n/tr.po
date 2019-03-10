@@ -260,7 +260,7 @@ msgstr "<span><i>Beklemede</i>... Sipariş, ödemeden sonra onaylanacak.</span>"
 #: code:addons/payment/models/account_invoice.py:72
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr ""
+msgstr "Ödeme alıcısından bir yevmiye belirtilmelidir %s."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:65
@@ -272,7 +272,7 @@ msgstr ""
 #: code:addons/payment/models/account_payment.py:55
 #, python-format
 msgid "A payment transaction already exists."
-msgstr ""
+msgstr "Bir ödeme işlemi zaten var."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:57
@@ -364,7 +364,7 @@ msgstr "Etkin"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_active
 msgid "Add Extra Fees"
-msgstr "Ekstra Ücretleri ekle"
+msgstr "Ekstra Ücretleri Ekle"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -484,7 +484,7 @@ msgstr "İptal"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__cancel_msg
 msgid "Cancel Message"
-msgstr "Mesajı İptal et"
+msgstr "İptal Mesajı"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -496,7 +496,7 @@ msgstr "İptal Edildi"
 #: code:addons/payment/static/src/xml/payment_processing.xml:109
 #, python-format
 msgid "Cancelled payments"
-msgstr ""
+msgstr "İptal edilen ödemeler"
 
 #. module: payment
 #. openerp-web
@@ -530,13 +530,13 @@ msgstr "Teslimat tamamlandığında, Odoo'dan tutarı yakalayın."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Check here"
-msgstr ""
+msgstr "Burayı kontrol et"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_open_payment_onboarding_payment_acquirer_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Choose a payment method"
-msgstr "Ödeme Metodu Seç"
+msgstr "Ödeme Metodu Seçin"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -549,7 +549,7 @@ msgstr "Semt/İlçe"
 #: code:addons/payment/static/src/xml/payment_processing.xml:40
 #, python-format
 msgid "Click here to be redirected to the confirmation page."
-msgstr ""
+msgstr "Onay sayfasına yönlendirilmek için burayı tıklayın."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -585,7 +585,7 @@ msgstr "Yapılandır"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Configure your payment methods."
-msgstr ""
+msgstr "Ödeme yöntemlerinizi yapılandırın."
 
 #. module: payment
 #. openerp-web
@@ -624,17 +624,17 @@ msgstr "Ülke"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_acquirer
 msgid "Create a new payment acquirer"
-msgstr ""
+msgstr "Yeni bir ödeme alıcısı oluşturun"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
 msgid "Create a new payment transaction"
-msgstr ""
+msgstr "Yeni bir ödeme işlemi oluştur"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_icon
 msgid "Create a payment icon"
-msgstr ""
+msgstr "Ödeme simgesi oluşturun"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.payment_token_action
@@ -677,7 +677,7 @@ msgstr "Özel"
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Custom payment instructions"
-msgstr ""
+msgstr "Özel ödeme talimatları"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
@@ -697,7 +697,7 @@ msgstr "Görünüm sırasını belirle"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Dismiss"
-msgstr ""
+msgstr "Reddet"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__display_name
@@ -895,7 +895,7 @@ msgstr "TX'in iç referansı"
 #: code:addons/payment/static/src/xml/payment_processing.xml:145
 #, python-format
 msgid "Internal server error"
-msgstr ""
+msgstr "İç Sunucu Hatası"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:55
@@ -1123,7 +1123,7 @@ msgstr "Ödeme alıcısı bulunamadı"
 #: code:addons/payment/static/src/xml/payment_processing.xml:118
 #, python-format
 msgid "No payment has been processed."
-msgstr ""
+msgstr "Herhangi ödeme işlemi gerçekleştirilemedi."
 
 #. module: payment
 #. openerp-web
@@ -1136,7 +1136,7 @@ msgstr "Ödeme yöntemi seçilmedi."
 #. module: payment
 #: selection:res.company,payment_acquirer_onboarding_state:0
 msgid "Not done"
-msgstr ""
+msgstr "Yapılmadı"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__payment_token_id
@@ -1172,7 +1172,7 @@ msgstr "Tamam"
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:48
 #, python-format
 msgid "Only administrators can access this data."
-msgstr ""
+msgstr "Bu verilere yalnızca yöneticiler erişebilir."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:723
@@ -1235,12 +1235,12 @@ msgstr "İş Ortağı Adı"
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with PayPal"
-msgstr ""
+msgstr "PayPal ile Öde"
 
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with another payment acquirer"
-msgstr ""
+msgstr "Başka bir ödeme alıcısıyla ödeme yapın"
 
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
@@ -1303,7 +1303,7 @@ msgstr "Ödeme İkonları"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr ""
+msgstr "Ödeme Talimatları"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__journal_id
@@ -1392,7 +1392,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:26
 #, python-format
 msgid "Payments received"
-msgstr ""
+msgstr "Ödemeler alındı"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
@@ -1438,7 +1438,7 @@ msgstr "Beklemede"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pending_msg
 msgid "Pending Message"
-msgstr "Bekleyen Mesaj"
+msgstr "Bekleme Mesajı"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
@@ -1457,6 +1457,8 @@ msgid ""
 "Please make a payment to <ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
+"Lütfen bir ödeme yapmak için <ul><li>Banka: %s</li><li>Hesap Numarası: "
+"%s</li><li>Hesap Sahibi: %s</li></ul>"
 
 #. module: payment
 #. openerp-web
@@ -1489,7 +1491,7 @@ msgstr "Lütfen iletişim referansı olarak sipariş adı kullanın."
 #: code:addons/payment/static/src/xml/payment_processing.xml:139
 #, python-format
 msgid "Please wait ..."
-msgstr ""
+msgstr "Lütfen bekleyin ..."
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
@@ -1536,7 +1538,7 @@ msgstr "Referans"
 #. module: payment
 #: sql_constraint:payment.transaction:0
 msgid "Reference must be unique!"
-msgstr ""
+msgstr "Referans benzersiz olmalı!"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
@@ -1617,19 +1619,19 @@ msgstr "Sunucudan Sunucuya"
 #: code:addons/payment/static/src/js/payment_form.js:302
 #, python-format
 msgid "Server error"
-msgstr "Sunucu hatas"
+msgstr "Sunucu hatası"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:138
 #, python-format
 msgid "Server error:"
-msgstr ""
+msgstr "Sunucu hatası:"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Set payments"
-msgstr ""
+msgstr "Ödemeleri ayarlama"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__short_name
@@ -1887,13 +1889,13 @@ msgstr "Geçersiz İşlem"
 #: code:addons/payment/static/src/xml/payment_processing.xml:87
 #, python-format
 msgid "Waiting for payment"
-msgstr ""
+msgstr "Ödeme bekliyor"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:666
 #, python-format
 msgid "Waiting for payment confirmation..."
-msgstr ""
+msgstr "Ödeme onayı bekleniyor ..."
 
 #. module: payment
 #. openerp-web
@@ -1970,7 +1972,7 @@ msgstr "Ödemenizi işleyemiyoruz."
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
-msgstr "Wire Transfer"
+msgstr "Manuel Transfer"
 
 #. module: payment
 #. openerp-web
@@ -2166,7 +2168,7 @@ msgstr "referans: işlem referans numarası"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "to choose another payment method."
-msgstr ""
+msgstr "başka bir ödeme yöntemi seçmek için."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
