@@ -82,7 +82,7 @@ def add_check_digit(body):
 
     body = clean(body)
     multipliers = (7, 3, 1)
-    numbers_reversed = map(int, reversed(body))
+    numbers_reversed = [int(char) for char in reversed(body)]
     # All digits of the reference number are multiplied from right to left with the values 7, 3, 1, 7, 3, 1...
     multiplied_sum = sum(multipliers[i % 3] * x for i, x in enumerate(numbers_reversed))
     # The sum is subtracted from the following full ten.
