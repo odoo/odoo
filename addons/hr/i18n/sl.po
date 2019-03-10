@@ -93,12 +93,12 @@ msgstr "<span>Poročanje</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Approve</span>"
-msgstr ""
+msgstr "<span>Za odobritev</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Do</span>"
-msgstr ""
+msgstr "<span>Opravki</span>"
 
 #. module: hr
 #: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
@@ -218,7 +218,7 @@ msgstr ""
 #. module: hr
 #: selection:mail.alias,alias_contact:0
 msgid "Authenticated Employees"
-msgstr ""
+msgstr "Overjeni uslužbenci"
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
@@ -345,7 +345,7 @@ msgstr "Družba"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__resource_calendar_id
 msgid "Company Working Hours"
-msgstr ""
+msgstr "Delovni čas organizacije"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__complete_name
@@ -365,7 +365,7 @@ msgstr "Nastavitve"
 #. module: hr
 #: model:hr.job,name:hr.job_consultant
 msgid "Consultant"
-msgstr ""
+msgstr "Svetovalec"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner
@@ -563,7 +563,7 @@ msgstr "Struktua zaposlenih"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_list
 msgid "Employees Tags"
-msgstr ""
+msgstr "Oznake delojemalcev"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__address_home_id
@@ -571,6 +571,8 @@ msgid ""
 "Enter here the private address of the employee, not the one linked to your "
 "company."
 msgstr ""
+"Sem vstavite privatni naslov delojemalca in ne tistega, ki je vezan na vašo "
+"organizacijo."
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
@@ -733,7 +735,7 @@ msgstr "Kadrovske zadeve"
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
 msgid "Human Resources Manager"
-msgstr ""
+msgstr "Upravitelj kadrov"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__id
@@ -1018,17 +1020,17 @@ msgstr "Državljanstvo"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Rok naslednje aktivnosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Povzetek naslednje aktivnosti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Tip naslednje aktivnosti"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1150,7 +1152,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,activity_state:0
 msgid "Overdue"
-msgstr ""
+msgstr "Zapadlo"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -1191,7 +1193,7 @@ msgstr "Kraj rojstva"
 #. module: hr
 #: selection:hr.employee,activity_state:0
 msgid "Planned"
-msgstr ""
+msgstr "Planirano"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
@@ -1323,6 +1325,8 @@ msgid ""
 "Set default calendar used to compute time allocation for leaves, timesheets,"
 " ..."
 msgstr ""
+"Nastavitev privzetega koledarja za izračun časa dodelitve dopusta, časovnic,"
+" ..."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__state
@@ -1340,17 +1344,17 @@ msgstr "Nastavitve"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_org_chart
 msgid "Show Organizational Chart"
-msgstr ""
+msgstr "Prikaz organigrama"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form"
-msgstr ""
+msgstr "Prikaz organigrama na obrazcu delojemalca"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form."
-msgstr ""
+msgstr "Prikaz organigrama na obrazcu delojemalca."
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -1463,7 +1467,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_address_home_a_company
 msgid "The employee adress has a company linked"
-msgstr ""
+msgstr "Naslov delojemalca je povezan s podjetjem"
 
 #. module: hr
 #: sql_constraint:hr.job:0
@@ -1545,6 +1549,9 @@ msgid ""
 "                                            This private address is used in the expense report reimbursement document.\n"
 "                                            It should be different from the work address."
 msgstr ""
+"Uporabite domači naslov delojemalca.\n"
+"                                            Ta privatni naslov se uporablja za dokumente o vračilu stroškov.\n"
+"                                            Moral bi biti drugačen od delovnega naslova."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_id
@@ -1693,7 +1700,7 @@ msgstr "Službeni mobilni tel."
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Organization"
-msgstr ""
+msgstr "Organizacija dela"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form

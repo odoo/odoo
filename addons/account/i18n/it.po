@@ -12,16 +12,17 @@
 # Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
+# Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2018
 # Paolo Caruccio <paolo.caruccio66@gmail.com>, 2018
 # maiolif <maiolif@mgftools.com>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Cécile Collart <cco@odoo.com>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 # Federico Castellano <castellano.federico@outlook.com>, 2018
+# Martin Trigaux, 2018
 # Paolo Valier, 2018
 # David Minneci <david@numeko.it>, 2018
 # efraimbiffi <eab@odoo.com>, 2018
-# Martin Trigaux, 2018
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
@@ -864,7 +865,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr "Impostazione di un avviso sul partner (conto)"
+msgstr "Impostazione di un avviso sul partner (contabilità)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__access_warning
@@ -1478,12 +1479,12 @@ msgstr "Determinare imposte successive"
 #. module: account
 #: model:ir.actions.report,name:account.action_report_aged_partner_balance
 msgid "Aged Partner Balance"
-msgstr "Saldo cliente - fornitore valorizzato per anzianita"
+msgstr "Scadenziario clienti/fornitori"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_agedpartnerbalance
 msgid "Aged Partner Balance Report"
-msgstr ""
+msgstr "Resoconto scadenze clienti/fornitori"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_id
@@ -1992,7 +1993,7 @@ msgstr "Attività"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_asset
 msgid "Assets Management"
-msgstr "Gestione Immobilizzazioni"
+msgstr "Gestione immobilizzazioni"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_ids
@@ -2635,7 +2636,7 @@ msgstr "Impossibile creare movimenti per aziende diverse."
 #: code:addons/account/models/account_move.py:390
 #, python-format
 msgid "Cannot create unbalanced journal entry."
-msgstr "Impossibile creare registrazioni non bilanciate."
+msgstr "Impossibile creare registrazioni squadrate."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:757
@@ -4796,7 +4797,7 @@ msgstr "Importo fisso"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_fixed_assets
 msgid "Fixed Assets"
-msgstr "Attività immobilizzate"
+msgstr "Immobilizzazioni"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__amount
@@ -7783,7 +7784,7 @@ msgstr "Conto fornitore"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Payable Accounts"
-msgstr "Conti fornitore"
+msgstr "Conto fornitori"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__debit_limit
@@ -8420,7 +8421,7 @@ msgstr "Conto cliente"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Receivable Accounts"
-msgstr "Conti cliente"
+msgstr "Conto clienti"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__account_id
@@ -10075,8 +10076,8 @@ msgid ""
 "Technical field used to determine at which date this reconciliation needs to"
 " be shown on the aged receivable/payable reports."
 msgstr ""
-"Campo tecnico usato per definire la data alla quale questa riconciliazione "
-"dev'essere mostrata nei resoconti di anzianita' debiti - crediti"
+"Campo tecnico usato per definire la data in cui deve essere mostrata questa "
+"riconciliazione nei resoconti scadenze debiti/crediti."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__tax_type_domain
@@ -10842,8 +10843,8 @@ msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
 msgstr ""
-"Questo conto verrà usato al posto del predefinito come conto fornitore per "
-"il partner corrente."
+"Questo conto verrà usato, al posto del predefinito, come conto fornitore per"
+" il partner corrente."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_receivable_id
@@ -10851,8 +10852,8 @@ msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
 msgstr ""
-"Questo conto verrà usato al posto del predefinito come conto cliente per il "
-"partner corrente."
+"Questo conto verrà usato, al posto del predefinito, come conto cliente per "
+"il partner corrente."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_income_categ_id
@@ -11055,8 +11056,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
 msgstr ""
-"Questo termine di pagamento verrà usato, al posto di quello predefinito, per"
-" ordini di acquisto e fatture fornitori "
+"Questo termine di pagamento verrà usato, al posto del predefinito, per "
+"ordini di acquisto e fatture fornitori "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_payment_term_id
@@ -11064,8 +11065,8 @@ msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
 msgstr ""
-"Questo termine di pagamento verrà usato, al posto di quello predefinito, per"
-" ordini di vendita e fatture clienti"
+"Questo termine di pagamento verrà usato, al posto del predefinito, per "
+"ordini di vendita e fatture clienti"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__account_id

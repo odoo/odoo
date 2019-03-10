@@ -26,12 +26,14 @@ msgid ""
 "${object.create_uid.name} from ${object.company_id.name} invites you to "
 "connect to Odoo"
 msgstr ""
+"$ {object.company_id.name} இலிருந்து $ {object.create_uid.name} உங்களை Odoo "
+"உடன் இணைக்க அழைக்கிறார்"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:126
 #, python-format
 msgid "%s connected"
-msgstr ""
+msgstr "%sஇணைக்கப்பட்ட"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -39,13 +41,15 @@ msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
 msgstr ""
+"இந்த பயனருக்கு கடவுச்சொல் மீட்டமைக்கப்பட்டுள்ளது. பின்வரும் இணைப்பைக் கொண்ட "
+"ஒரு மின்னஞ்சல் அனுப்பப்பட்டது:"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
-msgstr ""
+msgstr "பின்வரும் சந்தா இணைப்பு கொண்ட அழைப்பிதழ் மின்னஞ்சல் அனுப்பப்பட்டது:"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -308,36 +312,39 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr ""
+msgstr "ஏற்கனவே ஒரு கணக்கு உள்ளதா?"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:80
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
+"உங்கள் கடவுச்சொல்லை மீட்டமைக்க சான்றுகளுடன் ஒரு மின்னஞ்சல் அனுப்பப்பட்டது"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:52
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr ""
+"மற்றொரு மின்னஞ்சல் ஏற்கனவே இந்த மின்னஞ்சல் முகவரியைப் பயன்படுத்தி பதிவு "
+"செய்யப்பட்டுள்ளது."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:137
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "அங்கீகரிப்பு தோல்வியுற்றது."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Back to Login"
-msgstr ""
+msgstr "மீண்டும் உள்நுழையவும்"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:199
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "மின்னஞ்சலை அனுப்ப முடியாது: பயனருக்கு மின்னஞ்சல் முகவரி இல்லை."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -357,7 +364,7 @@ msgstr "உறுதிப்படுத்தவும்"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
-msgstr ""
+msgstr "கடவுச்சொல்லை உறுதிப்படுத்துக"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -373,174 +380,176 @@ msgstr "தொடர்பு"
 #: code:addons/auth_signup/controllers/main.py:55
 #, python-format
 msgid "Could not create a new account."
-msgstr ""
+msgstr "புதிய கணக்கை உருவாக்க முடியவில்லை."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:84
 #, python-format
 msgid "Could not reset your password"
-msgstr ""
+msgstr "உங்கள் கடவுச்சொல்லை மீட்டமைக்க முடியவில்லை"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
 msgid "Customer Account"
-msgstr ""
+msgstr "வாடிக்கையாளர் கணக்கு"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr ""
+msgstr "இயல்புநிலை அணுகல் உரிமைகள்"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr ""
+msgstr "ஒரு கணக்கு இல்லையா?"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
-msgstr ""
+msgstr "உள்நுழைவுப் பக்கத்திலிருந்து கடவுச்சொல் மீட்டமைவை இயக்கு"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP ரவுட்டிங்"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:115
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
+msgstr "தவறான கையெழுத்து டோக்கன்"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr ""
+msgstr "உங்கள் வாடிக்கையாளர்கள் தங்கள் ஆவணங்கள் பார்க்க உள்ளே நுழைய அனுமதிக்க"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "எப்போதும் இணைக்கப்படவில்லை"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:75
 #, python-format
 msgid "No login provided."
-msgstr ""
+msgstr "உள்நுழை இல்லை."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Password"
-msgstr ""
+msgstr "கடவுச்சொல்"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Password Reset"
-msgstr ""
+msgstr "கடவுச்சொல்லை மீட்டமை"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr ""
+msgstr "கடவுச்சொல்லை மீட்டமை"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:125
 #, python-format
 msgid "Passwords do not match; please retype them."
 msgstr ""
+"கடவுச்சொற்கள் பொருந்தவில்லை; தயவு செய்து அவற்றை மீண்டும் தட்டச்சு "
+"செய்யவும்."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
-msgstr ""
+msgstr "கடவுச்சொல்லை மீட்டமைக்க"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:163
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
+msgstr "கடவுச்சொல்லை மீட்டமை: தவறான பயனர்பெயர் அல்லது மின்னஞ்சல்"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send Reset Password Instructions"
-msgstr ""
+msgstr "கடவுச்சொல் வழிமுறைகளை மீட்டமை"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "அழைப்பிதழ் மின்னஞ்சல் அனுப்பவும்"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
-msgstr ""
+msgstr "பதிவு செய்க"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_expiration
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_expiration
 msgid "Signup Expiration"
-msgstr ""
+msgstr "உள்நுழைவு காலாவதி"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_token
 msgid "Signup Token"
-msgstr ""
+msgstr "பதிவு டோக்கன்"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_type
 msgid "Signup Token Type"
-msgstr ""
+msgstr "பதிவு டோக்கன் வகை"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_valid
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_valid
 msgid "Signup Token is Valid"
-msgstr ""
+msgstr "உள்நுழைவு டோக்கன் செல்லுபடியாகும்"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_url
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_url
 msgid "Signup URL"
-msgstr ""
+msgstr "பதிவு URL"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:117
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr ""
+msgstr "அழைக்கப்படாத பயனர்களுக்கான பதிவு அனுமதிக்கப்படவில்லை"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:149
 #, python-format
 msgid "Signup token '%s' is no longer valid"
-msgstr ""
+msgstr "உள்நுழைவு டோக்கன் '' இனி செல்லுபடியாகாது"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:145
 #, python-format
 msgid "Signup token '%s' is not valid"
-msgstr ""
+msgstr "பதிவு டோக்கன் '' செல்லுபடியாகாது"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:138
 #, python-format
 msgid "Signup: invalid template user"
-msgstr ""
+msgstr "பதிவுசெய்தல்: தவறான டெம்ப்ளேட் பயனர்"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:141
 #, python-format
 msgid "Signup: no login given for new user"
-msgstr ""
+msgstr "பதிவுசெய்தல்: புதிய பயனருக்கு புகுபதிவு இல்லை"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:143
 #, python-format
 msgid "Signup: no name or partner given for new user"
-msgstr ""
+msgstr "பதிவுசெய்தல்: புதிய பயனருக்கு பெயர் அல்லது பங்குதாரர் இல்லை"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
@@ -551,18 +560,19 @@ msgstr "நிலைமை"
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
 msgid "Template user for new users created through signup"
 msgstr ""
+"பதிவு செய்ததன் மூலம் உருவாக்கப்பட்ட புதிய பயனர்களுக்கான டெம்ப்ளேட் பயனர்"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:123
 #, python-format
 msgid "The form was not properly filled in."
-msgstr ""
+msgstr "படிவம் ஒழுங்காக நிரப்பப்படவில்லை."
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:127
 #, python-format
 msgid "This is his first connection. Wish him welcome"
-msgstr ""
+msgstr "இது அவரது முதல் இணைப்பு. அவரை வரவேற்கிறேன்"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -571,6 +581,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"B2B பயன்முறையில் அழைப்பிதழ்களை அனுப்ப, தொடர்புகளைத் திறக்கலாம் அல்லது "
+"பட்டியல் பார்வையில் பலவற்றைத் தேர்ந்தெடுத்து கீழ்தோன்றும் மெனுவில் 'Portal "
+"Access Management' விருப்பத்தை சொடுக்கவும் * Action *."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -580,20 +593,20 @@ msgstr "பயனர்கள்"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to ${object.company_id.name}!"
-msgstr ""
+msgstr "$ {Object.company_id.name} க்கு வருக!"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr ""
+msgstr "உங்கள் மின்னஞ்சல்"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr ""
+msgstr "உங்கள் பெயர்"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr ""
+msgstr "எ.கா. ஜான் டோ"

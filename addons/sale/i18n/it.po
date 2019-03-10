@@ -23,6 +23,7 @@
 # Paolo Valier, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Mario Riva <mario.riva@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -30,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+"Last-Translator: Mario Riva <mario.riva@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -534,7 +535,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
 msgid "Access warning"
-msgstr "Allerta di Accesso"
+msgstr "Avviso di accesso"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__qty_delivered_method
@@ -1289,11 +1290,6 @@ msgstr "Descrizione"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Details"
 msgstr "Dettagli"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
-msgid "Digital Content"
-msgstr "Contenuto digitale"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
@@ -2772,7 +2768,7 @@ msgstr "Varianti prodotto"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
 msgid "Product attribute values that do not create variants"
-msgstr "Valore attributo prodotto che non crea varianti"
+msgstr "Valori di attributo prodotto che non creano varianti"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2878,7 +2874,7 @@ msgstr "Preventivo inviato"
 #. module: sale
 #: sql_constraint:res.company:0
 msgid "Quotation Validity is required and must be greater than 0."
-msgstr "Il preventivo deve essere valido e superiore a 0."
+msgstr "La validità del preventivo è necessaria e deve superiore a 0."
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -3283,7 +3279,7 @@ msgstr "Seleziona"
 #: code:addons/sale/static/src/js/tour.js:46
 #, python-format
 msgid "Select a product, or create a new one on the fly."
-msgstr "Seleziona un prodotto o creane uno nuovo al volo."
+msgstr "Selezionare un prodotto o creane al volo uno nuovo."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_template__sale_line_warn
@@ -3323,14 +3319,12 @@ msgstr "Invia Fattura PRO-FORMA"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is paid"
-msgstr ""
-"Inviare una email specifica per il prodotto una volta che la fattura è stata"
-" pagata"
+msgstr "Invia una email relativa al prodotto dopo il pagamento della fattura"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Send a quotation to test the customer portal."
-msgstr "Invia un preventivo per testare il portale clienti"
+msgstr "Invia un preventivo per provare il portale clienti."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_sample_quotation
@@ -3425,7 +3419,7 @@ msgstr "Costi di spedizione"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Shipping Information"
-msgstr "Informazioni Spedizione"
+msgstr "Informazioni di spedizione"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -3451,7 +3445,7 @@ msgstr "Mostrare le condizioni generali sugli ordini"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Sign and pay online"
-msgstr ""
+msgstr "Conferma e paga online"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
@@ -3554,7 +3548,7 @@ msgstr "Acciaio"
 #. module: sale
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Stock Moves"
-msgstr "Movimenti di Magazzino"
+msgstr "Movimenti di magazzino"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
@@ -3606,7 +3600,7 @@ msgstr "Imposte utilizzate per depositi"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__display_type
 msgid "Technical field for UX purpose."
-msgstr "Campo tecnico per l'esperienza utente."
+msgstr "Campo tecnico per esperienza utente (UX)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3682,7 +3676,7 @@ msgstr "Valore da fatturare in anticipo, escluse le imposte"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__analytic_account_id
 msgid "The analytic account related to a sales order."
-msgstr "Il conto analitico legato all'ordine di vendita."
+msgstr "Il conto analitico collegato a un ordine di vendita."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:360
@@ -3759,12 +3753,12 @@ msgstr "Il valore dell'anticipo deve essere positivo"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no orders for your account."
-msgstr "Non sono presenti ordini di vendita relativi al tuo profilo."
+msgstr "Nel conto non sono attualmente presenti ordini."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
-msgstr "Al momento non ci sono preventivi per il tuo account."
+msgstr "Nel conto non sono attualmente presenti preventivi."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4227,8 +4221,8 @@ msgstr "Inserito valore errato!"
 #: model:ir.model.fields,help:sale.field_sale_order_line__order_partner_id
 msgid "You can find a customer by its Name, TIN, Email or Internal Reference."
 msgstr ""
-"È possibile trovare un cliente per nome, partita IVA, e-mail o riferimento "
-"interno."
+"È possibile trovare un cliente per nome, codice fiscale, e-mail o "
+"riferimento interno."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:268

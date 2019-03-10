@@ -123,6 +123,8 @@ msgid ""
 "<i>Pending,</i> Your online payment has been successfully processed. But "
 "your order is not validated yet."
 msgstr ""
+"<i>Nerešeno.</i> Vaše spletno plačilo je bilo obdelano, a naročilo še ni "
+"potrjeno."
 
 #. module: payment
 #. openerp-web
@@ -189,6 +191,8 @@ msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
 msgstr ""
+"<span><i>Opravljeno,</i> vaše spletno plačilo je bilo obdelano. Hvala za "
+"naročilo.</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,error_msg:payment.payment_acquirer_adyen
@@ -207,6 +211,9 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
+"<span><i>Napaka.</i> Med transakcijo je prišlo do napake. Naročilo je bilo "
+"potrjeno, a ne bo plačano. V primeru, da imate vprašanja glede stanja vašega"
+" naročila, prosimo, da nas pokličite.</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -222,6 +229,8 @@ msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
 msgstr ""
+"<span><i>Opravljeno,</i> vaše spletno plačilo je bilo obdelano, a naročilo "
+"še ni potrjeno.</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -229,6 +238,7 @@ msgid ""
 "<span><i>Pending</i>... The order will be validated after the "
 "payment.</span>"
 msgstr ""
+"<span><i>Čakanje</i>... Naročilo bo overjeno po izvedenem plačilu.</span>"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:72
@@ -954,12 +964,12 @@ msgstr "Omogoči razpoložljivost prejemnika plačila (izdani računi, itd.)"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
 msgid "Manage your Payment Methods"
-msgstr ""
+msgstr "Upravljanje načinov plačila"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
 msgid "Manage your payment methods"
-msgstr ""
+msgstr "Upravljanje načinov plačila"
 
 #. module: payment
 #: selection:res.company,payment_onboarding_payment_method:0
@@ -1031,6 +1041,8 @@ msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
 msgstr ""
+"Prikazano sporočilo kadar je nalog v stanju nerešeno po opravljenem postopku"
+" plačevanja."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -1094,7 +1106,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:310
 #, python-format
 msgid "No payment method selected"
-msgstr ""
+msgstr "Način plačila ni izbran"
 
 #. module: payment
 #: selection:res.company,payment_acquirer_onboarding_state:0
@@ -1389,7 +1401,7 @@ msgstr "Na čakanju"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pending_msg
 msgid "Pending Message"
-msgstr ""
+msgstr "Sporočilo za nerešena"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
@@ -1414,14 +1426,14 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:202
 #, python-format
 msgid "Please select a payment method."
-msgstr ""
+msgstr "Izberite način plačila."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:311
 #, python-format
 msgid "Please select the option to add a new payment method."
-msgstr ""
+msgstr "Izberite opcijo za dodajanje novega načina plačila."
 
 #. module: payment
 #: model_terms:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -1765,6 +1777,7 @@ msgstr "Transactions"
 msgid ""
 "Transfer information will be provided after choosing the payment aquirer."
 msgstr ""
+"Podatki glede transakcije vam bodo predloženi po izbiri načina plačila."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__type
