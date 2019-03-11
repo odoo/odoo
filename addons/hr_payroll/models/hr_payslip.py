@@ -343,6 +343,7 @@ class HrPayslipLine(models.Model):
 
     date_from = fields.Date(string='From', related="slip_id.date_from")
     date_to = fields.Date(string='To', related="slip_id.date_to")
+    company_id = fields.Many2one(related='slip_id.company_id')
 
     @api.depends('quantity', 'amount', 'rate')
     def _compute_total(self):
